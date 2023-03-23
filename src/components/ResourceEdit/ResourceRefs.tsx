@@ -1,5 +1,3 @@
-import CheckedCheckBox from '@mui/icons-material/CheckBoxOutlined';
-import UnCheckbox from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import Delete from '@mui/icons-material/Delete';
 import {
   Box,
@@ -16,27 +14,19 @@ import { useSelector } from 'react-redux';
 import { IState } from '../../model';
 import BookSelect, { OptionType } from '../BookSelect';
 import { ActionRow, AltButton, PriButton } from '../StepEditor';
+import Confirm from '../AlertDialog';
 
 interface ActionColProps {
   row: number;
   checked: boolean;
-  onSelect: (val: number) => void;
   onDelete: (val: number) => void;
 }
 
-function ActionCol({ row, checked, onSelect, onDelete }: ActionColProps) {
-  const handleToggle = (row: number) => () => onSelect(row);
+function ActionCol({ row, checked, onDelete }: ActionColProps) {
   const handleDelete = (row: number) => () => onDelete(row);
 
   return (
     <Stack direction="row" sx={{ alignItems: 'center' }}>
-      <IconButton onClick={handleToggle(row)}>
-        {!checked ? (
-          <UnCheckbox fontSize="small" />
-        ) : (
-          <CheckedCheckBox fontSize="small" />
-        )}
-      </IconButton>
       <IconButton onClick={handleDelete(row)}>
         <Delete fontSize="small" />
       </IconButton>
@@ -49,6 +39,7 @@ const t = {
   references: 'References',
   action: 'Action',
   bookSelect: 'Select Book',
+  deleteConfirm: 'Delete {0}',
 };
 
 const Content = styled(Box)<BoxProps>(({ theme }) => ({
@@ -78,6 +69,7 @@ interface ICellChange {
 export default function ResourceRefs() {
   const [data, setData] = React.useState<ICell[][]>([]);
   const dataRef = React.useRef<ICell[][]>([]);
+  const [confirmRow, setConfirmRow] = React.useState<number>();
   const bookMap = useSelector((state: IState) => state.books.map);
   const bookSuggestions = useSelector(
     (state: IState) => state.books.suggestions
@@ -86,7 +78,7 @@ export default function ResourceRefs() {
   const preventSave = useRef<boolean>(false);
 
   const readOnlys = [false, false, true];
-  const widths = [200, 400, 60];
+  const widths = [170, 400, 30];
   const cClass = ['book', 'refs', 'act'];
 
   enum ColName {
@@ -117,18 +109,37 @@ export default function ResourceRefs() {
     );
   };
 
-  const handleToggle = (row: number) => {
-    let newData = dataRef.current.map((r) => r);
-    const newValue = !Boolean(newData[row][ColName.Act]?.checked) ? 'X' : '';
-    newData[row] = rowCells(
-      row,
-      newData[row].map((c, i) => (i !== ColName.Act ? c.value : newValue))
-    );
+  const deleteConfirmed = () => {
+    if (confirmRow === undefined) return;
+    const newData: ICell[][] = [];
+    let c = 0;
+    const myData = dataRef.current;
+    for (let i = 0; i < myData.length; i++) {
+      if (i < confirmRow) {
+        newData.push(dataRef.current[i]);
+        c++;
+        // were skipping i === confirmRow (c becomes one less than i)
+      } else if (i > confirmRow) {
+        // we need to update the delete action for rows after deleted row
+        newData.push(
+          rowCells(
+            c,
+            myData[i].map((v) => v.value)
+          )
+        );
+        c++;
+      }
+    }
     updData(newData);
+    setConfirmRow(undefined);
+  };
+
+  const deleteRejected = () => {
+    setConfirmRow(undefined);
   };
 
   const handleDelete = (row: number) => {
-    console.log(`deleting ${row}`);
+    setConfirmRow(row);
   };
 
   const rowCells = (n: number, row: string[]) =>
@@ -147,7 +158,6 @@ export default function ResourceRefs() {
               <ActionCol
                 row={n}
                 checked={Boolean(row[ColName.Act])}
-                onSelect={handleToggle}
                 onDelete={handleDelete}
               />
             ),
@@ -199,6 +209,19 @@ export default function ResourceRefs() {
     updData(newData);
   };
 
+  const confirmMsg = (row: number | undefined) => {
+    if (!row) return '';
+    const bookCode = dataRef.current[row][ColName.Book].value;
+    let bookLabel = '';
+    if (suggestionRef.current) {
+      const bookLabels = suggestionRef.current.filter(
+        (s) => s.value === bookCode
+      );
+      if (bookLabels.length > 0) bookLabel = bookLabels[0].label;
+    }
+    return `${bookLabel} ${dataRef.current[row][ColName.Refs].value}`;
+  };
+
   return (
     <Stack spacing={1}>
       <ButtonGroup>
@@ -215,6 +238,13 @@ export default function ResourceRefs() {
         <AltButton onClick={handleCancel}>Cancel</AltButton>
         <PriButton onClick={handleSave}>Save</PriButton>
       </ActionRow>
+      {confirmRow && (
+        <Confirm
+          text={t.deleteConfirm.replace('{0}', confirmMsg(confirmRow))}
+          yesResponse={deleteConfirmed}
+          noResponse={deleteRejected}
+        />
+      )}
     </Stack>
   );
 }
