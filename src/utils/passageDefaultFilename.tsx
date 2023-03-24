@@ -1,5 +1,11 @@
-import { getVernacularMediaRec, parseRef, VernacularTag } from '../crud';
-import { Passage, Plan } from '../model';
+import {
+  findRecord,
+  getVernacularMediaRec,
+  parseRef,
+  related,
+  VernacularTag,
+} from '../crud';
+import { Passage, Plan, Section } from '../model';
 import Memory from '@orbit/memory';
 import { cleanFileName } from '.';
 
@@ -11,6 +17,21 @@ export const passageDefaultPrefix = (planId: string, memory: Memory) => {
 };
 const pad3 = (n: number) => ('00' + n).slice(-3);
 
+const noPassageRef = (passage: Passage, memory: Memory) => {
+  var sect = findRecord(
+    memory,
+    'section',
+    related(passage, 'section')
+  ) as Section;
+  var plan = findRecord(memory, 'plan', related(sect, 'plan')) as Plan;
+  if (plan.attributes.flat && sect.attributes.name.length > 0)
+    return sect.attributes.name;
+  return (
+    'S' +
+    pad3(sect.attributes.sequencenum) +
+    (plan.attributes.flat ? '' : '_P' + pad3(passage.attributes.sequencenum))
+  );
+};
 export const passageDefaultFilename = (
   passage: Passage,
   planId: string,
@@ -37,7 +58,7 @@ export const passageDefaultFilename = (
       var title = cleanFileName(
         passage.attributes.reference?.length > 0
           ? passage.attributes.reference
-          : passage.attributes.title
+          : noPassageRef(passage, memory)
       );
       tmp = `${book}${title}`;
     }

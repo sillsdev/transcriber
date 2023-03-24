@@ -154,6 +154,7 @@ export const exportProject =
             if (artifactType)
               bodyFormData.append('artifactType', localizedArtifact);
             bodyFormData.append('ids', ',' + mediaList.join() + ',');
+            bodyFormData.append('nameTemplate', '{BOOK}{REF}_{VERS}');
           } else {
             dispatch({
               payload: errorStatus(-1, nodatamsg),
@@ -162,6 +163,7 @@ export const exportProject =
             return;
           }
         }
+
         await axiosPost(
           `offlineData/project/export/${exportType}/${remProjectId}/${start}`,
           bodyFormData,

@@ -434,7 +434,9 @@ export function TranscriptionTab(
   useEffect(() => {
     if (exportUrl && exportName !== '') {
       if (exportAnchor && exportAnchor.current) {
-        exportAnchor.current.click();
+        if (process.env.REACT_APP_DEBUG !== 'true')
+          exportAnchor.current.click();
+        else console.log(exportUrl);
         URL.revokeObjectURL(exportUrl);
         setExportUrl(undefined);
         showTitledMessage(
