@@ -283,19 +283,28 @@ export const scriptureFullPath = (
   }
   return { fullPath, book, ref };
 };
-export const nameFromRef = (mf: MediaFile, memory: Memory) => {
+export const nameFromTemplate = (
+  mf: MediaFile,
+  memory: Memory,
+  template: string = ''
+) => {
   const passRec = findRecord(
     memory,
     'passage',
     related(mf, 'passage')
   ) as Passage;
   if (!passRec) return mf.attributes.originalFile;
-  var tmp = passageDefaultFilename(passRec, '', memory, undefined, '');
-  const ver = mf.attributes?.versionNumber;
-  const { ext } = removeExtension(
-    mf.attributes.s3file ?? mf.attributes.audioUrl
-  );
-  return `${tmp}_v${ver}.${ext}`;
+  if (template === '') {
+    var tmp = passageDefaultFilename(passRec, '', memory, undefined, '');
+    const ver = mf.attributes?.versionNumber;
+    const { ext } = removeExtension(
+      mf.attributes.s3file ?? mf.attributes.audioUrl
+    );
+    return `${tmp}_v${ver}.${ext}`;
+  } else {
+    //not implemented yet
+    return 'Not Implemented Yet';
+  }
 };
 export const mediaArtifacts = ({
   memory,

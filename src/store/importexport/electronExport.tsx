@@ -36,7 +36,7 @@ import {
   fileInfo,
   updateableFiles,
   staticFiles,
-  nameFromRef,
+  nameFromTemplate,
   VernacularTag,
 } from '../../crud';
 import {
@@ -228,7 +228,7 @@ export async function electronExport(
           scripturePackage,
           projRec,
         } as IExportScripturePath);
-        if (rename) newname = mediapath + nameFromRef(mf, memory);
+        if (rename) newname = mediapath + nameFromTemplate(mf, memory);
         else newname = fullPath || mediapath + path.basename(mp);
         await AddStreamEntry(mp, newname);
         if (expType === ExportType.ELAN) {
