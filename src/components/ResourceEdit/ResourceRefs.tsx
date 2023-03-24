@@ -1,5 +1,6 @@
 import { Button, ButtonGroup, Stack } from '@mui/material';
-import ReferenceTable, { BookRef } from './ResRefTable';
+import { BookRef } from '../../model';
+import ReferenceTable from './ResRefTable';
 
 const t = {
   byWord: 'By Word',

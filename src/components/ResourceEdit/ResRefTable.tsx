@@ -1,5 +1,6 @@
 import { Box, BoxProps, Stack, styled } from '@mui/material';
 import React, { useRef } from 'react';
+import { BookRef } from '../../model';
 import DataSheet from 'react-datasheet';
 import { useSelector } from 'react-redux';
 import { IState } from '../../model';
@@ -50,11 +51,6 @@ interface ICellChange {
   row: number;
   col: number;
   value: string | null;
-}
-
-export interface BookRef {
-  code: string;
-  refs: string;
 }
 
 interface ReferenceTableProps {
