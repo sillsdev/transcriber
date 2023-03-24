@@ -18,7 +18,7 @@ const t = {
 };
 
 const refPat =
-  /((\d+)(?::(\d+))?(\s*-\s*(\d+))?\s*;\s*)*(\d+)(?::(\d+))?(\s*-\s*(\d+))?/;
+  /((\d+)(?:\s*:\s*(\d+))?(\s*-\s*(\d+))?\s*;\s*)*(\d+)(?:\s*:\s*(\d+))?(\s*-\s*(\d+))?/;
 
 const refTest = (s: string) => {
   const m = refPat.exec(s);
