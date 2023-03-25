@@ -64,7 +64,6 @@ export function ResourceTabs({
   sharedResources,
 }: IProps & IRecordProps) {
   const [value, setValue] = React.useState(0);
-  const sharedResRec = React.useRef<SharedResource>();
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
   const readSharedResource = useSharedResRead();
   const updateSharedResource = useSharedResUpdate();
@@ -73,11 +72,16 @@ export function ResourceTabs({
   });
   const deleteSharedResource = useSharedResDelete();
 
+  const sharedResRec = React.useMemo(
+    () => readSharedResource(passId),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [passId]
+  );
+
   const values = React.useMemo(() => {
-    sharedResRec.current = readSharedResource(passId);
-    if (sharedResRec.current) {
+    if (sharedResRec) {
       const { title, description, languagebcp47, termsOfUse, keywords } =
-        sharedResRec.current.attributes;
+        sharedResRec.attributes;
       const lgParts = languagebcp47.split('|');
       const bcp47 = lgParts.length === 1 ? languagebcp47 : lgParts[1];
       const languageName = lgParts.length === 1 ? '' : lgParts[0];
@@ -88,7 +92,7 @@ export function ResourceTabs({
         languageName,
         terms: termsOfUse,
         keywords,
-        category: related(sharedResRec.current, 'artifactCategory'),
+        category: related(sharedResRec, 'artifactCategory'),
       } as IResourceDialog;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -108,8 +112,8 @@ export function ResourceTabs({
       keywords,
       category,
     } = values;
-    if (sharedResRec.current) {
-      const rec = sharedResRec.current;
+    if (sharedResRec) {
+      const rec = sharedResRec;
       updateSharedResource(
         {
           ...rec,
@@ -138,10 +142,10 @@ export function ResourceTabs({
   };
 
   const handleDelete = () => {
-    if (sharedResRec.current) {
+    if (sharedResRec) {
       deleteSharedResource({
         type: 'sharedresource',
-        id: sharedResRec.current.id,
+        id: sharedResRec.id,
       } as SharedResource);
     }
   };
@@ -174,7 +178,7 @@ export function ResourceTabs({
         />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <ResourceRefs onOpen={handleOverOpen} />
+        <ResourceRefs res={sharedResRec} onOpen={handleOverOpen} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <VersionDlg passId={passId} />

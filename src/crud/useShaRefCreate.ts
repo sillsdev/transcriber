@@ -1,35 +1,19 @@
 import { useGlobal } from 'reactn';
-import { Operation, RecordIdentity, TransformBuilder } from '@orbit/data';
-import { SharedResourceReference } from '../model';
+import { Operation, TransformBuilder } from '@orbit/data';
+import { SharedResourceReference, SharedResource } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { BookRef, Passage } from '../model';
 import { parseRef } from './passage';
-
-interface IProps {
-  bookRefs: BookRef[];
-}
-
-interface RefProps {
-  sharedResource: RecordIdentity;
-  category: string;
-  cluster?: RecordIdentity;
-}
+import { rangeSort } from '../utils';
 
 const newRange = (p: Passage) =>
   p.endVerse ? `${p.startVerse}-${p.endVerse}` : `${p.startVerse}`;
 
-const rangeSort = (i: string, j: string) =>
-  parseInt(i) <= parseInt(j) ? -1 : 1;
-
-export const useShaRefCreate = ({
-  sharedResource,
-  category, // artifactCategoryId
-  cluster, // cluster organizationId
-}: RefProps) => {
+export const useShaRefCreate = (sharedResource: SharedResource) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
-  return async ({ bookRefs }: IProps) => {
+  return async (bookRefs: BookRef[]) => {
     const t = new TransformBuilder();
     let ops: Operation[] = [];
     for (const bookRef of bookRefs) {
@@ -70,32 +54,10 @@ export const useShaRefCreate = ({
             t,
             shaRefRec,
             'sharedResource',
-            'sharedResource',
+            'sharedresource',
             sharedResource.id
           ),
         ]);
-        if (cluster) {
-          ops.push(
-            ...ReplaceRelatedRecord(
-              t,
-              shaRefRec,
-              'cluster',
-              'organization',
-              cluster.id
-            )
-          );
-        }
-        if (category) {
-          ops.push(
-            ...ReplaceRelatedRecord(
-              t,
-              shaRefRec,
-              'artifactCategory',
-              'artifactcategory',
-              category
-            )
-          );
-        }
       }
     }
     await memory.update(ops);

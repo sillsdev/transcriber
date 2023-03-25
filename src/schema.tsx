@@ -866,8 +866,6 @@ if (
     },
     relationships: {
       sharedResource: { type: 'hasOne', model: 'sharedresource' },
-      cluster: { type: 'hasOne', model: 'organization' },
-      artifactcateory: { type: 'hasOne', model: 'artifactcategory' },
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };
