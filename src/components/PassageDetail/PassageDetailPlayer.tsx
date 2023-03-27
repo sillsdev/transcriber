@@ -14,7 +14,7 @@ import { IWsAudioPlayerStrings, MediaFile } from '../../model';
 import { UpdateRecord } from '../../model/baseModel';
 import { playerSelector } from '../../selector';
 import { NamedRegions, getSegments, updateSegments } from '../../utils';
-import { findRecord } from '../../crud';
+import { TransformBuilder } from '@orbit/data';
 
 interface IProps {
   allowSegment?: NamedRegions | undefined;
@@ -25,6 +25,11 @@ interface IProps {
   canSetDefaultParams?: boolean;
   onSegment?: (segment: string) => void;
   onSegmentParamChange?: (params: IRegionParams, teamDefault: boolean) => void;
+  onProgress?: (progress: number) => void;
+  onSaveProgress?: (progress: number) => void;
+  onInteraction?: () => void;
+  allowZoomAndSpeed?: boolean;
+  position?: number;
 }
 
 export function PassageDetailPlayer(props: IProps) {
@@ -37,6 +42,11 @@ export function PassageDetailPlayer(props: IProps) {
     canSetDefaultParams,
     onSegment,
     onSegmentParamChange,
+    onProgress,
+    onSaveProgress,
+    onInteraction,
+    allowZoomAndSpeed,
+    position,
   } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
@@ -70,7 +80,9 @@ export function PassageDetailPlayer(props: IProps) {
     discussionMarkers,
     highlightDiscussion,
     handleHighlightDiscussion,
-    selected,
+    rowData,
+    index,
+    forceRefresh,
   } = ctx.state;
   const highlightRef = useRef(highlightDiscussion);
 
@@ -81,9 +93,7 @@ export function PassageDetailPlayer(props: IProps) {
   const savingRef = useRef(false);
 
   const loadSegments = () => {
-    const mediafile = findRecord(memory, 'mediafile', selected) as
-      | MediaFile
-      | undefined;
+    const mediafile = rowData[index].mediafile;
     const segs = mediafile?.attributes?.segments || '{}';
     if (allowSegment) segmentsRef.current = getSegments(allowSegment, segs);
     setDefaultSegments(segmentsRef.current);
@@ -107,9 +117,7 @@ export function PassageDetailPlayer(props: IProps) {
   const writeSegments = async () => {
     if (!savingRef.current) {
       savingRef.current = true;
-      const mediafile = findRecord(memory, 'mediafile', selected) as
-        | MediaFile
-        | undefined;
+      const mediafile = rowData[index].mediafile;
       if (mediafile) {
         await memory
           .update((t) => [
@@ -139,6 +147,23 @@ export function PassageDetailPlayer(props: IProps) {
             savingRef.current = false;
           });
       }
+    }
+  };
+
+  const onDuration = (duration: number) => {
+    const mediafile = rowData[index].mediafile;
+    if (
+      duration &&
+      Math.floor(duration) !== Math.floor(mediafile.attributes.duration)
+    ) {
+      memory
+        .update((t: TransformBuilder) =>
+          t.replaceAttribute(mediafile, 'duration', Math.floor(duration))
+        )
+        .then(() => {
+          forceRefresh();
+        });
+      console.log(`update duration to ${Math.floor(duration)}`);
     }
   };
 
@@ -196,10 +221,6 @@ export function PassageDetailPlayer(props: IProps) {
     }
   };
 
-  const onInteraction = () => {
-    //focus on add comment?? focusOnTranscription();
-  };
-
   useEffect(() => {
     highlightRef.current = highlightDiscussion;
   }, [highlightDiscussion]);
@@ -227,6 +248,9 @@ export function PassageDetailPlayer(props: IProps) {
     }
     //save the segments here
   };
+  useEffect(() => {
+    setInitialPosition(position);
+  }, [position]);
 
   return (
     <div id="detailplayer">
@@ -253,6 +277,11 @@ export function PassageDetailPlayer(props: IProps) {
         onPlayStatus={onPlayStatus}
         onInteraction={onInteraction}
         onCurrentSegment={onCurrentSegment}
+        allowZoom={allowZoomAndSpeed}
+        allowSpeed={allowZoomAndSpeed}
+        onProgress={onProgress}
+        onSaveProgress={onSaveProgress}
+        onDuration={onDuration}
         metaData={
           saveSegments ? (
             <Button

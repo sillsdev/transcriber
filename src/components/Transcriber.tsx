@@ -54,7 +54,6 @@ import {
   FontData,
   getFontData,
   remoteIdNum,
-  useFetchMediaUrl,
   UpdateMediaStateOps,
   AddPassageStateChangeToOps,
   remoteId,
@@ -73,8 +72,6 @@ import {
   getParatextDataPath,
   refMatch,
   waitForIt,
-  dataPath,
-  PathType,
   integrationSlug,
   getSegments,
   NamedRegions,
@@ -93,7 +90,6 @@ import * as action from '../store';
 import { bindActionCreators } from 'redux';
 import { translateParatextError } from '../utils/translateParatextError';
 import TranscribeAddNote from './TranscribeAddNote';
-import WSAudioPlayer from './WSAudioPlayer';
 import PassageHistory from './PassageHistory';
 import { HotKeyContext } from '../context/HotKeyContext';
 import TaskFlag from './TaskFlag';
@@ -104,6 +100,7 @@ import { activitySelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import usePassageDetailContext from '../context/usePassageDetailContext';
 import { IRegionParams } from '../crud/useWavesurferRegions';
+import PassageDetailPlayer from './PassageDetail/PassageDetailPlayer';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -246,24 +243,16 @@ export function Transcriber(
     allBookData,
     selected,
     playing,
-    setPlaying,
-    trBusy,
-    setTrBusy,
     allDone,
-    refresh,
-    mediaUrl,
-    audioBlob,
+    //audioBlob,
     loading,
     artifactId,
   } = useTodo();
+
   const { slug } = useParams();
-  const { safeURL } = useFetchMediaUrl();
-  const { section, passage, duration, mediafile, state, role } = rowData[
-    index
-  ] || {
+  const { section, passage, mediafile, state, role } = rowData[index] || {
     section: {} as Section,
     passage: {} as Passage,
-    duration: 0,
     mediafile: {} as MediaFile,
     state: '',
     role: '',
@@ -283,7 +272,6 @@ export function Transcriber(
   const playedSecsRef = useRef<number>(0);
   const segmentsRef = useRef('{}');
   const stateRef = useRef<string>(state);
-  const [totalSeconds, setTotalSeconds] = useState(duration);
   const [transcribing] = useState(
     state === ActivityStates.Transcribing ||
       state === ActivityStates.TranscribeReady
@@ -296,7 +284,7 @@ export function Transcriber(
   const [textValue, setTextValue] = useState('');
   const [lastSaved, setLastSaved] = useState('');
   const [defaultPosition, setDefaultPosition] = useState(0.0);
-  const [initialSegments, setInitialSegments] = useState('{}');
+
   const { showMessage } = useSnackBar();
   const showHistoryRef = useRef(false);
   const [showHistory, setShowHistoryx] = useState(false);
@@ -321,7 +309,9 @@ export function Transcriber(
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
   const t = transcriberStr;
-  const { playerSize, setPlayerSize } = usePassageDetailContext();
+  const { playerSize, setPlayerSize, pdBusy, setSelected } =
+    usePassageDetailContext();
+
   const [myPlayerSize, setMyPlayerSize] = useState(INIT_PLAYER_HEIGHT);
   const [style, setStyle] = useState({
     cursor: 'default',
@@ -370,7 +360,6 @@ export function Transcriber(
       changed,
       projData,
       fontStatus,
-      totalSeconds,
       transcribing,
       height,
       boxHeight,
@@ -408,7 +397,7 @@ export function Transcriber(
 
   useEffect(() => {
     setStyle({
-      cursor: trBusy || loading ? 'progress' : 'default',
+      cursor: pdBusy || loading ? 'progress' : 'default',
     });
     setTextAreaStyle({
       ...textAreaStyle,
@@ -416,7 +405,7 @@ export function Transcriber(
       fontFamily: projData?.fontFamily,
       fontSize: projData?.fontSize,
       direction: projData?.fontDir as any,
-      cursor: trBusy || loading ? 'progress' : 'default',
+      cursor: pdBusy || loading ? 'progress' : 'default',
     });
     if (transcriptionRef.current) {
       const el = transcriptionRef?.current?.firstChild as HTMLTextAreaElement;
@@ -426,7 +415,7 @@ export function Transcriber(
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trBusy, loading, boxHeight, projData]);
+  }, [pdBusy, loading, boxHeight, projData]);
 
   const handleShowHistory = () => {
     setShowHistory(!showHistoryRef.current);
@@ -520,14 +509,15 @@ export function Transcriber(
   }, [selected]);
 
   useEffect(() => {
-    mediaRef.current = mediafile;
     if (mediafile && mediafile.attributes) {
+      if (mediaRef.current !== mediafile) setSelected(mediafile.id);
       const trans = getTranscription();
       if (trans.transcription !== transcriptionIn.current && !saving.current) {
         //if someone else changed it...let the user pick
         setConfirm(trans);
       }
     }
+    mediaRef.current = mediafile;
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [mediafiles, mediafile]);
 
@@ -603,41 +593,6 @@ export function Transcriber(
     focusOnTranscription();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [index, rowData, state]);
-
-  useEffect(() => {
-    if (totalSeconds && (!duration || duration !== Math.floor(totalSeconds))) {
-      const mediaRecs = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('mediafile')
-      ) as MediaFile[];
-      //check if the url we have loaded is for the current mediaId
-      const oldRec = mediaRecs.filter((m) => m.id === mediafile.id);
-      if (oldRec.length) {
-        safeURL(dataPath(oldRec[0].attributes.audioUrl, PathType.MEDIA)).then(
-          (mediaRecUrl) => {
-            var cut = mediaUrl.lastIndexOf('&Signature');
-            var check = cut > 0 ? mediaUrl.substring(0, cut) : mediaUrl;
-            if (
-              check === (cut > 0 ? mediaRecUrl.substring(0, cut) : mediaRecUrl)
-            ) {
-              memory
-                .update((t: TransformBuilder) =>
-                  t.replaceAttribute(
-                    oldRec[0],
-                    'duration',
-                    Math.floor(totalSeconds)
-                  )
-                )
-                .then(() => {
-                  refresh();
-                });
-              // console.log(`update duration to ${Math.floor(totalSeconds)}`);
-            }
-          }
-        );
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [duration, totalSeconds]);
 
   useEffect(() => {
     if (!offline) {
@@ -940,14 +895,12 @@ export function Transcriber(
     setTextValue(val.transcription);
     setDefaultPosition(val.position);
     segmentsRef.current = val.segments;
-    setInitialSegments(segmentsRef.current);
     //focus on player
     if (transcriptionRef.current) {
       transcriptionRef.current.firstChild.value = val.transcription;
       focusOnTranscription();
     }
     setLastSaved(mediafile.attributes?.dateUpdated || '');
-    setTotalSeconds(duration);
   };
 
   const handleAutosave = async () => {
@@ -973,9 +926,6 @@ export function Transcriber(
 
   const paperStyle = { width: width - 36 };
 
-  const onDuration = (value: number) => {
-    setTotalSeconds(value);
-  };
   const onInteraction = () => {
     focusOnTranscription();
   };
@@ -983,9 +933,10 @@ export function Transcriber(
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
 
   const onSegmentChange = (segments: string) => {
-    segmentsRef.current = segments;
-    setInitialSegments(segmentsRef.current);
-    toolChanged(toolId, true);
+    if (segmentsRef.current !== segments) {
+      segmentsRef.current = segments;
+      toolChanged(toolId, true);
+    }
   };
   const onSegmentParamChange = (
     params: IRegionParams,
@@ -1008,11 +959,6 @@ export function Transcriber(
   const handleSplitSize = debounce((e: any) => {
     setMyPlayerSize(e);
   }, 50);
-
-  const onPlayStatus = (newPlaying: boolean) => {
-    setPlaying(newPlaying);
-    playingRef.current = newPlaying;
-  };
 
   const noParatext = React.useMemo(
     () =>
@@ -1092,41 +1038,27 @@ export function Transcriber(
                         </Grid>
                       )}
                     <Grid item xs id="transcriberplayer">
-                      <Grid container justifyContent="center">
-                        <WSAudioPlayer
-                          id="audioPlayer"
-                          allowRecord={false}
-                          allowAutoSegment={true}
-                          defaultRegionParams={segParams}
-                          canSetDefaultParams={canSetOrgDefault}
-                          allowSegment={
-                            selected !== '' && role !== 'view'
-                              ? NamedRegions.Transcription
-                              : undefined
-                          }
-                          allowZoom={true}
-                          allowSpeed={true}
-                          size={myPlayerSize}
-                          blob={audioBlob}
-                          initialposition={defaultPosition}
-                          segments={initialSegments}
-                          isPlaying={playing}
-                          loading={loading}
-                          busy={trBusy}
-                          setBusy={setTrBusy}
-                          onProgress={onProgress}
-                          onSegmentChange={onSegmentChange}
-                          onSegmentParamChange={onSegmentParamChange}
-                          onPlayStatus={onPlayStatus}
-                          onDuration={onDuration}
-                          onInteraction={onInteraction}
-                          onSaveProgress={
-                            selected === '' || role === 'view'
-                              ? undefined
-                              : onSaveProgress
-                          }
-                        />
-                      </Grid>
+                      <PassageDetailPlayer
+                        position={defaultPosition}
+                        allowAutoSegment={true}
+                        defaultSegParams={segParams}
+                        canSetDefaultParams={canSetOrgDefault}
+                        allowSegment={
+                          selected !== '' && role !== 'view'
+                            ? NamedRegions.Transcription
+                            : undefined
+                        }
+                        allowZoomAndSpeed={true}
+                        onProgress={onProgress}
+                        onSegment={onSegmentChange}
+                        onSegmentParamChange={onSegmentParamChange}
+                        onInteraction={onInteraction}
+                        onSaveProgress={
+                          selected === '' || role === 'view'
+                            ? undefined
+                            : onSaveProgress
+                        }
+                      />
                     </Grid>
                   </Grid>
                 </Pane>
