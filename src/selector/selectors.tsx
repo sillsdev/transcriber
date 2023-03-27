@@ -127,6 +127,9 @@ export const scriptureTableFilterMenuSelector = (state: IState) =>
 export const sharedSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'shared' });
 
+export const sharedResSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'sharedResource' });
+
 export const sortMenuSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'sortMenu' });
 

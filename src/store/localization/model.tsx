@@ -188,6 +188,7 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IControlStrings extends Localize.LocalizedStringsMethods {
+    "book": string;
     "other": string;
     "scripture": string;
 };
@@ -844,9 +845,15 @@ export interface IProjectDownloadStrings extends Localize.LocalizedStringsMethod
 };
 
 export interface IResourceStrings extends Localize.LocalizedStringsMethods {
+    "action": string;
     "add": string;
+    "book": string;
+    "bookSelect": string;
+    "byWord": string;
     "delete": string;
+    "deleteConfirm": string;
     "description": string;
+    "errorData": string;
     "keywords": string;
     "overview": string;
     "references": string;

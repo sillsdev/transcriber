@@ -1031,6 +1031,13 @@
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="control.book">
+      		<source>Book</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">selectPlanType.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="control.other">
             <source>General</source>
             <target/>
@@ -4867,6 +4874,13 @@
                <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="resource.action">
+         	<source>Action</source>
+         	<target/>
+         	<context-group>
+         		<context context-type="sourcefile">Access.tsx</context>
+         	</context-group>
+         </trans-unit>
       	<trans-unit id="resource.add">
       		<source>Add</source>
       		<target/>
@@ -4874,18 +4888,53 @@
       			<context context-type="sourcefile">ResourceOverview.tsx</context>
       		</context-group>
       	</trans-unit>
-		<trans-unit id="resource.delete">
+      	<trans-unit id="resource.book">
+      		<source>Book</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.bookSelect">
+      		<source>Select Book</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.byWord">
+      		<source>By Word</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.delete">
 			<source>Delete</source>
 			<target/>
 			<context-group>
 				<context context-type="sourcefile">ResourceOverview.tsx</context>
 			</context-group>
 		</trans-unit>
+      	<trans-unit id="resource.deleteConfirm">
+      		<source>Delete {0}</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="resource.description">
       		<source>Description</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.errorData">
+      		<source>Do you want to save and discard data with errors?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="resource.keywords">

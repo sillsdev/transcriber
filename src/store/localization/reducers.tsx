@@ -207,6 +207,7 @@ const initialState = {
 	}),
 	"control": new LocalizedStrings({
 		"en": {
+			"book": "Book",
 			"other": "General",
 			"scripture": "Scripture",
 		}
@@ -899,9 +900,15 @@ const initialState = {
 	}),
 	"resource": new LocalizedStrings({
 		"en": {
+			"action": "Action",
 			"add": "Add",
+			"book": "Book",
+			"bookSelect": "Select Book",
+			"byWord": "By Word",
 			"delete": "Delete",
+			"deleteConfirm": "Delete {0}",
 			"description": "Description",
+			"errorData": "Do you want to save and discard data with errors?",
 			"keywords": "Keywords",
 			"overview": "Overview",
 			"references": "References",

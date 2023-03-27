@@ -1,22 +1,14 @@
 import { Box, BoxProps, Stack, styled } from '@mui/material';
 import React, { useRef } from 'react';
-import { BookRef } from '../../model';
+import { BookRef, IResourceStrings } from '../../model';
 import DataSheet from 'react-datasheet';
-import { useSelector } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import { IState } from '../../model';
 import BookSelect, { OptionType } from '../BookSelect';
 import { ActionRow, AltButton, PriButton } from '../StepEditor';
 import Confirm from '../AlertDialog';
 import ActionCol from './ResActionCol';
-
-const t = {
-  book: 'Book',
-  references: 'References',
-  action: 'Action',
-  bookSelect: 'Select Book',
-  deleteConfirm: 'Delete {0}',
-  errorData: 'Do you want to save and discard data with errors?',
-};
+import { sharedResourceSelector } from '../../selector';
 
 const refPat =
   /(?:\d+\s*:\s*(?:\d+(?:\s*-\s*\d+)?,\s*)*(?:\d+(?:\s*-\s*\d+)?)?;\s*)*(?:\d+\s*:\s*(?:\d+(?:\s*-\s*\d+)?,\s*)*(?:\d+(?:\s*-\s*\d+)?)?)?/;
@@ -74,6 +66,7 @@ export default function ReferenceTable({
   );
   const suggestionRef = useRef<Array<OptionType>>();
   const preventSave = useRef<boolean>(false);
+  const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
 
   const readOnlys = [false, false, true];
   const widths = [170, 400, 30];

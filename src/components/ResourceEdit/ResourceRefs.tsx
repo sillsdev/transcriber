@@ -3,16 +3,19 @@ import { useShaRefCreate } from '../../crud/useShaRefCreate';
 import { useShaRefDelete } from '../../crud/useShaRefDelete';
 import { useShaRefRead } from '../../crud/useShaRefRead';
 import { useShaRefUpdate } from '../../crud/useShaRefUpdate';
-import { BookRef, SharedResource, SharedResourceReference } from '../../model';
+import {
+  BookRef,
+  SharedResource,
+  SharedResourceReference,
+  IResourceStrings,
+} from '../../model';
 import ReferenceTable from './ResRefTable';
 import { rangeAdd, useBookN } from '../../utils';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from 'react-orbitjs';
 import React from 'react';
-
-const t = {
-  byWord: 'By Word',
-};
+import { shallowEqual, useSelector } from 'react-redux';
+import { sharedResourceSelector } from '../../selector';
 
 interface RecordProps {
   sharedResourceReferences: SharedResourceReference[];
@@ -33,6 +36,7 @@ export function ResourceRefs({
   const updateShaRefRecs = useShaRefUpdate(res || ({} as SharedResource));
   const deleteShaRefRecs = useShaRefDelete();
   const bookN = useBookN();
+  const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
 
   const handleAddWord = () => {};
 
