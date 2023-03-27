@@ -142,6 +142,7 @@ const PassageDetailGrids = () => {
     currentstep,
     discussionSize,
     setDiscussionSize,
+    playerSize,
     setPlayerSize,
     orgWorkflowSteps,
     mediafileId,
@@ -283,7 +284,7 @@ const PassageDetailGrids = () => {
                 <Pane>
                   {tool !== ToolSlug.Transcribe && tool !== ToolSlug.Record && (
                     <SplitPane
-                      defaultSize={INIT_PLAYERPANE_HEIGHT}
+                      defaultSize={playerSize}
                       minSize={INIT_PLAYERPANE_HEIGHT}
                       maxSize={height - 280}
                       style={{ position: 'static' }}

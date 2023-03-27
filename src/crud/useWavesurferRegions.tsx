@@ -598,7 +598,7 @@ export function useWaveSurferRegions(
 
   function justPlayRegion(progress: number) {
     if (
-      singleRegionRef.current &&
+      //singleRegionRef.current &&
       currentRegion() &&
       !currentRegion().loop &&
       roundToTenths(currentRegion().start) <= roundToTenths(progress) && //account for discussion topic rounding

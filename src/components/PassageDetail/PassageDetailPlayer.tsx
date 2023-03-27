@@ -48,6 +48,7 @@ export function PassageDetailPlayer(props: IProps) {
     allowZoomAndSpeed,
     position,
   } = props;
+
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const {
@@ -78,13 +79,11 @@ export function PassageDetailPlayer(props: IProps) {
     currentSegmentIndex,
     setCurrentSegment,
     discussionMarkers,
-    highlightDiscussion,
     handleHighlightDiscussion,
     rowData,
     index,
     forceRefresh,
   } = ctx.state;
-  const highlightRef = useRef(highlightDiscussion);
 
   const [defaultSegments, setDefaultSegments] = useState('{}');
 
@@ -197,7 +196,9 @@ export function PassageDetailPlayer(props: IProps) {
       index =
         segs.regions
           .sort((a: IRegion, b: IRegion) => a.start - b.start)
-          .findIndex((r: IRegion) => r.start === segment.start) + 1;
+          .findIndex(
+            (r: IRegion) => r.start <= segment.start && r.end >= segment.end
+          ) + 1;
     }
     setCurrentSegment && setCurrentSegment(segment, index);
   };
@@ -222,10 +223,6 @@ export function PassageDetailPlayer(props: IProps) {
   };
 
   useEffect(() => {
-    highlightRef.current = highlightDiscussion;
-  }, [highlightDiscussion]);
-
-  useEffect(() => {
     if (playing !== playingRef.current) setRequestPlay(playing);
   }, [playing]);
 
@@ -235,7 +232,7 @@ export function PassageDetailPlayer(props: IProps) {
       setupLocate();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentstep]);
+  }, [currentstep, allowSegment]);
 
   useEffect(() => {
     if (saveRequested(toolId)) handleSave();
