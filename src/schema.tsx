@@ -859,8 +859,7 @@ if (
     attributes: {
       book: { type: 'string' },
       chapter: { type: 'number' },
-      verse: { type: 'number' }, //or maybe this isn't here at all?
-      verseRanges: { type: 'string' },
+      verses: { type: 'string' },
       dateCreated: { type: 'date-time' },
       dateUpdated: { type: 'date-time' },
     },

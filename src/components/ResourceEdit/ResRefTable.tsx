@@ -19,7 +19,7 @@ const t = {
 };
 
 const refPat =
-  /((\d+)(?:\s*:\s*(\d+))?(\s*-\s*(\d+))?\s*;\s*)*(\d+)(?:\s*:\s*(\d+))?(\s*-\s*(\d+))?/;
+  /(?:\d+\s*:\s*(?:\d+(?:\s*-\s*\d+)?,\s*)*(?:\d+(?:\s*-\s*\d+)?)?;\s*)*(?:\d+\s*:\s*(?:\d+(?:\s*-\s*\d+)?,\s*)*(?:\d+(?:\s*-\s*\d+)?)?)?/;
 
 const refTest = (s: string) => {
   const m = refPat.exec(s);
@@ -54,11 +54,13 @@ interface ICellChange {
 }
 
 interface ReferenceTableProps {
+  bookData: BookRef[];
   onCommit: (refs: BookRef[]) => void;
   onCancel: () => void;
 }
 
 export default function ReferenceTable({
+  bookData,
   onCommit,
   onCancel,
 }: ReferenceTableProps) {
@@ -180,10 +182,13 @@ export default function ReferenceTable({
 
   React.useEffect(() => {
     let newData: ICell[][] = emptyTable();
-    newData.push(rowCells(1, emptyRow()));
+    bookData.forEach(({ code, refs }, i) =>
+      newData.push(rowCells(i + 1, [code, refs, '']))
+    );
+    newData.push(rowCells(bookData.length + 1, emptyRow()));
     updData(newData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [bookData]);
 
   const handleCancel = () => onCancel();
   const handleSave = () => {

@@ -68,3 +68,4 @@ export * from './useMyNavigate';
 export * from './useBookN';
 export * from './bcvKey';
 export * from './rangeSort';
+export * from './rangeAdd';

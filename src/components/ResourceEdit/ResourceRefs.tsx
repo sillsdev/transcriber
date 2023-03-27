@@ -3,26 +3,36 @@ import { useShaRefCreate } from '../../crud/useShaRefCreate';
 import { useShaRefDelete } from '../../crud/useShaRefDelete';
 import { useShaRefRead } from '../../crud/useShaRefRead';
 import { useShaRefUpdate } from '../../crud/useShaRefUpdate';
-import { BookRef, SharedResource } from '../../model';
+import { BookRef, SharedResource, SharedResourceReference } from '../../model';
 import ReferenceTable from './ResRefTable';
-import { rangeSort } from '../../utils';
+import { rangeAdd, useBookN } from '../../utils';
+import { QueryBuilder } from '@orbit/data';
+import { withData } from 'react-orbitjs';
+import React from 'react';
 
 const t = {
   byWord: 'By Word',
 };
 
-const chapKey = (book: string, chapter: number) => `${book} ${chapter}`;
+interface RecordProps {
+  sharedResourceReferences: SharedResourceReference[];
+}
 
 interface ResourceRefsProps {
   res?: SharedResource;
   onOpen: () => void;
 }
 
-export default function ResourceRefs({ res, onOpen }: ResourceRefsProps) {
+export function ResourceRefs({
+  res,
+  onOpen,
+  sharedResourceReferences,
+}: ResourceRefsProps & RecordProps) {
   const readShaRefRecs = useShaRefRead();
   const createShaRefRecs = useShaRefCreate(res || ({} as SharedResource));
   const updateShaRefRecs = useShaRefUpdate(res || ({} as SharedResource));
   const deleteShaRefRecs = useShaRefDelete();
+  const bookN = useBookN();
 
   const handleAddWord = () => {};
 
@@ -32,28 +42,34 @@ export default function ResourceRefs({ res, onOpen }: ResourceRefsProps) {
     if (shaRefRecs.length === 0) {
       createShaRefRecs(refs);
     } else {
-      const chapSet = new Set<string>();
-      const updRecIds = new Set<string>();
+      const updRecIds = new Map<string, string>();
       const bookMap = new Map<string, string>();
       refs.forEach((r) => {
         const chapSpec = r.refs.replace(/\s*/g, '').split(';');
         chapSpec.forEach((c) => {
           const chapter = parseInt(c);
-          chapSet.add(chapKey(r.code, chapter)); // don't delete
           const rec = shaRefRecs.find(
             (sr) =>
               sr.attributes.book === r.code && sr.attributes.chapter === chapter
           );
           if (rec) {
+            if (!updRecIds.has(rec.id))
+              updRecIds.set(rec.id, rec.attributes.verses);
             const m = /\d+:(.*)$/.exec(c);
-            const newRange = m?.groups && m.groups[1];
-            if (newRange) {
-              updRecIds.add(rec.id);
-              const ranges = rec.attributes.verseRanges
-                .split(';')
-                .concat([newRange])
-                .sort(rangeSort);
-              rec.attributes.verseRanges = ranges.join(';');
+            if (m) {
+              const ranges = m[1].split(',');
+              for (const range of ranges) {
+                const m1 = /(\d+)(?:-(\d+))?/.exec(range);
+                if (m1) {
+                  const start = m1[1];
+                  const end = m1[2];
+                  rec.attributes.verses = rangeAdd(
+                    rec.attributes.verses,
+                    start,
+                    end
+                  );
+                }
+              }
             }
           } else {
             if (bookMap.has(r.code)) {
@@ -65,26 +81,99 @@ export default function ResourceRefs({ res, onOpen }: ResourceRefsProps) {
           }
         });
       });
-      const updRecs = shaRefRecs.filter((sr) => updRecIds.has(sr.id));
-      updateShaRefRecs(updRecs);
+      const updRecs = shaRefRecs.filter(
+        (sr) =>
+          updRecIds.has(sr.id) && updRecIds.get(sr.id) !== sr.attributes.verses
+      );
+      if (updRecs.length > 0) updateShaRefRecs(updRecs);
       const addRefs = Array.from(bookMap).map(
         ([code, refs]) => ({ code, refs } as BookRef)
       );
-      createShaRefRecs(addRefs);
-      const delRecs = shaRefRecs.filter(
-        (sr) => !chapSet.has(chapKey(sr.attributes.book, sr.attributes.chapter))
-      );
-      deleteShaRefRecs(delRecs);
+      if (addRefs.length > 0) createShaRefRecs(addRefs);
+      const delRecs = shaRefRecs.filter((sr) => !updRecIds.has(sr.id));
+      if (delRecs.length > 0) deleteShaRefRecs(delRecs);
     }
   };
   const handleCancel = () => onOpen();
+
+  const dataSort = (i: SharedResourceReference, j: SharedResourceReference) => {
+    const iBook = bookN(i.attributes.book);
+    const jBook = bookN(j.attributes.book);
+    const bookDiff = iBook - jBook;
+    return bookDiff < 0
+      ? -1
+      : bookDiff > 0
+      ? 1
+      : i.attributes.chapter - j.attributes.chapter;
+  };
+
+  const collapseRefs = (chapter: number, verseText: string) => {
+    const verses = verseText.split(',').map((v) => parseInt(v));
+    let result = `${chapter}`;
+    if (verseText !== '') {
+      result += `: ${verses[0]}`;
+      let isRange = false;
+      let last = verses[0];
+      for (let i = 1; i < verses.length; i += 1) {
+        if (verses[i] === last + 1) {
+          last = verses[i];
+          isRange = true;
+        } else {
+          if (isRange) {
+            result += `-${last}`;
+            isRange = false;
+          }
+          last = verses[i];
+          result += `, ${last}`;
+        }
+      }
+      if (isRange) result += `-${last}`;
+    }
+    return result;
+  };
+
+  const bookSort = (i: BookRef, j: BookRef) => bookN(i.code) - bookN(j.code);
+
+  const bookData = React.useMemo(() => {
+    const books = new Map<string, string>();
+    sharedResourceReferences
+      .sort(dataSort)
+      .map((sr) => ({
+        code: sr.attributes.book,
+        refs: collapseRefs(sr.attributes.chapter, sr.attributes.verses),
+      }))
+      .forEach(({ code, refs }) => {
+        if (books.has(code)) {
+          books.set(code, `${books.get(code)}; ${refs}`);
+        } else {
+          books.set(code, refs);
+        }
+      });
+    return Array.from(books)
+      .map(([code, refs]) => ({ code, refs }))
+      .sort(bookSort);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sharedResourceReferences]);
 
   return (
     <Stack spacing={1}>
       <ButtonGroup>
         <Button onClick={handleAddWord}>{t.byWord}</Button>
       </ButtonGroup>
-      <ReferenceTable onCommit={handleCommit} onCancel={handleCancel} />
+      <ReferenceTable
+        bookData={bookData}
+        onCommit={handleCommit}
+        onCancel={handleCancel}
+      />
     </Stack>
   );
 }
+
+const mapRecordsToProps = {
+  sharedResourceReferences: (q: QueryBuilder) =>
+    q.findRecords('sharedresourcereference'),
+};
+
+export default withData(mapRecordsToProps)(ResourceRefs as any) as any as (
+  props: ResourceRefsProps
+) => JSX.Element;
