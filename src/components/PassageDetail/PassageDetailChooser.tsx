@@ -67,10 +67,12 @@ export const PassageDetailChooser = () => {
       passages.forEach((p) => {
         const passRec = findRecord(memory, 'passage', p.id) as Passage;
         let reference = passageReference(passRec, allBookData);
-        if (!reference)
+        if (reference.length === 0)
           reference = `${section?.attributes?.sequencenum}.${
             passRec?.attributes?.sequencenum || 1
           }`;
+        if (marks.current.findIndex((m) => m.label === reference) > -1)
+          reference += '#' + passRec?.attributes?.sequencenum.toString();
         marks.current.push({
           value: passRec?.attributes?.sequencenum || -1,
           label: reference,

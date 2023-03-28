@@ -194,6 +194,7 @@ const initState = {
   highlightDiscussion: undefined as number | undefined,
   refresh: 0,
   prjId: '',
+  forceRefresh: () => {},
 };
 
 export type ICtxState = typeof initState;
@@ -288,7 +289,12 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       }
       segmentsCb.current = undefined;
     };
-
+    const forceRefresh = () => {
+      refreshRef.current = refreshRef.current + 1;
+      setState((state: ICtxState) => {
+        return { ...state, refresh: refreshRef.current };
+      });
+    };
     const setCurrentStep = (stepId: string) => {
       if (changed) {
         setConfirm(stepId);
@@ -568,8 +574,11 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       //if this is a file that will be played in the wavesurfer..fetch it
       if (
         (r.isVernacular && i === 0) ||
-        r.artifactType ===
-          localizedArtifactType(ArtifactTypeSlug.ProjectResource)
+        [
+          localizedArtifactType(ArtifactTypeSlug.ProjectResource),
+          localizedArtifactType(ArtifactTypeSlug.WholeBackTranslation),
+          localizedArtifactType(ArtifactTypeSlug.PhraseBackTranslation),
+        ].includes(r.artifactType)
       ) {
         if (
           mediaState.id !== r.mediafile.id &&
@@ -979,6 +988,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             handleOldVernacularPlayEnd,
             setDiscussionMarkers,
             handleHighlightDiscussion,
+            forceRefresh,
           },
           setState,
         }}
