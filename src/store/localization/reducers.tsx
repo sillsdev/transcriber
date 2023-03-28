@@ -794,6 +794,7 @@ const initialState = {
 			"passageDetail": "Passage Detail",
 			"playpause": "Play/Pause",
 			"recordAudio": "Record/Edit Audio",
+			"resourceEdit": "Resource Edit",
 			"resources": "Resources",
 			"transcribe": "Transcribe",
 			"versions": "Versions",

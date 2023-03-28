@@ -61,7 +61,7 @@ export function PlanAudioActions(props: IProps) {
         <StyledIconButton
           id="passageShare"
           shared={mediaShared === IMediaShare.OldVersionOnly}
-          title={mediaShared ? 't.resourceEdit' : t.versions}
+          title={mediaShared ? t.resourceEdit : t.versions}
           disabled={disabled}
           onClick={onHistory(rowIndex)}
         >

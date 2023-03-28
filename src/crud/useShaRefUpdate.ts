@@ -1,9 +1,9 @@
 import { useGlobal } from 'reactn';
-import { SharedResourceReference, SharedResource } from '../model';
+import { SharedResourceReference } from '../model';
 import { Operation, TransformBuilder } from '@orbit/data';
-import { ReplaceRelatedRecord, UpdateRecord } from '../model/baseModel';
+import { UpdateRecord } from '../model/baseModel';
 
-export const useShaRefUpdate = (sharedResource: SharedResource) => {
+export const useShaRefUpdate = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
@@ -11,16 +11,7 @@ export const useShaRefUpdate = (sharedResource: SharedResource) => {
     const t = new TransformBuilder();
     let ops: Operation[] = [];
     for (const sharedResourceReference of sharedResourceReferences) {
-      ops = ops.concat([
-        ...UpdateRecord(t, sharedResourceReference, user),
-        ...ReplaceRelatedRecord(
-          t,
-          sharedResourceReference,
-          'sharedResource',
-          'sharedresource',
-          sharedResource.id
-        ),
-      ]);
+      ops = ops.concat([...UpdateRecord(t, sharedResourceReference, user)]);
     }
     memory.update(ops);
   };

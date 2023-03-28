@@ -3688,6 +3688,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planActions.resourceEdit">
+         <segment>
+            <source>Resource Edit</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planActions.resources">
          <segment>
             <source>Resources</source>

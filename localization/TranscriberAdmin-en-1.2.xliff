@@ -4300,13 +4300,20 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="planActions.resources">
-            <source>Resources</source>
+         <trans-unit id="planActions.resourceEdit">
+            <source>Resource Edit</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="planActions.resources">
+      		<source>Resources</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="planActions.transcribe">
             <source>Transcribe</source>
             <target/>

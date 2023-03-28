@@ -745,6 +745,7 @@ export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
     "passageDetail": string;
     "playpause": string;
     "recordAudio": string;
+    "resourceEdit": string;
     "resources": string;
     "transcribe": string;
     "versions": string;

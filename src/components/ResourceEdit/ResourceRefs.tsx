@@ -33,7 +33,7 @@ export function ResourceRefs({
 }: ResourceRefsProps & RecordProps) {
   const readShaRefRecs = useShaRefRead();
   const createShaRefRecs = useShaRefCreate(res || ({} as SharedResource));
-  const updateShaRefRecs = useShaRefUpdate(res || ({} as SharedResource));
+  const updateShaRefRecs = useShaRefUpdate();
   const deleteShaRefRecs = useShaRefDelete();
   const bookN = useBookN();
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
