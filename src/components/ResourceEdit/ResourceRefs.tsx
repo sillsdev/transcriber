@@ -16,6 +16,7 @@ import { withData } from 'react-orbitjs';
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedResourceSelector } from '../../selector';
+import { related } from '../../crud';
 
 interface RecordProps {
   sharedResourceReferences: SharedResourceReference[];
@@ -141,6 +142,7 @@ export function ResourceRefs({
   const bookData = React.useMemo(() => {
     const books = new Map<string, string>();
     sharedResourceReferences
+      .filter((sr) => related(sr, 'sharedResource') === (res?.id || ''))
       .sort(dataSort)
       .map((sr) => ({
         code: sr.attributes.book,
@@ -157,7 +159,7 @@ export function ResourceRefs({
       .map(([code, refs]) => ({ code, refs }))
       .sort(bookSort);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sharedResourceReferences]);
+  }, [sharedResourceReferences, res?.id]);
 
   return (
     <Stack spacing={1}>
