@@ -21,6 +21,7 @@ import {
   Paper,
   PaperProps,
   styled,
+  Typography,
 } from '@mui/material';
 import TreeGrid from '../../TreeGrid';
 import {
@@ -78,12 +79,13 @@ interface IRecordProps {
 }
 
 interface IProps extends IRecordProps {
+  title: string;
   visual?: boolean;
   onSelect?: (items: RecordIdentity[]) => void;
 }
 
 export function SelectSections(props: IProps) {
-  const { passages, sections, visual, onSelect } = props;
+  const { passages, sections, visual, title, onSelect } = props;
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const [data, setData] = useState(Array<IRow>());
@@ -236,6 +238,7 @@ export function SelectSections(props: IProps) {
 
   return (
     <Box id="SelectSections" sx={{ pt: 2, maxHeight: '70%' }}>
+      <Typography variant="h6">{title}</Typography>
       <StyledPaper id="PassageList" style={heightStyle}>
         <TreeGrid
           columns={columnDefs}
@@ -258,7 +261,6 @@ export function SelectSections(props: IProps) {
           checks={checks}
         />
       </StyledPaper>
-
       <div>
         <Button
           onClick={handleSelected}

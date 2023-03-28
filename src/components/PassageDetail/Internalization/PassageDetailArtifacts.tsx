@@ -1,4 +1,4 @@
-import { useState, useContext, useMemo, useRef } from 'react';
+import { useState, useContext, useMemo, useRef, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
@@ -38,6 +38,7 @@ import {
   useSecResUserDelete,
   useOrganizedBy,
   useRole,
+  findRecord,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
@@ -125,6 +126,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const [projectResourceVisible, setProjectResourceVisible] = useState(false);
   const [projResPassageVisible, setProjResPassageVisible] = useState(false);
   const [projResWizVisible, setProjResWizVisible] = useState(false);
+  const [projResSetup, setProjResSetup] = useState(new Array<MediaFile>());
   const [editResource, setEditResource] = useState<
     SectionResource | undefined
   >();
@@ -388,6 +390,7 @@ export function PassageDetailArtifacts(props: IProps) {
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     let cnt = rowData.length;
+    var projRes = new Array<MediaFile>();
     if (mediaRemoteIds) {
       for (const remId of mediaRemoteIds) {
         cnt += 1;
@@ -427,8 +430,11 @@ export function PassageDetailArtifacts(props: IProps) {
             mediaRecId,
             isPassageResource() ? passage.id : null
           );
+        } else {
+          projRes.push(findRecord(memory, 'mediafile', id) as MediaFile);
         }
       }
+      if (projRes.length) setProjResSetup(projRes);
       resetEdit();
     }
   };
@@ -489,13 +495,28 @@ export function PassageDetailArtifacts(props: IProps) {
     setComplete(0);
   };
 
+  useEffect(() => {
+    if (!projResPassageVisible && !projResWizVisible && projMediaRef.current)
+      setProjResSetup(projResSetup.filter((m) => m !== projMediaRef.current));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projResPassageVisible, projResWizVisible]);
+
+  useEffect(() => {
+    if (projResSetup.length) {
+      handleSelectProjectResource(projResSetup[0]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projResSetup]);
+
   const handleSelectProjectResourcePassage = (items: RecordIdentity[]) => {
     projIdentRef.current = items;
-    setProjResPassageVisible(false);
     if (isVisual(projMediaRef.current)) {
-      writeVisualResource(items);
+      writeVisualResource(items).then(() => {
+        setProjResPassageVisible(false);
+      });
     } else {
       setProjResWizVisible(true);
+      setProjResPassageVisible(false);
     }
   };
 
@@ -618,6 +639,7 @@ export function PassageDetailArtifacts(props: IProps) {
         />
       </BigDialog>
       <BigDialog
+        bp={BigDialogBp.lg}
         title={t.generalResources}
         isOpen={projectResourceVisible}
         onOpen={handleProjectResourceVisible}
@@ -634,6 +656,7 @@ export function PassageDetailArtifacts(props: IProps) {
       >
         {projResPassageVisible ? (
           <SelectSections
+            title={projMediaRef.current?.attributes?.originalFile ?? ''}
             visual={visual}
             onSelect={handleSelectProjectResourcePassage}
           />

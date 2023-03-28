@@ -592,6 +592,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         }
 
         if (resetBlob) currentSegmentRef.current = undefined;
+
         setState((state: ICtxState) => {
           return {
             ...state,
@@ -876,26 +877,32 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         localizedCategory: localizedArtifactCategory,
         localizedType: localizedArtifactType,
       };
-      let newData = mediaRows({
-        ...props,
-        mediafiles: allMedia,
-        user,
-        ...localize,
+      getProjectResources().then((pres) => {
+        let newData = mediaRows({
+          ...props,
+          mediafiles: allMedia.concat(pres),
+          user,
+          ...localize,
+        });
+        const passRec = passages.find((p) => p.id === passageId);
+        const sectId = related(passRec, 'section');
+        let res = getResources(sectionResources, mediafiles, sectId);
+        newData = newData.concat(
+          resourceRows({ ...props, res, user, ...localize }).sort((i, j) =>
+            i.done === j.done ? i.sequenceNum - j.sequenceNum : i.done ? 1 : -1
+          )
+        );
+
+        const mediafileId =
+          newData.length > 0 && newData[0].isVernacular ? newData[0].id : '';
+        var i = state.selected
+          ? newData.findIndex((r) => r.mediafile.id === state.selected)
+          : state.index;
+        setState((state: ICtxState) => {
+          return { ...state, rowData: newData, index: i, mediafileId };
+        });
+        if (mediafileId && state.index === 0) setSelected(mediafileId, newData);
       });
-      const passRec = passages.find((p) => p.id === passageId);
-      const sectId = related(passRec, 'section');
-      let res = getResources(sectionResources, mediafiles, sectId);
-      newData = newData.concat(
-        resourceRows({ ...props, res, user, ...localize }).sort((i, j) =>
-          i.done === j.done ? i.sequenceNum - j.sequenceNum : i.done ? 1 : -1
-        )
-      );
-      const mediafileId =
-        newData.length > 0 && newData[0].isVernacular ? newData[0].id : '';
-      setState((state: ICtxState) => {
-        return { ...state, rowData: newData, mediafileId };
-      });
-      if (mediafileId && state.index === 0) setSelected(mediafileId, newData);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sectionResources, mediafiles, pasId, userResources]);
 

@@ -92,7 +92,7 @@ export function PassageDetailPlayer(props: IProps) {
   const savingRef = useRef(false);
 
   const loadSegments = () => {
-    const mediafile = rowData[index].mediafile;
+    const mediafile = rowData[index]?.mediafile;
     const segs = mediafile?.attributes?.segments || '{}';
     if (allowSegment) segmentsRef.current = getSegments(allowSegment, segs);
     setDefaultSegments(segmentsRef.current);
@@ -116,7 +116,7 @@ export function PassageDetailPlayer(props: IProps) {
   const writeSegments = async () => {
     if (!savingRef.current) {
       savingRef.current = true;
-      const mediafile = rowData[index].mediafile;
+      const mediafile = rowData[index]?.mediafile;
       if (mediafile) {
         await memory
           .update((t) => [
@@ -150,8 +150,9 @@ export function PassageDetailPlayer(props: IProps) {
   };
 
   const onDuration = (duration: number) => {
-    const mediafile = rowData[index].mediafile;
+    const mediafile = rowData[index]?.mediafile;
     if (
+      mediafile &&
       duration &&
       Math.floor(duration) !== Math.floor(mediafile.attributes.duration)
     ) {
