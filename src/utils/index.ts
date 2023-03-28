@@ -67,3 +67,4 @@ export * from './useHome';
 export * from './useMyNavigate';
 export * from './useBookN';
 export * from './bcvKey';
+export * from './rangeAdd';

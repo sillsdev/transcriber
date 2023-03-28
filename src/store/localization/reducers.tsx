@@ -207,6 +207,7 @@ const initialState = {
 	}),
 	"control": new LocalizedStrings({
 		"en": {
+			"book": "Book",
 			"other": "General",
 			"scripture": "Scripture",
 		}
@@ -793,6 +794,7 @@ const initialState = {
 			"passageDetail": "Passage Detail",
 			"playpause": "Play/Pause",
 			"recordAudio": "Record/Edit Audio",
+			"resourceEdit": "Resource Edit",
 			"resources": "Resources",
 			"transcribe": "Transcribe",
 			"versions": "Versions",
@@ -895,6 +897,26 @@ const initialState = {
 			"download": "Download?",
 			"downloadLater": "Download Later",
 			"downloadMb": "Download {0}MB of offline audio project files?",
+		}
+	}),
+	"resource": new LocalizedStrings({
+		"en": {
+			"action": "Action",
+			"add": "Add",
+			"book": "Book",
+			"bookSelect": "Select Book",
+			"byWord": "By Word",
+			"delete": "Delete",
+			"deleteConfirm": "Delete {0}",
+			"description": "Description",
+			"errorData": "Do you want to save and discard data with errors?",
+			"keywords": "Keywords",
+			"overview": "Overview",
+			"references": "References",
+			"resourceEdit": "Resource Edit",
+			"terms": "Terms of use",
+			"title": "Title",
+			"versions": "Versions",
 		}
 	}),
 	"scriptureTable": new LocalizedStrings({
@@ -1465,6 +1487,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"profile" : new LocalizedStrings(action.payload.data.profile),
 				"projButtons" : new LocalizedStrings(action.payload.data.projButtons),
 				"projectDownload" : new LocalizedStrings(action.payload.data.projectDownload),
+				"resource" : new LocalizedStrings(action.payload.data.resource),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
 				"scriptureTableFilter" : new LocalizedStrings(action.payload.data.scriptureTableFilter),
 				"sectionResources" : new LocalizedStrings(action.payload.data.sectionResources),

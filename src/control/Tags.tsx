@@ -12,7 +12,10 @@ import { ITag } from '../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { vProjectSelector } from '../selector';
 
-const sortedOpts = (tags: ITag) => Object.keys(tags).sort();
+const sortedOpts = (tags: ITag) =>
+  Object.keys(tags)
+    .map((k) => k) // no empty keys
+    .sort();
 
 export const filteredOptions = (tags: ITag) =>
   sortedOpts(tags).filter((tag) => tags[tag]);
@@ -34,6 +37,12 @@ export default function Tags({ label, tags, onChange, sx }: IProps) {
   const [name, setName] = React.useState('');
   const cleared = React.useRef(false);
   const t = useSelector(vProjectSelector, shallowEqual);
+
+  const options = React.useMemo(() => sortedOpts(tags), [tags]);
+
+  React.useEffect(() => {
+    setValue(filteredOptions(tags));
+  }, [tags]);
 
   const updValue = (value: string) => ({
     ...tags,
@@ -88,16 +97,11 @@ export default function Tags({ label, tags, onChange, sx }: IProps) {
     }
   };
 
-  React.useEffect(() => {
-    setValue(filteredOptions(tags));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <Autocomplete
       multiple
       id="checkboxes-tags"
-      options={sortedOpts(tags)}
+      options={options}
       value={value ?? []}
       disableCloseOnSelect
       onChange={(event, newValue) => handleChoice(newValue)}

@@ -886,6 +886,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="control.book">
+         <segment>
+            <source>Book</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="control.other">
          <segment>
             <source>General</source>
@@ -3682,6 +3688,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planActions.resourceEdit">
+         <segment>
+            <source>Resource Edit</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planActions.resources">
          <segment>
             <source>Resources</source>
@@ -4171,6 +4183,102 @@
       <unit id="projectDownload.downloadMb">
          <segment>
             <source>Download {0}MB of offline audio project files?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.action">
+         <segment>
+            <source>Action</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.book">
+         <segment>
+            <source>Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.bookSelect">
+         <segment>
+            <source>Select Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.byWord">
+         <segment>
+            <source>By Word</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.deleteConfirm">
+         <segment>
+            <source>Delete {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.description">
+         <segment>
+            <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.errorData">
+         <segment>
+            <source>Do you want to save and discard data with errors?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.keywords">
+         <segment>
+            <source>Keywords</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.overview">
+         <segment>
+            <source>Overview</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.references">
+         <segment>
+            <source>References</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.resourceEdit">
+         <segment>
+            <source>Resource Edit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.terms">
+         <segment>
+            <source>Terms of use</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.title">
+         <segment>
+            <source>Title</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.versions">
+         <segment>
+            <source>Versions</source>
             <target/>
          </segment>
       </unit>

@@ -188,6 +188,7 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IControlStrings extends Localize.LocalizedStringsMethods {
+    "book": string;
     "other": string;
     "scripture": string;
 };
@@ -744,6 +745,7 @@ export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
     "passageDetail": string;
     "playpause": string;
     "recordAudio": string;
+    "resourceEdit": string;
     "resources": string;
     "transcribe": string;
     "versions": string;
@@ -841,6 +843,25 @@ export interface IProjectDownloadStrings extends Localize.LocalizedStringsMethod
     "download": string;
     "downloadLater": string;
     "downloadMb": string;
+};
+
+export interface IResourceStrings extends Localize.LocalizedStringsMethods {
+    "action": string;
+    "add": string;
+    "book": string;
+    "bookSelect": string;
+    "byWord": string;
+    "delete": string;
+    "deleteConfirm": string;
+    "description": string;
+    "errorData": string;
+    "keywords": string;
+    "overview": string;
+    "references": string;
+    "resourceEdit": string;
+    "terms": string;
+    "title": string;
+    "versions": string;
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
@@ -1374,6 +1395,7 @@ export interface ILocalizedStrings {
 	profile: IProfileStrings;
 	projButtons: IProjButtonsStrings;
 	projectDownload: IProjectDownloadStrings;
+	resource: IResourceStrings;
 	scriptureTable: IScriptureTableStrings;
 	scriptureTableFilter: IScriptureTableFilterStrings;
 	sectionResources: ISectionResourcesStrings;

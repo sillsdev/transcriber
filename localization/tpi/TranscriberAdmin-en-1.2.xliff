@@ -1031,6 +1031,13 @@
           <context context-type="sourcefile">Community.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="control.book">
+        <source>Book</source>
+        <target state="needs-translation">Book</target>
+        <context-group>
+          <context context-type="sourcefile">selectPlanType.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="control.other">
         <source>General</source>
         <target state="needs-translation">General</target>
@@ -4293,6 +4300,13 @@
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="planActions.resourceEdit">
+        <source>Resource Edit</source>
+        <target state="needs-translation">Resource Edit</target>
+        <context-group>
+          <context context-type="sourcefile">PlanSheet.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="planActions.resources">
         <source>Resources</source>
         <target state="needs-translation">Resources</target>
@@ -4865,6 +4879,118 @@
         <target state="needs-translation">Download {0}MB of offline audio project files?</target>
         <context-group>
           <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.action">
+        <source>Action</source>
+        <target state="needs-translation">Action</target>
+        <context-group>
+          <context context-type="sourcefile">Access.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.add">
+        <source>Add</source>
+        <target state="needs-translation">Add</target>
+        <context-group>
+          <context context-type="sourcefile">ResourceOverview.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.book">
+        <source>Book</source>
+        <target state="needs-translation">Book</target>
+        <context-group>
+          <context context-type="sourcefile">Access.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.bookSelect">
+        <source>Select Book</source>
+        <target state="needs-translation">Select Book</target>
+        <context-group>
+          <context context-type="sourcefile">Access.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.byWord">
+        <source>By Word</source>
+        <target state="needs-translation">By Word</target>
+        <context-group>
+          <context context-type="sourcefile">Access.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.delete">
+        <source>Delete</source>
+        <target state="needs-translation">Delete</target>
+        <context-group>
+          <context context-type="sourcefile">ResourceOverview.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.deleteConfirm">
+        <source>Delete {0}</source>
+        <target state="needs-translation">Delete {0}</target>
+        <context-group>
+          <context context-type="sourcefile">Access.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.description">
+        <source>Description</source>
+        <target state="needs-translation">Description</target>
+        <context-group>
+          <context context-type="sourcefile">ResourceOverview.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.errorData">
+        <source>Do you want to save and discard data with errors?</source>
+        <target state="needs-translation">Do you want to save and discard data with errors?</target>
+        <context-group>
+          <context context-type="sourcefile">Access.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.keywords">
+        <source>Keywords</source>
+        <target state="needs-translation">Keywords</target>
+        <context-group>
+          <context context-type="sourcefile">ResourceOverview.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.overview">
+        <source>Overview</source>
+        <target state="needs-translation">Overview</target>
+        <context-group>
+          <context context-type="sourcefile">ResourceOverview.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.references">
+        <source>References</source>
+        <target state="needs-translation">References</target>
+        <context-group>
+          <context context-type="sourcefile">ResourceOverview.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.resourceEdit">
+        <source>Resource Edit</source>
+        <target state="needs-translation">Resource Edit</target>
+        <context-group>
+          <context context-type="sourcefile">ResourceOverview.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.terms">
+        <source>Terms of use</source>
+        <target state="needs-translation">Terms of use</target>
+        <context-group>
+          <context context-type="sourcefile">ResourceOverview.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.title">
+        <source>Title</source>
+        <target state="needs-translation">Title</target>
+        <context-group>
+          <context context-type="sourcefile">ResourceOverview.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.versions">
+        <source>Versions</source>
+        <target state="needs-translation">Versions</target>
+        <context-group>
+          <context context-type="sourcefile">ResourceOverview.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="scriptureTable.book">

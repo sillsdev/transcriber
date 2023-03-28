@@ -6,15 +6,13 @@ export interface SharedResourceReference extends BaseModel {
     book: string;
     chapter: number;
     verse: number; //or maybe this isn't here at all?
-    verseRanges: string;
+    verses: string;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
   };
   relationships: {
-    passage: RecordRelationship;
-    cluster: RecordRelationship; //organization
-    artifactCategory: RecordRelationship;
+    sharedResource: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
 }

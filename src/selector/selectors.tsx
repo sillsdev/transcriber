@@ -115,6 +115,9 @@ export const resourceSelector = (state: IState) =>
 export const selectRecordingSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'selectRecording' });
 
+export const sharedResourceSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'resource' });
+
 export const projButtonsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'projButtons' });
 
@@ -123,6 +126,9 @@ export const scriptureTableFilterMenuSelector = (state: IState) =>
 
 export const sharedSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'shared' });
+
+export const sharedResSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'sharedResource' });
 
 export const sortMenuSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'sortMenu' });

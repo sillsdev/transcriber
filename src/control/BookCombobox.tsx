@@ -1,15 +1,13 @@
 import React, { ChangeEvent } from 'react';
-import { OptionType } from '../model';
+import { IControlStrings, OptionType } from '../model';
 import {
   TextField,
   Autocomplete,
   AutocompleteChangeReason,
   AutocompleteRenderInputParams,
 } from '@mui/material';
-
-const t = {
-  book: 'Book',
-};
+import { shallowEqual, useSelector } from 'react-redux';
+import { controlSelector } from '../selector';
 
 interface IProps {
   value: OptionType | null;
@@ -20,6 +18,7 @@ interface IProps {
 
 export const BookCombobox = (props: IProps) => {
   const { value, suggestions, variant } = props;
+  const t: IControlStrings = useSelector(controlSelector, shallowEqual);
 
   const handleChange = (
     e: ChangeEvent<{}>,

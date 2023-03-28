@@ -859,15 +859,12 @@ if (
     attributes: {
       book: { type: 'string' },
       chapter: { type: 'number' },
-      verse: { type: 'number' }, //or maybe this isn't here at all?
-      verseRanges: { type: 'string' },
+      verses: { type: 'string' },
       dateCreated: { type: 'date-time' },
       dateUpdated: { type: 'date-time' },
     },
     relationships: {
       sharedResource: { type: 'hasOne', model: 'sharedresource' },
-      cluster: { type: 'hasOne', model: 'organization' },
-      artifactcateory: { type: 'hasOne', model: 'artifactcategory' },
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };

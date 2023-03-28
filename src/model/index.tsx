@@ -54,3 +54,6 @@ export * from './sectionResource';
 export * from './sectionResourceUser';
 export * from './stepComplete';
 export * from './keyTerm';
+export * from './sharedResource';
+export * from './sharedResourceReference';
+export * from './bookRef';

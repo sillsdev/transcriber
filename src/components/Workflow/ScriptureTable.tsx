@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { connect, shallowEqual, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {
   IState,
@@ -23,6 +23,7 @@ import {
   IWorkflowStepsStrings,
   GroupMembership,
   Discussion,
+  IResourceStrings,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import * as actions from '../../store';
@@ -79,10 +80,12 @@ import { PlanContext } from '../../context/PlanContext';
 import stringReplace from 'react-string-replace';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
+import ResourceTabs from '../ResourceEdit/ResourceTabs';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { ISTFilterState } from './filterMenu';
 import { useProjectDefaults } from '../../crud/useProjectDefaults';
+import { sharedResourceSelector } from '../../selector';
 
 const SaveWait = 500;
 
@@ -228,6 +231,10 @@ export function ScriptureTable(
     canHideDone: true,
   });
   const filterParam = 'ProjectFilter';
+  const resStr: IResourceStrings = useSelector(
+    sharedResourceSelector,
+    shallowEqual
+  );
 
   const [filterState, setFilterState] =
     useState<ISTFilterState>(defaultFilterState);
@@ -1149,11 +1156,15 @@ export function ScriptureTable(
         />
       )}
       <BigDialog
-        title={ts.versionHistory}
+        title={shared ? resStr.resourceEdit : ts.versionHistory}
         isOpen={versionItem !== ''}
         onOpen={handleVerHistClose}
       >
-        <VersionDlg passId={versionItem} />
+        {shared ? (
+          <ResourceTabs passId={versionItem} onOpen={handleVerHistClose} />
+        ) : (
+          <VersionDlg passId={versionItem} />
+        )}
       </BigDialog>
     </Box>
   );

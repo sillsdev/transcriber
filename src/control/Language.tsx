@@ -8,7 +8,8 @@ import {
   Box,
 } from '@mui/material';
 import { LanguagePicker } from 'mui-language-picker';
-import { TeamContext } from '../context/TeamContext';
+import { useSelector, shallowEqual } from 'react-redux';
+import { vProjectSelector, pickerSelector } from '../selector';
 
 export interface ILanguage {
   bcp47: string;
@@ -19,6 +20,8 @@ export interface ILanguage {
 
 interface IProps extends ILanguage {
   onChange: (state: ILanguage) => void;
+  hideSpelling?: boolean;
+  hideFont?: boolean;
 }
 
 export const Language = (props: IProps) => {
@@ -29,9 +32,8 @@ export const Language = (props: IProps) => {
     font,
     spellCheck,
   });
-  const ctx = React.useContext(TeamContext);
-  const t = ctx.state.vProjectStrings;
-  const lt = ctx.state.pickerStrings;
+  const t = useSelector(vProjectSelector, shallowEqual);
+  const lt = useSelector(pickerSelector, shallowEqual);
   const stateRef = React.useRef<ILanguage>();
   const langEl = React.useRef<any>();
 
@@ -70,10 +72,17 @@ export const Language = (props: IProps) => {
 
   const widthStyle: CSSProperties = { width: 400 };
 
+  const fullBox = React.useMemo(() => {
+    if (props.hideSpelling && props.hideFont) return undefined;
+    return { pt: 3 };
+  }, [props.hideSpelling, props.hideFont]);
+
   return (
-    <Box sx={{ pt: 3 }}>
-      <FormLabel sx={{ color: 'secondary.main' }}>{t.language}</FormLabel>
-      <FormGroup sx={{ pb: 3 }}>
+    <Box sx={fullBox}>
+      {fullBox && (
+        <FormLabel sx={{ color: 'secondary.main' }}>{t.language}</FormLabel>
+      )}
+      <FormGroup sx={fullBox ? { pb: 3 } : undefined}>
         <FormControlLabel
           id="language-code"
           ref={langEl}
@@ -81,8 +90,8 @@ export const Language = (props: IProps) => {
           control={
             <LanguagePicker
               value={bcp47}
-              name={languageName}
-              font={font}
+              name={languageName ?? ''}
+              font={font ?? ''}
               setCode={handleBcp47}
               setName={handleLanguage}
               setFont={handleFont}
@@ -91,34 +100,38 @@ export const Language = (props: IProps) => {
           }
           label=""
         />
-        <FormControlLabel
-          control={
-            <TextField
-              id="language-font"
-              label={t.font}
-              sx={{ mx: 1 }}
-              value={font}
-              onClick={handleChangeFont}
-              onKeyDown={handleChangeFont}
-              margin="normal"
-              style={widthStyle}
-              variant="filled"
-              required={false}
-            />
-          }
-          label=""
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              id="language-spellCheck"
-              checked={spellCheck}
-              onChange={handleSpellCheckChange}
-              value="spellCheck"
-            />
-          }
-          label={t.spellCheck}
-        />
+        {!Boolean(props?.hideFont) && (
+          <FormControlLabel
+            control={
+              <TextField
+                id="language-font"
+                label={t.font}
+                sx={{ mx: 1 }}
+                value={font}
+                onClick={handleChangeFont}
+                onKeyDown={handleChangeFont}
+                margin="normal"
+                style={widthStyle}
+                variant="filled"
+                required={false}
+              />
+            }
+            label=""
+          />
+        )}
+        {!Boolean(props?.hideSpelling) && (
+          <FormControlLabel
+            control={
+              <Checkbox
+                id="language-spellCheck"
+                checked={spellCheck}
+                onChange={handleSpellCheckChange}
+                value="spellCheck"
+              />
+            }
+            label={t.spellCheck}
+          />
+        )}
       </FormGroup>
     </Box>
   );

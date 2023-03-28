@@ -1,4 +1,12 @@
-import { Box, IconButton, Paper, SxProps, TextField } from '@mui/material';
+import {
+  Box,
+  BoxProps,
+  IconButton,
+  Paper,
+  styled,
+  SxProps,
+  TextField,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
   IArtifactCategory,
@@ -32,8 +40,16 @@ interface IProps extends IRecordProps {
   discussion?: boolean;
 }
 
+const StyledBox = styled(Box)<BoxProps>(() => ({
+  '& .MuiFormControl-root': {
+    margin: 0,
+  },
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
 const textFieldProps = {
-  mx: 1,
+  mr: 1,
   width: 'inherit',
   maxWidth: '400px',
   minWidth: '200px',
@@ -125,7 +141,7 @@ export const SelectArtifactCategory = (props: IProps) => {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+    <StyledBox>
       <TextField
         id="artifact-category"
         select
@@ -150,8 +166,8 @@ export const SelectArtifactCategory = (props: IProps) => {
       >
         {artifactCategorys
           .sort((i, j) => (i.category < j.category ? -1 : 1))
-          .map((option: IArtifactCategory, i) => (
-            <StyledMenuItem key={i} value={option.id}>
+          .map((option: IArtifactCategory) => (
+            <StyledMenuItem key={option.id} value={option.id}>
               {option.category + '\u00A0\u00A0'}
               {scripture === ScriptureEnum.highlight ? (
                 scriptureTypeCategory(option.slug) ? (
@@ -167,7 +183,14 @@ export const SelectArtifactCategory = (props: IProps) => {
             </StyledMenuItem>
           ))
           .concat(
-            allowNew ? (
+            // if not populated yet
+            artifactCategorys.findIndex(
+              (v: IArtifactCategory) => v.id === initCategory
+            ) === -1 ? (
+              <StyledMenuItem key={initCategory} value={initCategory}>
+                <></>
+              </StyledMenuItem>
+            ) : allowNew ? (
               <StyledMenuItem key={t.addNewCategory} value={t.addNewCategory}>
                 {t.addNewCategory + '\u00A0\u00A0'}
                 <AddIcon />
@@ -206,7 +229,7 @@ export const SelectArtifactCategory = (props: IProps) => {
           </Box>
         </Paper>
       )}
-    </Box>
+    </StyledBox>
   );
 };
 
