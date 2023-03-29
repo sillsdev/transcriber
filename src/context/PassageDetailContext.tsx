@@ -150,6 +150,7 @@ const initState = {
   commentPlayId: '',
   setCommentPlayId: (mediaId: string) => {},
   oldVernacularPlayItem: '',
+  oldVernacularStart: 0,
   oldVernacularPlaying: false,
   handleOldVernacularPlayEnd: () => {},
   rowData: Array<IRow>(),
@@ -358,6 +359,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             commentPlaying: playing ? false : state.commentPlaying,
             oldVernacularPlaying: playing ? false : state.oldVernacularPlaying,
             oldVernacularPlayItem: playing ? '' : state.oldVernacularPlayItem,
+            oldVernacularStart: playing ? 0 : state.oldVernacularStart,
           };
         });
       }
@@ -376,6 +378,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             oldVernacularPlayItem: itemPlaying
               ? ''
               : state.oldVernacularPlayItem,
+            oldVernacularStart: itemPlaying ? 0 : state.oldVernacularStart,
           };
         });
       }
@@ -424,6 +427,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           ...state,
           oldVernacularPlaying: false,
           oldVernacularPlayItem: '',
+          oldVernacularStart: 0,
         };
       });
     };
@@ -617,6 +621,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             commentPlaying: false,
             itemPlaying: false,
             oldVernacularPlayItem: r.mediafile.id,
+            oldVernacularStart: mediaStart.current || 0,
             rowData: newRows.length > 0 ? newRows : rowData,
           };
         });
