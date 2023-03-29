@@ -20,6 +20,7 @@ export function OldVernVersion({ id, oldVernVer, mediaId, text }: IProps) {
   const {
     oldVernacularPlayItem,
     oldVernacularPlaying,
+    oldVernacularStart,
     handleOldVernacularPlayEnd,
     setMediaSelected,
   } = useContext(PassageDetailContext).state;
@@ -49,8 +50,10 @@ export function OldVernVersion({ id, oldVernVer, mediaId, text }: IProps) {
           id={`play-${id}`}
           size="small"
           onClick={handlePlayOldClip(mediaId)}
+          sx={{ p: '3px', m: '5px' }}
         >
-          {oldVernacularPlayItem === mediaId ? (
+          {oldVernacularPlayItem === mediaId &&
+          oldVernacularStart === myRegion?.start ? (
             <StopIcon fontSize="small" />
           ) : (
             <PlayIcon fontSize="small" />
