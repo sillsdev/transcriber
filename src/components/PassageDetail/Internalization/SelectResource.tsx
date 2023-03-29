@@ -92,12 +92,13 @@ export const SelectResource = (props: IProps) => {
     if (!selecting.current) {
       selecting.current = true;
       onSelect &&
-        (await onSelect(
+        onSelect(
           resource.filter((r, i) => selected.indexOf(i) !== -1),
           catMap
-        ));
-      selecting.current = false;
-      onOpen && onOpen(false);
+        ).finally(() => {
+          selecting.current = false;
+          onOpen && onOpen(false);
+        });
     }
   };
 
