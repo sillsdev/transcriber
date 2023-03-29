@@ -145,20 +145,24 @@ export function ProjectExpansion(props: IProjectDialogState) {
             otherLabel={t.other}
             decorations={decoration}
           />
-          <FormLabel sx={{ pt: 4, color: 'secondary.main' }}>
-            {t.sharedResources}
-          </FormLabel>
-          <FormControlLabel
-            sx={{ mx: 1, mb: 1 }}
-            control={
-              <Checkbox
-                id="checkbox-shared"
-                checked={isPublic}
-                onChange={handleShareable}
+          {!state.isPersonal && (
+            <>
+              <FormLabel sx={{ pt: 4, color: 'secondary.main' }}>
+                {t.sharedResources}
+              </FormLabel>
+              <FormControlLabel
+                sx={{ mx: 1, mb: 1 }}
+                control={
+                  <Checkbox
+                    id="checkbox-shared"
+                    checked={isPublic}
+                    onChange={handleShareable}
+                  />
+                }
+                label={t.isPublic}
               />
-            }
-            label={t.isPublic}
-          />
+            </>
+          )}
         </AccordionDetails>
       </Accordion>
       <SnackBar message={message} />

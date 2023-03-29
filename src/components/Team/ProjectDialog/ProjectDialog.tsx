@@ -44,6 +44,7 @@ const initState = {
   tags: {} as ITag,
   flat: false,
   organizedBy: '',
+  isPersonal: false,
   vProjectStrings: {} as IVProjectStrings,
 };
 export const initProjectState = { ...initState };
