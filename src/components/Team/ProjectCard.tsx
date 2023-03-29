@@ -99,6 +99,7 @@ export const ProjectCard = (props: IProps) => {
     vProjectStrings,
     projButtonStrings,
     sections,
+    personalProjects,
     doImport,
   } = ctx.state;
   const dispatch = useDispatch();
@@ -288,6 +289,7 @@ export const ProjectCard = (props: IProps) => {
       tags: attr.tags || {},
       flat: attr.flat,
       organizedBy: attr.organizedBy || vProjectStrings.sections,
+      isPersonal: personalProjects.includes(project),
       vProjectStrings: vProjectStrings,
     };
     return value;

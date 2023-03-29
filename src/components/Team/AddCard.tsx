@@ -93,7 +93,10 @@ export const AddCard = (props: IProps) => {
   const [uploadVisible, setUploadVisible] = React.useState(false);
   const [type, setType] = React.useState('');
   const [language, setLanguagex] = React.useState<ILanguage>(initLang);
-  const [projDef, setProjDef] = React.useState(initProjectState);
+  const [projDef, setProjDef] = React.useState({
+    ...initProjectState,
+    isPersonal: !Boolean(team),
+  });
   const [book, setBookx] = React.useState<OptionType | null>(null);
   const bookRef = useRef<OptionType | null>(null);
   const languageRef = useRef<ILanguage>(initLang);
