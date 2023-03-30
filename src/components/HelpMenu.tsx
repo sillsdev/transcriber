@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { useGlobal } from 'reactn';
 import { IMainStrings, Plan } from '../model';
-import { IconButton, ListItemIcon, ListItemText } from '@mui/material';
+import { IconButton, ListItemIcon, ListItemText, SxProps } from '@mui/material';
 import ReportIcon from '@mui/icons-material/Report';
 import HelpIcon from '@mui/icons-material/Help';
 import InfoIcon from '@mui/icons-material/Info';
@@ -30,6 +30,7 @@ const ipc = (window as any)?.electron;
 interface IProps {
   online: boolean;
   action?: (what: string) => void;
+  sx?: SxProps;
 }
 
 export function HelpMenu(props: IProps) {
@@ -219,6 +220,7 @@ export function HelpMenu(props: IProps) {
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
+        sx={props?.sx}
       >
         <StyledMenuItem id="helpHelp" onClick={handleHelp()}>
           <ListItemIcon>

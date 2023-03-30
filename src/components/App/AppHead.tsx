@@ -398,6 +398,7 @@ export const AppHead = (props: IProps) => {
             latestVersion.split(' ')[0] !== version && (
               <Tooltip
                 arrow
+                placement="bottom-end"
                 open={updateTipOpen}
                 onOpen={handleUpdateOpen}
                 onClose={handleUpdateClose}
@@ -431,7 +432,10 @@ export const AppHead = (props: IProps) => {
                 </IconButton>
               </Tooltip>
             )}
-          <HelpMenu online={!isOffline} />
+          <HelpMenu
+            online={!isOffline}
+            sx={updateTipOpen && isElectron ? { top: '40px' } : {}}
+          />
           {pathname !== '/' && !pathname.startsWith('/access') && (
             <UserMenu action={handleUserMenu} />
           )}
