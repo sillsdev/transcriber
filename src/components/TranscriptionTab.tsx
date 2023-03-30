@@ -613,7 +613,7 @@ export function TranscriptionTab(
     }
     return (
       <td className="MuiTableCell-root">
-        <div style={{ display: 'flex' }}>{props.children}</div>
+        <Box sx={{ display: 'flex' }}>{props.children}</Box>
       </td>
     );
   };
@@ -727,6 +727,12 @@ export function TranscriptionTab(
                 aria-label={t.electronBackup}
                 onClick={handleBackup}
                 title={t.electronBackup}
+                sx={{
+                  m: 1,
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  justifyContent: 'flex-start',
+                }}
               >
                 {t.electronBackup}
               </PriButton>
