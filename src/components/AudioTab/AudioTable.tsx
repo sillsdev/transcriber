@@ -237,7 +237,7 @@ export const AudioTable = (props: IProps) => {
           mediaId={mediaId || ''}
           online={connected || offlineOnly}
           readonly={readonly}
-          canDelete={!readonly}
+          canDelete={!readonly && !row.readyToShare}
           onDelete={handleConfirmAction}
         />
       </Table.Cell>
