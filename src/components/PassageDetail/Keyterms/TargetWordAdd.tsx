@@ -253,7 +253,7 @@ export default function TargetWordAdd(props: IProps) {
                       aria-label="save target term"
                       onClick={handleOk}
                       onMouseDown={handleMouseDownSave}
-                      disabled={recording}
+                      disabled={recording || !canSave}
                       edge="end"
                     >
                       <CheckIcon fontSize="small" />
