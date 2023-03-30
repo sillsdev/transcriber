@@ -597,7 +597,9 @@ export function PlanSheet(props: IProps) {
                       value: e,
                       readOnly: isOffline && !offlineOnly,
                       className:
-                        iscurrent + 'book ' + (section ? ' setp' : 'pass'),
+                        'book ' +
+                        `${iscurrent} ` +
+                        (section ? ' setp' : 'pass'),
                       dataEditor: bookEditor,
                     }
                   : {
