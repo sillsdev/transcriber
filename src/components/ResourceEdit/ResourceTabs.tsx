@@ -75,7 +75,7 @@ export function ResourceTabs({
   const sharedResRec = React.useMemo(
     () => readSharedResource(passId),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [passId]
+    [passId, value]
   );
 
   const values = React.useMemo(() => {
@@ -102,7 +102,7 @@ export function ResourceTabs({
     setValue(newValue);
   };
 
-  const handleCommit = (values: IResourceDialog) => {
+  const handleCommit = async (values: IResourceDialog) => {
     const {
       title,
       description,
@@ -129,7 +129,7 @@ export function ResourceTabs({
         category
       );
     } else {
-      createSharedResource({
+      await createSharedResource({
         title,
         description,
         languagebcp47: `${languageName}|${bcp47}`,
