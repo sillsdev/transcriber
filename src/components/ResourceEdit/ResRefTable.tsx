@@ -1,6 +1,6 @@
 import { Box, BoxProps, Stack, styled } from '@mui/material';
 import React, { useRef } from 'react';
-import { BookRef, IResourceStrings } from '../../model';
+import { BookRef, IResourceStrings, ISharedStrings } from '../../model';
 import DataSheet from 'react-datasheet';
 import { shallowEqual, useSelector } from 'react-redux';
 import { IState } from '../../model';
@@ -8,7 +8,7 @@ import BookSelect, { OptionType } from '../BookSelect';
 import { ActionRow, AltButton, PriButton } from '../StepEditor';
 import Confirm from '../AlertDialog';
 import ActionCol from './ResActionCol';
-import { sharedResourceSelector } from '../../selector';
+import { sharedResourceSelector, sharedSelector } from '../../selector';
 
 const refPat =
   /(?:\d+\s*:\s*(?:\d+(?:\s*-\s*\d+)?,\s*)*(?:\d+(?:\s*-\s*\d+)?)?;\s*)*(?:\d+\s*:\s*(?:\d+(?:\s*-\s*\d+)?,\s*)*(?:\d+(?:\s*-\s*\d+)?)?)?/;
@@ -67,6 +67,7 @@ export default function ReferenceTable({
   const suggestionRef = useRef<Array<OptionType>>();
   const preventSave = useRef<boolean>(false);
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const readOnlys = [false, false, true];
   const widths = [170, 400, 30];
@@ -265,8 +266,10 @@ export default function ReferenceTable({
         />
       </Content>
       <ActionRow>
-        <AltButton onClick={handleCancel}>Cancel</AltButton>
-        <PriButton onClick={handleSave}>Save</PriButton>
+        <AltButton onClick={handleCancel}>{ts.cancel}</AltButton>
+        <PriButton onClick={handleSave} disabled={data.length <= 2}>
+          {ts.save}
+        </PriButton>
       </ActionRow>
       {confirmRow && (
         <Confirm
