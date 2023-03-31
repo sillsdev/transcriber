@@ -81,7 +81,7 @@ export interface IRowData {
 }
 
 const initState = {
-  index: 0,
+  index: -1,
   selected: '', //was passageid...now mediafileid
   setSelected: (selected: string) => {},
   playing: false,
@@ -530,7 +530,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           return {
             ...state,
             audioBlob: undefined,
-            index: 0,
+            index: -1,
             selected: '',
             playing: false,
             playItem: '',
