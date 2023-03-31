@@ -89,7 +89,7 @@ export function DiscussionList(props: IProps & IRecordProps) {
     mediafileId,
     setDiscussionMarkers,
   } = ctx.state;
-  const { toolsChanged } = useContext(UnsavedContext).state;
+  const { toolsChanged, isChanged } = useContext(UnsavedContext).state;
   const t: IDiscussionListStrings = useSelector(
     discussionListSelector,
     shallowEqual
@@ -239,36 +239,43 @@ export function DiscussionList(props: IProps & IRecordProps) {
   };
   useEffect(() => {
     if (currentstep !== '') {
-      if (adding) {
-        setDisplayDiscussions([
-          {
-            type: 'discussion',
-            attributes: {
-              subject: currentSegment || '',
-            },
-          } as any as Discussion,
-        ]);
-      } else {
-        setDisplayDiscussions(
-          discussions
-            .filter(
-              (d) =>
-                (!forYou ||
-                  related(d, 'user') === userId ||
-                  projGroups?.includes(related(d, 'group'))) &&
-                resolved === Boolean(d.attributes?.resolved) &&
-                (!latestVersion ||
-                  latestMedia.indexOf(related(d, 'mediafile')) >= 0) &&
-                (allPassages || currentPassage(d)) &&
-                (allSteps
-                  ? discussionOrg(d) === organization
-                  : related(d, 'orgWorkflowStep') === currentstep) &&
-                (catSelect.length === 0 ||
-                  catSelect.includes(related(d, 'artifactCategory')))
-            )
-            .sort((x, y) => discussionSort(x, y))
-        );
-      }
+      waitForIt(
+        'new discussion save',
+        () => !isChanged(NewDiscussionToolId),
+        () => false,
+        200
+      ).then(() => {
+        if (adding) {
+          setDisplayDiscussions([
+            {
+              type: 'discussion',
+              attributes: {
+                subject: currentSegment || '',
+              },
+            } as any as Discussion,
+          ]);
+        } else {
+          setDisplayDiscussions(
+            discussions
+              .filter(
+                (d) =>
+                  (!forYou ||
+                    related(d, 'user') === userId ||
+                    projGroups?.includes(related(d, 'group'))) &&
+                  resolved === Boolean(d.attributes?.resolved) &&
+                  (!latestVersion ||
+                    latestMedia.indexOf(related(d, 'mediafile')) >= 0) &&
+                  (allPassages || currentPassage(d)) &&
+                  (allSteps
+                    ? discussionOrg(d) === organization
+                    : related(d, 'orgWorkflowStep') === currentstep) &&
+                  (catSelect.length === 0 ||
+                    catSelect.includes(related(d, 'artifactCategory')))
+              )
+              .sort((x, y) => discussionSort(x, y))
+          );
+        }
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [

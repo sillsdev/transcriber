@@ -283,7 +283,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     groups,
     memberships,
   });
-  const afterUploadcb = async (mediaId: string) => {
+  const saveMyComment = async (mediaId: string) => {
     commentMediaId.current = mediaId;
     if (discussion.id) {
       if (commentText.current || commentMediaId.current)
@@ -302,7 +302,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   const { uploadMedia, fileName } = useRecordComment({
     mediafileId: mediafileId,
     commentNumber: -1,
-    afterUploadcb,
+    afterUploadcb: saveMyComment,
   });
 
   const [changeAssignment, setChangeAssignment] = useState<
@@ -349,9 +349,12 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     //if any of my comments are changed, add the discussion to the toolChanged list so DiscussionList will pick it up
     if (!myChanged) {
       var myIds = myComments.map((d) => d.id);
-      myIds.push(discussion.id + 'reply');
+      if (discussion.id) myIds.push(discussion.id + 'reply');
+      else myIds.push(myCommentToolId);
       var anyChanged = Object.keys(toolsChanged).some((t) => myIds.includes(t));
-      toolChanged(myToolId, anyChanged);
+      if (anyChanged)
+        if (discussion.id) toolChanged(myToolId, anyChanged);
+        else setChanged(true); //set myChanged also
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, myComments, myChanged]);
@@ -629,18 +632,19 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     }
   };
   const handleSave = async () => {
+    //if there is an audo comment, start the upload
+    if (canSaveRecording && !commentMediaId.current) {
+      startSave(myCommentToolId);
+      await waitForIt(
+        'comment upload',
+        () => {
+          return Boolean(commentMediaId.current);
+        },
+        () => false,
+        500
+      );
+    }
     if (mediafileId && myChanged) {
-      if (canSaveRecording && !commentMediaId.current) {
-        startSave(myCommentToolId);
-        await waitForIt(
-          'comment upload',
-          () => {
-            return Boolean(commentMediaId.current);
-          },
-          () => false,
-          500
-        );
-      }
       //we should only get here with no subject if they've clicked off the screen and then told us to save with no subject
       discussion.attributes.subject =
         editSubject.length > 0 ? editSubject : tdcs.topic;
@@ -697,10 +701,11 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
       );
       await memory.update(ops);
     }
-    afterUploadcb(commentMediaId.current);
-    onAddComplete && onAddComplete(discussion.id);
-    setEditing(false);
-    setChanged(false);
+    saveMyComment(commentMediaId.current).then(() => {
+      onAddComplete && onAddComplete(discussion.id);
+      setEditing(false);
+      setChanged(false);
+    });
   };
 
   const handleCancel = (e: any) => {
