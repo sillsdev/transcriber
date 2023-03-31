@@ -114,7 +114,7 @@ export function ResourceTabs({
     } = values;
     if (sharedResRec) {
       const rec = sharedResRec;
-      updateSharedResource(
+      await updateSharedResource(
         {
           ...rec,
           attributes: {

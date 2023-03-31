@@ -7,8 +7,8 @@ export const useSharedResUpdate = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
-  return (sharedResource: SharedResource, category: string) => {
-    memory.update((t: TransformBuilder) => [
+  return async (sharedResource: SharedResource, category: string) => {
+    await memory.update((t: TransformBuilder) => [
       ...UpdateRecord(t, sharedResource, user),
       ...ReplaceRelatedRecord(
         t,
