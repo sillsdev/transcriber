@@ -90,14 +90,17 @@ export function PassageDetailPlayer(props: IProps) {
   const segmentsRef = useRef('');
   const playingRef = useRef(playing);
   const savingRef = useRef(false);
+  const mediafileRef = useRef<MediaFile>();
 
   const loadSegments = () => {
-    const mediafile = rowData[index]?.mediafile;
-    const segs = mediafile?.attributes?.segments || '{}';
+    const segs = mediafileRef.current?.attributes?.segments || '{}';
     if (allowSegment) segmentsRef.current = getSegments(allowSegment, segs);
     setDefaultSegments(segmentsRef.current);
     onSegment && onSegment(segmentsRef.current);
   };
+  useEffect(() => {
+    mediafileRef.current = rowData[index]?.mediafile;
+  }, [rowData, index]);
 
   useEffect(() => {
     if (allowSegment && suggestedSegments) {
@@ -116,8 +119,8 @@ export function PassageDetailPlayer(props: IProps) {
   const writeSegments = async () => {
     if (!savingRef.current) {
       savingRef.current = true;
-      const mediafile = rowData[index]?.mediafile;
-      if (mediafile) {
+      if (mediafileRef.current) {
+        var mediafile = mediafileRef.current;
         await memory
           .update((t) => [
             ...UpdateRecord(
@@ -128,7 +131,7 @@ export function PassageDetailPlayer(props: IProps) {
                 attributes: {
                   segments: updateSegments(
                     allowSegment ?? NamedRegions.BackTranslation,
-                    mediafile.attributes?.segments,
+                    mediafile.attributes?.segments ?? '{}',
                     segmentsRef.current
                   ),
                 },
@@ -150,20 +153,28 @@ export function PassageDetailPlayer(props: IProps) {
   };
 
   const onDuration = (duration: number) => {
-    const mediafile = rowData[index]?.mediafile;
     if (
-      mediafile &&
+      mediafileRef.current &&
+      !Boolean(mediafileRef.current.attributes.sourceSegments) &&
       duration &&
-      Math.floor(duration) !== Math.floor(mediafile.attributes.duration)
+      Math.floor(duration) !==
+        Math.floor(mediafileRef.current.attributes.duration)
     ) {
+      console.log(
+        `update duration to ${Math.floor(duration)} from
+        ${Math.floor(mediafileRef.current.attributes.duration)}`
+      );
       memory
         .update((t: TransformBuilder) =>
-          t.replaceAttribute(mediafile, 'duration', Math.floor(duration))
+          t.replaceAttribute(
+            mediafileRef.current as MediaFile, //I already checked for undefined
+            'duration',
+            Math.floor(duration)
+          )
         )
         .then(() => {
           forceRefresh();
         });
-      console.log(`update duration to ${Math.floor(duration)}`);
     }
   };
 

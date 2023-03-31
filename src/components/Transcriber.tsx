@@ -249,10 +249,11 @@ export function Transcriber(
   const { section, passage, mediafile, state, role } = rowData[index] || {
     section: {} as Section,
     passage: {} as Passage,
-    mediafile: {} as MediaFile,
+    mediafile: undefined,
     state: '',
     role: '',
   };
+  console.log('rowData', rowData, 'index', index, 'mediafile', mediafile);
   const { toolChanged, saveCompleted } = useContext(UnsavedContext).state;
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
@@ -296,7 +297,7 @@ export function Transcriber(
   const [confirm, setConfirm] = useState<ITrans>();
   const transcriptionRef = React.useRef<any>();
   const playingRef = useRef<Boolean>();
-  const mediaRef = useRef<MediaFile>();
+  const mediaRef = useRef<MediaFile>({} as MediaFile);
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
   const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
   const t = transcriberStr;
@@ -488,8 +489,8 @@ export function Transcriber(
   }, [selected]);
 
   useEffect(() => {
-    if (mediafile && mediafile.attributes) {
-      if (mediaRef.current !== mediafile) setSelected(mediafile.id);
+    if (mediaRef.current !== mediafile) setSelected(mediafile?.id || '');
+    if (mediafile) {
       const trans = getTranscription();
       if (trans.transcription !== transcriptionIn.current && !saving.current) {
         //if someone else changed it...let the user pick
@@ -859,7 +860,7 @@ export function Transcriber(
   };
 
   const getTranscription = () => {
-    const attr = mediafile.attributes || {};
+    const attr = mediafile?.attributes || {};
     return {
       transcription: attr.transcription || '',
       position: attr.position,
@@ -877,7 +878,7 @@ export function Transcriber(
       transcriptionRef.current.firstChild.value = val.transcription;
       focusOnTranscription();
     }
-    setLastSaved(mediafile.attributes?.dateUpdated || '');
+    setLastSaved(mediafile?.attributes?.dateUpdated || '');
   };
 
   const handleAutosave = async () => {
