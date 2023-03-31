@@ -43,7 +43,6 @@ import {
   ToolSlug,
   useArtifactType,
   useProjectType,
-  useRole,
   useStepTool,
   useUrlContext,
 } from '../crud';
@@ -150,7 +149,6 @@ const PassageDetailGrids = () => {
 
   const { tool, settings } = useStepTool(currentstep);
   const { slugFromId } = useArtifactType();
-  const { userIsAdmin } = useRole();
   const artifactId = useMemo(() => {
     if (settings) {
       var id = JSON.parse(settings).artifactTypeId;
@@ -234,16 +232,14 @@ const PassageDetailGrids = () => {
           <Grid item id="tool" sx={rowProps} xs={3}>
             {tool && t.hasOwnProperty(tool) ? t.getString(tool) : tool}
           </Grid>
-          {userIsAdmin && (
-            <Grid
-              item
-              id="stepcomplete"
-              sx={{ display: 'flex', justifyContent: 'flex-end' }}
-              xs={3}
-            >
-              <PassageDetailStepComplete />
-            </Grid>
-          )}
+          <Grid
+            item
+            id="stepcomplete"
+            sx={{ display: 'flex', justifyContent: 'flex-end' }}
+            xs={3}
+          >
+            <PassageDetailStepComplete />
+          </Grid>
         </Grid>
         <Grid item sx={descProps} xs={12}>
           <WorkflowSteps />
