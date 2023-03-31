@@ -6,23 +6,30 @@ import { IKeyTermsStrings } from '../../../model';
 
 interface IProps {
   label: string;
+  playerOpen?: boolean;
   onPlay?: () => void;
   onClick: () => void;
   onDelete: () => void;
 }
-export const KeyTermChip = ({ label, onPlay, onClick, onDelete }: IProps) => {
+export const KeyTermChip = ({
+  label,
+  playerOpen,
+  onPlay,
+  onClick,
+  onDelete,
+}: IProps) => {
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
 
   return (
     <Chip
       icon={
-        onPlay && (
+        onPlay && !playerOpen ? (
           <Tooltip title={t.play}>
             <IconButton onClick={onPlay}>
               <PlayIcon fontSize="small" />
             </IconButton>
           </Tooltip>
-        )
+        ) : undefined
       }
       label={label}
       onClick={onClick}

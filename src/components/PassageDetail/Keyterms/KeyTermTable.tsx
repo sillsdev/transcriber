@@ -237,6 +237,11 @@ export default function KeyTermTable({
                     >
                       <KeyTermChip
                         label={t.label}
+                        playerOpen={Boolean(
+                          commentPlayId &&
+                            mediaId === commentPlayId &&
+                            t.mediaId === mediaId
+                        )}
                         onPlay={
                           t.mediaId ? handleChipPlay(t.mediaId) : undefined
                         }
