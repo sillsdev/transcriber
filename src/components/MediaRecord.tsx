@@ -354,7 +354,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
         allowRecord={allowRecord !== false}
         allowSilence={allowWave}
         oneTryOnly={oneTryOnly}
-        size={size || 350}
+        size={size || 300}
         blob={originalBlob}
         onBlobReady={onBlobReady}
         setChanged={setFilechanged}
