@@ -163,7 +163,11 @@ export function ResourceTabs({
           aria-label="resource edit tabs"
         >
           <Tab label={t.overview} {...a11yProps(0)} />
-          <Tab label={t.references} {...a11yProps(1)} />
+          <Tab
+            label={t.references}
+            {...a11yProps(1)}
+            disabled={!sharedResRec?.id}
+          />
           <Tab label={t.versions} {...a11yProps(2)} />
         </Tabs>
       </Box>
