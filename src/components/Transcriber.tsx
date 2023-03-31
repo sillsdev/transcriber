@@ -954,7 +954,6 @@ export function Transcriber(
         : ArtifactTypeSlug.Vernacular
     );
   }, [slug, artifactId, slugFromId]);
-
   return (
     <GrowingDiv>
       <Paper sx={{ p: 2, m: 'auto' }} style={paperStyle}>
@@ -964,7 +963,7 @@ export function Transcriber(
           <Grid container direction="column" style={style}>
             <Wrapper>
               <SplitPane
-                defaultSize={playerSize - 20}
+                defaultSize={Math.max(INIT_PLAYER_HEIGHT, playerSize)}
                 minSize={INIT_PLAYER_HEIGHT}
                 maxSize={discussionSize.height - 280}
                 style={{ position: 'static' }}
