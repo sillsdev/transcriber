@@ -22,6 +22,7 @@ localization/az/*
 localization/hi/*
 localization/nl/*
 localization/tl/*
+localization/tpi/*
 
 # misc
 .eslintcache

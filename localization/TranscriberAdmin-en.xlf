@@ -3310,9 +3310,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.keywords">
+         <segment>
+            <source>Keywords</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.language">
+         <segment>
+            <source>Language</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.link">
          <segment>
             <source>Link</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.no">
+         <segment>
+            <source>No</source>
             <target/>
          </segment>
       </unit>
@@ -3382,9 +3400,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.source">
+         <segment>
+            <source>Source</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.startStop">
          <segment>
             <source>Start - Stop</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.termsOfUse">
+         <segment>
+            <source>Terms of Use</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.title">
+         <segment>
+            <source>Title</source>
             <target/>
          </segment>
       </unit>
@@ -3433,6 +3469,12 @@
       <unit id="passageDetailArtifacts.version">
          <segment>
             <source>Version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.yes">
+         <segment>
+            <source>Yes</source>
             <target/>
          </segment>
       </unit>

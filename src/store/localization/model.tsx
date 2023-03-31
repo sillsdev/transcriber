@@ -661,7 +661,10 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "description": string;
     "editResource": string;
     "generalResources": string;
+    "keywords": string;
+    "language": string;
     "link": string;
+    "no": string;
     "passageResource": string;
     "pasteFormat": string;
     "pasteError": string;
@@ -673,7 +676,10 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "resource": string;
     "resourcesDeleted": string;
     "sharedResource": string;
+    "source": string;
     "startStop": string;
+    "termsOfUse": string;
+    "title": string;
     "type": string;
     "tip1a": string;
     "tip1b": string;
@@ -682,6 +688,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "upload": string;
     "uploadProject": string;
     "version": string;
+    "yes": string;
 };
 
 export interface IPassageDetailStepCompleteStrings extends Localize.LocalizedStringsMethods {
