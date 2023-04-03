@@ -688,6 +688,7 @@ const initialState = {
 	}),
 	"passageDetailArtifacts": new LocalizedStrings({
 		"en": {
+			"accept": "Accept",
 			"action": "Action",
 			"activity": "Add Activity",
 			"add": "Add",
@@ -721,6 +722,7 @@ const initialState = {
 			"source": "Source",
 			"startStop": "Start - Stop",
 			"termsOfUse": "Terms of Use",
+			"termsReview": "Review the Terms of Use",
 			"title": "Title",
 			"type": "Type",
 			"tip1a": "Resources for:",

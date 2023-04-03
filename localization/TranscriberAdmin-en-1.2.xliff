@@ -3754,6 +3754,13 @@
       			<context context-type="sourcefile">PassageChooser.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.accept">
+      		<source>Accept</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.action">
             <source>Action</source>
             <target/>
@@ -3980,6 +3987,13 @@
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.termsOfUse">
       		<source>Terms of Use</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.termsReview">
+      		<source>Review the Terms of Use</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">AddResource.tsx</context>

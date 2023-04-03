@@ -646,6 +646,7 @@ export interface IPassageChooserStrings extends Localize.LocalizedStringsMethods
 };
 
 export interface IPassageDetailArtifactsStrings extends Localize.LocalizedStringsMethods {
+    "accept": string;
     "action": string;
     "activity": string;
     "add": string;
@@ -679,6 +680,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "source": string;
     "startStop": string;
     "termsOfUse": string;
+    "termsReview": string;
     "title": string;
     "type": string;
     "tip1a": string;

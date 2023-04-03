@@ -17,6 +17,8 @@ import {
 } from '../../../selector';
 import { useGlobal } from 'reactn';
 import { QueryBuilder } from '@orbit/data';
+import BigDialog from '../../../hoc/BigDialog';
+import { Typography } from '@mui/material';
 
 interface IRRow {
   language: string;
@@ -43,6 +45,7 @@ export const SelectSharedResource = (props: IProps) => {
   const [resources, setResources] = useState<Resource[]>([]);
   const [data, setData] = useState<IRRow[]>([]);
   const [checks, setChecks] = useState<number[]>([]);
+  const [termsCheck, setTermsCheck] = useState<number>();
   const selecting = useRef(false);
   const { localizedArtifactCategory } = useArtifactCategory();
   const t: IPassageDetailArtifactsStrings = useSelector(
@@ -155,12 +158,31 @@ export const SelectSharedResource = (props: IProps) => {
 
   const handleCheck = (chks: Array<number>) => {
     const newChecks = chks.map((r) => r).sort(numSort);
-    if (checks.join(',') !== newChecks.join(',')) setChecks(newChecks);
+    if (checks.join(',') !== newChecks.join(',')) {
+      let check = false;
+      for (const c of chks) {
+        if (!checks.includes(c) && resources[c].attributes.termsOfUse) {
+          setTermsCheck(c);
+          check = true;
+          break;
+        }
+      }
+      if (!check) setChecks(newChecks);
+    }
+  };
+
+  const handleTermsCheck = () => {
+    setTermsCheck(undefined);
+  };
+
+  const handleTermsAccept = () => {
+    if (termsCheck !== undefined) setChecks(checks.concat([termsCheck]));
+    setTermsCheck(undefined);
   };
 
   useEffect(() => {
     setData(
-      resources.map((r, i) => {
+      resources.map((r) => {
         const langArr = r.attributes.languagebcp47.split('|');
         const language =
           langArr.length > 1 ? `${langArr[0]} (${langArr[1]})` : langArr[0];
@@ -197,17 +219,40 @@ export const SelectSharedResource = (props: IProps) => {
         expandedGroups={[]} // shuts off toolbar row
       />
       <ActionRow>
-        <PriButton
-          id="res-selected"
-          onClick={handleSelect}
-          disabled={checks.length === 0 || selecting.current}
-        >
-          {t.link}
-        </PriButton>
         <AltButton id="res-select-cancel" onClick={handleCancel}>
           {ts.cancel}
         </AltButton>
+        <PriButton
+          id="res-selected"
+          onClick={handleSelect}
+          disabled={
+            checks.length === 0 || selecting.current || Boolean(termsCheck)
+          }
+        >
+          {t.link}
+        </PriButton>
       </ActionRow>
+      {termsCheck !== undefined && (
+        <BigDialog
+          title={t.termsReview}
+          isOpen={termsCheck !== undefined}
+          onOpen={handleTermsCheck}
+        >
+          <>
+            <Typography>
+              {resources[termsCheck].attributes.termsOfUse}
+            </Typography>
+            <ActionRow>
+              <AltButton id="terms-cancel" onClick={handleTermsCheck}>
+                {ts.cancel}
+              </AltButton>
+              <PriButton id="terms-accept" onClick={handleTermsAccept}>
+                {t.accept}
+              </PriButton>
+            </ActionRow>
+          </>
+        </BigDialog>
+      )}
     </div>
   );
 };

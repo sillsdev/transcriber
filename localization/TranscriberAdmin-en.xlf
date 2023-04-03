@@ -3220,6 +3220,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.accept">
+         <segment>
+            <source>Accept</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.action">
          <segment>
             <source>Action</source>
@@ -3415,6 +3421,12 @@
       <unit id="passageDetailArtifacts.termsOfUse">
          <segment>
             <source>Terms of Use</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.termsReview">
+         <segment>
+            <source>Review the Terms of Use</source>
             <target/>
          </segment>
       </unit>
