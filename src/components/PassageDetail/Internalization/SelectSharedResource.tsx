@@ -1,11 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   IPassageDetailArtifactsStrings,
   ISharedStrings,
   Resource,
+  SharedResourceReference,
 } from '../../../model';
 import ShapingTable from '../../ShapingTable';
-import { useArtifactCategory } from '../../../crud';
+import { related, remoteId, useArtifactCategory } from '../../../crud';
 import { Sorting } from '@devexpress/dx-react-grid';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { ActionRow, AltButton, PriButton } from '../../../control';
@@ -14,6 +15,8 @@ import {
   passageDetailArtifactsSelector,
   sharedSelector,
 } from '../../../selector';
+import { useGlobal } from 'reactn';
+import { QueryBuilder } from '@orbit/data';
 
 interface IRRow {
   language: string;
@@ -34,8 +37,9 @@ interface IProps {
 
 export const SelectSharedResource = (props: IProps) => {
   const { sourcePassages, onOpen, onSelect } = props;
+  const [memory] = useGlobal('memory');
   const ctx = useContext(PassageDetailContext);
-  const { getSharedResources } = ctx.state;
+  const { passage, getSharedResources } = ctx.state;
   const [resources, setResources] = useState<Resource[]>([]);
   const [data, setData] = useState<IRRow[]>([]);
   const [checks, setChecks] = useState<number[]>([]);
@@ -93,12 +97,54 @@ export const SelectSharedResource = (props: IProps) => {
     }
   };
 
+  const passageRefs = useMemo(
+    () => {
+      const resultSet = new Set<number>();
+      const m = /(\d+):(\d+)(?:-(\d+))/.exec(passage.attributes.reference);
+      if (m) {
+        const refRecs = memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('sharedresourcereference')
+        ) as SharedResourceReference[];
+        const chapRefs = refRecs.filter(
+          (r) =>
+            r.attributes.book === passage.attributes.book &&
+            r.attributes.chapter === parseInt(m[1])
+        );
+        const startVerse = parseInt(m[2]);
+        const endVerse = parseInt(m[3]);
+        for (const cr of chapRefs) {
+          const verses = cr.attributes.verses
+            .split(',')
+            .map((v) => parseInt(v));
+          for (let v = startVerse; v <= endVerse; v += 1) {
+            if (verses.includes(v)) {
+              resultSet.add(
+                parseInt(
+                  remoteId(
+                    'sharedresource',
+                    related(cr, 'sharedResource'),
+                    memory.keyMap
+                  )
+                )
+              );
+              break;
+            }
+          }
+        }
+      }
+      return Array.from(resultSet);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [passage]
+  );
+
   useEffect(() => {
     getSharedResources().then((res) => {
       const latest = res.filter(
         (r) =>
           r.attributes?.latest &&
-          !sourcePassages.includes(r.attributes.passageId)
+          !sourcePassages.includes(r.attributes.passageId) &&
+          passageRefs.includes(r.attributes.resourceId)
       );
       setResources(latest);
     });
