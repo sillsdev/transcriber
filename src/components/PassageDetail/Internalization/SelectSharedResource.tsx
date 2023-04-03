@@ -103,6 +103,17 @@ export const SelectSharedResource = (props: IProps) => {
   const passageRefs = useMemo(
     () => {
       const resultSet = new Set<number>();
+      const addRes = (sr: SharedResourceReference) => {
+        resultSet.add(
+          parseInt(
+            remoteId(
+              'sharedresource',
+              related(sr, 'sharedResource'),
+              memory.keyMap
+            )
+          )
+        );
+      };
       const m = /(\d+):(\d+)(?:-(\d+))/.exec(passage.attributes.reference);
       if (m) {
         const refRecs = memory.cache.query((q: QueryBuilder) =>
@@ -116,21 +127,17 @@ export const SelectSharedResource = (props: IProps) => {
         const startVerse = parseInt(m[2]);
         const endVerse = parseInt(m[3]);
         for (const cr of chapRefs) {
-          const verses = cr.attributes.verses
-            .split(',')
-            .map((v) => parseInt(v));
-          for (let v = startVerse; v <= endVerse; v += 1) {
-            if (verses.includes(v)) {
-              resultSet.add(
-                parseInt(
-                  remoteId(
-                    'sharedresource',
-                    related(cr, 'sharedResource'),
-                    memory.keyMap
-                  )
-                )
-              );
-              break;
+          if (!cr.attributes.verses) {
+            addRes(cr);
+          } else {
+            const verses = cr.attributes.verses
+              .split(',')
+              .map((v) => parseInt(v));
+            for (let v = startVerse; v <= endVerse; v += 1) {
+              if (verses.includes(v)) {
+                addRes(cr);
+                break;
+              }
             }
           }
         }

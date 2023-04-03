@@ -24,18 +24,18 @@ export const useShaRefCreate = (sharedResource: SharedResource) => {
         if (m) {
           const chapter = m[1];
           const ranges = m[2];
+          const key = chapter ? chapKey(bookRef.code, chapter) : bookRef.code;
           if (ranges) {
             for (const range of ranges.split(',')) {
               const m1 = rangePat.exec(range);
               if (m1) {
                 const start = m1[1];
                 const end = m1[2];
-                const key = chapter
-                  ? chapKey(bookRef.code, chapter)
-                  : bookRef.code;
                 chapMap.set(key, rangeAdd(chapMap.get(key), start, end));
               }
             }
+          } else {
+            chapMap.set(key, '');
           }
         }
       }
