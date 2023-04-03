@@ -3859,8 +3859,29 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.keywords">
+      		<source>Keywords</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.language">
+      		<source>Language</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.link">
       		<source>Link</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.no">
+      		<source>No</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">AddResource.tsx</context>
@@ -3943,11 +3964,32 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.source">
+      		<source>Source</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.startStop">
       		<source>Start - Stop</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.termsOfUse">
+      		<source>Terms of Use</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.title">
+      		<source>Title</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.type">
@@ -4006,6 +4048,13 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.yes">
+      		<source>Yes</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="passageDetailStepComplete.incomplete">
             <source>Step Incomplete</source>
             <target/>

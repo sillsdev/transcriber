@@ -39,10 +39,12 @@ import {
   useOrganizedBy,
   useRole,
   findRecord,
+  useArtifactCategory,
+  IArtifactCategory,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
-import SelectResource, { CatMap } from './SelectResource';
+import SelectSharedResource from './SelectSharedResource';
 import SelectProjectResource from './SelectProjectResource';
 import SelectSections from './SelectSections';
 import ResourceData from './ResourceData';
@@ -118,6 +120,8 @@ export function PassageDetailArtifacts(props: IProps) {
   const AddMediaFileResource = useMediaResCreate(passage, currentstep);
   const UpdateSectionResource = useSecResUpdate();
   const DeleteSectionResource = useSecResDelete();
+  const { getArtifactCategorys } = useArtifactCategory();
+  const catRef = useRef<IArtifactCategory[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [visual, setVisual] = useState(false);
   const cancelled = useRef(false);
@@ -439,14 +443,22 @@ export function PassageDetailArtifacts(props: IProps) {
     }
   };
 
-  const handleSelectShared = async (res: Resource[], catMap: CatMap) => {
+  useEffect(() => {
+    getArtifactCategorys(true, false).then((cats) => (catRef.current = cats));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSelectShared = async (res: Resource[]) => {
     let cnt = rowData.length;
     for (const r of res) {
-      const newMediaRec = await AddMediaFileResource(r, catMap[r.id]);
+      const catRec = catRef.current.find(
+        (c) => c.slug === r.attributes.categoryName
+      );
+      const newMediaRec = await AddMediaFileResource(r, catRec?.id || '');
       cnt += 1;
       await AddSectionResource(
         cnt,
-        r.attributes.reference,
+        r.attributes.title || r.attributes.reference,
         newMediaRec,
         isPassageResource() ? passage.id : null
       );
@@ -633,7 +645,7 @@ export function PassageDetailArtifacts(props: IProps) {
         onOpen={handleSharedResourceVisible}
         bp={BigDialogBp.md}
       >
-        <SelectResource
+        <SelectSharedResource
           onSelect={handleSelectShared}
           onOpen={handleSharedResourceVisible}
         />
