@@ -6,7 +6,7 @@ import {
   SharedResourceReference,
 } from '../../../model';
 import ShapingTable from '../../ShapingTable';
-import { related, remoteId, useArtifactCategory } from '../../../crud';
+import { related, remoteIdNum, useArtifactCategory } from '../../../crud';
 import { Sorting } from '@devexpress/dx-react-grid';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { ActionRow, AltButton, PriButton } from '../../../control';
@@ -105,12 +105,10 @@ export const SelectSharedResource = (props: IProps) => {
       const resultSet = new Set<number>();
       const addRes = (sr: SharedResourceReference) => {
         resultSet.add(
-          parseInt(
-            remoteId(
-              'sharedresource',
-              related(sr, 'sharedResource'),
-              memory.keyMap
-            )
+          remoteIdNum(
+            'sharedresource',
+            related(sr, 'sharedResource'),
+            memory.keyMap
           )
         );
       };
