@@ -443,6 +443,21 @@ export function PassageDetailArtifacts(props: IProps) {
     }
   };
 
+  const resourceSourcePassages = useMemo(() => {
+    const results: number[] = [];
+    sectionResources.forEach((sr) => {
+      const rec = findRecord(memory, 'mediafile', related(sr, 'mediafile')) as
+        | MediaFile
+        | undefined;
+      if (rowData.find((r) => r.id === rec?.id)) {
+        const passageId = rec?.attributes.resourcePassageId;
+        if (passageId) results.push(passageId);
+      }
+    });
+    return results;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sectionResources]);
+
   useEffect(() => {
     getArtifactCategorys(true, false).then((cats) => (catRef.current = cats));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -646,6 +661,7 @@ export function PassageDetailArtifacts(props: IProps) {
         bp={BigDialogBp.md}
       >
         <SelectSharedResource
+          sourcePassages={resourceSourcePassages}
           onSelect={handleSelectShared}
           onOpen={handleSharedResourceVisible}
         />

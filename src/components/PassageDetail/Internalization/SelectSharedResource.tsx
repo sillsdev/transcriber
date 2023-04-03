@@ -27,12 +27,13 @@ interface IRRow {
 }
 
 interface IProps {
+  sourcePassages: number[];
   onOpen: (val: boolean) => void;
   onSelect?: (resources: Resource[]) => Promise<void>;
 }
 
 export const SelectSharedResource = (props: IProps) => {
-  const { onOpen, onSelect } = props;
+  const { sourcePassages, onOpen, onSelect } = props;
   const ctx = useContext(PassageDetailContext);
   const { getSharedResources } = ctx.state;
   const [resources, setResources] = useState<Resource[]>([]);
@@ -68,6 +69,7 @@ export const SelectSharedResource = (props: IProps) => {
   const columnFormatting = [
     { columnName: 'title', wordWrapEnabled: true },
     { columnName: 'description', wordWrapEnabled: true },
+    { columnName: 'keywords', wordWrapEnabled: true },
     { columnName: 'source', wordWrapEnabled: true },
   ];
   const sorting: Sorting[] = [
@@ -93,11 +95,15 @@ export const SelectSharedResource = (props: IProps) => {
 
   useEffect(() => {
     getSharedResources().then((res) => {
-      const latest = res.filter((r) => r.attributes?.latest);
+      const latest = res.filter(
+        (r) =>
+          r.attributes?.latest &&
+          !sourcePassages.includes(r.attributes.passageId)
+      );
       setResources(latest);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [sourcePassages]);
 
   const numSort = (i: number, j: number) => i - j;
 
@@ -122,7 +128,7 @@ export const SelectSharedResource = (props: IProps) => {
           title: r.attributes.title,
           description: r.attributes.description,
           version: r.attributes.versionNumber,
-          keywords: r.attributes.keywords,
+          keywords: r.attributes.keywords?.replace('|', ', '),
           terms: r.attributes.termsOfUse ? t.yes : t.no,
           source: r.attributes.projectName,
         } as IRRow;
