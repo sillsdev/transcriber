@@ -3244,9 +3244,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.allLevel">
+         <segment>
+            <source>All Resources</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.allResources">
          <segment>
             <source>Show resources for all passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.bookLevel">
+         <segment>
+            <source>Resources for the Book</source>
             <target/>
          </segment>
       </unit>
@@ -3259,6 +3271,18 @@
       <unit id="passageDetailArtifacts.category">
          <segment>
             <source>Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.chapterLevel">
+         <segment>
+            <source>Resources for the Chapter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.chooseLevel">
+         <segment>
+            <source>Resource Reference Filter Level</source>
             <target/>
          </segment>
       </unit>
@@ -3402,7 +3426,7 @@
       </unit>
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
-            <source>Link Shared Resource</source>
+            <source>Link Shared {0} Resource</source>
             <target/>
          </segment>
       </unit>
@@ -3475,6 +3499,12 @@
       <unit id="passageDetailArtifacts.uploadProject">
          <segment>
             <source>General - to be used by multiple {0} or passages. (Uploaded files will only appear under Configure General.)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.verseLevel">
+         <segment>
+            <source>Resources for verses in this passage</source>
             <target/>
          </segment>
       </unit>

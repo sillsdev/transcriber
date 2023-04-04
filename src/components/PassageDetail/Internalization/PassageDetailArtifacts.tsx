@@ -348,7 +348,11 @@ export function PassageDetailArtifacts(props: IProps) {
   const handleAction = (what: string) => {
     if (what === 'upload') {
       setUploadVisible(true);
-    } else if (what === 'reference') {
+    } else if (what === 'ref-passage') {
+      resourceTypeRef.current = ResourceTypeEnum.passageResource;
+      setSharedResourceVisible(true);
+    } else if (what === 'ref-section') {
+      resourceTypeRef.current = ResourceTypeEnum.sectionResource;
       setSharedResourceVisible(true);
     } else if (what === 'activity') {
     } else if (what === 'wizard') {

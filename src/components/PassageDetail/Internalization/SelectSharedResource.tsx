@@ -9,7 +9,12 @@ import ShapingTable from '../../ShapingTable';
 import { related, remoteIdNum, useArtifactCategory } from '../../../crud';
 import { Sorting } from '@devexpress/dx-react-grid';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
-import { ActionRow, AltButton, PriButton } from '../../../control';
+import {
+  ActionRow,
+  AltButton,
+  GrowingSpacer,
+  PriButton,
+} from '../../../control';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
   passageDetailArtifactsSelector,
@@ -18,7 +23,15 @@ import {
 import { useGlobal } from 'reactn';
 import { QueryBuilder } from '@orbit/data';
 import BigDialog from '../../../hoc/BigDialog';
-import { Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
+import RefLevelMenu from './RefLevelMenu';
+
+export enum RefLevel {
+  All,
+  Book,
+  Chapter,
+  Verse,
+}
 
 interface IRRow {
   language: string;
@@ -39,6 +52,7 @@ interface IProps {
 
 export const SelectSharedResource = (props: IProps) => {
   const { sourcePassages, onOpen, onSelect } = props;
+  const [refLevel, setRefLevel] = useState<RefLevel>(RefLevel.Verse);
   const [memory] = useGlobal('memory');
   const ctx = useContext(PassageDetailContext);
   const { passage, getSharedResources } = ctx.state;
@@ -100,11 +114,13 @@ export const SelectSharedResource = (props: IProps) => {
     }
   };
 
-  const passageRefs = useMemo(
+  const refRes = useMemo(
     () => {
-      const resultSet = new Set<number>();
-      const addRes = (sr: SharedResourceReference) => {
-        resultSet.add(
+      const bookSet = new Set<number>();
+      const chapSet = new Set<number>();
+      const verseSet = new Set<number>();
+      const addRes = (set: Set<number>, sr: SharedResourceReference) => {
+        set.add(
           remoteIdNum(
             'sharedresource',
             related(sr, 'sharedResource'),
@@ -117,30 +133,37 @@ export const SelectSharedResource = (props: IProps) => {
         const refRecs = memory.cache.query((q: QueryBuilder) =>
           q.findRecords('sharedresourcereference')
         ) as SharedResourceReference[];
-        const chapRefs = refRecs.filter(
-          (r) =>
-            r.attributes.book === passage.attributes.book &&
-            r.attributes.chapter === parseInt(m[1])
+        const bookRefs = refRecs.filter(
+          (r) => r.attributes.book === passage.attributes.book
         );
+        bookRefs.forEach((b) => addRes(bookSet, b));
+        const chapRefs = bookRefs.filter(
+          (r) => r.attributes.chapter === parseInt(m[1])
+        );
+        chapRefs.forEach((c) => addRes(chapSet, c));
         const startVerse = parseInt(m[2]);
         const endVerse = parseInt(m[3]);
         for (const cr of chapRefs) {
           if (!cr.attributes.verses) {
-            addRes(cr);
+            addRes(verseSet, cr);
           } else {
             const verses = cr.attributes.verses
               .split(',')
               .map((v) => parseInt(v));
             for (let v = startVerse; v <= endVerse; v += 1) {
               if (verses.includes(v)) {
-                addRes(cr);
+                addRes(verseSet, cr);
                 break;
               }
             }
           }
         }
       }
-      return Array.from(resultSet);
+      return {
+        books: Array.from(bookSet),
+        chapters: Array.from(chapSet),
+        verses: Array.from(verseSet),
+      };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [passage]
@@ -152,12 +175,18 @@ export const SelectSharedResource = (props: IProps) => {
         (r) =>
           r.attributes?.latest &&
           !sourcePassages.includes(r.attributes.passageId) &&
-          passageRefs.includes(r.attributes.resourceId)
+          ((refLevel === RefLevel.Verse &&
+            refRes.verses.includes(r.attributes.resourceId)) ||
+            (refLevel === RefLevel.Chapter &&
+              refRes.chapters.includes(r.attributes.resourceId)) ||
+            (refLevel === RefLevel.Book &&
+              refRes.books.includes(r.attributes.resourceId)) ||
+            refLevel === RefLevel.All)
       );
       setResources(latest);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sourcePassages]);
+  }, [sourcePassages, refLevel]);
 
   const numSort = (i: number, j: number) => i - j;
 
@@ -210,8 +239,24 @@ export const SelectSharedResource = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resources, checks]);
 
+  function handleRefLevel(what: string): void {
+    if (what === 'verse') {
+      setRefLevel(RefLevel.Verse);
+    } else if (what === 'chapter') {
+      setRefLevel(RefLevel.Chapter);
+    } else if (what === 'book') {
+      setRefLevel(RefLevel.Book);
+    } else if (what === 'all') {
+      setRefLevel(RefLevel.All);
+    }
+  }
+
   return (
     <div id="select-shared-resources">
+      <Stack direction="row">
+        <GrowingSpacer />
+        <RefLevelMenu level={refLevel} action={handleRefLevel} />
+      </Stack>
       <ShapingTable
         columns={columnDefs}
         columnWidths={columnWidths}
@@ -240,6 +285,11 @@ export const SelectSharedResource = (props: IProps) => {
       {termsCheck !== undefined && (
         <BigDialog
           title={t.termsReview}
+          description={
+            <Typography sx={{ pb: 2 }}>
+              {'for {0}'.replace('{0}', resources[termsCheck].attributes.title)}
+            </Typography>
+          }
           isOpen={termsCheck !== undefined}
           onOpen={handleTermsCheck}
         >
