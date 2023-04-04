@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { useGlobal } from 'reactn';
-import { ITemplateStrings, Plan, PlanType } from '../../model';
-import { QueryBuilder } from '@orbit/data';
+import { ITemplateStrings } from '../../model';
 import {
   Paper,
   InputBase,
@@ -15,10 +13,11 @@ import {
   ListItemIcon,
   SxProps,
   ListItemButton,
+  Typography,
 } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
 import InfoIcon from '@mui/icons-material/Info';
-import { related, useOrganizedBy } from '../../crud';
+import { useOrganizedBy } from '../../crud';
 import { IMatchData } from './makeRefMap';
 import { templateSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -85,8 +84,6 @@ export interface ITemplateProps {
 
 export function Template(props: ITemplateProps) {
   const { matchMap, options } = props;
-  const [plan] = useGlobal('plan');
-  const [memory] = useGlobal('memory');
   const [template, setTemplatex] = useState<string>();
   const [templateInfo, setTemplateInfo] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
@@ -141,70 +138,76 @@ export function Template(props: ITemplateProps) {
       if (lastTemplate) {
         setTemplate(lastTemplate);
       } else {
-        const planRecs = memory.cache.query((q: QueryBuilder) =>
-          q.findRecords('plan')
-        ) as Plan[];
-        const myPlan = planRecs.filter((p) => p.id === plan);
-        if (myPlan.length > 0) {
-          const planTypeRec = memory.cache.query((q: QueryBuilder) =>
-            q.findRecord({
-              type: 'plantype',
-              id: related(myPlan[0], 'plantype'),
-            })
-          ) as PlanType;
-          setTemplate(
-            planTypeRec?.attributes?.name.toLocaleLowerCase() !== 'other'
-              ? '{BOOK}-{CHAP}-{BEG}-{END}'
-              : '{CHAP}-{BEG}-{END}'
-          );
-        }
+        setTemplate('{SECT}');
+        // const planRecs = memory.cache.query((q: QueryBuilder) =>
+        //   q.findRecords('plan')
+        // ) as Plan[];
+        // const myPlan = planRecs.filter((p) => p.id === plan);
+        // if (myPlan.length > 0) {
+        //   const planTypeRec = memory.cache.query((q: QueryBuilder) =>
+        //     q.findRecord({
+        //       type: 'plantype',
+        //       id: related(myPlan[0], 'plantype'),
+        //     })
+        //   ) as PlanType;
+        //   setTemplate(
+        //     planTypeRec?.attributes?.name.toLocaleLowerCase() !== 'other'
+        //       ? '{BOOK}-{CHAP}-{BEG}-{END}'
+        //       : '{CHAP}-{BEG}-{END}'
+        //   );
+        // }
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   return (
-    <Paper
-      component="form"
-      sx={{
-        padding: '2px 4px',
-        display: 'flex',
-        alignItems: 'center',
-        width: 600,
-      }}
-    >
-      <InputLabel>{`${t.fileTemplate}:`}</InputLabel>
-      <InputBase
-        sx={{ ml: 1, flex: 1 }}
-        value={template}
-        onChange={handleTemplateChange}
-      />
-      <IconButton
-        id="templApply"
-        sx={iconProps}
-        aria-label={t.apply}
-        onClick={handleApply}
-        title={t.apply}
+    <>
+      <Paper
+        component="form"
+        sx={{
+          padding: '2px 4px',
+          display: 'flex',
+          alignItems: 'center',
+          width: 600,
+        }}
       >
-        <DoneIcon />
-      </IconButton>
-      <Divider orientation="vertical" sx={{ height: '28px', m: '4px' }} />
-      <IconButton
-        id="templCodes"
-        color="primary"
-        sx={iconProps}
-        onClick={handleTemplateInfo}
-        title={t.templateCodes}
-      >
-        <InfoIcon />
-      </IconButton>
-      <InfoDialog
-        open={templateInfo}
-        onClose={handleClose}
-        onClick={handleClick}
-        organizedBy={organizedBy}
-      />
-    </Paper>
+        <InputLabel>{`${t.fileTemplate}:`}</InputLabel>
+        <InputBase
+          sx={{ ml: 1, flex: 1 }}
+          value={template}
+          onChange={handleTemplateChange}
+        />
+        <IconButton
+          id="templApply"
+          sx={iconProps}
+          aria-label={t.apply}
+          onClick={handleApply}
+          title={t.apply}
+        >
+          <DoneIcon />
+        </IconButton>
+        <Divider orientation="vertical" sx={{ height: '28px', m: '4px' }} />
+        <IconButton
+          id="templCodes"
+          color="primary"
+          sx={iconProps}
+          onClick={handleTemplateInfo}
+          title={t.templateCodes}
+        >
+          <InfoIcon />
+        </IconButton>
+        <InfoDialog
+          open={templateInfo}
+          onClose={handleClose}
+          onClick={handleClick}
+          organizedBy={organizedBy}
+        />
+      </Paper>
+      {template === '{SECT}' && (
+        <Typography fontSize="small">{t.renderExportTemplate}</Typography>
+      )}
+    </>
   );
 }
 export default Template;
