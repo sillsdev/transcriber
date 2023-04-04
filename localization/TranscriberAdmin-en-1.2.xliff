@@ -5966,6 +5966,13 @@
                <context context-type="sourcefile">template.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="template.renderExportTemplate">
+      		<source>The {SECT} template works for files exported from Render.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">template.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="template.templateCodes">
             <source>Template Codes</source>
             <target/>
