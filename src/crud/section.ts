@@ -1,5 +1,5 @@
-import { Section, Passage, User } from '../model';
-import { related } from '.';
+import { Section, Passage, User, BookName } from '../model';
+import { parseRef, passageBook, related } from '.';
 import { numCompare } from '../utils/sort';
 
 function sectionReviewer(s: Section, users: Array<User>) {
@@ -23,6 +23,29 @@ export function sectionNumber(section: Section) {
 }
 export function sectionCompare(a: Section, b: Section) {
   return numCompare(a.attributes.sequencenum, b.attributes.sequencenum);
+}
+export function sectionRef(
+  a: Section,
+  passages: Passage[],
+  bookData: BookName[]
+) {
+  let start: Passage | undefined;
+  let end: Passage | undefined;
+  if (passages.length > 0) {
+    start = passages[0];
+    end = passages[passages.length - 1];
+    parseRef(start);
+    parseRef(end);
+  }
+  return start?.startChapter && end?.startChapter
+    ? `${passageBook(start, bookData)} ${start.startChapter}:${
+        start.startVerse
+      }-${
+        end.endChapter !== start.startChapter
+          ? end.endChapter?.toString() + ':'
+          : ''
+      }${end.endVerse}`
+    : undefined;
 }
 /* build the section name = sequence + name */
 export function sectionDescription(section: Section, passage?: Passage) {

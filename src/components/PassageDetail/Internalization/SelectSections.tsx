@@ -33,6 +33,7 @@ import {
   useOrganizedBy,
   findRecord,
   usePlanType,
+  sectionRef,
 } from '../../../crud';
 import { transcriptionTabSelector } from '../../../selector';
 import { eqSet } from '../../../utils';
@@ -60,12 +61,14 @@ const getChildRows = (row: any, rootRows: any[]) => {
 };
 
 /* build the section name = sequence + name */
-const getSection = (section: Section) => {
+const getSection = (
+  section: Section,
+  passages: Passage[],
+  bookData: BookName[]
+) => {
   const name =
-    section && section.attributes && section.attributes.name
-      ? section.attributes.name
-      : '';
-  return sectionNumber(section) + ' ' + name;
+    sectionRef(section, passages, bookData) ?? section?.attributes?.name ?? '';
+  return sectionNumber(section) + '.\u00A0\u00A0' + name;
 };
 
 /* build the passage name = sequence + book + reference */
@@ -181,7 +184,7 @@ export function SelectSections(props: IProps) {
         if (!isFlat && passageCount > 1)
           rowData.push({
             id: section.id,
-            name: getSection(section),
+            name: getSection(section, sectionpassages, bookData),
             passages: passageCount.toString(),
             parentId: '',
           });
