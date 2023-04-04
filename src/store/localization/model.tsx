@@ -1033,6 +1033,7 @@ export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
     "fileTemplate": string;
     "language": string;
     "passage": string;
+    "renderExportTemplate": string;
     "templateCodes": string;
 };
 

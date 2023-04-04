@@ -1101,6 +1101,7 @@ const initialState = {
 			"fileTemplate": "File Name Template",
 			"language": "Language BCP47 code",
 			"passage": "Passage number(within {0})",
+			"renderExportTemplate": "The {SECT} template works for files exported from Render.",
 			"templateCodes": "Template Codes",
 		}
 	}),
