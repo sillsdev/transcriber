@@ -33,6 +33,7 @@ import { IMediaActionsStrings } from '../model';
 import { mediaActionsSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { GridColumnExtension } from '@devexpress/dx-react-grid';
+import usePassageDetailContext from '../context/usePassageDetailContext';
 
 export const TaskItemWidth = 240;
 
@@ -122,16 +123,14 @@ export function TaskTable(props: IProps) {
     activityStateStr,
     todoStr,
     projButtonStr,
-    selected,
     expandedGroups,
     filter,
-    playing,
-    setPlaying,
     setFilter,
-    loading,
-    trBusy,
     flat,
   } = useTodo();
+  const { playerMediafile, playing, setPlaying, loading, pdBusy } =
+    usePassageDetailContext();
+  const filterRef = useRef(filter);
   const t = todoStr;
   const tpb = projButtonStr;
   const [user] = useGlobal('user');
@@ -201,7 +200,7 @@ export function TaskTable(props: IProps) {
 
   const [rows, setRows] = useState(Array<IRow>());
   const [style, setStyle] = useState<CSSProperties>({
-    height: window.innerHeight - 100,
+    height: window.innerHeight - 275,
     overflowY: 'auto',
     cursor: 'default',
   });
@@ -219,6 +218,11 @@ export function TaskTable(props: IProps) {
     if (onFilter) onFilter(!filter);
     setFilter(!filter);
   };
+
+  useEffect(() => {
+    filterRef.current = filter;
+    setDimensions();
+  }, [filter]);
 
   const handleStopPlayer = () => {
     if (playing) setPlaying(false);
@@ -248,7 +252,7 @@ export function TaskTable(props: IProps) {
 
   const setDimensions = () => {
     setStyle({
-      height: window.innerHeight - 100,
+      height: window.innerHeight - 275,
       overflowY: 'auto',
       cursor: busyRef.current ? 'progress' : 'default',
     });
@@ -270,13 +274,13 @@ export function TaskTable(props: IProps) {
   }, []);
 
   useEffect(() => {
-    busyRef.current = trBusy || loading;
+    busyRef.current = pdBusy || loading;
     setStyle({
-      height: window.innerHeight - 100,
+      height: window.innerHeight - 275,
       overflowY: 'auto',
       cursor: busyRef.current ? 'progress' : 'default',
     });
-  }, [trBusy, loading]);
+  }, [pdBusy, loading]);
 
   useEffect(() => {
     if (formRef.current && selectedRef.current) {
@@ -436,8 +440,8 @@ export function TaskTable(props: IProps) {
             curId = rowData[value.props.item]?.mediafile.id;
         return (
           <td
-            ref={curId === selected ? selectedRef : notSelectedRef}
-            style={curId === selected ? selBacking : noSelBacking}
+            ref={curId === playerMediafile?.id ? selectedRef : notSelectedRef}
+            style={curId === playerMediafile?.id ? selBacking : noSelBacking}
           >
             {value}
           </td>
@@ -461,7 +465,6 @@ export function TaskTable(props: IProps) {
   const playEnded = () => {
     setPlaying(false);
   };
-
   return (
     <TaskTableDiv
       id="TaskTable"

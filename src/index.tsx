@@ -221,7 +221,6 @@ Promise.all(promises)
       latestVersion: '',
       releaseDate: '',
       progress: 0,
-      trackedTask: '',
     });
     ReactDOM.render(<Root />, document.getElementById('root'));
   })

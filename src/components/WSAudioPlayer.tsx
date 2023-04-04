@@ -90,6 +90,7 @@ interface IProps {
   markers?: IMarker[];
   metaData?: JSX.Element;
   isPlaying?: boolean;
+  regionOnly?: boolean;
   loading?: boolean;
   busy?: boolean;
   defaultRegionParams?: IRegionParams;
@@ -150,6 +151,7 @@ function WSAudioPlayer(props: IProps) {
     markers,
     metaData,
     isPlaying,
+    regionOnly,
     loading,
     busy,
     defaultRegionParams,
@@ -219,6 +221,7 @@ function WSAudioPlayer(props: IProps) {
     wsLoad,
     wsClear,
     wsTogglePlay,
+    wsPlayRegion,
     wsBlob,
     wsPause,
     wsDuration,
@@ -465,6 +468,7 @@ function WSAudioPlayer(props: IProps) {
   }, [size, wsSetHeight]);
 
   useEffect(() => {
+    console.log('initialposition', initialposition);
     if (
       initialposition !== undefined &&
       initialposition !== initialPosRef.current
@@ -542,12 +546,18 @@ function WSAudioPlayer(props: IProps) {
 
   const handlePlayStatus = () => {
     if (durationRef.current === 0 || recordingRef.current) return false;
-    const playing = wsTogglePlay();
-    if (playing && wsPosition().toFixed(2) === durationRef.current.toFixed(2))
+    var nowplaying = true;
+    if (regionOnly) {
+      wsPlayRegion();
+    } else nowplaying = wsTogglePlay();
+    if (
+      nowplaying &&
+      wsPosition().toFixed(2) === durationRef.current.toFixed(2)
+    )
       wsGoto(0);
-    setPlaying(playing);
-    if (onPlayStatus && isPlaying !== undefined && playing !== isPlaying) {
-      onPlayStatus(playing);
+    setPlaying(nowplaying);
+    if (onPlayStatus && isPlaying !== undefined && nowplaying !== isPlaying) {
+      onPlayStatus(nowplaying);
     }
   };
 

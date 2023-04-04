@@ -136,9 +136,11 @@ const initState = {
   firstStepIndex: -1,
   setFirstStepIndex: (step: number) => {},
   index: 0, //row index?
+  mediafileId: '', //This is the latest vernacular
   selected: '',
   setSelected: (selected: string) => {},
   setMediaSelected: (id: string, start: number, end: number) => {},
+  playerMediafile: undefined as MediaFile | undefined, //passagedetailPlayer id
   playing: false, //vernacular in wavesurfer
   setPlaying: (playing: boolean) => {},
   itemPlaying: false, //resource, bt, retell etc
@@ -155,7 +157,7 @@ const initState = {
   handleOldVernacularPlayEnd: () => {},
   rowData: Array<IRow>(),
   sharedStr: {} as ISharedStrings,
-  mediafileId: '',
+
   loading: false,
   audioBlob: undefined as Blob | undefined,
   pdBusy: false,
@@ -282,7 +284,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           commentPlayId: '',
         };
       });
-      if (step && getTool(step.attributes?.tool) !== ToolSlug.Resource) {
+      var tool = getTool(step?.attributes?.tool) as ToolSlug;
+      if (step && tool !== ToolSlug.Resource && tool !== ToolSlug.Transcribe) {
         //this does a bunch of stuff...don't just set it in the state above...
         if (state.rowData.length > 0 && state.rowData[0].isVernacular)
           setSelected(state.rowData[0].id);
@@ -348,7 +351,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       });
     };
 
-    //this is for the vernacular only
+    //this is for the PD Player only
     const setPlaying = (playing: boolean) => {
       if (playing !== state.playing) {
         setState((state: ICtxState) => {
@@ -535,7 +538,11 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       );
     };
 
-    const setSelected = (selected: string, rowData: IRow[] = state.rowData) => {
+    const setSelected = (
+      selected: string,
+      rowData: IRow[] = state.rowData,
+      inPlayer = true
+    ) => {
       let i = rowData.findIndex((r) => r.mediafile.id === selected);
       let newRows: IRow[] = [];
       if (i < 0) {
@@ -556,6 +563,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           i = newRows.length - 1;
         } else {
           oldVernReset();
+          fetchMediaUrl({
+            id: '',
+          });
           setState((state: ICtxState) => {
             return {
               ...state,
@@ -577,12 +587,13 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       var resetBlob = false;
       //if this is a file that will be played in the wavesurfer..fetch it
       if (
-        (r.isVernacular && i === 0) ||
-        [
-          localizedArtifactType(ArtifactTypeSlug.ProjectResource),
-          localizedArtifactType(ArtifactTypeSlug.WholeBackTranslation),
-          localizedArtifactType(ArtifactTypeSlug.PhraseBackTranslation),
-        ].includes(r.artifactType)
+        inPlayer &&
+        ((r.isVernacular && i === 0) ||
+          [
+            localizedArtifactType(ArtifactTypeSlug.ProjectResource),
+            localizedArtifactType(ArtifactTypeSlug.WholeBackTranslation),
+            localizedArtifactType(ArtifactTypeSlug.PhraseBackTranslation),
+          ].includes(r.artifactType))
       ) {
         if (
           mediaState.id !== r.mediafile.id &&
@@ -596,16 +607,17 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         }
 
         if (resetBlob) currentSegmentRef.current = undefined;
-
+        var rows = newRows.length > 0 ? newRows : rowData;
         setState((state: ICtxState) => {
           return {
             ...state,
             audioBlob: resetBlob ? undefined : state.audioBlob,
             index: i,
             selected,
+            playerMediafile: rows[i].mediafile,
             playing: false,
             loading: fetching.current !== '',
-            rowData: newRows.length > 0 ? newRows : rowData,
+            rowData: rows,
             currentSegment: resetBlob ? '' : state.currentSegment,
             currentSegmentIndex: resetBlob ? 0 : state.currentSegmentIndex,
           };
@@ -682,11 +694,11 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const setMediaSelected = (id: string, start: number, end: number) => {
       mediaStart.current = start;
       mediaEnd.current = end;
-      setSelected(id, state.rowData);
+      setSelected(id, state.rowData, false);
     };
 
     const handleDuration = (duration: number) => {
-      if (mediaStart.current) {
+      if (mediaStart.current !== undefined) {
         mediaPosition.current = mediaStart.current;
         mediaStart.current = undefined;
         setState((state: ICtxState) => {
@@ -828,7 +840,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
               return;
             }
             //not sure what this intermediary file is, but causes console errors
-            if (b.type !== 'text/html') {
+            if (b.type !== 'text/html' && b.type !== 'application/xml') {
               if (urlOrError === mediaUrlRef.current) {
                 setState((state: ICtxState) => {
                   return {

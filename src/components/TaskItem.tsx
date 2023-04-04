@@ -22,6 +22,7 @@ import TaskAvatar from './TaskAvatar';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { TaskItemWidth } from './TaskTable';
 import { ActivityStates } from '../model';
+import usePassageDetailContext from '../context/usePassageDetailContext';
 
 const rowProp = { display: 'flex', flexDirection: 'row' } as SxProps;
 
@@ -36,14 +37,13 @@ export function TaskItem(props: IProps) {
   const {
     rowData,
     activityStateStr,
-    selected,
     allDone,
-    setSelected,
     refresh,
     setAllDone,
     allBookData,
   } = useTodo();
   const uctx = React.useContext(UnsavedContext);
+  const { playerMediafile, setSelected } = usePassageDetailContext();
   const { checkSavedFn } = uctx.state;
 
   // TT-1749 during refresh the index went out of range.
@@ -52,11 +52,11 @@ export function TaskItem(props: IProps) {
 
   const handleSelect = (select: string) => () => {
     //if we're all done, we can't need to save
-    if (allDone && select === selected) {
+    if (allDone && select === playerMediafile?.id) {
       setAllDone(false);
     } else
       checkSavedFn(() => {
-        if (select !== selected) setSelected(select);
+        if (select !== playerMediafile?.id) setSelected(select);
         else refresh();
       });
   };

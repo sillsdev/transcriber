@@ -94,15 +94,16 @@ export function useWaveSurfer(
     if (onPlayStatus) onPlayStatus(playingRef.current);
   };
   const progress = () => progressRef.current;
-
-  const setPlaying = (value: boolean) => {
+  const wsPlayRegion = () => setPlayingx(true, true);
+  const setPlaying = (value: boolean) => setPlayingx(value, singleRegionOnly);
+  const setPlayingx = (value: boolean, regionOnly: boolean) => {
     if (value !== playingRef.current) {
       playingRef.current = value;
       try {
         if (value) {
           if (wavesurfer()?.isReady) {
             //play region once if single region
-            if (!justPlayRegion(progress())) {
+            if (!regionOnly || !justPlayRegion(progress())) {
               //default play (which will loop region if looping is on)
               wavesurfer()?.play(progress());
             }
@@ -579,6 +580,7 @@ export function useWaveSurfer(
     wsIsPlaying,
     wsTogglePlay,
     wsPlay,
+    wsPlayRegion,
     wsPause,
     wsGoto,
     wsSetPlaybackRate,

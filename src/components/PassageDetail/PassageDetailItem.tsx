@@ -183,7 +183,7 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
   const { userIsAdmin } = useRole();
   const {
     passage,
-    mediafileId,
+    playerMediafile,
     discussionSize,
     setDiscussionSize,
     playerSize,
@@ -219,6 +219,9 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
   const [segParams, setSegParams] = useState<IRegionParams>(btDefaultSegParams);
   const toolId = 'RecordArtifactTool';
 
+  const mediafileId = useMemo(() => {
+    return playerMediafile?.id ?? '';
+  }, [playerMediafile]);
   useEffect(() => {
     if (segments) {
       var def = getOrgDefault(segments);

@@ -211,7 +211,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   const ctx = useContext(PassageDetailContext);
   const {
     currentstep,
-    mediafileId,
+    playerMediafile,
     setPlayerSegments,
     currentSegment,
     handleHighlightDiscussion,
@@ -267,6 +267,10 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   const commentText = useRef('');
   const commentMediaId = useRef('');
   const [canSaveRecording, setCanSaveRecording] = useState(false);
+
+  const mediafileId = useMemo(() => {
+    return playerMediafile?.id ?? '';
+  }, [playerMediafile]);
 
   const myToolId: string = useMemo(() => {
     if (discussion.id) return discussion.id;
