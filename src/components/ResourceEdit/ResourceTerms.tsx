@@ -12,7 +12,8 @@ export const ResourceTerms = (props: IResourceState) => {
 
   const handleChange = (e: any) => {
     e.persist();
-    setState((state) => ({ ...state, terms: e.target?.value || '' }));
+    setState &&
+      setState((state) => ({ ...state, terms: e.target?.value || '' }));
   };
 
   return (
@@ -22,7 +23,7 @@ export const ResourceTerms = (props: IResourceState) => {
       label={t.terms}
       multiline
       value={terms}
-      onChange={handleChange}
+      onChange={setState ? handleChange : undefined}
       fullWidth
     />
   );

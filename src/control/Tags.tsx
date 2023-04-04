@@ -104,8 +104,10 @@ export default function Tags({ label, tags, onChange, sx }: IProps) {
       options={options}
       value={value ?? []}
       disableCloseOnSelect
-      onChange={(event, newValue) => handleChoice(newValue)}
-      onInputChange={handleInputChange}
+      onChange={
+        onChange ? (event, newValue) => handleChoice(newValue) : undefined
+      }
+      onInputChange={onChange ? handleInputChange : undefined}
       onClose={handleLeave}
       filterOptions={(options, params) => {
         const filtered = filter(options, params);

@@ -1,5 +1,5 @@
 import { Box, Divider, Stack } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   ActionRow,
   AltButton,
@@ -49,7 +49,7 @@ const initState: IResourceDialog = {
 
 export interface IResourceState {
   state: IResourceDialog;
-  setState: React.Dispatch<React.SetStateAction<IResourceDialog>>;
+  setState?: React.Dispatch<React.SetStateAction<IResourceDialog>>;
 }
 
 interface IProps extends IDialog<IResourceDialog> {
@@ -59,12 +59,18 @@ interface IProps extends IDialog<IResourceDialog> {
 
 export default function ResourceOverview(props: IProps) {
   const { mode, values, isOpen, onOpen, onCommit, onCancel, onDelete } = props;
+
   const [isDeveloper] = useGlobal('developer');
   const [state, setState] = React.useState({ ...initState });
   const { title, bcp47, keywords } = state;
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
+
+  const updateState = useMemo(
+    () => (mode === Mode.view ? undefined : setState),
+    [mode]
+  );
 
   useEffect(() => {
     setState(!values ? { ...initState } : { ...values });
@@ -80,7 +86,7 @@ export default function ResourceOverview(props: IProps) {
   };
 
   const handleLanguageChange = (val: ILanguage) => {
-    setState((state) => ({ ...state, ...val }));
+    if (mode !== Mode.view) setState((state) => ({ ...state, ...val }));
   };
 
   const handleDelete = () => {
@@ -104,16 +110,17 @@ export default function ResourceOverview(props: IProps) {
   return (
     <Box>
       <Stack spacing={2}>
-        <ResourceTitle state={state} setState={setState} />
-        <ResourceDescription state={state} setState={setState} />
-        <ResourceCategory state={state} setState={setState} />
-        <ResourceKeywords state={state} setState={setState} />
-        <ResourceTerms state={state} setState={setState} />
+        <ResourceTitle state={state} setState={updateState} />
+        <ResourceDescription state={state} setState={updateState} />
+        <ResourceCategory state={state} setState={updateState} />
+        <ResourceKeywords state={state} setState={updateState} />
+        <ResourceTerms state={state} setState={updateState} />
         <Language
           {...state}
           onChange={handleLanguageChange}
           hideSpelling
           hideFont
+          disabled={mode === Mode.view}
         />
       </Stack>
       <Divider sx={{ mt: 2 }} />
@@ -129,13 +136,15 @@ export default function ResourceOverview(props: IProps) {
         <AltButton id="resCancel" onClick={handleClose}>
           {ts.cancel}
         </AltButton>
-        <PriButton
-          id="resSave"
-          onClick={handleAdd}
-          disabled={title === '' || bcp47 === 'und'}
-        >
-          {mode === Mode.add ? t.add : ts.save}
-        </PriButton>
+        {mode !== Mode.view && (
+          <PriButton
+            id="resSave"
+            onClick={handleAdd}
+            disabled={title === '' || bcp47 === 'und'}
+          >
+            {mode === Mode.add ? t.add : ts.save}
+          </PriButton>
+        )}
       </ActionRow>
     </Box>
   );

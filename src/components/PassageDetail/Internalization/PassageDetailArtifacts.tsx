@@ -641,7 +641,11 @@ export function PassageDetailArtifacts(props: IProps) {
               onView={handleDisplayId}
               onDone={handleDone}
               onDelete={handleDelete}
-              onEdit={handleEdit}
+              onEdit={
+                userIsAdmin && (!offline || offlineOnly)
+                  ? handleEdit
+                  : undefined
+              }
             />
           ))}
       </SortableList>

@@ -22,6 +22,7 @@ interface IProps extends ILanguage {
   onChange: (state: ILanguage) => void;
   hideSpelling?: boolean;
   hideFont?: boolean;
+  disabled?: boolean;
 }
 
 export const Language = (props: IProps) => {
@@ -96,6 +97,7 @@ export const Language = (props: IProps) => {
               setName={handleLanguage}
               setFont={handleFont}
               t={lt}
+              disabled={props.disabled}
             />
           }
           label=""

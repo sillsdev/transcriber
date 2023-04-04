@@ -39,11 +39,18 @@ export const ResourceKeywords = (props: IResourceState) => {
   }, [keywords, allKeywords]);
 
   const handleChange = (tags: ITag) => {
-    setState((state) => ({
-      ...state,
-      keywords: filteredOptions(tags).join('|'),
-    }));
+    setState &&
+      setState((state) => ({
+        ...state,
+        keywords: filteredOptions(tags).join('|'),
+      }));
   };
 
-  return <Tags label={t.keywords} tags={tags} onChange={handleChange} />;
+  return (
+    <Tags
+      label={t.keywords}
+      tags={tags}
+      onChange={setState ? handleChange : undefined}
+    />
+  );
 };
