@@ -7,14 +7,15 @@ export const ResourceCategory = (props: IResourceState) => {
   const { category } = state;
 
   const handleChange = (category: string) => {
-    setState((state) => ({ ...state, category }));
+    setState && setState((state) => ({ ...state, category }));
   };
 
   return (
     <SelectArtifactCategory
+      disabled={!setState}
       resource
       initCategory={category}
-      onCategoryChange={handleChange}
+      onCategoryChange={setState ? handleChange : undefined}
       required={false}
       allowNew
     />

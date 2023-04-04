@@ -12,7 +12,8 @@ export const ResourceDescription = (props: IResourceState) => {
 
   const handleChangeDescription = (e: any) => {
     e.persist();
-    setState((state) => ({ ...state, description: e.target?.value || '' }));
+    setState &&
+      setState((state) => ({ ...state, description: e.target?.value || '' }));
   };
 
   return (
@@ -21,7 +22,7 @@ export const ResourceDescription = (props: IResourceState) => {
       id="description"
       label={t.description}
       value={description}
-      onChange={handleChangeDescription}
+      onChange={setState ? handleChangeDescription : undefined}
       fullWidth
     />
   );

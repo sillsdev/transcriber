@@ -38,6 +38,7 @@ interface IProps extends IRecordProps {
   scripture?: ScriptureEnum;
   resource?: boolean;
   discussion?: boolean;
+  disabled?: boolean;
 }
 
 const StyledBox = styled(Box)<BoxProps>(() => ({
@@ -67,6 +68,7 @@ export const SelectArtifactCategory = (props: IProps) => {
     scripture,
     resource,
     discussion,
+    disabled,
   } = props;
   const [categoryId, setCategoryId] = useState(initCategory);
   const [newArtifactCategory, setNewArtifactCategory] = useState('');
@@ -149,6 +151,7 @@ export const SelectArtifactCategory = (props: IProps) => {
         sx={textFieldProps}
         value={categoryId || ''}
         onChange={handleArtifactCategoryChange}
+        disabled={disabled}
         SelectProps={{
           MenuProps: {
             sx: menuProps,

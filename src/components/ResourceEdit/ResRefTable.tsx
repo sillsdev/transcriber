@@ -47,7 +47,7 @@ interface ICellChange {
 
 interface ReferenceTableProps {
   bookData: BookRef[];
-  onCommit: (refs: BookRef[]) => void;
+  onCommit?: (refs: BookRef[]) => void;
   onCancel: () => void;
 }
 
@@ -167,8 +167,12 @@ export default function ReferenceTable({
           } as ICell)
     );
 
-  const emptyTable = () => [rowCells(0, [t.book, t.references, t.action])];
-  const emptyRow = () => ['', '', ''].map((c) => c);
+  const emptyTable = () =>
+    onCommit
+      ? [rowCells(0, [t.book, t.references, t.action])]
+      : [rowCells(0, [t.book, t.references])];
+
+  const emptyRow = () => (onCommit ? ['', '', ''] : ['', '']).map((c) => c);
 
   React.useEffect(() => {
     suggestionRef.current = bookSuggestions;
@@ -177,7 +181,7 @@ export default function ReferenceTable({
   React.useEffect(() => {
     let newData: ICell[][] = emptyTable();
     bookData.forEach(({ code, refs }, i) =>
-      newData.push(rowCells(i + 1, [code, refs, '']))
+      newData.push(rowCells(i + 1, onCommit ? [code, refs, ''] : [code, refs]))
     );
     newData.push(rowCells(bookData.length + 1, emptyRow()));
     updData(newData);
@@ -206,11 +210,11 @@ export default function ReferenceTable({
     if (error > 0) {
       setConfirmErr(refData);
     } else {
-      onCommit(refData);
+      onCommit && onCommit(refData);
     }
   };
   const saveConfirm = () => {
-    if (confirmErr) onCommit(confirmErr);
+    if (confirmErr && onCommit) onCommit(confirmErr);
     setConfirmErr(undefined);
   };
   const saveRejected = () => {
@@ -262,14 +266,16 @@ export default function ReferenceTable({
         <DataSheet
           data={data}
           valueRenderer={handleValueRenderer}
-          onCellsChanged={handleCellsChanged}
+          onCellsChanged={onCommit ? handleCellsChanged : undefined}
         />
       </Content>
       <ActionRow>
         <AltButton onClick={handleCancel}>{ts.cancel}</AltButton>
-        <PriButton onClick={handleSave} disabled={data.length <= 2}>
-          {ts.save}
-        </PriButton>
+        {onCommit && (
+          <PriButton onClick={handleSave} disabled={data.length <= 2}>
+            {ts.save}
+          </PriButton>
+        )}
       </ActionRow>
       {confirmRow && (
         <Confirm

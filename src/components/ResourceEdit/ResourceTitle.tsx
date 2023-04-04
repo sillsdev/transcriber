@@ -12,7 +12,8 @@ export const ResourceTitle = (props: IResourceState) => {
 
   const handleChangeTitle = (e: any) => {
     e.persist();
-    setState((state) => ({ ...state, title: e.target?.value || '' }));
+    setState &&
+      setState((state) => ({ ...state, title: e.target?.value || '' }));
   };
 
   return (
@@ -22,7 +23,7 @@ export const ResourceTitle = (props: IResourceState) => {
       id="title"
       label={t.title}
       value={title}
-      onChange={handleChangeTitle}
+      onChange={setState ? handleChangeTitle : undefined}
       fullWidth
     />
   );

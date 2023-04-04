@@ -14,7 +14,10 @@ import {
   useSharedResRead,
   useSharedResUpdate,
   useSharedResDelete,
+  useRole,
 } from '../../crud';
+import { useMemo } from 'react';
+import { useGlobal } from 'reactn';
 
 interface IRecordProps {
   sharedResources: SharedResource[];
@@ -71,6 +74,14 @@ export function ResourceTabs({
     passage: { type: 'passage', id: passId },
   });
   const deleteSharedResource = useSharedResDelete();
+  const { userIsAdmin } = useRole();
+  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
+
+  const readOnly = useMemo(
+    () => !userIsAdmin || (offline && !offlineOnly),
+    [userIsAdmin, offline, offlineOnly]
+  );
 
   const sharedResRec = React.useMemo(
     () => readSharedResource(passId),
@@ -173,7 +184,13 @@ export function ResourceTabs({
       </Box>
       <TabPanel value={value} index={0}>
         <ResourceOverview
-          mode={values ? DialogMode.edit : DialogMode.add}
+          mode={
+            readOnly
+              ? DialogMode.view
+              : values
+              ? DialogMode.edit
+              : DialogMode.add
+          }
           values={values}
           isOpen={true}
           onOpen={handleOverOpen}
@@ -182,7 +199,17 @@ export function ResourceTabs({
         />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <ResourceRefs res={sharedResRec} onOpen={handleOverOpen} />
+        <ResourceRefs
+          mode={
+            readOnly
+              ? DialogMode.view
+              : values
+              ? DialogMode.edit
+              : DialogMode.add
+          }
+          res={sharedResRec}
+          onOpen={handleOverOpen}
+        />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <VersionDlg passId={passId} />

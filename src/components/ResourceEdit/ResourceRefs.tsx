@@ -8,6 +8,7 @@ import {
   SharedResource,
   SharedResourceReference,
   IResourceStrings,
+  DialogMode,
 } from '../../model';
 import ReferenceTable from './ResRefTable';
 import { rangeAdd, useBookN } from '../../utils';
@@ -24,11 +25,13 @@ interface RecordProps {
 
 interface ResourceRefsProps {
   res?: SharedResource;
+  mode: DialogMode;
   onOpen: () => void;
 }
 
 export function ResourceRefs({
   res,
+  mode,
   onOpen,
   sharedResourceReferences,
 }: ResourceRefsProps & RecordProps) {
@@ -163,12 +166,14 @@ export function ResourceRefs({
 
   return (
     <Stack spacing={1}>
-      <ButtonGroup>
-        <Button onClick={handleAddWord}>{t.byWord}</Button>
-      </ButtonGroup>
+      {false && (
+        <ButtonGroup>
+          <Button onClick={handleAddWord}>{t.byWord}</Button>
+        </ButtonGroup>
+      )}
       <ReferenceTable
         bookData={bookData}
-        onCommit={handleCommit}
+        onCommit={mode === DialogMode.view ? undefined : handleCommit}
         onCancel={handleCancel}
       />
     </Stack>
