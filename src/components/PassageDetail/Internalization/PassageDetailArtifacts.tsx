@@ -1,4 +1,11 @@
-import { useState, useContext, useMemo, useRef, useEffect } from 'react';
+import {
+  useState,
+  useContext,
+  useMemo,
+  useRef,
+  useEffect,
+  useCallback,
+} from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
@@ -361,9 +368,13 @@ export function PassageDetailArtifacts(props: IProps) {
     }
   };
 
-  const listFilter = (r: IRow) =>
-    r?.isResource &&
-    (allResources || r.passageId === '' || r.passageId === passage.id);
+  const listFilter = useCallback(
+    (r: IRow) =>
+      r?.isResource &&
+      (allResources || r.passageId === '' || r.passageId === passage.id),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [allResources, passage]
+  );
 
   const onSortEnd = ({
     oldIndex,

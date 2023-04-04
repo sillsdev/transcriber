@@ -59,7 +59,8 @@ export const SelectSharedResource = (props: IProps) => {
   const [resources, setResources] = useState<Resource[]>([]);
   const [data, setData] = useState<IRRow[]>([]);
   const [checks, setChecks] = useState<number[]>([]);
-  const [termsCheck, setTermsCheck] = useState<number>();
+  const [termsCheck, setTermsCheck] = useState<number[]>([]);
+  const [curTermsCheck, setCurTermsCheck] = useState<number>();
   const selecting = useRef(false);
   const { localizedArtifactCategory } = useArtifactCategory();
   const t: IPassageDetailArtifactsStrings = useSelector(
@@ -191,27 +192,45 @@ export const SelectSharedResource = (props: IProps) => {
   const numSort = (i: number, j: number) => i - j;
 
   const handleCheck = (chks: Array<number>) => {
-    const newChecks = chks.map((r) => r).sort(numSort);
-    if (checks.join(',') !== newChecks.join(',')) {
-      let check = false;
-      for (const c of chks) {
-        if (!checks.includes(c) && resources[c].attributes.termsOfUse) {
-          setTermsCheck(c);
-          check = true;
-          break;
-        }
+    if (checks.join(',') !== chks.join(',')) {
+      const termsList: number[] = [];
+      const noTermsList: number[] = [];
+      for (const c of chks.sort(numSort)) {
+        if (!checks.includes(c))
+          if (resources[c].attributes.termsOfUse) {
+            termsList.push(c);
+          } else {
+            noTermsList.push(c);
+          }
       }
-      if (!check) setChecks(newChecks);
+      if (noTermsList.length > 0) {
+        setChecks(checks.concat(noTermsList).sort(numSort));
+      }
+      if (termsList.length > 0) {
+        setTermsCheck(termsList);
+        setCurTermsCheck(termsList[0]);
+      }
     }
   };
 
-  const handleTermsCheck = () => {
-    setTermsCheck(undefined);
+  const handleTermsCancel = () => {
+    setTermsCheck([]);
+    setCurTermsCheck(undefined);
+  };
+
+  const handleTermsReject = () => {
+    const updatedTermsCheck = termsCheck.filter((t) => t !== curTermsCheck);
+    setTermsCheck(updatedTermsCheck);
+    if (updatedTermsCheck.length === 0) {
+      handleTermsCancel();
+    } else {
+      setCurTermsCheck(updatedTermsCheck[0]);
+    }
   };
 
   const handleTermsAccept = () => {
-    if (termsCheck !== undefined) setChecks(checks.concat([termsCheck]));
-    setTermsCheck(undefined);
+    if (curTermsCheck !== undefined) setChecks(checks.concat([curTermsCheck]));
+    handleTermsReject();
   };
 
   useEffect(() => {
@@ -276,29 +295,32 @@ export const SelectSharedResource = (props: IProps) => {
           id="res-selected"
           onClick={handleSelect}
           disabled={
-            checks.length === 0 || selecting.current || Boolean(termsCheck)
+            checks.length === 0 || selecting.current || termsCheck.length > 0
           }
         >
           {t.link}
         </PriButton>
       </ActionRow>
-      {termsCheck !== undefined && (
+      {curTermsCheck && (
         <BigDialog
           title={t.termsReview}
           description={
             <Typography sx={{ pb: 2 }}>
-              {'for {0}'.replace('{0}', resources[termsCheck].attributes.title)}
+              {'for {0}'.replace(
+                '{0}',
+                resources[curTermsCheck].attributes.title
+              )}
             </Typography>
           }
           isOpen={termsCheck !== undefined}
-          onOpen={handleTermsCheck}
+          onOpen={handleTermsCancel}
         >
           <>
             <Typography>
-              {resources[termsCheck].attributes.termsOfUse}
+              {resources[curTermsCheck].attributes.termsOfUse}
             </Typography>
             <ActionRow>
-              <AltButton id="terms-cancel" onClick={handleTermsCheck}>
+              <AltButton id="terms-cancel" onClick={handleTermsReject}>
                 {ts.cancel}
               </AltButton>
               <PriButton id="terms-accept" onClick={handleTermsAccept}>
