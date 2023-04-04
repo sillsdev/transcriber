@@ -11,7 +11,7 @@ import ActionCol from './ResActionCol';
 import { sharedResourceSelector, sharedSelector } from '../../selector';
 
 const refPat =
-  /(?:\d+\s*:\s*(?:\d+(?:\s*-\s*\d+)?,\s*)*(?:\d+(?:\s*-\s*\d+)?)?;\s*)*(?:\d+\s*:\s*(?:\d+(?:\s*-\s*\d+)?,\s*)*(?:\d+(?:\s*-\s*\d+)?)?)?/;
+  /(?:\d+\s*(?::\s*(?:\d+(?:\s*-\s*\d+)?,\s*)*\d+(?:\s*-\s*\d+)?)?;\s*)*(?:\d+\s*(?::\s*(?:\d+(?:\s*-\s*\d+)?,\s*)*\d+(?:\s*-\s*\d+)?)?)?/;
 
 const refTest = (s: string) => {
   const m = refPat.exec(s);

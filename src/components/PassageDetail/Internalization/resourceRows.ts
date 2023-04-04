@@ -69,7 +69,7 @@ export const oneMediaRow = ({
     mediafile: media || ({} as MediaFile),
     resource: r,
     isResource: isResource(typeNameSlug),
-    passageId: related(media, 'passage') || '',
+    passageId: related(r, 'passage') || '',
     isComment: typeNameSlug === 'comment',
     isKeyTerm: typeNameSlug === 'keyterm',
     isVernacular: typeNameSlug === '' || typeNameSlug === 'vernacular',

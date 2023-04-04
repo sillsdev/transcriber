@@ -68,9 +68,35 @@ export const AddResource = (props: IProps) => {
             {'\u00A0'}
           </ListItemText>
         </StyledMenuItem>
-        <StyledMenuItem id="referenceResource" onClick={handle('reference')}>
+        <StyledMenuItem
+          id="referencePassageResource"
+          onClick={handle('ref-passage')}
+        >
           <ListItemText>
-            {t.sharedResource}
+            {t.sharedResource.replace(
+              '{0}',
+              t.passageResource.toLocaleLowerCase()
+            )}
+            {'\u00A0'}
+            <LightTooltip
+              title={t.tip1b.replace(
+                '{0}',
+                t.passageResource.toLocaleLowerCase()
+              )}
+            >
+              <InfoIcon />
+            </LightTooltip>
+          </ListItemText>
+        </StyledMenuItem>
+        <StyledMenuItem
+          id="referenceSectionResource"
+          onClick={handle('ref-section')}
+        >
+          <ListItemText>
+            {t.sharedResource.replace(
+              '{0}',
+              getOrganizedBy(true).toLocaleLowerCase()
+            )}
             {'\u00A0'}
             <LightTooltip
               title={t.tip1b.replace(
