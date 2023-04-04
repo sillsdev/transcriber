@@ -124,19 +124,21 @@ export const useFetchMediaUrl = (reporter?: any) => {
             const audioUrl = mediarec.attributes.audioUrl;
             const path = dataPath(audioUrl, PathType.MEDIA);
             const foundLocal = await ipc?.exists(path);
-            if (!foundLocal && accessToken) {
-              if (cancelled()) return;
-              dispatch({ payload: audioUrl, type: MediaSt.FETCHED });
-            } else if (!path.startsWith('http')) {
-              if (cancelled()) return;
-              dispatch({ payload: await safeURL(path), type: MediaSt.FETCHED });
-              return;
-            } else if (!accessToken) {
-              dispatch({
-                payload: 'no offline file',
-                type: MediaSt.ERROR,
-              });
-              return;
+            if (foundLocal || !accessToken) {
+              if (!path.startsWith('http')) {
+                if (cancelled()) return;
+                dispatch({
+                  payload: await safeURL(path),
+                  type: MediaSt.FETCHED,
+                });
+                return;
+              } else if (!accessToken) {
+                dispatch({
+                  payload: 'no offline file',
+                  type: MediaSt.ERROR,
+                });
+                return;
+              }
             }
           }
         } catch (e: any) {
