@@ -3754,6 +3754,13 @@
       			<context context-type="sourcefile">PassageChooser.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.accept">
+      		<source>Accept</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.action">
             <source>Action</source>
             <target/>
@@ -3775,11 +3782,25 @@
                <context context-type="sourcefile">AddResource.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.allLevel">
+      		<source>All Resources</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.allResources">
       		<source>Show resources for all passages</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.bookLevel">
+      		<source>Resources for the Book</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.canceling">
@@ -3796,6 +3817,20 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.chapterLevel">
+      		<source>Resources for the Chapter</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.chooseLevel">
+      		<source>Resource Reference Filter Level</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.clipboard">
       		<source>clipboard</source>
       		<target/>
@@ -3957,13 +3992,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
-         <trans-unit id="passageDetailArtifacts.sharedResource">
-            <source>Link Shared Resource</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">PassageMedia.tsx</context>
-            </context-group>
-         </trans-unit>
+      	<trans-unit id="passageDetailArtifacts.sharedResource">
+      		<source>Link Shared {0} Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.source">
       		<source>Source</source>
       		<target/>
@@ -3980,6 +4015,13 @@
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.termsOfUse">
       		<source>Terms of Use</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.termsReview">
+      		<source>Review the Terms of Use</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">AddResource.tsx</context>
@@ -4036,6 +4078,13 @@
          </trans-unit>
       	<trans-unit id="passageDetailArtifacts.uploadProject">
       		<source>General - to be used by multiple {0} or passages. (Uploaded files will only appear under Configure General.)</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.verseLevel">
+      		<source>Resources for verses in this passage</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>

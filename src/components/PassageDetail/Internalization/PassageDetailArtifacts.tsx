@@ -1,4 +1,11 @@
-import { useState, useContext, useMemo, useRef, useEffect } from 'react';
+import {
+  useState,
+  useContext,
+  useMemo,
+  useRef,
+  useEffect,
+  useCallback,
+} from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
@@ -348,7 +355,11 @@ export function PassageDetailArtifacts(props: IProps) {
   const handleAction = (what: string) => {
     if (what === 'upload') {
       setUploadVisible(true);
-    } else if (what === 'reference') {
+    } else if (what === 'ref-passage') {
+      resourceTypeRef.current = ResourceTypeEnum.passageResource;
+      setSharedResourceVisible(true);
+    } else if (what === 'ref-section') {
+      resourceTypeRef.current = ResourceTypeEnum.sectionResource;
       setSharedResourceVisible(true);
     } else if (what === 'activity') {
     } else if (what === 'wizard') {
@@ -357,9 +368,13 @@ export function PassageDetailArtifacts(props: IProps) {
     }
   };
 
-  const listFilter = (r: IRow) =>
-    r?.isResource &&
-    (allResources || r.passageId === '' || r.passageId === passage.id);
+  const listFilter = useCallback(
+    (r: IRow) =>
+      r?.isResource &&
+      (allResources || r.passageId === '' || r.passageId === passage.id),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [allResources, passage]
+  );
 
   const onSortEnd = ({
     oldIndex,
@@ -442,6 +457,21 @@ export function PassageDetailArtifacts(props: IProps) {
       resetEdit();
     }
   };
+
+  const resourceSourcePassages = useMemo(() => {
+    const results: number[] = [];
+    sectionResources.forEach((sr) => {
+      const rec = findRecord(memory, 'mediafile', related(sr, 'mediafile')) as
+        | MediaFile
+        | undefined;
+      if (rowData.find((r) => r.id === rec?.id)) {
+        const passageId = rec?.attributes.resourcePassageId;
+        if (passageId) results.push(passageId);
+      }
+    });
+    return results;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sectionResources]);
 
   useEffect(() => {
     getArtifactCategorys(true, false).then((cats) => (catRef.current = cats));
@@ -646,6 +676,7 @@ export function PassageDetailArtifacts(props: IProps) {
         bp={BigDialogBp.md}
       >
         <SelectSharedResource
+          sourcePassages={resourceSourcePassages}
           onSelect={handleSelectShared}
           onOpen={handleSharedResourceVisible}
         />

@@ -646,12 +646,17 @@ export interface IPassageChooserStrings extends Localize.LocalizedStringsMethods
 };
 
 export interface IPassageDetailArtifactsStrings extends Localize.LocalizedStringsMethods {
+    "accept": string;
     "action": string;
     "activity": string;
     "add": string;
+    "allLevel": string;
     "allResources": string;
+    "bookLevel": string;
     "canceling": string;
     "category": string;
+    "chapterLevel": string;
+    "chooseLevel": string;
     "clipboard": string;
     "completed": string;
     "configure": string;
@@ -679,6 +684,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "source": string;
     "startStop": string;
     "termsOfUse": string;
+    "termsReview": string;
     "title": string;
     "type": string;
     "tip1a": string;
@@ -687,6 +693,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "unusedSegment": string;
     "upload": string;
     "uploadProject": string;
+    "verseLevel": string;
     "version": string;
     "yes": string;
 };
