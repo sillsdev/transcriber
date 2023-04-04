@@ -187,7 +187,7 @@ const PassageDetailGrids = () => {
     setHeight(window.innerHeight);
     setDiscussionSize({
       width: discussionSize.width, //should we be smarter here?
-      height: window.innerHeight,
+      height: window.innerHeight - 275,
     });
     setPlayerSize(INIT_PLAYERPANE_HEIGHT + SMALLPLAYERDIFF);
     // setPaperStyle({ width: window.innerWidth - 10 });
@@ -303,15 +303,13 @@ const PassageDetailGrids = () => {
                     </SplitPane>
                   )}
                   {tool === ToolSlug.Transcribe && (
-                    <Pane>
-                      <Grid item sx={descProps} xs={12}>
-                        <PassageDetailTranscribe
-                          width={width - discussionSize.width - 16}
-                          artifactTypeId={artifactId}
-                          onFilter={handleFilter}
-                        />
-                      </Grid>
-                    </Pane>
+                    <Grid item sx={descProps} xs={12}>
+                      <PassageDetailTranscribe
+                        width={width - discussionSize.width - 16}
+                        artifactTypeId={artifactId}
+                        onFilter={handleFilter}
+                      />
+                    </Grid>
                   )}
                   {tool === ToolSlug.Record && (
                     <Grid item sx={descProps} xs={12}>
@@ -337,24 +335,22 @@ const PassageDetailGrids = () => {
           tool === ToolSlug.WholeBackTranslate) && (
           <Grid container direction="row" sx={rowProps}>
             <Grid item xs={12}>
-              <Grid container>
-                <PassageDetailItem
-                  width={width}
-                  slugs={
-                    tool === ToolSlug.Community
-                      ? communitySlugs
-                      : tool === ToolSlug.PhraseBackTranslate
-                      ? phraseBackTranslationSlugs
-                      : wholeBackTranslationSlugs
-                  }
-                  showTopic={tool === ToolSlug.Community}
-                  segments={
-                    tool === ToolSlug.PhraseBackTranslate
-                      ? NamedRegions.BackTranslation
-                      : undefined
-                  }
-                />
-              </Grid>
+              <PassageDetailItem
+                width={width}
+                slugs={
+                  tool === ToolSlug.Community
+                    ? communitySlugs
+                    : tool === ToolSlug.PhraseBackTranslate
+                    ? phraseBackTranslationSlugs
+                    : wholeBackTranslationSlugs
+                }
+                showTopic={tool === ToolSlug.Community}
+                segments={
+                  tool === ToolSlug.PhraseBackTranslate
+                    ? NamedRegions.BackTranslation
+                    : undefined
+                }
+              />
             </Grid>
           </Grid>
         )}

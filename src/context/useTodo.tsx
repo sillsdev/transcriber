@@ -11,7 +11,7 @@ const useTodo = () => {
     filter,
     setFilter,
     index: state.index,
-    selected: state.selected,
+    transSelected: state.transSelected,
   };
 };
 

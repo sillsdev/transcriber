@@ -5,6 +5,7 @@ import React, {
   useRef,
   CSSProperties,
   PropsWithChildren,
+  useMemo,
 } from 'react';
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
@@ -212,9 +213,8 @@ interface IProps {
 }
 
 interface ITrans {
-  transcription: string;
+  transcription: string | undefined;
   position: number;
-  segments: string | undefined;
 }
 
 export function Transcriber(
@@ -237,11 +237,9 @@ export function Transcriber(
     index,
     transcriberStr,
     sharedStr,
-    selected,
-    playing,
+    transSelected,
+    setTransSelected,
     allDone,
-    //audioBlob,
-    loading,
     artifactId,
   } = useTodo();
 
@@ -253,7 +251,6 @@ export function Transcriber(
     state: '',
     role: '',
   };
-  console.log('rowData', rowData, 'index', index, 'mediafile', mediafile);
   const { toolChanged, saveCompleted } = useContext(UnsavedContext).state;
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
@@ -301,8 +298,16 @@ export function Transcriber(
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
   const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
   const t = transcriberStr;
-  const { playerSize, setPlayerSize, pdBusy, setSelected, discussionSize } =
-    usePassageDetailContext();
+  const {
+    loading,
+    playing,
+    playerSize,
+    setPlayerSize,
+    pdBusy,
+    playerMediafile,
+    setSelected,
+    discussionSize,
+  } = usePassageDetailContext();
   const [boxHeight, setBoxHeight] = useState(
     discussionSize.height - (playerSize + 200)
   );
@@ -445,6 +450,12 @@ export function Transcriber(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allDone]);
 
+  const allowSegment = useMemo(() => {
+    return transSelected && role !== 'view'
+      ? NamedRegions.Transcription
+      : undefined;
+  }, [transSelected, role]);
+
   useEffect(() => {
     const getParatextIntegration = () => {
       const intfind = integrations.findIndex(
@@ -477,22 +488,39 @@ export function Transcriber(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussionSize, playerSize]);
 
+  //user changes selected...tell the task table
   useEffect(() => {
-    if (!selected)
+    if (transSelected !== playerMediafile?.id)
+      setTransSelected(playerMediafile?.id);
+    segmentsRef.current = undefined; //when they're loaded we'll be notified
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerMediafile]);
+
+  //if task table has changed selected...tell the world
+  useEffect(() => {
+    if (transSelected !== undefined && transSelected !== playerMediafile?.id)
+      setSelected(transSelected);
+    if (!transSelected)
       showTranscription({
-        transcription: '',
+        transcription: undefined,
         position: 0,
-        segments: undefined,
       });
     else if (!saving.current) showTranscription(getTranscription());
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [selected]);
+  }, [transSelected]);
 
   useEffect(() => {
-    if (mediaRef.current !== mediafile) setSelected(mediafile?.id || '');
+    if (mediaRef.current?.id !== mediafile?.id) {
+      if (playerMediafile?.id !== mediafile?.id || '')
+        setSelected(mediafile?.id || '');
+    }
     if (mediafile) {
       const trans = getTranscription();
-      if (trans.transcription !== transcriptionIn.current && !saving.current) {
+      if (
+        transcriptionIn.current !== undefined &&
+        trans.transcription !== transcriptionIn.current &&
+        !saving.current
+      ) {
         //if someone else changed it...let the user pick
         setConfirm(trans);
       }
@@ -528,7 +556,6 @@ export function Transcriber(
       showTranscription({
         transcription: paratext_textStatus.statusMsg,
         position: 0,
-        segments: segmentsRef.current,
       });
       toolChanged(toolId, true);
       save(
@@ -860,19 +887,18 @@ export function Transcriber(
   };
 
   const getTranscription = () => {
-    const attr = mediafile?.attributes || {};
+    const attr = mediafile?.attributes;
     return {
-      transcription: attr.transcription || '',
-      position: attr.position,
-      segments: getSegments(NamedRegions.Transcription, attr.segments),
+      transcription: attr?.transcription || undefined,
+      position: attr?.position,
+      segments: getSegments(NamedRegions.Transcription, attr?.segments),
     };
   };
 
   const showTranscription = (val: ITrans) => {
     transcriptionIn.current = val.transcription;
-    setTextValue(val.transcription);
+    setTextValue(val.transcription ?? '');
     setDefaultPosition(val.position);
-    segmentsRef.current = val.segments;
     //focus on player
     if (transcriptionRef.current) {
       transcriptionRef.current.firstChild.value = val.transcription;
@@ -912,7 +938,9 @@ export function Transcriber(
 
   const onSegmentChange = (segments: string) => {
     if (segmentsRef.current !== segments) {
-      if (segmentsRef.current) toolChanged(toolId, true);
+      if (segmentsRef.current && allowSegment) {
+        toolChanged(toolId, true);
+      }
       segmentsRef.current = segments;
     }
   };
@@ -954,6 +982,7 @@ export function Transcriber(
         : ArtifactTypeSlug.Vernacular
     );
   }, [slug, artifactId, slugFromId]);
+
   return (
     <GrowingDiv>
       <Paper sx={{ p: 2, m: 'auto' }} style={paperStyle}>
@@ -986,7 +1015,7 @@ export function Transcriber(
                               <IconButton
                                 id="transcriber.pullParatext"
                                 onClick={handlePullParatext}
-                                disabled={selected === ''}
+                                disabled={!transSelected}
                               >
                                 <>
                                   <PullIcon />{' '}
@@ -1005,18 +1034,14 @@ export function Transcriber(
                         allowAutoSegment={true}
                         defaultSegParams={segParams}
                         canSetDefaultParams={canSetOrgDefault}
-                        allowSegment={
-                          selected !== '' && role !== 'view'
-                            ? NamedRegions.Transcription
-                            : undefined
-                        }
+                        allowSegment={allowSegment}
                         allowZoomAndSpeed={true}
                         onProgress={onProgress}
                         onSegment={onSegmentChange}
                         onSegmentParamChange={onSegmentParamChange}
                         onInteraction={onInteraction}
                         onSaveProgress={
-                          selected === '' || role === 'view'
+                          !transSelected || role === 'view'
                             ? undefined
                             : onSaveProgress
                         }
@@ -1042,7 +1067,7 @@ export function Transcriber(
                             autoFocus
                             id="transcriber.text"
                             value={textValue}
-                            readOnly={selected === '' || role === 'view'}
+                            readOnly={!transSelected || role === 'view'}
                             style={textAreaStyle}
                             onChange={handleChange}
                             lang={projData?.langTag || 'en'}
@@ -1054,7 +1079,7 @@ export function Transcriber(
                           autoFocus
                           id="transcriber.text"
                           value={textValue}
-                          readOnly={selected === '' || role === 'view'}
+                          readOnly={!transSelected || role === 'view'}
                           style={textAreaStyle}
                           onChange={handleChange}
                           lang={projData?.langTag || 'en'}
@@ -1077,7 +1102,6 @@ export function Transcriber(
 
             <Grid container direction="row" sx={{ pt: '16px' }}>
               <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
-                (
                 <TaskFlag
                   ta={ta}
                   state={mediafile?.attributes?.transcriptionstate || ''}
@@ -1097,7 +1121,7 @@ export function Transcriber(
                         <AltButton
                           id="transcriber.reject"
                           onClick={handleReject}
-                          disabled={selected === '' || playing}
+                          disabled={!transSelected || playing}
                         >
                           {t.reject}
                         </AltButton>
@@ -1109,7 +1133,7 @@ export function Transcriber(
                               id="transcriber.save"
                               variant={changed ? 'contained' : 'outlined'}
                               onClick={handleSaveButton}
-                              disabled={selected === '' || playing}
+                              disabled={!transSelected || playing}
                             >
                               {t.save}
                             </AltButton>
@@ -1126,7 +1150,7 @@ export function Transcriber(
                             <PriButton
                               id="transcriber.submit"
                               onClick={handleSubmit}
-                              disabled={selected === '' || playing}
+                              disabled={!transSelected || playing}
                             >
                               {t.submit}
                             </PriButton>
@@ -1138,7 +1162,7 @@ export function Transcriber(
                         id="transcriber.reopen"
                         onClick={handleReopen}
                         disabled={
-                          selected === '' ||
+                          !transSelected ||
                           !previous.hasOwnProperty(state) ||
                           playing ||
                           (user !== related(section, 'transcriber') &&
@@ -1175,7 +1199,7 @@ export function Transcriber(
                 GetUser(memory, related(mediafile, 'lastModifiedByUser'))
                   .attributes?.name ?? 'unknown'
               )
-              .replace('{1}', confirm.transcription)}
+              .replace('{1}', confirm.transcription ?? '')}
             yesResponse={handleUpdateConfirmed}
             noResponse={handleUpdateRefused}
           />

@@ -41,6 +41,5 @@ declare module 'reactn/default' {
     latestVersion: string;
     releaseDate: string;
     progress: number;
-    trackedTask: string;
   }
 }

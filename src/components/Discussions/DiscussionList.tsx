@@ -86,7 +86,7 @@ export function DiscussionList(props: IProps & IRecordProps) {
     discussionSize,
     passage,
     currentSegment,
-    mediafileId,
+    playerMediafile,
     setDiscussionMarkers,
   } = ctx.state;
   const { toolsChanged, isChanged } = useContext(UnsavedContext).state;
@@ -94,6 +94,9 @@ export function DiscussionList(props: IProps & IRecordProps) {
     discussionListSelector,
     shallowEqual
   );
+  const mediafileId = useMemo(() => {
+    return playerMediafile?.id ?? '';
+  }, [playerMediafile]);
 
   const [rootWidthStyle, setRootWidthStyle] = useState({
     width: `${discussionSize.width - 30}px`, //leave room for scroll bar

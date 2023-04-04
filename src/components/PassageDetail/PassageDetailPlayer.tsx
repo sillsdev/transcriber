@@ -1,7 +1,6 @@
 import { useGlobal } from 'reactn';
 import { Button } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import {
   IRegion,
@@ -15,6 +14,7 @@ import { UpdateRecord } from '../../model/baseModel';
 import { playerSelector } from '../../selector';
 import { NamedRegions, getSegments, updateSegments } from '../../utils';
 import { TransformBuilder } from '@orbit/data';
+import usePassageDetailContext from '../../context/usePassageDetailContext';
 
 interface IProps {
   allowSegment?: NamedRegions | undefined;
@@ -61,10 +61,10 @@ export function PassageDetailPlayer(props: IProps) {
   } = useContext(UnsavedContext).state;
   const t: IWsAudioPlayerStrings = useSelector(playerSelector, shallowEqual);
   const toolId = 'ArtifactSegments';
-  const ctx = useContext(PassageDetailContext);
-  const [requestPlay, setRequestPlay] = useState<boolean | undefined>(
-    undefined
-  );
+  const [requestPlay, setRequestPlay] = useState<{
+    play: boolean | undefined;
+    regionOnly: boolean;
+  }>({ play: undefined, regionOnly: false });
   const [initialposition, setInitialPosition] = useState<number | undefined>(0);
   const {
     loading,
@@ -80,10 +80,9 @@ export function PassageDetailPlayer(props: IProps) {
     setCurrentSegment,
     discussionMarkers,
     handleHighlightDiscussion,
-    rowData,
-    index,
+    playerMediafile,
     forceRefresh,
-  } = ctx.state;
+  } = usePassageDetailContext();
 
   const [defaultSegments, setDefaultSegments] = useState('{}');
 
@@ -99,8 +98,9 @@ export function PassageDetailPlayer(props: IProps) {
     onSegment && onSegment(segmentsRef.current);
   };
   useEffect(() => {
-    mediafileRef.current = rowData[index]?.mediafile;
-  }, [rowData, index]);
+    //we need a ref for onDuration
+    mediafileRef.current = playerMediafile;
+  }, [playerMediafile]);
 
   useEffect(() => {
     if (allowSegment && suggestedSegments) {
@@ -114,7 +114,7 @@ export function PassageDetailPlayer(props: IProps) {
     if (allowSegment) loadSegments();
     else setDefaultSegments('{}');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allowSegment]);
+  }, [allowSegment, playerMediafile]);
 
   const writeSegments = async () => {
     if (!savingRef.current) {
@@ -196,7 +196,7 @@ export function PassageDetailPlayer(props: IProps) {
       var segs = parseRegions(segments);
       if (segs.regions.length > 0) {
         setInitialPosition(segs.regions[0].start);
-        setRequestPlay(true);
+        setRequestPlay({ play: true, regionOnly: true });
       }
     }
   };
@@ -218,7 +218,7 @@ export function PassageDetailPlayer(props: IProps) {
     segmentsRef.current = segments;
     setDefaultSegments(segments); //now we'll notice if we reset them in SetPlayerSegments
     onSegment && onSegment(segments);
-    if (saveSegments) {
+    if (allowSegment && saveSegments) {
       toolChanged(toolId);
     } else {
       //not saving segments...so don't update changed
@@ -229,13 +229,14 @@ export function PassageDetailPlayer(props: IProps) {
     if (playingRef.current !== newPlaying) {
       setPlaying(newPlaying);
       playingRef.current = newPlaying;
-      setRequestPlay(undefined);
+      setRequestPlay({ play: undefined, regionOnly: false });
       setInitialPosition(undefined);
     }
   };
 
   useEffect(() => {
-    if (playing !== playingRef.current) setRequestPlay(playing);
+    if (playing !== playingRef.current)
+      setRequestPlay({ play: playing, regionOnly: false });
   }, [playing]);
 
   useEffect(() => {
@@ -269,7 +270,8 @@ export function PassageDetailPlayer(props: IProps) {
         size={playerSize}
         blob={audioBlob}
         initialposition={initialposition}
-        isPlaying={requestPlay}
+        isPlaying={requestPlay.play}
+        regionOnly={requestPlay.regionOnly}
         loading={loading}
         busy={pdBusy}
         allowSegment={allowSegment}

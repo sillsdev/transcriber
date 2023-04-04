@@ -75,13 +75,13 @@ export function useWaveSurferRegions(
       : [];
   const region = (id: string) => wavesurferRef.current?.regions.list[id];
   const numRegions = () => regionIds().length;
-  const currentRegion = () =>
-    singleRegionRef.current
+  const currentRegion = () => {
+    return singleRegionRef.current
       ? numRegions() > 0
         ? region(regionIds()[0])
         : undefined
       : currentRegionRef.current;
-
+  };
   const setCurrentRegion = (r: any) => {
     currentRegionRef.current = r;
     onCurrentRegion &&
@@ -390,7 +390,9 @@ export function useWaveSurferRegions(
       setPrevNext(regionIds());
       onRegion(regarray.length, newRegions);
       if (defaultRegionIndex >= 0) {
-        currentRegionRef.current = regarray[defaultRegionIndex];
+        currentRegionRef.current = findRegion(
+          regarray[defaultRegionIndex]?.start ?? 0
+        );
       } else {
         onRegionGoTo(0);
       }
@@ -598,7 +600,6 @@ export function useWaveSurferRegions(
 
   function justPlayRegion(progress: number) {
     if (
-      //singleRegionRef.current &&
       currentRegion() &&
       !currentRegion().loop &&
       roundToTenths(currentRegion().start) <= roundToTenths(progress) && //account for discussion topic rounding
