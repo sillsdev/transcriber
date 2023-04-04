@@ -64,21 +64,22 @@ export function parseRef(a: Passage) {
     }
   }
 }
-
-/* build the passage ref = book + reference */
-export function passageReference(passage: Passage, bookData: BookName[] = []) {
+export function passageBook(passage: Passage, bookData: BookName[] = []) {
   const attr = passage.attributes;
-  if (!attr) return '';
-  let book = attr.book || '';
+  let book = attr?.book || '';
   if (book !== '') {
     const bookItem = bookData.filter((b) => b.code === book);
     if (bookItem.length > 0) {
       book = bookItem[0].abbr;
     }
-    book += ' ';
   }
-  const reference = attr.reference ? attr.reference : '';
-  return book + reference;
+  return book;
+}
+/* build the passage ref = book + reference */
+export function passageReference(passage: Passage, bookData: BookName[] = []) {
+  var book = passageBook(passage, bookData);
+  book += ' ';
+  return book + passage.attributes?.reference;
 }
 
 /* build the passage name = sequence + book + reference */
