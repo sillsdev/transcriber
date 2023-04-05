@@ -232,6 +232,7 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
   }, [organization]);
 
   const handleSplitSize = debounce((e: number) => {
+    console.log(`passageDetailItem split ${discussionSize.height}`);
     setDiscussionSize({ width: width - e, height: discussionSize.height });
   }, 50);
 
@@ -394,7 +395,7 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
               <Pane>
                 <SplitPane
                   split="horizontal"
-                  defaultSize={playerSize - 20}
+                  defaultSize={playerSize}
                   minSize={150}
                   style={{ position: 'static' }}
                   onChange={handleHorizonalSplitSize}

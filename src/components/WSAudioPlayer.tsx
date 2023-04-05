@@ -259,7 +259,7 @@ function WSAudioPlayer(props: IProps) {
     onInteraction,
     onMarkerClick,
     () => {}, //on error...probably should report?
-    size - 150,
+    allowZoom ? size - 120 : size - 106,
     allowRecord,
     timelineRef.current,
     currentSegmentIndex,
@@ -464,8 +464,8 @@ function WSAudioPlayer(props: IProps) {
   }, [autoStart]);
 
   useEffect(() => {
-    wsSetHeight(size - 150); //does this need to be smarter?
-  }, [size, wsSetHeight]);
+    wsSetHeight(allowZoom ? size - 120 : size - 106); //does this need to be smarter?
+  }, [size, wsSetHeight, allowZoom]);
 
   useEffect(() => {
     console.log('initialposition', initialposition);
@@ -705,7 +705,7 @@ function WSAudioPlayer(props: IProps) {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <Paper sx={{ p: 2, margin: 'auto' }}>
+      <Paper sx={{ p: 1, margin: 'auto' }}>
         <Box
           sx={{
             display: 'flex',

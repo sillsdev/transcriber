@@ -129,7 +129,6 @@ const Pane = (props: PaneProps & PropsWithChildren) => {
 
 const PassageDetailGrids = () => {
   const INIT_PLAYERPANE_HEIGHT = 150;
-  const SMALLPLAYERDIFF = 25;
   const [plan] = useGlobal('plan');
   const [width, setWidth] = useState(window.innerWidth);
   const [height, setHeight] = useState(window.innerHeight);
@@ -175,21 +174,23 @@ const PassageDetailGrids = () => {
   const t = useSelector(toolSelector, shallowEqual) as IToolStrings;
 
   const handleVertSplitSize = debounce((e: number) => {
+    console.log(`passageDetail split ${discussionSize.height}`);
     setDiscussionSize({ width: width - e, height: discussionSize.height });
   }, 50);
 
   const handleHorzSplitSize = debounce((e: number) => {
-    setPlayerSize(e + SMALLPLAYERDIFF);
+    setPlayerSize(e);
   }, 50);
 
   const setDimensions = () => {
     setWidth(Math.max(window.innerWidth, minWidth));
     setHeight(window.innerHeight);
+    console.log(`passageDetail setDim ${window.innerHeight - 275}`);
     setDiscussionSize({
       width: discussionSize.width, //should we be smarter here?
       height: window.innerHeight - 275,
     });
-    setPlayerSize(INIT_PLAYERPANE_HEIGHT + SMALLPLAYERDIFF);
+    setPlayerSize(INIT_PLAYERPANE_HEIGHT);
     // setPaperStyle({ width: window.innerWidth - 10 });
   };
 
@@ -200,6 +201,7 @@ const PassageDetailGrids = () => {
   useEffect(() => {
     setDimensions();
     const handleResize = debounce(() => {
+      console.log(`passageDetail resize `);
       setDimensions();
     }, 100);
     window.addEventListener('resize', handleResize);
@@ -269,7 +271,7 @@ const PassageDetailGrids = () => {
           tool === ToolSlug.Record ||
           tool === ToolSlug.Transcribe ||
           tool === ToolSlug.KeyTerm) && (
-          <Paper sx={{ p: 2, margin: 'auto', width: `calc(100% - 32px)` }}>
+          <Paper sx={{ p: 0, margin: 'auto', width: `calc(100% - 32px)` }}>
             <Wrapper>
               <SplitPane
                 defaultSize={width - discussionSize.width - 16}

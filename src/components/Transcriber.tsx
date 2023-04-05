@@ -481,9 +481,8 @@ export function Transcriber(
   }, [toolsChanged]);
 
   useEffect(() => {
-    const headHeight = 120;
-    const newBoxHeight =
-      discussionSize.height - (playerSize + 220) - headHeight;
+    const newBoxHeight = discussionSize.height - playerSize;
+    console.log(`transcriber ${discussionSize.height} ${newBoxHeight}`);
     if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussionSize, playerSize]);
@@ -985,14 +984,14 @@ export function Transcriber(
 
   return (
     <GrowingDiv>
-      <Paper sx={{ p: 2, m: 'auto' }} style={paperStyle}>
+      <Paper sx={{ p: 0, m: 'auto' }} style={paperStyle}>
         {allDone ? (
           <AllDone />
         ) : (
           <Grid container direction="column" style={style}>
             <Wrapper>
               <SplitPane
-                defaultSize={Math.max(INIT_PLAYER_HEIGHT, playerSize)}
+                defaultSize={playerSize}
                 minSize={INIT_PLAYER_HEIGHT}
                 maxSize={discussionSize.height - 280}
                 style={{ position: 'static' }}
@@ -1100,7 +1099,7 @@ export function Transcriber(
               </SplitPane>
             </Wrapper>
 
-            <Grid container direction="row" sx={{ pt: '16px' }}>
+            <Grid container direction="row" sx={{ pt: '12px' }}>
               <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
                 <TaskFlag
                   ta={ta}
