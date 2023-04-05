@@ -572,6 +572,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
               audioBlob: undefined,
               index: -1,
               selected,
+              playerMediafile: undefined,
               playing: false,
               itemPlaying: false,
               commentPlaying: false,
