@@ -53,6 +53,7 @@ import {
   mediaArtifacts,
   IExportArtifacts,
   ArtifactTypeSlug,
+  VernacularTag,
 } from '../../crud';
 import { logError, orbitInfo, Severity } from '../../utils';
 import Coordinator from '@orbit/coordinator';
@@ -153,8 +154,10 @@ export const exportProject =
           if (mediaList && mediaList.length > 0) {
             if (artifactType)
               bodyFormData.append('artifactType', localizedArtifact);
+
             bodyFormData.append('ids', ',' + mediaList.join() + ',');
-            bodyFormData.append('nameTemplate', '{BOOK}{REF}_{VERS}');
+            if (artifactType === VernacularTag)
+              bodyFormData.append('nameTemplate', '{BOOK}{REF}_{VERS}');
           } else {
             dispatch({
               payload: errorStatus(-1, nodatamsg),
