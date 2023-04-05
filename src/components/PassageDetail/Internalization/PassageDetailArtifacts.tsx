@@ -674,7 +674,12 @@ export function PassageDetailArtifacts(props: IProps) {
         }
       />
       <BigDialog
-        title={t.sharedResource}
+        title={t.sharedResource.replace(
+          '{0}',
+          resourceTypeRef.current === ResourceTypeEnum.sectionResource
+            ? getOrganizedBy(true)
+            : t.passageResource
+        )}
         isOpen={sharedResourceVisible}
         onOpen={handleSharedResourceVisible}
         bp={BigDialogBp.md}

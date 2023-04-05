@@ -73,10 +73,7 @@ export const AddResource = (props: IProps) => {
           onClick={handle('ref-passage')}
         >
           <ListItemText>
-            {t.sharedResource.replace(
-              '{0}',
-              t.passageResource.toLocaleLowerCase()
-            )}
+            {t.sharedResource.replace('{0}', t.passageResource)}
             {'\u00A0'}
             <LightTooltip
               title={t.tip1b.replace(
@@ -93,10 +90,7 @@ export const AddResource = (props: IProps) => {
           onClick={handle('ref-section')}
         >
           <ListItemText>
-            {t.sharedResource.replace(
-              '{0}',
-              getOrganizedBy(true).toLocaleLowerCase()
-            )}
+            {t.sharedResource.replace('{0}', getOrganizedBy(true))}
             {'\u00A0'}
             <LightTooltip
               title={t.tip1b.replace(
