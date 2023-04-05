@@ -60,6 +60,7 @@ export default function ReferenceTable({
   const dataRef = React.useRef<ICell[][]>([]);
   const [confirmRow, setConfirmRow] = React.useState<number>();
   const [confirmErr, setConfirmErr] = React.useState<BookRef[]>();
+  const [changed, setChanged] = React.useState(false);
   const bookMap = useSelector((state: IState) => state.books.map);
   const bookSuggestions = useSelector(
     (state: IState) => state.books.suggestions
@@ -123,6 +124,7 @@ export default function ReferenceTable({
       }
     }
     updData(newData);
+    setChanged(true);
     setConfirmRow(undefined);
   };
 
@@ -185,6 +187,7 @@ export default function ReferenceTable({
     );
     newData.push(rowCells(bookData.length + 1, emptyRow()));
     updData(newData);
+    setChanged(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookData]);
 
@@ -211,11 +214,13 @@ export default function ReferenceTable({
       setConfirmErr(refData);
     } else {
       onCommit && onCommit(refData);
+      setChanged(false);
     }
   };
   const saveConfirm = () => {
     if (confirmErr && onCommit) onCommit(confirmErr);
     setConfirmErr(undefined);
+    setChanged(false);
   };
   const saveRejected = () => {
     setConfirmErr(undefined);
@@ -245,6 +250,7 @@ export default function ReferenceTable({
     if (lastRow[0].value || lastRow[1].value)
       newData.push(rowCells(len, emptyRow()));
     updData(newData);
+    setChanged(true);
   };
 
   const confirmMsg = (row: number | undefined) => {
@@ -272,7 +278,10 @@ export default function ReferenceTable({
       <ActionRow>
         <AltButton onClick={handleCancel}>{ts.cancel}</AltButton>
         {onCommit && (
-          <PriButton onClick={handleSave} disabled={data.length <= 2}>
+          <PriButton
+            onClick={handleSave}
+            disabled={data.length <= 2 || !changed}
+          >
             {ts.save}
           </PriButton>
         )}

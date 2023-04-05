@@ -873,6 +873,8 @@ export interface IResourceStrings extends Localize.LocalizedStringsMethods {
     "overview": string;
     "references": string;
     "resourceEdit": string;
+    "rowsSaved": string;
+    "saving": string;
     "terms": string;
     "title": string;
     "versions": string;

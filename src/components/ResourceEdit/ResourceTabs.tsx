@@ -18,6 +18,7 @@ import {
 } from '../../crud';
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
+import { useSnackBar } from '../../hoc/SnackBar';
 
 interface IRecordProps {
   sharedResources: SharedResource[];
@@ -77,6 +78,7 @@ export function ResourceTabs({
   const { userIsAdmin } = useRole();
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const { showMessage } = useSnackBar();
 
   const readOnly = useMemo(
     () => !userIsAdmin || (offline && !offlineOnly),
@@ -114,6 +116,7 @@ export function ResourceTabs({
   };
 
   const handleCommit = async (values: IResourceDialog) => {
+    showMessage(t.saving);
     const {
       title,
       description,

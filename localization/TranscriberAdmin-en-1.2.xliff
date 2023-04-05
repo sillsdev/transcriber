@@ -5070,6 +5070,20 @@
       			<context context-type="sourcefile">ResourceOverview.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="resource.rowsSaved">
+      		<source>{0} rows saved.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.saving">
+      		<source>Saving...</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="resource.terms">
       		<source>Terms of use</source>
       		<target/>
