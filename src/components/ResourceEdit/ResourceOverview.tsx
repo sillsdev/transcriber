@@ -33,6 +33,7 @@ export interface IResourceDialog {
   terms: string;
   keywords: string;
   category: string;
+  changed: boolean;
 }
 
 const initState: IResourceDialog = {
@@ -45,6 +46,7 @@ const initState: IResourceDialog = {
   terms: '',
   keywords: '',
   category: '',
+  changed: false,
 };
 
 export interface IResourceState {
@@ -73,7 +75,7 @@ export default function ResourceOverview(props: IProps) {
   );
 
   useEffect(() => {
-    setState(!values ? { ...initState } : { ...values });
+    setState(!values ? { ...initState } : { ...values, changed: false });
   }, [values, isOpen]);
 
   const handleClose = () => {
@@ -86,7 +88,8 @@ export default function ResourceOverview(props: IProps) {
   };
 
   const handleLanguageChange = (val: ILanguage) => {
-    if (mode !== Mode.view) setState((state) => ({ ...state, ...val }));
+    if (mode !== Mode.view)
+      setState((state) => ({ ...state, ...val, changed: true }));
   };
 
   const handleDelete = () => {
@@ -140,7 +143,7 @@ export default function ResourceOverview(props: IProps) {
           <PriButton
             id="resSave"
             onClick={handleAdd}
-            disabled={title === '' || bcp47 === 'und'}
+            disabled={title === '' || bcp47 === 'und' || !state.changed}
           >
             {mode === Mode.add ? t.add : ts.save}
           </PriButton>

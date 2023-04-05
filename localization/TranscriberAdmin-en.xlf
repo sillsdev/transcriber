@@ -4348,6 +4348,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="resource.rowsSaved">
+         <segment>
+            <source>{0} rows saved.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.saving">
+         <segment>
+            <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="resource.terms">
          <segment>
             <source>Terms of use</source>

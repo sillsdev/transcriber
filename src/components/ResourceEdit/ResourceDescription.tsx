@@ -13,7 +13,11 @@ export const ResourceDescription = (props: IResourceState) => {
   const handleChangeDescription = (e: any) => {
     e.persist();
     setState &&
-      setState((state) => ({ ...state, description: e.target?.value || '' }));
+      setState((state) => ({
+        ...state,
+        description: e.target?.value || '',
+        changed: true,
+      }));
   };
 
   return (

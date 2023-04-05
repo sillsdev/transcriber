@@ -18,6 +18,7 @@ import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedResourceSelector } from '../../selector';
 import { related } from '../../crud';
+import { useSnackBar } from '../../hoc/SnackBar';
 
 interface RecordProps {
   sharedResourceReferences: SharedResourceReference[];
@@ -40,6 +41,7 @@ export function ResourceRefs({
   const updateShaRefRecs = useShaRefUpdate();
   const deleteShaRefRecs = useShaRefDelete();
   const bookN = useBookN();
+  const { showMessage } = useSnackBar();
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
 
   const handleAddWord = () => {};
@@ -100,6 +102,8 @@ export function ResourceRefs({
       if (addRefs.length > 0) createShaRefRecs(addRefs);
       const delRecs = shaRefRecs.filter((sr) => !updRecIds.has(sr.id));
       if (delRecs.length > 0) deleteShaRefRecs(delRecs);
+      const rowsSaved = addRefs.length + updRecs.length + delRecs.length;
+      showMessage(t.rowsSaved.replace('{0}', rowsSaved.toString()));
     }
   };
   const handleCancel = () => onOpen();

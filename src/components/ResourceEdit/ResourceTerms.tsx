@@ -13,7 +13,11 @@ export const ResourceTerms = (props: IResourceState) => {
   const handleChange = (e: any) => {
     e.persist();
     setState &&
-      setState((state) => ({ ...state, terms: e.target?.value || '' }));
+      setState((state) => ({
+        ...state,
+        terms: e.target?.value || '',
+        changed: true,
+      }));
   };
 
   return (

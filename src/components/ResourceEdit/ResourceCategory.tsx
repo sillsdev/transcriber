@@ -7,7 +7,7 @@ export const ResourceCategory = (props: IResourceState) => {
   const { category } = state;
 
   const handleChange = (category: string) => {
-    setState && setState((state) => ({ ...state, category }));
+    setState && setState((state) => ({ ...state, category, changed: true }));
   };
 
   return (

@@ -43,6 +43,7 @@ export const ResourceKeywords = (props: IResourceState) => {
       setState((state) => ({
         ...state,
         keywords: filteredOptions(tags).join('|'),
+        changed: true,
       }));
   };
 

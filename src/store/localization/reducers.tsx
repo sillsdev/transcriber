@@ -928,6 +928,8 @@ const initialState = {
 			"overview": "Overview",
 			"references": "References",
 			"resourceEdit": "Resource Edit",
+			"rowsSaved": "{0} rows saved.",
+			"saving": "Saving...",
 			"terms": "Terms of use",
 			"title": "Title",
 			"versions": "Versions",
