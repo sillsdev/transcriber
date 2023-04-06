@@ -66,6 +66,7 @@ const StartCard = (props: IProps) => {
           </Typography>
           {factors.map((factor) => (
             <Typography
+              key={factor}
               variant="body2"
               component="p"
               sx={{ color: 'grey', ml: 2, mb: 1, textIndent: '-6px' }}

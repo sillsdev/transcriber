@@ -5,6 +5,7 @@ import { QueryBuilder } from '@orbit/data';
 import { waitForIt } from '../utils';
 import { useTeamCreate, useIsPersonalTeam, remoteIdNum } from '.';
 import related from './related';
+import { checkPersOrgs } from '../utils/checkPersOrgs';
 
 export const useNewTeamId = () => {
   const [memory] = useGlobal('memory');
@@ -47,6 +48,7 @@ export const useNewTeamId = () => {
           remoteIdNum('organization', b.id, memory.keyMap) -
           remoteIdNum('organization', a.id, memory.keyMap)
       );
+    checkPersOrgs(orgRecs);
     return orgRecs.length > 0 ? orgRecs[0].id : undefined;
   };
 

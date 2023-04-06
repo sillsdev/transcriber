@@ -64,7 +64,7 @@ export function NewProjectGrid(props: IProps) {
         <Grid container spacing={3}>
           <Grid item xs={6}>
             <StartCard
-              id={'config'}
+              id="config"
               title={t.blank}
               description={t.blankTip}
               factors={blankFactors}
@@ -74,7 +74,7 @@ export function NewProjectGrid(props: IProps) {
           </Grid>
           <Grid item xs={6}>
             <StartCard
-              id={'quick'}
+              id="quick"
               title={t.general}
               description={t.generalTip}
               factors={generalFactors}

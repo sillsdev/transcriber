@@ -7,6 +7,7 @@ export enum LocalKey {
   start = 'startNext', //in progress mediadownload
   passage = 'passage',
   compare = 'compare',
+  personalOrgs = 'persOrgs',
 }
 
 export const localUserKey = (id: LocalKey) => {
