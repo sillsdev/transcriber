@@ -196,7 +196,6 @@ export function PlanSheet(props: IProps) {
   const ctx = useContext(PlanContext);
   const { projButtonStr, connected, readonly } = ctx.state;
 
-  const [isOffline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
   const [global] = useGlobal();
   const { showMessage } = useSnackBar();
@@ -348,7 +347,7 @@ export function PlanSheet(props: IProps) {
     j: number
   ) => {
     e.preventDefault();
-    if (i > 0 && (!isOffline || offlineOnly) && userIsAdmin) {
+    if (i > 0 && !readonly) {
       setPosition({ mouseX: e.clientX - 2, mouseY: e.clientY - 4, i, j });
     }
   };
@@ -595,7 +594,7 @@ export function PlanSheet(props: IProps) {
                 return cellIndex === bookCol && passage
                   ? {
                       value: e,
-                      readOnly: isOffline && !offlineOnly,
+                      readOnly: readonly,
                       className:
                         'book ' +
                         `${iscurrent} ` +
@@ -605,7 +604,7 @@ export function PlanSheet(props: IProps) {
                   : {
                       value: e,
                       readOnly:
-                        (isOffline && !offlineOnly) ||
+                        readonly ||
                         (section
                           ? passage
                             ? false
