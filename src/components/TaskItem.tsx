@@ -23,6 +23,7 @@ import { UnsavedContext } from '../context/UnsavedContext';
 import { TaskItemWidth } from './TaskTable';
 import { ActivityStates } from '../model';
 import usePassageDetailContext from '../context/usePassageDetailContext';
+import { PlayInPlayer } from '../context/PassageDetailContext';
 
 const rowProp = { display: 'flex', flexDirection: 'row' } as SxProps;
 
@@ -56,7 +57,8 @@ export function TaskItem(props: IProps) {
       setAllDone(false);
     } else
       checkSavedFn(() => {
-        if (select !== playerMediafile?.id) setSelected(select);
+        if (select !== playerMediafile?.id)
+          setSelected(select, PlayInPlayer.yes);
         else refresh();
       });
   };

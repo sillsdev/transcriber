@@ -76,6 +76,11 @@ import { useDispatch } from 'react-redux';
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
 };
+export enum PlayInPlayer {
+  no = 0,
+  yes = 1,
+  tryAgain = 2,
+}
 
 interface IRecordProps {
   passages: Passage[];
@@ -138,7 +143,11 @@ const initState = {
   index: 0, //row index?
   mediafileId: '', //This is the latest vernacular
   selected: '',
-  setSelected: (selected: string) => {},
+  setSelected: (
+    selected: string,
+    inPlayer: PlayInPlayer,
+    rowData?: IRow[]
+  ) => {},
   setMediaSelected: (id: string, start: number, end: number) => {},
   playerMediafile: undefined as MediaFile | undefined, //passagedetailPlayer id
   playing: false, //vernacular in wavesurfer
@@ -269,6 +278,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const highlightRef = useRef<number>();
     const refreshRef = useRef<number>(0);
     const settingSegmentRef = useRef(false);
+    const inPlayerRef = useRef<string>();
 
     const handleSetCurrentStep = (stepId: string) => {
       var step = state.orgWorkflowSteps.find((s) => s.id === stepId);
@@ -284,12 +294,13 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           commentPlayId: '',
         };
       });
+
       var tool = getTool(step?.attributes?.tool) as ToolSlug;
       if (step && tool !== ToolSlug.Resource && tool !== ToolSlug.Transcribe) {
         //this does a bunch of stuff...don't just set it in the state above...
         if (state.rowData.length > 0 && state.rowData[0].isVernacular)
-          setSelected(state.rowData[0].id);
-        else setSelected('');
+          setSelected(state.rowData[0].id, PlayInPlayer.yes);
+        else setSelected('', PlayInPlayer.yes);
       }
       segmentsCb.current = undefined;
     };
@@ -540,8 +551,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
 
     const setSelected = (
       selected: string,
-      rowData: IRow[] = state.rowData,
-      inPlayer = true
+      inPlayer: PlayInPlayer,
+      rowData: IRow[] = state.rowData
     ) => {
       let i = rowData.findIndex((r) => r.mediafile.id === selected);
       let newRows: IRow[] = [];
@@ -586,16 +597,15 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       }
       const r = rowData[i];
       var resetBlob = false;
+      //we've gotten a 403 and requeried so selected hasn't changed
+      if (inPlayer === PlayInPlayer.tryAgain)
+        inPlayer =
+          state.playerMediafile?.id === r.mediafile.id
+            ? PlayInPlayer.yes
+            : PlayInPlayer.no;
       //if this is a file that will be played in the wavesurfer..fetch it
-      if (
-        inPlayer &&
-        ((r.isVernacular && i === 0) ||
-          [
-            localizedArtifactType(ArtifactTypeSlug.ProjectResource),
-            localizedArtifactType(ArtifactTypeSlug.WholeBackTranslation),
-            localizedArtifactType(ArtifactTypeSlug.PhraseBackTranslation),
-          ].includes(r.artifactType))
-      ) {
+      if (inPlayer === PlayInPlayer.yes) {
+        inPlayerRef.current = r.mediafile.id;
         if (
           mediaState.id !== r.mediafile.id &&
           fetching.current !== r.mediafile.id
@@ -623,7 +633,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             currentSegmentIndex: resetBlob ? 0 : state.currentSegmentIndex,
           };
         });
-      } else if (r.isVernacular) {
+      } else if (mediaStart.current !== undefined) {
         //play just the segment of an old one
         setState((state: ICtxState) => {
           return {
@@ -695,7 +705,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const setMediaSelected = (id: string, start: number, end: number) => {
       mediaStart.current = start;
       mediaEnd.current = end;
-      setSelected(id, state.rowData, false);
+      setSelected(id, PlayInPlayer.no, state.rowData);
     };
 
     const handleDuration = (duration: number) => {
@@ -824,7 +834,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
                   () => false,
                   500
                 ).then(() => {
-                  setSelected(state.selected);
+                  setSelected(state.selected, PlayInPlayer.tryAgain);
                 });
               } else {
                 //no blob
@@ -919,7 +929,9 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         setState((state: ICtxState) => {
           return { ...state, rowData: newData, index: i, mediafileId };
         });
-        if (mediafileId && state.index === 0) setSelected(mediafileId, newData);
+
+        if (mediafileId && state.index === 0)
+          setSelected(mediafileId, PlayInPlayer.yes, newData);
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sectionResources, mediafiles, pasId, userResources]);

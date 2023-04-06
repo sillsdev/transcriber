@@ -18,7 +18,10 @@ import { useArtifactType } from '../../../crud';
 import { useKeyTermSave } from '../../../crud/useKeyTermSave';
 import KeyTermChip from './KeyTermChip';
 import { UnsavedContext } from '../../../context/UnsavedContext';
-import { PassageDetailContext } from '../../../context/PassageDetailContext';
+import {
+  PassageDetailContext,
+  PlayInPlayer,
+} from '../../../context/PassageDetailContext';
 import Confirm from '../../AlertDialog';
 import MediaPlayer from '../../MediaPlayer';
 import AddIcon from '@mui/icons-material/Add';
@@ -135,7 +138,7 @@ export default function KeyTermTable({
     if (mediaId === commentPlayId) {
       setCommentPlaying(!commentPlaying);
     } else {
-      setSelected(mediaId);
+      setSelected(mediaId, PlayInPlayer.no);
     }
   };
 

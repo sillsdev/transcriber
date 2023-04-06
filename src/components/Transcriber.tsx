@@ -99,6 +99,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import usePassageDetailContext from '../context/usePassageDetailContext';
 import { IRegionParams } from '../crud/useWavesurferRegions';
 import PassageDetailPlayer from './PassageDetail/PassageDetailPlayer';
+import { PlayInPlayer } from '../context/PassageDetailContext';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -498,7 +499,7 @@ export function Transcriber(
   //if task table has changed selected...tell the world
   useEffect(() => {
     if (transSelected !== undefined && transSelected !== playerMediafile?.id)
-      setSelected(transSelected);
+      setSelected(transSelected, PlayInPlayer.yes);
     if (!transSelected)
       showTranscription({
         transcription: undefined,
@@ -511,7 +512,7 @@ export function Transcriber(
   useEffect(() => {
     if (mediaRef.current?.id !== mediafile?.id) {
       if (playerMediafile?.id !== mediafile?.id || '')
-        setSelected(mediafile?.id || '');
+        setSelected(mediafile?.id || '', PlayInPlayer.yes);
     }
     if (mediafile) {
       const trans = getTranscription();

@@ -25,7 +25,10 @@ import {
 } from '../../../model';
 import { withData } from 'react-orbitjs';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
-import { PassageDetailContext } from '../../../context/PassageDetailContext';
+import {
+  PassageDetailContext,
+  PlayInPlayer,
+} from '../../../context/PassageDetailContext';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import Uploader from '../../Uploader';
@@ -211,7 +214,7 @@ export function PassageDetailArtifacts(props: IProps) {
           return;
         }
       }
-      setSelected(id);
+      setSelected(id, PlayInPlayer.no);
     }
   };
 
@@ -496,7 +499,7 @@ export function PassageDetailArtifacts(props: IProps) {
   };
 
   const handleSelectProjectResource = (m: MediaFile) => {
-    setSelected(m.id);
+    setSelected(m.id, PlayInPlayer.yes);
     projMediaRef.current = m;
     setVisual(isVisual(m));
     setProjectResourceVisible(false);
