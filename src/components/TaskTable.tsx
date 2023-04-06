@@ -39,6 +39,7 @@ export const TaskItemWidth = 240;
 export const TaskTableWidth = 260;
 
 const TaskTableDiv = styled('div')(() => ({
+  width: '100%',
   '&[data-list="true"] table': {
     minWidth: `${TaskItemWidth}px !important`,
   },
@@ -90,7 +91,7 @@ export const Header = styled(Box, {
         width: 'auto',
       }
     : {
-        width: `${TaskItemWidth}px`,
+        width: `${TaskItemWidth - 30}px`,
       }),
 }));
 
@@ -232,7 +233,7 @@ export function TaskTable(props: IProps) {
       overflowY: 'auto',
       cursor: busyRef.current ? 'progress' : 'default',
     }));
-    setWidth(window.innerWidth);
+    setWidth(filterRef.current ? window.innerWidth - 300 : TaskTableWidth);
   };
 
   useEffect(() => {
@@ -502,7 +503,7 @@ export function TaskTable(props: IProps) {
           </Header>
           <ShapingTable
             columns={columns}
-            columnFormatting={columnFormatting}
+            columnFormatting={filter ? columnFormatting : []}
             dataCell={Cell}
             sorting={[
               { columnName: 'plan', direction: 'asc' },
