@@ -1,6 +1,13 @@
 import { useState, useEffect, useRef, useMemo, CSSProperties } from 'react';
 import { useGlobal } from 'reactn';
-import { IconButton, Typography, Box, BoxProps, styled } from '@mui/material';
+import {
+  IconButton,
+  Typography,
+  Box,
+  BoxProps,
+  styled,
+  TableCell,
+} from '@mui/material';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import CloseIcon from '@mui/icons-material/Close';
@@ -36,9 +43,12 @@ import { GridColumnExtension } from '@devexpress/dx-react-grid';
 import usePassageDetailContext from '../context/usePassageDetailContext';
 
 export const TaskItemWidth = 240;
+export const TaskTableWidth = 265;
 
 const TaskTableDiv = styled('div')(() => ({
-  width: '100%',
+  td: {
+    padding: 0,
+  },
   '&[data-list="true"] table': {
     minWidth: `${TaskItemWidth}px !important`,
   },
@@ -144,7 +154,7 @@ export function TaskTable(props: IProps) {
     mediaActionsSelector,
     shallowEqual
   );
-  const [width, setWidth] = useState(window.innerWidth);
+  const [width, setWidth] = useState(TaskTableWidth);
   const { getPlan, getPlanName } = usePlan();
   const offlineAvailableToggle = useOfflineAvailToggle();
   const [planId] = useGlobal('plan');
@@ -227,12 +237,15 @@ export function TaskTable(props: IProps) {
   };
 
   const setDimensions = () => {
+    const newWidth = filterRef.current
+      ? window.innerWidth - 40
+      : TaskTableWidth;
+    if (width !== newWidth) setWidth(newWidth);
     setStyle((style) => ({
       ...style,
-      overflowY: 'auto',
       cursor: busyRef.current ? 'progress' : 'default',
+      width: newWidth,
     }));
-    setWidth(window.innerWidth);
   };
 
   useEffect(() => {
@@ -283,11 +296,11 @@ export function TaskTable(props: IProps) {
 
   useEffect(() => {
     busyRef.current = pdBusy || loading;
-    setStyle({
+    setStyle((style) => ({
+      ...style,
       height: discussionSize.height + extraHeight,
-      overflowY: 'auto',
       cursor: busyRef.current ? 'progress' : 'default',
-    });
+    }));
   }, [pdBusy, loading, discussionSize]);
 
   useEffect(() => {
@@ -307,21 +320,21 @@ export function TaskTable(props: IProps) {
     if (!filter) {
       setColumnFormatting([
         { columnName: 'composite', width: TaskItemWidth, align: 'left' },
-        { columnName: 'play', width: 1, align: 'left' },
-        { columnName: 'plan', width: 1, align: 'left' },
-        { columnName: 'section', width: 1, align: 'right' },
-        { columnName: 'title', width: 1, align: 'left' },
-        { columnName: 'sectPass', width: 1, align: 'left' },
+        { columnName: 'play', width: 0, align: 'left' },
+        { columnName: 'plan', width: 0, align: 'left' },
+        { columnName: 'section', width: 0, align: 'right' },
+        { columnName: 'title', width: 0, align: 'left' },
+        { columnName: 'sectPass', width: 0, align: 'left' },
         {
           columnName: 'description',
-          width: 1,
+          width: 0,
           align: 'left',
           wordWrapEnabled: true,
         },
-        { columnName: 'length', width: 1, align: 'left' },
-        { columnName: 'duration', width: 1, align: 'right' },
-        { columnName: 'state', width: 1, align: 'left' },
-        { columnName: 'assigned', width: 1, align: 'left' },
+        { columnName: 'length', width: 0, align: 'left' },
+        { columnName: 'duration', width: 0, align: 'right' },
+        { columnName: 'state', width: 0, align: 'left' },
+        { columnName: 'assigned', width: 0, align: 'left' },
       ]);
     } else {
       let addHead = 50;
@@ -447,15 +460,15 @@ export function TaskTable(props: IProps) {
           if (row.mediaId !== '')
             curId = rowData[value.props.item]?.mediafile.id;
         return (
-          <td
+          <TableCell
             ref={curId === playerMediafile?.id ? selectedRef : notSelectedRef}
             style={curId === playerMediafile?.id ? selBacking : noSelBacking}
           >
             {value}
-          </td>
+          </TableCell>
         );
       }
-      return <td>{'\u00a0'}</td>;
+      return <td>{'\u200B'}</td>; // Zero width space
     } else {
       if (column.name === 'composite') {
         return <td>{'\u00a0'}</td>;

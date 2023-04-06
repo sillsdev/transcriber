@@ -6,7 +6,7 @@ import Transcriber from '../../components/Transcriber';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { sharedSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
-import TaskTable, { TaskItemWidth } from '../TaskTable';
+import TaskTable, { TaskTableWidth } from '../TaskTable';
 
 interface TableContainerProps extends BoxProps {
   topFilter?: boolean;
@@ -25,7 +25,7 @@ const TableContainer = styled(Box, {
 const TranscriberContainer = styled(Box)<BoxProps>(({ theme }) => ({
   zIndex: 1,
   position: 'absolute',
-  left: `${TaskItemWidth + 4}px`,
+  left: `${TaskTableWidth + 4}px`,
 }));
 
 interface IProps {
@@ -58,7 +58,7 @@ export function PassageDetailTranscribe({
             </TableContainer>
             {!topFilter && (
               <TranscriberContainer>
-                <Transcriber defaultWidth={width - TaskItemWidth} />
+                <Transcriber defaultWidth={width - TaskTableWidth} />
               </TranscriberContainer>
             )}
           </Box>
