@@ -265,7 +265,7 @@ export const CommentCard = (props: IProps & IRecordProps) => {
 
   const handlePlayComment = () => {
     if (mediaId === commentPlayId) setCommentPlaying(!commentPlaying);
-    else setSelected(mediaId);
+    else setSelected(mediaId, false);
   };
 
   useEffect(() => {

@@ -498,7 +498,7 @@ export function Transcriber(
   //if task table has changed selected...tell the world
   useEffect(() => {
     if (transSelected !== undefined && transSelected !== playerMediafile?.id)
-      setSelected(transSelected);
+      setSelected(transSelected, true);
     if (!transSelected)
       showTranscription({
         transcription: undefined,
@@ -509,9 +509,10 @@ export function Transcriber(
   }, [transSelected]);
 
   useEffect(() => {
+
     if (mediaRef.current?.id !== mediafile?.id) {
       if (playerMediafile?.id !== mediafile?.id || '')
-        setSelected(mediafile?.id || '');
+        setSelected(mediafile?.id || '', true);
     }
     if (mediafile) {
       const trans = getTranscription();

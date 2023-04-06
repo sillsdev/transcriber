@@ -211,7 +211,7 @@ export function PassageDetailArtifacts(props: IProps) {
           return;
         }
       }
-      setSelected(id);
+      setSelected(id, false);
     }
   };
 
@@ -496,7 +496,7 @@ export function PassageDetailArtifacts(props: IProps) {
   };
 
   const handleSelectProjectResource = (m: MediaFile) => {
-    setSelected(m.id);
+    setSelected(m.id, true);
     projMediaRef.current = m;
     setVisual(isVisual(m));
     setProjectResourceVisible(false);

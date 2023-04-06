@@ -56,7 +56,7 @@ export function TaskItem(props: IProps) {
       setAllDone(false);
     } else
       checkSavedFn(() => {
-        if (select !== playerMediafile?.id) setSelected(select);
+        if (select !== playerMediafile?.id) setSelected(select, true);
         else refresh();
       });
   };

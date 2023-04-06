@@ -135,7 +135,7 @@ export default function KeyTermTable({
     if (mediaId === commentPlayId) {
       setCommentPlaying(!commentPlaying);
     } else {
-      setSelected(mediaId);
+      setSelected(mediaId, false);
     }
   };
 
