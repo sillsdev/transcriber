@@ -36,7 +36,10 @@ import { useGlobal } from 'reactn';
 import { CommentEditor } from './CommentEditor';
 import DiscussionMenu from './DiscussionMenu';
 import { useRecordComment } from './useRecordComment';
-import { PassageDetailContext } from '../../context/PassageDetailContext';
+import {
+  PassageDetailContext,
+  PlayInPlayer,
+} from '../../context/PassageDetailContext';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import MediaPlayer from '../MediaPlayer';
@@ -265,7 +268,7 @@ export const CommentCard = (props: IProps & IRecordProps) => {
 
   const handlePlayComment = () => {
     if (mediaId === commentPlayId) setCommentPlaying(!commentPlaying);
-    else setSelected(mediaId, false);
+    else setSelected(mediaId, PlayInPlayer.no);
   };
 
   useEffect(() => {
