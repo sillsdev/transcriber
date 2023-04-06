@@ -36,6 +36,7 @@ import { GridColumnExtension } from '@devexpress/dx-react-grid';
 import usePassageDetailContext from '../context/usePassageDetailContext';
 
 export const TaskItemWidth = 240;
+export const TaskTableWidth = 260;
 
 const TaskTableDiv = styled('div')(() => ({
   '&[data-list="true"] table': {
@@ -89,7 +90,7 @@ export const Header = styled(Box, {
         width: 'auto',
       }
     : {
-        width: `${TaskItemWidth - 30}px`,
+        width: `${TaskItemWidth}px`,
       }),
 }));
 
@@ -143,7 +144,7 @@ export function TaskTable(props: IProps) {
     mediaActionsSelector,
     shallowEqual
   );
-  const [width, setWidth] = useState(TaskItemWidth);
+  const [width, setWidth] = useState(TaskTableWidth);
   const { getPlan, getPlanName } = usePlan();
   const offlineAvailableToggle = useOfflineAvailToggle();
   const [planId] = useGlobal('plan');
@@ -306,21 +307,21 @@ export function TaskTable(props: IProps) {
     if (!filter) {
       setColumnFormatting([
         { columnName: 'composite', width: TaskItemWidth, align: 'left' },
-        { columnName: 'play', width: 1, align: 'left' },
-        { columnName: 'plan', width: 1, align: 'left' },
-        { columnName: 'section', width: 1, align: 'right' },
-        { columnName: 'title', width: 1, align: 'left' },
-        { columnName: 'sectPass', width: 1, align: 'left' },
+        { columnName: 'play', width: 0, align: 'left' },
+        { columnName: 'plan', width: 0, align: 'left' },
+        { columnName: 'section', width: 0, align: 'right' },
+        { columnName: 'title', width: 0, align: 'left' },
+        { columnName: 'sectPass', width: 0, align: 'left' },
         {
           columnName: 'description',
-          width: 1,
+          width: 0,
           align: 'left',
           wordWrapEnabled: true,
         },
-        { columnName: 'length', width: 1, align: 'left' },
-        { columnName: 'duration', width: 1, align: 'right' },
-        { columnName: 'state', width: 1, align: 'left' },
-        { columnName: 'assigned', width: 1, align: 'left' },
+        { columnName: 'length', width: 0, align: 'left' },
+        { columnName: 'duration', width: 0, align: 'right' },
+        { columnName: 'state', width: 0, align: 'left' },
+        { columnName: 'assigned', width: 0, align: 'left' },
       ]);
     } else {
       let addHead = 50;
@@ -501,7 +502,7 @@ export function TaskTable(props: IProps) {
           </Header>
           <ShapingTable
             columns={columns}
-            columnFormatting={filter ? columnFormatting : []}
+            columnFormatting={columnFormatting}
             dataCell={Cell}
             sorting={[
               { columnName: 'plan', direction: 'asc' },
