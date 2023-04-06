@@ -128,8 +128,14 @@ export function TaskTable(props: IProps) {
     setFilter,
     flat,
   } = useTodo();
-  const { playerMediafile, playing, setPlaying, loading, pdBusy } =
-    usePassageDetailContext();
+  const {
+    playerMediafile,
+    playing,
+    setPlaying,
+    loading,
+    pdBusy,
+    discussionSize,
+  } = usePassageDetailContext();
   const filterRef = useRef(filter);
   const t = todoStr;
   const tpb = projButtonStr;
@@ -199,8 +205,9 @@ export function TaskTable(props: IProps) {
   const defaultGrouping = [{ columnName: 'plan' }];
 
   const [rows, setRows] = useState(Array<IRow>());
+  const extraHeight = 86;
   const [style, setStyle] = useState<CSSProperties>({
-    height: window.innerHeight - 275,
+    height: discussionSize.height + extraHeight,
     overflowY: 'auto',
     cursor: 'default',
   });
@@ -219,9 +226,33 @@ export function TaskTable(props: IProps) {
     setFilter(!filter);
   };
 
+  const setDimensions = () => {
+    setStyle((style) => ({
+      ...style,
+      overflowY: 'auto',
+      cursor: busyRef.current ? 'progress' : 'default',
+    }));
+    setWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    if (onFilter) onFilter(false);
+    setDimensions();
+    const handleResize = debounce(() => {
+      setDimensions();
+    }, 100);
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
+
   useEffect(() => {
     filterRef.current = filter;
     setDimensions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
   const handleStopPlayer = () => {
@@ -250,37 +281,14 @@ export function TaskTable(props: IProps) {
     }
   };
 
-  const setDimensions = () => {
-    setStyle({
-      height: window.innerHeight - 275,
-      overflowY: 'auto',
-      cursor: busyRef.current ? 'progress' : 'default',
-    });
-    setWidth(window.innerWidth);
-  };
-
-  useEffect(() => {
-    if (onFilter) onFilter(false);
-    setDimensions();
-    const handleResize = debounce(() => {
-      setDimensions();
-    }, 100);
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, []);
-
   useEffect(() => {
     busyRef.current = pdBusy || loading;
     setStyle({
-      height: window.innerHeight - 275,
+      height: discussionSize.height + extraHeight,
       overflowY: 'auto',
       cursor: busyRef.current ? 'progress' : 'default',
     });
-  }, [pdBusy, loading]);
+  }, [pdBusy, loading, discussionSize]);
 
   useEffect(() => {
     if (formRef.current && selectedRef.current) {
