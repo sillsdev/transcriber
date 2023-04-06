@@ -38,7 +38,6 @@ import usePassageDetailContext from '../context/usePassageDetailContext';
 export const TaskItemWidth = 240;
 
 const TaskTableDiv = styled('div')(() => ({
-  width: '100%',
   '&[data-list="true"] table': {
     minWidth: `${TaskItemWidth}px !important`,
   },
@@ -144,7 +143,7 @@ export function TaskTable(props: IProps) {
     mediaActionsSelector,
     shallowEqual
   );
-  const [width, setWidth] = useState(window.innerWidth);
+  const [width, setWidth] = useState(TaskItemWidth);
   const { getPlan, getPlanName } = usePlan();
   const offlineAvailableToggle = useOfflineAvailToggle();
   const [planId] = useGlobal('plan');
@@ -478,6 +477,7 @@ export function TaskTable(props: IProps) {
       id="TaskTable"
       ref={formRef}
       style={style}
+      sx={{ width: width }}
       data-list={!filter ? 'true' : ''}
     >
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
