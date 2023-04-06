@@ -1,6 +1,13 @@
 import { useState, useEffect, useRef, useMemo, CSSProperties } from 'react';
 import { useGlobal } from 'reactn';
-import { IconButton, Typography, Box, BoxProps, styled } from '@mui/material';
+import {
+  IconButton,
+  Typography,
+  Box,
+  BoxProps,
+  styled,
+  TableCell,
+} from '@mui/material';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import CloseIcon from '@mui/icons-material/Close';
@@ -36,10 +43,12 @@ import { GridColumnExtension } from '@devexpress/dx-react-grid';
 import usePassageDetailContext from '../context/usePassageDetailContext';
 
 export const TaskItemWidth = 240;
-export const TaskTableWidth = 260;
+export const TaskTableWidth = 265;
 
 const TaskTableDiv = styled('div')(() => ({
-  width: '100%',
+  td: {
+    padding: 0,
+  },
   '&[data-list="true"] table': {
     minWidth: `${TaskItemWidth}px !important`,
   },
@@ -228,12 +237,15 @@ export function TaskTable(props: IProps) {
   };
 
   const setDimensions = () => {
+    const newWidth = filterRef.current
+      ? window.innerWidth - 40
+      : TaskTableWidth;
+    if (width !== newWidth) setWidth(newWidth);
     setStyle((style) => ({
       ...style,
-      overflowY: 'auto',
       cursor: busyRef.current ? 'progress' : 'default',
+      width: newWidth,
     }));
-    setWidth(filterRef.current ? window.innerWidth - 300 : TaskTableWidth);
   };
 
   useEffect(() => {
@@ -284,11 +296,11 @@ export function TaskTable(props: IProps) {
 
   useEffect(() => {
     busyRef.current = pdBusy || loading;
-    setStyle({
+    setStyle((style) => ({
+      ...style,
       height: discussionSize.height + extraHeight,
-      overflowY: 'auto',
       cursor: busyRef.current ? 'progress' : 'default',
-    });
+    }));
   }, [pdBusy, loading, discussionSize]);
 
   useEffect(() => {
@@ -448,15 +460,15 @@ export function TaskTable(props: IProps) {
           if (row.mediaId !== '')
             curId = rowData[value.props.item]?.mediafile.id;
         return (
-          <td
+          <TableCell
             ref={curId === playerMediafile?.id ? selectedRef : notSelectedRef}
             style={curId === playerMediafile?.id ? selBacking : noSelBacking}
           >
             {value}
-          </td>
+          </TableCell>
         );
       }
-      return <td>{'\u00a0'}</td>;
+      return <td>{'\u200B'}</td>; // Zero width space
     } else {
       if (column.name === 'composite') {
         return <td>{'\u00a0'}</td>;
@@ -479,7 +491,6 @@ export function TaskTable(props: IProps) {
       id="TaskTable"
       ref={formRef}
       style={style}
-      sx={{ width: width }}
       data-list={!filter ? 'true' : ''}
     >
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
