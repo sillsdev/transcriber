@@ -364,19 +364,27 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
 
     //this is for the PD Player only
     const setPlaying = (playing: boolean) => {
-      if (playing !== state.playing) {
+      //if this is called from a callback, we don't know the state
+      //if (playing !== state.playing) {
+      if (playing)
         setState((state: ICtxState) => {
           return {
             ...state,
             playing,
-            itemPlaying: playing ? false : state.itemPlaying,
-            commentPlaying: playing ? false : state.commentPlaying,
-            oldVernacularPlaying: playing ? false : state.oldVernacularPlaying,
-            oldVernacularPlayItem: playing ? '' : state.oldVernacularPlayItem,
-            oldVernacularStart: playing ? 0 : state.oldVernacularStart,
+            itemPlaying: false,
+            commentPlaying: false,
+            oldVernacularPlaying: false,
+            oldVernacularPlayItem: '',
+            oldVernacularStart: 0,
           };
         });
-      }
+      else
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            playing,
+          };
+        });
     };
     const setItemPlaying = (itemPlaying: boolean) => {
       if (itemPlaying !== state.itemPlaying) {
