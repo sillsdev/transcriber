@@ -9,8 +9,16 @@ import { StepEditor } from '../StepEditor';
 import { useNewTeamId, defaultWorkflow } from '../../crud';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { TeamPaper, TeamHeadDiv, TeamName, AltButton } from '../../control';
+import { QueryBuilder } from '@orbit/data';
+import { withData } from 'react-orbitjs';
+import { Organization } from '../../model';
 
-export const PersonalItem = () => {
+interface Records {
+  organizations: Organization[];
+}
+
+export const PersonalItem = (props: Records) => {
+  const { organizations } = props;
   const ctx = React.useContext(TeamContext);
   const { personalProjects, cardStrings } = ctx.state;
   const t = cardStrings;
@@ -40,7 +48,7 @@ export const PersonalItem = () => {
       setOrg(val);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [organizations]);
 
   return (
     <TeamPaper id="PersonalItem">
@@ -72,3 +80,10 @@ export const PersonalItem = () => {
     </TeamPaper>
   );
 };
+const mapRecordsToProps = {
+  organizations: (q: QueryBuilder) => q.findRecords('organization'),
+};
+
+export default withData(mapRecordsToProps)(
+  PersonalItem
+) as any as () => JSX.Element;
