@@ -6325,6 +6325,12 @@
 				<target>Plus lente [{0}]</target>
 			</segment>
 		</unit>
+        <unit id="wsAudioPlayer.stopTip">
+			<segment>
+				<source>Stop [{0}]</source>
+				<target>Arrêt [{0}]</target>
+			</segment>
+		</unit>
 		<unit id="wsAudioPlayer.timerTip">
 			<segment>
 				<source>Timestamp [{0}]</source>

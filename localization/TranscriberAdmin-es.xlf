@@ -718,7 +718,7 @@
 		<unit id="commentCard.playOrStop">
 			<segment>
 				<source>Play / Stop</source>
-				<target>Reproducir / Detener</target>
+				<target>Reproducir / Parar</target>
 			</segment>
 		</unit>
 		<unit id="commentCard.previousVersion">
@@ -6323,6 +6323,12 @@
 			<segment>
 				<source>Slower [{0}]</source>
 				<target>Desacelerar [{0}]</target>
+			</segment>
+		</unit>
+        <unit id="wsAudioPlayer.stopTip">
+			<segment>
+				<source>Stop [{0}]</source>
+				<target>Parar [{0}]</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.timerTip">
