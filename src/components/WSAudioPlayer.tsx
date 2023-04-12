@@ -722,10 +722,12 @@ function WSAudioPlayer(props: IProps) {
                     <Grid item>
                       <LightTooltip
                         id="wsAudioRecordTip"
-                        title={(recording ? t.pauseTip : t.record).replace(
-                          '{0}',
-                          RECORD_KEY
-                        )}
+                        title={(recording
+                          ? oneTryOnly
+                            ? t.stopTip
+                            : t.pauseTip
+                          : t.record
+                        ).replace('{0}', RECORD_KEY)}
                       >
                         <span>
                           <IconButton
@@ -745,7 +747,12 @@ function WSAudioPlayer(props: IProps) {
                   <Grid item>
                     <LightTooltip
                       id="wsAudioPlayTip"
-                      title={(playing ? t.pauseTip : t.playTip).replace(
+                      title={(playing
+                        ? oneTryOnly
+                          ? t.stopTip
+                          : t.pauseTip
+                        : t.playTip
+                      ).replace(
                         '{0}',
                         localizeHotKey(
                           justPlayButton ? ALT_PLAY_PAUSE_KEY : PLAY_PAUSE_KEY
@@ -1007,10 +1014,12 @@ function WSAudioPlayer(props: IProps) {
 
                     <LightTooltip
                       id="wsAudioPlayTip"
-                      title={(playing ? t.pauseTip : t.playTip).replace(
-                        '{0}',
-                        localizeHotKey(PLAY_PAUSE_KEY)
-                      )}
+                      title={(playing
+                        ? oneTryOnly
+                          ? t.stopTip
+                          : t.pauseTip
+                        : t.playTip
+                      ).replace('{0}', localizeHotKey(PLAY_PAUSE_KEY))}
                     >
                       <span>
                         <IconButton
