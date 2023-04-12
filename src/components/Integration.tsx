@@ -167,6 +167,8 @@ export function IntegrationPanel(
   const [projectsLoaded] = useGlobal('projectsLoaded');
   const getOfflineProject = useOfflnProjRead();
   const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
+  const [local, setLocal] = useState(offline || offlineOnly);
   const { accessToken } = useContext(TokenContext).state;
   const [count, setCount] = useState(-1);
 
@@ -218,7 +220,8 @@ export function IntegrationPanel(
   const getParatextIntegration = (local: string) => {
     const intfind: Integration[] = integrations.filter(
       (i) =>
-        i.attributes?.name === local && Boolean(i.keys?.remoteId) !== offline
+        i.attributes?.name === local &&
+        Boolean(i.keys?.remoteId) !== offlineOnly
     );
     if (intfind.length === 0)
       addParatextIntegration(local).then((res) => setParatextIntegration(res));
@@ -343,7 +346,7 @@ export function IntegrationPanel(
   };
 
   const getProjectLabel = (): string => {
-    if (offline) return t.selectProject;
+    if (local) return t.selectProject;
     return connected
       ? paratext_projectsStatus && paratext_projectsStatus.complete
         ? !paratext_projectsStatus.errStatus
@@ -405,6 +408,9 @@ export function IntegrationPanel(
     let language = proj && proj.attributes ? proj.attributes.languageName : '';
     return replLang.replace('{lang0}', language || '');
   };
+  useEffect(() => {
+    setLocal(offline || offlineOnly);
+  }, [offline, offlineOnly]);
 
   useEffect(() => {
     if (artifactType) {
@@ -414,11 +420,11 @@ export function IntegrationPanel(
   }, [artifactType]);
 
   useEffect(() => {
-    if (offline) {
+    if (local) {
       getParatextDataPath().then((val) => setPtPath(val));
     } else {
       //force a current check -- will set connected
-      checkOnline((result) => { });
+      checkOnline((result) => {});
     }
     resetProjects();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -467,7 +473,7 @@ export function IntegrationPanel(
   /* do this once */
   useEffect(() => {
     if (integrations.length > 0) {
-      getParatextIntegration(integrationSlug(exportType, offline));
+      getParatextIntegration(integrationSlug(exportType, offlineOnly));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [integrations, exportType]);
@@ -489,7 +495,7 @@ export function IntegrationPanel(
   }, [paratext_countStatus]);
 
   useEffect(() => {
-    if (!offline) {
+    if (!local) {
       if (!paratext_usernameStatus) {
         getUserName(accessToken || '', errorReporter, t.usernamePending);
       } else if (paratext_usernameStatus.errStatus)
@@ -509,7 +515,7 @@ export function IntegrationPanel(
         let proj = getProject();
         const langTag =
           proj && proj.attributes ? proj.attributes.language : undefined;
-        if (offline) {
+        if (local) {
           const localprojs = projectintegrations.filter(
             (pi) =>
               related(pi, 'integration') === paratextIntegration &&
@@ -605,7 +611,7 @@ export function IntegrationPanel(
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Accordion id="int-online" defaultExpanded={!offline} disabled={offline}>
+      <Accordion id="int-online" defaultExpanded={!local} disabled={local}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls={t.paratext}
@@ -685,8 +691,9 @@ export function IntegrationPanel(
                           key={option.ParatextId}
                           value={option.ParatextId}
                         >
-                          {`${option.ShortName ? option.ShortName + '/' : ''}${option.Name
-                            } (${option.LanguageTag})`}
+                          {`${option.ShortName ? option.ShortName + '/' : ''}${
+                            option.Name
+                          } (${option.LanguageTag})`}
                         </MenuItem>
                       ))}
                   </TextField>
@@ -705,11 +712,11 @@ export function IntegrationPanel(
                   hasParatext
                     ? t.yes + ': ' + paratext_username
                     : connected
-                      ? paratext_usernameStatus &&
-                        paratext_usernameStatus.complete
-                        ? t.no
-                        : t.usernamePending
-                      : t.offline
+                    ? paratext_usernameStatus &&
+                      paratext_usernameStatus.complete
+                      ? t.no
+                      : t.usernamePending
+                    : t.offline
                 }
               />
             </ListItem>
@@ -725,8 +732,8 @@ export function IntegrationPanel(
                   hasPermission
                     ? t.yes + ' :' + ptPermission
                     : connected
-                      ? t.no
-                      : t.offline
+                    ? t.no
+                    : t.offline
                 }
               />
             </ListItem>
@@ -772,7 +779,7 @@ export function IntegrationPanel(
           </FormControl>
         </AccordionDetails>
       </Accordion>
-      <Accordion id="int-offln" defaultExpanded={offline} disabled={!offline}>
+      <Accordion id="int-offln" defaultExpanded={local} disabled={!local}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls={t.paratextLocal}

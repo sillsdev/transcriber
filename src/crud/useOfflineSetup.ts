@@ -6,6 +6,7 @@ import {
   ArtifactType,
   RoleNames,
   WorkflowStep,
+  Integration,
 } from '../model';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -40,6 +41,51 @@ export const useOfflineSetup = () => {
         await backup.push((t: TransformBuilder) => [
           t.addRecord(scriptureRec),
           t.addRecord(otherRec),
+        ])
+      );
+    }
+  };
+
+  const makeIntegrationRecs = async () => {
+    const allRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('integration')
+    ) as Integration[];
+    const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
+    if (offlineRecs.length === 0) {
+      let paratextRec = {
+        type: 'integration',
+        attributes: {
+          name: 'paratext',
+        },
+      } as Integration;
+      memory.schema.initializeRecord(paratextRec);
+      await memory.sync(
+        await backup.push((t: TransformBuilder) => [t.addRecord(paratextRec)])
+      );
+    }
+    if (
+      offlineRecs.filter(
+        (r) => r.attributes.name === 'paratextwholebacktranslation'
+      ).length === 0
+    ) {
+      let wbtRec = {
+        type: 'integration',
+        attributes: {
+          name: 'paratextwholebacktranslation',
+        },
+      } as Integration;
+      memory.schema.initializeRecord(wbtRec);
+      let pbtRec = {
+        type: 'integration',
+        attributes: {
+          name: 'paratextbacktranslation',
+        },
+      } as Integration;
+      memory.schema.initializeRecord(pbtRec);
+      await memory.sync(
+        await backup.push((t: TransformBuilder) => [
+          t.addRecord(wbtRec),
+          t.addRecord(pbtRec),
         ])
       );
     }
@@ -334,6 +380,7 @@ export const useOfflineSetup = () => {
     await makeRoleRecs();
     await makeTypeRecs('project');
     await makeTypeRecs('plan');
+    await makeIntegrationRecs(); //this used to be automatic until we started trying to guess at what project they wanted.
     if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 3) {
       await makeArtifactCategoryRecs();
       await makeArtifactTypeRecs();
