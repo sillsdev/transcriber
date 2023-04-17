@@ -58,6 +58,10 @@ const TaskTableDiv = styled('div')(() => ({
   '& .MuiListItem-root': {
     padding: '0 16px',
   },
+  '& .MuiListItem-root .item-desc': {
+    width: `${TaskItemWidth - 80}px!important`,
+    overflow: 'hidden',
+  },
   '& .MuiList-root': {
     padding: 0,
   },
