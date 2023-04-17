@@ -6,7 +6,12 @@ import {
   SharedResourceReference,
 } from '../../../model';
 import ShapingTable from '../../ShapingTable';
-import { related, remoteIdNum, useArtifactCategory } from '../../../crud';
+import {
+  related,
+  remoteIdNum,
+  useArtifactCategory,
+  usePlanType,
+} from '../../../crud';
 import { Sorting } from '@devexpress/dx-react-grid';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import {
@@ -55,12 +60,14 @@ export const SelectSharedResource = (props: IProps) => {
   const [refLevel, setRefLevel] = useState<RefLevel>(RefLevel.Verse);
   const [memory] = useGlobal('memory');
   const ctx = useContext(PassageDetailContext);
-  const { passage, getSharedResources } = ctx.state;
+  const { passage, section, getSharedResources } = ctx.state;
   const [resources, setResources] = useState<Resource[]>([]);
   const [data, setData] = useState<IRRow[]>([]);
   const [checks, setChecks] = useState<number[]>([]);
   const [termsCheck, setTermsCheck] = useState<number[]>([]);
   const [curTermsCheck, setCurTermsCheck] = useState<number>();
+  const planType = usePlanType();
+  const [isScripture, setIsScripture] = useState(true);
   const selecting = useRef(false);
   const { localizedArtifactCategory } = useArtifactCategory();
   const t: IPassageDetailArtifactsStrings = useSelector(
@@ -117,6 +124,11 @@ export const SelectSharedResource = (props: IProps) => {
 
   const refRes = useMemo(
     () => {
+      const scripture = planType(related(section, 'plan'))?.scripture;
+      setIsScripture(scripture);
+      if (!scripture) {
+        setRefLevel(RefLevel.All);
+      }
       const bookSet = new Set<number>();
       const chapSet = new Set<number>();
       const verseSet = new Set<number>();
@@ -167,7 +179,7 @@ export const SelectSharedResource = (props: IProps) => {
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [passage]
+    [passage, section]
   );
 
   useEffect(() => {
@@ -192,16 +204,19 @@ export const SelectSharedResource = (props: IProps) => {
   const numSort = (i: number, j: number) => i - j;
 
   const handleCheck = (chks: Array<number>) => {
-    if (checks.join(',') !== chks.join(',')) {
+    const curLen = checks.length;
+    const newLen = chks.length;
+    if (curLen < newLen) {
       const termsList: number[] = [];
       const noTermsList: number[] = [];
       for (const c of chks.sort(numSort)) {
-        if (!checks.includes(c))
+        if (!checks.includes(c)) {
           if (resources[c].attributes.termsOfUse) {
             termsList.push(c);
           } else {
             noTermsList.push(c);
           }
+        }
       }
       if (noTermsList.length > 0) {
         setChecks(checks.concat(noTermsList).sort(numSort));
@@ -210,6 +225,8 @@ export const SelectSharedResource = (props: IProps) => {
         setTermsCheck(termsList);
         setCurTermsCheck(termsList[0]);
       }
+    } else if (curLen > newLen) {
+      setChecks(chks);
     }
   };
 
@@ -236,9 +253,12 @@ export const SelectSharedResource = (props: IProps) => {
   useEffect(() => {
     setData(
       resources.map((r) => {
-        const langArr = r.attributes.languagebcp47.split('|');
-        const language =
-          langArr.length > 1 ? `${langArr[0]} (${langArr[1]})` : langArr[0];
+        const langArr = r.attributes.languagebcp47?.split('|');
+        const language = langArr
+          ? langArr.length > 1
+            ? `${langArr[0]} (${langArr[1]})`
+            : langArr[0]
+          : r.attributes.language;
         const catSlug = r.attributes.categoryName;
         const category = catSlug
           ? (localizedArtifactCategory(catSlug) as string) || catSlug
@@ -246,8 +266,8 @@ export const SelectSharedResource = (props: IProps) => {
         return {
           language,
           category,
-          title: r.attributes.title,
-          description: r.attributes.description,
+          title: r.attributes.title || r.attributes.originalFile,
+          description: r.attributes.description || r.attributes.passageDesc,
           version: r.attributes.versionNumber,
           keywords: r.attributes.keywords?.replace('|', ', '),
           terms: r.attributes.termsOfUse ? t.yes : t.no,
@@ -272,10 +292,12 @@ export const SelectSharedResource = (props: IProps) => {
 
   return (
     <div id="select-shared-resources">
-      <Stack direction="row">
-        <GrowingSpacer />
-        <RefLevelMenu level={refLevel} action={handleRefLevel} />
-      </Stack>
+      {isScripture && (
+        <Stack direction="row">
+          <GrowingSpacer />
+          <RefLevelMenu level={refLevel} action={handleRefLevel} />
+        </Stack>
+      )}
       <ShapingTable
         columns={columnDefs}
         columnWidths={columnWidths}
@@ -301,7 +323,7 @@ export const SelectSharedResource = (props: IProps) => {
           {t.link}
         </PriButton>
       </ActionRow>
-      {curTermsCheck && (
+      {curTermsCheck !== undefined && (
         <BigDialog
           title={t.termsReview}
           description={
