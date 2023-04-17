@@ -4057,7 +4057,13 @@
 				<target>Recibir notificaciones y resúmenes por correo electrónico</target>
 			</segment>
 		</unit>
-		<unit id="profile.timezone">
+      <unit id="profile.sharedContentCreator">
+         <segment>
+            <source>Allow user to create shared content projects.</source>
+            <target>Permitir al usuario crear proyectos de contenido compartido.</target>
+         </segment>
+      </unit>
+        <unit id="profile.timezone">
 			<segment>
 				<source>Time zone</source>
 				<target/>

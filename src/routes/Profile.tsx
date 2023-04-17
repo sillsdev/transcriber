@@ -155,7 +155,7 @@ export function Profile(props: IProps) {
   const navigate = useMyNavigate();
   const { accessToken } = useContext(TokenContext).state;
   const { getUserRec } = useUser();
-  const { getMbrRoleRec, userIsAdmin } = useRole();
+  const { getMbrRoleRec, userIsAdmin, userIsSharedContentAdmin } = useRole();
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [name, setName] = useState('');
@@ -166,6 +166,7 @@ export function Profile(props: IProps) {
   const [role, setRole] = useState('');
   const [locale, setLocale] = useState<string>(localeDefault(isDeveloper));
   const [news, setNews] = useState<boolean | null>(null);
+  const [sharedContent, setSharedContent] = useState(false);
   const [digest, setDigest] = useState<DigestPreference | null>(null);
   const [phone, setPhone] = useState<string | null>(null);
   const [bcp47, setBcp47] = useState<string | null>(null);
@@ -261,7 +262,10 @@ export function Profile(props: IProps) {
     toolChanged(toolId, true);
     setLocked(!locked);
   };
-
+  const handleSharedContentChange = () => {
+    toolChanged(toolId, true);
+    setSharedContent(!Boolean(sharedContent));
+  };
   const handleDigestChange = () => {
     toolChanged(toolId, true);
     setDigest(
@@ -304,7 +308,7 @@ export function Profile(props: IProps) {
                 progressbarTypeid: progBar,
                 digestPreference: digest,
                 newsPreference: news,
-                hotKeys,
+                sharedContentCreator: sharedContent,
                 avatarUrl,
               },
             } as User,
@@ -355,6 +359,7 @@ export function Profile(props: IProps) {
           progressbarTypeid: progBar,
           digestPreference: digest,
           newsPreference: news,
+          sharedContentCreator: sharedContent,
           hotKeys,
           avatarUrl,
         },
@@ -483,6 +488,7 @@ export function Profile(props: IProps) {
         progressbarTypeid: progBar,
         digestPreference: DigestPreference.dailyDigest,
         newsPreference: false,
+        sharedContentCreator: false,
         hotKeys,
         avatarUrl,
       },
@@ -515,6 +521,7 @@ export function Profile(props: IProps) {
     setTimezone(attr.timezone || '');
     setLocale(attr.locale ? attr.locale : localeDefault(isDeveloper));
     setNews(attr.newsPreference);
+    setSharedContent(attr.sharedContentCreator ?? false);
     setDigest(attr.digestPreference);
     setLocked(true);
     setBcp47(attr.uilanguagebcp47);
@@ -722,6 +729,19 @@ export function Profile(props: IProps) {
                         />
                       }
                       label={t.sendDigest}
+                    />
+                  )}
+                  {userIsSharedContentAdmin && (
+                    <FormControlLabel
+                      sx={textFieldProps}
+                      control={
+                        <Checkbox
+                          id="sharedcontent"
+                          checked={sharedContent}
+                          onChange={handleSharedContentChange}
+                        />
+                      }
+                      label={t.sharedContentCreator}
                     />
                   )}
                   {showDetail && (

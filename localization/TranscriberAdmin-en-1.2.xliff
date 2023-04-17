@@ -4881,6 +4881,13 @@
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="profile.sharedContentCreator">
+            <source>Allow user to create shared content projects.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Profile.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="profile.timezone">
             <source>Time zone</source>
             <target/>
@@ -7053,6 +7060,13 @@
          </trans-unit>
          <trans-unit id="vProject.isPublic">
             <source>This project contains resources that can be used in other projects for Internalization.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="vProject.howToPublic">
+            <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>

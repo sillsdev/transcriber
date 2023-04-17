@@ -4186,6 +4186,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="profile.sharedContentCreator">
+         <segment>
+            <source>Allow user to create shared content projects.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="profile.timezone">
          <segment>
             <source>Time zone</source>
@@ -6049,6 +6055,12 @@
       <unit id="vProject.isPublic">
          <segment>
             <source>This project contains resources that can be used in other projects for Internalization.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.howToPublic">
+         <segment>
+            <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
             <target/>
          </segment>
       </unit>

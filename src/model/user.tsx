@@ -25,6 +25,8 @@ export interface User extends BaseModel {
     hotKeys: string | null;
     digestPreference: DigestPreference | null;
     newsPreference: boolean | null;
+    sharedContentAdmin: boolean | null;
+    sharedContentCreator: boolean | null;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
@@ -57,6 +59,8 @@ export interface CurrentUser extends User {
     hotKeys: string | null;
     digestPreference: DigestPreference | null;
     newsPreference: boolean | null;
+    sharedContentAdmin: boolean | null;
+    sharedContentCreator: boolean | null;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;

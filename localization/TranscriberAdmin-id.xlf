@@ -5797,7 +5797,13 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="vProject.language">
+        <unit id="vProject.howToPublic">
+            <segment>
+                <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
+                <target>Hubungi Nathan Payne (nathan_payne@sil.org) untuk akses membuat konten bersama.</target>
+            </segment>
+        </unit>
+      		<unit id="vProject.language">
 			<segment>
 				<source>Language</source>
 				<target/>

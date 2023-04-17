@@ -837,6 +837,7 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "role": string;
     "save": string;
     "sendDigest": string;
+    "sharedContentCreator": string;
     "timezone": string;
     "userExists": string;
     "userProfile": string;
@@ -1238,6 +1239,7 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "fontSize": string;
     "hierarchical": string;
     "isPublic": string;
+    "howToPublic": string;
     "language": string;
     "layout": string;
     "nameInUse": string;

@@ -19,7 +19,7 @@ import { EditorSettings } from './EditorSettings';
 import { Options } from '.';
 import RenderLogo from '../../../control/RenderLogo';
 import { useSnackBar } from '../../../hoc/SnackBar';
-import { useOrganizedBy } from '../../../crud';
+import { useOrganizedBy, useRole } from '../../../crud';
 
 const StyledAccordionSummary = styled(AccordionSummary)<AccordionSummaryProps>(
   ({ theme }) => ({
@@ -62,6 +62,7 @@ export function ProjectExpansion(props: IProjectDialogState) {
   const { state, setState } = props;
   const { organizedBy, isPublic } = state;
   const { localizedOrganizedBy, fromLocalizedOrganizedBy } = useOrganizedBy();
+  const { userIsSharedContentCreator } = useRole();
   const [localOrgBy, setLocalOrgBy] = useState('');
   const ctx = React.useContext(TeamContext);
   const t = ctx.state.vProjectStrings;
@@ -150,6 +151,9 @@ export function ProjectExpansion(props: IProjectDialogState) {
               <FormLabel sx={{ pt: 4, color: 'secondary.main' }}>
                 {t.sharedResources}
               </FormLabel>
+              {!userIsSharedContentCreator && (
+                <FormLabel>{t.howToPublic}</FormLabel>
+              )}
               <FormControlLabel
                 sx={{ mx: 1, mb: 1 }}
                 control={
@@ -157,6 +161,7 @@ export function ProjectExpansion(props: IProjectDialogState) {
                     id="checkbox-shared"
                     checked={isPublic}
                     onChange={handleShareable}
+                    disabled={!userIsSharedContentCreator}
                   />
                 }
                 label={t.isPublic}
