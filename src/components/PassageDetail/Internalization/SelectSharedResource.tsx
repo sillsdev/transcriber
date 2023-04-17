@@ -2,11 +2,18 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   IPassageDetailArtifactsStrings,
   ISharedStrings,
+  Plan,
+  PlanType,
   Resource,
   SharedResourceReference,
 } from '../../../model';
 import ShapingTable from '../../ShapingTable';
-import { related, remoteIdNum, useArtifactCategory } from '../../../crud';
+import {
+  findRecord,
+  related,
+  remoteIdNum,
+  useArtifactCategory,
+} from '../../../crud';
 import { Sorting } from '@devexpress/dx-react-grid';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import {
@@ -55,12 +62,13 @@ export const SelectSharedResource = (props: IProps) => {
   const [refLevel, setRefLevel] = useState<RefLevel>(RefLevel.Verse);
   const [memory] = useGlobal('memory');
   const ctx = useContext(PassageDetailContext);
-  const { passage, getSharedResources } = ctx.state;
+  const { passage, section, getSharedResources } = ctx.state;
   const [resources, setResources] = useState<Resource[]>([]);
   const [data, setData] = useState<IRRow[]>([]);
   const [checks, setChecks] = useState<number[]>([]);
   const [termsCheck, setTermsCheck] = useState<number[]>([]);
   const [curTermsCheck, setCurTermsCheck] = useState<number>();
+  const [isGeneral, setIsGeneral] = useState(false);
   const selecting = useRef(false);
   const { localizedArtifactCategory } = useArtifactCategory();
   const t: IPassageDetailArtifactsStrings = useSelector(
@@ -117,6 +125,20 @@ export const SelectSharedResource = (props: IProps) => {
 
   const refRes = useMemo(
     () => {
+      const planRec = findRecord(memory, 'plan', related(section, 'plan')) as
+        | Plan
+        | undefined;
+      if (planRec) {
+        const planTypeRec = findRecord(
+          memory,
+          'plantype',
+          related(planRec, 'plantype')
+        ) as PlanType | undefined;
+        if (planTypeRec?.attributes?.name?.toLowerCase() === 'other') {
+          setIsGeneral(true);
+          setRefLevel(RefLevel.All);
+        }
+      }
       const bookSet = new Set<number>();
       const chapSet = new Set<number>();
       const verseSet = new Set<number>();
@@ -167,7 +189,7 @@ export const SelectSharedResource = (props: IProps) => {
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [passage]
+    [passage, section]
   );
 
   useEffect(() => {
@@ -277,10 +299,12 @@ export const SelectSharedResource = (props: IProps) => {
 
   return (
     <div id="select-shared-resources">
-      <Stack direction="row">
-        <GrowingSpacer />
-        <RefLevelMenu level={refLevel} action={handleRefLevel} />
-      </Stack>
+      {!isGeneral && (
+        <Stack direction="row">
+          <GrowingSpacer />
+          <RefLevelMenu level={refLevel} action={handleRefLevel} />
+        </Stack>
+      )}
       <ShapingTable
         columns={columnDefs}
         columnWidths={columnWidths}
