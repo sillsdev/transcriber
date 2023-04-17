@@ -192,24 +192,29 @@ export const SelectSharedResource = (props: IProps) => {
   const numSort = (i: number, j: number) => i - j;
 
   const handleCheck = (chks: Array<number>) => {
-    if (checks.join(',') !== chks.join(',')) {
+    const curLen = checks.length;
+    const newLen = chks.length;
+    if (curLen < newLen) {
       const termsList: number[] = [];
       const noTermsList: number[] = [];
       for (const c of chks.sort(numSort)) {
-        if (!checks.includes(c))
+        if (!checks.includes(c)) {
           if (resources[c].attributes.termsOfUse) {
             termsList.push(c);
           } else {
             noTermsList.push(c);
           }
+        }
       }
-      if (noTermsList.length > 0) {
+      if (noTermsList.length !== checks.length) {
         setChecks(checks.concat(noTermsList).sort(numSort));
       }
       if (termsList.length > 0) {
         setTermsCheck(termsList);
         setCurTermsCheck(termsList[0]);
       }
+    } else if (curLen > newLen) {
+      setChecks(chks);
     }
   };
 
