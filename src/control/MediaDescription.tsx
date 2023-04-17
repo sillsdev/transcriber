@@ -82,7 +82,7 @@ export const ItemDescription = ({
     version = s.attributes?.versionNumber?.toString();
   }
   return (
-    <StyledBox col={col}>
+    <StyledBox col={col} className="item-desc">
       <span>
         {mediafile
           ? localizedArtifactTypeFromId(related(mediafile, 'artifactType'))
