@@ -18,6 +18,7 @@ import { UnsavedContext } from '../context/UnsavedContext';
 import SpeakerName from './SpeakerName';
 import { AltButton, PriButton } from '../control';
 import { passageRecordSelector } from '../selector';
+import Busy from './Busy';
 
 const RecordDialog = styled(Dialog)<DialogProps>(() => ({
   flexGrow: 1,
@@ -67,12 +68,13 @@ function PassageRecordDlg(props: IProps) {
     team,
   } = props;
   const [reporter] = useGlobal('errorReporter');
+  const [busy, setBusy] = useState(false);
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
   const [canCancel, setCanCancel] = useState(false);
   const [hasRights, setHasRights] = useState(false);
-  const { startSave, saveCompleted } = useContext(UnsavedContext).state;
+  const { startSave } = useContext(UnsavedContext).state;
   const t: IPassageRecordStrings = useSelector(
     passageRecordSelector,
     shallowEqual
@@ -80,8 +82,12 @@ function PassageRecordDlg(props: IProps) {
 
   const myToolId = 'PassageRecordDlg';
 
+  const onSaving = () => {
+    setBusy(true);
+  };
+
   const onReady = () => {
-    saveCompleted(myToolId, '');
+    setBusy(false);
     close();
   };
 
@@ -100,6 +106,8 @@ function PassageRecordDlg(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
 
+  useEffect(() => setBusy(false), [visible]);
+
   const handleSave = () => {
     startSave(myToolId);
   };
@@ -107,7 +115,7 @@ function PassageRecordDlg(props: IProps) {
     if (onCancel) {
       onCancel();
     }
-    close();
+    if (!busy) close();
   };
 
   return (
@@ -119,17 +127,21 @@ function PassageRecordDlg(props: IProps) {
     >
       <DialogTitle id="recDlg">{t.title}</DialogTitle>
       <DialogContent>
-        <SpeakerName
-          name={speaker || ''}
-          onRights={handleRights}
-          onChange={handleSpeaker}
-          createProject={createProject}
-          team={team}
-        />
+        {!busy && (
+          <SpeakerName
+            name={speaker || ''}
+            onRights={handleRights}
+            onChange={handleSpeaker}
+            createProject={createProject}
+            team={team}
+          />
+        )}
+        {busy && <Busy />}
         <MediaRecord
           toolId={myToolId}
           mediaId={mediaId}
           uploadMethod={uploadMethod}
+          onSaving={onSaving}
           onReady={onReady}
           defaultFilename={defaultFilename}
           allowRecord={hasRights}
@@ -149,7 +161,7 @@ function PassageRecordDlg(props: IProps) {
         <PriButton
           id="rec-save"
           onClick={handleSave}
-          disabled={(ready && !ready()) || !canSave}
+          disabled={busy || (ready && !ready()) || !canSave}
         >
           {t.save}
         </PriButton>

@@ -45,6 +45,7 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   const { startSave, toolChanged, toolsChanged, saveRequested, waitForSave } =
     useContext(UnsavedContext).state;
   const [reporter] = useGlobal('errorReporter');
+  const [, setBigBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
@@ -56,7 +57,12 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   const { passage, mediafileId } = usePassageDetailContext();
   const { showMessage } = useSnackBar();
   const toolId = 'RecordTool';
-  const onReady = () => {};
+  const onSaving = () => {
+    setBigBusy(true);
+  };
+  const onReady = () => {
+    setBigBusy(false);
+  };
   const [importList, setImportList] = useState<File[]>();
   const cancelled = useRef(false);
   const [uploadVisible, setUploadVisible] = useState(false);
@@ -207,6 +213,7 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
           toolId={toolId}
           mediaId={mediafileId}
           uploadMethod={uploadMedia}
+          onSaving={onSaving}
           onReady={onReady}
           defaultFilename={defaultFilename}
           allowRecord={hasRights}

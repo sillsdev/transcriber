@@ -394,6 +394,7 @@ export function DataChanges(props: IProps) {
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [loadComplete] = useGlobal('loadComplete');
   const [busy, setBusy] = useGlobal('remoteBusy');
+  const [bigBusy] = useGlobal('importexportBusy');
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const [connected] = useGlobal('connected');
   const [user] = useGlobal('user');
@@ -446,7 +447,13 @@ export function DataChanges(props: IProps) {
     } else if (checkBusy !== busy) setBusy(checkBusy);
   };
   const updateData = async () => {
-    if (!doingChanges.current && !busy && !saving && authenticated()) {
+    if (
+      !doingChanges.current &&
+      !busy &&
+      !bigBusy &&
+      !saving &&
+      authenticated()
+    ) {
       doingChanges.current = true; //attempt to prevent double calls
       setFirstRun(false);
       await doDataChanges(

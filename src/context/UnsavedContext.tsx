@@ -72,7 +72,7 @@ const UnsavedProvider = connect(
   const { t } = props;
   // const [memory] = useGlobal('memory');
   const [importexportBusy] = useGlobal('importexportBusy');
-  const [busy] = useGlobal('remoteBusy');
+  const [busy, setBusy] = useGlobal('remoteBusy');
   const [alertOpen, setAlertOpen] = useGlobal('alertOpen'); //global because planSheet checks it
   const saveConfirm = React.useRef<() => any>();
   const { showMessage } = useSnackBar();
@@ -99,6 +99,7 @@ const UnsavedProvider = connect(
   }, [saveResult]);
 
   const startSave = (id?: string) => {
+    setBusy(true);
     if (id) {
       if (!toolsChangedRef.current[id]?.startSave) {
         toolsChangedRef.current[id] = {
@@ -176,6 +177,7 @@ const UnsavedProvider = connect(
 
   const saveCompleted = (toolId: string, saveErr?: string) => {
     toolChanged(toolId, false, saveErr);
+    if (SaveComplete()) setBusy(false);
   };
   const anySaving = () => {
     const reducer = (prev: string, id: string) => {
