@@ -1102,6 +1102,7 @@ const initialState = {
 	"template": new LocalizedStrings({
 		"en": {
 			"apply": "Apply",
+			"autoMatchTemplate": "Auto Match Template",
 			"beginning": "Starting verse number",
 			"book": "Paratext book identifier (Length 3 uppercase)",
 			"bookname": "Book name",

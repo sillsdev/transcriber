@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { ITemplateStrings } from '../../model';
 import {
-  Paper,
-  InputBase,
   Divider,
   IconButton,
-  InputLabel,
   Dialog,
   DialogTitle,
   List,
@@ -13,7 +10,8 @@ import {
   ListItemIcon,
   SxProps,
   ListItemButton,
-  Typography,
+  TextField,
+  InputAdornment,
 } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
 import InfoIcon from '@mui/icons-material/Info';
@@ -163,50 +161,52 @@ export function Template(props: ITemplateProps) {
 
   return (
     <>
-      <Paper
-        component="form"
-        sx={{
-          padding: '2px 4px',
-          display: 'flex',
-          alignItems: 'center',
-          width: 600,
+      <TextField
+        label={t.autoMatchTemplate}
+        variant="filled"
+        sx={{ mx: 2 }}
+        value={template}
+        onChange={handleTemplateChange}
+        helperText={template === '{SECT}' ? t.renderExportTemplate : undefined}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              {
+                <>
+                  <IconButton
+                    id="templApply"
+                    sx={iconProps}
+                    aria-label={t.apply}
+                    onClick={handleApply}
+                    title={t.apply}
+                  >
+                    <DoneIcon />
+                  </IconButton>
+                  <Divider
+                    orientation="vertical"
+                    sx={{ height: '28px', m: '4px' }}
+                  />
+                  <IconButton
+                    id="templCodes"
+                    color="primary"
+                    sx={iconProps}
+                    onClick={handleTemplateInfo}
+                    title={t.templateCodes}
+                  >
+                    <InfoIcon />
+                  </IconButton>
+                </>
+              }
+            </InputAdornment>
+          ),
         }}
-      >
-        <InputLabel>{`${t.fileTemplate}:`}</InputLabel>
-        <InputBase
-          sx={{ ml: 1, flex: 1 }}
-          value={template}
-          onChange={handleTemplateChange}
-        />
-        <IconButton
-          id="templApply"
-          sx={iconProps}
-          aria-label={t.apply}
-          onClick={handleApply}
-          title={t.apply}
-        >
-          <DoneIcon />
-        </IconButton>
-        <Divider orientation="vertical" sx={{ height: '28px', m: '4px' }} />
-        <IconButton
-          id="templCodes"
-          color="primary"
-          sx={iconProps}
-          onClick={handleTemplateInfo}
-          title={t.templateCodes}
-        >
-          <InfoIcon />
-        </IconButton>
-        <InfoDialog
-          open={templateInfo}
-          onClose={handleClose}
-          onClick={handleClick}
-          organizedBy={organizedBy}
-        />
-      </Paper>
-      {template === '{SECT}' && (
-        <Typography fontSize="small">{t.renderExportTemplate}</Typography>
-      )}
+      />
+      <InfoDialog
+        open={templateInfo}
+        onClose={handleClose}
+        onClick={handleClick}
+        organizedBy={organizedBy}
+      />
     </>
   );
 }
