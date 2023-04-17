@@ -1034,6 +1034,7 @@ export interface ITeamCheckReferenceStrings extends Localize.LocalizedStringsMet
 
 export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
     "apply": string;
+    "autoMatchTemplate": string;
     "beginning": string;
     "book": string;
     "bookname": string;

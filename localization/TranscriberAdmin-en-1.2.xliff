@@ -5924,6 +5924,13 @@
                <context context-type="sourcefile">template.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="template.autoMatchTemplate">
+      		<source>Auto Match Template</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">template.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="template.beginning">
             <source>Starting verse number</source>
             <target/>

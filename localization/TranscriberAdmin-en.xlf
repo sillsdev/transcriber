@@ -5080,6 +5080,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="template.autoMatchTemplate">
+         <segment>
+            <source>Auto Match Template</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="template.beginning">
          <segment>
             <source>Starting verse number</source>
