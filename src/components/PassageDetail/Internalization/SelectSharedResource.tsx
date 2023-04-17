@@ -2,17 +2,15 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   IPassageDetailArtifactsStrings,
   ISharedStrings,
-  Plan,
-  PlanType,
   Resource,
   SharedResourceReference,
 } from '../../../model';
 import ShapingTable from '../../ShapingTable';
 import {
-  findRecord,
   related,
   remoteIdNum,
   useArtifactCategory,
+  usePlanType,
 } from '../../../crud';
 import { Sorting } from '@devexpress/dx-react-grid';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
@@ -68,7 +66,8 @@ export const SelectSharedResource = (props: IProps) => {
   const [checks, setChecks] = useState<number[]>([]);
   const [termsCheck, setTermsCheck] = useState<number[]>([]);
   const [curTermsCheck, setCurTermsCheck] = useState<number>();
-  const [isGeneral, setIsGeneral] = useState(false);
+  const planType = usePlanType();
+  const [isScripture, setIsScripture] = useState(true);
   const selecting = useRef(false);
   const { localizedArtifactCategory } = useArtifactCategory();
   const t: IPassageDetailArtifactsStrings = useSelector(
@@ -125,19 +124,10 @@ export const SelectSharedResource = (props: IProps) => {
 
   const refRes = useMemo(
     () => {
-      const planRec = findRecord(memory, 'plan', related(section, 'plan')) as
-        | Plan
-        | undefined;
-      if (planRec) {
-        const planTypeRec = findRecord(
-          memory,
-          'plantype',
-          related(planRec, 'plantype')
-        ) as PlanType | undefined;
-        if (planTypeRec?.attributes?.name?.toLowerCase() === 'other') {
-          setIsGeneral(true);
-          setRefLevel(RefLevel.All);
-        }
+      const scripture = planType(related(section, 'plan'))?.scripture;
+      setIsScripture(scripture);
+      if (!scripture) {
+        setRefLevel(RefLevel.All);
       }
       const bookSet = new Set<number>();
       const chapSet = new Set<number>();
@@ -299,7 +289,7 @@ export const SelectSharedResource = (props: IProps) => {
 
   return (
     <div id="select-shared-resources">
-      {!isGeneral && (
+      {isScripture && (
         <Stack direction="row">
           <GrowingSpacer />
           <RefLevelMenu level={refLevel} action={handleRefLevel} />
