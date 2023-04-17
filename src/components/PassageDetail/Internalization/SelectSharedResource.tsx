@@ -253,9 +253,12 @@ export const SelectSharedResource = (props: IProps) => {
   useEffect(() => {
     setData(
       resources.map((r) => {
-        const langArr = r.attributes.languagebcp47.split('|');
-        const language =
-          langArr.length > 1 ? `${langArr[0]} (${langArr[1]})` : langArr[0];
+        const langArr = r.attributes.languagebcp47?.split('|');
+        const language = langArr
+          ? langArr.length > 1
+            ? `${langArr[0]} (${langArr[1]})`
+            : langArr[0]
+          : r.attributes.language;
         const catSlug = r.attributes.categoryName;
         const category = catSlug
           ? (localizedArtifactCategory(catSlug) as string) || catSlug
@@ -263,8 +266,8 @@ export const SelectSharedResource = (props: IProps) => {
         return {
           language,
           category,
-          title: r.attributes.title,
-          description: r.attributes.description,
+          title: r.attributes.title || r.attributes.originalFile,
+          description: r.attributes.description || r.attributes.passageDesc,
           version: r.attributes.versionNumber,
           keywords: r.attributes.keywords?.replace('|', ', '),
           terms: r.attributes.termsOfUse ? t.yes : t.no,
