@@ -95,7 +95,7 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
       files,
       n: 0,
       token: accessToken || '',
-      offlineOnly: offline,
+      offline: offline,
       errorReporter: reporter,
       cb: itemComplete,
     });
