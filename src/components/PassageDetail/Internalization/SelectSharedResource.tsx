@@ -206,7 +206,7 @@ export const SelectSharedResource = (props: IProps) => {
           }
         }
       }
-      if (noTermsList.length !== checks.length) {
+      if (noTermsList.length > 0) {
         setChecks(checks.concat(noTermsList).sort(numSort));
       }
       if (termsList.length > 0) {
@@ -306,7 +306,7 @@ export const SelectSharedResource = (props: IProps) => {
           {t.link}
         </PriButton>
       </ActionRow>
-      {curTermsCheck && (
+      {curTermsCheck !== undefined && (
         <BigDialog
           title={t.termsReview}
           description={
