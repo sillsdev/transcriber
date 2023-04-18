@@ -52,6 +52,7 @@ interface IStateProps {
 interface IProps {
   toolId: string;
   onReady?: () => void;
+  onSaving?: () => void;
   onRecording?: (r: boolean) => void;
   onPlayStatus?: (p: boolean) => void;
   mediaId?: string;
@@ -79,6 +80,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     t,
     toolId,
     onReady,
+    onSaving,
     onRecording,
     onPlayStatus,
     mediaId,
@@ -119,7 +121,8 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
   const { showMessage } = useSnackBar();
   const [converting, setConverting] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const { toolsChanged, saveRequested } = useContext(UnsavedContext).state;
+  const { toolsChanged, saveRequested, saveCompleted } =
+    useContext(UnsavedContext).state;
   const saveRef = useRef(false);
   const guidRef = useRef('');
   const extensions = useMemo(
@@ -221,22 +224,25 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
       if (convert_complete) {
         if (convert_blob)
           doUpload(convert_blob).then(() => {
-            resetConvertBlob();
-            setConverting(false);
-            if (onReady) onReady();
+            convertComplete();
           });
         else {
-          resetConvertBlob();
-          setConverting(false);
-          if (onReady) onReady();
+          convertComplete();
         }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [convert_status, convert_complete, convert_blob]);
 
+  const convertComplete = () => {
+    resetConvertBlob();
+    setConverting(false);
+    saveCompleted(toolId, '');
+    if (onReady) onReady();
+  };
   useEffect(() => {
     if (saveRequested(toolId) && !saveRef.current) {
+      onSaving && onSaving();
       if (audioBlob) {
         saveRef.current = true;
         if (mimeType !== 'audio/wav') {
@@ -249,23 +255,17 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
             300
           ).then(() => convertBlob(audioBlob, mimeType, guidRef.current));
         } else {
-          doUpload(audioBlob).then(() => onReady && onReady());
+          doUpload(audioBlob).then(() => {
+            saveCompleted(toolId, '');
+            onReady && onReady();
+          });
         }
         return;
       }
     } else if (!saveRequested(toolId) && saveRef.current)
       saveRef.current = false;
-  }, [
-    audioBlob,
-    toolsChanged,
-    mimeType,
-    doUpload,
-    convertBlob,
-    onReady,
-    saveRequested,
-    convert_guid,
-    toolId,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [audioBlob, toolsChanged, mimeType, convert_guid, toolId]);
 
   const setExtension = (mimeType: string) => {
     if (mimeType) {
