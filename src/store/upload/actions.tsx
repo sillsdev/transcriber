@@ -113,20 +113,12 @@ export interface NextUploadProps {
   files: File[];
   n: number;
   token: string;
-  offlineOnly: boolean;
+  offline: boolean;
   errorReporter: any;
   cb?: (n: number, success: boolean, data?: any) => void;
 }
 export const nextUpload =
-  ({
-    record,
-    files,
-    n,
-    token,
-    offlineOnly,
-    errorReporter,
-    cb,
-  }: NextUploadProps) =>
+  ({ record, files, n, token, offline, errorReporter, cb }: NextUploadProps) =>
   (dispatch: any) => {
     dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
     const acceptExtPat =
@@ -142,7 +134,7 @@ export const nextUpload =
       if (cb) cb(n, false);
       return;
     }
-    if (offlineOnly) {
+    if (offline) {
       try {
         writeFileLocal(files[n]).then((filename: string) => {
           if (cb) cb(n, true, { ...record, audioUrl: filename });

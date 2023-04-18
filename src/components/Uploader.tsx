@@ -220,7 +220,7 @@ export const Uploader = (props: IProps) => {
       files: uploadList,
       n: currentlyLoading,
       token: ctx.accessToken || '',
-      offlineOnly: offline,
+      offline: offline,
       errorReporter,
       cb: itemComplete,
     });
