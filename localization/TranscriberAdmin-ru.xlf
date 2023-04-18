@@ -1015,12 +1015,6 @@
 				<target>{0} / {1} обсуждения</target>
 			</segment>
 		</unit>
-		<unit id="discussionList.saveFilter">
-			<segment>
-				<source>Save as project default</source>
-				<target>Сохранить как команду по умолчанию</target>
-			</segment>
-		</unit>
 		<unit id="discussionList.saveFirst">
 			<segment>
 				<source>Save changed discussions and comments first?</source>
@@ -1235,6 +1229,12 @@
 			<segment>
 				<source>Resolved</source>
 				<target>Решено</target>
+			</segment>
+		</unit>
+		<unit id="filterMenu.saveFilter">
+			<segment>
+				<source>Save as project default</source>
+				<target>Сохранить как команду по умолчанию</target>
 			</segment>
 		</unit>
 		<unit id="grid.all">

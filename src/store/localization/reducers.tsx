@@ -247,7 +247,6 @@ const initialState = {
 			"collapse": "Show/Hide All Comments",
 			"discussionFilter": "Discussion Filter",
 			"filterStatus": "{0} / {1} discussions",
-			"saveFilter": "Save as team default",
 			"saveFirst": "Save changed discussions and comments first?",
 			"title": "Discussions",
 		}
@@ -300,6 +299,7 @@ const initialState = {
 			"forYou": "For You",
 			"latestVersion": "Latest Version",
 			"resolved": "Resolved",
+			"saveFilter": "Save as team default",
 		}
 	}),
 	"grid": new LocalizedStrings({
