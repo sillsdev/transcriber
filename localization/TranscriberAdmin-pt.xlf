@@ -5797,7 +5797,13 @@
 				<target>Este projeto contém recursos que podem ser utilizados em outros projetos de Internalização.</target>
 			</segment>
 		</unit>
-		<unit id="vProject.language">
+        <unit id="vProject.howToPublic">
+            <segment>
+                <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
+                <target>Entre em contato com Nathan Payne (nathan_payne@sil.org) para obter acesso para criar conteúdo compartilhado.</target>
+            </segment>
+        </unit>
+        <unit id="vProject.language">
 			<segment>
 				<source>Language</source>
 				<target>Idioma</target>

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { Role, RoleNames } from '../model';
+import { Role, RoleNames, User } from '../model';
 import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
-import { related } from '../crud';
+import { findRecord, related } from '../crud';
 import { logError, Severity } from '../utils';
 import { ReplaceRelatedRecord } from '../model/baseModel';
 
@@ -30,9 +30,19 @@ export const useRole = () => {
     return Object.values(uniqueRoles);
   }, [offlineOnly, memory]);
 
-  const userIsAdmin = React.useMemo(() => {
+  const userIsAdmin = useMemo(() => {
     return orgRole === RoleNames.Admin;
   }, [orgRole]);
+
+  const userIsSharedContentAdmin = useMemo(() => {
+    var userRec = findRecord(memory, 'user', user) as User;
+    return userRec?.attributes.sharedContentAdmin;
+  }, [memory, user]);
+
+  const userIsSharedContentCreator = useMemo(() => {
+    var userRec = findRecord(memory, 'user', user) as User;
+    return userRec?.attributes.sharedContentCreator;
+  }, [memory, user]);
 
   const userIsOrgAdmin = (orgId: string) =>
     getMyOrgRole(orgId) === RoleNames.Admin;
@@ -105,5 +115,7 @@ export const useRole = () => {
     getMyOrgRole,
     userIsAdmin,
     userIsOrgAdmin,
+    userIsSharedContentAdmin,
+    userIsSharedContentCreator,
   };
 };

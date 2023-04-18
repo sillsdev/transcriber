@@ -4057,6 +4057,12 @@
 				<target>Получение уведомлений и дайджестов по электронной почте</target>
 			</segment>
 		</unit>
+        <unit id="profile.sharedContentCreator">
+            <segment>
+                <source>Allow user to create shared content projects.</source>
+                <target>Разрешить пользователю создавать проекты с общим содержимым.</target>
+            </segment>
+        </unit>
 		<unit id="profile.timezone">
 			<segment>
 				<source>Time zone</source>
@@ -5797,6 +5803,12 @@
 				<target>"Этот проект содержит ресурсы, которые могут быть использованы в другихроектах по интернализации."</target>
 			</segment>
 		</unit>
+        <unit id="vProject.howToPublic">
+            <segment>
+                <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
+                <target>Свяжитесь с Натаном Пейном (nathan_payne@sil.org), чтобы получить доступ к созданию общего контента.</target>
+            </segment>
+        </unit>
 		<unit id="vProject.language">
 			<segment>
 				<source>Language</source>

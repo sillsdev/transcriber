@@ -4057,7 +4057,13 @@
 				<target>Recevoir les résumés quotidiens</target>
 			</segment>
 		</unit>
-		<unit id="profile.timezone">
+        <unit id="profile.sharedContentCreator">
+            <segment>
+                <source>Allow user to create shared content projects.</source>
+                <target>Autoriser l'utilisateur à créer des projets de contenu partagé.</target>
+            </segment>
+        </unit>
+      		<unit id="profile.timezone">
 			<segment>
 				<source>Time zone</source>
 				<target>Fuseau horaire</target>
@@ -5797,7 +5803,13 @@
 				<target>Ce projet contient des ressources qui peuvent être utilisées dans d'autres projets d'internalisation.</target>
 			</segment>
 		</unit>
-		<unit id="vProject.language">
+      <unit id="vProject.howToPublic">
+         <segment>
+            <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
+            <target>Contactez Nathan Payne (nathan_payne@sil.org) pour accéder à la création de contenu partagé.</target>
+         </segment>
+      </unit>
+      <unit id="vProject.language">
 			<segment>
 				<source>Language</source>
 				<target>Langue</target>

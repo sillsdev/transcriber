@@ -418,6 +418,8 @@ const schemaDefinition: SchemaSettings = {
         hotKeys: { type: 'string' },
         digestPreference: { type: 'number' },
         newsPreference: { type: 'boolean' },
+        sharedContentAdmin: { type: 'boolean' },
+        sharedContentCreator: { type: 'boolean' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
