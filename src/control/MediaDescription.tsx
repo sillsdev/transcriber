@@ -1,6 +1,6 @@
 import { Box, BoxProps, Chip, styled } from '@mui/material';
 import { MediaFile } from '../model';
-import { findRecord, related, useArtifactType } from '../crud';
+import { findRecord, related } from '../crud';
 import { dateOrTime, prettySegment } from '../utils';
 import { useGlobal } from 'reactn';
 
@@ -14,8 +14,6 @@ const StyledBox = styled(Box, {
   ...(col
     ? {
         paddingLeft: theme.spacing(2),
-        display: 'flex',
-        flexDirection: 'column',
       }
     : {
         paddingLeft: theme.spacing(2),
@@ -71,7 +69,6 @@ export const ItemDescription = ({
   mediafile?: MediaFile;
   col?: boolean;
 }) => {
-  const { localizedArtifactTypeFromId } = useArtifactType();
   const [memory] = useGlobal('memory');
   const [locale] = useGlobal('lang');
 
@@ -83,12 +80,6 @@ export const ItemDescription = ({
   }
   return (
     <StyledBox col={col} className="item-desc">
-      <span>
-        {mediafile
-          ? localizedArtifactTypeFromId(related(mediafile, 'artifactType'))
-          : ''}
-        {'\u00A0'}
-      </span>
       <PerformedBy mediafile={mediafile} />
       <Segments mediafile={mediafile} version={version} />
       <Created mediafile={mediafile} lang={locale} />
