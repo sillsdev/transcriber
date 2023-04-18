@@ -156,9 +156,13 @@ export const ProjectDownload = (
           .then((token: string) => {
             const timer = setInterval(() => {
               ipc?.downloadStat(token).then((reply: string) => {
-                const { received, total, error } = JSON.parse(
-                  reply
-                ) as StatReply;
+                const { received, total, error } = reply
+                  ? (JSON.parse(reply) as StatReply)
+                  : {
+                      received: 0,
+                      total: 0,
+                      error: 'no downloadStat reply for ' + token,
+                    };
                 if (error) {
                   logError(Severity.error, errorReporter, error);
                   clearInterval(timer);
