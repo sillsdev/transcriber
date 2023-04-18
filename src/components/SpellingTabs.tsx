@@ -24,8 +24,10 @@ function TabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box p={3}>
-          <Typography component="div">{children}</Typography>
+        <Box p={3} sx={{ height: '100%' }}>
+          <Typography component="div" sx={{ mt: '30px' }}>
+            {children}
+          </Typography>
         </Box>
       )}
     </div>
@@ -61,7 +63,17 @@ export function SpellingTabs(props: IProps) {
   return (
     <Box sx={{ flexGrow: 1, backgroundColor: 'background.paper' }}>
       <AppBar position="static">
-        <Tabs value={value} onChange={handleChange} aria-label="spelling tabs">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="spelling tabs"
+          sx={{
+            backgroundColor: 'secondary.light',
+            position: 'absolute',
+            zIndex: 1,
+            width: `100%`,
+          }}
+        >
           <Tab label={t.dictionaries} {...a11yProps(0)} />
           <Tab label={t.custom} {...a11yProps(1)} />
         </Tabs>
