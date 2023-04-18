@@ -102,6 +102,7 @@ export function DiscussionList(props: IProps & IRecordProps) {
     width: `${discussionSize.width - 30}px`, //leave room for scroll bar
     maxHeight: discussionSize.height,
   });
+  const { userIsAdmin } = useRole();
   const defaultFilterState = {
     forYou: false,
     resolved: false,
@@ -109,8 +110,13 @@ export function DiscussionList(props: IProps & IRecordProps) {
     allPassages: false,
     allSteps: false,
   };
+  const [canSetTeamDefault, setCanSetTeamDefault] = useState(
+    userIsAdmin && !isOffline
+  );
+  const [teamDefault, setTeamDefault] = useState(false);
   const [filterState, setFilterStatex] =
     useState<IFilterState>(defaultFilterState);
+  const [orgFilterState, setOrgFilterState] = useState(defaultFilterState);
   const { forYou, resolved, latestVersion, allPassages, allSteps } =
     filterState;
   const [sortState, setSortState] = useState<ISortState>({
@@ -120,7 +126,6 @@ export function DiscussionList(props: IProps & IRecordProps) {
   });
   const [catFilter, setCatFilter] = useState<CatData[]>([]);
   const [catSelect, setCatSelect] = useState<string[]>([]);
-  const [confirmFilterSave, setConfirmFilterSave] = useState(false);
   const [confirmAction, setConfirmAction] = useState<string>('');
   // const [startSave, setStartSave] = useState(false);
   // const [clearSave, setClearSave] = useState(false);
@@ -138,7 +143,7 @@ export function DiscussionList(props: IProps & IRecordProps) {
   const [highlightedRef, setHighlightedRef] = useState<any>();
   const [highlightNew, setHighlightNew] = useState('');
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
-  const { userIsAdmin } = useRole();
+
   const projGroups = useMemo(() => {
     const mygroups = groupMemberships.filter(
       (gm) => related(gm, 'user') === userId
@@ -146,19 +151,31 @@ export function DiscussionList(props: IProps & IRecordProps) {
     return mygroups.map((g) => related(g, 'group'));
   }, [groupMemberships, userId]);
 
+  useEffect(
+    () => setCanSetTeamDefault(userIsAdmin && !isOffline),
+    [userIsAdmin, isOffline]
+  );
+
+  useEffect(() => {
+    if (teamDefault && filterState !== orgFilterState) {
+      setOrgFilterState(filterState);
+      setOrgDefault('discussionFilter', filterState);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teamDefault, filterState]);
+
   useEffect(() => {
     var def = getOrgDefault('discussionFilter');
-    if (def) setFilterStatex(def);
-    else setFilterStatex(defaultFilterState);
+    if (def) {
+      setFilterStatex(def);
+      setOrgFilterState(def);
+      setTeamDefault(true);
+    } else setFilterStatex(defaultFilterState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organization]);
 
   const setFilterState = (filter: IFilterState) => {
     setFilterStatex(filter);
-    if (userIsAdmin && !isOffline) {
-      //see if this is the new org default
-      setConfirmFilterSave(true);
-    }
   };
   // All passages is currently giving all passages in all projects.
   // we would need this if we only wanted the passages of this project.
@@ -356,13 +373,7 @@ export function DiscussionList(props: IProps & IRecordProps) {
       doTheThing();
     });
   };
-  const handleSaveFilterConfirmed = () => {
-    setOrgDefault('discussionFilter', filterState);
-    setConfirmFilterSave(false);
-  };
-  const handleSaveFilterRefused = () => {
-    setConfirmFilterSave(false);
-  };
+
   const handleSaveFirstConfirmed = () => {
     // setStartSave(true);
     waitSaveOrClear();
@@ -456,6 +467,8 @@ export function DiscussionList(props: IProps & IRecordProps) {
               action={handleFilterAction}
               cats={catSelect.length}
               disabled={adding || isMediaMissing()}
+              teamDefault={teamDefault}
+              setTeamDefault={canSetTeamDefault ? setTeamDefault : undefined}
             />
             <IconButton
               id="addDiscussion"
@@ -508,14 +521,6 @@ export function DiscussionList(props: IProps & IRecordProps) {
             text={t.saveFirst}
             yesResponse={handleSaveFirstConfirmed}
             noResponse={handleSaveFirstRefused}
-          />
-        )}
-        {confirmFilterSave && (
-          <Confirm
-            jsx={<span></span>}
-            text={t.saveFilter}
-            yesResponse={handleSaveFilterConfirmed}
-            noResponse={handleSaveFilterRefused}
           />
         )}
       </>

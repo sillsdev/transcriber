@@ -225,7 +225,6 @@ export interface IDiscussionListStrings extends Localize.LocalizedStringsMethods
     "collapse": string;
     "discussionFilter": string;
     "filterStatus": string;
-    "saveFilter": string;
     "saveFirst": string;
     "title": string;
 };
@@ -274,6 +273,7 @@ export interface IFilterMenuStrings extends Localize.LocalizedStringsMethods {
     "forYou": string;
     "latestVersion": string;
     "resolved": string;
+    "saveFilter": string;
 };
 
 export interface IGridStrings extends Localize.LocalizedStringsMethods {

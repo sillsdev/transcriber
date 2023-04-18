@@ -1227,13 +1227,7 @@
                <context context-type="sourcefile">discussionList.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="discussionList.saveFilter">
-            <source>Save as team default</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">discussionList.tsx</context>
-            </context-group>
-         </trans-unit>
+
          <trans-unit id="discussionList.saveFirst">
             <source>Save changed discussions and comments first?</source>
             <target/>
@@ -1481,6 +1475,13 @@
          </trans-unit>
          <trans-unit id="filterMenu.resolved">
             <source>Resolved</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">filterMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="filterMenu.saveFilter">
+            <source>Save as team default</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">filterMenu.tsx</context>

@@ -1015,12 +1015,6 @@
 				<target>{0} / {1} discusiones</target>
 			</segment>
 		</unit>
-		<unit id="discussionList.saveFilter">
-			<segment>
-				<source>Save as the Team default</source>
-				<target>Guardar como el equipo por defecto</target>
-			</segment>
-		</unit>
 		<unit id="discussionList.saveFirst">
 			<segment>
 				<source>Save changed discussions and comments first?</source>
@@ -1237,7 +1231,13 @@
 				<target>Resuelto</target>
 			</segment>
 		</unit>
-		<unit id="grid.all">
+		<unit id="filterMenu.saveFilter">
+			<segment>
+				<source>Save as the Team default</source>
+				<target>Guardar como el equipo por defecto</target>
+			</segment>
+		</unit>
+        <unit id="grid.all">
 			<segment>
 				<source>All</source>
 				<target>Todo</target>
