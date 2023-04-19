@@ -25,16 +25,36 @@ export function TeamCheckReference() {
     setItemPlaying,
     handleItemPlayEnd,
     handleItemTogglePlay,
+    section,
+    passage,
   } = ctx.state;
   const mediaStart = useRef<number | undefined>();
   const mediaEnd = useRef<number | undefined>();
   const mediaPosition = useRef<number | undefined>();
   const [resource, setResource] = useState('');
 
+  const storeKey = (keyType?: string) =>
+    `${localUserKey(LocalKey.compare)}_${
+      keyType ?? passage.attributes.sequencenum
+    }`;
+
+  const SecSlug = 'secId';
+
   const handleResource = (id: string) => {
     const row = rowData.find((r) => r.id === id);
     if (row) {
-      localStorage.setItem(localUserKey(LocalKey.compare), id);
+      const secId = localStorage.getItem(storeKey(SecSlug));
+      if (secId !== section.id) {
+        localStorage.setItem(storeKey(SecSlug), section.id);
+        let n = 1;
+        while (true) {
+          const res = localStorage.getItem(storeKey(n.toString()));
+          if (!res) break;
+          localStorage.removeItem(storeKey(n.toString()));
+          n += 1;
+        }
+      }
+      localStorage.setItem(storeKey(), id);
       const segs = getSegments(
         NamedRegions.ProjectResource,
         row.mediafile.attributes.segments
@@ -75,13 +95,15 @@ export function TeamCheckReference() {
   };
 
   useEffect(() => {
-    const res = localStorage.getItem(localUserKey(LocalKey.compare));
-    if (res) {
+    // We track the user's choices for each passage of the section
+    const res = localStorage.getItem(storeKey());
+    const secId = localStorage.getItem(storeKey(SecSlug));
+    if (res && secId === section.id) {
       setResource(res);
       handleResource(res);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [section, passage]);
 
   return (
     <Grid container direction="column">
