@@ -426,7 +426,6 @@ export function Transcriber(
 
   useEffect(() => {
     const getParatextIntegration = () => {
-      console.log();
       const intfind = integrations.findIndex(
         (i) =>
           i.attributes &&
@@ -487,7 +486,6 @@ export function Transcriber(
 
   useEffect(() => {
     const newBoxHeight = discussionSize.height - playerSize;
-    console.log(`transcriber ${discussionSize.height} ${newBoxHeight}`);
     if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussionSize, playerSize]);
@@ -917,18 +915,8 @@ export function Transcriber(
       if (transcriptionIn.current || '' !== transcription) {
         await handleSave();
       }
-    } else {
-      console.log(
-        'Not autosaving because playing? ',
-        playingRef.current,
-        ' saving? ',
-        saving.current,
-        ' have transRef? ',
-        transcriptionRef.current,
-        'have original?',
-        transcriptionIn.current
-      );
     }
+
     launchTimer();
   };
 
