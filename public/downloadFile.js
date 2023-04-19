@@ -7,9 +7,11 @@ const fs = require('fs-extra');
 
 const downloadMap = new Map();
 const downloadStatus = (token) => {
+  console.log(`downloadStatus ${token} is`, downloadMap.get(token));
   return JSON.stringify(downloadMap.get(token));
 };
 const downloadClose = (token) => {
+  console.log(`downloadClose ${token}`);
   if (downloadMap.has(token)) downloadMap.delete(token);
 };
 
@@ -30,6 +32,7 @@ function downloadFile(url, localPath, token) {
 
     req.on('response', function (data) {
       total_bytes = parseInt(data.headers['content-length'] || '');
+      console.log(`downloadSet ${token} ${total_bytes}`);
       if (token) {
         downloadMap.set(token, {
           received: 0,
@@ -53,6 +56,7 @@ function downloadFile(url, localPath, token) {
     // });
 
     req.on('error', function (err) {
+      console.log(`downloadError ${key} ${err}`);
       error = err;
       if (key) {
         const status = downloadMap.get(key);
