@@ -255,6 +255,7 @@ export function Transcriber(
   const { toolChanged, saveCompleted } = useContext(UnsavedContext).state;
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [project] = useGlobal('project');
   const [projType] = useGlobal('projType');
   const [user] = useGlobal('user');
@@ -425,11 +426,13 @@ export function Transcriber(
 
   useEffect(() => {
     const getParatextIntegration = () => {
+      console.log();
       const intfind = integrations.findIndex(
         (i) =>
           i.attributes &&
-          i.attributes.name === integrationSlug(artifactTypeSlug, offline) &&
-          Boolean(i.keys?.remoteId) !== offline
+          i.attributes.name ===
+            integrationSlug(artifactTypeSlug, offlineOnly) &&
+          Boolean(i.keys?.remoteId) !== offlineOnly
       );
       if (intfind > -1) setParatextIntegration(integrations[intfind].id);
     };
@@ -462,8 +465,9 @@ export function Transcriber(
       const intfind = integrations.findIndex(
         (i) =>
           i.attributes &&
-          i.attributes.name === integrationSlug(artifactTypeSlug, offline) &&
-          Boolean(i.keys?.remoteId) !== offline
+          i.attributes.name ===
+            integrationSlug(artifactTypeSlug, offlineOnly) &&
+          Boolean(i.keys?.remoteId) !== offlineOnly
       );
       if (intfind > -1) setParatextIntegration(integrations[intfind].id);
     };
