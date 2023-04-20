@@ -313,7 +313,7 @@ const ipcMethods = () => {
       localFile = localFile.replace(/\//g, '\\');
     const token = generateUUID();
     console.log(`downloadFile ${token} ${localFile} ${url}`);
-    downloadFile(url, localFile, token);
+    await downloadFile(url, localFile, token);
     return token;
   });
 
