@@ -21,8 +21,9 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { NextUploadProps } from '../store';
 import { useDispatch } from 'react-redux';
 import { mediaTabSelector, sharedSelector } from '../selector';
-import { passageDefaultPrefix } from '../utils/passageDefaultFilename';
+import { passageDefaultSuffix } from '../utils/passageDefaultFilename';
 import IndexedDBSource from '@orbit/indexeddb/dist/types/source';
+import path from 'path-browserify';
 
 const UnsupportedMessage = styled('span')(({ theme }) => ({
   color: theme.palette.secondary.light,
@@ -238,10 +239,26 @@ export const Uploader = (props: IProps) => {
         ? 'Project'
         : files[0]?.name.split('.')[0];
     if (createProject) planIdRef.current = await createProject(name);
-    var prefix = passageDefaultPrefix(planIdRef.current, memory);
-    while (files.findIndex((f) => !f.name.startsWith(prefix)) > -1) {
-      var ix = files.findIndex((f) => !f.name.startsWith(prefix));
-      files.splice(ix, 1, new File([files[ix]], prefix + files[ix].name));
+    var suffix = passageDefaultSuffix(planIdRef.current, memory);
+
+    while (
+      files.findIndex(
+        (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
+      ) > -1
+    ) {
+      var ix = files.findIndex(
+        (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
+      );
+      files.splice(
+        ix,
+        1,
+        new File(
+          [files[ix]],
+          path.basename(files[ix].name, path.extname(files[ix].name)) +
+            suffix +
+            path.extname(files[ix].name)
+        )
+      );
     }
     uploadFiles(files);
     fileList.current = files;
