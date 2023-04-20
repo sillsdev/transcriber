@@ -240,6 +240,9 @@ export const importComplete = () => (dispatch: any) => {
     type: IMPORT_COMPLETE,
   });
 };
+const partialMessage = (msg: string, partialMsg: string) =>
+  (msg.length > 0 ? ',' : '') + partialMsg.substring(1, partialMsg.length - 2);
+
 const importFromElectron =
   (
     filename: string,
@@ -268,38 +271,46 @@ const importFromElectron =
         xhr.open('PUT', response.data.fileURL, true);
         xhr.setRequestHeader('Content-Type', response.data.contentType);
         xhr.send(file.slice());
-        xhr.onload = () => {
+        xhr.onload = async () => {
           if (xhr.status < 300) {
             dispatch({
               payload: pendingmsg.replace('{0}', '20'),
               type: IMPORT_PENDING,
             });
-            /* tell it to process the file now */
-            if (projectid === 0)
-              url = API_CONFIG.host + '/api/offlineData/sync/' + filename;
-            else
-              url =
-                API_CONFIG.host +
-                '/api/offlineData/project/import/' +
-                projectid.toString() +
-                '/' +
-                filename;
-
-            Axios.put(url, null, {
-              headers: {
-                Authorization: 'Bearer ' + token,
-              },
-            })
-              .then((putresponse) => {
-                if (putresponse.data.status === 200)
+            var start = '0';
+            var msg = '';
+            if (projectid === 0) {
+              url = `${API_CONFIG.host}/api/offlineData/sync/${filename}/`;
+              start = '0/0';
+            } else
+              url = `${API_CONFIG.host}/api/offlineData/project/import/${projectid}/${filename}/`;
+            do {
+              try {
+                /* tell it to process the file now */
+                var putresponse = await Axios.put(url + start, null, {
+                  headers: {
+                    Authorization: 'Bearer ' + token,
+                  },
+                });
+                if (putresponse.data.status === 200) {
                   dispatch({
                     payload: {
                       status: completemsg,
-                      msg: putresponse.data.message,
+                      msg:
+                        msg.length > 0
+                          ? '[' +
+                            msg +
+                            partialMessage(msg, putresponse.data.message) +
+                            ']'
+                          : putresponse.data.message,
                     },
                     type: IMPORT_SUCCESS,
                   });
-                else {
+                  break;
+                } else if (putresponse.data.status === 206) {
+                  start = putresponse.data.startindex;
+                  msg += partialMessage(msg, putresponse.data.message);
+                } else {
                   logError(
                     Severity.error,
                     errorReporter,
@@ -312,9 +323,9 @@ const importFromElectron =
                     ),
                     type: IMPORT_ERROR,
                   });
+                  break;
                 }
-              })
-              .catch((reason) => {
+              } catch (reason: any) {
                 logError(
                   Severity.error,
                   errorReporter,
@@ -324,7 +335,9 @@ const importFromElectron =
                   payload: errorStatus(-1, reason.toString()),
                   type: IMPORT_ERROR,
                 });
-              });
+                break;
+              }
+            } while (start !== '0' && start !== '0/0');
           } else {
             logError(
               Severity.error,
