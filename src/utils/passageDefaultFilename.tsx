@@ -9,11 +9,11 @@ import { Passage, Plan, Section } from '../model';
 import Memory from '@orbit/memory';
 import { cleanFileName } from '.';
 
-export const passageDefaultPrefix = (planId: string, memory: Memory) => {
+export const passageDefaultSuffix = (planId: string, memory: Memory) => {
   var planRec = memory.cache.query((q) =>
     q.findRecord({ type: 'plan', id: planId })
   ) as Plan;
-  return planRec.attributes.slug + '_';
+  return '_' + planRec.attributes.slug;
 };
 const pad3 = (n: number) => ('00' + n).slice(-3);
 
@@ -68,7 +68,7 @@ export const passageDefaultFilename = (
         tmp += '_v' + (mediaRec.attributes.versionNumber + 1).toString();
       }
     }
-    return (planId ? passageDefaultPrefix(planId, memory) : '') + tmp + postfix;
+    return tmp + postfix + (planId ? passageDefaultSuffix(planId, memory) : '');
   }
   return '';
 };
