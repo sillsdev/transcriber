@@ -265,6 +265,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   const { localizedWorkStepFromId } = useOrgWorkflowSteps();
   const cardRef = useRef<any>();
   const commentText = useRef('');
+  const [comment, setComment] = useState('');
   const commentMediaId = useRef('');
   const [canSaveRecording, setCanSaveRecording] = useState(false);
 
@@ -832,6 +833,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   };
   const handleTextChange = (newText: string) => {
     commentText.current = newText;
+    setComment(newText);
     setChanged(true);
   };
   return (
@@ -916,7 +918,9 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
                   id={`ok-${discussion.id}`}
                   onClick={handleSave}
                   sx={lightButton}
-                  disabled={editSubject === ''}
+                  disabled={
+                    editSubject === '' || (!canSaveRecording && !comment)
+                  }
                 >
                   {discussion.id ? ts.save : t.addComment}
                 </Button>
