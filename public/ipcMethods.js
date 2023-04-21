@@ -312,7 +312,6 @@ const ipcMethods = () => {
     if (process.platform === 'win32')
       localFile = localFile.replace(/\//g, '\\');
     const token = generateUUID();
-    console.log(`downloadFile ${token} ${localFile} ${url}`);
     await downloadFile(url, localFile, token);
     return token;
   });

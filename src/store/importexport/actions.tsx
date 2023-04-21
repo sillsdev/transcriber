@@ -87,11 +87,6 @@ export const exportProject =
     orgWorkflowSteps?: OrgWorkflowStep[]
   ) =>
   async (dispatch: any) => {
-    console.log(
-      `exportProject project: ${projectid} user: ${userid} media: ${numberOfMedia} token: ${Boolean(
-        token
-      )}`
-    );
     dispatch({
       payload: pendingmsg.replace('{0}%', ''),
       type: EXPORT_PENDING,

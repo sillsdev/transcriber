@@ -101,15 +101,12 @@ export const ProjectDownload = (
           ) as Project;
           if (projRec) newSteps = newSteps.concat(projRec.attributes.name);
         });
-        console.log(`downloadPrepare `, newSteps);
         setSteps(newSteps);
         doProjectExport(ExportType.PTF, projectIds[currentStep]);
       } else if (busy) {
-        console.log(`downloadNotButy`);
         setBusy(false);
         if (offlineUpdates.length > 0) updateLocalOnly();
         setTimeout(() => {
-          console.log(`downloadReset`);
           setExportName('');
           setExportUrl('');
           setProgress(Steps.Finished);
