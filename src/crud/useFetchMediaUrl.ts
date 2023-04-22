@@ -103,7 +103,8 @@ export const useFetchMediaUrl = (reporter?: any) => {
 
     const cancelled = () => {
       if (cancelRequest) {
-        dispatch({ payload: undefined, type: MediaSt.IDLE });
+        // setting to idle here clears the fetched url when component refreshed
+        // dispatch({ payload: undefined, type: MediaSt.IDLE });
         return true;
       }
       return false;
