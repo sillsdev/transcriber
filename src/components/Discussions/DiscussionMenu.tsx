@@ -122,6 +122,14 @@ export function DiscussionMenu(props: IProps) {
             <ListItemText primary={t.setSegment} />
           </StyledMenuItem>
         )}
+        <StyledMenuItem
+          id="move"
+          aria-hidden={!Boolean(anchorEl)}
+          onClick={handle('move')}
+        >
+          <ListItemIcon></ListItemIcon>
+          <ListItemText primary={'t.move'} />
+        </StyledMenuItem>
       </StyledMenu>
     </div>
   );

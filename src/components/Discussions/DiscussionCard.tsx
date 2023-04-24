@@ -71,6 +71,8 @@ import { discussionCardSelector, sharedSelector } from '../../selector';
 import { CommentEditor } from './CommentEditor';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { useRecordComment } from './useRecordComment';
+import BigDialog from '../../hoc/BigDialog';
+import { DiscussionMove } from './DiscussionMove';
 
 const DiscussionCardRoot = styled(Box)<BoxProps>(() => ({
   width: '100%',
@@ -242,6 +244,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [myChanged, setMyChanged] = useState(false);
   const savingRef = useRef(false);
+  const [showMove, setShowMove] = useState(false);
 
   const [editSubject, setEditSubject] = useState(
     discussion.attributes?.subject
@@ -551,6 +554,14 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     }, 2000);
   };
 
+  const handleMove = () => {
+    setShowMove(true);
+  };
+
+  const moveClose = () => {
+    setShowMove(false);
+  };
+
   const handleDiscussionAction = (what: string) => {
     if (what === 'edit') {
       setEditSubject(discussion.attributes.subject);
@@ -565,6 +576,8 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
       handleResolveDiscussion(false);
     } else if (what === 'set') {
       handleSetSegment();
+    } else if (what === 'move') {
+      handleMove();
     }
   };
 
@@ -1084,6 +1097,15 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
           yesResponse={handleActionConfirmed}
           noResponse={handleActionRefused}
         />
+      )}
+      {showMove && (
+        <BigDialog
+          title={'t.discussionMove'}
+          isOpen={showMove}
+          onOpen={moveClose}
+        >
+          <DiscussionMove />
+        </BigDialog>
       )}
     </DiscussionCardRoot>
   );
