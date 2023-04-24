@@ -373,7 +373,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   }, [changeAssignment]);
 
   useEffect(() => {
-    if (comments)
+    if (comments) {
       setMyComments(
         comments
           .filter(
@@ -385,6 +385,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
             a.attributes.dateCreated <= b.attributes.dateCreated ? -1 : 1
           )
       );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comments, discussion.id, permissions]);
 
@@ -637,7 +638,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     }
   };
   const handleSave = async () => {
-    //if there is an audo comment, start the upload
+    //if there is an audio comment, start the upload
     if (canSaveRecording && !commentMediaId.current) {
       startSave(myCommentToolId);
       await waitForIt(
@@ -919,7 +920,9 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
                   onClick={handleSave}
                   sx={lightButton}
                   disabled={
-                    editSubject === '' || (!canSaveRecording && !comment)
+                    editSubject === '' ||
+                    editSubject === discussion.attributes?.subject ||
+                    !(canSaveRecording || myComments.length > 0 || comment)
                   }
                 >
                   {discussion.id ? ts.save : t.addComment}
