@@ -1157,6 +1157,13 @@
                <context context-type="sourcefile">DiscussionCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="discussionCard.move">
+      		<source>Select step for discussion</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="discussionCard.or">
             <source>or</source>
             <target/>
@@ -1256,6 +1263,13 @@
                <context context-type="sourcefile">DiscussionMenu.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="discussionMenu.move">
+      		<source>Move</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DiscussionMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="discussionMenu.reopen">
             <source>Reopen</source>
             <target/>

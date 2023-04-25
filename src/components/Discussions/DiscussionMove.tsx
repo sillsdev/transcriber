@@ -6,11 +6,16 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 
-export const DiscussionMove = () => {
+interface IProps {
+  onSelect: (id: string) => void;
+}
+
+export const DiscussionMove = ({ onSelect }: IProps) => {
   const { workflow } = usePassageDetailContext();
 
   const handle = (id: string) => () => {
     console.log(`choice is ${id}`);
+    onSelect(id);
   };
 
   return (

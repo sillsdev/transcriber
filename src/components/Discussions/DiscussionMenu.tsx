@@ -128,7 +128,7 @@ export function DiscussionMenu(props: IProps) {
           onClick={handle('move')}
         >
           <ListItemIcon></ListItemIcon>
-          <ListItemText primary={'t.move'} />
+          <ListItemText primary={t.move} />
         </StyledMenuItem>
       </StyledMenu>
     </div>

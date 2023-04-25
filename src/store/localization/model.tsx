@@ -212,6 +212,7 @@ export interface IDiscussionCardStrings extends Localize.LocalizedStringsMethods
     "comments": string;
     "confirmDelete": string;
     "locate": string;
+    "move": string;
     "or": string;
     "playOrStop": string;
     "resolved": string;
@@ -232,6 +233,7 @@ export interface IDiscussionListStrings extends Localize.LocalizedStringsMethods
 export interface IDiscussionMenuStrings extends Localize.LocalizedStringsMethods {
     "delete": string;
     "edit": string;
+    "move": string;
     "reopen": string;
     "resolve": string;
     "setSegment": string;
