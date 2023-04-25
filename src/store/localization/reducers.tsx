@@ -233,6 +233,7 @@ const initialState = {
 			"comments": "Comments: {0}",
 			"confirmDelete": "Delete this discussion and all commments?",
 			"locate": "Locate discussion subject in audio recording",
+			"move": "Select step for discussion",
 			"or": "or",
 			"playOrStop": "Play or Stop",
 			"resolved": "Resolve",
@@ -255,6 +256,7 @@ const initialState = {
 		"en": {
 			"delete": "Delete",
 			"edit": "Edit",
+			"move": "Move",
 			"reopen": "Reopen",
 			"resolve": "Resolve",
 			"setSegment": "Set Segment",

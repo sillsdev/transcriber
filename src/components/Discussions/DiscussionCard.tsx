@@ -71,6 +71,8 @@ import { discussionCardSelector, sharedSelector } from '../../selector';
 import { CommentEditor } from './CommentEditor';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { useRecordComment } from './useRecordComment';
+import BigDialog from '../../hoc/BigDialog';
+import { DiscussionMove } from './DiscussionMove';
 
 const DiscussionCardRoot = styled(Box)<BoxProps>(() => ({
   width: '100%',
@@ -242,6 +244,8 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [myChanged, setMyChanged] = useState(false);
   const savingRef = useRef(false);
+  const [showMove, setShowMove] = useState(false);
+  const [moveTo, setMoveTo] = useState<string>();
 
   const [editSubject, setEditSubject] = useState(
     discussion.attributes?.subject
@@ -331,6 +335,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     setEditCategory('');
     setComment('');
     commentText.current = '';
+    setMoveTo(undefined);
   };
   useEffect(() => {
     if (canSaveRecording) {
@@ -551,6 +556,21 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     }, 2000);
   };
 
+  const handleMove = () => {
+    setShowMove(true);
+  };
+
+  const moveClose = () => {
+    setShowMove(false);
+  };
+
+  const handleDoMove = (id: string) => {
+    setMoveTo(id);
+    setShowMove(false);
+    handleDiscussionAction('edit');
+    setTimeout(() => setChanged(true), 100);
+  };
+
   const handleDiscussionAction = (what: string) => {
     if (what === 'edit') {
       setEditSubject(discussion.attributes.subject);
@@ -565,6 +585,8 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
       handleResolveDiscussion(false);
     } else if (what === 'set') {
       handleSetSegment();
+    } else if (what === 'move') {
+      handleMove();
     }
   };
 
@@ -660,16 +682,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
       var t = new TransformBuilder();
       if (!discussion.id) {
         ops.push(...AddRecord(t, discussion, user, memory));
-        ops.push(
-          ...UpdateRelatedRecord(
-            t,
-            discussion,
-            'orgWorkflowStep',
-            'orgworkflowstep',
-            currentstep,
-            user
-          )
-        );
+
         ops.push(
           ...UpdateRelatedRecord(
             t,
@@ -681,6 +694,16 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
           )
         );
       } else ops.push(...UpdateRecord(t, discussion, user));
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          discussion,
+          'orgWorkflowStep',
+          'orgworkflowstep',
+          moveTo ?? currentstep,
+          user
+        )
+      );
       ops.push(
         ...UpdateRelatedRecord(
           t,
@@ -709,6 +732,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
       );
       await memory.update(ops);
     }
+    setMoveTo(undefined);
     saveMyComment(commentMediaId.current).then(() => {
       onAddComplete && onAddComplete(discussion.id);
       setEditing(false);
@@ -722,6 +746,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     onAddComplete && onAddComplete('');
     setEditing(false);
     setChanged(false);
+    setMoveTo(undefined);
   };
   const assignedGroup = useMemo(() => {
     return editAssigned.startsWith(groupPrefix)
@@ -923,7 +948,6 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
                   sx={lightButton}
                   disabled={
                     editSubject === '' ||
-                    editSubject === discussion.attributes?.subject ||
                     !(canSaveRecording || myComments.length > 0 || comment)
                   }
                 >
@@ -1084,6 +1108,11 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
           yesResponse={handleActionConfirmed}
           noResponse={handleActionRefused}
         />
+      )}
+      {showMove && (
+        <BigDialog title={t.move} isOpen={showMove} onOpen={moveClose}>
+          <DiscussionMove onSelect={handleDoMove} />
+        </BigDialog>
       )}
     </DiscussionCardRoot>
   );

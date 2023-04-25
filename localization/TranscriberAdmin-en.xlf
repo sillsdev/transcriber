@@ -994,6 +994,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionCard.move">
+         <segment>
+            <source>Select step for discussion</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionCard.or">
          <segment>
             <source>or</source>
@@ -1075,6 +1081,12 @@
       <unit id="discussionMenu.edit">
          <segment>
             <source>Edit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.move">
+         <segment>
+            <source>Move</source>
             <target/>
          </segment>
       </unit>
