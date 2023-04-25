@@ -948,8 +948,6 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
                   sx={lightButton}
                   disabled={
                     editSubject === '' ||
-                    (editSubject === discussion.attributes?.subject &&
-                      !myChanged) ||
                     !(canSaveRecording || myComments.length > 0 || comment)
                   }
                 >
