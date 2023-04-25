@@ -938,7 +938,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           return { ...state, rowData: newData, index: i, mediafileId };
         });
 
-        if (mediafileId && state.index === 0)
+        if (mediafileId !== state.playerMediafile?.id)
           setSelected(mediafileId, PlayInPlayer.yes, newData);
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
