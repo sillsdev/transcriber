@@ -194,13 +194,13 @@ const UnsavedProvider = connect(
     return allErrors;
   };
   const saveRequested = (toolId: string) => {
-    return toolsChanged[toolId]?.startSave;
+    return toolsChangedRef.current[toolId]?.startSave;
   };
   const clearRequested = (toolId: string) => {
-    return toolsChanged[toolId]?.clearChanged;
+    return toolsChangedRef.current[toolId]?.clearChanged;
   };
   const isChanged = (toolId: string) => {
-    return toolsChanged[toolId] !== undefined;
+    return toolsChangedRef.current[toolId] !== undefined;
   };
   const toolChanged = (
     toolId: string,

@@ -186,16 +186,8 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
         !recording &&
         !saveRef.current
     );
-  }, [
-    blobReady,
-    tooBig,
-    name,
-    filechanged,
-    converting,
-    uploading,
-    recording,
-    setCanSave,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blobReady, tooBig, name, filechanged, converting, uploading, recording]);
 
   useEffect(() => {
     if (setCanCancel) setCanCancel(!converting && !uploading);

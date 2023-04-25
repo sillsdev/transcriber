@@ -65,6 +65,7 @@ interface IRecordProps {
 }
 interface IProps {}
 export const NewDiscussionToolId = 'newDiscussion';
+export const NewCommentToolId = NewDiscussionToolId + 'comment';
 
 export function DiscussionList(props: IProps & IRecordProps) {
   const { discussions, mediafiles, users, groups, groupMemberships } = props;
@@ -290,17 +291,8 @@ export function DiscussionList(props: IProps & IRecordProps) {
     }
   };
   useEffect(() => {
-    if (currentstep !== '') {
-      if (isChanged(NewDiscussionToolId)) {
-        waitForIt(
-          'new discussion save',
-          () => !isChanged(NewDiscussionToolId),
-          () => false,
-          200
-        ).then(() => {
-          resetDiscussionList();
-        });
-      } else resetDiscussionList();
+    if (currentstep !== '' && !isChanged(NewCommentToolId)) {
+      resetDiscussionList();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [

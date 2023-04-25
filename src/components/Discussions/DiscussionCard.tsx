@@ -60,7 +60,7 @@ import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { removeExtension, startEnd, waitForIt } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
-import { NewDiscussionToolId } from './DiscussionList';
+import { NewDiscussionToolId, NewCommentToolId } from './DiscussionList';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import GroupAvatar from '../GroupAvatar';
 import SelectDiscussionAssignment from '../../control/SelectDiscussionAssignment';
@@ -281,10 +281,9 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     if (discussion.id) return discussion.id;
     else return NewDiscussionToolId;
   }, [discussion]);
-  const myCommentToolId = NewDiscussionToolId + 'comment';
 
   const afterSaveCommentcb = () => {
-    saveCompleted(myCommentToolId);
+    saveCompleted(NewCommentToolId);
   };
   const saveComment = useSaveComment({
     cb: afterSaveCommentcb,
@@ -303,7 +302,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
           commentMediaId.current,
           undefined
         );
-      else saveCompleted(myCommentToolId);
+      else saveCompleted(NewCommentToolId);
       commentText.current = '';
       commentMediaId.current = '';
     }
@@ -362,7 +361,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     if (!myChanged) {
       var myIds = myComments.map((d) => d.id);
       if (discussion.id) myIds.push(discussion.id + 'reply');
-      else myIds.push(myCommentToolId);
+      else myIds.push(NewCommentToolId);
       var anyChanged = Object.keys(toolsChanged).some((t) => myIds.includes(t));
       if (anyChanged)
         if (discussion.id) toolChanged(myToolId, anyChanged);
@@ -664,7 +663,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   const handleSave = async () => {
     //if there is an audio comment, start the upload
     if (canSaveRecording && !commentMediaId.current) {
-      startSave(myCommentToolId);
+      startSave(NewCommentToolId);
       await waitForIt(
         'comment upload',
         () => {
@@ -736,6 +735,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     saveMyComment(commentMediaId.current).then(() => {
       onAddComplete && onAddComplete(discussion.id);
       setEditing(false);
+      setEditAssigned('');
       setChanged(false);
     });
   };
@@ -931,7 +931,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
               />
               {onAddComplete && (
                 <CommentEditor
-                  toolId={myCommentToolId}
+                  toolId={NewCommentToolId}
                   comment={commentText.current}
                   refresh={refresh}
                   setCanSaveRecording={setCanSaveRecording}
