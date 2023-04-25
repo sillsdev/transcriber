@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import * as actions from '../store';
 import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
 import { styled } from '@mui/material';
-import MediaUpload, { UploadType } from './MediaUpload';
+import MediaUpload, { SIZELIMIT, UploadType } from './MediaUpload';
 import {
   findRecord,
   pullTableList,
@@ -25,7 +25,7 @@ import { passageDefaultSuffix } from '../utils/passageDefaultFilename';
 import IndexedDBSource from '@orbit/indexeddb/dist/types/source';
 import path from 'path-browserify';
 
-const UnsupportedMessage = styled('span')(({ theme }) => ({
+const ErrorMessage = styled('span')(({ theme }) => ({
   color: theme.palette.secondary.light,
 }));
 
@@ -223,6 +223,7 @@ export const Uploader = (props: IProps) => {
       token: ctx.accessToken || '',
       offline: offline,
       errorReporter,
+      uploadType: uploadType ?? UploadType.Media,
       cb: itemComplete,
     });
   };
@@ -272,19 +273,40 @@ export const Uploader = (props: IProps) => {
     if (cancelled) cancelled.current = true;
     restoreScroll();
   };
-
+  //This doesn't actually show the message from sections/passages
+  //calls showMessage...but doesn't show it
   React.useEffect(() => {
     if (uploadError && uploadError !== '') {
       if (uploadError.indexOf('unsupported') > 0)
         showMessage(
-          <UnsupportedMessage>
+          <ErrorMessage>
             {t.unsupported.replace(
               '{0}',
               uploadError.substring(0, uploadError.indexOf(':unsupported'))
             )}
-          </UnsupportedMessage>
+          </ErrorMessage>
         );
-      else showMessage(uploadError);
+      else if (uploadError.indexOf('toobig') > 0) {
+        showMessage(
+          <ErrorMessage>
+            {t.toobig
+              .replace(
+                '{0}',
+                uploadError.substring(0, uploadError.indexOf(':toobig'))
+              )
+              .replace(
+                '{1}',
+                uploadError.substring(
+                  uploadError.indexOf('toobig:') + 'toobig:'.length
+                )
+              )
+              .replace(
+                '{2}',
+                SIZELIMIT(uploadType ?? UploadType.Media).toString()
+              )}
+          </ErrorMessage>
+        );
+      } else showMessage(uploadError);
       setBusy(false);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

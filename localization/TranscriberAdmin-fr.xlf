@@ -2953,6 +2953,12 @@
 				<target>Taille (MO)</target>
 			</segment>
 		</unit>
+      <unit id="mediaTab.toobig">
+         <segment>
+            <source>File {0} is too large {1}. File Limit is {2}MB</source>
+            <target>Le fichier {0} est trop volumineux {1}. La limite de fichier est de {2} Mo</target>
+         </segment>
+      </unit>
 		<unit id="mediaTab.unsupported">
 			<segment>
 				<source>File {0} is an unsupported file type.</source>
@@ -2965,7 +2971,7 @@
 				<target>{0} des {1} fichiers téléchargés avec succès.</target>
 			</segment>
 		</unit>
-		<unit id="mediaTab.version">
+      <unit id="mediaTab.version">
 			<segment>
 				<source>Version</source>
 				<target>Version</target>
@@ -3073,7 +3079,13 @@
 				<target>Télécharger des fichiers audio</target>
 			</segment>
 		</unit>
-		<unit id="mediaUpload.upload">
+        <unit id="mediaUpload.toobig">
+            <segment>
+                <source>Too large: {0}. File Limit is {1}MB</source>
+                <target>Trop grand : {0}. La limite de fichier est de {1} Mo</target>
+            </segment>
+        </unit>
+      		<unit id="mediaUpload.upload">
 			<segment>
 				<source>Upload</source>
 				<target>Télécharger</target>
@@ -3487,7 +3499,19 @@
 				<target>Créer / modifier l'audio</target>
 			</segment>
 		</unit>
-		<unit id="passageRecord.uncompressed">
+      <unit id="passageRecord.toobig">
+         <segment>
+            <source>File is too large. File Limit is {1}MB</source>
+            <target>Le fichier est trop grand. La limite de fichier est de {1} Mo</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.toobigwarn">
+         <segment>
+            <source>File is near size limit {1}MB</source>
+            <target>Le fichier est proche de la limite de taille {1} Mo</target>
+         </segment>
+      </unit>
+      	<unit id="passageRecord.uncompressed">
 			<segment>
 				<source>Uncompressed</source>
 				<target>Non compressé</target>

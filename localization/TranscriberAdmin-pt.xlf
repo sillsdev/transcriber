@@ -2953,6 +2953,12 @@
 				<target>Tamanho (MB)</target>
 			</segment>
 		</unit>
+      <unit id="mediaTab.toobig">
+         <segment>
+            <source>File {0} is too large {1}. File Limit is {2}MB</source>
+            <target>O arquivo {0} é muito grande {1}. Limite de arquivo é {2}MB</target>
+         </segment>
+      </unit>
 		<unit id="mediaTab.unsupported">
 			<segment>
 				<source>File {0} is an unsupported file type.</source>
@@ -3073,6 +3079,12 @@
 				<target>Upload de áudio</target>
 			</segment>
 		</unit>
+        <unit id="mediaUpload.toobig">
+            <segment>
+                <source>Too large: {0}. File Limit is {1}MB</source>
+                <target>Muito grande: {0}. Limite de arquivo é {1}MB</target>
+            </segment>
+        </unit>
 		<unit id="mediaUpload.upload">
 			<segment>
 				<source>Upload</source>
@@ -3487,6 +3499,18 @@
 				<target>Gravar / editar áudio</target>
 			</segment>
 		</unit>
+      <unit id="passageRecord.toobig">
+         <segment>
+            <source>File is too large. File Limit is {1}MB</source>
+            <target>O arquivo é muito grande. Limite de arquivo é {1}MB</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.toobigwarn">
+         <segment>
+            <source>File is near size limit {1}MB</source>
+            <target>O arquivo está próximo do limite de tamanho {1} MB</target>
+         </segment>
+      </unit>
 		<unit id="passageRecord.uncompressed">
 			<segment>
 				<source>Uncompressed</source>

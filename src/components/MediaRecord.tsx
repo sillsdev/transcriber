@@ -23,6 +23,7 @@ import {
   styled,
   SxProps,
   TextField,
+  Typography,
 } from '@mui/material';
 import WSAudioPlayer from './WSAudioPlayer';
 import { generateUUID, loadBlob, waitForIt, cleanFileName } from '../utils';
@@ -30,6 +31,7 @@ import { MediaSt, useFetchMediaUrl } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { bindActionCreators } from 'redux';
 import { UnsavedContext } from '../context/UnsavedContext';
+import { UploadType, SIZELIMIT } from './MediaUpload';
 
 const Row = styled(Box)<BoxProps>(() => ({
   display: 'flex',
@@ -106,6 +108,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     metaData,
     preload,
   } = props;
+  const WARNINGLIMIT = 1;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [name, setName] = useState(t.defaultFilename);
@@ -118,6 +121,9 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
   const [recording, setRecording] = useState(false);
   const [blobReady, setBlobReady] = useState(true);
   const [mimeType, setMimeType] = useState('audio/ogg;codecs=opus');
+  const [compression, setCompression] = useState(20);
+  const [warning, setWarning] = useState('');
+  const [tooBig, setTooBig] = useState(false);
   const { showMessage } = useSnackBar();
   const [converting, setConverting] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -129,6 +135,8 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     () => ['mp3', 'mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'],
     []
   );
+  const sizeLimit = SIZELIMIT(UploadType.Media);
+
   const mimes = useMemo(
     () => [
       'audio/mpeg',
@@ -170,6 +178,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
   useEffect(() => {
     setCanSave(
       blobReady &&
+        !tooBig &&
         name !== '' &&
         filechanged &&
         !converting &&
@@ -179,6 +188,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     );
   }, [
     blobReady,
+    tooBig,
     name,
     filechanged,
     converting,
@@ -241,9 +251,17 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     if (onReady) onReady();
   };
   useEffect(() => {
+    var limit = sizeLimit * compression;
+    var big = (audioBlob?.size ?? 0) > limit * 1000000;
+    setTooBig(big);
+    if (audioBlob && audioBlob.size > (limit - WARNINGLIMIT) * 1000000)
+      setWarning(
+        (big ? t.toobig : t.toobigwarn).replace('{1}', limit.toString())
+      );
+    else setWarning('');
     if (saveRequested(toolId) && !saveRef.current) {
-      onSaving && onSaving();
       if (audioBlob) {
+        onSaving && onSaving();
         saveRef.current = true;
         if (mimeType !== 'audio/wav') {
           setConverting(true);
@@ -274,7 +292,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     }
   };
 
-  function onBlobReady(blob: Blob) {
+  function onBlobReady(blob: Blob | undefined) {
     setAudioBlob(blob);
     setFilechanged(true);
   }
@@ -292,6 +310,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
 
   const reset = () => {
     setMimeType('audio/ogg;codecs=opus');
+    setCompression(20);
     setUserHasSetName(false);
     setFilechanged(false);
     setOriginalBlob(undefined);
@@ -300,6 +319,9 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
 
   const handleChangeMime = (event: React.ChangeEvent<HTMLInputElement>) => {
     setMimeType((event.target as HTMLInputElement).value);
+    setCompression(
+      (event.target as HTMLInputElement).value === 'audio/wav' ? 1 : 20
+    );
   };
 
   const handleChangeFileName = (e: any) => {
@@ -365,6 +387,11 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
         autoStart={autoStart}
         segments={segments}
       />
+      {warning && (
+        <Typography sx={{ m: 2, color: 'warning.dark' }} id="warning">
+          {warning}
+        </Typography>
+      )}
       <Row>
         {showFilename && (
           <TextField
@@ -377,6 +404,9 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
             fullWidth={true}
           />
         )}
+        <Typography sx={{ m: 1, mt: 2 }} id="size">
+          {`${((audioBlob?.size ?? 0) / 1000000 / compression).toFixed(2)}MB`}
+        </Typography>
         {allowWave && (
           <FormControl component="fieldset" sx={controlProps}>
             <RadioGroup

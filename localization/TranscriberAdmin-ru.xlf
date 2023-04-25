@@ -2953,6 +2953,12 @@
 				<target>Размер (МБ)</target>
 			</segment>
 		</unit>
+      <unit id="mediaTab.toobig">
+         <segment>
+            <source>File {0} is too large {1}. File Limit is {2}MB</source>
+            <target>Файл {0} слишком велик {1}. Максимальный размер файла: {2} МБ.</target>
+         </segment>
+      </unit>
 		<unit id="mediaTab.unsupported">
 			<segment>
 				<source>File {0} is an unsupported file type.</source>
@@ -3073,6 +3079,12 @@
 				<target>Загрузить аудио</target>
 			</segment>
 		</unit>
+        <unit id="mediaUpload.toobig">
+            <segment>
+                <source>Too large: {0}. File Limit is {1}MB</source>
+                <target>Слишком большой: {0}. Максимальный размер файла: {1} МБ.</target>
+            </segment>
+        </unit>
 		<unit id="mediaUpload.upload">
 			<segment>
 				<source>Upload</source>
@@ -3487,6 +3499,18 @@
 				<target>Запись / редактирование аудио</target>
 			</segment>
 		</unit>
+      <unit id="passageRecord.toobig">
+         <segment>
+            <source>File is too large. File Limit is {1}MB</source>
+            <target>Файл слишком большой. Максимальный размер файла: {1} МБ.</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.toobigwarn">
+         <segment>
+            <source>File is near size limit {1}MB</source>
+            <target>Размер файла близок к пределу {1} МБ.</target>
+         </segment>
+      </unit>
 		<unit id="passageRecord.uncompressed">
 			<segment>
 				<source>Uncompressed</source>

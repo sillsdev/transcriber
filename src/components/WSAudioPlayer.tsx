@@ -104,7 +104,7 @@ interface IProps {
   onProgress?: (progress: number) => void;
   onSegmentChange?: (segments: string) => void;
   onSegmentParamChange?: (params: IRegionParams, teamDefault: boolean) => void;
-  onBlobReady?: (blob: Blob) => void;
+  onBlobReady?: (blob: Blob | undefined) => void;
   setBlobReady?: (ready: boolean) => void;
   setChanged?: (changed: boolean) => void;
   onSaveProgress?: (progress: number) => void; //user initiated
@@ -335,7 +335,7 @@ function WSAudioPlayer(props: IProps) {
     )
       return false;
     if (!recordingRef.current) {
-      if (setBlobReady) setBlobReady(false);
+      setBlobReady && setBlobReady(false);
       wsPause(); //stop if playing
       recordStartPosition.current = wsPosition();
       recordOverwritePosition.current = recordStartPosition.current;
@@ -468,7 +468,6 @@ function WSAudioPlayer(props: IProps) {
   }, [size, wsSetHeight, allowZoom]);
 
   useEffect(() => {
-    console.log('initialposition', initialposition);
     if (
       initialposition !== undefined &&
       initialposition !== initialPosRef.current
@@ -653,11 +652,11 @@ function WSAudioPlayer(props: IProps) {
   };
 
   const handleChanged = async () => {
-    if (setChanged) setChanged(durationRef.current !== 0);
-    if (setBlobReady) setBlobReady(false);
+    setChanged && setChanged(durationRef.current !== 0);
+    setBlobReady && setBlobReady(false);
     wsBlob().then((newblob) => {
-      if (onBlobReady && newblob) onBlobReady(newblob);
-      if (setBlobReady) setBlobReady(true);
+      onBlobReady && onBlobReady(newblob);
+      setBlobReady && setBlobReady(newblob !== undefined);
       if (setMimeType && newblob?.type) setMimeType(newblob?.type);
       setDuration(wsDuration());
     });
@@ -667,9 +666,10 @@ function WSAudioPlayer(props: IProps) {
     if (confirmAction === t.deleteRecording) {
       wsClear();
       setDuration(0);
-      if (setChanged) setChanged(false);
-      if (setBlobReady) setBlobReady(true);
-      if (oneShotUsed) setOneShotUsed(false);
+      setChanged && setChanged(false);
+      onBlobReady && onBlobReady(undefined);
+      setBlobReady && setBlobReady(false);
+      oneShotUsed && setOneShotUsed(false);
       setReady(false);
     } else {
       wsRegionDelete();
@@ -702,7 +702,6 @@ function WSAudioPlayer(props: IProps) {
     setSilence(e.target.value);
   };
   const onSplit = (split: IRegionChange) => {};
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Paper sx={{ p: 1, margin: 'auto' }}>

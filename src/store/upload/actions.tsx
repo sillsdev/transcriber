@@ -19,6 +19,7 @@ import {
 } from '../../utils';
 import moment from 'moment';
 import _ from 'lodash';
+import { UploadType, SIZELIMIT } from '../../components/MediaUpload';
 const ipc = (window as any)?.electron;
 var path = require('path-browserify');
 
@@ -115,10 +116,20 @@ export interface NextUploadProps {
   token: string;
   offline: boolean;
   errorReporter: any;
+  uploadType: UploadType;
   cb?: (n: number, success: boolean, data?: any) => void;
 }
 export const nextUpload =
-  ({ record, files, n, token, offline, errorReporter, cb }: NextUploadProps) =>
+  ({
+    record,
+    files,
+    n,
+    token,
+    offline,
+    errorReporter,
+    uploadType,
+    cb,
+  }: NextUploadProps) =>
   (dispatch: any) => {
     dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
     const acceptExtPat =
@@ -128,6 +139,19 @@ export const nextUpload =
         payload: {
           current: n,
           error: `${files[n].name}:unsupported`,
+        },
+        type: UPLOAD_ITEM_FAILED,
+      });
+      if (cb) cb(n, false);
+      return;
+    }
+    if (files[n].size > SIZELIMIT(uploadType) * 1000000) {
+      dispatch({
+        payload: {
+          current: n,
+          error: `${files[n].name}:toobig:${(files[n].size / 1000000).toFixed(
+            2
+          )}`,
         },
         type: UPLOAD_ITEM_FAILED,
       });

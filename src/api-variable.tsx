@@ -35,4 +35,7 @@ export const API_CONFIG = {
   genHierarchicalSample: process.env.REACT_APP_GEN_HIERARCHICAL
     ? process.env.REACT_APP_GEN_HIERARCHICAL
     : '',
+  sizeLimit: process.env.REACT_APP_SIZELIMIT
+    ? process.env.REACT_APP_SIZELIMIT
+    : '20',
 };
