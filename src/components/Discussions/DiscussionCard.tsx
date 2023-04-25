@@ -329,6 +329,8 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     setEditSubject('');
     setEditAssigned('');
     setEditCategory('');
+    setComment('');
+    commentText.current = '';
   };
   useEffect(() => {
     if (canSaveRecording) {
@@ -974,14 +976,14 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
               <Grid item sx={tilteCtrlProps}>
                 {assignedGroup && (
                   <LightTooltip title={t.changeAssignment}>
-                    <IconButton onClick={handleAssignedClick}>
+                    <IconButton onClick={handleAssignedClick} sx={{ p: '1px' }}>
                       <GroupAvatar groupRec={assignedGroup} org={false} />
                     </IconButton>
                   </LightTooltip>
                 )}
                 {assignedUser && (
                   <LightTooltip title={t.changeAssignment}>
-                    <IconButton onClick={handleAssignedClick}>
+                    <IconButton onClick={handleAssignedClick} sx={{ p: '1px' }}>
                       <UserAvatar userRec={assignedUser} />
                     </IconButton>
                   </LightTooltip>
