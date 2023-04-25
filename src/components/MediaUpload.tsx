@@ -14,6 +14,7 @@ import path from 'path-browserify';
 import { useSnackBar } from '../hoc/SnackBar';
 import SpeakerName from './SpeakerName';
 import { mediaUploadSelector } from '../selector';
+import { API_CONFIG } from '../api-variable';
 
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
@@ -48,7 +49,20 @@ export enum UploadType {
   ProjectResource = 5,
   IntellectualProperty = 6,
 }
+const PROJECTRESOURCE_SIZELIMIT = 50;
+const NO_SIZELIMIT = 10000;
 
+export const SIZELIMIT = (uploadType: UploadType) => {
+  switch (uploadType) {
+    case UploadType.ProjectResource:
+      return PROJECTRESOURCE_SIZELIMIT;
+    case UploadType.ITF:
+    case UploadType.PTF:
+      return NO_SIZELIMIT;
+    default:
+      return parseInt(API_CONFIG.sizeLimit);
+  }
+};
 interface ITargetProps {
   name: string;
   acceptextension: string;
@@ -146,6 +160,7 @@ function MediaUpload(props: IProps) {
   const [files, setFiles] = useState<File[]>([]);
   const { showMessage } = useSnackBar();
   const [acceptextension, setAcceptExtension] = useState('');
+  const [sizeLimit, setSizeLimit] = useState(0);
   const [acceptmime, setAcceptMime] = useState('');
   const [hasRights, setHasRight] = useState(!onSpeaker || Boolean(speaker));
   const t: IMediaUploadStrings = useSelector(mediaUploadSelector, shallowEqual);
@@ -209,8 +224,21 @@ function MediaUpload(props: IProps) {
           )
         );
       }
-      setName(fileName(goodFiles));
-      setFiles(goodFiles);
+      var smallenoughfiles = Array.from(
+        goodFiles.filter((s) => s.size <= sizeLimit * 1000000)
+      );
+      if (smallenoughfiles.length < goodFiles.length) {
+        rejectedFiles = Array.from(goodFiles).filter(
+          (s) => s.size > sizeLimit * 1000000
+        );
+        showMessage(
+          t.toobig
+            .replace('{0}', rejectedFiles.map((f) => f.name).join(', '))
+            .replace('{1}', sizeLimit.toString())
+        );
+      }
+      setName(fileName(smallenoughfiles));
+      setFiles(smallenoughfiles);
     } else {
       setFiles([]);
       setName('');
@@ -245,6 +273,7 @@ function MediaUpload(props: IProps) {
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf, image/png, image/jpeg',
       ].map((s) => s)[uploadType]
     );
+    setSizeLimit(SIZELIMIT(uploadType));
   }, [uploadType]);
 
   return (

@@ -287,6 +287,7 @@ export function useWaveSurfer(
     durationRef.current = 0;
     clearRegions();
     wsGoto(0);
+    onReady();
   };
 
   const wsIsReady = () => wavesurfer()?.isReady || false;

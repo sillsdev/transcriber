@@ -7,6 +7,7 @@ import { TokenContext } from '../context/TokenProvider';
 import { useDispatch } from 'react-redux';
 import { PassageDetailContext } from '../context/PassageDetailContext';
 import IndexedDBSource from '@orbit/indexeddb/dist/types/source';
+import { UploadType } from '../components/MediaUpload';
 
 interface IProps {
   artifactId: string;
@@ -97,6 +98,7 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
       token: accessToken || '',
       offline: offline,
       errorReporter: reporter,
+      uploadType: UploadType.Media,
       cb: itemComplete,
     });
   };

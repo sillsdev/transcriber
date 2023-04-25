@@ -634,6 +634,7 @@ const initialState = {
 			"selectRows": "Please select row(s) to {0}.",
 			"showHideFilter": "Show/Hide filter rows",
 			"size": "Size (MB)",
+			"toobig": "File {0} is too large {1}. File Limit is {2}MB",
 			"unsupported": "File {0} is an unsupported file type.",
 			"uploadComplete": "{0} of {1} files uploaded successfully.",
 			"version": "Version",
@@ -658,6 +659,7 @@ const initialState = {
 			"resourceTitle": "Upload Resources",
 			"task": "You can upload audio files in .mp3, .m4a, .wav or .ogg format.",
 			"title": "Upload Audio",
+			"toobig": "Too large: {0}. File Limit is {1}MB",
 			"upload": "Upload",
 		}
 	}),
@@ -769,6 +771,8 @@ const initialState = {
 			"save": "Save",
 			"saving": "Saving...",
 			"title": "Record/Edit Audio",
+			"toobig": "File is too large. File Limit is {1}MB",
+			"toobigwarn": "File is near size limit {1}MB",
 			"uncompressed": "Uncompressed",
 		}
 	}),

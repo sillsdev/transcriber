@@ -15,6 +15,7 @@ import JSONAPISource from '@orbit/jsonapi';
 import { TokenContext } from '../../context/TokenProvider';
 import { useDispatch } from 'react-redux';
 import IndexedDBSource from '@orbit/indexeddb/dist/types/source';
+import { UploadType } from '../MediaUpload';
 
 interface IProps {
   mediafileId: string;
@@ -123,6 +124,7 @@ export const useRecordComment = ({
       token: accessToken || '',
       offline: offline,
       errorReporter: reporter,
+      uploadType: UploadType.Media,
       cb: itemComplete,
     });
   };
