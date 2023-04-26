@@ -731,12 +731,33 @@
             </context-group>
          </trans-unit>
          <trans-unit id="cards.OBT">
-            <source>Oral Bible Translation</source>
+            <source>Oral Bible Translation (complete)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TeamDialog.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="cards.OBTs">
+      		<source>Oral Bible Translation (Simple)</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="cards.OBTr">
+      		<source>Oral Bible Translation (like Render)</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="cards.OBTo">
+      		<source>Oral Bible Translation (oral only)</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="cards.offline">
             <source>Offline</source>
             <target/>
@@ -7437,6 +7458,20 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="workflowSteps.consultantCheck1">
+      		<source>First Consultant Check</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.consultantCheck2">
+      		<source>Second Consultant Check</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="workflowSteps.done">
       		<source>Done</source>
       		<target/>
@@ -7452,19 +7487,26 @@
             </context-group>
          </trans-unit>
          <trans-unit id="workflowSteps.finalRecording">
-            <source>Final Record</source>
+            <source>Studio Record</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="workflowSteps.finalReview">
-            <source>Final Review</source>
+            <source>Final Audio Review</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="workflowSteps.finalReviewText">
+      		<source>Final Text Review</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="workflowSteps.internalize">
             <source>Internalize</source>
             <target/>
@@ -7521,6 +7563,20 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="workflowSteps.retellBackTranslation">
+      		<source>Retell Back Translation</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.retellBTTranscribe">
+      		<source>Retell BT Transcribe</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="workflowSteps.saveFirst">
             <source>Save before changing step?</source>
             <target/>
@@ -7529,12 +7585,26 @@
             </context-group>
          </trans-unit>
          <trans-unit id="workflowSteps.teamCheck">
-            <source>Team Check</source>
+            <source>Compare</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="workflowSteps.termIdentify">
+      		<source>Term Identify</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.teamReview">
+      		<source>Term Review</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="workflowSteps.transcribe">
             <source>Transcribe</source>
             <target/>
