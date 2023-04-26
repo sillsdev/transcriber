@@ -134,6 +134,9 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "newProject": string;
     "OBS": string;
     "OBT": string;
+    "OBTs": string;
+    "OBTr": string;
+    "OBTo": string;
     "offline": string;
     "offlineAvail": string;
     "passagesCreated": string;
@@ -1298,10 +1301,13 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "communityTest2": string;
     "communityTesting": string;
     "consultantCheck": string;
+    "consultantCheck1": string;
+    "consultantCheck2": string;
     "done": string;
     "export": string;
     "finalRecording": string;
     "finalReview": string;
+    "finalReviewText": string;
     "internalize": string;
     "paratextSync": string;
     "peerReview": string;
@@ -1310,8 +1316,12 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "pBTParatextSync": string;
     "preliminaryApproval": string;
     "record": string;
+    "retellBackTranslation": string;
+    "retellBTTranscribe": string;
     "saveFirst": string;
     "teamCheck": string;
+    "termIdentify": string;
+    "teamReview": string;
     "transcribe": string;
     "unsaved": string;
     "wholeBackTranslate": string;

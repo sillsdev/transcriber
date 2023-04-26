@@ -630,7 +630,25 @@
       </unit>
       <unit id="cards.OBT">
          <segment>
-            <source>Oral Bible Translation</source>
+            <source>Oral Bible Translation (complete)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.OBTs">
+         <segment>
+            <source>Oral Bible Translation (Simple)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.OBTr">
+         <segment>
+            <source>Oral Bible Translation (like Render)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.OBTo">
+         <segment>
+            <source>Oral Bible Translation (oral only)</source>
             <target/>
          </segment>
       </unit>
@@ -6376,6 +6394,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="workflowSteps.consultantCheck1">
+         <segment>
+            <source>First Consultant Check</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.consultantCheck2">
+         <segment>
+            <source>Second Consultant Check</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="workflowSteps.done">
          <segment>
             <source>Done</source>
@@ -6390,13 +6420,19 @@
       </unit>
       <unit id="workflowSteps.finalRecording">
          <segment>
-            <source>Final Record</source>
+            <source>Studio Record</source>
             <target/>
          </segment>
       </unit>
       <unit id="workflowSteps.finalReview">
          <segment>
-            <source>Final Review</source>
+            <source>Final Audio Review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.finalReviewText">
+         <segment>
+            <source>Final Text Review</source>
             <target/>
          </segment>
       </unit>
@@ -6448,6 +6484,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="workflowSteps.retellBackTranslation">
+         <segment>
+            <source>Retell Back Translation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.retellBTTranscribe">
+         <segment>
+            <source>Retell BT Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="workflowSteps.saveFirst">
          <segment>
             <source>Save before changing step?</source>
@@ -6456,7 +6504,19 @@
       </unit>
       <unit id="workflowSteps.teamCheck">
          <segment>
-            <source>Team Check</source>
+            <source>Compare</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.termIdentify">
+         <segment>
+            <source>Term Identify</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.teamReview">
+         <segment>
+            <source>Term Review</source>
             <target/>
          </segment>
       </unit>
