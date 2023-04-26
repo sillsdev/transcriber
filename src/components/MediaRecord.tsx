@@ -359,11 +359,13 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
 
   return (
     <Paper id="mediaRecord">
-      {mediaState.status === MediaSt.FETCHED && mediaState.id === mediaId && (
-        <Button id="rec-load" variant="contained" onClick={handleLoadAudio}>
-          {t.loadfile}
-        </Button>
-      )}
+      {mediaId &&
+        mediaState.status === MediaSt.FETCHED &&
+        mediaState.id === mediaId && (
+          <Button id="rec-load" variant="contained" onClick={handleLoadAudio}>
+            {t.loadfile}
+          </Button>
+        )}
       <WSAudioPlayer
         allowRecord={allowRecord !== false}
         allowSilence={allowWave}
