@@ -291,7 +291,7 @@ export function DiscussionList(props: IProps & IRecordProps) {
     }
   };
   useEffect(() => {
-    if (currentstep !== '' && !isChanged(NewCommentToolId)) {
+    if (currentstep !== '' && (!isChanged(NewCommentToolId) || !adding)) {
       resetDiscussionList();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
