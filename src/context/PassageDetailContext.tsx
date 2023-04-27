@@ -135,6 +135,7 @@ const initState = {
   passage: {} as Passage,
   section: {} as Section,
   currentstep: '',
+  tool: ToolSlug.Discuss,
   orgWorkflowSteps: [] as OrgWorkflowStep[],
   setOrgWorkflowSteps: (steps: OrgWorkflowStep[]) => {},
   setCurrentStep: (step: string) => {}, //what the user is looking at
@@ -282,11 +283,13 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
 
     const handleSetCurrentStep = (stepId: string) => {
       var step = state.orgWorkflowSteps.find((s) => s.id === stepId);
+      var tool = getTool(step?.attributes?.tool) as ToolSlug;
       setCurrentSegment(undefined, 0);
       setState((state: ICtxState) => {
         return {
           ...state,
           currentstep: stepId,
+          tool,
           playing: false,
           itemPlaying: false,
           commentPlaying: false,
@@ -295,12 +298,11 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         };
       });
 
-      var tool = getTool(step?.attributes?.tool) as ToolSlug;
       if (step && tool !== ToolSlug.Resource && tool !== ToolSlug.Transcribe) {
         //this does a bunch of stuff...don't just set it in the state above...
-        if (state.rowData.length > 0 && state.rowData[0].isVernacular)
+        if (state.rowData.length > 0 && state.rowData[0].isVernacular) {
           setSelected(state.rowData[0].id, PlayInPlayer.yes);
-        else setSelected('', PlayInPlayer.yes);
+        } else setSelected('', PlayInPlayer.yes);
       }
       segmentsCb.current = undefined;
     };
@@ -564,6 +566,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     ) => {
       let i = rowData.findIndex((r) => r.mediafile.id === selected);
       let newRows: IRow[] = [];
+
       if (i < 0) {
         const media = mediafiles.find((m) => m.id === selected);
         if (media) {
@@ -938,8 +941,13 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           return { ...state, rowData: newData, index: i, mediafileId };
         });
 
-        if (mediafileId !== state.playerMediafile?.id)
+        if (
+          state.tool !== ToolSlug.Resource &&
+          state.tool !== ToolSlug.Transcribe &&
+          mediafileId !== state.playerMediafile?.id
+        ) {
           setSelected(mediafileId, PlayInPlayer.yes, newData);
+        }
       });
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sectionResources, mediafiles, pasId, userResources]);
