@@ -14,10 +14,16 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { passageChooserSelector } from '../../selector';
 import { usePassageNavigate } from './usePassageNavigate';
 
-const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
-  padding: `0 ${theme.spacing(6)}px`,
+interface StyledBoxProps extends BoxProps {
+  noOnLeft?: boolean;
+}
+const StyledBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'width',
+})<StyledBoxProps>(({ width, theme }) => ({
+  padding: `${theme.spacing(2)}px ${theme.spacing(6)}px`,
   display: 'flex',
   flexDirection: 'row',
+  width: `${width}px`,
 }));
 
 interface Mark {
@@ -25,7 +31,11 @@ interface Mark {
   label: string;
 }
 
-export const PassageDetailChooser = () => {
+interface IProps {
+  width: number;
+}
+
+export const PassageDetailChooser = ({ width }: IProps) => {
   const [memory] = useGlobal('memory');
   const { passage, section, prjId, allBookData } = usePassageDetailContext();
   const [passageCount, setPassageCount] = useState(0);
@@ -88,7 +98,7 @@ export const PassageDetailChooser = () => {
   }, [view]);
 
   return passageCount > 1 ? (
-    <StyledBox>
+    <StyledBox width={width}>
       <Typography sx={{ pr: 2 }}>{t.passages}</Typography>
       <Tabs
         value={value || 0}

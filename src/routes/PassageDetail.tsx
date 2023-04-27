@@ -246,9 +246,6 @@ const PassageDetailGrids = () => {
         <Grid item sx={descProps} xs={12}>
           <WorkflowSteps />
         </Grid>
-        <Grid item xs={12}>
-          <PassageDetailChooser />
-        </Grid>
         {tool === ToolSlug.Resource && (
           <Grid container direction="row" sx={rowProps}>
             <Grid item xs={12}>
@@ -290,6 +287,9 @@ const PassageDetailGrids = () => {
                       onChange={handleHorzSplitSize}
                     >
                       <Pane>
+                        <PassageDetailChooser
+                          width={width - discussionSize.width - 16}
+                        />
                         {(tool !== ToolSlug.KeyTerm || mediafileId) && (
                           <PassageDetailPlayer />
                         )}
@@ -306,6 +306,9 @@ const PassageDetailGrids = () => {
                   )}
                   {tool === ToolSlug.Transcribe && (
                     <Grid item sx={descProps} xs={12}>
+                      <PassageDetailChooser
+                        width={width - discussionSize.width - 16}
+                      />
                       <PassageDetailTranscribe
                         width={width - discussionSize.width - 16}
                         artifactTypeId={artifactId}
@@ -315,6 +318,9 @@ const PassageDetailGrids = () => {
                   )}
                   {tool === ToolSlug.Record && (
                     <Grid item sx={descProps} xs={12}>
+                      <PassageDetailChooser
+                        width={width - discussionSize.width - 16}
+                      />
                       <PassageDetailRecord />
                     </Grid>
                   )}
