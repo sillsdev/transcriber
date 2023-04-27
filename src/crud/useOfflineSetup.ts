@@ -169,7 +169,6 @@ export const useOfflineSetup = () => {
     if (offlineRecs.length === 0) {
       makeWorkflowProcessSteps('OBT', [
         { name: 'Internalize', tool: 'resource' },
-        { name: 'TermReview', tool: 'keyterm' },
         { name: 'Record', tool: 'record' },
         { name: 'TermIdentify', tool: 'keyterm' },
         { name: 'PeerReview', tool: 'teamCheck' },
@@ -206,7 +205,6 @@ export const useOfflineSetup = () => {
 
       makeWorkflowProcessSteps('OBTo', [
         { name: 'Internalize', tool: 'resource' },
-        { name: 'TermReview', tool: 'keyterm' },
         { name: 'Record', tool: 'record' },
         { name: 'TermIdentify', tool: 'keyterm' },
         { name: 'PeerReview', tool: 'teamCheck' },

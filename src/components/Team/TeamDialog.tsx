@@ -157,7 +157,7 @@ export function TeamDialog(props: IProps) {
               label={t.process}
               value={process || ''}
               onChange={handleProcess}
-              sx={{ my: 2, width: '200px' }}
+              sx={{ my: 2, width: '300px' }}
             >
               {processOptions
                 .sort((i, j) => (i.label <= j.label ? -1 : 1))

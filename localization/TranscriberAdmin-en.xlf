@@ -6510,7 +6510,7 @@
       </unit>
       <unit id="workflowSteps.termIdentify">
          <segment>
-            <source>Term Identify</source>
+            <source>Term Verify</source>
             <target/>
          </segment>
       </unit>

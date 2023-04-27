@@ -1404,7 +1404,7 @@ const initialState = {
 			"retellBTTranscribe": "Retell BT Transcribe",
 			"saveFirst": "Save before changing step?",
 			"teamCheck": "Compare",
-			"termIdentify": "Term Identify",
+			"termIdentify": "Term Verify",
 			"teamReview": "Term Review",
 			"transcribe": "Transcribe",
 			"unsaved": "Unsaved content",

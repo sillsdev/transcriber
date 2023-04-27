@@ -7592,7 +7592,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="workflowSteps.termIdentify">
-      		<source>Term Identify</source>
+      		<source>Term Verify</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">passageDetail.tsx</context>
