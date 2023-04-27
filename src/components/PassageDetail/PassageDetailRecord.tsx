@@ -2,7 +2,12 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { ISharedStrings, MediaFile } from '../../model';
 import { Button, Typography, SxProps, Box } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { findRecord, useFetchMediaUrl, VernacularTag } from '../../crud';
+import {
+  findRecord,
+  IMediaState,
+  useFetchMediaUrl,
+  VernacularTag,
+} from '../../crud';
 import { useGlobal } from 'reactn';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
@@ -16,13 +21,12 @@ import Uploader from '../Uploader';
 import AudacityManager from '../Workflow/AudacityManager';
 import { isElectron } from '../../api-variable';
 import { AudacityLogo, PriButton } from '../../control';
-import AddIcon from '@mui/icons-material/LibraryAddOutlined';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
-import VersionsIcon from '@mui/icons-material/List';
 import { PlanProvider } from '../../context/PlanContext';
 import SpeakerName from '../SpeakerName';
 import { sharedSelector } from '../../selector';
+import { RecordButtons } from './RecordButtons';
 
 const buttonProps = {
   mx: 1,
@@ -47,14 +51,13 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   const [reporter] = useGlobal('errorReporter');
   const [, setBigBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
-  const [offlineOnly] = useGlobal('offlineOnly');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
-  const { passage, mediafileId } = usePassageDetailContext();
+  const { passage, mediafileId, chooserSize } = usePassageDetailContext();
   const { showMessage } = useSnackBar();
   const toolId = 'RecordTool';
   const onSaving = () => {
@@ -68,7 +71,8 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [audacityVisible, setAudacityVisible] = useState(false);
   const [versionVisible, setVersionVisible] = useState(false);
-  const [preload, setPreload] = useState(false);
+  const [preload, setPreload] = useState<boolean>();
+  const [recorderState, setRecorderState] = useState<IMediaState>();
   const [resetMedia, setResetMedia] = useState(false);
   const [speaker, setSpeaker] = useState('');
   const [hasRights, setHasRight] = useState(false);
@@ -168,29 +172,19 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   };
   const handleNameChange = (name: string) => setSpeaker(name);
   const handleRights = (hasRights: boolean) => setHasRight(hasRights);
+  const handleReload = () => setPreload(true);
+  const handleTrackRecorder = (state: IMediaState) => setRecorderState(state);
 
   return (
     <PlanProvider {...props}>
       <div>
-        <Button
-          sx={buttonProps}
-          id="pdRecordVersions"
-          onClick={handleVersions}
-          title={ts.versionHistory}
-        >
-          <VersionsIcon />
-          {ts.versionHistory}
-        </Button>
-        <Button
-          sx={buttonProps}
-          id="pdRecordUpload"
-          onClick={handleUpload}
-          title={!offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular}
-        >
-          <AddIcon />
-          {!offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular}
-        </Button>
-
+        <RecordButtons
+          mediaId={mediafileId}
+          mediaState={recorderState}
+          onVersions={handleVersions}
+          onUpload={handleUpload}
+          onReload={handleReload}
+        />
         {isElectron && (
           <Button
             sx={buttonProps}
@@ -220,10 +214,12 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
           allowWave={true}
           showFilename={true}
           preload={preload}
+          trackState={handleTrackRecorder}
           setCanSave={setCanSave}
           setStatusText={setStatusText}
           doReset={resetMedia}
           setDoReset={setResetMedia}
+          size={300 - chooserSize}
           metaData={
             <>
               <Typography
