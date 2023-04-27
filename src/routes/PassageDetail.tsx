@@ -58,7 +58,7 @@ const KeyTerms = React.lazy(
   () => import('../components/PassageDetail/Keyterms/KeyTerms')
 );
 
-const minWidth = 800;
+const minWidth = 880;
 
 const descProps = { overflow: 'hidden', textOverflow: 'ellipsis' } as SxProps;
 const rowProps = { alignItems: 'center', whiteSpace: 'nowrap' } as SxProps;
@@ -128,7 +128,7 @@ const Pane = (props: PaneProps & PropsWithChildren) => {
 };
 
 const PassageDetailGrids = () => {
-  const INIT_PLAYERPANE_HEIGHT = 150;
+  const INIT_PLAYERPANE_HEIGHT = 150 + 48; // 48 for possible passage chooser
   const [plan] = useGlobal('plan');
   const [width, setWidth] = useState(window.innerWidth);
   const [height, setHeight] = useState(window.innerHeight);
@@ -280,7 +280,7 @@ const PassageDetailGrids = () => {
                   {tool !== ToolSlug.Transcribe && tool !== ToolSlug.Record && (
                     <SplitPane
                       defaultSize={playerSize}
-                      minSize={INIT_PLAYERPANE_HEIGHT}
+                      minSize={INIT_PLAYERPANE_HEIGHT + 48} // 48 for chooser
                       maxSize={height - 280}
                       style={{ position: 'static' }}
                       split="horizontal"

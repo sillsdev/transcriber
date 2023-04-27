@@ -37,7 +37,8 @@ interface IProps {
 
 export const PassageDetailChooser = ({ width }: IProps) => {
   const [memory] = useGlobal('memory');
-  const { passage, section, prjId, allBookData } = usePassageDetailContext();
+  const { passage, section, prjId, allBookData, chooserSize, setChooserSize } =
+    usePassageDetailContext();
   const [passageCount, setPassageCount] = useState(0);
   const [value, setValue] = useState(0);
   const marks = useRef<Array<Mark>>([]);
@@ -73,6 +74,8 @@ export const PassageDetailChooser = ({ width }: IProps) => {
     if (Array.isArray(passages)) {
       const newCount = passages.length;
       if (passageCount !== newCount) setPassageCount(newCount);
+      const newSize = newCount > 1 ? 48 : 0;
+      if (chooserSize !== newSize) setChooserSize(newSize);
       marks.current = [];
       passages.forEach((p) => {
         const passRec = findRecord(memory, 'passage', p.id) as Passage;

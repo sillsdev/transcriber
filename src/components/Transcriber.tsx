@@ -104,7 +104,7 @@ import { PlayInPlayer } from '../context/PassageDetailContext';
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
 const HISTORY_KEY = 'F7,CTRL+7';
-const INIT_PLAYER_HEIGHT = 180;
+const INIT_PLAYER_HEIGHT = 180 + 48; // 48 for possible passage chooser
 
 const Wrapper = styledComp.div`
   .Resizer {

@@ -76,6 +76,7 @@ export function PassageDetailPlayer(props: IProps) {
     setPlaying,
     currentstep,
     playerSize,
+    chooserSize,
     currentSegmentIndex,
     setCurrentSegment,
     discussionMarkers,
@@ -262,12 +263,13 @@ export function PassageDetailPlayer(props: IProps) {
     setInitialPosition(position);
   }, [position]);
 
+  console.log(`detailPlayer chooserSize: ${chooserSize}`);
   return (
     <div id="detailplayer">
       <WSAudioPlayer
         id="audioPlayer"
         allowRecord={false}
-        size={playerSize}
+        size={playerSize - chooserSize}
         blob={audioBlob}
         initialposition={initialposition}
         isPlaying={requestPlay.play}
