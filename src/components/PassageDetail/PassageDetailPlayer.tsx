@@ -15,10 +15,13 @@ import { playerSelector } from '../../selector';
 import { NamedRegions, getSegments, updateSegments } from '../../utils';
 import { TransformBuilder } from '@orbit/data';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-
+export enum SaveSegments {
+  showSaveButton = 0,
+  saveButNoButton = 1,
+}
 interface IProps {
   allowSegment?: NamedRegions | undefined;
-  saveSegments?: boolean;
+  saveSegments?: SaveSegments;
   allowAutoSegment?: boolean;
   suggestedSegments?: string;
   defaultSegParams?: IRegionParams;
@@ -110,7 +113,8 @@ export function PassageDetailPlayer(props: IProps) {
       setDefaultSegments(segmentsRef.current);
       onSegment && onSegment(segmentsRef.current);
     }
-  }, [allowSegment, onSegment, suggestedSegments]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allowSegment, suggestedSegments]);
 
   useEffect(() => {
     if (allowSegment) loadSegments();
@@ -220,7 +224,7 @@ export function PassageDetailPlayer(props: IProps) {
     segmentsRef.current = segments;
     setDefaultSegments(segments); //now we'll notice if we reset them in SetPlayerSegments
     onSegment && onSegment(segments);
-    if (allowSegment && saveSegments) {
+    if (allowSegment && saveSegments !== undefined) {
       toolChanged(toolId);
     } else {
       //not saving segments...so don't update changed
@@ -296,7 +300,7 @@ export function PassageDetailPlayer(props: IProps) {
         onSaveProgress={onSaveProgress}
         onDuration={onDuration}
         metaData={
-          saveSegments ? (
+          saveSegments === SaveSegments.showSaveButton ? (
             <Button
               id="segment-save"
               onClick={handleSave}

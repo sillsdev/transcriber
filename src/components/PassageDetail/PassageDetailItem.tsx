@@ -48,7 +48,7 @@ import {
   PaneProps,
   SplitPaneProps,
 } from 'react-split-pane';
-import PassageDetailPlayer from './PassageDetailPlayer';
+import PassageDetailPlayer, { SaveSegments } from './PassageDetailPlayer';
 import DiscussionList from '../Discussions/DiscussionList';
 import MediaPlayer from '../MediaPlayer';
 import MediaRecord from '../MediaRecord';
@@ -403,7 +403,11 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
                     <PassageDetailPlayer
                       allowSegment={segments}
                       allowAutoSegment={segments !== undefined}
-                      saveSegments={segments !== undefined}
+                      saveSegments={
+                        segments !== undefined
+                          ? SaveSegments.showSaveButton
+                          : undefined
+                      }
                       defaultSegParams={segParams}
                       canSetDefaultParams={canSetOrgDefault}
                       onSegmentParamChange={onSegmentParamChange}
