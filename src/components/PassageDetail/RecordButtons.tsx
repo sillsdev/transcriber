@@ -1,6 +1,7 @@
 import { Button, ButtonGroup } from '@mui/material';
 import AddIcon from '@mui/icons-material/LibraryAddOutlined';
 import VersionsIcon from '@mui/icons-material/List';
+import AudioFileIcon from '@mui/icons-material/AudioFileOutlined';
 import { useGlobal } from 'reactn';
 import { shallowEqual, useSelector } from 'react-redux';
 import { passageRecordSelector, sharedSelector } from '../../selector';
@@ -52,6 +53,7 @@ export const RecordButtons = ({
         mediaState.status === MediaSt.FETCHED &&
         mediaState.id === mediaId && (
           <Button id="pdRecordReload" onClick={onReload}>
+            <AudioFileIcon />
             {t.loadfile}
           </Button>
         )}

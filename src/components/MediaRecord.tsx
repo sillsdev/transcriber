@@ -28,7 +28,7 @@ import { useSnackBar } from '../hoc/SnackBar';
 import { bindActionCreators } from 'redux';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { UploadType, SIZELIMIT } from './MediaUpload';
-
+import AudioFileIcon from '@mui/icons-material/AudioFileOutlined';
 const controlProps = { m: 1 } as SxProps;
 
 interface IDispatchProps {
@@ -367,7 +367,8 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
         mediaId &&
         mediaState.status === MediaSt.FETCHED &&
         mediaState.id === mediaId && (
-          <Button id="rec-load" variant="contained" onClick={handleLoadAudio}>
+          <Button id="rec-load" variant="outlined" onClick={handleLoadAudio}>
+            <AudioFileIcon />
             {t.loadfile}
           </Button>
         )}
