@@ -365,7 +365,9 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
       var anyChanged = Object.keys(toolsChanged).some((t) => myIds.includes(t));
       if (anyChanged)
         if (discussion.id) toolChanged(myToolId, anyChanged);
-        else setChanged(true); //set myChanged also
+        //new discussion and my comment changed so set myChanged also
+        else setChanged(true);
+      else if (!myChanged) saveCompleted(myToolId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, myComments, myChanged]);
