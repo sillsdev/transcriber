@@ -98,7 +98,9 @@ import { activitySelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import usePassageDetailContext from '../context/usePassageDetailContext';
 import { IRegionParams } from '../crud/useWavesurferRegions';
-import PassageDetailPlayer from './PassageDetail/PassageDetailPlayer';
+import PassageDetailPlayer, {
+  SaveSegments,
+} from './PassageDetail/PassageDetailPlayer';
 import { PlayInPlayer } from '../context/PassageDetailContext';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
@@ -936,12 +938,7 @@ export function Transcriber(
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
 
   const onSegmentChange = (segments: string) => {
-    if (segmentsRef.current !== segments) {
-      if (segmentsRef.current && allowSegment) {
-        toolChanged(toolId, true);
-      }
-      segmentsRef.current = segments;
-    }
+    segmentsRef.current = segments;
   };
   const onSegmentParamChange = (
     params: IRegionParams,
@@ -1031,6 +1028,7 @@ export function Transcriber(
                       <PassageDetailPlayer
                         position={defaultPosition}
                         allowAutoSegment={true}
+                        saveSegments={SaveSegments.saveButNoButton}
                         defaultSegParams={segParams}
                         canSetDefaultParams={canSetOrgDefault}
                         allowSegment={allowSegment}
