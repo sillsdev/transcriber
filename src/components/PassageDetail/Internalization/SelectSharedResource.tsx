@@ -28,8 +28,10 @@ import {
 import { useGlobal } from 'reactn';
 import { QueryBuilder } from '@orbit/data';
 import BigDialog from '../../../hoc/BigDialog';
-import { Stack, Typography } from '@mui/material';
+import { Stack, TextField, Typography } from '@mui/material';
 import RefLevelMenu from './RefLevelMenu';
+import { ResourceTypeEnum } from './PassageDetailArtifacts';
+import BookSelect, { OptionType } from '../../BookSelect';
 
 export enum RefLevel {
   All,
@@ -51,12 +53,13 @@ interface IRRow {
 
 interface IProps {
   sourcePassages: number[];
+  scope: ResourceTypeEnum;
   onOpen: (val: boolean) => void;
   onSelect?: (resources: Resource[]) => Promise<void>;
 }
 
 export const SelectSharedResource = (props: IProps) => {
-  const { sourcePassages, onOpen, onSelect } = props;
+  const { sourcePassages, scope, onOpen, onSelect } = props;
   const [refLevel, setRefLevel] = useState<RefLevel>(RefLevel.Verse);
   const [memory] = useGlobal('memory');
   const ctx = useContext(PassageDetailContext);
@@ -290,14 +293,25 @@ export const SelectSharedResource = (props: IProps) => {
     }
   }
 
+  const handleBookCommit = (newValue: string) => {};
+  const handleBookRevert = () => {};
+  const handlePreventSave = () => {};
+
   return (
     <div id="select-shared-resources">
-      {isScripture && (
-        <Stack direction="row">
-          <GrowingSpacer />
-          <RefLevelMenu level={refLevel} action={handleRefLevel} />
-        </Stack>
-      )}
+      <Stack direction="row">
+        <GrowingSpacer />
+        <BookSelect
+          placeHolder={'t.SelectBook'}
+          suggestions={[]}
+          value={{} as OptionType}
+          onCommit={handleBookCommit}
+          onRevert={handleBookRevert}
+          setPreventSave={handlePreventSave}
+        />
+        <TextField id="find-refs" label="References" variant="outlined" />
+        <RefLevelMenu level={refLevel} action={handleRefLevel} />
+      </Stack>
       <ShapingTable
         columns={columnDefs}
         columnWidths={columnWidths}

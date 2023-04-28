@@ -687,6 +687,7 @@ export function PassageDetailArtifacts(props: IProps) {
       >
         <SelectSharedResource
           sourcePassages={resourceSourcePassages}
+          scope={resourceTypeRef.current}
           onSelect={handleSelectShared}
           onOpen={handleSharedResourceVisible}
         />
