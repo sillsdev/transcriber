@@ -305,6 +305,7 @@ export function Transcriber(
     playing,
     playerSize,
     setPlayerSize,
+    chooserSize,
     pdBusy,
     playerMediafile,
     setSelected,
@@ -485,7 +486,7 @@ export function Transcriber(
   }, [toolsChanged]);
 
   useEffect(() => {
-    const newBoxHeight = discussionSize.height - playerSize;
+    const newBoxHeight = discussionSize.height - playerSize - chooserSize;
     if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussionSize, playerSize]);
@@ -992,7 +993,7 @@ export function Transcriber(
               <SplitPane
                 defaultSize={playerSize}
                 minSize={INIT_PLAYER_HEIGHT}
-                maxSize={discussionSize.height - 280}
+                maxSize={discussionSize.height - 280 - chooserSize}
                 style={{ position: 'static' }}
                 split="horizontal"
                 onChange={handleSplitSize}

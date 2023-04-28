@@ -12,30 +12,22 @@ import { IState, IPassageRecordStrings } from '../model';
 import localStrings from '../selector/localize';
 import * as actions from '../store';
 import {
-  Box,
-  BoxProps,
+  Stack,
   Button,
-  FormControl,
+  Checkbox,
   FormControlLabel,
   Paper,
-  Radio,
-  RadioGroup,
-  styled,
   SxProps,
   TextField,
   Typography,
 } from '@mui/material';
 import WSAudioPlayer from './WSAudioPlayer';
 import { generateUUID, loadBlob, waitForIt, cleanFileName } from '../utils';
-import { MediaSt, useFetchMediaUrl } from '../crud';
+import { IMediaState, MediaSt, useFetchMediaUrl } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { bindActionCreators } from 'redux';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { UploadType, SIZELIMIT } from './MediaUpload';
-
-const Row = styled(Box)<BoxProps>(() => ({
-  display: 'flex',
-}));
 
 const controlProps = { m: 1 } as SxProps;
 
@@ -75,6 +67,7 @@ interface IProps {
   setDoReset?: (r: boolean) => void;
   preload?: boolean;
   autoStart?: boolean;
+  trackState?: (mediaState: IMediaState) => void;
 }
 
 function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
@@ -107,6 +100,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     size,
     metaData,
     preload,
+    trackState,
   } = props;
   const WARNINGLIMIT = 1;
   const [reporter] = useGlobal('errorReporter');
@@ -162,6 +156,11 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     if (mediaId !== mediaState.id) fetchMediaUrl({ id: mediaId ?? '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
+
+  useEffect(() => {
+    trackState && trackState(mediaState);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mediaState]);
 
   useEffect(() => {
     setExtension(mimeType);
@@ -309,11 +308,16 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     setAudioBlob(undefined);
   };
 
-  const handleChangeMime = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMimeType((event.target as HTMLInputElement).value);
-    setCompression(
-      (event.target as HTMLInputElement).value === 'audio/wav' ? 1 : 20
-    );
+  const handleCompressChanged = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.currentTarget.checked) {
+      setMimeType('audio/ogg;codecs=opus');
+      setCompression(20);
+    } else {
+      setMimeType('audio/wav');
+      setCompression(1);
+    }
   };
 
   const handleChangeFileName = (e: any) => {
@@ -359,7 +363,8 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
 
   return (
     <Paper id="mediaRecord">
-      {mediaId &&
+      {preload === false &&
+        mediaId &&
         mediaState.status === MediaSt.FETCHED &&
         mediaState.id === mediaId && (
           <Button id="rec-load" variant="contained" onClick={handleLoadAudio}>
@@ -386,7 +391,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
           {warning}
         </Typography>
       )}
-      <Row>
+      <Stack direction="row" sx={{ alignItems: 'center' }}>
         {showFilename && (
           <TextField
             sx={controlProps}
@@ -398,36 +403,23 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
             fullWidth={true}
           />
         )}
-        <Typography sx={{ m: 1, mt: 2 }} id="size">
+        <Typography sx={{ mr: 3 }} id="size">
           {`${((audioBlob?.size ?? 0) / 1000000 / compression).toFixed(2)}MB`}
         </Typography>
         {allowWave && (
-          <FormControl component="fieldset" sx={controlProps}>
-            <RadioGroup
-              row={true}
-              id="filetype"
-              aria-label="filetype"
-              name="filetype"
-              value={mimeType}
-              onChange={handleChangeMime}
-            >
-              <FormControlLabel
-                id="compressed"
-                value={'audio/ogg;codecs=opus'}
-                control={<Radio />}
-                label={t.compressed}
+          <FormControlLabel
+            control={
+              <Checkbox
+                defaultChecked
+                size="small"
+                onChange={handleCompressChanged}
               />
-              <FormControlLabel
-                id="uncompressed"
-                value={'audio/wav'}
-                control={<Radio />}
-                label={t.uncompressed}
-              />
-            </RadioGroup>
-          </FormControl>
+            }
+            label={t.compressed}
+          />
         )}
         {metaData}
-      </Row>
+      </Stack>
     </Paper>
   );
 }

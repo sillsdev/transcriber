@@ -14,7 +14,6 @@ export const DiscussionMove = ({ onSelect }: IProps) => {
   const { workflow } = usePassageDetailContext();
 
   const handle = (id: string) => () => {
-    console.log(`choice is ${id}`);
     onSelect(id);
   };
 

@@ -185,6 +185,8 @@ const initState = {
   playerSize: 280,
   setDiscussionSize: (size: { width: number; height: number }) => {},
   setPlayerSize: (size: number) => {},
+  chooserSize: 48,
+  setChooserSize: (size: number) => {},
   defaultFilename: '',
   uploadItem: '',
   recordCb: (planId: string, MediaRemId?: string[]) => {},
@@ -355,6 +357,12 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const setPlayerSize = (playerSize: number) => {
       setState((state: ICtxState) => {
         return { ...state, playerSize };
+      });
+    };
+
+    const setChooserSize = (chooserSize: number) => {
+      setState((state: ICtxState) => {
+        return { ...state, chooserSize };
       });
     };
 
@@ -1018,6 +1026,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setFirstStepIndex,
             setDiscussionSize,
             setPlayerSize,
+            setChooserSize,
             setPlaying,
             setItemPlaying,
             setPlayItem,

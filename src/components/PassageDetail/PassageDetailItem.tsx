@@ -232,7 +232,6 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
   }, [organization]);
 
   const handleSplitSize = debounce((e: number) => {
-    console.log(`passageDetailItem split ${discussionSize.height}`);
     setDiscussionSize({ width: width - e, height: discussionSize.height });
   }, 50);
 

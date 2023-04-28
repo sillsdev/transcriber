@@ -58,8 +58,6 @@ const KeyTerms = React.lazy(
   () => import('../components/PassageDetail/Keyterms/KeyTerms')
 );
 
-const minWidth = 800;
-
 const descProps = { overflow: 'hidden', textOverflow: 'ellipsis' } as SxProps;
 const rowProps = { alignItems: 'center', whiteSpace: 'nowrap' } as SxProps;
 
@@ -127,8 +125,13 @@ const Pane = (props: PaneProps & PropsWithChildren) => {
   return <PaneBar {...props} className={props.className || 'pane'} />;
 };
 
-const PassageDetailGrids = () => {
-  const INIT_PLAYERPANE_HEIGHT = 150;
+interface PGProps {
+  minWidth: number;
+  onMinWidth: (width: number) => void;
+}
+
+const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
+  const INIT_PLAYERPANE_HEIGHT = 150 + 48; // 48 for possible passage chooser
   const [plan] = useGlobal('plan');
   const [width, setWidth] = useState(window.innerWidth);
   const [height, setHeight] = useState(window.innerHeight);
@@ -141,6 +144,7 @@ const PassageDetailGrids = () => {
     discussionSize,
     setDiscussionSize,
     playerSize,
+    chooserSize,
     setPlayerSize,
     orgWorkflowSteps,
     mediafileId,
@@ -174,7 +178,6 @@ const PassageDetailGrids = () => {
   const t = useSelector(toolSelector, shallowEqual) as IToolStrings;
 
   const handleVertSplitSize = debounce((e: number) => {
-    console.log(`passageDetail split ${discussionSize.height}`);
     setDiscussionSize({ width: width - e, height: discussionSize.height });
   }, 50);
 
@@ -185,7 +188,6 @@ const PassageDetailGrids = () => {
   const setDimensions = () => {
     setWidth(Math.max(window.innerWidth, minWidth));
     setHeight(window.innerHeight);
-    console.log(`passageDetail setDim ${window.innerHeight - 275}`);
     setDiscussionSize({
       width: discussionSize.width, //should we be smarter here?
       height: window.innerHeight - 275,
@@ -194,6 +196,25 @@ const PassageDetailGrids = () => {
     // setPaperStyle({ width: window.innerWidth - 10 });
   };
 
+  useEffect(() => {
+    if (tool === ToolSlug.Record) {
+      onMinWidth(880);
+    } else if (tool === ToolSlug.Transcribe && artifactId) {
+      onMinWidth(1175);
+    } else if (
+      tool === ToolSlug.Transcribe ||
+      tool === ToolSlug.Community ||
+      tool === ToolSlug.PhraseBackTranslate
+    ) {
+      onMinWidth(1050);
+    } else if (tool === ToolSlug.KeyTerm) {
+      onMinWidth(955);
+    } else {
+      onMinWidth(800);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tool]);
+
   const handleFilter = (filtered: boolean) => {
     setTopFilter(filtered);
   };
@@ -201,7 +222,6 @@ const PassageDetailGrids = () => {
   useEffect(() => {
     setDimensions();
     const handleResize = debounce(() => {
-      console.log(`passageDetail resize `);
       setDimensions();
     }, 100);
     window.addEventListener('resize', handleResize);
@@ -210,6 +230,11 @@ const PassageDetailGrids = () => {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  useEffect(() => {
+    setDimensions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [minWidth]);
 
   const plans = useMemo(() => {
     const plans = memory.cache.query((q: QueryBuilder) =>
@@ -246,9 +271,6 @@ const PassageDetailGrids = () => {
         <Grid item sx={descProps} xs={12}>
           <WorkflowSteps />
         </Grid>
-        <Grid item xs={12}>
-          <PassageDetailChooser />
-        </Grid>
         {tool === ToolSlug.Resource && (
           <Grid container direction="row" sx={rowProps}>
             <Grid item xs={12}>
@@ -283,15 +305,18 @@ const PassageDetailGrids = () => {
                   {tool !== ToolSlug.Transcribe && tool !== ToolSlug.Record && (
                     <SplitPane
                       defaultSize={playerSize}
-                      minSize={INIT_PLAYERPANE_HEIGHT}
+                      minSize={INIT_PLAYERPANE_HEIGHT + 48} // 48 for chooser
                       maxSize={height - 280}
                       style={{ position: 'static' }}
                       split="horizontal"
                       onChange={handleHorzSplitSize}
                     >
                       <Pane>
+                        <PassageDetailChooser
+                          width={width - discussionSize.width - 16}
+                        />
                         {(tool !== ToolSlug.KeyTerm || mediafileId) && (
-                          <PassageDetailPlayer />
+                          <PassageDetailPlayer chooserReduce={chooserSize} />
                         )}
                       </Pane>
                       <Pane>
@@ -306,6 +331,9 @@ const PassageDetailGrids = () => {
                   )}
                   {tool === ToolSlug.Transcribe && (
                     <Grid item sx={descProps} xs={12}>
+                      <PassageDetailChooser
+                        width={width - discussionSize.width - 16}
+                      />
                       <PassageDetailTranscribe
                         width={width - discussionSize.width - 16}
                         artifactTypeId={artifactId}
@@ -315,6 +343,9 @@ const PassageDetailGrids = () => {
                   )}
                   {tool === ToolSlug.Record && (
                     <Grid item sx={descProps} xs={12}>
+                      <PassageDetailChooser
+                        width={width - discussionSize.width - 16}
+                      />
                       <PassageDetailRecord />
                     </Grid>
                   )}
@@ -381,6 +412,7 @@ export const PassageDetail = () => {
   const [view, setView] = useState('');
   const [projType] = useGlobal('projType');
   const [user] = useGlobal('user');
+  const [minWidth, setMinWidth] = useState(800);
   const { setProjectType } = useProjectType();
 
   useEffect(() => {
@@ -395,13 +427,17 @@ export const PassageDetail = () => {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
+  const handleMinWidth = (width: number) => {
+    setMinWidth(width);
+  };
+
   if (view !== '' && view !== pathname) return <StickyRedirect to={view} />;
 
   return (
     <Box sx={{ flexGrow: 1, minWidth: `${minWidth}px`, minHeight: '700px' }}>
       <AppHead switchTo={true} />
       <PassageDetailProvider>
-        <PassageDetailGrids />
+        <PassageDetailGrids minWidth={minWidth} onMinWidth={handleMinWidth} />
       </PassageDetailProvider>
     </Box>
   );

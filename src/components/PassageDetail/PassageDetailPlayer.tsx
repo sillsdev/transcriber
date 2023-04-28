@@ -30,6 +30,7 @@ interface IProps {
   onInteraction?: () => void;
   allowZoomAndSpeed?: boolean;
   position?: number;
+  chooserReduce?: number;
 }
 
 export function PassageDetailPlayer(props: IProps) {
@@ -47,6 +48,7 @@ export function PassageDetailPlayer(props: IProps) {
     onInteraction,
     allowZoomAndSpeed,
     position,
+    chooserReduce,
   } = props;
 
   const [memory] = useGlobal('memory');
@@ -267,7 +269,7 @@ export function PassageDetailPlayer(props: IProps) {
       <WSAudioPlayer
         id="audioPlayer"
         allowRecord={false}
-        size={playerSize}
+        size={playerSize - (chooserReduce ?? 0)}
         blob={audioBlob}
         initialposition={initialposition}
         isPlaying={requestPlay.play}
