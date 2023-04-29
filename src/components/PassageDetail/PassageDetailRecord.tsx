@@ -1,6 +1,6 @@
 import { shallowEqual, useSelector } from 'react-redux';
 import { ISharedStrings, MediaFile } from '../../model';
-import { Button, Typography, SxProps, Box } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import {
   findRecord,
@@ -20,19 +20,13 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 import Uploader from '../Uploader';
 import AudacityManager from '../Workflow/AudacityManager';
 import { isElectron } from '../../api-variable';
-import { AudacityLogo, PriButton } from '../../control';
+import { PriButton } from '../../control';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
 import { PlanProvider } from '../../context/PlanContext';
 import SpeakerName from '../SpeakerName';
 import { sharedSelector } from '../../selector';
 import { RecordButtons } from './RecordButtons';
-
-const buttonProps = {
-  mx: 1,
-  maxHeight: '40px',
-  alignSelf: 'center',
-} as SxProps;
 
 interface IRecordProps {
   mediafiles: Array<MediaFile>;
@@ -195,18 +189,8 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
           onVersions={handleVersions}
           onUpload={handleUpload}
           onReload={handleReload}
+          onAudacity={isElectron ? handleAudacity : undefined}
         />
-        {isElectron && (
-          <Button
-            sx={buttonProps}
-            id="pdAudacity"
-            onClick={handleAudacity}
-            title={ts.launchAudacity}
-          >
-            <AudacityLogo />
-            {ts.launchAudacity}
-          </Button>
-        )}
         <Box sx={{ py: 1 }}>
           <SpeakerName
             name={speaker}

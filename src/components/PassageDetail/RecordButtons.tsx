@@ -2,6 +2,7 @@ import { Button, ButtonGroup } from '@mui/material';
 import AddIcon from '@mui/icons-material/LibraryAddOutlined';
 import VersionsIcon from '@mui/icons-material/List';
 import AudioFileIcon from '@mui/icons-material/AudioFileOutlined';
+import { AudacityLogo } from '../../control';
 import { useGlobal } from 'reactn';
 import { shallowEqual, useSelector } from 'react-redux';
 import { passageRecordSelector, sharedSelector } from '../../selector';
@@ -14,6 +15,7 @@ interface IProps {
   onVersions: () => void;
   onUpload: () => void;
   onReload: () => void;
+  onAudacity?: () => void;
 }
 
 export const RecordButtons = ({
@@ -22,6 +24,7 @@ export const RecordButtons = ({
   onVersions,
   onUpload,
   onReload,
+  onAudacity,
 }: IProps) => {
   const [offlineOnly] = useGlobal('offlineOnly');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
@@ -57,6 +60,12 @@ export const RecordButtons = ({
             {t.loadfile}
           </Button>
         )}
+      {onAudacity && (
+        <Button id="pdAudacity" onClick={onAudacity} title={ts.launchAudacity}>
+          <AudacityLogo />
+          {ts.launchAudacity}
+        </Button>
+      )}
     </ButtonGroup>
   );
 };
