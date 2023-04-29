@@ -3469,10 +3469,10 @@
 				<target>Тип файла</target>
 			</segment>
 		</unit>
-		<unit id="passageRecord.loadfile">
+		<unit id="passageRecord.loadlatest">
 			<segment>
-				<source>Load Existing File</source>
-				<target>Загрузить существующий файл</target>
+				<source>Load Latest Audio</source>
+				<target>Загрузить последнее аудио</target>
 			</segment>
 		</unit>
 		<unit id="passageRecord.loading">

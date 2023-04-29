@@ -3469,10 +3469,10 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="passageRecord.loadfile">
+		<unit id="passageRecord.loadlatest">
 			<segment>
-				<source>Load Existing File</source>
-				<target/>
+				<source>Load Latest Audio</source>
+				<target>Muat Audio Terbaru</target>
 			</segment>
 		</unit>
 		<unit id="passageRecord.loading">
