@@ -242,7 +242,6 @@ export const ProjectResourceConfigure = (props: IProps) => {
           ),
         })
           .then(() => {
-            console.log('save complete');
             saveCompleted(wizToolId);
           })
           .catch((err) => {
