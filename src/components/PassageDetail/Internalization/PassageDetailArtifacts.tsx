@@ -590,10 +590,8 @@ export function PassageDetailArtifacts(props: IProps) {
   };
 
   const handleDuration = (duration: number) => {
-    if (mediaStart.current) {
-      mediaPosition.current = mediaStart.current;
-      mediaStart.current = undefined;
-    }
+    mediaPosition.current = mediaStart.current ?? 0;
+    mediaStart.current = undefined;
     setItemPlaying(true);
   };
 

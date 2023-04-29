@@ -27,6 +27,7 @@ export function TeamCheckReference() {
     handleItemTogglePlay,
     section,
     passage,
+    currentstep,
   } = ctx.state;
   const mediaStart = useRef<number | undefined>();
   const mediaEnd = useRef<number | undefined>();
@@ -79,22 +80,19 @@ export function TeamCheckReference() {
   };
 
   const handleDuration = (duration: number) => {
-    if (mediaStart.current) {
-      mediaPosition.current = mediaStart.current;
-      mediaStart.current = undefined;
-      setItemPlaying(true);
-    }
+    mediaPosition.current = mediaStart.current ?? 0;
+    mediaStart.current = undefined;
+    setItemPlaying(true);
   };
 
   const handlePosition = (position: number) => {
-    if (mediaEnd.current) {
-      if (position >= mediaEnd.current) {
-        handleEnded();
-      }
+    if (mediaEnd.current && position >= mediaEnd.current) {
+      handleEnded();
     }
   };
 
   useEffect(() => {
+    setPlayItem('');
     // We track the user's choices for each passage of the section
     const res = localStorage.getItem(storeKey());
     const secId = localStorage.getItem(storeKey(SecSlug));
@@ -103,7 +101,7 @@ export function TeamCheckReference() {
       handleResource(res);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [section, passage]);
+  }, [section, passage, currentstep]);
 
   return (
     <Grid container direction="column">
