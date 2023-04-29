@@ -4429,7 +4429,13 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="shared.BookNotSet">
+		<unit id="shared.bookNotFound">
+			<segment>
+				<source>Paratext project does not contain book.</source>
+				<target></target>
+			</segment>
+		</unit>
+        <unit id="shared.BookNotSet">
 			<segment>
 				<source>Book was not set for Section {0} Passage {1}</source>
 				<target/>

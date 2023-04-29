@@ -69,7 +69,10 @@ import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
 import { doDataChanges } from '../hoc/DataChanges';
 import Memory from '@orbit/memory';
-import { translateParatextError } from '../utils/translateParatextError';
+import {
+  translateParatextErr,
+  translateParatextError,
+} from '../utils/translateParatextError';
 import { PriButton, SelectExportType, StyledHeading } from '../control';
 
 const panelProps = { flexDirection: 'column' } as SxProps;
@@ -338,7 +341,7 @@ export function IntegrationPanel(
       getTypeId(exportType),
       getTranscription
     );
-    showMessage(err || t.syncComplete);
+    showMessage(translateParatextErr(err, ts) || t.syncComplete);
     resetCount();
     if (setStepComplete && currentstep && !err)
       setStepComplete(currentstep, true);

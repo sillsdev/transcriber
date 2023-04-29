@@ -4435,7 +4435,13 @@
 				<target>Passage {0}.{1}: Le projet Paratext ne contient pas de livre {2}.</target>
 			</segment>
 		</unit>
-		<unit id="shared.BookNotSet">
+		<unit id="shared.bookNotFound">
+			<segment>
+				<source>Paratext project does not contain book.</source>
+				<target>Le projet Paratext ne contient pas de livre.</target>
+			</segment>
+		</unit>
+        <unit id="shared.BookNotSet">
 			<segment>
 				<source>Book was not set for Section {0} Passage {1}</source>
 				<target>Le livre n'a pas été défini pour la section {0} Passage {1}</target>
