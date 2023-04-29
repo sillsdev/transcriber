@@ -82,7 +82,8 @@ export function MediaPlayer(props: IProps) {
   }, [ready, requestPlay, playing, playItem]);
 
   const setPosition = (position: number | undefined) => {
-    if (audioRef.current && position) audioRef.current.currentTime = position;
+    if (audioRef.current && position !== undefined)
+      audioRef.current.currentTime = position;
   };
   useEffect(() => {
     setPosition(position);
