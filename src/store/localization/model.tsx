@@ -980,6 +980,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "part": string;
     "peerreviewer": string;
     "recordingInProgress": string;
+    "bookNotFound": string;
     "referenceNotFound": string;
     "role": string;
     "save": string;

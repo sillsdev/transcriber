@@ -1042,6 +1042,7 @@ const initialState = {
 			"part": "Part {0}",
 			"peerreviewer": "Peer Reviewer",
 			"recordingInProgress": "Recording in progress...",
+			"bookNotFound": "Paratext project does not contain book.",
 			"referenceNotFound": "Reference does not exist in Paratext chapter, or reference is within a larger verse range.",
 			"role": "Role",
 			"save": "Save",

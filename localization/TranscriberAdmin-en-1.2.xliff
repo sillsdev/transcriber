@@ -5673,6 +5673,13 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shared.bookNotFound">
+            <source>Paratext project does not contain book.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.referenceNotFound">
             <source>Reference does not exist in Paratext chapter, or reference is within a larger verse range.</source>
             <target/>
@@ -5680,6 +5687,7 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
+
          <trans-unit id="shared.role">
             <source>Role</source>
             <target/>
