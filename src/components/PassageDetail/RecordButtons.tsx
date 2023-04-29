@@ -33,36 +33,45 @@ export const RecordButtons = ({
     shallowEqual
   );
 
+  const IconSize = { width: '14px', height: '14px' };
+
   return (
     <ButtonGroup size="small" sx={{ my: 1 }}>
       <Button
         id="pdRecordVersions"
         onClick={onVersions}
         title={ts.versionHistory}
+        startIcon={<VersionsIcon sx={IconSize} />}
       >
-        <VersionsIcon />
         {ts.versionHistory}
       </Button>
       <Button
         id="pdRecordUpload"
         onClick={onUpload}
         title={!offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular}
+        startIcon={<AddIcon sx={IconSize} />}
       >
-        <AddIcon />
         {!offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular}
       </Button>
       {mediaId &&
         mediaState &&
         mediaState.status === MediaSt.FETCHED &&
         mediaState.id === mediaId && (
-          <Button id="pdRecordReload" onClick={onReload}>
-            <AudioFileIcon />
+          <Button
+            id="pdRecordReload"
+            onClick={onReload}
+            startIcon={<AudioFileIcon sx={IconSize} />}
+          >
             {t.loadfile}
           </Button>
         )}
       {onAudacity && (
-        <Button id="pdAudacity" onClick={onAudacity} title={ts.launchAudacity}>
-          <AudacityLogo />
+        <Button
+          id="pdAudacity"
+          onClick={onAudacity}
+          title={ts.launchAudacity}
+          startIcon={<AudacityLogo sx={IconSize} />}
+        >
           {ts.launchAudacity}
         </Button>
       )}
