@@ -189,13 +189,14 @@ const initState = {
   setChooserSize: (size: number) => {},
   defaultFilename: '',
   uploadItem: '',
-  recordCb: (planId: string, MediaRemId?: string[]) => {},
   currentSegment: '',
   currentSegmentIndex: -1,
   setCurrentSegment: (segment: IRegion | undefined, index: number) => {}, //replace the above two
   setupLocate: (cb?: (segments: string) => void) => {},
   getCurrentSegment: () => undefined as IRegion | undefined,
   setPlayerSegments: (segments: string) => {},
+  recording: false,
+  setRecording: (recording: boolean) => {},
   commentRecording: false,
   setCommentRecording: (commentRecording: boolean) => {},
   wfStr: {} as IWorkflowStepsStrings,
@@ -275,7 +276,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const mediaEnd = useRef<number | undefined>();
     const mediaPosition = useRef<number | undefined>();
     const currentSegmentRef = useRef<IRegion | undefined>();
-    const { startSave, clearChanged, waitForSave } =
+    const { startSave, startClear, waitForSave } =
       useContext(UnsavedContext).state;
     const [plan] = useGlobal('plan');
     const highlightRef = useRef<number>();
@@ -295,8 +296,10 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           playing: false,
           itemPlaying: false,
           commentPlaying: false,
+          oldVernacularPlaying: false,
           playItem: '',
           commentPlayId: '',
+          oldVernacularPlayItem: '',
         };
       });
 
@@ -340,9 +343,11 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     };
 
     const handleRefuseStep = () => {
-      clearChanged();
-      handleSetCurrentStep(confirm);
-      setConfirm('');
+      startClear();
+      waitForSave(() => {
+        handleSetCurrentStep(confirm);
+        setConfirm('');
+      }, 400);
     };
 
     const setDiscussionSize = (discussionSize: {
@@ -366,9 +371,28 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       });
     };
 
+    const setRecording = (recording: boolean) => {
+      setState((state: ICtxState) => {
+        return {
+          ...state,
+          playing: false, //stop the vernacular
+          itemPlaying: false,
+          commentPlaying: false,
+          oldVernacularPlaying: false,
+          recording,
+        };
+      });
+    };
     const setCommentRecording = (commentRecording: boolean) => {
       setState((state: ICtxState) => {
-        return { ...state, commentRecording };
+        return {
+          ...state,
+          playing: false, //stop the vernacular
+          itemPlaying: false,
+          commentPlaying: false,
+          oldVernacularPlaying: false,
+          commentRecording,
+        };
       });
     };
 
@@ -1041,6 +1065,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setupLocate,
             stepComplete,
             setStepComplete,
+            setRecording,
             setCommentRecording,
             setMediaSelected,
             handleItemPlayEnd,

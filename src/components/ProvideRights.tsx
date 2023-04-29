@@ -66,8 +66,15 @@ export function ProvideRights(props: IProps & IRecordProps) {
   const [importList, setImportList] = useState<File[]>();
   const [uploadVisible, setUploadVisible] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
-  const { toolChanged, toolsChanged, startSave, saveCompleted, saveRequested } =
-    useContext(UnsavedContext).state;
+  const {
+    toolChanged,
+    toolsChanged,
+    startSave,
+    saveCompleted,
+    saveRequested,
+    clearRequested,
+    clearCompleted,
+  } = useContext(UnsavedContext).state;
 
   const { getTypeId } = useArtifactType();
   const { showMessage } = useSnackBar();
@@ -94,6 +101,9 @@ export function ProvideRights(props: IProps & IRecordProps) {
 
   useEffect(() => {
     if (saveRequested(toolId) && canSave) handleSave();
+    else if (clearRequested(toolId)) {
+      clearCompleted(toolId);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, canSave]);
 

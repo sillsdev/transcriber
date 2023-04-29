@@ -226,7 +226,9 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     saveCompleted,
     saveRequested,
     clearRequested,
+    clearCompleted,
     startSave,
+    startClear,
   } = useContext(UnsavedContext).state;
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
@@ -356,13 +358,19 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentstep, discussion.id]);
 
+  const myCommentIds = useMemo(() => {
+    var myIds = myComments.map((d) => d.id);
+    if (discussion.id) myIds.push(discussion.id + 'reply');
+    else myIds.push(NewCommentToolId);
+    return myIds;
+  }, [myComments, discussion]);
+
   useEffect(() => {
     //if any of my comments are changed, add the discussion to the toolChanged list so DiscussionList will pick it up
     if (!myChanged) {
-      var myIds = myComments.map((d) => d.id);
-      if (discussion.id) myIds.push(discussion.id + 'reply');
-      else myIds.push(NewCommentToolId);
-      var anyChanged = Object.keys(toolsChanged).some((t) => myIds.includes(t));
+      var anyChanged = Object.keys(toolsChanged).some((t) =>
+        myCommentIds.includes(t)
+      );
       if (anyChanged)
         if (discussion.id) toolChanged(myToolId, anyChanged);
         //new discussion and my comment changed so set myChanged also
@@ -749,6 +757,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     setEditing(false);
     setChanged(false);
     setMoveTo(undefined);
+    clearCompleted(myToolId);
   };
   const assignedGroup = useMemo(() => {
     return editAssigned.startsWith(groupPrefix)
@@ -771,6 +780,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
 
   useEffect(() => {
     if (saveRequested(myToolId) && !savingRef.current) {
+      myCommentIds.forEach((id) => startSave(id));
       savingRef.current = true;
       handleSave().then(() => {
         waitForIt(
@@ -782,7 +792,13 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
           savingRef.current = false;
         });
       });
-    } else if (clearRequested(myToolId)) handleCancel('');
+    } else if (clearRequested(myToolId)) {
+      handleCancel('');
+      //if we're coming from unsavedcontext, this will be done already
+      //but if we're coming from the discussion filter...we need to do it
+      myCommentIds.forEach((id) => startClear(id));
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 

@@ -187,6 +187,8 @@ export function Profile(props: IProps) {
     toolChanged,
     toolsChanged,
     saveRequested,
+    clearRequested,
+    clearCompleted,
     isChanged,
   } = useContext(UnsavedContext).state;
   const [myChanged, setMyChanged] = useState(false);
@@ -275,6 +277,8 @@ export function Profile(props: IProps) {
   useEffect(() => {
     if (saveRequested(toolId)) {
       handleSave();
+    } else if (clearRequested(toolId)) {
+      clearCompleted(toolId);
     }
     var changed = isChanged(toolId);
     if (changed !== myChanged) setMyChanged(changed);

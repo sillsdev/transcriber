@@ -90,7 +90,8 @@ export function DiscussionList(props: IProps & IRecordProps) {
     playerMediafile,
     setDiscussionMarkers,
   } = ctx.state;
-  const { toolsChanged, isChanged } = useContext(UnsavedContext).state;
+  const { toolsChanged, isChanged, startSave, startClear } =
+    useContext(UnsavedContext).state;
   const t: IDiscussionListStrings = useSelector(
     discussionListSelector,
     shallowEqual
@@ -128,8 +129,6 @@ export function DiscussionList(props: IProps & IRecordProps) {
   const [catFilter, setCatFilter] = useState<CatData[]>([]);
   const [catSelect, setCatSelect] = useState<string[]>([]);
   const [confirmAction, setConfirmAction] = useState<string>('');
-  // const [startSave, setStartSave] = useState(false);
-  // const [clearSave, setClearSave] = useState(false);
   const discussionOrg = useDiscussionOrg();
   const anyChangedRef = useRef(false);
   const enum WaitSave {
@@ -365,19 +364,21 @@ export function DiscussionList(props: IProps & IRecordProps) {
       () => false,
       300
     ).then(() => {
-      // setStartSave(false);
-      // setClearSave(false);
       doTheThing();
     });
   };
 
   const handleSaveFirstConfirmed = () => {
-    // setStartSave(true);
+    var myIds = displayDiscussions.map((d) => d.id);
+    myIds.push(NewDiscussionToolId);
+    myIds.forEach((id) => startSave(id));
     waitSaveOrClear();
   };
 
   const handleSaveFirstRefused = () => {
-    // setClearSave(true);
+    var myIds = displayDiscussions.map((d) => d.id);
+    myIds.push(NewDiscussionToolId);
+    myIds.forEach((id) => startClear(id));
     waitSaveOrClear();
   };
 
@@ -497,8 +498,6 @@ export function DiscussionList(props: IProps & IRecordProps) {
                 onAddComplete={adding ? handleAddComplete : undefined}
                 showStep={allSteps}
                 showReference={allPassages}
-                // startSave={startSave}
-                // clearSave={clearSave}
                 setRef={setHighlightedRef}
                 requestHighlight={highlightNew}
               />

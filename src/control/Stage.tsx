@@ -6,6 +6,7 @@ import NextIcon from '@mui/icons-material/NavigateNext';
 interface IProps {
   id: string;
   label: string;
+  disabled: boolean;
   color?: string;
   textColor?: string;
   wid?: number;
@@ -23,6 +24,7 @@ export const Stage = ({
   wid,
   done,
   tip,
+  disabled,
   select,
   moveStep,
 }: IProps) => {
@@ -43,7 +45,7 @@ export const Stage = ({
     } as CSSProperties);
 
   const handleClick = () => {
-    select && select(id);
+    !disabled && select && select(id);
   };
   const handleMove = (forward: boolean) => () => {
     moveStep && moveStep(forward);

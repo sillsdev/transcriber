@@ -20,10 +20,11 @@ export const TeamScreen = () => {
   const [plan] = useGlobal('plan');
   const [home, setHome] = useGlobal('home');
   const [view, setView] = useState('');
-  const { clearChanged } = useContext(UnsavedContext).state;
+  const { startClear } = useContext(UnsavedContext).state;
   const { resetProject } = useHome();
+
   useEffect(() => {
-    clearChanged();
+    startClear();
     setHome(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

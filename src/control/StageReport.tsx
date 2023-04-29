@@ -24,6 +24,7 @@ export const StageReport = ({ step, onClick, tip }: IProps) => {
       <Stage
         id=""
         label={step}
+        disabled={false}
         color={theme.palette.grey[300]}
         select={onClick}
         tip={tip}

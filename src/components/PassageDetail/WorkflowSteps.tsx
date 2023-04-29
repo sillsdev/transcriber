@@ -14,6 +14,8 @@ export function WorkflowSteps() {
     wfStr,
     firstStepIndex,
     setFirstStepIndex,
+    recording,
+    commentRecording,
   } = usePassageDetailContext();
   const theme = useTheme();
   const [shownWorkflow, setShownWorkflow] = useState<SimpleWf[]>([]);
@@ -102,11 +104,14 @@ export function WorkflowSteps() {
           <Stage
             key={w.id}
             id={w.id}
+            disabled={recording || commentRecording}
             label={label}
             color={curColor(w.id)}
             textColor={
               w.id === currentstep
                 ? theme.palette.secondary.contrastText
+                : recording || commentRecording
+                ? '#d3d3d3'
                 : '#000000'
             }
             wid={stageWdith}

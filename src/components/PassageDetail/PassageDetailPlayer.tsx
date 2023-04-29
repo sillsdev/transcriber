@@ -58,6 +58,8 @@ export function PassageDetailPlayer(props: IProps) {
     toolsChanged,
     isChanged,
     saveRequested,
+    clearRequested,
+    clearCompleted,
     startSave,
     saveCompleted,
   } = useContext(UnsavedContext).state;
@@ -180,11 +182,6 @@ export function PassageDetailPlayer(props: IProps) {
     }
   };
 
-  useEffect(() => {
-    if (saveRequested(toolId) && !savingRef.current) writeSegments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [saveRequested]);
-
   const setPlayerSegments = (segments: string) => {
     if (
       !allowSegment ||
@@ -250,7 +247,10 @@ export function PassageDetailPlayer(props: IProps) {
   }, [currentstep, allowSegment]);
 
   useEffect(() => {
-    if (saveRequested(toolId)) handleSave();
+    if (saveRequested(toolId) && !savingRef.current) writeSegments();
+    else if (clearRequested(toolId)) {
+      clearCompleted(toolId);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 

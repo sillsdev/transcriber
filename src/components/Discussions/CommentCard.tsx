@@ -131,6 +131,7 @@ export const CommentCard = (props: IProps & IRecordProps) => {
     saveCompleted,
     saveRequested,
     clearRequested,
+    clearCompleted,
   } = useContext(UnsavedContext).state;
   const [editing, setEditing] = useState(false);
   const [canSaveRecording, setCanSaveRecording] = useState(false);
@@ -242,6 +243,7 @@ export const CommentCard = (props: IProps & IRecordProps) => {
   };
   const handleCancelEdit = () => {
     reset();
+    clearCompleted(comment.id);
   };
 
   const handleTextChange = (newText: string) => {

@@ -121,8 +121,13 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
   const { showMessage } = useSnackBar();
   const [converting, setConverting] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const { toolsChanged, saveRequested, saveCompleted } =
-    useContext(UnsavedContext).state;
+  const {
+    toolsChanged,
+    saveRequested,
+    saveCompleted,
+    clearRequested,
+    clearCompleted,
+  } = useContext(UnsavedContext).state;
   const saveRef = useRef(false);
   const guidRef = useRef('');
   const extensions = useMemo(
@@ -238,7 +243,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
   const convertComplete = () => {
     resetConvertBlob();
     setConverting(false);
-    saveCompleted(toolId, '');
+    saveCompleted(toolId);
     if (onReady) onReady();
   };
   useEffect(() => {
@@ -265,14 +270,17 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
           ).then(() => convertBlob(audioBlob, mimeType, guidRef.current));
         } else {
           doUpload(audioBlob).then(() => {
-            saveCompleted(toolId, '');
+            saveCompleted(toolId);
             onReady && onReady();
           });
         }
         return;
       }
-    } else if (!saveRequested(toolId) && saveRef.current)
-      saveRef.current = false;
+    } else if (clearRequested(toolId)) {
+      reset();
+      setDoReset && setDoReset(true);
+    }
+    if (!saveRequested(toolId) && saveRef.current) saveRef.current = false;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audioBlob, toolsChanged, mimeType, convert_guid, toolId]);
 
@@ -306,6 +314,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     setFilechanged(false);
     setOriginalBlob(undefined);
     setAudioBlob(undefined);
+    clearCompleted(toolId);
   };
 
   const handleCompressChanged = (

@@ -129,7 +129,8 @@ export const ProjectResourceConfigure = (props: IProps) => {
     saveRequested,
     startSave,
     saveCompleted,
-    clearChanged,
+    clearRequested,
+    clearCompleted,
     checkSavedFn,
   } = useContext(UnsavedContext).state;
   const savingRef = useRef(false);
@@ -241,6 +242,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
           ),
         })
           .then(() => {
+            console.log('save complete');
             saveCompleted(wizToolId);
             savingRef.current = false;
             canceling.current = false;
@@ -259,11 +261,6 @@ export const ProjectResourceConfigure = (props: IProps) => {
     }
   };
 
-  useEffect(() => {
-    if (saveRequested(wizToolId) && !savingRef.current) writeResources();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [saveRequested]);
-
   const handleCreate = () => {
     if (!saveRequested(wizToolId)) {
       startSave(wizToolId);
@@ -271,7 +268,8 @@ export const ProjectResourceConfigure = (props: IProps) => {
   };
 
   useEffect(() => {
-    if (saveRequested(wizToolId)) handleCreate();
+    if (saveRequested(wizToolId) && !savingRef.current) writeResources();
+    else if (clearRequested(wizToolId)) clearCompleted(wizToolId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
@@ -282,7 +280,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
       return;
     }
     checkSavedFn(() => {
-      clearChanged(wizToolId);
+      toolChanged(wizToolId, false);
       onOpen && onOpen(false);
     });
   };
