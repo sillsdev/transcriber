@@ -378,7 +378,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
         mediaState.id === mediaId && (
           <Button id="rec-load" variant="outlined" onClick={handleLoadAudio}>
             <AudioFileIcon />
-            {t.loadfile}
+            {t.loadlatest}
           </Button>
         )}
       <WSAudioPlayer

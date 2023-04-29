@@ -5,6 +5,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import {
   findRecord,
   IMediaState,
+  MediaSt,
   useFetchMediaUrl,
   VernacularTag,
 } from '../../crud';
@@ -75,6 +76,7 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   const [versionVisible, setVersionVisible] = useState(false);
   const [preload, setPreload] = useState<boolean>();
   const [recorderState, setRecorderState] = useState<IMediaState>();
+  const [hasExistingVersion, setHasExistingVersion] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
   const [speaker, setSpeaker] = useState('');
   const [hasRights, setHasRight] = useState(false);
@@ -119,6 +121,14 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafileId, mediafiles]);
+
+  useEffect(() => {
+    setHasExistingVersion(
+      Boolean(mediafileId) &&
+        recorderState?.status === MediaSt.FETCHED &&
+        recorderState?.id === mediafileId
+    );
+  }, [mediafileId, recorderState]);
 
   const handleSave = () => {
     startSave(toolId);
@@ -184,11 +194,9 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
     <PlanProvider {...props}>
       <div>
         <RecordButtons
-          mediaId={mediafileId}
-          mediaState={recorderState}
-          onVersions={handleVersions}
+          onVersions={hasExistingVersion ? handleVersions : undefined}
+          onReload={hasExistingVersion ? handleReload : undefined}
           onUpload={handleUpload}
-          onReload={handleReload}
           onAudacity={isElectron ? handleAudacity : undefined}
         />
         <Box sx={{ py: 1 }}>

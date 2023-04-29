@@ -4224,8 +4224,8 @@
                <context context-type="sourcefile">passageRecord.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="passageRecord.loadfile">
-            <source>Load Existing File</source>
+         <trans-unit id="passageRecord.loadlatest">
+            <source>Load Latest Audio</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageRecord.tsx</context>

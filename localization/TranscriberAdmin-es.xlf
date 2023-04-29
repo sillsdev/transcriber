@@ -3457,10 +3457,10 @@
 				<target>Tipo de archivo</target>
 			</segment>
 		</unit>
-		<unit id="passageRecord.loadfile">
+		<unit id="passageRecord.loadlatest">
 			<segment>
-				<source>Load Existing File</source>
-				<target>Cargar archivo existente</target>
+				<source>Load Latest Audio</source>
+				<target>Cargar audio más reciente</target>
 			</segment>
 		</unit>
 		<unit id="passageRecord.loading">

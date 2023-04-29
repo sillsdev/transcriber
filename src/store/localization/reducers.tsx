@@ -771,7 +771,7 @@ const initialState = {
 			"defaultFilename": "MyRecording",
 			"fileName": "Name",
 			"fileType": "File Type",
-			"loadfile": "Load Existing File",
+			"loadlatest": "Load Latest Audio",
 			"loading": "Loading...",
 			"save": "Save",
 			"saving": "Saving...",

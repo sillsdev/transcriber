@@ -7,20 +7,15 @@ import { useGlobal } from 'reactn';
 import { shallowEqual, useSelector } from 'react-redux';
 import { passageRecordSelector, sharedSelector } from '../../selector';
 import { IPassageRecordStrings, ISharedStrings } from '../../model';
-import { IMediaState, MediaSt } from '../../crud';
 
 interface IProps {
-  mediaId: string;
-  mediaState?: IMediaState;
-  onVersions: () => void;
+  onVersions?: () => void;
+  onReload?: () => void;
   onUpload: () => void;
-  onReload: () => void;
   onAudacity?: () => void;
 }
 
 export const RecordButtons = ({
-  mediaId,
-  mediaState,
   onVersions,
   onUpload,
   onReload,
@@ -37,14 +32,25 @@ export const RecordButtons = ({
 
   return (
     <ButtonGroup size="small" sx={{ my: 1 }}>
-      <Button
-        id="pdRecordVersions"
-        onClick={onVersions}
-        title={ts.versionHistory}
-        startIcon={<VersionsIcon sx={IconSize} />}
-      >
-        {ts.versionHistory}
-      </Button>
+      {onVersions && (
+        <Button
+          id="pdRecordVersions"
+          onClick={onVersions}
+          title={ts.versionHistory}
+          startIcon={<VersionsIcon sx={IconSize} />}
+        >
+          {ts.versionHistory}
+        </Button>
+      )}
+      {onReload && (
+        <Button
+          id="pdRecordReload"
+          onClick={onReload}
+          startIcon={<AudioFileIcon sx={IconSize} />}
+        >
+          {t.loadlatest}
+        </Button>
+      )}
       <Button
         id="pdRecordUpload"
         onClick={onUpload}
@@ -53,18 +59,6 @@ export const RecordButtons = ({
       >
         {!offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular}
       </Button>
-      {mediaId &&
-        mediaState &&
-        mediaState.status === MediaSt.FETCHED &&
-        mediaState.id === mediaId && (
-          <Button
-            id="pdRecordReload"
-            onClick={onReload}
-            startIcon={<AudioFileIcon sx={IconSize} />}
-          >
-            {t.loadfile}
-          </Button>
-        )}
       {onAudacity && (
         <Button
           id="pdAudacity"
