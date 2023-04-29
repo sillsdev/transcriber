@@ -158,7 +158,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const [allResources, setAllResources] = useState(false);
   const { showMessage } = useSnackBar();
   const [confirm, setConfirm] = useState('');
-  const { checkSavedFn } = useContext(UnsavedContext).state;
+  const { waitForSave } = useContext(UnsavedContext).state;
   const mediaStart = useRef<number | undefined>();
   const mediaEnd = useRef<number | undefined>();
   const mediaPosition = useRef<number | undefined>();
@@ -273,7 +273,7 @@ export function PassageDetailArtifacts(props: IProps) {
     if (v) {
       setProjResWizVisible(v);
     } else {
-      checkSavedFn(() => {
+      waitForSave(undefined, 200).then(() => {
         setProjResWizVisible(v);
         projMediaRef.current = undefined;
         setVisual(false);

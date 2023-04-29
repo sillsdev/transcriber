@@ -1,7 +1,15 @@
 import { useEffect, useState, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { Passage, IPassageChooserStrings } from '../../model';
-import { Typography, Box, BoxProps, styled, Tabs, Tab } from '@mui/material';
+import {
+  Typography,
+  Box,
+  BoxProps,
+  styled,
+  Tabs,
+  Tab,
+  SxProps,
+} from '@mui/material';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import {
   related,
@@ -15,7 +23,7 @@ import { passageChooserSelector } from '../../selector';
 import { usePassageNavigate } from './usePassageNavigate';
 
 interface StyledBoxProps extends BoxProps {
-  noOnLeft?: boolean;
+  width?: number;
 }
 const StyledBox = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'width',
@@ -33,9 +41,10 @@ interface Mark {
 
 interface IProps {
   width: number;
+  sx?: SxProps;
 }
 
-export const PassageDetailChooser = ({ width }: IProps) => {
+export const PassageDetailChooser = ({ width, sx }: IProps) => {
   const [memory] = useGlobal('memory');
   const { passage, section, prjId, allBookData, chooserSize, setChooserSize } =
     usePassageDetailContext();
@@ -101,7 +110,7 @@ export const PassageDetailChooser = ({ width }: IProps) => {
   }, [view]);
 
   return passageCount > 1 ? (
-    <StyledBox width={width}>
+    <StyledBox width={width} sx={{ ...sx, alignItems: 'center' }}>
       <Typography sx={{ pr: 2 }}>{t.passages}</Typography>
       <Tabs
         value={value || 0}
