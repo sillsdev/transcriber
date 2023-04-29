@@ -37,6 +37,7 @@ export const ReplyCard = (props: IProps & IRecordProps) => {
     toolsChanged,
     saveRequested,
     clearRequested,
+    clearCompleted,
   } = useContext(UnsavedContext).state;
   const myToolId = discussion.id + 'reply';
   const afterSavecb = () => {
@@ -77,7 +78,7 @@ export const ReplyCard = (props: IProps & IRecordProps) => {
   const handleCancelEdit = () => {
     setRefresh(refresh + 1);
     commentText.current = '';
-    toolChanged(myToolId, false);
+    clearCompleted(myToolId);
   };
 
   useEffect(() => {

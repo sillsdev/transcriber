@@ -67,10 +67,7 @@ export const CommentEditor = (props: IProps) => {
   const {
     playing,
     itemPlaying,
-    setPlaying,
-    setItemPlaying,
     commentPlaying,
-    setCommentPlaying,
     commentRecording,
     setCommentRecording,
   } = useContext(PassageDetailContext).state;
@@ -91,8 +88,9 @@ export const CommentEditor = (props: IProps) => {
     toolsChanged,
     toolChanged,
     startSave,
-    clearChanged,
     saveRequested,
+    clearRequested,
+    clearCompleted,
     isChanged,
   } = useContext(UnsavedContext).state;
 
@@ -107,6 +105,7 @@ export const CommentEditor = (props: IProps) => {
     var changed = isChanged(toolId);
     if (myChanged !== changed) setMyChanged(changed);
     if (saveRequested(toolId)) handleOk();
+    else if (clearRequested(toolId)) handleCancel();
     else if (changed) setStatusText(t.unsaved);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, toolId]);
@@ -162,9 +161,6 @@ export const CommentEditor = (props: IProps) => {
   };
 
   const handleRecord = () => {
-    setPlaying(false);
-    setItemPlaying(false);
-    setCommentPlaying(false, true);
     setStartRecord(true);
     setCommentRecording(true);
   };
@@ -174,7 +170,7 @@ export const CommentEditor = (props: IProps) => {
     setStatusText('');
     setCurText('');
     doRecordRef.current = false;
-    clearChanged(toolId);
+    clearCompleted(toolId);
   };
 
   useEffect(() => {

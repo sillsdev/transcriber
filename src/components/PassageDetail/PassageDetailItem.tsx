@@ -192,7 +192,6 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
     currentSegment,
     currentSegmentIndex,
     getCurrentSegment,
-    setPlaying,
     setCommentPlaying,
     playItem,
     setPlayItem,
@@ -200,8 +199,9 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
     setItemPlaying,
     handleItemTogglePlay,
     handleItemPlayEnd,
+    setRecording,
   } = usePassageDetailContext();
-  const { toolChanged, toolsChanged, startSave, saveCompleted, saveRequested } =
+  const { toolChanged, startSave, saveCompleted, saveRequested } =
     useContext(UnsavedContext).state;
 
   const { getTypeId, localizedArtifactType } = useArtifactType();
@@ -241,6 +241,7 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
 
   useEffect(() => {
     if (!slugs.find((s) => s === recordType)) setRecordType(slugs[0]);
+    setSpeaker('');
   }, [slugs, recordType]);
 
   useEffect(() => {
@@ -283,11 +284,6 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
     currentSegmentIndex,
     currentVersion,
   ]);
-
-  useEffect(() => {
-    if (saveRequested(toolId) && canSave) handleSave();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [toolsChanged, canSave]);
 
   const handleSave = () => {
     //tell the media recorder to save
@@ -366,11 +362,7 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
   };
 
   const onRecordingOrPlaying = (doingsomething: boolean) => {
-    if (doingsomething) {
-      setPlaying(false); //stop the vernacular
-      setItemPlaying(false);
-      setCommentPlaying(false);
-    }
+    setRecording(doingsomething);
   };
   const onSegmentParamChange = (
     params: IRegionParams,

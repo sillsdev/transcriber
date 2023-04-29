@@ -183,6 +183,8 @@ export function ScriptureTable(
     saveRequested,
     startSave,
     saveCompleted,
+    clearRequested,
+    clearCompleted,
     waitForSave,
     toolChanged,
     toolsChanged,
@@ -956,7 +958,7 @@ export function ScriptureTable(
           }
         });
       }
-    }
+    } else if (clearRequested(toolId)) clearCompleted(toolId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 

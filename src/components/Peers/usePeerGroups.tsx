@@ -50,20 +50,20 @@ export const usePeerGroups = ({ users, groups, memberships }: IProps) => {
     setMyGroups(
       groups.filter(
         (g) =>
-          g?.id !== allUserId &&
+          !g.attributes.allUsers &&
           groupIds.includes(g.id) &&
           related(g, 'owner') === organization
       )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [memberships, organization, users, allUserId]);
+  }, [memberships, organization, users]);
 
   useEffect(() => {
     const newCols = groups.filter(
-      (g) => g?.id !== allUserId && related(g, 'owner') === organization
+      (g) => !g.attributes.allUsers && related(g, 'owner') === organization
     );
     setPeerGroups(newCols);
-  }, [groups, organization, allUserId]);
+  }, [groups, organization]);
 
   useEffect(() => {
     const users = userNames.map((r) => r.userId);

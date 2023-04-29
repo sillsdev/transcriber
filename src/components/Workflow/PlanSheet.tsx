@@ -217,8 +217,14 @@ export function PlanSheet(props: IProps) {
   const [currentRow, setCurrentRowx] = useState(-1);
   const [active, setActive] = useState(-1); // used for action menu to display
   const sheetRef = useRef<any>();
-  const { startSave, toolsChanged, saveRequested, isChanged } =
-    useContext(UnsavedContext).state;
+  const {
+    startSave,
+    toolsChanged,
+    saveRequested,
+    isChanged,
+    clearRequested,
+    clearCompleted,
+  } = useContext(UnsavedContext).state;
   const [srcMediaId, setSrcMediaId] = useState('');
   const [mediaPlaying, setMediaPlaying] = useState(false);
   const [warning, setWarning] = useState<string>();
@@ -477,6 +483,10 @@ export function PlanSheet(props: IProps) {
     if (changedRef.current !== changed) setChanged(changedRef.current);
     var isSaving = saveRequested(toolId);
     if (isSaving !== saving) setSaving(isSaving);
+    if (clearRequested(toolId)) {
+      changedRef.current = false;
+      clearCompleted(toolId);
+    }
     if (changedRef.current) {
       if (saveTimer.current === undefined) startSaveTimer();
       if (!connected && !offlineOnly) showMessage(ts.NoSaveOffline);

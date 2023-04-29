@@ -96,11 +96,12 @@ export default function TargetWordAdd(props: IProps) {
   const [recording, setRecording] = useState(false);
   // const [myChanged, setMyChanged] = useState(false);
   const {
-    // toolsChanged,
+    toolsChanged,
     toolChanged,
     startSave,
-    clearChanged,
     saveRequested,
+    clearRequested,
+    clearCompleted,
     // isChanged,
   } = useContext(UnsavedContext).state;
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
@@ -158,7 +159,7 @@ export default function TargetWordAdd(props: IProps) {
     setStatusText('');
     setCurText('');
     doRecordRef.current = false;
-    clearChanged(toolId);
+    clearCompleted(toolId);
     saving.current = false;
     onSetRecordRow(undefined);
   };
@@ -176,13 +177,11 @@ export default function TargetWordAdd(props: IProps) {
   }, []);
 
   // WHen cancelling this logic tries to save
-  // useEffect(() => {
-  //   var changed = isChanged(toolId);
-  //   if (myChanged !== changed) setMyChanged(changed);
-  //   if (saveRequested(toolId)) handleOk();
-  //   else if (changed) setStatusText(t.unsaved);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [toolsChanged, toolId]);
+  useEffect(() => {
+    if (saveRequested(toolId)) handleOk();
+    else if (clearRequested(toolId)) handleCancel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toolsChanged]);
 
   useEffect(() => {
     if (startRecord)

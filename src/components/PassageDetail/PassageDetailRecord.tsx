@@ -46,8 +46,15 @@ const SaveWait = 500;
 export function PassageDetailRecord(props: IProps & IRecordProps) {
   const { ready, mediafiles } = props;
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const { startSave, toolChanged, toolsChanged, saveRequested, waitForSave } =
-    useContext(UnsavedContext).state;
+  const {
+    startSave,
+    toolChanged,
+    toolsChanged,
+    saveRequested,
+    clearRequested,
+    clearCompleted,
+    waitForSave,
+  } = useContext(UnsavedContext).state;
   const [reporter] = useGlobal('errorReporter');
   const [, setBigBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
@@ -57,7 +64,8 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   const [defaultFilename, setDefaultFileName] = useState('');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
-  const { passage, mediafileId, chooserSize } = usePassageDetailContext();
+  const { passage, mediafileId, chooserSize, setRecording } =
+    usePassageDetailContext();
   const { showMessage } = useSnackBar();
   const toolId = 'RecordTool';
   const onSaving = () => {
@@ -84,6 +92,9 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
 
   useEffect(() => {
     if (saveRequested(toolId)) handleSave();
+    else if (clearRequested(toolId)) {
+      clearCompleted(toolId);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
@@ -209,6 +220,7 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
           uploadMethod={uploadMedia}
           onSaving={onSaving}
           onReady={onReady}
+          onRecording={setRecording}
           defaultFilename={defaultFilename}
           allowRecord={hasRights}
           allowWave={true}

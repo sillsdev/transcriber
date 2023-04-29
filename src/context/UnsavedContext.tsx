@@ -32,12 +32,13 @@ const initState = {
   handleSaveRefused: () => {},
   toolChanged: (toolId: string, changed?: boolean, toolErr?: string) => {},
   startSave: (toolId?: string) => {},
+  startClear: (tooldId?: string) => {},
   saveCompleted: (toolId: string, saveErr?: string) => {},
+  clearCompleted: (toolId: string) => {},
   waitForSave: async (
     resolvedMethod: (() => any) | undefined,
     waitCount: number
   ) => {},
-  clearChanged: (toolId?: string) => {},
   anySaving: () => false,
   saveRequested: (toolId: string) => false,
   clearRequested: (toolId: string) => false,
@@ -129,31 +130,35 @@ const UnsavedProvider = connect(
       }
     }
   };
-
-  const clearChanged = (id?: string) => {
-    //this is used in discussions where we're not actually switching
-    //screens (possibly changing filter) and the comment might show up
-    //again in it's original state
-    var setit = false;
+  const startClear = (id?: string) => {
+    setBusy(true);
     if (id) {
-      if (
-        toolsChangedRef.current[id] &&
-        toolsChangedRef.current[id].clearChanged
-      )
-        toolsChangedRef.current = {
-          ...toolsChangedRef.current,
-          [id]: { startSave: false, clearChanged: true, saveError: '' },
+      if (!toolsChangedRef.current[id]?.clearChanged) {
+        toolsChangedRef.current[id] = {
+          startSave: false,
+          clearChanged: true,
+          saveError: '',
         };
-      setit = true;
-    } else {
-      if (Object.keys(toolsChangedRef.current).length > 0) {
-        toolsChangedRef.current = {};
-        setChanged(false);
-        setit = true;
+        setToolsChanged({ ...toolsChangedRef.current });
       }
-    }
-    if (setit) {
-      setToolsChanged({ ...toolsChangedRef.current });
+    } else {
+      //start them all
+      var setit = false;
+      Object.keys(toolsChangedRef.current).forEach((id) => {
+        if (!toolsChangedRef.current[id].clearChanged) {
+          setit = true;
+          toolsChangedRef.current[id] = {
+            startSave: false,
+            clearChanged: true,
+            saveError: '',
+          };
+        }
+      });
+      if (setit) {
+        setToolsChanged({ ...toolsChangedRef.current });
+        saveErr.current = '';
+        setSaveResult('');
+      }
     }
   };
 
@@ -178,6 +183,9 @@ const UnsavedProvider = connect(
   const saveCompleted = (toolId: string, saveErr?: string) => {
     toolChanged(toolId, false, saveErr);
     if (SaveComplete()) setBusy(false);
+  };
+  const clearCompleted = (toolId: string) => {
+    saveCompleted(toolId);
   };
   const anySaving = () => {
     const reducer = (prev: string, id: string) => {
@@ -237,10 +245,7 @@ const UnsavedProvider = connect(
       if (changedRef.current !== anyChanged) {
         setChanged(anyChanged);
       }
-      if (
-        Object.keys(toolsChangedRef.current).length === 0 ||
-        completeWithErrors()
-      ) {
+      if (!anyChanged || completeWithErrors()) {
         allSaveCompleted();
       }
     }
@@ -281,8 +286,8 @@ const UnsavedProvider = connect(
     const savedMethod = saveConfirm.current;
     saveConfirm.current = undefined;
     setAlertOpen(false);
-    clearChanged();
-    if (savedMethod) savedMethod();
+    startClear();
+    finishConfirmed(savedMethod, 18);
   };
 
   const finishConfirmed = (
@@ -312,9 +317,10 @@ const UnsavedProvider = connect(
           handleSaveRefused,
           handleSaveConfirmed,
           startSave,
+          startClear,
           saveCompleted,
+          clearCompleted,
           waitForSave,
-          clearChanged,
           anySaving,
           toolChanged,
           saveRequested,

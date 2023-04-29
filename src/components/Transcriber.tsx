@@ -292,8 +292,13 @@ export function Transcriber(
   const remote = coordinator.getSource('remote');
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
-  const { toolsChanged, saveRequested, isChanged } =
-    useContext(UnsavedContext).state;
+  const {
+    toolsChanged,
+    saveRequested,
+    clearRequested,
+    clearCompleted,
+    isChanged,
+  } = useContext(UnsavedContext).state;
   const [changed, setChanged] = useState(false);
   const [confirm, setConfirm] = useState<ITrans>();
   const transcriptionRef = React.useRef<any>();
@@ -481,6 +486,8 @@ export function Transcriber(
   useEffect(() => {
     if (saveRequested(toolId)) {
       handleSave();
+    } else if (clearRequested(toolId)) {
+      clearCompleted(toolId);
     }
     var newchanged = isChanged(toolId);
     if (newchanged !== changed) setChanged(newchanged);
