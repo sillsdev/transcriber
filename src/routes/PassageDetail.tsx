@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation, useParams } from 'react-router-dom';
-import { Grid, debounce, Paper, Box, SxProps } from '@mui/material';
+import { Grid, debounce, Paper, Box, SxProps, Stack } from '@mui/material';
 
 import styled from 'styled-components';
 import AppHead from '../components/App/AppHead';
@@ -275,18 +275,22 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
           <Grid container direction="row" sx={rowProps}>
             <Grid item xs={12}>
               <Grid container>
+                <PassageDetailChooser width={width - 24} sx={{ pl: 2 }} />
                 <PassageDetailArtifacts />
               </Grid>
             </Grid>
           </Grid>
         )}
         {tool === ToolSlug.Paratext && (
-          <IntegrationTab
-            artifactType={artifactSlug as ArtifactTypeSlug}
-            passage={ctx.state.passage}
-            setStepComplete={ctx.state.setStepComplete as any}
-            currentstep={currentstep}
-          />
+          <Stack>
+            <PassageDetailChooser width={width - 24} sx={{ pl: 2 }} />
+            <IntegrationTab
+              artifactType={artifactSlug as ArtifactTypeSlug}
+              passage={ctx.state.passage}
+              setStepComplete={ctx.state.setStepComplete as any}
+              currentstep={currentstep}
+            />
+          </Stack>
         )}
         {(tool === ToolSlug.Discuss ||
           tool === ToolSlug.TeamCheck ||

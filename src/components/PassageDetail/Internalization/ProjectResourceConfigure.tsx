@@ -244,14 +244,12 @@ export const ProjectResourceConfigure = (props: IProps) => {
           .then(() => {
             console.log('save complete');
             saveCompleted(wizToolId);
-            savingRef.current = false;
-            canceling.current = false;
-            setComplete(0);
-            onOpen && onOpen(false);
           })
           .catch((err) => {
             //so we don't come here...we go to continue/logout
             saveCompleted(wizToolId, err.message);
+          })
+          .finally(() => {
             savingRef.current = false;
             canceling.current = false;
             setComplete(0);
