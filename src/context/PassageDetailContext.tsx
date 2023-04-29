@@ -652,7 +652,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             currentSegmentIndex: resetBlob ? 0 : state.currentSegmentIndex,
           };
         });
-      } else if (mediaStart.current !== undefined) {
+      } else if (mediaStart.current !== undefined && !r.isResource) {
         //play just the segment of an old one
         setState((state: ICtxState) => {
           return {
