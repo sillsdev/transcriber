@@ -15,10 +15,12 @@ import { API_CONFIG, isElectron } from '../../api-variable';
 import ImportTab from '../ImportTab';
 import { AltButton } from '../../control';
 import { useMyNavigate } from '../../utils';
+import AddIcon from '@mui/icons-material/Add';
 import { useRole } from '../../crud';
 import { TokenContext } from '../../context/TokenProvider';
 import { errStatus } from '../../store/AxiosStatus';
 import { useSnackBar } from '../../hoc/SnackBar';
+import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
 
 const RootBox = styled(Box)<BoxProps>(({ theme }) => ({
   padding: theme.spacing(2),
@@ -33,17 +35,19 @@ const TeamActions = () => {
   const [isDeveloper] = useGlobal('developer');
   const [, setBusy] = useGlobal('remoteBusy');
   const [openAdd, setOpenAdd] = useState(false);
+  const [openContent, setOpenContent] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const ctx = useContext(TeamContext);
   const navigate = useMyNavigate();
-  const { teamCreate, cardStrings, isDeleting } = ctx.state;
+  const { teamCreate, cardStrings, isDeleting, sharedStrings } = ctx.state;
   const [email, setEmail] = useState('');
   const [validEmail, setValidEmail] = useState(false);
+  const [contentStatus, setContentStatus] = useState('');
   const { userIsSharedContentAdmin } = useRole();
   const t = cardStrings;
+  const ts = sharedStrings;
   const tokenctx = useContext(TokenContext).state;
   const { showMessage } = useSnackBar();
-  const [, setBigBusy] = useGlobal('importexportBusy');
 
   const handleClickOpen = () => {
     setOpenAdd(true);
@@ -51,7 +55,9 @@ const TeamActions = () => {
   const handleClickImport = () => {
     setImportOpen(true);
   };
-
+  const handleClickContent = () => {
+    setOpenContent(true);
+  };
   const handleAdd = (
     team: Organization,
     cb?: (id: string) => Promise<void>
@@ -62,12 +68,18 @@ const TeamActions = () => {
       setOpenAdd(false);
     });
   };
-
+  const handleContentDone = () => {
+    setContentStatus('');
+    setEmail('');
+    setOpenContent(false);
+  };
   const handleAdded = () => {
     setOpenAdd(false);
   };
   const handleSharedContentClick = () => {
-    setBigBusy(true);
+    if (!validEmail) return;
+    setValidEmail(false); //turn off the save button
+    setContentStatus(ts.saving);
     Axios.post(
       `${API_CONFIG.host}/api/users/sharedcreator/${encodeURIComponent(
         email
@@ -81,13 +93,11 @@ const TeamActions = () => {
       }
     )
       .then((response) => {
-        setBigBusy(false);
         showMessage(t.creatorOK);
-        setValidEmail(false);
+        handleContentDone();
       })
       .catch((err) => {
-        setBigBusy(false);
-        showMessage(errStatus(err).errMsg);
+        setContentStatus(errStatus(err).errMsg);
       });
   };
   const handleEmailChange = (e: any) => {
@@ -115,31 +125,13 @@ const TeamActions = () => {
         </AltButton>
       )}
       {!offline && userIsSharedContentAdmin && (
-        <Box sx={{ p: 1, border: '1px solid grey' }}>
-          <FormControlLabel
-            control={
-              <TextField
-                id="email"
-                label={t.creatorEmail}
-                value={email}
-                onChange={handleEmailChange}
-                margin="normal"
-                required
-                variant="filled"
-                fullWidth={true}
-              />
-            }
-            label=""
-            labelPlacement="top"
-          />
-          <AltButton
-            id="sharedcontent"
-            onClick={handleSharedContentClick}
-            disabled={!validEmail}
-          >
-            {t.creatorAdd}
-          </AltButton>
-        </Box>
+        <AltButton
+          id="contentCreator"
+          sx={{ mb: 2 }}
+          onClick={handleClickContent}
+        >
+          <AddIcon fontSize="small" />
+        </AltButton>
       )}
       {isDeveloper && (
         <AltButton id="Error" sx={{ mt: 2 }} onClick={() => navigate('/error')}>
@@ -153,6 +145,32 @@ const TeamActions = () => {
         onCommit={handleAdd}
         disabled={isDeleting}
       />
+      <BigDialog
+        isOpen={openContent}
+        onOpen={handleContentDone}
+        onSave={validEmail ? handleSharedContentClick : undefined}
+        onCancel={handleContentDone}
+        title={t.creatorAdd}
+        bp={BigDialogBp.sm}
+      >
+        <FormControlLabel
+          control={
+            <TextField
+              id="email"
+              label={t.creatorEmail}
+              value={email}
+              onChange={handleEmailChange}
+              margin="normal"
+              required
+              variant="filled"
+              sx={{ width: '600px' }}
+              fullWidth={true}
+            />
+          }
+          label={contentStatus}
+          labelPlacement="bottom"
+        />
+      </BigDialog>
       {isElectron && importOpen && (
         <ImportTab isOpen={importOpen} onOpen={setImportOpen} />
       )}

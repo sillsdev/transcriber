@@ -1049,6 +1049,7 @@ const initialState = {
 			"referenceNotFound": "Reference does not exist in Paratext chapter, or reference is within a larger verse range.",
 			"role": "Role",
 			"save": "Save",
+			"saving": "Saving...",
 			"select": "Select",
 			"teamrole": "Team Role",
 			"transcriber": "Transcriber",

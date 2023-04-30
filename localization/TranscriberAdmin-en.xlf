@@ -4906,6 +4906,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.saving">
+         <segment>
+            <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.select">
          <segment>
             <source>Select</source>

@@ -987,6 +987,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "referenceNotFound": string;
     "role": string;
     "save": string;
+    "saving": string;
     "select": string;
     "teamrole": string;
     "transcriber": string;
