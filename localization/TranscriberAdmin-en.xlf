@@ -556,6 +556,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.creatorAdd">
+         <segment>
+            <source>Add Shared Content Creator</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.creatorEmail">
+         <segment>
+            <source>Email</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.creatorOK">
+         <segment>
+            <source>User has been given Creator permission.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.delete">
          <segment>
             <source>Delete</source>

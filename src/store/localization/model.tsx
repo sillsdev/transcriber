@@ -121,6 +121,9 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "copyNew": string;
     "copySame": string;
     "copyStatus": string;
+    "creatorAdd": string;
+    "creatorEmail": string;
+    "creatorOK": string;
     "delete": string;
     "deleteTeam": string;
     "draft": string;

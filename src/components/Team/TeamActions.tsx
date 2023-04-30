@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+import { useContext, useState } from 'react';
+import Axios from 'axios';
 import { useGlobal } from 'reactn';
-import { Box, BoxProps, styled } from '@mui/material';
+import {
+  Box,
+  BoxProps,
+  FormControlLabel,
+  TextField,
+  styled,
+} from '@mui/material';
 import { DialogMode, Organization } from '../../model';
 import TeamDialog from './TeamDialog';
 import { TeamContext } from '../../context/TeamContext';
-import { isElectron } from '../../api-variable';
+import { API_CONFIG, isElectron } from '../../api-variable';
 import ImportTab from '../ImportTab';
 import { AltButton } from '../../control';
 import { useMyNavigate } from '../../utils';
+import { useRole } from '../../crud';
+import { TokenContext } from '../../context/TokenProvider';
+import { errStatus } from '../../store/AxiosStatus';
+import { useSnackBar } from '../../hoc/SnackBar';
 
 const RootBox = styled(Box)<BoxProps>(({ theme }) => ({
   padding: theme.spacing(2),
@@ -23,10 +34,16 @@ const TeamActions = () => {
   const [, setBusy] = useGlobal('remoteBusy');
   const [openAdd, setOpenAdd] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
-  const ctx = React.useContext(TeamContext);
+  const ctx = useContext(TeamContext);
   const navigate = useMyNavigate();
   const { teamCreate, cardStrings, isDeleting } = ctx.state;
+  const [email, setEmail] = useState('');
+  const [validEmail, setValidEmail] = useState(false);
+  const { userIsSharedContentAdmin } = useRole();
   const t = cardStrings;
+  const tokenctx = useContext(TokenContext).state;
+  const { showMessage } = useSnackBar();
+  const [, setBigBusy] = useGlobal('importexportBusy');
 
   const handleClickOpen = () => {
     setOpenAdd(true);
@@ -49,6 +66,37 @@ const TeamActions = () => {
   const handleAdded = () => {
     setOpenAdd(false);
   };
+  const handleSharedContentClick = () => {
+    setBigBusy(true);
+    Axios.post(
+      `${API_CONFIG.host}/api/users/sharedcreator/${encodeURIComponent(
+        email
+      )}/true`,
+      null,
+      {
+        headers: {
+          'Content-Type': 'application/vnd.api+json',
+          Authorization: 'Bearer ' + tokenctx.accessToken,
+        },
+      }
+    )
+      .then((response) => {
+        setBigBusy(false);
+        showMessage(t.creatorOK);
+        setValidEmail(false);
+      })
+      .catch((err) => {
+        setBigBusy(false);
+        showMessage(errStatus(err).errMsg);
+      });
+  };
+  const handleEmailChange = (e: any) => {
+    setEmail(e.target.value);
+    setValidEmail(ValidateEmail(e.target.value));
+  };
+  const ValidateEmail = (email: string) => {
+    return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);
+  };
 
   return (
     <RootBox>
@@ -65,6 +113,33 @@ const TeamActions = () => {
         >
           {t.import}
         </AltButton>
+      )}
+      {!offline && userIsSharedContentAdmin && (
+        <Box sx={{ p: 1, border: '1px solid grey' }}>
+          <FormControlLabel
+            control={
+              <TextField
+                id="email"
+                label={t.creatorEmail}
+                value={email}
+                onChange={handleEmailChange}
+                margin="normal"
+                required
+                variant="filled"
+                fullWidth={true}
+              />
+            }
+            label=""
+            labelPlacement="top"
+          />
+          <AltButton
+            id="sharedcontent"
+            onClick={handleSharedContentClick}
+            disabled={!validEmail}
+          >
+            {t.creatorAdd}
+          </AltButton>
+        </Box>
       )}
       {isDeveloper && (
         <AltButton id="Error" sx={{ mt: 2 }} onClick={() => navigate('/error')}>

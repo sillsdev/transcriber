@@ -646,6 +646,28 @@
                <context context-type="sourcefile">ProjectCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.creatorAdd">
+            <source>Add Shared Content Creator</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.creatorEmail">
+            <source>Email</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.creatorOK">
+            <source>User has been given Creator permission.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectCard.tsx</context>
+            </context-group>
+         </trans-unit>
+
          <trans-unit id="cards.delete">
             <source>Delete</source>
             <target/>
