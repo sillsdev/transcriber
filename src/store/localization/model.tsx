@@ -690,6 +690,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "reference": string;
     "resource": string;
     "resourcesDeleted": string;
+    "selectBook": string;
     "sharedResource": string;
     "source": string;
     "startStop": string;

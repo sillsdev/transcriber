@@ -3484,6 +3484,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.selectBook">
+         <segment>
+            <source>Select Book</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
             <source>Link Shared {0} Resource</source>

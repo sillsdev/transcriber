@@ -732,6 +732,7 @@ const initialState = {
 			"reference": "Reference",
 			"resource": "Resource",
 			"resourcesDeleted": " ({0} resources will be deleted.)",
+			"selectBook": "Select Book",
 			"sharedResource": "Link Shared {0} Resource",
 			"source": "Source",
 			"startStop": "Start - Stop",
