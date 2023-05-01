@@ -1,13 +1,22 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  ChangeEvent,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   IPassageDetailArtifactsStrings,
   ISharedStrings,
   IState,
+  Passage,
   Resource,
   SharedResourceReference,
 } from '../../../model';
 import ShapingTable from '../../ShapingTable';
 import {
+  findRecord,
   related,
   remoteIdNum,
   useArtifactCategory,
@@ -92,12 +101,12 @@ export const SelectSharedResource = (props: IProps) => {
   const [termsCheck, setTermsCheck] = useState<number[]>([]);
   const [curTermsCheck, setCurTermsCheck] = useState<number>();
   const planType = usePlanType();
-  const [isScripture, setIsScripture] = useState(true);
   const [bookCd, setBookCd] = useState<string>();
   const [bookOpt, setBookOpt] = useState<OptionType>();
   const bookSuggestions = useSelector(
     (state: IState) => state.books.suggestions
   );
+  const [findRef, setFindRef] = useState('');
   const selecting = useRef(false);
   const { localizedArtifactCategory } = useArtifactCategory();
   const t: IPassageDetailArtifactsStrings = useSelector(
@@ -160,11 +169,6 @@ export const SelectSharedResource = (props: IProps) => {
 
   const refRes = useMemo(
     () => {
-      const scripture = planType(related(section, 'plan'))?.scripture;
-      setIsScripture(scripture);
-      if (!scripture) {
-        setRefLevel(RefLevel.All);
-      }
       const bookSet = new Set<number>();
       const chapSet = new Set<number>();
       const verseSet = new Set<number>();
@@ -177,37 +181,39 @@ export const SelectSharedResource = (props: IProps) => {
           )
         );
       };
-      const m = /(\d+):(\d+)(?:-(\d+))/.exec(passage.attributes.reference);
-      if (m) {
-        const refRecs = memory.cache.query((q: QueryBuilder) =>
-          q.findRecords('sharedresourcereference')
-        ) as SharedResourceReference[];
-        const bookRefs = refRecs.filter(
-          (r) => r.attributes.book === passage.attributes.book
-        );
-        bookRefs.forEach((b) => addRes(bookSet, b));
-        const chapRefs = bookRefs.filter(
-          (r) => r.attributes.chapter === parseInt(m[1])
-        );
-        chapRefs.forEach((c) => addRes(chapSet, c));
-        const startVerse = parseInt(m[2]);
-        const endVerse = parseInt(m[3]);
-        for (const cr of chapRefs) {
-          if (!cr.attributes.verses) {
-            addRes(verseSet, cr);
-          } else {
-            const verses = cr.attributes.verses
-              .split(',')
-              .map((v) => parseInt(v));
-            for (let v = startVerse; v <= endVerse; v += 1) {
-              if (verses.includes(v)) {
-                addRes(verseSet, cr);
-                break;
+      const rangeList = findRef.split(';');
+      rangeList.forEach((r) => {
+        const m = /(\d+):(\d+)(?:-(\d+))/.exec(r);
+        if (m) {
+          const refRecs = memory.cache.query((q: QueryBuilder) =>
+            q.findRecords('sharedresourcereference')
+          ) as SharedResourceReference[];
+          const bookRefs = refRecs.filter((r) => r.attributes.book === bookCd);
+          bookRefs.forEach((b) => addRes(bookSet, b));
+          const chapRefs = bookRefs.filter(
+            (r) => r.attributes.chapter === parseInt(m[1])
+          );
+          chapRefs.forEach((c) => addRes(chapSet, c));
+          const startVerse = parseInt(m[2]);
+          const endVerse = parseInt(m[3]);
+          for (const cr of chapRefs) {
+            if (!cr.attributes.verses) {
+              addRes(verseSet, cr);
+            } else {
+              const verses = cr.attributes.verses
+                .split(',')
+                .map((v) => parseInt(v));
+              for (let v = startVerse; v <= endVerse; v += 1) {
+                if (verses.includes(v)) {
+                  addRes(verseSet, cr);
+                  break;
+                }
               }
             }
           }
         }
-      }
+      });
+
       return {
         books: Array.from(bookSet),
         chapters: Array.from(chapSet),
@@ -215,8 +221,33 @@ export const SelectSharedResource = (props: IProps) => {
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [passage, section]
+    [bookCd, findRef]
   );
+
+  useEffect(() => {
+    const scripture = planType(related(section, 'plan'))?.scripture;
+    if (!scripture) {
+      setRefLevel(RefLevel.All);
+    }
+    if (passage) {
+      setBookCd(passage.attributes.book);
+      setBookOpt(
+        bookSuggestions.find((s) => s.value === passage.attributes.book)
+      );
+    }
+    if (scope === ResourceTypeEnum.passageResource) {
+      setFindRef(passage.attributes.reference);
+    } else if (scope === ResourceTypeEnum.sectionResource) {
+      const secRefs: string[] = [];
+      const passages = related(section, 'passages') as Passage[];
+      passages.forEach((recId) => {
+        const passRec = findRecord(memory, 'passage', recId.id) as Passage;
+        secRefs.push(passRec.attributes.reference);
+      });
+      setFindRef(secRefs.join('; '));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [passage, section, scope]);
 
   useEffect(() => {
     getSharedResources().then((res) => {
@@ -235,7 +266,7 @@ export const SelectSharedResource = (props: IProps) => {
       setResources(latest);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sourcePassages, refLevel]);
+  }, [sourcePassages, refLevel, refRes]);
 
   const numSort = (i: number, j: number) => i - j;
 
@@ -314,18 +345,6 @@ export const SelectSharedResource = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resources, checks]);
 
-  function handleRefLevel(what: string): void {
-    if (what === 'verse') {
-      setRefLevel(RefLevel.Verse);
-    } else if (what === 'chapter') {
-      setRefLevel(RefLevel.Chapter);
-    } else if (what === 'book') {
-      setRefLevel(RefLevel.Book);
-    } else if (what === 'all') {
-      setRefLevel(RefLevel.All);
-    }
-  }
-
   const handleLevelChange = (event: SelectChangeEvent<RefLevel>) => {
     setRefLevel(event.target.value as RefLevel);
   };
@@ -339,6 +358,10 @@ export const SelectSharedResource = (props: IProps) => {
     setBookCd(undefined);
   };
   const handlePreventSave = () => {};
+
+  const handleFindRefChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setFindRef(event.target.value);
+  };
 
   return (
     <div id="select-shared-resources">
@@ -357,7 +380,13 @@ export const SelectSharedResource = (props: IProps) => {
         <TextField
           id="find-refs"
           variant="outlined"
-          inputProps={{ sx: { py: 1 }, placeholder: 't.reference' }}
+          value={findRef}
+          onChange={handleFindRefChange}
+          inputProps={{
+            sx: { py: 1 },
+            placeholder: 't.reference',
+          }}
+          sx={{ width: '400px' }}
         />
         <ReferenceLevel
           id="ref-level"
