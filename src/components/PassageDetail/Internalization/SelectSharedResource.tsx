@@ -167,68 +167,12 @@ export const SelectSharedResource = (props: IProps) => {
     }
   };
 
-  const refRes = useMemo(
-    () => {
-      const bookSet = new Set<number>();
-      const chapSet = new Set<number>();
-      const verseSet = new Set<number>();
-      const addRes = (set: Set<number>, sr: SharedResourceReference) => {
-        set.add(
-          remoteIdNum(
-            'sharedresource',
-            related(sr, 'sharedResource'),
-            memory.keyMap
-          )
-        );
-      };
-      const rangeList = findRef.split(';');
-      rangeList.forEach((r) => {
-        const m = /(\d+):(\d+)(?:-(\d+))/.exec(r);
-        if (m) {
-          const refRecs = memory.cache.query((q: QueryBuilder) =>
-            q.findRecords('sharedresourcereference')
-          ) as SharedResourceReference[];
-          const bookRefs = refRecs.filter((r) => r.attributes.book === bookCd);
-          bookRefs.forEach((b) => addRes(bookSet, b));
-          const chapRefs = bookRefs.filter(
-            (r) => r.attributes.chapter === parseInt(m[1])
-          );
-          chapRefs.forEach((c) => addRes(chapSet, c));
-          const startVerse = parseInt(m[2]);
-          const endVerse = parseInt(m[3]);
-          for (const cr of chapRefs) {
-            if (!cr.attributes.verses) {
-              addRes(verseSet, cr);
-            } else {
-              const verses = cr.attributes.verses
-                .split(',')
-                .map((v) => parseInt(v));
-              for (let v = startVerse; v <= endVerse; v += 1) {
-                if (verses.includes(v)) {
-                  addRes(verseSet, cr);
-                  break;
-                }
-              }
-            }
-          }
-        }
-      });
-
-      return {
-        books: Array.from(bookSet),
-        chapters: Array.from(chapSet),
-        verses: Array.from(verseSet),
-      };
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [bookCd, findRef]
-  );
-
   useEffect(() => {
-    const scripture = planType(related(section, 'plan'))?.scripture;
-    if (!scripture) {
-      setRefLevel(RefLevel.All);
-    }
+    setRefLevel(
+      planType(related(section, 'plan'))?.scripture
+        ? RefLevel.Verse
+        : RefLevel.All
+    );
     if (passage) {
       setBookCd(passage.attributes.book);
       setBookOpt(
@@ -248,6 +192,62 @@ export const SelectSharedResource = (props: IProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passage, section, scope]);
+
+  const refRes = useMemo(
+    () => {
+      const bookSet = new Set<number>();
+      const chapSet = new Set<number>();
+      const verseSet = new Set<number>();
+      const addRes = (set: Set<number>, sr: SharedResourceReference) => {
+        set.add(
+          remoteIdNum(
+            'sharedresource',
+            related(sr, 'sharedResource'),
+            memory.keyMap
+          )
+        );
+      };
+      const refRecs = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('sharedresourcereference')
+      ) as SharedResourceReference[];
+      const bookRefs = refRecs.filter((r) => r.attributes.book === bookCd);
+      bookRefs.forEach((b) => addRes(bookSet, b));
+      const rangeList = findRef.split(';');
+      rangeList.forEach((r) => {
+        const m = /(\d+)(?::(\d+)(?:-(\d+)))/.exec(r);
+        if (m) {
+          const chapRefs = bookRefs.filter(
+            (r) => r.attributes.chapter === parseInt(m[1])
+          );
+          chapRefs.forEach((c) => addRes(chapSet, c));
+          const startVerse = parseInt(m[2]);
+          const endVerse = m[3] ? parseInt(m[3]) : startVerse;
+          for (const cr of chapRefs) {
+            if (!cr.attributes.verses) {
+              addRes(verseSet, cr);
+            } else {
+              const verses = cr.attributes.verses
+                .split(',')
+                .map((v) => parseInt(v));
+              for (let v = startVerse; v <= endVerse; v += 1) {
+                if (verses.includes(v)) {
+                  addRes(verseSet, cr);
+                  break;
+                }
+              }
+            }
+          }
+        }
+      });
+      return {
+        books: Array.from(bookSet),
+        chapters: Array.from(chapSet),
+        verses: Array.from(verseSet),
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [bookCd, findRef]
+  );
 
   useEffect(() => {
     getSharedResources().then((res) => {
@@ -369,7 +369,7 @@ export const SelectSharedResource = (props: IProps) => {
         <GrowingSpacer />
         <Box sx={{ width: '200px' }}>
           <BookSelect
-            placeHolder={'t.SelectBook'}
+            placeHolder={t.selectBook}
             suggestions={bookSuggestions}
             value={bookOpt}
             onCommit={handleBookCommit}
@@ -384,7 +384,7 @@ export const SelectSharedResource = (props: IProps) => {
           onChange={handleFindRefChange}
           inputProps={{
             sx: { py: 1 },
-            placeholder: 't.reference',
+            placeholder: t.reference,
           }}
           sx={{ width: '400px' }}
         />
