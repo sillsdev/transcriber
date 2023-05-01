@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { IMediaUploadStrings } from '../model';
 import {
@@ -88,7 +88,6 @@ const DropTarget = (targetProps: ITargetProps) => {
   const handleDrop = (files: FileList) => {
     handleFiles(files);
   };
-
   return process.env.NODE_ENV !== 'test' ? (
     <FileDrop onDrop={handleDrop}>
       <MyLabel id="file" htmlFor="upload" onChange={handleNameChange}>
@@ -157,7 +156,8 @@ function MediaUpload(props: IProps) {
     team,
   } = props;
   const [name, setName] = useState('');
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFilesx] = useState<File[]>([]);
+  const filesRef = useRef(files);
   const { showMessage } = useSnackBar();
   const [acceptextension, setAcceptExtension] = useState('');
   const [sizeLimit, setSizeLimit] = useState(0);
@@ -197,12 +197,33 @@ function MediaUpload(props: IProps) {
     }
     onVisible(false);
   };
+  const setFiles = (f: File[]) => {
+    filesRef.current = f;
+    setFilesx(f);
+  };
   const fileName = (files: File[]) => {
-    return files.length === 1
+    return files.length === 0
+      ? ''
+      : files.length === 1
       ? files[0].name
       : files.length.toString() + ' files selected';
   };
-
+  const checkSizes = (files: File[], sizelimit: number) => {
+    var smallenoughfiles = Array.from(
+      files.filter((s) => s.size <= sizelimit * 1000000)
+    );
+    if (smallenoughfiles.length < files.length) {
+      var rejectedFiles = Array.from(files).filter(
+        (s) => s.size > sizelimit * 1000000
+      );
+      showMessage(
+        t.toobig
+          .replace('{0}', rejectedFiles.map((f) => f.name).join(', '))
+          .replace('{1}', sizelimit.toString())
+      );
+    }
+    return smallenoughfiles;
+  };
   const handleFiles = (files: FileList | undefined) => {
     if (files) {
       var goodFiles = Array.from(files).filter((s) =>
@@ -224,21 +245,9 @@ function MediaUpload(props: IProps) {
           )
         );
       }
-      var smallenoughfiles = Array.from(
-        goodFiles.filter((s) => s.size <= sizeLimit * 1000000)
-      );
-      if (smallenoughfiles.length < goodFiles.length) {
-        rejectedFiles = Array.from(goodFiles).filter(
-          (s) => s.size > sizeLimit * 1000000
-        );
-        showMessage(
-          t.toobig
-            .replace('{0}', rejectedFiles.map((f) => f.name).join(', '))
-            .replace('{1}', sizeLimit.toString())
-        );
-      }
-      setName(fileName(smallenoughfiles));
-      setFiles(smallenoughfiles);
+      goodFiles = checkSizes(goodFiles, sizeLimit);
+      setName(fileName(goodFiles));
+      setFiles(goodFiles);
     } else {
       setFiles([]);
       setName('');
@@ -273,7 +282,14 @@ function MediaUpload(props: IProps) {
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf, image/png, image/jpeg',
       ].map((s) => s)[uploadType]
     );
-    setSizeLimit(SIZELIMIT(uploadType));
+    var size = SIZELIMIT(uploadType);
+    setSizeLimit(size);
+    if (filesRef.current.length > 0) {
+      var goodFiles = checkSizes(filesRef.current, size);
+      setName(fileName(goodFiles));
+      setFiles(goodFiles);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadType]);
 
   return (

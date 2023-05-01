@@ -176,7 +176,7 @@ export const Uploader = (props: IProps) => {
     const next = n + 1;
     if (next < uploadList.length && !cancelled.current) {
       doUpload(next);
-    } else if (!offline) {
+    } else if (!offline && mediaIdRef.current?.length > 0) {
       pullTableList(
         'mediafile',
         mediaIdRef.current,
