@@ -41,7 +41,10 @@ export const useRole = () => {
 
   const userIsSharedContentCreator = useMemo(() => {
     var userRec = findRecord(memory, 'user', user) as User;
-    return userRec?.attributes.sharedContentCreator;
+    return (
+      userRec?.attributes.sharedContentAdmin ||
+      userRec?.attributes.sharedContentCreator
+    );
   }, [memory, user]);
 
   const userIsOrgAdmin = (orgId: string) =>

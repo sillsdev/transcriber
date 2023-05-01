@@ -121,6 +121,9 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "copyNew": string;
     "copySame": string;
     "copyStatus": string;
+    "creatorAdd": string;
+    "creatorEmail": string;
+    "creatorOK": string;
     "delete": string;
     "deleteTeam": string;
     "draft": string;
@@ -984,6 +987,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "referenceNotFound": string;
     "role": string;
     "save": string;
+    "saving": string;
     "select": string;
     "teamrole": string;
     "transcriber": string;

@@ -646,6 +646,28 @@
                <context context-type="sourcefile">ProjectCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.creatorAdd">
+            <source>Add Shared Content Creator</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.creatorEmail">
+            <source>Email</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.creatorOK">
+            <source>User has been given Creator permission.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectCard.tsx</context>
+            </context-group>
+         </trans-unit>
+
          <trans-unit id="cards.delete">
             <source>Delete</source>
             <target/>
@@ -5700,6 +5722,13 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.saving">
+            <source>Saving...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">drawer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="shared.select">
