@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   IPassageDetailArtifactsStrings,
   ISharedStrings,
+  IState,
   Resource,
   SharedResourceReference,
 } from '../../../model';
@@ -28,7 +29,15 @@ import {
 import { useGlobal } from 'reactn';
 import { QueryBuilder } from '@orbit/data';
 import BigDialog from '../../../hoc/BigDialog';
-import { Stack, TextField, Typography } from '@mui/material';
+import {
+  Autocomplete,
+  AutocompleteProps,
+  Box,
+  Stack,
+  TextField,
+  Typography,
+  styled,
+} from '@mui/material';
 import RefLevelMenu from './RefLevelMenu';
 import { ResourceTypeEnum } from './PassageDetailArtifacts';
 import BookSelect, { OptionType } from '../../BookSelect';
@@ -39,6 +48,20 @@ export enum RefLevel {
   Chapter,
   Verse,
 }
+
+interface RefOption {
+  value: RefLevel;
+  label: string;
+}
+
+const ReferenceLevel = styled(Autocomplete)<
+  AutocompleteProps<RefOption, false, true, false>
+>(({ theme }) => ({
+  '& .MuiInputBase-root, & input': {
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+}));
 
 interface IRRow {
   language: string;
@@ -71,6 +94,11 @@ export const SelectSharedResource = (props: IProps) => {
   const [curTermsCheck, setCurTermsCheck] = useState<number>();
   const planType = usePlanType();
   const [isScripture, setIsScripture] = useState(true);
+  const [bookCd, setBookCd] = useState<string>();
+  const [bookOpt, setBookOpt] = useState<OptionType>();
+  const bookSuggestions = useSelector(
+    (state: IState) => state.books.suggestions
+  );
   const selecting = useRef(false);
   const { localizedArtifactCategory } = useArtifactCategory();
   const t: IPassageDetailArtifactsStrings = useSelector(
@@ -108,6 +136,12 @@ export const SelectSharedResource = (props: IProps) => {
     { columnName: 'language', direction: 'asc' },
     { columnName: 'category', direction: 'asc' },
     { columnName: 'title', direction: 'asc' },
+  ];
+  const referenceLevel: RefOption[] = [
+    { label: t.verseLevel, value: RefLevel.Verse },
+    { label: t.chapterLevel, value: RefLevel.Chapter },
+    { label: t.bookLevel, value: RefLevel.Book },
+    { label: t.allLevel, value: RefLevel.All },
   ];
 
   const handleCancel = () => {
@@ -293,23 +327,48 @@ export const SelectSharedResource = (props: IProps) => {
     }
   }
 
-  const handleBookCommit = (newValue: string) => {};
-  const handleBookRevert = () => {};
+  const handleBookCommit = (newValue: string) => {
+    setBookCd(newValue);
+    const newOpt = bookSuggestions.find((v) => v.value === newValue);
+    setBookOpt(newOpt);
+  };
+  const handleBookRevert = () => {
+    setBookCd(undefined);
+  };
   const handlePreventSave = () => {};
 
   return (
     <div id="select-shared-resources">
-      <Stack direction="row">
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', my: 1 }}>
         <GrowingSpacer />
-        <BookSelect
-          placeHolder={'t.SelectBook'}
-          suggestions={[]}
-          value={{} as OptionType}
-          onCommit={handleBookCommit}
-          onRevert={handleBookRevert}
-          setPreventSave={handlePreventSave}
+        <Box sx={{ width: '200px' }}>
+          <BookSelect
+            placeHolder={'t.SelectBook'}
+            suggestions={bookSuggestions}
+            value={bookOpt}
+            onCommit={handleBookCommit}
+            onRevert={handleBookRevert}
+            setPreventSave={handlePreventSave}
+          />
+        </Box>
+        <TextField
+          id="find-refs"
+          label="References"
+          variant="outlined"
+          inputProps={{ sx: { py: 1 } }}
+          InputLabelProps={{ sx: { lineHeight: `1em` } }}
         />
-        <TextField id="find-refs" label="References" variant="outlined" />
+        <ReferenceLevel
+          id="ref-level"
+          disablePortal
+          disableClearable
+          options={referenceLevel}
+          value={referenceLevel.find((rl) => rl.value === refLevel)}
+          sx={{ width: '325px', my: 1 }}
+          renderInput={(params: any) => (
+            <TextField {...params} label={'t.level'} />
+          )}
+        />
         <RefLevelMenu level={refLevel} action={handleRefLevel} />
       </Stack>
       <ShapingTable
