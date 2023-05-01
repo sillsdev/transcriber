@@ -581,10 +581,13 @@ function WSAudioPlayer(props: IProps) {
   }
 
   function onRecordError(e: any) {
+    processRecordRef.current = false;
     if (autostartTimer.current && e.error === 'No mediaRecorder') {
       cleanupAutoStart();
       launchTimer();
-    } else showMessage(e.error);
+    } else {
+      showMessage(e.error || e.toString());
+    }
   }
 
   async function onRecordDataAvailable(e: any, blob: Blob) {
@@ -664,6 +667,7 @@ function WSAudioPlayer(props: IProps) {
   const handleActionConfirmed = () => {
     initialPosRef.current = undefined;
     if (confirmAction === t.deleteRecording) {
+      setPlaying(false);
       wsClear();
       setDuration(0);
       setChanged && setChanged(false);
@@ -672,8 +676,7 @@ function WSAudioPlayer(props: IProps) {
       oneShotUsed && setOneShotUsed(false);
       setReady(false);
     } else {
-      wsRegionDelete();
-      handleChanged();
+      handleDeleteRegion();
     }
     setConfirmAction('');
   };
@@ -684,6 +687,7 @@ function WSAudioPlayer(props: IProps) {
     setConfirmAction(t.deleteRecording);
   };
   const handleDeleteRegion = () => {
+    setPlaying(false);
     wsRegionDelete();
     handleChanged();
   };
