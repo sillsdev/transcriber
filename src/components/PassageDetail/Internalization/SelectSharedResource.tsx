@@ -30,15 +30,16 @@ import { useGlobal } from 'reactn';
 import { QueryBuilder } from '@orbit/data';
 import BigDialog from '../../../hoc/BigDialog';
 import {
-  Autocomplete,
-  AutocompleteProps,
   Box,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  SelectProps,
   Stack,
   TextField,
   Typography,
   styled,
 } from '@mui/material';
-import RefLevelMenu from './RefLevelMenu';
 import { ResourceTypeEnum } from './PassageDetailArtifacts';
 import BookSelect, { OptionType } from '../../BookSelect';
 
@@ -54,12 +55,10 @@ interface RefOption {
   label: string;
 }
 
-const ReferenceLevel = styled(Autocomplete)<
-  AutocompleteProps<RefOption, false, true, false>
->(({ theme }) => ({
-  '& .MuiInputBase-root, & input': {
-    paddingTop: 0,
-    paddingBottom: 0,
+const ReferenceLevel = styled(Select)<SelectProps>(({ theme }) => ({
+  '#ref-level': {
+    paddingTop: `8px`,
+    paddingBottom: `8px`,
   },
 }));
 
@@ -327,6 +326,10 @@ export const SelectSharedResource = (props: IProps) => {
     }
   }
 
+  const handleLevelChange = (event: SelectChangeEvent<RefLevel>) => {
+    setRefLevel(event.target.value as RefLevel);
+  };
+
   const handleBookCommit = (newValue: string) => {
     setBookCd(newValue);
     const newOpt = bookSuggestions.find((v) => v.value === newValue);
@@ -353,23 +356,19 @@ export const SelectSharedResource = (props: IProps) => {
         </Box>
         <TextField
           id="find-refs"
-          label="References"
           variant="outlined"
-          inputProps={{ sx: { py: 1 } }}
-          InputLabelProps={{ sx: { lineHeight: `1em` } }}
+          inputProps={{ sx: { py: 1 }, placeholder: 't.reference' }}
         />
         <ReferenceLevel
           id="ref-level"
-          disablePortal
-          disableClearable
-          options={referenceLevel}
-          value={referenceLevel.find((rl) => rl.value === refLevel)}
-          sx={{ width: '325px', my: 1 }}
-          renderInput={(params: any) => (
-            <TextField {...params} label={'t.level'} />
-          )}
-        />
-        <RefLevelMenu level={refLevel} action={handleRefLevel} />
+          value={refLevel ?? RefLevel.All}
+          onChange={handleLevelChange as any}
+          sx={{ width: '325px' }}
+        >
+          {referenceLevel.map((rl) => (
+            <MenuItem value={rl.value}>{rl.label}</MenuItem>
+          ))}
+        </ReferenceLevel>
       </Stack>
       <ShapingTable
         columns={columnDefs}
