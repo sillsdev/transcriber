@@ -187,9 +187,10 @@ export const SelectArtifactCategory = (props: IProps) => {
           ))
           .concat(
             // if not populated yet
-            artifactCategorys.findIndex(
-              (v: IArtifactCategory) => v.id === initCategory
-            ) === -1 ? (
+            initCategory !== '' &&
+              artifactCategorys.findIndex(
+                (v: IArtifactCategory) => v.id === initCategory
+              ) === -1 ? (
               <StyledMenuItem key={initCategory} value={initCategory}>
                 <></>
               </StyledMenuItem>
