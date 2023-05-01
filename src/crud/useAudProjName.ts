@@ -37,19 +37,19 @@ export const useAudProjName = () => {
     const docs = await ipc?.getPath('documents');
     const book = passRec?.attributes?.book;
     const secSeq = secRec?.attributes?.sequencenum || 0;
-    let secPart = `${book ? '-' + book : ''}${recSlug(secRec, secSeq)}`;
+    let secPart = `${book ?? ''}${recSlug(secRec, secSeq)}`;
     const ref = passRec?.attributes?.reference;
     const cleanRef = ref ? `-${cleanFileName(ref.replace(' ', '_'))}` : '';
     let aupPath = path.join(docs, 'Audacity', 'aup3', planSlug(planRec));
     let pasPart = '';
     if (planRec?.attributes?.flat) {
       secPart += cleanRef;
-      aupPath = path.join(aupPath, secPart.slice(1));
+      aupPath = path.join(aupPath, secPart);
     } else {
       const pasSeq = passRec?.attributes?.sequencenum || 0;
       pasPart = cleanRef + recSlug(passRec, pasSeq);
-      aupPath = path.join(aupPath, secPart.slice(1), pasPart.slice(1));
+      aupPath = path.join(aupPath, secPart, pasPart.slice(1));
     }
-    return path.join(aupPath, `${planSlug(planRec)}${secPart}${pasPart}.aup3`);
+    return path.join(aupPath, `${secPart}${pasPart}_${planSlug(planRec)}.aup3`);
   };
 };
