@@ -103,8 +103,13 @@ export function SpeakerName({
     }
   };
 
-  const handleLeave = (event: React.SyntheticEvent, reason: string) => {
-    if (reason === 'blur' && valueRef.current) handleChoice(valueRef.current);
+  const handleLeave = (event: any, reason: string) => {
+    if (
+      reason === 'blur' &&
+      valueRef.current &&
+      event.relatedTarget.id !== 'uploadCancel'
+    )
+      handleChoice(valueRef.current);
   };
 
   React.useEffect(() => {
