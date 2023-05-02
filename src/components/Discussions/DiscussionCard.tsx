@@ -368,8 +368,8 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   useEffect(() => {
     //if any of my comments are changed, add the discussion to the toolChanged list so DiscussionList will pick it up
     if (!myChanged) {
-      var anyChanged = Object.keys(toolsChanged).some((t) =>
-        myCommentIds.includes(t)
+      var anyChanged = Object.keys(toolsChanged).some(
+        (t) => myCommentIds.includes(t) && !toolsChanged[t].clearChanged
       );
       if (anyChanged)
         if (discussion.id) toolChanged(myToolId, anyChanged);

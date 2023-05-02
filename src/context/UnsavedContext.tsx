@@ -133,7 +133,10 @@ const UnsavedProvider = connect(
   const startClear = (id?: string) => {
     setBusy(true);
     if (id) {
-      if (!toolsChangedRef.current[id]?.clearChanged) {
+      if (
+        toolsChangedRef.current[id] &&
+        !toolsChangedRef.current[id].clearChanged
+      ) {
         toolsChangedRef.current[id] = {
           startSave: false,
           clearChanged: true,
@@ -208,7 +211,10 @@ const UnsavedProvider = connect(
     return toolsChangedRef.current[toolId]?.clearChanged;
   };
   const isChanged = (toolId: string) => {
-    return toolsChangedRef.current[toolId] !== undefined;
+    return (
+      toolsChangedRef.current[toolId] !== undefined &&
+      !toolsChangedRef.current[toolId].clearChanged
+    );
   };
   const toolChanged = (
     toolId: string,
