@@ -2,7 +2,6 @@ import {
   Box,
   BoxProps,
   IconButton,
-  Paper,
   styled,
   SxProps,
   TextField,
@@ -205,33 +204,37 @@ export const SelectArtifactCategory = (props: IProps) => {
           )}
       </TextField>
       {showNew && (
-        <Paper>
-          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            <TextField
-              id="new-artifact-cat"
-              label={t.newArtifactCategory}
-              sx={{ mx: 1, width: '300px' }}
-              value={newArtifactCategory || ''}
-              onChange={handleNewArtifactCategoryChange}
-            ></TextField>
-            <IconButton
-              id="addnew"
-              color="secondary"
-              aria-label="addnew"
-              onClick={addNewCategory}
-            >
-              <AddIcon />
-            </IconButton>
-            <IconButton
-              id="cancelnew"
-              color="secondary"
-              aria-label="cancelnew"
-              onClick={cancelNewCategory}
-            >
-              <CancelIcon />
-            </IconButton>
-          </Box>
-        </Paper>
+        <Box sx={{ p: 1 }}>
+          <TextField
+            id="new-artifact-cat"
+            label={t.newArtifactCategory}
+            sx={{ width: '300px' }}
+            value={newArtifactCategory || ''}
+            onChange={handleNewArtifactCategoryChange}
+            InputProps={{
+              endAdornment: (
+                <>
+                  <IconButton
+                    id="addnew"
+                    color="secondary"
+                    aria-label="addnew"
+                    onClick={addNewCategory}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                  <IconButton
+                    id="cancelnew"
+                    color="secondary"
+                    aria-label="cancelnew"
+                    onClick={cancelNewCategory}
+                  >
+                    <CancelIcon />
+                  </IconButton>
+                </>
+              ),
+            }}
+          ></TextField>
+        </Box>
       )}
     </StyledBox>
   );
