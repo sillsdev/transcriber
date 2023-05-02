@@ -327,9 +327,16 @@ export const ProjectResourceConfigure = (props: IProps) => {
         return { start: 0, end: 0 };
       })
       .filter((r) => r.end > 0);
+    if (media?.attributes.duration) {
+      regs = regs.filter((r) => r.start <= media.attributes.duration);
+    }
     var errors = segBoundaries.length - regs.length;
     var updated = 0;
     regs.forEach((r, i) => {
+      if (media?.attributes.duration && r.end > media?.attributes.duration) {
+        r.end = media?.attributes.duration;
+        updated++;
+      }
       if (i > 0 && r.start !== regs[i - 1].end) {
         r.start = regs[i - 1].end;
         updated++;
