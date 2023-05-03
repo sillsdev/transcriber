@@ -65,7 +65,9 @@ interface IProps {
   size?: number;
   doReset?: boolean;
   setDoReset?: (r: boolean) => void;
+  showLoad?: boolean;
   preload?: boolean;
+  onLoaded?: () => void;
   autoStart?: boolean;
   trackState?: (mediaState: IMediaState) => void;
 }
@@ -99,7 +101,9 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     resetConvertBlob,
     size,
     metaData,
+    showLoad,
     preload,
+    onLoaded,
     trackState,
   } = props;
   const WARNINGLIMIT = 1;
@@ -344,12 +348,14 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
       if (b) {
         setOriginalBlob(b);
         setLoading(false);
+        onLoaded && onLoaded();
         setAudioBlob(b);
       } else {
         showMessage(urlorError);
         //force it to go get another (unexpired) s3 url
         fetchMediaUrl({ id: mediaId ?? '' });
         setLoading(false);
+        onLoaded && onLoaded();
       }
     });
     if (defaultFilename) setName(defaultFilename);
@@ -372,7 +378,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
 
   return (
     <Paper id="mediaRecord">
-      {preload === false &&
+      {showLoad &&
         mediaId &&
         mediaState.status === MediaSt.FETCHED &&
         mediaState.id === mediaId && (

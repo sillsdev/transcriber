@@ -143,6 +143,7 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
     }
     setPreload(true);
   };
+  const afterLoaded = () => setPreload(false);
 
   const saveIfChanged = (cb: () => void) => {
     if (canSave) {
@@ -189,7 +190,6 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   const handleRights = (hasRights: boolean) => setHasRight(hasRights);
   const handleReload = () => setPreload(true);
   const handleTrackRecorder = (state: IMediaState) => setRecorderState(state);
-
   return (
     <PlanProvider {...props}>
       <div>
@@ -217,7 +217,9 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
           allowRecord={hasRights}
           allowWave={true}
           showFilename={true}
+          showLoad={false}
           preload={preload}
+          onLoaded={afterLoaded}
           trackState={handleTrackRecorder}
           setCanSave={setCanSave}
           setStatusText={setStatusText}
