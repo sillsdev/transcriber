@@ -147,7 +147,7 @@ function PassageRecordDlg(props: IProps) {
           allowRecord={hasRights}
           allowWave={allowWave}
           showFilename={allowWave}
-          preload={false}
+          showLoad={true}
           setCanSave={setCanSave}
           setCanCancel={setCanCancel}
           setStatusText={setStatusText}
