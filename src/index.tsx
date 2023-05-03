@@ -35,6 +35,7 @@ import { QueryBuilder } from '@orbit/data';
 import { related } from './crud';
 import { Section, Plan } from './model';
 import { TokenProvider } from './context/TokenProvider';
+import { ErrorFallback } from './components/ErrorFallback';
 const appVersion = require('../package.json').version;
 const { auth0Domain, webClientId, apiIdentifier } = envVariables;
 const ipc = (window as any)?.electron;
@@ -118,7 +119,7 @@ const ErrorManagedApp = () => {
   }, []);
 
   return bugsnagClient && SnagBoundary ? (
-    <SnagBoundary>
+    <SnagBoundary FallbackComponent={ErrorFallback as any}>
       <ErrorBoundary errorReporter={bugsnagClient} memory={memory}>
         <App />
       </ErrorBoundary>
