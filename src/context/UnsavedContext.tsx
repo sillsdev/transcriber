@@ -122,12 +122,12 @@ const UnsavedProvider = connect(
           };
         }
       });
-      if (setit) {
-        setBusy(Object.keys(toolsChangedRef.current).length > 0);
-        setToolsChanged({ ...toolsChangedRef.current });
-        saveErr.current = '';
-        setSaveResult('');
-      }
+    }
+    if (setit) {
+      setBusy(Object.keys(toolsChangedRef.current).length > 0);
+      setToolsChanged({ ...toolsChangedRef.current });
+      saveErr.current = '';
+      setSaveResult('');
     }
   };
   const startClear = (id?: string) => {
@@ -156,12 +156,12 @@ const UnsavedProvider = connect(
           };
         }
       });
-      if (setit) {
-        setBusy(Object.keys(toolsChangedRef.current).length > 0);
-        setToolsChanged({ ...toolsChangedRef.current });
-        saveErr.current = '';
-        setSaveResult('');
-      }
+    }
+    if (setit) {
+      setBusy(Object.keys(toolsChangedRef.current).length > 0);
+      setToolsChanged({ ...toolsChangedRef.current });
+      saveErr.current = '';
+      setSaveResult('');
     }
   };
 
