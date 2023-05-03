@@ -17,7 +17,10 @@ export function logError(
   reporter: any,
   error: Error | string
 ) {
-  if (typeof reporter === 'string') {
+  const connected = localStorage.getItem('connected');
+  if (connected && connected !== 'true') {
+    logMessage(localStorage.getItem('errorLog') ?? 'errorLog', level, error);
+  } else if (typeof reporter === 'string') {
     logMessage(reporter, level, error);
   } else if (reporter) {
     if (level === Severity.error) {

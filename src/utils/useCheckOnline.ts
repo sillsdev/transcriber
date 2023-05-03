@@ -40,6 +40,7 @@ export const useCheckOnline = () => {
   ) => {
     Online(forceCheck || !offline, (result) => {
       if (connected !== result) {
+        localStorage.setItem('connected', `${result}`);
         setConnected(result);
         if (result) {
           dispatch(resetOrbitError());

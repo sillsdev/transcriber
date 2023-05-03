@@ -1,5 +1,4 @@
 import React, { PropsWithChildren, useEffect } from 'react';
-import { useGlobal } from 'reactn';
 import ReactDOM from 'react-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
 import envVariables from './auth/auth0-variables.json';
@@ -40,8 +39,8 @@ const appVersion = require('../package.json').version;
 const { auth0Domain, webClientId, apiIdentifier } = envVariables;
 const ipc = (window as any)?.electron;
 
-const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
-const prod = API_CONFIG.host.indexOf('prod') !== -1;
+const prodOrQa = API_CONFIG.snagId !== '';
+const prod = API_CONFIG.host.indexOf('app.') !== -1;
 const bugsnagClient = prodOrQa
   ? Bugsnag.start({
       apiKey: API_CONFIG.snagId,
@@ -106,11 +105,12 @@ if (isElectron) {
 }
 
 const ErrorManagedApp = () => {
-  const [electronLog, setElectronLog] = useGlobal('errorReporter');
+  const [electronLog, setElectronLog] = React.useState('errorReporter');
 
   useEffect(() => {
     if (isElectron) {
       logFile().then((fullName: string) => {
+        localStorage.setItem('errorLog', fullName);
         setElectronLog(fullName);
       });
     }
