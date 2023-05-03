@@ -100,7 +100,7 @@ const UnsavedProvider = connect(
   }, [saveResult]);
 
   const startSave = (id?: string) => {
-    setBusy(true);
+    var setit = false;
     if (id) {
       if (!toolsChangedRef.current[id]?.startSave) {
         toolsChangedRef.current[id] = {
@@ -108,11 +108,10 @@ const UnsavedProvider = connect(
           clearChanged: false,
           saveError: '',
         };
-        setToolsChanged({ ...toolsChangedRef.current });
+        setit = true;
       }
     } else {
       //start them all
-      var setit = false;
       Object.keys(toolsChangedRef.current).forEach((id) => {
         if (!toolsChangedRef.current[id].startSave) {
           setit = true;
@@ -124,6 +123,7 @@ const UnsavedProvider = connect(
         }
       });
       if (setit) {
+        setBusy(Object.keys(toolsChangedRef.current).length > 0);
         setToolsChanged({ ...toolsChangedRef.current });
         saveErr.current = '';
         setSaveResult('');
@@ -131,7 +131,7 @@ const UnsavedProvider = connect(
     }
   };
   const startClear = (id?: string) => {
-    setBusy(true);
+    var setit = false;
     if (id) {
       if (
         toolsChangedRef.current[id] &&
@@ -142,11 +142,10 @@ const UnsavedProvider = connect(
           clearChanged: true,
           saveError: '',
         };
-        setToolsChanged({ ...toolsChangedRef.current });
+        setit = true;
       }
     } else {
       //start them all
-      var setit = false;
       Object.keys(toolsChangedRef.current).forEach((id) => {
         if (!toolsChangedRef.current[id].clearChanged) {
           setit = true;
@@ -158,6 +157,7 @@ const UnsavedProvider = connect(
         }
       });
       if (setit) {
+        setBusy(Object.keys(toolsChangedRef.current).length > 0);
         setToolsChanged({ ...toolsChangedRef.current });
         saveErr.current = '';
         setSaveResult('');
