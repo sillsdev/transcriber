@@ -1,6 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { ISharedStrings, IPlanActionsStrings } from '../../model';
+import {
+  ISharedStrings,
+  IPlanActionsStrings,
+  IPlanSheetStrings,
+} from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
   Button,
@@ -20,7 +24,11 @@ import MicIcon from '@mui/icons-material/Mic';
 import { elemOffset } from '../../utils';
 import { isElectron } from '../../api-variable';
 import { AudacityLogo } from '../../control';
-import { planActionsSelector, sharedSelector } from '../../selector';
+import {
+  planActionsSelector,
+  planSheetSelector,
+  sharedSelector,
+} from '../../selector';
 
 interface IProps {
   rowIndex: number;
@@ -30,12 +38,23 @@ interface IProps {
   canAssign: boolean;
   canDelete: boolean;
   active: boolean;
+  organizedBy: string;
+  sectionSequenceNumber: string;
+  passageSequenceNumber: string;
   onPlayStatus: (mediaId: string) => void;
   onRecord: (i: number) => void;
   onUpload: (i: number) => () => void;
   onAudacity: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
+  onDisableFilter?: () => void;
+  onPassageBelow?: () => void;
+  onPassageLast?: () => void;
+  onPassageToPrev?: () => void;
+  onPassageToNext?: () => void;
+  onSectionAbove?: () => void;
+  onSectionEnd?: () => void;
+  onPassageEnd?: () => void;
 }
 export function PlanActionMenu(props: IProps) {
   const {
@@ -52,8 +71,20 @@ export function PlanActionMenu(props: IProps) {
     canAssign,
     canDelete,
     active,
+    organizedBy,
+    sectionSequenceNumber,
+    passageSequenceNumber,
+    onDisableFilter,
+    onPassageBelow,
+    onPassageLast,
+    onPassageToPrev,
+    onPassageToNext,
+    onSectionAbove,
+    onSectionEnd,
+    onPassageEnd,
   } = props;
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
+  const p: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [open, setOpen] = React.useState(false);
   const [hover, setHover] = React.useState(false);
@@ -182,6 +213,65 @@ export function PlanActionMenu(props: IProps) {
                         onClick={onAssign([rowIndex])}
                       >
                         <AssignIcon sx={{ color: 'primary.light' }} />
+                      </MenuItem>
+                    )}
+                    {onDisableFilter && (
+                      <MenuItem id="filtered" onClick={onDisableFilter}>
+                        {p.filtered}
+                      </MenuItem>
+                    )}
+                    {onSectionAbove && (
+                      <MenuItem id="secAbove" onClick={onSectionAbove}>
+                        {p.sectionAbove
+                          .replace('{0}', organizedBy)
+                          .replace('{1}', organizedBy)
+                          .replace('{2}', sectionSequenceNumber)}
+                      </MenuItem>
+                    )}
+                    {onPassageBelow && isSection && (
+                      <MenuItem id="psgAsFirst" onClick={onPassageBelow}>
+                        {p.insertFirstPassage
+                          .replace('{0}', organizedBy)
+                          .replace('{1}', sectionSequenceNumber)}
+                      </MenuItem>
+                    )}
+                    {onPassageLast && (
+                      <MenuItem id="psgAsLast" onClick={onPassageLast}>
+                        {p.insertLastPassage
+                          .replace('{0}', organizedBy)
+                          .replace('{1}', sectionSequenceNumber)}
+                      </MenuItem>
+                    )}
+                    {onPassageToPrev && (
+                      <MenuItem id="passToPrev" onClick={onPassageToPrev}>
+                        {p.passageToPrevSection.replace(
+                          '{0}',
+                          passageSequenceNumber
+                        )}
+                      </MenuItem>
+                    )}
+
+                    {onPassageBelow && isPassage && (
+                      <MenuItem id="passBelow" onClick={onPassageBelow}>
+                        {p.passageBelow.replace('{0}', passageSequenceNumber)}
+                      </MenuItem>
+                    )}
+                    {onPassageToNext && (
+                      <MenuItem id="passToNext" onClick={onPassageToNext}>
+                        {p.passageToNextSection.replace(
+                          '{0}',
+                          passageSequenceNumber
+                        )}
+                      </MenuItem>
+                    )}
+                    {onPassageEnd && (
+                      <MenuItem id="passageEnd" onClick={onPassageEnd}>
+                        {p.passageEnd}
+                      </MenuItem>
+                    )}
+                    {onSectionEnd && (
+                      <MenuItem id="secEnd" onClick={onSectionEnd}>
+                        {p.sectionEnd.replace('{0}', organizedBy)}
                       </MenuItem>
                     )}
                     {isPassage && (

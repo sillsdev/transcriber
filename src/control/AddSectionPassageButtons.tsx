@@ -20,14 +20,17 @@ interface IProps {
   };
   sectionSequenceNumber: string;
   passageSequenceNumber: string;
-  filtered: boolean;
-  disableFilter: () => void;
+  onDisableFilter?: () => void;
   isSection: (i: number) => boolean;
   isPassage: (i: number) => boolean;
   handleNoContextMenu: () => void;
-  addPassage: (i?: number, before?: boolean) => void;
-  movePassage: (i: number, before: boolean) => void;
-  addSection: (i?: number) => void;
+  onPassageBelow?: () => void;
+  onPassageLast?: () => void;
+  onPassageToPrev?: () => void;
+  onPassageToNext?: () => void;
+  onSectionAbove?: () => void;
+  onSectionEnd?: () => void;
+  onPassageEnd?: () => void;
 }
 
 export const AddSectionPassageButtons = (props: IProps) => {
@@ -39,14 +42,17 @@ export const AddSectionPassageButtons = (props: IProps) => {
     mouseposition,
     sectionSequenceNumber,
     passageSequenceNumber,
-    filtered,
-    disableFilter,
+    onDisableFilter,
     isSection,
     isPassage,
     handleNoContextMenu,
-    addPassage,
-    addSection,
-    movePassage,
+    onPassageBelow,
+    onPassageLast,
+    onPassageToPrev,
+    onPassageToNext,
+    onSectionAbove,
+    onSectionEnd,
+    onPassageEnd,
   } = props;
   const [actionMenuItem, setActionMenuItem] = React.useState<any>(undefined);
   const { getOrganizedBy } = useOrganizedBy();
@@ -63,40 +69,27 @@ export const AddSectionPassageButtons = (props: IProps) => {
   };
 
   const handleSectionAbove = () => {
-    //we'll find a section before we get past 0
-    var row = currentrow;
-    while (!isSection(row)) row -= 1;
-    addSection(row);
+    onSectionAbove && onSectionAbove();
     handleClose();
   };
 
   const handlePassageBelow = () => {
-    addPassage(currentrow, false);
+    onPassageBelow && onPassageBelow();
     handleClose();
   };
   const handlePassageLast = () => {
-    //we're on a section so find our last row and add it below it
-    var row = currentrow;
-    while (isPassage(row + 1)) row++;
-    addPassage(row, false);
+    onPassageLast && onPassageLast();
     handleClose();
   };
 
   const handlePassageToPrev = () => {
-    movePassage(currentrow, true);
+    onPassageToPrev && onPassageToPrev();
     handleClose();
   };
 
   const handlePassageToNext = () => {
-    movePassage(currentrow, false);
+    onPassageToNext && onPassageToNext();
     handleClose();
-  };
-
-  const handleSectionEnd = () => {
-    addSection();
-  };
-  const handlePassageEnd = () => {
-    addPassage();
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -156,12 +149,12 @@ export const AddSectionPassageButtons = (props: IProps) => {
         }
         onClose={handleClose}
       >
-        {filtered && (
-          <MenuItem id="filtered" onClick={disableFilter}>
+        {onDisableFilter && (
+          <MenuItem id="filtered" onClick={onDisableFilter}>
             {t.filtered}
           </MenuItem>
         )}
-        {!filtered && currentrow >= 0 && numRows > 0 && (
+        {onSectionAbove && (
           <MenuItem id="secAbove" onClick={handleSectionAbove}>
             {t.sectionAbove
               .replace('{0}', organizedBy)
@@ -169,25 +162,22 @@ export const AddSectionPassageButtons = (props: IProps) => {
               .replace('{2}', sectionSequenceNumber)}
           </MenuItem>
         )}
-        {!filtered && isContextMenu && !inlinePassages && (
+        {onPassageBelow && (
           <MenuItem id="passageAsFirst" onClick={handlePassageBelow}>
             {t.insertFirstPassage
               .replace('{0}', organizedBy)
               .replace('{1}', sectionSequenceNumber)}
           </MenuItem>
         )}
-        {!filtered &&
-          isContextMenu &&
-          !inlinePassages &&
-          isPassage(currentrow + 1) && (
-            <MenuItem id="passageAsLast" onClick={handlePassageLast}>
-              {t.insertLastPassage
-                .replace('{0}', organizedBy)
-                .replace('{1}', sectionSequenceNumber)}
-            </MenuItem>
-          )}
-        {!filtered && !isContextMenu && (
-          <MenuItem id="secEnd" onClick={handleSectionEnd}>
+        {onPassageLast && (
+          <MenuItem id="passageAsLast" onClick={handlePassageLast}>
+            {t.insertLastPassage
+              .replace('{0}', organizedBy)
+              .replace('{1}', sectionSequenceNumber)}
+          </MenuItem>
+        )}
+        {onSectionEnd && (
+          <MenuItem id="secEnd" onClick={onSectionEnd}>
             {t.sectionEnd.replace('{0}', organizedBy)}
           </MenuItem>
         )}
@@ -212,46 +202,43 @@ export const AddSectionPassageButtons = (props: IProps) => {
             : undefined
         }
       >
-        {filtered && (
-          <MenuItem id="filtered" onClick={disableFilter}>
+        {onDisableFilter && (
+          <MenuItem id="filtered" onClick={onDisableFilter}>
             {t.filtered}
           </MenuItem>
         )}
-        {!filtered && currentisSection && (
+        {onPassageBelow && currentisSection && (
           <MenuItem id="psgAsFirst" onClick={handlePassageBelow}>
             {t.insertFirstPassage
               .replace('{0}', organizedBy)
               .replace('{1}', sectionSequenceNumber)}
           </MenuItem>
         )}
-        {!filtered && currentisSection && isPassage(currentrow + 1) && (
+        {onPassageLast && (
           <MenuItem id="psgAsLast" onClick={handlePassageLast}>
             {t.insertLastPassage
               .replace('{0}', organizedBy)
               .replace('{1}', sectionSequenceNumber)}
           </MenuItem>
         )}
-        {!filtered &&
-          currentrow >= 2 &&
-          currentisPassage &&
-          isSection(currentrow - 1) && (
-            <MenuItem id="passToPrev" onClick={handlePassageToPrev}>
-              {t.passageToPrevSection.replace('{0}', passageSequenceNumber)}
-            </MenuItem>
-          )}
+        {onPassageToPrev && (
+          <MenuItem id="passToPrev" onClick={handlePassageToPrev}>
+            {t.passageToPrevSection.replace('{0}', passageSequenceNumber)}
+          </MenuItem>
+        )}
 
-        {!filtered && currentisPassage && (
+        {onPassageBelow && currentisPassage && (
           <MenuItem id="passBelow" onClick={handlePassageBelow}>
             {t.passageBelow.replace('{0}', passageSequenceNumber)}
           </MenuItem>
         )}
-        {!filtered && currentisPassage && isSection(currentrow + 1) && (
+        {onPassageToNext && (
           <MenuItem id="passToNext" onClick={handlePassageToNext}>
             {t.passageToNextSection.replace('{0}', passageSequenceNumber)}
           </MenuItem>
         )}
-        {!filtered && !isContextMenu && currentrow !== numRows - 1 && (
-          <MenuItem id="passageEnd" onClick={handlePassageEnd}>
+        {onPassageEnd && (
+          <MenuItem id="passageEnd" onClick={onPassageEnd}>
             {t.passageEnd}
           </MenuItem>
         )}
