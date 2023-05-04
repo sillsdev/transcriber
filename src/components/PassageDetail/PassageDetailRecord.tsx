@@ -74,7 +74,7 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [audacityVisible, setAudacityVisible] = useState(false);
   const [versionVisible, setVersionVisible] = useState(false);
-  const [preload, setPreload] = useState<boolean>();
+  const [preload, setPreload] = useState(0);
   const [recorderState, setRecorderState] = useState<IMediaState>();
   const [hasExistingVersion, setHasExistingVersion] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
@@ -141,9 +141,8 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
       setUploadVisible(false);
       setAudacityVisible(false);
     }
-    setPreload(true);
+    setPreload(preload + 1);
   };
-  const afterLoaded = () => setPreload(false);
 
   const saveIfChanged = (cb: () => void) => {
     if (canSave) {
@@ -188,7 +187,7 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   };
   const handleNameChange = (name: string) => setSpeaker(name);
   const handleRights = (hasRights: boolean) => setHasRight(hasRights);
-  const handleReload = () => setPreload(true);
+  const handleReload = () => setPreload(preload + 1);
   const handleTrackRecorder = (state: IMediaState) => setRecorderState(state);
   return (
     <PlanProvider {...props}>
@@ -219,7 +218,6 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
           showFilename={true}
           showLoad={false}
           preload={preload}
-          onLoaded={afterLoaded}
           trackState={handleTrackRecorder}
           setCanSave={setCanSave}
           setStatusText={setStatusText}

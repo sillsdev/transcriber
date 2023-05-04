@@ -66,7 +66,7 @@ interface IProps {
   doReset?: boolean;
   setDoReset?: (r: boolean) => void;
   showLoad?: boolean;
-  preload?: boolean;
+  preload?: number;
   onLoaded?: () => void;
   autoStart?: boolean;
   trackState?: (mediaState: IMediaState) => void;
@@ -368,7 +368,7 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
   };
 
   useEffect(() => {
-    if (preload && !loading) {
+    if ((preload ?? 0) > 0 && !loading) {
       handleLoadAudio();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
