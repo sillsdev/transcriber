@@ -31,14 +31,14 @@ export const useCheckOnline = () => {
   const [connected, setConnected] = useGlobal('connected');
   const [orbitRetries, setOrbitRetries] = useGlobal('orbitRetries');
   const [coordinator] = useGlobal('coordinator');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline');
   const remote = coordinator.getSource('remote') as JSONAPISource;
 
   const checkOnline = (
     cb: (result: boolean) => void,
     forceCheck: boolean = false
   ) => {
-    Online(forceCheck || !offlineOnly, (result) => {
+    Online(forceCheck || !offline, (result) => {
       if (connected !== result) {
         setConnected(result);
         if (result) {
