@@ -115,7 +115,7 @@ const PlanProvider = withData(mapRecordsToProps)(
     //do this every 30 seconds to warn they can't save
     useInterval(
       () => checkOnline((result: boolean) => {}),
-      offlineOnly ? null : 1000 * 30
+      isOffline ? null : 1000 * 30
     );
 
     return (
