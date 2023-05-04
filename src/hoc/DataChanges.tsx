@@ -337,7 +337,7 @@ export const doDataChanges = async (
       const p = projectsLoaded[ix];
       const op = getOfflineProject(p);
       if (
-        remoteId('project', p, memory.keyMap) &&
+        Number.isInteger(remoteId('project', p, memory.keyMap)) &&
         op.attributes?.snapshotDate &&
         Date.parse(op.attributes.snapshotDate) < Date.parse(lastTime)
       ) {
