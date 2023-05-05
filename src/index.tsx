@@ -1,5 +1,4 @@
 import React, { PropsWithChildren, useEffect } from 'react';
-import { useGlobal } from 'reactn';
 import ReactDOM from 'react-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
 import envVariables from './auth/auth0-variables.json';
@@ -36,14 +35,16 @@ import { QueryBuilder } from '@orbit/data';
 import { related } from './crud';
 import { Section, Plan } from './model';
 import { TokenProvider } from './context/TokenProvider';
+import { ErrorFallback } from './components/ErrorFallback';
 const appVersion = require('../package.json').version;
 const { auth0Domain, webClientId, apiIdentifier } = envVariables;
 const ipc = (window as any)?.electron;
 
-const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
-const prod = API_CONFIG.host.indexOf('prod') !== -1;
+const prodOrQa = API_CONFIG.snagId !== '';
+const prod = API_CONFIG.host.indexOf('app.') !== -1;
 const bugsnagClient = prodOrQa
   ? Bugsnag.start({
+      hostname: API_CONFIG.endpoint,
       apiKey: API_CONFIG.snagId,
       plugins: [new BugsnagReact()],
       appVersion,
@@ -106,11 +107,12 @@ if (isElectron) {
 }
 
 const ErrorManagedApp = () => {
-  const [electronLog, setElectronLog] = useGlobal('errorReporter');
+  const [electronLog, setElectronLog] = React.useState('errorReporter');
 
   useEffect(() => {
     if (isElectron) {
       logFile().then((fullName: string) => {
+        localStorage.setItem(LocalKey.errorLog, fullName);
         setElectronLog(fullName);
       });
     }
@@ -118,7 +120,7 @@ const ErrorManagedApp = () => {
   }, []);
 
   return bugsnagClient && SnagBoundary ? (
-    <SnagBoundary>
+    <SnagBoundary FallbackComponent={ErrorFallback as any}>
       <ErrorBoundary errorReporter={bugsnagClient} memory={memory}>
         <App />
       </ErrorBoundary>
@@ -175,7 +177,7 @@ const Root = () => (
 
 // localStorage home used by dataPath to avoid Promise
 ipc?.home().then((folder: string) => {
-  localStorage.setItem('home', folder);
+  localStorage.setItem(LocalKey.home, folder);
 });
 
 const promises = [];
@@ -209,7 +211,7 @@ Promise.all(promises)
       importexportBusy: false,
       autoOpenAddMedia: false,
       editUserId: null,
-      developer: localStorage.getItem('developer'),
+      developer: localStorage.getItem(LocalKey.developer),
       offline: isElectron,
       errorReporter: bugsnagClient,
       alertOpen: false,

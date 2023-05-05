@@ -5,6 +5,7 @@ import JSONAPISource from '@orbit/jsonapi';
 import { OrbitNetworkErrorRetries } from '../api-variable';
 import { API_CONFIG } from '../api-variable';
 import { useDispatch } from 'react-redux';
+import { LocalKey } from '../utils';
 
 function Online(doCheck: boolean, cb: (result: boolean) => void) {
   const opts = {
@@ -40,6 +41,7 @@ export const useCheckOnline = () => {
   ) => {
     Online(forceCheck || !offline, (result) => {
       if (connected !== result) {
+        localStorage.setItem(LocalKey.connected, `${result && !offline}`);
         setConnected(result);
         if (result) {
           dispatch(resetOrbitError());

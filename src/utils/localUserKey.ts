@@ -8,6 +8,24 @@ export enum LocalKey {
   passage = 'passage',
   compare = 'compare',
   personalOrgs = 'persOrgs',
+  /* Documentation for localStorage keys */
+  home = 'home', // set to home folder for dataPath (to avoid async)
+  connected = 'connected', // true if we're connected (used for error reporting)
+  errorLog = 'errorLog', // current error log file name
+  authId = 'auth-id', // current auth identity
+  inviteId = 'inviteId', // id of invitation
+  inviteError = 'inviteError', // save error we had while accepting invite
+  userId = 'user-id', // guid for current user
+  onlineUserId = 'online-user-id', // user id last time we went online"
+  goingOnline = 'goingOnline', // reloading and going online
+  loggedIn = 'isLoggedIn', // true if logged in
+  offlineAdmin = 'offlineAdmin', // allow admin functions because offline only
+  developer = 'developer', // enable developer features
+  updates = 'updates', // set to false to turn of update checking
+  template = 'template', // track latest file template for bulk uploads
+  autoaddProject = 'autoaddProject',
+  staticTables = 'static-tables', // last static table version
+  lastProj = 'lastProj', // most recent project used
 }
 
 export const localUserKey = (id: LocalKey) => {
@@ -21,8 +39,8 @@ export const localUserKey = (id: LocalKey) => {
   }
   if (!userId)
     userId =
-      localStorage.getItem('user-id') ||
-      localStorage.getItem('online-user-id') ||
+      localStorage.getItem(LocalKey.userId) ||
+      localStorage.getItem(LocalKey.onlineUserId) ||
       '';
   return `${userId}-${id}`;
 };
