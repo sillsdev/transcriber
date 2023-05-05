@@ -1,7 +1,7 @@
 import moment from 'moment';
 import { join } from 'path-browserify';
 import { Stats } from 'fs-extra';
-import { createFolder } from '.';
+import { LocalKey, createFolder } from '.';
 import Bugsnag from '@bugsnag/js';
 import { AxiosError } from 'axios';
 const ipc = (window as any)?.electron;
@@ -17,9 +17,13 @@ export function logError(
   reporter: any,
   error: Error | string
 ) {
-  const connected = localStorage.getItem('connected');
+  const connected = localStorage.getItem(LocalKey.connected);
   if (connected && connected !== 'true') {
-    logMessage(localStorage.getItem('errorLog') ?? 'errorLog', level, error);
+    logMessage(
+      localStorage.getItem(LocalKey.errorLog) ?? LocalKey.errorLog,
+      level,
+      error
+    );
   } else if (typeof reporter === 'string') {
     logMessage(reporter, level, error);
   } else if (reporter) {
