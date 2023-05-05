@@ -392,15 +392,18 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
           </Grid>
         )}
 
-        {tool === ToolSlug.Export && (
+        {(tool === ToolSlug.Export || tool === ToolSlug.Done) && (
           <Grid container>
             <Grid item xs={12}>
-              <TranscriptionTab
-                projectPlans={plans}
-                floatTop
-                step={currentstep}
-                orgSteps={orgWorkflowSteps}
-              />
+              <PassageDetailChooser width={width - 16} />
+              {tool === ToolSlug.Export && (
+                <TranscriptionTab
+                  projectPlans={plans}
+                  floatTop
+                  step={currentstep}
+                  orgSteps={orgWorkflowSteps}
+                />
+              )}
             </Grid>
           </Grid>
         )}
@@ -438,7 +441,7 @@ export const PassageDetail = () => {
   if (view !== '' && view !== pathname) return <StickyRedirect to={view} />;
 
   return (
-    <Box sx={{ flexGrow: 1, minWidth: `${minWidth}px`, minHeight: '700px' }}>
+    <Box sx={{ flexGrow: 1, minWidth: `${minWidth}px`, minHeight: '536px' }}>
       <AppHead switchTo={true} />
       <PassageDetailProvider>
         <PassageDetailGrids minWidth={minWidth} onMinWidth={handleMinWidth} />
