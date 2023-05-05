@@ -9,6 +9,7 @@ export enum LocalKey {
   compare = 'compare',
   personalOrgs = 'persOrgs',
   /* Documentation for localStorage keys */
+  home = 'home', // set to home folder for dataPath (to avoid async)
   connected = 'connected', // true if we're connected (used for error reporting)
   errorLog = 'errorLog', // current error log file name
   authId = 'auth-id', // current auth identity
@@ -38,8 +39,8 @@ export const localUserKey = (id: LocalKey) => {
   }
   if (!userId)
     userId =
-      localStorage.getItem('user-id') ||
-      localStorage.getItem('online-user-id') ||
+      localStorage.getItem(LocalKey.userId) ||
+      localStorage.getItem(LocalKey.onlineUserId) ||
       '';
   return `${userId}-${id}`;
 };

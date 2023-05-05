@@ -112,7 +112,7 @@ const ErrorManagedApp = () => {
   useEffect(() => {
     if (isElectron) {
       logFile().then((fullName: string) => {
-        localStorage.setItem('errorLog', fullName);
+        localStorage.setItem(LocalKey.errorLog, fullName);
         setElectronLog(fullName);
       });
     }
@@ -177,7 +177,7 @@ const Root = () => (
 
 // localStorage home used by dataPath to avoid Promise
 ipc?.home().then((folder: string) => {
-  localStorage.setItem('home', folder);
+  localStorage.setItem(LocalKey.home, folder);
 });
 
 const promises = [];
@@ -211,7 +211,7 @@ Promise.all(promises)
       importexportBusy: false,
       autoOpenAddMedia: false,
       editUserId: null,
-      developer: localStorage.getItem('developer'),
+      developer: localStorage.getItem(LocalKey.developer),
       offline: isElectron,
       errorReporter: bugsnagClient,
       alertOpen: false,
