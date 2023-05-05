@@ -44,6 +44,7 @@ const prodOrQa = API_CONFIG.snagId !== '';
 const prod = API_CONFIG.host.indexOf('app.') !== -1;
 const bugsnagClient = prodOrQa
   ? Bugsnag.start({
+      hostname: API_CONFIG.endpoint,
       apiKey: API_CONFIG.snagId,
       plugins: [new BugsnagReact()],
       appVersion,
