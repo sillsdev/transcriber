@@ -529,6 +529,48 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="cards.copyComplete">
+			<segment>
+				<source>Copy Complete {0}</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="cards.copyNew">
+			<segment>
+				<source>Copy project to new team.</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="cards.copySame">
+			<segment>
+				<source>Copy project to same team.</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="cards.copyStatus">
+			<segment>
+				<source>Copy to {0}</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="cards.creatorAdd">
+			<segment>
+				<source>Add Shared Content Creator</source>
+				<target>Tambahkan Pembuat Konten Bersama</target>
+			</segment>
+		</unit>
+		<unit id="cards.creatorEmail">
+			<segment>
+				<source>Email</source>
+				<target>Email</target>
+			</segment>
+		</unit>
+		<unit id="cards.creatorOK">
+			<segment>
+				<source>User has been given Creator permission.</source>
+				<target>Pengguna telah diberi izin Pencipta.</target>
+			</segment>
+		</unit>
 		<unit id="cards.delete">
 			<segment>
 				<source>Delete</source>
@@ -603,8 +645,26 @@
 		</unit>
 		<unit id="cards.OBT">
 			<segment>
-				<source>Oral Bible Translation</source>
-				<target/>
+				<source>Oral Bible Translation (complete)</source>
+				<target>Terjemahan Alkitab Lisan (lengkap)</target>
+			</segment>
+		</unit>
+		<unit id="cards.OBTs">
+			<segment>
+				<source>Oral Bible Translation (Simple)</source>
+				<target>Terjemahan Alkitab Lisan (Sederhana)</target>
+			</segment>
+		</unit>
+		<unit id="cards.OBTr">
+			<segment>
+				<source>Oral Bible Translation (like Render)</source>
+				<target>Terjemahan Alkitab Lisan (seperti Render)</target>
+			</segment>
+		</unit>
+		<unit id="cards.OBTo">
+			<segment>
+				<source>Oral Bible Translation (oral only)</source>
+				<target>Terjemahan Alkitab Lisan (hanya lisan)</target>
 			</segment>
 		</unit>
 		<unit id="cards.offline">
@@ -733,6 +793,12 @@
 				<target>Tidak disetujui</target>
 			</segment>
 		</unit>
+		<unit id="commentEditor.comment">
+			<segment>
+				<source>Comment</source>
+				<target>Komentar</target>
+			</segment>
+		</unit>
 		<unit id="commentEditor.record">
 			<segment>
 				<source>Record Comment</source>
@@ -853,6 +919,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="control.book">
+			<segment>
+				<source>Book</source>
+				<target>Buku</target>
+			</segment>
+		</unit>
 		<unit id="control.other">
 			<segment>
 				<source>General</source>
@@ -955,6 +1027,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="discussionCard.move">
+			<segment>
+				<source>Select step for discussion</source>
+				<target>Pilih langkah untuk diskusi</target>
+			</segment>
+		</unit>
 		<unit id="discussionCard.or">
 			<segment>
 				<source>or</source>
@@ -1037,6 +1115,12 @@
 			<segment>
 				<source>Edit</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="discussionMenu.move">
+			<segment>
+				<source>Move</source>
+				<target>Pindah</target>
 			</segment>
 		</unit>
 		<unit id="discussionMenu.reopen">
@@ -2072,12 +2156,12 @@
 			</segment>
 		</unit>
 		<unit id="keyTerms.cancel">
-         <segment>
-            <source>Cancel Translation</source>
-            <target>Batalkan Terjemahan</target>
-         </segment>
-      </unit>
-      <unit id="keyTerms.category">
+			<segment>
+				<source>Cancel Translation</source>
+				<target>Batalkan Terjemahan</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.category">
 			<segment>
 				<source>Category</source>
 				<target/>
@@ -2180,54 +2264,54 @@
 			</segment>
 		</unit>
 		<unit id="keyTerms.play">
-         <segment>
-            <source>Play Translation</source>
-            <target>Putar Terjemahan</target>
-         </segment>
-      </unit>
-      <unit id="keyTerms.realia">
+			<segment>
+				<source>Play Translation</source>
+				<target>Putar Terjemahan</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.realia">
 			<segment>
 				<source>Realia</source>
 				<target>Realia</target>
 			</segment>
 		</unit>
 		<unit id="keyTerms.record">
-         <segment>
-            <source>Record Translation</source>
-            <target>Rekam Terjemahan</target>
-         </segment>
-      </unit>
-      <unit id="keyTerms.recording">
-         <segment>
-            <source>Recording in progress.</source>
-            <target>Perekaman sedang berlangsung.</target>
-         </segment>
-      </unit>
-      <unit id="keyTerms.ritual">
+			<segment>
+				<source>Record Translation</source>
+				<target>Rekam Terjemahan</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.recording">
+			<segment>
+				<source>Recording in progress.</source>
+				<target>Perekaman sedang berlangsung.</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.ritual">
 			<segment>
 				<source>Ritual</source>
 				<target/>
 			</segment>
 		</unit>
 		<unit id="keyTerms.save">
-         <segment>
-            <source>Save Translation</source>
-            <target>Simpan Terjemahan</target>
-         </segment>
-      </unit>
-      <unit id="keyTerms.saving">
+			<segment>
+				<source>Save Translation</source>
+				<target>Simpan Terjemahan</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.saving">
 			<segment>
 				<source>Saving...</source>
 				<target/>
 			</segment>
 		</unit>
 		<unit id="keyTerms.settingLanguage">
-         <segment>
-            <source>Set Langauge</source>
-            <target>Tetapkan Bahasa</target>
-         </segment>
-      </unit>
-      <unit id="keyTerms.sortShow">
+			<segment>
+				<source>Set Langauge</source>
+				<target>Tetapkan Bahasa</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.sortShow">
 			<segment>
 				<source>Sort and Show</source>
 				<target/>
@@ -2953,12 +3037,12 @@
 				<target/>
 			</segment>
 		</unit>
-      <unit id="mediaTab.toobig">
-         <segment>
-            <source>File {0} is too large {1}. File Limit is {2}MB</source>
-            <target>Berkas {0} terlalu besar {1}. Batas Berkas adalah {2}MB</target>
-         </segment>
-      </unit>
+		<unit id="mediaTab.toobig">
+			<segment>
+				<source>File {0} is too large {1}. File Limit is {2}MB</source>
+				<target>Berkas {0} terlalu besar {1}. Batas Berkas adalah {2}MB</target>
+			</segment>
+		</unit>
 		<unit id="mediaTab.unsupported">
 			<segment>
 				<source>File {0} is an unsupported file type.</source>
@@ -3079,13 +3163,13 @@
 				<target/>
 			</segment>
 		</unit>
-        <unit id="mediaUpload.toobig">
-            <segment>
-                <source>Too large: {0}. File Limit is {1}MB</source>
-                <target>Terlalu besar: {0}. Batas Berkas adalah {1}MB</target>
-            </segment>
-        </unit>
-        <unit id="mediaUpload.upload">
+		<unit id="mediaUpload.toobig">
+			<segment>
+				<source>Too large: {0}. File Limit is {1}MB</source>
+				<target>Terlalu besar: {0}. Batas Berkas adalah {1}MB</target>
+			</segment>
+		</unit>
+		<unit id="mediaUpload.upload">
 			<segment>
 				<source>Upload</source>
 				<target/>
@@ -3193,6 +3277,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.accept">
+			<segment>
+				<source>Accept</source>
+				<target>Menerima</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.action">
 			<segment>
 				<source>Action</source>
@@ -3211,10 +3301,22 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.allLevel">
+			<segment>
+				<source>All Resources</source>
+				<target>Semua Sumber Daya</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.allResources">
 			<segment>
 				<source>Show resources for all passages</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.bookLevel">
+			<segment>
+				<source>Resources for the Book</source>
+				<target>Sumber Daya untuk Buku</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.canceling">
@@ -3227,6 +3329,18 @@
 			<segment>
 				<source>Category</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.chapterLevel">
+			<segment>
+				<source>Resources for the Chapter</source>
+				<target>Sumber Daya untuk Bab</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.chooseLevel">
+			<segment>
+				<source>Resource Reference Filter Level</source>
+				<target>Tingkat Filter Referensi Sumber Daya</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.clipboard">
@@ -3283,10 +3397,28 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.keywords">
+			<segment>
+				<source>Keywords</source>
+				<target>Kata kunci</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.language">
+			<segment>
+				<source>Language</source>
+				<target>Bahasa</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.link">
 			<segment>
 				<source>Link</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.no">
+			<segment>
+				<source>No</source>
+				<target>Tidak</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.passageResource">
@@ -3349,16 +3481,46 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.selectBook">
+			<segment>
+				<source>Select Book</source>
+				<target>Pilih Buku</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.sharedResource">
 			<segment>
-				<source>Link Shared Resource</source>
-				<target/>
+				<source>Link Shared {0} Resource</source>
+				<target>Tautan Dibagikan {0} Sumber Daya</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.source">
+			<segment>
+				<source>Source</source>
+				<target>Sumber</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.startStop">
 			<segment>
 				<source>Start - Stop</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.termsOfUse">
+			<segment>
+				<source>Terms of Use</source>
+				<target>Ketentuan Penggunaan</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.termsReview">
+			<segment>
+				<source>Review the Terms of Use</source>
+				<target>Tinjau Ketentuan Penggunaan</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.title">
+			<segment>
+				<source>Title</source>
+				<target>Judul</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.type">
@@ -3403,10 +3565,22 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.verseLevel">
+			<segment>
+				<source>Resources for verses in this passage</source>
+				<target>Sumber-sumber untuk ayat-ayat dalam bagian ini</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.version">
 			<segment>
 				<source>Version</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.yes">
+			<segment>
+				<source>Yes</source>
+				<target>Ya</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailStepComplete.incomplete">
@@ -3499,18 +3673,18 @@
 				<target/>
 			</segment>
 		</unit>
-      <unit id="passageRecord.toobig">
-         <segment>
-            <source>File is too large. File Limit is {1}MB</source>
-            <target>File terlalu besar. Batas Berkas adalah {1}MB</target>
-         </segment>
-      </unit>
-      <unit id="passageRecord.toobigwarn">
-         <segment>
-            <source>File is near size limit {1}MB</source>
-            <target>File mendekati batas ukuran {1}MB</target>
-         </segment>
-      </unit>
+		<unit id="passageRecord.toobig">
+			<segment>
+				<source>File is too large. File Limit is {1}MB</source>
+				<target>File terlalu besar. Batas Berkas adalah {1}MB</target>
+			</segment>
+		</unit>
+		<unit id="passageRecord.toobigwarn">
+			<segment>
+				<source>File is near size limit {1}MB</source>
+				<target>File mendekati batas ukuran {1}MB</target>
+			</segment>
+		</unit>
 		<unit id="passageRecord.uncompressed">
 			<segment>
 				<source>Uncompressed</source>
@@ -3671,6 +3845,12 @@
 			<segment>
 				<source>Record/Edit Audio</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="planActions.resourceEdit">
+			<segment>
+				<source>Resource Edit</source>
+				<target>Sunting Sumber Daya</target>
 			</segment>
 		</unit>
 		<unit id="planActions.resources">
@@ -4081,6 +4261,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="profile.sharedContentCreator">
+			<segment>
+				<source>Allow user to create shared content projects.</source>
+				<target>Memungkinkan pengguna untuk membuat proyek konten bersama.</target>
+			</segment>
+		</unit>
 		<unit id="profile.timezone">
 			<segment>
 				<source>Time zone</source>
@@ -4163,6 +4349,114 @@
 			<segment>
 				<source>Download {0}MB of offline audio project files?</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="resource.action">
+			<segment>
+				<source>Action</source>
+				<target>Tindakan</target>
+			</segment>
+		</unit>
+		<unit id="resource.add">
+			<segment>
+				<source>Add</source>
+				<target>Menambahkan</target>
+			</segment>
+		</unit>
+		<unit id="resource.book">
+			<segment>
+				<source>Book</source>
+				<target>Buku</target>
+			</segment>
+		</unit>
+		<unit id="resource.bookSelect">
+			<segment>
+				<source>Select Book</source>
+				<target>Pilih Buku</target>
+			</segment>
+		</unit>
+		<unit id="resource.byWord">
+			<segment>
+				<source>By Word</source>
+				<target>Dengan Word</target>
+			</segment>
+		</unit>
+		<unit id="resource.delete">
+			<segment>
+				<source>Delete</source>
+				<target>Menghapus</target>
+			</segment>
+		</unit>
+		<unit id="resource.deleteConfirm">
+			<segment>
+				<source>Delete {0}</source>
+				<target>Menghapus {0}</target>
+			</segment>
+		</unit>
+		<unit id="resource.description">
+			<segment>
+				<source>Description</source>
+				<target>Deskripsi</target>
+			</segment>
+		</unit>
+		<unit id="resource.errorData">
+			<segment>
+				<source>Do you want to save and discard data with errors?</source>
+				<target>Apakah Anda ingin menyimpan dan membuang data yang mengalami kesalahan?</target>
+			</segment>
+		</unit>
+		<unit id="resource.keywords">
+			<segment>
+				<source>Keywords</source>
+				<target>Kata kunci</target>
+			</segment>
+		</unit>
+		<unit id="resource.overview">
+			<segment>
+				<source>Overview</source>
+				<target>Ikhtisar</target>
+			</segment>
+		</unit>
+		<unit id="resource.references">
+			<segment>
+				<source>References</source>
+				<target>Referensi</target>
+			</segment>
+		</unit>
+		<unit id="resource.resourceEdit">
+			<segment>
+				<source>Resource Edit</source>
+				<target>Sunting Sumber Daya</target>
+			</segment>
+		</unit>
+		<unit id="resource.rowsSaved">
+			<segment>
+				<source>{0} rows saved.</source>
+				<target>Baris {0} disimpan.</target>
+			</segment>
+		</unit>
+		<unit id="resource.saving">
+			<segment>
+				<source>Saving...</source>
+				<target>Menyimpan</target>
+			</segment>
+		</unit>
+		<unit id="resource.terms">
+			<segment>
+				<source>Terms of use</source>
+				<target>Ketentuan penggunaan</target>
+			</segment>
+		</unit>
+		<unit id="resource.title">
+			<segment>
+				<source>Title</source>
+				<target>Judul</target>
+			</segment>
+		</unit>
+		<unit id="resource.versions">
+			<segment>
+				<source>Versions</source>
+				<target>Versi</target>
 			</segment>
 		</unit>
 		<unit id="scriptureTable.book">
@@ -4429,13 +4723,7 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="shared.bookNotFound">
-			<segment>
-				<source>Paratext project does not contain book.</source>
-				<target></target>
-			</segment>
-		</unit>
-        <unit id="shared.BookNotSet">
+		<unit id="shared.BookNotSet">
 			<segment>
 				<source>Book was not set for Section {0} Passage {1}</source>
 				<target/>
@@ -4597,6 +4885,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="shared.bookNotFound">
+			<segment>
+				<source>Paratext project does not contain book.</source>
+				<target>Proyek parateks tidak berisi buku.</target>
+			</segment>
+		</unit>
 		<unit id="shared.referenceNotFound">
 			<segment>
 				<source>Reference does not exist in Paratext chapter, or reference is within a larger verse range.</source>
@@ -4613,6 +4907,12 @@
 			<segment>
 				<source>Save</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="shared.saving">
+			<segment>
+				<source>Saving...</source>
+				<target>Menyimpan...</target>
 			</segment>
 		</unit>
 		<unit id="shared.select">
@@ -4873,6 +5173,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="template.autoMatchTemplate">
+			<segment>
+				<source>Auto Match Template</source>
+				<target>Templat Pencocokan Otomatis</target>
+			</segment>
+		</unit>
 		<unit id="template.beginning">
 			<segment>
 				<source>Starting verse number</source>
@@ -4881,7 +5187,13 @@
 		</unit>
 		<unit id="template.book">
 			<segment>
-				<source>Paratext book identifier</source>
+				<source>Paratext book identifier (Length 3 uppercase)</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="template.bookname">
+			<segment>
+				<source>Book name</source>
 				<target/>
 			</segment>
 		</unit>
@@ -4913,6 +5225,12 @@
 			<segment>
 				<source>Passage number(within {0})</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="template.renderExportTemplate">
+			<segment>
+				<source>The {SECT} template works for files exported from Render.</source>
+				<target>Templat {SECT} berfungsi untuk file yang diekspor dari Render.</target>
 			</segment>
 		</unit>
 		<unit id="template.templateCodes">
@@ -5289,7 +5607,7 @@
 		</unit>
 		<unit id="transcriber.updateByOther2">
 			<segment>
-				<source>Transcription updated by {0}.  Keep their changes? {1}</source>
+				<source>Transcription updated by {0}. Keep their changes? {1}</source>
 				<target>Transkripsi diperbarui oleh {0}. Menyimpan perubahan mereka? {1}</target>
 			</segment>
 		</unit>
@@ -5523,7 +5841,7 @@
 		</unit>
 		<unit id="transcriptionTab.offlineData">
 			<segment>
-				<source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
+				<source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
 				<target>Anda memiliki perubahan baru secara lokal yang tidak disertakan dalam ekspor ptf. Silakan juga ekspor file itf untuk menangkap semua perubahan.</target>
 			</segment>
 		</unit>
@@ -5827,13 +6145,13 @@
 				<target/>
 			</segment>
 		</unit>
-        <unit id="vProject.howToPublic">
-            <segment>
-                <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
-                <target>Hubungi Nathan Payne (nathan_payne@sil.org) untuk akses membuat konten bersama.</target>
-            </segment>
-        </unit>
-      		<unit id="vProject.language">
+		<unit id="vProject.howToPublic">
+			<segment>
+				<source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
+				<target>Hubungi Nathan Payne (nathan_payne@sil.org) untuk akses membuat konten bersama.</target>
+			</segment>
+		</unit>
+		<unit id="vProject.language">
 			<segment>
 				<source>Language</source>
 				<target/>
@@ -6109,6 +6427,18 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="workflowSteps.consultantCheck1">
+			<segment>
+				<source>First Consultant Check</source>
+				<target>Pemeriksaan Konsultan Pertama</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.consultantCheck2">
+			<segment>
+				<source>Second Consultant Check</source>
+				<target>Pemeriksaan Konsultan Kedua</target>
+			</segment>
+		</unit>
 		<unit id="workflowSteps.done">
 			<segment>
 				<source>Done</source>
@@ -6123,14 +6453,20 @@
 		</unit>
 		<unit id="workflowSteps.finalRecording">
 			<segment>
-				<source>Final Record</source>
-				<target/>
+				<source>Studio Record</source>
+				<target>Rekaman Studio</target>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.finalReview">
 			<segment>
-				<source>Final Review</source>
-				<target/>
+				<source>Final Audio Review</source>
+				<target>Tinjauan Audio Akhir</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.finalReviewText">
+			<segment>
+				<source>Final Text Review</source>
+				<target>Tinjauan Teks Akhir</target>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.internalize">
@@ -6181,6 +6517,18 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="workflowSteps.retellBackTranslation">
+			<segment>
+				<source>Retell Back Translation</source>
+				<target>Ceritakan Kembali Terjemahan</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.retellBTTranscribe">
+			<segment>
+				<source>Retell BT Transcribe</source>
+				<target>Ceritakan Kembali Transkrip BT</target>
+			</segment>
+		</unit>
 		<unit id="workflowSteps.saveFirst">
 			<segment>
 				<source>Save before changing step?</source>
@@ -6189,8 +6537,20 @@
 		</unit>
 		<unit id="workflowSteps.teamCheck">
 			<segment>
-				<source>Team Check</source>
-				<target/>
+				<source>Compare</source>
+				<target>Bandingkan</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.termIdentify">
+			<segment>
+				<source>Term Verify</source>
+				<target>Verifikasi Istilah</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.teamReview">
+			<segment>
+				<source>Term Review</source>
+				<target>Tinjauan Istilah</target>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.transcribe">
@@ -6205,7 +6565,7 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.wholeBackTranslation">
+		<unit id="workflowSteps.wholeBackTranslate">
 			<segment>
 				<source>Whole Back Translate</source>
 				<target>Terjemahan Seluruh Kembali</target>
@@ -6361,7 +6721,7 @@
 				<target/>
 			</segment>
 		</unit>
-        <unit id="wsAudioPlayer.stopTip">
+		<unit id="wsAudioPlayer.stopTip">
 			<segment>
 				<source>Stop [{0}]</source>
 				<target>Hentikan [{0}]</target>

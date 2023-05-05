@@ -529,6 +529,48 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="cards.copyComplete">
+			<segment>
+				<source>Copy Complete {0}</source>
+				<target>Копирование завершено {0}</target>
+			</segment>
+		</unit>
+		<unit id="cards.copyNew">
+			<segment>
+				<source>Copy project to new team.</source>
+				<target>Копирование проекта в новую команду.</target>
+			</segment>
+		</unit>
+		<unit id="cards.copySame">
+			<segment>
+				<source>Copy project to same team.</source>
+				<target>Скопировать проект в ту же команду.</target>
+			</segment>
+		</unit>
+		<unit id="cards.copyStatus">
+			<segment>
+				<source>Copy to {0}</source>
+				<target>Скопировать в {0}</target>
+			</segment>
+		</unit>
+		<unit id="cards.creatorAdd">
+			<segment>
+				<source>Add Shared Content Creator</source>
+				<target>Добавить создателя общего контента</target>
+			</segment>
+		</unit>
+		<unit id="cards.creatorEmail">
+			<segment>
+				<source>Email</source>
+				<target>Email</target>
+			</segment>
+		</unit>
+		<unit id="cards.creatorOK">
+			<segment>
+				<source>User has been given Creator permission.</source>
+				<target>Пользователь получил разрешение создателя.</target>
+			</segment>
+		</unit>
 		<unit id="cards.delete">
 			<segment>
 				<source>Delete</source>
@@ -603,8 +645,26 @@
 		</unit>
 		<unit id="cards.OBT">
 			<segment>
-				<source>Oral Bible Translation</source>
-				<target>Устный перевод Библии</target>
+				<source>Oral Bible Translation (complete)</source>
+				<target>Устный перевод Библии (полный)</target>
+			</segment>
+		</unit>
+		<unit id="cards.OBTs">
+			<segment>
+				<source>Oral Bible Translation (Simple)</source>
+				<target>Устный перевод Библии (простой)</target>
+			</segment>
+		</unit>
+		<unit id="cards.OBTr">
+			<segment>
+				<source>Oral Bible Translation (like Render)</source>
+				<target>Устный перевод Библии (типа Render)</target>
+			</segment>
+		</unit>
+		<unit id="cards.OBTo">
+			<segment>
+				<source>Oral Bible Translation (oral only)</source>
+				<target>Устный перевод Библии (только устный)</target>
 			</segment>
 		</unit>
 		<unit id="cards.offline">
@@ -733,6 +793,12 @@
 				<target>Не одобрено</target>
 			</segment>
 		</unit>
+		<unit id="commentEditor.comment">
+			<segment>
+				<source>Comment</source>
+				<target>Комментарий</target>
+			</segment>
+		</unit>
 		<unit id="commentEditor.record">
 			<segment>
 				<source>Record Comment</source>
@@ -853,6 +919,12 @@
 				<target>{0} из {1} файлов загружены успешно.</target>
 			</segment>
 		</unit>
+		<unit id="control.book">
+			<segment>
+				<source>Book</source>
+				<target>Книга</target>
+			</segment>
+		</unit>
 		<unit id="control.other">
 			<segment>
 				<source>General</source>
@@ -955,6 +1027,12 @@
 				<target>Найдите тему обсуждения в аудиозаписи</target>
 			</segment>
 		</unit>
+		<unit id="discussionCard.move">
+			<segment>
+				<source>Select step for discussion</source>
+				<target>Выберите шаг для обсуждения</target>
+			</segment>
+		</unit>
 		<unit id="discussionCard.or">
 			<segment>
 				<source>or</source>
@@ -1037,6 +1115,12 @@
 			<segment>
 				<source>Edit</source>
 				<target>Редактировать</target>
+			</segment>
+		</unit>
+		<unit id="discussionMenu.move">
+			<segment>
+				<source>Move</source>
+				<target>Переместить</target>
 			</segment>
 		</unit>
 		<unit id="discussionMenu.reopen">
@@ -1233,8 +1317,8 @@
 		</unit>
 		<unit id="filterMenu.saveFilter">
 			<segment>
-				<source>Save as project default</source>
-				<target>Сохранить как команду по умолчанию</target>
+				<source>Save as team default</source>
+				<target>Сохранить по умолчанию для команды</target>
 			</segment>
 		</unit>
 		<unit id="grid.all">
@@ -2072,12 +2156,12 @@
 			</segment>
 		</unit>
 		<unit id="keyTerms.cancel">
-         <segment>
-            <source>Cancel Translation</source>
-            <target>Отменить перевод</target>
-         </segment>
-      </unit>
-      <unit id="keyTerms.category">
+			<segment>
+				<source>Cancel Translation</source>
+				<target>Отменить перевод</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.category">
 			<segment>
 				<source>Category</source>
 				<target>Категория</target>
@@ -2180,54 +2264,54 @@
 			</segment>
 		</unit>
 		<unit id="keyTerms.play">
-         <segment>
-            <source>Play Translation</source>
-            <target>Воспроизвести перевод</target>
-         </segment>
-      </unit>
-      <unit id="keyTerms.realia">
+			<segment>
+				<source>Play Translation</source>
+				<target>Воспроизвести перевод</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.realia">
 			<segment>
 				<source>Realia</source>
 				<target>Реалии</target>
 			</segment>
 		</unit>
 		<unit id="keyTerms.record">
-         <segment>
-            <source>Record Translation</source>
-            <target>Перевод записей</target>
-         </segment>
-      </unit>
-      <unit id="keyTerms.recording">
-         <segment>
-            <source>Recording in progress.</source>
-            <target>Идет запись.</target>
-         </segment>
-      </unit>
-      <unit id="keyTerms.ritual">
+			<segment>
+				<source>Record Translation</source>
+				<target>Перевод записей</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.recording">
+			<segment>
+				<source>Recording in progress.</source>
+				<target>Идет запись.</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.ritual">
 			<segment>
 				<source>Ritual</source>
 				<target>Ритуал</target>
 			</segment>
 		</unit>
 		<unit id="keyTerms.save">
-         <segment>
-            <source>Save Translation</source>
-            <target>Сохранить перевод</target>
-         </segment>
-      </unit>
-      <unit id="keyTerms.saving">
+			<segment>
+				<source>Save Translation</source>
+				<target>Сохранить перевод</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.saving">
 			<segment>
 				<source>Saving...</source>
 				<target>Сохранение...</target>
 			</segment>
 		</unit>
 		<unit id="keyTerms.settingLanguage">
-         <segment>
-            <source>Set Langauge</source>
-            <target>Установить язык</target>
-         </segment>
-      </unit>
-      <unit id="keyTerms.sortShow">
+			<segment>
+				<source>Set Langauge</source>
+				<target>Установить язык</target>
+			</segment>
+		</unit>
+		<unit id="keyTerms.sortShow">
 			<segment>
 				<source>Sort and Show</source>
 				<target>Сортировать и показывать</target>
@@ -2953,12 +3037,12 @@
 				<target>Размер (МБ)</target>
 			</segment>
 		</unit>
-      <unit id="mediaTab.toobig">
-         <segment>
-            <source>File {0} is too large {1}. File Limit is {2}MB</source>
-            <target>Файл {0} слишком велик {1}. Максимальный размер файла: {2} МБ.</target>
-         </segment>
-      </unit>
+		<unit id="mediaTab.toobig">
+			<segment>
+				<source>File {0} is too large {1}. File Limit is {2}MB</source>
+				<target>Файл {0} слишком велик {1}. Максимальный размер файла: {2} МБ.</target>
+			</segment>
+		</unit>
 		<unit id="mediaTab.unsupported">
 			<segment>
 				<source>File {0} is an unsupported file type.</source>
@@ -3079,12 +3163,12 @@
 				<target>Загрузить аудио</target>
 			</segment>
 		</unit>
-        <unit id="mediaUpload.toobig">
-            <segment>
-                <source>Too large: {0}. File Limit is {1}MB</source>
-                <target>Слишком большой: {0}. Максимальный размер файла: {1} МБ.</target>
-            </segment>
-        </unit>
+		<unit id="mediaUpload.toobig">
+			<segment>
+				<source>Too large: {0}. File Limit is {1}MB</source>
+				<target>Слишком большой: {0}. Максимальный размер файла: {1} МБ.</target>
+			</segment>
+		</unit>
 		<unit id="mediaUpload.upload">
 			<segment>
 				<source>Upload</source>
@@ -3193,6 +3277,12 @@
 				<target>Прохождения: </target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.accept">
+			<segment>
+				<source>Accept</source>
+				<target>Принять</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.action">
 			<segment>
 				<source>Action</source>
@@ -3211,10 +3301,22 @@
 				<target>Добавить</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.allLevel">
+			<segment>
+				<source>All Resources</source>
+				<target>Все ресурсы</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.allResources">
 			<segment>
 				<source>Show resources for all passages</source>
 				<target>Показать ресурсы для всех отрывков</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.bookLevel">
+			<segment>
+				<source>Resources for the Book</source>
+				<target>Ресурсы для книги</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.canceling">
@@ -3227,6 +3329,18 @@
 			<segment>
 				<source>Category</source>
 				<target>Категория</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.chapterLevel">
+			<segment>
+				<source>Resources for the Chapter</source>
+				<target>Ресурсы для главы</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.chooseLevel">
+			<segment>
+				<source>Resource Reference Filter Level</source>
+				<target>Уровень фильтрации ссылок на ресурсы</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.clipboard">
@@ -3283,10 +3397,28 @@
 				<target>Общие ресурсы</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.keywords">
+			<segment>
+				<source>Keywords</source>
+				<target>Ключевые слова</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.language">
+			<segment>
+				<source>Language</source>
+				<target>Язык</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.link">
 			<segment>
 				<source>Link</source>
 				<target>Ссылка</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.no">
+			<segment>
+				<source>No</source>
+				<target>Нет</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.passageResource">
@@ -3349,16 +3481,46 @@
 				<target> ({0} ресурсов будет удалено).</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.selectBook">
+			<segment>
+				<source>Select Book</source>
+				<target>Выбрать книгу</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.sharedResource">
 			<segment>
-				<source>Link Shared Resource</source>
-				<target>Ссылка Общий ресурс</target>
+				<source>Link Shared {0} Resource</source>
+				<target>Ссылка Общий {0} ресурс</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.source">
+			<segment>
+				<source>Source</source>
+				<target>Источник</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.startStop">
 			<segment>
 				<source>Start - Stop</source>
 				<target>Старт - Стоп</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.termsOfUse">
+			<segment>
+				<source>Terms of Use</source>
+				<target>Условия использования</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.termsReview">
+			<segment>
+				<source>Review the Terms of Use</source>
+				<target>Ознакомьтесь с условиями использования</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.title">
+			<segment>
+				<source>Title</source>
+				<target>Название</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailArtifacts.type">
@@ -3403,10 +3565,22 @@
 				<target>Общие - для использования несколькими {0} или переходами. (Загруженные файлы будут отображаться только в разделе Configure General).</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.verseLevel">
+			<segment>
+				<source>Resources for verses in this passage</source>
+				<target>Ресурсы для стихов из этого отрывка</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.version">
 			<segment>
 				<source>Version</source>
 				<target>Версия</target>
+			</segment>
+		</unit>
+		<unit id="passageDetailArtifacts.yes">
+			<segment>
+				<source>Yes</source>
+				<target>Да</target>
 			</segment>
 		</unit>
 		<unit id="passageDetailStepComplete.incomplete">
@@ -3499,18 +3673,18 @@
 				<target>Запись / редактирование аудио</target>
 			</segment>
 		</unit>
-      <unit id="passageRecord.toobig">
-         <segment>
-            <source>File is too large. File Limit is {1}MB</source>
-            <target>Файл слишком большой. Максимальный размер файла: {1} МБ.</target>
-         </segment>
-      </unit>
-      <unit id="passageRecord.toobigwarn">
-         <segment>
-            <source>File is near size limit {1}MB</source>
-            <target>Размер файла близок к пределу {1} МБ.</target>
-         </segment>
-      </unit>
+		<unit id="passageRecord.toobig">
+			<segment>
+				<source>File is too large. File Limit is {1}MB</source>
+				<target>Файл слишком большой. Максимальный размер файла: {1} МБ.</target>
+			</segment>
+		</unit>
+		<unit id="passageRecord.toobigwarn">
+			<segment>
+				<source>File is near size limit {1}MB</source>
+				<target>Размер файла близок к пределу {1} МБ.</target>
+			</segment>
+		</unit>
 		<unit id="passageRecord.uncompressed">
 			<segment>
 				<source>Uncompressed</source>
@@ -3671,6 +3845,12 @@
 			<segment>
 				<source>Record/Edit Audio</source>
 				<target>Запись/Редактировать аудио</target>
+			</segment>
+		</unit>
+		<unit id="planActions.resourceEdit">
+			<segment>
+				<source>Resource Edit</source>
+				<target>Редактировать ресурс</target>
 			</segment>
 		</unit>
 		<unit id="planActions.resources">
@@ -4081,12 +4261,12 @@
 				<target>Получение уведомлений и дайджестов по электронной почте</target>
 			</segment>
 		</unit>
-        <unit id="profile.sharedContentCreator">
-            <segment>
-                <source>Allow user to create shared content projects.</source>
-                <target>Разрешить пользователю создавать проекты с общим содержимым.</target>
-            </segment>
-        </unit>
+		<unit id="profile.sharedContentCreator">
+			<segment>
+				<source>Allow user to create shared content projects.</source>
+				<target>Разрешить пользователю создавать проекты с общим содержимым.</target>
+			</segment>
+		</unit>
 		<unit id="profile.timezone">
 			<segment>
 				<source>Time zone</source>
@@ -4169,6 +4349,114 @@
 			<segment>
 				<source>Download {0}MB of offline audio project files?</source>
 				<target>Загрузить {0} МБ автономных файлов аудиопроекта?</target>
+			</segment>
+		</unit>
+		<unit id="resource.action">
+			<segment>
+				<source>Action</source>
+				<target>Действие</target>
+			</segment>
+		</unit>
+		<unit id="resource.add">
+			<segment>
+				<source>Add</source>
+				<target>Добавить</target>
+			</segment>
+		</unit>
+		<unit id="resource.book">
+			<segment>
+				<source>Book</source>
+				<target>Книга</target>
+			</segment>
+		</unit>
+		<unit id="resource.bookSelect">
+			<segment>
+				<source>Select Book</source>
+				<target>Выбрать книгу</target>
+			</segment>
+		</unit>
+		<unit id="resource.byWord">
+			<segment>
+				<source>By Word</source>
+				<target>По слову</target>
+			</segment>
+		</unit>
+		<unit id="resource.delete">
+			<segment>
+				<source>Delete</source>
+				<target>Удалить</target>
+			</segment>
+		</unit>
+		<unit id="resource.deleteConfirm">
+			<segment>
+				<source>Delete {0}</source>
+				<target>Удалить {0}</target>
+			</segment>
+		</unit>
+		<unit id="resource.description">
+			<segment>
+				<source>Description</source>
+				<target>Описание</target>
+			</segment>
+		</unit>
+		<unit id="resource.errorData">
+			<segment>
+				<source>Do you want to save and discard data with errors?</source>
+				<target>Вы хотите сохранять и удалять данные с ошибками?</target>
+			</segment>
+		</unit>
+		<unit id="resource.keywords">
+			<segment>
+				<source>Keywords</source>
+				<target>Ключевые слова</target>
+			</segment>
+		</unit>
+		<unit id="resource.overview">
+			<segment>
+				<source>Overview</source>
+				<target>Обзор</target>
+			</segment>
+		</unit>
+		<unit id="resource.references">
+			<segment>
+				<source>References</source>
+				<target>Ссылки</target>
+			</segment>
+		</unit>
+		<unit id="resource.resourceEdit">
+			<segment>
+				<source>Resource Edit</source>
+				<target>Редактирование ресурса</target>
+			</segment>
+		</unit>
+		<unit id="resource.rowsSaved">
+			<segment>
+				<source>{0} rows saved.</source>
+				<target>Сохранено {0} строк.</target>
+			</segment>
+		</unit>
+		<unit id="resource.saving">
+			<segment>
+				<source>Saving...</source>
+				<target>Сохранение...</target>
+			</segment>
+		</unit>
+		<unit id="resource.terms">
+			<segment>
+				<source>Terms of use</source>
+				<target>Условия использования</target>
+			</segment>
+		</unit>
+		<unit id="resource.title">
+			<segment>
+				<source>Title</source>
+				<target>Название</target>
+			</segment>
+		</unit>
+		<unit id="resource.versions">
+			<segment>
+				<source>Versions</source>
+				<target>Версии</target>
 			</segment>
 		</unit>
 		<unit id="scriptureTable.book">
@@ -4597,6 +4885,12 @@
 				<target>Запись в процессе...</target>
 			</segment>
 		</unit>
+		<unit id="shared.bookNotFound">
+			<segment>
+				<source>Paratext project does not contain book.</source>
+				<target>Проект Paratext не содержит книги.</target>
+			</segment>
+		</unit>
 		<unit id="shared.referenceNotFound">
 			<segment>
 				<source>Reference does not exist in Paratext chapter, or reference is within a larger verse range.</source>
@@ -4613,6 +4907,12 @@
 			<segment>
 				<source>Save</source>
 				<target>Сохранить</target>
+			</segment>
+		</unit>
+		<unit id="shared.saving">
+			<segment>
+				<source>Saving...</source>
+				<target>Сохранение...</target>
 			</segment>
 		</unit>
 		<unit id="shared.select">
@@ -4873,6 +5173,12 @@
 				<target>Применить</target>
 			</segment>
 		</unit>
+		<unit id="template.autoMatchTemplate">
+			<segment>
+				<source>Auto Match Template</source>
+				<target>Шаблон автосоответствия</target>
+			</segment>
+		</unit>
 		<unit id="template.beginning">
 			<segment>
 				<source>Starting verse number</source>
@@ -4881,8 +5187,14 @@
 		</unit>
 		<unit id="template.book">
 			<segment>
-				<source>Paratext book identifier</source>
-				<target/>
+				<source>Paratext book identifier (Length 3 uppercase)</source>
+				<target>Идентификатор книги в паратексте (длина 3 заглавных буквы)</target>
+			</segment>
+		</unit>
+		<unit id="template.bookname">
+			<segment>
+				<source>Book name</source>
+				<target>Название книги</target>
 			</segment>
 		</unit>
 		<unit id="template.chapter">
@@ -4913,6 +5225,12 @@
 			<segment>
 				<source>Passage number(within {0})</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="template.renderExportTemplate">
+			<segment>
+				<source>The {SECT} template works for files exported from Render.</source>
+				<target>Шаблон {SECT} работает для файлов, экспортированных из Render.</target>
 			</segment>
 		</unit>
 		<unit id="template.templateCodes">
@@ -5065,7 +5383,7 @@
 				<target>Паратекст Синхронизация</target>
 			</segment>
 		</unit>
-		<unit id="tool.phrasebacktranslate">
+		<unit id="tool.phraseBackTranslate">
 			<segment>
 				<source>Phrase Back Translate</source>
 				<target>Обратный перевод фразы</target>
@@ -5289,7 +5607,7 @@
 		</unit>
 		<unit id="transcriber.updateByOther2">
 			<segment>
-				<source>Transcription updated by {0}.  Keep their changes? {1}</source>
+				<source>Transcription updated by {0}. Keep their changes? {1}</source>
 				<target>Транскрипция обновлена ​​{0}. Сохранить их изменения? {1}</target>
 			</segment>
 		</unit>
@@ -5523,7 +5841,7 @@
 		</unit>
 		<unit id="transcriptionTab.offlineData">
 			<segment>
-				<source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
+				<source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
 				<target>У вас есть новые локальные изменения, которые не были включены в экспорт ptf. Также экспортируйте файл itf, чтобы зафиксировать все изменения.</target>
 			</segment>
 		</unit>
@@ -5827,12 +6145,12 @@
 				<target>"Этот проект содержит ресурсы, которые могут быть использованы в другихроектах по интернализации."</target>
 			</segment>
 		</unit>
-        <unit id="vProject.howToPublic">
-            <segment>
-                <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
-                <target>Свяжитесь с Натаном Пейном (nathan_payne@sil.org), чтобы получить доступ к созданию общего контента.</target>
-            </segment>
-        </unit>
+		<unit id="vProject.howToPublic">
+			<segment>
+				<source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
+				<target>Свяжитесь с Натаном Пейном (nathan_payne@sil.org), чтобы получить доступ к созданию общего контента.</target>
+			</segment>
+		</unit>
 		<unit id="vProject.language">
 			<segment>
 				<source>Language</source>
@@ -6109,6 +6427,18 @@
 				<target>Проверка консультанта</target>
 			</segment>
 		</unit>
+		<unit id="workflowSteps.consultantCheck1">
+			<segment>
+				<source>First Consultant Check</source>
+				<target>Проверка первого консультанта</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.consultantCheck2">
+			<segment>
+				<source>Second Consultant Check</source>
+				<target>Проверка второго консультанта</target>
+			</segment>
+		</unit>
 		<unit id="workflowSteps.done">
 			<segment>
 				<source>Done</source>
@@ -6123,14 +6453,20 @@
 		</unit>
 		<unit id="workflowSteps.finalRecording">
 			<segment>
-				<source>Final Record</source>
-				<target>Окончательная запись</target>
+				<source>Studio Record</source>
+				<target>Студийная запись</target>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.finalReview">
 			<segment>
-				<source>Final Review</source>
-				<target>Окончательная проверка</target>
+				<source>Final Audio Review</source>
+				<target>Окончательная аудиорецензия</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.finalReviewText">
+			<segment>
+				<source>Final Text Review</source>
+				<target>Окончательная проверка текста</target>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.internalize">
@@ -6181,6 +6517,18 @@
 				<target>Запись</target>
 			</segment>
 		</unit>
+		<unit id="workflowSteps.retellBackTranslation">
+			<segment>
+				<source>Retell Back Translation</source>
+				<target>Пересказ Обратный перевод</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.retellBTTranscribe">
+			<segment>
+				<source>Retell BT Transcribe</source>
+				<target>Пересказ BT Транскрипция</target>
+			</segment>
+		</unit>
 		<unit id="workflowSteps.saveFirst">
 			<segment>
 				<source>Save before changing step?</source>
@@ -6189,8 +6537,20 @@
 		</unit>
 		<unit id="workflowSteps.teamCheck">
 			<segment>
-				<source>Team Check</source>
-				<target>Проверка команды</target>
+				<source>Compare</source>
+				<target>Сравнить</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.termIdentify">
+			<segment>
+				<source>Term Verify</source>
+				<target>Проверка термина</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.teamReview">
+			<segment>
+				<source>Term Review</source>
+				<target>Проверка термина</target>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.transcribe">
@@ -6361,7 +6721,7 @@
 				<target>Помедленнее [{0}]</target>
 			</segment>
 		</unit>
-        <unit id="wsAudioPlayer.stopTip">
+		<unit id="wsAudioPlayer.stopTip">
 			<segment>
 				<source>Stop [{0}]</source>
 				<target>Остановить [{0}]</target>
