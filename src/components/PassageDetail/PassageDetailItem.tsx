@@ -62,6 +62,7 @@ import { GrowingSpacer, LightTooltip, PriButton } from '../../control';
 import { useSelector } from 'react-redux';
 import { communitySelector, sharedSelector } from '../../selector';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
+import PassageDetailChooser from './PassageDetailChooser';
 
 const PlayerRow = styled('div')(() => ({
   width: '100%',
@@ -197,6 +198,7 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
     setPlayItem,
     itemPlaying,
     setItemPlaying,
+    chooserSize,
     handleItemTogglePlay,
     handleItemPlayEnd,
     setRecording,
@@ -392,6 +394,9 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
                   onChange={handleHorizonalSplitSize}
                 >
                   <Pane>
+                    <PassageDetailChooser
+                      width={width - discussionSize.width - 16}
+                    />
                     <PassageDetailPlayer
                       allowSegment={segments}
                       allowAutoSegment={segments !== undefined}
@@ -403,6 +408,7 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
                       defaultSegParams={segParams}
                       canSetDefaultParams={canSetOrgDefault}
                       onSegmentParamChange={onSegmentParamChange}
+                      chooserReduce={chooserSize}
                     />
                   </Pane>
                   {currentVersion !== 0 ? (
