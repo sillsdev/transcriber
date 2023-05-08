@@ -81,6 +81,7 @@ export const exportProject =
     errorReporter: any, //global errorReporter
     pendingmsg: string,
     nodatamsg: string,
+    queuedmsg: string,
     localizedArtifact: string,
     getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
     target?: string,
@@ -196,18 +197,20 @@ export const exportProject =
                   laststart = start;
                 }
                 if (laststartCount > 20) {
-                  start = 0;
-                  laststart = 0;
-                  laststartCount = 0;
+                  dispatch({
+                    payload: queuedmsg,
+                    type: EXPORT_PENDING,
+                  });
+                } else {
+                  var pct = Math.min(
+                    Math.round((start / (numberOfMedia + 15)) * 100),
+                    90
+                  );
+                  dispatch({
+                    payload: pendingmsg.replace('{0}', pct.toString()),
+                    type: EXPORT_PENDING,
+                  });
                 }
-                var pct = Math.min(
-                  Math.round((start / (numberOfMedia + 15)) * 100),
-                  90
-                );
-                dispatch({
-                  payload: pendingmsg.replace('{0}', pct.toString()),
-                  type: EXPORT_PENDING,
-                });
             }
           })
           // eslint-disable-next-line no-loop-func

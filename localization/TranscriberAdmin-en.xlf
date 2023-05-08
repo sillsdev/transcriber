@@ -5866,6 +5866,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.queued">
+         <segment>
+            <source>Your export has been queued on the media server.  It could take up to 6 minutes to resume progress.  Please wait.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.scriptureBurrito">
          <segment>
             <source>Scripture Burrito</source>

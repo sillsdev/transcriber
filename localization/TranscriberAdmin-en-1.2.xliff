@@ -6844,7 +6844,14 @@
                <context context-type="sourcefile">TranscriptionTab.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="transcriptionTab.scriptureBurrito">
+         <trans-unit id="transcriptionTab.queued">
+            <source>Your export has been queued on the media server.  It could take up to 6 minutes to resume progress.  Please wait.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TranscriptionTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcriptionTab.scriptureBurrito">
       		<source>Scripture Burrito</source>
       		<target/>
       		<context-group>

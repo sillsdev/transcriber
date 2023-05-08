@@ -293,6 +293,7 @@ export function TranscriptionTab(
           ? localizedArtifactType(artifactType)
           : t.changed
       ),
+      t.queued,
       localizedArtifact,
       getOfflineProject,
       step,
