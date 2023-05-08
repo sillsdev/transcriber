@@ -530,7 +530,7 @@ export function Transcriber(
       const trans = getTranscription();
       if (
         transcriptionIn.current !== undefined &&
-        trans.transcription !== transcriptionIn.current &&
+        (trans.transcription ?? '') !== transcriptionIn.current &&
         !saving.current
       ) {
         //if someone else changed it...let the user pick
@@ -1035,7 +1035,11 @@ export function Transcriber(
                       <PassageDetailPlayer
                         position={defaultPosition}
                         allowAutoSegment={true}
-                        saveSegments={SaveSegments.saveButNoButton}
+                        saveSegments={
+                          role === 'view'
+                            ? undefined
+                            : SaveSegments.saveButNoButton
+                        }
                         defaultSegParams={segParams}
                         canSetDefaultParams={canSetOrgDefault}
                         allowSegment={allowSegment}
@@ -1044,6 +1048,7 @@ export function Transcriber(
                         onSegment={onSegmentChange}
                         onSegmentParamChange={onSegmentParamChange}
                         onInteraction={onInteraction}
+                        parentToolId={toolId}
                         onSaveProgress={
                           !transSelected || role === 'view'
                             ? undefined
