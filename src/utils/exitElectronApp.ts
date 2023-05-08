@@ -7,15 +7,15 @@ export const exitElectronApp = () => {
   }
 };
 
-export const relaunchApp = () => {
+export const relaunchApp = async () => {
   if (isElectron) {
-    ipc?.relaunchApp();
+    await ipc?.relaunchApp();
   }
 };
 
-export const exitApp = () => {
+export const exitApp = async () => {
   if (isElectron) {
-    ipc?.exitApp();
+    await ipc?.exitApp();
   }
 };
 

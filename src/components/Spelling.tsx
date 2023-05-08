@@ -42,9 +42,9 @@ export const Spelling = (props: IStateProps) => {
     setConfirm(false);
   };
 
-  const restart = () => {
-    relaunchApp();
-    exitApp();
+  const restart = async () => {
+    await relaunchApp();
+    setTimeout(() => exitApp(), 1000);
   };
 
   React.useEffect(() => {
