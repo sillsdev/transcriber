@@ -1036,9 +1036,9 @@ export function Transcriber(
                         position={defaultPosition}
                         allowAutoSegment={true}
                         saveSegments={
-                          role === 'view'
-                            ? undefined
-                            : SaveSegments.saveButNoButton
+                          allowSegment
+                            ? SaveSegments.saveButNoButton
+                            : undefined
                         }
                         defaultSegParams={segParams}
                         canSetDefaultParams={canSetOrgDefault}
