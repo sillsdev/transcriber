@@ -1316,6 +1316,8 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "finalReview": string;
     "finalReviewText": string;
     "internalize": string;
+    "paratextConsultantCheck": string;
+    "paratextPeerReview": string;
     "paratextSync": string;
     "peerReview": string;
     "phraseBackTranslation": string;

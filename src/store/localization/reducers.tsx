@@ -1400,6 +1400,8 @@ const initialState = {
 			"finalReview": "Final Audio Review",
 			"finalReviewText": "Final Text Review",
 			"internalize": "Internalize",
+			"paratextConsultantCheck": "Consultant Check in Paratext",
+			"paratextPeerReview": "Peer Review in Paratext",
 			"paratextSync": "Sync to Paratext",
 			"peerReview": "Peer Review",
 			"phraseBackTranslation": "Phrase Back Translate",

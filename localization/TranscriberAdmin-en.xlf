@@ -6484,6 +6484,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="workflowSteps.paratextConsultantCheck">
+         <segment>
+            <source>Consultant Check in Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.paratextPeerReview">
+         <segment>
+            <source>Peer Review in Paratext</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="workflowSteps.paratextSync">
          <segment>
             <source>Sync to Paratext</source>

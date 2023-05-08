@@ -7565,6 +7565,20 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="workflowSteps.paratextConsultantCheck">
+      		<source>Consultant Check in Paratext</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="workflowSteps.paratextPeerReview">
+      		<source>Peer Review in Paratext</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="workflowSteps.paratextSync">
             <source>Sync to Paratext</source>
             <target/>
