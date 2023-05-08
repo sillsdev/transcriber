@@ -34,6 +34,7 @@ interface IProps {
   allowZoomAndSpeed?: boolean;
   position?: number;
   chooserReduce?: number;
+  parentToolId?: string;
 }
 
 export function PassageDetailPlayer(props: IProps) {
@@ -52,6 +53,7 @@ export function PassageDetailPlayer(props: IProps) {
     allowZoomAndSpeed,
     position,
     chooserReduce,
+    parentToolId,
   } = props;
 
   const [memory] = useGlobal('memory');
@@ -222,7 +224,8 @@ export function PassageDetailPlayer(props: IProps) {
     setDefaultSegments(segments); //now we'll notice if we reset them in SetPlayerSegments
     onSegment && onSegment(segments);
     if (allowSegment && saveSegments !== undefined) {
-      toolChanged(toolId);
+      //if I have a parentToolId it will save the segments
+      toolChanged(parentToolId ?? toolId);
     } else {
       //not saving segments...so don't update changed
     }
