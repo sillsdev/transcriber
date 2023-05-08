@@ -1189,6 +1189,7 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "changed": string;
     "passages": string;
     "plan": string;
+    "queued": string;
     "scriptureBurrito": string;
     "sectionstate": string;
     "showHideFilter": string;

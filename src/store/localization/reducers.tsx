@@ -1265,6 +1265,7 @@ const initialState = {
 			"changed": "Changed",
 			"passages": "Passages",
 			"plan": "Plan",
+			"queued": "Your export has been queued on the media server.  It could take up to 6 minutes to resume progress.  Please wait.",
 			"scriptureBurrito": "Scripture Burrito",
 			"sectionstate": "State",
 			"showHideFilter": "Show/Hide filter rows",
