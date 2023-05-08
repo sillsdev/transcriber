@@ -77,7 +77,7 @@ export const ProjectDownload = (
   const [steps, setSteps] = React.useState<string[]>([]);
   const [currentStep, setCurrentStep] = React.useState(0);
   const [exportName, setExportName] = React.useState('');
-  const [exportUrl, setExportUrl] = React.useState('');
+  const [exportUrl, setExportUrlx] = React.useState('');
   const exportUrlRef = React.useRef('');
   const [offlineUpdates] = React.useState<Operation[]>([]);
   const backup = coordinator.getSource('backup') as IndexedDBSource;
@@ -85,6 +85,11 @@ export const ProjectDownload = (
   const setProgress = (val: Steps) => {
     progressRef.current = val;
     setProgressx(val);
+  };
+
+  const setExportUrl = (val: string) => {
+    exportUrlRef.current = val;
+    setExportUrlx(val);
   };
 
   const translateError = (err: IAxiosStatus): string => {
@@ -116,7 +121,6 @@ export const ProjectDownload = (
         setTimeout(() => {
           setExportName('');
           setExportUrl('');
-          exportUrlRef.current = '';
           setProgress(Steps.Finished);
           finish();
         }, 1000);
@@ -140,7 +144,6 @@ export const ProjectDownload = (
           if (exportFile) {
             setExportName(exportFile.message);
             setExportUrl(exportFile.fileURL);
-            exportUrlRef.current = exportFile.fileURL;
             exportComplete();
             setProgress(Steps.Download);
           }
