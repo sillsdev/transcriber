@@ -73,7 +73,7 @@ export const ProjectDownload = (
     message: t.downloadingProject,
   });
   const [progress, setProgressx] = React.useState<Steps>(Steps.Prepare);
-  const progressRef = React.useRef<Steps>();
+  const progressRef = React.useRef<Steps>(progress);
   const [steps, setSteps] = React.useState<string[]>([]);
   const [currentStep, setCurrentStep] = React.useState(0);
   const [exportName, setExportName] = React.useState('');
