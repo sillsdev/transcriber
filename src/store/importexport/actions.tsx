@@ -55,6 +55,7 @@ import {
   ArtifactTypeSlug,
   VernacularTag,
 } from '../../crud';
+import { Moment } from 'moment';
 import { logError, orbitInfo, Severity } from '../../utils';
 import Coordinator from '@orbit/coordinator';
 import { axiosPost } from '../../utils/axios';
@@ -84,6 +85,7 @@ export const exportProject =
     queuedmsg: string,
     localizedArtifact: string,
     getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
+    importedDate?: Moment,
     target?: string,
     orgWorkflowSteps?: OrgWorkflowStep[]
   ) =>
@@ -115,6 +117,7 @@ export const exportProject =
         nodatamsg,
         localizedArtifact,
         getOfflineProject,
+        importedDate,
         target,
         orgWorkflowSteps
       )

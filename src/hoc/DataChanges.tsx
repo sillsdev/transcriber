@@ -34,6 +34,7 @@ import {
   related,
   remoteId,
   remoteIdGuid,
+  remoteIdNum,
   SetUserLanguage,
 } from '../crud';
 import { currentDateTime, localUserKey, LocalKey } from '../utils';
@@ -337,7 +338,7 @@ export const doDataChanges = async (
       const p = projectsLoaded[ix];
       const op = getOfflineProject(p);
       if (
-        Number.isInteger(remoteId('project', p, memory.keyMap)) &&
+        !isNaN(remoteIdNum('project', p, memory.keyMap)) &&
         op.attributes?.snapshotDate &&
         Date.parse(op.attributes.snapshotDate) < Date.parse(lastTime)
       ) {

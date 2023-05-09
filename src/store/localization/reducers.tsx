@@ -1254,6 +1254,8 @@ const initialState = {
 			"exportITFtype": "Incremental Changes (itf)",
 			"exportProject": "Export Audio Project",
 			"exportPTFtype": "Export Audio Project (ptf)",
+			"exportSince": "Changes since date",
+			"exportSinceGo": "Export from date",
 			"exportTooLarge": "The audio project cannot be exported.  The export file is too large.",
 			"exportType": "Which export type?",
 			"filter": "Filter",

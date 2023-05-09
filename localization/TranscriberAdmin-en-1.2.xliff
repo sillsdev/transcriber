@@ -6767,6 +6767,20 @@
                <context context-type="sourcefile">ExportTab.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="transcriptionTab.exportSince">
+            <source>Changes since date</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ExportTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcriptionTab.exportSinceGo">
+            <source>Export from date</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ExportTab.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="transcriptionTab.exportTooLarge">
             <source>The audio project cannot be exported.  The export file is too large.</source>
             <target/>
