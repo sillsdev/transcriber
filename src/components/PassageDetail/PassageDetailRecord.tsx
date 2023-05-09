@@ -1,6 +1,6 @@
 import { shallowEqual, useSelector } from 'react-redux';
 import { ISharedStrings, MediaFile } from '../../model';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Stack } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import {
   findRecord,
@@ -34,6 +34,7 @@ interface IRecordProps {
 }
 interface IProps {
   ready?: () => boolean;
+  width?: number;
 }
 
 const SaveWait = 500;
@@ -191,7 +192,7 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   const handleTrackRecorder = (state: IMediaState) => setRecorderState(state);
   return (
     <PlanProvider {...props}>
-      <div>
+      <Stack sx={{ width: props.width }}>
         <RecordButtons
           onVersions={hasExistingVersion ? handleVersions : undefined}
           onReload={hasExistingVersion ? handleReload : undefined}
@@ -278,7 +279,7 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
         >
           <VersionDlg passId={passage.id} />
         </BigDialog>
-      </div>
+      </Stack>
     </PlanProvider>
   );
 }
