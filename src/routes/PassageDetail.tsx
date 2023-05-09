@@ -149,7 +149,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
     orgWorkflowSteps,
     mediafileId,
   } = ctx.state;
-
+  const minWidthRef = React.useRef(800);
   const { tool, settings } = useStepTool(currentstep);
   const { slugFromId } = useArtifactType();
   const artifactId = useMemo(() => {
@@ -186,7 +186,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   }, 50);
 
   const setDimensions = () => {
-    setWidth(Math.max(window.innerWidth, minWidth));
+    setWidth(Math.max(window.innerWidth, minWidthRef.current));
     setHeight(window.innerHeight);
     setDiscussionSize({
       width: discussionSize.width, //should we be smarter here?
@@ -232,6 +232,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   }, []);
 
   useEffect(() => {
+    minWidthRef.current = minWidth;
     setDimensions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [minWidth]);
@@ -350,7 +351,9 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                       <PassageDetailChooser
                         width={width - discussionSize.width - 16}
                       />
-                      <PassageDetailRecord />
+                      <PassageDetailRecord
+                        width={width - discussionSize.width - 16}
+                      />
                     </Grid>
                   )}
                 </Pane>
