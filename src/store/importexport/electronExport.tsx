@@ -1,7 +1,7 @@
 import { ExportType, FileResponse } from './types';
 import AdmZip from 'adm-zip';
 import path from 'path-browserify';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import {
   Project,
   User,
@@ -61,6 +61,7 @@ export async function electronExport(
   nodatamsg: string,
   localizedArtifact: string,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
+  importedDate?: Moment | undefined,
   target?: string,
   orgWorkflowSteps?: OrgWorkflowStep[]
 ): Promise<FileResponse | null> {
@@ -112,7 +113,13 @@ export async function electronExport(
     '_' +
     fileName(projRec, '', 'itf');
 
-  const backupName = 'APM' + idStr('user', userid) + '_backup.' + exportType;
+  const backupName =
+    new Date().getDate().toString() +
+    new Date().getHours().toString() +
+    '_APM' +
+    idStr('user', userid) +
+    '_backup.' +
+    exportType;
 
   const getProjRec = (projectid: number | string): Project => {
     return memory.cache.query((q: QueryBuilder) =>
@@ -170,7 +177,10 @@ export async function electronExport(
       );
     };
     const AddStreamEntry = async (local: string, name: string) => {
-      if (await ipc?.exists(local)) {
+      if (
+        (await ipc?.exists(local)) &&
+        path.dirname(name) !== path.basename(name)
+      ) {
         await ipc?.zipAddLocal(
           zip,
           local,
@@ -651,9 +661,15 @@ export async function electronExport(
       if (p && Array.isArray(p)) return p.length === 1;
       return true; //should never get here
     };
+    var imported = moment.utc();
+    var op: OfflineProject | undefined;
+    if (importedDate) {
+      imported = importedDate;
+    } else {
+      op = getOfflineProject(projRec.id);
+      imported = moment.utc(op.attributes.snapshotDate || '01/01/1900');
+    }
 
-    const op = getOfflineProject(projRec.id);
-    const imported = moment.utc(op.attributes.snapshotDate || '01/01/1900');
     if (!scripturePackage) {
       await AddSourceEntry(imported.toISOString());
       await AddVersionEntry((backup?.schema.version || 1).toString());
@@ -685,9 +701,14 @@ export async function electronExport(
         for (const info of updateableFiles) {
           numRecs += await AddChanged(info, limit, needsRemoteIds);
         }
-        if (expType !== ExportType.ITFBACKUP && backup && op.attributes) {
-          op.attributes.exportedDate = exported;
-          await backup.push((t: TransformBuilder) => t.updateRecord(op));
+        if (expType !== ExportType.ITFBACKUP && backup) {
+          if (!op) op = getOfflineProject(projRec.id);
+          if (op && op.attributes) {
+            op.attributes.exportedDate = exported;
+            await backup.push((t: TransformBuilder) =>
+              t.updateRecord(op as OfflineProject)
+            );
+          }
         }
         break;
       case ExportType.DBL:

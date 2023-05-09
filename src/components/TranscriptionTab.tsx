@@ -35,6 +35,7 @@ import {
   DialogActions,
   Box,
   Alert,
+  TextField, //mui 6 has a datepicker...upgrade this when...
 } from '@mui/material';
 // import CopyIcon from '@mui/icons-material/FileCopy';
 import FilterIcon from '@mui/icons-material/FilterList';
@@ -80,6 +81,7 @@ import { dateOrTime } from '../utils';
 import AudioDownload from './AudioDownload';
 import { SelectExportType, iconMargin } from '../control';
 import AudioExportMenu from './AudioExportMenu';
+import moment, { Moment } from 'moment';
 
 interface IRow {
   id: string;
@@ -179,6 +181,9 @@ export function TranscriptionTab(
   const token = useContext(TokenContext).state.accessToken;
   const { showMessage, showTitledMessage } = useSnackBar();
   const [openExport, setOpenExport] = useState(false);
+  const [openDatePicker, setOpenDatePicker] = useState(false);
+  const [sinceDate, setSinceDate] = useState<string>('');
+  const [snapshotDate, setSnapshotDate] = useState<Moment | undefined>();
   const [data, setData] = useState(Array<IRow>());
   const [alertOpen, setAlertOpen] = useState(false);
   const [passageId, setPassageId] = useState('');
@@ -252,7 +257,7 @@ export function TranscriptionTab(
     if (err.errMsg.includes('RangeError')) return t.exportTooLarge;
     return err.errMsg;
   };
-  const doProjectExport = (exportType: ExportType) => {
+  const doProjectExport = (exportType: ExportType, importedDate?: Moment) => {
     setBusy(true);
 
     const mediaFiles = memory.cache.query((q: QueryBuilder) =>
@@ -296,6 +301,7 @@ export function TranscriptionTab(
       t.queued,
       localizedArtifact,
       getOfflineProject,
+      importedDate,
       step,
       orgSteps
     );
@@ -646,12 +652,41 @@ export function TranscriptionTab(
       setOpenExport(false);
       doProjectExport(ExportType.PTF);
     };
-    const doITF = () => {
-      setOpenExport(false);
-      doProjectExport(ExportType.ITF);
+    const doITF = (event: React.MouseEvent<HTMLElement>) => {
+      if (event.shiftKey) {
+        const op = getOfflineProject(project);
+        var oldDate = moment(op.attributes.snapshotDate);
+        setSnapshotDate(oldDate);
+        setSinceDate(
+          op.attributes.snapshotDate.substring(
+            0,
+            op.attributes.snapshotDate.indexOf('T')
+          )
+        );
+        setOpenDatePicker(true);
+      } else {
+        setOpenExport(false);
+        doProjectExport(ExportType.ITF);
+      }
+    };
+    const doITFwDate = () => {
+      const doIt = (newDate: Moment | undefined) => {
+        setOpenDatePicker(false);
+        setOpenExport(false);
+        doProjectExport(ExportType.ITF, newDate);
+      };
+      var newDate = moment(sinceDate);
+      if (newDate.isValid()) {
+        doIt(newDate.date() !== snapshotDate?.date() ? newDate : undefined);
+      } else {
+        showMessage('invalid date');
+      }
     };
     const closeNoChoice = () => {
       setOpenExport(false);
+    };
+    const handleTextChange = (e: any) => {
+      setSinceDate(e.target.value);
     };
     return (
       <Dialog
@@ -677,6 +712,26 @@ export function TranscriptionTab(
           <Button id="expItf" onClick={doITF} color="primary" autoFocus>
             {t.exportITFtype}
           </Button>
+          {openDatePicker && (
+            <TextField
+              id="datesince"
+              value={sinceDate}
+              onChange={handleTextChange}
+              label={t.exportSince}
+              focused
+              sx={{ width: '400px' }}
+            />
+          )}
+          {openDatePicker && (
+            <Button
+              id="expItfGo"
+              onClick={doITFwDate}
+              color="primary"
+              autoFocus
+            >
+              {t.exportSinceGo}
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     );

@@ -5800,6 +5800,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.exportSince">
+         <segment>
+            <source>Changes since date</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportSinceGo">
+         <segment>
+            <source>Export from date</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
             <source>The audio project cannot be exported.  The export file is too large.</source>

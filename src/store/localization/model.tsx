@@ -1178,6 +1178,8 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "exportITFtype": string;
     "exportProject": string;
     "exportPTFtype": string;
+    "exportSince": string;
+    "exportSinceGo": string;
     "exportTooLarge": string;
     "exportType": string;
     "filter": string;
