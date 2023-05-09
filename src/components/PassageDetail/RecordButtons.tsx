@@ -3,7 +3,6 @@ import AddIcon from '@mui/icons-material/LibraryAddOutlined';
 import VersionsIcon from '@mui/icons-material/List';
 import AudioFileIcon from '@mui/icons-material/AudioFileOutlined';
 import { AudacityLogo } from '../../control';
-import { useGlobal } from 'reactn';
 import { shallowEqual, useSelector } from 'react-redux';
 import { passageRecordSelector, sharedSelector } from '../../selector';
 import { IPassageRecordStrings, ISharedStrings } from '../../model';
@@ -21,7 +20,6 @@ export const RecordButtons = ({
   onReload,
   onAudacity,
 }: IProps) => {
-  const [offlineOnly] = useGlobal('offlineOnly');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const t: IPassageRecordStrings = useSelector(
     passageRecordSelector,
@@ -54,10 +52,10 @@ export const RecordButtons = ({
       <Button
         id="pdRecordUpload"
         onClick={onUpload}
-        title={!offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular}
+        title={ts.uploadMediaSingular}
         startIcon={<AddIcon sx={IconSize} />}
       >
-        {!offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular}
+        {ts.uploadMediaSingular}
       </Button>
       {onAudacity && (
         <Button
