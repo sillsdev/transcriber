@@ -1,3 +1,17 @@
+audio-project-manager (2.16.3.0)  experimental; urgency=high
+
+  * load testing is related to handling larger projects
+  * Shared resources are easier to search and can be attached to passages or sections
+  * Filters are available for the Audio Project Manager sheet. This helps users focus on current work
+  * The compare tool now remembers what was last compared.
+  * The whole back translation tool requires working with the whole and doesn't allow partial work.
+  * General resources can be added with a single step
+  * Discussions and their first comment are added as a single step
+  * A new set of four oral Bible translation work flows have been added.
+  * When passages are pulled from Paratext the verse sorting is fixed
+
+ -- Greg Trihus <greg_trihus@sil.org>  Tue, 9 May 2023 21:08:00 -0600
+
 audio-project-manager (2.16.2.0)  experimental; urgency=high
 
   * Upgrade Electronjs 22.0 and React 18
