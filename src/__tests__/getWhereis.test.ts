@@ -1,6 +1,5 @@
 import { IExeca } from '../model';
 import { getWhereis } from '../utils/getWhereis';
-// const execa = require('execa');
 
 let res: string | undefined = '';
 
@@ -31,11 +30,6 @@ test('audacity header snap response with newline', async () => {
   res = 'audacity: /snap/bin/audacity\n';
   expect(await getWhereis('audacity', scall)).toBe('/snap/bin/audacity');
 });
-
-// fails on Windows
-// test('audacity live', async () => {
-//   expect(await getWhereis('audacity', execa)).toBe('/snap/bin/audacity');
-// });
 
 test('python not installed', async () => {
   res = 'python: ';

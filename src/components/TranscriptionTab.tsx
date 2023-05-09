@@ -23,7 +23,7 @@ import {
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
   Button,
@@ -34,6 +34,8 @@ import {
   DialogContentText,
   DialogActions,
   Box,
+  Alert,
+  TextField, //mui 6 has a datepicker...upgrade this when...
 } from '@mui/material';
 // import CopyIcon from '@mui/icons-material/FileCopy';
 import FilterIcon from '@mui/icons-material/FilterList';
@@ -46,6 +48,7 @@ import {
   TabActions,
   TabAppBar,
   PriButton,
+  AltButton,
 } from '../control';
 import { useSnackBar } from '../hoc/SnackBar';
 import TreeGrid from './TreeGrid';
@@ -78,6 +81,7 @@ import { dateOrTime } from '../utils';
 import AudioDownload from './AudioDownload';
 import { SelectExportType, iconMargin } from '../control';
 import AudioExportMenu from './AudioExportMenu';
+import moment, { Moment } from 'moment';
 
 interface IRow {
   id: string;
@@ -132,11 +136,7 @@ interface IRecordProps {
   roles: Array<Role>;
 }
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {
+interface IProps {
   projectPlans: Plan[];
   planColumn?: boolean;
   floatTop?: boolean;
@@ -144,7 +144,9 @@ interface IProps
   orgSteps?: OrgWorkflowStep[];
 }
 
-export function TranscriptionTab(props: IProps) {
+export function TranscriptionTab(
+  props: IProps & IStateProps & IDispatchProps & IRecordProps
+) {
   const {
     activityState,
     t,
@@ -179,7 +181,11 @@ export function TranscriptionTab(props: IProps) {
   const token = useContext(TokenContext).state.accessToken;
   const { showMessage, showTitledMessage } = useSnackBar();
   const [openExport, setOpenExport] = useState(false);
+  const [openDatePicker, setOpenDatePicker] = useState(false);
+  const [sinceDate, setSinceDate] = useState<string>('');
+  const [snapshotDate, setSnapshotDate] = useState<Moment | undefined>();
   const [data, setData] = useState(Array<IRow>());
+  const [alertOpen, setAlertOpen] = useState(false);
   const [passageId, setPassageId] = useState('');
   const eafAnchor = React.useRef<HTMLAnchorElement>(null);
   const [dataUrl, setDataUrl] = useState<string | undefined>();
@@ -191,7 +197,6 @@ export function TranscriptionTab(props: IProps) {
   const [user] = useGlobal('user');
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const { getOrganizedBy } = useOrganizedBy();
-  const [fingerprint] = useGlobal('fingerprint');
   const getOfflineProject = useOfflnProjRead();
   const [globalStore] = useGlobal();
   const { getTypeId, localizedArtifactType } = useArtifactType();
@@ -252,7 +257,7 @@ export function TranscriptionTab(props: IProps) {
     if (err.errMsg.includes('RangeError')) return t.exportTooLarge;
     return err.errMsg;
   };
-  const doProjectExport = (exportType: ExportType) => {
+  const doProjectExport = (exportType: ExportType, importedDate?: Moment) => {
     setBusy(true);
 
     const mediaFiles = memory.cache.query((q: QueryBuilder) =>
@@ -263,28 +268,14 @@ export function TranscriptionTab(props: IProps) {
     ) as Plan[];
 
     var projectplans = plans.filter((pl) => related(pl, 'project') === project);
-    let media: MediaFile[] = getMediaInPlans(
-      projectplans.map((p) => p.id),
-      mediaFiles,
-      VernacularTag,
-      true
-    );
-    const attached = media
-      .map((m) => related(m, 'passage'))
-      .filter((p) => p && p !== '');
-    if (!attached.length) {
-      showMessage(t.incompletePlan);
-      setBusy(false);
-      return;
-    }
     /* get correct count */
     const onlyTypeId = [ExportType.DBL, ExportType.BURRITO].includes(exportType)
       ? VernacularTag
-      : exportType === ExportType.AUDIO
+      : [ExportType.AUDIO, ExportType.ELAN].includes(exportType)
       ? getTypeId(artifactType)
       : undefined;
     const onlyLatest = onlyTypeId !== undefined;
-    media = getMediaInPlans(
+    let media = getMediaInPlans(
       projectplans.map((p) => p.id),
       mediaFiles,
       onlyTypeId,
@@ -296,7 +287,6 @@ export function TranscriptionTab(props: IProps) {
       memory,
       backup,
       project,
-      fingerprint,
       user,
       media.length,
       token,
@@ -308,14 +298,16 @@ export function TranscriptionTab(props: IProps) {
           ? localizedArtifactType(artifactType)
           : t.changed
       ),
-      t.offlineData,
+      t.queued,
       localizedArtifact,
       getOfflineProject,
+      importedDate,
       step,
       orgSteps
     );
   };
   const handleProjectExport = () => {
+    setAlertOpen(false);
     if (offline) setOpenExport(true);
     else doProjectExport(ExportType.PTF);
   };
@@ -383,16 +375,18 @@ export function TranscriptionTab(props: IProps) {
       showMessage(t.noData.replace('{0}', localizedArtifactType(artifactType)));
   };
 
-  const handleAudioExportMenu = (what: string) => {
-    if (what === 'zip') {
-      setBusy(true);
-      doProjectExport(ExportType.AUDIO);
-    } else if (what === 'burrito') {
-      setBusy(true);
-      doProjectExport(ExportType.BURRITO);
-      // } else if (what === 'dbl') {
-      //   setBusy(true);
-      //   doProjectExport(ExportType.DBL);
+  const handleAudioExportMenu = (what: string | ExportType) => {
+    setBusy(true);
+    switch (what) {
+      case ExportType.AUDIO:
+      case ExportType.ELAN:
+      case ExportType.BURRITO:
+        //case ExportType.DBL:
+        doProjectExport(what);
+        break;
+      default:
+        setBusy(false);
+        break;
     }
   };
 
@@ -447,7 +441,9 @@ export function TranscriptionTab(props: IProps) {
   useEffect(() => {
     if (exportUrl && exportName !== '') {
       if (exportAnchor && exportAnchor.current) {
-        exportAnchor.current.click();
+        if (process.env.REACT_APP_DEBUG !== 'true')
+          exportAnchor.current.click();
+        else console.log(exportUrl);
         URL.revokeObjectURL(exportUrl);
         setExportUrl(undefined);
         showTitledMessage(
@@ -476,6 +472,7 @@ export function TranscriptionTab(props: IProps) {
         if (exportStatus.complete) {
           setBusy(false);
           if (exportFile && exportName === '') {
+            setAlertOpen(exportStatus.errMsg !== '');
             setExportName(exportFile.message);
             setExportUrl(exportFile.fileURL);
           }
@@ -623,7 +620,7 @@ export function TranscriptionTab(props: IProps) {
     }
     return (
       <td className="MuiTableCell-root">
-        <div style={{ display: 'flex' }}>{props.children}</div>
+        <Box sx={{ display: 'flex' }}>{props.children}</Box>
       </td>
     );
   };
@@ -655,14 +652,42 @@ export function TranscriptionTab(props: IProps) {
       setOpenExport(false);
       doProjectExport(ExportType.PTF);
     };
-    const doITF = () => {
-      setOpenExport(false);
-      doProjectExport(ExportType.ITF);
+    const doITF = (event: React.MouseEvent<HTMLElement>) => {
+      if (event.shiftKey) {
+        const op = getOfflineProject(project);
+        var oldDate = moment(op.attributes.snapshotDate);
+        setSnapshotDate(oldDate);
+        setSinceDate(
+          op.attributes.snapshotDate.substring(
+            0,
+            op.attributes.snapshotDate.indexOf('T')
+          )
+        );
+        setOpenDatePicker(true);
+      } else {
+        setOpenExport(false);
+        doProjectExport(ExportType.ITF);
+      }
+    };
+    const doITFwDate = () => {
+      const doIt = (newDate: Moment | undefined) => {
+        setOpenDatePicker(false);
+        setOpenExport(false);
+        doProjectExport(ExportType.ITF, newDate);
+      };
+      var newDate = moment(sinceDate);
+      if (newDate.isValid()) {
+        doIt(newDate.date() !== snapshotDate?.date() ? newDate : undefined);
+      } else {
+        showMessage('invalid date');
+      }
     };
     const closeNoChoice = () => {
       setOpenExport(false);
     };
-
+    const handleTextChange = (e: any) => {
+      setSinceDate(e.target.value);
+    };
     return (
       <Dialog
         open={openExport}
@@ -687,6 +712,26 @@ export function TranscriptionTab(props: IProps) {
           <Button id="expItf" onClick={doITF} color="primary" autoFocus>
             {t.exportITFtype}
           </Button>
+          {openDatePicker && (
+            <TextField
+              id="datesince"
+              value={sinceDate}
+              onChange={handleTextChange}
+              label={t.exportSince}
+              focused
+              sx={{ width: '400px' }}
+            />
+          )}
+          {openDatePicker && (
+            <Button
+              id="expItfGo"
+              onClick={doITFwDate}
+              color="primary"
+              autoFocus
+            >
+              {t.exportSinceGo}
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     );
@@ -702,7 +747,7 @@ export function TranscriptionTab(props: IProps) {
         >
           <TabActions>
             {(planColumn || floatTop) && (
-              <PriButton
+              <AltButton
                 id="transExp"
                 key="export"
                 aria-label={t.exportProject}
@@ -711,9 +756,9 @@ export function TranscriptionTab(props: IProps) {
                 disabled={busy}
               >
                 {t.exportProject}
-              </PriButton>
+              </AltButton>
             )}
-            <PriButton
+            <AltButton
               id="transCopy"
               key="copy"
               aria-label={t.copyTranscriptions}
@@ -722,7 +767,7 @@ export function TranscriptionTab(props: IProps) {
             >
               {t.copyTranscriptions +
                 (localizedArtifact ? ' (' + localizedArtifact + ')' : '')}
-            </PriButton>
+            </AltButton>
             {step && (
               <AudioExportMenu
                 key="audioexport"
@@ -738,6 +783,12 @@ export function TranscriptionTab(props: IProps) {
                 aria-label={t.electronBackup}
                 onClick={handleBackup}
                 title={t.electronBackup}
+                sx={{
+                  m: 1,
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  justifyContent: 'flex-start',
+                }}
               >
                 {t.electronBackup}
               </PriButton>
@@ -748,11 +799,10 @@ export function TranscriptionTab(props: IProps) {
               exportTypes={artifactTypes}
               setExportType={setArtifactType}
             />
-            <PriButton
+            <AltButton
               id="transFilt"
               key="filter"
               aria-label={t.filter}
-              variant="outlined"
               onClick={handleFilter}
               title={t.showHideFilter}
             >
@@ -762,9 +812,19 @@ export function TranscriptionTab(props: IProps) {
               ) : (
                 <FilterIcon sx={iconMargin} />
               )}
-            </PriButton>
+            </AltButton>
           </TabActions>
         </TabAppBar>
+        {alertOpen && (
+          <Alert
+            severity="warning"
+            onClose={() => {
+              setAlertOpen(false);
+            }}
+          >
+            {t.offlineData}
+          </Alert>
+        )}
         <PaddedBox>
           <TreeGrid
             columns={columnDefs}
@@ -791,6 +851,7 @@ export function TranscriptionTab(props: IProps) {
             showgroups={filter}
             showSelection={false}
             defaultHiddenColumnNames={defaultHiddenColumnNames}
+            checks={[]}
           />
         </PaddedBox>
       </div>
@@ -822,7 +883,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   allBookData: state.books.bookData,
 });
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       exportProject: actions.exportProject,
@@ -841,5 +902,5 @@ const mapRecordsToProps = {
 };
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(TranscriptionTab) as any
-) as any;
+  connect(mapStateToProps, mapDispatchToProps)(TranscriptionTab as any) as any
+) as any as (props: IProps) => JSX.Element;

@@ -7,7 +7,7 @@ import { remoteIdGuid, remoteId } from '../crud';
 import { dataPath, PathType } from '../utils/dataPath';
 import { MediaFile } from '../model';
 import { infoMsg, logError, Severity } from '../utils';
-const os = require('os');
+const ipc = (window as any)?.electron;
 // See: https://www.smashingmagazine.com/2020/07/custom-react-hook-fetch-cache-data/
 
 export enum MediaSt {
@@ -88,9 +88,9 @@ export const useFetchMediaUrl = (reporter?: any) => {
     return isNaN(Number(id)) ? remoteId('mediafile', id, memory.keyMap) : id;
   };
 
-  const safeURL = (path: string) => {
+  const safeURL = async (path: string) => {
     if (!path.startsWith('http')) {
-      const start = os.platform() === 'win32' ? 8 : 7;
+      const start = (await ipc?.isWindows()) ? 8 : 7;
       const url = new URL(`file://${path}`).toString().slice(start);
       return `transcribe-safe://${url}`;
     }
@@ -103,13 +103,14 @@ export const useFetchMediaUrl = (reporter?: any) => {
 
     const cancelled = () => {
       if (cancelRequest) {
-        dispatch({ payload: undefined, type: MediaSt.IDLE });
+        // setting to idle here clears the fetched url when component refreshed
+        // dispatch({ payload: undefined, type: MediaSt.IDLE });
         return true;
       }
       return false;
     };
 
-    const fetchData = () => {
+    const fetchData = async () => {
       if (isElectron) {
         try {
           if (cancelled()) return;
@@ -123,16 +124,22 @@ export const useFetchMediaUrl = (reporter?: any) => {
             if (cancelled()) return;
             const audioUrl = mediarec.attributes.audioUrl;
             const path = dataPath(audioUrl, PathType.MEDIA);
-            if (!path.startsWith('http')) {
-              if (cancelled()) return;
-              dispatch({ payload: safeURL(path), type: MediaSt.FETCHED });
-              return;
-            } else if (!accessToken) {
-              dispatch({
-                payload: 'no offline file',
-                type: MediaSt.ERROR,
-              });
-              return;
+            const foundLocal = await ipc?.exists(path);
+            if (foundLocal || !accessToken) {
+              if (!path.startsWith('http')) {
+                if (cancelled()) return;
+                dispatch({
+                  payload: await safeURL(path),
+                  type: MediaSt.FETCHED,
+                });
+                return;
+              } else if (!accessToken) {
+                dispatch({
+                  payload: 'no offline file',
+                  type: MediaSt.ERROR,
+                });
+                return;
+              }
             }
           }
         } catch (e: any) {

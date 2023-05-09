@@ -1,28 +1,31 @@
-import React, { useContext, useMemo, useRef, useState } from 'react';
+import { useContext, useMemo, useRef, useState } from 'react';
 import { useEffect, useGlobal } from 'reactn';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
+  Box,
+  BoxProps,
   Button,
   Card,
   CardContent,
+  CardProps,
   Chip,
   Grid,
   IconButton,
+  IconButtonProps,
+  styled,
+  SxProps,
   TextField,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 import Confirm from '../AlertDialog';
 import {
   Discussion,
   Comment,
   IDiscussionCardStrings,
-  IState,
   Group,
   User,
   MediaFile,
   ISharedStrings,
   ArtifactCategory,
-  RoleNames,
   Section,
   Plan,
   Passage,
@@ -32,11 +35,10 @@ import ResolveIcon from '@mui/icons-material/Check';
 import HideIcon from '@mui/icons-material/ArrowDropUp';
 import ShowIcon from '@mui/icons-material/ArrowDropDown';
 import LocationIcon from '@mui/icons-material/LocationSearching';
-import { connect } from 'react-redux';
-import localStrings from '../../selector/localize';
+import { shallowEqual } from 'react-redux';
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
-import { withData } from '../../mods/react-orbitjs';
-import { PermissionName, related, usePermissions } from '../../crud';
+import { withData } from 'react-orbitjs';
+import { PermissionName, related, usePermissions, useRole } from '../../crud';
 import CommentCard from './CommentCard';
 import ReplyCard from './ReplyCard';
 import UserAvatar from '../UserAvatar';
@@ -58,131 +60,103 @@ import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { removeExtension, startEnd, waitForIt } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
-import { NewDiscussionToolId } from './DiscussionList';
+import { NewDiscussionToolId, NewCommentToolId } from './DiscussionList';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import GroupAvatar from '../GroupAvatar';
 import SelectDiscussionAssignment from '../../control/SelectDiscussionAssignment';
 import { usePeerGroups } from '../Peers/usePeerGroups';
 import { OldVernVersion } from '../../control/OldVernVersion';
+import { useSelector } from 'react-redux';
+import { discussionCardSelector, sharedSelector } from '../../selector';
+import { CommentEditor } from './CommentEditor';
+import { useSaveComment } from '../../crud/useSaveComment';
+import { useRecordComment } from './useRecordComment';
+import BigDialog from '../../hoc/BigDialog';
+import { DiscussionMove } from './DiscussionMove';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      display: 'flex',
-      '&:hover button': {
-        color: 'black',
-      },
-      '&:hover button[disabled]': {
-        color: 'grey',
-      },
-      '& .MuiTypography-root': {
-        cursor: 'default ',
-      },
-      '& button': {
-        color: 'lightgrey',
-      },
-      '& .MuiChip-root': {
-        backgroundColor: 'lightgrey',
-      },
-    },
-    card: {
-      margin: theme.spacing(1),
-      backgroundColor: theme.palette.primary.light,
-      flexGrow: 1,
-    },
-    highlightedcard: {
-      margin: theme.spacing(1),
-      backgroundColor: theme.palette.secondary.light,
-      flexGrow: 1,
-    },
-    resolvedcard: {
-      margin: theme.spacing(1),
-      backgroundColor: 'grey',
-      flexGrow: 1,
-    },
-    content: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      color: theme.palette.primary.contrastText,
-    },
-    commentCount: {
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    ref: {
-      overflow: 'hidden',
-    },
-    topicItem: {
-      overflow: 'hidden',
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    topic: {
-      marginRight: theme.spacing(2),
-      alignSelf: 'center',
-    },
-    pos: {
-      marginBottom: 12,
-    },
-    title: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      flexGrow: 1,
-      flexWrap: 'unset',
-    },
-    titleControls: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    cardFlow: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-      backgroundColor: theme.palette.background.paper,
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    actionButton: {
-      color: theme.palette.background.paper,
-    },
-    smallButton: {
-      width: theme.spacing(3),
-      height: theme.spacing(3),
-      color: theme.palette.background.paper,
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      display: 'flex',
-      flexGrow: 1,
-    },
-    menu: {},
-    edit: {
-      backgroundColor: theme.palette.background.paper,
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      width: '100%',
-    },
-    editText: {
-      margin: theme.spacing(1),
-      marginTop: theme.spacing(3),
-      color: theme.palette.primary.dark,
-    },
-    oldVersion: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-  })
-);
+const DiscussionCardRoot = styled(Box)<BoxProps>(() => ({
+  width: '100%',
+  display: 'flex',
+  '&:hover button': {
+    color: 'black',
+  },
+  '&:hover button[disabled]': {
+    color: 'grey',
+  },
+  '& .MuiTypography-root': {
+    cursor: 'default ',
+  },
+  '& button': {
+    color: 'lightgrey',
+  },
+  '& .MuiChip-root': {
+    backgroundColor: 'lightgrey',
+  },
+}));
+
+const EditContainer = styled('div')(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  display: 'flex',
+  flexDirection: 'column',
+  flexGrow: 1,
+  width: '100%',
+}));
+
+// see: https://mui.com/material-ui/customization/how-to-customize/
+interface StyledCardProps extends CardProps {
+  resolved?: boolean;
+  highlight?: boolean;
+}
+const StyledCard = styled(Card, {
+  shouldForwardProp: (prop) => prop !== 'resolved' && prop !== 'highlight',
+})<StyledCardProps>(({ resolved, highlight, theme }) => ({
+  ...(resolved
+    ? {
+        margin: theme.spacing(1),
+        backgroundColor: 'grey',
+        flexGrow: 1,
+      }
+    : highlight
+    ? {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.light,
+        flexGrow: 1,
+      }
+    : {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.primary.light,
+        flexGrow: 1,
+      }),
+}));
+
+const SmallButton = styled(IconButton)<IconButtonProps>(({ theme }) => ({
+  width: theme.spacing(3),
+  height: theme.spacing(3),
+  color: theme.palette.background.paper,
+}));
+
+const topicProps = { mr: 2, alignSelf: 'center' } as SxProps;
+const topicItemProps = {
+  overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'row',
+} as SxProps;
+const titleProps = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  flexGrow: 1,
+  flexWrap: 'unset',
+} as SxProps;
+const tilteCtrlProps = { display: 'flex', flexDirection: 'row' } as SxProps;
+const cardFlowProps = {
+  px: 2,
+  bgColor: 'background.paper',
+  display: 'flex',
+  flexDirection: 'column',
+} as SxProps;
+const lightButton = { color: 'background.paper' } as SxProps;
+
 interface IRecordProps {
   comments: Array<Comment>;
   mediafiles: Array<MediaFile>;
@@ -194,30 +168,25 @@ interface IRecordProps {
   users: Array<User>;
   memberships: Array<GroupMembership>;
 }
-interface IStateProps {
-  t: IDiscussionCardStrings;
-  ts: ISharedStrings;
-}
-interface IProps extends IRecordProps, IStateProps {
+
+interface IProps {
   id: string;
   discussion: Discussion;
   collapsed: boolean;
   showStep: boolean;
   showReference: boolean;
-  onAddComplete?: (id: string) => {};
-  setRef: (ref: any) => {};
+  onAddComplete?: (id: string) => void;
+  setRef: (ref: any) => void;
   requestHighlight: string;
 }
+
 export const DiscussionRegion = (discussion: Discussion) => {
   return startEnd(discussion.attributes?.subject);
 };
 
-export const DiscussionCard = (props: IProps) => {
-  const classes = useStyles();
+export const DiscussionCard = (props: IProps & IRecordProps) => {
   const {
     id,
-    t,
-    ts,
     discussion,
     collapsed,
     showStep,
@@ -235,11 +204,16 @@ export const DiscussionCard = (props: IProps) => {
     users,
     memberships,
   } = props;
+  const t: IDiscussionCardStrings = useSelector(
+    discussionCardSelector,
+    shallowEqual
+  );
   const tdcs = t;
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const ctx = useContext(PassageDetailContext);
   const {
     currentstep,
-    mediafileId,
+    playerMediafile,
     setPlayerSegments,
     currentSegment,
     handleHighlightDiscussion,
@@ -252,10 +226,12 @@ export const DiscussionCard = (props: IProps) => {
     saveCompleted,
     saveRequested,
     clearRequested,
+    clearCompleted,
+    startSave,
+    startClear,
   } = useContext(UnsavedContext).state;
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
-  const [projRole] = useGlobal('projRole');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [myComments, setMyComments] = useState<Comment[]>([]);
@@ -270,6 +246,9 @@ export const DiscussionCard = (props: IProps) => {
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [myChanged, setMyChanged] = useState(false);
   const savingRef = useRef(false);
+  const [showMove, setShowMove] = useState(false);
+  const [moveTo, setMoveTo] = useState<string>();
+
   const [editSubject, setEditSubject] = useState(
     discussion.attributes?.subject
   );
@@ -291,13 +270,55 @@ export const DiscussionCard = (props: IProps) => {
   const { localizedArtifactCategory } = useArtifactCategory();
   const { localizedWorkStepFromId } = useOrgWorkflowSteps();
   const cardRef = useRef<any>();
-  const myToolId = useMemo(() => {
+  const commentText = useRef('');
+  const [comment, setComment] = useState('');
+  const commentMediaId = useRef('');
+  const [canSaveRecording, setCanSaveRecording] = useState(false);
+
+  const mediafileId = useMemo(() => {
+    return playerMediafile?.id ?? '';
+  }, [playerMediafile]);
+
+  const myToolId: string = useMemo(() => {
     if (discussion.id) return discussion.id;
     else return NewDiscussionToolId;
   }, [discussion]);
+
+  const afterSaveCommentcb = () => {
+    saveCompleted(NewCommentToolId);
+  };
+  const saveComment = useSaveComment({
+    cb: afterSaveCommentcb,
+    users,
+    groups,
+    memberships,
+  });
+  const saveMyComment = async (mediaId: string) => {
+    commentMediaId.current = mediaId;
+    if (discussion.id) {
+      if (commentText.current || commentMediaId.current)
+        saveComment(
+          discussion.id,
+          '',
+          commentText.current,
+          commentMediaId.current,
+          undefined
+        );
+      else saveCompleted(NewCommentToolId);
+      commentText.current = '';
+      commentMediaId.current = '';
+    }
+  };
+  const { uploadMedia, fileName } = useRecordComment({
+    mediafileId: mediafileId,
+    commentNumber: -1,
+    afterUploadcb: saveMyComment,
+  });
+
   const [changeAssignment, setChangeAssignment] = useState<
     boolean | undefined
   >();
+  const { userIsAdmin } = useRole();
 
   const handleSelect = (discussion: Discussion) => () => {
     selectDiscussion(discussion);
@@ -313,7 +334,16 @@ export const DiscussionCard = (props: IProps) => {
     setEditSubject('');
     setEditAssigned('');
     setEditCategory('');
+    setComment('');
+    commentText.current = '';
+    setMoveTo(undefined);
   };
+  useEffect(() => {
+    if (canSaveRecording) {
+      setChanged(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canSaveRecording]);
 
   useEffect(() => {
     if (Boolean(onAddComplete) !== editing) {
@@ -328,13 +358,24 @@ export const DiscussionCard = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentstep, discussion.id]);
 
+  const myCommentIds = useMemo(() => {
+    var myIds = myComments.map((d) => d.id);
+    if (discussion.id) myIds.push(discussion.id + 'reply');
+    else myIds.push(NewCommentToolId);
+    return myIds;
+  }, [myComments, discussion]);
+
   useEffect(() => {
     //if any of my comments are changed, add the discussion to the toolChanged list so DiscussionList will pick it up
     if (!myChanged) {
-      var myIds = myComments.map((d) => d.id);
-      myIds.push(discussion.id + 'reply');
-      var anyChanged = Object.keys(toolsChanged).some((t) => myIds.includes(t));
-      toolChanged(myToolId, anyChanged);
+      var anyChanged = Object.keys(toolsChanged).some(
+        (t) => myCommentIds.includes(t) && !toolsChanged[t].clearChanged
+      );
+      if (anyChanged)
+        if (discussion.id) toolChanged(myToolId, anyChanged);
+        //new discussion and my comment changed so set myChanged also
+        else setChanged(true);
+      else if (!myChanged) saveCompleted(myToolId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, myComments, myChanged]);
@@ -348,7 +389,7 @@ export const DiscussionCard = (props: IProps) => {
   }, [changeAssignment]);
 
   useEffect(() => {
-    if (comments)
+    if (comments) {
       setMyComments(
         comments
           .filter(
@@ -360,6 +401,7 @@ export const DiscussionCard = (props: IProps) => {
             a.attributes.dateCreated <= b.attributes.dateCreated ? -1 : 1
           )
       );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [comments, discussion.id, permissions]);
 
@@ -523,6 +565,21 @@ export const DiscussionCard = (props: IProps) => {
     }, 2000);
   };
 
+  const handleMove = () => {
+    setShowMove(true);
+  };
+
+  const moveClose = () => {
+    setShowMove(false);
+  };
+
+  const handleDoMove = (id: string) => {
+    setMoveTo(id);
+    setShowMove(false);
+    handleDiscussionAction('edit');
+    setTimeout(() => setChanged(true), 100);
+  };
+
   const handleDiscussionAction = (what: string) => {
     if (what === 'edit') {
       setEditSubject(discussion.attributes.subject);
@@ -537,6 +594,8 @@ export const DiscussionCard = (props: IProps) => {
       handleResolveDiscussion(false);
     } else if (what === 'set') {
       handleSetSegment();
+    } else if (what === 'move') {
+      handleMove();
     }
   };
 
@@ -612,22 +671,27 @@ export const DiscussionCard = (props: IProps) => {
     }
   };
   const handleSave = async () => {
-    if (mediafileId && myChanged && editSubject.length > 0) {
-      discussion.attributes.subject = editSubject;
+    //if there is an audio comment, start the upload
+    if (canSaveRecording && !commentMediaId.current) {
+      startSave(NewCommentToolId);
+      await waitForIt(
+        'comment upload',
+        () => {
+          return Boolean(commentMediaId.current);
+        },
+        () => false,
+        500
+      );
+    }
+    if (mediafileId && myChanged) {
+      //we should only get here with no subject if they've clicked off the screen and then told us to save with no subject
+      discussion.attributes.subject =
+        editSubject.length > 0 ? editSubject : tdcs.topic;
       var ops: Operation[] = [];
       var t = new TransformBuilder();
       if (!discussion.id) {
         ops.push(...AddRecord(t, discussion, user, memory));
-        ops.push(
-          ...UpdateRelatedRecord(
-            t,
-            discussion,
-            'orgWorkflowStep',
-            'orgworkflowstep',
-            currentstep,
-            user
-          )
-        );
+
         ops.push(
           ...UpdateRelatedRecord(
             t,
@@ -639,6 +703,16 @@ export const DiscussionCard = (props: IProps) => {
           )
         );
       } else ops.push(...UpdateRecord(t, discussion, user));
+      ops.push(
+        ...UpdateRelatedRecord(
+          t,
+          discussion,
+          'orgWorkflowStep',
+          'orgworkflowstep',
+          moveTo ?? currentstep,
+          user
+        )
+      );
       ops.push(
         ...UpdateRelatedRecord(
           t,
@@ -667,15 +741,23 @@ export const DiscussionCard = (props: IProps) => {
       );
       await memory.update(ops);
     }
-    onAddComplete && onAddComplete(discussion.id);
-    setEditing(false);
-    setChanged(false);
+    setMoveTo(undefined);
+    saveMyComment(commentMediaId.current).then(() => {
+      onAddComplete && onAddComplete(discussion.id);
+      setEditing(false);
+      setEditAssigned('');
+      setChanged(false);
+    });
   };
 
   const handleCancel = (e: any) => {
+    commentText.current = '';
+    commentMediaId.current = '';
     onAddComplete && onAddComplete('');
     setEditing(false);
     setChanged(false);
+    setMoveTo(undefined);
+    clearCompleted(myToolId);
   };
   const assignedGroup = useMemo(() => {
     return editAssigned.startsWith(groupPrefix)
@@ -698,6 +780,7 @@ export const DiscussionCard = (props: IProps) => {
 
   useEffect(() => {
     if (saveRequested(myToolId) && !savingRef.current) {
+      myCommentIds.forEach((id) => startSave(id));
       savingRef.current = true;
       handleSave().then(() => {
         waitForIt(
@@ -709,7 +792,13 @@ export const DiscussionCard = (props: IProps) => {
           savingRef.current = false;
         });
       });
-    } else if (clearRequested(myToolId)) handleCancel('');
+    } else if (clearRequested(myToolId)) {
+      handleCancel('');
+      //if we're coming from unsavedcontext, this will be done already
+      //but if we're coming from the discussion filter...we need to do it
+      myCommentIds.forEach((id) => startClear(id));
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
@@ -788,25 +877,33 @@ export const DiscussionCard = (props: IProps) => {
     setEditAssigned(currentAssigned());
     setChangeAssignment(!changeAssignment as boolean);
   };
-
+  const handleTextChange = (newText: string) => {
+    commentText.current = newText;
+    setComment(newText);
+    setChanged(true);
+  };
   return (
-    <div className={classes.root}>
-      <Card
+    <DiscussionCardRoot>
+      <StyledCard
         ref={cardRef}
         key={discussion.id}
         id={id}
-        className={
-          discussion.attributes.resolved
-            ? classes.resolvedcard
-            : myRegion?.start && myRegion?.start === highlightDiscussion
-            ? classes.highlightedcard
-            : classes.card
-        }
+        resolved={discussion.attributes.resolved}
+        highlight={Boolean(
+          myRegion?.start && myRegion?.start === highlightDiscussion
+        )}
         onClick={handleSelect(discussion)}
       >
-        <CardContent className={classes.content}>
+        <CardContent
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            color: 'primary.contrastText',
+          }}
+        >
           {editing ? (
-            <div className={classes.edit}>
+            <EditContainer>
               <TextField
                 autoFocus
                 margin="dense"
@@ -817,7 +914,7 @@ export const DiscussionCard = (props: IProps) => {
                 required
                 fullWidth
               />
-              <div className={classes.row}>
+              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                 <SelectGroup
                   id={`group-${discussion.id}`}
                   org={false}
@@ -829,7 +926,7 @@ export const DiscussionCard = (props: IProps) => {
                 <Typography
                   variant="h6"
                   component="h2"
-                  className={classes.editText}
+                  sx={{ m: 1, mt: 3, color: 'primary.dark' }}
                 >
                   {t.or}
                 </Typography>
@@ -840,80 +937,95 @@ export const DiscussionCard = (props: IProps) => {
                   required={false}
                   label={t.assignUser}
                 />
-              </div>
+              </Box>
               <SelectArtifactCategory
                 id={`category-${discussion.id}`}
                 initCategory={editCategory}
                 onCategoryChange={onCategoryChange}
-                allowNew={
-                  projRole === RoleNames.Admin && (!offline || offlineOnly)
-                }
+                allowNew={userIsAdmin && (!offline || offlineOnly)}
                 required={false}
                 scripture={ScriptureEnum.hide}
                 discussion={true}
               />
-              <div className={classes.row}>
+              {onAddComplete && (
+                <CommentEditor
+                  toolId={NewCommentToolId}
+                  comment={commentText.current}
+                  refresh={refresh}
+                  setCanSaveRecording={setCanSaveRecording}
+                  fileName={fileName(editSubject, '')}
+                  uploadMethod={uploadMedia}
+                  onTextChange={handleTextChange}
+                  cancelOnlyIfChanged={true}
+                />
+              )}
+              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                 <Button
                   id={`ok-${discussion.id}`}
                   onClick={handleSave}
-                  className={classes.actionButton}
-                  disabled={editSubject === ''}
+                  sx={lightButton}
+                  disabled={
+                    editSubject === '' ||
+                    !(canSaveRecording || myComments.length > 0 || comment)
+                  }
                 >
-                  {t.addComment}
+                  {discussion.id ? ts.save : t.addComment}
                 </Button>
                 <Button
                   id={`cancel-${discussion.id}`}
                   onClick={handleCancel}
-                  className={classes.actionButton}
+                  sx={lightButton}
                 >
                   {ts.cancel}
                 </Button>
-              </div>
-            </div>
+              </Box>
+            </EditContainer>
           ) : (
-            <Grid container className={classes.title}>
-              <Grid item className={classes.topicItem}>
-                {myRegion && related(discussion, 'mediafile') === mediafileId && (
-                  <IconButton
-                    id={`locate-${discussion.id}`}
-                    size="small"
-                    className={classes.actionButton}
-                    title={t.locate}
-                    onClick={handleLocateClick}
-                  >
-                    <LocationIcon fontSize="small" />
-                  </IconButton>
-                )}
-                {myRegion && related(discussion, 'mediafile') !== mediafileId && (
-                  <div className={classes.oldVersion}>
-                    <OldVernVersion
-                      id={discussion.id}
-                      oldVernVer={version}
-                      mediaId={related(discussion, 'mediafile')}
-                      text={discussion.attributes?.subject}
-                    />
-                  </div>
-                )}
+            <Grid container sx={titleProps}>
+              <Grid item sx={topicItemProps}>
+                {myRegion &&
+                  related(discussion, 'mediafile') === mediafileId && (
+                    <IconButton
+                      id={`locate-${discussion.id}`}
+                      size="small"
+                      sx={lightButton}
+                      title={t.locate}
+                      onClick={handleLocateClick}
+                    >
+                      <LocationIcon fontSize="small" />
+                    </IconButton>
+                  )}
+                {myRegion &&
+                  related(discussion, 'mediafile') !== mediafileId && (
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <OldVernVersion
+                        id={discussion.id}
+                        oldVernVer={version}
+                        mediaId={related(discussion, 'mediafile')}
+                        text={discussion.attributes?.subject}
+                      />
+                    </Box>
+                  )}
                 <Typography
                   variant="h6"
                   component="h2"
-                  className={classes.topic}
+                  sx={topicProps}
                   title={discussionDescription()}
                 >
                   {discussion.attributes?.subject}
                 </Typography>
               </Grid>
-              <Grid item className={classes.titleControls}>
+              <Grid item sx={tilteCtrlProps}>
                 {assignedGroup && (
                   <LightTooltip title={t.changeAssignment}>
-                    <IconButton onClick={handleAssignedClick}>
+                    <IconButton onClick={handleAssignedClick} sx={{ p: '1px' }}>
                       <GroupAvatar groupRec={assignedGroup} org={false} />
                     </IconButton>
                   </LightTooltip>
                 )}
                 {assignedUser && (
                   <LightTooltip title={t.changeAssignment}>
-                    <IconButton onClick={handleAssignedClick}>
+                    <IconButton onClick={handleAssignedClick} sx={{ p: '1px' }}>
                       <UserAvatar userRec={assignedUser} />
                     </IconButton>
                   </LightTooltip>
@@ -933,7 +1045,7 @@ export const DiscussionCard = (props: IProps) => {
                 {!discussion.attributes.resolved && (
                   <IconButton
                     id={`resolveDiscussion-${discussion.id}`}
-                    className={classes.actionButton}
+                    sx={lightButton}
                     title={t.resolved}
                     onClick={handleResolveButton}
                   >
@@ -950,15 +1062,21 @@ export const DiscussionCard = (props: IProps) => {
             </Grid>
           )}
 
-          <div className={classes.commentCount}>
-            <IconButton
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <SmallButton
               id={`collapseDiscussion-${discussion.id}`}
-              className={classes.smallButton}
               title={t.collapse}
               onClick={handleToggleCollapse}
             >
               {showComments ? <HideIcon /> : <ShowIcon />}
-            </IconButton>
+            </SmallButton>
             <Typography variant="body2" component="p">
               {t.comments.replace('{0}', myComments.length.toString())}
             </Typography>
@@ -974,35 +1092,34 @@ export const DiscussionCard = (props: IProps) => {
                 variant="body2"
                 component="p"
                 title={reference}
-                className={classes.ref}
+                sx={{ overflow: 'hidden' }}
               >
                 {reference}
               </Typography>
             )}
-          </div>
+          </Box>
           {showComments && !onAddComplete && (
-            <Grid container className={classes.cardFlow}>
+            <Grid container sx={cardFlowProps}>
               {myComments.map((i, j) => (
                 <CommentCard
                   key={i.id}
                   comment={i}
                   approvalStatus={approvalStatus(i.attributes?.visible)}
                   discussion={discussion}
-                  number={j}
+                  commentNumber={j}
                   onEditing={handleEditCard}
                 />
               ))}
               {!discussion.attributes.resolved && !editCard && (
                 <ReplyCard
-                  id={`reply-${discussion.id}`}
                   discussion={discussion}
-                  number={myComments.length}
+                  commentNumber={myComments.length}
                 />
               )}
             </Grid>
           )}
         </CardContent>
-      </Card>
+      </StyledCard>
       {confirmAction === '' || (
         <Confirm
           text={t.confirmDelete}
@@ -1010,7 +1127,12 @@ export const DiscussionCard = (props: IProps) => {
           noResponse={handleActionRefused}
         />
       )}
-    </div>
+      {showMove && (
+        <BigDialog title={t.move} isOpen={showMove} onOpen={moveClose}>
+          <DiscussionMove onSelect={handleDoMove} />
+        </BigDialog>
+      )}
+    </DiscussionCardRoot>
   );
 };
 const mapRecordsToProps = {
@@ -1024,10 +1146,6 @@ const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
   memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
 };
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'discussionCard' }),
-  ts: localStrings(state, { layout: 'shared' }),
-});
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(DiscussionCard) as any
-) as any;
+export default withData(mapRecordsToProps)(DiscussionCard) as any as (
+  props: IProps
+) => JSX.Element;

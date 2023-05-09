@@ -1,49 +1,26 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { Grid, Paper, Typography, Button } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { TeamContext } from '../../context/TeamContext';
 import BigDialog from '../../hoc/BigDialog';
 import { ProjectCard, AddCard } from '.';
 import { StepEditor } from '../StepEditor';
 import { useNewTeamId, defaultWorkflow } from '../../crud';
 import { UnsavedContext } from '../../context/UnsavedContext';
+import { TeamPaper, TeamHeadDiv, TeamName, AltButton } from '../../control';
+import { QueryBuilder } from '@orbit/data';
+import { withData } from 'react-orbitjs';
+import { Organization } from '../../model';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      backgroundColor: theme.palette.background.default,
-      marginBottom: theme.spacing(2),
-      '& .MuiPaper-rounded': {
-        borderRadius: '8px',
-      },
-    },
-    teamHead: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      padding: theme.spacing(2),
-    },
-    name: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    icon: {
-      paddingRight: theme.spacing(1),
-    },
-    cardFlow: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-    },
-  })
-);
+interface Records {
+  organizations: Organization[];
+}
 
-export const PersonalItem = () => {
-  const classes = useStyles();
+export const PersonalItem = (props: Records) => {
+  const { organizations } = props;
   const ctx = React.useContext(TeamContext);
-  const { personalProjects, cardStrings, ts, resetOrbitError } = ctx.state;
+  const { personalProjects, cardStrings } = ctx.state;
   const t = cardStrings;
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -51,7 +28,7 @@ export const PersonalItem = () => {
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [showWorkflow, setShowWorkflow] = useState(false);
   const [org, setOrg] = useState('');
-  const getTeamId = useNewTeamId({ ts, resetOrbitError });
+  const getTeamId = useNewTeamId();
 
   const handleWorkflow = (isOpen: boolean) => {
     if (changed) {
@@ -71,27 +48,23 @@ export const PersonalItem = () => {
       setOrg(val);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [organizations]);
 
   return (
-    <Paper id="PersonalItem" className={classes.root}>
-      <div className={classes.teamHead}>
-        <Typography variant="h5" className={classes.name}>
-          <PersonIcon className={classes.icon} />
+    <TeamPaper id="PersonalItem">
+      <TeamHeadDiv>
+        <TeamName variant="h5">
+          <PersonIcon sx={{ pr: 1 }} />
           {t.personalProjects}
-        </Typography>
+        </TeamName>
         {'\u00A0'}
         {canModify(isOffline, offlineOnly) && (
-          <Button
-            id="editWorkflow"
-            onClick={handleEditWorkflow}
-            variant="contained"
-          >
+          <AltButton id="editWorkflow" onClick={handleEditWorkflow}>
             {t.editWorkflow.replace('{0}', '')}
-          </Button>
+          </AltButton>
         )}
-      </div>
-      <Grid container className={classes.cardFlow}>
+      </TeamHeadDiv>
+      <Grid container sx={{ px: 2 }}>
         {personalProjects.map((i) => {
           return <ProjectCard key={i.id} project={i} />;
         })}
@@ -104,6 +77,13 @@ export const PersonalItem = () => {
       >
         <StepEditor process={defaultWorkflow} org={org} />
       </BigDialog>
-    </Paper>
+    </TeamPaper>
   );
 };
+const mapRecordsToProps = {
+  organizations: (q: QueryBuilder) => q.findRecords('organization'),
+};
+
+export default withData(mapRecordsToProps)(
+  PersonalItem
+) as any as () => JSX.Element;

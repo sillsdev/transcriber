@@ -22,7 +22,7 @@ export const wfColumnHeads = (
   localName: ILocalName,
   minWidth: IMinWidth
 ) => {
-  const sheet: Array<Array<any>> = workflowSheet(wf, colNames);
+  const sheet: Array<Array<any>> = workflowSheet(wf, colNames, wf);
   const colMx: Array<number> = sheet.reduce(
     (prev, cur) =>
       cur.map((v, i) =>

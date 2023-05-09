@@ -2,7 +2,12 @@ import { useGlobal } from 'reactn';
 import { VProject, Project, Plan, Group } from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import { related, useTypeId, useOfflnProjCreate } from '.';
-import { useProjectsLoaded, localeDefault, currentDateTime } from '../utils';
+import {
+  useProjectsLoaded,
+  localeDefault,
+  currentDateTime,
+  cleanFileName,
+} from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 
@@ -61,6 +66,7 @@ export const useVProjectCreate = () => {
         allowClaim: true,
         dateCreated: currentDateTime(),
         dateUpdated: currentDateTime(),
+        defaultParams: '{}',
       },
     } as Project;
     memory.schema.initializeRecord(project);
@@ -89,7 +95,20 @@ export const useVProjectCreate = () => {
     ]);
     await offlineProjectCreate(project);
     AddProjectLoaded(project.id);
-
+    let slug = cleanFileName(name).substring(0, 6);
+    if (offlineOnly) {
+      //see if slug is unique
+      const plans = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('plan')
+      ) as Plan[];
+      let tmp = '';
+      let findit = (fnd: string) =>
+        plans.findIndex((p) => p.attributes.slug === fnd);
+      while (findit(slug + tmp) > 0) {
+        tmp = ((parseInt(tmp) ?? 0) + 1).toString();
+      }
+      slug += tmp;
+    }
     let plan: Plan = {
       type: 'plan',
       attributes: {
@@ -97,6 +116,7 @@ export const useVProjectCreate = () => {
         flat,
         tags: JSON.stringify(tags),
         organizedBy,
+        slug: slug,
       },
     } as any;
     memory.schema.initializeRecord(plan);

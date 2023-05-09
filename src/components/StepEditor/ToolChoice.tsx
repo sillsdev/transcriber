@@ -1,36 +1,17 @@
-import { IState, IStepEditorStrings, OptionType } from '../../model';
-import { connect } from 'react-redux';
-import localStrings from '../../selector/localize';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import { TextField, MenuItem } from '@material-ui/core';
+import { IStepEditorStrings, OptionType } from '../../model';
+import { shallowEqual, useSelector } from 'react-redux';
+import { TextField, MenuItem } from '@mui/material';
 import { useTools } from '../../crud';
+import { stepEditorSelector } from './StepEditor';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      display: 'flex',
-      flexGrow: 1,
-    },
-    menu: {
-      width: 300,
-    },
-  })
-);
-
-interface IStateProps {
-  t: IStepEditorStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   tool: string;
   onChange: (tool: string) => void;
 }
 
-export const ToolChoice = ({ tool, onChange, t }: IProps) => {
-  const classes = useStyles();
+export const ToolChoice = ({ tool, onChange }: IProps) => {
   const { getToolOptions } = useTools();
+  const t: IStepEditorStrings = useSelector(stepEditorSelector, shallowEqual);
 
   const handleChange = (e: any) => {
     onChange(e.target.value);
@@ -44,10 +25,10 @@ export const ToolChoice = ({ tool, onChange, t }: IProps) => {
       value={tool}
       onChange={handleChange}
       variant="filled"
-      className={classes.textField}
+      sx={{ mx: 1, display: 'flex', flexGrow: 1 }}
       SelectProps={{
         MenuProps: {
-          className: classes.menu,
+          sx: { width: '300px' },
         },
       }}
     >
@@ -60,8 +41,4 @@ export const ToolChoice = ({ tool, onChange, t }: IProps) => {
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'stepEditor' }),
-});
-
-export default connect(mapStateToProps)(ToolChoice) as any;
+export default ToolChoice;

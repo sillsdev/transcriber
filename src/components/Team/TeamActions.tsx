@@ -1,37 +1,53 @@
-import React, { useState } from 'react';
+import { useContext, useState } from 'react';
+import Axios from 'axios';
 import { useGlobal } from 'reactn';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import { Button } from '@material-ui/core';
+import {
+  Box,
+  BoxProps,
+  FormControlLabel,
+  TextField,
+  styled,
+} from '@mui/material';
 import { DialogMode, Organization } from '../../model';
 import TeamDialog from './TeamDialog';
 import { TeamContext } from '../../context/TeamContext';
-import { isElectron } from '../../api-variable';
+import { API_CONFIG, isElectron } from '../../api-variable';
 import ImportTab from '../ImportTab';
+import { AltButton } from '../../control';
+import { useMyNavigate } from '../../utils';
+import AddIcon from '@mui/icons-material/Add';
+import { useRole } from '../../crud';
+import { TokenContext } from '../../context/TokenProvider';
+import { errStatus } from '../../store/AxiosStatus';
+import { useSnackBar } from '../../hoc/SnackBar';
+import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      padding: theme.spacing(2),
-      minWidth: theme.spacing(20),
-      display: 'flex',
-      flexDirection: 'column',
-      alignContent: 'center',
-    },
-    button: {
-      marginBottom: theme.spacing(2),
-    },
-  })
-);
+const RootBox = styled(Box)<BoxProps>(({ theme }) => ({
+  padding: theme.spacing(2),
+  minWidth: theme.spacing(20),
+  display: 'flex',
+  flexDirection: 'column',
+  alignContent: 'center',
+}));
 
 const TeamActions = () => {
-  const classes = useStyles();
   const [offline] = useGlobal('offline');
   const [isDeveloper] = useGlobal('developer');
+  const [, setBusy] = useGlobal('remoteBusy');
   const [openAdd, setOpenAdd] = useState(false);
+  const [openContent, setOpenContent] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
-  const ctx = React.useContext(TeamContext);
-  const { teamCreate, cardStrings, isDeleting } = ctx.state;
+  const ctx = useContext(TeamContext);
+  const navigate = useMyNavigate();
+  const { teamCreate, cardStrings, isDeleting, sharedStrings } = ctx.state;
+  const [email, setEmail] = useState('');
+  const [validEmail, setValidEmail] = useState(false);
+  const [contentStatus, setContentStatus] = useState('');
+  const { userIsSharedContentAdmin } = useRole();
   const t = cardStrings;
+  const ts = sharedStrings;
+  const tokenctx = useContext(TokenContext).state;
+  const { showMessage } = useSnackBar();
 
   const handleClickOpen = () => {
     setOpenAdd(true);
@@ -39,44 +55,88 @@ const TeamActions = () => {
   const handleClickImport = () => {
     setImportOpen(true);
   };
-
+  const handleClickContent = () => {
+    setOpenContent(true);
+  };
   const handleAdd = (
     team: Organization,
     cb?: (id: string) => Promise<void>
   ) => {
-    teamCreate(team, async () => {
-      cb && (await cb(team.id));
+    setBusy(true); //this will be reset by datachanges
+    teamCreate(team, async (id: string) => {
+      cb && (await cb(id));
       setOpenAdd(false);
     });
   };
-
+  const handleContentDone = () => {
+    setContentStatus('');
+    setEmail('');
+    setOpenContent(false);
+  };
   const handleAdded = () => {
     setOpenAdd(false);
   };
+  const handleSharedContentClick = () => {
+    if (!validEmail) return;
+    setValidEmail(false); //turn off the save button
+    setContentStatus(ts.saving);
+    Axios.post(
+      `${API_CONFIG.host}/api/users/sharedcreator/${encodeURIComponent(
+        email
+      )}/true`,
+      null,
+      {
+        headers: {
+          'Content-Type': 'application/vnd.api+json',
+          Authorization: 'Bearer ' + tokenctx.accessToken,
+        },
+      }
+    )
+      .then((response) => {
+        showMessage(t.creatorOK);
+        handleContentDone();
+      })
+      .catch((err) => {
+        setContentStatus(errStatus(err).errMsg);
+      });
+  };
+  const handleEmailChange = (e: any) => {
+    setEmail(e.target.value);
+    setValidEmail(ValidateEmail(e.target.value));
+  };
+  const ValidateEmail = (email: string) => {
+    return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);
+  };
 
   return (
-    <div className={classes.root}>
+    <RootBox>
       {(!offline || isDeveloper) && (
-        <Button
-          id="TeamActAdd"
-          variant="contained"
-          color="default"
-          className={classes.button}
-          onClick={handleClickOpen}
-        >
+        <AltButton id="TeamActAdd" sx={{ mb: 2 }} onClick={handleClickOpen}>
           {t.addTeam}
-        </Button>
+        </AltButton>
       )}
       {offline && (
-        <Button
+        <AltButton
           id="teamActImport"
-          variant="contained"
-          color="default"
-          className={classes.button}
+          sx={{ mb: 2 }}
           onClick={handleClickImport}
         >
           {t.import}
-        </Button>
+        </AltButton>
+      )}
+      {!offline && userIsSharedContentAdmin && (
+        <AltButton
+          id="contentCreator"
+          sx={{ mb: 2 }}
+          onClick={handleClickContent}
+        >
+          <AddIcon fontSize="small" />
+        </AltButton>
+      )}
+      {isDeveloper && (
+        <AltButton id="Error" sx={{ mt: 2 }} onClick={() => navigate('/error')}>
+          Error
+        </AltButton>
       )}
       <TeamDialog
         mode={DialogMode.add}
@@ -85,10 +145,36 @@ const TeamActions = () => {
         onCommit={handleAdd}
         disabled={isDeleting}
       />
+      <BigDialog
+        isOpen={openContent}
+        onOpen={handleContentDone}
+        onSave={validEmail ? handleSharedContentClick : undefined}
+        onCancel={handleContentDone}
+        title={t.creatorAdd}
+        bp={BigDialogBp.sm}
+      >
+        <FormControlLabel
+          control={
+            <TextField
+              id="email"
+              label={t.creatorEmail}
+              value={email}
+              onChange={handleEmailChange}
+              margin="normal"
+              required
+              variant="filled"
+              sx={{ width: '600px' }}
+              fullWidth={true}
+            />
+          }
+          label={contentStatus}
+          labelPlacement="bottom"
+        />
+      </BigDialog>
       {isElectron && importOpen && (
         <ImportTab isOpen={importOpen} onOpen={setImportOpen} />
       )}
-    </div>
+    </RootBox>
   );
 };
 

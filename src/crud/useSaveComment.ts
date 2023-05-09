@@ -1,7 +1,15 @@
 import { Operation, TransformBuilder } from '@orbit/data';
+import { useDispatch } from 'react-redux';
 import { useGlobal } from 'reactn';
 import { findRecord, PermissionName, remoteIdGuid, usePermissions } from '.';
-import { MediaFile, Comment, GroupMembership, Group, User } from '../model';
+import {
+  MediaFile,
+  Comment,
+  GroupMembership,
+  Group,
+  User,
+  IApiError,
+} from '../model';
 import {
   AddRecord,
   UpdateRecord,
@@ -12,11 +20,7 @@ import {
 import { orbitErr } from '../utils';
 import * as actions from '../store';
 
-interface IDispatchProps {
-  doOrbitError: typeof actions.doOrbitError;
-}
-interface IProps extends IDispatchProps {
-  discussion: string;
+interface IProps {
   cb: () => void;
   users: User[];
   groups: Group[];
@@ -27,14 +31,17 @@ export const useSaveComment = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const { users, groups, memberships } = props;
+  const dispatch = useDispatch();
+  const doOrbitError = (ex: IApiError) => dispatch(actions.doOrbitError(ex));
   const { hasPermission, addAccess, addNeedsApproval, approve } =
     usePermissions({
       users,
       groups,
       memberships,
     });
-  const { discussion, cb, doOrbitError } = props;
+  const { cb } = props;
   return (
+    discussionId: string,
     commentId: string,
     commentText: string,
     mediaRemId: string,
@@ -88,12 +95,12 @@ export const useSaveComment = (props: IProps) => {
           commentRec,
           'discussion',
           'discussion',
-          discussion
+          discussionId
         )
       );
     }
     ops.push(
-      ...UpdateLastModifiedBy(t, { type: 'discussion', id: discussion }, user)
+      ...UpdateLastModifiedBy(t, { type: 'discussion', id: discussionId }, user)
     );
     if (mediafile) {
       ops.push(

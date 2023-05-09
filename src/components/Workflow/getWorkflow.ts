@@ -13,6 +13,7 @@ import { getVernacularMediaRec, getMediaShared } from '../../crud/media';
 import { getNextStep } from '../../crud/getNextStep';
 import { getStepComplete } from '../../crud';
 import { toCamel } from '../../utils';
+import { ISTFilterState } from './filterMenu';
 
 const wfSectionUpdate = (item: IWorkflow, rec: IWorkflow) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -91,7 +92,36 @@ const wfPassageAdd = (
 };
 
 const initItem = {} as IWorkflow;
+export const isSectionFiltered = (
+  filterState: ISTFilterState,
+  sectionSeq: number
+) =>
+  !filterState.disabled &&
+  ((filterState.minSection > 1 && sectionSeq < filterState.minSection) ||
+    (filterState.maxSection > -1 && sectionSeq > filterState.maxSection));
 
+export const isPassageFiltered = (
+  w: IWorkflow,
+  filterState: ISTFilterState,
+  orgWorkflowSteps: OrgWorkflowStep[],
+  doneStepId: string
+) => {
+  const stepIndex = (stepId: string) =>
+    orgWorkflowSteps.findIndex((s) => s.id === stepId);
+  return (
+    !filterState.disabled &&
+    ((filterState.hideDone && w.stepId === doneStepId) ||
+      (filterState.assignedToMe && w.discussionCount === 0) ||
+      (filterState.maxStep &&
+        w.stepId &&
+        stepIndex(w.stepId) > stepIndex(filterState.maxStep)) ||
+      (filterState.minStep &&
+        w.stepId &&
+        stepIndex(w.stepId) < stepIndex(filterState.minStep)) ||
+      (filterState.minSection > 1 && w.sectionSeq < filterState.minSection) ||
+      (filterState.maxSection > -1 && w.sectionSeq > filterState.maxSection))
+  );
+};
 export const getWorkflow = (
   plan: string,
   sections: Section[],
@@ -101,6 +131,9 @@ export const getWorkflow = (
   memory: Memory,
   orgWorkflowSteps: OrgWorkflowStep[],
   wfStr: IWorkflowStepsStrings,
+  filterState: ISTFilterState,
+  doneStepId: string,
+  getDiscussionCount: (passageId: string, stepId: string) => number,
   current?: IWorkflow[]
 ) => {
   const myWork = current || Array<IWorkflow>();
@@ -129,6 +162,7 @@ export const getWorkflow = (
       item.sectionUpdated = section.attributes.dateUpdated;
       item.passageSeq = 0;
       item.deleted = false;
+      item.filtered = isSectionFiltered(filterState, item.sectionSeq);
       curSection = item.sectionSeq;
     }
     let first = true;
@@ -161,7 +195,7 @@ export const getWorkflow = (
         item.mediaShared = projectShared
           ? getMediaShared(passage.id, memory)
           : IMediaShare.NotPublic;
-        item.deleted = false;
+
         const stepId = getNextStep({
           psgCompleted: getStepComplete(passage),
           orgWorkflowSteps,
@@ -172,7 +206,14 @@ export const getWorkflow = (
             wfStr.getString(toCamel(stepRec.attributes.name)) ||
             stepRec.attributes.name;
           item.stepId = stepRec.id;
+          item.discussionCount = item.passageId
+            ? getDiscussionCount(item.passageId.id, item.stepId)
+            : 0;
         }
+        item.deleted = false;
+        item.filtered =
+          item.filtered ||
+          isPassageFiltered(item, filterState, orgWorkflowSteps, doneStepId);
       }
       //console.log(`item ${JSON.stringify(item, null, 2)}`);
       wfPassageAdd(myWork, item, sectionIndex);

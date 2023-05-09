@@ -11,10 +11,8 @@ interface PassageInfo {
   mediaId: string;
   transcription: string;
 }
-const isElectron = process.env.REACT_APP_MODE === 'electron';
-const ipc = isElectron ? require('electron').ipcRenderer : null;
-const path = require('path');
-const fs = isElectron ? require('fs-extra') : null;
+const ipc = (window as any)?.electron;
+const path = require('path-browserify');
 
 const domParser = new DOMParser();
 const xmlSerializer = new XMLSerializer();
@@ -503,7 +501,7 @@ const getPassageVerses = (doc: Document, p: Passage) => {
 const paratextPaths = async (chap: string) => {
   const ptProg = await getReadWriteProg();
   const pt = chap.split('-');
-  const temp = await ipc?.invoke('temp');
+  const temp = await ipc?.temp();
   return {
     chapterFile: path.join(temp, chap + '.usx'),
     book: pt[0],
@@ -521,7 +519,7 @@ const getChapter = async (
   },
   ptProjName: string
 ) => {
-  const temp = await ipc?.invoke('temp');
+  const temp = await ipc?.temp();
   if (!temp) throw new Error('Unable to find temp directory.'); //this is app.getPath('temp')
   const { stdout } = await paths.program([
     '-r',
@@ -533,7 +531,7 @@ const getChapter = async (
   ]);
   if (stdout) console.log(stdout);
 
-  const usx: string = fs.readFileSync(paths.chapterFile, 'utf-8');
+  const usx: string = await ipc?.read(paths.chapterFile, 'utf-8');
   return domParser.parseFromString(usx);
 };
 
@@ -548,7 +546,7 @@ const writeChapter = async (
   usxDom: Document
 ) => {
   const usxXml: string = xmlSerializer.serializeToString(usxDom);
-  fs.writeFileSync(paths.chapterFile, usxXml, { encoding: 'utf-8' });
+  ipc?.write(paths.chapterFile, usxXml);
   return await paths.program([
     '-w',
     ptProjName,
@@ -599,7 +597,7 @@ const doChapter = async (
   }
   await memory.update(ops);
 
-  fs.unlinkSync(paths.chapterFile);
+  ipc?.delete(paths.chapterFile);
 };
 
 export const getLocalParatextText = async (

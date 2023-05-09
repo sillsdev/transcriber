@@ -18,6 +18,7 @@ export interface Project extends Record {
     dateUpdated: string;
     dateArchived: string;
     lastModifiedBy: number;
+    defaultParams: string;
   };
   relationships?: {
     projecttype: RecordRelationship;

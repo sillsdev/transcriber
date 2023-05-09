@@ -1,15 +1,12 @@
 import React, { useRef, useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import * as actions from '../store';
 import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
 import { styled } from '@mui/material';
-import localStrings from '../selector/localize';
-import MediaUpload, { UploadType } from './MediaUpload';
+import MediaUpload, { SIZELIMIT, UploadType } from './MediaUpload';
 import {
   findRecord,
-  pullPlanMedia,
+  pullTableList,
   related,
   remoteIdNum,
   useArtifactType,
@@ -20,23 +17,17 @@ import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import PassageRecordDlg from './PassageRecordDlg';
 import { restoreScroll } from '../utils';
+import { shallowEqual, useSelector } from 'react-redux';
+import { NextUploadProps } from '../store';
+import { useDispatch } from 'react-redux';
+import { mediaTabSelector, sharedSelector } from '../selector';
+import { passageDefaultSuffix } from '../utils/passageDefaultFilename';
+import IndexedDBSource from '@orbit/indexeddb/dist/types/source';
+import path from 'path-browserify';
 
-const UnsupportedMessage = styled('span')(({ theme }) => ({
+const ErrorMessage = styled('span')(({ theme }) => ({
   color: theme.palette.secondary.light,
 }));
-
-interface IStateProps {
-  t: IMediaTabStrings;
-  ts: ISharedStrings;
-  uploadError: string;
-}
-
-interface IDispatchProps {
-  uploadFiles: typeof actions.uploadFiles;
-  nextUpload: typeof actions.nextUpload;
-  uploadComplete: typeof actions.uploadComplete;
-  doOrbitError: typeof actions.doOrbitError;
-}
 
 interface IProps {
   noBusy?: boolean;
@@ -65,15 +56,13 @@ interface IProps {
   team?: string; // used when adding a card to check speakers
 }
 
-export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
+export const Uploader = (props: IProps) => {
   const {
     noBusy,
     mediaId,
     recordAudio,
     allowWave,
     defaultFilename,
-    t,
-    ts,
     isOpen,
     onOpen,
     showMessage,
@@ -90,15 +79,21 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
     uploadType,
     team,
   } = props;
-  const { nextUpload } = props;
-  const { uploadError } = props;
-  const { uploadComplete, finish, doOrbitError } = props;
-  const { uploadFiles } = props;
+  const { finish } = props;
   const { metaData, ready } = props;
   const { createProject } = props;
+  const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const uploadError = useSelector((state: IState) => state.upload.errmsg);
+  const dispatch = useDispatch();
+  const uploadFiles = (files: File[]) => dispatch(actions.uploadFiles(files));
+  const nextUpload = (props: NextUploadProps) =>
+    dispatch(actions.nextUpload(props));
+  const uploadComplete = () => dispatch(actions.uploadComplete());
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [errorReporter] = useGlobal('errorReporter');
   const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
@@ -110,7 +105,7 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
   const ctx = useContext(TokenContext).state;
   const mediaIdRef = useRef<string[]>([]);
   const artifactTypeRef = useRef<string>('');
-  const { createMedia } = useOfflnMediafileCreate(doOrbitError);
+  const { createMedia } = useOfflnMediafileCreate();
   const [, setComplete] = useGlobal('progress');
   const { localizedArtifactTypeFromId } = useArtifactType();
 
@@ -172,7 +167,7 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
         psgId,
         artifactTypeId !== undefined ? artifactTypeId : '',
         sourceMediaId || '',
-        recordAudio ? user : ''
+        user
       );
       mediaIdRef.current.push(newMediaRec.id);
     }
@@ -181,8 +176,15 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
     const next = n + 1;
     if (next < uploadList.length && !cancelled.current) {
       doUpload(next);
-    } else if (!offline) {
-      pullPlanMedia(planIdRef.current, memory, remote).then(() => {
+    } else if (!offline && mediaIdRef.current?.length > 0) {
+      pullTableList(
+        'mediafile',
+        mediaIdRef.current,
+        memory,
+        remote,
+        backup,
+        errorReporter
+      ).then(() => {
         finishMessage();
       });
     } else {
@@ -204,6 +206,7 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
       artifactTypeId: getArtifactTypeId(),
       passageId: getPassageId(),
       userId: getUserId(),
+      recordedbyUserId: getUserId(),
       sourceMediaId: getSourceMediaId(),
       sourceSegments: sourceSegments,
       performedBy: performedBy,
@@ -212,16 +215,17 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
         ? ts.mediaAttached
         : localizedArtifactTypeFromId(artifactTypeId), //put psc message here
     } as any;
-    if (recordAudio) mediaFile.recordedbyUserId = getUserId();
-    nextUpload(
-      mediaFile,
-      uploadList,
-      currentlyLoading,
-      ctx.accessToken || '',
-      offline,
+
+    nextUpload({
+      record: mediaFile,
+      files: uploadList,
+      n: currentlyLoading,
+      token: ctx.accessToken || '',
+      offline: offline,
       errorReporter,
-      itemComplete
-    );
+      uploadType: uploadType ?? UploadType.Media,
+      cb: itemComplete,
+    });
   };
 
   const uploadMedia = async (files: File[]) => {
@@ -236,6 +240,27 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
         ? 'Project'
         : files[0]?.name.split('.')[0];
     if (createProject) planIdRef.current = await createProject(name);
+    var suffix = passageDefaultSuffix(planIdRef.current, memory);
+
+    while (
+      files.findIndex(
+        (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
+      ) > -1
+    ) {
+      var ix = files.findIndex(
+        (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
+      );
+      files.splice(
+        ix,
+        1,
+        new File(
+          [files[ix]],
+          path.basename(files[ix].name, path.extname(files[ix].name)) +
+            suffix +
+            path.extname(files[ix].name)
+        )
+      );
+    }
     uploadFiles(files);
     fileList.current = files;
     mediaIdRef.current = new Array<string>();
@@ -248,19 +273,40 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
     if (cancelled) cancelled.current = true;
     restoreScroll();
   };
-
+  //This doesn't actually show the message from sections/passages
+  //calls showMessage...but doesn't show it
   React.useEffect(() => {
     if (uploadError && uploadError !== '') {
       if (uploadError.indexOf('unsupported') > 0)
         showMessage(
-          <UnsupportedMessage>
+          <ErrorMessage>
             {t.unsupported.replace(
               '{0}',
               uploadError.substring(0, uploadError.indexOf(':unsupported'))
             )}
-          </UnsupportedMessage>
+          </ErrorMessage>
         );
-      else showMessage(uploadError);
+      else if (uploadError.indexOf('toobig') > 0) {
+        showMessage(
+          <ErrorMessage>
+            {t.toobig
+              .replace(
+                '{0}',
+                uploadError.substring(0, uploadError.indexOf(':toobig'))
+              )
+              .replace(
+                '{1}',
+                uploadError.substring(
+                  uploadError.indexOf('toobig:') + 'toobig:'.length
+                )
+              )
+              .replace(
+                '{2}',
+                SIZELIMIT(uploadType ?? UploadType.Media).toString()
+              )}
+          </ErrorMessage>
+        );
+      } else showMessage(uploadError);
       setBusy(false);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -279,18 +325,17 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
 
   return (
     <div>
-      {recordAudio && !importList && (
+      {recordAudio && ready && !importList && (
         <PassageRecordDlg
           visible={isOpen}
           onVisible={onOpen}
-          mediaId={mediaId}
+          mediaId={mediaId ?? ''}
           uploadMethod={uploadMedia}
           onCancel={uploadCancel}
           metaData={metaData}
           ready={ready}
           defaultFilename={defaultFilename}
           allowWave={allowWave}
-          showFilename={allowWave}
           speaker={performedBy}
           onSpeaker={handleSpeakerChange}
           createProject={createProject}
@@ -322,25 +367,4 @@ export const Uploader = (props: IProps & IStateProps & IDispatchProps) => {
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'mediaTab' }),
-  ts: localStrings(state, { layout: 'shared' }),
-  uploadError: state.upload.errmsg,
-});
-
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      uploadFiles: actions.uploadFiles,
-      nextUpload: actions.nextUpload,
-      uploadComplete: actions.uploadComplete,
-      doOrbitError: actions.doOrbitError,
-    },
-    dispatch
-  ),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Uploader) as any as (props: IProps) => JSX.Element;
+export default Uploader;

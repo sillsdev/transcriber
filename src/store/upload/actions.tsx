@@ -19,8 +19,9 @@ import {
 } from '../../utils';
 import moment from 'moment';
 import _ from 'lodash';
-var fs = require('fs');
-var path = require('path');
+import { UploadType, SIZELIMIT } from '../../components/MediaUpload';
+const ipc = (window as any)?.electron;
+var path = require('path-browserify');
 
 export const uploadFiles = (files: File[]) => (dispatch: any) => {
   dispatch({
@@ -38,28 +39,35 @@ const nextVersion = (fileName: string) => {
   return `${name}.ver02.${ext}`;
 };
 
-export const writeFileLocal = (file: File, remoteName?: string) => {
+let writeName = ''; // used for message if copy fails
+
+export const writeFileLocal = async (file: File, remoteName?: string) => {
   var local = { localname: '' };
+  const filePath = (file as any)?.path || '';
   dataPath(
-    remoteName ? remoteName : `http://${file.path}`,
+    remoteName ? remoteName : `http://${filePath}`,
     PathType.MEDIA,
     local
   );
-  var fullName = local.localname;
-  if (!remoteName && file.path === '') fullName += path.sep + file.name;
-  createPathFolder(fullName);
-  while (fs.existsSync(fullName)) {
-    fullName = nextVersion(fullName);
+  writeName = local.localname;
+  if (!remoteName && filePath === '') writeName += path.sep + file.name;
+  await createPathFolder(writeName);
+  while (await ipc?.exists(writeName)) {
+    writeName = nextVersion(writeName);
   }
-  const reader = new FileReader();
-  reader.onload = (evt) => {
-    fs.writeFileSync(fullName, evt?.target?.result, {
-      encoding: 'binary',
-      flag: 'wx', //write - fail if file exists
-    });
-  };
-  reader.readAsBinaryString(file);
-  return path.join(PathType.MEDIA, fullName.split(path.sep).pop());
+  if (filePath) {
+    await ipc?.copyFile(filePath, writeName);
+  } else {
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      ipc?.write(writeName, evt?.target?.result, {
+        encoding: 'binary',
+        flag: 'wx', //write - fail if file exists
+      });
+    };
+    reader.readAsBinaryString(file);
+  }
+  return path.join(PathType.MEDIA, writeName.split(path.sep).pop());
 };
 const uploadFile = (
   data: any,
@@ -101,16 +109,27 @@ const uploadFile = (
     }
   };
 };
+export interface NextUploadProps {
+  record: any;
+  files: File[];
+  n: number;
+  token: string;
+  offline: boolean;
+  errorReporter: any;
+  uploadType: UploadType;
+  cb?: (n: number, success: boolean, data?: any) => void;
+}
 export const nextUpload =
-  (
-    record: any,
-    files: File[],
-    n: number,
-    token: string,
-    offlineOnly: boolean,
-    errorReporter: any,
-    cb?: (n: number, success: boolean, data?: any) => void
-  ) =>
+  ({
+    record,
+    files,
+    n,
+    token,
+    offline,
+    errorReporter,
+    uploadType,
+    cb,
+  }: NextUploadProps) =>
   (dispatch: any) => {
     dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
     const acceptExtPat =
@@ -126,10 +145,24 @@ export const nextUpload =
       if (cb) cb(n, false);
       return;
     }
-    if (offlineOnly) {
+    if (files[n].size > SIZELIMIT(uploadType) * 1000000) {
+      dispatch({
+        payload: {
+          current: n,
+          error: `${files[n].name}:toobig:${(files[n].size / 1000000).toFixed(
+            2
+          )}`,
+        },
+        type: UPLOAD_ITEM_FAILED,
+      });
+      if (cb) cb(n, false);
+      return;
+    }
+    if (offline) {
       try {
-        var filename = writeFileLocal(files[n]);
-        if (cb) cb(n, true, { ...record, audioUrl: filename });
+        writeFileLocal(files[n]).then((filename: string) => {
+          if (cb) cb(n, true, { ...record, audioUrl: filename });
+        });
       } catch (err: any) {
         logError(
           Severity.error,
@@ -175,9 +208,9 @@ export const nextUpload =
             topic: record.topic,
           },
           relationships: {
-            lastmodifiedbyuser: {
+            'last-modified-by-user': {
               data: {
-                type: 'lastmodifiedbyuser',
+                type: 'users',
                 id: record.userId?.toString(),
               },
             },
@@ -200,6 +233,10 @@ export const nextUpload =
         vnd.data.relationships['source-media'] = {
           data: { type: 'mediafiles', id: record.sourceMediaId.toString() },
         };
+      if (record.recordedbyUserId)
+        vnd.data.relationships['recordedby-user'] = {
+          data: { type: 'users', id: record.recordedbyUserId.toString() },
+        };
       return vnd;
     };
     const fromVnd = (data: any) => {
@@ -217,18 +254,21 @@ export const nextUpload =
         Authorization: 'Bearer ' + token,
       },
     })
-      .then((response) => {
+      .then(async (response) => {
         dispatch({ payload: n, type: UPLOAD_ITEM_CREATED });
         var json = fromVnd(response.data);
         uploadFile(json, files[n], errorReporter, token, completeCB);
         if (isElectron) {
           try {
-            writeFileLocal(files[n], response.data.audioUrl);
+            await writeFileLocal(
+              files[n],
+              response.data.data.attributes['audio-url']
+            );
           } catch (err) {
             logError(
               Severity.error,
               errorReporter,
-              `failed writing ${files[n]}`
+              `failed copying ${(files[n] as any).path} to ${writeName}`
             );
           }
         }

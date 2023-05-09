@@ -1,10 +1,23 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useRef,
+  CSSProperties,
+  PropsWithChildren,
+  useMemo,
+} from 'react';
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
-import SplitPane, { Pane } from 'react-split-pane';
-import styled from 'styled-components';
+import {
+  default as SplitPaneBar,
+  Pane as PaneBar,
+  PaneProps,
+  SplitPaneProps,
+} from 'react-split-pane';
+import styledComp from 'styled-components';
 import Confirm from './AlertDialog';
 import {
   MediaFile,
@@ -15,23 +28,25 @@ import {
   IState,
   Integration,
   ProjectIntegration,
-  RoleNames,
   IActivityStateStrings,
 } from '../model';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid,
   Paper,
   Typography,
-  Button,
   IconButton,
   TextareaAutosize,
-} from '@material-ui/core';
+} from '@mui/material';
 import useTodo from '../context/useTodo';
 import PullIcon from '@mui/icons-material/GetAppOutlined';
-import HistoryIcon from '@mui/icons-material/History';
-import { formatTime, LightTooltip } from '../control';
+import {
+  AltButton,
+  formatTime,
+  GrowingDiv,
+  LightTooltip,
+  PriButton,
+} from '../control';
 import TranscribeReject from './TranscribeReject';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
@@ -39,13 +54,15 @@ import {
   FontData,
   getFontData,
   remoteIdNum,
-  useFetchMediaUrl,
   UpdateMediaStateOps,
   AddPassageStateChangeToOps,
   remoteId,
   ArtifactTypeSlug,
   useArtifactType,
   findRecord,
+  useOrgDefaults,
+  useRole,
+  GetUser,
 } from '../crud';
 import {
   insertAtCursor,
@@ -53,11 +70,8 @@ import {
   Severity,
   currentDateTime,
   getParatextDataPath,
-  camel2Title,
   refMatch,
   waitForIt,
-  dataPath,
-  PathType,
   integrationSlug,
   getSegments,
   NamedRegions,
@@ -66,69 +80,35 @@ import {
 import { isElectron } from '../api-variable';
 import { TokenContext } from '../context/TokenProvider';
 import { debounce } from 'lodash';
-import { TaskItemWidth } from '../components/TaskTable';
 import { AllDone } from './AllDone';
 import { LastEdit } from '../control';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
 import { bindActionCreators } from 'redux';
 import { translateParatextError } from '../utils/translateParatextError';
 import TranscribeAddNote from './TranscribeAddNote';
-import WSAudioPlayer from './WSAudioPlayer';
 import PassageHistory from './PassageHistory';
 import { HotKeyContext } from '../context/HotKeyContext';
 import TaskFlag from './TaskFlag';
 import Spelling from './Spelling';
-import { SectionPassageTitle } from '../control/SectionPassageTitle';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { activitySelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import usePassageDetailContext from '../context/usePassageDetailContext';
+import { IRegionParams } from '../crud/useWavesurferRegions';
+import PassageDetailPlayer, {
+  SaveSegments,
+} from './PassageDetail/PassageDetailPlayer';
+import { PlayInPlayer } from '../context/PassageDetailContext';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
 const HISTORY_KEY = 'F7,CTRL+7';
 const INIT_PLAYER_HEIGHT = 180;
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      margin: 'auto',
-    },
-    description: {
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-    },
-    row: {
-      alignItems: 'center',
-      whiteSpace: 'nowrap',
-    },
-    padRow: {
-      paddingTop: '16px',
-    },
-    taskFlag: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    button: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    pane: {},
-    textarea: { resize: 'none' },
-    grow: {
-      flexGrow: 1,
-      display: 'flex',
-      flexDirection: 'row',
-    },
-  })
-);
-const Wrapper = styled.div`
+const Wrapper = styledComp.div`
   .Resizer {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -184,12 +164,13 @@ const Wrapper = styled.div`
   }
 `;
 
-interface ParamTypes {
-  prjId: string;
-  pasId: string;
-  slug?: string;
-  medId?: string;
-}
+const SplitPane = (props: SplitPaneProps & PropsWithChildren) => {
+  return <SplitPaneBar {...props} />;
+};
+
+const Pane = (props: PaneProps & PropsWithChildren) => {
+  return <PaneBar {...props} className={props.className || 'pane'} />;
+};
 
 interface IRecordProps {
   mediafiles: MediaFile[];
@@ -202,7 +183,7 @@ const mapRecordsToProps = {
   projintegrations: (q: QueryBuilder) => q.findRecords('projectintegration'),
 };
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       getUserName: action.getUserName,
@@ -230,16 +211,18 @@ const mapStateToProps = (state: IState): IStateProps => ({
   paratext_username: state.paratext.username,
   paratext_usernameStatus: state.paratext.usernameStatus,
 });
-interface IProps extends IStateProps, IRecordProps, IDispatchProps {
-  defaultWidth?: number;
+interface IProps {
+  defaultWidth: number;
 }
 
 interface ITrans {
-  transcription: string;
+  transcription: string | undefined;
   position: number;
-  segments: string;
 }
-export function Transcriber(props: IProps) {
+
+export function Transcriber(
+  props: IProps & IStateProps & IDispatchProps & IRecordProps
+) {
   const {
     mediafiles,
     projintegrations,
@@ -257,61 +240,45 @@ export function Transcriber(props: IProps) {
     index,
     transcriberStr,
     sharedStr,
-    allBookData,
-    selected,
-    playing,
-    setPlaying,
-    trBusy,
-    setTrBusy,
+    transSelected,
+    setTransSelected,
     allDone,
-    refresh,
-    mediaUrl,
-    audioBlob,
-    loading,
     artifactId,
   } = useTodo();
-  const { slug } = useParams<ParamTypes>();
-  const { safeURL } = useFetchMediaUrl();
-  const { section, passage, duration, mediafile, state, role } = rowData[
-    index
-  ] || {
+
+  const { slug } = useParams();
+  const { section, passage, mediafile, state, role } = rowData[index] || {
     section: {} as Section,
     passage: {} as Passage,
-    duration: 0,
-    mediafile: {} as MediaFile,
+    mediafile: undefined,
     state: '',
     role: '',
   };
   const { toolChanged, saveCompleted } = useContext(UnsavedContext).state;
-  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [project] = useGlobal('project');
   const [projType] = useGlobal('projType');
   const [user] = useGlobal('user');
-  const [projRole] = useGlobal('projRole');
+  const [organization] = useGlobal('organization');
   const [errorReporter] = useGlobal('errorReporter');
   const { accessToken } = useContext(TokenContext).state;
   const [assigned, setAssigned] = useState('');
   const [projData, setProjData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
   const playedSecsRef = useRef<number>(0);
-  const segmentsRef = useRef('{}');
+  const segmentsRef = useRef<string>();
   const stateRef = useRef<string>(state);
-  const [totalSeconds, setTotalSeconds] = useState(duration);
   const [transcribing] = useState(
     state === ActivityStates.Transcribing ||
       state === ActivityStates.TranscribeReady
   );
-  const [height, setHeight] = useState(window.innerHeight);
-  const [boxHeight, setBoxHeight] = useState(
-    height - (INIT_PLAYER_HEIGHT + 200)
-  );
-  const [width, setWidth] = useState(props.defaultWidth || window.innerWidth);
+
   const [textValue, setTextValue] = useState('');
   const [lastSaved, setLastSaved] = useState('');
   const [defaultPosition, setDefaultPosition] = useState(0.0);
-  const [initialSegments, setInitialSegments] = useState('{}');
+
   const { showMessage } = useSnackBar();
   const showHistoryRef = useRef(false);
   const [showHistory, setShowHistoryx] = useState(false);
@@ -325,26 +292,52 @@ export function Transcriber(props: IProps) {
   const remote = coordinator.getSource('remote');
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
-  const { toolsChanged, saveRequested, isChanged } =
-    useContext(UnsavedContext).state;
+  const {
+    toolsChanged,
+    saveRequested,
+    clearRequested,
+    clearCompleted,
+    isChanged,
+  } = useContext(UnsavedContext).state;
   const [changed, setChanged] = useState(false);
   const [confirm, setConfirm] = useState<ITrans>();
   const transcriptionRef = React.useRef<any>();
   const playingRef = useRef<Boolean>();
-  const mediaRef = useRef<MediaFile>();
+  const mediaRef = useRef<MediaFile>({} as MediaFile);
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
-  const { subscribe, unsubscribe, localizeHotKey } =
-    useContext(HotKeyContext).state;
+  const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
   const t = transcriberStr;
-  const [playerSize, setPlayerSize] = useState(INIT_PLAYER_HEIGHT);
+  const {
+    loading,
+    playing,
+    playerSize,
+    setPlayerSize,
+    chooserSize,
+    pdBusy,
+    playerMediafile,
+    setSelected,
+    discussionSize,
+  } = usePassageDetailContext();
+  const [boxHeight, setBoxHeight] = useState(
+    discussionSize.height - (playerSize + 200)
+  );
   const [style, setStyle] = useState({
     cursor: 'default',
   });
+  const transcribeDefaultParams = {
+    silenceThreshold: 0.004,
+    timeThreshold: 0.02,
+    segLenThreshold: 0.5,
+  };
+  const { userIsAdmin } = useRole();
+  const [segParams, setSegParams] = useState(transcribeDefaultParams);
+
+  const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
 
   const [artifactTypeSlug, setArtifactTypeSlug] = useState(slug);
   const { slugFromId } = useArtifactType();
 
-  const [textAreaStyle, setTextAreaStyle] = useState({
+  const [textAreaStyle, setTextAreaStyle] = useState<CSSProperties>({
     overflow: 'auto',
     backgroundColor: '#cfe8fc',
     height: boxHeight,
@@ -353,6 +346,7 @@ export function Transcriber(props: IProps) {
     fontSize: projData?.fontSize,
     direction: projData?.fontDir as any,
     cursor: 'default',
+    resize: 'none',
   });
   const ta: IActivityStateStrings = useSelector(activitySelector, shallowEqual);
   const toolId = 'transcriber';
@@ -367,14 +361,13 @@ export function Transcriber(props: IProps) {
       projType,
       plan,
       user,
-      projRole,
+      orgRole,
       errorReporter,
       busy,
       assigned,
       changed,
       projData,
       fontStatus,
-      totalSeconds,
       transcribing,
       height,
       boxHeight,
@@ -404,8 +397,15 @@ export function Transcriber(props: IProps) {
   }, [playing]);
 
   useEffect(() => {
+    var def = getOrgDefault(NamedRegions.Transcription);
+    if (def) setSegParams(def);
+    else setSegParams(transcribeDefaultParams);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [organization]);
+
+  useEffect(() => {
     setStyle({
-      cursor: trBusy || loading ? 'progress' : 'default',
+      cursor: pdBusy || loading ? 'progress' : 'default',
     });
     setTextAreaStyle({
       ...textAreaStyle,
@@ -413,7 +413,7 @@ export function Transcriber(props: IProps) {
       fontFamily: projData?.fontFamily,
       fontSize: projData?.fontSize,
       direction: projData?.fontDir as any,
-      cursor: trBusy || loading ? 'progress' : 'default',
+      cursor: pdBusy || loading ? 'progress' : 'default',
     });
     if (transcriptionRef.current) {
       const el = transcriptionRef?.current?.firstChild as HTMLTextAreaElement;
@@ -423,7 +423,7 @@ export function Transcriber(props: IProps) {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trBusy, loading, boxHeight, projData]);
+  }, [pdBusy, loading, boxHeight, projData]);
 
   const handleShowHistory = () => {
     setShowHistory(!showHistoryRef.current);
@@ -432,42 +432,27 @@ export function Transcriber(props: IProps) {
 
   const keys = [{ key: HISTORY_KEY, cb: handleShowHistory }];
 
-  const setDimensions = () => {
-    setHeight(window.innerHeight);
-    setWidth(props.defaultWidth || window.innerWidth - TaskItemWidth - 16);
-  };
-
   useEffect(() => {
     const getParatextIntegration = () => {
       const intfind = integrations.findIndex(
         (i) =>
           i.attributes &&
-          i.attributes.name === integrationSlug(artifactTypeSlug, offline) &&
-          Boolean(i.keys?.remoteId) !== offline
+          i.attributes.name ===
+            integrationSlug(artifactTypeSlug, offlineOnly) &&
+          Boolean(i.keys?.remoteId) !== offlineOnly
       );
       if (intfind > -1) setParatextIntegration(integrations[intfind].id);
     };
-
+    if (playerSize < INIT_PLAYER_HEIGHT) setPlayerSize(INIT_PLAYER_HEIGHT);
     getParatextIntegration();
 
-    setDimensions();
-    const handleResize = debounce(() => {
-      setDimensions();
-    }, 100);
     keys.forEach((k) => subscribe(k.key, k.cb));
 
-    window.addEventListener('resize', handleResize);
     return () => {
       keys.forEach((k) => unsubscribe(k.key));
-      window.removeEventListener('resize', handleResize);
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
-
-  useEffect(() => {
-    setDimensions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.defaultWidth]);
 
   useEffect(() => {
     if (!allDone) {
@@ -476,13 +461,20 @@ export function Transcriber(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allDone]);
 
+  const allowSegment = useMemo(() => {
+    return transSelected && role !== 'view'
+      ? NamedRegions.Transcription
+      : undefined;
+  }, [transSelected, role]);
+
   useEffect(() => {
     const getParatextIntegration = () => {
       const intfind = integrations.findIndex(
         (i) =>
           i.attributes &&
-          i.attributes.name === integrationSlug(artifactTypeSlug, offline) &&
-          Boolean(i.keys?.remoteId) !== offline
+          i.attributes.name ===
+            integrationSlug(artifactTypeSlug, offlineOnly) &&
+          Boolean(i.keys?.remoteId) !== offlineOnly
       );
       if (intfind > -1) setParatextIntegration(integrations[intfind].id);
     };
@@ -494,6 +486,8 @@ export function Transcriber(props: IProps) {
   useEffect(() => {
     if (saveRequested(toolId)) {
       handleSave();
+    } else if (clearRequested(toolId)) {
+      clearCompleted(toolId);
     }
     var newchanged = isChanged(toolId);
     if (newchanged !== changed) setChanged(newchanged);
@@ -501,28 +495,49 @@ export function Transcriber(props: IProps) {
   }, [toolsChanged]);
 
   useEffect(() => {
-    const headHeight = props.defaultWidth ? 120 : 0;
-    const newBoxHeight = height - (playerSize + 220) - headHeight;
+    const newBoxHeight = discussionSize.height - playerSize - chooserSize;
     if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [height, playerSize]);
+  }, [discussionSize, playerSize]);
 
+  //user changes selected...tell the task table
   useEffect(() => {
-    if (!selected)
-      showTranscription({ transcription: '', position: 0, segments: '{}' });
+    if (transSelected !== playerMediafile?.id)
+      setTransSelected(playerMediafile?.id);
+    segmentsRef.current = undefined; //when they're loaded we'll be notified
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerMediafile]);
+
+  //if task table has changed selected...tell the world
+  useEffect(() => {
+    if (transSelected !== undefined && transSelected !== playerMediafile?.id)
+      setSelected(transSelected, PlayInPlayer.yes);
+    if (!transSelected)
+      showTranscription({
+        transcription: undefined,
+        position: 0,
+      });
     else if (!saving.current) showTranscription(getTranscription());
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [selected]);
+  }, [transSelected]);
 
   useEffect(() => {
-    mediaRef.current = mediafile;
-    if (mediafile && mediafile.attributes) {
+    if (mediaRef.current?.id !== mediafile?.id) {
+      if (playerMediafile?.id !== mediafile?.id || '')
+        setSelected(mediafile?.id || '', PlayInPlayer.yes);
+    }
+    if (mediafile) {
       const trans = getTranscription();
-      if (trans.transcription !== transcriptionIn.current && !saving.current) {
+      if (
+        transcriptionIn.current !== undefined &&
+        (trans.transcription ?? '') !== transcriptionIn.current &&
+        !saving.current
+      ) {
         //if someone else changed it...let the user pick
         setConfirm(trans);
       }
     }
+    mediaRef.current = mediafile;
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [mediafiles, mediafile]);
 
@@ -553,7 +568,6 @@ export function Transcriber(props: IProps) {
       showTranscription({
         transcription: paratext_textStatus.statusMsg,
         position: 0,
-        segments: segmentsRef.current,
       });
       toolChanged(toolId, true);
       save(
@@ -600,38 +614,6 @@ export function Transcriber(props: IProps) {
   }, [index, rowData, state]);
 
   useEffect(() => {
-    if (totalSeconds && (!duration || duration !== Math.floor(totalSeconds))) {
-      const mediaRecs = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('mediafile')
-      ) as MediaFile[];
-      //check if the url we have loaded is for the current mediaId
-      const oldRec = mediaRecs.filter((m) => m.id === mediafile.id);
-      if (oldRec.length) {
-        var mediaRecUrl = safeURL(
-          dataPath(oldRec[0].attributes.audioUrl, PathType.MEDIA)
-        );
-        var cut = mediaUrl.lastIndexOf('&Signature');
-        var check = cut > 0 ? mediaUrl.substring(0, cut) : mediaUrl;
-        if (check === (cut > 0 ? mediaRecUrl.substring(0, cut) : mediaRecUrl)) {
-          memory
-            .update((t: TransformBuilder) =>
-              t.replaceAttribute(
-                oldRec[0],
-                'duration',
-                Math.floor(totalSeconds)
-              )
-            )
-            .then(() => {
-              refresh();
-            });
-          // console.log(`update duration to ${Math.floor(totalSeconds)}`);
-        }
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [duration, totalSeconds]);
-
-  useEffect(() => {
     if (!offline) {
       if (!paratext_usernameStatus && !noParatext) {
         getUserName(accessToken || '', errorReporter, '');
@@ -666,15 +648,15 @@ export function Transcriber(props: IProps) {
       return;
     }
     if (offline) {
-      getParatextDataPath().then((ptPath: string) =>
+      getParatextDataPath().then((ptPath: string) => {
         getParatextTextLocal(
           ptPath,
           passage,
           paratextProject,
           errorReporter,
           t.pullParatextStart
-        )
-      );
+        );
+      });
     } else {
       getParatextText(
         accessToken || '',
@@ -685,9 +667,7 @@ export function Transcriber(props: IProps) {
       );
     }
   };
-  const handleShowAddNote = () => {
-    setAddNoteVisible(true);
-  };
+
   const handleReject = () => {
     if (saving.current) {
       showMessage(t.saving);
@@ -763,22 +743,10 @@ export function Transcriber(props: IProps) {
     transcribed: 'editor',
   };
 
-  const roleHierarchy = [
-    RoleNames.Transcriber,
-    RoleNames.Editor,
-    RoleNames.Admin,
-  ];
-
   const handleAssign = async (curState: string) => {
     const secRec = findRecord(memory, 'section', section.id);
     const role = stateRole[curState];
-    if (
-      secRec &&
-      role &&
-      projRole &&
-      roleHierarchy.indexOf(camel2Title(role) as RoleNames) <=
-        roleHierarchy.indexOf(projRole)
-    ) {
+    if (secRec && role) {
       const assigned = related(secRec, role);
       if (!assigned || assigned === '') {
         await memory.update(
@@ -826,7 +794,7 @@ export function Transcriber(props: IProps) {
   const save = async (
     nextState: string,
     newPosition: number,
-    segments: string,
+    segments: string | undefined,
     thiscomment: string | undefined
   ) => {
     if (transcriptionRef.current && mediaRef.current) {
@@ -860,7 +828,7 @@ export function Transcriber(props: IProps) {
               segments: updateSegments(
                 NamedRegions.Transcription,
                 mediaRef.current.attributes?.segments,
-                segments
+                segments ?? '{}'
               ),
               transcriptionstate: nextState,
             },
@@ -931,41 +899,34 @@ export function Transcriber(props: IProps) {
   };
 
   const getTranscription = () => {
-    const attr = mediafile.attributes || {};
+    const attr = mediafile?.attributes;
     return {
-      transcription: attr.transcription || '',
-      position: attr.position,
-      segments: getSegments(NamedRegions.Transcription, attr.segments),
+      transcription: attr?.transcription || undefined,
+      position: attr?.position,
+      segments: getSegments(NamedRegions.Transcription, attr?.segments),
     };
   };
 
   const showTranscription = (val: ITrans) => {
     transcriptionIn.current = val.transcription;
-    setTextValue(val.transcription);
+    setTextValue(val.transcription ?? '');
     setDefaultPosition(val.position);
-    segmentsRef.current = val.segments;
-    setInitialSegments(segmentsRef.current);
     //focus on player
     if (transcriptionRef.current) {
       transcriptionRef.current.firstChild.value = val.transcription;
       focusOnTranscription();
     }
-    setLastSaved(mediafile.attributes?.dateUpdated || '');
-    setTotalSeconds(duration);
+    setLastSaved(mediafile?.attributes?.dateUpdated || '');
   };
 
   const handleAutosave = async () => {
-    if (
-      !playingRef.current &&
-      !saving.current &&
-      transcriptionRef.current &&
-      transcriptionIn.current !== undefined
-    ) {
+    if (!playingRef.current && !saving.current && transcriptionRef.current) {
       const transcription = transcriptionRef.current.firstChild.value;
-      if (transcriptionIn.current !== transcription) {
+      if (transcriptionIn.current || '' !== transcription) {
         await handleSave();
       }
     }
+
     launchTimer();
   };
 
@@ -975,11 +936,8 @@ export function Transcriber(props: IProps) {
     }, 1000 * 30);
   };
 
-  const paperStyle = { width: width - 36 };
+  const paperStyle = { width: props.defaultWidth - 36 };
 
-  const onDuration = (value: number) => {
-    setTotalSeconds(value);
-  };
   const onInteraction = () => {
     focusOnTranscription();
   };
@@ -988,8 +946,15 @@ export function Transcriber(props: IProps) {
 
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
-    toolChanged(toolId, true);
   };
+  const onSegmentParamChange = (
+    params: IRegionParams,
+    teamDefault: boolean
+  ) => {
+    setSegParams(params);
+    if (teamDefault) setOrgDefault(NamedRegions.Transcription, params);
+  };
+
   const onSaveProgress = (progress: number) => {
     if (transcriptionRef.current) {
       focusOnTranscription();
@@ -1003,11 +968,6 @@ export function Transcriber(props: IProps) {
   const handleSplitSize = debounce((e: any) => {
     setPlayerSize(e);
   }, 50);
-
-  const onPlayStatus = (newPlaying: boolean) => {
-    setPlaying(newPlaying);
-    playingRef.current = newPlaying;
-  };
 
   const noParatext = React.useMemo(
     () =>
@@ -1027,38 +987,27 @@ export function Transcriber(props: IProps) {
   }, [slug, artifactId, slugFromId]);
 
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper} style={paperStyle}>
+    <GrowingDiv>
+      <Paper sx={{ p: 0, m: 'auto' }} style={paperStyle}>
         {allDone ? (
           <AllDone />
         ) : (
           <Grid container direction="column" style={style}>
-            {props.defaultWidth === undefined && (
-              <Grid
-                container
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <Grid item md={9}>
-                  <SectionPassageTitle
-                    section={section}
-                    passage={passage}
-                    allBookData={allBookData}
-                  />
-                </Grid>
-              </Grid>
-            )}
             <Wrapper>
               <SplitPane
-                defaultSize={INIT_PLAYER_HEIGHT}
+                defaultSize={playerSize}
                 minSize={INIT_PLAYER_HEIGHT}
-                maxSize={height - 280}
+                maxSize={discussionSize.height - 280 - chooserSize}
                 style={{ position: 'static' }}
                 split="horizontal"
                 onChange={handleSplitSize}
               >
-                <Pane className={classes.pane}>
-                  <Grid container direction="row" className={classes.row}>
+                <Pane>
+                  <Grid
+                    container
+                    direction="row"
+                    sx={{ alignItems: 'center', whiteSpace: 'nowrap' }}
+                  >
                     {role === 'transcriber' &&
                       hasParatextName &&
                       paratextProject &&
@@ -1069,7 +1018,7 @@ export function Transcriber(props: IProps) {
                               <IconButton
                                 id="transcriber.pullParatext"
                                 onClick={handlePullParatext}
-                                disabled={selected === ''}
+                                disabled={!transSelected}
                               >
                                 <>
                                   <PullIcon />{' '}
@@ -1083,42 +1032,33 @@ export function Transcriber(props: IProps) {
                         </Grid>
                       )}
                     <Grid item xs id="transcriberplayer">
-                      <Grid container justifyContent="center">
-                        <WSAudioPlayer
-                          id="audioPlayer"
-                          allowRecord={false}
-                          allowAutoSegment={true}
-                          allowSegment={
-                            selected !== '' && role !== 'view'
-                              ? NamedRegions.Transcription
-                              : undefined
-                          }
-                          allowZoom={true}
-                          allowSpeed={true}
-                          size={playerSize}
-                          blob={audioBlob}
-                          initialposition={defaultPosition}
-                          segments={initialSegments}
-                          isPlaying={playing}
-                          loading={loading}
-                          busy={trBusy}
-                          setBusy={setTrBusy}
-                          onProgress={onProgress}
-                          onSegmentChange={onSegmentChange}
-                          onPlayStatus={onPlayStatus}
-                          onDuration={onDuration}
-                          onInteraction={onInteraction}
-                          onSaveProgress={
-                            selected === '' || role === 'view'
-                              ? undefined
-                              : onSaveProgress
-                          }
-                        />
-                      </Grid>
+                      <PassageDetailPlayer
+                        position={defaultPosition}
+                        allowAutoSegment={true}
+                        saveSegments={
+                          allowSegment
+                            ? SaveSegments.saveButNoButton
+                            : undefined
+                        }
+                        defaultSegParams={segParams}
+                        canSetDefaultParams={canSetOrgDefault}
+                        allowSegment={allowSegment}
+                        allowZoomAndSpeed={true}
+                        onProgress={onProgress}
+                        onSegment={onSegmentChange}
+                        onSegmentParamChange={onSegmentParamChange}
+                        onInteraction={onInteraction}
+                        parentToolId={toolId}
+                        onSaveProgress={
+                          !transSelected || role === 'view'
+                            ? undefined
+                            : onSaveProgress
+                        }
+                      />
                     </Grid>
                   </Grid>
                 </Pane>
-                <Pane className={classes.pane}>
+                <Pane>
                   <Grid item xs={12} sm container>
                     <Grid
                       ref={transcriptionRef}
@@ -1133,11 +1073,10 @@ export function Transcriber(props: IProps) {
                           onStatus={loadStatus}
                         >
                           <TextareaAutosize
-                            className={classes.textarea}
                             autoFocus
                             id="transcriber.text"
                             value={textValue}
-                            readOnly={selected === '' || role === 'view'}
+                            readOnly={!transSelected || role === 'view'}
                             style={textAreaStyle}
                             onChange={handleChange}
                             lang={projData?.langTag || 'en'}
@@ -1146,11 +1085,10 @@ export function Transcriber(props: IProps) {
                         </WebFontLoader>
                       ) : (
                         <TextareaAutosize
-                          className={classes.textarea}
                           autoFocus
                           id="transcriber.text"
                           value={textValue}
-                          readOnly={selected === '' || role === 'view'}
+                          readOnly={!transSelected || role === 'view'}
                           style={textAreaStyle}
                           onChange={handleChange}
                           lang={projData?.langTag || 'en'}
@@ -1171,45 +1109,12 @@ export function Transcriber(props: IProps) {
               </SplitPane>
             </Wrapper>
 
-            <Grid container direction="row" className={classes.padRow}>
-              <Grid item className={classes.taskFlag}>
-                {!props.defaultWidth ? (
-                  <>
-                    <Button
-                      id="transcriber.showNote"
-                      variant="outlined"
-                      color="primary"
-                      className={classes.button}
-                      onClick={handleShowAddNote}
-                      disabled={selected === ''}
-                    >
-                      {t.addNote}
-                    </Button>
-
-                    <LightTooltip
-                      title={t.historyTip.replace(
-                        '{0}',
-                        localizeHotKey(HISTORY_KEY)
-                      )}
-                    >
-                      <span>
-                        <IconButton
-                          id="transcriber.showHistory"
-                          onClick={handleShowHistory}
-                        >
-                          <>
-                            <HistoryIcon />
-                          </>
-                        </IconButton>
-                      </span>
-                    </LightTooltip>
-                  </>
-                ) : (
-                  <TaskFlag
-                    ta={ta}
-                    state={mediafile?.attributes?.transcriptionstate || ''}
-                  />
-                )}
+            <Grid container direction="row" sx={{ pt: '12px' }}>
+              <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
+                <TaskFlag
+                  ta={ta}
+                  state={mediafile?.attributes?.transcriptionstate || ''}
+                />
                 {isElectron && <Spelling />}
               </Grid>
               <Grid item xs>
@@ -1222,30 +1127,25 @@ export function Transcriber(props: IProps) {
                     />
                     {role !== 'view' ? (
                       <>
-                        <Button
+                        <AltButton
                           id="transcriber.reject"
-                          variant="outlined"
-                          color="primary"
-                          className={classes.button}
                           onClick={handleReject}
-                          disabled={selected === '' || playing}
+                          disabled={!transSelected || playing}
                         >
                           {t.reject}
-                        </Button>
+                        </AltButton>
                         <LightTooltip
                           title={transcribing ? t.saveTip : t.saveReviewTip}
                         >
                           <span>
-                            <Button
+                            <AltButton
                               id="transcriber.save"
                               variant={changed ? 'contained' : 'outlined'}
-                              color="primary"
-                              className={classes.button}
                               onClick={handleSaveButton}
-                              disabled={selected === '' || playing}
+                              disabled={!transSelected || playing}
                             >
                               {t.save}
-                            </Button>
+                            </AltButton>
                           </span>
                         </LightTooltip>
                         <LightTooltip
@@ -1256,36 +1156,30 @@ export function Transcriber(props: IProps) {
                           }
                         >
                           <span>
-                            <Button
+                            <PriButton
                               id="transcriber.submit"
-                              variant="contained"
-                              color="primary"
-                              className={classes.button}
                               onClick={handleSubmit}
-                              disabled={selected === '' || playing}
+                              disabled={!transSelected || playing}
                             >
                               {t.submit}
-                            </Button>
+                            </PriButton>
                           </span>
                         </LightTooltip>
                       </>
                     ) : (
-                      <Button
+                      <AltButton
                         id="transcriber.reopen"
-                        variant="outlined"
-                        color="primary"
-                        className={classes.button}
                         onClick={handleReopen}
                         disabled={
-                          selected === '' ||
+                          !transSelected ||
                           !previous.hasOwnProperty(state) ||
                           playing ||
                           (user !== related(section, 'transcriber') &&
-                            projRole !== RoleNames.Admin)
+                            !userIsAdmin)
                         }
                       >
                         {t.reopen}
-                      </Button>
+                      </AltButton>
                     )}
                   </div>
                 </Grid>
@@ -1308,16 +1202,22 @@ export function Transcriber(props: IProps) {
         {confirm && (
           <Confirm
             isDelete={false}
-            text={t.updateByOther2.replace('{0}', confirm.transcription)}
+            text={t.updateByOther2
+              .replace(
+                '{0}',
+                GetUser(memory, related(mediafile, 'lastModifiedByUser'))
+                  .attributes?.name ?? 'unknown'
+              )
+              .replace('{1}', confirm.transcription ?? '')}
             yesResponse={handleUpdateConfirmed}
             noResponse={handleUpdateRefused}
           />
         )}
       </Paper>
-    </div>
+    </GrowingDiv>
   );
 }
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(Transcriber) as any
-) as any;
+  connect(mapStateToProps, mapDispatchToProps)(Transcriber as any) as any
+) as any as (props: IProps) => JSX.Element;

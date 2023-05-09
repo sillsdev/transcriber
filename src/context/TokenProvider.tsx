@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-has-content */
 import React from 'react';
 import { User, useAuth0 } from '@auth0/auth0-react';
 import { IToken } from '../model';
@@ -9,7 +10,7 @@ import { useGlobal } from 'reactn';
 import { useUpdateOrbitToken } from '../crud';
 import { logError, Severity, useInterval } from '../utils';
 import { isElectron } from '../api-variable';
-const ipc = isElectron ? require('electron').ipcRenderer : null;
+const ipc = (window as any)?.electron;
 
 const Expires = 0; // Set to 7110 to test 1:30 token
 
@@ -19,7 +20,8 @@ const initState = {
   expiresAt: 0 as number | null,
   email_verified: false as boolean | undefined,
   logout: () => {},
-  isAuthenticated: () => false,
+  resetExpiresAt: () => {},
+  authenticated: () => false,
   setAuthSession: (
     profile: User | undefined,
     accessToken: string,
@@ -42,8 +44,14 @@ interface IProps {
 
 function TokenProvider(props: IProps) {
   const { children } = props;
-  const { getAccessTokenSilently, user, isLoading, isAuthenticated, error } =
-    useAuth0();
+  const {
+    getAccessTokenSilently,
+    loginWithRedirect,
+    user,
+    isLoading,
+    isAuthenticated,
+    error,
+  } = useAuth0();
   const [modalOpen, setModalOpen] = React.useState(false);
   const [secondsToExpire, setSecondsToExpire] = React.useState(0);
   const [offline] = useGlobal('offline');
@@ -73,9 +81,17 @@ function TokenProvider(props: IProps) {
     (async () => {
       if (isAuthenticated && user) {
         console.log(`checking for token`);
-        const token = await getAccessTokenSilently();
-        const decodedToken = jwtDecode(token) as IToken;
-        setAuthSession(user, token, decodedToken.exp);
+        getAccessTokenSilently()
+          .then((token) => {
+            updateOrbitToken(token);
+            const decodedToken = jwtDecode(token) as IToken;
+            setState((state) => ({ ...state, expireAt: decodedToken.exp }));
+            setAuthSession(user, token, decodedToken.exp);
+          })
+          .catch((e: any) => {
+            handleLogOut();
+            loginWithRedirect();
+          });
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,18 +112,21 @@ function TokenProvider(props: IProps) {
   };
 
   const resetExpiresAt = () => {
+    if (offline) return;
     if (isElectron) {
       ipc
         ?.invoke('refresh-token')
         .then(async () => {
-          const myUser = await ipc?.invoke('get-profile');
-          const myToken = await ipc?.invoke('get-token');
+          const myUser = await ipc?.getProfile();
+          const myToken = await ipc?.getToken();
           updateOrbitToken(myToken);
           const decodedToken = jwtDecode(myToken) as IToken;
           setState((state) => ({ ...state, expireAt: decodedToken.exp }));
           setAuthSession(myUser, myToken, decodedToken.exp);
         })
         .catch((e: Error) => {
+          localStorage.setItem('offlineAdmin', 'false');
+          localStorage.removeItem('user-id');
           handleLogOut();
           logError(Severity.error, errorReporter, e);
         });
@@ -119,9 +138,10 @@ function TokenProvider(props: IProps) {
           setState((state) => ({ ...state, expireAt: decodedToken.exp }));
           setAuthSession(user, token, decodedToken.exp);
         })
-        .catch((e: Error) => {
+        .catch((e: any) => {
           handleLogOut();
           logError(Severity.error, errorReporter, e);
+          loginWithRedirect();
         });
     }
   };
@@ -138,12 +158,13 @@ function TokenProvider(props: IProps) {
   const handleLogOut = () => {
     setState((state) => ({ ...state, expiresAt: -1 }));
     view.current = 'loggedOut';
-    setModalOpen(false);
+    localStorage.removeItem('isLoggedIn');
+    if (modalOpen) setModalOpen(false);
   };
 
   const checkTokenExpired = () => {
     if (!offline) {
-      if (state.expiresAt) {
+      if ((state.expiresAt ?? 0) > 0) {
         const currentUnix = moment().locale('en').format('X');
         const expires = moment
           .unix(state?.expiresAt || 0)
@@ -164,7 +185,7 @@ function TokenProvider(props: IProps) {
     }
   };
 
-  useInterval(checkTokenExpired, state?.expiresAt && !offline ? 1000 : null);
+  useInterval(checkTokenExpired, state?.expiresAt && !offline ? 5000 : null);
 
   const handleClose = (value: number) => {
     setModalOpen(false);
@@ -213,7 +234,8 @@ function TokenProvider(props: IProps) {
           ...state,
           setAuthSession,
           logout,
-          isAuthenticated: authenticated,
+          authenticated,
+          resetExpiresAt,
         },
         setState,
       }}

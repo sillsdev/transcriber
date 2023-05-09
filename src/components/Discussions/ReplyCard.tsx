@@ -1,4 +1,3 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import {
   Discussion,
   Group,
@@ -7,82 +6,29 @@ import {
   User,
 } from '../../model';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { useContext, useEffect, useRef, useState } from 'reactn';
 import { CommentEditor } from './CommentEditor';
-import * as actions from '../../store';
 import { useRecordComment } from './useRecordComment';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { useSaveComment } from '../../crud/useSaveComment';
 import { useMounted } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
+import { Box } from '@mui/material';
+import { related } from '../../crud';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      flexFlow: 'column',
-      flexGrow: 1,
-    },
-
-    commentLine: {
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    content: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      color: theme.palette.primary.contrastText,
-    },
-    name: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    container: {
-      display: 'flex',
-    },
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexGrow: 1,
-    },
-    column: {
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 'inherit',
-    },
-    avatar: {
-      margin: theme.spacing(1),
-    },
-  })
-);
 interface IRecordProps {
   mediafiles: Array<MediaFile>;
   users: Array<User>;
   groups: Array<Group>;
   memberships: Array<GroupMembership>;
 }
-interface IStateProps {}
-interface IDispatchProps {
-  uploadFiles: typeof actions.uploadFiles;
-  nextUpload: typeof actions.nextUpload;
-  uploadComplete: typeof actions.uploadComplete;
-  doOrbitError: typeof actions.doOrbitError;
-}
-
-interface IProps extends IRecordProps, IStateProps, IDispatchProps {
+interface IProps {
   discussion: Discussion;
-  number: number;
+  commentNumber: number;
 }
 
-export const ReplyCard = (props: IProps) => {
-  const { discussion, number, users, groups, memberships } = props;
-  const { uploadFiles, nextUpload, uploadComplete, doOrbitError } = props;
-  const classes = useStyles();
+export const ReplyCard = (props: IProps & IRecordProps) => {
+  const { discussion, commentNumber, users, groups, memberships } = props;
   const [refresh, setRefresh] = useState(0);
   const isMounted = useMounted('replycard');
   const {
@@ -91,6 +37,7 @@ export const ReplyCard = (props: IProps) => {
     toolsChanged,
     saveRequested,
     clearRequested,
+    clearCompleted,
   } = useContext(UnsavedContext).state;
   const myToolId = discussion.id + 'reply';
   const afterSavecb = () => {
@@ -102,26 +49,20 @@ export const ReplyCard = (props: IProps) => {
     }
   };
   const saveComment = useSaveComment({
-    discussion: discussion.id,
     cb: afterSavecb,
-    doOrbitError,
     users,
     groups,
     memberships,
   });
   const commentText = useRef('');
-  const afterUploadcb = (mediaId: string) => {
-    saveComment('', commentText.current, mediaId, undefined);
+  const afterUploadcb = async (mediaId: string) => {
+    saveComment(discussion.id, '', commentText.current, mediaId, undefined);
     commentText.current = '';
   };
   const { uploadMedia, fileName } = useRecordComment({
-    discussion,
-    number,
+    mediafileId: related(discussion, 'mediafile'),
+    commentNumber,
     afterUploadcb,
-    uploadFiles,
-    nextUpload,
-    uploadComplete,
-    doOrbitError,
   });
   const savingRef = useRef(false);
   const [canSaveRecording, setCanSaveRecording] = useState(false);
@@ -137,7 +78,7 @@ export const ReplyCard = (props: IProps) => {
   const handleCancelEdit = () => {
     setRefresh(refresh + 1);
     commentText.current = '';
-    toolChanged(myToolId, false);
+    clearCompleted(myToolId);
   };
 
   useEffect(() => {
@@ -165,7 +106,7 @@ export const ReplyCard = (props: IProps) => {
   }, [canSaveRecording]);
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ display: 'flex', flexFlow: 'column', flexGrow: 1 }}>
       <CommentEditor
         toolId={myToolId}
         comment={commentText.current}
@@ -173,12 +114,12 @@ export const ReplyCard = (props: IProps) => {
         onOk={handleSaveEdit}
         onCancel={handleCancelEdit}
         setCanSaveRecording={setCanSaveRecording}
-        fileName={fileName}
+        fileName={fileName(discussion.attributes.subject, discussion.id)}
         uploadMethod={uploadMedia}
         onTextChange={handleTextChange}
         cancelOnlyIfChanged={true}
       />
-    </div>
+    </Box>
   );
 };
 const mapRecordsToProps = {
@@ -187,20 +128,7 @@ const mapRecordsToProps = {
   groups: (q: QueryBuilder) => q.findRecords('group'),
   memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
 };
-const mapStateToProps = () => ({});
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      fetchBooks: actions.fetchBooks,
-      uploadFiles: actions.uploadFiles,
-      nextUpload: actions.nextUpload,
-      uploadComplete: actions.uploadComplete,
-      doOrbitError: actions.doOrbitError,
-      resetOrbitError: actions.resetOrbitError,
-    },
-    dispatch
-  ),
-});
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(ReplyCard) as any
-) as any;
+
+export default withData(mapRecordsToProps)(ReplyCard) as any as (
+  props: IProps
+) => JSX.Element;

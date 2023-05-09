@@ -194,6 +194,7 @@ const pa11: Passage = {
     lastModifiedByUser: { data: { type: 'user', id: 'u0' } },
   },
 } as Passage;
+const getDiscussionCount = (psg: string, step: string) => 0;
 
 const owf: OrgWorkflowStep[] = [
   {
@@ -277,41 +278,75 @@ const owf: OrgWorkflowStep[] = [
 afterEach(cleanup);
 
 test('empty input gives empty output', async () => {
-  expect(getWorkflow('', [], [], false, false, memory, [], wfStr)).toEqual([]);
+  expect(
+    getWorkflow('', [], [], false, false, memory, [], wfStr, getDiscussionCount)
+  ).toEqual([]);
 });
 
 test('empty flat input gives empty output', async () => {
-  expect(getWorkflow('', [], [], true, false, memory, [], wfStr)).toEqual([]);
+  expect(
+    getWorkflow('', [], [], true, false, memory, [], wfStr, getDiscussionCount)
+  ).toEqual([]);
 });
 
 test('empty input with plan id gives empty output', async () => {
-  expect(getWorkflow('pl1', [], [], false, false, memory, [], wfStr)).toEqual(
-    []
-  );
+  expect(
+    getWorkflow(
+      'pl1',
+      [],
+      [],
+      false,
+      false,
+      memory,
+      [],
+      wfStr,
+      getDiscussionCount
+    )
+  ).toEqual([]);
 });
 
 test('one section gives output', async () => {
-  expect(getWorkflow('pl1', [s1], [], false, false, memory, [], wfStr)).toEqual(
-    [
-      {
-        level: 0,
-        kind: 0,
-        sectionSeq: 1,
-        title: 'Intro',
-        passageSeq: 0,
-        sectionId: { type: 'section', id: 's1' },
-        sectionUpdated: '2021-09-15',
-        transcriber: undefined,
-        editor: undefined,
-        deleted: false,
-      },
-    ] as IWorkflow[]
-  );
+  expect(
+    getWorkflow(
+      'pl1',
+      [s1],
+      [],
+      false,
+      false,
+      memory,
+      [],
+      wfStr,
+      getDiscussionCount
+    )
+  ).toEqual([
+    {
+      level: 0,
+      kind: 0,
+      sectionSeq: 1,
+      title: 'Intro',
+      passageSeq: 0,
+      sectionId: { type: 'section', id: 's1' },
+      sectionUpdated: '2021-09-15',
+      transcriber: undefined,
+      editor: undefined,
+      deleted: false,
+    },
+  ] as IWorkflow[]);
 });
 
 test('one section and one passage gives output', async () => {
   expect(
-    getWorkflow('pl1', [s1], [pa1], false, false, memory, [], wfStr)
+    getWorkflow(
+      'pl1',
+      [s1],
+      [pa1],
+      false,
+      false,
+      memory,
+      [],
+      wfStr,
+      getDiscussionCount
+    )
   ).toEqual([
     {
       level: 0,
@@ -353,7 +388,8 @@ test('one section and two passages gives output', async () => {
       memory,
 
       [],
-      wfStr
+      wfStr,
+      getDiscussionCount
     )
   ).toEqual([
     {
@@ -410,7 +446,8 @@ test('one section and two passages with flat output', async () => {
       memory,
 
       [],
-      wfStr
+      wfStr,
+      getDiscussionCount
     )
   ).toEqual([
     {
@@ -460,7 +497,8 @@ test('one section and three passages out of order', async () => {
       memory,
 
       [],
-      wfStr
+      wfStr,
+      getDiscussionCount
     )
   ).toEqual([
     {
@@ -522,7 +560,17 @@ test('one section and three passages out of order', async () => {
 
 test('one flat section and with one passage gives output', async () => {
   expect(
-    getWorkflow('pl1', [s1], [pa1], true, false, memory, [], wfStr)
+    getWorkflow(
+      'pl1',
+      [s1],
+      [pa1],
+      true,
+      false,
+      memory,
+      [],
+      wfStr,
+      getDiscussionCount
+    )
   ).toEqual([
     {
       level: 0,
@@ -557,7 +605,8 @@ test('two flat sections and one from another plan gives output', async () => {
       memory,
 
       [],
-      wfStr
+      wfStr,
+      getDiscussionCount
     )
   ).toEqual([
     {
@@ -612,7 +661,8 @@ test('two sections and passages with one from another plan', async () => {
       memory,
 
       [],
-      wfStr
+      wfStr,
+      getDiscussionCount
     )
   ).toEqual([
     {
@@ -708,7 +758,8 @@ test('update one flat section to two flat section ignoring other plan', async ()
     memory,
 
     [],
-    wfStr
+    wfStr,
+    getDiscussionCount
   );
   expect(workflow).toEqual([
     {
@@ -741,6 +792,7 @@ test('update one flat section to two flat section ignoring other plan', async ()
 
     [],
     wfStr,
+    getDiscussionCount,
     workflow
   );
   expect(updated).toEqual([
@@ -787,7 +839,17 @@ test('update one flat section to two flat section ignoring other plan', async ()
 
 test('one section and one passage with step gives output', async () => {
   expect(
-    getWorkflow('pl1', [s1], [pa1], false, false, memory, owf, wfStr)
+    getWorkflow(
+      'pl1',
+      [s1],
+      [pa1],
+      false,
+      false,
+      memory,
+      owf,
+      wfStr,
+      getDiscussionCount
+    )
   ).toEqual([
     {
       level: 0,
@@ -838,7 +900,8 @@ test('two flat sections with steps gives output', async () => {
       memory,
 
       owf,
-      wfStr
+      wfStr,
+      getDiscussionCount
     )
   ).toEqual([
     {

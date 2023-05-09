@@ -1,15 +1,17 @@
 import { useGlobal } from 'reactn';
 import * as actions from '../store';
-import { IMainStrings } from '../model';
+import { IApiError, IMainStrings } from '../model';
 import { useSnackBar } from '../hoc/SnackBar';
 import { useCheckOnline, useProjectsLoaded } from '../utils';
 import { LoadProjectData } from '.';
+import { shallowEqual, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { mainSelector } from '../selector';
 
-export const useLoadProjectData = (
-  t: IMainStrings,
-  doOrbitError: typeof actions.doOrbitError,
-  resetOrbitError: typeof actions.resetOrbitError
-) => {
+export const useLoadProjectData = () => {
+  const t: IMainStrings = useSelector(mainSelector, shallowEqual);
+  const dispatch = useDispatch();
+  const doOrbitError = (ex: IApiError) => dispatch(actions.doOrbitError(ex));
   const [coordinator] = useGlobal('coordinator');
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -17,7 +19,7 @@ export const useLoadProjectData = (
   const [, setBusy] = useGlobal('importexportBusy');
   const AddProjectLoaded = useProjectsLoaded();
   const { showMessage } = useSnackBar();
-  const checkOnline = useCheckOnline(resetOrbitError);
+  const checkOnline = useCheckOnline();
 
   return (projectId: string, cb?: () => void) => {
     if (projectsLoaded.includes(projectId) || offlineOnly) {

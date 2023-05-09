@@ -1,6 +1,14 @@
 import React, { useMemo } from 'react';
 import { IFilterMenuStrings } from '../../model';
-import { IconButton, ListItemIcon, ListItemText, Badge } from '@mui/material';
+import {
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Badge,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+} from '@mui/material';
 import FilterIcon from '@mui/icons-material/FilterList';
 import BoxOpen from '@mui/icons-material/CheckBoxOutlineBlank';
 import BoxClose from '@mui/icons-material/CheckBox';
@@ -23,10 +31,13 @@ interface IProps {
   cats: number;
   stopPlayer?: () => void;
   disabled?: boolean;
+  teamDefault: boolean;
+  setTeamDefault?: (td: boolean) => void;
 }
 
 export function FilterMenu(props: IProps) {
-  const { action, cats, stopPlayer, disabled } = props;
+  const { action, cats, stopPlayer, disabled, teamDefault, setTeamDefault } =
+    props;
   const { forYou, resolved, latestVersion, allPassages, allSteps } =
     props.state;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -115,6 +126,21 @@ export function FilterMenu(props: IProps) {
           <ListItemIcon>{cats === 0 ? t.all : cats.toString()}</ListItemIcon>
           <ListItemText primary={t.category} />
         </StyledMenuItem>
+        {setTeamDefault && <Divider component="li" />}
+        {setTeamDefault && (
+          <FormControlLabel
+            sx={{ ml: 1 }}
+            control={
+              <Checkbox
+                checked={teamDefault}
+                disableRipple
+                inputProps={{ 'aria-labelledby': 'save as team default' }}
+                onChange={(event) => setTeamDefault(event.target.checked)}
+              />
+            }
+            label={t.saveFilter}
+          />
+        )}
       </StyledMenu>
     </Badge>
   );

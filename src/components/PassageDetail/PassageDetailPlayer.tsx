@@ -1,23 +1,40 @@
 import { useGlobal } from 'reactn';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
-import { IRegion, parseRegions } from '../../crud/useWavesurferRegions';
+import {
+  IRegion,
+  IRegionParams,
+  parseRegions,
+} from '../../crud/useWavesurferRegions';
 import WSAudioPlayer from '../WSAudioPlayer';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IWsAudioPlayerStrings, MediaFile } from '../../model';
 import { UpdateRecord } from '../../model/baseModel';
 import { playerSelector } from '../../selector';
 import { NamedRegions, getSegments, updateSegments } from '../../utils';
-import { findRecord } from '../../crud';
-
+import { TransformBuilder } from '@orbit/data';
+import usePassageDetailContext from '../../context/usePassageDetailContext';
+export enum SaveSegments {
+  showSaveButton = 0,
+  saveButNoButton = 1,
+}
 interface IProps {
   allowSegment?: NamedRegions | undefined;
-  saveSegments?: boolean;
+  saveSegments?: SaveSegments;
   allowAutoSegment?: boolean;
   suggestedSegments?: string;
+  defaultSegParams?: IRegionParams;
+  canSetDefaultParams?: boolean;
   onSegment?: (segment: string) => void;
+  onSegmentParamChange?: (params: IRegionParams, teamDefault: boolean) => void;
+  onProgress?: (progress: number) => void;
+  onSaveProgress?: (progress: number) => void;
+  onInteraction?: () => void;
+  allowZoomAndSpeed?: boolean;
+  position?: number;
+  chooserReduce?: number;
+  parentToolId?: string;
 }
 
 export function PassageDetailPlayer(props: IProps) {
@@ -26,8 +43,19 @@ export function PassageDetailPlayer(props: IProps) {
     allowAutoSegment,
     saveSegments,
     suggestedSegments,
+    defaultSegParams,
+    canSetDefaultParams,
     onSegment,
+    onSegmentParamChange,
+    onProgress,
+    onSaveProgress,
+    onInteraction,
+    allowZoomAndSpeed,
+    position,
+    chooserReduce,
+    parentToolId,
   } = props;
+
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const {
@@ -35,15 +63,17 @@ export function PassageDetailPlayer(props: IProps) {
     toolsChanged,
     isChanged,
     saveRequested,
+    clearRequested,
+    clearCompleted,
     startSave,
     saveCompleted,
   } = useContext(UnsavedContext).state;
   const t: IWsAudioPlayerStrings = useSelector(playerSelector, shallowEqual);
   const toolId = 'ArtifactSegments';
-  const ctx = useContext(PassageDetailContext);
-  const [requestPlay, setRequestPlay] = useState<boolean | undefined>(
-    undefined
-  );
+  const [requestPlay, setRequestPlay] = useState<{
+    play: boolean | undefined;
+    regionOnly: boolean;
+  }>({ play: undefined, regionOnly: false });
   const [initialposition, setInitialPosition] = useState<number | undefined>(0);
   const {
     loading,
@@ -58,31 +88,28 @@ export function PassageDetailPlayer(props: IProps) {
     currentSegmentIndex,
     setCurrentSegment,
     discussionMarkers,
-    highlightDiscussion,
     handleHighlightDiscussion,
-    selected,
-  } = ctx.state;
-  const highlightRef = useRef(highlightDiscussion);
-  const defaultSegParams = {
-    silenceThreshold: 0.004,
-    timeThreshold: 0.12,
-    segLenThreshold: 4.5,
-  };
+    playerMediafile,
+    forceRefresh,
+  } = usePassageDetailContext();
+
   const [defaultSegments, setDefaultSegments] = useState('{}');
 
   const segmentsRef = useRef('');
   const playingRef = useRef(playing);
   const savingRef = useRef(false);
+  const mediafileRef = useRef<MediaFile>();
 
   const loadSegments = () => {
-    const mediafile = findRecord(memory, 'mediafile', selected) as
-      | MediaFile
-      | undefined;
-    const segs = mediafile?.attributes?.segments || '{}';
+    const segs = mediafileRef.current?.attributes?.segments || '{}';
     if (allowSegment) segmentsRef.current = getSegments(allowSegment, segs);
     setDefaultSegments(segmentsRef.current);
     onSegment && onSegment(segmentsRef.current);
   };
+  useEffect(() => {
+    //we need a ref for onDuration
+    mediafileRef.current = playerMediafile;
+  }, [playerMediafile]);
 
   useEffect(() => {
     if (allowSegment && suggestedSegments) {
@@ -90,21 +117,20 @@ export function PassageDetailPlayer(props: IProps) {
       setDefaultSegments(segmentsRef.current);
       onSegment && onSegment(segmentsRef.current);
     }
-  }, [allowSegment, onSegment, suggestedSegments]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allowSegment, suggestedSegments]);
 
   useEffect(() => {
     if (allowSegment) loadSegments();
     else setDefaultSegments('{}');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allowSegment]);
+  }, [allowSegment, playerMediafile]);
 
   const writeSegments = async () => {
     if (!savingRef.current) {
       savingRef.current = true;
-      const mediafile = findRecord(memory, 'mediafile', selected) as
-        | MediaFile
-        | undefined;
-      if (mediafile) {
+      if (mediafileRef.current) {
+        var mediafile = mediafileRef.current;
         await memory
           .update((t) => [
             ...UpdateRecord(
@@ -114,8 +140,8 @@ export function PassageDetailPlayer(props: IProps) {
                 id: mediafile.id,
                 attributes: {
                   segments: updateSegments(
-                    NamedRegions.BackTranslation,
-                    mediafile.attributes?.segments,
+                    allowSegment ?? NamedRegions.BackTranslation,
+                    mediafile.attributes?.segments ?? '{}',
                     segmentsRef.current
                   ),
                 },
@@ -136,10 +162,31 @@ export function PassageDetailPlayer(props: IProps) {
     }
   };
 
-  useEffect(() => {
-    if (saveRequested(toolId) && !savingRef.current) writeSegments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [saveRequested]);
+  const onDuration = (duration: number) => {
+    if (
+      mediafileRef.current &&
+      !Boolean(mediafileRef.current.attributes.sourceSegments) &&
+      duration &&
+      Math.floor(duration) !==
+        Math.floor(mediafileRef.current.attributes.duration)
+    ) {
+      console.log(
+        `update duration to ${Math.floor(duration)} from
+        ${Math.floor(mediafileRef.current.attributes.duration)}`
+      );
+      memory
+        .update((t: TransformBuilder) =>
+          t.replaceAttribute(
+            mediafileRef.current as MediaFile, //I already checked for undefined
+            'duration',
+            Math.floor(duration)
+          )
+        )
+        .then(() => {
+          forceRefresh();
+        });
+    }
+  };
 
   const setPlayerSegments = (segments: string) => {
     if (
@@ -154,7 +201,7 @@ export function PassageDetailPlayer(props: IProps) {
       var segs = parseRegions(segments);
       if (segs.regions.length > 0) {
         setInitialPosition(segs.regions[0].start);
-        setRequestPlay(true);
+        setRequestPlay({ play: true, regionOnly: true });
       }
     }
   };
@@ -166,7 +213,9 @@ export function PassageDetailPlayer(props: IProps) {
       index =
         segs.regions
           .sort((a: IRegion, b: IRegion) => a.start - b.start)
-          .findIndex((r: IRegion) => r.start === segment.start) + 1;
+          .findIndex(
+            (r: IRegion) => r.start <= segment.start && r.end >= segment.end
+          ) + 1;
     }
     setCurrentSegment && setCurrentSegment(segment, index);
   };
@@ -174,8 +223,9 @@ export function PassageDetailPlayer(props: IProps) {
     segmentsRef.current = segments;
     setDefaultSegments(segments); //now we'll notice if we reset them in SetPlayerSegments
     onSegment && onSegment(segments);
-    if (saveSegments) {
-      toolChanged(toolId);
+    if (allowSegment && saveSegments !== undefined) {
+      //if I have a parentToolId it will save the segments
+      toolChanged(parentToolId ?? toolId);
     } else {
       //not saving segments...so don't update changed
     }
@@ -185,21 +235,14 @@ export function PassageDetailPlayer(props: IProps) {
     if (playingRef.current !== newPlaying) {
       setPlaying(newPlaying);
       playingRef.current = newPlaying;
-      setRequestPlay(undefined);
+      setRequestPlay({ play: undefined, regionOnly: false });
       setInitialPosition(undefined);
     }
   };
 
-  const onInteraction = () => {
-    //focus on add comment?? focusOnTranscription();
-  };
-
   useEffect(() => {
-    highlightRef.current = highlightDiscussion;
-  }, [highlightDiscussion]);
-
-  useEffect(() => {
-    if (playing !== playingRef.current) setRequestPlay(playing);
+    if (playing !== playingRef.current)
+      setRequestPlay({ play: playing, regionOnly: false });
   }, [playing]);
 
   useEffect(() => {
@@ -208,10 +251,13 @@ export function PassageDetailPlayer(props: IProps) {
       setupLocate();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentstep]);
+  }, [currentstep, allowSegment]);
 
   useEffect(() => {
-    if (saveRequested(toolId)) handleSave();
+    if (saveRequested(toolId) && !savingRef.current) writeSegments();
+    else if (clearRequested(toolId)) {
+      clearCompleted(toolId);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
@@ -221,32 +267,43 @@ export function PassageDetailPlayer(props: IProps) {
     }
     //save the segments here
   };
+  useEffect(() => {
+    setInitialPosition(position);
+  }, [position]);
 
   return (
     <div id="detailplayer">
       <WSAudioPlayer
         id="audioPlayer"
         allowRecord={false}
-        size={playerSize}
+        size={playerSize - (chooserReduce ?? 0)}
         blob={audioBlob}
         initialposition={initialposition}
-        isPlaying={requestPlay}
+        isPlaying={requestPlay.play}
+        regionOnly={requestPlay.regionOnly}
         loading={loading}
         busy={pdBusy}
         allowSegment={allowSegment}
         allowAutoSegment={allowAutoSegment}
         defaultRegionParams={defaultSegParams}
+        canSetDefaultParams={canSetDefaultParams}
         segments={defaultSegments}
         currentSegmentIndex={currentSegmentIndex}
         markers={discussionMarkers}
         onMarkerClick={handleHighlightDiscussion}
         setBusy={setPDBusy}
         onSegmentChange={onSegmentChange}
+        onSegmentParamChange={onSegmentParamChange}
         onPlayStatus={onPlayStatus}
         onInteraction={onInteraction}
         onCurrentSegment={onCurrentSegment}
+        allowZoom={allowZoomAndSpeed}
+        allowSpeed={allowZoomAndSpeed}
+        onProgress={onProgress}
+        onSaveProgress={onSaveProgress}
+        onDuration={onDuration}
         metaData={
-          saveSegments ? (
+          saveSegments === SaveSegments.showSaveButton ? (
             <Button
               id="segment-save"
               onClick={handleSave}

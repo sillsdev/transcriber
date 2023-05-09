@@ -49,7 +49,7 @@ interface SortEndProps {
 
 interface IProps {
   process?: string;
-  org?: string;
+  org: string;
 }
 
 const wfStepsSelector = (state: IState) =>
@@ -64,8 +64,14 @@ export const StepEditor = ({ process, org }: IProps) => {
   const se: IStepEditorStrings = useSelector(stepEditorSelector, shallowEqual);
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const { toolChanged, toolsChanged, saveRequested, saveCompleted } =
-    useContext(UnsavedContext).state;
+  const {
+    toolChanged,
+    toolsChanged,
+    saveRequested,
+    saveCompleted,
+    clearRequested,
+    clearCompleted,
+  } = useContext(UnsavedContext).state;
   const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
   const { showMessage } = useSnackBar();
   const saving = useRef(false);
@@ -117,7 +123,7 @@ export const StepEditor = ({ process, org }: IProps) => {
   const handleSortEnd = ({ oldIndex, newIndex }: SortEndProps) => {
     setToolSettingsRow(-1);
     let newRows = arrayMove(rows, oldIndex, newIndex).map((r, i) =>
-      r.seq !== i ? { ...r, seq: i } : r
+      r.seq !== -1 && r.seq !== i ? { ...r, seq: i } : r
     );
     setRows(newRows);
     toolChanged(toolId, true);
@@ -292,6 +298,7 @@ export const StepEditor = ({ process, org }: IProps) => {
 
   useEffect(() => {
     if (saveRequested(toolId)) saveRecs().then(() => saveCompleted(toolId));
+    else if (clearRequested(toolId)) clearCompleted(toolId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
@@ -321,7 +328,7 @@ export const StepEditor = ({ process, org }: IProps) => {
       }
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [org]);
 
   const prettySettings = (tool: string, settings: string) => {
     var json = settings ? JSON.parse(settings) : undefined;

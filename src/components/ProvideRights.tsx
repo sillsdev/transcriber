@@ -17,7 +17,7 @@ import {
 } from '../crud';
 import Memory from '@orbit/memory';
 import { useSnackBar } from '../hoc/SnackBar';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { cleanFileName } from '../utils';
 import MediaRecord from './MediaRecord';
@@ -66,8 +66,15 @@ export function ProvideRights(props: IProps & IRecordProps) {
   const [importList, setImportList] = useState<File[]>();
   const [uploadVisible, setUploadVisible] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
-  const { toolChanged, toolsChanged, startSave, saveCompleted, saveRequested } =
-    useContext(UnsavedContext).state;
+  const {
+    toolChanged,
+    toolsChanged,
+    startSave,
+    saveCompleted,
+    saveRequested,
+    clearRequested,
+    clearCompleted,
+  } = useContext(UnsavedContext).state;
 
   const { getTypeId } = useArtifactType();
   const { showMessage } = useSnackBar();
@@ -94,6 +101,9 @@ export function ProvideRights(props: IProps & IRecordProps) {
 
   useEffect(() => {
     if (saveRequested(toolId) && canSave) handleSave();
+    else if (clearRequested(toolId)) {
+      clearCompleted(toolId);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, canSave]);
 
@@ -194,7 +204,6 @@ export function ProvideRights(props: IProps & IRecordProps) {
           <Typography sx={statusProps}>{t.record}</Typography>
         </Box>
         <MediaRecord
-          id="mediarecord"
           toolId={toolId}
           uploadMethod={uploadMedia}
           defaultFilename={defaultFilename}

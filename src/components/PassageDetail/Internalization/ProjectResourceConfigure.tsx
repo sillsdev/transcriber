@@ -13,7 +13,7 @@ import SkipIcon from '@mui/icons-material/NotInterested';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
-import { withData } from '../../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import PassageDetailPlayer from '../PassageDetailPlayer';
 import { parseRegions, IRegion } from '../../../crud/useWavesurferRegions';
 import { prettySegment, cleanClipboard } from '../../../utils';
@@ -129,7 +129,8 @@ export const ProjectResourceConfigure = (props: IProps) => {
     saveRequested,
     startSave,
     saveCompleted,
-    clearChanged,
+    clearRequested,
+    clearCompleted,
     checkSavedFn,
   } = useContext(UnsavedContext).state;
   const savingRef = useRef(false);
@@ -242,14 +243,12 @@ export const ProjectResourceConfigure = (props: IProps) => {
         })
           .then(() => {
             saveCompleted(wizToolId);
-            savingRef.current = false;
-            canceling.current = false;
-            setComplete(0);
-            onOpen && onOpen(false);
           })
           .catch((err) => {
             //so we don't come here...we go to continue/logout
             saveCompleted(wizToolId, err.message);
+          })
+          .finally(() => {
             savingRef.current = false;
             canceling.current = false;
             setComplete(0);
@@ -259,11 +258,6 @@ export const ProjectResourceConfigure = (props: IProps) => {
     }
   };
 
-  useEffect(() => {
-    if (saveRequested(wizToolId) && !savingRef.current) writeResources();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [saveRequested]);
-
   const handleCreate = () => {
     if (!saveRequested(wizToolId)) {
       startSave(wizToolId);
@@ -271,7 +265,8 @@ export const ProjectResourceConfigure = (props: IProps) => {
   };
 
   useEffect(() => {
-    if (saveRequested(wizToolId)) handleCreate();
+    if (saveRequested(wizToolId) && !savingRef.current) writeResources();
+    else if (clearRequested(wizToolId)) clearCompleted(wizToolId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
@@ -282,7 +277,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
       return;
     }
     checkSavedFn(() => {
-      clearChanged(wizToolId);
+      toolChanged(wizToolId, false);
       onOpen && onOpen(false);
     });
   };
@@ -332,9 +327,16 @@ export const ProjectResourceConfigure = (props: IProps) => {
         return { start: 0, end: 0 };
       })
       .filter((r) => r.end > 0);
+    if (media?.attributes.duration) {
+      regs = regs.filter((r) => r.start <= media.attributes.duration);
+    }
     var errors = segBoundaries.length - regs.length;
     var updated = 0;
     regs.forEach((r, i) => {
+      if (media?.attributes.duration && r.end > media?.attributes.duration) {
+        r.end = media?.attributes.duration;
+        updated++;
+      }
       if (i > 0 && r.start !== regs[i - 1].end) {
         r.start = regs[i - 1].end;
         updated++;
@@ -494,6 +496,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     if (change) {
       setData(newData);
       dataRef.current = newData;
+      setPastedSegments('');
       if (!isChanged(wizToolId)) toolChanged(wizToolId);
     }
   };

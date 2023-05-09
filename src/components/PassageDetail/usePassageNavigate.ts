@@ -1,12 +1,12 @@
 import { useContext } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
-import { LocalKey, localUserKey } from '../../utils';
+import { LocalKey, localUserKey, useMyNavigate } from '../../utils';
 
 export const usePassageNavigate = (cb: () => void) => {
   const { pathname } = useLocation();
-  const { push } = useHistory();
+  const navigate = useMyNavigate();
   const { setCurrentStep } = usePassageDetailContext();
   const { checkSavedFn } = useContext(UnsavedContext).state;
 
@@ -17,7 +17,7 @@ export const usePassageNavigate = (cb: () => void) => {
           checkSavedFn(() => {
             if (!view.endsWith('null'))
               localStorage.setItem(localUserKey(LocalKey.url), view);
-            push(view);
+            navigate(view);
             cb();
             // Jump to first uncompleted step
             setCurrentStep('');

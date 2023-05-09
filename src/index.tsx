@@ -1,24 +1,21 @@
-import React from 'react';
+import React, { PropsWithChildren, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
-import {
-  auth0Domain,
-  webClientId,
-  apiIdentifier,
-} from './auth/auth0-variables.json';
+import envVariables from './auth/auth0-variables.json';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import ErrorBoundary from './hoc/ErrorBoundary';
-import { Router, HashRouter } from 'react-router-dom';
-import { DataProvider } from './mods/react-orbitjs';
+import {
+  DataProvider as DataProviderBar,
+  DataProviderProps,
+} from 'react-orbitjs';
 import { Provider } from 'react-redux';
 import { coordinator, memory, backup, schema } from './schema';
 import configureStore from './store';
 import { setGlobal } from 'reactn';
 import Bugsnag from '@bugsnag/js';
 import BugsnagReact from '@bugsnag/plugin-react';
-import history from './history';
 import {
   logError,
   Severity,
@@ -26,6 +23,7 @@ import {
   logFile,
   getFingerprintArray,
   waitForIt,
+  LocalKey,
 } from './utils';
 import { updateableFiles, staticFiles, localFiles } from './crud';
 import {
@@ -36,12 +34,17 @@ import {
 import { QueryBuilder } from '@orbit/data';
 import { related } from './crud';
 import { Section, Plan } from './model';
+import { TokenProvider } from './context/TokenProvider';
+import { ErrorFallback } from './components/ErrorFallback';
 const appVersion = require('../package.json').version;
+const { auth0Domain, webClientId, apiIdentifier } = envVariables;
+const ipc = (window as any)?.electron;
 
-const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
-const prod = API_CONFIG.host.indexOf('prod') !== -1;
+const prodOrQa = API_CONFIG.snagId !== '';
+const prod = API_CONFIG.host.indexOf('app.') !== -1;
 const bugsnagClient = prodOrQa
   ? Bugsnag.start({
+      hostname: API_CONFIG.endpoint,
       apiKey: API_CONFIG.snagId,
       plugins: [new BugsnagReact()],
       appVersion,
@@ -51,7 +54,6 @@ const bugsnagClient = prodOrQa
 const SnagBoundary = prodOrQa
   ? Bugsnag.getPlugin('react')?.createErrorBoundary(React)
   : null;
-const electronLog = isElectron ? logFile() : undefined;
 
 // Redux store
 const store = configureStore();
@@ -104,9 +106,21 @@ if (isElectron) {
   console.log('Running on the Web, Filesystem access disabled.');
 }
 
-const errorManagedApp =
-  bugsnagClient && SnagBoundary ? (
-    <SnagBoundary>
+const ErrorManagedApp = () => {
+  const [electronLog, setElectronLog] = React.useState('errorReporter');
+
+  useEffect(() => {
+    if (isElectron) {
+      logFile().then((fullName: string) => {
+        localStorage.setItem(LocalKey.errorLog, fullName);
+        setElectronLog(fullName);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return bugsnagClient && SnagBoundary ? (
+    <SnagBoundary FallbackComponent={ErrorFallback as any}>
       <ErrorBoundary errorReporter={bugsnagClient} memory={memory}>
         <App />
       </ErrorBoundary>
@@ -116,33 +130,56 @@ const errorManagedApp =
       <App />
     </ErrorBoundary>
   );
+};
+const TokenChecked = () => (
+  <TokenProvider>
+    <ErrorManagedApp />
+  </TokenProvider>
+);
 
-const onRedirectingCallbck = (appState?: { returnTo?: string }) => {
-  history.push(
-    appState && appState.returnTo ? appState.returnTo : window.location.pathname
+const AuthApp = () => {
+  const onRedirectingCallbck = (appState?: { returnTo?: string }) => {
+    //user has requested a specific path
+    //remember it to come back to after loading
+    localStorage.setItem(
+      LocalKey.deeplink,
+      appState && appState.returnTo
+        ? appState.returnTo
+        : window.location.pathname
+    );
+  };
+
+  return (
+    <Auth0Provider
+      domain={auth0Domain}
+      clientId={webClientId}
+      audience={apiIdentifier}
+      redirectUri={process.env.REACT_APP_CALLBACK}
+      useRefreshTokens={true}
+      onRedirectCallback={onRedirectingCallbck}
+    >
+      <TokenChecked />
+    </Auth0Provider>
   );
 };
 
-const router = isElectron ? (
-  <HashRouter>{errorManagedApp}</HashRouter>
-) : (
-  <Auth0Provider
-    domain={auth0Domain}
-    clientId={webClientId}
-    audience={apiIdentifier}
-    redirectUri={process.env.REACT_APP_CALLBACK}
-    useRefreshTokens={true}
-    onRedirectCallback={onRedirectingCallbck}
-  >
-    <Router history={history}>{errorManagedApp}</Router>
-  </Auth0Provider>
-);
+const DataProvider = (props: DataProviderProps & PropsWithChildren) => {
+  return <DataProviderBar {...props} />;
+};
 
 const Root = () => (
   <DataProvider dataStore={memory}>
-    <Provider store={store as any}>{router}</Provider>
+    <Provider store={store as any}>
+      {isElectron ? <TokenChecked /> : <AuthApp />}
+    </Provider>
   </DataProvider>
 );
+
+// localStorage home used by dataPath to avoid Promise
+ipc?.home().then((folder: string) => {
+  localStorage.setItem(LocalKey.home, folder);
+});
+
 const promises = [];
 promises.push(getFingerprintArray());
 if (isElectron) {
@@ -151,10 +188,10 @@ if (isElectron) {
 Promise.all(promises)
   .then((promResults) => {
     setGlobal({
+      home: false,
       organization: '',
       orgRole: undefined,
       project: '',
-      projRole: undefined,
       projType: '',
       plan: '',
       tab: undefined,
@@ -174,9 +211,9 @@ Promise.all(promises)
       importexportBusy: false,
       autoOpenAddMedia: false,
       editUserId: null,
-      developer: localStorage.getItem('developer'),
+      developer: localStorage.getItem(LocalKey.developer),
       offline: isElectron,
-      errorReporter: !isElectron ? bugsnagClient : electronLog,
+      errorReporter: bugsnagClient,
       alertOpen: false,
       fingerprint: promResults[0][0],
       orbitRetries: OrbitNetworkErrorRetries,
@@ -186,7 +223,6 @@ Promise.all(promises)
       latestVersion: '',
       releaseDate: '',
       progress: 0,
-      trackedTask: '',
     });
     ReactDOM.render(<Root />, document.getElementById('root'));
   })

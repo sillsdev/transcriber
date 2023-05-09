@@ -1,5 +1,5 @@
 import { useState, CSSProperties } from 'react';
-import { IconButton } from '@material-ui/core';
+import { IconButton } from '@mui/material';
 import UncheckedIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckedIcon from '@mui/icons-material/CheckBoxOutlined';
 import { passageDetailArtifactsSelector } from '../../../selector';

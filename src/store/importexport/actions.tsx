@@ -1,6 +1,5 @@
 import Axios, { AxiosError } from 'axios';
-import fs from 'fs';
-import path from 'path';
+import path from 'path-browserify';
 import {
   Comment,
   Project,
@@ -16,8 +15,8 @@ import {
   VProject,
   Discussion,
   OrgWorkflowStep,
+  IApiError,
 } from '../../model';
-import * as actions from '../../store';
 import { API_CONFIG } from '../../api-variable';
 import { ResourceDocument } from '@orbit/jsonapi';
 import {
@@ -33,6 +32,10 @@ import {
   IMPORT_SUCCESS,
   IMPORT_ERROR,
   IMPORT_COMPLETE,
+  COPY_PENDING,
+  COPY_SUCCESS,
+  COPY_ERROR,
+  COPY_COMPLETE,
   FileResponse,
   ExportType,
 } from './types';
@@ -50,11 +53,14 @@ import {
   mediaArtifacts,
   IExportArtifacts,
   ArtifactTypeSlug,
+  VernacularTag,
 } from '../../crud';
+import { Moment } from 'moment';
 import { logError, orbitInfo, Severity } from '../../utils';
 import Coordinator from '@orbit/coordinator';
 import { axiosPost } from '../../utils/axios';
 import { updateBackTranslationType } from '../../crud/updateBackTranslationType';
+const ipc = (window as any)?.electron;
 
 export const exportComplete = () => (dispatch: any) => {
   dispatch({
@@ -70,16 +76,16 @@ export const exportProject =
     memory: Memory,
     backup: IndexedDBSource,
     projectid: number | string,
-    fingerprint: string,
     userid: number | string,
     numberOfMedia: number,
     token: string | null,
     errorReporter: any, //global errorReporter
     pendingmsg: string,
     nodatamsg: string,
-    noNewAllowedmsg: string,
+    queuedmsg: string,
     localizedArtifact: string,
     getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
+    importedDate?: Moment,
     target?: string,
     orgWorkflowSteps?: OrgWorkflowStep[]
   ) =>
@@ -107,12 +113,11 @@ export const exportProject =
         memory,
         backup,
         projectid,
-        fingerprint,
         userid,
         nodatamsg,
-        noNewAllowedmsg,
         localizedArtifact,
         getOfflineProject,
+        importedDate,
         target,
         orgWorkflowSteps
       )
@@ -135,6 +140,8 @@ export const exportProject =
           ? projectid.toString()
           : remoteId('project', projectid, memory.keyMap);
       let start = 0;
+      let laststart = 0;
+      let laststartCount = 0;
       do {
         var projRec = getProjRec(projectid);
         var bodyFormData = new FormData();
@@ -151,7 +158,10 @@ export const exportProject =
           if (mediaList && mediaList.length > 0) {
             if (artifactType)
               bodyFormData.append('artifactType', localizedArtifact);
+
             bodyFormData.append('ids', ',' + mediaList.join() + ',');
+            if (artifactType === VernacularTag)
+              bodyFormData.append('nameTemplate', '{BOOK}{REF}_{VERS}');
           } else {
             dispatch({
               payload: errorStatus(-1, nodatamsg),
@@ -160,6 +170,7 @@ export const exportProject =
             return;
           }
         }
+
         await axiosPost(
           `offlineData/project/export/${exportType}/${remProjectId}/${start}`,
           bodyFormData,
@@ -183,13 +194,26 @@ export const exportProject =
                 });
                 break;
               default:
-                dispatch({
-                  payload: pendingmsg.replace(
-                    '{0}',
-                    Math.round((start / (numberOfMedia + 15)) * 100).toString()
-                  ),
-                  type: EXPORT_PENDING,
-                });
+                if (start === laststart) laststartCount++;
+                else {
+                  laststartCount = 0;
+                  laststart = start;
+                }
+                if (laststartCount > 20) {
+                  dispatch({
+                    payload: queuedmsg,
+                    type: EXPORT_PENDING,
+                  });
+                } else {
+                  var pct = Math.min(
+                    Math.round((start / (numberOfMedia + 15)) * 100),
+                    90
+                  );
+                  dispatch({
+                    payload: pendingmsg.replace('{0}', pct.toString()),
+                    type: EXPORT_PENDING,
+                  });
+                }
             }
           })
           // eslint-disable-next-line no-loop-func
@@ -205,6 +229,9 @@ export const exportProject =
               type: EXPORT_ERROR,
             });
           });
+        if (start > -1) {
+          await new Promise((r) => setTimeout(r, 3000));
+        }
       } while (start > -1);
     }
   };
@@ -214,6 +241,9 @@ export const importComplete = () => (dispatch: any) => {
     type: IMPORT_COMPLETE,
   });
 };
+const partialMessage = (msg: string, partialMsg: string) =>
+  (msg.length > 0 ? ',' : '') + partialMsg.substring(1, partialMsg.length - 2);
+
 const importFromElectron =
   (
     filename: string,
@@ -242,38 +272,46 @@ const importFromElectron =
         xhr.open('PUT', response.data.fileURL, true);
         xhr.setRequestHeader('Content-Type', response.data.contentType);
         xhr.send(file.slice());
-        xhr.onload = () => {
+        xhr.onload = async () => {
           if (xhr.status < 300) {
             dispatch({
               payload: pendingmsg.replace('{0}', '20'),
               type: IMPORT_PENDING,
             });
-            /* tell it to process the file now */
-            if (projectid === 0)
-              url = API_CONFIG.host + '/api/offlineData/sync/' + filename;
-            else
-              url =
-                API_CONFIG.host +
-                '/api/offlineData/project/import/' +
-                projectid.toString() +
-                '/' +
-                filename;
-
-            Axios.put(url, null, {
-              headers: {
-                Authorization: 'Bearer ' + token,
-              },
-            })
-              .then((putresponse) => {
-                if (putresponse.data.status === 200)
+            var start = '0';
+            var msg = '';
+            if (projectid === 0) {
+              url = `${API_CONFIG.host}/api/offlineData/sync/${filename}/`;
+              start = '0/0';
+            } else
+              url = `${API_CONFIG.host}/api/offlineData/project/import/${projectid}/${filename}/`;
+            do {
+              try {
+                /* tell it to process the file now */
+                var putresponse = await Axios.put(url + start, null, {
+                  headers: {
+                    Authorization: 'Bearer ' + token,
+                  },
+                });
+                if (putresponse.data.status === 200) {
                   dispatch({
                     payload: {
                       status: completemsg,
-                      msg: putresponse.data.message,
+                      msg:
+                        msg.length > 0
+                          ? '[' +
+                            msg +
+                            partialMessage(msg, putresponse.data.message) +
+                            ']'
+                          : putresponse.data.message,
                     },
                     type: IMPORT_SUCCESS,
                   });
-                else {
+                  break;
+                } else if (putresponse.data.status === 206) {
+                  start = putresponse.data.startindex;
+                  msg += partialMessage(msg, putresponse.data.message);
+                } else {
                   logError(
                     Severity.error,
                     errorReporter,
@@ -286,9 +324,9 @@ const importFromElectron =
                     ),
                     type: IMPORT_ERROR,
                   });
+                  break;
                 }
-              })
-              .catch((reason) => {
+              } catch (reason: any) {
                 logError(
                   Severity.error,
                   errorReporter,
@@ -298,7 +336,9 @@ const importFromElectron =
                   payload: errorStatus(-1, reason.toString()),
                   type: IMPORT_ERROR,
                 });
-              });
+                break;
+              }
+            } while (start !== '0' && start !== '0/0');
           } else {
             logError(
               Severity.error,
@@ -321,16 +361,94 @@ const importFromElectron =
         });
       });
   };
+export interface CopyProjectProps {
+  projectid: number;
+  sameorg: boolean;
+  token: string | null;
+  errorReporter: any;
+  pendingmsg: string;
+  completemsg: string;
+}
+export const copyProject =
+  ({
+    projectid,
+    sameorg,
+    token,
+    errorReporter,
+    pendingmsg,
+    completemsg,
+  }: CopyProjectProps) =>
+  async (dispatch: any) => {
+    dispatch({
+      payload: pendingmsg.replace('{0}', 'same ' + sameorg.toString()),
+      type: COPY_PENDING,
+    });
+    var start = 0;
+    var url = `${API_CONFIG.host}/api/offlineData/project/copyp/${sameorg}/${projectid}/${start}`;
+
+    do {
+      var response = await Axios.put(url, null, {
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      });
+      start = response.data.id;
+      var returnstatus = response.data.status;
+      var status = response.data.message;
+      var newproject = response.data.fileURL;
+      dispatch({
+        payload: pendingmsg.replace('{0}', status),
+        type: COPY_PENDING,
+      });
+      url = `${API_CONFIG.host}/api/offlineData/project/copyp/${projectid}/${start}/${newproject}`;
+    } while (returnstatus === 200 && start !== -1);
+    if (start === -1)
+      dispatch({
+        payload: {
+          status: completemsg.replace('{0}', status),
+          msg: status,
+        },
+        type: COPY_SUCCESS,
+      });
+    else {
+      logError(Severity.error, errorReporter, 'import error' + returnstatus);
+      dispatch({
+        payload: errorStatus(returnstatus, status),
+        type: COPY_ERROR,
+      });
+    }
+    //clean it up
+    url = `${API_CONFIG.host}/api/offlineData/project/copyp/${newproject}`;
+    response = await Axios.put(url, null, {
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    });
+  };
+export const copyComplete = () => (dispatch: any) => {
+  dispatch({
+    payload: undefined,
+    type: COPY_COMPLETE,
+  });
+};
+export interface ImportSyncFromElectronProps {
+  filename: string;
+  file: Buffer;
+  token: string | null;
+  errorReporter: any;
+  pendingmsg: string;
+  completemsg: string;
+}
 
 export const importSyncFromElectron =
-  (
-    filename: string,
-    file: Buffer,
-    token: string | null,
-    errorReporter: any,
-    pendingmsg: string,
-    completemsg: string
-  ) =>
+  ({
+    filename,
+    file,
+    token,
+    errorReporter,
+    pendingmsg,
+    completemsg,
+  }: ImportSyncFromElectronProps) =>
   (dispatch: any) => {
     dispatch(
       importFromElectron(
@@ -345,15 +463,24 @@ export const importSyncFromElectron =
     );
   };
 
+export interface ImportProjectFromElectronProps {
+  files: File[];
+  projectid: number;
+  token: string | null;
+  errorReporter: any;
+  pendingmsg: string;
+  completemsg: string;
+}
+
 export const importProjectFromElectron =
-  (
-    files: File[],
-    projectid: number,
-    token: string | null,
-    errorReporter: any,
-    pendingmsg: string,
-    completemsg: string
-  ) =>
+  ({
+    files,
+    projectid,
+    token,
+    errorReporter,
+    pendingmsg,
+    completemsg,
+  }: ImportProjectFromElectronProps) =>
   (dispatch: any) => {
     dispatch(
       importFromElectron(
@@ -368,37 +495,63 @@ export const importProjectFromElectron =
     );
   };
 
+export interface ImportProjectToElectronProps {
+  filepath: string;
+  dataDate: string;
+  version: number;
+  coordinator: Coordinator;
+  offlineOnly: boolean;
+  AddProjectLoaded: (project: string) => void;
+  reportError: (ex: IApiError) => void;
+  getTypeId: (slug: string) => string | null;
+  pendingmsg: string;
+  completemsg: string;
+  oldfilemsg: string;
+  token: string | null;
+  user: string;
+  errorReporter: any;
+  offlineSetup: () => Promise<void>;
+}
+
 export const importProjectToElectron =
-  (
-    filepath: string,
-    dataDate: string,
-    version: number,
-    coordinator: Coordinator,
-    offlineOnly: boolean,
-    AddProjectLoaded: (project: string) => void,
-    reportError: typeof actions.doOrbitError,
-    getTypeId: (slug: string) => string | null,
-    pendingmsg: string,
-    completemsg: string,
-    oldfilemsg: string,
-    token: string | null,
-    user: string,
-    errorReporter: any,
-    offlineSetup: () => Promise<void>
-  ) =>
-  (dispatch: any) => {
+  ({
+    filepath,
+    dataDate,
+    version,
+    coordinator,
+    offlineOnly,
+    AddProjectLoaded,
+    reportError,
+    getTypeId,
+    pendingmsg,
+    completemsg,
+    oldfilemsg,
+    token,
+    user,
+    errorReporter,
+    offlineSetup,
+  }: ImportProjectToElectronProps) =>
+  async (dispatch: any) => {
     var tb: TransformBuilder = new TransformBuilder();
     var oparray: Operation[] = [];
 
     const memory = coordinator.getSource('memory') as Memory;
     const backup = coordinator.getSource('backup') as IndexedDBSource;
 
-    function getProjectFromFile(ser: JSONAPISerializerCustom) {
-      var file = path.join(filepath, 'D_projects.json');
-      var data = fs.readFileSync(file);
-      var json = ser.deserialize(
-        JSON.parse(data.toString()) as ResourceDocument
-      );
+    const importJson = async (
+      ser: JSONAPISerializerCustom,
+      file: string,
+      folder?: string
+    ) => {
+      if (folder) {
+        file = path.join(folder, file);
+      }
+      const data = (await ipc?.read(file, 'utf-8')) as string;
+      return ser.deserialize(JSON.parse(data) as ResourceDocument);
+    };
+
+    async function getProjectFromFile(ser: JSONAPISerializerCustom) {
+      let json = await importJson(ser, 'D_projects.json', filepath);
       var project: any;
       if (Array.isArray(json.data)) project = json.data[0];
       else project = json.data;
@@ -420,7 +573,7 @@ export const importProjectToElectron =
       }
     }
     async function removeProject(ser: JSONAPISerializerCustom) {
-      var rec = getProjectFromFile(ser);
+      var rec = await getProjectFromFile(ser);
 
       if (!rec) return;
 
@@ -599,10 +752,7 @@ export const importProjectToElectron =
       ser: JSONAPISerializerCustom,
       dataDate: string
     ) {
-      var data = fs.readFileSync(file);
-      var json = ser.deserialize(
-        JSON.parse(data.toString()) as ResourceDocument
-      );
+      let json = await importJson(ser, file);
       var project: Project | undefined = undefined;
       if (!Array.isArray(json.data)) json.data = [json.data];
       for (let n = 0; n < json.data.length; n += 1) {
@@ -624,7 +774,7 @@ export const importProjectToElectron =
       return project;
     }
 
-    if (fs.existsSync(path.join(filepath, 'H_passagesections.json'))) {
+    if (await ipc?.exists(path.join(filepath, 'H_passagesections.json'))) {
       dispatch({
         payload: errorStatus(-1, oldfilemsg),
         type: IMPORT_ERROR,
@@ -635,82 +785,85 @@ export const importProjectToElectron =
       payload: pendingmsg.replace('{0}', '1'),
       type: IMPORT_PENDING,
     });
-    fs.readdir(filepath, async function (err, files) {
-      if (err) {
+    const result = (await ipc?.readDir(filepath)) as
+      | string[]
+      | NodeJS.ErrnoException;
+    const err = !Array.isArray(result) ? result : undefined;
+    if (err) {
+      dispatch({
+        payload: errorStatus(err.errno, err.message),
+        type: IMPORT_ERROR,
+      });
+    } else {
+      const files = result as string[];
+      const ser = getSerializer(memory, offlineOnly);
+      try {
+        //remove all project data
+        await removeProject(ser);
         dispatch({
-          payload: errorStatus(err.errno, err.message),
-          type: IMPORT_ERROR,
+          payload: pendingmsg.replace('{0}', '20'),
+          type: IMPORT_PENDING,
         });
-      } else {
-        const ser = getSerializer(memory, offlineOnly);
-        try {
-          //remove all project data
-          await removeProject(ser);
-          dispatch({
-            payload: pendingmsg.replace('{0}', '20'),
-            type: IMPORT_PENDING,
-          });
-          var project: Project | undefined = undefined;
-          for (let index = 0; index < files.length; index++) {
-            project =
-              (await processFile(
-                path.join(filepath, files[index]),
-                ser,
-                dataDate
-              )) || project;
-          }
-          dispatch({
-            payload: pendingmsg.replace('{0}', '25'),
-            type: IMPORT_PENDING,
-          });
-          await saveToMemory(oparray, 'import project to memory');
-          await saveToBackup(oparray, 'import project to backup');
-          dispatch({
-            payload: pendingmsg.replace('{0}', '80'),
-            type: IMPORT_PENDING,
-          });
-          //remove records with no attributes...i.e. groups created from user's groupmemberships that we didn't import
-          oparray = [];
-          var allrecs = await backup.pull((q) => q.findRecords());
+        var project: Project | undefined = undefined;
+        for (let index = 0; index < files.length; index++) {
+          project =
+            (await processFile(
+              path.join(filepath, files[index]),
+              ser,
+              dataDate
+            )) || project;
+        }
+        dispatch({
+          payload: pendingmsg.replace('{0}', '25'),
+          type: IMPORT_PENDING,
+        });
+        await saveToMemory(oparray, 'import project to memory');
+        await saveToBackup(oparray, 'import project to backup');
+        dispatch({
+          payload: pendingmsg.replace('{0}', '80'),
+          type: IMPORT_PENDING,
+        });
+        //remove records with no attributes...i.e. groups created from user's groupmemberships that we didn't import
+        oparray = [];
+        var allrecs = await backup.pull((q) => q.findRecords());
 
-          allrecs[0].operations.forEach((r: any) => {
-            if (r.record.attributes === undefined) {
-              oparray.push(
-                tb.removeRecord({ type: r.record.type, id: r.record.id })
-              );
-            }
-          });
-          if (version < 4 && project) {
-            syncPassageState(project, tb, oparray);
-          }
-          dispatch({
-            payload: pendingmsg.replace('{0}', '90'),
-            type: IMPORT_PENDING,
-          });
-          if (oparray.length > 0) {
-            await saveToMemory(oparray, 'remove extra records');
-            await saveToBackup(oparray, 'remove extra records from backup');
-          }
-          if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
-            updateBackTranslationType(
-              memory,
-              token,
-              user,
-              errorReporter,
-              offlineSetup
+        allrecs[0].operations.forEach((r: any) => {
+          if (r.record.attributes === undefined) {
+            oparray.push(
+              tb.removeRecord({ type: r.record.type, id: r.record.id })
             );
           }
-          AddProjectLoaded(project?.id || '');
-          dispatch({
-            payload: { status: completemsg, msg: '' },
-            type: IMPORT_SUCCESS,
-          });
-        } catch (err: any) {
-          dispatch({
-            payload: errorStatus(undefined, err.message),
-            type: IMPORT_ERROR,
-          });
+        });
+        if (version < 4 && project) {
+          syncPassageState(project, tb, oparray);
         }
+        dispatch({
+          payload: pendingmsg.replace('{0}', '90'),
+          type: IMPORT_PENDING,
+        });
+        if (oparray.length > 0) {
+          await saveToMemory(oparray, 'remove extra records');
+          await saveToBackup(oparray, 'remove extra records from backup');
+        }
+        if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
+          updateBackTranslationType(
+            memory,
+            token,
+            user,
+            errorReporter,
+            offlineSetup
+          );
+        }
+        AddProjectLoaded(project?.id || '');
+        dispatch({
+          payload: { status: completemsg, msg: '' },
+          type: IMPORT_SUCCESS,
+        });
+      } catch (err: any) {
+        dispatch({
+          payload: errorStatus(undefined, err.message),
+          type: IMPORT_ERROR,
+        });
       }
-    });
+    }
   };

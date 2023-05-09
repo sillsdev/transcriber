@@ -1,24 +1,21 @@
 import React, { useState } from 'react';
-import { useGlobal } from 'reactn';
-import { ITemplateStrings, Plan, PlanType } from '../../model';
-import { QueryBuilder } from '@orbit/data';
+import { ITemplateStrings } from '../../model';
 import {
-  Paper,
-  InputBase,
   Divider,
   IconButton,
-  InputLabel,
   Dialog,
   DialogTitle,
   List,
-  ListItem,
   ListItemText,
   ListItemIcon,
   SxProps,
+  ListItemButton,
+  TextField,
+  InputAdornment,
 } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
 import InfoIcon from '@mui/icons-material/Info';
-import { related, useOrganizedBy } from '../../crud';
+import { useOrganizedBy } from '../../crud';
 import { IMatchData } from './makeRefMap';
 import { templateSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -32,15 +29,17 @@ const iconProps = { p: 1 } as SxProps;
 interface InfoDialogProps {
   open: boolean;
   onClose: () => void;
+  onClick: (template: string) => void;
   organizedBy: string;
 }
 
 const InfoDialog = (props: InfoDialogProps) => {
-  const { onClose, open, organizedBy } = props;
+  const { onClose, onClick, open, organizedBy } = props;
   const t: ITemplateStrings = useSelector(templateSelector, shallowEqual);
 
   const pattern: IstrMap = {
     BOOK: t.book,
+    BOOKNAME: t.bookname,
     SECT: organizedBy,
     PASS: t.passage.replace('{0}', organizedBy),
     CHAP: t.chapter,
@@ -52,6 +51,10 @@ const InfoDialog = (props: InfoDialogProps) => {
     onClose();
   };
 
+  const handleListItemClick = (index: number) => {
+    onClick(Object.keys(pattern)[index]);
+  };
+
   return (
     <Dialog
       onClose={handleClose}
@@ -61,11 +64,11 @@ const InfoDialog = (props: InfoDialogProps) => {
     >
       <DialogTitle id="templDlg">{t.templateCodes}</DialogTitle>
       <List>
-        {Object.keys(pattern).map((pat) => (
-          <ListItem button key={pat}>
+        {Object.keys(pattern).map((pat, index) => (
+          <ListItemButton key={pat} onClick={() => handleListItemClick(index)}>
             <ListItemIcon>{`{${pat}}`}</ListItemIcon>
             <ListItemText primary={pattern[pat]} />
-          </ListItem>
+          </ListItemButton>
         ))}
       </List>
     </Dialog>
@@ -79,17 +82,18 @@ export interface ITemplateProps {
 
 export function Template(props: ITemplateProps) {
   const { matchMap, options } = props;
-  const [plan] = useGlobal('plan');
-  const [memory] = useGlobal('memory');
-  const [template, setTemplate] = useState<string>();
+  const [template, setTemplatex] = useState<string>();
   const [templateInfo, setTemplateInfo] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const t: ITemplateStrings = useSelector(templateSelector, shallowEqual);
 
+  const setTemplate = (t: string) => {
+    setTemplatex(t);
+    localStorage.setItem('template', t);
+  };
   const handleTemplateChange = (e: any) => {
     setTemplate(e.target.value);
-    localStorage.setItem('template', e.target.value);
   };
 
   const handleTemplateInfo = () => {
@@ -99,14 +103,18 @@ export function Template(props: ITemplateProps) {
   const handleClose = () => {
     setTemplateInfo(false);
   };
+  const handleClick = (newpart: string) => {
+    setTemplate(template + `{${newpart}}`);
+  };
 
   const handleApply = () => {
     if (!template) return;
     const terms = template
-      .match(/{([A-Za-z]{3,4})}/g)
+      .match(/{([A-Za-z]{3,8})}/g)
       ?.map((v) => v.slice(1, -1));
     const rex: IstrMap = {
       BOOK: '([A-Z1-3]{3})',
+      BOOKNAME: '([A-Za-z]+)',
       SECT: '([0-9]+)',
       PASS: '([0-9]+)',
       CHAP: '([0-9]{1,3})',
@@ -128,69 +136,78 @@ export function Template(props: ITemplateProps) {
       if (lastTemplate) {
         setTemplate(lastTemplate);
       } else {
-        const planRecs = memory.cache.query((q: QueryBuilder) =>
-          q.findRecords('plan')
-        ) as Plan[];
-        const myPlan = planRecs.filter((p) => p.id === plan);
-        if (myPlan.length > 0) {
-          const planTypeRec = memory.cache.query((q: QueryBuilder) =>
-            q.findRecord({
-              type: 'plantype',
-              id: related(myPlan[0], 'plantype'),
-            })
-          ) as PlanType;
-          setTemplate(
-            planTypeRec?.attributes?.name.toLocaleLowerCase() !== 'other'
-              ? '{BOOK}-{CHAP}-{BEG}-{END}'
-              : '{CHAP}-{BEG}-{END}'
-          );
-        }
+        setTemplate('{SECT}');
+        // const planRecs = memory.cache.query((q: QueryBuilder) =>
+        //   q.findRecords('plan')
+        // ) as Plan[];
+        // const myPlan = planRecs.filter((p) => p.id === plan);
+        // if (myPlan.length > 0) {
+        //   const planTypeRec = memory.cache.query((q: QueryBuilder) =>
+        //     q.findRecord({
+        //       type: 'plantype',
+        //       id: related(myPlan[0], 'plantype'),
+        //     })
+        //   ) as PlanType;
+        //   setTemplate(
+        //     planTypeRec?.attributes?.name.toLocaleLowerCase() !== 'other'
+        //       ? '{BOOK}-{CHAP}-{BEG}-{END}'
+        //       : '{CHAP}-{BEG}-{END}'
+        //   );
+        // }
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   return (
-    <Paper
-      component="form"
-      sx={{
-        padding: '2px 4px',
-        display: 'flex',
-        alignItems: 'center',
-        width: 600,
-      }}
-    >
-      <InputLabel>{`${t.fileTemplate}:`}</InputLabel>
-      <InputBase
-        sx={{ ml: 1, flex: 1 }}
+    <>
+      <TextField
+        label={t.autoMatchTemplate}
+        variant="filled"
+        sx={{ mx: 2, width: '600px' }}
         value={template}
         onChange={handleTemplateChange}
+        helperText={template === '{SECT}' ? t.renderExportTemplate : undefined}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              {
+                <>
+                  <IconButton
+                    id="templApply"
+                    sx={iconProps}
+                    aria-label={t.apply}
+                    onClick={handleApply}
+                    title={t.apply}
+                  >
+                    <DoneIcon />
+                  </IconButton>
+                  <Divider
+                    orientation="vertical"
+                    sx={{ height: '28px', m: '4px' }}
+                  />
+                  <IconButton
+                    id="templCodes"
+                    color="primary"
+                    sx={iconProps}
+                    onClick={handleTemplateInfo}
+                    title={t.templateCodes}
+                  >
+                    <InfoIcon />
+                  </IconButton>
+                </>
+              }
+            </InputAdornment>
+          ),
+        }}
       />
-      <IconButton
-        id="templApply"
-        sx={iconProps}
-        aria-label={t.apply}
-        onClick={handleApply}
-        title={t.apply}
-      >
-        <DoneIcon />
-      </IconButton>
-      <Divider orientation="vertical" sx={{ height: '28px', m: '4px' }} />
-      <IconButton
-        id="templCodes"
-        color="primary"
-        sx={iconProps}
-        onClick={handleTemplateInfo}
-        title={t.templateCodes}
-      >
-        <InfoIcon />
-      </IconButton>
       <InfoDialog
         open={templateInfo}
         onClose={handleClose}
+        onClick={handleClick}
         organizedBy={organizedBy}
       />
-    </Paper>
+    </>
   );
 }
 export default Template;

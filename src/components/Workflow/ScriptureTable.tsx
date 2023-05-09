@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { connect, shallowEqual, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {
   IState,
@@ -21,15 +21,17 @@ import {
   WorkflowStep,
   OrgWorkflowStep,
   IWorkflowStepsStrings,
+  GroupMembership,
+  Discussion,
+  IResourceStrings,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import * as actions from '../../store';
-import { withData, WithDataProps } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
-import { Link } from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Box, Link } from '@mui/material';
 import { useSnackBar } from '../../hoc/SnackBar';
 import PlanSheet, { ICellChange } from './PlanSheet';
 import {
@@ -39,6 +41,11 @@ import {
   usePlan,
   useFilteredSteps,
   VernacularTag,
+  useDiscussionCount,
+  getTool,
+  ToolSlug,
+  remoteId,
+  remoteIdGuid,
 } from '../../crud';
 import {
   lookupBook,
@@ -59,6 +66,8 @@ import {
   wfNumChanges,
   getWorkflow,
   workflowSheet,
+  isSectionFiltered,
+  isPassageFiltered,
 } from '.';
 import { debounce } from 'lodash';
 import AudacityManager from './AudacityManager';
@@ -71,35 +80,14 @@ import { PlanContext } from '../../context/PlanContext';
 import stringReplace from 'react-string-replace';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
+import ResourceTabs from '../ResourceEdit/ResourceTabs';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import { UnsavedContext } from '../../context/UnsavedContext';
+import { ISTFilterState } from './filterMenu';
+import { useProjectDefaults } from '../../crud/useProjectDefaults';
+import { sharedResourceSelector } from '../../selector';
 
 const SaveWait = 500;
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    progress: {
-      width: '100%',
-    },
-    paper: {},
-    actions: {
-      paddingBottom: 16,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-    icon: {
-      marginLeft: theme.spacing(1),
-    },
-  })
-);
 
 interface IStateProps {
   t: IScriptureTableStrings;
@@ -114,28 +102,20 @@ interface IStateProps {
 
 interface IDispatchProps {
   fetchBooks: typeof actions.fetchBooks;
-  doOrbitError: typeof actions.doOrbitError;
-  resetOrbitError: typeof actions.resetOrbitError;
 }
 
 interface IRecordProps {
   passages: Array<Passage>;
   sections: Array<Section>;
   mediafiles: Array<MediaFile>;
+  discussions: Array<Discussion>;
+  groupmemberships: Array<GroupMembership>;
   workflowSteps: WorkflowStep[];
   orgWorkflowSteps: OrgWorkflowStep[];
 }
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {
+interface IProps {
   colNames: string[];
-}
-
-interface ParamTypes {
-  prjId: string;
 }
 
 interface AudacityInfo {
@@ -143,7 +123,9 @@ interface AudacityInfo {
   index: number;
 }
 
-export function ScriptureTable(props: IProps) {
+export function ScriptureTable(
+  props: IProps & IStateProps & IDispatchProps & IRecordProps
+) {
   const {
     t,
     wfStr,
@@ -155,22 +137,23 @@ export function ScriptureTable(props: IProps) {
     bookMap,
     allBookData,
     fetchBooks,
-    doOrbitError,
-    resetOrbitError,
     passages,
     sections,
     mediafiles,
+    discussions,
+    groupmemberships,
     workflowSteps,
     orgWorkflowSteps,
   } = props;
-  const classes = useStyles();
-  const { prjId } = useParams<ParamTypes>();
+  const { prjId } = useParams();
   const [width, setWidth] = React.useState(window.innerWidth);
+  const [project] = useGlobal('project');
   const [plan] = useGlobal('plan');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
+  const [org] = useGlobal('organization');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setBusy] = useGlobal('importexportBusy');
   const myChangedRef = useRef(false);
@@ -200,6 +183,8 @@ export function ScriptureTable(props: IProps) {
     saveRequested,
     startSave,
     saveCompleted,
+    clearRequested,
+    clearCompleted,
     waitForSave,
     toolChanged,
     toolsChanged,
@@ -219,17 +204,82 @@ export function ScriptureTable(props: IProps) {
   const onlineSave = useWfOnlineSave({ setComplete });
   const [detachPassage] = useMediaAttach({
     ...props,
-    doOrbitError,
   });
-  const checkOnline = useCheckOnline(resetOrbitError);
+  const checkOnline = useCheckOnline();
   const [speaker, setSpeaker] = useState('');
   const getStepsBusy = useRef(false);
   const [orgSteps, setOrgSteps] = useState<OrgWorkflowStep[]>([]);
+  const {
+    getProjectDefault,
+    setProjectDefault,
+    canSetProjectDefault,
+    getLocalDefault,
+    setLocalDefault,
+  } = useProjectDefaults();
   const getFilteredSteps = useFilteredSteps();
+  const getDiscussionCount = useDiscussionCount({
+    mediafiles,
+    discussions,
+    groupmemberships,
+  });
+  const [defaultFilterState, setDefaultFilterState] = useState<ISTFilterState>({
+    minStep: '', //orgworkflow step to show this step or after
+    maxStep: '', //orgworkflow step to show this step or before
+    hideDone: false,
+    minSection: 1,
+    maxSection: -1,
+    assignedToMe: false,
+    disabled: false,
+    canHideDone: true,
+  });
+  const filterParam = 'ProjectFilter';
+  const resStr: IResourceStrings = useSelector(
+    sharedResourceSelector,
+    shallowEqual
+  );
+
+  const [filterState, setFilterState] =
+    useState<ISTFilterState>(defaultFilterState);
   const secNumCol = React.useMemo(() => {
     return colNames.indexOf('sectionSeq');
   }, [colNames]);
-
+  const local: ILocal = {
+    sectionSeq: organizedBy,
+    title: t.title,
+    passageSeq: t.passage,
+    book: t.book,
+    reference: t.reference,
+    comment: t.description,
+    action: t.extras,
+  };
+  const onFilterChange = (
+    filter: ISTFilterState | undefined,
+    projDefault: boolean
+  ) => {
+    setLocalDefault(filterParam, filter);
+    if (projDefault) {
+      var def;
+      if (filter) {
+        def = { ...filter };
+        //convert steps to remote id
+        if (filter.minStep)
+          def.minStep = remoteId(
+            'orgworkflowstep',
+            filter.minStep,
+            memory.keyMap
+          );
+        if (filter.maxStep)
+          def.maxStep = remoteId(
+            'orgworkflowstep',
+            filter.maxStep,
+            memory.keyMap
+          );
+      }
+      setProjectDefault(filterParam, def);
+    }
+    if (filter) setFilterState(filter);
+    else setFilterState(defaultFilterState);
+  };
   const setWorkflow = (wf: IWorkflow[]) => {
     workflowRef.current = wf;
     setWorkflowx(wf);
@@ -370,6 +420,8 @@ export function ScriptureTable(props: IProps) {
       passageUpdated: currentDateTime(),
       passageId: undefined,
       mediaShared: shared ? IMediaShare.None : IMediaShare.NotPublic,
+      deleted: false,
+      filtered: false,
     } as IWorkflow;
 
     if (flat && isSectionRow(myWorkflow[index])) {
@@ -400,13 +452,18 @@ export function ScriptureTable(props: IProps) {
     setChanged(true);
   };
 
+  const getUndelIndex = (workflow: IWorkflow[], ix: number | undefined) => {
+    // find the undeleted index...
+    if (ix !== undefined) return getByIndex(workflow, ix).i;
+    return ix;
+  };
+
   const addSection = (ix?: number) => {
     if (savingRef.current) {
       showMessage(t.saving);
       return;
     }
-    //find the undeleted index...
-    if (ix !== undefined) var { i } = getByIndex(workflow, ix);
+    const i = getUndelIndex(workflow, ix);
 
     const sequenceNums = workflow.map((row, j) =>
       !i || j < i ? (!row.deleted && row.sectionSeq) || 0 : 0
@@ -432,8 +489,7 @@ export function ScriptureTable(props: IProps) {
       showMessage(t.saving);
       return;
     }
-    //find the undeleted index...
-    if (ix !== undefined) var { i } = getByIndex(workflow, ix);
+    const i = getUndelIndex(workflow, ix);
     addPassageTo(workflow, i, before);
   };
   const movePassage = (ix: number, before: boolean) => {
@@ -442,15 +498,14 @@ export function ScriptureTable(props: IProps) {
       return;
     }
     if (flat) return;
-    //find the undeleted index...
-    var { i } = getByIndex(workflow, ix);
-    movePassageTo(workflow, i, before);
+    const i = getUndelIndex(workflow, ix);
+    if (i !== undefined) movePassageTo(workflow, i, before);
   };
   const getByIndex = (wf: IWorkflow[], index: number) => {
     let n = 0;
     let i = 0;
     while (i < wf.length) {
-      if (!wf[i].deleted) {
+      if (!wf[i].deleted && !wf[i].filtered) {
         if (n === index) break;
         n += 1;
       }
@@ -610,16 +665,7 @@ export function ScriptureTable(props: IProps) {
       SaveWait
     ).then(() => cb());
   };
-  const handleTranscribe = (i: number) => {
-    saveIfChanged(async () => {
-      waitForPassageId(i, () => {
-        const { wf } = getByIndex(workflowRef.current, i);
-        const id = wf?.passageId?.id || '';
-        const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
-        setView(`/work/${prjId}/${passageRemoteId}`);
-      });
-    });
-  };
+
   const handlePassageDetail = (i: number) => {
     saveIfChanged(async () => {
       waitForPassageId(i, () => {
@@ -676,9 +722,13 @@ export function ScriptureTable(props: IProps) {
     waitForPassageId(i, () => {
       const { wf } = getByIndex(workflowRef.current, i);
       uploadItem.current = wf;
-      setDefaultFilename(
-        passageDefaultFilename(wf?.passageId?.id || '', memory, VernacularTag)
-      );
+      if (wf?.passageId) {
+        var ident = wf.passageId; //make typescript stop complaining
+        var passage = memory.cache.query((q) => q.findRecord(ident)) as Passage;
+        setDefaultFilename(
+          passageDefaultFilename(passage, plan, memory, VernacularTag)
+        );
+      }
       setRecordAudio(record);
       setImportList(list);
       setUploadVisible(true);
@@ -777,17 +827,59 @@ export function ScriptureTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); //do this once to get the default;
 
+  const getFilter = () => {
+    var filter =
+      getLocalDefault(filterParam) ??
+      getProjectDefault(filterParam) ??
+      defaultFilterState;
+
+    if (filter.minStep && !isNaN(Number(filter.minStep)))
+      filter.minStep = remoteIdGuid(
+        'orgworkflowstep',
+        filter.minStep,
+        memory.keyMap
+      );
+    if (filter.maxStep && !isNaN(Number(filter.maxStep)))
+      filter.maxStep = remoteIdGuid(
+        'orgworkflowstep',
+        filter.maxStep,
+        memory.keyMap
+      );
+    return filter;
+  };
+  useEffect(() => {
+    setFilterState(getFilter());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project, defaultFilterState]);
+
   useEffect(() => {
     if (!getStepsBusy.current) {
       getStepsBusy.current = true;
-
       getFilteredSteps((orgSteps) => {
-        setOrgSteps(orgSteps);
         getStepsBusy.current = false;
+        setOrgSteps(
+          orgSteps.sort(
+            (i, j) => i.attributes.sequencenum - j.attributes.sequencenum
+          )
+        );
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workflowSteps, orgWorkflowSteps]);
+  }, [workflowSteps, orgWorkflowSteps, org]);
+
+  const doneStepId = useMemo(() => {
+    if (getStepsBusy.current) return 'notready';
+    var tmp = orgSteps.find(
+      (s) => getTool(s.attributes?.tool) === ToolSlug.Done
+    );
+
+    if (defaultFilterState.canHideDone !== Boolean(tmp))
+      setDefaultFilterState({
+        ...defaultFilterState,
+        canHideDone: Boolean(tmp),
+      });
+    return tmp?.id ?? 'noDoneStep';
+  }, [defaultFilterState, orgSteps]);
 
   // Save locally or online in batches
   useEffect(() => {
@@ -866,7 +958,7 @@ export function ScriptureTable(props: IProps) {
           }
         });
       }
-    }
+    } else if (clearRequested(toolId)) clearCompleted(toolId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
@@ -889,7 +981,10 @@ export function ScriptureTable(props: IProps) {
         shared,
         memory,
         orgSteps,
-        wfStr
+        wfStr,
+        filterState,
+        doneStepId,
+        getDiscussionCount
       );
       setWorkflow(newWorkflow);
       getLastModified(plan);
@@ -906,15 +1001,7 @@ export function ScriptureTable(props: IProps) {
   // Reset column widths based on sheet content
   useEffect(() => {
     const curNames = [...colNames.concat(['action'])];
-    const local: ILocal = {
-      sectionSeq: organizedBy,
-      title: t.title,
-      passageSeq: t.passage,
-      book: t.book,
-      reference: t.reference,
-      comment: t.description,
-      action: t.extras,
-    };
+
     const minWidth = {
       sectionSeq: 60,
       title: 100,
@@ -946,12 +1033,48 @@ export function ScriptureTable(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [workflow, width, colNames, flat]);
 
+  useEffect(() => {
+    const newWork: IWorkflow[] = [];
+    var changed = false;
+    workflowRef.current.forEach((w) => {
+      var filtered = false;
+      if (isSectionRow(w))
+        filtered = isSectionFiltered(filterState, w.sectionSeq);
+
+      if (isPassageRow(w))
+        filtered =
+          filtered || isPassageFiltered(w, filterState, orgSteps, doneStepId);
+      if (filtered !== w.filtered) changed = true;
+      newWork.push({
+        ...w,
+        filtered,
+      });
+    });
+    if (changed) {
+      setWorkflow(newWork);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orgSteps, filterState, doneStepId]);
+
+  const rowinfo = useMemo(() => {
+    var totalSections = new Set(
+      workflow.filter((w) => !w.deleted).map((w) => w.sectionSeq)
+    ).size;
+    var filtered = workflow.filter((w) => !w.deleted && !w.filtered);
+    var showingSections = new Set(filtered.map((w) => w.sectionSeq)).size;
+    if (showingSections < totalSections) {
+      local.sectionSeq =
+        organizedBy + ' (' + showingSections + '/' + totalSections + ')';
+    }
+    return filtered;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workflow]);
+
   const rowdata = useMemo(
-    () => workflowSheet(workflow, colNames),
-    [workflow, colNames]
+    () => workflowSheet(rowinfo, colNames, workflow),
+    [rowinfo, colNames, workflow]
   );
 
-  const rowinfo = useMemo(() => workflow.filter((w) => !w.deleted), [workflow]);
   if (view !== '') return <StickyRedirect to={view} />;
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
@@ -961,12 +1084,13 @@ export function ScriptureTable(props: IProps) {
       setUploadVisible(false);
     }
   };
+  const isReady = () => true;
 
   const handleLookupBook = (book: string) =>
     lookupBook({ book, allBookData, bookMap });
 
   return (
-    <div className={classes.container}>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <PlanSheet
         {...props}
         columns={columns}
@@ -984,16 +1108,18 @@ export function ScriptureTable(props: IProps) {
         lookupBook={handleLookupBook}
         resequence={handleResequence}
         inlinePassages={flat}
-        onTranscribe={handleTranscribe}
         onAudacity={handleAudacity}
         onPassageDetail={handlePassageDetail}
         onAssign={handleAssign}
         onUpload={handleUpload}
         onRecord={handleRecord}
         onHistory={handleVersions}
+        onFilterChange={onFilterChange}
+        filterState={filterState}
+        maximumSection={workflow[workflow.length - 1]?.sectionSeq ?? 0}
+        orgSteps={orgSteps}
+        canSetDefault={canSetProjectDefault}
         toolId={toolId}
-        t={s}
-        ts={ts}
       />
       {assignSectionVisible && (
         <AssignSection
@@ -1017,6 +1143,7 @@ export function ScriptureTable(props: IProps) {
         passageId={uploadItem.current?.passageId?.id}
         performedBy={speaker}
         onSpeakerChange={handleNameChange}
+        ready={isReady}
       />
       {audacityItem?.wf?.passageId && (
         <AudacityManager
@@ -1031,13 +1158,17 @@ export function ScriptureTable(props: IProps) {
         />
       )}
       <BigDialog
-        title={ts.versionHistory}
+        title={shared ? resStr.resourceEdit : ts.versionHistory}
         isOpen={versionItem !== ''}
         onOpen={handleVerHistClose}
       >
-        <VersionDlg passId={versionItem} />
+        {shared ? (
+          <ResourceTabs passId={versionItem} onOpen={handleVerHistClose} />
+        ) : (
+          <VersionDlg passId={versionItem} />
+        )}
       </BigDialog>
-    </div>
+    </Box>
   );
 }
 
@@ -1052,12 +1183,10 @@ const mapStateToProps = (state: IState): IStateProps => ({
   allBookData: state.books.bookData,
 });
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       fetchBooks: actions.fetchBooks,
-      doOrbitError: actions.doOrbitError,
-      resetOrbitError: actions.resetOrbitError,
     },
     dispatch
   ),
@@ -1067,10 +1196,12 @@ const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  discussions: (q: QueryBuilder) => q.findRecords('discussion'),
+  groupmemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
   workflowSteps: (q: QueryBuilder) => q.findRecords('workflowstep'),
   orgWorkflowSteps: (q: QueryBuilder) => q.findRecords('orgworkflowstep'),
 };
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(ScriptureTable) as any
+  connect(mapStateToProps, mapDispatchToProps)(ScriptureTable as any) as any
 ) as any;

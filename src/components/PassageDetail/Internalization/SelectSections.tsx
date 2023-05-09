@@ -12,10 +12,17 @@ import {
   IPassageDetailArtifactsStrings,
 } from '../../../model';
 import { ITranscriptionTabStrings } from '../../../model';
-import { withData, WithDataProps } from '../../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder, RecordIdentity } from '@orbit/data';
-import { Button, debounce, Paper } from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import {
+  Box,
+  Button,
+  debounce,
+  Paper,
+  PaperProps,
+  styled,
+  Typography,
+} from '@mui/material';
 import TreeGrid from '../../TreeGrid';
 import {
   related,
@@ -26,31 +33,20 @@ import {
   useOrganizedBy,
   findRecord,
   usePlanType,
+  sectionRef,
 } from '../../../crud';
 import { transcriptionTabSelector } from '../../../selector';
 import { eqSet } from '../../../utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    content: {
-      paddingTop: theme.spacing(2),
-      maxHeight: '70%',
-    },
-    root: {
-      backgroundColor: theme.palette.background.default,
-      marginBottom: theme.spacing(1),
-      '& .MuiPaper-rounded': {
-        borderRadius: '8px',
-      },
-      overflow: 'auto',
-      paddingTop: theme.spacing(2),
-    },
-  })
-);
+const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  marginBottom: theme.spacing(1),
+  '& .MuiPaper-rounded': {
+    borderRadius: '8px',
+  },
+  overflow: 'auto',
+  paddingTop: theme.spacing(2),
+}));
 
 interface IRow {
   id: string;
@@ -65,12 +61,14 @@ const getChildRows = (row: any, rootRows: any[]) => {
 };
 
 /* build the section name = sequence + name */
-const getSection = (section: Section) => {
+const getSection = (
+  section: Section,
+  passages: Passage[],
+  bookData: BookName[]
+) => {
   const name =
-    section && section.attributes && section.attributes.name
-      ? section.attributes.name
-      : '';
-  return sectionNumber(section) + ' ' + name;
+    sectionRef(section, passages, bookData) ?? section?.attributes?.name ?? '';
+  return sectionNumber(section) + '.\u00A0\u00A0' + name;
 };
 
 /* build the passage name = sequence + book + reference */
@@ -83,14 +81,14 @@ interface IRecordProps {
   sections: Array<Section>;
 }
 
-interface IProps extends IRecordProps, WithDataProps {
+interface IProps extends IRecordProps {
+  title: string;
   visual?: boolean;
   onSelect?: (items: RecordIdentity[]) => void;
 }
 
 export function SelectSections(props: IProps) {
-  const { passages, sections, visual, onSelect } = props;
-  const classes = useStyles();
+  const { passages, sections, visual, title, onSelect } = props;
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const [data, setData] = useState(Array<IRow>());
@@ -186,7 +184,7 @@ export function SelectSections(props: IProps) {
         if (!isFlat && passageCount > 1)
           rowData.push({
             id: section.id,
-            name: getSection(section),
+            name: getSection(section, sectionpassages, bookData),
             passages: passageCount.toString(),
             parentId: '',
           });
@@ -242,8 +240,9 @@ export function SelectSections(props: IProps) {
   };
 
   return (
-    <div id="SelectSections" className={classes.content}>
-      <Paper id="PassageList" className={classes.root} style={heightStyle}>
+    <Box id="SelectSections" sx={{ pt: 2, maxHeight: '70%' }}>
+      <Typography variant="h6">{title}</Typography>
+      <StyledPaper id="PassageList" style={heightStyle}>
         <TreeGrid
           columns={columnDefs}
           columnWidths={columnWidths}
@@ -264,8 +263,7 @@ export function SelectSections(props: IProps) {
           select={handleSelect}
           checks={checks}
         />
-      </Paper>
-
+      </StyledPaper>
       <div>
         <Button
           onClick={handleSelected}
@@ -276,7 +274,7 @@ export function SelectSections(props: IProps) {
           {buttonText}
         </Button>
       </div>
-    </div>
+    </Box>
   );
 }
 

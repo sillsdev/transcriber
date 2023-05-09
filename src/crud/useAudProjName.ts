@@ -3,9 +3,8 @@ import { Plan, Passage, Section } from '../model';
 import { RecordIdentity, Record } from '@orbit/data';
 import { related, usePlan } from '.';
 import { toCamel, pad2, cleanFileName } from '../utils';
-import { isElectron } from '../api-variable';
-const ipc = isElectron ? require('electron').ipcRenderer : null;
-const path = require('path');
+const ipc = (window as any)?.electron;
+const path = require('path-browserify');
 
 const planSlug = (rec: Plan | null) => {
   const name = rec?.attributes?.name || '';
@@ -35,22 +34,22 @@ export const useAudProjName = () => {
       q.findRecord({ type: 'section', id: secId })
     ) as Section;
     const planRec = getPlan(related(secRec, 'plan'));
-    const docs = await ipc?.invoke('getPath', 'documents');
+    const docs = await ipc?.getPath('documents');
     const book = passRec?.attributes?.book;
     const secSeq = secRec?.attributes?.sequencenum || 0;
-    let secPart = `${book ? '-' + book : ''}${recSlug(secRec, secSeq)}`;
+    let secPart = `${book ?? ''}${recSlug(secRec, secSeq)}`;
     const ref = passRec?.attributes?.reference;
     const cleanRef = ref ? `-${cleanFileName(ref.replace(' ', '_'))}` : '';
     let aupPath = path.join(docs, 'Audacity', 'aup3', planSlug(planRec));
     let pasPart = '';
     if (planRec?.attributes?.flat) {
       secPart += cleanRef;
-      aupPath = path.join(aupPath, secPart.slice(1));
+      aupPath = path.join(aupPath, secPart);
     } else {
       const pasSeq = passRec?.attributes?.sequencenum || 0;
       pasPart = cleanRef + recSlug(passRec, pasSeq);
-      aupPath = path.join(aupPath, secPart.slice(1), pasPart.slice(1));
+      aupPath = path.join(aupPath, secPart, pasPart.slice(1));
     }
-    return path.join(aupPath, `${planSlug(planRec)}${secPart}${pasPart}.aup3`);
+    return path.join(aupPath, `${secPart}${pasPart}_${planSlug(planRec)}.aup3`);
   };
 };

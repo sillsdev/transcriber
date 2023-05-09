@@ -1,8 +1,6 @@
 import { fileJson, getRegVal } from '../utils';
-const os = require('os');
-const path = require('path');
-const isElectron = process.env.REACT_APP_MODE === 'electron';
-const execa = isElectron ? require('execa') : null;
+const path = require('path-browserify');
+const ipc = (window as any)?.electron;
 
 const progVal91 = 'Paratext9_Full_Release_AppPath';
 const progVal9 = 'Program_Files_Directory_Ptw9';
@@ -11,11 +9,11 @@ const dataVal = 'Settings_Directory';
 const regKey = 'HKLM\\SOFTWARE\\WOW6432Node\\Paratext\\8';
 
 export const getParatextDataPath = async () => {
-  if (os.platform() === 'win32') {
+  if (await ipc?.isWindows()) {
     return await getRegVal(regKey, dataVal);
   } else {
     const regKeyFile = path.join(
-      os.homedir(),
+      await ipc?.home(),
       '.config',
       'paratext',
       'registry',
@@ -26,7 +24,7 @@ export const getParatextDataPath = async () => {
       'values.xml'
     );
     let dir = null;
-    const keyJson = fileJson(regKeyFile);
+    const keyJson = await fileJson(regKeyFile);
     if (keyJson) {
       const vals = keyJson.values.value;
       if (Array.isArray(vals)) {
@@ -45,19 +43,21 @@ export const getParatextDataPath = async () => {
 };
 
 export const getReadWriteProg = async () => {
-  if (os.platform() === 'win32') {
+  if (await ipc?.isWindows()) {
     const progPath =
       (await getRegVal(regKey, progVal91)) ||
       (await getRegVal(regKey, progVal9)) ||
       (await getRegVal(regKey, progVal8));
     return async (args: string[]) => {
-      return await execa(path.join(progPath, 'rdwrtp8'), args);
+      return JSON.parse(await ipc?.exec(path.join(progPath, 'rdwrtp8'), args));
     };
   } else {
     return async (args: string[]) => {
-      return await execa('/usr/bin/paratext9', ['--rdwrtp8'].concat(args), {
-        env: { ...{ ...process }.env, DISPLAY: ':0' },
-      });
+      return JSON.parse(
+        await ipc?.exec('/usr/bin/paratext9', ['--rdwrtp8'].concat(args), {
+          env: { ...{ ...process }.env, DISPLAY: ':0' },
+        })
+      );
     };
   }
 };

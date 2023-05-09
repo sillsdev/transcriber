@@ -5,18 +5,13 @@ import { MediaFile } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils';
 import { useMediaAttach } from './useMediaAttach';
-import * as actions from '../store';
-import path from 'path';
+import path from 'path-browserify';
 
-export const useOfflnMediafileCreate = (
-  doOrbitError: typeof actions.doOrbitError
-) => {
+export const useOfflnMediafileCreate = () => {
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
-  const [attachPassage] = useMediaAttach({
-    doOrbitError,
-  });
+  const [attachPassage] = useMediaAttach({});
   const createMedia = async (
     data: any, //from upload
     version: number,

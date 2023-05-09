@@ -1,13 +1,14 @@
 import { IExeca } from '../model';
-const isElectron = process.env.REACT_APP_MODE === 'electron';
-const execa = isElectron ? require('execa') : null;
+const ipc = (window as any)?.electron;
 
 const lnRe = /([A-Za-z0-9_\\(\\)]+)[^A-Za-z0-9_]+([A-Z_]+)[^A-Za-z0-9_]+(.*)?/;
 
 export const getRegVal = async (key: string, name: string) => {
   let val: (string | undefined)[] = [];
   try {
-    const { stdout } = (await execa('reg', ['query', key])) as IExeca;
+    const { stdout } = JSON.parse(
+      await ipc?.exec('reg', ['query', key])
+    ) as IExeca;
     val =
       typeof stdout === 'string'
         ? stdout

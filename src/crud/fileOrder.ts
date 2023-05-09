@@ -7,13 +7,15 @@ export const updateableFiles = [
   { table: 'comment', sort: 'J' },
   { table: 'discussion', sort: 'I' },
   { table: 'groupmembership', sort: 'D' },
-  { table: 'intellectualproperty', sort: 'C' },
+  { table: 'intellectualproperty', sort: 'I' },
   { table: 'mediafile', sort: 'H' },
+  { table: 'orgkeyterm', sort: 'C' },
+  { table: 'orgkeytermtarget', sort: 'I' },
   { table: 'passage', sort: 'G' },
   { table: 'passagestatechange', sort: 'H' },
   { table: 'project', sort: 'D' },
   { table: 'section', sort: 'F' },
-  { table: 'sectionresourceuser', sort: 'H' },
+  { table: 'sectionresourceuser', sort: 'J' },
   { table: 'user', sort: 'A' },
 ];
 
@@ -34,7 +36,9 @@ export const staticFiles = [
   { table: 'projectintegration', sort: 'E' }, //do we care that they synced locally??
   { table: 'projecttype', sort: 'B' },
   { table: 'role', sort: 'B' },
-  { table: 'sectionresource', sort: 'G' },
+  { table: 'sectionresource', sort: 'I' },
+  { table: 'sharedresource', sort: 'I' },
+  { table: 'sharedresourcereference', sort: 'J' },
   { table: 'workflowstep', sort: 'B' },
 ];
 

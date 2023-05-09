@@ -1,4 +1,4 @@
-import { SortableElement } from 'react-sortable-hoc';
+import { SortableElement, SortableElementProps } from 'react-sortable-hoc';
 import { ListItem, IconButton, styled } from '@mui/material';
 import HideIcon from '@mui/icons-material/VisibilityOff';
 import ShowIcon from '@mui/icons-material/Visibility';
@@ -8,6 +8,7 @@ import ToolChoice from './ToolChoice';
 import { shallowEqual, useSelector } from 'react-redux';
 import { IStepEditorStrings } from '../../model';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { PropsWithChildren } from 'react';
 
 const StepSpan = styled('span')(() => ({ minWidth: 250 }));
 const ToolSpan = styled('span')(() => ({ minWidth: 250 }));
@@ -23,7 +24,7 @@ interface IProps {
   settingsTitle?: string;
 }
 
-export const StepItem = SortableElement(
+export const StepItem = SortableElement<IProps & SortableElementProps & PropsWithChildren>(
   ({
     value,
     onNameChange,

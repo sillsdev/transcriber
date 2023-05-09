@@ -1,56 +1,38 @@
 import React, { useState, useContext } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import JwtDecode from 'jwt-decode';
-import { connect } from 'react-redux';
-import { IState, IToken, IEmailUnverifiedStrings } from '../model';
-import localStrings from '../selector/localize';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { Typography, Grid, Button } from '@material-ui/core';
-import { Redirect } from 'react-router';
+import { shallowEqual, useSelector } from 'react-redux';
+import { IToken, IEmailUnverifiedStrings } from '../model';
+import { Typography, Grid, styled, Box, BoxProps } from '@mui/material';
 import { API_CONFIG, isElectron } from '../api-variable';
 import Axios from 'axios';
 import { TokenContext } from '../context/TokenProvider';
 import { doLogout, goOnline } from './Access';
+import { ActionRow, PriButton } from '../control';
+import { emailUnverifiedSelector } from '../selector';
+import { useMounted, useMyNavigate } from '../utils';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    fullScreen: {
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      width: '100%',
-      height: `calc(100vh - 120px)`,
-    },
-    list: {
-      alignSelf: 'center',
-    },
-    button: {
-      margin: theme.spacing(1),
-      variant: 'outlined',
-      color: 'primary',
-    },
-    actions: {
-      paddingBottom: 16,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'center',
-    },
-  })
-);
+const FullScreen = styled(Box)<BoxProps>(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  width: '100%',
+  height: `calc(100vh - 120px)`,
+}));
 
-interface IStateProps {
-  t: IEmailUnverifiedStrings;
-}
-
-interface IProps extends IStateProps {}
+interface IProps {}
 
 export const EmailUnverified = (props: IProps) => {
-  const { t } = props;
-  const classes = useStyles();
+  const isMounted = useMounted('unverfied');
+  const navigate = useMyNavigate();
   const { getAccessTokenSilently, user } = useAuth0();
   const { accessToken, setAuthSession } = useContext(TokenContext).state;
   const [view, setView] = useState('');
   const [message, setMessage] = useState('');
+  const t: IEmailUnverifiedStrings = useSelector(
+    emailUnverifiedSelector,
+    shallowEqual
+  );
 
   const handleResend = (e: any) => {
     var url = API_CONFIG.host + '/api/auth/resend';
@@ -81,6 +63,7 @@ export const EmailUnverified = (props: IProps) => {
     if (user?.email_verified) {
       (async () => {
         const token = await getAccessTokenSilently();
+        if (!isMounted()) return;
         const decodedToken = JwtDecode(token) as IToken;
         setAuthSession(user, token, decodedToken.exp);
         setView('Loading');
@@ -89,17 +72,17 @@ export const EmailUnverified = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  if (/Logout/i.test(view)) return <Redirect to="/logout" />;
-  if (/Loading/i.test(view)) return <Redirect to="/loading" />;
+  if (/Logout/i.test(view)) navigate('/logout');
+  if (/Loading/i.test(view)) navigate('/loading');
 
   return (
-    <div className={classes.fullScreen}>
+    <FullScreen>
       <Typography align="center" variant="h6">
         {t.emailUnverified}
         <br></br>
         {t.verify}
       </Typography>
-      <Typography align="center" variant="h6">
+      <Typography align="center" variant="h6" sx={{ mb: 4 }}>
         {message}
       </Typography>
       <Grid
@@ -109,46 +92,20 @@ export const EmailUnverified = (props: IProps) => {
         alignItems="center"
         spacing={0}
       >
-        <div className={classes.actions}>
-          <Button
-            id="emailResent"
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleResend}
-          >
+        <ActionRow>
+          <PriButton id="emailResent" onClick={handleResend}>
             {t.resend}
-          </Button>
-        </div>
-        <div className={classes.actions}>
-          <Button
-            id="emailVerified"
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleVerified}
-          >
+          </PriButton>
+          <PriButton id="emailVerified" onClick={handleVerified}>
             {t.verified}
-          </Button>
-        </div>
-        <div className={classes.actions}>
-          <Button
-            id="emailLogout"
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleLogout}
-          >
+          </PriButton>
+          <PriButton id="emailLogout" onClick={handleLogout}>
             {t.logout}
-          </Button>
-        </div>
+          </PriButton>
+        </ActionRow>
       </Grid>
-    </div>
+    </FullScreen>
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'emailUnverified' }),
-});
-
-export default connect(mapStateToProps)(EmailUnverified) as any;
+export default EmailUnverified;

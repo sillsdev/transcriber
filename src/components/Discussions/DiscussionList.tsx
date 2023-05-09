@@ -1,83 +1,61 @@
 import {
-  createStyles,
+  Box,
   Grid,
   IconButton,
-  makeStyles,
   Paper,
-  Theme,
+  PaperProps,
+  styled,
+  SxProps,
   Typography,
+  TypographyProps,
   useTheme,
-} from '@material-ui/core';
+} from '@mui/material';
 import QueryBuilder from '@orbit/data/dist/types/query-builder';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { connect } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import {
-  findRecord,
-  getMediaInPlans,
-  related,
-  useTeamUpdate,
-  VernacularTag,
-} from '../../crud';
+import { getMediaInPlans, related, useRole, VernacularTag } from '../../crud';
 import {
   Discussion,
   IDiscussionListStrings,
-  IState,
   MediaFile,
   Group,
   User,
   GroupMembership,
-  RoleNames,
-  Organization,
 } from '../../model';
-import localStrings from '../../selector/localize';
 import AddIcon from '@mui/icons-material/Add';
 import HideIcon from '@mui/icons-material/ArrowDropUp';
 import ShowIcon from '@mui/icons-material/ArrowDropDown';
 import DiscussionCard, { DiscussionRegion } from './DiscussionCard';
 import BigDialog from '../../hoc/BigDialog';
 import CategoryList, { CatData } from './CategoryList';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { useGlobal } from 'reactn';
-import { useDiscussionOrg } from '../../crud';
+import { useDiscussionOrg, useOrgDefaults } from '../../crud';
 import FilterMenu, { IFilterState } from './FilterMenu';
 import Confirm from '../AlertDialog';
 import { onlyUnique, waitForIt } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import SortMenu, { ISortState } from './SortMenu';
+import { discussionListSelector } from '../../selector';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      backgroundColor: theme.palette.background.default,
-      marginBottom: theme.spacing(1),
-      '& .MuiPaper-rounded': {
-        borderRadius: '8px',
-      },
-      overflow: 'auto',
-    },
-    discussionHead: {
-      display: 'flex',
-      justifyContent: 'space-between',
-      padding: theme.spacing(1),
-    },
-    name: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    icon: {
-      paddingRight: theme.spacing(1),
-    },
-    actionButton: {
-      color: theme.palette.primary.light,
-    },
-    cardFlow: {},
-  })
-);
-interface IStateProps {
-  t: IDiscussionListStrings;
-}
+const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  marginBottom: theme.spacing(1),
+  '& .MuiPaper-rounded': {
+    borderRadius: '8px',
+  },
+  overflow: 'auto',
+}));
+
+const Title = styled(Typography)<TypographyProps>(() => ({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+}));
+
+const actionButtonProps = { color: 'primary.light' } as SxProps;
+
 interface IRecordProps {
   discussions: Discussion[];
   mediafiles: MediaFile[];
@@ -85,18 +63,16 @@ interface IRecordProps {
   groups: Group[];
   groupMemberships: GroupMembership[];
 }
-interface IProps extends IStateProps, IRecordProps {}
+interface IProps {}
 export const NewDiscussionToolId = 'newDiscussion';
+export const NewCommentToolId = NewDiscussionToolId + 'comment';
 
-export function DiscussionList(props: IProps) {
-  const { t, discussions, mediafiles, users, groups, groupMemberships } = props;
-  const classes = useStyles();
+export function DiscussionList(props: IProps & IRecordProps) {
+  const { discussions, mediafiles, users, groups, groupMemberships } = props;
   const theme = useTheme();
   const [planId] = useGlobal('plan');
   const [userId] = useGlobal('user');
   const [organization] = useGlobal('organization');
-  const [memory] = useGlobal('memory');
-  const [projRole] = useGlobal('projRole');
   const [isOffline] = useGlobal('offline');
   const [displayDiscussions, setDisplayDiscussions] = useState<Discussion[]>(
     []
@@ -111,22 +87,39 @@ export function DiscussionList(props: IProps) {
     discussionSize,
     passage,
     currentSegment,
-    mediafileId,
+    playerMediafile,
     setDiscussionMarkers,
   } = ctx.state;
-  const { toolsChanged } = useContext(UnsavedContext).state;
+  const discussionSizeRef = useRef(discussionSize);
+  const { toolsChanged, isChanged, startSave, startClear } =
+    useContext(UnsavedContext).state;
+  const t: IDiscussionListStrings = useSelector(
+    discussionListSelector,
+    shallowEqual
+  );
+  const mediafileId = useMemo(() => {
+    return playerMediafile?.id ?? '';
+  }, [playerMediafile]);
 
   const [rootWidthStyle, setRootWidthStyle] = useState({
-    width: `${discussionSize.width - 30}px`, //leave room for scroll bar
-    maxHeight: discussionSize.height,
+    width: `${discussionSizeRef.current?.width - 30}px`, //leave room for scroll bar
+    maxHeight: `${discussionSizeRef.current?.height}px`,
   });
-  const [filterState, setFilterStatex] = useState<IFilterState>({
+  const { userIsAdmin } = useRole();
+  const defaultFilterState = {
     forYou: false,
     resolved: false,
     latestVersion: false,
     allPassages: false,
     allSteps: false,
-  });
+  };
+  const [canSetTeamDefault, setCanSetTeamDefault] = useState(
+    userIsAdmin && !isOffline
+  );
+  const [teamDefault, setTeamDefault] = useState(false);
+  const [filterState, setFilterStatex] =
+    useState<IFilterState>(defaultFilterState);
+  const [orgFilterState, setOrgFilterState] = useState(defaultFilterState);
   const { forYou, resolved, latestVersion, allPassages, allSteps } =
     filterState;
   const [sortState, setSortState] = useState<ISortState>({
@@ -136,12 +129,8 @@ export function DiscussionList(props: IProps) {
   });
   const [catFilter, setCatFilter] = useState<CatData[]>([]);
   const [catSelect, setCatSelect] = useState<string[]>([]);
-  const [confirmFilterSave, setConfirmFilterSave] = useState(false);
   const [confirmAction, setConfirmAction] = useState<string>('');
-  const [startSave, setStartSave] = useState(false);
-  const [clearSave, setClearSave] = useState(false);
   const discussionOrg = useDiscussionOrg();
-  const orgUpdate = useTeamUpdate();
   const anyChangedRef = useRef(false);
   const enum WaitSave {
     add = 'add',
@@ -154,6 +143,7 @@ export function DiscussionList(props: IProps) {
   const formRef = useRef<any>();
   const [highlightedRef, setHighlightedRef] = useState<any>();
   const [highlightNew, setHighlightNew] = useState('');
+  const { getOrgDefault, setOrgDefault } = useOrgDefaults();
 
   const projGroups = useMemo(() => {
     const mygroups = groupMemberships.filter(
@@ -163,24 +153,38 @@ export function DiscussionList(props: IProps) {
   }, [groupMemberships, userId]);
 
   useEffect(() => {
-    const org = findRecord(
-      memory,
-      'organization',
-      organization
-    ) as Organization;
-    const json = JSON.parse(org.attributes.defaultParams ?? '{}');
-    if (json.discussionFilter) {
-      setFilterStatex(json.discussionFilter);
+    discussionSizeRef.current = discussionSize;
+    setRootWidthStyle({
+      width: `${discussionSizeRef.current?.width - 30}px`,
+      maxHeight: `${discussionSizeRef.current?.height}px`,
+    });
+  }, [discussionSize]);
+
+  useEffect(
+    () => setCanSetTeamDefault(userIsAdmin && !isOffline),
+    [userIsAdmin, isOffline]
+  );
+
+  useEffect(() => {
+    if (teamDefault && filterState !== orgFilterState) {
+      setOrgFilterState(filterState);
+      setOrgDefault('discussionFilter', filterState);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teamDefault, filterState]);
+
+  useEffect(() => {
+    var def = getOrgDefault('discussionFilter');
+    if (def) {
+      setFilterStatex(def);
+      setOrgFilterState(def);
+      setTeamDefault(true);
+    } else setFilterStatex(defaultFilterState);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organization]);
 
   const setFilterState = (filter: IFilterState) => {
     setFilterStatex(filter);
-    if (projRole === RoleNames.Admin && !isOffline) {
-      //see if this is the new org default
-      setConfirmFilterSave(true);
-    }
   };
   // All passages is currently giving all passages in all projects.
   // we would need this if we only wanted the passages of this project.
@@ -216,13 +220,6 @@ export function DiscussionList(props: IProps) {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planId, mediafiles]);
-
-  useEffect(() => {
-    setRootWidthStyle({
-      width: `${discussionSize.width - 30}px`,
-      maxHeight: discussionSize.height,
-    });
-  }, [discussionSize]);
 
   const discussionSort = (x: Discussion, y: Discussion) => {
     const topicSort = () => {
@@ -262,38 +259,41 @@ export function DiscussionList(props: IProps) {
       return topicSort();
     }
   };
+  const resetDiscussionList = () => {
+    if (adding) {
+      setDisplayDiscussions([
+        {
+          type: 'discussion',
+          attributes: {
+            subject: currentSegment || '',
+          },
+        } as any as Discussion,
+      ]);
+    } else {
+      setDisplayDiscussions(
+        discussions
+          .filter(
+            (d) =>
+              (!forYou ||
+                related(d, 'user') === userId ||
+                projGroups?.includes(related(d, 'group'))) &&
+              resolved === Boolean(d.attributes?.resolved) &&
+              (!latestVersion ||
+                latestMedia.indexOf(related(d, 'mediafile')) >= 0) &&
+              (allPassages || currentPassage(d)) &&
+              (allSteps
+                ? discussionOrg(d) === organization
+                : related(d, 'orgWorkflowStep') === currentstep) &&
+              (catSelect.length === 0 ||
+                catSelect.includes(related(d, 'artifactCategory')))
+          )
+          .sort((x, y) => discussionSort(x, y))
+      );
+    }
+  };
   useEffect(() => {
-    if (currentstep !== '') {
-      if (adding) {
-        setDisplayDiscussions([
-          {
-            type: 'discussion',
-            attributes: {
-              subject: currentSegment || '',
-            },
-          } as any as Discussion,
-        ]);
-      } else {
-        setDisplayDiscussions(
-          discussions
-            .filter(
-              (d) =>
-                (!forYou ||
-                  related(d, 'user') === userId ||
-                  projGroups?.includes(related(d, 'group'))) &&
-                resolved === Boolean(d.attributes?.resolved) &&
-                (!latestVersion ||
-                  latestMedia.indexOf(related(d, 'mediafile')) >= 0) &&
-                (allPassages || currentPassage(d)) &&
-                (allSteps
-                  ? discussionOrg(d) === organization
-                  : related(d, 'orgWorkflowStep') === currentstep) &&
-                (catSelect.length === 0 ||
-                  catSelect.includes(related(d, 'artifactCategory')))
-            )
-            .sort((x, y) => discussionSort(x, y))
-        );
-      }
+    if (currentstep !== '' && (!isChanged(NewCommentToolId) || !adding)) {
+      resetDiscussionList();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -366,29 +366,21 @@ export function DiscussionList(props: IProps) {
       () => false,
       300
     ).then(() => {
-      setStartSave(false);
-      setClearSave(false);
       doTheThing();
     });
   };
-  const handleSaveFilterConfirmed = () => {
-    var org = findRecord(memory, 'organization', organization) as Organization;
-    var json = JSON.parse(org.attributes.defaultParams ?? '{}');
-    json.discussionFilter = filterState;
-    org.attributes.defaultParams = JSON.stringify(json);
-    orgUpdate(org);
-    setConfirmFilterSave(false);
-  };
-  const handleSaveFilterRefused = () => {
-    setConfirmFilterSave(false);
-  };
+
   const handleSaveFirstConfirmed = () => {
-    setStartSave(true);
+    var myIds = displayDiscussions.map((d) => d.id);
+    myIds.push(NewDiscussionToolId);
+    myIds.forEach((id) => startSave(id));
     waitSaveOrClear();
   };
 
   const handleSaveFirstRefused = () => {
-    setClearSave(true);
+    var myIds = displayDiscussions.map((d) => d.id);
+    myIds.push(NewDiscussionToolId);
+    myIds.forEach((id) => startClear(id));
     waitSaveOrClear();
   };
 
@@ -457,13 +449,11 @@ export function DiscussionList(props: IProps) {
   );
 
   return (
-    <Paper id="DiscussionListHeader" className={classes.root}>
+    <StyledPaper id="DiscussionListHeader">
       <>
-        <div className={classes.discussionHead}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1 }}>
           <div>
-            <Typography variant="h6" className={classes.name}>
-              {t.title}
-            </Typography>
+            <Title variant="h6">{t.title}</Title>
             <Typography>{filterStatus}</Typography>
           </div>
           <div>
@@ -477,10 +467,12 @@ export function DiscussionList(props: IProps) {
               action={handleFilterAction}
               cats={catSelect.length}
               disabled={adding || isMediaMissing()}
+              teamDefault={teamDefault}
+              setTeamDefault={canSetTeamDefault ? setTeamDefault : undefined}
             />
             <IconButton
               id="addDiscussion"
-              className={classes.actionButton}
+              sx={actionButtonProps}
               title={t.add}
               onClick={handleAddDiscussion}
               disabled={adding || isMediaMissing()}
@@ -489,21 +481,16 @@ export function DiscussionList(props: IProps) {
             </IconButton>
             <IconButton
               id="collapseDiscussion"
-              className={classes.actionButton}
+              sx={actionButtonProps}
               title={t.collapse}
               onClick={handleToggleCollapse}
             >
               {collapsed ? <ShowIcon /> : <HideIcon />}
             </IconButton>
           </div>
-        </div>
-        <Paper
-          ref={formRef}
-          id="DiscussionList"
-          className={classes.root}
-          style={rootWidthStyle}
-        >
-          <Grid container className={classes.cardFlow}>
+        </Box>
+        <StyledPaper ref={formRef} id="DiscussionList" style={rootWidthStyle}>
+          <Grid container>
             {displayDiscussions.map((i, j) => (
               <DiscussionCard
                 id={`card-${j}`}
@@ -513,14 +500,12 @@ export function DiscussionList(props: IProps) {
                 onAddComplete={adding ? handleAddComplete : undefined}
                 showStep={allSteps}
                 showReference={allPassages}
-                startSave={startSave}
-                clearSave={clearSave}
                 setRef={setHighlightedRef}
                 requestHighlight={highlightNew}
               />
             ))}
           </Grid>
-        </Paper>
+        </StyledPaper>
         <BigDialog
           title={t.categoryList}
           isOpen={categoryOpen}
@@ -536,22 +521,11 @@ export function DiscussionList(props: IProps) {
             noResponse={handleSaveFirstRefused}
           />
         )}
-        {confirmFilterSave && (
-          <Confirm
-            jsx={<span></span>}
-            text={t.saveFilter}
-            yesResponse={handleSaveFilterConfirmed}
-            noResponse={handleSaveFilterRefused}
-          />
-        )}
       </>
-    </Paper>
+    </StyledPaper>
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'discussionList' }),
-});
 const mapRecordsToProps = {
   discussions: (q: QueryBuilder) => q.findRecords('discussion'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
@@ -560,6 +534,6 @@ const mapRecordsToProps = {
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
 };
 
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(DiscussionList) as any as any
-) as any;
+export default withData(mapRecordsToProps)(DiscussionList) as any as (
+  props: IProps
+) => JSX.Element;

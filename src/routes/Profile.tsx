@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { TokenContext } from '../context/TokenProvider';
 import { connect } from 'react-redux';
@@ -10,19 +9,12 @@ import {
   IProfileStrings,
   DigestPreference,
   OrganizationMembership,
-  RoleNames,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import {
-  withStyles,
-  makeStyles,
-  createStyles,
-  Theme,
-} from '@material-ui/core/styles';
 import {
   Paper,
   Grid,
@@ -30,12 +22,17 @@ import {
   FormControl,
   FormGroup,
   FormControlLabel,
-  Button,
   Checkbox,
   Typography,
   Avatar,
   MenuItem,
-} from '@material-ui/core';
+  Box,
+  styled,
+  PaperProps,
+  SxProps,
+  TypographyProps,
+  GridProps,
+} from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import Confirm from '../components/AlertDialog';
 import ParatextLinked from '../components/ParatextLinked';
@@ -56,8 +53,8 @@ import {
   localeDefault,
   getParatextDataPath,
   waitForIt,
+  useMyNavigate,
 } from '../utils';
-import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
 import {
   AddRecord,
@@ -69,80 +66,57 @@ import StickyRedirect from '../components/StickyRedirect';
 import { useSnackBar } from '../hoc/SnackBar';
 import SelectRole from '../control/SelectRole';
 import { UnsavedContext } from '../context/UnsavedContext';
+import { ActionRow, AltButton, PriButton } from '../control';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    appBar: {
-      width: '100%',
-      boxShadow: 'none',
-    },
-    container: {
-      display: 'flex',
-      flexGrow: 1,
-      margin: theme.spacing(4),
-      marginTop: '80px',
-      padding: '40px',
-      justifyContent: 'center',
-    },
-    fullContainer: {
-      margin: 0,
-    },
-    paper: {
-      paddingLeft: theme.spacing(4),
-    },
-    group: {
-      paddingBottom: theme.spacing(3),
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    locale: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 206,
-    },
-    timezone: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 206,
-    },
-    menu: {
-      width: 200,
-    },
-    actions: {
-      paddingBottom: 16,
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-    icon: {
-      marginLeft: theme.spacing(1),
-    },
-    caption: {
-      width: 150,
-      textAlign: 'left',
-      textOverflow: 'ellipsis',
-      overflow: 'hidden',
-    },
-    notLinked: {
-      fontWeight: 'bold',
-      paddingTop: theme.spacing(2),
-    },
-    bigAvatar: {
-      width: 150,
-      height: 150,
-    },
-  })
-);
+// see: https://mui.com/material-ui/customization/how-to-customize/
+interface ContainerProps extends PaperProps {
+  noMargin?: boolean;
+}
+const PaperContainer = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== 'noMargin',
+})<ContainerProps>(({ noMargin, theme }) => ({
+  display: 'flex',
+  flexGrow: 1,
+  marginTop: '80px',
+  padding: '40px',
+  justifyContent: 'center',
+  ...(noMargin
+    ? {
+        margin: 0,
+      }
+    : {
+        margin: theme.spacing(4),
+      }),
+}));
+
+const Caption = styled(Typography)<TypographyProps>(() => ({
+  width: 150,
+  textAlign: 'left',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+}));
+
+const textFieldProps = { mx: 1 } as SxProps;
+const selectProps = { mx: 1, width: '206px' } as SxProps;
+const menuProps = { width: '200px' } as SxProps;
+const bigAvatarProps = { width: '150px', height: '150px' } as SxProps;
+
+interface IBigAvatarProps {
+  avatarUrl: string | null;
+  name: string;
+}
+const BigAvatar = (props: IBigAvatarProps) => {
+  const { avatarUrl, name } = props;
+
+  if (!avatarUrl || avatarUrl === '') {
+    return <Avatar sx={bigAvatarProps}>{makeAbbr(name)}</Avatar>;
+  }
+  return <Avatar sx={bigAvatarProps} src={avatarUrl} />;
+};
+
+const StyledGrid = styled(Grid)<GridProps>(() => ({
+  padding: '0 30px',
+}));
 
 interface IStateProps {
   t: IProfileStrings;
@@ -159,11 +133,7 @@ interface IRecordProps {
   users: Array<User>;
 }
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   noMargin?: boolean;
   finishAdd?: () => void;
 }
@@ -171,7 +141,6 @@ interface IProps
 export function Profile(props: IProps) {
   const { users, t, noMargin, finishAdd, setLanguage } = props;
   const { paratext_username, paratext_usernameStatus, getUserName } = props;
-  const classes = useStyles();
   const [isOffline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
@@ -180,13 +149,13 @@ export function Profile(props: IProps) {
   const [organization] = useGlobal('organization');
   const [user, setUser] = useGlobal('user');
   const [, setLang] = useGlobal('lang');
-  const [orgRole] = useGlobal('orgRole');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [errorReporter] = useGlobal('errorReporter');
   const [isDeveloper] = useGlobal('developer');
+  const navigate = useMyNavigate();
   const { accessToken } = useContext(TokenContext).state;
   const { getUserRec } = useUser();
-  const { getMbrRoleRec } = useRole();
+  const { getMbrRoleRec, userIsAdmin, userIsSharedContentAdmin } = useRole();
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [name, setName] = useState('');
@@ -197,6 +166,7 @@ export function Profile(props: IProps) {
   const [role, setRole] = useState('');
   const [locale, setLocale] = useState<string>(localeDefault(isDeveloper));
   const [news, setNews] = useState<boolean | null>(null);
+  const [sharedContent, setSharedContent] = useState(false);
   const [digest, setDigest] = useState<DigestPreference | null>(null);
   const [phone, setPhone] = useState<string | null>(null);
   const [bcp47, setBcp47] = useState<string | null>(null);
@@ -217,6 +187,8 @@ export function Profile(props: IProps) {
     toolChanged,
     toolsChanged,
     saveRequested,
+    clearRequested,
+    clearCompleted,
     isChanged,
   } = useContext(UnsavedContext).state;
   const [myChanged, setMyChanged] = useState(false);
@@ -227,7 +199,6 @@ export function Profile(props: IProps) {
   const toolId = 'profile';
   const saving = useRef(false);
   const [confirmCancel, setConfirmCancel] = useState<string>();
-
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
   };
@@ -293,7 +264,10 @@ export function Profile(props: IProps) {
     toolChanged(toolId, true);
     setLocked(!locked);
   };
-
+  const handleSharedContentChange = () => {
+    toolChanged(toolId, true);
+    setSharedContent(!Boolean(sharedContent));
+  };
   const handleDigestChange = () => {
     toolChanged(toolId, true);
     setDigest(
@@ -303,6 +277,8 @@ export function Profile(props: IProps) {
   useEffect(() => {
     if (saveRequested(toolId)) {
       handleSave();
+    } else if (clearRequested(toolId)) {
+      clearCompleted(toolId);
     }
     var changed = isChanged(toolId);
     if (changed !== myChanged) setMyChanged(changed);
@@ -336,7 +312,7 @@ export function Profile(props: IProps) {
                 progressbarTypeid: progBar,
                 digestPreference: digest,
                 newsPreference: news,
-                hotKeys,
+                sharedContentCreator: sharedContent,
                 avatarUrl,
               },
             } as User,
@@ -387,6 +363,7 @@ export function Profile(props: IProps) {
           progressbarTypeid: progBar,
           digestPreference: digest,
           newsPreference: news,
+          sharedContentCreator: sharedContent,
           hotKeys,
           avatarUrl,
         },
@@ -398,6 +375,15 @@ export function Profile(props: IProps) {
         if (offlineOnly) setUser(userRec.id);
       } else {
         addToOrgAndGroup(userRec, true);
+      }
+      if (offlineOnly) {
+        await waitForIt(
+          'record added',
+          () => Boolean(userRec.id),
+          () => false,
+          100
+        );
+        if (offlineOnly) localStorage.setItem('user-id', userRec.id);
       }
       toolChanged(toolId, false);
     }
@@ -426,9 +412,9 @@ export function Profile(props: IProps) {
         message = message2.replace('{0}', defTimezone);
       }
       setConfirmCancel(message);
-    } else handleCancelConrimed();
+    } else handleCancelConfirmed();
   };
-  const handleCancelConrimed = () => {
+  const handleCancelConfirmed = () => {
     setConfirmCancel(undefined);
     toolChanged(toolId, false);
     if (editId) {
@@ -479,21 +465,6 @@ export function Profile(props: IProps) {
     setDeleteItem('');
   };
 
-  interface IBigAvatarProps {
-    avatarUrl: string | null;
-    name: string;
-  }
-  const BigAvatar = (props: IBigAvatarProps) => {
-    const { avatarUrl, name } = props;
-
-    if (!avatarUrl || avatarUrl === '') {
-      return <Avatar className={classes.bigAvatar}>{makeAbbr(name)}</Avatar>;
-    }
-    return <Avatar className={classes.bigAvatar} src={avatarUrl} />;
-  };
-
-  const StyledGrid = withStyles({ item: { padding: '0 30px' } })(Grid);
-
   useEffect(() => {
     if (isOffline) getParatextDataPath().then((val) => setPtPath(val));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -521,6 +492,7 @@ export function Profile(props: IProps) {
         progressbarTypeid: progBar,
         digestPreference: DigestPreference.dailyDigest,
         newsPreference: false,
+        sharedContentCreator: false,
         hotKeys,
         avatarUrl,
       },
@@ -553,6 +525,7 @@ export function Profile(props: IProps) {
     setTimezone(attr.timezone || '');
     setLocale(attr.locale ? attr.locale : localeDefault(isDeveloper));
     setNews(attr.newsPreference);
+    setSharedContent(attr.sharedContentCreator ?? false);
     setDigest(attr.digestPreference);
     setLocked(true);
     setBcp47(attr.uilanguagebcp47);
@@ -594,28 +567,20 @@ export function Profile(props: IProps) {
     (timezone || '') !== '' &&
     (locale || '') !== '';
 
-  if (/Logout/i.test(view)) return <Redirect to="/logout" />;
-  if (/access/i.test(view)) return <Redirect to="/" />;
+  if (/Logout/i.test(view)) navigate('/logout');
+  if (/access/i.test(view)) navigate('/');
   if (/Team/i.test(view)) return <StickyRedirect to="/team" />;
 
   return (
-    <div id="Profile" className={classes.root}>
+    <Box id="Profile" sx={{ width: '100%' }}>
       <AppHead {...props} />
-      <Paper
-        className={clsx(classes.container, {
-          [classes.fullContainer]: noMargin,
-        })}
-      >
-        <div className={classes.paper}>
+      <PaperContainer noMargin={noMargin}>
+        <Box sx={{ pl: 4 }}>
           <Grid container>
             <StyledGrid item xs={12} md={5}>
               <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-              {name !== email && (
-                <Typography variant="h6" className={classes.caption}>
-                  {name || ''}
-                </Typography>
-              )}
-              <Typography className={classes.caption}>{email || ''}</Typography>
+              {name !== email && <Caption variant="h6">{name || ''}</Caption>}
+              <Caption>{email || ''}</Caption>
               <ParatextLinked
                 hasParatext={hasParatext}
                 ptPath={ptPath}
@@ -633,13 +598,13 @@ export function Profile(props: IProps) {
               )}
 
               <FormControl>
-                <FormGroup className={classes.group}>
+                <FormGroup sx={{ pb: 3 }}>
                   <FormControlLabel
                     control={
                       <TextField
                         id="profileName"
                         label={t.name}
-                        className={classes.textField}
+                        sx={textFieldProps}
                         value={name}
                         onChange={handleNameChange}
                         onClick={handleNameClick}
@@ -663,7 +628,7 @@ export function Profile(props: IProps) {
                       <TextField
                         id="given"
                         label={t.given}
-                        className={classes.textField}
+                        sx={textFieldProps}
                         value={given || ''}
                         onChange={handleGivenChange}
                         margin="normal"
@@ -678,7 +643,7 @@ export function Profile(props: IProps) {
                       <TextField
                         id="family"
                         label={t.family}
-                        className={classes.textField}
+                        sx={textFieldProps}
                         value={family || ''}
                         onChange={handleFamilyChange}
                         margin="normal"
@@ -688,11 +653,10 @@ export function Profile(props: IProps) {
                     }
                     label=""
                   />
-                  {orgRole === RoleNames.Admin && editId && email !== '' && (
+                  {userIsAdmin && editId && email !== '' && (
                     <FormControlLabel
                       control={
                         <SelectRole
-                          org={true}
                           initRole={role}
                           onChange={handleRoleChange}
                           required={true}
@@ -707,12 +671,12 @@ export function Profile(props: IProps) {
                         id="select-locale"
                         select
                         label={t.locale}
-                        className={classes.locale}
+                        sx={selectProps}
                         value={locale}
                         onChange={handleLocaleChange}
                         SelectProps={{
                           MenuProps: {
-                            className: classes.menu,
+                            sx: menuProps,
                           },
                         }}
                         margin="normal"
@@ -734,12 +698,12 @@ export function Profile(props: IProps) {
                         id="select-timezone"
                         select
                         label={t.timezone}
-                        className={classes.timezone}
+                        sx={selectProps}
                         value={timezone}
                         onChange={handleTimezoneChange}
                         SelectProps={{
                           MenuProps: {
-                            className: classes.menu,
+                            sx: menuProps,
                           },
                         }}
                         margin="normal"
@@ -760,7 +724,7 @@ export function Profile(props: IProps) {
 
                   {email !== '' && (
                     <FormControlLabel
-                      className={classes.textField}
+                      sx={textFieldProps}
                       control={
                         <Checkbox
                           id="digest"
@@ -771,6 +735,19 @@ export function Profile(props: IProps) {
                       label={t.sendDigest}
                     />
                   )}
+                  {userIsSharedContentAdmin && (
+                    <FormControlLabel
+                      sx={textFieldProps}
+                      control={
+                        <Checkbox
+                          id="sharedcontent"
+                          checked={sharedContent}
+                          onChange={handleSharedContentChange}
+                        />
+                      }
+                      label={t.sharedContentCreator}
+                    />
+                  )}
                   {showDetail && (
                     <>
                       <FormControlLabel
@@ -778,7 +755,7 @@ export function Profile(props: IProps) {
                           <TextField
                             id="phone"
                             label={t.phone}
-                            className={classes.textField}
+                            sx={textFieldProps}
                             value={phone}
                             onChange={handlePhoneChange}
                             margin="normal"
@@ -787,9 +764,9 @@ export function Profile(props: IProps) {
                         }
                         label=""
                       />
-                      {orgRole === RoleNames.Admin && (
+                      {userIsAdmin && (
                         <FormControlLabel
-                          className={classes.textField}
+                          sx={textFieldProps}
                           control={
                             <Checkbox
                               id="checkbox-locked"
@@ -804,30 +781,24 @@ export function Profile(props: IProps) {
                   )}
                 </FormGroup>
               </FormControl>
-              <div className={classes.actions}>
+              <ActionRow>
                 {((editId && /Add/i.test(editId)) ||
                   (currentUser &&
                     currentUser.attributes?.name !==
                       currentUser.attributes?.email)) && (
-                  <Button
+                  <AltButton
                     id="profileCancel"
                     key="cancel"
                     aria-label={t.cancel}
-                    variant="outlined"
-                    color="primary"
-                    className={classes.button}
                     onClick={handleCancel}
                   >
                     {t.cancel}
-                  </Button>
+                  </AltButton>
                 )}
-                <Button
+                <PriButton
                   id="profileSave"
                   key="add"
                   aria-label={t.add}
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
                   disabled={
                     !requiredComplete() ||
                     !myChanged ||
@@ -841,9 +812,9 @@ export function Profile(props: IProps) {
                     : userNotComplete()
                     ? t.next
                     : t.save}
-                  <SaveIcon className={classes.icon} />
-                </Button>
-              </div>
+                  <SaveIcon sx={{ ml: 1 }} />
+                </PriButton>
+              </ActionRow>
             </Grid>
           </Grid>
           {(!isOffline || offlineOnly) &&
@@ -857,7 +828,7 @@ export function Profile(props: IProps) {
                 inProgress={deleteItem !== ''}
               />
             )}
-        </div>
+        </Box>
         {deleteItem !== '' && (
           <Confirm
             yesResponse={handleDeleteConfirmed}
@@ -867,12 +838,12 @@ export function Profile(props: IProps) {
         {confirmCancel && (
           <Confirm
             text="Discard unsaved data?"
-            yesResponse={handleCancelConrimed}
+            yesResponse={handleCancelConfirmed}
             noResponse={handleCancelAborted}
           />
         )}
-      </Paper>
-    </div>
+      </PaperContainer>
+    </Box>
   );
 }
 
@@ -886,7 +857,7 @@ const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       setLanguage: action.setLanguage,
@@ -897,5 +868,5 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 });
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(Profile) as any
+  connect(mapStateToProps, mapDispatchToProps)(Profile as any) as any
 ) as any;

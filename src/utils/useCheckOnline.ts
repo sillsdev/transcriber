@@ -4,6 +4,8 @@ import Axios from 'axios';
 import JSONAPISource from '@orbit/jsonapi';
 import { OrbitNetworkErrorRetries } from '../api-variable';
 import { API_CONFIG } from '../api-variable';
+import { useDispatch } from 'react-redux';
+import { LocalKey } from '../utils';
 
 function Online(doCheck: boolean, cb: (result: boolean) => void) {
   const opts = {
@@ -24,24 +26,25 @@ function Online(doCheck: boolean, cb: (result: boolean) => void) {
       cb(reason.response !== undefined);
     });
 }
-export const useCheckOnline = (
-  resetOrbitError: typeof actions.resetOrbitError
-) => {
+export const useCheckOnline = () => {
+  const dispatch = useDispatch();
+  const resetOrbitError = actions.resetOrbitError;
   const [connected, setConnected] = useGlobal('connected');
   const [orbitRetries, setOrbitRetries] = useGlobal('orbitRetries');
   const [coordinator] = useGlobal('coordinator');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline');
   const remote = coordinator.getSource('remote') as JSONAPISource;
 
   const checkOnline = (
     cb: (result: boolean) => void,
     forceCheck: boolean = false
   ) => {
-    Online(forceCheck || !offlineOnly, (result) => {
+    Online(forceCheck || !offline, (result) => {
       if (connected !== result) {
+        localStorage.setItem(LocalKey.connected, `${result && !offline}`);
         setConnected(result);
         if (result) {
-          resetOrbitError();
+          dispatch(resetOrbitError());
           if (orbitRetries < OrbitNetworkErrorRetries) {
             remote.requestQueue.retry();
             setOrbitRetries(OrbitNetworkErrorRetries);

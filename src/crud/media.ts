@@ -31,7 +31,8 @@ import {
 } from '../utils';
 import moment from 'moment';
 import eaf from '../utils/transcriptionEaf';
-import path from 'path';
+import path from 'path-browserify';
+import { passageDefaultFilename } from '../utils/passageDefaultFilename';
 
 const vernSort = (m: MediaFile) => (!related(m, 'artifactType') ? 0 : 1);
 
@@ -282,7 +283,29 @@ export const scriptureFullPath = (
   }
   return { fullPath, book, ref };
 };
-
+export const nameFromTemplate = (
+  mf: MediaFile,
+  memory: Memory,
+  template: string = ''
+) => {
+  const passRec = findRecord(
+    memory,
+    'passage',
+    related(mf, 'passage')
+  ) as Passage;
+  if (!passRec) return mf.attributes.originalFile;
+  if (template === '') {
+    var tmp = passageDefaultFilename(passRec, '', memory, undefined, '');
+    const ver = mf.attributes?.versionNumber;
+    const { ext } = removeExtension(
+      mf.attributes.s3file ?? mf.attributes.audioUrl
+    );
+    return `${tmp}_v${ver}.${ext}`;
+  } else {
+    //not implemented yet
+    return 'Not Implemented Yet';
+  }
+};
 export const mediaArtifacts = ({
   memory,
   projRec,

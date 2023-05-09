@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useGlobal } from 'reactn';
-import { Redirect, useLocation } from 'react-router-dom';
-import { IState, IMainStrings } from '../../model';
-import { connect } from 'react-redux';
+import { useLocation, useParams } from 'react-router-dom';
+import { IState, IMainStrings, IViewModeStrings } from '../../model';
+import { connect, shallowEqual, useSelector } from 'react-redux';
 import localStrings from '../../selector/localize';
 import {
   AppBar,
@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import SystemUpdateIcon from '@mui/icons-material/SystemUpdateAlt';
+import TableViewIcon from '@mui/icons-material/TableView';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { API_CONFIG, isElectron } from '../../api-variable';
 import { TokenContext } from '../../context/TokenProvider';
@@ -34,6 +35,7 @@ import {
   Severity,
   infoMsg,
   exitApp,
+  useMyNavigate,
 } from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
 import { usePlan, useLoadStatic } from '../../crud';
@@ -46,40 +48,53 @@ import moment from 'moment';
 import { useSnackBar, AlertSeverity } from '../../hoc/SnackBar';
 import PolicyDialog from '../PolicyDialog';
 import JSONAPISource from '@orbit/jsonapi';
-
-const shell = isElectron ? require('electron').shell : null;
+import { viewModeSelector } from '../../selector';
+import { useHome } from '../../utils/useHome';
+const ipc = (window as any)?.electron;
 
 const twoIcon = { minWidth: `calc(${48 * 2}px)` } as React.CSSProperties;
 const threeIcon = { minWidth: `calc(${48 * 3}px)` } as React.CSSProperties;
 
 interface INameProps {
   setView: React.Dispatch<React.SetStateAction<string>>;
+  switchTo: boolean;
 }
 
-const ProjectName = ({ setView }: INameProps) => {
+const ProjectName = ({ setView, switchTo }: INameProps) => {
   const ctx = useContext(UnsavedContext);
   const { checkSavedFn } = ctx.state;
   const { getPlanName } = usePlan();
-  const [, setProject] = useGlobal('project');
-  const [, setProjRole] = useGlobal('projRole');
-  const [, setProjType] = useGlobal('projType');
-  const [plan, setPlan] = useGlobal('plan');
+  const [plan] = useGlobal('plan');
+  const { prjId } = useParams();
+  const navigate = useMyNavigate();
+  const { goHome } = useHome();
+  const t: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
 
   const handleHome = () => {
-    setProject('');
-    setPlan('');
-    setProjRole(undefined);
-    setProjType('');
-    setView('Home');
+    goHome();
   };
 
+  const handleAudioProject = () => {
+    navigate(`/plan/${prjId}/0`);
+  };
+
+  const checkSavedAndGoAP = () => checkSavedFn(() => handleAudioProject());
   const checkSavedAndGoHome = () => checkSavedFn(() => handleHome());
 
   return (
     <>
-      <IconButton id="home" onClick={checkSavedAndGoHome}>
-        <HomeIcon />
-      </IconButton>
+      <Tooltip title={t.home}>
+        <IconButton id="home" onClick={checkSavedAndGoHome}>
+          <HomeIcon />
+        </IconButton>
+      </Tooltip>
+      {plan && switchTo && (
+        <Tooltip title={t.audioProject}>
+          <IconButton id="project" onClick={checkSavedAndGoAP}>
+            <TableViewIcon />
+          </IconButton>
+        </Tooltip>
+      )}
       <Typography variant="h6" noWrap>
         {getPlanName(plan)}
       </Typography>
@@ -100,17 +115,20 @@ const mapStateToProps = (state: IState): IStateProps => ({
 
 interface IProps extends IStateProps {
   resetRequests: () => Promise<void>;
-  SwitchTo?: React.FC;
+  switchTo: boolean;
 }
 
 export const AppHead = (props: IProps) => {
-  const { resetRequests, SwitchTo, t, orbitStatus, orbitErrorMsg } = props;
+  const { resetRequests, switchTo, t, orbitStatus, orbitErrorMsg } = props;
   const { pathname } = useLocation();
+  const navigate = useMyNavigate();
+  const [home] = useGlobal('home');
+  const [orgRole] = useGlobal('orgRole');
   const [errorReporter] = useGlobal('errorReporter');
   const [coordinator] = useGlobal('coordinator');
+  const [user] = useGlobal('user');
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [isOffline] = useGlobal('offline');
-  const [projRole] = useGlobal('projRole');
   const [connected] = useGlobal('connected');
   const tokenCtx = useContext(TokenContext);
   const ctx = useContext(UnsavedContext);
@@ -140,6 +158,7 @@ export const AppHead = (props: IProps) => {
   const saving = useMemo(() => anySaving(), [toolsChanged]);
   const { showMessage } = useSnackBar();
   const { loadStatic, checkStaticTables } = useLoadStatic();
+  const tv: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
 
   const handleUserMenuAction = (
     what: string,
@@ -211,8 +230,8 @@ export const AppHead = (props: IProps) => {
   };
 
   const handleDownloadClick = (event: React.MouseEvent<HTMLElement>) => {
-    if (shell)
-      shell.openExternal(
+    if (ipc)
+      ipc?.openExternal(
         'https://software.sil.org/audioprojectmanager/download/'
       );
     // remote?.getCurrentWindow().close();
@@ -230,6 +249,18 @@ export const AppHead = (props: IProps) => {
       }
     };
     window.addEventListener('beforeunload', handleUnload);
+    if (!user) {
+      //are we here from a deeplink?
+      if (
+        pathname !== '/' &&
+        !pathname.startsWith('/access') &&
+        pathname !== '/loading' &&
+        pathname !== '/profile'
+      ) {
+        console.log('pathname', pathname);
+        setView('Access');
+      }
+    }
     return () => {
       window.removeEventListener('beforeunload', handleUnload);
     };
@@ -316,13 +347,12 @@ export const AppHead = (props: IProps) => {
   const handleUpdateClose = () => setUpdateTipOpen(pathname === '/');
   const handleTermsClose = () => setShowTerms('');
 
-  if (view === 'Error') return <Redirect to="/error" />;
+  if (view === 'Error') navigate('/error');
   if (view === 'Profile') return <StickyRedirect to="/profile" />;
-  if (view === 'Logout') return <Redirect to="/logout" />;
-  if (view === 'Access') return <Redirect to="/" />;
-  if (view === 'Home') return <StickyRedirect to="/team" />;
-  if (view === 'Terms') return <Redirect to="/terms" />;
-  if (view === 'Privacy') return <Redirect to="/privacy" />;
+  if (view === 'Logout') navigate('/logout');
+  if (view === 'Access') navigate('/');
+  if (view === 'Terms') navigate('/terms');
+  if (view === 'Privacy') navigate('/privacy');
   return (
     <AppBar
       position="fixed"
@@ -339,8 +369,17 @@ export const AppHead = (props: IProps) => {
           <LinearProgress id="busy" variant="indeterminate" />
         )}
         <Toolbar>
-          {projRole && <ProjectName setView={setView} />}
-          {!projRole && <span style={cssVars}>{'\u00A0'}</span>}
+          {!home && orgRole && (
+            <>
+              <ProjectName setView={setView} switchTo={switchTo} />
+              <GrowingSpacer />
+              <Typography variant="h6">
+                {switchTo ? tv.work : tv.audioProject}
+              </Typography>
+              <GrowingSpacer />
+            </>
+          )}
+          {home && <span style={cssVars}>{'\u00A0'}</span>}
           <GrowingSpacer />
           {(pathname === '/' || pathname.startsWith('/access')) && (
             <>
@@ -350,7 +389,6 @@ export const AppHead = (props: IProps) => {
               <GrowingSpacer />
             </>
           )}
-          {SwitchTo && <SwitchTo />}
           {'\u00A0'}
           {(isOffline || orbitStatus !== undefined || !connected) && (
             <CloudOffIcon sx={{ p: '12pt' }} color="action" />
@@ -360,6 +398,7 @@ export const AppHead = (props: IProps) => {
             latestVersion.split(' ')[0] !== version && (
               <Tooltip
                 arrow
+                placement="bottom-end"
                 open={updateTipOpen}
                 onOpen={handleUpdateOpen}
                 onClose={handleUpdateClose}
@@ -387,13 +426,16 @@ export const AppHead = (props: IProps) => {
               >
                 <IconButton
                   id="systemUpdate"
-                  href="https://app.audioprojectmanager.org"
+                  href="https://www.audioprojectmanager.org"
                 >
                   <ExitToAppIcon color="primary" />
                 </IconButton>
               </Tooltip>
             )}
-          <HelpMenu online={!isOffline} />
+          <HelpMenu
+            online={!isOffline}
+            sx={updateTipOpen && isElectron ? { top: '40px' } : {}}
+          />
           {pathname !== '/' && !pathname.startsWith('/access') && (
             <UserMenu action={handleUserMenu} />
           )}

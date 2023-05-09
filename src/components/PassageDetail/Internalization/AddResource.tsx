@@ -1,13 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { IPassageDetailArtifactsStrings, MediaFile } from '../../../model';
 import { ListItemText, Divider } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import { LightTooltip } from '../../../control';
-import { useOrganizedBy } from '../../../crud';
+import { related, useOrganizedBy, usePlanType } from '../../../crud';
 import { resourceSelector } from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { PriButton, StyledMenu, StyledMenuItem } from '../../../control';
 
@@ -23,13 +23,18 @@ export const AddResource = (props: IProps) => {
   const { action, stopPlayer, mediafiles } = props;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { getOrganizedBy } = useOrganizedBy();
+  const planType = usePlanType();
   const ctx = useContext(PassageDetailContext);
-  const { getProjectResources } = ctx.state;
+  const { section, getProjectResources } = ctx.state;
   const t: IPassageDetailArtifactsStrings = useSelector(
     resourceSelector,
     shallowEqual
   );
   const [hasProjRes, setHasProjRes] = useState(false);
+
+  const isFlat = useMemo(() => {
+    return planType(related(section, 'plan'))?.flat;
+  }, [planType, section]);
 
   useEffect(() => {
     getProjectResources().then((res) => setHasProjRes(res.length > 0));
@@ -68,9 +73,31 @@ export const AddResource = (props: IProps) => {
             {'\u00A0'}
           </ListItemText>
         </StyledMenuItem>
-        <StyledMenuItem id="referenceResource" onClick={handle('reference')}>
+        {!isFlat && (
+          <StyledMenuItem
+            id="referencePassageResource"
+            onClick={handle('ref-passage')}
+          >
+            <ListItemText>
+              {t.sharedResource.replace('{0}', t.passageResource)}
+              {'\u00A0'}
+              <LightTooltip
+                title={t.tip1b.replace(
+                  '{0}',
+                  t.passageResource.toLocaleLowerCase()
+                )}
+              >
+                <InfoIcon />
+              </LightTooltip>
+            </ListItemText>
+          </StyledMenuItem>
+        )}
+        <StyledMenuItem
+          id="referenceSectionResource"
+          onClick={handle('ref-section')}
+        >
           <ListItemText>
-            {t.sharedResource}
+            {t.sharedResource.replace('{0}', getOrganizedBy(true))}
             {'\u00A0'}
             <LightTooltip
               title={t.tip1b.replace(
@@ -78,7 +105,7 @@ export const AddResource = (props: IProps) => {
                 getOrganizedBy(true).toLocaleLowerCase()
               )}
             >
-              <InfoIcon fontSize="small" />
+              <InfoIcon />
             </LightTooltip>
           </ListItemText>
         </StyledMenuItem>
@@ -97,13 +124,10 @@ export const AddResource = (props: IProps) => {
                 getOrganizedBy(false).toLocaleLowerCase()
               )}
             >
-              <InfoIcon fontSize="small" />
+              <InfoIcon />
             </LightTooltip>
           </ListItemText>
         </StyledMenuItem>
-        {/* <StyledMenuItem id="activity" onClick={handle('activity')}>
-          <ListItemText primary={t.activity} />
-        </StyledMenuItem> */}
       </StyledMenu>
     </div>
   );

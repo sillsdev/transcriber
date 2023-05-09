@@ -1,14 +1,15 @@
-import { TextField, MenuItem } from '@material-ui/core';
+import { TextField, TextFieldProps, MenuItem, styled } from '@mui/material';
 import { ArtifactTypeSlug, useArtifactType } from '../crud';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    typeSelect: {
-      paddingRight: theme.spacing(2),
-    },
-  })
-);
+const StyledTextField = styled(TextField)<TextFieldProps>(({ theme }) => ({
+  '& #select-export-type': {
+    color: theme.palette.primary.main,
+  },
+  '& svg': {
+    color: theme.palette.primary.main,
+  },
+}));
+
 interface IProps {
   exportType: string;
   exportTypes: ArtifactTypeSlug[];
@@ -17,7 +18,6 @@ interface IProps {
 
 export const SelectExportType = (props: IProps) => {
   const { exportType, setExportType, exportTypes } = props;
-  const classes = useStyles();
   const { localizedArtifactType } = useArtifactType();
 
   const handleExportType = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,18 +25,18 @@ export const SelectExportType = (props: IProps) => {
   };
 
   return (
-    <TextField
+    <StyledTextField
       id="select-export-type"
       select
       value={exportType}
       onChange={handleExportType}
-      className={classes.typeSelect}
+      sx={{ pr: 2 }}
     >
       {exportTypes.map((t) => (
         <MenuItem id={`exp-${t}`} key={t} value={t}>
           {localizedArtifactType(t)}
         </MenuItem>
       ))}
-    </TextField>
+    </StyledTextField>
   );
 };

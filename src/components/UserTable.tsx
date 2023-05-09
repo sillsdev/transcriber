@@ -2,21 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation } from 'react-router-dom';
 import { localizeRole, LocalKey, localUserKey } from '../utils';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { shallowEqual } from 'react-redux';
 import {
-  IState,
   User,
   Role,
   OrganizationMembership,
   IUsertableStrings,
   ISharedStrings,
-  GroupMembership,
   RoleNames,
 } from '../model';
-import localStrings from '../selector/localize';
-import { withData } from '../mods/react-orbitjs';
-import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
+import { withData } from 'react-orbitjs';
+import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import { IconButton, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import FilterIcon from '@mui/icons-material/FilterList';
@@ -37,8 +33,6 @@ import {
   useUser,
   useRole,
 } from '../crud';
-import SelectRole from '../control/SelectRole';
-import { UpdateRelatedRecord } from '../model/baseModel';
 import {
   GrowingSpacer,
   PriButton,
@@ -46,6 +40,8 @@ import {
   ActionRow,
   iconMargin,
 } from '../control';
+import { useSelector } from 'react-redux';
+import { sharedSelector, usertableSelector } from '../selector';
 
 interface IRow {
   type: string;
@@ -59,69 +55,48 @@ interface IRow {
   id: RecordIdentity;
 }
 
-const getUser = (
-  om: OrganizationMembership | GroupMembership,
-  users: User[]
-) => {
+const getUser = (om: OrganizationMembership, users: User[]) => {
   return users.filter((u) => u.id === related(om, 'user'));
 };
-const getName = (
-  om: OrganizationMembership | GroupMembership,
-  users: User[]
-) => {
+const getName = (om: OrganizationMembership, users: User[]) => {
   const u = getUser(om, users);
   return u && u.length > 0 && u[0].attributes && u[0].attributes.name;
 };
-
-interface IStateProps {
-  t: IUsertableStrings;
-  ts: ISharedStrings;
-}
-
-interface IDispatchProps {}
 
 interface IRecordProps {
   users: Array<User>;
   roles: Array<Role>;
   organizationMemberships: Array<OrganizationMembership>;
-  groupMemberships: Array<GroupMembership>;
 }
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+interface IProps {
   projectRole?: boolean;
 }
 
-export function UserTable(props: IProps) {
-  const {
-    t,
-    ts,
-    users,
-    roles,
-    organizationMemberships,
-    groupMemberships,
-    projectRole,
-  } = props;
+export function UserTable(props: IProps & IRecordProps) {
+  const { users, roles, organizationMemberships } = props;
+  const t: IUsertableStrings = useSelector(usertableSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { pathname } = useLocation();
   const [organization] = useGlobal('organization');
-  const [group] = useGlobal('group');
   const [user] = useGlobal('user');
   const [, setEditId] = useGlobal('editUserId');
   const [memory] = useGlobal('memory');
-  const [orgRole] = useGlobal('orgRole');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [offline] = useGlobal('offline');
   const { getUserRec } = useUser();
   const [data, setData] = useState(Array<IRow>());
+  const { userIsAdmin } = useRole();
   const columnDefs = [
     { name: 'name', title: t.name },
     { name: 'email', title: t.email },
     { name: 'locale', title: t.locale },
     // { name: 'phone', title: t.phone },
     { name: 'timezone', title: t.timezone },
-    { name: 'role', title: projectRole ? ts.projectrole : ts.teamrole },
+    { name: 'role', title: ts.teamrole },
     {
       name: 'action',
-      title: orgRole === RoleNames.Admin ? t.action : '\u00A0',
+      title: userIsAdmin ? t.action : '\u00A0',
     },
   ];
   const columnWidths = [
@@ -130,7 +105,7 @@ export function UserTable(props: IProps) {
     { columnName: 'locale', width: 100 },
     // { columnName: 'phone', width: 100 },
     { columnName: 'timezone', width: 100 },
-    { columnName: 'role', width: projectRole ? 200 : 100 },
+    { columnName: 'role', width: 100 },
     { columnName: 'action', width: 150 },
   ];
   const sortingEnabled = [{ columnName: 'action', sortingEnabled: false }];
@@ -142,7 +117,6 @@ export function UserTable(props: IProps) {
   const [view, setView] = useState('');
   const addToOrgAndGroup = useAddToOrgAndGroup();
   const teamDelete = useTeamDelete();
-  const { getInviteProjRole } = useRole();
 
   const handleInvite = () => {
     setDialogVisible(true);
@@ -203,13 +177,9 @@ export function UserTable(props: IProps) {
 
   useEffect(() => {
     const getMedia = () => {
-      const members = (
-        projectRole
-          ? groupMemberships.filter((gm) => related(gm, 'group') === group)
-          : organizationMemberships.filter(
-              (om) => related(om, 'organization') === organization
-            )
-      ).sort((i, j) => (getName(i, users) <= getName(j, users) ? -1 : 1));
+      const members = organizationMemberships
+        .filter((om) => related(om, 'organization') === organization)
+        .sort((i, j) => (getName(i, users) <= getName(j, users) ? -1 : 1));
       const rowData: IRow[] = [];
       members.forEach((m) => {
         const user = getUser(m, users);
@@ -223,16 +193,12 @@ export function UserTable(props: IProps) {
               locale: u.attributes.locale ? u.attributes.locale : '',
               // phone: u.attributes.phone ? u.attributes.phone : '',
               timezone: u.attributes.timezone ? u.attributes.timezone : '',
-              role:
-                projectRole && canEdit()
-                  ? role.length > 0
-                    ? role[0].id
-                    : ''
-                  : localizeRole(
-                      role.length > 0 ? role[0].attributes.roleName : 'member',
-                      ts,
-                      projectRole
-                    ),
+              role: localizeRole(
+                role.length > 0
+                  ? role[0].attributes.roleName
+                  : RoleNames.Member,
+                ts
+              ),
               action: u.id,
               id: { type: 'user', id: u.id },
             } as IRow);
@@ -243,7 +209,7 @@ export function UserTable(props: IProps) {
     };
     setData(getMedia());
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization, users, roles, organizationMemberships, groupMemberships]);
+  }, [organization, users, roles, organizationMemberships]);
 
   interface ICell {
     value: string;
@@ -253,39 +219,6 @@ export function UserTable(props: IProps) {
     tableRow: any;
     tableColumn: any;
   }
-  const handleRoleChange = (e: string, rowid: string) => {
-    var index = parseInt(rowid);
-    if (index !== undefined) {
-      var userid = data[index].id.id;
-
-      const gms = groupMemberships.filter(
-        (gm) => related(gm, 'user') === userid && related(gm, 'group') === group
-      );
-      if (gms.length > 0) {
-        memory.update((t: TransformBuilder) =>
-          UpdateRelatedRecord(t, gms[0], 'role', 'role', e, user)
-        );
-      }
-    }
-  };
-  const RoleCell = ({ value, style, row, tableRow, ...restProps }: ICell) => (
-    <Table.Cell
-      {...restProps}
-      style={{ ...style }}
-      tableRow={tableRow}
-      row
-      value
-    >
-      <SelectRole
-        org={false}
-        initRole={row.role}
-        onChange={handleRoleChange}
-        required={false}
-        disabled={isCurrentUser((row as IRow).id.id)}
-        rowid={tableRow.rowId}
-      />
-    </Table.Cell>
-  );
 
   const ActionCell = ({ value, style, ...restProps }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
@@ -314,16 +247,14 @@ export function UserTable(props: IProps) {
     </Table.Cell>
   );
   const canEdit = () => {
-    const projRole = getInviteProjRole(organization);
-    return projRole === RoleNames.Admin && (!offline || offlineOnly);
+    return userIsAdmin && (!offline || offlineOnly);
   };
   const Cell = (props: any) => {
     const { column } = props;
     if (column.name === 'action') {
       if (canEdit()) return <ActionCell {...props} />;
       else return <></>;
-    } else if (column.name === 'role' && projectRole && canEdit())
-      return <RoleCell {...props} />;
+    }
     return <Table.Cell {...props} />;
   };
 
@@ -405,23 +336,13 @@ export function UserTable(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'usertable' }),
-  ts: localStrings(state, { layout: 'shared' }),
-});
-
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators({}, dispatch),
-});
-
 const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
   roles: (q: QueryBuilder) => q.findRecords('role'),
   organizationMemberships: (q: QueryBuilder) =>
     q.findRecords('organizationmembership'),
-  groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
 };
 
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(UserTable) as any
-) as any;
+export default withData(mapRecordsToProps)(UserTable) as any as (
+  props: IProps
+) => JSX.Element;

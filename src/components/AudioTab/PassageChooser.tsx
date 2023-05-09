@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IMediaTabStrings, RoleNames } from '../../model';
+import { IState, IMediaTabStrings } from '../../model';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import localStrings from '../../selector/localize';
-import { FormControlLabel, Switch, Radio } from '@material-ui/core';
+import { FormControlLabel, Switch, Radio } from '@mui/material';
 import ShapingTable from '../ShapingTable';
-import { useOrganizedBy } from '../../crud';
+import { useOrganizedBy, useRole } from '../../crud';
 import { IRow, IPRow } from '.';
+import { Sorting } from '@devexpress/dx-react-grid';
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -27,11 +27,10 @@ interface IProps extends IStateProps {
 export const PassageChooser = (props: IProps) => {
   const { data, row, t, visible, uploadMedia } = props;
   const { doAttach, setVisible, setUploadMedia, mediaRow } = props;
-  const [projRole] = useGlobal('projRole');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const [pcheck, setCheck] = useState(-1);
-
+  const { userIsAdmin } = useRole();
   const columnDefs = [
     { name: 'sectionDesc', title: organizedBy },
     { name: 'reference', title: t.reference },
@@ -46,7 +45,7 @@ export const PassageChooser = (props: IProps) => {
     { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },
     { columnName: 'reference', aligh: 'left', wordWrapEnabled: true },
   ];
-  const sorting = [{ columnName: 'sort', direction: 'asc' }];
+  const sorting: Sorting[] = [{ columnName: 'sort', direction: 'asc' }];
   const hiddenColumnNames = ['sort', 'attached'];
   const summaryItems = [{ columnName: 'reference', type: 'count' }];
   const [attachedFilter, setAttachedFilter] = useState({
@@ -98,7 +97,7 @@ export const PassageChooser = (props: IProps) => {
     const handleSelect = () => {
       props.onToggle && props.onToggle();
     };
-    return projRole === RoleNames.Admin ? (
+    return userIsAdmin ? (
       <Table.Cell {...props}>
         {(!props.row.fileName || props.row.reference === '') && (
           <Radio checked={props.selected} onChange={handleSelect} />

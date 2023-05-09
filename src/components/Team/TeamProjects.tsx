@@ -1,8 +1,9 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { Grid } from '@material-ui/core';
+import { Grid } from '@mui/material';
 import { TeamContext } from '../../context/TeamContext';
-import { PersonalItem, TeamItem } from '.';
+import { TeamItem } from '.';
+import PersonalItem from './PersonalItem';
 import ImportTab from '../ImportTab';
 import { getPlanName } from '../../context/TranscriberContext';
 import { related } from '../../crud';

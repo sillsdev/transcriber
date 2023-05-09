@@ -1,35 +1,18 @@
 import React from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Grid, Button, Typography, Tooltip } from '@material-ui/core';
+import { Grid, Typography, styled, Box, BoxProps } from '@mui/material';
 import BigDialog from '../../hoc/BigDialog';
 import { TeamContext } from '../../context/TeamContext';
-import { ParatextLogo } from '../../control';
-import { ChoiceHead } from '../../control/ChoiceHead';
+import StartCard from './StartCard';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      '& .MuiListSubheader-root': {
-        lineHeight: 'unset',
-      },
-      '& .MuiListItemIcon-root': {
-        minWidth: '30px',
-      },
-    },
-    action: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      alignSelf: 'center',
-    },
-    button: {
-      margin: theme.spacing(1),
-    },
-    notes: {
-      fontSize: 'small',
-    },
-  })
-);
+const NewProjectRoot = styled(Box)<BoxProps>(() => ({
+  flexGrow: 1,
+  '& .MuiListSubheader-root': {
+    lineHeight: 'unset',
+  },
+  '& .MuiListItemIcon-root': {
+    minWidth: '30px',
+  },
+}));
 
 interface IProps {
   open: boolean;
@@ -37,34 +20,21 @@ interface IProps {
   doUpload: (e: React.MouseEvent) => void;
   doRecord: (e: React.MouseEvent) => void;
   doNewProj: (e: React.MouseEvent) => void;
-  setType: (type: string) => void;
 }
 
 export function NewProjectGrid(props: IProps) {
   const { open, onOpen } = props;
-  const { doUpload, doRecord, doNewProj, setType } = props;
-  const classes = useStyles();
+  const { doUpload, doRecord, doNewProj } = props;
   const ctx = React.useContext(TeamContext);
   const { newProjectStrings } = ctx.state;
   const t = newProjectStrings;
 
-  enum Integration {
-    none,
-    pt,
-  }
-
-  const doSetType = (kind: Integration) => {
-    setType(kind === Integration.pt ? 'scripture' : 'other');
-  };
-
-  const handleUpload = (kind: Integration) => (e: React.MouseEvent) => {
-    doSetType(kind);
+  const handleUpload = (e: React.MouseEvent) => {
     doUpload(e);
     onOpen(false);
   };
 
-  const handleRecord = (kind: Integration) => (e: React.MouseEvent) => {
-    doSetType(kind);
+  const handleRecord = (e: React.MouseEvent) => {
     doRecord(e);
     onOpen(false);
   };
@@ -78,56 +48,6 @@ export function NewProjectGrid(props: IProps) {
     onOpen(false);
   };
 
-  const spacer = '\u00A0';
-
-  const ParatextDecoration = () => (
-    <>
-      {spacer}
-      <Tooltip title={t.paratextIntegration}>
-        <span>
-          <ParatextLogo />
-        </span>
-      </Tooltip>
-    </>
-  );
-
-  const actId = (kind: Integration, act: string) =>
-    `addProj${act}-${kind === Integration.pt ? 'aud' : 'oth'}-0`;
-
-  const ActionButtons = ({ kind }: { kind: Integration }) => (
-    <>
-      <Button
-        id={actId(kind, 'Up')}
-        onClick={handleUpload(kind)}
-        variant="outlined"
-        color="primary"
-      >
-        {t.uploadAudio}
-      </Button>
-      <Button
-        id={actId(kind, 'Rec')}
-        onClick={handleRecord(kind)}
-        variant="outlined"
-        className={classes.button}
-        color="primary"
-      >
-        {t.startRecording}
-      </Button>
-    </>
-  );
-
-  const ConfigureAction = () => (
-    <Button
-      id="config"
-      onClick={handleNewProj}
-      variant="outlined"
-      color="primary"
-    >
-      {t.configure}
-    </Button>
-  );
-
-  const scriptureFactors = [t.scriptureFactor1, t.scriptureFactor2];
   const generalFactors = [t.generalFactor1, t.generalFactor2];
   const blankFactors = [t.blankFactor1, t.blankFactor2];
 
@@ -137,47 +57,35 @@ export function NewProjectGrid(props: IProps) {
       isOpen={open}
       onOpen={handleCancel}
       description={
-        <Typography className={classes.notes}>{t.likeTemplate}</Typography>
+        <Typography sx={{ fontSize: 'small' }}>{t.likeTemplate}</Typography>
       }
     >
-      <div className={classes.root}>
+      <NewProjectRoot>
         <Grid container spacing={3}>
-          <Grid item xs={8}>
-            <ChoiceHead
-              title={t.scripture}
-              decorate={<ParatextDecoration />}
-              keyFactorTitle={t.keyFactors}
-              prose={t.scriptureTip}
-              factors={scriptureFactors}
-            />
-          </Grid>
-          <Grid item xs={4} className={classes.action}>
-            <ActionButtons kind={Integration.pt} />
-          </Grid>
-          <Grid item xs={8}>
-            <ChoiceHead
-              title={t.general}
-              keyFactorTitle={t.keyFactors}
-              prose={t.generalTip}
-              factors={generalFactors}
-            />
-          </Grid>
-          <Grid item xs={4} className={classes.action}>
-            <ActionButtons kind={Integration.none} />
-          </Grid>
-          <Grid item xs={8}>
-            <ChoiceHead
+          <Grid item xs={6}>
+            <StartCard
+              id="config"
               title={t.blank}
-              keyFactorTitle={t.keyFactors}
-              prose={t.blankTip}
+              description={t.blankTip}
               factors={blankFactors}
+              primary={t.configure}
+              onPrimary={handleNewProj}
             />
           </Grid>
-          <Grid item xs={4} className={classes.action}>
-            <ConfigureAction />
+          <Grid item xs={6}>
+            <StartCard
+              id="quick"
+              title={t.general}
+              description={t.generalTip}
+              factors={generalFactors}
+              primary={t.uploadAudio}
+              onPrimary={handleUpload}
+              secondary={t.startRecording}
+              onSecondary={handleRecord}
+            />
           </Grid>
         </Grid>
-      </div>
+      </NewProjectRoot>
     </BigDialog>
   );
 }

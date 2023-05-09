@@ -9,7 +9,7 @@ import {
   TableRow,
   Paper,
   IconButton,
-} from '@material-ui/core';
+} from '@mui/material';
 import UncheckedIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckedIcon from '@mui/icons-material/CheckBoxOutlined';
 import GroupDialog from './GroupDialog';
@@ -20,7 +20,7 @@ import {
   RoleNames,
   IPeerStrings,
 } from '../../model';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { related, usePermissions, useRole } from '../../crud';
 import { AddRecord, ReplaceRelatedRecord } from '../../model/baseModel';

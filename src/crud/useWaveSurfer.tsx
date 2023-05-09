@@ -6,7 +6,6 @@ import { createWaveSurfer } from '../components/WSAudioPlugins';
 import { logError, Severity, waitForIt } from '../utils';
 import {
   IRegion,
-  IRegionParams,
   IRegions,
   parseRegions,
   useWaveSurferRegions,
@@ -27,11 +26,7 @@ export function useWaveSurfer(
   container: any,
   onReady: () => void = noop,
   onProgress: (progress: number) => void = noop1,
-  onRegion: (
-    count: number,
-    params: IRegionParams | undefined,
-    newRegion: boolean
-  ) => void = noop1,
+  onRegion: (count: number, newRegion: boolean) => void = noop1,
   onCanUndo: (canUndo: boolean) => void = noop1,
   onPlayStatus: (playing: boolean) => void = noop,
   onInteraction: () => void = noop,
@@ -99,14 +94,16 @@ export function useWaveSurfer(
     if (onPlayStatus) onPlayStatus(playingRef.current);
   };
   const progress = () => progressRef.current;
-  const setPlaying = (value: boolean) => {
+  const wsPlayRegion = () => setPlayingx(true, true);
+  const setPlaying = (value: boolean) => setPlayingx(value, singleRegionOnly);
+  const setPlayingx = (value: boolean, regionOnly: boolean) => {
     if (value !== playingRef.current) {
       playingRef.current = value;
       try {
         if (value) {
           if (wavesurfer()?.isReady) {
             //play region once if single region
-            if (!justPlayRegion(progress())) {
+            if (!regionOnly || !justPlayRegion(progress())) {
               //default play (which will loop region if looping is on)
               wavesurfer()?.play(progress());
             }
@@ -170,8 +167,10 @@ export function useWaveSurfer(
           durationRef.current = ws.getDuration();
           if (!regionsLoadedRef.current) {
             //we need to call this even if undefined to setup regions variables
-            loadRegions(inputRegionsRef.current, false);
-            regionsLoadedRef.current = true;
+            regionsLoadedRef.current = loadRegions(
+              inputRegionsRef.current,
+              false
+            );
           }
           if (playingRef.current) setPlaying(true);
           onReady();
@@ -288,6 +287,7 @@ export function useWaveSurfer(
     durationRef.current = 0;
     clearRegions();
     wsGoto(0);
+    onReady();
   };
 
   const wsIsReady = () => wavesurfer()?.isReady || false;
@@ -565,7 +565,7 @@ export function useWaveSurfer(
 
     loadDecoded(uberSegment);
     wavesurfer()?.regions.clear();
-    onRegion(0, undefined, true);
+    onRegion(0, true);
     var tmp = start - 0.03;
     if (tmp < 0) tmp = 0;
     wsGoto(tmp);
@@ -581,6 +581,7 @@ export function useWaveSurfer(
     wsIsPlaying,
     wsTogglePlay,
     wsPlay,
+    wsPlayRegion,
     wsPause,
     wsGoto,
     wsSetPlaybackRate,

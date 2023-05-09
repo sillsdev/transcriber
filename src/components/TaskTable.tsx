@@ -1,6 +1,13 @@
 import { useState, useEffect, useRef, useMemo, CSSProperties } from 'react';
 import { useGlobal } from 'reactn';
-import { IconButton, Typography, Box, BoxProps, styled } from '@mui/material';
+import {
+  IconButton,
+  Typography,
+  Box,
+  BoxProps,
+  styled,
+  TableCell,
+} from '@mui/material';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import CloseIcon from '@mui/icons-material/Close';
@@ -23,19 +30,25 @@ import {
   useOrganizedBy,
   usePlan,
   useOfflineAvailToggle,
+  useRole,
 } from '../crud';
 import { numCompare } from '../utils';
 import { useProjectPlans } from '../crud';
 import { debounce } from 'lodash';
 import MediaPlayer from './MediaPlayer';
-import { RoleNames, IMediaActionsStrings } from '../model';
+import { IMediaActionsStrings } from '../model';
 import { mediaActionsSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import { GridColumnExtension } from '@devexpress/dx-react-grid';
+import usePassageDetailContext from '../context/usePassageDetailContext';
 
 export const TaskItemWidth = 240;
+export const TaskTableWidth = 265;
 
 const TaskTableDiv = styled('div')(() => ({
-  width: '100%',
+  td: {
+    padding: 0,
+  },
   '&[data-list="true"] table': {
     minWidth: `${TaskItemWidth}px !important`,
   },
@@ -44,6 +57,11 @@ const TaskTableDiv = styled('div')(() => ({
   },
   '& .MuiListItem-root': {
     padding: '0 16px',
+  },
+  '& .MuiListItem-root .item-desc': {
+    width: `${TaskItemWidth - 80}px!important`,
+    whiteSpace: 'normal',
+    overflow: 'hidden',
   },
   '& .MuiList-root': {
     padding: 0,
@@ -120,16 +138,20 @@ export function TaskTable(props: IProps) {
     activityStateStr,
     todoStr,
     projButtonStr,
-    selected,
     expandedGroups,
     filter,
-    playing,
-    setPlaying,
     setFilter,
-    loading,
-    trBusy,
     flat,
   } = useTodo();
+  const {
+    playerMediafile,
+    playing,
+    setPlaying,
+    loading,
+    pdBusy,
+    discussionSize,
+  } = usePassageDetailContext();
+  const filterRef = useRef(filter);
   const t = todoStr;
   const tpb = projButtonStr;
   const [user] = useGlobal('user');
@@ -137,13 +159,12 @@ export function TaskTable(props: IProps) {
     mediaActionsSelector,
     shallowEqual
   );
-  const [width, setWidth] = useState(window.innerWidth);
+  const [width, setWidth] = useState(TaskTableWidth);
   const { getPlan, getPlanName } = usePlan();
   const offlineAvailableToggle = useOfflineAvailToggle();
   const [planId] = useGlobal('plan');
   const [planName, setPlanName] = useState('');
   const [projectId] = useGlobal('project');
-  const [projRole] = useGlobal('projRole');
   const projectPlans = useProjectPlans();
   const [openIntegration, setOpenIntegration] = useState(false);
   const [openExport, setOpenExport] = useState(false);
@@ -165,7 +186,9 @@ export function TaskTable(props: IProps) {
     { name: 'state', title: t.state },
     { name: 'assigned', title: t.assigned },
   ]);
-  const [columnFormatting, setColumnFormatting] = useState([
+  const [columnFormatting, setColumnFormatting] = useState<
+    GridColumnExtension[]
+  >([
     { columnName: 'composite', width: TaskItemWidth, align: 'left' },
     { columnName: 'play', width: 65, align: 'left' },
     { columnName: 'plan', width: 100, align: 'left', wordWrapEnabled: true },
@@ -197,8 +220,9 @@ export function TaskTable(props: IProps) {
   const defaultGrouping = [{ columnName: 'plan' }];
 
   const [rows, setRows] = useState(Array<IRow>());
+  const extraHeight = 86;
   const [style, setStyle] = useState<CSSProperties>({
-    height: window.innerHeight - 100,
+    height: discussionSize.height + extraHeight,
     overflowY: 'auto',
     cursor: 'default',
   });
@@ -207,7 +231,7 @@ export function TaskTable(props: IProps) {
   const selectedRef = useRef<any>();
   const notSelectedRef = useRef<any>();
   const busyRef = useRef(false);
-
+  const { userIsAdmin } = useRole();
   const hiddenColumnNames = useMemo(() => (flat ? ['sectPass'] : []), [flat]);
 
   const handleToggleFilter = () => {
@@ -216,6 +240,38 @@ export function TaskTable(props: IProps) {
     if (onFilter) onFilter(!filter);
     setFilter(!filter);
   };
+
+  const setDimensions = () => {
+    const newWidth = filterRef.current
+      ? window.innerWidth - 40
+      : TaskTableWidth;
+    if (width !== newWidth) setWidth(newWidth);
+    setStyle((style) => ({
+      ...style,
+      cursor: busyRef.current ? 'progress' : 'default',
+      width: newWidth,
+    }));
+  };
+
+  useEffect(() => {
+    if (onFilter) onFilter(false);
+    setDimensions();
+    const handleResize = debounce(() => {
+      setDimensions();
+    }, 100);
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
+
+  useEffect(() => {
+    filterRef.current = filter;
+    setDimensions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter]);
 
   const handleStopPlayer = () => {
     if (playing) setPlaying(false);
@@ -243,37 +299,14 @@ export function TaskTable(props: IProps) {
     }
   };
 
-  const setDimensions = () => {
-    setStyle({
-      height: window.innerHeight - 100,
-      overflowY: 'auto',
-      cursor: busyRef.current ? 'progress' : 'default',
-    });
-    setWidth(window.innerWidth);
-  };
-
   useEffect(() => {
-    if (onFilter) onFilter(false);
-    setDimensions();
-    const handleResize = debounce(() => {
-      setDimensions();
-    }, 100);
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, []);
-
-  useEffect(() => {
-    busyRef.current = trBusy || loading;
-    setStyle({
-      height: window.innerHeight - 100,
-      overflowY: 'auto',
+    busyRef.current = pdBusy || loading;
+    setStyle((style) => ({
+      ...style,
+      height: discussionSize.height + extraHeight,
       cursor: busyRef.current ? 'progress' : 'default',
-    });
-  }, [trBusy, loading]);
+    }));
+  }, [pdBusy, loading, discussionSize]);
 
   useEffect(() => {
     if (formRef.current && selectedRef.current) {
@@ -292,21 +325,21 @@ export function TaskTable(props: IProps) {
     if (!filter) {
       setColumnFormatting([
         { columnName: 'composite', width: TaskItemWidth, align: 'left' },
-        { columnName: 'play', width: 1, align: 'left' },
-        { columnName: 'plan', width: 1, align: 'left' },
-        { columnName: 'section', width: 1, align: 'right' },
-        { columnName: 'title', width: 1, align: 'left' },
-        { columnName: 'sectPass', width: 1, align: 'left' },
+        { columnName: 'play', width: 0, align: 'left' },
+        { columnName: 'plan', width: 0, align: 'left' },
+        { columnName: 'section', width: 0, align: 'right' },
+        { columnName: 'title', width: 0, align: 'left' },
+        { columnName: 'sectPass', width: 0, align: 'left' },
         {
           columnName: 'description',
-          width: 1,
+          width: 0,
           align: 'left',
           wordWrapEnabled: true,
         },
-        { columnName: 'length', width: 1, align: 'left' },
-        { columnName: 'duration', width: 1, align: 'right' },
-        { columnName: 'state', width: 1, align: 'left' },
-        { columnName: 'assigned', width: 1, align: 'left' },
+        { columnName: 'length', width: 0, align: 'left' },
+        { columnName: 'duration', width: 0, align: 'right' },
+        { columnName: 'state', width: 0, align: 'left' },
+        { columnName: 'assigned', width: 0, align: 'left' },
       ]);
     } else {
       let addHead = 50;
@@ -432,15 +465,15 @@ export function TaskTable(props: IProps) {
           if (row.mediaId !== '')
             curId = rowData[value.props.item]?.mediafile.id;
         return (
-          <td
-            ref={curId === selected ? selectedRef : notSelectedRef}
-            style={curId === selected ? selBacking : noSelBacking}
+          <TableCell
+            ref={curId === playerMediafile?.id ? selectedRef : notSelectedRef}
+            style={curId === playerMediafile?.id ? selBacking : noSelBacking}
           >
             {value}
-          </td>
+          </TableCell>
         );
       }
-      return <td>{'\u00a0'}</td>;
+      return <td>{'\u200B'}</td>; // Zero width space
     } else {
       if (column.name === 'composite') {
         return <td>{'\u00a0'}</td>;
@@ -458,7 +491,6 @@ export function TaskTable(props: IProps) {
   const playEnded = () => {
     setPlaying(false);
   };
-
   return (
     <TaskTableDiv
       id="TaskTable"
@@ -475,7 +507,7 @@ export function TaskTable(props: IProps) {
               action={handleProjectMenu}
               stopPlayer={handleStopPlayer}
               inProject={true}
-              isOwner={projRole === RoleNames.Admin}
+              isAdmin={userIsAdmin}
               project={projectId}
               justFilter={isDetail}
             />

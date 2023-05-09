@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useGlobal } from 'reactn';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
   Button,
@@ -11,8 +11,7 @@ import {
   DialogTitle,
   MenuItem,
   LinearProgress,
-} from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
+} from '@mui/material';
 import {
   Organization,
   IDialog,
@@ -25,15 +24,6 @@ import { TeamContext } from '../../context/TeamContext';
 import { useTeamApiPull, defaultWorkflow } from '../../crud';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    process: {
-      width: '200px',
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-    },
-  })
-);
 interface IRecordProps {
   organizations: Array<Organization>;
 }
@@ -45,13 +35,12 @@ interface IProps extends IRecordProps, IDialog<Organization> {
 export function TeamDialog(props: IProps) {
   const { mode, values, isOpen, organizations, onOpen, onCommit, onDelete } =
     props;
-  const classes = useStyles();
   const [name, setName] = React.useState('');
   const ctx = React.useContext(TeamContext);
   const { cardStrings } = ctx.state;
   const t = cardStrings;
   const teamApiPull = useTeamApiPull();
-  const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
+  const { CreateOrgWorkflowSteps } = useOrgWorkflowSteps();
   const [memory] = useGlobal('memory');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [process, setProcess] = useState<string>();
@@ -75,9 +64,9 @@ export function TeamDialog(props: IProps) {
       ...current,
       attributes: { ...current.attributes, name },
     } as Organization;
-    onCommit(team, async () => {
+    onCommit(team, async (id: string) => {
       if (mode === DialogMode.add) {
-        await GetOrgWorkflowSteps({ process: process || defaultWorkflow });
+        await CreateOrgWorkflowSteps(process || defaultWorkflow, id);
       }
       setProcess(undefined);
       savingRef.current = false;
@@ -168,7 +157,7 @@ export function TeamDialog(props: IProps) {
               label={t.process}
               value={process || ''}
               onChange={handleProcess}
-              className={classes.process}
+              sx={{ my: 2, width: '300px' }}
             >
               {processOptions
                 .sort((i, j) => (i.label <= j.label ? -1 : 1))

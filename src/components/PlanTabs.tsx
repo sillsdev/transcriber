@@ -23,7 +23,7 @@ import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
 import StickyRedirect from './StickyRedirect';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { PlanContext } from '../context/PlanContext';
 import { useOrganizedBy, useMediaCounts, useSectionCounts } from '../crud';
 import { HeadHeight } from '../App';
@@ -48,10 +48,6 @@ interface IRecordProps {
 interface IProps extends IStateProps, IRecordProps {
   checkSaved: (method: () => void) => void;
 }
-interface ParamTypes {
-  prjId: string;
-  tabNm: string;
-}
 const ScrollableTabsButtonAuto = (props: IProps) => {
   const { t, checkSaved, plans, sections, passages, mediafiles } = props;
   const ctx = React.useContext(PlanContext);
@@ -61,7 +57,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
   const [busy] = useGlobal('remoteBusy');
-  const { prjId, tabNm } = useParams<ParamTypes>();
+  const { prjId, tabNm } = useParams();
   const { getOrganizedBy } = useOrganizedBy();
   const [planMedia, attached, trans] = useMediaCounts(plan, mediafiles);
   const [planSectionIds, assigned, planPassages] = useSectionCounts(
@@ -192,7 +188,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
         {tab === tabs.media && (
           <AudioTab
             {...props}
-            projectplans={plans.filter((p) => p.id === plan)}
+            // projectplans={plans.filter((p) => p.id === plan)}
           />
         )}
         {tab === tabs.assignment && <AssignmentTable {...props} />}

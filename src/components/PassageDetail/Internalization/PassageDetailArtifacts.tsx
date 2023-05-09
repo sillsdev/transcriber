@@ -1,10 +1,16 @@
-import { useState, useContext, useMemo, useRef } from 'react';
+import {
+  useState,
+  useContext,
+  useMemo,
+  useRef,
+  useEffect,
+  useCallback,
+} from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
   IPassageDetailArtifactsStrings,
   IState,
-  RoleNames,
   Passage,
   Section,
 } from '../../../model';
@@ -17,9 +23,12 @@ import {
   SectionResourceUser,
   Resource,
 } from '../../../model';
-import { withData } from '../../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
-import { PassageDetailContext } from '../../../context/PassageDetailContext';
+import {
+  PassageDetailContext,
+  PlayInPlayer,
+} from '../../../context/PassageDetailContext';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import Uploader from '../../Uploader';
@@ -38,10 +47,14 @@ import {
   useSecResUserRead,
   useSecResUserDelete,
   useOrganizedBy,
+  useRole,
+  findRecord,
+  useArtifactCategory,
+  IArtifactCategory,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
-import SelectResource, { CatMap } from './SelectResource';
+import SelectSharedResource from './SelectSharedResource';
 import SelectProjectResource from './SelectProjectResource';
 import SelectSections from './SelectSections';
 import ResourceData from './ResourceData';
@@ -91,7 +104,6 @@ export enum ResourceTypeEnum {
 export function PassageDetailArtifacts(props: IProps) {
   const { sectionResources, mediafiles, artifactTypes, t } = props;
   const [memory] = useGlobal('memory');
-  const [projRole] = useGlobal('projRole');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [complete, setComplete] = useGlobal('progress');
@@ -118,6 +130,8 @@ export function PassageDetailArtifacts(props: IProps) {
   const AddMediaFileResource = useMediaResCreate(passage, currentstep);
   const UpdateSectionResource = useSecResUpdate();
   const DeleteSectionResource = useSecResDelete();
+  const { getArtifactCategorys } = useArtifactCategory();
+  const catRef = useRef<IArtifactCategory[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [visual, setVisual] = useState(false);
   const cancelled = useRef(false);
@@ -126,6 +140,7 @@ export function PassageDetailArtifacts(props: IProps) {
   const [projectResourceVisible, setProjectResourceVisible] = useState(false);
   const [projResPassageVisible, setProjResPassageVisible] = useState(false);
   const [projResWizVisible, setProjResWizVisible] = useState(false);
+  const [projResSetup, setProjResSetup] = useState(new Array<MediaFile>());
   const [editResource, setEditResource] = useState<
     SectionResource | undefined
   >();
@@ -143,12 +158,12 @@ export function PassageDetailArtifacts(props: IProps) {
   const [allResources, setAllResources] = useState(false);
   const { showMessage } = useSnackBar();
   const [confirm, setConfirm] = useState('');
-  const { checkSavedFn } = useContext(UnsavedContext).state;
+  const { waitForSave } = useContext(UnsavedContext).state;
   const mediaStart = useRef<number | undefined>();
   const mediaEnd = useRef<number | undefined>();
   const mediaPosition = useRef<number | undefined>();
   const projectResourceSave = useProjectResourceSave();
-
+  const { userIsAdmin } = useRole();
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
       (t) =>
@@ -199,7 +214,7 @@ export function PassageDetailArtifacts(props: IProps) {
           return;
         }
       }
-      setSelected(id);
+      setSelected(id, PlayInPlayer.no);
     }
   };
 
@@ -258,7 +273,7 @@ export function PassageDetailArtifacts(props: IProps) {
     if (v) {
       setProjResWizVisible(v);
     } else {
-      checkSavedFn(() => {
+      waitForSave(undefined, 200).then(() => {
         setProjResWizVisible(v);
         projMediaRef.current = undefined;
         setVisual(false);
@@ -343,7 +358,11 @@ export function PassageDetailArtifacts(props: IProps) {
   const handleAction = (what: string) => {
     if (what === 'upload') {
       setUploadVisible(true);
-    } else if (what === 'reference') {
+    } else if (what === 'ref-passage') {
+      resourceTypeRef.current = ResourceTypeEnum.passageResource;
+      setSharedResourceVisible(true);
+    } else if (what === 'ref-section') {
+      resourceTypeRef.current = ResourceTypeEnum.sectionResource;
       setSharedResourceVisible(true);
     } else if (what === 'activity') {
     } else if (what === 'wizard') {
@@ -352,9 +371,13 @@ export function PassageDetailArtifacts(props: IProps) {
     }
   };
 
-  const listFilter = (r: IRow) =>
-    r?.isResource &&
-    (allResources || r.passageId === '' || r.passageId === passage.id);
+  const listFilter = useCallback(
+    (r: IRow) =>
+      r?.isResource &&
+      (allResources || r.passageId === '' || r.passageId === passage.id),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [allResources, passage]
+  );
 
   const onSortEnd = ({
     oldIndex,
@@ -389,6 +412,7 @@ export function PassageDetailArtifacts(props: IProps) {
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     let cnt = rowData.length;
+    var projRes = new Array<MediaFile>();
     if (mediaRemoteIds) {
       for (const remId of mediaRemoteIds) {
         cnt += 1;
@@ -428,20 +452,46 @@ export function PassageDetailArtifacts(props: IProps) {
             mediaRecId,
             isPassageResource() ? passage.id : null
           );
+        } else {
+          projRes.push(findRecord(memory, 'mediafile', id) as MediaFile);
         }
       }
+      if (projRes.length) setProjResSetup(projRes);
       resetEdit();
     }
   };
 
-  const handleSelectShared = async (res: Resource[], catMap: CatMap) => {
+  const resourceSourcePassages = useMemo(() => {
+    const results: number[] = [];
+    sectionResources.forEach((sr) => {
+      const rec = findRecord(memory, 'mediafile', related(sr, 'mediafile')) as
+        | MediaFile
+        | undefined;
+      if (rowData.find((r) => r.id === rec?.id)) {
+        const passageId = rec?.attributes.resourcePassageId;
+        if (passageId) results.push(passageId);
+      }
+    });
+    return results;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sectionResources]);
+
+  useEffect(() => {
+    getArtifactCategorys(true, false).then((cats) => (catRef.current = cats));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSelectShared = async (res: Resource[]) => {
     let cnt = rowData.length;
     for (const r of res) {
-      const newMediaRec = await AddMediaFileResource(r, catMap[r.id]);
+      const catRec = catRef.current.find(
+        (c) => c.slug === r.attributes.categoryName
+      );
+      const newMediaRec = await AddMediaFileResource(r, catRec?.id || '');
       cnt += 1;
       await AddSectionResource(
         cnt,
-        r.attributes.reference,
+        r.attributes.title || r.attributes.reference,
         newMediaRec,
         isPassageResource() ? passage.id : null
       );
@@ -449,7 +499,7 @@ export function PassageDetailArtifacts(props: IProps) {
   };
 
   const handleSelectProjectResource = (m: MediaFile) => {
-    setSelected(m.id);
+    setSelected(m.id, PlayInPlayer.yes);
     projMediaRef.current = m;
     setVisual(isVisual(m));
     setProjectResourceVisible(false);
@@ -490,13 +540,28 @@ export function PassageDetailArtifacts(props: IProps) {
     setComplete(0);
   };
 
+  useEffect(() => {
+    if (!projResPassageVisible && !projResWizVisible && projMediaRef.current)
+      setProjResSetup(projResSetup.filter((m) => m !== projMediaRef.current));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projResPassageVisible, projResWizVisible]);
+
+  useEffect(() => {
+    if (projResSetup.length) {
+      handleSelectProjectResource(projResSetup[0]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projResSetup]);
+
   const handleSelectProjectResourcePassage = (items: RecordIdentity[]) => {
     projIdentRef.current = items;
-    setProjResPassageVisible(false);
     if (isVisual(projMediaRef.current)) {
-      writeVisualResource(items);
+      writeVisualResource(items).then(() => {
+        setProjResPassageVisible(false);
+      });
     } else {
       setProjResWizVisible(true);
+      setProjResPassageVisible(false);
     }
   };
 
@@ -525,10 +590,8 @@ export function PassageDetailArtifacts(props: IProps) {
   };
 
   const handleDuration = (duration: number) => {
-    if (mediaStart.current) {
-      mediaPosition.current = mediaStart.current;
-      mediaStart.current = undefined;
-    }
+    mediaPosition.current = mediaStart.current ?? 0;
+    mediaStart.current = undefined;
     setItemPlaying(true);
   };
 
@@ -542,7 +605,7 @@ export function PassageDetailArtifacts(props: IProps) {
   return (
     <>
       <Box sx={{ display: 'flex', flexDirection: 'row', flexGrow: 1, pr: 2 }}>
-        {projRole === RoleNames.Admin && (!offline || offlineOnly) && (
+        {userIsAdmin && (!offline || offlineOnly) && (
           <AddResource action={handleAction} />
         )}
         <MediaContainer>
@@ -579,7 +642,11 @@ export function PassageDetailArtifacts(props: IProps) {
               onView={handleDisplayId}
               onDone={handleDone}
               onDelete={handleDelete}
-              onEdit={handleEdit}
+              onEdit={
+                userIsAdmin && (!offline || offlineOnly)
+                  ? handleEdit
+                  : undefined
+              }
             />
           ))}
       </SortableList>
@@ -608,17 +675,25 @@ export function PassageDetailArtifacts(props: IProps) {
         }
       />
       <BigDialog
-        title={t.sharedResource}
+        title={t.sharedResource.replace(
+          '{0}',
+          resourceTypeRef.current === ResourceTypeEnum.sectionResource
+            ? getOrganizedBy(true)
+            : t.passageResource
+        )}
         isOpen={sharedResourceVisible}
         onOpen={handleSharedResourceVisible}
         bp={BigDialogBp.md}
       >
-        <SelectResource
+        <SelectSharedResource
+          sourcePassages={resourceSourcePassages}
+          scope={resourceTypeRef.current}
           onSelect={handleSelectShared}
           onOpen={handleSharedResourceVisible}
         />
       </BigDialog>
       <BigDialog
+        bp={BigDialogBp.lg}
         title={t.generalResources}
         isOpen={projectResourceVisible}
         onOpen={handleProjectResourceVisible}
@@ -635,6 +710,7 @@ export function PassageDetailArtifacts(props: IProps) {
       >
         {projResPassageVisible ? (
           <SelectSections
+            title={projMediaRef.current?.attributes?.originalFile ?? ''}
             visual={visual}
             onSelect={handleSelectProjectResourcePassage}
           />

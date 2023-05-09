@@ -24,6 +24,7 @@ import {
   OrgData,
   OrganizationMembership,
   GroupMembership,
+  IApiError,
 } from '../model';
 import * as actions from '../store';
 import { orbitInfo } from '../utils/infoMsg';
@@ -78,7 +79,7 @@ export async function insertData(
   backup: IndexedDBSource,
   tb: TransformBuilder,
   oparray: Operation[],
-  orbitError: typeof actions.doOrbitError,
+  orbitError: (ex: IApiError) => void,
   checkExisting: boolean,
   isImport: boolean,
   snapshotDate?: string
@@ -170,7 +171,7 @@ async function processData(
   backup: IndexedDBSource,
   tb: TransformBuilder,
   setCompleted: undefined | ((valud: number) => void),
-  orbitError: typeof actions.doOrbitError
+  orbitError: (ex: IApiError) => void
 ) {
   var x = JSON.parse(data);
   var tables: ResourceDocument[] = x.data;
@@ -313,7 +314,7 @@ export async function LoadProjectData(
   projectsLoaded: string[],
   AddProjectLoaded: (proj: string) => void,
   setBusy: (v: boolean) => void,
-  orbitError: typeof actions.doOrbitError
+  orbitError: (ex: IApiError) => void
 ): Promise<boolean> {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;

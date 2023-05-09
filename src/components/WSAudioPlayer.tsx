@@ -43,6 +43,7 @@ import {
   IRegion,
   IRegionChange,
   IRegionParams,
+  parseRegionParams,
   parseRegions,
 } from '../crud/useWavesurferRegions';
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
@@ -82,15 +83,18 @@ interface IProps {
   allowSpeed?: boolean;
   allowSilence?: boolean;
   alternatePlayer?: boolean;
+  oneTryOnly?: boolean;
   size: number;
   segments: string;
   currentSegmentIndex?: number;
   markers?: IMarker[];
   metaData?: JSX.Element;
   isPlaying?: boolean;
+  regionOnly?: boolean;
   loading?: boolean;
   busy?: boolean;
   defaultRegionParams?: IRegionParams;
+  canSetDefaultParams?: boolean;
   doReset?: boolean;
   autoStart?: boolean;
   setBusy?: (busy: boolean) => void;
@@ -99,7 +103,8 @@ interface IProps {
   onPlayStatus?: (playing: boolean) => void;
   onProgress?: (progress: number) => void;
   onSegmentChange?: (segments: string) => void;
-  onBlobReady?: (blob: Blob) => void;
+  onSegmentParamChange?: (params: IRegionParams, teamDefault: boolean) => void;
+  onBlobReady?: (blob: Blob | undefined) => void;
   setBlobReady?: (ready: boolean) => void;
   setChanged?: (changed: boolean) => void;
   onSaveProgress?: (progress: number) => void; //user initiated
@@ -139,15 +144,18 @@ function WSAudioPlayer(props: IProps) {
     allowAutoSegment,
     allowSpeed,
     allowSilence,
+    oneTryOnly,
     size,
     segments,
     currentSegmentIndex,
     markers,
     metaData,
     isPlaying,
+    regionOnly,
     loading,
     busy,
     defaultRegionParams,
+    canSetDefaultParams,
     doReset,
     autoStart,
     setBusy,
@@ -155,6 +163,7 @@ function WSAudioPlayer(props: IProps) {
     setAcceptedMimes,
     onProgress,
     onSegmentChange,
+    onSegmentParamChange,
     onPlayStatus,
     onBlobReady,
     setBlobReady,
@@ -179,9 +188,6 @@ function WSAudioPlayer(props: IProps) {
   const [looping, setLoopingx] = useState(false);
   const [hasRegion, setHasRegion] = useState(0);
   const [canUndo, setCanUndo] = useState(false);
-  const [regionParams, setRegionParams] = useState<IRegionParams | undefined>(
-    defaultRegionParams
-  );
   const recordStartPosition = useRef(0);
   const recordOverwritePosition = useRef<number | undefined>(undefined);
   const recordingRef = useRef(false);
@@ -207,6 +213,7 @@ function WSAudioPlayer(props: IProps) {
   });
   const autostartTimer = useRef<NodeJS.Timeout>();
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
+  const [oneShotUsed, setOneShotUsed] = useState(false);
 
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
@@ -214,6 +221,7 @@ function WSAudioPlayer(props: IProps) {
     wsLoad,
     wsClear,
     wsTogglePlay,
+    wsPlayRegion,
     wsBlob,
     wsPause,
     wsDuration,
@@ -251,7 +259,7 @@ function WSAudioPlayer(props: IProps) {
     onInteraction,
     onMarkerClick,
     () => {}, //on error...probably should report?
-    size - 150,
+    allowZoom ? size - 120 : size - 106,
     allowRecord,
     timelineRef.current,
     currentSegmentIndex,
@@ -319,10 +327,15 @@ function WSAudioPlayer(props: IProps) {
     return false;
   };
   const handleRecorder = () => {
-    if (!allowRecord || playingRef.current || processRecordRef.current)
+    if (
+      !allowRecord ||
+      playingRef.current ||
+      processRecordRef.current ||
+      oneShotUsed
+    )
       return false;
     if (!recordingRef.current) {
-      if (setBlobReady) setBlobReady(false);
+      setBlobReady && setBlobReady(false);
       wsPause(); //stop if playing
       recordStartPosition.current = wsPosition();
       recordOverwritePosition.current = recordStartPosition.current;
@@ -333,6 +346,7 @@ function WSAudioPlayer(props: IProps) {
       stopRecording();
       wsStopRecord();
       setRecording(false);
+      if (oneTryOnly) setOneShotUsed(true);
     }
     return true;
   };
@@ -450,8 +464,8 @@ function WSAudioPlayer(props: IProps) {
   }, [autoStart]);
 
   useEffect(() => {
-    wsSetHeight(size - 150); //does this need to be smarter?
-  }, [size, wsSetHeight]);
+    wsSetHeight(allowZoom ? size - 120 : size - 106); //does this need to be smarter?
+  }, [size, wsSetHeight, allowZoom]);
 
   useEffect(() => {
     if (
@@ -476,16 +490,23 @@ function WSAudioPlayer(props: IProps) {
     if (segments !== segmentsRef.current) {
       segmentsRef.current = segments;
       if (ready && segmentsRef.current !== wsGetRegions()) {
-        wsLoadRegions(segments, loopingRef.current);
-        var region = parseRegions(segments);
-        if (region.regions.length) {
-          const start = region.regions[0].start;
-          wsGoto(start);
-        }
+        loadRegions();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [segments, looping]);
+
+  const loadRegions = () => {
+    wsLoadRegions(segmentsRef.current, loopingRef.current);
+    var region = parseRegions(segmentsRef.current);
+    if (region.regions.length) {
+      const start = region.regions[0].start;
+      wsGoto(start);
+    }
+    var params = parseRegionParams(segmentsRef.current, defaultRegionParams);
+    if (params && params !== defaultRegionParams && onSegmentParamChange)
+      onSegmentParamChange(params, false);
+  };
 
   useEffect(() => {
     onSaveProgressRef.current = onSaveProgress;
@@ -502,6 +523,7 @@ function WSAudioPlayer(props: IProps) {
       wsClear(true);
       initialPosRef.current = undefined;
       recordStartPosition.current = 0;
+      setOneShotUsed(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blob, doReset]); //passed in by user
@@ -523,12 +545,18 @@ function WSAudioPlayer(props: IProps) {
 
   const handlePlayStatus = () => {
     if (durationRef.current === 0 || recordingRef.current) return false;
-    const playing = wsTogglePlay();
-    if (playing && wsPosition().toFixed(2) === durationRef.current.toFixed(2))
+    var nowplaying = true;
+    if (regionOnly) {
+      wsPlayRegion();
+    } else nowplaying = wsTogglePlay();
+    if (
+      nowplaying &&
+      wsPosition().toFixed(2) === durationRef.current.toFixed(2)
+    )
       wsGoto(0);
-    setPlaying(playing);
-    if (onPlayStatus && isPlaying !== undefined && playing !== isPlaying) {
-      onPlayStatus(playing);
+    setPlaying(nowplaying);
+    if (onPlayStatus && isPlaying !== undefined && nowplaying !== isPlaying) {
+      onPlayStatus(nowplaying);
     }
   };
 
@@ -553,10 +581,13 @@ function WSAudioPlayer(props: IProps) {
   }
 
   function onRecordError(e: any) {
+    processRecordRef.current = false;
     if (autostartTimer.current && e.error === 'No mediaRecorder') {
       cleanupAutoStart();
       launchTimer();
-    } else showMessage(e.error);
+    } else {
+      showMessage(e.error || e.toString());
+    }
   }
 
   async function onRecordDataAvailable(e: any, blob: Blob) {
@@ -573,8 +604,8 @@ function WSAudioPlayer(props: IProps) {
   function onWSReady() {
     setReady(true);
     setDuration(wsDuration());
-    if (segmentsRef.current?.length > 2)
-      wsLoadRegions(segmentsRef.current, loopingRef.current);
+    if (segmentsRef.current?.length > 2) loadRegions();
+
     if (setBusy) setBusy(false);
     if (initialPosRef.current) wsGoto(initialPosRef.current);
   }
@@ -582,13 +613,8 @@ function WSAudioPlayer(props: IProps) {
     setProgress(progress);
     if (onProgress) onProgress(progress);
   }
-  function onWSRegion(
-    count: number,
-    params: IRegionParams | undefined,
-    newRegion: boolean
-  ) {
+  function onWSRegion(count: number, newRegion: boolean) {
     setHasRegion(count);
-    setRegionParams(params);
     if (onSegmentChange && newRegion) onSegmentChange(wsGetRegions());
   }
   function onWSCanUndo(canUndo: boolean) {
@@ -629,11 +655,11 @@ function WSAudioPlayer(props: IProps) {
   };
 
   const handleChanged = async () => {
-    if (setChanged) setChanged(durationRef.current !== 0);
-    if (setBlobReady) setBlobReady(false);
+    setChanged && setChanged(durationRef.current !== 0);
+    setBlobReady && setBlobReady(false);
     wsBlob().then((newblob) => {
-      if (onBlobReady && newblob) onBlobReady(newblob);
-      if (setBlobReady) setBlobReady(true);
+      onBlobReady && onBlobReady(newblob);
+      setBlobReady && setBlobReady(newblob !== undefined);
       if (setMimeType && newblob?.type) setMimeType(newblob?.type);
       setDuration(wsDuration());
     });
@@ -641,14 +667,16 @@ function WSAudioPlayer(props: IProps) {
   const handleActionConfirmed = () => {
     initialPosRef.current = undefined;
     if (confirmAction === t.deleteRecording) {
+      setPlaying(false);
       wsClear();
       setDuration(0);
-      if (setChanged) setChanged(false);
-      if (setBlobReady) setBlobReady(true);
+      setChanged && setChanged(false);
+      onBlobReady && onBlobReady(undefined);
+      setBlobReady && setBlobReady(false);
+      oneShotUsed && setOneShotUsed(false);
       setReady(false);
     } else {
-      wsRegionDelete();
-      handleChanged();
+      handleDeleteRegion();
     }
     setConfirmAction('');
   };
@@ -659,6 +687,7 @@ function WSAudioPlayer(props: IProps) {
     setConfirmAction(t.deleteRecording);
   };
   const handleDeleteRegion = () => {
+    setPlaying(false);
     wsRegionDelete();
     handleChanged();
   };
@@ -677,10 +706,9 @@ function WSAudioPlayer(props: IProps) {
     setSilence(e.target.value);
   };
   const onSplit = (split: IRegionChange) => {};
-
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <Paper sx={{ p: 2, margin: 'auto' }}>
+      <Paper sx={{ p: 1, margin: 'auto' }}>
         <Box
           sx={{
             display: 'flex',
@@ -693,32 +721,41 @@ function WSAudioPlayer(props: IProps) {
             <Grid container sx={toolbarProp}>
               {allowRecord && (
                 <>
-                  <Grid item>
-                    <LightTooltip
-                      id="wsAudioRecordTip"
-                      title={(recording ? t.pauseTip : t.record).replace(
-                        '{0}',
-                        RECORD_KEY
-                      )}
-                    >
-                      <span>
-                        <IconButton
-                          id="wsAudioRecord"
-                          sx={{ color: 'red' }}
-                          onClick={handleRecorder}
-                          disabled={
-                            playingRef.current || processRecordRef.current
-                          }
-                        >
-                          {recording ? <FaStopCircle /> : <FaDotCircle />}
-                        </IconButton>
-                      </span>
-                    </LightTooltip>
-                  </Grid>
+                  {!oneShotUsed && (
+                    <Grid item>
+                      <LightTooltip
+                        id="wsAudioRecordTip"
+                        title={(recording
+                          ? oneTryOnly
+                            ? t.stopTip
+                            : t.pauseTip
+                          : t.record
+                        ).replace('{0}', RECORD_KEY)}
+                      >
+                        <span>
+                          <IconButton
+                            id="wsAudioRecord"
+                            sx={{ color: 'red' }}
+                            onClick={handleRecorder}
+                            disabled={
+                              playingRef.current || processRecordRef.current
+                            }
+                          >
+                            {recording ? <FaStopCircle /> : <FaDotCircle />}
+                          </IconButton>
+                        </span>
+                      </LightTooltip>
+                    </Grid>
+                  )}
                   <Grid item>
                     <LightTooltip
                       id="wsAudioPlayTip"
-                      title={(playing ? t.pauseTip : t.playTip).replace(
+                      title={(playing
+                        ? oneTryOnly
+                          ? t.stopTip
+                          : t.pauseTip
+                        : t.playTip
+                      ).replace(
                         '{0}',
                         localizeHotKey(
                           justPlayButton ? ALT_PLAY_PAUSE_KEY : PLAY_PAUSE_KEY
@@ -812,7 +849,7 @@ function WSAudioPlayer(props: IProps) {
                       <VertDivider id="wsAudioDiv4" />{' '}
                     </>
                   )}
-                  {hasRegion !== 0 && (
+                  {hasRegion !== 0 && !oneShotUsed && (
                     <LightTooltip
                       id="wsAudioDeleteRegionTip"
                       title={t.deleteRegion}
@@ -826,7 +863,7 @@ function WSAudioPlayer(props: IProps) {
                       </IconButton>
                     </LightTooltip>
                   )}
-                  {canUndo && (
+                  {canUndo && !oneShotUsed && (
                     <LightTooltip id="wsUndoTip" title={t.undoTip}>
                       <IconButton
                         id="wsUndo"
@@ -860,10 +897,12 @@ function WSAudioPlayer(props: IProps) {
                 <WSAudioPlayerSegment
                   ready={ready}
                   onSplit={onSplit}
+                  onParamChange={onSegmentParamChange}
                   loop={loopingRef.current || false}
                   playing={playing}
                   currentNumRegions={hasRegion}
-                  params={regionParams}
+                  params={defaultRegionParams}
+                  canSetDefault={canSetDefaultParams}
                   wsAutoSegment={allowAutoSegment ? wsAutoSegment : undefined}
                   wsRemoveSplitRegion={wsRemoveSplitRegion}
                   wsAddOrRemoveRegion={wsAddOrRemoveRegion}
@@ -978,10 +1017,12 @@ function WSAudioPlayer(props: IProps) {
 
                     <LightTooltip
                       id="wsAudioPlayTip"
-                      title={(playing ? t.pauseTip : t.playTip).replace(
-                        '{0}',
-                        localizeHotKey(PLAY_PAUSE_KEY)
-                      )}
+                      title={(playing
+                        ? oneTryOnly
+                          ? t.stopTip
+                          : t.pauseTip
+                        : t.playTip
+                      ).replace('{0}', localizeHotKey(PLAY_PAUSE_KEY))}
                     >
                       <span>
                         <IconButton

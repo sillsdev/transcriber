@@ -9,6 +9,7 @@ export enum ExportType {
   DBL = 'dbl', //Digital Bible Library Package
   BURRITO = 'burrito', //Scripture Burrito package
   AUDIO = 'audio', //Latest audio export
+  ELAN = 'elan', //Latest audio and eaf
 }
 export interface FileResponse {
   fileURL: string;
@@ -16,6 +17,7 @@ export interface FileResponse {
   contentType: string;
   buffer: Buffer | undefined;
   changes: number;
+  filtered: number;
   id: string;
 }
 // Describing the shape of the paratext integration slice of state
@@ -34,6 +36,10 @@ export const IMPORT_PENDING = 'IMPORT_PENDING';
 export const IMPORT_SUCCESS = 'IMPORT_SUCCESS';
 export const IMPORT_ERROR = 'IMPORT_ERROR';
 export const IMPORT_COMPLETE = 'IMPORT_COMPLETE';
+export const COPY_PENDING = 'IMPORT_PENDING';
+export const COPY_SUCCESS = 'IMPORT_SUCCESS';
+export const COPY_ERROR = 'IMPORT_ERROR';
+export const COPY_COMPLETE = 'IMPORT_COMPLETE';
 
 interface ExportPendingMsg {
   type: typeof EXPORT_PENDING;
@@ -84,3 +90,28 @@ export type ImportMsgs =
   | ImportSucceededMsg
   | ImportFailedMsg
   | ImportCompleteMsg;
+
+interface CopyPendingMsg {
+  type: typeof COPY_PENDING;
+  payload: string;
+}
+
+interface CopySucceededMsg {
+  type: typeof COPY_SUCCESS;
+  payload: { status: string; msg: string };
+}
+
+interface CopyFailedMsg {
+  type: typeof COPY_ERROR;
+  payload: IAxiosStatus;
+}
+interface CopyCompleteMsg {
+  type: typeof COPY_COMPLETE;
+  payload: IAxiosStatus;
+}
+
+export type CopyMsgs =
+  | CopyPendingMsg
+  | CopySucceededMsg
+  | CopyFailedMsg
+  | CopyCompleteMsg;

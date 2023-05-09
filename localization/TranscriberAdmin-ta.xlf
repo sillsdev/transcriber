@@ -457,120 +457,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="groupSettings.add">
-         <segment>
-            <source>Ok</source>
-            <target>Ok</target>
-         </segment>
-      </unit>
-      <unit id="groupSettings.addGroupMember">
-         <segment>
-            <source>Choose {0}</source>
-            <target>Choose {0}</target>
-         </segment>
-      </unit>
-      <unit id="groupSettings.addMemberInstruction">
-         <segment>
-            <source>Choose a person who will act as a {0} for projects in this group.</source>
-            <target>Choose a person who will act as a {0} for projects in this group.</target>
-         </segment>
-      </unit>
-      <unit id="groupSettings.allReviewersCanTranscribe">
-         <segment>
-            <source>All Editors are allowed to transcribe.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.assignedSections">
-         <segment>
-            <source>  Assigned {0}: </source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.cancel">
-         <segment>
-            <source>Cancel</source>
-            <target>ரத்து செய்</target>
-         </segment>
-      </unit>
-      <unit id="groupSettings.delete">
-         <segment>
-            <source>Delete</source>
-            <target>நீக்கு</target>
-         </segment>
-      </unit>
-      <unit id="groupSettings.editors">
-         <segment>
-            <source>Editors</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.editorsDetail">
-         <segment>
-            <source>(Review + Transcribe)</source>
-            <target>(Review + Transcribe)</target>
-         </segment>
-      </unit>
-      <unit id="groupSettings.loadingTable">
-         <segment>
-            <source>Loading data</source>
-            <target>தரவுகள் நிரப்பப்படுகிறது</target>
-         </segment>
-      </unit>
-      <unit id="groupSettings.name">
-         <segment>
-            <source>Name</source>
-            <target>பெயர்</target>
-         </segment>
-      </unit>
-      <unit id="groupSettings.noDeleteAllUsersInfo">
-         <segment>
-            <source>Cannot delete members from the All Members group</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.noDeleteInfo">
-         <segment>
-            <source>This role is included in a higher role and cannot be deleted.</source>
-            <target>This role is included in a higher role and cannot be deleted.</target>
-         </segment>
-      </unit>
-      <unit id="groupSettings.owners">
-         <segment>
-            <source>Owners</source>
-            <target>உரிமையாளர்கள்</target>
-         </segment>
-      </unit>
-      <unit id="groupSettings.ownersDetail">
-         <segment>
-            <source>(Manage + Review + Transcribe)</source>
-            <target>(Manage + Review + Transcribe)</target>
-         </segment>
-      </unit>
-      <unit id="groupSettings.projectPlans">
-         <segment>
-            <source>Project Plans</source>
-            <target>செயல்திட்ட பணிகள்</target>
-         </segment>
-      </unit>
-      <unit id="groupSettings.save">
-         <segment>
-            <source>Save</source>
-            <target>சேமி</target>
-         </segment>
-      </unit>
-      <unit id="groupSettings.transcribers">
-         <segment>
-            <source>Transcribers</source>
-            <target>எழுத்து வடிவமைப்பவர்கள்</target>
-         </segment>
-      </unit>
-      <unit id="groupSettings.transcribersDetail">
-         <segment>
-            <source>(Transcribe)</source>
-            <target>(Transcribe)</target>
-         </segment>
-      </unit>
       <unit id="groupTabs.groups">
          <segment>
             <source>Groups</source>
@@ -1099,18 +985,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.groupRole">
-         <segment>
-            <source>Project Role</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="invite.groups">
-         <segment>
-            <source>Project</source>
-            <target>திட்டம்</target>
-         </segment>
-      </unit>
+
       <unit id="invite.instructions">
          <segment>
             <source>Please click the following link to accept the invitation:</source>
@@ -1175,12 +1050,6 @@
          <segment>
             <source>Save</source>
             <target>சேமி</target>
-         </segment>
-      </unit>
-      <unit id="invite.selectProjectRole">
-         <segment>
-            <source>Select project role</source>
-            <target/>
          </segment>
       </unit>
       <unit id="invite.selectTeamRole">
@@ -1411,12 +1280,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.owner">
-         <segment>
-            <source>Owner</source>
-            <target>Owner</target>
-         </segment>
-      </unit>
       <unit id="main.passages">
          <segment>
             <source>Passages</source>
@@ -1429,10 +1292,10 @@
             <target>திட்டம்</target>
          </segment>
       </unit>
-      <unit id="main.projRole">
+      <unit id="main.orgRole">
          <segment>
-            <source>Role in Project:</source>
-            <target>Role in Project:</target>
+            <source>Role:</source>
+            <target>Role:</target>
          </segment>
       </unit>
       <unit id="main.reportIssue">
@@ -1475,12 +1338,6 @@
          <segment>
             <source>Settings</source>
             <target>அமைப்புகள்</target>
-         </segment>
-      </unit>
-      <unit id="main.switchTo">
-         <segment>
-            <source>Switch to:</source>
-            <target/>
          </segment>
       </unit>
       <unit id="main.tasks">
@@ -1677,7 +1534,7 @@
       </unit>
       <unit id="mediaTab.size">
          <segment>
-            <source>Size (KB)</source>
+            <source>Size (MB)</source>
             <target>அளவு (கேபி)</target>
          </segment>
       </unit>
@@ -2241,8 +2098,8 @@
       </unit>
       <unit id="shared.admin">
          <segment>
-            <source>Owner</source>
-            <target>Owner</target>
+            <source>Admin</source>
+            <target>Admin</target>
          </segment>
       </unit>
       <unit id="shared.editor">

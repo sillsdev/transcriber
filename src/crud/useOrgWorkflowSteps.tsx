@@ -1,6 +1,6 @@
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { useGlobal, useRef } from 'reactn';
-import { related } from '.';
+import { related, remoteId } from '.';
 import {
   IState,
   IWorkflowStepsStrings,
@@ -52,6 +52,9 @@ export const useOrgWorkflowSteps = () => {
     wf: WorkflowStep,
     org?: string
   ) => {
+    let myOrgId = org ?? global.organization;
+    let myOrgRemoteId = remoteId('organization', myOrgId, memory.keyMap);
+    if (!offline && !myOrgRemoteId) return; // offline users won't have an org remoteId
     var ops: Operation[] = [];
     const wfs = {
       type: 'orgworkflowstep',
@@ -61,13 +64,7 @@ export const useOrgWorkflowSteps = () => {
     } as OrgWorkflowStep;
     ops.push(...AddRecord(t, wfs, user, memory));
     ops.push(
-      ...ReplaceRelatedRecord(
-        t,
-        wfs,
-        'organization',
-        'organization',
-        org || global.organization
-      )
+      ...ReplaceRelatedRecord(t, wfs, 'organization', 'organization', myOrgId)
     );
     try {
       await memory.update(ops);
@@ -76,7 +73,7 @@ export const useOrgWorkflowSteps = () => {
     }
   };
 
-  const QueryOrgWorkflowSteps = async (process: string, org?: string) => {
+  const QueryOrgWorkflowSteps = async (process: string, org: string) => {
     /* wait for new workflow steps remote id to fill in */
     await waitForIt(
       'waiting for workflow update',
@@ -98,13 +95,13 @@ export const useOrgWorkflowSteps = () => {
       .filter(
         (s) =>
           (process === 'ANY' || s.attributes.process === process) &&
-          related(s, 'organization') === (org || global.organization) &&
+          related(s, 'organization') === org &&
           Boolean(s.keys?.remoteId) !== offlineOnly
       )
       .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
   };
 
-  const CreateOrgWorkflowSteps = async (process: string, org?: string) => {
+  const CreateOrgWorkflowSteps = async (process: string, org: string) => {
     creatingRef.current = true;
     const workflowsteps = (
       memory.cache.query((q: QueryBuilder) =>
@@ -124,7 +121,7 @@ export const useOrgWorkflowSteps = () => {
 
   interface IGetSteps {
     process: string;
-    org?: string;
+    org: string;
     showAll?: boolean;
   }
 
@@ -136,7 +133,18 @@ export const useOrgWorkflowSteps = () => {
         () => false,
         100
       );
-    var orgsteps = await QueryOrgWorkflowSteps(process, org);
+    if (!org) {
+      //hopefully we'll be back...
+      return [];
+    }
+    //try to avoid creating orgworkflowsteps when we're switching modes
+    var retry = 0;
+    do {
+      if (retry > 0) await new Promise((resolve) => setTimeout(resolve, 1000));
+      var orgsteps = await QueryOrgWorkflowSteps(process, org);
+      retry++;
+    } while (orgsteps.length === 0 && retry < 3);
+
     if (orgsteps.length === 0) {
       orgsteps = await CreateOrgWorkflowSteps(
         process === 'ANY' ? defaultWorkflow : process,
@@ -146,5 +154,10 @@ export const useOrgWorkflowSteps = () => {
     return orgsteps.filter((s) => showAll || s.attributes.sequencenum >= 0);
   };
 
-  return { GetOrgWorkflowSteps, localizedWorkStepFromId, localizedWorkStep };
+  return {
+    GetOrgWorkflowSteps,
+    CreateOrgWorkflowSteps,
+    localizedWorkStepFromId,
+    localizedWorkStep,
+  };
 };

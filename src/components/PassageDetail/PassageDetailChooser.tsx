@@ -1,7 +1,15 @@
 import { useEffect, useState, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { Passage, IPassageChooserStrings } from '../../model';
-import { Typography, Box, BoxProps, styled, Tabs, Tab } from '@mui/material';
+import {
+  Typography,
+  Box,
+  BoxProps,
+  styled,
+  Tabs,
+  Tab,
+  SxProps,
+} from '@mui/material';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import {
   related,
@@ -14,10 +22,16 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { passageChooserSelector } from '../../selector';
 import { usePassageNavigate } from './usePassageNavigate';
 
-const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
-  padding: `0 ${theme.spacing(6)}px`,
+interface StyledBoxProps extends BoxProps {
+  width?: number;
+}
+const StyledBox = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'width',
+})<StyledBoxProps>(({ width, theme }) => ({
+  padding: `${theme.spacing(2)}px ${theme.spacing(6)}px`,
   display: 'flex',
   flexDirection: 'row',
+  width: `${width}px`,
 }));
 
 interface Mark {
@@ -25,9 +39,15 @@ interface Mark {
   label: string;
 }
 
-export const PassageDetailChooser = () => {
+interface IProps {
+  width: number;
+  sx?: SxProps;
+}
+
+export const PassageDetailChooser = ({ width, sx }: IProps) => {
   const [memory] = useGlobal('memory');
-  const { passage, section, prjId, allBookData } = usePassageDetailContext();
+  const { passage, section, prjId, allBookData, chooserSize, setChooserSize } =
+    usePassageDetailContext();
   const [passageCount, setPassageCount] = useState(0);
   const [value, setValue] = useState(0);
   const marks = useRef<Array<Mark>>([]);
@@ -63,13 +83,18 @@ export const PassageDetailChooser = () => {
     if (Array.isArray(passages)) {
       const newCount = passages.length;
       if (passageCount !== newCount) setPassageCount(newCount);
+      const newSize = newCount > 1 ? 48 : 0;
+      if (chooserSize !== newSize) setChooserSize(newSize);
+      marks.current = [];
       passages.forEach((p) => {
         const passRec = findRecord(memory, 'passage', p.id) as Passage;
         let reference = passageReference(passRec, allBookData);
-        if (!reference)
+        if (reference.length === 0)
           reference = `${section?.attributes?.sequencenum}.${
             passRec?.attributes?.sequencenum || 1
           }`;
+        if (marks.current.findIndex((m) => m.label === reference) > -1)
+          reference += '#' + passRec?.attributes?.sequencenum.toString();
         marks.current.push({
           value: passRec?.attributes?.sequencenum || -1,
           label: reference,
@@ -85,7 +110,7 @@ export const PassageDetailChooser = () => {
   }, [view]);
 
   return passageCount > 1 ? (
-    <StyledBox>
+    <StyledBox width={width} sx={{ ...sx, alignItems: 'center' }}>
       <Typography sx={{ pr: 2 }}>{t.passages}</Typography>
       <Tabs
         value={value || 0}

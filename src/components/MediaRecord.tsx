@@ -8,64 +8,29 @@ import React, {
 } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, MediaFile, IPassageRecordStrings } from '../model';
+import { IState, IPassageRecordStrings } from '../model';
 import localStrings from '../selector/localize';
 import * as actions from '../store';
 import {
+  Stack,
   Button,
-  createStyles,
-  FormControl,
+  Checkbox,
   FormControlLabel,
-  makeStyles,
   Paper,
-  Radio,
-  RadioGroup,
+  SxProps,
   TextField,
-  Theme,
-} from '@material-ui/core';
+  Typography,
+} from '@mui/material';
 import WSAudioPlayer from './WSAudioPlayer';
-import { QueryBuilder } from '@orbit/data';
-import {
-  generateUUID,
-  loadBlob,
-  removeExtension,
-  waitForIt,
-  cleanFileName,
-} from '../utils';
-import { MediaSt, useFetchMediaUrl } from '../crud';
+import { generateUUID, loadBlob, waitForIt, cleanFileName } from '../utils';
+import { IMediaState, MediaSt, useFetchMediaUrl } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { bindActionCreators } from 'redux';
 import { UnsavedContext } from '../context/UnsavedContext';
+import { UploadType, SIZELIMIT } from './MediaUpload';
+import AudioFileIcon from '@mui/icons-material/AudioFileOutlined';
+const controlProps = { m: 1 } as SxProps;
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      '& .MuiDialog-paper': {
-        maxWidth: '90%',
-        minWidth: '90%',
-      },
-    },
-    paper: {
-      padding: theme.spacing(2),
-      margin: 'auto',
-    },
-    button: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    formControl: {
-      margin: theme.spacing(1),
-    },
-    row: {
-      display: 'flex',
-    },
-    status: {
-      marginRight: theme.spacing(2),
-      alignSelf: 'center',
-    },
-  })
-);
 interface IDispatchProps {
   convertBlob: typeof actions.convertBlob;
   resetConvertBlob: typeof actions.resetConvertBlob;
@@ -78,35 +43,41 @@ interface IStateProps {
   convert_guid: string;
 }
 
-interface IProps extends IStateProps, IDispatchProps {
+interface IProps {
   toolId: string;
-  onReady: () => void;
-  onRecording: (r: boolean) => void;
-  onPlayStatus: (p: boolean) => void;
-  mediaId: string;
+  onReady?: () => void;
+  onSaving?: () => void;
+  onRecording?: (r: boolean) => void;
+  onPlayStatus?: (p: boolean) => void;
+  mediaId?: string;
   metaData?: JSX.Element;
   defaultFilename?: string;
-  startSave: boolean;
+  startSave?: boolean;
   setCanSave: (canSave: boolean) => void;
   setCanCancel?: (canCancel: boolean) => void;
   setStatusText: (status: string) => void;
   uploadMethod?: (files: File[]) => Promise<void>;
   cancelMethod?: () => void;
   allowRecord?: boolean;
+  oneTryOnly?: boolean;
   allowWave?: boolean;
   showFilename?: boolean;
   size?: number;
   doReset?: boolean;
   setDoReset?: (r: boolean) => void;
-  preload?: boolean;
-  autoStart: boolean;
+  showLoad?: boolean;
+  preload?: number;
+  onLoaded?: () => void;
+  autoStart?: boolean;
+  trackState?: (mediaState: IMediaState) => void;
 }
 
-function MediaRecord(props: IProps) {
+function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
   const {
     t,
     toolId,
     onReady,
+    onSaving,
     onRecording,
     onPlayStatus,
     mediaId,
@@ -116,6 +87,7 @@ function MediaRecord(props: IProps) {
     setCanCancel,
     setStatusText,
     allowRecord,
+    oneTryOnly,
     allowWave,
     showFilename,
     autoStart,
@@ -129,8 +101,12 @@ function MediaRecord(props: IProps) {
     resetConvertBlob,
     size,
     metaData,
+    showLoad,
     preload,
+    onLoaded,
+    trackState,
   } = props;
+  const WARNINGLIMIT = 1;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [name, setName] = useState(t.defaultFilename);
@@ -139,21 +115,31 @@ function MediaRecord(props: IProps) {
   const [originalBlob, setOriginalBlob] = useState<Blob>();
   const [audioBlob, setAudioBlob] = useState<Blob>();
   const [loading, setLoading] = useState(false);
-  const [memory] = useGlobal('memory');
   const [filechanged, setFilechanged] = useState(false);
   const [recording, setRecording] = useState(false);
   const [blobReady, setBlobReady] = useState(true);
   const [mimeType, setMimeType] = useState('audio/ogg;codecs=opus');
+  const [compression, setCompression] = useState(20);
+  const [warning, setWarning] = useState('');
+  const [tooBig, setTooBig] = useState(false);
   const { showMessage } = useSnackBar();
   const [converting, setConverting] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const { toolsChanged, saveRequested } = useContext(UnsavedContext).state;
+  const {
+    toolsChanged,
+    saveRequested,
+    saveCompleted,
+    clearRequested,
+    clearCompleted,
+  } = useContext(UnsavedContext).state;
   const saveRef = useRef(false);
   const guidRef = useRef('');
   const extensions = useMemo(
     () => ['mp3', 'mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'],
     []
   );
+  const sizeLimit = SIZELIMIT(UploadType.Media);
+
   const mimes = useMemo(
     () => [
       'audio/mpeg',
@@ -166,7 +152,6 @@ function MediaRecord(props: IProps) {
     ],
     []
   );
-  const classes = useStyles();
 
   useEffect(() => {
     setConverting(false);
@@ -177,9 +162,14 @@ function MediaRecord(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (mediaId !== mediaState.id) fetchMediaUrl({ id: mediaId });
+    if (mediaId !== mediaState.id) fetchMediaUrl({ id: mediaId ?? '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
+
+  useEffect(() => {
+    trackState && trackState(mediaState);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mediaState]);
 
   useEffect(() => {
     setExtension(mimeType);
@@ -196,6 +186,7 @@ function MediaRecord(props: IProps) {
   useEffect(() => {
     setCanSave(
       blobReady &&
+        !tooBig &&
         name !== '' &&
         filechanged &&
         !converting &&
@@ -203,15 +194,8 @@ function MediaRecord(props: IProps) {
         !recording &&
         !saveRef.current
     );
-  }, [
-    blobReady,
-    name,
-    filechanged,
-    converting,
-    uploading,
-    recording,
-    setCanSave,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blobReady, tooBig, name, filechanged, converting, uploading, recording]);
 
   useEffect(() => {
     if (setCanCancel) setCanCancel(!converting && !uploading);
@@ -250,23 +234,34 @@ function MediaRecord(props: IProps) {
       if (convert_complete) {
         if (convert_blob)
           doUpload(convert_blob).then(() => {
-            resetConvertBlob();
-            setConverting(false);
-            if (onReady) onReady();
+            convertComplete();
           });
         else {
-          resetConvertBlob();
-          setConverting(false);
-          if (onReady) onReady();
+          convertComplete();
         }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [convert_status, convert_complete, convert_blob]);
 
+  const convertComplete = () => {
+    resetConvertBlob();
+    setConverting(false);
+    saveCompleted(toolId);
+    if (onReady) onReady();
+  };
   useEffect(() => {
+    var limit = sizeLimit * compression;
+    var big = (audioBlob?.size ?? 0) > limit * 1000000;
+    setTooBig(big);
+    if (audioBlob && audioBlob.size > (limit - WARNINGLIMIT) * 1000000)
+      setWarning(
+        (big ? t.toobig : t.toobigwarn).replace('{1}', limit.toString())
+      );
+    else setWarning('');
     if (saveRequested(toolId) && !saveRef.current) {
       if (audioBlob) {
+        onSaving && onSaving();
         saveRef.current = true;
         if (mimeType !== 'audio/wav') {
           setConverting(true);
@@ -278,23 +273,20 @@ function MediaRecord(props: IProps) {
             300
           ).then(() => convertBlob(audioBlob, mimeType, guidRef.current));
         } else {
-          doUpload(audioBlob).then(() => onReady());
+          doUpload(audioBlob).then(() => {
+            saveCompleted(toolId);
+            onReady && onReady();
+          });
         }
         return;
       }
-    } else if (!saveRequested(toolId) && saveRef.current)
-      saveRef.current = false;
-  }, [
-    audioBlob,
-    toolsChanged,
-    mimeType,
-    doUpload,
-    convertBlob,
-    onReady,
-    saveRequested,
-    convert_guid,
-    toolId,
-  ]);
+    } else if (clearRequested(toolId)) {
+      reset();
+      setDoReset && setDoReset(true);
+    }
+    if (!saveRequested(toolId) && saveRef.current) saveRef.current = false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [audioBlob, toolsChanged, mimeType, convert_guid, toolId]);
 
   const setExtension = (mimeType: string) => {
     if (mimeType) {
@@ -303,7 +295,7 @@ function MediaRecord(props: IProps) {
     }
   };
 
-  function onBlobReady(blob: Blob) {
+  function onBlobReady(blob: Blob | undefined) {
     setAudioBlob(blob);
     setFilechanged(true);
   }
@@ -321,14 +313,24 @@ function MediaRecord(props: IProps) {
 
   const reset = () => {
     setMimeType('audio/ogg;codecs=opus');
+    setCompression(20);
     setUserHasSetName(false);
     setFilechanged(false);
     setOriginalBlob(undefined);
     setAudioBlob(undefined);
+    clearCompleted(toolId);
   };
 
-  const handleChangeMime = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMimeType((event.target as HTMLInputElement).value);
+  const handleCompressChanged = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (event.currentTarget.checked) {
+      setMimeType('audio/ogg;codecs=opus');
+      setCompression(20);
+    } else {
+      setMimeType('audio/wav');
+      setCompression(1);
+    }
   };
 
   const handleChangeFileName = (e: any) => {
@@ -346,28 +348,27 @@ function MediaRecord(props: IProps) {
       if (b) {
         setOriginalBlob(b);
         setLoading(false);
+        onLoaded && onLoaded();
         setAudioBlob(b);
       } else {
         showMessage(urlorError);
         //force it to go get another (unexpired) s3 url
-        fetchMediaUrl({ id: mediaId });
+        fetchMediaUrl({ id: mediaId ?? '' });
         setLoading(false);
+        onLoaded && onLoaded();
       }
     });
+    if (defaultFilename) setName(defaultFilename);
+    else setName(t.defaultFilename);
+
     if (!mediaId) {
-      if (defaultFilename) setName(defaultFilename);
-      else setName(t.defaultFilename);
       setDoReset && setDoReset(true);
       return;
     }
-    const mediaRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'mediafile', id: mediaId })
-    ) as MediaFile;
-    setName(removeExtension(mediaRec.attributes.originalFile).name);
   };
 
   useEffect(() => {
-    if (preload && !loading) {
+    if ((preload ?? 0) > 0 && !loading) {
       handleLoadAudio();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -377,15 +378,20 @@ function MediaRecord(props: IProps) {
 
   return (
     <Paper id="mediaRecord">
-      {mediaState.status === MediaSt.FETCHED && mediaState.id === mediaId && (
-        <Button id="rec-load" variant="contained" onClick={handleLoadAudio}>
-          {t.loadfile}
-        </Button>
-      )}
+      {showLoad &&
+        mediaId &&
+        mediaState.status === MediaSt.FETCHED &&
+        mediaState.id === mediaId && (
+          <Button id="rec-load" variant="outlined" onClick={handleLoadAudio}>
+            <AudioFileIcon />
+            {t.loadlatest}
+          </Button>
+        )}
       <WSAudioPlayer
         allowRecord={allowRecord !== false}
         allowSilence={allowWave}
-        size={size || 350}
+        oneTryOnly={oneTryOnly}
+        size={size || 300}
         blob={originalBlob}
         onBlobReady={onBlobReady}
         setChanged={setFilechanged}
@@ -396,10 +402,15 @@ function MediaRecord(props: IProps) {
         autoStart={autoStart}
         segments={segments}
       />
-      <div className={classes.row}>
+      {warning && (
+        <Typography sx={{ m: 2, color: 'warning.dark' }} id="warning">
+          {warning}
+        </Typography>
+      )}
+      <Stack direction="row" sx={{ alignItems: 'center' }}>
         {showFilename && (
           <TextField
-            className={classes.formControl}
+            sx={controlProps}
             id="filename"
             label={t.fileName}
             value={name}
@@ -408,37 +419,27 @@ function MediaRecord(props: IProps) {
             fullWidth={true}
           />
         )}
+        <Typography sx={{ mr: 3 }} id="size">
+          {`${((audioBlob?.size ?? 0) / 1000000 / compression).toFixed(2)}MB`}
+        </Typography>
         {allowWave && (
-          <FormControl component="fieldset" className={classes.formControl}>
-            <RadioGroup
-              row={true}
-              id="filetype"
-              aria-label="filetype"
-              name="filetype"
-              value={mimeType}
-              onChange={handleChangeMime}
-            >
-              <FormControlLabel
-                id="compressed"
-                value={'audio/ogg;codecs=opus'}
-                control={<Radio />}
-                label={t.compressed}
+          <FormControlLabel
+            control={
+              <Checkbox
+                defaultChecked
+                size="small"
+                onChange={handleCompressChanged}
               />
-              <FormControlLabel
-                id="uncompressed"
-                value={'audio/wav'}
-                control={<Radio />}
-                label={t.uncompressed}
-              />
-            </RadioGroup>
-          </FormControl>
+            }
+            label={t.compressed}
+          />
         )}
         {metaData}
-      </div>
+      </Stack>
     </Paper>
   );
 }
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       convertBlob: actions.convertBlob,
@@ -447,6 +448,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     dispatch
   ),
 });
+
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'passageRecord' }),
   convert_status: state.convertBlob.statusmsg,
@@ -454,4 +456,8 @@ const mapStateToProps = (state: IState): IStateProps => ({
   convert_blob: state.convertBlob.blob,
   convert_guid: state.convertBlob.guid,
 });
-export default connect(mapStateToProps, mapDispatchToProps)(MediaRecord) as any;
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MediaRecord as any) as any as (props: IProps) => JSX.Element;

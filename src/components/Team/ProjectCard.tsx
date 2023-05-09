@@ -1,17 +1,23 @@
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useGlobal, useEffect } from 'reactn';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
   CardActions,
   CardContent,
   Typography,
   Chip,
-} from '@material-ui/core';
+  styled,
+  CardProps,
+  CardContentProps,
+  Box,
+  ChipProps,
+} from '@mui/material';
+import * as actions from '../../store';
 import ScriptureIcon from '@mui/icons-material/MenuBook';
 import { BsPencilSquare } from 'react-icons/bs';
 import moment from 'moment';
-import { VProject, DialogMode } from '../../model';
+import { VProject, DialogMode, IState } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import ProjectMenu from './ProjectMenu';
 import BigDialog from '../../hoc/BigDialog';
@@ -27,83 +33,88 @@ import {
   useOfflnProjRead,
   useOfflineAvailToggle,
   related,
+  useRole,
+  remoteIdNum,
 } from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
 import OfflineIcon from '@mui/icons-material/OfflinePin';
+import { useHome } from '../../utils';
+import { copyComplete, CopyProjectProps } from '../../store';
+import { TokenContext } from '../../context/TokenProvider';
+import { useSnackBar } from '../../hoc/SnackBar';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: 'flex',
-      '&:hover button': {
-        color: 'white',
-      },
-      '& .MuiTypography-root': {
-        cursor: 'default ',
-      },
-      cursor: 'pointer',
-    },
-    card: {
-      minWidth: 275,
-      margin: theme.spacing(1),
-      backgroundColor: theme.palette.primary.light,
-    },
-    rootLoaded: {
-      backgroundColor: theme.palette.primary.dark,
-    },
-    content: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      color: theme.palette.primary.contrastText,
-    },
-    firstLine: {
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    name: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    button: {
-      textTransform: 'none',
-    },
-    pos: {
-      marginBottom: 12,
-    },
-    offline: {
-      display: 'flex',
-      color: theme.palette.primary.contrastText,
-    },
+const ProjectCardRoot = styled('div')(({ theme }) => ({
+  display: 'flex',
+  '&:hover button': {
+    color: 'white',
+  },
+  '& .MuiTypography-root': {
+    cursor: 'default ',
+  },
+  cursor: 'pointer',
+}));
+
+const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
+  minWidth: 275,
+  margin: theme.spacing(1),
+  backgroundColor: theme.palette.primary.light,
+}));
+
+const StyledCardContent = styled(CardContent)<CardContentProps>(
+  ({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    color: theme.palette.primary.contrastText,
   })
 );
+
+const FirstLineDiv = styled('div')(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+}));
+
+const StyledChip = styled(Chip)<ChipProps>(({ theme }) => ({
+  backgroundColor: theme.palette.grey[400],
+}));
 
 interface IProps {
   project: VProject;
 }
 
 export const ProjectCard = (props: IProps) => {
-  const classes = useStyles();
   const { project } = props;
   const ctx = React.useContext(TeamContext);
   const {
     loadProject,
-    selectProject,
     setProjectParams,
     projectSections,
     projectDescription,
     projectLanguage,
     projectUpdate,
     projectDelete,
-    isOwner,
     cardStrings,
     vProjectStrings,
     projButtonStrings,
     sections,
+    personalProjects,
     doImport,
   } = ctx.state;
+  const dispatch = useDispatch();
+
+  const copyProject = (props: CopyProjectProps) =>
+    dispatch(actions.copyProject(props));
+  const copyStatus = useSelector(
+    (state: IState) => state.importexport.importexportStatus
+  );
+  const [copying, setCopying] = useState(false);
+  const { accessToken } = useContext(TokenContext).state;
+  const [errorReporter] = useGlobal('errorReporter');
+  const [memory] = useGlobal('memory');
+  const { showMessage } = useSnackBar();
+  const [, setBusy] = useGlobal('importexportBusy');
   const { getPlanName } = usePlan();
   const { localizedOrganizedBy } = useOrganizedBy();
   const [organizedBySing, setOrganizedBySing] = useState('');
@@ -118,11 +129,15 @@ export const ProjectCard = (props: IProps) => {
   const [openReports, setOpenReports] = useState(false);
   const [deleteItem, setDeleteItem] = useState<VProject>();
   const [open, setOpen] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
   const t = cardStrings;
   const tpb = projButtonStrings;
+  const { userIsOrgAdmin } = useRole();
+  const { leaveHome } = useHome();
 
   const handleSelect = (project: VProject) => () => {
-    selectProject(project);
+    loadProject(project);
+    leaveHome();
   };
 
   useEffect(() => {
@@ -137,8 +152,20 @@ export const ProjectCard = (props: IProps) => {
     setOrganizedByPlural(
       localizedOrganizedBy(project.attributes.organizedBy, false)
     );
+    setIsAdmin(userIsOrgAdmin(related(project, 'organization')));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
+  useEffect(() => {
+    if (copying && copyStatus) {
+      if (copyStatus.errStatus || copyStatus.complete) {
+        copyComplete();
+        setCopying(false);
+        setBusy(false);
+        showMessage(copyStatus.errMsg ?? copyStatus.statusMsg);
+      } else showMessage(copyStatus.statusMsg);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [copyStatus]);
 
   const LoadAndGo = async (what: string) => {
     loadProject(project, () => {
@@ -169,6 +196,18 @@ export const ProjectCard = (props: IProps) => {
         break;
       case 'delete':
         setDeleteItem(project);
+        break;
+      case 'copysame':
+      case 'copynew':
+        setCopying(true);
+        copyProject({
+          projectid: remoteIdNum('project', projectId, memory.keyMap),
+          sameorg: what === 'copysame',
+          token: accessToken,
+          errorReporter: errorReporter,
+          pendingmsg: t.copyStatus,
+          completemsg: t.copyComplete,
+        });
         break;
       case 'import':
       case 'export':
@@ -250,6 +289,7 @@ export const ProjectCard = (props: IProps) => {
       tags: attr.tags || {},
       flat: attr.flat,
       organizedBy: attr.organizedBy || vProjectStrings.sections,
+      isPersonal: personalProjects.includes(project),
       vProjectStrings: vProjectStrings,
     };
     return value;
@@ -264,15 +304,15 @@ export const ProjectCard = (props: IProps) => {
   );
 
   return (
-    <div className={classes.root}>
-      <Card
-        id={`card-${project.id}`}
-        className={classes.card}
-        onClick={handleSelect(project)}
-      >
-        <CardContent className={classes.content}>
-          <div className={classes.firstLine}>
-            <Typography variant="h6" component="h2" className={classes.name}>
+    <ProjectCardRoot>
+      <StyledCard id={`card-${project.id}`} onClick={handleSelect(project)}>
+        <StyledCardContent>
+          <FirstLineDiv>
+            <Typography
+              variant="h6"
+              component="h2"
+              sx={{ display: 'flex', alignItems: 'center' }}
+            >
               {(project?.attributes?.type || '').toLowerCase() ===
               'scripture' ? (
                 <ScriptureIcon />
@@ -284,14 +324,12 @@ export const ProjectCard = (props: IProps) => {
             </Typography>
             <ProjectMenu
               action={handleProjectAction}
-              isOwner={isOwner(project)}
               project={project}
               inProject={false}
+              isAdmin={isAdmin}
             />
-          </div>
-          <Typography className={classes.pos}>
-            {projectDescription(project)}
-          </Typography>
+          </FirstLineDiv>
+          <Typography sx={{ mb: 2 }}>{projectDescription(project)}</Typography>
           <Typography variant="body2" component="p">
             {t.language.replace('{0}', projectLanguage(project))}
           </Typography>
@@ -306,21 +344,21 @@ export const ProjectCard = (props: IProps) => {
                     : organizedByPlural
                 )}
           </Typography>
-        </CardContent>
+        </StyledCardContent>
         {project?.attributes?.tags && (
           <CardActions>
             <>
               {offlineProjectRead(project).attributes?.offlineAvailable && (
-                <div className={classes.offline}>
+                <Box sx={{ display: 'flex', color: 'primary.contrastText' }}>
                   <OfflineIcon />
                   {'\u00A0'}
                   <Typography>{t.offline}</Typography>
-                </div>
+                </Box>
               )}
               {Object.keys(project?.attributes?.tags)
                 .filter((t) => project?.attributes?.tags[t])
                 .map((t) => (
-                  <Chip
+                  <StyledChip
                     key={t}
                     size="small"
                     label={localizeProjectTag(t, vProjectStrings)}
@@ -329,7 +367,7 @@ export const ProjectCard = (props: IProps) => {
             </>
           </CardActions>
         )}
-      </Card>
+      </StyledCard>
       <ProjectDialog
         mode={DialogMode.edit}
         values={projectValues(project)}
@@ -342,7 +380,7 @@ export const ProjectCard = (props: IProps) => {
         isOpen={openIntegration}
         onOpen={setOpenIntegration}
       >
-        <IntegrationTab {...props} />
+        <IntegrationTab />
       </BigDialog>
       <BigDialog
         title={tpb.exportTitle.replace('{0}', getPlanName(project.id))}
@@ -368,6 +406,6 @@ export const ProjectCard = (props: IProps) => {
           noResponse={handleDeleteRefused}
         />
       )}
-    </div>
+    </ProjectCardRoot>
   );
 };

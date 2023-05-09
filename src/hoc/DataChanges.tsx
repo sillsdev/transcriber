@@ -34,6 +34,7 @@ import {
   related,
   remoteId,
   remoteIdGuid,
+  remoteIdNum,
   SetUserLanguage,
 } from '../crud';
 import { currentDateTime, localUserKey, LocalKey } from '../utils';
@@ -46,6 +47,7 @@ import {
   IState,
   OfflineProject,
   OrganizationMembership,
+  PassageStateChange,
   Plan,
   VProject,
 } from '../model';
@@ -60,7 +62,6 @@ interface IStateProps {}
 
 interface IDispatchProps {
   setLanguage: typeof actions.setLanguage;
-  resetOrbitError: typeof actions.resetOrbitError;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -240,14 +241,9 @@ export const doDataChanges = async (
 
                       case 'discussion':
                       case 'comment':
-                        DeleteLocalCopy(
-                          upRec.record.attributes?.offlineId,
-                          upRec.record.type,
-                          tb,
-                          localOps
-                        );
-                        break;
                       case 'intellectualproperty':
+                      case 'orgkeytermtarget':
+                      case 'passagestatechange':
                         DeleteLocalCopy(
                           upRec.record.attributes?.offlineId,
                           upRec.record.type,
@@ -255,6 +251,7 @@ export const doDataChanges = async (
                           localOps
                         );
                         break;
+
                       case 'invitation':
                         const userrec = GetUser(memory, user);
                         if (
@@ -305,10 +302,29 @@ export const doDataChanges = async (
           await memory.sync(await backup.push(operations));
         }
       }
+      if (version === 6) {
+        let operations: Operation[] = [];
+        //clean up abandoned pscs
+        var pscs = (
+          memory.cache.query((q: QueryBuilder) =>
+            q.findRecords('passagestatechange')
+          ) as PassageStateChange[]
+        ).filter((p) => !Boolean(p.keys?.remoteId));
+        pscs.forEach((p) =>
+          operations.push(tb.removeRecord({ type: p.type, id: p.id }))
+        );
+        if (operations.length > 0) {
+          await memory.sync(await backup.push(operations));
+        }
+      }
       setDataChangeCount(0);
       return data?.attributes?.startnext;
     } catch (e: any) {
       logError(Severity.error, errorReporter, e);
+      if ((e.response?.data?.errors?.length ?? 0) > 0) {
+        var s = e.response.data.errors[0].detail?.toString();
+        if (s.startsWith('Project not')) return -2;
+      }
       return started;
     }
   };
@@ -322,10 +338,11 @@ export const doDataChanges = async (
       const p = projectsLoaded[ix];
       const op = getOfflineProject(p);
       if (
+        !isNaN(remoteIdNum('project', p, memory.keyMap)) &&
         op.attributes?.snapshotDate &&
         Date.parse(op.attributes.snapshotDate) < Date.parse(lastTime)
       ) {
-        start = 1;
+        start = 0;
         startNext = 0;
         tries = 5;
         while (startNext >= 0 && tries > 0) {
@@ -345,7 +362,11 @@ export const doDataChanges = async (
           if (startNext === start) tries--;
           else start = startNext;
         }
-        await updateSnapshotDate(p, nextTime, startNext + 1);
+        if (startNext === -1)
+          await updateSnapshotDate(p, nextTime, startNext + 1); //done
+        else if (startNext > 0)
+          //network error but not a known unrecoverable one so don't move on
+          await updateSnapshotDate(p, op.attributes.snapshotDate, startNext);
       }
     }
   }
@@ -361,25 +382,27 @@ export const doDataChanges = async (
     if (startNext === start) tries--;
     else start = startNext;
   }
-  if (startNext < 0) localStorage.setItem(userLastTimeKey, nextTime);
-  localStorage.setItem(userNextStartKey, (startNext + 1).toString());
+  if (startNext === -1) localStorage.setItem(userLastTimeKey, nextTime);
+  if (startNext !== -2)
+    localStorage.setItem(userNextStartKey, (startNext + 1).toString());
 };
 
 export function DataChanges(props: IProps) {
-  const { children, setLanguage, resetOrbitError } = props;
+  const { children, setLanguage } = props;
   const [isOffline] = useGlobal('offline');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [loadComplete] = useGlobal('loadComplete');
   const [busy, setBusy] = useGlobal('remoteBusy');
+  const [bigBusy] = useGlobal('importexportBusy');
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const [connected] = useGlobal('connected');
   const [user] = useGlobal('user');
   const [fingerprint] = useGlobal('fingerprint');
   const [errorReporter] = useGlobal('errorReporter');
   const ctx = useContext(TokenContext).state;
-  const { isAuthenticated } = ctx;
+  const { authenticated } = ctx;
   const [busyDelay, setBusyDelay] = useState<number | null>(null);
   const [dataDelay, setDataDelay] = useState<number | null>(null);
   const [firstRun, setFirstRun] = useState(true);
@@ -388,7 +411,7 @@ export function DataChanges(props: IProps) {
   const [orbitRetries] = useGlobal('orbitRetries');
   const doingChanges = useRef(false);
   const getOfflineProject = useOfflnProjRead();
-  const checkOnline = useCheckOnline(resetOrbitError);
+  const checkOnline = useCheckOnline();
   const { anySaving, toolsChanged } = useContext(UnsavedContext).state;
   const defaultBackupDelay = isOffline ? 1000 * 60 * 30 : null; //30 minutes;
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -400,17 +423,17 @@ export function DataChanges(props: IProps) {
 
     setFirstRun(dataDelay === null);
     const newDelay =
-      connected && loadComplete && remote && isAuthenticated()
+      connected && loadComplete && remote && authenticated()
         ? dataDelay === null
           ? 10
           : defaultDataDelay
         : null;
     setDataDelay(newDelay);
     if (!remote) setBusy(false);
+    // the busy delay is increased by 10 times if we aren't connected yet
+    // but should be because we have authenticated.
     setBusyDelay(
-      remote && isAuthenticated()
-        ? defaultBusyDelay * (connected ? 1 : 10)
-        : null
+      remote && authenticated() ? defaultBusyDelay * (connected ? 1 : 10) : null
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remote, ctx, loadComplete, connected, firstRun]);
@@ -425,7 +448,13 @@ export function DataChanges(props: IProps) {
     } else if (checkBusy !== busy) setBusy(checkBusy);
   };
   const updateData = async () => {
-    if (!doingChanges.current && !busy && !saving && isAuthenticated()) {
+    if (
+      !doingChanges.current &&
+      !busy &&
+      !bigBusy &&
+      !saving &&
+      authenticated()
+    ) {
       doingChanges.current = true; //attempt to prevent double calls
       setFirstRun(false);
       await doDataChanges(
@@ -451,9 +480,7 @@ export function DataChanges(props: IProps) {
         memory,
         undefined,
         project,
-        fingerprint,
         user,
-        '',
         '',
         '',
         getOfflineProject

@@ -3,6 +3,7 @@ import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
+import path from 'path-browserify';
 import {
   IState,
   ITranscriptionTabStrings,
@@ -20,7 +21,6 @@ import { offlineProjectUpdateFilesDownloaded, useProjectExport } from '../crud';
 import {
   currentDateTime,
   dataPath,
-  downloadFile,
   logError,
   PathType,
   Severity,
@@ -28,6 +28,8 @@ import {
 import AdmZip from 'adm-zip';
 import { Operation } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
+const ipc = (window as any)?.electron;
+
 enum Steps {
   Prepare,
   Download,
@@ -48,13 +50,15 @@ interface IDispatchProps {
   exportComplete: typeof actions.exportComplete;
 }
 
-interface IProps extends IStateProps, IDispatchProps {
+interface IProps {
   open: Boolean;
   projectIds: string[];
   finish: () => void;
 }
 
-export const ProjectDownload = (props: IProps) => {
+export const ProjectDownload = (
+  props: IProps & IStateProps & IDispatchProps
+) => {
   const { open, projectIds, t, ts, finish } = props;
   const { exportProject, exportComplete, exportStatus, exportFile } = props;
   const [errorReporter] = useGlobal('errorReporter');
@@ -68,13 +72,25 @@ export const ProjectDownload = (props: IProps) => {
     t,
     message: t.downloadingProject,
   });
-  const [progress, setProgress] = React.useState<Steps>(Steps.Prepare);
+  const [progress, setProgressx] = React.useState<Steps>(Steps.Prepare);
+  const progressRef = React.useRef<Steps>(progress);
   const [steps, setSteps] = React.useState<string[]>([]);
   const [currentStep, setCurrentStep] = React.useState(0);
   const [exportName, setExportName] = React.useState('');
-  const [exportUrl, setExportUrl] = React.useState('');
+  const [exportUrl, setExportUrlx] = React.useState('');
+  const exportUrlRef = React.useRef('');
   const [offlineUpdates] = React.useState<Operation[]>([]);
   const backup = coordinator.getSource('backup') as IndexedDBSource;
+
+  const setProgress = (val: Steps) => {
+    progressRef.current = val;
+    setProgressx(val);
+  };
+
+  const setExportUrl = (val: string) => {
+    exportUrlRef.current = val;
+    setExportUrlx(val);
+  };
 
   const translateError = (err: IAxiosStatus): string => {
     if (err.errStatus === 401) return ts.expiredToken;
@@ -98,7 +114,6 @@ export const ProjectDownload = (props: IProps) => {
           if (projRec) newSteps = newSteps.concat(projRec.attributes.name);
         });
         setSteps(newSteps);
-        setProgress(Steps.Prepare);
         doProjectExport(ExportType.PTF, projectIds[currentStep]);
       } else if (busy) {
         setBusy(false);
@@ -138,17 +153,55 @@ export const ProjectDownload = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exportFile, exportStatus]);
 
+  interface StatReply {
+    received: number;
+    total: number;
+    error: any;
+  }
+
   React.useEffect(() => {
     if (progress === Steps.Download) {
       const localPath = dataPath(exportName, PathType.ZIP);
-      downloadFile({ url: exportUrl, localPath })
-        .then(() => {
-          setProgress(Steps.Import);
-        })
-        .catch((ex) => logError(Severity.error, errorReporter, ex))
-        .finally(() => {
-          URL.revokeObjectURL(exportUrl);
-        });
+      ipc?.createFolder(path.dirname(localPath)).then(() => {
+        ipc
+          ?.downloadLaunch(exportUrl, localPath)
+          .then((token: string) => {
+            const timer = setInterval(() => {
+              ipc?.downloadStat(token).then((reply: string) => {
+                const { received, total, error } = reply
+                  ? (JSON.parse(reply) as StatReply)
+                  : {
+                      received: 0,
+                      total: 0,
+                      error: 'no downloadStat reply for ' + token,
+                    };
+                if (error) {
+                  logError(Severity.error, errorReporter, error);
+                  clearInterval(timer);
+                  ipc?.downloadClose(token);
+                } else if (received < total) {
+                  showTitledMessage(
+                    t.downloadProject,
+                    t.downloading.replace(
+                      '{0}',
+                      `${exportName} ${Math.round((received * 100) / total)}%`
+                    )
+                  );
+                } else {
+                  clearInterval(timer);
+                  ipc?.downloadClose(token);
+                  setProgress(Steps.Import);
+                }
+              });
+            }, 500);
+          })
+          .catch((ex: Error) => {
+            logError(Severity.error, errorReporter, ex);
+          })
+          .finally(() => {
+            URL.revokeObjectURL(exportUrl);
+          });
+      });
       showTitledMessage(
         t.downloadProject,
         t.downloading.replace('{0}', exportName)
@@ -159,23 +212,43 @@ export const ProjectDownload = (props: IProps) => {
 
   React.useEffect(() => {
     if (progress === Steps.Import) {
-      const localPath = dataPath(exportName, PathType.ZIP);
-      const zip = new AdmZip(localPath);
-      zip.extractAllTo(dataPath(), true);
-      offlineProjectUpdateFilesDownloaded(
-        projectIds[currentStep],
-        offlineUpdates,
-        memory,
-        currentDateTime()
-      );
-      setProgress(Steps.Prepare);
-      setCurrentStep(currentStep + 1);
+      (async () => {
+        const localPath = dataPath(exportName, PathType.ZIP);
+        const zip = (await ipc?.zipOpen(localPath)) as AdmZip;
+        await ipc?.zipExtract(zip, dataPath(), true);
+        await ipc?.zipClose(zip);
+        offlineProjectUpdateFilesDownloaded(
+          projectIds[currentStep],
+          offlineUpdates,
+          memory,
+          currentDateTime()
+        );
+        setCurrentStep(currentStep + 1);
+        setProgress(Steps.Prepare);
+      })();
     } else if (progress === Steps.Error) {
-      setProgress(Steps.Prepare);
       setCurrentStep(currentStep + 1);
+      setProgress(Steps.Prepare);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [progress]);
+
+  React.useEffect(() => {
+    return () => {
+      if (progressRef.current !== Steps.Prepare) {
+        logError(Severity.error, errorReporter, ts.cancel);
+        if (exportUrlRef.current) URL.revokeObjectURL(exportUrlRef.current);
+        showTitledMessage(t.error, ts.cancel);
+        exportComplete();
+        setProgress(Steps.Error);
+        setTimeout(() => {
+          setBusy(false);
+          finish();
+        }, 1000);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const percent = (count: number, total: number) => {
     if (!total) return 0;
@@ -206,7 +279,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   exportStatus: state.importexport.importexportStatus,
 });
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+const mapDispatchToProps = (dispatch: any) => ({
   ...bindActionCreators(
     {
       exportProject: actions.exportProject,
@@ -219,4 +292,4 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProjectDownload) as any;
+)(ProjectDownload as any) as any;

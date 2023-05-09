@@ -17,7 +17,7 @@ export const getMediaInPlans = (
 ) => {
   const latest: ILatest = {};
   var media = mediaFiles.filter(
-    (m) => planids.indexOf(related(m, 'plan')) >= 0
+    (m) => planids.indexOf(related(m, 'plan')) >= 0 && m.attributes
   );
   if (onlyTypeId !== undefined) {
     media = media.filter((m) => related(m, 'artifactType') === onlyTypeId);

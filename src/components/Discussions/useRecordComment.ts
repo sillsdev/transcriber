@@ -2,43 +2,42 @@ import { useMemo, useRef, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import {
   findRecord,
-  pullPlanMedia,
+  pullTableList,
   related,
   remoteIdNum,
   useArtifactType,
   useOfflnMediafileCreate,
 } from '../../crud';
-import { Discussion, MediaFile } from '../../model';
+import { MediaFile } from '../../model';
 import * as actions from '../../store';
 import { cleanFileName } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { TokenContext } from '../../context/TokenProvider';
-interface IDispatchProps {
-  uploadFiles: typeof actions.uploadFiles;
-  nextUpload: typeof actions.nextUpload;
-  uploadComplete: typeof actions.uploadComplete;
-  doOrbitError: typeof actions.doOrbitError;
-}
+import { useDispatch } from 'react-redux';
+import IndexedDBSource from '@orbit/indexeddb/dist/types/source';
+import { UploadType } from '../MediaUpload';
 
-interface IProps extends IDispatchProps {
-  discussion: Discussion;
-  number: number;
-  afterUploadcb: (mediaId: string) => void;
+interface IProps {
+  mediafileId: string;
+  commentNumber: number;
+  afterUploadcb: (mediaId: string) => Promise<void>;
 }
 
 export const useRecordComment = ({
-  discussion,
-  number,
+  mediafileId,
+  commentNumber,
   afterUploadcb,
-  uploadFiles,
-  nextUpload,
-  uploadComplete,
-  doOrbitError,
 }: IProps) => {
+  const dispatch = useDispatch();
+  const uploadFiles = (files: File[]) => dispatch(actions.uploadFiles(files));
+  const nextUpload = (props: actions.NextUploadProps) =>
+    dispatch(actions.nextUpload(props));
+  const uploadComplete = () => dispatch(actions.uploadComplete);
   const [reporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [offline] = useGlobal('offline');
@@ -46,19 +45,19 @@ export const useRecordComment = ({
   const { commentId } = useArtifactType();
   const fileList = useRef<File[]>();
   const mediaIdRef = useRef('');
-  const { createMedia } = useOfflnMediafileCreate(doOrbitError);
+  const { createMedia } = useOfflnMediafileCreate();
 
   const passageId = useMemo(() => {
-    const vernMediaId = related(discussion, 'mediafile');
-    const vernRec = findRecord(memory, 'mediafile', vernMediaId) as MediaFile;
+    const vernRec = findRecord(memory, 'mediafile', mediafileId) as MediaFile;
     return related(vernRec, 'passage') as string;
-  }, [discussion, memory]);
+  }, [mediafileId, memory]);
 
-  const fileName = useMemo(() => {
-    return `${cleanFileName(discussion.attributes?.subject)}${(
-      discussion.id + 'xxxx'
-    ).slice(0, 4)}-${number}`;
-  }, [discussion, number]);
+  const fileName = (subject: string, id: string) => {
+    return `${cleanFileName(subject)}${(id + 'xxxx').slice(
+      0,
+      4
+    )}-${commentNumber}`;
+  };
 
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     const uploadList = fileList.current;
@@ -81,7 +80,14 @@ export const useRecordComment = ({
       ).id;
     }
     if (!offline) {
-      pullPlanMedia(plan, memory, remote).then(() => {
+      pullTableList(
+        'mediafile',
+        Array(mediaIdRef.current),
+        memory,
+        remote,
+        backup,
+        reporter
+      ).then(() => {
         uploadComplete();
         afterUploadcb(mediaIdRef.current);
       });
@@ -111,15 +117,16 @@ export const useRecordComment = ({
       recordedByUserId: getUserId(),
       userId: getUserId(),
     } as any;
-    nextUpload(
-      mediaFile,
+    nextUpload({
+      record: mediaFile,
       files,
-      0,
-      accessToken || '',
-      offline,
-      reporter,
-      itemComplete
-    );
+      n: 0,
+      token: accessToken || '',
+      offline: offline,
+      errorReporter: reporter,
+      uploadType: UploadType.Media,
+      cb: itemComplete,
+    });
   };
   return { uploadMedia, fileName };
 };

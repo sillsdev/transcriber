@@ -1,25 +1,21 @@
 import { isElectron } from '../api-variable';
-
-const noop = {} as any;
-
-const electronremote = isElectron ? require('@electron/remote') : noop;
+const ipc = (window as any)?.electron;
 
 export const exitElectronApp = () => {
   if (isElectron) {
-    let w = electronremote.getCurrentWindow();
-    w.close();
+    ipc?.closeApp();
   }
 };
 
-export const relaunchApp = () => {
+export const relaunchApp = async () => {
   if (isElectron) {
-    electronremote.app.relaunch();
+    await ipc?.relaunchApp();
   }
 };
 
-export const exitApp = () => {
+export const exitApp = async () => {
   if (isElectron) {
-    electronremote.app.exit();
+    await ipc?.exitApp();
   }
 };
 

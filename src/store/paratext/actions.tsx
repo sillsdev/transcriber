@@ -36,6 +36,7 @@ import {
   axiosError,
 } from '../../utils';
 import MemorySource from '@orbit/memory';
+const ipc = (window as any)?.electron;
 
 export const resetUserName = () => (dispatch: any) => {
   dispatch({
@@ -73,7 +74,8 @@ export const getParatextText =
       });
       dispatch({ payload: response.data, type: TEXT_SUCCESS });
     } catch (err: any) {
-      if (err.errMsg !== 'no range')
+      var msg: string = err.response?.data?.toString() ?? err.errMsg;
+      if (!msg.includes('no range') && !msg.includes('401'))
         logError(
           Severity.error,
           errorReporter,
@@ -90,21 +92,23 @@ export const getParatextTextLocal =
     errorReporter: any,
     pendingmsg: string
   ) =>
-  async (dispatch: any) => {
+  (dispatch: any) => {
     dispatch({
       payload: pendingStatus(pendingmsg),
       type: TEXT_PENDING,
     });
     try {
-      var pt = localProjects(ptPath, undefined, ptProjName);
-      if (pt && pt.length > 0) {
-        let response = await getLocalParatextText(passage, pt[0].ShortName);
-        dispatch({ payload: response, type: TEXT_SUCCESS });
-      } else
-        dispatch({
-          payload: errorStatus(undefined, 'No Local Project' + ptProjName),
-          type: TEXT_ERROR,
-        });
+      localProjects(ptPath, undefined, ptProjName).then((pt) => {
+        if (pt && pt.length > 0) {
+          getLocalParatextText(passage, pt[0].ShortName).then((response) =>
+            dispatch({ payload: response, type: TEXT_SUCCESS })
+          );
+        } else
+          dispatch({
+            payload: errorStatus(undefined, 'No Local Project' + ptProjName),
+            type: TEXT_ERROR,
+          });
+      });
     } catch (err: any) {
       if (err.errMsg !== 'no range')
         logError(
@@ -210,39 +214,38 @@ export const getProjects =
       });
   };
 
-const localProjects = (
+const localProjects = async (
   ptPath: string,
   languageTag?: string,
   projName?: string
 ) => {
   if (ptPath === '') return;
-  const fs = require('fs');
-  const path = require('path');
+  const path = require('path-browserify');
   let pt: ParatextProject[] = [];
-  fs.readdirSync(ptPath)
-    .filter((n: string) => n.indexOf('.') === -1 && n[0] !== '_')
-    .forEach((n: string) => {
-      const settingsPath = path.join(ptPath, n, 'Settings.xml');
-      const settingsJson = fileJson(settingsPath);
-      if (settingsJson) {
-        const setting = settingsJson.ScriptureText;
-        const langIso = setting.LanguageIsoCode._text
-          .replace(/::?:?/g, '-')
-          .replace(/-$/, '');
-        pt.push({
-          ParatextId: setting.Guid._text,
-          Name: setting.FullName._text,
-          ShortName: setting.Name._text,
-          LanguageName: setting.Language._text,
-          LanguageTag: langIso,
-          CurrentUserRole:
-            setting.Editable._text === 'T' ? 'pt_translator' : '',
-          IsConnectable: setting.Editable._text === 'T',
-          ProjectType: setting.TranslationInfo._text.split(':')[0],
-          BaseProject: setting.TranslationInfo._text.split(':')[2],
-        } as ParatextProject);
-      }
-    });
+  const fileList = (await ipc?.readDir(ptPath)).filter(
+    (n: string) => n.indexOf('.') === -1 && n[0] !== '_'
+  );
+  for (let n of fileList) {
+    const settingsPath = path.join(ptPath, n, 'Settings.xml');
+    const settingsJson = await fileJson(settingsPath);
+    if (settingsJson) {
+      const setting = settingsJson.ScriptureText;
+      const langIso = setting.LanguageIsoCode._text
+        .replace(/::?:?/g, '-')
+        .replace(/-$/, '');
+      pt.push({
+        ParatextId: setting.Guid._text,
+        Name: setting.FullName._text,
+        ShortName: setting.Name._text,
+        LanguageName: setting.Language._text,
+        LanguageTag: langIso,
+        CurrentUserRole: setting.Editable._text === 'T' ? 'pt_translator' : '',
+        IsConnectable: setting.Editable._text === 'T',
+        ProjectType: setting.TranslationInfo._text.split(':')[0],
+        BaseProject: setting.TranslationInfo._text.split(':')[2],
+      } as ParatextProject);
+    }
+  }
   if (projName) {
     pt = pt.filter((p) => p.Name === projName);
   }
@@ -274,8 +277,9 @@ export const getLocalProjects =
       type: PROJECTS_PENDING,
     });
     if (ptPath === '') return;
-    let pts = localProjects(ptPath, languageTag);
-    dispatch({ payload: pts, type: PROJECTS_SUCCESS });
+    localProjects(ptPath, languageTag).then((pts) =>
+      dispatch({ payload: pts, type: PROJECTS_SUCCESS })
+    );
   };
 
 export const resetCount = () => (dispatch: any) => {

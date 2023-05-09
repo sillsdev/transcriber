@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { shallowEqual } from 'react-redux';
 import {
   IState,
   Plan,
@@ -22,8 +22,7 @@ import {
   IPassageDetailStepCompleteStrings,
   StepComplete,
 } from '../model';
-import localStrings from '../selector/localize';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   useFetchMediaUrl,
@@ -43,10 +42,15 @@ import {
 } from '../crud';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
-import { loadBlob, logError, prettySegment, Severity } from '../utils';
+import {
+  loadBlob,
+  logError,
+  prettySegment,
+  Severity,
+  waitForIt,
+} from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
 import * as actions from '../store';
-import { bindActionCreators } from 'redux';
 import JSONAPISource from '@orbit/jsonapi';
 import MediaPlayer from '../components/MediaPlayer';
 import {
@@ -61,39 +65,22 @@ import { UnsavedContext } from './UnsavedContext';
 import { IRegion } from '../crud/useWavesurferRegions';
 import { UpdateLastModifiedBy } from '../model/baseModel';
 import { IMarker } from '../crud/useWaveSurfer';
+import { useSelector } from 'react-redux';
+import {
+  passageDetailStepCompleteSelector,
+  sharedSelector,
+  workflowStepsSelector,
+} from '../selector';
+import { useDispatch } from 'react-redux';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
 };
-
-interface IStateProps {
-  wfStr: IWorkflowStepsStrings;
-  sharedStr: ISharedStrings;
-  stepCompleteStr: IPassageDetailStepCompleteStrings;
-  allBookData: BookName[];
-  booksLoaded: boolean;
-  lang: string;
+export enum PlayInPlayer {
+  no = 0,
+  yes = 1,
+  tryAgain = 2,
 }
-const mapStateToProps = (state: IState): IStateProps => ({
-  wfStr: localStrings(state, { layout: 'workflowSteps' }),
-  sharedStr: localStrings(state, { layout: 'shared' }),
-  stepCompleteStr: localStrings(state, { layout: 'passageDetailStepComplete' }),
-  allBookData: state.books.bookData,
-  booksLoaded: state.books.loaded,
-  lang: state.strings.lang,
-});
-
-interface IDispatchProps {
-  fetchBooks: typeof actions.fetchBooks;
-}
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      fetchBooks: actions.fetchBooks,
-    },
-    dispatch
-  ),
-});
 
 interface IRecordProps {
   passages: Passage[];
@@ -135,6 +122,7 @@ export interface IRow {
   isVernacular: boolean;
   isResource: boolean;
   isComment: boolean;
+  isKeyTerm: boolean;
   isText: boolean;
   sourceVersion: number;
 }
@@ -147,15 +135,22 @@ const initState = {
   passage: {} as Passage,
   section: {} as Section,
   currentstep: '',
+  tool: ToolSlug.Discuss,
   orgWorkflowSteps: [] as OrgWorkflowStep[],
   setOrgWorkflowSteps: (steps: OrgWorkflowStep[]) => {},
   setCurrentStep: (step: string) => {}, //what the user is looking at
   firstStepIndex: -1,
   setFirstStepIndex: (step: number) => {},
   index: 0, //row index?
+  mediafileId: '', //This is the latest vernacular
   selected: '',
-  setSelected: (selected: string) => {},
+  setSelected: (
+    selected: string,
+    inPlayer: PlayInPlayer,
+    rowData?: IRow[]
+  ) => {},
   setMediaSelected: (id: string, start: number, end: number) => {},
+  playerMediafile: undefined as MediaFile | undefined, //passagedetailPlayer id
   playing: false, //vernacular in wavesurfer
   setPlaying: (playing: boolean) => {},
   itemPlaying: false, //resource, bt, retell etc
@@ -167,11 +162,12 @@ const initState = {
   commentPlayId: '',
   setCommentPlayId: (mediaId: string) => {},
   oldVernacularPlayItem: '',
+  oldVernacularStart: 0,
   oldVernacularPlaying: false,
   handleOldVernacularPlayEnd: () => {},
   rowData: Array<IRow>(),
   sharedStr: {} as ISharedStrings,
-  mediafileId: '',
+
   loading: false,
   audioBlob: undefined as Blob | undefined,
   pdBusy: false,
@@ -185,19 +181,22 @@ const initState = {
   stepComplete: (stepId: string) => {
     return false;
   },
-  discussionSize: { width: 450, height: 700 },
+  discussionSize: { width: 450, height: 900 },
   playerSize: 280,
   setDiscussionSize: (size: { width: number; height: number }) => {},
   setPlayerSize: (size: number) => {},
+  chooserSize: 48,
+  setChooserSize: (size: number) => {},
   defaultFilename: '',
   uploadItem: '',
-  recordCb: (planId: string, MediaRemId?: string[]) => {},
   currentSegment: '',
   currentSegmentIndex: -1,
   setCurrentSegment: (segment: IRegion | undefined, index: number) => {}, //replace the above two
   setupLocate: (cb?: (segments: string) => void) => {},
   getCurrentSegment: () => undefined as IRegion | undefined,
   setPlayerSegments: (segments: string) => {},
+  recording: false,
+  setRecording: (recording: boolean) => {},
   commentRecording: false,
   setCommentRecording: (commentRecording: boolean) => {},
   wfStr: {} as IWorkflowStepsStrings,
@@ -211,6 +210,7 @@ const initState = {
   highlightDiscussion: undefined as number | undefined,
   refresh: 0,
   prjId: '',
+  forceRefresh: () => {},
 };
 
 export type ICtxState = typeof initState;
@@ -222,30 +222,35 @@ interface IContext {
 
 const PassageDetailContext = React.createContext({} as IContext);
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+interface IProps {
   children: React.ReactElement;
 }
-interface ParamTypes {
-  prjId: string;
-  pasId: string;
-  mediaId: string;
-}
 const PassageDetailProvider = withData(mapRecordsToProps)(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )((props: IProps) => {
+  (props: IProps & IRecordProps) => {
     const [reporter] = useGlobal('errorReporter');
     const { passages, sections, sectionResources, mediafiles } = props;
     const { artifactTypes, categories, userResources } = props;
     const { workflowSteps, orgWorkflowSteps } = props;
-    const { wfStr, sharedStr, stepCompleteStr } = props;
-    const { lang, allBookData, fetchBooks, booksLoaded } = props;
-    const { pasId, prjId } = useParams<ParamTypes>();
+    const wfStr: IWorkflowStepsStrings = useSelector(
+      workflowStepsSelector,
+      shallowEqual
+    );
+    const sharedStr: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+    const stepCompleteStr: IPassageDetailStepCompleteStrings = useSelector(
+      passageDetailStepCompleteSelector,
+      shallowEqual
+    );
+    const lang = useSelector((state: IState) => state.strings.lang);
+    const allBookData = useSelector((state: IState) => state.books.bookData);
+    const booksLoaded = useSelector((state: IState) => state.books.loaded);
+    const dispatch = useDispatch();
+    const fetchBooks = (lang: string) => dispatch(actions.fetchBooks(lang));
+    const { pasId, prjId } = useParams();
     const [memory] = useGlobal('memory');
     const [coordinator] = useGlobal('coordinator');
     const remote = coordinator.getSource('remote') as JSONAPISource;
     const [user] = useGlobal('user');
+    const [org] = useGlobal('organization');
     const [errorReporter] = useGlobal('errorReporter');
     const [saveResult, setSaveResult] = useGlobal('saveResult');
     const [confirm, setConfirm] = useState('');
@@ -256,7 +261,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       ...initState,
       allBookData,
       wfStr,
-      prjId,
+      prjId: prjId ?? '',
     });
     const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
     const fetching = useRef('');
@@ -271,36 +276,47 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const mediaEnd = useRef<number | undefined>();
     const mediaPosition = useRef<number | undefined>();
     const currentSegmentRef = useRef<IRegion | undefined>();
-    const { startSave, clearChanged, waitForSave } =
+    const { startSave, startClear, waitForSave } =
       useContext(UnsavedContext).state;
     const [plan] = useGlobal('plan');
     const highlightRef = useRef<number>();
     const refreshRef = useRef<number>(0);
     const settingSegmentRef = useRef(false);
+    const inPlayerRef = useRef<string>();
 
     const handleSetCurrentStep = (stepId: string) => {
       var step = state.orgWorkflowSteps.find((s) => s.id === stepId);
+      var tool = getTool(step?.attributes?.tool) as ToolSlug;
       setCurrentSegment(undefined, 0);
       setState((state: ICtxState) => {
         return {
           ...state,
           currentstep: stepId,
+          tool,
           playing: false,
           itemPlaying: false,
           commentPlaying: false,
+          oldVernacularPlaying: false,
           playItem: '',
           commentPlayId: '',
+          oldVernacularPlayItem: '',
         };
       });
-      if (step && getTool(step.attributes?.tool) !== ToolSlug.Resource) {
+
+      if (step && tool !== ToolSlug.Resource && tool !== ToolSlug.Transcribe) {
         //this does a bunch of stuff...don't just set it in the state above...
-        if (state.rowData.length > 0 && state.rowData[0].isVernacular)
-          setSelected(state.rowData[0].id);
-        else setSelected('');
+        if (state.rowData.length > 0 && state.rowData[0].isVernacular) {
+          setSelected(state.rowData[0].id, PlayInPlayer.yes);
+        } else setSelected('', PlayInPlayer.yes);
       }
       segmentsCb.current = undefined;
     };
-
+    const forceRefresh = () => {
+      refreshRef.current = refreshRef.current + 1;
+      setState((state: ICtxState) => {
+        return { ...state, refresh: refreshRef.current };
+      });
+    };
     const setCurrentStep = (stepId: string) => {
       if (changed) {
         setConfirm(stepId);
@@ -327,9 +343,11 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     };
 
     const handleRefuseStep = () => {
-      clearChanged();
-      handleSetCurrentStep(confirm);
-      setConfirm('');
+      startClear();
+      waitForSave(() => {
+        handleSetCurrentStep(confirm);
+        setConfirm('');
+      }, 400);
     };
 
     const setDiscussionSize = (discussionSize: {
@@ -347,26 +365,60 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       });
     };
 
-    const setCommentRecording = (commentRecording: boolean) => {
+    const setChooserSize = (chooserSize: number) => {
       setState((state: ICtxState) => {
-        return { ...state, commentRecording };
+        return { ...state, chooserSize };
       });
     };
 
-    //this is for the vernacular only
+    const setRecording = (recording: boolean) => {
+      setState((state: ICtxState) => {
+        return {
+          ...state,
+          playing: false, //stop the vernacular
+          itemPlaying: false,
+          commentPlaying: false,
+          oldVernacularPlaying: false,
+          recording,
+        };
+      });
+    };
+    const setCommentRecording = (commentRecording: boolean) => {
+      setState((state: ICtxState) => {
+        return {
+          ...state,
+          playing: false, //stop the vernacular
+          itemPlaying: false,
+          commentPlaying: false,
+          oldVernacularPlaying: false,
+          commentRecording,
+        };
+      });
+    };
+
+    //this is for the PD Player only
     const setPlaying = (playing: boolean) => {
-      if (playing !== state.playing) {
+      //if this is called from a callback, we don't know the state
+      //if (playing !== state.playing) {
+      if (playing)
         setState((state: ICtxState) => {
           return {
             ...state,
             playing,
-            itemPlaying: playing ? false : state.itemPlaying,
-            commentPlaying: playing ? false : state.commentPlaying,
-            oldVernacularPlaying: playing ? false : state.oldVernacularPlaying,
-            oldVernacularPlayItem: playing ? '' : state.oldVernacularPlayItem,
+            itemPlaying: false,
+            commentPlaying: false,
+            oldVernacularPlaying: false,
+            oldVernacularPlayItem: '',
+            oldVernacularStart: 0,
           };
         });
-      }
+      else
+        setState((state: ICtxState) => {
+          return {
+            ...state,
+            playing,
+          };
+        });
     };
     const setItemPlaying = (itemPlaying: boolean) => {
       if (itemPlaying !== state.itemPlaying) {
@@ -382,6 +434,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             oldVernacularPlayItem: itemPlaying
               ? ''
               : state.oldVernacularPlayItem,
+            oldVernacularStart: itemPlaying ? 0 : state.oldVernacularStart,
           };
         });
       }
@@ -430,6 +483,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           ...state,
           oldVernacularPlaying: false,
           oldVernacularPlayItem: '',
+          oldVernacularStart: 0,
         };
       });
     };
@@ -495,7 +549,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       });
       const recId = {
         type: 'passage',
-        id: remoteIdGuid('passage', pasId, memory.keyMap) || pasId,
+        id: remoteIdGuid('passage', pasId ?? '', memory.keyMap) || pasId || '',
       };
       var tb = new TransformBuilder();
       var ops = [] as Operation[];
@@ -537,9 +591,14 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       );
     };
 
-    const setSelected = (selected: string, rowData: IRow[] = state.rowData) => {
+    const setSelected = (
+      selected: string,
+      inPlayer: PlayInPlayer,
+      rowData: IRow[] = state.rowData
+    ) => {
       let i = rowData.findIndex((r) => r.mediafile.id === selected);
       let newRows: IRow[] = [];
+
       if (i < 0) {
         const media = mediafiles.find((m) => m.id === selected);
         if (media) {
@@ -558,12 +617,16 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           i = newRows.length - 1;
         } else {
           oldVernReset();
+          fetchMediaUrl({
+            id: '',
+          });
           setState((state: ICtxState) => {
             return {
               ...state,
               audioBlob: undefined,
               index: -1,
               selected,
+              playerMediafile: undefined,
               playing: false,
               itemPlaying: false,
               commentPlaying: false,
@@ -577,12 +640,15 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       }
       const r = rowData[i];
       var resetBlob = false;
+      //we've gotten a 403 and requeried so selected hasn't changed
+      if (inPlayer === PlayInPlayer.tryAgain)
+        inPlayer =
+          state.playerMediafile?.id === r.mediafile.id
+            ? PlayInPlayer.yes
+            : PlayInPlayer.no;
       //if this is a file that will be played in the wavesurfer..fetch it
-      if (
-        (r.isVernacular && i === 0) ||
-        r.artifactType ===
-          localizedArtifactType(ArtifactTypeSlug.ProjectResource)
-      ) {
+      if (inPlayer === PlayInPlayer.yes) {
+        inPlayerRef.current = r.mediafile.id;
         if (
           mediaState.id !== r.mediafile.id &&
           fetching.current !== r.mediafile.id
@@ -595,20 +661,22 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         }
 
         if (resetBlob) currentSegmentRef.current = undefined;
+        var rows = newRows.length > 0 ? newRows : rowData;
         setState((state: ICtxState) => {
           return {
             ...state,
             audioBlob: resetBlob ? undefined : state.audioBlob,
             index: i,
             selected,
+            playerMediafile: rows[i].mediafile,
             playing: false,
             loading: fetching.current !== '',
-            rowData: newRows.length > 0 ? newRows : rowData,
+            rowData: rows,
             currentSegment: resetBlob ? '' : state.currentSegment,
             currentSegmentIndex: resetBlob ? 0 : state.currentSegmentIndex,
           };
         });
-      } else if (r.isVernacular) {
+      } else if (mediaStart.current !== undefined && !r.isResource) {
         //play just the segment of an old one
         setState((state: ICtxState) => {
           return {
@@ -619,10 +687,11 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             commentPlaying: false,
             itemPlaying: false,
             oldVernacularPlayItem: r.mediafile.id,
+            oldVernacularStart: mediaStart.current || 0,
             rowData: newRows.length > 0 ? newRows : rowData,
           };
         });
-      } else if (r.isComment) {
+      } else if (r.isComment || r.isKeyTerm) {
         setState((state: ICtxState) => {
           return {
             ...state,
@@ -679,11 +748,11 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const setMediaSelected = (id: string, start: number, end: number) => {
       mediaStart.current = start;
       mediaEnd.current = end;
-      setSelected(id, state.rowData);
+      setSelected(id, PlayInPlayer.no, state.rowData);
     };
 
     const handleDuration = (duration: number) => {
-      if (mediaStart.current) {
+      if (mediaStart.current !== undefined) {
         mediaPosition.current = mediaStart.current;
         mediaStart.current = undefined;
         setState((state: ICtxState) => {
@@ -743,7 +812,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     };
 
     useEffect(() => {
-      const passageId = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
+      const passageId =
+        remoteIdGuid('passage', pasId ?? '', memory.keyMap) || pasId || '';
       var p = passages.find((p) => p.id === passageId);
       if (p) {
         const complete = getStepComplete(p);
@@ -798,7 +868,17 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             if (!b) {
               if (urlOrError.includes('403')) {
                 //force requery for new media url
-                setSelected(state.selected);
+                fetchMediaUrl({
+                  id: '',
+                });
+                waitForIt(
+                  'requery url',
+                  () => mediaState.id === '',
+                  () => false,
+                  500
+                ).then(() => {
+                  setSelected(state.selected, PlayInPlayer.tryAgain);
+                });
               } else {
                 //no blob
                 showMessage(urlOrError);
@@ -814,7 +894,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
               return;
             }
             //not sure what this intermediary file is, but causes console errors
-            if (b.type !== 'text/html') {
+            if (b.type !== 'text/html' && b.type !== 'application/xml') {
               if (urlOrError === mediaUrlRef.current) {
                 setState((state: ICtxState) => {
                   return {
@@ -861,32 +941,46 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     }, [saveResult]);
 
     useEffect(() => {
-      const passageId = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
+      const passageId =
+        remoteIdGuid('passage', pasId ?? '', memory.keyMap) || pasId || '';
       const allMedia = getAllMediaRecs(passageId, memory);
       const localize = {
         localizedCategory: localizedArtifactCategory,
         localizedType: localizedArtifactType,
       };
-      let newData = mediaRows({
-        ...props,
-        mediafiles: allMedia,
-        user,
-        ...localize,
+      getProjectResources().then((pres) => {
+        let newData = mediaRows({
+          ...props,
+          mediafiles: allMedia.concat(pres),
+          user,
+          ...localize,
+        });
+        const passRec = passages.find((p) => p.id === passageId);
+        const sectId = related(passRec, 'section');
+        let res = getResources(sectionResources, mediafiles, sectId);
+        newData = newData.concat(
+          resourceRows({ ...props, res, user, ...localize }).sort((i, j) =>
+            i.done === j.done ? i.sequenceNum - j.sequenceNum : i.done ? 1 : -1
+          )
+        );
+
+        const mediafileId =
+          newData.length > 0 && newData[0].isVernacular ? newData[0].id : '';
+        var i = state.selected
+          ? newData.findIndex((r) => r.mediafile.id === state.selected)
+          : state.index;
+        setState((state: ICtxState) => {
+          return { ...state, rowData: newData, index: i, mediafileId };
+        });
+
+        if (
+          state.tool !== ToolSlug.Resource &&
+          state.tool !== ToolSlug.Transcribe &&
+          mediafileId !== state.playerMediafile?.id
+        ) {
+          setSelected(mediafileId, PlayInPlayer.yes, newData);
+        }
       });
-      const passRec = passages.find((p) => p.id === passageId);
-      const sectId = related(passRec, 'section');
-      let res = getResources(sectionResources, mediafiles, sectId);
-      newData = newData.concat(
-        resourceRows({ ...props, res, user, ...localize }).sort((i, j) =>
-          i.done === j.done ? i.sequenceNum - j.sequenceNum : i.done ? 1 : -1
-        )
-      );
-      const mediafileId =
-        newData.length > 0 && newData[0].isVernacular ? newData[0].id : '';
-      setState((state: ICtxState) => {
-        return { ...state, rowData: newData, mediafileId };
-      });
-      if (mediafileId && state.index === 0) setSelected(mediafileId, newData);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sectionResources, mediafiles, pasId, userResources]);
 
@@ -918,7 +1012,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [plan, orgWorkflowSteps, workflowSteps]);
+    }, [plan, orgWorkflowSteps, workflowSteps, org]);
 
     useEffect(() => {
       const wf: SimpleWf[] = state.orgWorkflowSteps.map((s) => ({
@@ -956,6 +1050,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setFirstStepIndex,
             setDiscussionSize,
             setPlayerSize,
+            setChooserSize,
             setPlaying,
             setItemPlaying,
             setPlayItem,
@@ -970,6 +1065,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             setupLocate,
             stepComplete,
             setStepComplete,
+            setRecording,
             setCommentRecording,
             setMediaSelected,
             handleItemPlayEnd,
@@ -979,6 +1075,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
             handleOldVernacularPlayEnd,
             setDiscussionMarkers,
             handleHighlightDiscussion,
+            forceRefresh,
           },
           setState,
         }}
@@ -1005,7 +1102,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         )}
       </PassageDetailContext.Provider>
     );
-  })
+  }
 );
 
 export { PassageDetailContext, PassageDetailProvider };

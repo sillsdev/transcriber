@@ -35,4 +35,9 @@ export const StyledMenuItem = styled(MenuItem)<MenuItemProps>(({ theme }) => ({
       color: theme.palette.common.white,
     },
   },
+  '& .MuiSvgIcon-root': {
+    width: '24px',
+    height: '24px',
+    color: theme.palette.secondary.light,
+  },
 }));

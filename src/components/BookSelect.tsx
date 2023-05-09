@@ -10,7 +10,7 @@ export interface OptionType {
 type KeyEvent = React.KeyboardEvent<Element>;
 
 interface IProps {
-  value: OptionType;
+  value?: OptionType;
   suggestions: OptionType[];
   placeHolder?: string;
   onCommit: (newValue: string, e?: KeyEvent) => void;

@@ -1,6 +1,11 @@
 import { useGlobal } from 'reactn';
 import { TransformBuilder } from '@orbit/data';
-import { User, OrganizationMembership, GroupMembership } from '../model';
+import {
+  User,
+  OrganizationMembership,
+  GroupMembership,
+  RoleNames,
+} from '../model';
 import { useRole, allUsersRec } from '.';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 
@@ -8,16 +13,15 @@ export const useAddToOrgAndGroup = () => {
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
-  const { getRoleRec } = useRole();
+  const { getRoleId } = useRole();
 
   return (userRec: User, newRec: boolean) => {
     const addMemberships = () => {
       let orgMember: OrganizationMembership = {
         type: 'organizationmembership',
       } as any;
-      const memberRec = getRoleRec('member', true)[0];
+      const memberId = getRoleId(RoleNames.Member);
       const allUsersGroup = allUsersRec(memory, organization);
-      const editorRec = getRoleRec('editor', false)[0];
       let groupMbr: GroupMembership = {
         type: 'groupmembership',
       } as any;
@@ -31,7 +35,7 @@ export const useAddToOrgAndGroup = () => {
           'organization',
           organization
         ),
-        ...ReplaceRelatedRecord(t, orgMember, 'role', 'role', memberRec.id),
+        ...ReplaceRelatedRecord(t, orgMember, 'role', 'role', memberId),
       ]);
       memory.update((t: TransformBuilder) => [
         ...AddRecord(t, groupMbr, user, memory),
@@ -40,10 +44,10 @@ export const useAddToOrgAndGroup = () => {
           t,
           groupMbr,
           'group',
-          'role',
+          'group',
           allUsersGroup?.id
         ),
-        ...ReplaceRelatedRecord(t, groupMbr, 'role', 'role', editorRec.id),
+        ...ReplaceRelatedRecord(t, groupMbr, 'role', 'role', memberId),
       ]);
     };
     if (newRec) {

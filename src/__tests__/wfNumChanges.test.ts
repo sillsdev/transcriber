@@ -1,4 +1,4 @@
-import { IWorkflow, IwfKind } from '../model';
+import { IWorkflow, IwfKind, IMediaShare } from '../model';
 import { wfNumChanges } from '../components/Workflow';
 
 const workflow: IWorkflow[] = [
@@ -13,6 +13,7 @@ const workflow: IWorkflow[] = [
     transcriber: undefined,
     editor: undefined,
     deleted: false,
+    mediaShared: IMediaShare.NotPublic,
   },
   {
     level: 1,
@@ -25,6 +26,7 @@ const workflow: IWorkflow[] = [
     passageUpdated: '2021-09-15',
     passageId: { type: 'passage', id: 'pa1' },
     deleted: false,
+    mediaShared: IMediaShare.NotPublic,
   },
   {
     level: 1,
@@ -37,6 +39,7 @@ const workflow: IWorkflow[] = [
     passageUpdated: '2021-09-16',
     passageId: { type: 'passage', id: 'pa2' },
     deleted: false,
+    mediaShared: IMediaShare.NotPublic,
   },
   {
     level: 1,
@@ -49,6 +52,7 @@ const workflow: IWorkflow[] = [
     passageUpdated: '2021-09-15',
     passageId: { type: 'passage', id: 'pa3' },
     deleted: false,
+    mediaShared: IMediaShare.NotPublic,
   },
   {
     level: 0,
@@ -61,6 +65,7 @@ const workflow: IWorkflow[] = [
     transcriber: undefined,
     editor: undefined,
     deleted: false,
+    mediaShared: IMediaShare.NotPublic,
   },
   {
     level: 1,
@@ -73,6 +78,7 @@ const workflow: IWorkflow[] = [
     passageUpdated: '2021-09-15',
     passageId: { type: 'passage', id: 'pa4' },
     deleted: false,
+    mediaShared: IMediaShare.NotPublic,
   },
 ];
 
@@ -106,6 +112,7 @@ test('section and passages count separately in flat', () => {
       transcriber: undefined,
       editor: undefined,
       deleted: false,
+      mediaShared: IMediaShare.NotPublic,
     },
   ];
 

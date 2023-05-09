@@ -3,10 +3,10 @@ import { IAxiosStatus } from '../store/AxiosStatus';
 import React from 'react';
 
 const translateParatextReferenceError = (
-  err: IAxiosStatus,
+  errMsg: string,
   t: ISharedStrings
 ): JSX.Element => {
-  const errs = err.errMsg.split('||');
+  const errs = errMsg.split('||');
   let localizedErr: JSX.Element[] = [];
   errs.forEach((referr) => {
     var parts = referr.split('|');
@@ -59,10 +59,14 @@ export const translateParatextError = (
     )
       return t.expiredParatextToken;
     if (err.errMsg.includes('logged in')) return t.invalidParatextLogin;
-    if (err.errMsg.includes('ReferenceError')) {
-      return translateParatextReferenceError(err, t);
-    }
   }
-  if (err.errMsg.includes('no range')) return t.referenceNotFound;
-  return err.errMsg;
+  return translateParatextErr(err.errMsg, t);
+};
+export const translateParatextErr = (errMsg: string, t: ISharedStrings) => {
+  if (errMsg.includes('ReferenceError')) {
+    return translateParatextReferenceError(errMsg, t);
+  }
+  if (errMsg.includes('no range')) return t.referenceNotFound;
+  if (errMsg.includes('does not contain the book')) return t.bookNotFound;
+  return errMsg;
 };

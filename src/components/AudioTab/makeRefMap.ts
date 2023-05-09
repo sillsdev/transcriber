@@ -1,4 +1,5 @@
 import { IRow, IPRow, IAttachMap } from '.';
+import { BookName } from '../../model';
 
 export interface IMatchData {
   terms?: string[];
@@ -7,7 +8,11 @@ export interface IMatchData {
   attachMap: IAttachMap;
 }
 
-export const makeMatchMap = (pat: string, matchData: IMatchData) => {
+export const makeMatchMap = (
+  pat: string,
+  matchData: IMatchData,
+  books: BookName[]
+) => {
   const { terms, data, pdata, attachMap } = matchData;
   if (pdata.length === 0 || data.length === 0) return;
   const rpat = new RegExp(pat);
@@ -33,6 +38,11 @@ export const makeMatchMap = (pat: string, matchData: IMatchData) => {
                 if (parseInt(val) !== r.pasNum) fail = true;
               } else if (t === 'BOOK') {
                 if (val !== r.book) fail = true;
+              } else if (t === 'BOOKNAME') {
+                var b = books.filter(
+                  (b) => b.long.toUpperCase() === val.toUpperCase()
+                );
+                if (b.length === 0 || b[0].code !== r.book) fail = true;
               } else if (t === 'CHAP') {
                 if (parseInt(val) !== r.chap) fail = true;
               } else if (t === 'BEG') {

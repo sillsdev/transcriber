@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { IState, IMediaUploadStrings } from '../model';
-import localStrings from '../selector/localize';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import React, { useEffect, useRef, useState } from 'react';
+import { shallowEqual, useSelector } from 'react-redux';
+import { IMediaUploadStrings } from '../model';
 import {
   Button,
   Dialog,
@@ -10,52 +8,37 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Typography,
-} from '@material-ui/core';
-import path from 'path';
+  styled,
+} from '@mui/material';
+import path from 'path-browserify';
 import { useSnackBar } from '../hoc/SnackBar';
 import SpeakerName from './SpeakerName';
+import { mediaUploadSelector } from '../selector';
+import { API_CONFIG } from '../api-variable';
 
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    label: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexGrow: 1,
-      backgroundColor: theme.palette.grey[500],
-      border: 'none',
-      padding: theme.spacing(2),
-    },
-    drop: {
-      borderWidth: '1px',
-      borderStyle: 'dashed',
-      borderColor: theme.palette.secondary.light,
-      padding: theme.spacing(1),
-      margin: theme.spacing(1),
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 400,
-    },
-    menu: {
-      width: 300,
-    },
-    formTextInput: {
-      fontSize: 'small',
-    },
-    formTextLabel: {
-      fontSize: 'small',
-    },
-  })
-);
+const MyLabel = styled('label')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  flexGrow: 1,
+  backgroundColor: theme.palette.grey[500],
+  border: 'none',
+  padding: theme.spacing(2),
+}));
 
-interface IStateProps {
-  t: IMediaUploadStrings;
-}
+const Drop = styled('div')(({ theme }) => ({
+  borderWidth: '1px',
+  borderStyle: 'dashed',
+  borderColor: theme.palette.secondary.light,
+  padding: theme.spacing(1),
+  margin: theme.spacing(1),
+}));
+
+const HiddenInput = styled('input')(({ theme }) => ({
+  display: 'none',
+}));
 
 export enum UploadType {
   Media = 0,
@@ -66,8 +49,21 @@ export enum UploadType {
   ProjectResource = 5,
   IntellectualProperty = 6,
 }
+const PROJECTRESOURCE_SIZELIMIT = 50;
+const NO_SIZELIMIT = 10000;
 
-interface ITargetProps extends IStateProps {
+export const SIZELIMIT = (uploadType: UploadType) => {
+  switch (uploadType) {
+    case UploadType.ProjectResource:
+      return PROJECTRESOURCE_SIZELIMIT;
+    case UploadType.ITF:
+    case UploadType.PTF:
+      return NO_SIZELIMIT;
+    default:
+      return parseInt(API_CONFIG.sizeLimit);
+  }
+};
+interface ITargetProps {
   name: string;
   acceptextension: string;
   acceptmime: string;
@@ -76,10 +72,9 @@ interface ITargetProps extends IStateProps {
 }
 
 const DropTarget = (targetProps: ITargetProps) => {
-  const { name, multiple, acceptextension, acceptmime, handleFiles, t } =
+  const { name, multiple, acceptextension, acceptmime, handleFiles } =
     targetProps;
-  const classes = useStyles();
-  const inputStyle = { display: 'none' };
+  const t: IMediaUploadStrings = useSelector(mediaUploadSelector, shallowEqual);
 
   const handleNameChange = (
     e: React.FormEvent<HTMLInputElement | HTMLLabelElement>
@@ -93,24 +88,17 @@ const DropTarget = (targetProps: ITargetProps) => {
   const handleDrop = (files: FileList) => {
     handleFiles(files);
   };
-
   return process.env.NODE_ENV !== 'test' ? (
     <FileDrop onDrop={handleDrop}>
-      <label
-        id="file"
-        className={classes.label}
-        htmlFor="upload"
-        onChange={handleNameChange}
-      >
+      <MyLabel id="file" htmlFor="upload" onChange={handleNameChange}>
         {name === ''
           ? multiple
             ? t.dragDropMultiple
             : t.dragDropSingle
           : name}
-      </label>
-      <input
+      </MyLabel>
+      <HiddenInput
         id="upload"
-        style={inputStyle}
         type="file"
         accept={acceptextension}
         multiple={multiple}
@@ -119,21 +107,15 @@ const DropTarget = (targetProps: ITargetProps) => {
     </FileDrop>
   ) : (
     <div>
-      <label
-        id="file"
-        className={classes.label}
-        htmlFor="upload"
-        onChange={handleNameChange}
-      >
+      <MyLabel id="file" htmlFor="upload" onChange={handleNameChange}>
         {name === ''
           ? multiple
             ? t.dragDropMultiple
             : t.dragDropSingle
           : name}
-      </label>
-      <input
+      </MyLabel>
+      <HiddenInput
         id="upload"
-        style={inputStyle}
         type="file"
         accept={acceptmime}
         multiple={multiple}
@@ -143,7 +125,7 @@ const DropTarget = (targetProps: ITargetProps) => {
   );
 };
 
-interface IProps extends IStateProps {
+interface IProps {
   visible: boolean;
   onVisible: (v: boolean) => void;
   uploadType: UploadType;
@@ -160,7 +142,6 @@ interface IProps extends IStateProps {
 
 function MediaUpload(props: IProps) {
   const {
-    t,
     visible,
     onVisible,
     uploadType,
@@ -174,13 +155,15 @@ function MediaUpload(props: IProps) {
     createProject,
     team,
   } = props;
-  const classes = useStyles();
   const [name, setName] = useState('');
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFilesx] = useState<File[]>([]);
+  const filesRef = useRef(files);
   const { showMessage } = useSnackBar();
   const [acceptextension, setAcceptExtension] = useState('');
+  const [sizeLimit, setSizeLimit] = useState(0);
   const [acceptmime, setAcceptMime] = useState('');
   const [hasRights, setHasRight] = useState(!onSpeaker || Boolean(speaker));
+  const t: IMediaUploadStrings = useSelector(mediaUploadSelector, shallowEqual);
   const title = [
     t.title,
     t.resourceTitle,
@@ -214,12 +197,33 @@ function MediaUpload(props: IProps) {
     }
     onVisible(false);
   };
+  const setFiles = (f: File[]) => {
+    filesRef.current = f;
+    setFilesx(f);
+  };
   const fileName = (files: File[]) => {
-    return files.length === 1
+    return files.length === 0
+      ? ''
+      : files.length === 1
       ? files[0].name
       : files.length.toString() + ' files selected';
   };
-
+  const checkSizes = (files: File[], sizelimit: number) => {
+    var smallenoughfiles = Array.from(
+      files.filter((s) => s.size <= sizelimit * 1000000)
+    );
+    if (smallenoughfiles.length < files.length) {
+      var rejectedFiles = Array.from(files).filter(
+        (s) => s.size > sizelimit * 1000000
+      );
+      showMessage(
+        t.toobig
+          .replace('{0}', rejectedFiles.map((f) => f.name).join(', '))
+          .replace('{1}', sizelimit.toString())
+      );
+    }
+    return smallenoughfiles;
+  };
   const handleFiles = (files: FileList | undefined) => {
     if (files) {
       var goodFiles = Array.from(files).filter((s) =>
@@ -241,6 +245,7 @@ function MediaUpload(props: IProps) {
           )
         );
       }
+      goodFiles = checkSizes(goodFiles, sizeLimit);
       setName(fileName(goodFiles));
       setFiles(goodFiles);
     } else {
@@ -277,6 +282,14 @@ function MediaUpload(props: IProps) {
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf, image/png, image/jpeg',
       ].map((s) => s)[uploadType]
     );
+    var size = SIZELIMIT(uploadType);
+    setSizeLimit(size);
+    if (filesRef.current.length > 0) {
+      var goodFiles = checkSizes(filesRef.current, size);
+      setName(fileName(goodFiles));
+      setFiles(goodFiles);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadType]);
 
   return (
@@ -294,14 +307,14 @@ function MediaUpload(props: IProps) {
           </DialogContentText>
           {onSpeaker && uploadType === UploadType.Media && (
             <SpeakerName
-              name={speaker || ''}
+              name={hasRights ? speaker || '' : ''}
               onRights={handleRights}
               onChange={handleSpeaker}
               createProject={createProject}
               team={team}
             />
           )}
-          <div className={classes.drop}>
+          <Drop>
             {hasRights ? (
               <DropTarget
                 name={name}
@@ -309,12 +322,11 @@ function MediaUpload(props: IProps) {
                 acceptextension={acceptextension}
                 acceptmime={acceptmime}
                 multiple={multiple}
-                t={t}
               />
             ) : (
-              <Typography className={classes.label}>{'\u00A0'}</Typography>
+              <MyLabel>{'\u00A0'}</MyLabel>
             )}
-          </div>
+          </Drop>
           {metaData}
         </DialogContent>
         <DialogActions>
@@ -343,8 +355,4 @@ function MediaUpload(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'mediaUpload' }),
-});
-
-export default connect(mapStateToProps)(MediaUpload) as any;
+export default MediaUpload;

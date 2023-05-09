@@ -1,39 +1,24 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { Route, Redirect, RouteProps } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { TokenContext } from '../context/TokenProvider';
-import { LocalKey, localUserKey } from '../utils';
+import { LocalKey, localUserKey, useMyNavigate } from '../utils';
 
-interface IProps extends RouteProps {
-  children: JSX.Element;
+interface IProps {
+  el: JSX.Element;
 }
 
-export function PrivateRoute({ children, ...rest }: IProps) {
+export function PrivateRoute({ el }: IProps) {
   const [offline] = useGlobal('offline');
-  const { isAuthenticated } = useContext(TokenContext).state;
+  const { pathname } = useLocation();
+  const navigate = useMyNavigate();
+  const { authenticated } = useContext(TokenContext).state;
 
-  return (
-    <Route
-      {...rest}
-      render={({ location }) => {
-        if (offline || isAuthenticated()) return children;
-        if (typeof location?.pathname === 'string')
-          localStorage.setItem(
-            localUserKey(LocalKey.deeplink),
-            location?.pathname
-          );
-        if (!location?.pathname?.endsWith('null'))
-          localStorage.setItem(localUserKey(LocalKey.url), location?.pathname);
-        return (
-          <Redirect
-            to={{
-              pathname: '/',
-              state: { from: location },
-            }}
-          />
-        );
-      }}
-    />
-  );
+  if (!pathname?.endsWith('null') && pathname !== '/loading')
+    localStorage.setItem(localUserKey(LocalKey.url), pathname);
+  if (!offline && !authenticated())
+    navigate('/', { state: { from: pathname } });
+
+  return el;
 }
 export default PrivateRoute;

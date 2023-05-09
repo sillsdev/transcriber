@@ -9,6 +9,7 @@ export interface Organization extends Record {
     websiteUrl: string | null;
     logoUrl: string | null;
     publicByDefault: boolean;
+    clusterbase: boolean;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
@@ -17,6 +18,7 @@ export interface Organization extends Record {
   relationships?: {
     owner: RecordRelationship;
     groups: RecordRelationship;
+    cluster: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
 }

@@ -13,6 +13,7 @@ import Coordinator, {
   LogLevel,
   EventLoggingStrategy,
 } from '@orbit/coordinator';
+import Bugsnag from '@bugsnag/js';
 import IndexedDBSource from '@orbit/indexeddb';
 import IndexedDBBucket from '@orbit/indexeddb-bucket';
 import JSONAPISource from '@orbit/jsonapi';
@@ -277,9 +278,7 @@ export const Sources = async (
       memory,
       backup,
       0,
-      fingerprint,
       0,
-      '',
       '',
       '',
       getOfflineProject
@@ -305,6 +304,7 @@ export const Sources = async (
     setLang(locale);
     localStorage.setItem('user-id', user.id);
     localStorage.setItem('online-user-id', user.id);
+    Bugsnag.setUser(user.keys?.remoteId ?? user.id);
   }
   var user = localStorage.getItem('user-id') as string;
   setUser(user);

@@ -31,7 +31,7 @@
       "windows": {
         "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
       },
-      "args": ["./public/electron-debug.js"],
+      "args": ["./public/electron.js"],
       "outputCapture": "std",
       "protocol": "inspector"
     },
@@ -40,7 +40,7 @@
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceRoot}",
-      "args": ["public/electron-debug.js"],
+      "args": ["public/electron.js"],
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
       "windows": {
         "runtimeExecutable": "${workspaceRoot}\\node_modules\\.bin\\electron.cmd"
@@ -48,7 +48,7 @@
       "preLaunchTask": "DebugMode",
       "runtimeArgs": [
         "--remote-debugging-port=9223",
-        "./public/electron-debug.js"
+        "./public/electron.js"
       ],
       "postDebugTask": "end serve",
       "env": {
@@ -82,7 +82,6 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "env": { "CI": "true" },
-      "disableOptimisticBPs": true
     }
   ],
   "compounds": [

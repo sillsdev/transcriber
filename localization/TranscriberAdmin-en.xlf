@@ -532,6 +532,48 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.copyComplete">
+         <segment>
+            <source>Copy Complete {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.copyNew">
+         <segment>
+            <source>Copy project to new team.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.copySame">
+         <segment>
+            <source>Copy project to same team.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.copyStatus">
+         <segment>
+            <source>Copy to {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.creatorAdd">
+         <segment>
+            <source>Add Shared Content Creator</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.creatorEmail">
+         <segment>
+            <source>Email</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.creatorOK">
+         <segment>
+            <source>User has been given Creator permission.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.delete">
          <segment>
             <source>Delete</source>
@@ -606,7 +648,25 @@
       </unit>
       <unit id="cards.OBT">
          <segment>
-            <source>Oral Bible Translation</source>
+            <source>Oral Bible Translation (complete)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.OBTs">
+         <segment>
+            <source>Oral Bible Translation (Simple)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.OBTr">
+         <segment>
+            <source>Oral Bible Translation (like Render)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.OBTo">
+         <segment>
+            <source>Oral Bible Translation (oral only)</source>
             <target/>
          </segment>
       </unit>
@@ -736,6 +796,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="commentEditor.comment">
+         <segment>
+            <source>Comment</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="commentEditor.record">
          <segment>
             <source>Record Comment</source>
@@ -856,6 +922,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="control.book">
+         <segment>
+            <source>Book</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="control.other">
          <segment>
             <source>General</source>
@@ -888,7 +960,7 @@
       </unit>
       <unit id="discussionCard.addComment">
          <segment>
-            <source>Add Comment</source>
+            <source>Add</source>
             <target/>
          </segment>
       </unit>
@@ -958,6 +1030,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="discussionCard.move">
+         <segment>
+            <source>Select step for discussion</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="discussionCard.or">
          <segment>
             <source>or</source>
@@ -1018,12 +1096,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="discussionList.saveFilter">
-         <segment>
-            <source>Save as the Team default?</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="discussionList.saveFirst">
          <segment>
             <source>Save changed discussions and comments first?</source>
@@ -1045,6 +1117,12 @@
       <unit id="discussionMenu.edit">
          <segment>
             <source>Edit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionMenu.move">
+         <segment>
+            <source>Move</source>
             <target/>
          </segment>
       </unit>
@@ -1240,6 +1318,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="filterMenu.saveFilter">
+         <segment>
+            <source>Save as team default</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="grid.all">
          <segment>
             <source>All</source>
@@ -1369,138 +1453,6 @@
       <unit id="grid.sum">
          <segment>
             <source>Sum</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.add">
-         <segment>
-            <source>Ok</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.addGroupMember">
-         <segment>
-            <source>Choose {0}</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.addMemberInstruction">
-         <segment>
-            <source>Choose a person who will act as a {0} for audio projects in this group.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.allReviewersCanTranscribe">
-         <segment>
-            <source>All Editors are allowed to transcribe.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.assignedSections">
-         <segment>
-            <source>  Assigned {0}: </source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.cancel">
-         <segment>
-            <source>Cancel</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.delete">
-         <segment>
-            <source>Delete</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.editors">
-         <segment>
-            <source>Editors</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.editorsDetail">
-         <segment>
-            <source>(Review + Transcribe)</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.loadingTable">
-         <segment>
-            <source>Loading data</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.name">
-         <segment>
-            <source>Name</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.noDeleteAdmin">
-         <segment>
-            <source>The only Administrator cannot be deleted.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.noDeleteAllUsersInfo">
-         <segment>
-            <source>Cannot delete members from the All Members group</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.noDeleteInfo">
-         <segment>
-            <source>This role is included in a higher role and cannot be deleted.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.owners">
-         <segment>
-            <source>Owners</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.ownersDetail">
-         <segment>
-            <source>(Manage + Review + Transcribe)</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.projectPlans">
-         <segment>
-            <source>Audio Project Plans</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.roles">
-         <segment>
-            <source>Roles:{0}</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.save">
-         <segment>
-            <source>Save</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.transcribers">
-         <segment>
-            <source>Transcribers</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.transcribersDetail">
-         <segment>
-            <source>(Transcribe)</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="groupSettings.transcriptionTitle">
-         <segment>
-            <source>Users in Transcription Roles</source>
             <target/>
          </segment>
       </unit>
@@ -2086,18 +2038,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.groupRole">
-         <segment>
-            <source>Audio Project Role</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="invite.groups">
-         <segment>
-            <source>Audio Project</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="invite.instructions">
          <segment>
             <source>Please click the following link to accept the invitation:</source>
@@ -2136,7 +2076,7 @@
       </unit>
       <unit id="invite.noProjects">
          <segment>
-            <source>No audio projects are associated with this group.</source>
+            <source>This team has no audio projects.</source>
             <target/>
          </segment>
       </unit>
@@ -2170,12 +2110,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.selectProjectRole">
-         <segment>
-            <source>Select audio project role.</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="invite.selectTeamRole">
          <segment>
             <source>Select team role.</source>
@@ -2191,6 +2125,240 @@
       <unit id="invite.sil">
          <segment>
             <source>SIL International</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.addTargetWord">
+         <segment>
+            <source>Add Translation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.all">
+         <segment>
+            <source>All</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.aramaic">
+         <segment>
+            <source>Aramaic</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.attribute">
+         <segment>
+            <source>Attribute</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.being">
+         <segment>
+            <source>Being</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.cancel">
+         <segment>
+            <source>Cancel Translation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.category">
+         <segment>
+            <source>Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.chipDelete">
+         <segment>
+            <source>Delete {0} from {1}? Are you sure?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.chipDeleteNoLabel">
+         <segment>
+            <source>Delete translation from {0}? Are you sure?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.definition">
+         <segment>
+            <source>Definition</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.domain">
+         <segment>
+            <source>Domain</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.exclude">
+         <segment>
+            <source>Exclude</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.fauna">
+         <segment>
+            <source>Fauna</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.flora">
+         <segment>
+            <source>Flora</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.gloss">
+         <segment>
+            <source>Gloss</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.greek">
+         <segment>
+            <source>Greek</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.hebrew">
+         <segment>
+            <source>Hebrew</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.hide">
+         <segment>
+            <source>Hide</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.index">
+         <segment>
+            <source>Index</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.language">
+         <segment>
+            <source>Language</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.link">
+         <segment>
+            <source>Link</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.misc">
+         <segment>
+            <source>Miscellaneous</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.name">
+         <segment>
+            <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.play">
+         <segment>
+            <source>Play Translation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.realia">
+         <segment>
+            <source>Realia</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.record">
+         <segment>
+            <source>Record Translation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.recording">
+         <segment>
+            <source>Recording in progress.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.ritual">
+         <segment>
+            <source>Ritual</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.save">
+         <segment>
+            <source>Save Translation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.saving">
+         <segment>
+            <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.settingLanguage">
+         <segment>
+            <source>Set Langauge</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.sortShow">
+         <segment>
+            <source>Sort and Show</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.source">
+         <segment>
+            <source>Source</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.strong">
+         <segment>
+            <source>Strong</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.translation">
+         <segment>
+            <source>Translation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.termDetail">
+         <segment>
+            <source>Term Details</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.transliteration">
+         <segment>
+            <source>Transliteration</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.unsaved">
+         <segment>
+            <source>Unsaved.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.word">
+         <segment>
+            <source>Word</source>
             <target/>
          </segment>
       </unit>
@@ -2458,12 +2626,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.owner">
-         <segment>
-            <source>Owner</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="main.passages">
          <segment>
             <source>Passages</source>
@@ -2482,9 +2644,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.projRole">
+      <unit id="main.orgRole">
          <segment>
-            <source>Role in Audio Project:</source>
+            <source>Role:</source>
             <target/>
          </segment>
       </unit>
@@ -2545,12 +2707,6 @@
       <unit id="main.settings">
          <segment>
             <source>Settings</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="main.switchTo">
-         <segment>
-            <source>Switch to:</source>
             <target/>
          </segment>
       </unit>
@@ -2880,7 +3036,13 @@
       </unit>
       <unit id="mediaTab.size">
          <segment>
-            <source>Size (KB)</source>
+            <source>Size (MB)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.toobig">
+         <segment>
+            <source>File {0} is too large {1}. File Limit is {2}MB</source>
             <target/>
          </segment>
       </unit>
@@ -3004,6 +3166,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.toobig">
+         <segment>
+            <source>Too large: {0}. File Limit is {1}MB</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.upload">
          <segment>
             <source>Upload</source>
@@ -3018,25 +3186,25 @@
       </unit>
       <unit id="newProject.blank">
          <segment>
-            <source>Blank Audio Project</source>
+            <source>Audio Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.blankFactor1">
          <segment>
-            <source>Best option if multiple pre-recorded audio files are available</source>
+            <source>you want to set up a project with multiple passages</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.blankFactor2">
          <segment>
-            <source>Best option if passage list is available in a spreadsheet</source>
+            <source>you plan to record each passage as part of the workflow</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.blankTip">
          <segment>
-            <source>All settings are manually chosen.</source>
+            <source>Set up an empty project.</source>
             <target/>
          </segment>
       </unit>
@@ -3048,79 +3216,43 @@
       </unit>
       <unit id="newProject.general">
          <segment>
-            <source>General Quick Start</source>
+            <source>Quick Start</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.generalFactor1">
          <segment>
-            <source>Free-form references</source>
+            <source>you have one or a few prerecorded audio files for passages</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.generalFactor2">
          <segment>
-            <source>No Paratext sync expected or allowed</source>
+            <source>you just want to try out the program before you set up an actual project</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.generalTip">
          <segment>
-            <source>General transcription can cover a wide range of working scenarios and product solutions.</source>
+            <source>Create a project with one or a few audio files.</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.keyFactors">
          <segment>
-            <source>Key Factors</source>
+            <source>Best option if...</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.likeTemplate">
          <segment>
-            <source>These options present different templates for getting started. Choices made here can be changed in the Edit Audio Project Settings dialog.</source>
+            <source>Here are optional ways to get started. Later, you can use the Edit Audio Project Settings dialog box to change any of your initial settings.</source>
             <target/>
          </segment>
       </unit>
       <unit id="newProject.newProject">
          <segment>
-            <source>New Audio Project</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.other">
-         <segment>
-            <source>Other</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.paratextIntegration">
-         <segment>
-            <source>Integrated with Paratext</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.scripture">
-         <segment>
-            <source>Scripture Quick Start</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.scriptureFactor1">
-         <segment>
-            <source>Uses Scripture Referencing: book, chapter, and verse</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.scriptureFactor2">
-         <segment>
-            <source>Workflow syncs with Paratext</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="newProject.scriptureTip">
-         <segment>
-            <source>The final product may be audio or text and the content type may be translation, stories, drafting or adapation.</source>
+            <source>Create New Audio Project</source>
             <target/>
          </segment>
       </unit>
@@ -3138,13 +3270,19 @@
       </unit>
       <unit id="newProject.uploadAudio">
          <segment>
-            <source>Upload Audio</source>
+            <source>Bulk Upload</source>
             <target/>
          </segment>
       </unit>
       <unit id="passageChooser.passages">
          <segment>
             <source>Passages:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.accept">
+         <segment>
+            <source>Accept</source>
             <target/>
          </segment>
       </unit>
@@ -3166,9 +3304,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.allLevel">
+         <segment>
+            <source>All Resources</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.allResources">
          <segment>
             <source>Show resources for all passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.bookLevel">
+         <segment>
+            <source>Resources for the Book</source>
             <target/>
          </segment>
       </unit>
@@ -3181,6 +3331,18 @@
       <unit id="passageDetailArtifacts.category">
          <segment>
             <source>Category</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.chapterLevel">
+         <segment>
+            <source>Resources for the Chapter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.chooseLevel">
+         <segment>
+            <source>Resource Reference Filter Level</source>
             <target/>
          </segment>
       </unit>
@@ -3238,9 +3400,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.keywords">
+         <segment>
+            <source>Keywords</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.language">
+         <segment>
+            <source>Language</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.link">
          <segment>
             <source>Link</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.no">
+         <segment>
+            <source>No</source>
             <target/>
          </segment>
       </unit>
@@ -3304,15 +3484,45 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.selectBook">
+         <segment>
+            <source>Select Book</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
-            <source>Link Shared Resource</source>
+            <source>Link Shared {0} Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.source">
+         <segment>
+            <source>Source</source>
             <target/>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.startStop">
          <segment>
             <source>Start - Stop</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.termsOfUse">
+         <segment>
+            <source>Terms of Use</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.termsReview">
+         <segment>
+            <source>Review the Terms of Use</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.title">
+         <segment>
+            <source>Title</source>
             <target/>
          </segment>
       </unit>
@@ -3358,9 +3568,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.verseLevel">
+         <segment>
+            <source>Resources for verses in this passage</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.version">
          <segment>
             <source>Version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.yes">
+         <segment>
+            <source>Yes</source>
             <target/>
          </segment>
       </unit>
@@ -3424,9 +3646,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="passageRecord.loadfile">
+      <unit id="passageRecord.loadlatest">
          <segment>
-            <source>Load Existing File</source>
+            <source>Load Latest Audio</source>
             <target/>
          </segment>
       </unit>
@@ -3451,6 +3673,18 @@
       <unit id="passageRecord.title">
          <segment>
             <source>Record/Edit Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageRecord.toobig">
+         <segment>
+            <source>File is too large. File Limit is {1}MB</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageRecord.toobigwarn">
+         <segment>
+            <source>File is near size limit {1}MB</source>
             <target/>
          </segment>
       </unit>
@@ -3616,6 +3850,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planActions.resourceEdit">
+         <segment>
+            <source>Resource Edit</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planActions.resources">
          <segment>
             <source>Resources</source>
@@ -3673,6 +3913,12 @@
       <unit id="planSheet.confirm">
          <segment>
             <source>{0} {1} Item(s). Are you sure?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.filtered">
+         <segment>
+            <source>Disable filter to add rows.</source>
             <target/>
          </segment>
       </unit>
@@ -4018,6 +4264,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="profile.sharedContentCreator">
+         <segment>
+            <source>Allow user to create shared content projects.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="profile.timezone">
          <segment>
             <source>Time zone</source>
@@ -4102,6 +4354,114 @@
             <target/>
          </segment>
       </unit>
+      <unit id="resource.action">
+         <segment>
+            <source>Action</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.book">
+         <segment>
+            <source>Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.bookSelect">
+         <segment>
+            <source>Select Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.byWord">
+         <segment>
+            <source>By Word</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.deleteConfirm">
+         <segment>
+            <source>Delete {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.description">
+         <segment>
+            <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.errorData">
+         <segment>
+            <source>Do you want to save and discard data with errors?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.keywords">
+         <segment>
+            <source>Keywords</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.overview">
+         <segment>
+            <source>Overview</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.references">
+         <segment>
+            <source>References</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.resourceEdit">
+         <segment>
+            <source>Resource Edit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.rowsSaved">
+         <segment>
+            <source>{0} rows saved.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.saving">
+         <segment>
+            <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.terms">
+         <segment>
+            <source>Terms of use</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.title">
+         <segment>
+            <source>Title</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.versions">
+         <segment>
+            <source>Versions</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.book">
          <segment>
             <source>Book</source>
@@ -4177,6 +4537,60 @@
       <unit id="scriptureTable.title">
          <segment>
             <source>Title</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.apply">
+         <segment>
+            <source>Apply</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.assignedToMe">
+         <segment>
+            <source>Only rows with discussions assigned to me</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.clear">
+         <segment>
+            <source>Clear</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.disable">
+         <segment>
+            <source>Disable filter to add rows</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.hideDone">
+         <segment>
+            <source>Hide Done rows</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.step">
+         <segment>
+            <source>Workflow Step</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.minimum">
+         <segment>
+            <source>Minimum</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.maximum">
+         <segment>
+            <source>Maximum</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.saveFilter">
+         <segment>
+            <source>Save as project default</source>
             <target/>
          </segment>
       </unit>
@@ -4396,6 +4810,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.loading">
+         <segment>
+            <source>Loading...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.mediaAttached">
          <segment>
             <source>Audio Attached</source>
@@ -4444,12 +4864,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="shared.owner">
-         <segment>
-            <source>Owner</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="shared.paratextchapterSpan">
          <segment>
             <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
@@ -4468,15 +4882,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="shared.projectrole">
-         <segment>
-            <source>Project Role</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="shared.recordingInProgress">
          <segment>
             <source>Recording in progress...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.bookNotFound">
+         <segment>
+            <source>Paratext project does not contain book.</source>
             <target/>
          </segment>
       </unit>
@@ -4495,6 +4909,12 @@
       <unit id="shared.save">
          <segment>
             <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.saving">
+         <segment>
+            <source>Saving...</source>
             <target/>
          </segment>
       </unit>
@@ -4756,6 +5176,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="template.autoMatchTemplate">
+         <segment>
+            <source>Auto Match Template</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="template.beginning">
          <segment>
             <source>Starting verse number</source>
@@ -4764,7 +5190,13 @@
       </unit>
       <unit id="template.book">
          <segment>
-            <source>Paratext book identifier</source>
+            <source>Paratext book identifier (Length 3 uppercase)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="template.bookname">
+         <segment>
+            <source>Book name</source>
             <target/>
          </segment>
       </unit>
@@ -4795,6 +5227,12 @@
       <unit id="template.passage">
          <segment>
             <source>Passage number(within {0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="template.renderExportTemplate">
+         <segment>
+            <source>The {SECT} template works for files exported from Render.</source>
             <target/>
          </segment>
       </unit>
@@ -4933,6 +5371,12 @@
       <unit id="tool.export">
          <segment>
             <source>Export</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.keyterm">
+         <segment>
+            <source>Term Verify</source>
             <target/>
          </segment>
       </unit>
@@ -5166,7 +5610,7 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by another person.  Keep their changes? {0}</source>
+            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
             <target/>
          </segment>
       </unit>
@@ -5356,6 +5800,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.exportSince">
+         <segment>
+            <source>Changes since date</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportSinceGo">
+         <segment>
+            <source>Export from date</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
             <source>The audio project cannot be exported.  The export file is too large.</source>
@@ -5386,6 +5842,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.latestAudioElan">
+         <segment>
+            <source>Latest Audio + Transcription</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.noData">
          <segment>
             <source>No {0} Data.</source>
@@ -5394,7 +5856,7 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You cannot export an online project after creating new content offline (recordings, discussions, comments etc.). Please export an ITF file.</source>
+            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
             <target/>
          </segment>
       </unit>
@@ -5413,6 +5875,12 @@
       <unit id="transcriptionTab.plan">
          <segment>
             <source>Plan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.queued">
+         <segment>
+            <source>Your export has been queued on the media server.  It could take up to 6 minutes to resume progress.  Please wait.</source>
             <target/>
          </segment>
       </unit>
@@ -5592,13 +6060,25 @@
       </unit>
       <unit id="viewMode.audioProject">
          <segment>
-            <source>Audio Project</source>
+            <source>Audio Project Setup</source>
             <target/>
          </segment>
       </unit>
-      <unit id="viewMode.transcribe">
+      <unit id="viewMode.home">
          <segment>
-            <source>Transcribe</source>
+            <source>Home</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="viewMode.work">
+         <segment>
+            <source>Work</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="viewMode.gotowork">
+         <segment>
+            <source>Go to Work</source>
             <target/>
          </segment>
       </unit>
@@ -5683,6 +6163,12 @@
       <unit id="vProject.isPublic">
          <segment>
             <source>This project contains resources that can be used in other projects for Internalization.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.howToPublic">
+         <segment>
+            <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
             <target/>
          </segment>
       </unit>
@@ -5962,6 +6448,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="workflowSteps.consultantCheck1">
+         <segment>
+            <source>First Consultant Check</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.consultantCheck2">
+         <segment>
+            <source>Second Consultant Check</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="workflowSteps.done">
          <segment>
             <source>Done</source>
@@ -5976,19 +6474,37 @@
       </unit>
       <unit id="workflowSteps.finalRecording">
          <segment>
-            <source>Final Record</source>
+            <source>Studio Record</source>
             <target/>
          </segment>
       </unit>
       <unit id="workflowSteps.finalReview">
          <segment>
-            <source>Final Review</source>
+            <source>Final Audio Review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.finalReviewText">
+         <segment>
+            <source>Final Text Review</source>
             <target/>
          </segment>
       </unit>
       <unit id="workflowSteps.internalize">
          <segment>
             <source>Internalize</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.paratextConsultantCheck">
+         <segment>
+            <source>Consultant Check in Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.paratextPeerReview">
+         <segment>
+            <source>Peer Review in Paratext</source>
             <target/>
          </segment>
       </unit>
@@ -6034,6 +6550,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="workflowSteps.retellBackTranslation">
+         <segment>
+            <source>Retell Back Translation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.retellBTTranscribe">
+         <segment>
+            <source>Retell BT Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="workflowSteps.saveFirst">
          <segment>
             <source>Save before changing step?</source>
@@ -6042,7 +6570,19 @@
       </unit>
       <unit id="workflowSteps.teamCheck">
          <segment>
-            <source>Team Check</source>
+            <source>Compare</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.termIdentify">
+         <segment>
+            <source>Term Verify</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.teamReview">
+         <segment>
+            <source>Term Review</source>
             <target/>
          </segment>
       </unit>
@@ -6055,6 +6595,12 @@
       <unit id="workflowSteps.unsaved">
          <segment>
             <source>Unsaved content</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.wholeBackTranslate">
+         <segment>
+            <source>Whole Back Translate</source>
             <target/>
          </segment>
       </unit>
@@ -6073,6 +6619,12 @@
       <unit id="workflowSteps.wBTParatextSync">
          <segment>
             <source>Whole BT Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.none">
+         <segment>
+            <source>(None)</source>
             <target/>
          </segment>
       </unit>
@@ -6202,6 +6754,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.stopTip">
+         <segment>
+            <source>Stop [{0}]</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.timerTip">
          <segment>
             <source>Timestamp [{0}]</source>
@@ -6283,6 +6841,12 @@
       <unit id="wsAudioPlayerSegment.splitSegment">
          <segment>
             <source>Add/Remove Boundary [Double Click/{0}]</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayerSegment.teamDefault">
+         <segment>
+            <source>Save as team default</source>
             <target/>
          </segment>
       </unit>

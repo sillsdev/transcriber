@@ -1,43 +1,35 @@
 import {
-  createStyles,
+  Box,
+  BoxProps,
   IconButton,
-  makeStyles,
-  MenuItem,
-  Paper,
+  styled,
+  SxProps,
   TextField,
-  Theme,
-} from '@material-ui/core';
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
   IArtifactCategory,
   useArtifactCategory,
 } from '../../crud/useArtifactCategory';
-import {
-  ArtifactCategory,
-  ISelectArtifactCategoryStrings,
-  IState,
-} from '../../model';
+import { ArtifactCategory, ISelectArtifactCategoryStrings } from '../../model';
 import AddIcon from '@mui/icons-material/Add';
 import InfoIcon from '@mui/icons-material/Info';
 import CancelIcon from '@mui/icons-material/CancelOutlined';
-import { connect } from 'react-redux';
-import localStrings from '../../selector/localize';
+import { shallowEqual, useSelector } from 'react-redux';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from '../../mods/react-orbitjs';
-import { LightTooltip } from '../../control';
+import { withData } from 'react-orbitjs';
+import { LightTooltip, StyledMenuItem } from '../../control';
+import { artifactCategorySelector } from '../../selector';
 
 interface IRecordProps {
   artifactCategories: Array<ArtifactCategory>;
-}
-interface IStateProps {
-  t: ISelectArtifactCategoryStrings;
 }
 export enum ScriptureEnum {
   hide,
   highlight,
 }
-interface IProps extends IStateProps, IRecordProps {
+interface IProps extends IRecordProps {
   initCategory: string; //id
   onCategoryChange: (artifactCategoryId: string) => void;
   required: boolean;
@@ -45,60 +37,45 @@ interface IProps extends IStateProps, IRecordProps {
   scripture?: ScriptureEnum;
   resource?: boolean;
   discussion?: boolean;
+  disabled?: boolean;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 'inherit',
-      maxWidth: '400px',
-      minWidth: '200px',
-    },
-    newTextField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 300,
-    },
-    menu: {
-      width: 300,
-    },
-    formTextInput: {
-      fontSize: 'small',
-    },
-    formTextLabel: {
-      fontSize: 'small',
-    },
-    info: {
-      color: theme.palette.primary.light,
-    },
-  })
-);
+const StyledBox = styled(Box)<BoxProps>(() => ({
+  '& .MuiFormControl-root': {
+    margin: 0,
+  },
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
+const textFieldProps = {
+  mr: 1,
+  width: 'inherit',
+  maxWidth: '400px',
+  minWidth: '200px',
+} as SxProps;
+const menuProps = { width: 300 } as SxProps;
+const smallTextProps = { fontSize: 'small' } as SxProps;
+
 export const SelectArtifactCategory = (props: IProps) => {
   const {
     onCategoryChange,
     allowNew,
     required,
-    t,
     artifactCategories,
     initCategory,
     scripture,
     resource,
     discussion,
+    disabled,
   } = props;
-  const classes = useStyles();
   const [categoryId, setCategoryId] = useState(initCategory);
   const [newArtifactCategory, setNewArtifactCategory] = useState('');
   const [showNew, setShowNew] = useState(false);
+  const t: ISelectArtifactCategoryStrings = useSelector(
+    artifactCategorySelector,
+    shallowEqual
+  );
   const {
     getArtifactCategorys,
     addNewArtifactCategory,
@@ -165,28 +142,25 @@ export const SelectArtifactCategory = (props: IProps) => {
   };
 
   return (
-    <div className={classes.container}>
+    <StyledBox>
       <TextField
         id="artifact-category"
         select
         label={t.artifactCategory}
-        className={classes.textField}
+        sx={textFieldProps}
         value={categoryId || ''}
         onChange={handleArtifactCategoryChange}
+        disabled={disabled}
         SelectProps={{
           MenuProps: {
-            className: classes.menu,
+            sx: menuProps,
           },
         }}
         InputProps={{
-          classes: {
-            input: classes.formTextInput,
-          },
+          sx: smallTextProps,
         }}
         InputLabelProps={{
-          classes: {
-            root: classes.formTextLabel,
-          },
+          sx: smallTextProps,
         }}
         margin="normal"
         variant="filled"
@@ -194,13 +168,13 @@ export const SelectArtifactCategory = (props: IProps) => {
       >
         {artifactCategorys
           .sort((i, j) => (i.category < j.category ? -1 : 1))
-          .map((option: IArtifactCategory, i) => (
-            <MenuItem key={i} value={option.id}>
+          .map((option: IArtifactCategory) => (
+            <StyledMenuItem key={option.id} value={option.id}>
               {option.category + '\u00A0\u00A0'}
               {scripture === ScriptureEnum.highlight ? (
                 scriptureTypeCategory(option.slug) ? (
                   <LightTooltip title={t.scriptureHighlight}>
-                    <InfoIcon className={classes.info} />
+                    <InfoIcon />
                   </LightTooltip>
                 ) : (
                   <></>
@@ -208,58 +182,66 @@ export const SelectArtifactCategory = (props: IProps) => {
               ) : (
                 <></>
               )}
-            </MenuItem>
+            </StyledMenuItem>
           ))
           .concat(
-            allowNew ? (
-              <MenuItem key={t.addNewCategory} value={t.addNewCategory}>
+            // if not populated yet
+            initCategory !== '' &&
+              artifactCategorys.findIndex(
+                (v: IArtifactCategory) => v.id === initCategory
+              ) === -1 ? (
+              <StyledMenuItem key={initCategory} value={initCategory}>
+                <></>
+              </StyledMenuItem>
+            ) : allowNew ? (
+              <StyledMenuItem key={t.addNewCategory} value={t.addNewCategory}>
                 {t.addNewCategory + '\u00A0\u00A0'}
                 <AddIcon />
-              </MenuItem>
+              </StyledMenuItem>
             ) : (
               <div key={'noNew'}></div>
             )
           )}
       </TextField>
       {showNew && (
-        <Paper>
-          <div className={classes.row}>
-            <TextField
-              id="new-artifact-cat"
-              label={t.newArtifactCategory}
-              className={classes.newTextField}
-              value={newArtifactCategory || ''}
-              onChange={handleNewArtifactCategoryChange}
-            ></TextField>
-            <IconButton
-              id="addnew"
-              color="secondary"
-              aria-label="addnew"
-              onClick={addNewCategory}
-            >
-              <AddIcon />
-            </IconButton>
-            <IconButton
-              id="cancelnew"
-              color="secondary"
-              aria-label="cancelnew"
-              onClick={cancelNewCategory}
-            >
-              <CancelIcon />
-            </IconButton>
-          </div>
-        </Paper>
+        <Box sx={{ p: 1 }}>
+          <TextField
+            id="new-artifact-cat"
+            label={t.newArtifactCategory}
+            sx={{ width: '300px' }}
+            value={newArtifactCategory || ''}
+            onChange={handleNewArtifactCategoryChange}
+            InputProps={{
+              endAdornment: (
+                <>
+                  <IconButton
+                    id="addnew"
+                    color="secondary"
+                    aria-label="addnew"
+                    onClick={addNewCategory}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                  <IconButton
+                    id="cancelnew"
+                    color="secondary"
+                    aria-label="cancelnew"
+                    onClick={cancelNewCategory}
+                  >
+                    <CancelIcon />
+                  </IconButton>
+                </>
+              ),
+            }}
+          ></TextField>
+        </Box>
       )}
-    </div>
+    </StyledBox>
   );
 };
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'selectArtifactCategory' }),
-});
+
 const mapRecordsToProps = {
   artifactCategories: (q: QueryBuilder) => q.findRecords('artifactcategory'),
 };
 
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(SelectArtifactCategory) as any
-) as any;
+export default withData(mapRecordsToProps)(SelectArtifactCategory) as any;

@@ -1,6 +1,8 @@
 const { BrowserWindow, Menu, app } = require('electron');
 const authService = require('./auth-service');
 const createAppWindow = require('./app-process');
+const path = require('path');
+const isDev = require('electron-is-dev');
 
 let win = null;
 
@@ -10,7 +12,9 @@ function createAuthWindow(hasUsed, email) {
   win = new BrowserWindow({
     width: 1000,
     height: 780,
+    icon: path.join(__dirname, 'favicon.ico'),
     webPreferences: {
+      devTools: isDev,
       nodeIntegration: false,
       enableRemoteModule: false,
     },
@@ -31,7 +35,7 @@ function createAuthWindow(hasUsed, email) {
             return workOffline();
           },
         },
-        // { role: 'toggleDevTools' },
+        ...(isDev ? [{ role: 'toggleDevTools' }] : []),
         {
           label: 'Exit',
           click() {
@@ -72,6 +76,10 @@ function createAuthWindow(hasUsed, email) {
   win.on('authenticated', () => {
     destroyAuthWin();
   });
+
+  if (isDev) {
+    win.webContents.openDevTools({ mode: 'detach' });
+  }
 
   win.on('closed', () => {
     win = null;

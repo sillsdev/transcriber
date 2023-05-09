@@ -1,83 +1,83 @@
-import { connect } from 'react-redux';
-import {
-  IMediaTabStrings,
-  ISharedStrings,
-  IState,
-  MediaFile,
-} from '../../model';
-import localStrings from '../../selector/localize';
-import { Button, Typography, SxProps, Box } from '@mui/material';
+import { shallowEqual, useSelector } from 'react-redux';
+import { ISharedStrings, MediaFile } from '../../model';
+import { Typography, Box, Stack } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { findRecord, useFetchMediaUrl, VernacularTag } from '../../crud';
+import {
+  findRecord,
+  IMediaState,
+  MediaSt,
+  useFetchMediaUrl,
+  VernacularTag,
+} from '../../crud';
 import { useGlobal } from 'reactn';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
-import * as actions from '../../store';
-import { bindActionCreators } from 'redux';
 import Memory from '@orbit/memory';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { withData } from '../../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import MediaRecord from '../MediaRecord';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import Uploader from '../Uploader';
 import AudacityManager from '../Workflow/AudacityManager';
 import { isElectron } from '../../api-variable';
-import { AudacityLogo, PriButton } from '../../control';
-import AddIcon from '@mui/icons-material/LibraryAddOutlined';
+import { PriButton } from '../../control';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
-import VersionsIcon from '@mui/icons-material/List';
 import { PlanProvider } from '../../context/PlanContext';
 import SpeakerName from '../SpeakerName';
+import { sharedSelector } from '../../selector';
+import { RecordButtons } from './RecordButtons';
 
-const buttonProps = {
-  mx: 1,
-  maxHeight: '40px',
-  alignSelf: 'center',
-} as SxProps;
-
-interface IStateProps {
-  t: IMediaTabStrings;
-  ts: ISharedStrings;
-  uploadError: string;
-}
-interface IDispatchProps {
-  uploadFiles: typeof actions.uploadFiles;
-  nextUpload: typeof actions.nextUpload;
-  uploadComplete: typeof actions.uploadComplete;
-  doOrbitError: typeof actions.doOrbitError;
-}
 interface IRecordProps {
   mediafiles: Array<MediaFile>;
 }
-interface IProps extends IRecordProps, IStateProps, IDispatchProps {
+interface IProps {
   ready?: () => boolean;
+  width?: number;
 }
+
 const SaveWait = 500;
-export function PassageDetailRecord(props: IProps) {
-  const { ready, ts } = props;
-  const { mediafiles } = props;
-  const { startSave, toolChanged, toolsChanged, saveRequested, waitForSave } =
-    useContext(UnsavedContext).state;
+
+export function PassageDetailRecord(props: IProps & IRecordProps) {
+  const { ready, mediafiles } = props;
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const {
+    startSave,
+    toolChanged,
+    toolsChanged,
+    saveRequested,
+    clearRequested,
+    clearCompleted,
+    waitForSave,
+  } = useContext(UnsavedContext).state;
   const [reporter] = useGlobal('errorReporter');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [, setBigBusy] = useGlobal('importexportBusy');
+  const [plan] = useGlobal('plan');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
-  const { passage, mediafileId } = usePassageDetailContext();
+  const { passage, mediafileId, chooserSize, setRecording } =
+    usePassageDetailContext();
   const { showMessage } = useSnackBar();
   const toolId = 'RecordTool';
-  const onReady = () => {};
+  const onSaving = () => {
+    setBigBusy(true);
+  };
+  const onReady = () => {
+    setBigBusy(false);
+  };
   const [importList, setImportList] = useState<File[]>();
   const cancelled = useRef(false);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [audacityVisible, setAudacityVisible] = useState(false);
   const [versionVisible, setVersionVisible] = useState(false);
-  const [preload, setPreload] = useState(false);
+  const [preload, setPreload] = useState(0);
+  const [recorderState, setRecorderState] = useState<IMediaState>();
+  const [hasExistingVersion, setHasExistingVersion] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
   const [speaker, setSpeaker] = useState('');
   const [hasRights, setHasRight] = useState(false);
@@ -89,6 +89,9 @@ export function PassageDetailRecord(props: IProps) {
 
   useEffect(() => {
     if (saveRequested(toolId)) handleSave();
+    else if (clearRequested(toolId)) {
+      clearCompleted(toolId);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
@@ -104,9 +107,9 @@ export function PassageDetailRecord(props: IProps) {
 
   useEffect(() => {
     setDefaultFileName(
-      passageDefaultFilename(passage?.id, memory, VernacularTag)
+      passageDefaultFilename(passage, plan, memory, VernacularTag)
     );
-  }, [memory, passage, mediafiles]);
+  }, [memory, passage, mediafiles, plan]);
 
   useEffect(() => {
     const mediaRec = findRecord(memory, 'mediafile', mediafileId) as
@@ -120,6 +123,14 @@ export function PassageDetailRecord(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafileId, mediafiles]);
 
+  useEffect(() => {
+    setHasExistingVersion(
+      Boolean(mediafileId) &&
+        recorderState?.status === MediaSt.FETCHED &&
+        recorderState?.id === mediafileId
+    );
+  }, [mediafileId, recorderState]);
+
   const handleSave = () => {
     startSave(toolId);
   };
@@ -131,7 +142,7 @@ export function PassageDetailRecord(props: IProps) {
       setUploadVisible(false);
       setAudacityVisible(false);
     }
-    setPreload(true);
+    setPreload(preload + 1);
   };
 
   const saveIfChanged = (cb: () => void) => {
@@ -177,40 +188,17 @@ export function PassageDetailRecord(props: IProps) {
   };
   const handleNameChange = (name: string) => setSpeaker(name);
   const handleRights = (hasRights: boolean) => setHasRight(hasRights);
-
+  const handleReload = () => setPreload(preload + 1);
+  const handleTrackRecorder = (state: IMediaState) => setRecorderState(state);
   return (
     <PlanProvider {...props}>
-      <div>
-        <Button
-          sx={buttonProps}
-          id="pdRecordVersions"
-          onClick={handleVersions}
-          title={ts.versionHistory}
-        >
-          <VersionsIcon />
-          {ts.versionHistory}
-        </Button>
-        <Button
-          sx={buttonProps}
-          id="pdRecordUpload"
-          onClick={handleUpload}
-          title={!offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular}
-        >
-          <AddIcon />
-          {!offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular}
-        </Button>
-
-        {isElectron && (
-          <Button
-            sx={buttonProps}
-            id="pdAudacity"
-            onClick={handleAudacity}
-            title={ts.launchAudacity}
-          >
-            <AudacityLogo />
-            {ts.launchAudacity}
-          </Button>
-        )}
+      <Stack sx={{ width: props.width }}>
+        <RecordButtons
+          onVersions={hasExistingVersion ? handleVersions : undefined}
+          onReload={hasExistingVersion ? handleReload : undefined}
+          onUpload={handleUpload}
+          onAudacity={isElectron ? handleAudacity : undefined}
+        />
         <Box sx={{ py: 1 }}>
           <SpeakerName
             name={speaker}
@@ -222,16 +210,21 @@ export function PassageDetailRecord(props: IProps) {
           toolId={toolId}
           mediaId={mediafileId}
           uploadMethod={uploadMedia}
+          onSaving={onSaving}
           onReady={onReady}
+          onRecording={setRecording}
           defaultFilename={defaultFilename}
           allowRecord={hasRights}
           allowWave={true}
           showFilename={true}
+          showLoad={false}
           preload={preload}
+          trackState={handleTrackRecorder}
           setCanSave={setCanSave}
           setStatusText={setStatusText}
           doReset={resetMedia}
           setDoReset={setResetMedia}
+          size={300 - chooserSize}
           metaData={
             <>
               <Typography
@@ -286,30 +279,15 @@ export function PassageDetailRecord(props: IProps) {
         >
           <VersionDlg passId={passage.id} />
         </BigDialog>
-      </div>
+      </Stack>
     </PlanProvider>
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  uploadError: state.upload.errmsg,
-  t: localStrings(state, { layout: 'mediaTab' }),
-  ts: localStrings(state, { layout: 'shared' }),
-});
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      uploadFiles: actions.uploadFiles,
-      nextUpload: actions.nextUpload,
-      uploadComplete: actions.uploadComplete,
-      doOrbitError: actions.doOrbitError,
-    },
-    dispatch
-  ),
-});
 const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(PassageDetailRecord) as any
-) as any;
+
+export default withData(mapRecordsToProps)(PassageDetailRecord) as any as (
+  props: IProps
+) => JSX.Element;

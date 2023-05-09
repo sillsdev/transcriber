@@ -1,9 +1,9 @@
-import { useContext, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Grid, GridProps, styled } from '@mui/material';
 import SelectMyResource from './Internalization/SelectMyResource';
 import { MediaPlayer } from '../MediaPlayer';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { getSegments, NamedRegions } from '../../utils';
+import { getSegments, LocalKey, localUserKey, NamedRegions } from '../../utils';
 
 const StyledGrid = styled(Grid)<GridProps>(({ theme }) => ({
   margin: theme.spacing(1),
@@ -25,14 +25,37 @@ export function TeamCheckReference() {
     setItemPlaying,
     handleItemPlayEnd,
     handleItemTogglePlay,
+    section,
+    passage,
+    currentstep,
   } = ctx.state;
   const mediaStart = useRef<number | undefined>();
   const mediaEnd = useRef<number | undefined>();
   const mediaPosition = useRef<number | undefined>();
+  const [resource, setResource] = useState('');
+
+  const storeKey = (keyType?: string) =>
+    `${localUserKey(LocalKey.compare)}_${
+      keyType ?? passage.attributes.sequencenum
+    }`;
+
+  const SecSlug = 'secId';
 
   const handleResource = (id: string) => {
     const row = rowData.find((r) => r.id === id);
     if (row) {
+      const secId = localStorage.getItem(storeKey(SecSlug));
+      if (secId !== section.id) {
+        localStorage.setItem(storeKey(SecSlug), section.id);
+        let n = 1;
+        while (true) {
+          const res = localStorage.getItem(storeKey(n.toString()));
+          if (!res) break;
+          localStorage.removeItem(storeKey(n.toString()));
+          n += 1;
+        }
+      }
+      localStorage.setItem(storeKey(), id);
       const segs = getSegments(
         NamedRegions.ProjectResource,
         row.mediafile.attributes.segments
@@ -57,25 +80,33 @@ export function TeamCheckReference() {
   };
 
   const handleDuration = (duration: number) => {
-    if (mediaStart.current) {
-      mediaPosition.current = mediaStart.current;
-      mediaStart.current = undefined;
-      setItemPlaying(true);
-    }
+    mediaPosition.current = mediaStart.current ?? 0;
+    mediaStart.current = undefined;
+    setItemPlaying(true);
   };
 
   const handlePosition = (position: number) => {
-    if (mediaEnd.current) {
-      if (position >= mediaEnd.current) {
-        handleEnded();
-      }
+    if (mediaEnd.current && position >= mediaEnd.current) {
+      handleEnded();
     }
   };
+
+  useEffect(() => {
+    setPlayItem('');
+    // We track the user's choices for each passage of the section
+    const res = localStorage.getItem(storeKey());
+    const secId = localStorage.getItem(storeKey(SecSlug));
+    if (res && secId === section.id) {
+      setResource(res);
+      handleResource(res);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [section, passage, currentstep]);
 
   return (
     <Grid container direction="column">
       <Grid item xs={10} sx={{ m: 2, p: 2 }}>
-        <SelectMyResource onChange={handleResource} />
+        <SelectMyResource onChange={handleResource} inResource={resource} />
       </Grid>
       <StyledGrid item xs={10}>
         <MediaPlayer

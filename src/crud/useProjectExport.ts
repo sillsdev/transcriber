@@ -24,7 +24,6 @@ export const useProjectExport = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const backup = coordinator.getSource('backup') as IndexedDBSource;
-  const [fingerprint] = useGlobal('fingerprint');
   const [userId] = useGlobal('user');
   const [, setBusy] = useGlobal('importexportBusy');
   const [errorReporter] = useGlobal('errorReporter');
@@ -56,14 +55,13 @@ export const useProjectExport = (props: IProps) => {
       memory,
       backup,
       remoteIdNum('project', projectId, memory.keyMap),
-      fingerprint,
       remoteIdNum('user', userId, memory.keyMap),
       media.length,
       token,
       errorReporter,
       message || t.exportingProject,
       t.noData.replace('{0}', ''),
-      t.offlineData,
+      t.queued,
       '',
       getOfflineProject
     );

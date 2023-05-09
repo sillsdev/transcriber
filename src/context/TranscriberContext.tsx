@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import * as actions from '../store';
 import {
   IState,
@@ -18,76 +16,44 @@ import {
   IProjButtonsStrings,
   BookName,
   ActivityStates,
-  RoleNames,
   ISharedStrings,
   IActivityStateStrings,
 } from '../model';
-import localStrings from '../selector/localize';
-import { withData } from '../mods/react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
   related,
-  remoteId,
   sectionNumber,
   passageNumber,
   remoteIdGuid,
-  useFetchMediaUrl,
-  MediaSt,
   usePlan,
-  useRole,
   useArtifactType,
   getMediaInPlans,
   findRecord,
   VernacularTag,
 } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
-import { loadBlob, logError, Severity } from '../utils';
-import { useSnackBar } from '../hoc/SnackBar';
+import { shallowEqual, useSelector } from 'react-redux';
+import {
+  activitySelector,
+  projButtonsSelector,
+  sharedSelector,
+  taskItemSelector,
+  toDoTableSelector,
+  transcriberSelector,
+} from '../selector';
+import { useDispatch } from 'react-redux';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
 };
-
-interface IStateProps {
-  todoStr: IToDoTableStrings;
-  taskItemStr: ITaskItemStrings;
-  activityStateStr: IActivityStateStrings;
-  transcriberStr: ITranscriberStrings;
-  projButtonStr: IProjButtonsStrings;
-  sharedStr: ISharedStrings;
-  allBookData: BookName[];
-  booksLoaded: boolean;
-  lang: string;
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-  todoStr: localStrings(state, { layout: 'toDoTable' }),
-  taskItemStr: localStrings(state, { layout: 'taskItem' }),
-  activityStateStr: localStrings(state, { layout: 'activityState' }),
-  transcriberStr: localStrings(state, { layout: 'transcriber' }),
-  projButtonStr: localStrings(state, { layout: 'projButtons' }),
-  sharedStr: localStrings(state, { layout: 'shared' }),
-  allBookData: state.books.bookData,
-  booksLoaded: state.books.loaded,
-  lang: state.strings.lang,
-});
-
-interface IDispatchProps {
-  fetchBooks: typeof actions.fetchBooks;
-}
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      fetchBooks: actions.fetchBooks,
-    },
-    dispatch
-  ),
-});
 
 interface IRecordProps {
   passages: Passage[];
   sections: Section[];
   mediafiles: MediaFile[];
 }
+
 const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
@@ -111,11 +77,9 @@ export interface IRowData {
 }
 
 const initState = {
-  index: 0,
-  selected: '', //was passageid...now mediafileid
-  setSelected: (selected: string) => {},
-  playing: false,
-  setPlaying: (playing: boolean) => {},
+  transSelected: undefined as string | undefined, //mediafileid
+  setTransSelected: (selected: string | undefined) => {},
+  index: -1,
   rowData: Array<IRowData>(),
   expandedGroups: Array<string>(),
   playItem: '',
@@ -129,14 +93,9 @@ const initState = {
   todoStr: {} as IToDoTableStrings,
   transcriberStr: {} as ITranscriberStrings,
   projButtonStr: {} as IProjButtonsStrings,
-  hasUrl: false,
-  loading: false,
-  mediaUrl: '',
-  audioBlob: undefined as Blob | undefined,
-  trBusy: false,
-  setTrBusy: (trBusy: boolean) => {},
   flat: false,
   artifactId: null as string | null,
+  isDetail: false,
 };
 
 export type ICtxState = typeof initState;
@@ -148,47 +107,48 @@ interface IContext {
 
 const TranscriberContext = React.createContext({} as IContext);
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+interface IProps {
   children: React.ReactElement;
   artifactTypeId?: string | null | undefined;
 }
-interface ParamTypes {
-  prjId: string;
-  pasId: string;
-  slug?: string;
-  medId?: string;
-}
 const TranscriberProvider = withData(mapRecordsToProps)(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )((props: IProps) => {
+  (props: IProps & IRecordProps) => {
     const { artifactTypeId } = props;
     const [isDetail] = useState(artifactTypeId !== undefined);
-    const [reporter] = useGlobal('errorReporter');
     const { passages, mediafiles, sections } = props;
-    const { lang, allBookData, fetchBooks, booksLoaded } = props;
-    const {
-      todoStr,
-      taskItemStr,
-      activityStateStr,
-      transcriberStr,
-      projButtonStr,
-      sharedStr,
-    } = props;
-    const { prjId, pasId, slug, medId } = useParams<ParamTypes>();
+    const todoStr: IToDoTableStrings = useSelector(
+      toDoTableSelector,
+      shallowEqual
+    );
+    const taskItemStr: ITaskItemStrings = useSelector(
+      taskItemSelector,
+      shallowEqual
+    );
+    const activityStateStr: IActivityStateStrings = useSelector(
+      activitySelector,
+      shallowEqual
+    );
+    const transcriberStr: ITranscriberStrings = useSelector(
+      transcriberSelector,
+      shallowEqual
+    );
+    const projButtonStr: IProjButtonsStrings = useSelector(
+      projButtonsSelector,
+      shallowEqual
+    );
+    const allBookData = useSelector((state: IState) => state.books.bookData);
+    const lang = useSelector((state: IState) => state.strings.lang);
+    const booksLoaded = useSelector((state: IState) => state.books.loaded);
+    const dispatch = useDispatch();
+    const fetchBooks = (lang: string) => dispatch(actions.fetchBooks(lang));
+    const sharedStr: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+    const { pasId, slug, medId } = useParams();
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [devPlan] = useGlobal('plan');
     const { getPlan } = usePlan();
-    const [projRole] = useGlobal('projRole');
-    const [errorReporter] = useGlobal('errorReporter');
     const view = React.useRef('');
     const [refreshed, setRefreshed] = useState(0);
-    const mediaUrlRef = useRef('');
-    const { showMessage } = useSnackBar();
-    const [trackedTask, setTrackedTask] = useGlobal('trackedTask');
-    const { userCanTranscribe, userCanBeEditor } = useRole();
     const [planMedia, setPlanMedia] = useState<MediaFile[]>([]);
     const planMediaRef = useRef<MediaFile[]>([]);
     const passageMediaRef = useRef<MediaFile[]>([]);
@@ -202,10 +162,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       transcriberStr,
       projButtonStr,
       sharedStr,
+      isDetail,
     });
-    const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
     const { getTypeId } = useArtifactType();
-    const fetching = useRef('');
 
     const artifactId = useMemo(
       () => (slug ? getTypeId(slug) : artifactTypeId ?? VernacularTag),
@@ -233,64 +192,27 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       });
     };
 
-    const setPlaying = (playing: boolean) => {
-      setState((state: ICtxState) => {
-        return { ...state, playing };
-      });
-    };
-
     const setAllDone = (val: boolean) => {
       setState((state: ICtxState) => {
         return { ...state, allDone: val };
       });
     };
 
-    const setTrBusy = (busy: boolean) => {
-      setState((state: ICtxState) => {
-        return {
-          ...state,
-          trBusy: busy,
-        };
-      });
-    };
-    const setSelected = (
-      selected: string,
+    const setTransSelected = (
+      transSelected: string | undefined,
       rowData: IRowData[] = state.rowData
     ) => {
-      const i = rowData.findIndex((r) => r.mediafile.id === selected);
+      const i = rowData.findIndex((r) => r.mediafile.id === transSelected);
       if (i < 0) return;
       const r = rowData[i];
 
-      if (state.index !== i || state.selected !== selected) {
-        var psgId =
-          remoteId('passage', r.passage.id, memory.keyMap) || r.passage.id;
-        const remId =
-          remoteId('mediafile', selected, memory.keyMap) || selected;
-        if (!isDetail && (pasId !== psgId || (slug && remId !== medId))) {
-          view.current = `/work/${prjId}/${psgId}`;
-          if (slug) view.current += `/${slug}/${medId}`;
-        }
-        setTrackedTask(selected);
-        var resetBlob = false;
-        if (
-          mediaState.id !== r.mediafile.id &&
-          fetching.current !== r.mediafile.id
-        ) {
-          fetching.current = r.mediafile.id;
-          fetchMediaUrl({
-            id: r.mediafile.id,
-          });
-          resetBlob = true;
-        }
+      if (state.index !== i || state.transSelected !== transSelected) {
         setState((state: ICtxState) => {
           return {
             ...state,
-            audioBlob: resetBlob ? undefined : state.audioBlob,
             index: i,
-            selected,
-            playing: false,
+            transSelected,
             playItem: r.mediafile.id,
-            loading: fetching.current !== '',
           };
         });
       }
@@ -427,30 +349,19 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         });
     };
 
-    const role = React.useMemo(() => {
-      if (userCanTranscribe()) {
-        if (userCanBeEditor()) return RoleNames.Editor;
-        else return RoleNames.Transcriber;
-      } else return '';
-
-      /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    }, [projRole]);
-
     const selectTasks = (
       onlyAvailable: boolean,
       rowList: IRowData[],
       item: string
     ) => {
       // IN PROGRESS TASKS
-      if (role === RoleNames.Editor) {
-        addTasks(
-          ActivityStates.Reviewing,
-          'editor',
-          rowList,
-          onlyAvailable,
-          item
-        );
-      }
+      addTasks(
+        ActivityStates.Reviewing,
+        'editor',
+        rowList,
+        onlyAvailable,
+        item
+      );
 
       addTasks(
         ActivityStates.Transcribing,
@@ -478,15 +389,13 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       );
 
       // READY TO BEGIN TASKS
-      if (role === RoleNames.Editor) {
-        addTasks(
-          ActivityStates.Transcribed,
-          'editor',
-          rowList,
-          onlyAvailable,
-          item
-        );
-      }
+      addTasks(
+        ActivityStates.Transcribed,
+        'editor',
+        rowList,
+        onlyAvailable,
+        item
+      );
 
       addTasks(
         ActivityStates.TranscribeReady,
@@ -495,32 +404,25 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         onlyAvailable,
         item
       );
-      if (state.selected !== '' && state.index < rowList.length) {
-        if (rowList[state.index].mediafile.id !== state.selected) {
-          setSelected(state.selected);
-        }
-      }
     };
+
     useEffect(() => {
       const playItem = state.playItem;
       const rowList: IRowData[] = [];
-      if (pasId && isDetail) {
+      if (pasId) {
         var psg = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
         passageMediaRef.current = planMediaRef.current.filter(
           (m) => related(m, 'passage') === psg
         );
       } else passageMediaRef.current = planMediaRef.current;
 
-      if (role !== '') {
-        selectTasks(true, rowList, playItem); // assigned
-        selectTasks(false, rowList, playItem); // unassigned
-        const newAllDone = rowList.length === 0 && !isDetail;
-        if (newAllDone !== state.allDone) setAllDone(newAllDone);
-        // ALL OTHERS
-        addTasks('', 'view', rowList, false, playItem);
-      } else {
-        addTasks('', 'view', rowList, false, playItem);
-      }
+      selectTasks(true, rowList, playItem); // assigned
+      selectTasks(false, rowList, playItem); // unassigned
+      const newAllDone = rowList.length === 0 && !isDetail;
+      if (newAllDone !== state.allDone) setAllDone(newAllDone);
+      // ALL OTHERS
+      addTasks('', 'view', rowList, false, playItem);
+
       setRows(rowList.map((r) => r));
       const exGrp: string[] = [];
       rowList.forEach((r) => {
@@ -528,53 +430,47 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       });
       setExpandedGroups(exGrp);
       if (rowList.length > 0) {
-        let selected = state.selected;
-        if (!selected) {
+        let transSelected = state.transSelected;
+        if (!transSelected) {
           let mediaId = medId;
           if (!mediaId) {
             //vernacular so should just be one
-            const psg = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
+            const psg =
+              remoteIdGuid('passage', pasId ?? '', memory.keyMap) || pasId;
             const p = rowList.filter((r) => r.passage.id === psg);
             if (p.length > 0) mediaId = p[0].mediafile.id;
           }
-          selected =
+          transSelected =
             remoteIdGuid('mediafile', mediaId || '', memory.keyMap) ||
             mediaId ||
-            trackedTask;
+            '';
         }
 
-        if (selected !== '') {
+        if (transSelected !== '') {
           const selectedRow = rowList.filter(
-            (r) => r.mediafile.id === selected
+            (r) => r.mediafile.id === transSelected
           );
           if (selectedRow.length > 0) {
-            setSelected(selected, rowList);
+            setTransSelected(transSelected, rowList);
           } else {
-            selected = '';
+            transSelected = '';
           }
         }
-        if (selected === '') {
-          setSelected(rowList[1].mediafile.id, rowList);
+        if (transSelected === '') {
+          setTransSelected(rowList[1].mediafile.id, rowList);
         }
       } else {
-        //reset mediastate
-        fetchMediaUrl({
-          id: '',
-        });
         setState((state: ICtxState) => {
           return {
             ...state,
-            audioBlob: undefined,
-            index: 0,
-            selected: '',
-            playing: false,
+            index: -1,
+            transSelected: '',
             playItem: '',
-            loading: false,
           };
         });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [role, planMedia, refreshed, pasId, medId]);
+    }, [planMedia, refreshed, pasId, medId]);
 
     const actor: { [key: string]: string } = {
       [ActivityStates.TranscribeReady]: 'transcriber',
@@ -601,8 +497,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
             r.mediafile.attributes?.transcriptionstate ||
             ActivityStates.TranscribeReady;
           let rowRole = actor[state] || 'view';
-          if (rowRole === 'editor' && role !== RoleNames.Editor)
-            rowRole = 'view';
           const assigned = related(section, rowRole);
           rowData.push({
             ...r,
@@ -650,74 +544,11 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         }
       });
       if (changed) {
-        setState({ ...state, rowData, playing: false });
+        setState({ ...state, rowData }); //eh...what to do about: playing:false
         if (forcerefresh) refresh(); //force the transcriber pane to refresh also
       }
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [mediafiles, pasId]);
-
-    useEffect(() => {
-      if (mediaState.url && mediaState.id === fetching.current) {
-        mediaUrlRef.current = mediaState.url;
-        fetching.current = '';
-        try {
-          loadBlob(mediaState.url, (urlOrError, b) => {
-            if (!b) {
-              if (urlOrError.includes('403')) {
-                //force requery for new media url
-                setSelected(state.selected);
-              } else {
-                //no blob
-                showMessage(urlOrError);
-                setState((state: ICtxState) => {
-                  return {
-                    ...state,
-                    loading: false,
-                    audioBlob: undefined,
-                    playing: false,
-                  };
-                });
-              }
-              return;
-            }
-            //not sure what this intermediary file is, but causes console errors
-            if (b.type !== 'text/html') {
-              if (urlOrError === mediaUrlRef.current) {
-                setState((state: ICtxState) => {
-                  return {
-                    ...state,
-                    loading: false,
-                    audioBlob: b,
-                    playing: false,
-                  };
-                });
-              }
-            }
-          });
-        } catch (e: any) {
-          logError(Severity.error, errorReporter, e);
-          showMessage(e.message);
-        }
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [mediaState.url]);
-
-    useEffect(() => {
-      if (mediaState.error) {
-        if (mediaState.error.startsWith('no offline file'))
-          showMessage(sharedStr.fileNotFound);
-        else showMessage(mediaState.error);
-        setState((state: ICtxState) => {
-          return {
-            ...state,
-            loading: false,
-            audioBlob: undefined,
-            playing: false,
-          };
-        });
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [mediaState.error]);
 
     useEffect(() => {
       if (!booksLoaded) {
@@ -762,13 +593,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         value={{
           state: {
             ...state,
-            hasUrl: mediaState.status === MediaSt.FETCHED,
-            mediaUrl: mediaState.url,
             artifactId,
-            setSelected,
-            setPlaying,
             setAllDone,
-            setTrBusy,
+            setTransSelected,
             refresh,
           },
           setState,
@@ -777,7 +604,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         {props.children}
       </TranscriberContext.Provider>
     );
-  })
+  }
 );
 
 export { TranscriberContext, TranscriberProvider };
