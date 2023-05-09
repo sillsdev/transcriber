@@ -135,6 +135,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   const [plan] = useGlobal('plan');
   const [width, setWidth] = useState(window.innerWidth);
   const [height, setHeight] = useState(window.innerHeight);
+  const widthRef = React.useRef(window.innerWidth);
   //const [myPlayerSize, setMyPlayerSize] = useState(INIT_PLAYER_HEIGHT);
 
   const [topFilter, setTopFilter] = useState(false);
@@ -152,6 +153,18 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   const minWidthRef = React.useRef(800);
   const { tool, settings } = useStepTool(currentstep);
   const { slugFromId } = useArtifactType();
+  const [horizSize, setHorizSize] = useState(window.innerWidth - 450);
+  const discussionSizeRef = React.useRef(discussionSize);
+
+  useEffect(() => {
+    discussionSizeRef.current = discussionSize;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [discussionSize]);
+
+  useEffect(() => {
+    widthRef.current = width;
+  }, [width]);
+
   const artifactId = useMemo(() => {
     if (settings) {
       var id = JSON.parse(settings).artifactTypeId;
@@ -178,7 +191,11 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   const t = useSelector(toolSelector, shallowEqual) as IToolStrings;
 
   const handleVertSplitSize = debounce((e: number) => {
-    setDiscussionSize({ width: width - e, height: discussionSize.height });
+    setHorizSize(e);
+    setDiscussionSize({
+      width: widthRef.current - e,
+      height: discussionSize.height,
+    });
   }, 50);
 
   const handleHorzSplitSize = debounce((e: number) => {
@@ -186,12 +203,21 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   }, 50);
 
   const setDimensions = () => {
-    setWidth(Math.max(window.innerWidth, minWidthRef.current));
+    const newWidth = Math.max(window.innerWidth, minWidthRef.current);
+    setWidth(newWidth);
     setHeight(window.innerHeight);
-    setDiscussionSize({
-      width: discussionSize.width, //should we be smarter here?
-      height: window.innerHeight - 275,
-    });
+    let newDiscWidth = discussionSizeRef.current.width;
+    if (newDiscWidth > newWidth - minWidthRef.current + 450) newDiscWidth = 450;
+    const newDiscHeight = window.innerHeight - 275;
+    if (
+      discussionSizeRef.current.height !== newDiscHeight ||
+      discussionSizeRef.current.width !== newDiscWidth
+    )
+      setDiscussionSize({
+        width: newDiscWidth, //should we be smarter here?
+        height: newDiscHeight,
+      });
+    setHorizSize(newWidth - newDiscWidth);
     setPlayerSize(INIT_PLAYERPANE_HEIGHT);
     // setPaperStyle({ width: window.innerWidth - 10 });
   };
@@ -301,9 +327,10 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
           <Paper sx={{ p: 0, margin: 'auto', width: `calc(100% - 32px)` }}>
             <Wrapper>
               <SplitPane
-                defaultSize={width - discussionSize.width - 16}
+                defaultSize={widthRef.current - discussionSize.width - 16}
                 style={{ position: 'static' }}
                 split="vertical"
+                size={horizSize}
                 onChange={handleVertSplitSize}
               >
                 <Pane>
@@ -318,7 +345,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                     >
                       <Pane>
                         <PassageDetailChooser
-                          width={width - discussionSize.width - 16}
+                          width={widthRef.current - discussionSize.width - 16}
                         />
                         {(tool !== ToolSlug.KeyTerm || mediafileId) && (
                           <PassageDetailPlayer chooserReduce={chooserSize} />

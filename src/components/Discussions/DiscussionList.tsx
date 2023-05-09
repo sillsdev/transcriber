@@ -90,6 +90,7 @@ export function DiscussionList(props: IProps & IRecordProps) {
     playerMediafile,
     setDiscussionMarkers,
   } = ctx.state;
+  const discussionSizeRef = useRef(discussionSize);
   const { toolsChanged, isChanged, startSave, startClear } =
     useContext(UnsavedContext).state;
   const t: IDiscussionListStrings = useSelector(
@@ -101,8 +102,8 @@ export function DiscussionList(props: IProps & IRecordProps) {
   }, [playerMediafile]);
 
   const [rootWidthStyle, setRootWidthStyle] = useState({
-    width: `${discussionSize.width - 30}px`, //leave room for scroll bar
-    maxHeight: discussionSize.height,
+    width: `${discussionSizeRef.current?.width - 30}px`, //leave room for scroll bar
+    maxHeight: `${discussionSizeRef.current?.height}px`,
   });
   const { userIsAdmin } = useRole();
   const defaultFilterState = {
@@ -150,6 +151,14 @@ export function DiscussionList(props: IProps & IRecordProps) {
     );
     return mygroups.map((g) => related(g, 'group'));
   }, [groupMemberships, userId]);
+
+  useEffect(() => {
+    discussionSizeRef.current = discussionSize;
+    setRootWidthStyle({
+      width: `${discussionSizeRef.current?.width - 30}px`,
+      maxHeight: `${discussionSizeRef.current?.height}px`,
+    });
+  }, [discussionSize]);
 
   useEffect(
     () => setCanSetTeamDefault(userIsAdmin && !isOffline),
@@ -211,13 +220,6 @@ export function DiscussionList(props: IProps & IRecordProps) {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planId, mediafiles]);
-
-  useEffect(() => {
-    setRootWidthStyle({
-      width: `${discussionSize.width - 30}px`,
-      maxHeight: discussionSize.height,
-    });
-  }, [discussionSize]);
 
   const discussionSort = (x: Discussion, y: Discussion) => {
     const topicSort = () => {
