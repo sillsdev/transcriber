@@ -14,6 +14,7 @@
     "@devexpress/dx-react-grid-material-ui": "^3.0.4",
     "@dr-kobros/react-webfont-loader": "^8.0.0",
     "@electron/asar": "^3.2.2",
+    "@electron/notarize": "^1.2.3",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@mui/icons-material": "^5.8.4",
@@ -186,6 +187,7 @@
     "dmg": {
       "sign": false
     },
+    "afterSign": "env-config/notarize.js",
     "directories": {
       "buildResources": "assets"
     },
@@ -220,5 +222,7 @@
     "typescript": {
       "memoryLimit": 5000
     }
-  }
+  },
+  "main": "public/electron.js",
+  "homepage": "./"
 }
