@@ -22,7 +22,7 @@ export enum ArtifactTypeSlug {
   Comment = 'comment',
   Activity = 'activity',
   Resource = 'resource',
-  SharedResource = 'sharedResource',
+  SharedResource = 'sharedresource',
   ProjectResource = 'projectresource',
   IntellectualProperty = 'intellectualproperty',
   KeyTerm = 'keyterm',

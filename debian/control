@@ -1,10 +1,10 @@
 Source: audio-project-manager
 Section: sound
-Priority: extra
+Priority: optional
 Maintainer: Greg Trihus <greg_trihus@sil.org>
-Build-Depends: debhelper (>= 7),libsecret-1-dev
-Standards-Version: 3.9.7
-Homepage: www.audioprojectmanager.org
+Build-Depends: libsecret-1-dev
+Standards-Version: 4.5.0
+Homepage: https://www.audioprojectmanager.org
 Vcs-Git: git://github.com/sillsdev/transcriber.git
 Vcs-Browser: http://github.com/sillsdev/transcriber/
 
@@ -12,16 +12,12 @@ Package: audio-project-manager
 Architecture: all
 Depends: xchm
 Recommends:
-Description: Transcription of minority audio for review by Paratext or Elan
- Audio Project Manager is a web application you can use to manage a project to
- prepare text copies of audio files. Oral translation projects must take
- extra steps to ensure quality and consistency because other tools are text
- based. Even text projects may benefit from the naturalness of creating an
- oral draft by a native speaker and then transcribing it. Audio Project Manager
- is integrated with Paratext but can also export transcription to ELAN files
- if the goals are primarily related to language documentation.
-    This application is the Audio Project Manager Desktop Extension for Ubuntu
- Linx. It allows the user to transcribe while not connected to the Internet. The
- setup is done with the web app. Then the project is exported to a Portable
- Transcriber Format (PTF) file. This file is imported in this Desktop
- Extension to get the program setup.
+Description: Audio Project Manager (APM) is the next generation Bible
+ translation tool for those implementing an oral strategy in their Bible
+ translation project. APM serves as a bridge between high-quality tools like 
+ Paratext and Render, providing teams the flexibility to utilize the strengths
+ of each tool in a way that serves them best.
+   Audio Project Manager helps with managing files for personal or collaborative
+ team projects. Projects can be Scripture content or more general content. Each team can customize a workflow for their projects including steps like internalization, recording, term review, peer review, community checking, whole and phrase back translations, consultant review, transcription of the
+ vernacular or the back translations, syncing content into a Paratext project, and or exporting the content for use in other applications.
+

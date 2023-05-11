@@ -1,22 +1,14 @@
-import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
-import { Resource, MediaFile, ArtifactType } from '../model';
+import { RecordIdentity, TransformBuilder } from '@orbit/data';
+import { Resource, MediaFile } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
+import { ArtifactTypeSlug, useArtifactType } from './useArtifactType';
 
 export const useMediaResCreate = (passage: RecordIdentity, stepId: string) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [plan] = useGlobal('plan');
-
-  const sharedResource = useMemo(() => {
-    const artifactTypes = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('artifacttype')
-    ) as ArtifactType[];
-    return artifactTypes.find(
-      (t) => t.attributes?.typename === 'sharedresource'
-    );
-  }, [memory.cache]);
+  const { getTypeId } = useArtifactType();
 
   return async (res: Resource, artifactCategoryId?: string) => {
     const attr = res.attributes;
@@ -49,16 +41,15 @@ export const useMediaResCreate = (passage: RecordIdentity, stepId: string) => {
       // shared resources are not associated with a single passage
       // ...ReplaceRelatedRecord(t, mediaRec, 'passage', 'passage', passage.id),
     ];
-    if (sharedResource)
-      ops.push(
-        ...ReplaceRelatedRecord(
-          t,
-          mediaRec,
-          'artifactType',
-          'artifacttype',
-          sharedResource.id
-        )
-      );
+    ops.push(
+      ...ReplaceRelatedRecord(
+        t,
+        mediaRec,
+        'artifactType',
+        'artifacttype',
+        getTypeId(ArtifactTypeSlug.SharedResource)
+      )
+    );
     if (artifactCategoryId)
       ops.push(
         ...ReplaceRelatedRecord(
