@@ -15,9 +15,8 @@ mkdir ../audio-project-manager-${RELEASE}
 cp -r . ../audio-project-manager-${RELEASE}
 rm -rf ../audio-project-manager-${RELEASE}/.git
 rm -rf ../audio-project-manager-${RELEASE}/node_modules
-rm -rf ../audio-project-manager-${RELEASE}/src/components/LgPick/index
 rm -rf ../audio-project-manager-${RELEASE}/src/buildDate.json
-rm -rf ../audio-project-manager-${RELEASE}/package-lock.json
+# rm -rf ../audio-project-manager-${RELEASE}/package-lock.json
 cp debian/changelog ../audio-project-manager-${RELEASE}/debian/.
 cp debian/control ../audio-project-manager-${RELEASE}/debian/control
 cp debian/rules ../audio-project-manager-${RELEASE}/debian/rules
@@ -37,6 +36,7 @@ ln -fs audio-project-manager-${RELEASE}.tar.bz2 audio-project-manager_${RELEASE}
 
 # Do an initial unsigned source build in host OS environment
 cd audio-project-manager-${RELEASE}
+nvm use 16
 
 if [ "$(dpkg --print-architecture)" == "amd64" ]; then
    debuild -eBUILD_NUMBER=${RELEASE} -us -uc || exit 4
