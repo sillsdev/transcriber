@@ -4,6 +4,7 @@
 	xmlns:ns12="urn:oasis:names:tc:xliff:document:1.2"
 	xmlns:ns20="urn:oasis:names:tc:xliff:document:2.0"
 	version="1.0">
+	<!-- This copies the localization strings used by SIL Transcriber 1.0 for use in 2.0 -->
 	
 	<xsl:param name="lg">ta</xsl:param>
 	<xsl:param name="prev" select="document(concat('file:',$lg,'/TranscriberAdmin-en-1.2.xliff'))"/>

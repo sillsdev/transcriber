@@ -3,6 +3,7 @@
 	xmlns="urn:oasis:names:tc:xliff:document:2.0"
 	xmlns:ns12="urn:oasis:names:tc:xliff:document:1.2"
 	version="1.0">
+	<!-- This is used as part of localization/program.cs logic -->
 	
 	<xsl:output indent="yes"/>
 	<xsl:param name="fileId">TranscriberAdmin</xsl:param>

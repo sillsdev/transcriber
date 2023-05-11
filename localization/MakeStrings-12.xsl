@@ -3,6 +3,7 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
 	version="2.0" exclude-result-prefixes="xliff">
+	<!-- This is used as part of localization/program.cs logic -->
 	
 	<xsl:param name="v2File"/>
 	<xsl:variable name="v2" select="document($v2File)"/>
