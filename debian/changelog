@@ -1,3 +1,11 @@
+audio-project-manager (2.16.4.0)  experimental; urgency=high
+
+  * fixed shared resource loading
+  * fix linux build
+  * document Mac build
+
+ -- Greg Trihus <greg_trihus@sil.org>  Tue, 11 May 2023 11:21:00 -0600
+
 audio-project-manager (2.16.3.0)  experimental; urgency=high
 
   * load testing is related to handling larger projects
