@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef, useContext, ChangeEvent } from 'react';
 import { useGlobal } from 'reactn';
 import {
   Section,
@@ -8,7 +8,16 @@ import {
   MediaFile,
   SectionResource,
 } from '../../../model';
-import { IconButton, Paper, PaperProps, debounce, styled } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  Paper,
+  PaperProps,
+  Stack,
+  TextField,
+  debounce,
+  styled,
+} from '@mui/material';
 import SkipIcon from '@mui/icons-material/NotInterested';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
@@ -37,6 +46,8 @@ import {
   PriButton,
 } from '../../../control';
 
+const NotTable = 408;
+
 const wizToolId = 'ProjResWizard';
 
 const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
@@ -46,11 +57,10 @@ const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
     borderRadius: '8px',
   },
   overflow: 'auto',
-  paddingTop: theme.spacing(2),
 }));
 
 const StyledTable = styled('div')(({ theme }) => ({
-  padding: theme.spacing(4),
+  padding: theme.spacing(2),
   '& .data-grid .cell': {
     height: '48px',
   },
@@ -104,10 +114,11 @@ export const ProjectResourceConfigure = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [, setComplete] = useGlobal('progress');
   const [data, setData] = useState<ICell[][]>([]);
+  const [suffix, setSuffix] = useState('');
   const [numSegments, setNumSegments] = useState(0);
   const [pastedSegments, setPastedSegments] = useState('');
   const [heightStyle, setHeightStyle] = useState({
-    maxHeight: `${window.innerHeight - 450}px`,
+    maxHeight: `${window.innerHeight - NotTable}px`,
   });
   const dataRef = useRef<ICell[][]>([]);
   const infoRef = useRef<IInfo[]>([]);
@@ -150,7 +161,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
   }
   const setDimensions = () => {
     setHeightStyle({
-      maxHeight: `${window.innerHeight - 550}px`,
+      maxHeight: `${window.innerHeight - NotTable}px`,
     });
   };
 
@@ -220,12 +231,13 @@ export const ProjectResourceConfigure = (props: IProps) => {
           }
           const limitValue = row[ColName.Limits].value;
           let topic = row[ColName.Desc].value;
-          if (limitValue && row[ColName.Ref].value) {
+          let refValue = row[ColName.Ref].value;
+          if (limitValue && refValue) {
             await projectResourceSave({
               t,
               media,
               i,
-              topicIn: topic,
+              topicIn: topic ? topic : `${refValue} ${suffix}`,
               limitValue,
               mediafiles,
               sectionResources,
@@ -501,6 +513,10 @@ export const ProjectResourceConfigure = (props: IProps) => {
     }
   };
 
+  const handleSuffix = (e: ChangeEvent<HTMLInputElement>) => {
+    setSuffix(e.target.value);
+  };
+
   const handleSkip = (v: string) => () => {
     console.log(`skip ${v}`);
   };
@@ -515,7 +531,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     );
 
   return (
-    <>
+    <Box>
       <PassageDetailPlayer
         allowSegment={NamedRegions.ProjectResource}
         onSegment={handleSegment}
@@ -523,12 +539,20 @@ export const ProjectResourceConfigure = (props: IProps) => {
       />
       <StyledPaper id="proj-res-sheet" style={heightStyle}>
         <StyledTable id="proj-res-sheet">
-          <DataSheet
-            data={data}
-            valueRenderer={handleValueRenderer}
-            onCellsChanged={handleCellsChanged}
-            parsePaste={handleParsePaste}
-          />
+          <Stack direction="row" spacing={1}>
+            <DataSheet
+              data={data}
+              valueRenderer={handleValueRenderer}
+              onCellsChanged={handleCellsChanged}
+              parsePaste={handleParsePaste}
+            />
+            <TextField
+              label="Suffix"
+              variant="outlined"
+              value={suffix}
+              onChange={handleSuffix}
+            />
+          </Stack>
         </StyledTable>
       </StyledPaper>
       <ActionRow>
@@ -551,7 +575,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
           {ts.cancel}
         </AltButton>
       </ActionRow>
-    </>
+    </Box>
   );
 };
 
