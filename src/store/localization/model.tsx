@@ -694,6 +694,8 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "sharedResource": string;
     "source": string;
     "startStop": string;
+    "suffix": string;
+    "suffixTip": string;
     "termsOfUse": string;
     "termsReview": string;
     "title": string;

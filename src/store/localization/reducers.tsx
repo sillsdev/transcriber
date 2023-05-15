@@ -736,6 +736,8 @@ const initialState = {
 			"sharedResource": "Link Shared {0} Resource",
 			"source": "Source",
 			"startStop": "Start - Stop",
+			"suffix": "Suffix",
+			"suffixTip": "A Suffix is added to the end of the Reference (if there is no Description to override it).",
 			"termsOfUse": "Terms of Use",
 			"termsReview": "Review the Terms of Use",
 			"title": "Title",

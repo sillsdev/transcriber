@@ -3508,6 +3508,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.suffix">
+         <segment>
+            <source>Suffix</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.suffixTip">
+         <segment>
+            <source>A Suffix is added to the end of the Reference (if there is no Description to override it).</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.termsOfUse">
          <segment>
             <source>Terms of Use</source>
