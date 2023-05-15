@@ -17,7 +17,7 @@ export * from './setDefaultProj';
 export * from './updatePassageState';
 export * from './useAllUserGroup';
 export * from './useFlatAdd';
-export * from './useIsPersonalTeam';
+export * from './isPersonalTeam';
 export * from './useNewTeamId';
 export * from './useOrganizedBy';
 export * from './usePassageRec';
