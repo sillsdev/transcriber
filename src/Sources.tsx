@@ -304,7 +304,8 @@ export const Sources = async (
     setLang(locale);
     localStorage.setItem('user-id', user.id);
     localStorage.setItem('online-user-id', user.id);
-    Bugsnag.setUser(user.keys?.remoteId ?? user.id);
+    if (globalStore.errorReporter)
+      Bugsnag.setUser(user.keys?.remoteId ?? user.id);
   }
   var user = localStorage.getItem('user-id') as string;
   setUser(user);
