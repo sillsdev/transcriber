@@ -462,7 +462,7 @@
       </unit>
       <unit id="audacityManager.missingImport">
          <segment>
-            <source>Missing import file: {0}</source>
+            <source>Missing import file: {0}. Please open Audacity again and use File, Export to save the contents and then use Import here.</source>
             <target/>
          </segment>
       </unit>

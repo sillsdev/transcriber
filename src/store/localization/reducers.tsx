@@ -112,7 +112,7 @@ const initialState = {
 			"import": "Import",
 			"installError": "Audacity install error",
 			"loadingAudio": "Use File:Import in Audacity to load current audio if desired.",
-			"missingImport": "Missing import file: {0}",
+			"missingImport": "Missing import file: {0}. Please open Audacity again and use File, Export to save the contents and then use Import here.",
 			"missingProject": "Missing file. Use Browse to search for it or Create to make a new file.",
 			"open": "Open",
 			"saveFirst": "Save before editing",

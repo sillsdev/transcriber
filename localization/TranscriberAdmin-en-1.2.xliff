@@ -535,7 +535,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="audacityManager.missingImport">
-            <source>Missing import file: {0}</source>
+            <source>Missing import file: {0}. Please open Audacity again and use File, Export to save the contents and then use Import here.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AudacityManager.tsx</context>
