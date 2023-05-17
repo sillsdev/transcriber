@@ -167,7 +167,6 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [reporter] = useGlobal('errorReporter');
   const [organization] = useGlobal('organization');
-  const [offlineOnly] = useGlobal('offlineOnly');
   const [plan] = useGlobal('plan');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [statusText, setStatusText] = useState('');
@@ -419,16 +418,10 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
                             sx={buttonProp}
                             id="pdRecordUpload"
                             onClick={handleUpload}
-                            title={
-                              !offlineOnly
-                                ? ts.uploadMediaSingular
-                                : ts.importMediaSingular
-                            }
+                            title={ts.uploadMediaSingular}
                           >
                             <AddIcon />
-                            {!offlineOnly
-                              ? ts.uploadMediaSingular
-                              : ts.importMediaSingular}
+                            {ts.uploadMediaSingular}
                           </Button>
                           <GrowingSpacer />
                           {currentSegment && (

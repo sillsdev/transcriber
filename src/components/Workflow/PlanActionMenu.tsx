@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { useGlobal } from 'reactn';
 import { ISharedStrings, IPlanActionsStrings } from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
@@ -54,7 +53,6 @@ export function PlanActionMenu(props: IProps) {
     canDelete,
     active,
   } = props;
-  const [offlineOnly] = useGlobal('offlineOnly');
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [open, setOpen] = React.useState(false);
@@ -190,11 +188,7 @@ export function PlanActionMenu(props: IProps) {
                       <MenuItem
                         id="planActUpload"
                         onClick={onUpload(rowIndex)}
-                        title={
-                          !offlineOnly
-                            ? ts.uploadMediaSingular
-                            : ts.importMediaSingular
-                        }
+                        title={ts.uploadMediaSingular}
                       >
                         <AddIcon sx={{ color: 'primary.light' }} />
                       </MenuItem>
