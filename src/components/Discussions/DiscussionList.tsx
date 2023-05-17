@@ -32,7 +32,7 @@ import CategoryList, { CatData } from './CategoryList';
 import { withData } from 'react-orbitjs';
 import { useGlobal } from 'reactn';
 import { useDiscussionOrg, useOrgDefaults } from '../../crud';
-import FilterMenu, { IFilterState } from './FilterMenu';
+import FilterMenu, { IFilterState, Resolved } from './FilterMenu';
 import Confirm from '../AlertDialog';
 import { onlyUnique, waitForIt } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -106,9 +106,9 @@ export function DiscussionList(props: IProps & IRecordProps) {
     maxHeight: `${discussionSizeRef.current?.height}px`,
   });
   const { userIsAdmin } = useRole();
-  const defaultFilterState = {
+  const defaultFilterState: IFilterState = {
     forYou: false,
-    resolved: false,
+    resolved: Resolved.No,
     latestVersion: false,
     allPassages: false,
     allSteps: false,
@@ -277,7 +277,9 @@ export function DiscussionList(props: IProps & IRecordProps) {
               (!forYou ||
                 related(d, 'user') === userId ||
                 projGroups?.includes(related(d, 'group'))) &&
-              resolved === Boolean(d.attributes?.resolved) &&
+              (resolved === Resolved.Both ||
+                (resolved === Resolved.Yes) ===
+                  Boolean(d.attributes?.resolved)) &&
               (!latestVersion ||
                 latestMedia.indexOf(related(d, 'mediafile')) >= 0) &&
               (allPassages || currentPassage(d)) &&
@@ -340,6 +342,19 @@ export function DiscussionList(props: IProps & IRecordProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentstep, passage]);
 
+  const nextState = (what: string) => {
+    const cur = filterState[what];
+    if (what === 'resolved') {
+      return cur === Resolved.No
+        ? Resolved.Yes
+        : cur === Resolved.Yes
+        ? Resolved.Both
+        : Resolved.No;
+    } else {
+      return !cur;
+    }
+  };
+
   const doTheThing = () => {
     switch (confirmAction) {
       case WaitSave.add:
@@ -354,7 +369,7 @@ export function DiscussionList(props: IProps & IRecordProps) {
     }
     if (confirmAction.startsWith(WaitSave.filter)) {
       var what = confirmAction.substring(WaitSave.filter.length);
-      setFilterState({ ...filterState, [what]: !filterState[what] });
+      setFilterState({ ...filterState, [what]: nextState(what) });
     }
     setConfirmAction('');
   };
@@ -417,7 +432,7 @@ export function DiscussionList(props: IProps & IRecordProps) {
     if (what === 'Close') {
     } else if (Object.keys(filterState).includes(what)) {
       if (!checkChanged(WaitSave.filter + what))
-        setFilterState({ ...filterState, [what]: !filterState[what] });
+        setFilterState({ ...filterState, [what]: nextState(what) });
     } else {
       if (!checkChanged(WaitSave.category)) setCategoryOpen(true);
     }
