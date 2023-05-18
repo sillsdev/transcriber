@@ -72,25 +72,13 @@ export const ProjectDownload = (
     t,
     message: t.downloadingProject,
   });
-  const [progress, setProgressx] = React.useState<Steps>(Steps.Prepare);
-  const progressRef = React.useRef<Steps>(progress);
+  const [progress, setProgress] = React.useState<Steps>(Steps.Prepare);
   const [steps, setSteps] = React.useState<string[]>([]);
   const [currentStep, setCurrentStep] = React.useState(0);
   const [exportName, setExportName] = React.useState('');
-  const [exportUrl, setExportUrlx] = React.useState('');
-  const exportUrlRef = React.useRef('');
+  const [exportUrl, setExportUrl] = React.useState('');
   const [offlineUpdates] = React.useState<Operation[]>([]);
   const backup = coordinator.getSource('backup') as IndexedDBSource;
-
-  const setProgress = (val: Steps) => {
-    progressRef.current = val;
-    setProgressx(val);
-  };
-
-  const setExportUrl = (val: string) => {
-    exportUrlRef.current = val;
-    setExportUrlx(val);
-  };
 
   const translateError = (err: IAxiosStatus): string => {
     if (err.errStatus === 401) return ts.expiredToken;
@@ -235,17 +223,9 @@ export const ProjectDownload = (
 
   React.useEffect(() => {
     return () => {
-      if (progressRef.current !== Steps.Prepare) {
-        logError(Severity.error, errorReporter, ts.cancel);
-        if (exportUrlRef.current) URL.revokeObjectURL(exportUrlRef.current);
-        showTitledMessage(t.error, ts.cancel);
-        exportComplete();
-        setProgress(Steps.Error);
-        setTimeout(() => {
-          setBusy(false);
-          finish();
-        }, 1000);
-      }
+      exportComplete();
+      setBusy(false);
+      finish();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
