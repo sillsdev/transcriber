@@ -48,7 +48,9 @@ export const ProjectDownloadAlert = (props: IProps) => {
   const projectPlans = useProjectPlans();
 
   const getNeedyRemoteIds = async () => {
-    const ops = offlineProjects.filter((op) => op.attributes.offlineAvailable);
+    const ops = offlineProjects.filter(
+      (op) => op?.attributes?.offlineAvailable
+    );
     let planIds = Array<string>();
     const planProject: PlanProject = {};
     ops.forEach((offlineProjRec) => {
