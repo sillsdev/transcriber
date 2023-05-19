@@ -759,7 +759,7 @@ export async function electronExport(
       q.findRecords('offlineproject')
     ) as OfflineProject[];
     var ids = offlineprojects
-      .filter((o) => o.attributes.offlineAvailable)
+      .filter((o) => o?.attributes?.offlineAvailable)
       .map((o) => related(o, 'project')) as string[];
     projects = projects.filter((p) => ids.includes(p.id));
     backupZip = (await ipc?.zipOpen()) as AdmZip;
