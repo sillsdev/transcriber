@@ -6,6 +6,7 @@ import {
   FormGroup,
   FormControlLabel,
   Box,
+  SxProps,
 } from '@mui/material';
 import { LanguagePicker } from 'mui-language-picker';
 import { useSelector, shallowEqual } from 'react-redux';
@@ -23,10 +24,11 @@ interface IProps extends ILanguage {
   hideSpelling?: boolean;
   hideFont?: boolean;
   disabled?: boolean;
+  sx?: SxProps;
 }
 
 export const Language = (props: IProps) => {
-  const { bcp47, languageName, font, spellCheck, onChange } = props;
+  const { bcp47, languageName, font, spellCheck, sx, onChange } = props;
   const [state, setState] = React.useState<ILanguage>({
     bcp47,
     languageName,
@@ -83,11 +85,11 @@ export const Language = (props: IProps) => {
       {fullBox && (
         <FormLabel sx={{ color: 'secondary.main' }}>{t.language}</FormLabel>
       )}
-      <FormGroup sx={fullBox ? { pb: 3 } : undefined}>
+      <FormGroup sx={fullBox || undefined}>
         <FormControlLabel
           id="language-code"
           ref={langEl}
-          sx={{ marginLeft: 0 }}
+          sx={sx ?? { ml: 0 }}
           control={
             <LanguagePicker
               value={bcp47}
