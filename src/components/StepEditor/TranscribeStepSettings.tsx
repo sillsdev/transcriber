@@ -66,8 +66,9 @@ export const TranscribeStepSettings = ({ toolSettings, onChange }: IProps) => {
 
   const hasLang = useMemo(() => {
     const id =
-      lgState.artId &&
-      remoteIdGuid('artifacttype', lgState.artId, memory.keyMap);
+      (lgState.artId &&
+        remoteIdGuid('artifacttype', lgState.artId, memory.keyMap)) ??
+      lgState.artId;
     return id && langSlugs.includes(slugFromId(id) as ArtifactTypeSlug);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lgState]);
