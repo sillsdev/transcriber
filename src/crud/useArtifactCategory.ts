@@ -19,11 +19,12 @@ export interface IArtifactCategory {
 const stringSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'artifactCategory' });
 
-export const useArtifactCategory = () => {
+export const useArtifactCategory = (teamId?: string) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [offline] = useGlobal('offline');
   const [organization] = useGlobal('organization');
+  const curOrg = teamId ?? organization;
   const [offlineOnly] = useGlobal('offlineOnly');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -69,7 +70,7 @@ export const useArtifactCategory = () => {
     orgrecs
       .filter(
         (r) =>
-          (related(r, 'organization') === organization ||
+          (related(r, 'organization') === curOrg ||
             related(r, 'organization') === null) &&
           Boolean(r.keys?.remoteId) !== offlineOnly &&
           r.attributes.resource === resource &&
@@ -101,7 +102,7 @@ export const useArtifactCategory = () => {
       var dup = false;
       orgrecs.forEach((r) => {
         var org = related(r, 'organization');
-        if (org === organization || !org) dup = true;
+        if (org === curOrg || !org) dup = true;
       });
       if (dup) return 'duplicate';
       //now check duplicate localized
@@ -126,7 +127,7 @@ export const useArtifactCategory = () => {
           artifactCategory,
           'organization',
           'organization',
-          organization
+          curOrg
         ),
       ];
       await memory.update(ops);

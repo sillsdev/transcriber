@@ -689,6 +689,13 @@
                <context context-type="sourcefile">TeamDialog.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="cards.editCategory">
+      		<source>Edit Category</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="cards.editWorkflow">
             <source>Edit Workflow {0}</source>
             <target/>
@@ -885,6 +892,48 @@
                <context context-type="sourcefile">AddCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="category.builtIn">
+      		<source>Built in!</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.discussion">
+      		<source>Discussion</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.discussions">
+      		<source>discussion(s)</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.inUseBy">
+      		<source>In use by {0} {1}</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.resource">
+      		<source>Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.resources">
+      		<source>resource(s)</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="commentCard.approve">
             <source>Approve</source>
             <target/>
@@ -5016,13 +5065,20 @@
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="projButtons.export">
-            <source>Export</source>
+         <trans-unit id="projButtons.categoryTitle">
+            <source>{0} Categories</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjButtons.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="projButtons.export">
+      		<source>Export</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ProjButtons.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="projButtons.exportTitle">
             <source>{0} Export</source>
             <target/>
