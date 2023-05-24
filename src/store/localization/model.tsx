@@ -127,6 +127,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "delete": string;
     "deleteTeam": string;
     "draft": string;
+    "editCategory": string;
     "editWorkflow": string;
     "explainTeamDelete": string;
     "import": string;
@@ -155,6 +156,15 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "teamSettings": string;
     "transcriber": string;
     "uploadProgress": string;
+};
+
+export interface ICategoryStrings extends Localize.LocalizedStringsMethods {
+    "builtIn": string;
+    "discussion": string;
+    "discussions": string;
+    "inUseBy": string;
+    "resource": string;
+    "resources": string;
 };
 
 export interface ICommentCardStrings extends Localize.LocalizedStringsMethods {
@@ -859,6 +869,7 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IProjButtonsStrings extends Localize.LocalizedStringsMethods {
+    "categoryTitle": string;
     "export": string;
     "exportTitle": string;
     "import": string;
@@ -1406,6 +1417,7 @@ export interface ILocalizedStrings {
 	audacityManager: IAudacityManagerStrings;
 	audioDownload: IAudioDownloadStrings;
 	cards: ICardsStrings;
+	category: ICategoryStrings;
 	commentCard: ICommentCardStrings;
 	commentEditor: ICommentEditorStrings;
 	community: ICommunityStrings;

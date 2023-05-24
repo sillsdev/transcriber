@@ -142,6 +142,7 @@ const initialState = {
 			"delete": "Delete",
 			"deleteTeam": "Delete Team",
 			"draft": "Oral Drafting",
+			"editCategory": "Edit Category",
 			"editWorkflow": "Edit Workflow {0}",
 			"explainTeamDelete": "Deleting the team will delete all audio projects of the team.",
 			"import": "Import Audio Project",
@@ -170,6 +171,16 @@ const initialState = {
 			"teamSettings": "Team Settings",
 			"transcriber": "Transcribing",
 			"uploadProgress": "Upload Progress",
+		}
+	}),
+	"category": new LocalizedStrings({
+		"en": {
+			"builtIn": "Built in!",
+			"discussion": "Discussion",
+			"discussions": "discussion(s)",
+			"inUseBy": "In use by {0} {1}",
+			"resource": "Resource",
+			"resources": "resource(s)",
 		}
 	}),
 	"commentCard": new LocalizedStrings({
@@ -912,6 +923,7 @@ const initialState = {
 	}),
 	"projButtons": new LocalizedStrings({
 		"en": {
+			"categoryTitle": "{0} Categories",
 			"export": "Export",
 			"exportTitle": "{0} Export",
 			"import": "Import",
@@ -1498,6 +1510,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"audacityManager" : new LocalizedStrings(action.payload.data.audacityManager),
 				"audioDownload" : new LocalizedStrings(action.payload.data.audioDownload),
 				"cards" : new LocalizedStrings(action.payload.data.cards),
+				"category" : new LocalizedStrings(action.payload.data.category),
 				"commentCard" : new LocalizedStrings(action.payload.data.commentCard),
 				"commentEditor" : new LocalizedStrings(action.payload.data.commentEditor),
 				"community" : new LocalizedStrings(action.payload.data.community),

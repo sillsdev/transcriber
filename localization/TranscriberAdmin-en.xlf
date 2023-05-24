@@ -592,6 +592,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.editCategory">
+         <segment>
+            <source>Edit Category</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.editWorkflow">
          <segment>
             <source>Edit Workflow {0}</source>
@@ -757,6 +763,42 @@
       <unit id="cards.uploadProgress">
          <segment>
             <source>Upload Progress</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.builtIn">
+         <segment>
+            <source>Built in!</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.discussion">
+         <segment>
+            <source>Discussion</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.discussions">
+         <segment>
+            <source>discussion(s)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.inUseBy">
+         <segment>
+            <source>In use by {0} {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.resource">
+         <segment>
+            <source>Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.resources">
+         <segment>
+            <source>resource(s)</source>
             <target/>
          </segment>
       </unit>
@@ -4297,6 +4339,12 @@
       <unit id="profile.userProfile">
          <segment>
             <source>User profile</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projButtons.categoryTitle">
+         <segment>
+            <source>{0} Categories</source>
             <target/>
          </segment>
       </unit>

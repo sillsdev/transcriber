@@ -6,3 +6,4 @@ export * from './TeamProjects';
 export * from './TeamActions';
 export * from './TeamDialog';
 export * from './ProjectMenu';
+export * from './CategoryTabs';

@@ -16,6 +16,7 @@ import ImportIcon from '@mui/icons-material/CloudUpload';
 import ExportIcon from '@mui/icons-material/CloudDownload';
 import ReportIcon from '@mui/icons-material/Assessment';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import FilterIcon from '@mui/icons-material/FilterList';
 import UncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckedIcon from '@mui/icons-material/RadioButtonChecked';
@@ -153,6 +154,14 @@ export function ProjectMenu(props: IProps) {
               <ListItemText primary={tpb.integrations} />
             </StyledMenuItem>
           )}
+        {!inProject && !isOffline && isAdmin && (
+          <StyledMenuItem id="projMenuCat" onClick={handle('category')}>
+            <ListItemIcon>
+              <EditIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.editCategory} />
+          </StyledMenuItem>
+        )}
         {!justFilter && isAdmin && !inProject && (
           <StyledMenuItem id="projMenuImp" onClick={handle('import')}>
             <ListItemIcon>

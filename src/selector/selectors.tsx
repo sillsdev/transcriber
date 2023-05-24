@@ -19,6 +19,9 @@ export const audacityManagerSelector = (state: IState) =>
 export const cardsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'cards' });
 
+export const categorySelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'category' });
+
 export const commentCardSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'commentCard' });
 

@@ -42,6 +42,7 @@ import { useHome } from '../../utils';
 import { copyComplete, CopyProjectProps } from '../../store';
 import { TokenContext } from '../../context/TokenProvider';
 import { useSnackBar } from '../../hoc/SnackBar';
+import CategoryTabs from './CategoryTabs';
 
 const ProjectCardRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -127,6 +128,7 @@ export const ProjectCard = (props: IProps) => {
   const [openIntegration, setOpenIntegration] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [openReports, setOpenReports] = useState(false);
+  const [openCategory, setOpenCategory] = useState(false);
   const [deleteItem, setDeleteItem] = useState<VProject>();
   const [open, setOpen] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
@@ -197,6 +199,9 @@ export const ProjectCard = (props: IProps) => {
       case 'delete':
         setDeleteItem(project);
         break;
+      case 'category':
+        setOpenCategory(true);
+        break;
       case 'copysame':
       case 'copynew':
         setCopying(true);
@@ -216,6 +221,10 @@ export const ProjectCard = (props: IProps) => {
         LoadAndGo(what);
     }
     setOpen('');
+  };
+
+  const handleCloseCategory = () => {
+    setOpenCategory(false);
   };
 
   const handleProjectAction = (what: string) => {
@@ -399,6 +408,16 @@ export const ProjectCard = (props: IProps) => {
         onOpen={setOpenReports}
       >
         <Visualize selectedPlan={project.id} />
+      </BigDialog>
+      <BigDialog
+        title={tpb.categoryTitle.replace('{0}', getPlanName(project.id))}
+        isOpen={openCategory}
+        onOpen={setOpenCategory}
+      >
+        <CategoryTabs
+          teamId={related(project, 'organization') as string}
+          onClose={handleCloseCategory}
+        />
       </BigDialog>
       {deleteItem && (
         <Confirm
