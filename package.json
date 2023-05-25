@@ -222,5 +222,7 @@
     "typescript": {
       "memoryLimit": 5000
     }
-  }
+  },
+  "main": "public/electron.js",
+  "homepage": "./"
 }

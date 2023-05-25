@@ -410,7 +410,7 @@ export const ProjectCard = (props: IProps) => {
         <Visualize selectedPlan={project.id} />
       </BigDialog>
       <BigDialog
-        title={tpb.categoryTitle.replace('{0}', getPlanName(project.id))}
+        title={tpb.categoryTitle}
         isOpen={openCategory}
         onOpen={setOpenCategory}
       >

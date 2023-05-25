@@ -20,6 +20,7 @@ import { categorySelector, sharedSelector } from '../../selector';
 import { useGlobal } from 'reactn';
 import { Operation, TransformBuilder } from '@orbit/data';
 import { UpdateRecord } from '../../model/baseModel';
+import { useSnackBar } from '../../hoc/SnackBar';
 
 interface IProps {
   resource?: boolean;
@@ -41,10 +42,15 @@ export default function CategoryList({
   const [inUse, setInUse] = React.useState<[string, number][]>([]);
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const { getArtifactCategorys, localizedArtifactCategory } =
-    useArtifactCategory(teamId);
+  const { showMessage } = useSnackBar();
+  const {
+    getArtifactCategorys,
+    isDuplicateCategory,
+    localizedArtifactCategory,
+  } = useArtifactCategory(teamId);
   const t: ICategoryStrings = useSelector(categorySelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const tc = t;
 
   const displayValue = (c: IArtifactCategory) => {
     const editMap = new Map<string, IArtifactCategory>(edited);
@@ -74,22 +80,33 @@ export default function CategoryList({
     const t = new TransformBuilder();
     const ops: Operation[] = [];
     for (const r of recs) {
-      const rec = findRecord(
-        memory,
-        'artifactcategory',
-        r.id
-      ) as ArtifactCategory;
-      if (rec)
-        ops.push(
-          ...UpdateRecord(
-            t,
-            {
-              ...rec,
-              attributes: { ...rec.attributes, categoryname: r.category },
-            } as ArtifactCategory,
-            user
-          )
-        );
+      if (
+        r.category &&
+        !(await isDuplicateCategory(
+          r.category,
+          Boolean(resource),
+          Boolean(discussion)
+        ))
+      ) {
+        const rec = findRecord(
+          memory,
+          'artifactcategory',
+          r.id
+        ) as ArtifactCategory;
+        if (rec)
+          ops.push(
+            ...UpdateRecord(
+              t,
+              {
+                ...rec,
+                attributes: { ...rec.attributes, categoryname: r.category },
+              } as ArtifactCategory,
+              user
+            )
+          );
+      } else {
+        showMessage(tc.ignoreInvalid.replace('{0}', r.category));
+      }
     }
     for (const id of deleted) {
       ops.push(t.removeRecord({ type: 'artifactcategory', id }));

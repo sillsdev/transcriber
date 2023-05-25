@@ -31,7 +31,7 @@ export function MediaPlayer(props: IProps) {
   } = props;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
-  const audioRef = useRef<HTMLAudioElement>();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
   const [ready, setReady] = useState(false);
@@ -130,7 +130,7 @@ export function MediaPlayer(props: IProps) {
     <audio
       controls={controls}
       onEnded={ended}
-      ref={audioRef as any}
+      ref={audioRef}
       src={mediaState.url}
       onTimeUpdate={timeUpdate}
       onDurationChange={durationChange}

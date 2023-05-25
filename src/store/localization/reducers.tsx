@@ -178,6 +178,7 @@ const initialState = {
 			"builtIn": "Built in!",
 			"discussion": "Discussion",
 			"discussions": "discussion(s)",
+			"ignoreInvalid": "Ignoring invalid category change '{0}'.",
 			"inUseBy": "In use by {0} {1}",
 			"resource": "Resource",
 			"resources": "resource(s)",
@@ -923,7 +924,7 @@ const initialState = {
 	}),
 	"projButtons": new LocalizedStrings({
 		"en": {
-			"categoryTitle": "{0} Categories",
+			"categoryTitle": "Edit Category",
 			"export": "Export",
 			"exportTitle": "{0} Export",
 			"import": "Import",
