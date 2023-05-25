@@ -784,6 +784,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="category.ignoreInvalid">
+         <segment>
+            <source>Ignoring invalid category change '{0}'.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="category.inUseBy">
          <segment>
             <source>In use by {0} {1}</source>

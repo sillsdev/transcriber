@@ -162,6 +162,7 @@ export interface ICategoryStrings extends Localize.LocalizedStringsMethods {
     "builtIn": string;
     "discussion": string;
     "discussions": string;
+    "ignoreInvalid": string;
     "inUseBy": string;
     "resource": string;
     "resources": string;

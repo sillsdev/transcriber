@@ -86,30 +86,39 @@ export const useArtifactCategory = (teamId?: string) => {
     return categorys;
   };
 
+  const isDuplicateCategory = async (
+    newArtifactCategory: string,
+    resource: boolean,
+    discussion: boolean
+  ) => {
+    //check for duplicate
+    const orgrecs: ArtifactCategory[] = memory.cache.query((q: QueryBuilder) =>
+      q
+        .findRecords('artifactcategory')
+        .filter({ attribute: 'categoryname', value: newArtifactCategory })
+    ) as any;
+    var dup = false;
+    orgrecs.forEach((r) => {
+      var org = related(r, 'organization');
+      if (org === curOrg || !org) dup = true;
+    });
+    if (dup) return true;
+    //now check duplicate localized
+    const ac = (await getArtifactCategorys(resource, discussion)).filter(
+      (c) => c.category === newArtifactCategory
+    );
+    if (ac.length > 0) return true;
+    return false;
+  };
+
   const addNewArtifactCategory = async (
     newArtifactCategory: string,
     resource: boolean,
     discussion: boolean
   ) => {
     if (newArtifactCategory.length > 0) {
-      //check for duplicate
-      const orgrecs: ArtifactCategory[] = memory.cache.query(
-        (q: QueryBuilder) =>
-          q
-            .findRecords('artifactcategory')
-            .filter({ attribute: 'categoryname', value: newArtifactCategory })
-      ) as any;
-      var dup = false;
-      orgrecs.forEach((r) => {
-        var org = related(r, 'organization');
-        if (org === curOrg || !org) dup = true;
-      });
-      if (dup) return 'duplicate';
-      //now check duplicate localized
-      const ac = (await getArtifactCategorys(resource, discussion)).filter(
-        (c) => c.category === newArtifactCategory
-      );
-      if (ac.length > 0) return 'duplicate';
+      if (await isDuplicateCategory(newArtifactCategory, resource, discussion))
+        return 'duplicate';
 
       const artifactCategory: ArtifactCategory = {
         type: 'artifactcategory',
@@ -142,6 +151,7 @@ export const useArtifactCategory = (teamId?: string) => {
 
   return {
     getArtifactCategorys,
+    isDuplicateCategory,
     addNewArtifactCategory,
     localizedArtifactCategory,
     fromLocalizedArtifactCategory,

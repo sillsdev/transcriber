@@ -913,6 +913,13 @@
       			<context context-type="sourcefile">CategoryListEdit.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="category.ignoreInvalid">
+      		<source>Ignoring invalid category change '{0}'.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="category.inUseBy">
       		<source>In use by {0} {1}</source>
       		<target/>

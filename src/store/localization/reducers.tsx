@@ -178,6 +178,7 @@ const initialState = {
 			"builtIn": "Built in!",
 			"discussion": "Discussion",
 			"discussions": "discussion(s)",
+			"ignoreInvalid": "Ignoring invalid category change '{0}'.",
 			"inUseBy": "In use by {0} {1}",
 			"resource": "Resource",
 			"resources": "resource(s)",
