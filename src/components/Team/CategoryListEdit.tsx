@@ -81,7 +81,7 @@ export default function CategoryList({
     const ops: Operation[] = [];
     for (const r of recs) {
       if (
-        r.category &&
+        !/^\s*$/.test(r.category) &&
         !(await isDuplicateCategory(
           r.category,
           Boolean(resource),
@@ -202,7 +202,11 @@ export default function CategoryList({
         <AltButton id="catCancel" onClick={handleClose}>
           {ts.cancel}
         </AltButton>
-        <PriButton id="catSave" onClick={handleSave}>
+        <PriButton
+          id="catSave"
+          onClick={handleSave}
+          disabled={edited.length + deleted.length === 0}
+        >
           {ts.save}
         </PriButton>
       </ActionRow>
