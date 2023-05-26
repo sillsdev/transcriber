@@ -116,7 +116,7 @@ export const useArtifactCategory = (teamId?: string) => {
     resource: boolean,
     discussion: boolean
   ) => {
-    if (newArtifactCategory.length > 0) {
+    if (!/^\s*$/.test(newArtifactCategory)) {
       if (await isDuplicateCategory(newArtifactCategory, resource, discussion))
         return 'duplicate';
 
