@@ -4456,6 +4456,27 @@
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="peerCheck.afterResource">
+      		<source>Play from end of resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamCheckReference.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peerCheck.back3Seconds">
+      		<source>Skip back 3 seconds</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamCheckReference.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peerCheck.resourceStart">
+      		<source>Play from start of resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamCheckReference.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="permission.admin">
       		<source>Admin</source>
       		<target/>

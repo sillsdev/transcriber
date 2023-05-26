@@ -3820,6 +3820,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="peerCheck.afterResource">
+         <segment>
+            <source>Play from end of resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peerCheck.back3Seconds">
+         <segment>
+            <source>Skip back 3 seconds</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="peerCheck.resourceStart">
+         <segment>
+            <source>Play from start of resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="permission.admin">
          <segment>
             <source>Admin</source>

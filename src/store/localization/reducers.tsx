@@ -814,6 +814,13 @@ const initialState = {
 			"removeConfirm": "Do you want to remove the peer group and information about who are the members?",
 		}
 	}),
+	"peerCheck": new LocalizedStrings({
+		"en": {
+			"afterResource": "Play from end of resource",
+			"back3Seconds": "Skip back 3 seconds",
+			"resourceStart": "Play from start of resource",
+		}
+	}),
 	"permission": new LocalizedStrings({
 		"en": {
 			"admin": "Admin",
@@ -1544,6 +1551,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
 				"passageRecord" : new LocalizedStrings(action.payload.data.passageRecord),
 				"peer" : new LocalizedStrings(action.payload.data.peer),
+				"peerCheck" : new LocalizedStrings(action.payload.data.peerCheck),
 				"permission" : new LocalizedStrings(action.payload.data.permission),
 				"planActions" : new LocalizedStrings(action.payload.data.planActions),
 				"planSheet" : new LocalizedStrings(action.payload.data.planSheet),
