@@ -766,6 +766,12 @@ export interface IPeerStrings extends Localize.LocalizedStringsMethods {
     "removeConfirm": string;
 };
 
+export interface IPeerCheckStrings extends Localize.LocalizedStringsMethods {
+    "afterResource": string;
+    "back3Seconds": string;
+    "resourceStart": string;
+};
+
 export interface IPermissionStrings extends Localize.LocalizedStringsMethods {
     "admin": string;
     "adminTip": string;
@@ -1451,6 +1457,7 @@ export interface ILocalizedStrings {
 	passageMedia: IPassageMediaStrings;
 	passageRecord: IPassageRecordStrings;
 	peer: IPeerStrings;
+	peerCheck: IPeerCheckStrings;
 	permission: IPermissionStrings;
 	planActions: IPlanActionsStrings;
 	planSheet: IPlanSheetStrings;

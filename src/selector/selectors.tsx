@@ -97,6 +97,9 @@ export const passageRecordSelector = (state: IState) =>
 export const peerSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'peer' });
 
+export const peerCheckSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'peerCheck' });
+
 export const permissionsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'permission' });
 
