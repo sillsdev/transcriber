@@ -104,11 +104,11 @@ export const useOrgWorkflowSteps = () => {
   const CreateOrgWorkflowSteps = async (process: string, org: string) => {
     creatingRef.current = true;
     const workflowsteps = (
-      memory.cache.query((q: QueryBuilder) =>
+      (await memory.query((q: QueryBuilder) =>
         q
           .findRecords('workflowstep')
           .filter({ attribute: 'process', value: process })
-      ) as WorkflowStep[]
+      )) as WorkflowStep[]
     ).filter((s) => Boolean(s.keys?.remoteId) !== offlineOnly);
     var tb = new TransformBuilder();
     //originally had them all in one ops, but it was too fast
