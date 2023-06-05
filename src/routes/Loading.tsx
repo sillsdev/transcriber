@@ -347,7 +347,7 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
 
   const logoutAndTryAgain = () => {
     forceLogin();
-    setView('Logout');
+    setView('/logout');
   };
 
   if (!offline && !authenticated()) navigate('/');
