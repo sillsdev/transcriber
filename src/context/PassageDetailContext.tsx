@@ -1000,7 +1000,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     }, [state.playItem]);
 
     useEffect(() => {
-      if (!getStepsBusy.current) {
+      if (plan && org && !getStepsBusy.current) {
         getStepsBusy.current = true;
 
         getFilteredSteps((wf) => {
