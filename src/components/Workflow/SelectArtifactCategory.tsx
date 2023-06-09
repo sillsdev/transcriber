@@ -1,11 +1,4 @@
-import {
-  Box,
-  BoxProps,
-  IconButton,
-  styled,
-  SxProps,
-  TextField,
-} from '@mui/material';
+import { Box, BoxProps, styled, SxProps, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
   IArtifactCategory,
@@ -14,13 +7,12 @@ import {
 import { ArtifactCategory, ISelectArtifactCategoryStrings } from '../../model';
 import AddIcon from '@mui/icons-material/Add';
 import InfoIcon from '@mui/icons-material/Info';
-import CancelIcon from '@mui/icons-material/CancelOutlined';
 import { shallowEqual, useSelector } from 'react-redux';
-import { useSnackBar } from '../../hoc/SnackBar';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from 'react-orbitjs';
 import { LightTooltip, StyledMenuItem } from '../../control';
 import { artifactCategorySelector } from '../../selector';
+import { NewArtifactCategory } from './NewArtifactCategory';
 
 interface IRecordProps {
   artifactCategories: Array<ArtifactCategory>;
@@ -70,22 +62,16 @@ export const SelectArtifactCategory = (props: IProps) => {
     disabled,
   } = props;
   const [categoryId, setCategoryId] = useState(initCategory);
-  const [newArtifactCategory, setNewArtifactCategory] = useState('');
   const [showNew, setShowNew] = useState(false);
   const t: ISelectArtifactCategoryStrings = useSelector(
     artifactCategorySelector,
     shallowEqual
   );
-  const {
-    getArtifactCategorys,
-    addNewArtifactCategory,
-    scriptureTypeCategory,
-  } = useArtifactCategory();
+  const { getArtifactCategorys, scriptureTypeCategory } = useArtifactCategory();
   const [artifactCategorys, setArtifactCategorys] = useState<
     IArtifactCategory[]
   >([]);
 
-  const { showMessage } = useSnackBar();
   useEffect(() => {
     setCategoryId(initCategory);
   }, [initCategory]);
@@ -106,39 +92,24 @@ export const SelectArtifactCategory = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [artifactCategories]);
 
-  const addNewCategory = () => {
-    addNewArtifactCategory(
-      newArtifactCategory,
-      resource || false,
-      discussion || false
-    ).then((newId) => {
-      if (newId) {
-        if (newId === 'duplicate') {
-          showMessage(t.duplicateCategory);
-        } else {
-          getCategorys().then((cats) => {
-            setArtifactCategorys(cats);
-            setCategoryId(newId);
-            onCategoryChange(newId);
-          });
-        }
-      }
-      cancelNewCategory();
+  const categoryAdded = (newId: string) => {
+    getCategorys().then((cats) => {
+      setArtifactCategorys(cats);
+      setCategoryId(newId);
+      onCategoryChange(newId);
     });
+    cancelNewCategory();
   };
   const cancelNewCategory = () => {
-    setNewArtifactCategory('');
     setShowNew(false);
   };
+
   const handleArtifactCategoryChange = (e: any) => {
     if (e.target.value === t.addNewCategory) setShowNew(true);
     else {
       setCategoryId(e.target.value);
       onCategoryChange(e.target.value);
     }
-  };
-  const handleNewArtifactCategoryChange = (e: any) => {
-    setNewArtifactCategory(e.target.value);
   };
 
   return (
@@ -204,37 +175,12 @@ export const SelectArtifactCategory = (props: IProps) => {
           )}
       </TextField>
       {showNew && (
-        <Box sx={{ p: 1 }}>
-          <TextField
-            id="new-artifact-cat"
-            label={t.newArtifactCategory}
-            sx={{ width: '300px' }}
-            value={newArtifactCategory || ''}
-            onChange={handleNewArtifactCategoryChange}
-            InputProps={{
-              endAdornment: (
-                <>
-                  <IconButton
-                    id="addnew"
-                    color="secondary"
-                    aria-label="addnew"
-                    onClick={addNewCategory}
-                  >
-                    <AddIcon />
-                  </IconButton>
-                  <IconButton
-                    id="cancelnew"
-                    color="secondary"
-                    aria-label="cancelnew"
-                    onClick={cancelNewCategory}
-                  >
-                    <CancelIcon />
-                  </IconButton>
-                </>
-              ),
-            }}
-          ></TextField>
-        </Box>
+        <NewArtifactCategory
+          discussion={discussion}
+          resource={resource}
+          onAdded={categoryAdded}
+          onCancelled={cancelNewCategory}
+        />
       )}
     </StyledBox>
   );

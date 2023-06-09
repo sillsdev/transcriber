@@ -14,6 +14,7 @@ interface ISwitches {
 export interface IArtifactCategory {
   slug: string;
   category: string;
+  org: string;
   id: string;
 }
 const stringSelector = (state: IState) =>
@@ -80,6 +81,7 @@ export const useArtifactCategory = (teamId?: string) => {
         categorys.push({
           slug: r.attributes.categoryname,
           category: localizedArtifactCategory(r.attributes.categoryname),
+          org: related(r, 'organization') ?? '',
           id: r.id,
         })
       );

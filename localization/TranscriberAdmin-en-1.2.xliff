@@ -275,6 +275,27 @@
                <context context-type="sourcefile">artifactCategory.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="artifactCategory.retelling">
+            <source>Community Test Retell</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.grammar">
+            <source>Grammar</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.qanda">
+            <source>Question and Answer</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="artifactType.backtranslation">
             <source>Phrase Back Translation</source>
             <target/>
@@ -893,7 +914,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="category.builtIn">
-      		<source>Built in!</source>
+      		<source>System Categories</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">CategoryListEdit.tsx</context>
