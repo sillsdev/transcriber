@@ -1,6 +1,13 @@
 import * as React from 'react';
-import { List, ListItem, IconButton, TextField } from '@mui/material';
+import {
+  List,
+  ListItem,
+  IconButton,
+  TextField,
+  Typography,
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+
 import {
   IArtifactCategory,
   findRecord,
@@ -21,6 +28,7 @@ import { useGlobal } from 'reactn';
 import { Operation, TransformBuilder } from '@orbit/data';
 import { UpdateRecord } from '../../model/baseModel';
 import { useSnackBar } from '../../hoc/SnackBar';
+import { NewArtifactCategory } from '../Workflow/NewArtifactCategory';
 
 interface IProps {
   resource?: boolean;
@@ -38,8 +46,9 @@ export default function CategoryList({
   const [categories, setCategories] = React.useState<IArtifactCategory[]>([]);
   const [edited, setEdited] = React.useState<[string, IArtifactCategory][]>([]);
   const [deleted, setDeleted] = React.useState<string[]>([]);
-  const [builtIn, setBuiltIn] = React.useState<string[]>([]);
+  const [builtIn, setBuiltIn] = React.useState<IArtifactCategory[]>([]);
   const [inUse, setInUse] = React.useState<[string, number][]>([]);
+  const [refresh, setRefresh] = React.useState(0);
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const { showMessage } = useSnackBar();
@@ -50,6 +59,7 @@ export default function CategoryList({
   } = useArtifactCategory(teamId);
   const t: ICategoryStrings = useSelector(categorySelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+
   const tc = t;
 
   const displayValue = (c: IArtifactCategory) => {
@@ -114,21 +124,15 @@ export default function CategoryList({
     await memory.update(ops);
     onClose && onClose();
   };
+  const categoryAdded = (newId: string) => {
+    setRefresh(refresh + 1);
+  };
 
   React.useEffect(() => {
     getArtifactCategorys(Boolean(resource), Boolean(discussion)).then(
       (cats) => {
-        setCategories(cats);
-        const builtIn: string[] = [];
-        cats.forEach((c) => {
-          const rec = findRecord(
-            memory,
-            'artifactcategory',
-            c.id
-          ) as ArtifactCategory;
-          if (!related(rec, 'organization')) builtIn.push(c.id);
-        });
-        setBuiltIn(builtIn);
+        setCategories(cats.filter((c) => c.org !== '').sort(sortCats));
+        setBuiltIn(cats.filter((c) => c.org === '').sort(sortCats));
         const inUseMap = new Map<string, number>();
         const media = memory.cache.query((q) =>
           q.findRecords('mediafile')
@@ -136,35 +140,36 @@ export default function CategoryList({
         const discussions = memory.cache.query((q) =>
           q.findRecords('discussion')
         ) as Discussion[];
-        cats
-          .filter((c) => !builtIn.includes(c.id))
-          .forEach((c) => {
-            let count = 0;
-            if (resource)
-              count = media.filter(
-                (m) => related(m, 'artifactCategory') === c.id
-              ).length;
-            if (discussion)
-              count = discussions.filter(
-                (d) => related(d, 'artifactCategory') === c.id
-              ).length;
-            inUseMap.set(c.id, count);
-          });
+        cats.forEach((c) => {
+          let count = 0;
+          if (resource)
+            count = media.filter(
+              (m) => related(m, 'artifactCategory') === c.id
+            ).length;
+          if (discussion)
+            count = discussions.filter(
+              (d) => related(d, 'artifactCategory') === c.id
+            ).length;
+          inUseMap.set(c.id, count);
+        });
         setInUse(Array.from(inUseMap));
       }
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resource, discussion]);
+  }, [resource, discussion, refresh]);
 
   const sortCats = (i: IArtifactCategory, j: IArtifactCategory) =>
     i.category <= j.category ? -1 : 1;
-
   return (
     <>
       <List dense={true}>
+        <NewArtifactCategory
+          discussion={discussion}
+          resource={resource}
+          onAdded={categoryAdded}
+        />
         {categories
           .filter((c) => !deleted.includes(c.id))
-          .sort(sortCats)
           .map((c) => (
             <ListItem
               key={c.slug}
@@ -173,7 +178,7 @@ export default function CategoryList({
                   edge="end"
                   aria-label="delete"
                   onClick={handleDelete(c.id)}
-                  disabled={builtIn.includes(c.id) || displayCount(c) > 0}
+                  disabled={displayCount(c) > 0}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -184,11 +189,8 @@ export default function CategoryList({
                 variant="outlined"
                 value={displayValue(c)}
                 onChange={handleChange(c)}
-                disabled={builtIn.includes(c.id)}
                 helperText={
-                  builtIn.includes(c.id)
-                    ? t.builtIn
-                    : displayCount(c) > 0
+                  displayCount(c) > 0
                     ? t.inUseBy
                         .replace('{0}', `${displayCount(c)}`)
                         .replace('{1}', resource ? t.resources : t.discussions)
@@ -210,6 +212,23 @@ export default function CategoryList({
           {ts.save}
         </PriButton>
       </ActionRow>
+      {builtIn.length > 0 && (
+        <div>
+          <Typography variant="body2">{t.builtIn}</Typography>
+          <List dense={true}>
+            {builtIn.map((c) => (
+              <ListItem key={c.slug}>
+                <TextField
+                  sx={{ flexGrow: 1 }}
+                  variant="outlined"
+                  value={displayValue(c)}
+                  disabled={true}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </div>
+      )}
     </>
   );
 }

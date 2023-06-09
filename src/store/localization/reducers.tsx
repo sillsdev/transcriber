@@ -59,6 +59,9 @@ const initialState = {
 			"scripture": "Scripture",
 			"translationresource": "Translation Resource",
 			"uncategorized": "Uncategorized",
+			"retelling": "Community Test Retell",
+			"grammar": "Grammar",
+			"qanda": "Question and Answer",
 		}
 	}),
 	"artifactType": new LocalizedStrings({
@@ -175,7 +178,7 @@ const initialState = {
 	}),
 	"category": new LocalizedStrings({
 		"en": {
-			"builtIn": "Built in!",
+			"builtIn": "System Categories",
 			"discussion": "Discussion",
 			"discussions": "discussion(s)",
 			"ignoreInvalid": "Ignoring invalid category change '{0}'.",

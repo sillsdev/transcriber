@@ -238,6 +238,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactCategory.retelling">
+         <segment>
+            <source>Community Test Retell</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.grammar">
+         <segment>
+            <source>Grammar</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.qanda">
+         <segment>
+            <source>Question and Answer</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactType.backtranslation">
          <segment>
             <source>Phrase Back Translation</source>
@@ -768,7 +786,7 @@
       </unit>
       <unit id="category.builtIn">
          <segment>
-            <source>Built in!</source>
+            <source>System Categories</source>
             <target/>
          </segment>
       </unit>

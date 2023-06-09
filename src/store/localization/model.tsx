@@ -50,6 +50,9 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
     "scripture": string;
     "translationresource": string;
     "uncategorized": string;
+    "retelling": string;
+    "grammar": string;
+    "qanda": string;
 };
 
 export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
