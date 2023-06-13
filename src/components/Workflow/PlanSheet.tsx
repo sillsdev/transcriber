@@ -701,7 +701,10 @@ export function PlanSheet(props: IProps) {
                         : undefined
                     }
                     onPassageToNext={
-                      !filtered && passage && isSection(rowIndex + 1)
+                      !filtered &&
+                      !inlinePassages &&
+                      passage &&
+                      isSection(rowIndex + 1)
                         ? onPassageToNext
                         : undefined
                     }
