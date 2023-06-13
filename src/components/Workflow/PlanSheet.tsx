@@ -676,8 +676,8 @@ export function PlanSheet(props: IProps) {
                     isSection={section}
                     isPassage={passage}
                     organizedBy={organizedBy}
-                    sectionSequenceNumber={currentRowSectionNum}
-                    passageSequenceNumber={currentRowPassageNum}
+                    sectionSequenceNumber={row[SectionSeqCol].toString()}
+                    passageSequenceNumber={row[PassageSeqCol].toString()}
                     readonly={readonly || check.length > 0}
                     onDelete={handleConfirmDelete}
                     onPlayStatus={handlePlayStatus}
@@ -692,14 +692,26 @@ export function PlanSheet(props: IProps) {
                     onPassageBelow={
                       !filtered && !inlinePassages ? onPassageBelow : undefined
                     }
-                    onPassageLast={
-                      !filtered && !inlinePassages && isPassage(currentRow + 1)
-                        ? onPassageLast
+                    onSectionAbove={
+                      !filtered &&
+                      currentRow >= 0 &&
+                      rowInfo.length > 0 &&
+                      section
+                        ? onSectionAbove
                         : undefined
                     }
-                    onSectionAbove={
-                      !filtered && currentRow >= 0 && rowInfo.length > 0
-                        ? onSectionAbove
+                    onPassageToNext={
+                      !filtered && passage && isSection(rowIndex + 1)
+                        ? onPassageToNext
+                        : undefined
+                    }
+                    onPassageToPrev={
+                      !filtered &&
+                      !inlinePassages &&
+                      rowIndex > 2 &&
+                      passage &&
+                      isSection(rowIndex - 1)
+                        ? onPassageToPrev
                         : undefined
                     }
                   />
@@ -796,9 +808,8 @@ export function PlanSheet(props: IProps) {
                   inlinePassages={inlinePassages}
                   numRows={rowInfo.length}
                   readonly={readonly}
-                  isSection={isSection}
-                  isPassage={isPassage}
-                  currentrow={currentRow - 1}
+                  isSection={isSection(currentRow - 1)}
+                  isPassage={isPassage(currentRow - 1)}
                   mouseposition={position}
                   handleNoContextMenu={handleNoContextMenu}
                   sectionSequenceNumber={currentRowSectionNum}
@@ -812,25 +823,8 @@ export function PlanSheet(props: IProps) {
                       : undefined
                   }
                   onPassageLast={
-                    !filtered &&
-                    isSection(currentRow) &&
-                    isPassage(currentRow + 1)
+                    !filtered && isSection(currentRow - 1)
                       ? onPassageLast
-                      : undefined
-                  }
-                  onPassageToNext={
-                    !filtered &&
-                    isPassage(currentRow) &&
-                    isSection(currentRow + 1)
-                      ? onPassageToNext
-                      : undefined
-                  }
-                  onPassageToPrev={
-                    !filtered &&
-                    currentRow >= 2 &&
-                    isPassage(currentRow) &&
-                    isSection(currentRow - 1)
-                      ? onPassageToPrev
                       : undefined
                   }
                   onSectionAbove={

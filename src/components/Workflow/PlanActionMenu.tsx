@@ -29,6 +29,12 @@ import {
   planSheetSelector,
   sharedSelector,
 } from '../../selector';
+import {
+  InsertSectionIcon,
+  PassageBelowIcon,
+  PassageToNextIcon,
+  PassageToPrevIcon,
+} from '../../control/PlanIcons';
 
 interface IProps {
   rowIndex: number;
@@ -49,12 +55,9 @@ interface IProps {
   onDelete: (i: number) => () => void;
   onDisableFilter?: () => void;
   onPassageBelow?: () => void;
-  onPassageLast?: () => void;
   onPassageToPrev?: () => void;
   onPassageToNext?: () => void;
   onSectionAbove?: () => void;
-  onSectionEnd?: () => void;
-  onPassageEnd?: () => void;
 }
 export function PlanActionMenu(props: IProps) {
   const {
@@ -76,12 +79,9 @@ export function PlanActionMenu(props: IProps) {
     passageSequenceNumber,
     onDisableFilter,
     onPassageBelow,
-    onPassageLast,
     onPassageToPrev,
     onPassageToNext,
     onSectionAbove,
-    onSectionEnd,
-    onPassageEnd,
   } = props;
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
   const p: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
@@ -221,57 +221,64 @@ export function PlanActionMenu(props: IProps) {
                       </MenuItem>
                     )}
                     {onSectionAbove && (
-                      <MenuItem id="secAbove" onClick={onSectionAbove}>
-                        {p.sectionAbove
+                      <MenuItem
+                        id="secAbove"
+                        onClick={onSectionAbove}
+                        title={p.sectionAbove
                           .replace('{0}', organizedBy)
                           .replace('{1}', organizedBy)
                           .replace('{2}', sectionSequenceNumber)}
-                      </MenuItem>
-                    )}
-                    {onPassageBelow && isSection && (
-                      <MenuItem id="psgAsFirst" onClick={onPassageBelow}>
-                        {p.insertFirstPassage
-                          .replace('{0}', organizedBy)
-                          .replace('{1}', sectionSequenceNumber)}
-                      </MenuItem>
-                    )}
-                    {onPassageLast && (
-                      <MenuItem id="psgAsLast" onClick={onPassageLast}>
-                        {p.insertLastPassage
-                          .replace('{0}', organizedBy)
-                          .replace('{1}', sectionSequenceNumber)}
-                      </MenuItem>
-                    )}
-                    {onPassageToPrev && (
-                      <MenuItem id="passToPrev" onClick={onPassageToPrev}>
-                        {p.passageToPrevSection.replace(
-                          '{0}',
-                          passageSequenceNumber
-                        )}
+                      >
+                        <InsertSectionIcon />
                       </MenuItem>
                     )}
 
-                    {onPassageBelow && isPassage && (
-                      <MenuItem id="passBelow" onClick={onPassageBelow}>
-                        {p.passageBelow.replace('{0}', passageSequenceNumber)}
+                    {onPassageBelow && isSection && (
+                      <MenuItem
+                        id="psgAsFirst"
+                        onClick={onPassageBelow}
+                        title={p.insertFirstPassage
+                          .replace('{0}', organizedBy)
+                          .replace('{1}', sectionSequenceNumber)}
+                      >
+                        <PassageBelowIcon />
                       </MenuItem>
                     )}
-                    {onPassageToNext && (
-                      <MenuItem id="passToNext" onClick={onPassageToNext}>
-                        {p.passageToNextSection.replace(
+
+                    {onPassageToPrev && (
+                      <MenuItem
+                        id="passToPrev"
+                        onClick={onPassageToPrev}
+                        title={p.passageToPrevSection.replace(
                           '{0}',
                           passageSequenceNumber
                         )}
+                      >
+                        <PassageToPrevIcon />
                       </MenuItem>
                     )}
-                    {onPassageEnd && (
-                      <MenuItem id="passageEnd" onClick={onPassageEnd}>
-                        {p.passageEnd}
+                    {onPassageBelow && isPassage && (
+                      <MenuItem
+                        id="passBelow"
+                        onClick={onPassageBelow}
+                        title={p.passageBelow.replace(
+                          '{0}',
+                          passageSequenceNumber
+                        )}
+                      >
+                        <PassageBelowIcon />
                       </MenuItem>
                     )}
-                    {onSectionEnd && (
-                      <MenuItem id="secEnd" onClick={onSectionEnd}>
-                        {p.sectionEnd.replace('{0}', organizedBy)}
+                    {onPassageToNext && (
+                      <MenuItem
+                        id="passToNext"
+                        onClick={onPassageToNext}
+                        title={p.passageToNextSection.replace(
+                          '{0}',
+                          passageSequenceNumber
+                        )}
+                      >
+                        <PassageToNextIcon />
                       </MenuItem>
                     )}
                     {isPassage && (
