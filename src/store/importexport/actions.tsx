@@ -260,10 +260,12 @@ const importFromElectron =
       type: IMPORT_PENDING,
     });
     var url = API_CONFIG.host + '/api/offlineData/project/import/' + filename;
+    var headers = {
+      Authorization: 'Bearer ' + token,
+      AccessControlAllowOrigin: '*',
+    };
     Axios.get(url, {
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
+      headers: headers,
     })
       .then((response) => {
         const filename = response.data.message;
@@ -289,9 +291,7 @@ const importFromElectron =
               try {
                 /* tell it to process the file now */
                 var putresponse = await Axios.put(url + start, null, {
-                  headers: {
-                    Authorization: 'Bearer ' + token,
-                  },
+                  headers: headers,
                 });
                 if (putresponse.data.status === 200) {
                   dispatch({
