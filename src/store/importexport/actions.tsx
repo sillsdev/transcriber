@@ -264,7 +264,7 @@ const importFromElectron =
       Authorization: 'Bearer ' + token,
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Headers':
-        'X-Fp,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,Access-Control-Allow-Origin',
+        'X-Fp,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent',
     };
     Axios.get(url, {
       headers: headers,
