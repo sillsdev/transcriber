@@ -291,7 +291,7 @@ const importFromElectron =
             do {
               try {
                 /* tell it to process the file now */
-                var putresponse = await Axios.put(url + start, null, {
+                var putresponse = await Axios.get(url + start, {
                   headers: headers,
                 });
                 if (putresponse.data.status === 200) {
