@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { IPlanSheetStrings } from '../model';
 import { Menu, MenuItem } from '@mui/material';
 import DropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -6,12 +6,17 @@ import { iconMargin, AltButton } from '../control';
 import { useOrganizedBy } from '../crud';
 import { planSheetSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import {
+  InsertSectionIcon,
+  PassageBelowIcon,
+  PassageEndIcon,
+  SectionEndIcon,
+} from './PlanIcons';
 
 interface IProps {
   readonly: boolean;
   inlinePassages: boolean;
   numRows: number;
-  currentrow: number;
   mouseposition: {
     mouseX: null | number;
     mouseY: null | number;
@@ -20,14 +25,15 @@ interface IProps {
   };
   sectionSequenceNumber: string;
   passageSequenceNumber: string;
-  filtered: boolean;
-  disableFilter: () => void;
-  isSection: (i: number) => boolean;
-  isPassage: (i: number) => boolean;
+  onDisableFilter?: () => void;
+  isSection: boolean;
+  isPassage: boolean;
   handleNoContextMenu: () => void;
-  addPassage: (i?: number, before?: boolean) => void;
-  movePassage: (i: number, before: boolean) => void;
-  addSection: (i?: number) => void;
+  onPassageBelow?: () => void;
+  onPassageLast?: () => void;
+  onSectionAbove?: () => void;
+  onSectionEnd?: () => void;
+  onPassageEnd?: () => void;
 }
 
 export const AddSectionPassageButtons = (props: IProps) => {
@@ -35,18 +41,16 @@ export const AddSectionPassageButtons = (props: IProps) => {
     readonly,
     inlinePassages,
     numRows,
-    currentrow,
-    mouseposition,
     sectionSequenceNumber,
     passageSequenceNumber,
-    filtered,
-    disableFilter,
+    onDisableFilter,
     isSection,
     isPassage,
     handleNoContextMenu,
-    addPassage,
-    addSection,
-    movePassage,
+    onPassageBelow,
+    onSectionAbove,
+    onSectionEnd,
+    onPassageEnd,
   } = props;
   const [actionMenuItem, setActionMenuItem] = React.useState<any>(undefined);
   const { getOrganizedBy } = useOrganizedBy();
@@ -63,56 +67,20 @@ export const AddSectionPassageButtons = (props: IProps) => {
   };
 
   const handleSectionAbove = () => {
-    //we'll find a section before we get past 0
-    var row = currentrow;
-    while (!isSection(row)) row -= 1;
-    addSection(row);
+    onSectionAbove && onSectionAbove();
     handleClose();
   };
 
   const handlePassageBelow = () => {
-    addPassage(currentrow, false);
+    onPassageBelow && onPassageBelow();
     handleClose();
   };
+  /*
   const handlePassageLast = () => {
-    //we're on a section so find our last row and add it below it
-    var row = currentrow;
-    while (isPassage(row + 1)) row++;
-    addPassage(row, false);
+    onPassageLast && onPassageLast();
     handleClose();
-  };
+  };*/
 
-  const handlePassageToPrev = () => {
-    movePassage(currentrow, true);
-    handleClose();
-  };
-
-  const handlePassageToNext = () => {
-    movePassage(currentrow, false);
-    handleClose();
-  };
-
-  const handleSectionEnd = () => {
-    addSection();
-  };
-  const handlePassageEnd = () => {
-    addPassage();
-  };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const isContextMenu = useMemo(
-    () => mouseposition.mouseX != null,
-    [mouseposition]
-  );
-  const currentisPassage = useMemo(
-    () => isPassage(currentrow),
-    [isPassage, currentrow]
-  );
-
-  const currentisSection = useMemo(
-    () => isSection(currentrow),
-    [isSection, currentrow]
-  );
   return (
     <>
       <AltButton
@@ -137,121 +105,65 @@ export const AddSectionPassageButtons = (props: IProps) => {
           <DropDownIcon sx={iconMargin} />
         </AltButton>
       )}
-      {/*Section Button Menu and Context Menu */}
+      {/*Section Button Menu */}
       <Menu
         id="section-menu"
-        anchorReference={isContextMenu ? 'anchorPosition' : 'anchorEl'}
+        anchorReference={'anchorEl'}
         anchorEl={actionMenuItem}
-        anchorPosition={
-          isContextMenu
-            ? {
-                top: mouseposition.mouseY ?? 0,
-                left: mouseposition.mouseX ?? 0,
-              }
-            : undefined
-        }
-        open={
-          actionMenuItem?.id === 'planSheetAddSec' ||
-          (isContextMenu && currentisSection)
-        }
+        open={actionMenuItem?.id === 'planSheetAddSec'}
         onClose={handleClose}
       >
-        {filtered && (
-          <MenuItem id="filtered" onClick={disableFilter}>
+        {onDisableFilter && (
+          <MenuItem id="filtered" onClick={onDisableFilter}>
             {t.filtered}
           </MenuItem>
         )}
-        {!filtered && currentrow >= 0 && numRows > 0 && (
+        {onSectionAbove && (
           <MenuItem id="secAbove" onClick={handleSectionAbove}>
+            <InsertSectionIcon />
             {t.sectionAbove
               .replace('{0}', organizedBy)
               .replace('{1}', organizedBy)
               .replace('{2}', sectionSequenceNumber)}
           </MenuItem>
         )}
-        {!filtered && isContextMenu && !inlinePassages && (
-          <MenuItem id="passageAsFirst" onClick={handlePassageBelow}>
-            {t.insertFirstPassage
-              .replace('{0}', organizedBy)
-              .replace('{1}', sectionSequenceNumber)}
-          </MenuItem>
-        )}
-        {!filtered &&
-          isContextMenu &&
-          !inlinePassages &&
-          isPassage(currentrow + 1) && (
-            <MenuItem id="passageAsLast" onClick={handlePassageLast}>
-              {t.insertLastPassage
-                .replace('{0}', organizedBy)
-                .replace('{1}', sectionSequenceNumber)}
-            </MenuItem>
-          )}
-        {!filtered && !isContextMenu && (
-          <MenuItem id="secEnd" onClick={handleSectionEnd}>
+        {onSectionEnd && (
+          <MenuItem id="secEnd" onClick={onSectionEnd}>
+            <SectionEndIcon />
             {t.sectionEnd.replace('{0}', organizedBy)}
           </MenuItem>
         )}
       </Menu>
-      {/*Passage Button Menu and Context Menu */}
+      {/*Passage Button Menu */}
       <Menu
         keepMounted
-        open={
-          !inlinePassages &&
-          (actionMenuItem?.id === 'planSheetAddPass' ||
-            (isContextMenu && currentisPassage))
-        }
+        open={!inlinePassages && actionMenuItem?.id === 'planSheetAddPass'}
         onClose={handleClose}
-        anchorReference={isContextMenu ? 'anchorPosition' : 'anchorEl'}
+        anchorReference={'anchorEl'}
         anchorEl={actionMenuItem}
-        anchorPosition={
-          isContextMenu
-            ? {
-                top: mouseposition.mouseY ?? 0,
-                left: mouseposition.mouseX ?? 0,
-              }
-            : undefined
-        }
       >
-        {filtered && (
-          <MenuItem id="filtered" onClick={disableFilter}>
+        {onDisableFilter && (
+          <MenuItem id="filtered" onClick={onDisableFilter}>
             {t.filtered}
           </MenuItem>
         )}
-        {!filtered && currentisSection && (
+        {onPassageBelow && isSection && (
           <MenuItem id="psgAsFirst" onClick={handlePassageBelow}>
+            <PassageBelowIcon />
             {t.insertFirstPassage
               .replace('{0}', organizedBy)
               .replace('{1}', sectionSequenceNumber)}
           </MenuItem>
         )}
-        {!filtered && currentisSection && isPassage(currentrow + 1) && (
-          <MenuItem id="psgAsLast" onClick={handlePassageLast}>
-            {t.insertLastPassage
-              .replace('{0}', organizedBy)
-              .replace('{1}', sectionSequenceNumber)}
-          </MenuItem>
-        )}
-        {!filtered &&
-          currentrow >= 2 &&
-          currentisPassage &&
-          isSection(currentrow - 1) && (
-            <MenuItem id="passToPrev" onClick={handlePassageToPrev}>
-              {t.passageToPrevSection.replace('{0}', passageSequenceNumber)}
-            </MenuItem>
-          )}
-
-        {!filtered && currentisPassage && (
+        {onPassageBelow && isPassage && (
           <MenuItem id="passBelow" onClick={handlePassageBelow}>
+            <PassageBelowIcon />
             {t.passageBelow.replace('{0}', passageSequenceNumber)}
           </MenuItem>
         )}
-        {!filtered && currentisPassage && isSection(currentrow + 1) && (
-          <MenuItem id="passToNext" onClick={handlePassageToNext}>
-            {t.passageToNextSection.replace('{0}', passageSequenceNumber)}
-          </MenuItem>
-        )}
-        {!filtered && !isContextMenu && currentrow !== numRows - 1 && (
-          <MenuItem id="passageEnd" onClick={handlePassageEnd}>
+        {onPassageEnd && (
+          <MenuItem id="passageEnd" onClick={onPassageEnd}>
+            <PassageEndIcon />
             {t.passageEnd}
           </MenuItem>
         )}
