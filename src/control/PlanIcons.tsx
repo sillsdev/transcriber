@@ -21,7 +21,7 @@ export const InsertSectionIcon = () => (
       <FontAwesomeIcon icon={faArrowUp} />
       <FontAwesomeIcon icon={faS} transform="right-8 shrink-2" />
       <FontAwesomeIcon icon={faPlus} transform="up-4 right-16 shrink-2" />
-    </span>{' '}
+    </span>
   </StyledIcon>
 );
 export const SectionEndIcon = () => (
@@ -39,7 +39,7 @@ export const PassageBelowIcon = () => (
       <FontAwesomeIcon icon={faArrowDown} transform="shrink-2" color="blue" />
       <FontAwesomeIcon icon={faP} transform="right-8 shrink-2" />
       <FontAwesomeIcon icon={faPlus} transform="shrink-4 up-4 right-16" />
-    </span>{' '}
+    </span>
   </StyledIcon>
 );
 export const PassageEndIcon = () => (
@@ -48,7 +48,7 @@ export const PassageEndIcon = () => (
       <FontAwesomeIcon icon={faAnglesDown} transform="shrink-2" />
       <FontAwesomeIcon icon={faP} transform="right-12 shrink-2" />
       <FontAwesomeIcon icon={faPlus} transform="up-4 right-20 shrink-2" />
-    </span>{' '}
+    </span>
   </StyledIcon>
 );
 export const PassageToPrevIcon = () => (
@@ -56,7 +56,7 @@ export const PassageToPrevIcon = () => (
     <span className="fa-layers fa-fw fa-sm">
       <FontAwesomeIcon icon={faArrowTurnUp} transform="shrink-2" />
       <FontAwesomeIcon icon={faP} transform="right-8 shrink-2" />
-    </span>{' '}
+    </span>
   </StyledIcon>
 );
 export const PassageToNextIcon = () => (
@@ -64,6 +64,6 @@ export const PassageToNextIcon = () => (
     <span className="fa-layers fa-fw fa-sm">
       <FontAwesomeIcon icon={faArrowTurnDown} transform="shrink-2" />
       <FontAwesomeIcon icon={faP} transform="right-8 shrink-2" />
-    </span>{' '}
+    </span>
   </StyledIcon>
 );

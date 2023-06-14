@@ -121,7 +121,6 @@ export const AddSectionPassageButtons = (props: IProps) => {
         {onSectionAbove && (
           <MenuItem id="secAbove" onClick={handleSectionAbove}>
             <InsertSectionIcon />
-            {'\u00A0\u00A0\u00A0'}
             {t.sectionAbove
               .replace('{0}', organizedBy)
               .replace('{1}', organizedBy)
@@ -130,7 +129,7 @@ export const AddSectionPassageButtons = (props: IProps) => {
         )}
         {onSectionEnd && (
           <MenuItem id="secEnd" onClick={onSectionEnd}>
-            <SectionEndIcon /> {'\u00A0\u00A0\u00A0'}
+            <SectionEndIcon />
             {t.sectionEnd.replace('{0}', organizedBy)}
           </MenuItem>
         )}
@@ -150,31 +149,21 @@ export const AddSectionPassageButtons = (props: IProps) => {
         )}
         {onPassageBelow && isSection && (
           <MenuItem id="psgAsFirst" onClick={handlePassageBelow}>
-            <PassageBelowIcon /> {'\u00A0\u00A0\u00A0'}
+            <PassageBelowIcon />
             {t.insertFirstPassage
               .replace('{0}', organizedBy)
               .replace('{1}', sectionSequenceNumber)}
           </MenuItem>
         )}
-        {/*
-        {onPassageLast && (
-          <MenuItem id="psgAsLast" onClick={handlePassageLast}>
-            {t.insertLastPassage
-              .replace('{0}', organizedBy)
-              .replace('{1}', sectionSequenceNumber)}
-          </MenuItem>
-            )} */}
         {onPassageBelow && isPassage && (
           <MenuItem id="passBelow" onClick={handlePassageBelow}>
             <PassageBelowIcon />
-            {'\u00A0\u00A0\u00A0'}
             {t.passageBelow.replace('{0}', passageSequenceNumber)}
           </MenuItem>
         )}
         {onPassageEnd && (
           <MenuItem id="passageEnd" onClick={onPassageEnd}>
             <PassageEndIcon />
-            {'\u00A0\u00A0\u00A0'}
             {t.passageEnd}
           </MenuItem>
         )}
