@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { IPlanSheetStrings } from '../model';
-import { Menu, MenuItem } from '@mui/material';
+import {
+  ListItemIcon,
+  ListItemIconProps,
+  Menu,
+  MenuItem,
+  styled,
+} from '@mui/material';
 import DropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { iconMargin, AltButton } from '../control';
 import { useOrganizedBy } from '../crud';
@@ -12,6 +18,10 @@ import {
   PassageEndIcon,
   SectionEndIcon,
 } from './PlanIcons';
+
+const StyledMenuIcon = styled(ListItemIcon)<ListItemIconProps>(({ theme }) => ({
+  paddingRight: theme.spacing(2),
+}));
 
 interface IProps {
   readonly: boolean;
@@ -75,11 +85,6 @@ export const AddSectionPassageButtons = (props: IProps) => {
     onPassageBelow && onPassageBelow();
     handleClose();
   };
-  /*
-  const handlePassageLast = () => {
-    onPassageLast && onPassageLast();
-    handleClose();
-  };*/
 
   return (
     <>
@@ -120,7 +125,9 @@ export const AddSectionPassageButtons = (props: IProps) => {
         )}
         {onSectionAbove && (
           <MenuItem id="secAbove" onClick={handleSectionAbove}>
-            <InsertSectionIcon />
+            <StyledMenuIcon>
+              <InsertSectionIcon />
+            </StyledMenuIcon>
             {t.sectionAbove
               .replace('{0}', organizedBy)
               .replace('{1}', organizedBy)
@@ -129,7 +136,9 @@ export const AddSectionPassageButtons = (props: IProps) => {
         )}
         {onSectionEnd && (
           <MenuItem id="secEnd" onClick={onSectionEnd}>
-            <SectionEndIcon />
+            <StyledMenuIcon>
+              <SectionEndIcon />
+            </StyledMenuIcon>
             {t.sectionEnd.replace('{0}', organizedBy)}
           </MenuItem>
         )}
@@ -149,7 +158,9 @@ export const AddSectionPassageButtons = (props: IProps) => {
         )}
         {onPassageBelow && isSection && (
           <MenuItem id="psgAsFirst" onClick={handlePassageBelow}>
-            <PassageBelowIcon />
+            <StyledMenuIcon>
+              <PassageBelowIcon />
+            </StyledMenuIcon>
             {t.insertFirstPassage
               .replace('{0}', organizedBy)
               .replace('{1}', sectionSequenceNumber)}
@@ -157,13 +168,17 @@ export const AddSectionPassageButtons = (props: IProps) => {
         )}
         {onPassageBelow && isPassage && (
           <MenuItem id="passBelow" onClick={handlePassageBelow}>
-            <PassageBelowIcon />
+            <StyledMenuIcon>
+              <PassageBelowIcon />
+            </StyledMenuIcon>
             {t.passageBelow.replace('{0}', passageSequenceNumber)}
           </MenuItem>
         )}
         {onPassageEnd && (
           <MenuItem id="passageEnd" onClick={onPassageEnd}>
-            <PassageEndIcon />
+            <StyledMenuIcon>
+              <PassageEndIcon />
+            </StyledMenuIcon>
             {t.passageEnd}
           </MenuItem>
         )}

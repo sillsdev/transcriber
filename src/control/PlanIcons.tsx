@@ -36,7 +36,7 @@ export const SectionEndIcon = () => (
 export const PassageBelowIcon = () => (
   <StyledIcon size="small">
     <span className="fa-layers fa-fw fa-sm">
-      <FontAwesomeIcon icon={faArrowDown} transform="shrink-2" color="blue" />
+      <FontAwesomeIcon icon={faArrowDown} transform="shrink-2" />
       <FontAwesomeIcon icon={faP} transform="right-8 shrink-2" />
       <FontAwesomeIcon icon={faPlus} transform="shrink-4 up-4 right-16" />
     </span>
