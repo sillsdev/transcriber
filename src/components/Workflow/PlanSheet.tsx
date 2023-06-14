@@ -35,7 +35,7 @@ import {
   rememberCurrentPassage,
 } from '../../utils';
 import { isPassageRow, isSectionRow } from '.';
-import { remoteIdGuid, useRole } from '../../crud';
+import { remoteIdGuid, useOrganizedBy, useRole } from '../../crud';
 import TaskAvatar from '../TaskAvatar';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
@@ -246,8 +246,43 @@ export function PlanSheet(props: IProps) {
   const changedRef = useRef(false); //for autosave
   const [saving, setSaving] = useState(false);
   const { userIsAdmin } = useRole();
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(getOrganizedBy(true));
+
   const handleSave = () => {
     startSave();
+  };
+
+  const onSectionAbove = () => {
+    //we'll find a section before we get past 0
+    var row = currentRow;
+    while (!isSection(row)) row -= 1;
+    addSection(row);
+  };
+  const onPassageBelow = () => {
+    addPassage(currentRow, false);
+  };
+  const onPassageLast = () => {
+    //we're on a section so find our last row and add it below it
+    var row = currentRow;
+    while (isPassage(row + 1)) row++;
+    addPassage(row, false);
+  };
+
+  const onPassageToPrev = () => {
+    movePassage(currentRow, true);
+  };
+
+  const onPassageToNext = () => {
+    movePassage(currentRow, false);
+  };
+
+  const onSectionEnd = () => {
+    addSection();
+  };
+
+  const onPassageEnd = () => {
+    addPassage();
   };
 
   const sheetScroll = () => {
@@ -640,6 +675,9 @@ export function PlanSheet(props: IProps) {
                     rowIndex={rowIndex}
                     isSection={section}
                     isPassage={passage}
+                    organizedBy={organizedBy}
+                    sectionSequenceNumber={row[SectionSeqCol].toString()}
+                    passageSequenceNumber={row[PassageSeqCol].toString()}
                     readonly={readonly || check.length > 0}
                     onDelete={handleConfirmDelete}
                     onPlayStatus={handlePlayStatus}
@@ -650,6 +688,35 @@ export function PlanSheet(props: IProps) {
                     canAssign={userIsAdmin}
                     canDelete={userIsAdmin}
                     active={active - 1 === rowIndex}
+                    onDisableFilter={filtered ? disableFilter : undefined}
+                    onPassageBelow={
+                      !filtered && !inlinePassages ? onPassageBelow : undefined
+                    }
+                    onSectionAbove={
+                      !filtered &&
+                      currentRow >= 0 &&
+                      rowInfo.length > 0 &&
+                      section
+                        ? onSectionAbove
+                        : undefined
+                    }
+                    onPassageToNext={
+                      !filtered &&
+                      !inlinePassages &&
+                      passage &&
+                      isSection(rowIndex + 1)
+                        ? onPassageToNext
+                        : undefined
+                    }
+                    onPassageToPrev={
+                      !filtered &&
+                      !inlinePassages &&
+                      rowIndex > 2 &&
+                      passage &&
+                      isSection(rowIndex - 1)
+                        ? onPassageToPrev
+                        : undefined
+                    }
                   />
                 ),
                 // readOnly: true,
@@ -700,20 +767,24 @@ export function PlanSheet(props: IProps) {
   const playEnded = () => {
     setMediaPlaying(false);
   };
-  const currentRowSectionNum = () => {
+  const currentRowSectionNum = useMemo(() => {
     if (currentRowRef.current < 1) return '';
     var row = currentRowRef.current - 1;
     while (row >= 0 && !isSection(row)) row--;
     return row >= 0 ? rowData[row][SectionSeqCol].toString() : '';
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRow, rowData, rowInfo]);
 
-  const currentRowPassageNum = () =>
-    currentRowRef.current > 0 && isPassage(currentRowRef.current - 1)
+  const currentRowPassageNum = useMemo(() => {
+    return currentRowRef.current > 0 && isPassage(currentRowRef.current - 1)
       ? rowData[currentRowRef.current - 1][PassageSeqCol].toString()
       : '';
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRow, rowData, rowInfo]);
 
-  const filtered = useMemo(
-    () =>
+  const filtered = useMemo(() => {
+    console.log('filtered useMemo', filterState);
+    return (
       !filterState.disabled &&
       (filterState.minStep !== '' ||
         filterState.maxStep !== '' ||
@@ -721,9 +792,10 @@ export function PlanSheet(props: IProps) {
         filterState.minSection > 1 ||
         (filterState.maxSection > -1 &&
           filterState.maxSection < maximumSection) ||
-        filterState.assignedToMe),
-    [filterState, maximumSection]
-  );
+        filterState.assignedToMe)
+    );
+  }, [filterState, maximumSection]);
+
   const disableFilter = () => {
     onFilterChange({ ...filterState, disabled: true }, false);
   };
@@ -739,18 +811,32 @@ export function PlanSheet(props: IProps) {
                   inlinePassages={inlinePassages}
                   numRows={rowInfo.length}
                   readonly={readonly}
-                  isSection={isSection}
-                  isPassage={isPassage}
-                  currentrow={currentRow - 1}
+                  isSection={isSection(currentRow - 1)}
+                  isPassage={isPassage(currentRow - 1)}
                   mouseposition={position}
                   handleNoContextMenu={handleNoContextMenu}
-                  sectionSequenceNumber={currentRowSectionNum()}
-                  passageSequenceNumber={currentRowPassageNum()}
-                  addSection={addSection}
-                  addPassage={addPassage}
-                  movePassage={movePassage}
-                  filtered={filtered}
-                  disableFilter={disableFilter}
+                  sectionSequenceNumber={currentRowSectionNum}
+                  passageSequenceNumber={currentRowPassageNum}
+                  onPassageBelow={
+                    !filtered && !inlinePassages ? onPassageBelow : undefined
+                  }
+                  onPassageEnd={
+                    !filtered && currentRow !== rowInfo.length - 1
+                      ? onPassageEnd
+                      : undefined
+                  }
+                  onPassageLast={
+                    !filtered && isSection(currentRow - 1)
+                      ? onPassageLast
+                      : undefined
+                  }
+                  onSectionAbove={
+                    !filtered && currentRow >= 0 && rowInfo.length > 0
+                      ? onSectionAbove
+                      : undefined
+                  }
+                  onSectionEnd={!filtered ? onSectionEnd : undefined}
+                  onDisableFilter={filtered ? disableFilter : undefined}
                 />
                 <AltButton
                   id="planSheetImp"
