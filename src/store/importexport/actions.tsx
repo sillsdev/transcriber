@@ -262,12 +262,11 @@ const importFromElectron =
     var url = API_CONFIG.host + '/api/offlineData/project/import/' + filename;
     var headers = {
       Authorization: 'Bearer ' + token,
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers':
-        'X-Fp,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent',
     };
     Axios.get(url, {
-      headers: headers,
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
     })
       .then((response) => {
         const filename = response.data.message;
