@@ -688,11 +688,16 @@ export function PlanSheet(props: IProps) {
                     canAssign={userIsAdmin}
                     canDelete={userIsAdmin}
                     active={active - 1 === rowIndex}
-                    onDisableFilter={filtered ? disableFilter : undefined}
+                    onDisableFilter={
+                      !readonly && filtered ? disableFilter : undefined
+                    }
                     onPassageBelow={
-                      !filtered && !inlinePassages ? onPassageBelow : undefined
+                      !readonly && !filtered && !inlinePassages
+                        ? onPassageBelow
+                        : undefined
                     }
                     onSectionAbove={
+                      !readonly &&
                       !filtered &&
                       currentRow >= 0 &&
                       rowInfo.length > 0 &&
@@ -701,6 +706,7 @@ export function PlanSheet(props: IProps) {
                         : undefined
                     }
                     onPassageToNext={
+                      !readonly &&
                       !filtered &&
                       !inlinePassages &&
                       passage &&
@@ -709,6 +715,7 @@ export function PlanSheet(props: IProps) {
                         : undefined
                     }
                     onPassageToPrev={
+                      !readonly &&
                       !filtered &&
                       !inlinePassages &&
                       rowIndex > 2 &&
