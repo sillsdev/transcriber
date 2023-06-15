@@ -5,10 +5,13 @@ import process from 'process';
 const ipc = (window as any)?.electron;
 
 export const launchAudacity = async (proj: string, reporter: any) => {
+  const isMac = ipc?.isMac();
   const audacityExe = await getAudacityExe();
-  const args = [`"${proj}"`];
+  const args = isMac
+    ? ['/Applications/Audacity.app', `"${proj}"`]
+    : [`"${proj}"`];
   ipc
-    ?.exec(`"${audacityExe}"`, args, {
+    ?.exec(isMac ? 'open' : `"${audacityExe}"`, args, {
       shell: true,
       detached: true,
       cwd: path.join(await execFolder(), 'resources'),

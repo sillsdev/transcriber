@@ -7,6 +7,17 @@ export const audPrefsName = async () => {
     return path.join(appData, 'audacity', 'audacity.cfg');
   } else {
     const home = await ipc?.home();
+    if (await ipc?.isMac()) {
+      const macAudacityCfg = path.join(
+        home,
+        'Library',
+        'Application Support',
+        'audacity'
+      );
+      if (await ipc?.exists(macAudacityCfg)) {
+        return macAudacityCfg;
+      }
+    }
     const snapName = path.join(
       home,
       'snap',
