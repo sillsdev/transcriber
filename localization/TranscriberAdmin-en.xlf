@@ -4026,19 +4026,13 @@
       </unit>
       <unit id="planSheet.insertFirstPassage">
          <segment>
-            <source>Add passage as first in {0} {1}</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="planSheet.insertLastPassage">
-         <segment>
-            <source>Add passage as last in {0} {1}</source>
+            <source>Add Passage as first in {0} {1}</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.passageBelow">
          <segment>
-            <source>Insert passage below passage {0}</source>
+            <source>Add Passage below Passage {0}</source>
             <target/>
          </segment>
       </unit>
@@ -4092,7 +4086,7 @@
       </unit>
       <unit id="planSheet.sectionAbove">
          <segment>
-            <source>Insert {0} above {1} {2}</source>
+            <source>Add {0} above {1} {2}</source>
             <target/>
          </segment>
       </unit>
