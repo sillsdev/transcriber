@@ -1,38 +1,95 @@
 /* eslint-disable testing-library/no-node-access */
 /* eslint-disable testing-library/no-container */
-import { cleanup, render } from '@testing-library/react';
+// import { expect, jest, test } from '@jest/globals';
+import { cleanup, render, waitFor } from '@testing-library/react';
 import { MediaPlayer } from './MediaPlayer';
 
-const mockFn = jest.fn();
+enum MediaSt {
+  'IDLE',
+  'PENDING',
+  'FETCHED',
+  'ERROR',
+}
+interface IMediaState {
+  status: MediaSt;
+  error: null | string;
+  url: string; // temporary url
+  id: string; // media id
+  remoteId: string;
+  cancelled: boolean;
+}
+
+const mediaClean = {
+  status: MediaSt.IDLE,
+  error: null,
+  url: '',
+  id: '',
+  remoteId: '',
+  cancelled: false,
+};
+let mockMediaState: IMediaState = { ...mediaClean };
+
+jest.mock('../crud', () => {
+  const MediaSt = {
+    IDLE: 0,
+    PENDING: 1,
+    FETCHED: 2,
+    ERROR: 3,
+  };
+  return {
+    useFetchMediaUrl: () => {
+      return {
+        mediaState: mockMediaState,
+        fetchMediaUrl: ({ id }: { id: string }) => {
+          if (id === '1') {
+            mockMediaState = {
+              ...mockMediaState,
+              id: 'abcd-1',
+              remoteId: '1',
+              error: '',
+              status: MediaSt.PENDING,
+            };
+            setTimeout(() => {
+              mockMediaState = {
+                ...mockMediaState,
+                status: MediaSt.FETCHED,
+                url: 'https://localhost/media/1.mp3',
+              };
+            }, 500);
+          } else {
+            mockMediaState = { ...mockMediaState, error: 'error' };
+          }
+        },
+      };
+    },
+    MediaSt,
+  };
+});
+
+jest.mock('../hoc/SnackBar', () => ({
+  useSnackBar: () => ({
+    showMessage: jest.fn(),
+  }),
+}));
+
+jest.mock('../selector', () => ({
+  sharedSelector: jest.fn(),
+}));
+
+jest.mock('react-redux', () => ({
+  useSelector: jest.fn(),
+  shallowEqual: jest.fn(),
+}));
 
 jest.mock('reactn', () => ({
-  useGlobal: () => [{}, () => {}],
+  useGlobal: () => [jest.fn()],
 }));
-jest.mock('../crud', () => ({
-  useFetchMediaUrl: () => ({
-    fetchMediaUrl: mockFn,
-    mediaState: { id: '1' },
-  }),
-  MediaSt: { IDLE: 0, PENDING: 1, FETCHED: 2, ERROR: 3 },
-}));
+
 jest.mock('../utils', () => ({
-  logError: () => {},
-}));
-jest.mock('../hoc/SnackBar', () => ({
-  useSnackBar: () => ({ showMessage: () => {} }),
-}));
-jest.mock('../model', () => ({
-  ISharedStrings: {
-    fileNotFound: 'File not found',
-    mediaError: 'Media error',
+  logError: jest.fn(),
+  Severity: {
+    Error: 1,
   },
-}));
-jest.mock('../selector', () => ({
-  sharedSelector: () => {},
-}));
-jest.mock('react-redux', () => ({
-  useSelector: () => {},
-  shallowEqual: () => {},
 }));
 
 describe('<MediaPlayer />', () => {
@@ -58,7 +115,7 @@ describe('<MediaPlayer />', () => {
     expect(container.firstChild).toBe(null);
   });
 
-  it('should render without crashing when requestPlay is true and onTogglePlay is defined', () => {
+  it('should render without crashing when onTogglePlay is defined', () => {
     const props = {
       srcMediaId: '1',
       requestPlay: true,
@@ -69,7 +126,7 @@ describe('<MediaPlayer />', () => {
     expect(container.firstChild).toBe(null);
   });
 
-  it('should render without crashing when requestPlay is true and onPosition is defined', () => {
+  it('should render without crashing when onPosition is defined', () => {
     const props = {
       srcMediaId: '1',
       requestPlay: true,
@@ -80,7 +137,7 @@ describe('<MediaPlayer />', () => {
     expect(container.firstChild).toBe(null);
   });
 
-  it('should render without crashing when requestPlay is true and position is defined', () => {
+  it('should render without crashing when position is defined', () => {
     const props = {
       srcMediaId: '1',
       requestPlay: true,
@@ -91,7 +148,7 @@ describe('<MediaPlayer />', () => {
     expect(container.firstChild).toBe(null);
   });
 
-  it('should render without crashing when requestPlay is true and onDuration is defined', () => {
+  it('should render without crashing when onDuration is defined', () => {
     const props = {
       srcMediaId: '1',
       requestPlay: true,
@@ -102,7 +159,7 @@ describe('<MediaPlayer />', () => {
     expect(container.firstChild).toBe(null);
   });
 
-  it('should render without crashing when requestPlay is true and controls is defined', () => {
+  it('should render without crashing when controls is defined', () => {
     const props = {
       srcMediaId: '1',
       requestPlay: true,
@@ -113,7 +170,7 @@ describe('<MediaPlayer />', () => {
     expect(container.firstChild).toBe(null);
   });
 
-  it('should render without crashing when requestPlay is true and onTogglePlay, onPosition, position, onDuration, and controls are defined', () => {
+  it('should render without crashing when onTogglePlay, onPosition, position, onDuration, and controls are defined', () => {
     const props = {
       srcMediaId: '1',
       requestPlay: true,
@@ -128,14 +185,30 @@ describe('<MediaPlayer />', () => {
     expect(container.firstChild).toBe(null);
   });
 
-  it('calls fetchMediaUrl with srcMediaId id', () => {
+  it('returns an error if srcMediaId is not 1', async () => {
+    const props = {
+      srcMediaId: '2',
+      requestPlay: false,
+      onEnded: () => {},
+    };
+    render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(mockMediaState.error).toBe('error'));
+  });
+
+  it('fetchMediaUrl sets url when srcMediaId is 1', async () => {
     const props = {
       srcMediaId: '1',
       requestPlay: false,
       onEnded: () => {},
     };
     render(<MediaPlayer {...props} />);
-    expect(mockFn).toHaveBeenCalledTimes(1);
-    expect(mockFn).toHaveBeenCalledWith({ id: '1' });
+    await waitFor(() => expect(mockMediaState.id).toBe('abcd-1'));
+    await waitFor(() => expect(mockMediaState.remoteId).toBe('1'));
+    await waitFor(() => expect(mockMediaState.error).toBe(''));
+    await waitFor(() => expect(mockMediaState.status).toBe(MediaSt.PENDING));
+    await waitFor(() => expect(mockMediaState.status).toBe(MediaSt.FETCHED));
+    await waitFor(() =>
+      expect(mockMediaState.url).toBe('https://localhost/media/1.mp3')
+    );
   });
 });
