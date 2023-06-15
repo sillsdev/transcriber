@@ -4695,21 +4695,15 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.insertFirstPassage">
-            <source>Add passage as first in {0} {1}</source>
+            <source>Add Passage as first in {0} {1}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="planSheet.insertLastPassage">
-            <source>Add passage as last in {0} {1}</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">PlanSheet.tsx</context>
-            </context-group>
-         </trans-unit>
+
          <trans-unit id="planSheet.passageBelow">
-            <source>Insert passage below passage {0}</source>
+            <source>Add Passage below Passage {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -4772,7 +4766,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.sectionAbove">
-            <source>Insert {0} above {1} {2}</source>
+            <source>Add {0} above {1} {2}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>

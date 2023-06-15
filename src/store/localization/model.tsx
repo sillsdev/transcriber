@@ -811,7 +811,6 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "filtered": string;
     "nonNumber": string;
     "insertFirstPassage": string;
-    "insertLastPassage": string;
     "passageBelow": string;
     "passageEnd": string;
     "passageToPrevSection": string;
