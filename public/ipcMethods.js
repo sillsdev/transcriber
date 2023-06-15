@@ -48,6 +48,10 @@ const ipcMethods = () => {
     return process.platform === 'win32';
   });
 
+  ipcMain.handle('isMac', async () => {
+    return process.platform === 'darwin';
+  });
+
   ipcMain.handle('isProcessRunning', async (event, name) => {
     const platformMap = new Map([
       ['win32', 'tasklist'],
