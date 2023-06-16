@@ -1,6 +1,6 @@
 /* eslint-disable testing-library/no-node-access */
 /* eslint-disable testing-library/no-container */
-// import { expect, jest, test } from '@jest/globals';
+// See: https://www.w3schools.com/TAGS/ref_av_dom.asp
 import { cleanup, render, waitFor } from '@testing-library/react';
 import { MediaPlayer } from './MediaPlayer';
 
@@ -85,15 +85,18 @@ jest.mock('reactn', () => ({
   useGlobal: () => [jest.fn()],
 }));
 
-jest.mock('../utils', () => ({
-  logError: jest.fn(),
-  Severity: {
-    Error: 1,
-  },
-}));
+jest.mock('../utils', () => {
+  const logError = jest.fn((error: string, severity: number) => {});
+  return {
+    logError,
+  };
+});
 
 describe('<MediaPlayer />', () => {
   beforeEach(cleanup);
+  afterEach(() => {
+    mockMediaState = { ...mediaClean };
+  });
 
   it('should render without crashing', () => {
     const props = {
@@ -210,5 +213,228 @@ describe('<MediaPlayer />', () => {
     await waitFor(() =>
       expect(mockMediaState.url).toBe('https://localhost/media/1.mp3')
     );
+  });
+
+  it('should render with an audio player with src', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: () => {},
+    };
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    expect(container.querySelector('audio')).toBeInTheDocument();
+    expect(container.querySelector('audio')).toHaveAttribute(
+      'src',
+      'https://localhost/media/1.mp3'
+    );
+  });
+
+  it('should contain controls when controls parameter set', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: () => {},
+      controls: true,
+    };
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    expect(container.querySelector('audio')).toHaveAttribute('controls');
+  });
+
+  it('should not call onTogglePlay without requestPlay', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: () => {},
+      onTogglePlay: jest.fn(),
+    };
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    expect(container.querySelector('audio')).toBeInTheDocument();
+    expect(props.onTogglePlay).not.toHaveBeenCalled();
+  });
+
+  it('should play with requestPlay true', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: true,
+      onEnded: () => {},
+      onTogglePlay: jest.fn(),
+    };
+
+    const playStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'play')
+      .mockImplementation(() => new Promise(() => {}));
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    expect(playStub).toHaveBeenCalled();
+    playStub.mockRestore();
+    // expect(props.onTogglePlay).toHaveBeenCalled();
+  });
+
+  it('should call OnTogglePlay with pause event and requestPlay true', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: true,
+      onEnded: () => {},
+      onTogglePlay: jest.fn(),
+    };
+
+    const playStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'play')
+      .mockImplementation(() => new Promise(() => {}));
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    container.querySelector('audio')?.dispatchEvent(new Event('pause'));
+    expect(props.onTogglePlay).toHaveBeenCalled();
+    expect(playStub).toHaveBeenCalled();
+    playStub.mockRestore();
+  });
+
+  it('should call onEnded with ended event and requestPlay true', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: jest.fn(),
+    };
+
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    container.querySelector('audio')?.dispatchEvent(new Event('ended'));
+    expect(props.onEnded).toHaveBeenCalled();
+  });
+
+  it('should call onPosition when timeupdate event received', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: () => {},
+      onPosition: jest.fn(),
+    };
+
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    container.querySelector('audio')?.dispatchEvent(new Event('timeupdate'));
+    expect(props.onPosition).toHaveBeenCalledWith(0);
+  });
+
+  it('should not call onDuration when duration is 0', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: () => {},
+      onDuration: jest.fn(),
+    };
+
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    container
+      .querySelector('audio')
+      ?.dispatchEvent(new Event('durationchange'));
+    expect(props.onDuration).toHaveBeenCalledTimes(0); // since duration is 0
+  });
+
+  it('should set currentTime if position set', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: () => {},
+      position: 10,
+      onPosition: jest.fn(),
+    };
+
+    const currentTime = jest.fn();
+    const currentTimeStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'currentTime', 'set')
+      .mockImplementation(currentTime);
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    container
+      .querySelector('audio')
+      ?.dispatchEvent(new Event('durationchange'));
+    await waitFor(() => expect(currentTime).toHaveBeenCalledWith(10));
+    currentTimeStub.mockRestore();
   });
 });
