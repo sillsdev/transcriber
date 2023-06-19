@@ -1,8 +1,9 @@
 /* eslint-disable testing-library/no-node-access */
 /* eslint-disable testing-library/no-container */
 // See: https://www.w3schools.com/TAGS/ref_av_dom.asp
-import { cleanup, render, waitFor } from '@testing-library/react';
+import { cleanup, render, waitFor, screen } from '@testing-library/react';
 import { MediaPlayer } from './MediaPlayer';
+import { act } from 'react-dom/test-utils';
 
 enum MediaSt {
   'IDLE',
@@ -73,11 +74,17 @@ jest.mock('../hoc/SnackBar', () => ({
 }));
 
 jest.mock('../selector', () => ({
+  peerCheckSelector: jest.fn(),
   sharedSelector: jest.fn(),
 }));
 
 jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
+  useSelector: () => ({
+    afterResource: 'Play from end of resource',
+    back3Seconds: 'Skip back 3 seconds',
+    resourceStart: 'Play from start of resource',
+    mediaError: 'Media error',
+  }),
   shallowEqual: jest.fn(),
 }));
 
@@ -129,34 +136,12 @@ describe('<MediaPlayer />', () => {
     expect(container.firstChild).toBe(null);
   });
 
-  it('should render without crashing when onPosition is defined', () => {
+  it('should render without crashing when limits are defined', () => {
     const props = {
       srcMediaId: '1',
       requestPlay: true,
       onEnded: () => {},
-      onPosition: () => {},
-    };
-    const { container } = render(<MediaPlayer {...props} />);
-    expect(container.firstChild).toBe(null);
-  });
-
-  it('should render without crashing when position is defined', () => {
-    const props = {
-      srcMediaId: '1',
-      requestPlay: true,
-      onEnded: () => {},
-      position: 1,
-    };
-    const { container } = render(<MediaPlayer {...props} />);
-    expect(container.firstChild).toBe(null);
-  });
-
-  it('should render without crashing when onDuration is defined', () => {
-    const props = {
-      srcMediaId: '1',
-      requestPlay: true,
-      onEnded: () => {},
-      onDuration: () => {},
+      limits: { start: 0, end: 100 },
     };
     const { container } = render(<MediaPlayer {...props} />);
     expect(container.firstChild).toBe(null);
@@ -173,16 +158,14 @@ describe('<MediaPlayer />', () => {
     expect(container.firstChild).toBe(null);
   });
 
-  it('should render without crashing when onTogglePlay, onPosition, position, onDuration, and controls are defined', () => {
+  it('should render without crashing when onTogglePlay, limits, and controls are defined', () => {
     const props = {
       srcMediaId: '1',
       requestPlay: true,
       onEnded: () => {},
       onTogglePlay: () => {},
-      onPosition: () => {},
-      position: 1,
-      onDuration: () => {},
       controls: true,
+      limits: { start: 0, end: 100 },
     };
     const { container } = render(<MediaPlayer {...props} />);
     expect(container.firstChild).toBe(null);
@@ -296,7 +279,6 @@ describe('<MediaPlayer />', () => {
       srcMediaId: '1',
       requestPlay: true,
       onEnded: () => {},
-      onTogglePlay: jest.fn(),
     };
 
     const playStub = jest
@@ -306,7 +288,6 @@ describe('<MediaPlayer />', () => {
     await waitFor(() => expect(container.firstChild).not.toBe(null));
     expect(playStub).toHaveBeenCalled();
     playStub.mockRestore();
-    // expect(props.onTogglePlay).toHaveBeenCalled();
   });
 
   it('should call OnTogglePlay with pause event and requestPlay true', async () => {
@@ -355,11 +336,13 @@ describe('<MediaPlayer />', () => {
 
     const { container } = render(<MediaPlayer {...props} />);
     await waitFor(() => expect(container.firstChild).not.toBe(null));
-    container.querySelector('audio')?.dispatchEvent(new Event('ended'));
+    act(() => {
+      container.querySelector('audio')?.dispatchEvent(new Event('ended'));
+    });
     expect(props.onEnded).toHaveBeenCalled();
   });
 
-  it('should call onPosition when timeupdate event received', async () => {
+  it('should set currentTime if limits set', async () => {
     mockMediaState = {
       status: MediaSt.FETCHED,
       error: null,
@@ -373,56 +356,8 @@ describe('<MediaPlayer />', () => {
       srcMediaId: '1',
       requestPlay: false,
       onEnded: () => {},
-      onPosition: jest.fn(),
-    };
-
-    const { container } = render(<MediaPlayer {...props} />);
-    await waitFor(() => expect(container.firstChild).not.toBe(null));
-    container.querySelector('audio')?.dispatchEvent(new Event('timeupdate'));
-    expect(props.onPosition).toHaveBeenCalledWith(0);
-  });
-
-  it('should not call onDuration when duration is 0', async () => {
-    mockMediaState = {
-      status: MediaSt.FETCHED,
-      error: null,
-      url: 'https://localhost/media/1.mp3',
-      id: 'apcd-1',
-      remoteId: '1',
-      cancelled: false,
-    };
-
-    const props = {
-      srcMediaId: '1',
-      requestPlay: false,
-      onEnded: () => {},
-      onDuration: jest.fn(),
-    };
-
-    const { container } = render(<MediaPlayer {...props} />);
-    await waitFor(() => expect(container.firstChild).not.toBe(null));
-    container
-      .querySelector('audio')
-      ?.dispatchEvent(new Event('durationchange'));
-    expect(props.onDuration).toHaveBeenCalledTimes(0); // since duration is 0
-  });
-
-  it('should set currentTime if position set', async () => {
-    mockMediaState = {
-      status: MediaSt.FETCHED,
-      error: null,
-      url: 'https://localhost/media/1.mp3',
-      id: 'apcd-1',
-      remoteId: '1',
-      cancelled: false,
-    };
-
-    const props = {
-      srcMediaId: '1',
-      requestPlay: false,
-      onEnded: () => {},
-      position: 10,
-      onPosition: jest.fn(),
+      limits: { start: 10, end: 100 },
+      onLoaded: jest.fn(),
     };
 
     const currentTime = jest.fn();
@@ -434,7 +369,265 @@ describe('<MediaPlayer />', () => {
     container
       .querySelector('audio')
       ?.dispatchEvent(new Event('durationchange'));
+    expect(props.onLoaded).toHaveBeenCalled();
     await waitFor(() => expect(currentTime).toHaveBeenCalledWith(10));
     currentTimeStub.mockRestore();
+  });
+
+  it('should call onEnded if timeUpdate is more than limits.end', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: jest.fn(),
+      limits: { start: 10, end: 100 },
+    };
+
+    const pauseFn = jest.fn();
+    const pauseStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'pause')
+      .mockImplementation(pauseFn);
+    const currentTimeStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'currentTime', 'get')
+      .mockImplementation(() => 101);
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    act(() => {
+      // durationchange sets the stop value
+      container
+        .querySelector('audio')
+        ?.dispatchEvent(new Event('durationchange'));
+      container.querySelector('audio')?.dispatchEvent(new Event('timeupdate'));
+    });
+    expect(props.onEnded).toHaveBeenCalled();
+    expect(pauseFn).toHaveBeenCalled();
+    currentTimeStub.mockRestore();
+    pauseStub.mockRestore();
+  });
+
+  it('should not call onEnded if timeUpdate is less than limits.end', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: jest.fn(),
+      limits: { start: 10, end: 100 },
+    };
+
+    const pauseFn = jest.fn();
+    const pauseStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'pause')
+      .mockImplementation(pauseFn);
+    const currentTimeStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'currentTime', 'get')
+      .mockImplementation(() => 95);
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    act(() => {
+      // durationchange sets the stop value
+      container
+        .querySelector('audio')
+        ?.dispatchEvent(new Event('durationchange'));
+      container.querySelector('audio')?.dispatchEvent(new Event('timeupdate'));
+    });
+    expect(props.onEnded).not.toHaveBeenCalled();
+    expect(pauseFn).not.toHaveBeenCalled();
+    currentTimeStub.mockRestore();
+    pauseStub.mockRestore();
+  });
+
+  it('should include extra controls if limits set', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: () => {},
+      controls: true,
+      limits: { start: 10, end: 100 },
+    };
+
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    expect(screen.getByTestId('segment-start')).toBeInTheDocument();
+    expect(screen.getByTestId('skip-back')).toBeInTheDocument();
+    // skip-next needs the limits.end to be less than the duration
+    expect(screen.queryByTestId('skip-next')).toBeNull();
+  });
+
+  it('should include skip-next if limits set and duration is greater than limits.end', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: () => {},
+      controls: true,
+      limits: { start: 10, end: 100 },
+    };
+
+    const durationStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'duration', 'get')
+      .mockImplementation(() => 200);
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    act(() => {
+      container
+        .querySelector('audio')
+        ?.dispatchEvent(new Event('durationchange'));
+    });
+    expect(screen.getByTestId('skip-next')).toBeInTheDocument();
+    durationStub.mockRestore();
+  });
+
+  it('should set currentTime to start if segment-start clicked', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: jest.fn(),
+      controls: true,
+      limits: { start: 10, end: 100 },
+    };
+
+    const currentTimeGetStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'currentTime', 'get')
+      .mockImplementation(() => 95);
+    const currentTimeFn = jest.fn();
+    const currentTimeSetStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'currentTime', 'set')
+      .mockImplementation(currentTimeFn);
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    const startEl = screen.getByTestId('segment-start');
+    expect(startEl).toBeInTheDocument();
+    act(() => {
+      startEl.click();
+    });
+    expect(currentTimeFn).toHaveBeenCalledWith(10);
+    currentTimeGetStub.mockRestore();
+    currentTimeSetStub.mockRestore();
+  });
+
+  it('should set currentTime back 3 if skip-back clicked', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: jest.fn(),
+      controls: true,
+      limits: { start: 10, end: 100 },
+    };
+
+    const currentTimeGetStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'currentTime', 'get')
+      .mockImplementation(() => 95.5);
+    const currentTimeFn = jest.fn();
+    const currentTimeSetStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'currentTime', 'set')
+      .mockImplementation(currentTimeFn);
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    const backEl = screen.getByTestId('skip-back');
+    expect(backEl).toBeInTheDocument();
+    act(() => {
+      backEl.click();
+    });
+    expect(currentTimeFn).toHaveBeenCalledWith(92.5);
+    currentTimeGetStub.mockRestore();
+    currentTimeSetStub.mockRestore();
+  });
+
+  it('should set currentTime to end if skip-next clicked', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: jest.fn(),
+      controls: true,
+      limits: { start: 10, end: 100 },
+    };
+
+    const durationStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'duration', 'get')
+      .mockImplementation(() => 200);
+    const currentTimeGetStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'currentTime', 'get')
+      .mockImplementation(() => 95);
+    const currentTimeFn = jest.fn();
+    const currentTimeSetStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'currentTime', 'set')
+      .mockImplementation(currentTimeFn);
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    act(() => {
+      // duration must be set for skip-next to be rendered
+      container
+        .querySelector('audio')
+        ?.dispatchEvent(new Event('durationchange'));
+    });
+    const nextEl = screen.getByTestId('skip-next');
+    expect(nextEl).toBeInTheDocument();
+    act(() => {
+      nextEl.click();
+    });
+    expect(currentTimeFn).toHaveBeenCalledWith(100);
+    currentTimeGetStub.mockRestore();
+    currentTimeSetStub.mockRestore();
+    durationStub.mockRestore();
   });
 });

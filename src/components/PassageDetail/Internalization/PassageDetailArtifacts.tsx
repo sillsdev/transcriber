@@ -75,9 +75,14 @@ import {
 } from '../../../utils';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
-  margin: theme.spacing(1),
+  marginRight: theme.spacing(2),
+  marginTop: theme.spacing(1),
   width: '100%',
+  '& button': {
+    height: '40px',
+  },
   '& audio': {
+    height: '40px',
     display: 'flex',
     width: 'inherit',
   },
@@ -589,19 +594,10 @@ export function PassageDetailArtifacts(props: IProps) {
     handleItemPlayEnd();
   };
 
-  const handleDuration = (duration: number) => {
-    mediaPosition.current = mediaStart.current ?? 0;
-    mediaStart.current = undefined;
+  const handleLoaded = () => {
     setItemPlaying(true);
   };
 
-  const handlePosition = (position: number) => {
-    if (mediaEnd.current) {
-      if (position >= mediaEnd.current) {
-        handleEnded();
-      }
-    }
-  };
   return (
     <>
       <Box sx={{ display: 'flex', flexDirection: 'row', flexGrow: 1, pr: 2 }}>
@@ -613,11 +609,10 @@ export function PassageDetailArtifacts(props: IProps) {
             srcMediaId={playItem}
             requestPlay={itemPlaying}
             onEnded={handleEnded}
-            onDuration={handleDuration}
-            onPosition={handlePosition}
-            position={mediaPosition.current}
+            onLoaded={handleLoaded}
             onTogglePlay={handleItemTogglePlay}
             controls={playItem !== ''}
+            limits={{ start: mediaStart.current, end: mediaEnd.current }}
           />
         </MediaContainer>
         {otherResourcesAvailable && (

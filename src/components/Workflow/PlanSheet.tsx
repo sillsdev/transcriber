@@ -911,24 +911,24 @@ export function PlanSheet(props: IProps) {
             parsePaste={parsePaste}
             onSelect={handleSelect}
           />
+          {confirmAction !== '' ? (
+            <Confirm
+              text={t.confirm
+                .replace('{0}', confirmAction)
+                .replace('{1}', check.length.toString())}
+              yesResponse={handleActionConfirmed}
+              noResponse={handleActionRefused}
+            />
+          ) : (
+            <></>
+          )}
+          <MediaPlayer
+            srcMediaId={srcMediaId}
+            onEnded={playEnded}
+            requestPlay={mediaPlaying}
+          />
         </ContentDiv>
       </div>
-      {confirmAction !== '' ? (
-        <Confirm
-          text={t.confirm
-            .replace('{0}', confirmAction)
-            .replace('{1}', check.length.toString())}
-          yesResponse={handleActionConfirmed}
-          noResponse={handleActionRefused}
-        />
-      ) : (
-        <></>
-      )}
-      <MediaPlayer
-        srcMediaId={srcMediaId}
-        onEnded={playEnded}
-        requestPlay={mediaPlaying}
-      />
     </Box>
   );
 }
