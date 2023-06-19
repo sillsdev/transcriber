@@ -255,12 +255,12 @@ export function PlanSheet(props: IProps) {
 
   const onSectionAbove = () => {
     //we'll find a section before we get past 0
-    var row = currentRow;
+    var row = currentRow - 1;
     while (!isSection(row)) row -= 1;
     addSection(row);
   };
   const onPassageBelow = () => {
-    addPassage(currentRow, false);
+    addPassage(currentRow - 1, false);
   };
   const onPassageLast = () => {
     //we're on a section so find our last row and add it below it
@@ -270,11 +270,13 @@ export function PlanSheet(props: IProps) {
   };
 
   const onPassageToPrev = () => {
-    movePassage(currentRow, true);
+    //convert from currentRow with includes header
+    movePassage(currentRow - 1, true);
   };
 
   const onPassageToNext = () => {
-    movePassage(currentRow, false);
+    //convert from currentRow with includes header
+    movePassage(currentRow - 1, false);
   };
 
   const onSectionEnd = () => {
@@ -828,7 +830,7 @@ export function PlanSheet(props: IProps) {
                     !filtered && !inlinePassages ? onPassageBelow : undefined
                   }
                   onPassageEnd={
-                    !filtered && currentRow !== rowInfo.length - 1
+                    !filtered && currentRow !== rowInfo.length
                       ? onPassageEnd
                       : undefined
                   }

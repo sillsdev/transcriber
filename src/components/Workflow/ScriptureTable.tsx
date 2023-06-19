@@ -412,6 +412,7 @@ export function ScriptureTable(
     let index = i === undefined && lastRow >= 0 ? lastRow : i || 0;
     let newRow = {
       ...myWorkflow[index],
+      level: flat ? 0 : 1,
       kind: flat ? IwfKind.SectionPassage : IwfKind.Passage,
       book: workflow[lastRow]?.book || workflow[lastRow - 1]?.book || '',
       reference: '',
@@ -470,7 +471,7 @@ export function ScriptureTable(
     ) as number[];
     const sequencenum = Math.max(...sequenceNums, 0) + 1;
     let newRow = {
-      level: flat ? 0 : 1,
+      level: 0,
       kind: flat ? IwfKind.SectionPassage : IwfKind.Section,
       sectionSeq: sequencenum,
       passageSeq: 0,
@@ -564,7 +565,7 @@ export function ScriptureTable(
       workflow.forEach((wf, i) => {
         if (!removeItem.includes(i)) myWork.push(wf);
       });
-      setWorkflow([...myWork]);
+      setWorkflow([...wfResequence(myWork)]);
       setChanged(true);
     }
   };
