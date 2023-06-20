@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
-import React from 'react';
+import React, { useRef } from 'react';
 import { User, useAuth0 } from '@auth0/auth0-react';
 import { IToken } from '../model';
 import Busy from '../components/Busy';
@@ -25,7 +25,7 @@ const initState = {
   setAuthSession: (
     profile: User | undefined,
     accessToken: string,
-    expire?: number
+    skiptIt?: boolean
   ) => {},
 };
 
@@ -61,39 +61,37 @@ function TokenProvider(props: IProps) {
   const [state, setState] = React.useState({
     ...initState,
   });
-
-  const setAuthSession = (
-    profile: User | undefined,
-    accessToken: string,
-    expire?: number
-  ) => {
+  const expiresAtRef = useRef<number | null>(null);
+  const setAuthSession = (profile: User | undefined, accessToken: string) => {
+    if (accessToken) {
+      const decodedToken = jwtDecode(accessToken) as IToken;
+      expiresAtRef.current = decodedToken.exp;
+    } else {
+      expiresAtRef.current = null;
+    }
     setState((state) => ({
       ...state,
       accessToken,
       profile,
-      expiresAt: expire || accessToken ? new Date(5000, 0, 0).getTime() : null,
+      expiresAt: expiresAtRef.current,
       email_verified: profile?.email_verified,
     }));
     localStorage.setItem('isLoggedIn', 'true');
   };
 
   React.useEffect(() => {
-    (async () => {
-      if (isAuthenticated && user) {
-        console.log(`checking for token`);
-        getAccessTokenSilently()
-          .then((token) => {
-            updateOrbitToken(token);
-            const decodedToken = jwtDecode(token) as IToken;
-            setState((state) => ({ ...state, expireAt: decodedToken.exp }));
-            setAuthSession(user, token, decodedToken.exp);
-          })
-          .catch((e: any) => {
-            handleLogOut();
-            loginWithRedirect();
-          });
-      }
-    })();
+    //this is only called on web
+    if (isAuthenticated && user) {
+      getAccessTokenSilently()
+        .then((token) => {
+          updateOrbitToken(token);
+          setAuthSession(user, token);
+        })
+        .catch((e: any) => {
+          handleLogOut();
+          loginWithRedirect();
+        });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, user]);
 
@@ -108,21 +106,20 @@ function TokenProvider(props: IProps) {
 
   const authenticated = () => {
     if (!state.email_verified) return false;
-    return new Date().getTime() < (state.expiresAt || 0);
+    if (timeUntilExpire() < 0) return false;
+    return true;
   };
 
   const resetExpiresAt = () => {
     if (offline) return;
     if (isElectron) {
       ipc
-        ?.invoke('refresh-token')
+        ?.refreshToken()
         .then(async () => {
           const myUser = await ipc?.getProfile();
           const myToken = await ipc?.getToken();
           updateOrbitToken(myToken);
-          const decodedToken = jwtDecode(myToken) as IToken;
-          setState((state) => ({ ...state, expireAt: decodedToken.exp }));
-          setAuthSession(myUser, myToken, decodedToken.exp);
+          setAuthSession(myUser, myToken);
         })
         .catch((e: Error) => {
           localStorage.setItem('offlineAdmin', 'false');
@@ -134,9 +131,7 @@ function TokenProvider(props: IProps) {
       getAccessTokenSilently()
         .then((token) => {
           updateOrbitToken(token);
-          const decodedToken = jwtDecode(token) as IToken;
-          setState((state) => ({ ...state, expireAt: decodedToken.exp }));
-          setAuthSession(user, token, decodedToken.exp);
+          setAuthSession(user, token);
         })
         .catch((e: any) => {
           handleLogOut();
@@ -162,15 +157,21 @@ function TokenProvider(props: IProps) {
     if (modalOpen) setModalOpen(false);
   };
 
+  const timeUntilExpire = () => {
+    if (!expiresAtRef.current) return -1;
+    const currentUnix = moment().locale('en').format('X');
+    const expires = moment
+      .unix(expiresAtRef.current || 0)
+      .locale('en')
+      .format('X');
+    const secondsLeft = Number(expires) - Number(currentUnix);
+    return secondsLeft;
+  };
+
   const checkTokenExpired = () => {
     if (!offline) {
-      if ((state.expiresAt ?? 0) > 0) {
-        const currentUnix = moment().locale('en').format('X');
-        const expires = moment
-          .unix(state?.expiresAt || 0)
-          .locale('en')
-          .format('X');
-        const secondsLeft = Number(expires) - Number(currentUnix);
+      if ((expiresAtRef.current ?? 0) > 0) {
+        const secondsLeft = timeUntilExpire();
         if (secondsLeft < Expires + 30) {
           setSecondsToExpire(secondsLeft);
           if (!modalOpen) {
