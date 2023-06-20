@@ -78,9 +78,6 @@ const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
   marginTop: theme.spacing(1),
   width: '100%',
-  '& button': {
-    height: '40px',
-  },
   '& audio': {
     height: '40px',
     display: 'flex',

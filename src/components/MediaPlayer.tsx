@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, MouseEvent } from 'react';
 import { useGlobal } from 'reactn';
 import { useFetchMediaUrl, MediaSt } from '../crud';
 import { logError, Severity } from '../utils';
@@ -6,11 +6,38 @@ import { useSnackBar } from '../hoc/SnackBar';
 import { IPeerCheckStrings, ISharedStrings } from '../model';
 import { peerCheckSelector, sharedSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
-import { IconButton, Stack } from '@mui/material';
+import {
+  Chip,
+  ChipProps,
+  IconButton,
+  LinearProgress,
+  TooltipProps,
+  styled,
+} from '@mui/material';
 import { LightTooltip } from '../control/LightTooltip';
 import ReplayIcon from '@mui/icons-material/Replay';
 import SkipPrevious from '@mui/icons-material/SkipPrevious';
 import SkipNext from '@mui/icons-material/SkipNext';
+import Pause from '@mui/icons-material/Pause';
+import PlayArrow from '@mui/icons-material/PlayArrow';
+
+const StyledChip = styled(Chip)<ChipProps>(({ theme }) => ({
+  height: 'auto',
+  '&>*': {
+    padding: '4px!important',
+    margin: '4px!important',
+  },
+  '& .MuiChip-label': {
+    width: 'calc(100% - 20px)',
+  },
+  '& .MuiChip-deleteIcon': {
+    color: theme.palette.action.active,
+  },
+}));
+
+const StyledTip = styled(LightTooltip)<TooltipProps>(({ theme }) => ({
+  backgroundColor: 'transparent',
+}));
 
 interface IMediaLimits {
   start?: number;
@@ -40,11 +67,12 @@ export function MediaPlayer(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [value, setValue] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
   const [ready, setReady] = useState(false);
-  const timeTrack = useRef<number>();
   const [duration, setDuration] = useState(0);
+  const timeTracker = useRef<number>(0);
   const stop = useRef<number>(0);
   const { showMessage } = useSnackBar();
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
@@ -126,8 +154,15 @@ export function MediaPlayer(props: IProps) {
       el.pause();
       ended();
     }
-    if (time === timeTrack.current) return;
-    timeTrack.current = time;
+    const current = Math.round(
+      ((time / 10 - (limits?.start ?? 0)) /
+        ((limits?.end ?? 0) - (limits?.start ?? 0))) *
+        100
+    );
+    if (timeTracker.current !== current) {
+      timeTracker.current = current;
+      setValue(current);
+    }
   };
 
   const durationChange = () => {
@@ -137,7 +172,6 @@ export function MediaPlayer(props: IProps) {
     }
     const el = audioRef.current as HTMLMediaElement;
     if (el?.duration) setDuration(el.duration);
-    timeTrack.current = undefined;
     onLoaded && onLoaded();
   };
 
@@ -164,34 +198,98 @@ export function MediaPlayer(props: IProps) {
     stop.current = 0;
   };
 
-  return ready ? (
-    <Stack direction="row" sx={{ width: '100%' }}>
-      {controls && Boolean(limits?.end) ? (
-        <>
-          <LightTooltip title={t.resourceStart}>
-            <IconButton
-              data-testid="segment-start"
-              sx={{ height: '54px', alignSelf: 'center' }}
-              onClick={handleSegmentStart}
-            >
-              <SkipPrevious fontSize="small" />
-            </IconButton>
-          </LightTooltip>
-          <LightTooltip title={t.back3Seconds}>
-            <IconButton
-              data-testid="skip-back"
-              sx={{ height: '54px', alignSelf: 'center' }}
-              onClick={handleSkipBack}
-            >
-              <ReplayIcon fontSize="small" />
-            </IconButton>
-          </LightTooltip>
-        </>
-      ) : (
-        <></>
-      )}
+  const handlePlayPause = () => {
+    if (audioRef.current) {
+      if (playing) audioRef.current.pause();
+      else audioRef.current.play();
+    }
+  };
+
+  const handleProgressClick = (e: MouseEvent<HTMLSpanElement>) => {
+    if (audioRef.current) {
+      const el = audioRef.current as HTMLMediaElement;
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const percent = x / rect.width;
+      const time =
+        Math.round(((limits?.end ?? 0) - (limits?.start ?? 0)) * percent) +
+        (limits?.start ?? 0);
+      el.currentTime = time;
+      timeTracker.current = Math.round(
+        ((time / 10 - (limits?.start ?? 0)) /
+          ((limits?.end ?? 0) - (limits?.start ?? 0))) *
+          100
+      );
+      setValue(timeTracker.current);
+    }
+  };
+
+  return ready && limits?.end ? (
+    <>
+      <StyledChip
+        icon={
+          controls ? (
+            <>
+              <StyledTip title={t.resourceStart}>
+                <IconButton
+                  data-testid="segment-start"
+                  sx={{ alignSelf: 'center' }}
+                  onClick={handleSegmentStart}
+                >
+                  <SkipPrevious fontSize="small" />
+                </IconButton>
+              </StyledTip>
+              <StyledTip title={t.back3Seconds}>
+                <IconButton
+                  data-testid="skip-back"
+                  sx={{ alignSelf: 'center' }}
+                  onClick={handleSkipBack}
+                >
+                  <ReplayIcon fontSize="small" />
+                </IconButton>
+              </StyledTip>
+              <IconButton
+                data-testid="play-pause"
+                sx={{ alignSelf: 'center' }}
+                onClick={handlePlayPause}
+              >
+                {playing ? (
+                  <Pause fontSize="small" />
+                ) : (
+                  <PlayArrow fontSize="small" />
+                )}
+              </IconButton>
+            </>
+          ) : (
+            <></>
+          )
+        }
+        label={
+          <LinearProgress
+            variant="determinate"
+            value={value}
+            onClick={handleProgressClick}
+          />
+        }
+        deleteIcon={
+          controls && duration && limits?.end < duration ? (
+            <StyledTip title={t.afterResource}>
+              <IconButton
+                data-testid="skip-next"
+                sx={{ alignSelf: 'center' }}
+                onClick={handleSkipNext}
+              >
+                <SkipNext fontSize="small" />
+              </IconButton>
+            </StyledTip>
+          ) : (
+            <></>
+          )
+        }
+        onDelete={handleSkipNext}
+        sx={{ width: '100%' }}
+      />
       <audio
-        controls={controls}
         onEnded={ended}
         ref={audioRef}
         src={mediaState.url}
@@ -201,20 +299,19 @@ export function MediaPlayer(props: IProps) {
         onPause={pause}
         onPlay={play}
       />
-      {controls && limits?.end && duration && limits?.end < duration ? (
-        <LightTooltip title={t.afterResource}>
-          <IconButton
-            data-testid="skip-next"
-            sx={{ height: '54px', alignSelf: 'center' }}
-            onClick={handleSkipNext}
-          >
-            <SkipNext fontSize="small" />
-          </IconButton>
-        </LightTooltip>
-      ) : (
-        <></>
-      )}
-    </Stack>
+    </>
+  ) : ready ? (
+    <audio
+      controls={controls}
+      onEnded={ended}
+      ref={audioRef}
+      src={mediaState.url}
+      onTimeUpdate={timeUpdate}
+      onDurationChange={durationChange}
+      onError={handleError}
+      onPause={pause}
+      onPlay={play}
+    />
   ) : (
     <></>
   );
