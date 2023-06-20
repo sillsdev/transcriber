@@ -720,7 +720,7 @@ export function PlanSheet(props: IProps) {
                       !readonly &&
                       !filtered &&
                       !inlinePassages &&
-                      rowIndex > 2 &&
+                      rowIndex > 1 &&
                       passage &&
                       isSection(rowIndex - 1)
                         ? onPassageToPrev
