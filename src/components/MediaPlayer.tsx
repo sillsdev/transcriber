@@ -12,6 +12,7 @@ import {
   IconButton,
   Slider,
   Stack,
+  StackProps,
   TooltipProps,
   styled,
 } from '@mui/material';
@@ -39,6 +40,12 @@ const StyledChip = styled(Chip)<ChipProps>(({ theme }) => ({
 
 const StyledTip = styled(LightTooltip)<TooltipProps>(({ theme }) => ({
   backgroundColor: 'transparent',
+}));
+
+const StyledStack = styled(Stack)<StackProps>(({ theme }) => ({
+  '& audio': {
+    width: '100%',
+  },
 }));
 
 interface IMediaLimits {
@@ -183,8 +190,8 @@ export function MediaPlayer(props: IProps) {
   };
 
   const handleSegmentStart = () => {
+    setPosition(limits?.start ?? 0);
     if (limits?.end) {
-      setPosition(limits?.start);
       stop.current = Math.round((limits?.end ?? 0) * 10);
     }
   };
@@ -305,17 +312,41 @@ export function MediaPlayer(props: IProps) {
       />
     </>
   ) : ready ? (
-    <audio
-      controls={controls}
-      onEnded={ended}
-      ref={audioRef}
-      src={mediaState.url}
-      onTimeUpdate={timeUpdate}
-      onDurationChange={durationChange}
-      onError={handleError}
-      onPause={pause}
-      onPlay={play}
-    />
+    <StyledStack direction="row">
+      {controls && (
+        <>
+          <StyledTip title={t.resourceStart}>
+            <IconButton
+              data-testid="segment-start"
+              sx={{ alignSelf: 'center' }}
+              onClick={handleSegmentStart}
+            >
+              <SkipPrevious fontSize="small" />
+            </IconButton>
+          </StyledTip>
+          <StyledTip title={t.back3Seconds}>
+            <IconButton
+              data-testid="skip-back"
+              sx={{ alignSelf: 'center' }}
+              onClick={handleSkipBack}
+            >
+              <ReplayIcon fontSize="small" />
+            </IconButton>
+          </StyledTip>
+        </>
+      )}
+      <audio
+        controls={controls}
+        onEnded={ended}
+        ref={audioRef}
+        src={mediaState.url}
+        onTimeUpdate={timeUpdate}
+        onDurationChange={durationChange}
+        onError={handleError}
+        onPause={pause}
+        onPlay={play}
+      />
+    </StyledStack>
   ) : (
     <></>
   );
