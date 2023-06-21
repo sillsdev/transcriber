@@ -994,6 +994,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="control.normal">
+         <segment>
+            <source>Normal</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="control.other">
          <segment>
             <source>General</source>

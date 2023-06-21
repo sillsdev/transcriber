@@ -209,6 +209,7 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
 
 export interface IControlStrings extends Localize.LocalizedStringsMethods {
     "book": string;
+    "normal": string;
     "other": string;
     "scripture": string;
 };
