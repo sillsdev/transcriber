@@ -751,25 +751,13 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       setSelected(id, PlayInPlayer.no, state.rowData);
     };
 
-    const handleDuration = (duration: number) => {
-      if (mediaStart.current !== undefined) {
-        mediaPosition.current = mediaStart.current;
-        mediaStart.current = undefined;
-        setState((state: ICtxState) => {
-          return {
-            ...state,
-            oldVernacularPlaying: true,
-          };
-        });
-      }
-    };
-
-    const handlePosition = (position: number) => {
-      if (mediaEnd.current) {
-        if (position >= mediaEnd.current) {
-          oldVernReset();
-        }
-      }
+    const handleLoaded = () => {
+      setState((state: ICtxState) => {
+        return {
+          ...state,
+          oldVernacularPlaying: true,
+        };
+      });
     };
 
     const setCurrentSegment = (
@@ -1086,9 +1074,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           srcMediaId={state.oldVernacularPlayItem}
           requestPlay={state.oldVernacularPlaying}
           onEnded={handleOldVernacularPlayEnd}
-          onDuration={handleDuration}
-          onPosition={handlePosition}
-          position={mediaPosition.current}
+          onLoaded={handleLoaded}
+          limits={{ start: mediaStart.current, end: mediaEnd.current }}
         />
         {confirm !== '' && (
           <Confirm

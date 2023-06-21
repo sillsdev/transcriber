@@ -76,6 +76,10 @@ const GridContainerCol = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   color: theme.palette.primary.dark,
+  '& audio': {
+    marginTop: theme.spacing(1),
+    height: '40px',
+  },
 }));
 
 const StyledText = styled(TextField)<TextFieldProps>(({ theme }) => ({
