@@ -22,11 +22,7 @@ const initState = {
   logout: () => {},
   resetExpiresAt: () => {},
   authenticated: () => false,
-  setAuthSession: (
-    profile: User | undefined,
-    accessToken: string,
-    skiptIt?: boolean
-  ) => {},
+  setAuthSession: (profile: User | undefined, accessToken: string) => {},
 };
 
 export type ICtxState = typeof initState;
