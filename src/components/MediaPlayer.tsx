@@ -22,8 +22,8 @@ import SkipPrevious from '@mui/icons-material/SkipPrevious';
 import SkipNext from '@mui/icons-material/SkipNext';
 import Pause from '@mui/icons-material/Pause';
 import PlayArrow from '@mui/icons-material/PlayArrow';
-import { Duration } from '../control';
 import SpeedMenu from '../control/SpeedMenu';
+import { Duration } from '../control/Duration';
 
 const StyledChip = styled(Chip)<ChipProps>(({ theme }) => ({
   height: 'auto',
