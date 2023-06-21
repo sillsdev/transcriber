@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { pad2 } from '../utils';
+import { pad2 } from '../utils/pad2';
 
 export function formatTime(seconds: number, direction?: string) {
   if (typeof seconds !== 'number') return '';
