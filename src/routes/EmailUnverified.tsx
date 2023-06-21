@@ -1,8 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import JwtDecode from 'jwt-decode';
 import { shallowEqual, useSelector } from 'react-redux';
-import { IToken, IEmailUnverifiedStrings } from '../model';
+import { IEmailUnverifiedStrings } from '../model';
 import { Typography, Grid, styled, Box, BoxProps } from '@mui/material';
 import { API_CONFIG, isElectron } from '../api-variable';
 import Axios from 'axios';
@@ -64,8 +63,7 @@ export const EmailUnverified = (props: IProps) => {
       (async () => {
         const token = await getAccessTokenSilently();
         if (!isMounted()) return;
-        const decodedToken = JwtDecode(token) as IToken;
-        setAuthSession(user, token, decodedToken.exp);
+        setAuthSession(user, token);
         setView('Loading');
       })();
     }
