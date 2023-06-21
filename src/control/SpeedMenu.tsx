@@ -3,10 +3,10 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  ListItem,
   ListItemIcon,
+  ListItemText,
 } from '@mui/material';
-import Speed from '@mui/icons-material/Speed';
+import Speed from '@mui/icons-material/SlowMotionVideo';
 import Check from '@mui/icons-material/Check';
 import { useSelector, shallowEqual } from 'react-redux';
 import { controlSelector } from '../selector';
@@ -36,6 +36,7 @@ export default function SpeedMenu({ speed, onSpeed }: SpeedMenuProps) {
     <>
       <IconButton
         id="speed-button"
+        data-testid="speed-button"
         aria-controls={open ? 'speed-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
@@ -46,6 +47,7 @@ export default function SpeedMenu({ speed, onSpeed }: SpeedMenuProps) {
       </IconButton>
       <Menu
         id="speed-menu"
+        data-testid="speed-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
@@ -61,10 +63,8 @@ export default function SpeedMenu({ speed, onSpeed }: SpeedMenuProps) {
               onSpeed(s);
             }}
           >
-            <ListItem>
-              <ListItemIcon>{s === speed ? <Check /> : <></>}</ListItemIcon>
-              {s === 1 ? t.normal : `${s}x`}
-            </ListItem>
+            <ListItemIcon>{s === speed ? <Check /> : <></>}</ListItemIcon>
+            <ListItemText>{s === 1 ? t.normal : `${s}x`}</ListItemText>
           </MenuItem>
         ))}
       </Menu>

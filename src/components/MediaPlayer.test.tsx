@@ -1,7 +1,13 @@
 /* eslint-disable testing-library/no-node-access */
 /* eslint-disable testing-library/no-container */
 // See: https://www.w3schools.com/TAGS/ref_av_dom.asp
-import { cleanup, render, waitFor, screen } from '@testing-library/react';
+import {
+  cleanup,
+  render,
+  waitFor,
+  screen,
+  fireEvent,
+} from '@testing-library/react';
 import { MediaPlayer } from './MediaPlayer';
 import { act } from 'react-dom/test-utils';
 
@@ -629,5 +635,77 @@ describe('<MediaPlayer />', () => {
     currentTimeGetStub.mockRestore();
     currentTimeSetStub.mockRestore();
     durationStub.mockRestore();
+  });
+
+  it('should set playbackRate when speed button menu item chosen', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: jest.fn(),
+      controls: true,
+      limits: { start: 10, end: 100 },
+    };
+
+    const durationStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'duration', 'get')
+      .mockImplementation(() => 200);
+    const rateFn = jest.fn();
+    const rateSetStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'playbackRate', 'set')
+      .mockImplementation(rateFn);
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    act(() => {
+      // duration must be set for speed-button to be rendered
+      container
+        .querySelector('audio')
+        ?.dispatchEvent(new Event('durationchange'));
+    });
+    const nextEl = screen.getByTestId('speed-button');
+    expect(nextEl).toBeInTheDocument();
+    act(() => {
+      nextEl.click();
+    });
+    await screen.findByTestId('speed-menu');
+    fireEvent.click(screen.getByText('1.5x'));
+    expect(rateFn).toHaveBeenCalledWith(1.5);
+    rateSetStub.mockRestore();
+    durationStub.mockRestore();
+  });
+
+  it('should show negative time when if currentTime is less than start', async () => {
+    mockMediaState = {
+      status: MediaSt.FETCHED,
+      error: null,
+      url: 'https://localhost/media/1.mp3',
+      id: 'apcd-1',
+      remoteId: '1',
+      cancelled: false,
+    };
+
+    const props = {
+      srcMediaId: '1',
+      requestPlay: false,
+      onEnded: jest.fn(),
+      controls: true,
+      limits: { start: 10, end: 100 },
+    };
+
+    const currentTimeGetStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'currentTime', 'get')
+      .mockImplementation(() => 5);
+    const { container } = render(<MediaPlayer {...props} />);
+    await waitFor(() => expect(container.firstChild).not.toBe(null));
+    expect(screen.getByText('-0:10')).toBeInTheDocument();
+    currentTimeGetStub.mockRestore();
   });
 });
