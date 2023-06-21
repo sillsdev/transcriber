@@ -229,6 +229,7 @@ const initialState = {
 	"control": new LocalizedStrings({
 		"en": {
 			"book": "Book",
+			"normal": "Normal",
 			"other": "General",
 			"scripture": "Scripture",
 		}

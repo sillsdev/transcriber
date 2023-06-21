@@ -1158,6 +1158,13 @@
       			<context context-type="sourcefile">selectPlanType.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="control.normal">
+      		<source>Normal</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">selectPlanType.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="control.other">
             <source>General</source>
             <target/>

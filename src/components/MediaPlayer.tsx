@@ -23,6 +23,7 @@ import SkipNext from '@mui/icons-material/SkipNext';
 import Pause from '@mui/icons-material/Pause';
 import PlayArrow from '@mui/icons-material/PlayArrow';
 import { Duration } from '../control';
+import SpeedMenu from '../control/SpeedMenu';
 
 const StyledChip = styled(Chip)<ChipProps>(({ theme }) => ({
   height: 'auto',
@@ -81,6 +82,7 @@ export function MediaPlayer(props: IProps) {
   const [playItem, setPlayItem] = useState('');
   const [ready, setReady] = useState(false);
   const [duration, setDuration] = useState(0);
+  const [speed, setSpeed] = useState(1);
   const timeTracker = useRef<number>(0);
   const stop = useRef<number>(0);
   const { showMessage } = useSnackBar();
@@ -251,7 +253,7 @@ export function MediaPlayer(props: IProps) {
               </StyledTip>
               <IconButton
                 data-testid="play-pause"
-                sx={{ alignSelf: 'center' }}
+                sx={{ alignSelf: 'center', color: 'text.primary' }}
                 onClick={handlePlayPause}
               >
                 {playing ? (
@@ -278,21 +280,31 @@ export function MediaPlayer(props: IProps) {
               value={value}
               onChange={handleSliderChange}
               size="small"
-              // sx={{ px: 2 }}
+              sx={{ color: 'text.secondary' }}
             />
           </Stack>
         }
         deleteIcon={
           controls && duration && limits?.end < duration ? (
-            <StyledTip title={t.afterResource}>
-              <IconButton
-                data-testid="skip-next"
-                sx={{ alignSelf: 'center' }}
-                onClick={handleSkipNext}
-              >
-                <SkipNext fontSize="small" />
-              </IconButton>
-            </StyledTip>
+            <>
+              <StyledTip title={t.afterResource}>
+                <IconButton
+                  data-testid="skip-next"
+                  sx={{ alignSelf: 'center' }}
+                  onClick={handleSkipNext}
+                >
+                  <SkipNext fontSize="small" />
+                </IconButton>
+              </StyledTip>
+              <SpeedMenu
+                speed={speed}
+                onSpeed={(speed: number) => {
+                  const el = audioRef.current as any; // playbackRate is new
+                  if (el) el.playbackRate = speed;
+                  setSpeed(speed);
+                }}
+              />
+            </>
           ) : (
             <></>
           )
