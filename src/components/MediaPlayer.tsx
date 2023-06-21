@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, MouseEvent } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { useFetchMediaUrl, MediaSt } from '../crud';
 import { logError, Severity } from '../utils';
@@ -10,7 +10,8 @@ import {
   Chip,
   ChipProps,
   IconButton,
-  LinearProgress,
+  Slider,
+  Stack,
   TooltipProps,
   styled,
 } from '@mui/material';
@@ -20,6 +21,7 @@ import SkipPrevious from '@mui/icons-material/SkipPrevious';
 import SkipNext from '@mui/icons-material/SkipNext';
 import Pause from '@mui/icons-material/Pause';
 import PlayArrow from '@mui/icons-material/PlayArrow';
+import { Duration } from '../control';
 
 const StyledChip = styled(Chip)<ChipProps>(({ theme }) => ({
   height: 'auto',
@@ -154,10 +156,9 @@ export function MediaPlayer(props: IProps) {
       el.pause();
       ended();
     }
+    const start = limits?.start ?? 0;
     const current = Math.round(
-      ((time / 10 - (limits?.start ?? 0)) /
-        ((limits?.end ?? 0) - (limits?.start ?? 0))) *
-        100
+      ((time / 10 - start) / ((limits?.end ?? 0) - start)) * 100
     );
     if (timeTracker.current !== current) {
       timeTracker.current = current;
@@ -205,23 +206,16 @@ export function MediaPlayer(props: IProps) {
     }
   };
 
-  const handleProgressClick = (e: MouseEvent<HTMLSpanElement>) => {
-    if (audioRef.current) {
-      const el = audioRef.current as HTMLMediaElement;
-      const rect = e.currentTarget.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const percent = x / rect.width;
-      const time =
-        Math.round(((limits?.end ?? 0) - (limits?.start ?? 0)) * percent) +
-        (limits?.start ?? 0);
-      el.currentTime = time;
-      timeTracker.current = Math.round(
-        ((time / 10 - (limits?.start ?? 0)) /
-          ((limits?.end ?? 0) - (limits?.start ?? 0))) *
-          100
-      );
-      setValue(timeTracker.current);
-    }
+  const handleSliderChange = (e: Event, value: number | number[]) => {
+    const el = audioRef.current as HTMLMediaElement;
+    const curValue = Array.isArray(value) ? value[0] : value;
+    const percent = curValue / 100;
+    const start = limits?.start ?? 0;
+    const duration = (limits?.end ?? 0) - start;
+    const time = duration * percent + start;
+    el.currentTime = time;
+    timeTracker.current = Math.round((time - start) / duration);
+    setValue(timeTracker.current);
   };
 
   return ready && limits?.end ? (
@@ -259,17 +253,27 @@ export function MediaPlayer(props: IProps) {
                   <PlayArrow fontSize="small" />
                 )}
               </IconButton>
+              <Duration
+                seconds={
+                  (audioRef.current?.currentTime ?? 0) - (limits?.start ?? 0)
+                }
+              />
+              {' / '}
+              <Duration seconds={(limits?.end ?? 0) - (limits?.start ?? 0)} />
             </>
           ) : (
             <></>
           )
         }
         label={
-          <LinearProgress
-            variant="determinate"
-            value={value}
-            onClick={handleProgressClick}
-          />
+          <Stack direction="row" sx={{ px: 1 }}>
+            <Slider
+              value={value}
+              onChange={handleSliderChange}
+              size="small"
+              // sx={{ px: 2 }}
+            />
+          </Stack>
         }
         deleteIcon={
           controls && duration && limits?.end < duration ? (
