@@ -340,7 +340,7 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
   const handleSelect = (id: string, latest: boolean) => {
     //latest isn't used anymore but might be useful...so leave it
     setPlayItem(id);
-    setItemPlaying(false);
+    setItemPlaying(true);
     setCommentPlaying(false);
   };
 
