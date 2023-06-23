@@ -699,11 +699,7 @@ export function PlanSheet(props: IProps) {
                         : undefined
                     }
                     onSectionAbove={
-                      !readonly &&
-                      !filtered &&
-                      currentRow >= 0 &&
-                      rowInfo.length > 0 &&
-                      section
+                      !readonly && !filtered && rowInfo.length > 0 && section
                         ? onSectionAbove
                         : undefined
                     }
@@ -840,7 +836,7 @@ export function PlanSheet(props: IProps) {
                       : undefined
                   }
                   onSectionAbove={
-                    !filtered && currentRow >= 0 && rowInfo.length > 0
+                    !filtered && currentRow > 0 && rowInfo.length > 0
                       ? onSectionAbove
                       : undefined
                   }
