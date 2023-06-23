@@ -161,9 +161,8 @@ export function PassageDetailArtifacts(props: IProps) {
   const { showMessage } = useSnackBar();
   const [confirm, setConfirm] = useState('');
   const { waitForSave } = useContext(UnsavedContext).state;
-  const mediaStart = useRef<number | undefined>();
-  const mediaEnd = useRef<number | undefined>();
-  const mediaPosition = useRef<number | undefined>();
+  const [mediaStart, setMediaStart] = useState<number | undefined>();
+  const [mediaEnd, setMediaEnd] = useState<number | undefined>();
   const projectResourceSave = useProjectResourceSave();
   const { userIsAdmin } = useRole();
   const resourceType = useMemo(() => {
@@ -210,10 +209,13 @@ export function PassageDetailArtifacts(props: IProps) {
         const regions = JSON.parse(segs);
         if (regions.length > 0) {
           const { start, end } = regions[0];
-          mediaStart.current = start;
-          mediaEnd.current = end;
+          setMediaStart(start);
+          setMediaEnd(end);
           setMediaSelected(id, start, end);
           return;
+        } else {
+          setMediaStart(undefined);
+          setMediaEnd(undefined);
         }
       }
       setSelected(id, PlayInPlayer.no);
@@ -584,9 +586,6 @@ export function PassageDetailArtifacts(props: IProps) {
   };
 
   const handleEnded = () => {
-    mediaStart.current = undefined;
-    mediaEnd.current = undefined;
-    mediaPosition.current = undefined;
     setPlayItem('');
     handleItemPlayEnd();
   };
@@ -609,7 +608,7 @@ export function PassageDetailArtifacts(props: IProps) {
             onLoaded={handleLoaded}
             onTogglePlay={handleItemTogglePlay}
             controls={playItem !== ''}
-            limits={{ start: mediaStart.current, end: mediaEnd.current }}
+            limits={{ start: mediaStart, end: mediaEnd }}
           />
         </MediaContainer>
         {otherResourcesAvailable && (

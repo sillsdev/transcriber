@@ -44,6 +44,7 @@ const StyledTip = styled(LightTooltip)<TooltipProps>(({ theme }) => ({
 }));
 
 const StyledStack = styled(Stack)<StackProps>(({ theme }) => ({
+  width: '100%',
   '& audio': {
     width: '100%',
   },
