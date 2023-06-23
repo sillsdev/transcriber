@@ -67,6 +67,9 @@ export function TeamCheckReference() {
         setMediaEnd(end);
         setMediaSelected(id, start, end);
         return;
+      } else {
+        setMediaStart(undefined);
+        setMediaEnd(undefined);
       }
     }
     setPlayItem(id);
