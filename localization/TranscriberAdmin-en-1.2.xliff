@@ -711,7 +711,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="cards.editCategory">
-      		<source>Edit Category</source>
+      		<source>Edit Team Categories</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TeamDialog.tsx</context>
@@ -743,6 +743,20 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.longNotesProject">
+            <source>Project with Long Notes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectButtons.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.longNotes">
+            <source>Shared Introductions, Rationales, Devotionals, Podcasts</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectButtons.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="cards.mediaUploaded">
@@ -876,6 +890,20 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjectMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.shortNotes">
+            <source>Shared Glossary words, footnotes, etc.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectButtons.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.shortNotesProject">
+            <source>Project with Short Notes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectButtons.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="cards.sync">
@@ -5116,7 +5144,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="projButtons.categoryTitle">
-            <source>Edit Category</source>
+            <source>Edit Team Categories</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjButtons.tsx</context>
