@@ -59,7 +59,7 @@ alter table passages add passagetypeid int;
 ALTER TABLE passages ADD CONSTRAINT fk_passages_passagetype FOREIGN KEY (passagetypeid) REFERENCES passagetypes(id) ON DELETE SET NULL;
 
 
-alter table sections add graphics jsonb;
+alter table sections add graphics jsonb default '{}';
 alter table sections add published bool default false;
 
 alter table organizations add publishingdata jsonb;

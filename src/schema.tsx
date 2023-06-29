@@ -317,7 +317,7 @@ const schemaDefinition: SchemaSettings = {
         },
         editor: { type: 'hasOne', model: 'user' },
         transcriber: { type: 'hasOne', model: 'user' },
-        assignedgroup: { type: 'hasOne', model: 'group' },
+        group: { type: 'hasOne', model: 'group' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },

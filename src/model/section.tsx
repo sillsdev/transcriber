@@ -15,7 +15,7 @@ export interface Section extends BaseModel {
     passages: RecordRelationship;
     transcriber: RecordRelationship;
     editor: RecordRelationship;
-    assignedGroup: RecordRelationship;
+    group: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
 }
