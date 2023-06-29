@@ -135,6 +135,8 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "explainTeamDelete": string;
     "import": string;
     "language": string;
+    "longNotesProject": string;
+    "longNotes": string;
     "mediaUploaded": string;
     "members": string;
     "nameInUse": string;
@@ -154,6 +156,8 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "sectionStatus": string;
     "settings": string;
+    "shortNotes": string;
+    "shortNotesProject": string;
     "sync": string;
     "teamName": string;
     "teamSettings": string;

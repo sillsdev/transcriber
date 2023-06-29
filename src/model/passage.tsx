@@ -20,6 +20,7 @@ export interface Passage extends BaseModel {
     users: RecordHasManyRelationship;
     media: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
+    passageType: RecordRelationship;
   };
   startChapter?: number; //calculated
   endChapter?: number; //calculated

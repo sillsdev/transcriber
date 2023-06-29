@@ -133,6 +133,8 @@ const schemaDefinition: SchemaSettings = {
         logoUrl: { type: 'string' },
         publicByDefault: { type: 'boolean' },
         clusterbase: { type: 'boolean' },
+        publishingData: { type: 'string' },
+
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
@@ -144,6 +146,8 @@ const schemaDefinition: SchemaSettings = {
         groups: { type: 'hasMany', model: 'group', inverse: 'owner' },
         cluster: { type: 'hasOne', model: 'organization' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        glossaryProject: { type: 'hasOne', model: 'project' },
+        sidebarProject: { type: 'hasOne', model: 'project' },
       },
     },
     organizationmembership: {
@@ -297,6 +301,8 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         sequencenum: { type: 'number' },
         name: { type: 'string' },
+        graphics: { type: 'string' },
+        published: { type: 'boolean' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
@@ -311,6 +317,7 @@ const schemaDefinition: SchemaSettings = {
         },
         editor: { type: 'hasOne', model: 'user' },
         transcriber: { type: 'hasOne', model: 'user' },
+        group: { type: 'hasOne', model: 'group' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
@@ -336,6 +343,20 @@ const schemaDefinition: SchemaSettings = {
           model: 'section',
           inverse: 'passages',
         },
+        passagetype: { type: 'hasOne', model: 'passagetype' },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      },
+    },
+    passagenote: {
+      keys: { remoteId: {} },
+      attributes: {
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
+      },
+      relationships: {
+        passage: { type: 'hasOne', model: 'passage' },
+        noteSection: { type: 'hasOne', model: 'section' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
@@ -351,6 +372,22 @@ const schemaDefinition: SchemaSettings = {
       },
       relationships: {
         passage: { type: 'hasOne', model: 'passage' },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      },
+    },
+    passagetype: {
+      keys: { remoteId: {} },
+      attributes: {
+        usfm: { type: 'string' },
+        title: { type: 'string' },
+        abbrev: { type: 'string' },
+        defaultOrder: { type: 'number' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
+        offlineId: { type: 'string' },
+      },
+      relationships: {
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },

@@ -612,7 +612,7 @@
       </unit>
       <unit id="cards.editCategory">
          <segment>
-            <source>Edit Category</source>
+            <source>Edit Team Categories</source>
             <target/>
          </segment>
       </unit>
@@ -637,6 +637,18 @@
       <unit id="cards.language">
          <segment>
             <source>Language: {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.longNotesProject">
+         <segment>
+            <source>Project with Long Notes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.longNotes">
+         <segment>
+            <source>Shared Introductions, Rationales, Devotionals, Podcasts</source>
             <target/>
          </segment>
       </unit>
@@ -751,6 +763,18 @@
       <unit id="cards.settings">
          <segment>
             <source>Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.shortNotes">
+         <segment>
+            <source>Shared Glossary words, footnotes, etc.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.shortNotesProject">
+         <segment>
+            <source>Project with Short Notes</source>
             <target/>
          </segment>
       </unit>
@@ -4386,7 +4410,7 @@
       </unit>
       <unit id="projButtons.categoryTitle">
          <segment>
-            <source>Edit Category</source>
+            <source>Edit Team Categories</source>
             <target/>
          </segment>
       </unit>
