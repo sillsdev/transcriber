@@ -12,6 +12,7 @@ create table passagetypes (
 	);
 CREATE UNIQUE INDEX passagetype_usfm_idx ON public.passagetypes (usfm);
 CREATE UNIQUE INDEX passagetype_abbrev_idx ON public.passagetypes (abbrev);
+grant all on passagetypes to transcriber;
 
 --drop table passagenotes cascade;
 create table passagenotes (
@@ -27,6 +28,7 @@ create table passagenotes (
 CREATE INDEX idx_passagenote_passage ON public.passagenotes (passageid);
 ALTER TABLE passagenotes ADD CONSTRAINT fk_passagenote_passage FOREIGN KEY (passageid) REFERENCES passages(id) ON DELETE CASCADE;
 ALTER TABLE passagenotes ADD CONSTRAINT fk_passagenote_note FOREIGN KEY (notesectionid) REFERENCES sections(id) ON DELETE CASCADE;
+grant all on passagenotes to transcriber;
 
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder)
@@ -45,7 +47,7 @@ INSERT INTO public.passagetypes
 VALUES('ip', 'Introductory Paragraph', 'IP', -1);
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder)
-VALUES('w', 'Glossary link', 'GL', 1);
+VALUES('w', 'Short note link', 'GL', 1);
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder)
 VALUES('f', 'Footnote','FN', 2);
