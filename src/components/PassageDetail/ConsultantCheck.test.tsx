@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import ConsultantCheck from './ConsultantCheck';
 // import { ToolSlug } from '../../crud/toolSlug';
 // import { ArtifactTypeSlug } from '../../crud/artifactTypeSlug';
@@ -18,11 +18,11 @@ jest.mock('../../crud', () => ({
       else return 'other';
     },
   }),
-  findRecord: () => ({
-    attributes: {
-      tool: '{"tool": "record"}',
-    },
-  }),
+  findRecord: (memory: any, table: any, id: string) => {
+    if (id === '1') return { attributes: { tool: '{"tool": "record"}' } };
+    else if (id === '2')
+      return { attributes: { tool: '{"tool": "phraseBackTranslate"}' } };
+  },
   ArtifactTypeSlug: jest.requireActual('../../crud/artifactTypeSlug')
     .ArtifactTypeSlug,
   ToolSlug: jest.requireActual('../../crud/toolSlug').ToolSlug,
@@ -36,11 +36,9 @@ jest.mock('./ConsultantCheckReview', () => () => (
   <div>ConsultantCheckReview</div>
 ));
 jest.mock('../StepEditor', () => ({
-  ActionRow: ({ children }: { children: any }) => (
-    <div>ActionRow{children}</div>
-  ),
-  AltButton: () => <div>AltButton</div>,
-  PriButton: () => <div>PriButton</div>,
+  ActionRow: jest.requireActual('../../control/ActionRow').ActionRow,
+  AltButton: jest.requireActual('../../control/AltButton').AltButton,
+  PriButton: jest.requireActual('../../control/PriButton').PriButton,
 }));
 
 describe('ConsultantCheck', () => {
@@ -81,7 +79,7 @@ describe('ConsultantCheck', () => {
       },
     ];
     render(<ConsultantCheck width={500} />);
-    expect(screen.getByText('ActionRow')).not.toBe(null);
+    expect(screen.getByTestId('action-row')).not.toBe(null);
   });
 
   it('should render PriButton', () => {
@@ -92,6 +90,82 @@ describe('ConsultantCheck', () => {
       },
     ];
     render(<ConsultantCheck width={500} />);
-    expect(screen.getByText('PriButton')).not.toBe(null);
+    expect(screen.getByTestId('pri-button')).not.toBe(null);
+  });
+
+  it('should render Alt Button when Pri Button is clicked', () => {
+    mockWorkflow = [
+      {
+        id: '1',
+        label: 'Record',
+      },
+    ];
+    render(<ConsultantCheck width={500} />);
+    fireEvent.click(screen.getByTestId('pri-button'));
+    expect(screen.getByTestId('alt-button')).not.toBe(null);
+    expect(screen.queryAllByTestId('pri-button')).toHaveLength(0);
+  });
+
+  it('should render remain selected when its the only tab and Pri Button is clicked', () => {
+    mockWorkflow = [
+      {
+        id: '1',
+        label: 'Record',
+      },
+    ];
+    render(<ConsultantCheck width={500} />);
+    fireEvent.click(screen.getByTestId('pri-button'));
+    expect(screen.getByText('Vernacular')).toHaveClass('Mui-selected');
+  });
+
+  it('should have a second tab when workflow has the right two items', () => {
+    mockWorkflow = [
+      {
+        id: '1',
+        label: 'Record',
+      },
+      {
+        id: '2',
+        label: 'Phrase Back Translation',
+      },
+    ];
+    render(<ConsultantCheck width={500} />);
+    expect(screen.getByText('Vernacular')).not.toBe(null);
+    expect(screen.getByText('Phrase Back Translation')).not.toBe(null);
+  });
+
+  it('should have selected PBT when it has two items', () => {
+    mockWorkflow = [
+      {
+        id: '1',
+        label: 'Record',
+      },
+      {
+        id: '2',
+        label: 'Phrase Back Translation',
+      },
+    ];
+    render(<ConsultantCheck width={500} />);
+    expect(screen.getByText('Phrase Back Translation')).not.toBe(null);
+    expect(screen.getByText('Phrase Back Translation')).toHaveClass(
+      'Mui-selected'
+    );
+  });
+
+  it('should select Vernacular when the primary button is clicked', () => {
+    mockWorkflow = [
+      {
+        id: '1',
+        label: 'Record',
+      },
+      {
+        id: '2',
+        label: 'Phrase Back Translation',
+      },
+    ];
+    render(<ConsultantCheck width={500} />);
+    fireEvent.click(screen.getByTestId('pri-button'));
+    expect(screen.getByText('Vernacular')).not.toBe(null);
+    expect(screen.getByText('Vernacular')).toHaveClass('Mui-selected');
   });
 });

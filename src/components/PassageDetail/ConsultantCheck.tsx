@@ -127,13 +127,21 @@ export function ConsultantCheck({ width }: IProps) {
       {checkItems.map((item, index) => (
         <TabPanel key={item} value={value} index={index}>
           <ConsultantCheckReview item={item} />
-          <ActionRow>
+          <ActionRow data-testid="action-row">
             {approved.includes(item) ? (
-              <AltButton onClick={handleApproved(item)}>
+              <AltButton
+                data-testid="alt-button"
+                onClick={handleApproved(item)}
+              >
                 't.furtherReview'
               </AltButton>
             ) : (
-              <PriButton onClick={handleApproved(item)}>t.approved</PriButton>
+              <PriButton
+                data-testid="pri-button"
+                onClick={handleApproved(item)}
+              >
+                t.approved
+              </PriButton>
             )}
           </ActionRow>
         </TabPanel>
