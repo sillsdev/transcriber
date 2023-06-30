@@ -1,12 +1,15 @@
+import { ArtifactTypeSlug } from '../../crud';
 import MediaPlayer from '../MediaPlayer';
-import { CheckTranscription } from './CheckTranscription';
 
-export default function ConsultantCheckReview() {
+interface IProps {
+  item: ArtifactTypeSlug;
+}
+
+export default function ConsultantCheckReview({ item }: IProps) {
   const handleEnded = () => {};
   return (
     <>
       <MediaPlayer srcMediaId={''} requestPlay={false} onEnded={handleEnded} />
-      <CheckTranscription />
     </>
   );
 }

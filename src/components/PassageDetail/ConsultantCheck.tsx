@@ -121,7 +121,7 @@ export function ConsultantCheck({ width, onClose }: IProps) {
       </Box>
       {checkItems.map((item, index) => (
         <TabPanel value={value} index={index}>
-          <ConsultantCheckReview />
+          <ConsultantCheckReview item={item} />
           <ActionRow>
             {approved.includes(item) ? (
               <AltButton onClick={handleApproved(item)}>
