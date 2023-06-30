@@ -11,6 +11,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { shallowEqual, useSelector } from 'react-redux';
+import { consultantSelector } from '../../selector';
 
 interface IProps {
   item: ArtifactTypeSlug;
@@ -24,6 +26,7 @@ export default function ConsultantCheckReview({ item }: IProps) {
   const [marks, setMarks] = useState<{ label: string; value: number }[]>([]);
   const [transcription, setTranscription] = useState<string>('');
   const { localizedArtifactType } = useArtifactType();
+  const t = useSelector(consultantSelector, shallowEqual);
 
   const handleEnded = () => {};
 
@@ -84,7 +87,7 @@ export default function ConsultantCheckReview({ item }: IProps) {
   return (
     <Stack id="check-review">
       {mediaId === '' && (
-        <Typography data-testid="no-media">{'t.noMedia'}</Typography>
+        <Typography data-testid="no-media">{t.noMedia}</Typography>
       )}
       {allMedia.length > 1 && (
         <Stack direction="row" alignItems="center" sx={{ my: 2 }}>
@@ -113,7 +116,7 @@ export default function ConsultantCheckReview({ item }: IProps) {
       {mediaId !== '' && (
         <TextField
           data-testid="transcription"
-          placeholder="t.NoTranscription"
+          placeholder={t.NoTranscription}
           multiline
           sx={{ py: 2 }}
           value={transcription}

@@ -26,6 +26,16 @@ jest.mock('../../context/usePassageDetailContext', () => () => ({
 jest.mock('../MediaPlayer', () => () => <div>MediaPlayer</div>);
 // jest.mock('@mui/material', () => ({}));
 jest.mock('@mui/icons-material', () => ({}));
+jest.mock('../../selector', () => ({
+  consultantSelector: jest.fn(),
+}));
+jest.mock('react-redux', () => ({
+  useSelector: () => ({
+    noMedia: 'No Media',
+    noTranscription: 'No Transcription',
+  }),
+  shallowEqual: jest.fn(),
+}));
 
 describe('ConsultantCheckReview', () => {
   beforeEach(cleanup);

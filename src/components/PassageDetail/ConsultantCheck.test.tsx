@@ -40,6 +40,16 @@ jest.mock('../StepEditor', () => ({
   AltButton: jest.requireActual('../../control/AltButton').AltButton,
   PriButton: jest.requireActual('../../control/PriButton').PriButton,
 }));
+jest.mock('../../selector', () => ({
+  consultantSelector: jest.fn(),
+}));
+jest.mock('react-redux', () => ({
+  useSelector: () => ({
+    furtherReview: 'Further Review',
+    approved: 'Approved',
+  }),
+  shallowEqual: jest.fn(),
+}));
 
 describe('ConsultantCheck', () => {
   beforeEach(cleanup);

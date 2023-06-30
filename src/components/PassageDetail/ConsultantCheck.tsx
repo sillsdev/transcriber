@@ -11,6 +11,8 @@ import {
 } from '../../crud';
 import ConsultantCheckReview from './ConsultantCheckReview';
 import { ActionRow, AltButton, PriButton } from '../StepEditor';
+import { shallowEqual, useSelector } from 'react-redux';
+import { consultantSelector } from '../../selector';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -52,6 +54,7 @@ export function ConsultantCheck({ width }: IProps) {
   const [approved, setApproved] = useState<ArtifactTypeSlug[]>([]);
   const [value, setValue] = React.useState(0);
   const { localizedArtifactType } = useArtifactType();
+  const t = useSelector(consultantSelector, shallowEqual);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -133,14 +136,14 @@ export function ConsultantCheck({ width }: IProps) {
                 data-testid="alt-button"
                 onClick={handleApproved(item)}
               >
-                't.furtherReview'
+                {t.furtherReview}
               </AltButton>
             ) : (
               <PriButton
                 data-testid="pri-button"
                 onClick={handleApproved(item)}
               >
-                t.approved
+                {t.approved}
               </PriButton>
             )}
           </ActionRow>

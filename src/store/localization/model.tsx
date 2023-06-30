@@ -216,6 +216,13 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
     "uploadComplete": string;
 };
 
+export interface IConsultantCheckStrings extends Localize.LocalizedStringsMethods {
+    "approved": string;
+    "furtherReview": string;
+    "noMedia": string;
+    "noTranscription": string;
+};
+
 export interface IControlStrings extends Localize.LocalizedStringsMethods {
     "book": string;
     "normal": string;
@@ -1440,6 +1447,7 @@ export interface ILocalizedStrings {
 	commentCard: ICommentCardStrings;
 	commentEditor: ICommentEditorStrings;
 	community: ICommunityStrings;
+	consultantCheck: IConsultantCheckStrings;
 	control: IControlStrings;
 	deleteExpansion: IDeleteExpansionStrings;
 	discussionCard: IDiscussionCardStrings;
