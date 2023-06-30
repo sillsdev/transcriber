@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { Tabs, Tab, Box } from '@mui/material';
-import { OrgWorkflowStep } from '../../model';
+import { ArtifactTypeSlug, OrgWorkflowStep } from '../../model';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import {
-  ArtifactTypeSlug,
-  ToolSlug,
-  findRecord,
-  useArtifactType,
-} from '../../crud';
+import { ToolSlug, findRecord, useArtifactType } from '../../crud';
 import ConsultantCheckReview from './ConsultantCheckReview';
 import { ActionRow, AltButton, PriButton } from '../StepEditor';
 
@@ -43,11 +38,10 @@ function a11yProps(index: number) {
 
 interface IProps {
   width: number;
-  onClose?: () => void;
 }
 
-export function ConsultantCheck({ width, onClose }: IProps) {
-  const { workflow } = usePassageDetailContext();
+export function ConsultantCheck({ width }: IProps) {
+  const { workflow, stepComplete, currentstep } = usePassageDetailContext();
   const [memory] = useGlobal('memory');
   const [checkItems, setCheckItems] = useState<ArtifactTypeSlug[]>([]);
   const [approved, setApproved] = useState<ArtifactTypeSlug[]>([]);
@@ -64,12 +58,16 @@ export function ConsultantCheck({ width, onClose }: IProps) {
     } else {
       setApproved([...approved, item]);
     }
-    setValue(value + 1 < checkItems.length ? value + 1 : 0);
+    if (value + 1 < checkItems.length) {
+      setValue(value + 1);
+    } else {
+      stepComplete(currentstep);
+    }
   };
 
   useEffect(() => {
     if (workflow) {
-      const newItems: ArtifactTypeSlug[] = [];
+      let newItems: ArtifactTypeSlug[] = [];
       workflow.forEach((wf) => {
         const wfRec = findRecord(memory, 'orgworkflowstep', wf.id) as
           | OrgWorkflowStep
@@ -81,14 +79,14 @@ export function ConsultantCheck({ width, onClose }: IProps) {
           tool = toolJson.tool;
         } catch (err) {}
         if (tool === ToolSlug.Record) {
-          newItems.push(ArtifactTypeSlug.Vernacular);
+          newItems = [ArtifactTypeSlug.Vernacular, ...newItems];
         } else if (tool === ToolSlug.PhraseBackTranslate) {
-          newItems.push(ArtifactTypeSlug.PhraseBackTranslation);
+          newItems = [ArtifactTypeSlug.PhraseBackTranslation, ...newItems];
         } else if (tool === ToolSlug.WholeBackTranslate) {
-          newItems.push(ArtifactTypeSlug.WholeBackTranslation);
+          newItems = [ArtifactTypeSlug.WholeBackTranslation, ...newItems];
         } else if (tool === ToolSlug.Community) {
-          newItems.push(ArtifactTypeSlug.Retell);
-          newItems.push(ArtifactTypeSlug.QandA);
+          newItems = [ArtifactTypeSlug.QandA, ...newItems];
+          newItems = [ArtifactTypeSlug.Retell, ...newItems];
         }
       });
       setCheckItems(newItems);
@@ -104,6 +102,7 @@ export function ConsultantCheck({ width, onClose }: IProps) {
           value={value}
           onChange={handleChange}
           aria-label="category tabs"
+          sx={{ mt: 2 }}
         >
           {checkItems.map((item, index) => (
             <Tab
