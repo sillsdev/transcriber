@@ -1,4 +1,5 @@
 export * from './allUsers';
+export * from './artifactTypeSlug';
 export * from './fileOrder';
 export * from './fontChoice';
 export * from './getMediaInPlans';
@@ -14,6 +15,7 @@ export * from './remoteId';
 export * from './saveNewSection';
 export * from './section';
 export * from './setDefaultProj';
+export * from './toolSlug';
 export * from './updatePassageState';
 export * from './useAllUserGroup';
 export * from './useFlatAdd';

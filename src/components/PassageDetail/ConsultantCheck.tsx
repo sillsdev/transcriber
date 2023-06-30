@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { Tabs, Tab, Box } from '@mui/material';
-import { ArtifactTypeSlug, OrgWorkflowStep } from '../../model';
+import { OrgWorkflowStep } from '../../model';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import { ToolSlug, findRecord, useArtifactType } from '../../crud';
+import {
+  ToolSlug,
+  findRecord,
+  ArtifactTypeSlug,
+  useArtifactType,
+} from '../../crud';
 import ConsultantCheckReview from './ConsultantCheckReview';
 import { ActionRow, AltButton, PriButton } from '../StepEditor';
 
@@ -106,6 +111,7 @@ export function ConsultantCheck({ width }: IProps) {
         >
           {checkItems.map((item, index) => (
             <Tab
+              key={item}
               label={localizedArtifactType(item)}
               {...a11yProps(index)}
               sx={{
@@ -119,7 +125,7 @@ export function ConsultantCheck({ width }: IProps) {
         </Tabs>
       </Box>
       {checkItems.map((item, index) => (
-        <TabPanel value={value} index={index}>
+        <TabPanel key={item} value={value} index={index}>
           <ConsultantCheckReview item={item} />
           <ActionRow>
             {approved.includes(item) ? (

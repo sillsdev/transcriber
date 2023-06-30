@@ -1,9 +1,16 @@
 import { useEffect, useState } from 'react';
-import { MediaFile, ArtifactTypeSlug } from '../../model';
-import { useArtifactType, related } from '../../crud';
+import { MediaFile } from '../../model';
+import { ArtifactTypeSlug, useArtifactType, related } from '../../crud';
 import MediaPlayer from '../MediaPlayer';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import { Icon, IconButton, Slider, Stack, TextField } from '@mui/material';
+import {
+  Icon,
+  IconButton,
+  Slider,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 interface IProps {
   item: ArtifactTypeSlug;
@@ -38,11 +45,11 @@ export default function ConsultantCheckReview({ item }: IProps) {
 
   useEffect(() => {
     if (item === ArtifactTypeSlug.Vernacular) {
-      setMediaId(rowData[0].mediafile.id);
-      setAllMedia([rowData[0].mediafile]);
-      setTranscription(rowData[0].mediafile.attributes.transcription ?? '');
+      setMediaId(rowData[0]?.mediafile.id ?? '');
+      setAllMedia([rowData[0]?.mediafile] ?? []);
+      setTranscription(rowData[0]?.mediafile.attributes.transcription ?? '');
     } else {
-      const mediaId = rowData[0].mediafile.id;
+      const mediaId = rowData[0]?.mediafile.id ?? '';
       const artifactType = localizedArtifactType(item);
       const media = rowData
         .filter(
@@ -76,11 +83,13 @@ export default function ConsultantCheckReview({ item }: IProps) {
 
   return (
     <Stack id="check-review">
-      {mediaId === '' && 't.noMedia'}
+      {mediaId === '' && (
+        <Typography data-testid="no-media">{'t.noMedia'}</Typography>
+      )}
       {allMedia.length > 1 && (
         <Stack direction="row" alignItems="center" sx={{ my: 2 }}>
           <Slider
-            id="check-review-slider"
+            data-testid="check-review-slider"
             value={sliderIndex}
             marks={marks}
             max={allMedia.length - 1}
@@ -88,7 +97,7 @@ export default function ConsultantCheckReview({ item }: IProps) {
             sx={{ mx: 2 }}
           />
           <Stack>
-            <IconButton id="check-next" onClick={handleNext} color="primary">
+            <IconButton onClick={handleNext} color="primary">
               <Icon>skip_next</Icon>
             </IconButton>
             {'\u00A0' /* non-breaking space keeps button aligned with slider */}
@@ -103,6 +112,7 @@ export default function ConsultantCheckReview({ item }: IProps) {
       />
       {mediaId !== '' && (
         <TextField
+          data-testid="transcription"
           placeholder="t.NoTranscription"
           multiline
           sx={{ py: 2 }}
