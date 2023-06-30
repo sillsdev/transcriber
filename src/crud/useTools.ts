@@ -12,6 +12,7 @@ export enum ToolSlug {
   Transcribe = 'transcribe',
   PhraseBackTranslate = 'phraseBackTranslate',
   WholeBackTranslate = 'wholeBackTranslate',
+  ConsultantCheck = 'consultantCheck',
   Paratext = 'paratext',
   Community = 'community',
   Export = 'export',

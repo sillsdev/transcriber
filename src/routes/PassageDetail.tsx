@@ -35,6 +35,7 @@ import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord
 import PassageDetailItem from '../components/PassageDetail/PassageDetailItem';
 import PassageDetailTranscribe from '../components/PassageDetail/PassageDetailTranscribe';
 import PassageDetailChooser from '../components/PassageDetail/PassageDetailChooser';
+import ConsultantCheck from '../components/PassageDetail/ConsultantCheck';
 import IntegrationTab from '../components/Integration';
 import TranscriptionTab from '../components/TranscriptionTab';
 import {
@@ -323,6 +324,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
           tool === ToolSlug.TeamCheck ||
           tool === ToolSlug.Record ||
           tool === ToolSlug.Transcribe ||
+          tool === ToolSlug.ConsultantCheck ||
           tool === ToolSlug.KeyTerm) && (
           <Paper sx={{ p: 0, margin: 'auto', width: `calc(100% - 32px)` }}>
             <Wrapper>
@@ -334,7 +336,9 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                 onChange={handleVertSplitSize}
               >
                 <Pane>
-                  {tool !== ToolSlug.Transcribe && tool !== ToolSlug.Record && (
+                  {tool !== ToolSlug.Transcribe &&
+                  tool !== ToolSlug.Record &&
+                  tool !== ToolSlug.ConsultantCheck ? (
                     <SplitPane
                       defaultSize={playerSize}
                       minSize={INIT_PLAYERPANE_HEIGHT + 48} // 48 for chooser
@@ -360,27 +364,28 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                         )}
                       </Pane>
                     </SplitPane>
-                  )}
-                  {tool === ToolSlug.Transcribe && (
+                  ) : (
                     <Grid item sx={descProps} xs={12}>
                       <PassageDetailChooser
                         width={width - discussionSize.width - 16}
                       />
-                      <PassageDetailTranscribe
-                        width={width - discussionSize.width - 16}
-                        artifactTypeId={artifactId}
-                        onFilter={handleFilter}
-                      />
-                    </Grid>
-                  )}
-                  {tool === ToolSlug.Record && (
-                    <Grid item sx={descProps} xs={12}>
-                      <PassageDetailChooser
-                        width={width - discussionSize.width - 16}
-                      />
-                      <PassageDetailRecord
-                        width={width - discussionSize.width - 16}
-                      />
+                      {tool === ToolSlug.Transcribe && (
+                        <PassageDetailTranscribe
+                          width={width - discussionSize.width - 16}
+                          artifactTypeId={artifactId}
+                          onFilter={handleFilter}
+                        />
+                      )}
+                      {tool === ToolSlug.Record && (
+                        <PassageDetailRecord
+                          width={width - discussionSize.width - 16}
+                        />
+                      )}
+                      {tool === ToolSlug.ConsultantCheck && (
+                        <ConsultantCheck
+                          width={width - discussionSize.width - 16}
+                        />
+                      )}
                     </Grid>
                   )}
                 </Pane>
