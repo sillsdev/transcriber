@@ -17,6 +17,11 @@ export interface IArtifactCategory {
   org: string;
   id: string;
 }
+export enum ArtifactCategoryType {
+  Resource = 'resource',
+  Discussion = 'discussion',
+  Note = 'note',
+}
 const stringSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'artifactCategory' });
 
@@ -53,10 +58,7 @@ export const useArtifactCategory = (teamId?: string) => {
     return aRec && aRec.attributes ? aRec.attributes.categoryname : '';
   };
 
-  const getArtifactCategorys = async (
-    resource: boolean,
-    discussion: boolean
-  ) => {
+  const getArtifactCategorys = async (type: ArtifactCategoryType) => {
     const categorys: IArtifactCategory[] = [];
     /* wait for new categories remote id to fill in */
     await waitForIt(
@@ -74,8 +76,10 @@ export const useArtifactCategory = (teamId?: string) => {
           (related(r, 'organization') === curOrg ||
             related(r, 'organization') === null) &&
           Boolean(r.keys?.remoteId) !== offlineOnly &&
-          r.attributes.resource === resource &&
-          r.attributes.discussion === discussion
+          r.attributes.resource === (type === ArtifactCategoryType.Resource) &&
+          r.attributes.discussion ===
+            (type === ArtifactCategoryType.Discussion) &&
+          r.attributes.note === (type === ArtifactCategoryType.Note)
       )
       .forEach((r) =>
         categorys.push({
@@ -90,8 +94,7 @@ export const useArtifactCategory = (teamId?: string) => {
 
   const isDuplicateCategory = async (
     newArtifactCategory: string,
-    resource: boolean,
-    discussion: boolean
+    type: ArtifactCategoryType
   ) => {
     //check for duplicate
     const orgrecs: ArtifactCategory[] = memory.cache.query((q: QueryBuilder) =>
@@ -106,7 +109,7 @@ export const useArtifactCategory = (teamId?: string) => {
     });
     if (dup) return true;
     //now check duplicate localized
-    const ac = (await getArtifactCategorys(resource, discussion)).filter(
+    const ac = (await getArtifactCategorys(type)).filter(
       (c) => c.category === newArtifactCategory
     );
     if (ac.length > 0) return true;
@@ -115,19 +118,19 @@ export const useArtifactCategory = (teamId?: string) => {
 
   const addNewArtifactCategory = async (
     newArtifactCategory: string,
-    resource: boolean,
-    discussion: boolean
+    type: ArtifactCategoryType
   ) => {
     if (!/^\s*$/.test(newArtifactCategory)) {
-      if (await isDuplicateCategory(newArtifactCategory, resource, discussion))
+      if (await isDuplicateCategory(newArtifactCategory, type))
         return 'duplicate';
 
       const artifactCategory: ArtifactCategory = {
         type: 'artifactcategory',
         attributes: {
           categoryname: newArtifactCategory,
-          resource: resource,
-          discussion: discussion,
+          resource: type === ArtifactCategoryType.Resource,
+          discussion: type === ArtifactCategoryType.Discussion,
+          note: type === ArtifactCategoryType.Note,
         },
       } as any;
       const t = new TransformBuilder();

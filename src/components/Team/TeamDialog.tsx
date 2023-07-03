@@ -59,8 +59,7 @@ export function TeamDialog(props: IProps) {
   const [process, setProcess] = useState<string>();
   const [processOptions, setProcessOptions] = useState<OptionType[]>([]);
   const savingRef = useRef(false);
-  const [glossaryProjId, setGlossaryProjId] = useState('');
-  const [sidebarProjId, setSidebarProjId] = useState('');
+  const [noteProjId, setNoteProjId] = useState('');
   const [myProjects, setMyProjects] = useState<Project[]>([]);
 
   const reset = () => {
@@ -84,11 +83,8 @@ export function TeamDialog(props: IProps) {
       ...current,
       attributes: { ...current.attributes, name },
       relationships: {
-        glossaryProject: {
-          data: glossaryProjId ? { type: 'project', id: glossaryProjId } : null,
-        },
-        sidebarProject: {
-          data: sidebarProjId ? { type: 'project', id: sidebarProjId } : null,
+        noteProject: {
+          data: noteProjId ? { type: 'project', id: noteProjId } : null,
         },
       },
     } as Organization;
@@ -141,8 +137,7 @@ export function TeamDialog(props: IProps) {
   useEffect(() => {
     if (isOpen && !name) {
       setName(values?.attributes?.name || '');
-      setGlossaryProjId(values ? related(values, 'glossaryProject') : '');
-      setSidebarProjId(values ? related(values, 'sidebarProject') : '');
+      setNoteProjId(values ? related(values, 'noteProject') : '');
     } else if (!isOpen) {
       reset();
     }
@@ -165,12 +160,8 @@ export function TeamDialog(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values, isOpen]);
 
-  const handleGlossaryProjectChange = (e: any) => {
-    setGlossaryProjId(e.target.value);
-    setChanged(true);
-  };
-  const handleSidebarProjectChange = (e: any) => {
-    setSidebarProjId(e.target.value);
+  const handleNoteProjectChange = (e: any) => {
+    setNoteProjId(e.target.value);
     setChanged(true);
   };
 
@@ -223,41 +214,12 @@ export function TeamDialog(props: IProps) {
           {mode === DialogMode.edit && (
             <div>
               <TextField
-                id="select-glossary-project"
+                id="select-note-project"
                 select
-                label={t.shortNotesProject}
-                helperText={t.shortNotes}
-                value={glossaryProjId}
-                onChange={handleGlossaryProjectChange}
-                SelectProps={{
-                  MenuProps: {
-                    sx: menuProps,
-                  },
-                }}
-                sx={textFieldProps}
-                InputProps={{ sx: formText }}
-                InputLabelProps={{ sx: formText }}
-                margin="normal"
-                variant="filled"
-                required={true}
-              >
-                {myProjects
-                  .sort((i, j) =>
-                    i.attributes.name <= j.attributes.name ? -1 : 1
-                  )
-                  .map((option: Project) => (
-                    <MenuItem key={option.id} value={option.id}>
-                      {option.attributes.name}
-                    </MenuItem>
-                  ))}
-              </TextField>
-              <TextField
-                id="select-sidebar-project"
-                select
-                label={t.longNotesProject}
-                helperText={t.longNotes}
-                value={sidebarProjId}
-                onChange={handleSidebarProjectChange}
+                label={t.notesProject}
+                helperText={t.notesHelper}
+                value={noteProjId ?? ''}
+                onChange={handleNoteProjectChange}
                 SelectProps={{
                   MenuProps: {
                     sx: menuProps,

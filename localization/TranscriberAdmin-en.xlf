@@ -766,15 +766,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="cards.shortNotes">
+      <unit id="cards.notesHelper">
          <segment>
-            <source>Shared Glossary words, footnotes, etc.</source>
+            <source>Shared explanations, rationales, footnotes, etc.</source>
             <target/>
          </segment>
       </unit>
-      <unit id="cards.shortNotesProject">
+      <unit id="cards.notesProject">
          <segment>
-            <source>Project with Short Notes</source>
+            <source>Project with Notes</source>
             <target/>
          </segment>
       </unit>
@@ -838,9 +838,39 @@
             <target/>
          </segment>
       </unit>
+      <unit id="category.note">
+         <segment>
+            <source>Audio Note</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.chapternumber">
+         <segment>
+            <source>Chapter Number</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.general">
+         <segment>
+            <source>General Note</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.introPara">
+         <segment>
+            <source>Introductory Paragraph</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="category.resource">
          <segment>
             <source>Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.notes">
+         <segment>
+            <source>audio note(s)</source>
             <target/>
          </segment>
       </unit>

@@ -6,6 +6,7 @@ export interface ArtifactCategory extends BaseModel {
     categoryname: string;
     discussion: boolean;
     resource: boolean;
+    note: boolean;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;

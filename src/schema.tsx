@@ -146,8 +146,7 @@ const schemaDefinition: SchemaSettings = {
         groups: { type: 'hasMany', model: 'group', inverse: 'owner' },
         cluster: { type: 'hasOne', model: 'organization' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
-        glossaryProject: { type: 'hasOne', model: 'project' },
-        sidebarProject: { type: 'hasOne', model: 'project' },
+        notesProject: { type: 'hasOne', model: 'project' },
       },
     },
     organizationmembership: {
@@ -303,6 +302,7 @@ const schemaDefinition: SchemaSettings = {
         name: { type: 'string' },
         graphics: { type: 'string' },
         published: { type: 'boolean' },
+        level: { type: 'number' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
@@ -318,6 +318,7 @@ const schemaDefinition: SchemaSettings = {
         editor: { type: 'hasOne', model: 'user' },
         transcriber: { type: 'hasOne', model: 'user' },
         group: { type: 'hasOne', model: 'group' },
+        artifactCategory: { type: 'hasOne', model: 'artifactcategory' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
@@ -600,6 +601,8 @@ if (
       categoryname: { type: 'string' },
       discussion: { type: 'bool' },
       resource: { type: 'bool' },
+      note: { type: 'bool' },
+      graphics: { type: 'string' },
       dateCreated: { type: 'date-time' },
       dateUpdated: { type: 'date-time' },
       lastModifiedBy: { type: 'number' }, //bkwd compat only

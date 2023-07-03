@@ -156,8 +156,8 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "sectionStatus": string;
     "settings": string;
-    "shortNotes": string;
-    "shortNotesProject": string;
+    "notesHelper": string;
+    "notesProject": string;
     "sync": string;
     "teamName": string;
     "teamSettings": string;
@@ -171,7 +171,12 @@ export interface ICategoryStrings extends Localize.LocalizedStringsMethods {
     "discussions": string;
     "ignoreInvalid": string;
     "inUseBy": string;
+    "note": string;
+    "chapternumber": string;
+    "general": string;
+    "introPara": string;
     "resource": string;
+    "notes": string;
     "resources": string;
 };
 

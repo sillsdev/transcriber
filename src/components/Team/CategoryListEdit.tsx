@@ -9,6 +9,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import {
+  ArtifactCategoryType,
   IArtifactCategory,
   findRecord,
   related,
@@ -21,6 +22,7 @@ import {
   ICategoryStrings,
   ISharedStrings,
   MediaFile,
+  Section,
 } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { categorySelector, sharedSelector } from '../../selector';
@@ -31,18 +33,12 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import { NewArtifactCategory } from '../Workflow/NewArtifactCategory';
 
 interface IProps {
-  resource?: boolean;
-  discussion?: boolean;
+  type: ArtifactCategoryType;
   teamId: string;
   onClose?: () => void;
 }
 
-export default function CategoryList({
-  resource,
-  discussion,
-  teamId,
-  onClose,
-}: IProps) {
+export default function CategoryList({ type, teamId, onClose }: IProps) {
   const [categories, setCategories] = React.useState<IArtifactCategory[]>([]);
   const [edited, setEdited] = React.useState<[string, IArtifactCategory][]>([]);
   const [deleted, setDeleted] = React.useState<string[]>([]);
@@ -92,11 +88,7 @@ export default function CategoryList({
     for (const r of recs) {
       if (
         !/^\s*$/.test(r.category) &&
-        !(await isDuplicateCategory(
-          r.category,
-          Boolean(resource),
-          Boolean(discussion)
-        ))
+        !(await isDuplicateCategory(r.category, type))
       ) {
         const rec = findRecord(
           memory,
@@ -129,45 +121,46 @@ export default function CategoryList({
   };
 
   React.useEffect(() => {
-    getArtifactCategorys(Boolean(resource), Boolean(discussion)).then(
-      (cats) => {
-        setCategories(cats.filter((c) => c.org !== '').sort(sortCats));
-        setBuiltIn(cats.filter((c) => c.org === '').sort(sortCats));
-        const inUseMap = new Map<string, number>();
-        const media = memory.cache.query((q) =>
-          q.findRecords('mediafile')
-        ) as MediaFile[];
-        const discussions = memory.cache.query((q) =>
-          q.findRecords('discussion')
-        ) as Discussion[];
-        cats.forEach((c) => {
-          let count = 0;
-          if (resource)
-            count = media.filter(
-              (m) => related(m, 'artifactCategory') === c.id
-            ).length;
-          if (discussion)
-            count = discussions.filter(
-              (d) => related(d, 'artifactCategory') === c.id
-            ).length;
-          inUseMap.set(c.id, count);
-        });
-        setInUse(Array.from(inUseMap));
-      }
-    );
+    getArtifactCategorys(type).then((cats) => {
+      setCategories(cats.filter((c) => c.org !== '').sort(sortCats));
+      setBuiltIn(cats.filter((c) => c.org === '').sort(sortCats));
+      const inUseMap = new Map<string, number>();
+      const media = memory.cache.query((q) =>
+        q.findRecords('mediafile')
+      ) as MediaFile[];
+      const discussions = memory.cache.query((q) =>
+        q.findRecords('discussion')
+      ) as Discussion[];
+      const sections = (
+        memory.cache.query((q) => q.findRecords('section')) as Section[]
+      ).filter((s) => Boolean(related(s, 'category')));
+      cats.forEach((c) => {
+        let count = 0;
+        if (type === ArtifactCategoryType.Resource)
+          count = media.filter(
+            (m) => related(m, 'artifactCategory') === c.id
+          ).length;
+        else if (type === ArtifactCategoryType.Discussion)
+          count = discussions.filter(
+            (d) => related(d, 'artifactCategory') === c.id
+          ).length;
+        else
+          count = sections.filter(
+            (d) => related(d, 'artifactCategory') === c.id
+          ).length;
+        inUseMap.set(c.id, count);
+      });
+      setInUse(Array.from(inUseMap));
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resource, discussion, refresh]);
+  }, [type, refresh]);
 
   const sortCats = (i: IArtifactCategory, j: IArtifactCategory) =>
     i.category <= j.category ? -1 : 1;
   return (
     <>
       <List dense={true}>
-        <NewArtifactCategory
-          discussion={discussion}
-          resource={resource}
-          onAdded={categoryAdded}
-        />
+        <NewArtifactCategory type={type} onAdded={categoryAdded} />
         {categories
           .filter((c) => !deleted.includes(c.id))
           .map((c) => (
@@ -193,7 +186,14 @@ export default function CategoryList({
                   displayCount(c) > 0
                     ? t.inUseBy
                         .replace('{0}', `${displayCount(c)}`)
-                        .replace('{1}', resource ? t.resources : t.discussions)
+                        .replace(
+                          '{1}',
+                          type === ArtifactCategoryType.Resource
+                            ? t.resources
+                            : type === ArtifactCategoryType.Discussion
+                            ? t.discussions
+                            : t.notes
+                        )
                     : undefined
                 }
               />
