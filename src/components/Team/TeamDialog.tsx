@@ -218,7 +218,7 @@ export function TeamDialog(props: IProps) {
                 select
                 label={t.notesProject}
                 helperText={t.notesHelper}
-                value={noteProjId}
+                value={noteProjId ?? ''}
                 onChange={handleNoteProjectChange}
                 SelectProps={{
                   MenuProps: {

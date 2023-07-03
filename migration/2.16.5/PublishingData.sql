@@ -35,20 +35,20 @@ grant all on public.passagenotes_id_seq to transcriber;
 delete from passagetypes;
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder)
-VALUES('toc1', 'Book name: Long table of contents text', 'BKLNG', -4);
+VALUES('toc1', 'longbookname', 'BKLNG', -4);
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder)
-VALUES('toc2', 'Book name: Short table of contents text', 'BK', -4);
+VALUES('toc2', 'shortbookname', 'BK', -4);
 
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder)
-VALUES('s', 'Title', 'Title', -2);
+VALUES('s', 'title', 'TI', -2);
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder)
-VALUES('esb', 'Audio Note', 'IP', -1);
+VALUES('esb', 'audionote', 'IP', -1);
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder)
-VALUES('cn', 'Chapter number', 'CN', 1);
+VALUES('cn', 'chapternumber', 'CN', 1);
 
 
 alter table passages add passagetypeid int;
@@ -61,21 +61,21 @@ alter table sections add level int default 2;
 alter table sections add artifactcategoryid int;
 alter table sections add constraint fk_sections_artifactcategory foreign key (artifactcategoryid) references artifactcategorys(id) on delete set null;
 
-alter table organizations add publishingdata jsonb;
+alter table organizations add publishingdata jsonb default '{}';
 alter table organizations add noteprojectid int;
 
 ALTER TABLE public.organizations ADD CONSTRAINT fk_organizations_noteprojectid FOREIGN KEY (noteprojectid) REFERENCES projects(id) ON DELETE SET NULL;
 
 
-alter table artifactcategorys add note bool;
+alter table artifactcategorys add note bool default false;
 alter table artifactcategorys add graphics jsonb default '{}';
 INSERT INTO public.artifactcategorys
 (organizationid, categoryname, datecreated, dateupdated, lastmodifiedby, lastmodifiedorigin, discussion, resource, note, archived)
-VALUES(null, 'Chapter Number', current_timestamp at time zone 'utc', current_timestamp at time zone 'utc', (select id from users where email = 'sara_hentzel@sil.org'), 'setup'::text, false, false, true, false);
+VALUES(null, 'chapternumber', current_timestamp at time zone 'utc', current_timestamp at time zone 'utc', (select id from users where email = 'sara_hentzel@sil.org'), 'setup'::text, false, false, true, false);
 INSERT INTO public.artifactcategorys
 (organizationid, categoryname, datecreated, dateupdated, lastmodifiedby, lastmodifiedorigin, discussion, resource, note, archived)
-VALUES(null, 'General Note', current_timestamp at time zone 'utc', current_timestamp at time zone 'utc', (select id from users where email = 'sara_hentzel@sil.org'), 'setup'::text, false, false, true, false);
+VALUES(null, 'generalnote', current_timestamp at time zone 'utc', current_timestamp at time zone 'utc', (select id from users where email = 'sara_hentzel@sil.org'), 'setup'::text, false, false, true, false);
 INSERT INTO public.artifactcategorys
 (organizationid, categoryname, datecreated, dateupdated, lastmodifiedby, lastmodifiedorigin, discussion, resource, note, archived)
-VALUES(null, 'Introductory Paragraph', current_timestamp at time zone 'utc', current_timestamp at time zone 'utc', (select id from users where email = 'sara_hentzel@sil.org'), 'setup'::text, false, false, true, false);
+VALUES(null, 'introductoryparagraph', current_timestamp at time zone 'utc', current_timestamp at time zone 'utc', (select id from users where email = 'sara_hentzel@sil.org'), 'setup'::text, false, false, true, false);
 
