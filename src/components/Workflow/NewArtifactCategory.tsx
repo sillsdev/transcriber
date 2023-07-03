@@ -4,19 +4,18 @@ import CancelIcon from '@mui/icons-material/CancelOutlined';
 import { ISelectArtifactCategoryStrings } from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { artifactCategorySelector } from '../../selector';
-import { useArtifactCategory } from '../../crud';
+import { ArtifactCategoryType, useArtifactCategory } from '../../crud';
 import { useState } from 'react';
 import { useSnackBar } from '../../hoc/SnackBar';
 
 interface IProps {
-  resource?: boolean;
-  discussion?: boolean;
+  type: ArtifactCategoryType;
   onAdded: (newId: string) => void;
   onCancelled?: () => void;
 }
 
 export const NewArtifactCategory = (props: IProps) => {
-  const { resource, discussion, onAdded, onCancelled } = props;
+  const { type, onAdded, onCancelled } = props;
 
   const t: ISelectArtifactCategoryStrings = useSelector(
     artifactCategorySelector,
@@ -29,11 +28,7 @@ export const NewArtifactCategory = (props: IProps) => {
     setNewArtifactCategory(e.target.value);
   };
   const addNewCategory = () => {
-    addNewArtifactCategory(
-      newArtifactCategory,
-      resource || false,
-      discussion || false
-    ).then((newId) => {
+    addNewArtifactCategory(newArtifactCategory, type).then((newId) => {
       if (newId) {
         if (newId === 'duplicate') {
           showMessage(t.duplicateCategory);

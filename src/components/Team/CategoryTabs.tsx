@@ -6,6 +6,7 @@ import CategoryList from './CategoryListEdit';
 import { shallowEqual, useSelector } from 'react-redux';
 import { categorySelector } from '../../selector';
 import { ICategoryStrings } from '../../model';
+import { ArtifactCategoryType } from '../../crud';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -58,10 +59,25 @@ export default function CategoryTabs({ teamId, onClose }: IProps) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <CategoryList resource teamId={teamId} onClose={onClose} />
+        <CategoryList
+          type={ArtifactCategoryType.Resource}
+          teamId={teamId}
+          onClose={onClose}
+        />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <CategoryList discussion teamId={teamId} onClose={onClose} />
+        <CategoryList
+          type={ArtifactCategoryType.Discussion}
+          teamId={teamId}
+          onClose={onClose}
+        />
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <CategoryList
+          type={ArtifactCategoryType.Note}
+          teamId={teamId}
+          onClose={onClose}
+        />
       </TabPanel>
     </Box>
   );

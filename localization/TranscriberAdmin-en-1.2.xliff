@@ -892,15 +892,15 @@
                <context context-type="sourcefile">ProjectMenu.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="cards.shortNotes">
-            <source>Shared Glossary words, footnotes, etc.</source>
+         <trans-unit id="cards.notesHelper">
+            <source>Shared explanations, rationales, footnotes, etc.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjectButtons.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="cards.shortNotesProject">
-            <source>Project with Short Notes</source>
+         <trans-unit id="cards.notesProject">
+            <source>Project with Notes</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjectButtons.tsx</context>
@@ -976,14 +976,49 @@
       			<context context-type="sourcefile">CategoryListEdit.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="category.resource">
+      	<trans-unit id="category.note">
+      		<source>Audio Note</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.chapternumber">
+      		<source>Chapter Number</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.general">
+      		<source>General Note</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.introPara">
+      		<source>Introductory Paragraph</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="category.resource">
       		<source>Resource</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">CategoryTabs.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="category.resources">
+         <trans-unit id="category.notes">
+      		<source>audio note(s)</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="category.resources">
       		<source>resource(s)</source>
       		<target/>
       		<context-group>

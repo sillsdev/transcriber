@@ -20,8 +20,7 @@ export interface Organization extends Record {
     owner: RecordRelationship;
     groups: RecordRelationship;
     cluster: RecordRelationship;
-    glossaryProject: RecordRelationship;
-    sidebarProject: RecordRelationship;
+    noteProject: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
 }

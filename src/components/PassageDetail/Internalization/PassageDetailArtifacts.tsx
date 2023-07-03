@@ -51,6 +51,7 @@ import {
   findRecord,
   useArtifactCategory,
   IArtifactCategory,
+  ArtifactCategoryType,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
@@ -481,7 +482,9 @@ export function PassageDetailArtifacts(props: IProps) {
   }, [sectionResources]);
 
   useEffect(() => {
-    getArtifactCategorys(true, false).then((cats) => (catRef.current = cats));
+    getArtifactCategorys(ArtifactCategoryType.Resource).then(
+      (cats) => (catRef.current = cats)
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
