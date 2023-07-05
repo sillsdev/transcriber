@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import ConsultantCheckReview from './ConsultantCheckReview';
 import { ArtifactTypeSlug } from '../../crud/artifactTypeSlug';
 import { IRow } from '../../context/PassageDetailContext';
@@ -118,12 +118,11 @@ describe('ConsultantCheckReview', () => {
         },
       } as any,
     ];
-    const { container } = render(
-      <ConsultantCheckReview item={ArtifactTypeSlug.Vernacular} />
+    render(<ConsultantCheckReview item={ArtifactTypeSlug.Vernacular} />);
+    // eslint-disable-next-line testing-library/no-node-access
+    expect(screen.getByTestId('transcription').firstChild?.textContent).toBe(
+      undefined
     );
-    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
-    const textAreas = container.querySelectorAll('textarea');
-    expect(textAreas[0].value).toBe('');
   });
 
   it('should not render a no media message if there is phrase back translation media', () => {
@@ -226,65 +225,7 @@ describe('ConsultantCheckReview', () => {
     expect(screen.queryAllByTestId('no-media')).toHaveLength(1);
   });
 
-  it('should render a slider if there are two phrase back translation media', () => {
-    mockRowData = [
-      {
-        id: '1',
-        artifactType: 'Vernacular',
-        mediafile: {
-          id: '1',
-          attributes: {
-            transcription: 'transcription',
-          } as any,
-          type: 'mediafile',
-        },
-      } as any,
-      {
-        type: 'mediafile',
-        id: '2',
-        artifactType: 'Phrase Back Translation',
-        mediafile: {
-          id: '2',
-          attributes: {
-            transcription: 'transcription PBT (1)',
-          } as any,
-          relationships: {
-            sourceMedia: {
-              data: {
-                id: '1',
-                type: 'mediafile',
-              },
-            },
-          },
-        },
-      } as any,
-      {
-        type: 'mediafile',
-        id: '3',
-        artifactType: 'Phrase Back Translation',
-        mediafile: {
-          id: '3',
-          attributes: {
-            transcription: 'transcription PBT (2)',
-          } as any,
-          relationships: {
-            sourceMedia: {
-              data: {
-                id: '1',
-                type: 'mediafile',
-              },
-            },
-          },
-        },
-      } as any,
-    ];
-    render(
-      <ConsultantCheckReview item={ArtifactTypeSlug.PhraseBackTranslation} />
-    );
-    expect(screen.getByTestId('check-review-slider')).not.toBe(null);
-  });
-
-  it('should have the first Phrase Back Translation Transcription when there are multiple', () => {
+  it('should have all Phrase Back Translation Transcription when there are multiple', () => {
     mockRowData = [
       {
         id: '1',
@@ -340,65 +281,6 @@ describe('ConsultantCheckReview', () => {
       <ConsultantCheckReview item={ArtifactTypeSlug.PhraseBackTranslation} />
     );
     expect(screen.getByText('transcription PBT (1)')).not.toBe(null);
-  });
-
-  it('should have the second Phrase BT Transcription when the next button is clicked', () => {
-    mockRowData = [
-      {
-        id: '1',
-        artifactType: 'Vernacular',
-        mediafile: {
-          id: '1',
-          attributes: {
-            transcription: 'transcription',
-          } as any,
-          type: 'mediafile',
-        },
-      } as any,
-      {
-        type: 'mediafile',
-        id: '2',
-        artifactType: 'Phrase Back Translation',
-        mediafile: {
-          id: '2',
-          attributes: {
-            transcription: 'transcription PBT (1)',
-          } as any,
-          relationships: {
-            sourceMedia: {
-              data: {
-                id: '1',
-                type: 'mediafile',
-              },
-            },
-          },
-        },
-      } as any,
-      {
-        type: 'mediafile',
-        id: '3',
-        artifactType: 'Phrase Back Translation',
-        mediafile: {
-          id: '3',
-          attributes: {
-            transcription: 'transcription PBT (2)',
-          } as any,
-          relationships: {
-            sourceMedia: {
-              data: {
-                id: '1',
-                type: 'mediafile',
-              },
-            },
-          },
-        },
-      } as any,
-    ];
-    render(
-      <ConsultantCheckReview item={ArtifactTypeSlug.PhraseBackTranslation} />
-    );
-    fireEvent.click(screen.getByText('skip_next'));
     expect(screen.getByText('transcription PBT (2)')).not.toBe(null);
-    expect(screen.queryAllByText('transcription PBT (1)')).toHaveLength(0);
   });
 });

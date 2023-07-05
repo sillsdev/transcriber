@@ -2,17 +2,27 @@ import { useEffect, useState } from 'react';
 import { MediaFile } from '../../model';
 import { ArtifactTypeSlug, useArtifactType, related } from '../../crud';
 import MediaPlayer from '../MediaPlayer';
+import { IRow } from '../../context/PassageDetailContext';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import {
-  Icon,
   IconButton,
-  Slider,
   Stack,
-  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableCellProps,
+  TableHead,
+  TableRow,
   Typography,
+  styled,
 } from '@mui/material';
 import { shallowEqual, useSelector } from 'react-redux';
 import { consultantSelector } from '../../selector';
+import PlayArrow from '@mui/icons-material/PlayArrow';
+
+const StyledCell = styled(TableCell)<TableCellProps>(({ theme }) => ({
+  padding: '4px',
+}));
 
 interface IProps {
   item: ArtifactTypeSlug;
@@ -22,35 +32,38 @@ export default function ConsultantCheckReview({ item }: IProps) {
   const { rowData } = usePassageDetailContext();
   const [mediaId, setMediaId] = useState<string>('');
   const [allMedia, setAllMedia] = useState<MediaFile[]>([]);
-  const [sliderIndex, setSliderIndex] = useState<number>(0);
-  const [marks, setMarks] = useState<{ label: string; value: number }[]>([]);
-  const [transcription, setTranscription] = useState<string>('');
   const { localizedArtifactType } = useArtifactType();
   const t = useSelector(consultantSelector, shallowEqual);
 
-  const handleEnded = () => {};
-
-  const handleSliderChange = (event: any, newValue: number | number[]) => {
-    const value = newValue as number;
-    setMediaId(allMedia[value].id);
-    setTranscription(allMedia[value].attributes.transcription ?? '');
-    setSliderIndex(value);
+  const handleSelect = (id: string) => () => {
+    setMediaId(id);
   };
 
-  const handleNext = () => {
-    if (sliderIndex < allMedia.length - 1) {
-      const index = sliderIndex + 1;
-      setMediaId(allMedia[index].id);
-      setTranscription(allMedia[index].attributes.transcription ?? '');
-      setSliderIndex(index);
+  const handleEnded = () => {
+    setMediaId('');
+  };
+
+  const sortRows = (i: IRow, j: IRow) => {
+    const iSeg = i.mediafile.attributes.sourceSegments;
+    const jSeg = j.mediafile.attributes.sourceSegments;
+    let iStart = 0;
+    let jStart = 1;
+    try {
+      iStart = parseFloat(JSON.parse(iSeg).start);
+      jStart = parseFloat(JSON.parse(jSeg).start);
+      return iStart - jStart;
+    } catch (e) {
+      return i.mediafile.attributes.originalFile <=
+        j.mediafile.attributes.originalFile
+        ? -1
+        : 1;
     }
   };
 
   useEffect(() => {
     if (item === ArtifactTypeSlug.Vernacular) {
       setMediaId(rowData[0]?.mediafile.id ?? '');
-      setAllMedia([rowData[0]?.mediafile] ?? []);
-      setTranscription(rowData[0]?.mediafile.attributes.transcription ?? '');
+      setAllMedia(rowData[0]?.mediafile ? [rowData[0]?.mediafile] : []);
     } else {
       const mediaId = rowData[0]?.mediafile.id ?? '';
       const artifactType = localizedArtifactType(item);
@@ -60,67 +73,54 @@ export default function ConsultantCheckReview({ item }: IProps) {
             r.artifactType === artifactType &&
             related(r.mediafile, 'sourceMedia') === mediaId
         )
+        .sort(sortRows)
         .map((r) => r.mediafile);
       setAllMedia(media);
-      if (media.length > 0) {
-        setMediaId(media[0].id);
-        setTranscription(media[0].attributes.transcription ?? '');
-        setSliderIndex(0);
-        const sliderLength = media.length;
-        for (let value = 0; value < sliderLength; value++) {
-          setMarks((prev) => [
-            ...prev,
-            {
-              value,
-              label: `${value + 1} / ${sliderLength}`,
-            },
-          ]);
-        }
-      } else {
-        setMediaId('');
-        setTranscription('');
-      }
+      setMediaId('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item]);
 
   return (
     <Stack id="check-review">
-      {mediaId === '' && (
+      {allMedia.length === 0 && (
         <Typography data-testid="no-media">{t.noMedia}</Typography>
-      )}
-      {allMedia.length > 1 && (
-        <Stack direction="row" alignItems="center" sx={{ my: 2 }}>
-          <Slider
-            data-testid="check-review-slider"
-            value={sliderIndex}
-            marks={marks}
-            max={allMedia.length - 1}
-            onChange={handleSliderChange}
-            sx={{ mx: 2 }}
-          />
-          <Stack>
-            <IconButton onClick={handleNext} color="primary">
-              <Icon>skip_next</Icon>
-            </IconButton>
-            {'\u00A0' /* non-breaking space keeps button aligned with slider */}
-          </Stack>
-        </Stack>
       )}
       <MediaPlayer
         controls
         srcMediaId={mediaId}
-        requestPlay={false}
+        requestPlay={true}
         onEnded={handleEnded}
       />
-      {mediaId !== '' && (
-        <TextField
-          data-testid="transcription"
-          placeholder={t.NoTranscription}
-          multiline
-          sx={{ py: 2 }}
-          value={transcription}
-        />
+      {allMedia.length > 0 && (
+        <Table>
+          {allMedia.length > 1 && (
+            <TableHead>
+              <TableRow>
+                <StyledCell />
+                <StyledCell>{'t.Transcription'}</StyledCell>
+              </TableRow>
+            </TableHead>
+          )}
+          <TableBody>
+            {allMedia.map((m) => (
+              <TableRow key={m.id}>
+                <StyledCell sx={{ width: '40px' }}>
+                  {m.id !== mediaId && (
+                    <IconButton onClick={handleSelect(m.id)} data-testid="play">
+                      <PlayArrow />
+                    </IconButton>
+                  )}
+                </StyledCell>
+                <StyledCell>
+                  <Typography data-testid="transcription">
+                    {m.attributes.transcription ?? ''}
+                  </Typography>
+                </StyledCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       )}
     </Stack>
   );
