@@ -6,6 +6,8 @@ import { SimpleWf } from '../../context/PassageDetailContext';
 import { ArtifactTypeSlug } from '../../crud';
 
 let mockWorkflow: SimpleWf[] = [];
+let mockSetStepComplete = jest.fn();
+let mockCurrentStep = '';
 
 jest.mock('reactn', () => ({
   useGlobal: () => [[], jest.fn()],
@@ -30,7 +32,8 @@ jest.mock('../../crud', () => ({
 jest.mock('../../context/usePassageDetailContext', () => () => ({
   workflow: mockWorkflow,
   stepComplete: jest.fn(),
-  currentstep: '',
+  setStepComplete: mockSetStepComplete,
+  currentstep: mockCurrentStep,
 }));
 jest.mock('./ConsultantCheckReview', () => () => (
   <div>ConsultantCheckReview</div>
@@ -123,9 +126,12 @@ describe('ConsultantCheck', () => {
         label: 'Record',
       },
     ];
+    mockCurrentStep = 'record';
     render(<ConsultantCheck width={500} />);
     fireEvent.click(screen.getByTestId('pri-button'));
     expect(screen.getByText('Vernacular')).toHaveClass('Mui-selected');
+    expect(mockSetStepComplete).toBeCalledTimes(1);
+    expect(mockSetStepComplete).toBeCalledWith('record', true);
   });
 
   it('should have a second tab when workflow has the right two items', () => {

@@ -48,7 +48,8 @@ interface IProps {
 }
 
 export function ConsultantCheck({ width }: IProps) {
-  const { workflow, stepComplete, currentstep } = usePassageDetailContext();
+  const { workflow, setStepComplete, stepComplete, currentstep } =
+    usePassageDetailContext();
   const [memory] = useGlobal('memory');
   const [checkItems, setCheckItems] = useState<ArtifactTypeSlug[]>([]);
   const [approved, setApproved] = useState<ArtifactTypeSlug[]>([]);
@@ -69,7 +70,7 @@ export function ConsultantCheck({ width }: IProps) {
     if (value + 1 < checkItems.length) {
       setValue(value + 1);
     } else {
-      stepComplete(currentstep);
+      setStepComplete(currentstep, !stepComplete(currentstep));
     }
   };
 
