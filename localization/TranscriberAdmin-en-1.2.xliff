@@ -1214,8 +1214,22 @@
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="consultantCheck.approved">
-      		<source>Approved</source>
+      	<trans-unit id="consultantCheck.checked">
+      		<source>Checked</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ConsultantCheck.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="consultantCheck.compare">
+      		<source>Compare</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ConsultantCheck.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="consultantCheck.compareItems">
+      		<source>Select Items to Compare</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ConsultantCheck.tsx</context>
@@ -1237,6 +1251,13 @@
       	</trans-unit>
       	<trans-unit id="consultantCheck.noTranscription">
       		<source>No Transcription Available</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ConsultantCheckReview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="consultantCheck.transcription">
+      		<source>Transcription</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ConsultantCheckReview.tsx</context>

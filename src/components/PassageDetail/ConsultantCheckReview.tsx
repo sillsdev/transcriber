@@ -98,7 +98,7 @@ export default function ConsultantCheckReview({ item }: IProps) {
             <TableHead>
               <TableRow>
                 <StyledCell />
-                <StyledCell>{'t.Transcription'}</StyledCell>
+                <StyledCell>{t.transcription}</StyledCell>
               </TableRow>
             </TableHead>
           )}
@@ -114,7 +114,7 @@ export default function ConsultantCheckReview({ item }: IProps) {
                 </StyledCell>
                 <StyledCell>
                   <Typography data-testid="transcription">
-                    {m.attributes.transcription ?? ''}
+                    {m.attributes.transcription ?? t.noTranscription}
                   </Typography>
                 </StyledCell>
               </TableRow>

@@ -237,10 +237,13 @@ const initialState = {
 	}),
 	"consultantCheck": new LocalizedStrings({
 		"en": {
-			"approved": "Approved",
+			"checked": "Checked",
+			"compare": "Compare",
+			"compareItems": "Select Items to Compare",
 			"furtherReview": "Further Review",
 			"noMedia": "No Media Available",
 			"noTranscription": "No Transcription Available",
+			"transcription": "Transcription",
 		}
 	}),
 	"control": new LocalizedStrings({

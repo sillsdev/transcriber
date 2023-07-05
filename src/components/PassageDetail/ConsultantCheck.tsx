@@ -186,7 +186,7 @@ export function ConsultantCheck({ width }: IProps) {
                   data-testid="compare-button"
                   onClick={() => handleCompareOpen(true)}
                 >
-                  {'t.compare'}
+                  {t.compare}
                 </AltButton>
                 <GrowingDiv />
               </>
@@ -203,14 +203,14 @@ export function ConsultantCheck({ width }: IProps) {
                 data-testid="pri-button"
                 onClick={handleApproved(item)}
               >
-                {'t.checked'}
+                {t.checked}
               </PriButton>
             )}
           </ActionRow>
         </TabPanel>
       ))}
       <BigDialog
-        title={'t.compareItems'}
+        title={t.compareItems}
         isOpen={open}
         onOpen={() => handleCompareOpen(false)}
       >

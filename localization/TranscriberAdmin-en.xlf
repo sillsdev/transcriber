@@ -1042,9 +1042,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="consultantCheck.approved">
+      <unit id="consultantCheck.checked">
          <segment>
-            <source>Approved</source>
+            <source>Checked</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.compare">
+         <segment>
+            <source>Compare</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.compareItems">
+         <segment>
+            <source>Select Items to Compare</source>
             <target/>
          </segment>
       </unit>
@@ -1063,6 +1075,12 @@
       <unit id="consultantCheck.noTranscription">
          <segment>
             <source>No Transcription Available</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.transcription">
+         <segment>
+            <source>Transcription</source>
             <target/>
          </segment>
       </unit>

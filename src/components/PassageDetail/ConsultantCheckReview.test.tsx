@@ -121,7 +121,7 @@ describe('ConsultantCheckReview', () => {
     render(<ConsultantCheckReview item={ArtifactTypeSlug.Vernacular} />);
     // eslint-disable-next-line testing-library/no-node-access
     expect(screen.getByTestId('transcription').firstChild?.textContent).toBe(
-      undefined
+      'No Transcription'
     );
   });
 

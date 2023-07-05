@@ -217,10 +217,13 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IConsultantCheckStrings extends Localize.LocalizedStringsMethods {
-    "approved": string;
+    "checked": string;
+    "compare": string;
+    "compareItems": string;
     "furtherReview": string;
     "noMedia": string;
     "noTranscription": string;
+    "transcription": string;
 };
 
 export interface IControlStrings extends Localize.LocalizedStringsMethods {
