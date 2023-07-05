@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, act } from '@testing-library/react';
 import ConsultantCheckCompare from './ConsultantCheckCompare';
 
 jest.mock('react-redux', () => ({
@@ -128,7 +128,9 @@ describe('ConsultantCheckCompare', () => {
     expect(screen.getByTestId('checkbox-0')).toHaveClass('Mui-checked');
     expect(screen.getByTestId('checkbox-1')).not.toHaveClass('Mui-checked');
 
-    screen.getByTestId('checkbox-1').click();
+    act(() => {
+      screen.getByTestId('checkbox-1').click();
+    });
     screen.getByText('Save').click();
 
     expect(props.onChange).toHaveBeenCalledWith(['1', '2']);
