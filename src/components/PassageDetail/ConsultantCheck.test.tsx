@@ -35,13 +35,17 @@ jest.mock('../../context/usePassageDetailContext', () => () => ({
   setStepComplete: mockSetStepComplete,
   currentstep: mockCurrentStep,
 }));
-jest.mock('./ConsultantCheckReview', () => () => (
-  <div>ConsultantCheckReview</div>
+jest.mock('./ConsultantCheckReview', () => ({ item }: { item: string }) => (
+  <>
+    <div>ConsultantCheckReview</div>
+    <div>{item}</div>
+  </>
 ));
-jest.mock('../StepEditor', () => ({
+jest.mock('../../control', () => ({
   ActionRow: jest.requireActual('../../control/ActionRow').ActionRow,
   AltButton: jest.requireActual('../../control/AltButton').AltButton,
   PriButton: jest.requireActual('../../control/PriButton').PriButton,
+  GrowingDiv: jest.requireActual('../../control/GrowingDiv').GrowingDiv,
 }));
 jest.mock('../../selector', () => ({
   consultantSelector: jest.fn(),
@@ -53,6 +57,19 @@ jest.mock('react-redux', () => ({
   }),
   shallowEqual: jest.fn(),
 }));
+jest.mock('../../hoc/BigDialog', () => (props: any) => (
+  <>
+    <div>BigDialog</div>
+    <div>{props.isOpen ? 'compare-open' : 'compare-close'}</div>
+    <div>{props.children}</div>
+  </>
+));
+jest.mock('./ConsultantCheckCompare', () => (props: any) => (
+  <>
+    <div>ConsultantCheckCompare</div>
+    <div>{JSON.stringify(props, null, 2)}</div>
+  </>
+));
 
 describe('ConsultantCheck', () => {
   beforeEach(cleanup);
@@ -71,6 +88,7 @@ describe('ConsultantCheck', () => {
     ];
     render(<ConsultantCheck width={500} />);
     expect(screen.getByText('ConsultantCheckReview')).not.toBe(null);
+    expect(screen.getByText('vernacular')).not.toBe(null);
   });
 
   it('should render Vernacular tab', () => {
@@ -183,5 +201,33 @@ describe('ConsultantCheck', () => {
     fireEvent.click(screen.getByTestId('pri-button'));
     expect(screen.getByText('Vernacular')).not.toBe(null);
     expect(screen.getByText('Vernacular')).toHaveClass('Mui-selected');
+  });
+
+  it('should open the compare dialog when compare button clicked', () => {
+    mockWorkflow = [
+      {
+        id: '1',
+        label: 'Record',
+      },
+      {
+        id: '2',
+        label: 'Phrase Back Translation',
+      },
+    ];
+    render(<ConsultantCheck width={500} />);
+    expect(screen.getByText('compare-close')).toBeInTheDocument();
+    fireEvent.click(screen.getByTestId('compare-button'));
+    expect(screen.getByText('compare-open')).toBeInTheDocument();
+  });
+
+  it('should not have a compare button with one artifact type', () => {
+    mockWorkflow = [
+      {
+        id: '1',
+        label: 'Record',
+      },
+    ];
+    render(<ConsultantCheck width={500} />);
+    expect(screen.queryAllByTestId('compare-button')).toHaveLength(0);
   });
 });
