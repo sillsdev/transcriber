@@ -67,28 +67,31 @@ export const useArtifactCategory = (teamId?: string) => {
       () => offline && !offlineOnly,
       200
     );
-    const orgrecs: ArtifactCategory[] = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('artifactcategory')
-    ) as any;
-    orgrecs
-      .filter(
-        (r) =>
-          (related(r, 'organization') === curOrg ||
-            related(r, 'organization') === null) &&
-          Boolean(r.keys?.remoteId) !== offlineOnly &&
-          r.attributes.resource === (type === ArtifactCategoryType.Resource) &&
-          r.attributes.discussion ===
-            (type === ArtifactCategoryType.Discussion) &&
-          r.attributes.note === (type === ArtifactCategoryType.Note)
-      )
-      .forEach((r) =>
-        categorys.push({
-          slug: r.attributes.categoryname,
-          category: localizedArtifactCategory(r.attributes.categoryname),
-          org: related(r, 'organization') ?? '',
-          id: r.id,
-        })
-      );
+    var orgrecs: ArtifactCategory[] = (
+      memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('artifactcategory')
+      ) as ArtifactCategory[]
+    ).filter(
+      (r) =>
+        (related(r, 'organization') === curOrg ||
+          related(r, 'organization') === null) &&
+        Boolean(r.keys?.remoteId) !== offlineOnly
+    );
+    if (type === ArtifactCategoryType.Resource)
+      orgrecs = orgrecs.filter((r) => r.attributes.resource);
+    else if (type === ArtifactCategoryType.Discussion)
+      orgrecs = orgrecs.filter((r) => r.attributes.discussion);
+    else if (type === ArtifactCategoryType.Note)
+      orgrecs = orgrecs.filter((r) => r.attributes.note);
+
+    orgrecs.forEach((r) =>
+      categorys.push({
+        slug: r.attributes.categoryname,
+        category: localizedArtifactCategory(r.attributes.categoryname),
+        org: related(r, 'organization') ?? '',
+        id: r.id,
+      })
+    );
     return categorys;
   };
 

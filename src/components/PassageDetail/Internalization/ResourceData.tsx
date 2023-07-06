@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import { useOrganizedBy } from '../../../crud';
+import { ArtifactCategoryType, useOrganizedBy } from '../../../crud';
 import { IPassageDetailArtifactsStrings, ISharedStrings } from '../../../model';
 import {
   passageDetailArtifactsSelector,
@@ -86,7 +86,7 @@ export function ResourceData(props: IProps) {
         onCategoryChange={onCategoryChange}
         required={catRequired}
         scripture={ScriptureEnum.highlight}
-        resource={true}
+        type={ArtifactCategoryType.Resource}
       />
       {onPassResChange && (
         <div>
