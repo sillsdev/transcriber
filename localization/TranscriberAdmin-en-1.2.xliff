@@ -6481,6 +6481,13 @@
                <context context-type="sourcefile">useTools.ts</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="tool.consultantCheck">
+      		<source>Consultant Check</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useTools.ts</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="tool.discuss">
             <source>Discuss</source>
             <target/>

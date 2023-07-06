@@ -1201,6 +1201,7 @@ const initialState = {
 	"tool": new LocalizedStrings({
 		"en": {
 			"community": "Community Test",
+			"consultantCheck": "Consultant Check",
 			"discuss": "Discuss",
 			"done": "Done",
 			"export": "Export",

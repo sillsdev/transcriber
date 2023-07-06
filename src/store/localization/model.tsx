@@ -1128,6 +1128,7 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
 
 export interface IToolStrings extends Localize.LocalizedStringsMethods {
     "community": string;
+    "consultantCheck": string;
     "discuss": string;
     "done": string;
     "export": string;
