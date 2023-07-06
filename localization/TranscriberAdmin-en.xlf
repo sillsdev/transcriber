@@ -1042,6 +1042,48 @@
             <target/>
          </segment>
       </unit>
+      <unit id="consultantCheck.checked">
+         <segment>
+            <source>Checked</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.compare">
+         <segment>
+            <source>Compare</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.compareItems">
+         <segment>
+            <source>Select Items to Compare</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.furtherReview">
+         <segment>
+            <source>Further Review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.noMedia">
+         <segment>
+            <source>No Media Available</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.noTranscription">
+         <segment>
+            <source>No Transcription Available</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.transcription">
+         <segment>
+            <source>Transcription</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="control.book">
          <segment>
             <source>Book</source>

@@ -2,7 +2,7 @@ import { useGlobal } from 'reactn';
 import { RecordIdentity, TransformBuilder } from '@orbit/data';
 import { Resource, MediaFile } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
-import { ArtifactTypeSlug, useArtifactType } from './useArtifactType';
+import { ArtifactTypeSlug, useArtifactType } from '.';
 
 export const useMediaResCreate = (passage: RecordIdentity, stepId: string) => {
   const [memory] = useGlobal('memory');

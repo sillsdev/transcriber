@@ -235,6 +235,17 @@ const initialState = {
 			"uploadComplete": "{0} of {1} files uploaded successfully.",
 		}
 	}),
+	"consultantCheck": new LocalizedStrings({
+		"en": {
+			"checked": "Checked",
+			"compare": "Compare",
+			"compareItems": "Select Items to Compare",
+			"furtherReview": "Further Review",
+			"noMedia": "No Media Available",
+			"noTranscription": "No Transcription Available",
+			"transcription": "Transcription",
+		}
+	}),
 	"control": new LocalizedStrings({
 		"en": {
 			"book": "Book",
@@ -1534,6 +1545,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"commentCard" : new LocalizedStrings(action.payload.data.commentCard),
 				"commentEditor" : new LocalizedStrings(action.payload.data.commentEditor),
 				"community" : new LocalizedStrings(action.payload.data.community),
+				"consultantCheck" : new LocalizedStrings(action.payload.data.consultantCheck),
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
 				"discussionCard" : new LocalizedStrings(action.payload.data.discussionCard),
