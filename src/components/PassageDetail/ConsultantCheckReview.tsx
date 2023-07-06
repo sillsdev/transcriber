@@ -113,7 +113,10 @@ export default function ConsultantCheckReview({ item }: IProps) {
                   )}
                 </StyledCell>
                 <StyledCell>
-                  <Typography data-testid="transcription">
+                  <Typography
+                    data-testid="transcription"
+                    sx={{ whiteSpace: 'break-spaces' }}
+                  >
                     {m.attributes.transcription ?? t.noTranscription}
                   </Typography>
                 </StyledCell>
