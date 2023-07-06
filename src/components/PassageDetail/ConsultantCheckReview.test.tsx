@@ -23,8 +23,6 @@ jest.mock('../../crud', () => ({
 jest.mock('../../context/usePassageDetailContext', () => () => ({
   rowData: mockRowData,
 }));
-jest.mock('../MediaPlayer', () => () => <div>MediaPlayer</div>);
-// jest.mock('@mui/material', () => ({}));
 jest.mock('@mui/icons-material', () => ({}));
 jest.mock('../../selector', () => ({
   consultantSelector: jest.fn(),
@@ -48,7 +46,6 @@ describe('ConsultantCheckReview', () => {
       <ConsultantCheckReview item={ArtifactTypeSlug.Vernacular} />
     );
     expect(container).not.toBe(null);
-    expect(screen.getByText('MediaPlayer')).not.toBe(null);
     expect(screen.queryAllByTestId('transcription')).toHaveLength(0);
   });
 
@@ -61,7 +58,6 @@ describe('ConsultantCheckReview', () => {
 
   it('should render a MediaPlayer even with no audio files', () => {
     render(<ConsultantCheckReview item={ArtifactTypeSlug.Vernacular} />);
-    expect(screen.getByText('MediaPlayer')).not.toBe(null);
   });
 
   it('should not render a transcription if there is no media file', () => {
@@ -69,7 +65,7 @@ describe('ConsultantCheckReview', () => {
     expect(screen.queryAllByTestId('transcription')).toHaveLength(0);
   });
 
-  it('should render a Media player and no missing media message if there is vernacular media', () => {
+  it('should not have a missing media message if there is vernacular media', () => {
     mockRowData = [
       {
         id: '1',
@@ -84,7 +80,6 @@ describe('ConsultantCheckReview', () => {
       } as any,
     ];
     render(<ConsultantCheckReview item={ArtifactTypeSlug.Vernacular} />);
-    expect(screen.getByText('MediaPlayer')).not.toBe(null);
     expect(screen.queryAllByTestId('no-media')).toHaveLength(0);
   });
 
@@ -125,7 +120,7 @@ describe('ConsultantCheckReview', () => {
     );
   });
 
-  it('should not render a no media message if there is phrase back translation media', () => {
+  it('should not have a missing media message if there is phrase back translation media', () => {
     mockRowData = [
       {
         id: '1',
@@ -161,7 +156,6 @@ describe('ConsultantCheckReview', () => {
     render(
       <ConsultantCheckReview item={ArtifactTypeSlug.PhraseBackTranslation} />
     );
-    expect(screen.getByText('MediaPlayer')).not.toBe(null);
     expect(screen.queryAllByTestId('no-media')).toHaveLength(0);
   });
 

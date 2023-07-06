@@ -18,6 +18,7 @@ import {
   findRecord,
   ArtifactTypeSlug,
   useArtifactType,
+  useOrgDefaults,
 } from '../../crud';
 import ConsultantCheckReview from './ConsultantCheckReview';
 import { ActionRow, AltButton, GrowingDiv, PriButton } from '../../control';
@@ -27,6 +28,9 @@ import BigDialog from '../../hoc/BigDialog';
 import ConsultantCheckCompare from './ConsultantCheckCompare';
 import { UpdateRecord } from '../../model/baseModel';
 import { TransformBuilder } from '@orbit/data';
+import MediaPlayer from '../MediaPlayer';
+
+const ConsCheckComp = 'ConsultantCheckCompare';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -71,6 +75,8 @@ export function ConsultantCheck({ width }: IProps) {
   const [compare, setCompare] = useState<ArtifactTypeSlug[]>([]);
   const [open, setOpen] = useState(false);
   const [value, setValue] = React.useState(0);
+  const [mediaId, setMediaId] = useState<string>('');
+  const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   const { localizedArtifactType } = useArtifactType();
   const t = useSelector(consultantSelector, shallowEqual);
 
@@ -84,15 +90,36 @@ export function ConsultantCheck({ width }: IProps) {
 
   const handleSetCompare = (newCompare: string[]) => {
     setCompare(newCompare as ArtifactTypeSlug[]);
+    setOrgDefault(ConsCheckComp, newCompare);
     setOpen(false);
+  };
+
+  const handlePlayer = (item: string) => {
+    setMediaId(item);
+  };
+
+  const handleEnded = () => {
+    setMediaId('');
   };
 
   const handleChecked = (item: ArtifactTypeSlug) => () => {
     let newApproved: ArtifactTypeSlug[] = [];
-    if (approved.includes(item)) {
-      newApproved = approved.filter((a) => a !== item);
+    if (compare.length <= 1) {
+      if (approved.includes(item)) {
+        newApproved = approved.filter((a) => a !== item);
+      } else {
+        newApproved = [...approved, item];
+        if (value + 1 < checkItems.length) {
+          setValue(value + 1);
+        }
+      }
     } else {
-      newApproved = [...approved, item];
+      if (approved.includes(item)) {
+        newApproved = approved.filter((a) => !compare.includes(a));
+      } else {
+        const approvedSet = new Set([...approved, ...compare]);
+        newApproved = Array.from(approvedSet);
+      }
     }
     setApproved(newApproved);
     try {
@@ -117,9 +144,7 @@ export function ConsultantCheck({ width }: IProps) {
         );
       }
     } catch (err) {}
-    if (value + 1 < checkItems.length) {
-      setValue(value + 1);
-    } else {
+    if (value + 1 >= checkItems.length) {
       setStepComplete(currentstep, !stepComplete(currentstep));
     }
   };
@@ -134,6 +159,10 @@ export function ConsultantCheck({ width }: IProps) {
         }
       } catch (err) {}
       setApproved(newApproved);
+      const newCompare = getOrgDefault(ConsCheckComp);
+      if (newCompare) {
+        setCompare(newCompare as ArtifactTypeSlug[]);
+      }
       let newItems: ArtifactTypeSlug[] = [];
       workflow.forEach((wf) => {
         const wfRec = findRecord(memory, 'orgworkflowstep', wf.id) as
@@ -188,14 +217,31 @@ export function ConsultantCheck({ width }: IProps) {
           </Tabs>
         </Box>
       )}
+      <MediaPlayer
+        controls
+        srcMediaId={mediaId}
+        onEnded={handleEnded}
+        requestPlay={true}
+        sx={{ pt: 2 }}
+      />
       {checkItems.map((item, index) => (
         <TabPanel key={item} value={value} index={index}>
           {compare.length <= 1 ? (
-            <ConsultantCheckReview item={item} />
+            <ConsultantCheckReview
+              item={item}
+              onPlayer={handlePlayer}
+              playId={mediaId}
+            />
           ) : (
             <Table>
               <TableHead>
-                <TableRow>
+                <TableRow
+                  sx={{
+                    backgroundColor: approved.includes(item)
+                      ? 'grey.A400'
+                      : undefined,
+                  }}
+                >
                   {compare.map((item) => (
                     <TableCell key={item}>
                       <Typography>{localizedArtifactType(item)}</Typography>
@@ -207,7 +253,11 @@ export function ConsultantCheck({ width }: IProps) {
                 <TableRow>
                   {compare.map((item) => (
                     <TableCell key={item}>
-                      <ConsultantCheckReview item={item} />
+                      <ConsultantCheckReview
+                        item={item}
+                        onPlayer={handlePlayer}
+                        playId={mediaId}
+                      />
                     </TableCell>
                   ))}
                 </TableRow>

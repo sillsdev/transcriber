@@ -49,7 +49,12 @@ export default function ConsultantCheckCompare({
       </FormGroup>
       <ActionRow>
         <AltButton onClick={() => onChange(compare)}>{t.cancel}</AltButton>
-        <PriButton onClick={() => onChange(state)}>{t.save}</PriButton>
+        <PriButton
+          onClick={() => onChange(state)}
+          disabled={state.length === 1}
+        >
+          {t.save}
+        </PriButton>
       </ActionRow>
     </>
   );

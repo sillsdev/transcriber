@@ -6,6 +6,7 @@ import { ArtifactTypeSlug } from '../../crud';
 let mockWorkflow: SimpleWf[] = [];
 let mockSetStepComplete = jest.fn();
 let mockCurrentStep = '';
+let mockCompare: string[] = [];
 
 jest.mock('reactn', () => ({
   useGlobal: () => [[], jest.fn()],
@@ -23,6 +24,12 @@ jest.mock('../../crud', () => ({
     else if (id === '2')
       return { attributes: { tool: '{"tool": "phraseBackTranslate"}' } };
   },
+  useOrgDefaults: () => ({
+    getOrgDefault: () => {
+      return mockCompare;
+    },
+    setOrgDefault: jest.fn(),
+  }),
   ArtifactTypeSlug: jest.requireActual('../../crud/artifactTypeSlug')
     .ArtifactTypeSlug,
   ToolSlug: jest.requireActual('../../crud/toolSlug').ToolSlug,
@@ -33,6 +40,7 @@ jest.mock('../../context/usePassageDetailContext', () => () => ({
   setStepComplete: mockSetStepComplete,
   currentstep: mockCurrentStep,
 }));
+jest.mock('../MediaPlayer', () => () => <div>MediaPlayer</div>);
 jest.mock('./ConsultantCheckReview', () => ({ item }: { item: string }) => (
   <>
     <div>ConsultantCheckReview</div>
@@ -136,6 +144,7 @@ describe('ConsultantCheck', () => {
       },
     ];
     render(<ConsultantCheck width={500} />);
+    // eslint-disable-next-line testing-library/no-unnecessary-act
     fireEvent.click(screen.getByTestId('pri-button'));
     expect(screen.getByTestId('alt-button')).not.toBe(null);
     expect(screen.queryAllByTestId('pri-button')).toHaveLength(0);
@@ -233,5 +242,22 @@ describe('ConsultantCheck', () => {
     ];
     render(<ConsultantCheck width={500} />);
     expect(screen.queryAllByTestId('compare-button')).toHaveLength(0);
+  });
+
+  it('should render a table if compare set', () => {
+    mockWorkflow = [
+      {
+        id: '1',
+        label: 'Record',
+      },
+      {
+        id: '2',
+        label: 'Phrase Back Translation',
+      },
+    ];
+    mockCompare = ['1', '2'];
+    const { container } = render(<ConsultantCheck width={500} />);
+    // eslint-disable-next-line testing-library/no-node-access, testing-library/no-container
+    expect(container.querySelector('table')).toBeInTheDocument();
   });
 });

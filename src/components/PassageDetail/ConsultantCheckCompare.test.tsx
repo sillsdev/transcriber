@@ -95,7 +95,7 @@ describe('ConsultantCheckCompare', () => {
     expect(props.onChange).toHaveBeenCalledWith(['1']);
   });
 
-  it('should return compare value if save is clicked', () => {
+  it('should have save disabled if one item clicked', () => {
     const props = {
       compare: ['1'],
       allItems: ['1', '2'],
@@ -109,9 +109,27 @@ describe('ConsultantCheckCompare', () => {
     expect(screen.getByTestId('checkbox-0')).toHaveClass('Mui-checked');
     expect(screen.getByTestId('checkbox-1')).not.toHaveClass('Mui-checked');
 
+    expect(screen.getByText('Save')).toHaveClass('Mui-disabled');
+  });
+
+  it('should return compare value if save is clicked', () => {
+    const props = {
+      compare: ['1', '2'],
+      allItems: ['1', '2', '3'],
+      onChange: jest.fn(),
+    };
+
+    const { container } = render(<ConsultantCheckCompare {...props} />);
+    expect(container).not.toBe(null);
+    expect(screen.getByText('1')).toBeInTheDocument();
+    expect(screen.getByText('2')).toBeInTheDocument();
+    expect(screen.getByTestId('checkbox-0')).toHaveClass('Mui-checked');
+    expect(screen.getByTestId('checkbox-1')).toHaveClass('Mui-checked');
+    expect(screen.getByTestId('checkbox-2')).not.toHaveClass('Mui-checked');
+
     screen.getByText('Save').click();
 
-    expect(props.onChange).toHaveBeenCalledWith(['1']);
+    expect(props.onChange).toHaveBeenCalledWith(['1', '2']);
   });
 
   it('should return allItems value if save is clicked after checking 2', () => {

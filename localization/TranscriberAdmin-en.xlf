@@ -1044,7 +1044,7 @@
       </unit>
       <unit id="consultantCheck.checked">
          <segment>
-            <source>Checked</source>
+            <source>Mark Checked</source>
             <target/>
          </segment>
       </unit>
@@ -1062,7 +1062,7 @@
       </unit>
       <unit id="consultantCheck.furtherReview">
          <segment>
-            <source>Further Review</source>
+            <source>Review More</source>
             <target/>
          </segment>
       </unit>

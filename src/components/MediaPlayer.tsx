@@ -13,6 +13,7 @@ import {
   Slider,
   Stack,
   StackProps,
+  SxProps,
   TooltipProps,
   styled,
 } from '@mui/material';
@@ -63,6 +64,7 @@ interface IProps {
   controls?: boolean;
   limits?: IMediaLimits;
   onLoaded?: () => void;
+  sx?: SxProps;
 }
 
 export function MediaPlayer(props: IProps) {
@@ -74,6 +76,7 @@ export function MediaPlayer(props: IProps) {
     onTogglePlay,
     controls,
     limits,
+    sx,
   } = props;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
@@ -311,7 +314,7 @@ export function MediaPlayer(props: IProps) {
           )
         }
         onDelete={handleSkipNext}
-        sx={{ width: '100%' }}
+        sx={{ ...sx, width: '100%' }}
       />
       <audio
         onEnded={ended}
@@ -325,7 +328,7 @@ export function MediaPlayer(props: IProps) {
       />
     </>
   ) : ready ? (
-    <StyledStack direction="row">
+    <StyledStack direction="row" sx={{ ...sx }}>
       {controls && (
         <>
           <StyledTip title={t.resourceStart}>

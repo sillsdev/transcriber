@@ -1215,7 +1215,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="consultantCheck.checked">
-      		<source>Checked</source>
+      		<source>Mark Checked</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ConsultantCheck.tsx</context>
@@ -1236,7 +1236,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="consultantCheck.furtherReview">
-      		<source>Further Review</source>
+      		<source>Review More</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ConsultantCheck.tsx</context>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { MediaFile } from '../../model';
 import { ArtifactTypeSlug, useArtifactType, related } from '../../crud';
-import MediaPlayer from '../MediaPlayer';
 import { IRow } from '../../context/PassageDetailContext';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import {
@@ -19,6 +18,7 @@ import {
 import { shallowEqual, useSelector } from 'react-redux';
 import { consultantSelector } from '../../selector';
 import PlayArrow from '@mui/icons-material/PlayArrow';
+import CancelPlay from '@mui/icons-material/Clear';
 
 const StyledCell = styled(TableCell)<TableCellProps>(({ theme }) => ({
   padding: '4px',
@@ -26,21 +26,26 @@ const StyledCell = styled(TableCell)<TableCellProps>(({ theme }) => ({
 
 interface IProps {
   item: ArtifactTypeSlug;
+  onPlayer?: (mediaId: string) => void;
+  playId?: string;
 }
 
-export default function ConsultantCheckReview({ item }: IProps) {
+export default function ConsultantCheckReview({
+  item,
+  onPlayer,
+  playId,
+}: IProps) {
   const { rowData } = usePassageDetailContext();
-  const [mediaId, setMediaId] = useState<string>('');
   const [allMedia, setAllMedia] = useState<MediaFile[]>([]);
   const { localizedArtifactType } = useArtifactType();
   const t = useSelector(consultantSelector, shallowEqual);
 
   const handleSelect = (id: string) => () => {
-    setMediaId(id);
-  };
-
-  const handleEnded = () => {
-    setMediaId('');
+    if (playId !== id) {
+      onPlayer && onPlayer(id);
+    } else {
+      onPlayer && onPlayer('');
+    }
   };
 
   const sortRows = (i: IRow, j: IRow) => {
@@ -62,7 +67,7 @@ export default function ConsultantCheckReview({ item }: IProps) {
 
   useEffect(() => {
     if (item === ArtifactTypeSlug.Vernacular) {
-      setMediaId(rowData[0]?.mediafile.id ?? '');
+      onPlayer && onPlayer(rowData[0]?.mediafile.id ?? '');
       setAllMedia(rowData[0]?.mediafile ? [rowData[0]?.mediafile] : []);
     } else {
       const mediaId = rowData[0]?.mediafile.id ?? '';
@@ -76,7 +81,7 @@ export default function ConsultantCheckReview({ item }: IProps) {
         .sort(sortRows)
         .map((r) => r.mediafile);
       setAllMedia(media);
-      setMediaId('');
+      onPlayer && onPlayer('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item]);
@@ -86,12 +91,6 @@ export default function ConsultantCheckReview({ item }: IProps) {
       {allMedia.length === 0 && (
         <Typography data-testid="no-media">{t.noMedia}</Typography>
       )}
-      <MediaPlayer
-        controls
-        srcMediaId={mediaId}
-        requestPlay={true}
-        onEnded={handleEnded}
-      />
       {allMedia.length > 0 && (
         <Table>
           {allMedia.length > 1 && (
@@ -106,11 +105,9 @@ export default function ConsultantCheckReview({ item }: IProps) {
             {allMedia.map((m) => (
               <TableRow key={m.id}>
                 <StyledCell sx={{ width: '40px' }}>
-                  {m.id !== mediaId && (
-                    <IconButton onClick={handleSelect(m.id)} data-testid="play">
-                      <PlayArrow />
-                    </IconButton>
-                  )}
+                  <IconButton onClick={handleSelect(m.id)} data-testid="play">
+                    {m.id !== playId ? <PlayArrow /> : <CancelPlay />}
+                  </IconButton>
                 </StyledCell>
                 <StyledCell>
                   <Typography
