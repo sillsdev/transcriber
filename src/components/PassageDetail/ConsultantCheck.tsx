@@ -25,6 +25,8 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { consultantSelector } from '../../selector';
 import BigDialog from '../../hoc/BigDialog';
 import ConsultantCheckCompare from './ConsultantCheckCompare';
+import { UpdateRecord } from '../../model/baseModel';
+import { TransformBuilder } from '@orbit/data';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -60,9 +62,10 @@ interface IProps {
 }
 
 export function ConsultantCheck({ width }: IProps) {
-  const { workflow, setStepComplete, stepComplete, currentstep } =
+  const { workflow, setStepComplete, stepComplete, currentstep, passage } =
     usePassageDetailContext();
   const [memory] = useGlobal('memory');
+  const [user] = useGlobal('user');
   const [checkItems, setCheckItems] = useState<ArtifactTypeSlug[]>([]);
   const [approved, setApproved] = useState<ArtifactTypeSlug[]>([]);
   const [compare, setCompare] = useState<ArtifactTypeSlug[]>([]);
@@ -84,12 +87,36 @@ export function ConsultantCheck({ width }: IProps) {
     setOpen(false);
   };
 
-  const handleApproved = (item: ArtifactTypeSlug) => () => {
+  const handleChecked = (item: ArtifactTypeSlug) => () => {
+    let newApproved: ArtifactTypeSlug[] = [];
     if (approved.includes(item)) {
-      setApproved(approved.filter((a) => a !== item));
+      newApproved = approved.filter((a) => a !== item);
     } else {
-      setApproved([...approved, item]);
+      newApproved = [...approved, item];
     }
+    setApproved(newApproved);
+    try {
+      const stepComplete = JSON.parse(passage?.attributes?.stepComplete);
+      const newStepComplete = JSON.stringify({
+        ...stepComplete,
+        approved: newApproved,
+      });
+      if (newStepComplete !== passage?.attributes?.stepComplete) {
+        memory.update((t: TransformBuilder) =>
+          UpdateRecord(
+            t,
+            {
+              ...passage,
+              attributes: {
+                ...passage.attributes,
+                stepComplete: newStepComplete,
+              } as any,
+            },
+            user
+          )
+        );
+      }
+    } catch (err) {}
     if (value + 1 < checkItems.length) {
       setValue(value + 1);
     } else {
@@ -99,6 +126,14 @@ export function ConsultantCheck({ width }: IProps) {
 
   useEffect(() => {
     if (workflow) {
+      let newApproved: ArtifactTypeSlug[] = [];
+      try {
+        const result = JSON.parse(passage?.attributes?.stepComplete).approved;
+        if (result && Array.isArray(result)) {
+          newApproved = result;
+        }
+      } catch (err) {}
+      setApproved(newApproved);
       let newItems: ArtifactTypeSlug[] = [];
       workflow.forEach((wf) => {
         const wfRec = findRecord(memory, 'orgworkflowstep', wf.id) as
@@ -192,17 +227,11 @@ export function ConsultantCheck({ width }: IProps) {
               </>
             )}
             {approved.includes(item) ? (
-              <AltButton
-                data-testid="alt-button"
-                onClick={handleApproved(item)}
-              >
+              <AltButton data-testid="alt-button" onClick={handleChecked(item)}>
                 {t.furtherReview}
               </AltButton>
             ) : (
-              <PriButton
-                data-testid="pri-button"
-                onClick={handleApproved(item)}
-              >
+              <PriButton data-testid="pri-button" onClick={handleChecked(item)}>
                 {t.checked}
               </PriButton>
             )}

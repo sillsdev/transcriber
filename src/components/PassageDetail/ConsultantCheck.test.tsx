@@ -1,7 +1,5 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import ConsultantCheck from './ConsultantCheck';
-// import { ToolSlug } from '../../crud/toolSlug';
-// import { ArtifactTypeSlug } from '../../crud/artifactTypeSlug';
 import { SimpleWf } from '../../context/PassageDetailContext';
 import { ArtifactTypeSlug } from '../../crud';
 
@@ -70,6 +68,12 @@ jest.mock('./ConsultantCheckCompare', () => (props: any) => (
     <div>{JSON.stringify(props, null, 2)}</div>
   </>
 ));
+jest.mock('../../model/baseModel', () => ({
+  UpdateRecord: jest.fn(),
+}));
+jest.mock('@orbit/data', () => ({
+  TransformBuilder: jest.fn(),
+}));
 
 describe('ConsultantCheck', () => {
   beforeEach(cleanup);
