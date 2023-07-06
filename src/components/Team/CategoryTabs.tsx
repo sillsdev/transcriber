@@ -56,6 +56,7 @@ export default function CategoryTabs({ teamId, onClose }: IProps) {
         <Tabs value={value} onChange={handleChange} aria-label="category tabs">
           <Tab label={t.resource} {...a11yProps(0)} />
           <Tab label={t.discussion} {...a11yProps(1)} />
+          <Tab label={t.note} {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
