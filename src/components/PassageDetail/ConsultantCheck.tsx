@@ -123,7 +123,10 @@ export function ConsultantCheck({ width }: IProps) {
     }
     setApproved(newApproved);
     try {
-      const stepComplete = JSON.parse(passage?.attributes?.stepComplete);
+      const stepComplete = JSON.parse(passage?.attributes?.stepComplete) || {
+        completed: [],
+        approved: [],
+      };
       const newStepComplete = JSON.stringify({
         ...stepComplete,
         approved: newApproved,
