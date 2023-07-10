@@ -3942,7 +3942,7 @@
       </unit>
       <unit id="peerCheck.afterResource">
          <segment>
-            <source>Play from end of resource</source>
+            <source>Play followingI context</source>
             <target/>
          </segment>
       </unit>
@@ -3954,7 +3954,7 @@
       </unit>
       <unit id="peerCheck.resourceStart">
          <segment>
-            <source>Play from start of resource</source>
+            <source>Play from start</source>
             <target/>
          </segment>
       </unit>

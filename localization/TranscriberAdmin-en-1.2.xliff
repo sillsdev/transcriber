@@ -4597,7 +4597,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="peerCheck.afterResource">
-      		<source>Play from end of resource</source>
+      		<source>Play followingI context</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TeamCheckReference.tsx</context>
@@ -4611,7 +4611,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="peerCheck.resourceStart">
-      		<source>Play from start of resource</source>
+      		<source>Play from start</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TeamCheckReference.tsx</context>

@@ -840,9 +840,9 @@ const initialState = {
 	}),
 	"peerCheck": new LocalizedStrings({
 		"en": {
-			"afterResource": "Play from end of resource",
+			"afterResource": "Play followingI context",
 			"back3Seconds": "Skip back 3 seconds",
-			"resourceStart": "Play from start of resource",
+			"resourceStart": "Play from start",
 		}
 	}),
 	"permission": new LocalizedStrings({
