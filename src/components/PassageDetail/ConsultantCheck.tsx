@@ -140,7 +140,7 @@ export function ConsultantCheck({ width }: IProps) {
         });
       }
     } catch (err) {}
-    if (value + 1 >= checkItems.length) {
+    if (approved.length + 1 >= checkItems.length) {
       setStepComplete(currentstep, !stepComplete(currentstep));
     }
   };
