@@ -16,6 +16,7 @@ import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withData } from 'react-orbitjs';
 import { useGlobal } from 'reactn';
 import KeyTermSetting from './KeyTermSetting';
+import { Box } from '@mui/material';
 
 export const SortTag = 'ktSort';
 export const KtLang = 'ktLang';
@@ -116,7 +117,7 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
 
   return (
     <>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <KeyTermsSort initSort={sortBy} onChange={handleSortBy} />
         <KeyTermExclude
           init={
@@ -129,7 +130,7 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
           onChange={handleExclude}
         />
         <KeyTermSetting curCode={language} onChange={handleLang} />
-      </div>
+      </Box>
       <KeyTermTable
         rows={verseTerms(
           book,
