@@ -236,7 +236,7 @@ export function ConsultantCheck({ width }: IProps) {
               <TableHead>
                 <TableRow
                   sx={{
-                    backgroundColor: approved.includes(item)
+                    backgroundColor: approved.includes(compare[0])
                       ? 'grey.A400'
                       : undefined,
                   }}
