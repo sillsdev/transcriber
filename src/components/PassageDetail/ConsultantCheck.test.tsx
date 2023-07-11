@@ -1,4 +1,10 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import ConsultantCheck from './ConsultantCheck';
 import { SimpleWf } from '../../context/PassageDetailContext';
 import { ArtifactTypeSlug } from '../../crud';
@@ -39,7 +45,7 @@ jest.mock('../../crud', () => ({
 }));
 jest.mock('../../context/usePassageDetailContext', () => () => ({
   workflow: mockWorkflow,
-  stepComplete: jest.fn(),
+  stepComplete: () => false,
   setStepComplete: mockSetStepComplete,
   currentstep: mockCurrentStep,
   passage: { attributes: { stepComplete: mockPassageStepComplete } },
@@ -162,7 +168,7 @@ describe('ConsultantCheck', () => {
     expect(screen.queryAllByTestId('pri-button')).toHaveLength(0);
   });
 
-  it('should render remain selected when its the only tab and Pri Button is clicked', () => {
+  it('should render remain selected when its the only tab and Pri Button is clicked', async () => {
     mockWorkflow = [
       {
         id: '1',
@@ -173,11 +179,11 @@ describe('ConsultantCheck', () => {
     render(<ConsultantCheck width={500} />);
     fireEvent.click(screen.getByTestId('pri-button'));
     expect(screen.getByText('Vernacular')).toHaveClass('Mui-selected');
-    expect(mockSetStepComplete).toBeCalledTimes(1);
+    await waitFor(() => expect(mockSetStepComplete).toBeCalledTimes(1));
     expect(mockSetStepComplete).toBeCalledWith('record', true);
   });
 
-  it('should update passage record and include completed when Pri Button is clicked', () => {
+  it('should update passage record and include completed when Pri Button is clicked', async () => {
     mockWorkflow = [
       {
         id: '1',
@@ -187,7 +193,7 @@ describe('ConsultantCheck', () => {
     mockCurrentStep = 'record';
     render(<ConsultantCheck width={500} />);
     fireEvent.click(screen.getByTestId('pri-button'));
-    expect(mockSetStepComplete).toBeCalledTimes(1);
+    await waitFor(() => expect(mockSetStepComplete).toBeCalledTimes(1));
     expect(mockSetStepComplete).toBeCalledWith('record', true);
     expect(mockUpdateRecord).toBeCalledTimes(1);
     const stepCompleteJson =
@@ -196,7 +202,7 @@ describe('ConsultantCheck', () => {
     expect(result.completed).toEqual([]);
   });
 
-  it('should update passage record and keep completed when Pri Button is clicked', () => {
+  it('should update passage record and keep completed when Pri Button is clicked', async () => {
     mockWorkflow = [
       {
         id: '1',
@@ -207,7 +213,7 @@ describe('ConsultantCheck', () => {
     mockPassageStepComplete = `{"completed":["record"]}`;
     render(<ConsultantCheck width={500} />);
     fireEvent.click(screen.getByTestId('pri-button'));
-    expect(mockSetStepComplete).toBeCalledTimes(1);
+    await waitFor(() => expect(mockSetStepComplete).toBeCalledTimes(1));
     expect(mockSetStepComplete).toBeCalledWith('record', true);
     expect(mockUpdateRecord).toBeCalledTimes(1);
     const stepCompleteJson =

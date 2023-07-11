@@ -4597,7 +4597,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="peerCheck.afterResource">
-      		<source>Play followingI context</source>
+      		<source>Play following context</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TeamCheckReference.tsx</context>

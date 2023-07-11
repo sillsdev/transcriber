@@ -6,7 +6,7 @@ export const useUpdateRecord = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
-  return (rec: BaseModel) => {
-    memory.update((t: TransformBuilder) => UpdateRecord(t, rec, user));
+  return async (rec: BaseModel) => {
+    await memory.update((t: TransformBuilder) => UpdateRecord(t, rec, user));
   };
 };

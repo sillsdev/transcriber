@@ -840,7 +840,7 @@ const initialState = {
 	}),
 	"peerCheck": new LocalizedStrings({
 		"en": {
-			"afterResource": "Play followingI context",
+			"afterResource": "Play following context",
 			"back3Seconds": "Skip back 3 seconds",
 			"resourceStart": "Play from start",
 		}

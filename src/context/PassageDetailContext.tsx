@@ -551,13 +551,19 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         type: 'passage',
         id: remoteIdGuid('passage', pasId ?? '', memory.keyMap) || pasId || '',
       };
+      const curPassage = findRecord(memory, 'passage', recId.id) as Passage;
+      const curCompleteStr = curPassage?.attributes.stepComplete;
+      let stepComplete = {};
+      try {
+        stepComplete = JSON.parse(curCompleteStr || '{}');
+      } catch (err) {}
       var tb = new TransformBuilder();
       var ops = [] as Operation[];
       ops.push(
         tb.replaceAttribute(
           recId,
           'stepComplete',
-          JSON.stringify({ completed })
+          JSON.stringify({ ...stepComplete, completed })
         )
       );
       ops.push(...UpdateLastModifiedBy(tb, recId, user));

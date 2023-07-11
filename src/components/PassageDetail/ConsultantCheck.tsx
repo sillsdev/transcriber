@@ -101,7 +101,7 @@ export function ConsultantCheck({ width }: IProps) {
     setMediaId('');
   };
 
-  const handleChecked = (item: ArtifactTypeSlug) => () => {
+  const handleChecked = (item: ArtifactTypeSlug) => async () => {
     let newApproved: ArtifactTypeSlug[] = [];
     if (compare.length <= 1) {
       if (approved.includes(item)) {
@@ -131,7 +131,7 @@ export function ConsultantCheck({ width }: IProps) {
         approved: newApproved,
       });
       if (newStepComplete !== passage?.attributes?.stepComplete) {
-        updateRecord({
+        await updateRecord({
           ...passage,
           attributes: {
             ...passage.attributes,
@@ -140,8 +140,11 @@ export function ConsultantCheck({ width }: IProps) {
         });
       }
     } catch (err) {}
-    if (approved.length + 1 >= checkItems.length) {
-      setStepComplete(currentstep, !stepComplete(currentstep));
+    if (
+      approved.length + 1 >= checkItems.length &&
+      !stepComplete(currentstep)
+    ) {
+      setStepComplete(currentstep, true);
     }
   };
 

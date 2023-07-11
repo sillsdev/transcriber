@@ -3942,7 +3942,7 @@
       </unit>
       <unit id="peerCheck.afterResource">
          <segment>
-            <source>Play followingI context</source>
+            <source>Play following context</source>
             <target/>
          </segment>
       </unit>
