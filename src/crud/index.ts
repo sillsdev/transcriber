@@ -96,3 +96,4 @@ export * from './useSharedResCreate';
 export * from './useSharedResRead';
 export * from './useSharedResUpdate';
 export * from './useSharedResDelete';
+export * from './useUpdateRecord';

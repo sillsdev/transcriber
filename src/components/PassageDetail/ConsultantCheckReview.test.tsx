@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import ConsultantCheckReview from './ConsultantCheckReview';
 import { ArtifactTypeSlug } from '../../crud/artifactTypeSlug';
 import { IRow } from '../../context/PassageDetailContext';
@@ -81,6 +81,56 @@ describe('ConsultantCheckReview', () => {
     ];
     render(<ConsultantCheckReview item={ArtifactTypeSlug.Vernacular} />);
     expect(screen.queryAllByTestId('no-media')).toHaveLength(0);
+  });
+
+  it('should call onPlayer if play button clicked', () => {
+    mockRowData = [
+      {
+        id: '1',
+        artifactType: 'Vernacular',
+        mediafile: {
+          id: '1',
+          attributes: {
+            transcription: 'vernacular transcription',
+          } as any,
+          type: 'mediafile',
+        },
+      } as any,
+    ];
+    const onPlayer = jest.fn();
+    render(
+      <ConsultantCheckReview
+        item={ArtifactTypeSlug.Vernacular}
+        onPlayer={onPlayer}
+      />
+    );
+    fireEvent.click(screen.getByTestId('play'));
+    expect(onPlayer).toHaveBeenCalled();
+    expect(onPlayer).toHaveBeenCalledWith('1');
+  });
+
+  it('should not call onPlayer when vernacular media loaded', () => {
+    mockRowData = [
+      {
+        id: '1',
+        artifactType: 'Vernacular',
+        mediafile: {
+          id: '1',
+          attributes: {
+            transcription: 'vernacular transcription',
+          } as any,
+          type: 'mediafile',
+        },
+      } as any,
+    ];
+    const onPlayer = jest.fn();
+    render(
+      <ConsultantCheckReview
+        item={ArtifactTypeSlug.Vernacular}
+        onPlayer={onPlayer}
+      />
+    );
+    expect(onPlayer).not.toHaveBeenCalled();
   });
 
   it('should render a transcription if there is vernacular media transcription', () => {

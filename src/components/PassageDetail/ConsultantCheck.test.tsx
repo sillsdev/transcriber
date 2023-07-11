@@ -7,6 +7,8 @@ let mockWorkflow: SimpleWf[] = [];
 let mockSetStepComplete = jest.fn();
 let mockCurrentStep = '';
 let mockCompare: string[] = [];
+var mockPassageStepComplete: string | null = null;
+var mockUpdateRecord = jest.fn();
 
 jest.mock('reactn', () => ({
   useGlobal: () => [[], jest.fn()],
@@ -30,6 +32,7 @@ jest.mock('../../crud', () => ({
     },
     setOrgDefault: jest.fn(),
   }),
+  useUpdateRecord: () => mockUpdateRecord,
   ArtifactTypeSlug: jest.requireActual('../../crud/artifactTypeSlug')
     .ArtifactTypeSlug,
   ToolSlug: jest.requireActual('../../crud/toolSlug').ToolSlug,
@@ -39,6 +42,7 @@ jest.mock('../../context/usePassageDetailContext', () => () => ({
   stepComplete: jest.fn(),
   setStepComplete: mockSetStepComplete,
   currentstep: mockCurrentStep,
+  passage: { attributes: { stepComplete: mockPassageStepComplete } },
 }));
 jest.mock('../MediaPlayer', () => () => <div>MediaPlayer</div>);
 jest.mock('./ConsultantCheckReview', () => ({ item }: { item: string }) => (
@@ -85,6 +89,14 @@ jest.mock('@orbit/data', () => ({
 
 describe('ConsultantCheck', () => {
   beforeEach(cleanup);
+  afterEach(() => {
+    mockWorkflow = [];
+    mockCurrentStep = '';
+    mockCompare = [];
+    mockPassageStepComplete = null;
+    mockSetStepComplete.mockClear();
+    mockUpdateRecord.mockClear();
+  });
 
   it('should render', () => {
     const { container } = render(<ConsultantCheck width={500} />);
@@ -163,6 +175,45 @@ describe('ConsultantCheck', () => {
     expect(screen.getByText('Vernacular')).toHaveClass('Mui-selected');
     expect(mockSetStepComplete).toBeCalledTimes(1);
     expect(mockSetStepComplete).toBeCalledWith('record', true);
+  });
+
+  it('should update passage record and include completed when Pri Button is clicked', () => {
+    mockWorkflow = [
+      {
+        id: '1',
+        label: 'Record',
+      },
+    ];
+    mockCurrentStep = 'record';
+    render(<ConsultantCheck width={500} />);
+    fireEvent.click(screen.getByTestId('pri-button'));
+    expect(mockSetStepComplete).toBeCalledTimes(1);
+    expect(mockSetStepComplete).toBeCalledWith('record', true);
+    expect(mockUpdateRecord).toBeCalledTimes(1);
+    const stepCompleteJson =
+      mockUpdateRecord['mock'].calls[0][0]?.attributes?.stepComplete;
+    const result = JSON.parse(stepCompleteJson);
+    expect(result.completed).toEqual([]);
+  });
+
+  it('should update passage record and keep completed when Pri Button is clicked', () => {
+    mockWorkflow = [
+      {
+        id: '1',
+        label: 'Record',
+      },
+    ];
+    mockCurrentStep = 'record';
+    mockPassageStepComplete = `{"completed":["record"]}`;
+    render(<ConsultantCheck width={500} />);
+    fireEvent.click(screen.getByTestId('pri-button'));
+    expect(mockSetStepComplete).toBeCalledTimes(1);
+    expect(mockSetStepComplete).toBeCalledWith('record', true);
+    expect(mockUpdateRecord).toBeCalledTimes(1);
+    const stepCompleteJson =
+      mockUpdateRecord['mock'].calls[0][0]?.attributes?.stepComplete;
+    const result = JSON.parse(stepCompleteJson);
+    expect(result.completed).toEqual(['record']);
   });
 
   it('should have a second tab when workflow has the right two items', () => {

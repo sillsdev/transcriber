@@ -19,6 +19,7 @@ import {
   ArtifactTypeSlug,
   useArtifactType,
   useOrgDefaults,
+  useUpdateRecord,
 } from '../../crud';
 import ConsultantCheckReview from './ConsultantCheckReview';
 import { ActionRow, AltButton, GrowingDiv, PriButton } from '../../control';
@@ -26,8 +27,6 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { consultantSelector } from '../../selector';
 import BigDialog from '../../hoc/BigDialog';
 import ConsultantCheckCompare from './ConsultantCheckCompare';
-import { UpdateRecord } from '../../model/baseModel';
-import { TransformBuilder } from '@orbit/data';
 import MediaPlayer from '../MediaPlayer';
 
 const ConsCheckComp = 'ConsultantCheckCompare';
@@ -69,7 +68,6 @@ export function ConsultantCheck({ width }: IProps) {
   const { workflow, setStepComplete, stepComplete, currentstep, passage } =
     usePassageDetailContext();
   const [memory] = useGlobal('memory');
-  const [user] = useGlobal('user');
   const [checkItems, setCheckItems] = useState<ArtifactTypeSlug[]>([]);
   const [approved, setApproved] = useState<ArtifactTypeSlug[]>([]);
   const [compare, setCompare] = useState<ArtifactTypeSlug[]>([]);
@@ -77,6 +75,7 @@ export function ConsultantCheck({ width }: IProps) {
   const [value, setValue] = React.useState(0);
   const [mediaId, setMediaId] = useState<string>('');
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
+  const updateRecord = useUpdateRecord();
   const { localizedArtifactType } = useArtifactType();
   const t = useSelector(consultantSelector, shallowEqual);
 
@@ -132,19 +131,13 @@ export function ConsultantCheck({ width }: IProps) {
         approved: newApproved,
       });
       if (newStepComplete !== passage?.attributes?.stepComplete) {
-        memory.update((t: TransformBuilder) =>
-          UpdateRecord(
-            t,
-            {
-              ...passage,
-              attributes: {
-                ...passage.attributes,
-                stepComplete: newStepComplete,
-              } as any,
-            },
-            user
-          )
-        );
+        updateRecord({
+          ...passage,
+          attributes: {
+            ...passage.attributes,
+            stepComplete: newStepComplete,
+          } as any,
+        });
       }
     } catch (err) {}
     if (value + 1 >= checkItems.length) {

@@ -67,7 +67,6 @@ export default function ConsultantCheckReview({
 
   useEffect(() => {
     if (item === ArtifactTypeSlug.Vernacular) {
-      onPlayer && onPlayer(rowData[0]?.mediafile.id ?? '');
       setAllMedia(rowData[0]?.mediafile ? [rowData[0]?.mediafile] : []);
     } else {
       const mediaId = rowData[0]?.mediafile.id ?? '';
