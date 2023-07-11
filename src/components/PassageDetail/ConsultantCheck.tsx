@@ -173,13 +173,25 @@ export function ConsultantCheck({ width }: IProps) {
           const toolJson = toolData ? JSON.parse(toolData) : {};
           tool = toolJson.tool;
         } catch (err) {}
-        if (tool === ToolSlug.Record) {
+        if (
+          tool === ToolSlug.Record &&
+          !newItems.includes(ArtifactTypeSlug.Vernacular)
+        ) {
           newItems = [ArtifactTypeSlug.Vernacular, ...newItems];
-        } else if (tool === ToolSlug.PhraseBackTranslate) {
+        } else if (
+          tool === ToolSlug.PhraseBackTranslate &&
+          !newItems.includes(ArtifactTypeSlug.PhraseBackTranslation)
+        ) {
           newItems = [ArtifactTypeSlug.PhraseBackTranslation, ...newItems];
-        } else if (tool === ToolSlug.WholeBackTranslate) {
+        } else if (
+          tool === ToolSlug.WholeBackTranslate &&
+          !newItems.includes(ArtifactTypeSlug.WholeBackTranslation)
+        ) {
           newItems = [ArtifactTypeSlug.WholeBackTranslation, ...newItems];
-        } else if (tool === ToolSlug.Community) {
+        } else if (
+          tool === ToolSlug.Community &&
+          !newItems.includes(ArtifactTypeSlug.QandA)
+        ) {
           newItems = [ArtifactTypeSlug.QandA, ...newItems];
           newItems = [ArtifactTypeSlug.Retell, ...newItems];
         }

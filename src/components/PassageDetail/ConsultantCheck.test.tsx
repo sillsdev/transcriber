@@ -317,4 +317,23 @@ describe('ConsultantCheck', () => {
     // eslint-disable-next-line testing-library/no-node-access, testing-library/no-container
     expect(container.querySelector('table')).toBeInTheDocument();
   });
+
+  it('should only include each artifact type once in the list of tabs', () => {
+    mockWorkflow = [
+      {
+        id: '1',
+        label: 'Record',
+      },
+      {
+        id: '2',
+        label: 'Phrase Back Translation',
+      },
+      {
+        id: '3',
+        label: 'Phrase Back Translation',
+      },
+    ];
+    render(<ConsultantCheck width={500} />);
+    expect(screen.queryAllByText('Phrase Back Translation')).toHaveLength(1);
+  });
 });
