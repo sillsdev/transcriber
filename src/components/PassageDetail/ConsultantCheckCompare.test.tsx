@@ -112,7 +112,7 @@ describe('ConsultantCheckCompare', () => {
     expect(screen.getByText('Save')).toHaveClass('Mui-disabled');
   });
 
-  it('should return compare value if save is clicked', () => {
+  it('should not save if nothing has changed', () => {
     const props = {
       compare: ['1', '2'],
       allItems: ['1', '2', '3'],
@@ -129,7 +129,7 @@ describe('ConsultantCheckCompare', () => {
 
     screen.getByText('Save').click();
 
-    expect(props.onChange).toHaveBeenCalledWith(['1', '2']);
+    expect(props.onChange).not.toHaveBeenCalled();
   });
 
   it('should return allItems value if save is clicked after checking 2', () => {

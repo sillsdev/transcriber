@@ -51,7 +51,10 @@ export default function ConsultantCheckCompare({
         <AltButton onClick={() => onChange(compare)}>{t.cancel}</AltButton>
         <PriButton
           onClick={() => onChange(state)}
-          disabled={state.length === 1}
+          disabled={
+            state.length === 1 ||
+            JSON.stringify(state) === JSON.stringify(compare)
+          }
         >
           {t.save}
         </PriButton>
