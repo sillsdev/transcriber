@@ -17,7 +17,10 @@ var mockPassageStepComplete: string | null = null;
 var mockUpdateRecord = jest.fn();
 
 jest.mock('reactn', () => ({
-  useGlobal: () => [[], jest.fn()],
+  useGlobal: (token: string) => {
+    if (token === 'remoteBusy') return [false, jest.fn()];
+    else return [null, jest.fn()];
+  },
 }));
 jest.mock('../../crud', () => ({
   useArtifactType: () => ({
@@ -65,11 +68,13 @@ jest.mock('../../control', () => ({
 }));
 jest.mock('../../selector', () => ({
   consultantSelector: jest.fn(),
+  sharedSelector: jest.fn(),
 }));
 jest.mock('react-redux', () => ({
   useSelector: () => ({
     furtherReview: 'Further Review',
     approved: 'Approved',
+    wait: 'Please wait.',
   }),
   shallowEqual: jest.fn(),
 }));
@@ -91,6 +96,11 @@ jest.mock('../../model/baseModel', () => ({
 }));
 jest.mock('@orbit/data', () => ({
   TransformBuilder: jest.fn(),
+}));
+jest.mock('../../hoc/SnackBar', () => ({
+  useSnackBar: () => ({
+    showMessage: (message: string) => <div>{message}</div>,
+  }),
 }));
 
 describe('ConsultantCheck', () => {

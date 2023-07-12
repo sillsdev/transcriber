@@ -1105,6 +1105,7 @@ const initialState = {
 			"uploadRights": "Upload Rights File",
 			"user": "Team Member",
 			"versionHistory": "Versions",
+			"wait": "Please wait for action to finish.",
 			"yes": "Yes",
 		}
 	}),

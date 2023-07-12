@@ -1040,6 +1040,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "uploadRights": string;
     "user": string;
     "versionHistory": string;
+    "wait": string;
     "yes": string;
 };
 

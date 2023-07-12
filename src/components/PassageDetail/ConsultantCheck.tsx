@@ -24,10 +24,11 @@ import {
 import ConsultantCheckReview from './ConsultantCheckReview';
 import { ActionRow, AltButton, GrowingDiv, PriButton } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
-import { consultantSelector } from '../../selector';
+import { consultantSelector, sharedSelector } from '../../selector';
 import BigDialog from '../../hoc/BigDialog';
 import ConsultantCheckCompare from './ConsultantCheckCompare';
 import MediaPlayer from '../MediaPlayer';
+import { useSnackBar } from '../../hoc/SnackBar';
 
 const ConsCheckComp = 'ConsultantCheckCompare';
 
@@ -76,8 +77,11 @@ export function ConsultantCheck({ width }: IProps) {
   const [mediaId, setMediaId] = useState<string>('');
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   const updateRecord = useUpdateRecord();
+  const [busy] = useGlobal('remoteBusy');
+  const { showMessage } = useSnackBar();
   const { localizedArtifactType } = useArtifactType();
   const t = useSelector(consultantSelector, shallowEqual);
+  const ts = useSelector(sharedSelector, shallowEqual);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -102,6 +106,10 @@ export function ConsultantCheck({ width }: IProps) {
   };
 
   const handleChecked = (item: ArtifactTypeSlug) => async () => {
+    if (busy) {
+      showMessage(ts.wait);
+      return;
+    }
     let newApproved: ArtifactTypeSlug[] = [];
     if (compare.length <= 1) {
       if (approved.includes(item)) {

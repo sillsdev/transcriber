@@ -5170,6 +5170,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.wait">
+         <segment>
+            <source>Please wait for action to finish.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.yes">
          <segment>
             <source>Yes</source>

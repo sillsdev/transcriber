@@ -6033,6 +6033,13 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="shared.wait">
+      		<source>Please wait for action to finish.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ConsultantCheck.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="shared.yes">
             <source>Yes</source>
             <target/>
