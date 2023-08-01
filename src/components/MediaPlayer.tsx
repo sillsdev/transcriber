@@ -233,9 +233,11 @@ export function MediaPlayer(props: IProps) {
 
   return ready && limits?.end ? (
     <>
-      <StyledChip
-        icon={
-          controls ? (
+      {!controls ? (
+        <></>
+      ) : (
+        <StyledChip
+          icon={
             <>
               <StyledTip title={t.resourceStart}>
                 <IconButton
@@ -274,48 +276,46 @@ export function MediaPlayer(props: IProps) {
               {' / '}
               <Duration seconds={(limits?.end ?? 0) - (limits?.start ?? 0)} />
             </>
-          ) : (
-            <></>
-          )
-        }
-        label={
-          <Stack direction="row" sx={{ px: 1 }}>
-            <Slider
-              value={value}
-              onChange={handleSliderChange}
-              size="small"
-              sx={{ color: 'text.secondary' }}
-            />
-          </Stack>
-        }
-        deleteIcon={
-          controls && duration && limits?.end < duration ? (
-            <>
-              <StyledTip title={t.afterResource}>
-                <IconButton
-                  data-testid="skip-next"
-                  sx={{ alignSelf: 'center' }}
-                  onClick={handleSkipNext}
-                >
-                  <SkipNext fontSize="small" />
-                </IconButton>
-              </StyledTip>
-              <SpeedMenu
-                speed={speed}
-                onSpeed={(speed: number) => {
-                  const el = audioRef.current as any; // playbackRate is new
-                  if (el) el.playbackRate = speed;
-                  setSpeed(speed);
-                }}
+          }
+          label={
+            <Stack direction="row" sx={{ px: 1 }}>
+              <Slider
+                value={value}
+                onChange={handleSliderChange}
+                size="small"
+                sx={{ color: 'text.secondary' }}
               />
-            </>
-          ) : (
-            <></>
-          )
-        }
-        onDelete={handleSkipNext}
-        sx={{ ...sx, width: '100%' }}
-      />
+            </Stack>
+          }
+          deleteIcon={
+            duration && limits?.end < duration ? (
+              <>
+                <StyledTip title={t.afterResource}>
+                  <IconButton
+                    data-testid="skip-next"
+                    sx={{ alignSelf: 'center' }}
+                    onClick={handleSkipNext}
+                  >
+                    <SkipNext fontSize="small" />
+                  </IconButton>
+                </StyledTip>
+                <SpeedMenu
+                  speed={speed}
+                  onSpeed={(speed: number) => {
+                    const el = audioRef.current as any; // playbackRate is new
+                    if (el) el.playbackRate = speed;
+                    setSpeed(speed);
+                  }}
+                />
+              </>
+            ) : (
+              <></>
+            )
+          }
+          onDelete={handleSkipNext}
+          sx={{ ...sx, width: '100%' }}
+        />
+      )}
       <audio
         onEnded={ended}
         ref={audioRef}
