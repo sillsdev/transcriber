@@ -35,7 +35,7 @@ export default function ConsultantCheckReview({
   onPlayer,
   playId,
 }: IProps) {
-  const { rowData } = usePassageDetailContext();
+  const { rowData, playerMediafile } = usePassageDetailContext();
   const [allMedia, setAllMedia] = useState<MediaFile[]>([]);
   const { localizedArtifactType } = useArtifactType();
   const t = useSelector(consultantSelector, shallowEqual);
@@ -67,7 +67,12 @@ export default function ConsultantCheckReview({
 
   useEffect(() => {
     if (item === ArtifactTypeSlug.Vernacular) {
-      setAllMedia(rowData[0]?.mediafile ? [rowData[0]?.mediafile] : []);
+      setAllMedia(
+        rowData[0]?.mediafile &&
+          playerMediafile?.id === rowData[0]?.mediafile.id
+          ? [rowData[0]?.mediafile]
+          : []
+      );
     } else {
       const mediaId = rowData[0]?.mediafile.id ?? '';
       const artifactType = localizedArtifactType(item);
