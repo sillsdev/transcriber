@@ -148,10 +148,7 @@ export function ConsultantCheck({ width }: IProps) {
         });
       }
     } catch (err) {}
-    if (
-      approved.length + 1 >= checkItems.length &&
-      !stepComplete(currentstep)
-    ) {
+    if (newApproved.length >= checkItems.length && !stepComplete(currentstep)) {
       setStepComplete(currentstep, true);
     }
   };
