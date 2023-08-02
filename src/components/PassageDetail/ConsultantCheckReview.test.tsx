@@ -4,7 +4,7 @@ import { ArtifactTypeSlug } from '../../crud/artifactTypeSlug';
 import { IRow } from '../../context/PassageDetailContext';
 
 let mockRowData: IRow[] = [];
-var mockPlaerMediafile = {};
+var mockMediafileId = '';
 
 jest.mock('../../crud', () => ({
   ArtifactTypeSlug: jest.requireActual('../../crud/artifactTypeSlug')
@@ -23,7 +23,7 @@ jest.mock('../../crud', () => ({
 }));
 jest.mock('../../context/usePassageDetailContext', () => () => ({
   rowData: mockRowData,
-  playerMediafile: mockPlaerMediafile,
+  mediafileId: mockMediafileId,
 }));
 jest.mock('@mui/icons-material', () => ({}));
 jest.mock('../../selector', () => ({
@@ -41,7 +41,7 @@ describe('ConsultantCheckReview', () => {
   beforeEach(cleanup);
   afterEach(() => {
     mockRowData = [];
-    mockPlaerMediafile = {};
+    mockMediafileId = '';
   });
 
   it('should render', () => {
@@ -69,18 +69,18 @@ describe('ConsultantCheckReview', () => {
   });
 
   it('should not have a missing media message if there is vernacular media', () => {
-    mockPlaerMediafile = {
-      id: '1',
-      attributes: {
-        transcription: 'vernacular transcription',
-      } as any,
-      type: 'mediafile',
-    };
+    mockMediafileId = '1';
     mockRowData = [
       {
         id: '1',
         artifactType: 'Vernacular',
-        mediafile: mockPlaerMediafile,
+        mediafile: {
+          id: '1',
+          attributes: {
+            transcription: 'vernacular transcription',
+          } as any,
+          type: 'mediafile',
+        },
       } as any,
     ];
     render(<ConsultantCheckReview item={ArtifactTypeSlug.Vernacular} />);
@@ -88,18 +88,18 @@ describe('ConsultantCheckReview', () => {
   });
 
   it('should call onPlayer if play button clicked', () => {
-    mockPlaerMediafile = {
-      id: '1',
-      attributes: {
-        transcription: 'vernacular transcription',
-      } as any,
-      type: 'mediafile',
-    };
+    mockMediafileId = '1';
     mockRowData = [
       {
         id: '1',
         artifactType: 'Vernacular',
-        mediafile: mockPlaerMediafile,
+        mediafile: {
+          id: '1',
+          attributes: {
+            transcription: 'vernacular transcription',
+          } as any,
+          type: 'mediafile',
+        },
       } as any,
     ];
     const onPlayer = jest.fn();
@@ -115,18 +115,18 @@ describe('ConsultantCheckReview', () => {
   });
 
   it('should not call onPlayer when vernacular media loaded', () => {
-    mockPlaerMediafile = {
-      id: '1',
-      attributes: {
-        transcription: 'vernacular transcription',
-      } as any,
-      type: 'mediafile',
-    };
+    mockMediafileId = '1';
     mockRowData = [
       {
         id: '1',
         artifactType: 'Vernacular',
-        mediafile: mockPlaerMediafile,
+        mediafile: {
+          id: '1',
+          attributes: {
+            transcription: 'vernacular transcription',
+          } as any,
+          type: 'mediafile',
+        },
       } as any,
     ];
     const onPlayer = jest.fn();
@@ -140,18 +140,18 @@ describe('ConsultantCheckReview', () => {
   });
 
   it('should render a transcription if there is vernacular media transcription', () => {
-    mockPlaerMediafile = {
-      id: '1',
-      attributes: {
-        transcription: 'vernacular transcription',
-      } as any,
-      type: 'mediafile',
-    };
+    mockMediafileId = '1';
     mockRowData = [
       {
         id: '1',
         artifactType: 'Vernacular',
-        mediafile: mockPlaerMediafile,
+        mediafile: {
+          id: '1',
+          attributes: {
+            transcription: 'vernacular transcription',
+          } as any,
+          type: 'mediafile',
+        },
       } as any,
     ];
     render(<ConsultantCheckReview item={ArtifactTypeSlug.Vernacular} />);
@@ -159,16 +159,16 @@ describe('ConsultantCheckReview', () => {
   });
 
   it('should not render a transcription if there is no vernacular media transcription', () => {
-    mockPlaerMediafile = {
-      id: '1',
-      attributes: {} as any,
-      type: 'mediafile',
-    };
+    mockMediafileId = '1';
     mockRowData = [
       {
         id: '1',
         artifactType: 'Vernacular',
-        mediafile: mockPlaerMediafile,
+        mediafile: {
+          id: '1',
+          attributes: {} as any,
+          type: 'mediafile',
+        },
       } as any,
     ];
     render(<ConsultantCheckReview item={ArtifactTypeSlug.Vernacular} />);
@@ -179,18 +179,18 @@ describe('ConsultantCheckReview', () => {
   });
 
   it('should not have a missing media message if there is phrase back translation media', () => {
-    mockPlaerMediafile = {
-      id: '1',
-      attributes: {
-        transcription: 'transcription',
-      } as any,
-      type: 'mediafile',
-    };
+    mockMediafileId = '1';
     mockRowData = [
       {
         id: '1',
         artifactType: 'Vernacular',
-        mediafile: mockPlaerMediafile,
+        mediafile: {
+          id: '1',
+          attributes: {
+            transcription: 'transcription',
+          } as any,
+          type: 'mediafile',
+        },
       } as any,
       {
         type: 'mediafile',
