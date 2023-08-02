@@ -35,7 +35,7 @@ export default function ConsultantCheckReview({
   onPlayer,
   playId,
 }: IProps) {
-  const { rowData, playerMediafile } = usePassageDetailContext();
+  const { rowData, mediafileId } = usePassageDetailContext();
   const [allMedia, setAllMedia] = useState<MediaFile[]>([]);
   const { localizedArtifactType } = useArtifactType();
   const t = useSelector(consultantSelector, shallowEqual);
@@ -68,8 +68,7 @@ export default function ConsultantCheckReview({
   useEffect(() => {
     if (item === ArtifactTypeSlug.Vernacular) {
       setAllMedia(
-        rowData[0]?.mediafile &&
-          playerMediafile?.id === rowData[0]?.mediafile.id
+        rowData[0]?.mediafile && mediafileId === rowData[0]?.mediafile.id
           ? [rowData[0]?.mediafile]
           : []
       );
