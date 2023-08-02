@@ -1210,6 +1210,8 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "cantCopy": string;
     "copyTip": string;
     "copyTranscriptions": string;
+    "creatingDownloadFile": string;
+    "writingDownloadFile": string;
     "downloading": string;
     "downloadingProject": string;
     "downloadProject": string;

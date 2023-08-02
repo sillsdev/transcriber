@@ -82,7 +82,7 @@ export const exportProject =
     errorReporter: any, //global errorReporter
     pendingmsg: string,
     nodatamsg: string,
-    queuedmsg: string,
+    writingmsg: string,
     localizedArtifact: string,
     getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
     importedDate?: Moment,
@@ -201,7 +201,7 @@ export const exportProject =
                 }
                 if (laststartCount > 20) {
                   dispatch({
-                    payload: queuedmsg,
+                    payload: writingmsg,
                     type: EXPORT_PENDING,
                   });
                 } else {

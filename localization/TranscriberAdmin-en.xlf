@@ -5938,6 +5938,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.creatingDownloadFile">
+         <segment>
+            <source>Creating Download File...{0}%</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.writingDownloadFile">
+         <segment>
+            <source>Writing file on server. It could take up to 6 minutes to resume progress.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.downloading">
          <segment>
             <source>Creation complete. Downloading {0}</source>

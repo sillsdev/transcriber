@@ -6929,6 +6929,20 @@
                <context context-type="sourcefile">TranscriptionTab.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="transcriptionTab.creatingDownloadFile">
+            <source>Creating Download File...{0}%</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcriptionTab.writingDownloadFile">
+            <source>Writing file on server. It could take up to 6 minutes to resume progress.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownload.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="transcriptionTab.downloading">
             <source>Creation complete. Downloading {0}</source>
             <target/>
@@ -7099,13 +7113,6 @@
          </trans-unit>
          <trans-unit id="transcriptionTab.plan">
             <source>Plan</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">TranscriptionTab.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="transcriptionTab.queued">
-            <source>Your export has been queued on the media server.  It could take up to 6 minutes to resume progress.  Please wait.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TranscriptionTab.tsx</context>
