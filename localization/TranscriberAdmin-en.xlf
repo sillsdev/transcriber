@@ -5940,7 +5940,7 @@
       </unit>
       <unit id="transcriptionTab.creatingDownloadFile">
          <segment>
-            <source>Creating Download File...{0}%</source>
+            <source>Creating File...{0}%</source>
             <target/>
          </segment>
       </unit>
@@ -6097,12 +6097,6 @@
       <unit id="transcriptionTab.plan">
          <segment>
             <source>Plan</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.queued">
-         <segment>
-            <source>Your export has been queued on the media server.  It could take up to 6 minutes to resume progress.  Please wait.</source>
             <target/>
          </segment>
       </unit>

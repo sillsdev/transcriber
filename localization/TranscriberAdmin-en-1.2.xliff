@@ -6930,7 +6930,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="transcriptionTab.creatingDownloadFile">
-            <source>Creating Download File...{0}%</source>
+            <source>Creating File...{0}%</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjectDownload.tsx</context>
