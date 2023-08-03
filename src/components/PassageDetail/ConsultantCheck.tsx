@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useGlobal } from 'reactn';
 import {
   Tabs,
@@ -77,7 +77,8 @@ export function ConsultantCheck({ width }: IProps) {
   const [mediaId, setMediaId] = useState<string>('');
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   const updateRecord = useUpdateRecord();
-  const [globals] = useGlobal();
+  const [busy, setBusy] = useGlobal('remoteBusy');
+  const commitBusy = useRef(false);
   const { showMessage } = useSnackBar();
   const { localizedArtifactType } = useArtifactType();
   const t = useSelector(consultantSelector, shallowEqual);
@@ -106,11 +107,12 @@ export function ConsultantCheck({ width }: IProps) {
   };
 
   const handleChecked = (item: ArtifactTypeSlug) => async () => {
-    if (globals.remoteBusy) {
+    if (busy || commitBusy.current) {
       showMessage(ts.wait);
       return;
     }
-    globals.remoteBusy = true;
+    setBusy(true);
+    commitBusy.current = true;
     let newApproved: ArtifactTypeSlug[] = [];
     if (compare.length <= 1) {
       if (approved.includes(item)) {
@@ -152,7 +154,8 @@ export function ConsultantCheck({ width }: IProps) {
     if (newApproved.length >= checkItems.length && !stepComplete(currentstep)) {
       setStepComplete(currentstep, true);
     }
-    globals.remoteBusy = false;
+    setBusy(false);
+    commitBusy.current = false;
   };
 
   useEffect(() => {
