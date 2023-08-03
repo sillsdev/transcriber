@@ -478,6 +478,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       setCommentPlaying(!state.commentPlaying);
     };
     const handleOldVernacularPlayEnd = () => {
+      mediaStart.current = undefined;
+      mediaEnd.current = undefined;
       setState((state: ICtxState) => {
         return {
           ...state,
