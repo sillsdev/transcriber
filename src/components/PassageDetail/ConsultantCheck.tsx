@@ -77,7 +77,7 @@ export function ConsultantCheck({ width }: IProps) {
   const [mediaId, setMediaId] = useState<string>('');
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   const updateRecord = useUpdateRecord();
-  const [busy] = useGlobal('remoteBusy');
+  const [busy, setBusy] = useGlobal('remoteBusy');
   const { showMessage } = useSnackBar();
   const { localizedArtifactType } = useArtifactType();
   const t = useSelector(consultantSelector, shallowEqual);
@@ -110,6 +110,7 @@ export function ConsultantCheck({ width }: IProps) {
       showMessage(ts.wait);
       return;
     }
+    setBusy(true);
     let newApproved: ArtifactTypeSlug[] = [];
     if (compare.length <= 1) {
       if (approved.includes(item)) {
@@ -151,6 +152,7 @@ export function ConsultantCheck({ width }: IProps) {
     if (newApproved.length >= checkItems.length && !stepComplete(currentstep)) {
       setStepComplete(currentstep, true);
     }
+    setBusy(false);
   };
 
   useEffect(() => {
