@@ -11,7 +11,7 @@ import {
   Typography,
   TableBody,
 } from '@mui/material';
-import { OrgWorkflowStep } from '../../model';
+import { OrgWorkflowStep, Passage } from '../../model';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import {
   ToolSlug,
@@ -133,19 +133,24 @@ export function ConsultantCheck({ width }: IProps) {
     }
     setApproved(newApproved);
     try {
-      const stepComplete = JSON.parse(passage?.attributes?.stepComplete) || {
-        completed: [],
-        approved: [],
-      };
+      const pasRec = findRecord(memory, 'passage', passage?.id) as
+        | Passage
+        | undefined;
+      const stepComplete = pasRec?.attributes?.stepComplete
+        ? JSON.parse(pasRec?.attributes?.stepComplete)
+        : {
+            completed: [],
+            approved: [],
+          };
       const newStepComplete = JSON.stringify({
         ...stepComplete,
         approved: newApproved,
       });
-      if (newStepComplete !== passage?.attributes?.stepComplete) {
+      if (pasRec && newStepComplete !== pasRec?.attributes?.stepComplete) {
         await updateRecord({
-          ...passage,
+          ...pasRec,
           attributes: {
-            ...passage.attributes,
+            ...pasRec.attributes,
             stepComplete: newStepComplete,
           } as any,
         });
