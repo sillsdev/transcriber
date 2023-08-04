@@ -31,6 +31,8 @@ jest.mock('../../crud', () => ({
     },
   }),
   findRecord: (memory: any, table: any, id: string) => {
+    if (table === 'passage')
+      return { attributes: { stepComplete: mockPassageStepComplete } };
     if (id === '1') return { attributes: { tool: '{"tool": "record"}' } };
     else if (id === '2')
       return { attributes: { tool: '{"tool": "phraseBackTranslate"}' } };
