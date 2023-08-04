@@ -167,7 +167,12 @@ export function ConsultantCheck({ width }: IProps) {
     if (workflow) {
       let newApproved: ArtifactTypeSlug[] = [];
       try {
-        const result = JSON.parse(passage?.attributes?.stepComplete).approved;
+        const pasRec = findRecord(memory, 'passage', passage?.id) as
+          | Passage
+          | undefined;
+        const result =
+          pasRec?.attributes?.stepComplete &&
+          JSON.parse(pasRec?.attributes?.stepComplete).approved;
         if (result && Array.isArray(result)) {
           newApproved = result;
         }
