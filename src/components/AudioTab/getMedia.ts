@@ -29,7 +29,7 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
     planName,
     id: f.id,
     playIcon: playItem,
-    fileName: f.attributes.originalFile,
+    fileName: f.attributes.s3file,
     sectionId: sectionId,
     sectionDesc: getSection(section),
     reference: getReference(passage, allBookData),
