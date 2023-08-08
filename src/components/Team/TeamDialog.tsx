@@ -56,6 +56,7 @@ export function TeamDialog(props: IProps) {
   const t = cardStrings;
   const { CreateOrgWorkflowSteps } = useOrgWorkflowSteps();
   const [memory] = useGlobal('memory');
+  const [isDeveloper] = useGlobal('developer');
   const [process, setProcess] = useState<string>();
   const [processOptions, setProcessOptions] = useState<OptionType[]>([]);
   const savingRef = useRef(false);
@@ -213,35 +214,37 @@ export function TeamDialog(props: IProps) {
           )}
           {mode === DialogMode.edit && (
             <div>
-              <TextField
-                id="select-note-project"
-                select
-                label={t.notesProject}
-                helperText={t.notesHelper}
-                value={noteProjId ?? ''}
-                onChange={handleNoteProjectChange}
-                SelectProps={{
-                  MenuProps: {
-                    sx: menuProps,
-                  },
-                }}
-                sx={textFieldProps}
-                InputProps={{ sx: formText }}
-                InputLabelProps={{ sx: formText }}
-                margin="normal"
-                variant="filled"
-                required={true}
-              >
-                {myProjects
-                  .sort((i, j) =>
-                    i.attributes.name <= j.attributes.name ? -1 : 1
-                  )
-                  .map((option: Project) => (
-                    <MenuItem key={option.id} value={option.id}>
-                      {option.attributes.name}
-                    </MenuItem>
-                  ))}
-              </TextField>
+              {isDeveloper && (
+                <TextField
+                  id="select-note-project"
+                  select
+                  label={t.notesProject}
+                  helperText={t.notesHelper}
+                  value={noteProjId ?? ''}
+                  onChange={handleNoteProjectChange}
+                  SelectProps={{
+                    MenuProps: {
+                      sx: menuProps,
+                    },
+                  }}
+                  sx={textFieldProps}
+                  InputProps={{ sx: formText }}
+                  InputLabelProps={{ sx: formText }}
+                  margin="normal"
+                  variant="filled"
+                  required={true}
+                >
+                  {myProjects
+                    .sort((i, j) =>
+                      i.attributes.name <= j.attributes.name ? -1 : 1
+                    )
+                    .map((option: Project) => (
+                      <MenuItem key={option.id} value={option.id}>
+                        {option.attributes.name}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              )}
               <DeleteExpansion
                 title={t.deleteTeam}
                 explain={t.explainTeamDelete}

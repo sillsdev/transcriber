@@ -788,7 +788,7 @@ export function PlanSheet(props: IProps) {
   }, [currentRow, rowData, rowInfo]);
 
   const filtered = useMemo(() => {
-    console.log('filtered useMemo', filterState);
+    // console.log('filtered useMemo', filterState);
     return (
       !filterState.disabled &&
       (filterState.minStep !== '' ||
