@@ -1290,7 +1290,7 @@ const initialState = {
 			"copyTip": "Copy transcriptions to Clipboard",
 			"copyTranscriptions": "Copy Transcriptions",
 			"creatingDownloadFile": "Creating File...{0}%",
-			"writingDownloadFile": "Writing file on server. It could take up to 6 minutes to resume progress.",
+			"writingDownloadFile": "Writing file...It could take up to 6 minutes to resume progress.",
 			"downloading": "Creation complete. Downloading {0}",
 			"downloadingProject": "Downloading...{0}%",
 			"downloadProject": "Download Audio Project",

@@ -6937,7 +6937,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="transcriptionTab.writingDownloadFile">
-            <source>Writing file on server. It could take up to 6 minutes to resume progress.</source>
+            <source>Writing file...It could take up to 6 minutes to resume progress.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjectDownload.tsx</context>

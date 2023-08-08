@@ -5946,7 +5946,7 @@
       </unit>
       <unit id="transcriptionTab.writingDownloadFile">
          <segment>
-            <source>Writing file on server. It could take up to 6 minutes to resume progress.</source>
+            <source>Writing file...It could take up to 6 minutes to resume progress.</source>
             <target/>
          </segment>
       </unit>

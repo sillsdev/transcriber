@@ -90,6 +90,16 @@ export const exportProject =
     orgWorkflowSteps?: OrgWorkflowStep[]
   ) =>
   async (dispatch: any) => {
+    const sendProgress = (pct: number | string) => {
+      var msg = pendingmsg.replace(
+        typeof pct === 'number' ? '{0}' : '{0}%',
+        pct.toString()
+      );
+      dispatch({
+        payload: msg,
+        type: EXPORT_PENDING,
+      });
+    };
     dispatch({
       payload: pendingmsg.replace('{0}%', ''),
       type: EXPORT_PENDING,
@@ -119,7 +129,9 @@ export const exportProject =
         getOfflineProject,
         importedDate,
         target,
-        orgWorkflowSteps
+        orgWorkflowSteps,
+        exportType === ExportType.ITFSYNC ? undefined : sendProgress,
+        writingmsg
       )
         .then((response) => {
           dispatch({
