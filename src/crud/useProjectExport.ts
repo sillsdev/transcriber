@@ -59,9 +59,9 @@ export const useProjectExport = (props: IProps) => {
       media.length,
       token,
       errorReporter,
-      message || t.exportingProject,
+      message || t.creatingDownloadFile,
       t.noData.replace('{0}', ''),
-      t.queued,
+      t.writingDownloadFile,
       '',
       getOfflineProject
     );

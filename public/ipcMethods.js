@@ -10,6 +10,7 @@ const createAppWindow = require('./app-process');
 const { createAuthWindow, createLogoutWindow } = require('./auth-process');
 const authService = require('./auth-service');
 const fs = require('fs-extra');
+const unzipper = require('unzipper');
 const execa = require('execa');
 const AdmZip = require('adm-zip');
 const {
@@ -248,6 +249,15 @@ const ipcMethods = () => {
 
   ipcMain.handle('zipExtract', async (event, zip, folder, replace) => {
     return admZip.get(zip).extractAllTo(folder, replace);
+  });
+  ipcMain.handle('zipExtractOpen', async (event, zip, folder) => {
+    return new Promise((resolve, reject) => {
+      unzipper.Open.file(zip).then((d) =>
+        d.extract({ path: folder, concurrency: 5 })
+        .then(() => resolve())
+        .catch((err) => { reject(err); }))
+      .catch((err) => { reject(err); });
+    })
   });
 
   ipcMain.handle('zipClose', async (event, zip) => {

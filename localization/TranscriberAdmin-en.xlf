@@ -5938,6 +5938,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.creatingDownloadFile">
+         <segment>
+            <source>Creating File...{0}%</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.writingDownloadFile">
+         <segment>
+            <source>Writing file...It could take up to 6 minutes to resume progress.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.downloading">
          <segment>
             <source>Creation complete. Downloading {0}</source>
@@ -6085,12 +6097,6 @@
       <unit id="transcriptionTab.plan">
          <segment>
             <source>Plan</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.queued">
-         <segment>
-            <source>Your export has been queued on the media server.  It could take up to 6 minutes to resume progress.  Please wait.</source>
             <target/>
          </segment>
       </unit>
