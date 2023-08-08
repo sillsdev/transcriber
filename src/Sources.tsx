@@ -28,6 +28,7 @@ import { electronExport } from './store/importexport/electronExport';
 import { restoreBackup } from '.';
 import { AlertSeverity } from './hoc/SnackBar';
 import { updateBackTranslationType } from './crud/updateBackTranslationType';
+import { updateConsultantWorkflowStep } from './crud/updateConsultantWorkflowStep';
 
 export const Sources = async (
   coordinator: Coordinator,
@@ -310,13 +311,16 @@ export const Sources = async (
   var user = localStorage.getItem('user-id') as string;
   setUser(user);
   if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
-    updateBackTranslationType(
+    await updateBackTranslationType(
       memory,
       tokenCtx.state.accessToken || '',
       user,
       globalStore.errorReporter,
       offlineSetup
     );
+  }
+  if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 5) {
+    await updateConsultantWorkflowStep(memory, user);
   }
   return { syncBuffer, syncFile, goRemote };
 };
