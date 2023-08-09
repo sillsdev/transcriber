@@ -1,6 +1,6 @@
 import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { findRecord, related } from '.';
+import { findRecord, mediaFileName, related } from '.';
 import {
   PassageStateChange,
   ActivityStates,
@@ -91,7 +91,7 @@ export const UpdateMediaStateOps = (
     ops,
     passage,
     isVernacular && state ? state : '',
-    mediaRec.attributes.originalFile + (comment ? ':' + comment : ''),
+    mediaFileName(mediaRec) + (comment ? ':' + comment : ''),
     userId,
     memory
   );
