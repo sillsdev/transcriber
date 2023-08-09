@@ -7,7 +7,7 @@ interface ILatest {
 const versionName = (mf: MediaFile) => {
   const psg = related(mf, 'passage');
   if (psg) return psg;
-  return related(mf, 'plan') + mf.attributes.originalFile;
+  return related(mf, 'plan') + mf.attributes.s3file;
 };
 export const getMediaInPlans = (
   planids: Array<string>,

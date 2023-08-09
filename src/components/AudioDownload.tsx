@@ -10,7 +10,12 @@ import {
 import localStrings from '../selector/localize';
 import { IconButton, IconButtonProps, styled } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/GetAppOutlined';
-import { remoteIdGuid, useFetchMediaUrl, MediaSt } from '../crud';
+import {
+  remoteIdGuid,
+  useFetchMediaUrl,
+  MediaSt,
+  mediaFileName,
+} from '../crud';
 import { loadBlob, removeExtension } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
 
@@ -43,7 +48,7 @@ export const AudioDownload = (props: IProps) => {
     const mediaRec = memory.cache.query((q) =>
       q.findRecord({ type: 'mediafile', id })
     ) as MediaFile;
-    const fullName = mediaRec?.attributes?.originalFile || `media-${id}`;
+    const fullName = mediaFileName(mediaRec) || `media-${id}`;
     const { name, ext } = removeExtension(fullName);
     const version = mediaRec?.attributes?.versionNumber || '1';
     setAudName(`${name}-ver${version}.${ext}`);

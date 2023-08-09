@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { MediaFile } from '../../model';
-import { ArtifactTypeSlug, useArtifactType, related } from '../../crud';
+import {
+  ArtifactTypeSlug,
+  useArtifactType,
+  related,
+  mediaFileName,
+} from '../../crud';
 import { IRow } from '../../context/PassageDetailContext';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import {
@@ -58,10 +63,7 @@ export default function ConsultantCheckReview({
       jStart = parseFloat(JSON.parse(jSeg).start);
       return iStart - jStart;
     } catch (e) {
-      return i.mediafile.attributes.originalFile <=
-        j.mediafile.attributes.originalFile
-        ? -1
-        : 1;
+      return mediaFileName(i.mediafile) <= mediaFileName(j.mediafile) ? -1 : 1;
     }
   };
 

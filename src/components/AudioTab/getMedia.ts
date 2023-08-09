@@ -1,5 +1,5 @@
 import { MediaFile, Passage, Section, BookName } from '../../model';
-import { related } from '../../crud';
+import { mediaFileName, related } from '../../crud';
 import { IRow, getSection, getReference } from '.';
 
 export interface IGetMedia {
@@ -29,7 +29,7 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
     planName,
     id: f.id,
     playIcon: playItem,
-    fileName: f.attributes.s3file,
+    fileName: mediaFileName(f),
     sectionId: sectionId,
     sectionDesc: getSection(section),
     reference: getReference(passage, allBookData),
