@@ -351,11 +351,25 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
         onLoaded && onLoaded();
         setAudioBlob(b);
       } else {
-        showMessage(urlorError);
-        //force it to go get another (unexpired) s3 url
-        fetchMediaUrl({ id: mediaId ?? '' });
-        setLoading(false);
-        onLoaded && onLoaded();
+        if (urlorError.includes('403')) {
+          //force it to go get another (unexpired) s3 url
+          //force requery for new media url
+          fetchMediaUrl({
+            id: '',
+          });
+          waitForIt(
+            'requery url',
+            () => mediaState.id === '',
+            () => false,
+            500
+          ).then(() => {
+            fetchMediaUrl({ id: mediaId ?? '' });
+          });
+        } else {
+          showMessage(urlorError);
+          setLoading(false);
+          onLoaded && onLoaded();
+        }
       }
     });
     if (defaultFilename) setName(defaultFilename);
