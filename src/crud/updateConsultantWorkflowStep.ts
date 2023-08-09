@@ -16,7 +16,7 @@ async function getSteps(
     (s) =>
       Boolean(remoteId(table, s.id, memory.keyMap)) === Boolean(token) &&
       /Consultant/.test(s.attributes.name) &&
-      s.attributes.dateUpdated < '2023-08-09'
+      s.attributes.dateUpdated < '2023-08-25'
   );
 }
 
