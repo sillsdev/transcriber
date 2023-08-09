@@ -59,6 +59,7 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
   const [coordinator] = useGlobal('coordinator');
+  const [offline] = useGlobal('offline');
   const memory = coordinator.getSource('memory') as Memory;
   const { passage, mediafileId, chooserSize, setRecording } =
     usePassageDetailContext();
@@ -107,9 +108,9 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
 
   useEffect(() => {
     setDefaultFileName(
-      passageDefaultFilename(passage, plan, memory, VernacularTag)
+      passageDefaultFilename(passage, plan, memory, VernacularTag, offline)
     );
-  }, [memory, passage, mediafiles, plan]);
+  }, [memory, passage, mediafiles, plan, offline]);
 
   useEffect(() => {
     const mediaRec = findRecord(memory, 'mediafile', mediafileId) as

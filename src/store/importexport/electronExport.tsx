@@ -239,7 +239,7 @@ export async function electronExport(
           scripturePackage,
           projRec,
         } as IExportScripturePath);
-        if (rename) newname = mediapath + nameFromTemplate(mf, memory);
+        if (rename) newname = mediapath + nameFromTemplate(mf, memory, false);
         else newname = fullPath || mediapath + path.basename(mp);
         await AddStreamEntry(mp, newname);
         if (sendProgress && mx % 50 === 0)
