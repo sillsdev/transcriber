@@ -320,7 +320,8 @@ export const Sources = async (
     );
   }
   if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 5) {
-    await updateConsultantWorkflowStep(memory, user);
+    const token = tokenCtx.state.accessToken || null;
+    await updateConsultantWorkflowStep(token, memory, user);
   }
   return { syncBuffer, syncFile, goRemote };
 };
