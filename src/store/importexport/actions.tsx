@@ -868,7 +868,7 @@ export const importProjectToElectron =
           );
         }
         if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 5) {
-          await updateConsultantWorkflowStep(memory, user);
+          await updateConsultantWorkflowStep(token, memory, user);
         }
         AddProjectLoaded(project?.id || '');
         dispatch({
