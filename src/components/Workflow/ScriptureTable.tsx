@@ -150,6 +150,7 @@ export function ScriptureTable(
   const [project] = useGlobal('project');
   const [plan] = useGlobal('plan');
   const [coordinator] = useGlobal('coordinator');
+  const [offline] = useGlobal('offline');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
@@ -727,7 +728,7 @@ export function ScriptureTable(
         var ident = wf.passageId; //make typescript stop complaining
         var passage = memory.cache.query((q) => q.findRecord(ident)) as Passage;
         setDefaultFilename(
-          passageDefaultFilename(passage, plan, memory, VernacularTag)
+          passageDefaultFilename(passage, plan, memory, VernacularTag, offline)
         );
       }
       setRecordAudio(record);

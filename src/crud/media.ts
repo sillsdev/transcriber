@@ -286,6 +286,7 @@ export const scriptureFullPath = (
 export const nameFromTemplate = (
   mf: MediaFile,
   memory: Memory,
+  offline: boolean,
   template: string = ''
 ) => {
   const passRec = findRecord(
@@ -295,7 +296,14 @@ export const nameFromTemplate = (
   ) as Passage;
   if (!passRec) return mf.attributes.originalFile;
   if (template === '') {
-    var tmp = passageDefaultFilename(passRec, '', memory, undefined, '');
+    var tmp = passageDefaultFilename(
+      passRec,
+      '',
+      memory,
+      undefined,
+      offline,
+      ''
+    );
     const ver = mf.attributes?.versionNumber;
     const { ext } = removeExtension(
       mf.attributes.s3file ?? mf.attributes.audioUrl

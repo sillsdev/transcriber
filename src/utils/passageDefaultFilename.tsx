@@ -9,11 +9,15 @@ import { Passage, Plan, Section } from '../model';
 import Memory from '@orbit/memory';
 import { cleanFileName } from '.';
 
-export const passageDefaultSuffix = (planId: string, memory: Memory) => {
+export const passageDefaultSuffix = (
+  planId: string,
+  memory: Memory,
+  offline: boolean
+) => {
   var planRec = memory.cache.query((q) =>
     q.findRecord({ type: 'plan', id: planId })
   ) as Plan;
-  return '_' + planRec.attributes.slug;
+  return '_' + (offline ? 'l' : '') + planRec.attributes.slug;
 };
 const pad3 = (n: number) => ('00' + n).slice(-3);
 
@@ -37,6 +41,7 @@ export const passageDefaultFilename = (
   planId: string,
   memory: Memory,
   artifactType: string | null | undefined,
+  offline: boolean,
   postfix = ''
 ) => {
   if (passage?.attributes) {
@@ -68,7 +73,11 @@ export const passageDefaultFilename = (
         tmp += '_v' + (mediaRec.attributes.versionNumber + 1).toString();
       }
     }
-    return tmp + postfix + (planId ? passageDefaultSuffix(planId, memory) : '');
+    return (
+      tmp +
+      postfix +
+      (planId ? passageDefaultSuffix(planId, memory, offline) : '')
+    );
   }
   return '';
 };
