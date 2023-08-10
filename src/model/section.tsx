@@ -19,7 +19,6 @@ export interface Section extends BaseModel {
     transcriber: RecordRelationship;
     editor: RecordRelationship;
     group: RecordRelationship;
-    artifactCategory: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
 }

@@ -318,7 +318,6 @@ const schemaDefinition: SchemaSettings = {
         editor: { type: 'hasOne', model: 'user' },
         transcriber: { type: 'hasOne', model: 'user' },
         group: { type: 'hasOne', model: 'group' },
-        artifactCategory: { type: 'hasOne', model: 'artifactcategory' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
