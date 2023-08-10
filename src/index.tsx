@@ -49,6 +49,10 @@ const bugsnagClient = prodOrQa
       plugins: [new BugsnagReact()],
       appVersion,
       releaseStage: prod ? 'production' : 'staging',
+      endpoints: {
+        notify: API_CONFIG.notify,
+        sessions: API_CONFIG.sessions,
+      },
     })
   : undefined;
 const SnagBoundary = prodOrQa

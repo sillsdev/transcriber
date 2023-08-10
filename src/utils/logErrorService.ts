@@ -32,8 +32,8 @@ export function logError(
         Bugsnag.notify(typeof error === 'string' ? new Error(error) : error);
     } else if (level === Severity.info || level === Severity.retry) {
       if (typeof error === 'string') {
-        if (error !== '' && reporter.leaveBreadcrumb) {
-          reporter.leaveBreadcrumb(error);
+        if (error !== '' && Bugsnag.leaveBreadcrumb) {
+          Bugsnag.leaveBreadcrumb(error);
         }
       } else {
         if (reporter)
