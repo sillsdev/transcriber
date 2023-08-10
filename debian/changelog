@@ -1,3 +1,63 @@
+audio-project-manager (2.16.6.0)  experimental; urgency=high
+
+  * TT-3040 Category Edit (#1239)
+  * TT-3312 Capture back translation language (#1238)
+  * TT-3845 additional localization
+  * TT-3845 consultant check tool (#1265)
+  * TT-3845c wrap transcription into column
+  * TT-3845d use verbs on buttons
+  * TT-4801 Show All Discussions (#1232)
+  * TT-4809 No more menu adding Off line (#1252)
+  * TT-4809 move context menu to more menu (#1248)
+  * TT-4811 Add configured resource suffix (#1230)
+  * TT-4812 Peer Check controls (#1243)
+  * TT-4953 Audacity context help (#1231)
+  * TT-4972 Working Alone Relaunch (#1246)
+  * TT-5030 don't allow close until import is done (#1254)
+  * TT-5058 Add speed change control (#1258)
+  * TT-5058 tests and icon change (#1260)
+  * TT-5058, TT-5141, TT-5145 segmented playback (#1257)
+  * TT-5095 Cancel off line download (#1236)
+  * TT-5109 Change tool tip on upload (#1235)
+  * TT-5113 Remove off line duplicate creation (#1244)
+  * TT-5114 Record Buttons (#1234)
+  * TT-5123 Bugsnag forwarding (#1286)
+  * TT-5124, TT-4956 refreshing (#1229)
+  * TT-5125 Make Template Label smaller
+  * TT-5128 No launch after update (#1237)
+  * TT-5129 Fix token check logic (#1259)
+  * TT-5133 Language for BT step off line (#1240)
+  * TT-5135 Ignore Invalid Category Changes (#1241)
+  * TT-5139, TT-5137 Save only if changes (#1242)
+  * TT-5142 restart and rewind
+  * TT-5148 Invite Error logout navigation (#1245)
+  * TT-5161 Allow add new category in edit category dialog (#1247)
+  * TT-5168, TT-5169, TT-5170, TT-5172 Fix menu items (#1255)
+  * TT-5173 fix link to software site (#1253)
+  * TT-5175 fix rowIndex check for movePrev (#1256)
+  * TT-5181 key term player update
+  * TT-5181 show comment player
+  * TT-5183 compare choice resets start n end (#1261)
+  * TT-5190 set type as resource for SelectArtifactCategory (#1267)
+  * TT-5196 unzip only (#1281)
+  * TT-5199 check when no steps complete
+  * TT-5201 all approved before step complete
+  * TT-5203 no save compare w/o change
+  * TT-5204c Set busy when checking complete (#1274)
+  * TT-5205 remove resource from tool tip
+  * TT-5211 consultants only see one of each artifact tab
+  * TT-5213 remember marked tabs
+  * TT-5214 use first compare step for table marked
+  * TT-5222 Check if first audio is vernacular (#1270)
+  * TT-5224 use the correct filename (#1278)
+  * TT-5231 setting and resetting step complete (#1273)
+  * TT-5237 Migrate workflowsteps and irgworkflowsteps (#1280)
+  * TT-5239 handle expired url in mediarecord (#1283)
+  * TT-5524 Unique names for files created off line vs on line (#1282)
+  * update language picker
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 10 Aug 2023 15:08:00 -0600
+
 audio-project-manager (2.16.4.0)  experimental; urgency=high
 
   * fixed shared resource loading
