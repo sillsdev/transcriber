@@ -49,7 +49,10 @@ import {
   UpdateRecord,
   UpdateRelatedRecord,
 } from '../../model/baseModel';
-import { useArtifactCategory } from '../../crud/useArtifactCategory';
+import {
+  ArtifactCategoryType,
+  useArtifactCategory,
+} from '../../crud/useArtifactCategory';
 import SelectGroup from '../../control/SelectPeerGroup';
 import SelectUser from '../../control/SelectUser';
 import { LightTooltip, StageReport } from '../../control';
@@ -945,7 +948,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
                 allowNew={userIsAdmin && (!offline || offlineOnly)}
                 required={false}
                 scripture={ScriptureEnum.hide}
-                discussion={true}
+                type={ArtifactCategoryType.Discussion}
               />
               {onAddComplete && (
                 <CommentEditor
