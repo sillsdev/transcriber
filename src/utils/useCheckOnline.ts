@@ -6,8 +6,9 @@ import { OrbitNetworkErrorRetries } from '../api-variable';
 import { API_CONFIG } from '../api-variable';
 import { useDispatch } from 'react-redux';
 import { LocalKey } from '../utils';
+import Bugsnag from '@bugsnag/js';
 
-function Online(doCheck: boolean, cb: (result: boolean) => void) {
+export function Online(doCheck: boolean, cb: (result: boolean) => void) {
   const opts = {
     timeout: 10000,
   };
@@ -39,9 +40,17 @@ export const useCheckOnline = () => {
     cb: (result: boolean) => void,
     forceCheck: boolean = false
   ) => {
+    if (!forceCheck && offline) {
+      localStorage.setItem(LocalKey.connected, 'false');
+    }
     Online(forceCheck || !offline, (result) => {
       if (connected !== result) {
         localStorage.setItem(LocalKey.connected, `${result && !offline}`);
+        if (result) {
+          Bugsnag.resumeSession();
+        } else {
+          Bugsnag.pauseSession();
+        }
         setConnected(result);
         if (result) {
           dispatch(resetOrbitError());
