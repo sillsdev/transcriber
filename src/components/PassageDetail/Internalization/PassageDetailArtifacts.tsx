@@ -52,6 +52,7 @@ import {
   useArtifactCategory,
   IArtifactCategory,
   ArtifactCategoryType,
+  mediaFileName,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
@@ -704,7 +705,7 @@ export function PassageDetailArtifacts(props: IProps) {
       >
         {projResPassageVisible ? (
           <SelectSections
-            title={projMediaRef.current?.attributes?.originalFile ?? ''}
+            title={mediaFileName(projMediaRef.current) ?? ''}
             visual={visual}
             onSelect={handleSelectProjectResourcePassage}
           />
