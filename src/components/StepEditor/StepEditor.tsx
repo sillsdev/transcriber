@@ -1,10 +1,5 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  IStepEditorStrings,
-  IState,
-  IWorkflowStepsStrings,
-  OrgWorkflowStep,
-} from '../../model';
+import { IStepEditorStrings, IState, OrgWorkflowStep } from '../../model';
 import { Button, Box } from '@mui/material';
 import localStrings from '../../selector/localize';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
@@ -52,15 +47,12 @@ interface IProps {
   org: string;
 }
 
-const wfStepsSelector = (state: IState) =>
-  localStrings(state as IState, { layout: 'workflowSteps' });
 export const stepEditorSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'stepEditor' });
 
 export const StepEditor = ({ process, org }: IProps) => {
   const [rows, setRows] = useState<IStepRow[]>([]);
   const [showAll, setShowAll] = useState(false);
-  const t: IWorkflowStepsStrings = useSelector(wfStepsSelector, shallowEqual);
   const se: IStepEditorStrings = useSelector(stepEditorSelector, shallowEqual);
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
@@ -72,7 +64,7 @@ export const StepEditor = ({ process, org }: IProps) => {
     clearRequested,
     clearCompleted,
   } = useContext(UnsavedContext).state;
-  const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();
+  const { GetOrgWorkflowSteps, localizedWorkStep } = useOrgWorkflowSteps();
   const { showMessage } = useSnackBar();
   const saving = useRef(false);
   const toolId = 'stepEditor';
@@ -302,11 +294,6 @@ export const StepEditor = ({ process, org }: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
-  const localName = (name: string) => {
-    const lookUp = toCamel(name);
-    return t.hasOwnProperty(lookUp) ? t.getString(lookUp) : name;
-  };
-
   useEffect(() => {
     GetOrgWorkflowSteps({ process: 'ANY', org, showAll: true }).then(
       (orgSteps) => {
@@ -317,7 +304,7 @@ export const StepEditor = ({ process, org }: IProps) => {
           newRows.push({
             id: s.id,
             seq: s.attributes?.sequencenum,
-            name: localName(s.attributes?.name),
+            name: localizedWorkStep(s.attributes?.name),
             tool: toCamel(tool),
             settings: settings,
             prettySettings: prettySettings(tool, settings),

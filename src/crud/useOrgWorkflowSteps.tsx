@@ -12,6 +12,7 @@ import { logError, Severity, toCamel, waitForIt } from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { shallowEqual, useSelector } from 'react-redux';
 import localStrings from '../selector/localize';
+import { useSnackBar } from '../hoc/SnackBar';
 
 export const defaultWorkflow = 'transcriber';
 
@@ -32,6 +33,7 @@ export const useOrgWorkflowSteps = () => {
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const creatingRef = useRef(false);
+  const { showMessage } = useSnackBar();
 
   const localizedWorkStep = (val: string) => {
     return (t as ISwitches)[toCamel(val)] || val;
@@ -48,7 +50,7 @@ export const useOrgWorkflowSteps = () => {
   };
 
   const AddOrgWFToOps = async (
-    t: TransformBuilder,
+    tb: TransformBuilder,
     wf: WorkflowStep,
     org?: string
   ) => {
@@ -62,11 +64,12 @@ export const useOrgWorkflowSteps = () => {
         ...wf.attributes,
       },
     } as OrgWorkflowStep;
-    ops.push(...AddRecord(t, wfs, user, memory));
+    ops.push(...AddRecord(tb, wfs, user, memory));
     ops.push(
-      ...ReplaceRelatedRecord(t, wfs, 'organization', 'organization', myOrgId)
+      ...ReplaceRelatedRecord(tb, wfs, 'organization', 'organization', myOrgId)
     );
     try {
+      showMessage(t.addingStep + localizedWorkStep(wfs.attributes.name));
       await memory.update(ops);
     } catch (ex) {
       logError(Severity.error, errorReporter, ex as Error);
@@ -109,7 +112,9 @@ export const useOrgWorkflowSteps = () => {
           .findRecords('workflowstep')
           .filter({ attribute: 'process', value: process })
       )) as WorkflowStep[]
-    ).filter((s) => Boolean(s.keys?.remoteId) !== offlineOnly);
+    )
+      .filter((s) => Boolean(s.keys?.remoteId) !== offlineOnly)
+      .sort((a, b) => a.attributes.sequencenum - b.attributes.sequencenum);
     var tb = new TransformBuilder();
     //originally had them all in one ops, but it was too fast
     //we have checks on the back end for duplicate entries (using just type, datecreated, dateupdated) because orbit sometimes sends twice
