@@ -103,11 +103,11 @@ export const useTeamCreate = () => {
     ]);
     if (!offlineOnly) await teamApiPull(orgRec.id); // Update slug value
     await OrgRelated(coordinator, orgRec, user);
-
+    await CreateOrgWorkflowSteps(process, orgRec.id);
     setOrganization(orgRec.id);
     setOrgRole(RoleNames.Admin);
     setDefaultProj(orgRec.id, memory, setProject, setProjectType);
-    await CreateOrgWorkflowSteps(process, orgRec.id);
+
     return orgRec.id;
   };
 
