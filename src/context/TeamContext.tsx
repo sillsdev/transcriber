@@ -102,7 +102,11 @@ const initState = {
   projectCreate: async (project: VProject, team: TeamIdType) => '',
   projectUpdate: (project: VProject) => {},
   projectDelete: (project: VProject) => {},
-  teamCreate: (team: Organization, cb?: (org: string) => Promise<void>) => {},
+  teamCreate: (
+    team: Organization,
+    process: string,
+    cb?: (org: string) => Promise<void>
+  ) => {},
   teamUpdate: (team: Organization) => {},
   teamDelete: async (team: Organization) => {},
   isAdmin: (team: Organization) => false,
@@ -356,9 +360,10 @@ const TeamProvider = withData(mapRecordsToProps)(
 
     const teamCreate = (
       team: Organization,
+      process: string,
       cb?: (org: string) => Promise<void>
     ) => {
-      orbitTeamCreate(team, cb);
+      orbitTeamCreate(team, process, cb);
     };
 
     const teamUpdate = (team: Organization) => {

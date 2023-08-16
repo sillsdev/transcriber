@@ -1437,6 +1437,7 @@ const initialState = {
 	}),
 	"workflowSteps": new LocalizedStrings({
 		"en": {
+			"addingStep": "Adding Workflow Step:",
 			"backTranslation": "Back Translate",
 			"communityTest1": "Community Test 1",
 			"communityTest2": "Community Test 2",

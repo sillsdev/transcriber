@@ -8,7 +8,7 @@ import {
   ISharedStrings,
 } from '../model';
 import { useCheckOnline, cleanFileName } from '../utils';
-import { offlineError, useProjectType, useRole } from '.';
+import { offlineError, useOrgWorkflowSteps, useProjectType, useRole } from '.';
 import { useSnackBar } from '../hoc/SnackBar';
 import Memory from '@orbit/memory';
 import Coordinator from '@orbit/coordinator';
@@ -20,6 +20,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../selector';
 
 export const useTeamCreate = () => {
+  const { CreateOrgWorkflowSteps } = useOrgWorkflowSteps();
   const [coordinator] = useGlobal('coordinator');
   const [user] = useGlobal('user');
   const [, setOrganization] = useGlobal('organization');
@@ -89,10 +90,11 @@ export const useTeamCreate = () => {
 
   interface ICreateOrgProps {
     orgRec: Organization;
+    process: string;
   }
 
   const createOrg = async (props: ICreateOrgProps) => {
-    const { orgRec } = props;
+    const { orgRec, process } = props;
 
     const memory = coordinator.getSource('memory') as Memory;
     await memory.update((t: TransformBuilder) => [
@@ -105,10 +107,15 @@ export const useTeamCreate = () => {
     setOrganization(orgRec.id);
     setOrgRole(RoleNames.Admin);
     setDefaultProj(orgRec.id, memory, setProject, setProjectType);
+    await CreateOrgWorkflowSteps(process, orgRec.id);
     return orgRec.id;
   };
 
-  return (organization: Organization, cb?: (org: string) => void) => {
+  return (
+    organization: Organization,
+    process: string,
+    cb?: (org: string) => void
+  ) => {
     const { name, description, websiteUrl, logoUrl, publicByDefault } =
       organization?.attributes;
     let orgRec = {
@@ -127,7 +134,7 @@ export const useTeamCreate = () => {
 
     if (!workingOnItRef.current) {
       workingOnItRef.current = true;
-      createOrg({ orgRec })
+      createOrg({ orgRec, process })
         .then((org: string) => {
           workingOnItRef.current = false;
           if (cb) cb(org);

@@ -7741,6 +7741,13 @@
                <context context-type="sourcefile">welcome.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="workflowSteps.addingStep">
+            <source>Adding Workflow Step:</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="workflowSteps.backTranslation">
             <source>Back Translate</source>
             <target/>

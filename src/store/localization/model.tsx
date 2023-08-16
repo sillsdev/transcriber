@@ -1350,6 +1350,7 @@ export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods {
+    "addingStep": string;
     "backTranslation": string;
     "communityTest1": string;
     "communityTest2": string;

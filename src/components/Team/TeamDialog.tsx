@@ -24,14 +24,16 @@ import {
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
 import { defaultWorkflow, related } from '../../crud';
-import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 
 interface IRecordProps {
   organizations: Array<Organization>;
   projects: Array<Project>;
 }
-
-interface IProps extends IRecordProps, IDialog<Organization> {
+interface ITeamDialog {
+  team: Organization;
+  process?: string;
+}
+interface IProps extends IRecordProps, IDialog<ITeamDialog> {
   onDelete?: (team: Organization) => void;
 }
 const formText = { fontSize: 'small' } as SxProps;
@@ -54,7 +56,6 @@ export function TeamDialog(props: IProps) {
   const ctx = React.useContext(TeamContext);
   const { cardStrings } = ctx.state;
   const t = cardStrings;
-  const { CreateOrgWorkflowSteps } = useOrgWorkflowSteps();
   const [memory] = useGlobal('memory');
   const [isDeveloper] = useGlobal('developer');
   const [process, setProcess] = useState<string>();
@@ -77,7 +78,7 @@ export function TeamDialog(props: IProps) {
     savingRef.current = true;
     const current =
       mode === DialogMode.edit && values
-        ? values
+        ? values.team
         : ({ attributes: {} } as Organization);
     if (current.hasOwnProperty('relationships')) delete current?.relationships;
     const team = {
@@ -89,27 +90,24 @@ export function TeamDialog(props: IProps) {
         },
       },
     } as Organization;
-    onCommit(team, async (id: string) => {
-      if (mode === DialogMode.add) {
-        CreateOrgWorkflowSteps(process || defaultWorkflow, id).finally(() => {
-          setProcess(undefined);
-          savingRef.current = false;
-        });
-      } else {
+    onCommit(
+      { team, process: process || defaultWorkflow },
+      async (id: string) => {
+        setProcess(undefined);
         savingRef.current = false;
       }
-    });
+    );
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.persist();
-    if (values?.attributes.name !== e.target.value) setChanged(true);
+    if (values?.team.attributes.name !== e.target.value) setChanged(true);
     setName(e.target.value);
   };
 
   const handleDelete = () => {
     savingRef.current = true;
-    const team = { ...values, attributes: { name } } as Organization;
+    const team = { ...values?.team, attributes: { name } } as Organization;
     onDelete && onDelete(team);
     savingRef.current = false;
   };
@@ -119,7 +117,7 @@ export function TeamDialog(props: IProps) {
   };
 
   const nameInUse = (newName: string): boolean => {
-    if (newName === values?.attributes.name) return false;
+    if (newName === values?.team.attributes.name) return false;
     const sameNameRec = organizations.filter(
       (o) => o?.attributes?.name === newName
     );
@@ -129,7 +127,7 @@ export function TeamDialog(props: IProps) {
   useEffect(() => {
     if (isOpen && values && projects) {
       setMyProjects(
-        projects.filter((p) => related(p, 'organization') === values.id)
+        projects.filter((p) => related(p, 'organization') === values.team.id)
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,7 +135,7 @@ export function TeamDialog(props: IProps) {
 
   useEffect(() => {
     if (isOpen && !name) {
-      setName(values?.attributes?.name || '');
+      setName(values?.team.attributes?.name || '');
       setNoteProjId(values ? related(values, 'noteProject') : '');
     } else if (!isOpen) {
       reset();
