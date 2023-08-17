@@ -7,7 +7,7 @@
 	<xsl:output omit-xml-declaration="yes"/>
 	<!-- This document is exported from a folder in SILTranscriberTranslations.zip and renamed according to the language -->
 	<xsl:variable name="crowd"
-		select="document('file:/C:/Users/Trihus/git/transcriber/localization/TranscriberAdmin-ru-1.2.xliff')"/>
+		select="document('file:/C:/Users/Trihus/git/transcriber/localization/TranscriberAdmin-fr-1.2.xliff')"/>
 
 	<xsl:template match="node() |@*">
 		<xsl:variable name="id" select="parent::*/@id"/>
