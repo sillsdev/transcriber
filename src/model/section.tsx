@@ -5,6 +5,9 @@ export interface Section extends BaseModel {
   attributes: {
     sequencenum: number;
     name: string;
+    graphics: string;
+    published: boolean;
+    level: number;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
@@ -15,6 +18,7 @@ export interface Section extends BaseModel {
     passages: RecordRelationship;
     transcriber: RecordRelationship;
     editor: RecordRelationship;
+    group: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
 }

@@ -17,6 +17,11 @@ export interface IArtifactCategory {
   org: string;
   id: string;
 }
+export enum ArtifactCategoryType {
+  Resource = 'resource',
+  Discussion = 'discussion',
+  Note = 'note',
+}
 const stringSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'artifactCategory' });
 
@@ -53,10 +58,7 @@ export const useArtifactCategory = (teamId?: string) => {
     return aRec && aRec.attributes ? aRec.attributes.categoryname : '';
   };
 
-  const getArtifactCategorys = async (
-    resource: boolean,
-    discussion: boolean
-  ) => {
+  const getArtifactCategorys = async (type: ArtifactCategoryType) => {
     const categorys: IArtifactCategory[] = [];
     /* wait for new categories remote id to fill in */
     await waitForIt(
@@ -65,33 +67,37 @@ export const useArtifactCategory = (teamId?: string) => {
       () => offline && !offlineOnly,
       200
     );
-    const orgrecs: ArtifactCategory[] = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('artifactcategory')
-    ) as any;
-    orgrecs
-      .filter(
-        (r) =>
-          (related(r, 'organization') === curOrg ||
-            related(r, 'organization') === null) &&
-          Boolean(r.keys?.remoteId) !== offlineOnly &&
-          r.attributes.resource === resource &&
-          r.attributes.discussion === discussion
-      )
-      .forEach((r) =>
-        categorys.push({
-          slug: r.attributes.categoryname,
-          category: localizedArtifactCategory(r.attributes.categoryname),
-          org: related(r, 'organization') ?? '',
-          id: r.id,
-        })
-      );
+    var orgrecs: ArtifactCategory[] = (
+      memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('artifactcategory')
+      ) as ArtifactCategory[]
+    ).filter(
+      (r) =>
+        (related(r, 'organization') === curOrg ||
+          related(r, 'organization') === null) &&
+        Boolean(r.keys?.remoteId) !== offlineOnly
+    );
+    if (type === ArtifactCategoryType.Resource)
+      orgrecs = orgrecs.filter((r) => r.attributes.resource);
+    else if (type === ArtifactCategoryType.Discussion)
+      orgrecs = orgrecs.filter((r) => r.attributes.discussion);
+    else if (type === ArtifactCategoryType.Note)
+      orgrecs = orgrecs.filter((r) => r.attributes.note);
+
+    orgrecs.forEach((r) =>
+      categorys.push({
+        slug: r.attributes.categoryname,
+        category: localizedArtifactCategory(r.attributes.categoryname),
+        org: related(r, 'organization') ?? '',
+        id: r.id,
+      })
+    );
     return categorys;
   };
 
   const isDuplicateCategory = async (
     newArtifactCategory: string,
-    resource: boolean,
-    discussion: boolean
+    type: ArtifactCategoryType
   ) => {
     //check for duplicate
     const orgrecs: ArtifactCategory[] = memory.cache.query((q: QueryBuilder) =>
@@ -106,7 +112,7 @@ export const useArtifactCategory = (teamId?: string) => {
     });
     if (dup) return true;
     //now check duplicate localized
-    const ac = (await getArtifactCategorys(resource, discussion)).filter(
+    const ac = (await getArtifactCategorys(type)).filter(
       (c) => c.category === newArtifactCategory
     );
     if (ac.length > 0) return true;
@@ -115,19 +121,19 @@ export const useArtifactCategory = (teamId?: string) => {
 
   const addNewArtifactCategory = async (
     newArtifactCategory: string,
-    resource: boolean,
-    discussion: boolean
+    type: ArtifactCategoryType
   ) => {
     if (!/^\s*$/.test(newArtifactCategory)) {
-      if (await isDuplicateCategory(newArtifactCategory, resource, discussion))
+      if (await isDuplicateCategory(newArtifactCategory, type))
         return 'duplicate';
 
       const artifactCategory: ArtifactCategory = {
         type: 'artifactcategory',
         attributes: {
           categoryname: newArtifactCategory,
-          resource: resource,
-          discussion: discussion,
+          resource: type === ArtifactCategoryType.Resource,
+          discussion: type === ArtifactCategoryType.Discussion,
+          note: type === ArtifactCategoryType.Note,
         },
       } as any;
       const t = new TransformBuilder();

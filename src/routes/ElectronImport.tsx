@@ -1,4 +1,3 @@
-import AdmZip from 'adm-zip';
 import path from 'path-browserify';
 import moment, { Moment } from 'moment';
 import { Project, IElectronImportStrings, IState, IApiError } from '../model';
@@ -52,7 +51,7 @@ export const useElectronImport = () => {
   const { showTitledMessage } = useSnackBar();
   const getOfflineProject = useOfflnProjRead();
   const AddProjectLoaded = useProjectsLoaded();
-  const zipRef = useRef<AdmZip>();
+  const zipRef = useRef<string>();
   const t = useSelector(stringSelector, shallowEqual) as IElectronImportStrings;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const { getTypeId } = useArtifactType();
@@ -67,7 +66,7 @@ export const useElectronImport = () => {
   };
   //var importStatus = useSelector(importStatusSelector, shallowEqual);
 
-  const getData = async (zip: AdmZip, name: string) =>
+  const getData = async (zip: string, name: string) =>
     ((await ipc?.zipReadText(zip, name)) as string).replace(
       /(\r\n|\n|\r)/gm,
       ''
@@ -83,7 +82,7 @@ export const useElectronImport = () => {
       //they didn't pick a file
       return invalidReturn;
     }
-    var zip = (await ipc?.zipOpen(filePaths[0])) as AdmZip;
+    var zip = await ipc?.zipOpen(filePaths[0]);
     let valid = false;
     var exportTime: Moment = moment.utc();
     var exportDate = '';

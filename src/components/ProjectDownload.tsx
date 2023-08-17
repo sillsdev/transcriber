@@ -25,7 +25,6 @@ import {
   PathType,
   Severity,
 } from '../utils';
-import AdmZip from 'adm-zip';
 import { Operation } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 const ipc = (window as any)?.electron;
@@ -70,7 +69,7 @@ export const ProjectDownload = (
   const doProjectExport = useProjectExport({
     exportProject,
     t,
-    message: t.downloadingProject,
+    message: t.creatingDownloadFile,
   });
   const [progress, setProgress] = React.useState<Steps>(Steps.Prepare);
   const [steps, setSteps] = React.useState<string[]>([]);
@@ -202,9 +201,7 @@ export const ProjectDownload = (
     if (progress === Steps.Import) {
       (async () => {
         const localPath = dataPath(exportName, PathType.ZIP);
-        const zip = (await ipc?.zipOpen(localPath)) as AdmZip;
-        await ipc?.zipExtract(zip, dataPath(), true);
-        await ipc?.zipClose(zip);
+        await ipc?.zipExtractOpen(localPath, dataPath());
         offlineProjectUpdateFilesDownloaded(
           projectIds[currentStep],
           offlineUpdates,

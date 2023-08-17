@@ -15,7 +15,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
-import { useArtifactCategory, related } from '../../../crud';
+import { useArtifactCategory, related, mediaFileName } from '../../../crud';
 import {
   sharedSelector,
   passageDetailArtifactsSelector,
@@ -117,7 +117,7 @@ export const SelectProjectResource = (props: IProps) => {
             </ListItemIcon>
             <ListItemText
               primary={r.attributes?.topic}
-              secondary={r.attributes?.originalFile}
+              secondary={mediaFileName(r)}
             />
             <ListItemSecondaryAction>
               <>
@@ -148,7 +148,7 @@ export const SelectProjectResource = (props: IProps) => {
         <Confirm
           text={ts.delete.replace(
             '{0}',
-            (confirm.attributes.topic || confirm.attributes.originalFile) +
+            (confirm.attributes.topic || mediaFileName(confirm)) +
               t.resourcesDeleted.replace(
                 '{0}',
                 media.current?.length.toString() || '0'

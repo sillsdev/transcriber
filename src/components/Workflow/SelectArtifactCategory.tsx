@@ -1,6 +1,7 @@
 import { Box, BoxProps, styled, SxProps, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
+  ArtifactCategoryType,
   IArtifactCategory,
   useArtifactCategory,
 } from '../../crud/useArtifactCategory';
@@ -27,8 +28,7 @@ interface IProps extends IRecordProps {
   required: boolean;
   allowNew?: boolean;
   scripture?: ScriptureEnum;
-  resource?: boolean;
-  discussion?: boolean;
+  type: ArtifactCategoryType;
   disabled?: boolean;
 }
 
@@ -57,8 +57,7 @@ export const SelectArtifactCategory = (props: IProps) => {
     artifactCategories,
     initCategory,
     scripture,
-    resource,
-    discussion,
+    type,
     disabled,
   } = props;
   const [categoryId, setCategoryId] = useState(initCategory);
@@ -77,10 +76,7 @@ export const SelectArtifactCategory = (props: IProps) => {
   }, [initCategory]);
 
   const getCategorys = async () => {
-    var cats = await getArtifactCategorys(
-      resource || false,
-      discussion || false
-    );
+    var cats = await getArtifactCategorys(type);
     if (scripture === ScriptureEnum.hide)
       cats = cats.filter((c) => !scriptureTypeCategory(c.slug));
 
@@ -176,8 +172,7 @@ export const SelectArtifactCategory = (props: IProps) => {
       </TextField>
       {showNew && (
         <NewArtifactCategory
-          discussion={discussion}
-          resource={resource}
+          type={type}
           onAdded={categoryAdded}
           onCancelled={cancelNewCategory}
         />

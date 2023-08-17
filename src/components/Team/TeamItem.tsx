@@ -35,7 +35,6 @@ export const TeamItem = (props: IProps) => {
   const { setMyOrgRole } = useRole();
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [changed] = useGlobal('changed');
-
   const handleMembers = (team: Organization) => () => {
     setOrganization(team.id);
     setMyOrgRole(team.id);
@@ -47,11 +46,11 @@ export const TeamItem = (props: IProps) => {
   };
 
   const handleCommitSettings = (
-    team: Organization,
+    values: { team: Organization; process: string },
     cb?: (id: string) => Promise<void>
   ) => {
-    teamUpdate(team);
-    cb && cb(team.id);
+    teamUpdate(values.team);
+    cb && cb(values.team.id);
     setEditOpen(false);
   };
 
@@ -116,7 +115,7 @@ export const TeamItem = (props: IProps) => {
       </TeamHeadDiv>
       <TeamDialog
         mode={DialogMode.edit}
-        values={team}
+        values={{ team }}
         isOpen={editOpen}
         onOpen={setEditOpen}
         onCommit={handleCommitSettings}

@@ -35,7 +35,7 @@ export const KeyTermChip = ({
       onClick={onClick}
       onDelete={onDelete}
       size="small"
-      sx={{ mr: 1, mb: 1 }}
+      sx={{ mr: 1, mb: 1, width: 'fit-content' }}
     />
   );
 };

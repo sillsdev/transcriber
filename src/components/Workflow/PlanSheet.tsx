@@ -255,12 +255,12 @@ export function PlanSheet(props: IProps) {
 
   const onSectionAbove = () => {
     //we'll find a section before we get past 0
-    var row = currentRow;
+    var row = currentRow - 1;
     while (!isSection(row)) row -= 1;
     addSection(row);
   };
   const onPassageBelow = () => {
-    addPassage(currentRow, false);
+    addPassage(currentRow - 1, false);
   };
   const onPassageLast = () => {
     //we're on a section so find our last row and add it below it
@@ -270,11 +270,13 @@ export function PlanSheet(props: IProps) {
   };
 
   const onPassageToPrev = () => {
-    movePassage(currentRow, true);
+    //convert from currentRow with includes header
+    movePassage(currentRow - 1, true);
   };
 
   const onPassageToNext = () => {
-    movePassage(currentRow, false);
+    //convert from currentRow with includes header
+    movePassage(currentRow - 1, false);
   };
 
   const onSectionEnd = () => {
@@ -697,11 +699,7 @@ export function PlanSheet(props: IProps) {
                         : undefined
                     }
                     onSectionAbove={
-                      !readonly &&
-                      !filtered &&
-                      currentRow >= 0 &&
-                      rowInfo.length > 0 &&
-                      section
+                      !readonly && !filtered && rowInfo.length > 0 && section
                         ? onSectionAbove
                         : undefined
                     }
@@ -718,7 +716,7 @@ export function PlanSheet(props: IProps) {
                       !readonly &&
                       !filtered &&
                       !inlinePassages &&
-                      rowIndex > 2 &&
+                      rowIndex > 1 &&
                       passage &&
                       isSection(rowIndex - 1)
                         ? onPassageToPrev
@@ -790,7 +788,7 @@ export function PlanSheet(props: IProps) {
   }, [currentRow, rowData, rowInfo]);
 
   const filtered = useMemo(() => {
-    console.log('filtered useMemo', filterState);
+    // console.log('filtered useMemo', filterState);
     return (
       !filterState.disabled &&
       (filterState.minStep !== '' ||
@@ -828,7 +826,7 @@ export function PlanSheet(props: IProps) {
                     !filtered && !inlinePassages ? onPassageBelow : undefined
                   }
                   onPassageEnd={
-                    !filtered && currentRow !== rowInfo.length - 1
+                    !filtered && currentRow !== rowInfo.length
                       ? onPassageEnd
                       : undefined
                   }
@@ -838,7 +836,7 @@ export function PlanSheet(props: IProps) {
                       : undefined
                   }
                   onSectionAbove={
-                    !filtered && currentRow >= 0 && rowInfo.length > 0
+                    !filtered && currentRow > 0 && rowInfo.length > 0
                       ? onSectionAbove
                       : undefined
                   }
@@ -909,24 +907,24 @@ export function PlanSheet(props: IProps) {
             parsePaste={parsePaste}
             onSelect={handleSelect}
           />
+          {confirmAction !== '' ? (
+            <Confirm
+              text={t.confirm
+                .replace('{0}', confirmAction)
+                .replace('{1}', check.length.toString())}
+              yesResponse={handleActionConfirmed}
+              noResponse={handleActionRefused}
+            />
+          ) : (
+            <></>
+          )}
+          <MediaPlayer
+            srcMediaId={srcMediaId}
+            onEnded={playEnded}
+            requestPlay={mediaPlaying}
+          />
         </ContentDiv>
       </div>
-      {confirmAction !== '' ? (
-        <Confirm
-          text={t.confirm
-            .replace('{0}', confirmAction)
-            .replace('{1}', check.length.toString())}
-          yesResponse={handleActionConfirmed}
-          noResponse={handleActionRefused}
-        />
-      ) : (
-        <></>
-      )}
-      <MediaPlayer
-        srcMediaId={srcMediaId}
-        onEnded={playEnded}
-        requestPlay={mediaPlaying}
-      />
     </Box>
   );
 }

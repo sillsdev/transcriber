@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Box, MenuItem, SxProps, TextField } from '@mui/material';
-import {
-  ArtifactTypeSlug,
-  IArtifactType,
-  useArtifactType,
-} from '../../crud/useArtifactType';
+import { ArtifactTypeSlug, IArtifactType, useArtifactType } from '../../crud';
 import { ISelectArtifactTypeStrings } from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { artifactTypeSelector } from '../../selector';

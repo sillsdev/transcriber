@@ -283,7 +283,12 @@ export const AppHead = (props: IProps) => {
   }, [isMounted]);
 
   useEffect(() => {
-    if (latestVersion === '' && version !== '' && updates) {
+    if (
+      latestVersion === '' &&
+      version !== '' &&
+      updates &&
+      localStorage.getItem(LocalKey.connected) !== 'false'
+    ) {
       var bodyFormData = new FormData();
       bodyFormData.append('env', navigator.userAgent);
       axiosPost('userversions/2/' + version, bodyFormData)

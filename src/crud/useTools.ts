@@ -2,33 +2,20 @@ import { useState } from 'react';
 import { IState, OptionType, IToolStrings } from '../model';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
-
-export enum ToolSlug {
-  Resource = 'resource',
-  Record = 'record',
-  KeyTerm = 'keyterm',
-  TeamCheck = 'teamCheck',
-  Discuss = 'discuss',
-  Transcribe = 'transcribe',
-  PhraseBackTranslate = 'phraseBackTranslate',
-  WholeBackTranslate = 'wholeBackTranslate',
-  Paratext = 'paratext',
-  Community = 'community',
-  Export = 'export',
-  Done = 'done',
-}
+import { ToolSlug } from '.';
 
 const toolSlugs = [
   ToolSlug.Resource,
   ToolSlug.Record,
   ToolSlug.KeyTerm,
   ToolSlug.TeamCheck,
+  ToolSlug.Community,
   ToolSlug.Discuss,
   ToolSlug.Transcribe,
   ToolSlug.PhraseBackTranslate,
   ToolSlug.WholeBackTranslate,
   ToolSlug.Paratext,
-  ToolSlug.Community,
+  ToolSlug.ConsultantCheck,
   ToolSlug.Export,
   ToolSlug.Done,
 ];

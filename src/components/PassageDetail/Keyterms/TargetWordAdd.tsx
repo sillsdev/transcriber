@@ -247,28 +247,32 @@ export default function TargetWordAdd(props: IProps) {
               {hasContent() && (
                 <>
                   <Tooltip title={t.save}>
-                    <IconButton
-                      id="save-translation"
-                      aria-label="save target term"
-                      onClick={handleOk}
-                      onMouseDown={handleMouseDownSave}
-                      disabled={recording || (!canSave && !curText)}
-                      edge="end"
-                    >
-                      <CheckIcon fontSize="small" />
-                    </IconButton>
+                    <span>
+                      <IconButton
+                        id="save-translation"
+                        aria-label="save target term"
+                        onClick={handleOk}
+                        onMouseDown={handleMouseDownSave}
+                        disabled={recording || (!canSave && !curText)}
+                        edge="end"
+                      >
+                        <CheckIcon fontSize="small" />
+                      </IconButton>
+                    </span>
                   </Tooltip>
                   <Tooltip title={t.cancel}>
-                    <IconButton
-                      id="cancel-translation"
-                      aria-label="save target term"
-                      onClick={handleCancel}
-                      onMouseDown={handleMouseDownSave}
-                      disabled={recording}
-                      edge="end"
-                    >
-                      <CancelIcon fontSize="small" />
-                    </IconButton>
+                    <span>
+                      <IconButton
+                        id="cancel-translation"
+                        aria-label="save target term"
+                        onClick={handleCancel}
+                        onMouseDown={handleMouseDownSave}
+                        disabled={recording}
+                        edge="end"
+                      >
+                        <CancelIcon fontSize="small" />
+                      </IconButton>{' '}
+                    </span>
                   </Tooltip>
                 </>
               )}

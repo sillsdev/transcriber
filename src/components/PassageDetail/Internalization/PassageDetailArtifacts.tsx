@@ -51,6 +51,8 @@ import {
   findRecord,
   useArtifactCategory,
   IArtifactCategory,
+  ArtifactCategoryType,
+  mediaFileName,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
@@ -75,9 +77,11 @@ import {
 } from '../../../utils';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
-  margin: theme.spacing(1),
+  marginRight: theme.spacing(2),
+  marginTop: theme.spacing(1),
   width: '100%',
   '& audio': {
+    height: '40px',
     display: 'flex',
     width: 'inherit',
   },
@@ -159,9 +163,8 @@ export function PassageDetailArtifacts(props: IProps) {
   const { showMessage } = useSnackBar();
   const [confirm, setConfirm] = useState('');
   const { waitForSave } = useContext(UnsavedContext).state;
-  const mediaStart = useRef<number | undefined>();
-  const mediaEnd = useRef<number | undefined>();
-  const mediaPosition = useRef<number | undefined>();
+  const [mediaStart, setMediaStart] = useState<number | undefined>();
+  const [mediaEnd, setMediaEnd] = useState<number | undefined>();
   const projectResourceSave = useProjectResourceSave();
   const { userIsAdmin } = useRole();
   const resourceType = useMemo(() => {
@@ -208,10 +211,13 @@ export function PassageDetailArtifacts(props: IProps) {
         const regions = JSON.parse(segs);
         if (regions.length > 0) {
           const { start, end } = regions[0];
-          mediaStart.current = start;
-          mediaEnd.current = end;
+          setMediaStart(start);
+          setMediaEnd(end);
           setMediaSelected(id, start, end);
           return;
+        } else {
+          setMediaStart(undefined);
+          setMediaEnd(undefined);
         }
       }
       setSelected(id, PlayInPlayer.no);
@@ -477,7 +483,9 @@ export function PassageDetailArtifacts(props: IProps) {
   }, [sectionResources]);
 
   useEffect(() => {
-    getArtifactCategorys(true, false).then((cats) => (catRef.current = cats));
+    getArtifactCategorys(ArtifactCategoryType.Resource).then(
+      (cats) => (catRef.current = cats)
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -582,26 +590,14 @@ export function PassageDetailArtifacts(props: IProps) {
   };
 
   const handleEnded = () => {
-    mediaStart.current = undefined;
-    mediaEnd.current = undefined;
-    mediaPosition.current = undefined;
     setPlayItem('');
     handleItemPlayEnd();
   };
 
-  const handleDuration = (duration: number) => {
-    mediaPosition.current = mediaStart.current ?? 0;
-    mediaStart.current = undefined;
+  const handleLoaded = () => {
     setItemPlaying(true);
   };
 
-  const handlePosition = (position: number) => {
-    if (mediaEnd.current) {
-      if (position >= mediaEnd.current) {
-        handleEnded();
-      }
-    }
-  };
   return (
     <>
       <Box sx={{ display: 'flex', flexDirection: 'row', flexGrow: 1, pr: 2 }}>
@@ -613,11 +609,10 @@ export function PassageDetailArtifacts(props: IProps) {
             srcMediaId={playItem}
             requestPlay={itemPlaying}
             onEnded={handleEnded}
-            onDuration={handleDuration}
-            onPosition={handlePosition}
-            position={mediaPosition.current}
+            onLoaded={handleLoaded}
             onTogglePlay={handleItemTogglePlay}
             controls={playItem !== ''}
+            limits={{ start: mediaStart, end: mediaEnd }}
           />
         </MediaContainer>
         {otherResourcesAvailable && (
@@ -710,7 +705,7 @@ export function PassageDetailArtifacts(props: IProps) {
       >
         {projResPassageVisible ? (
           <SelectSections
-            title={projMediaRef.current?.attributes?.originalFile ?? ''}
+            title={mediaFileName(projMediaRef.current) ?? ''}
             visual={visual}
             onSelect={handleSelectProjectResourcePassage}
           />

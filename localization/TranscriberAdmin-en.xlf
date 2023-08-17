@@ -612,7 +612,7 @@
       </unit>
       <unit id="cards.editCategory">
          <segment>
-            <source>Edit Category</source>
+            <source>Edit Team Categories</source>
             <target/>
          </segment>
       </unit>
@@ -637,6 +637,18 @@
       <unit id="cards.language">
          <segment>
             <source>Language: {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.longNotesProject">
+         <segment>
+            <source>Project with Long Notes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.longNotes">
+         <segment>
+            <source>Shared Introductions, Rationales, Devotionals, Podcasts</source>
             <target/>
          </segment>
       </unit>
@@ -754,6 +766,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.notesHelper">
+         <segment>
+            <source>Shared explanations, rationales, footnotes, etc.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.notesProject">
+         <segment>
+            <source>Project with Notes</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.sync">
          <segment>
             <source>Sync ({0})</source>
@@ -814,9 +838,39 @@
             <target/>
          </segment>
       </unit>
+      <unit id="category.note">
+         <segment>
+            <source>Audio Note</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.chapternumber">
+         <segment>
+            <source>Chapter Number</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.general">
+         <segment>
+            <source>General Note</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.introPara">
+         <segment>
+            <source>Introductory Paragraph</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="category.resource">
          <segment>
             <source>Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.notes">
+         <segment>
+            <source>audio note(s)</source>
             <target/>
          </segment>
       </unit>
@@ -988,9 +1042,57 @@
             <target/>
          </segment>
       </unit>
+      <unit id="consultantCheck.checked">
+         <segment>
+            <source>Mark Checked</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.compare">
+         <segment>
+            <source>Compare</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.compareItems">
+         <segment>
+            <source>Select Items to Compare</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.furtherReview">
+         <segment>
+            <source>Review More</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.noMedia">
+         <segment>
+            <source>No Media Available</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.noTranscription">
+         <segment>
+            <source>No Transcription Available</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.transcription">
+         <segment>
+            <source>Transcription</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="control.book">
          <segment>
             <source>Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="control.normal">
+         <segment>
+            <source>Normal</source>
             <target/>
          </segment>
       </unit>
@@ -3840,7 +3942,7 @@
       </unit>
       <unit id="peerCheck.afterResource">
          <segment>
-            <source>Play from end of resource</source>
+            <source>Play following context</source>
             <target/>
          </segment>
       </unit>
@@ -3852,7 +3954,7 @@
       </unit>
       <unit id="peerCheck.resourceStart">
          <segment>
-            <source>Play from start of resource</source>
+            <source>Play from start</source>
             <target/>
          </segment>
       </unit>
@@ -4380,7 +4482,7 @@
       </unit>
       <unit id="projButtons.categoryTitle">
          <segment>
-            <source>Edit Category</source>
+            <source>Edit Team Categories</source>
             <target/>
          </segment>
       </unit>
@@ -5068,6 +5170,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.wait">
+         <segment>
+            <source>Please wait for action to finish.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.yes">
          <segment>
             <source>Yes</source>
@@ -5452,6 +5560,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="tool.consultantCheck">
+         <segment>
+            <source>Consultant Check</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="tool.discuss">
          <segment>
             <source>Discuss</source>
@@ -5824,6 +5938,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.creatingDownloadFile">
+         <segment>
+            <source>Creating File...{0}%</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.writingDownloadFile">
+         <segment>
+            <source>Writing file...It could take up to 6 minutes to resume progress.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.downloading">
          <segment>
             <source>Creation complete. Downloading {0}</source>
@@ -5971,12 +6097,6 @@
       <unit id="transcriptionTab.plan">
          <segment>
             <source>Plan</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.queued">
-         <segment>
-            <source>Your export has been queued on the media server.  It could take up to 6 minutes to resume progress.  Please wait.</source>
             <target/>
          </segment>
       </unit>
@@ -6511,6 +6631,12 @@
       <unit id="welcome.title">
          <segment>
             <source>Getting Started</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.addingStep">
+         <segment>
+            <source>Adding Workflow Step:</source>
             <target/>
          </segment>
       </unit>

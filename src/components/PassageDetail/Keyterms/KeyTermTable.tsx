@@ -53,8 +53,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const GridContainerCol = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
-  flexDirection: 'column',
+  flexDirection: 'row',
   color: theme.palette.primary.dark,
+  width: 'inherit',
+  '& audio': {
+    height: '32px',
+  },
 }));
 
 export interface ITarget {
@@ -235,7 +239,17 @@ export default function KeyTermTable({
                 <Grid container>
                   {row.target.map((t) => (
                     <Box
-                      sx={{ display: 'flex', flexDirection: 'column' }}
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        width:
+                          commentPlayId &&
+                          mediaId === commentPlayId &&
+                          t.mediaId === mediaId
+                            ? 'inherit'
+                            : undefined,
+                      }}
                       key={t.id}
                     >
                       <KeyTermChip
@@ -263,6 +277,7 @@ export default function KeyTermTable({
                               onEnded={handlePlayEnd}
                               onTogglePlay={handleTogglePlay}
                               controls={mediaId === commentPlayId}
+                              sx={{ mb: 1 }}
                             />
                           </GridContainerCol>
                         )}

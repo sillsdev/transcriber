@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { Organization, User } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import { waitForIt } from '../utils';
-import { useTeamCreate, isPersonalTeam, remoteIdNum } from '.';
+import { useTeamCreate, isPersonalTeam, remoteIdNum, defaultWorkflow } from '.';
 import related from './related';
 
 export const useNewTeamId = () => {
@@ -49,6 +49,7 @@ export const useNewTeamId = () => {
         {
           attributes: { name: personalOrg },
         } as Organization,
+        defaultWorkflow,
         (org: string) => {
           teamRef.current = org;
         }

@@ -59,11 +59,11 @@ const TeamActions = () => {
     setOpenContent(true);
   };
   const handleAdd = (
-    team: Organization,
+    value: { team: Organization; process: string },
     cb?: (id: string) => Promise<void>
   ) => {
     setBusy(true); //this will be reset by datachanges
-    teamCreate(team, async (id: string) => {
+    teamCreate(value.team, value.process, async (id: string) => {
       cb && (await cb(id));
       setOpenAdd(false);
     });

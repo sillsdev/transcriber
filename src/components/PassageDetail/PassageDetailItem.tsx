@@ -173,6 +173,7 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
   const [coordinator] = useGlobal('coordinator');
+  const [offline] = useGlobal('offline');
   const memory = coordinator.getSource('memory') as Memory;
   const [speaker, setSpeaker] = useState('');
   const [topic, setTopic] = useState('');
@@ -274,7 +275,14 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
     if (currentSegmentIndex > 0)
       postfix += 's' + currentSegmentIndex.toString();
     setDefaultFileName(
-      passageDefaultFilename(passage, plan, memory, recordTypeId, postfix)
+      passageDefaultFilename(
+        passage,
+        plan,
+        memory,
+        recordTypeId,
+        offline,
+        postfix
+      )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -340,7 +348,7 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
   const handleSelect = (id: string, latest: boolean) => {
     //latest isn't used anymore but might be useful...so leave it
     setPlayItem(id);
-    setItemPlaying(false);
+    setItemPlaying(true);
     setCommentPlaying(false);
   };
 

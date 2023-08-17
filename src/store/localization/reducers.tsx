@@ -145,11 +145,13 @@ const initialState = {
 			"delete": "Delete",
 			"deleteTeam": "Delete Team",
 			"draft": "Oral Drafting",
-			"editCategory": "Edit Category",
+			"editCategory": "Edit Team Categories",
 			"editWorkflow": "Edit Workflow {0}",
 			"explainTeamDelete": "Deleting the team will delete all audio projects of the team.",
 			"import": "Import Audio Project",
 			"language": "Language: {0}",
+			"longNotesProject": "Project with Long Notes",
+			"longNotes": "Shared Introductions, Rationales, Devotionals, Podcasts",
 			"mediaUploaded": "Audio Uploaded",
 			"members": "Members ({0})",
 			"nameInUse": "Name in use",
@@ -169,6 +171,8 @@ const initialState = {
 			"save": "Save",
 			"sectionStatus": "{0} {1}",
 			"settings": "Settings",
+			"notesHelper": "Shared explanations, rationales, footnotes, etc.",
+			"notesProject": "Project with Notes",
 			"sync": "Sync ({0})",
 			"teamName": "Team Name",
 			"teamSettings": "Team Settings",
@@ -183,7 +187,12 @@ const initialState = {
 			"discussions": "discussion(s)",
 			"ignoreInvalid": "Ignoring invalid category change '{0}'.",
 			"inUseBy": "In use by {0} {1}",
+			"note": "Audio Note",
+			"chapternumber": "Chapter Number",
+			"general": "General Note",
+			"introPara": "Introductory Paragraph",
 			"resource": "Resource",
+			"notes": "audio note(s)",
 			"resources": "resource(s)",
 		}
 	}),
@@ -226,9 +235,21 @@ const initialState = {
 			"uploadComplete": "{0} of {1} files uploaded successfully.",
 		}
 	}),
+	"consultantCheck": new LocalizedStrings({
+		"en": {
+			"checked": "Mark Checked",
+			"compare": "Compare",
+			"compareItems": "Select Items to Compare",
+			"furtherReview": "Review More",
+			"noMedia": "No Media Available",
+			"noTranscription": "No Transcription Available",
+			"transcription": "Transcription",
+		}
+	}),
 	"control": new LocalizedStrings({
 		"en": {
 			"book": "Book",
+			"normal": "Normal",
 			"other": "General",
 			"scripture": "Scripture",
 		}
@@ -819,9 +840,9 @@ const initialState = {
 	}),
 	"peerCheck": new LocalizedStrings({
 		"en": {
-			"afterResource": "Play from end of resource",
+			"afterResource": "Play following context",
 			"back3Seconds": "Skip back 3 seconds",
-			"resourceStart": "Play from start of resource",
+			"resourceStart": "Play from start",
 		}
 	}),
 	"permission": new LocalizedStrings({
@@ -933,7 +954,7 @@ const initialState = {
 	}),
 	"projButtons": new LocalizedStrings({
 		"en": {
-			"categoryTitle": "Edit Category",
+			"categoryTitle": "Edit Team Categories",
 			"export": "Export",
 			"exportTitle": "{0} Export",
 			"import": "Import",
@@ -1084,6 +1105,7 @@ const initialState = {
 			"uploadRights": "Upload Rights File",
 			"user": "Team Member",
 			"versionHistory": "Versions",
+			"wait": "Please wait for action to finish.",
 			"yes": "Yes",
 		}
 	}),
@@ -1180,6 +1202,7 @@ const initialState = {
 	"tool": new LocalizedStrings({
 		"en": {
 			"community": "Community Test",
+			"consultantCheck": "Consultant Check",
 			"discuss": "Discuss",
 			"done": "Done",
 			"export": "Export",
@@ -1266,6 +1289,8 @@ const initialState = {
 			"cantCopy": "Unable to copy to clipboard",
 			"copyTip": "Copy transcriptions to Clipboard",
 			"copyTranscriptions": "Copy Transcriptions",
+			"creatingDownloadFile": "Creating File...{0}%",
+			"writingDownloadFile": "Writing file...It could take up to 6 minutes to resume progress.",
 			"downloading": "Creation complete. Downloading {0}",
 			"downloadingProject": "Downloading...{0}%",
 			"downloadProject": "Download Audio Project",
@@ -1291,7 +1316,6 @@ const initialState = {
 			"changed": "Changed",
 			"passages": "Passages",
 			"plan": "Plan",
-			"queued": "Your export has been queued on the media server.  It could take up to 6 minutes to resume progress.  Please wait.",
 			"scriptureBurrito": "Scripture Burrito",
 			"sectionstate": "State",
 			"showHideFilter": "Show/Hide filter rows",
@@ -1413,6 +1437,7 @@ const initialState = {
 	}),
 	"workflowSteps": new LocalizedStrings({
 		"en": {
+			"addingStep": "Adding Workflow Step:",
 			"backTranslation": "Back Translate",
 			"communityTest1": "Community Test 1",
 			"communityTest2": "Community Test 2",
@@ -1524,6 +1549,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"commentCard" : new LocalizedStrings(action.payload.data.commentCard),
 				"commentEditor" : new LocalizedStrings(action.payload.data.commentEditor),
 				"community" : new LocalizedStrings(action.payload.data.community),
+				"consultantCheck" : new LocalizedStrings(action.payload.data.consultantCheck),
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
 				"discussionCard" : new LocalizedStrings(action.payload.data.discussionCard),

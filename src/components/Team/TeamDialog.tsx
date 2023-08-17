@@ -11,6 +11,7 @@ import {
   DialogTitle,
   MenuItem,
   LinearProgress,
+  SxProps,
 } from '@mui/material';
 import {
   Organization,
@@ -18,37 +19,57 @@ import {
   DialogMode,
   OptionType,
   WorkflowStep,
+  Project,
 } from '../../model';
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
-import { useTeamApiPull, defaultWorkflow } from '../../crud';
-import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
+import { defaultWorkflow, related } from '../../crud';
 
 interface IRecordProps {
   organizations: Array<Organization>;
+  projects: Array<Project>;
 }
-
-interface IProps extends IRecordProps, IDialog<Organization> {
+interface ITeamDialog {
+  team: Organization;
+  process?: string;
+}
+interface IProps extends IRecordProps, IDialog<ITeamDialog> {
   onDelete?: (team: Organization) => void;
 }
+const formText = { fontSize: 'small' } as SxProps;
+const menuProps = { width: '300px' } as SxProps;
+const textFieldProps = { mx: 1, width: '300px' } as SxProps;
 
 export function TeamDialog(props: IProps) {
-  const { mode, values, isOpen, organizations, onOpen, onCommit, onDelete } =
-    props;
+  const {
+    mode,
+    values,
+    isOpen,
+    organizations,
+    projects,
+    onOpen,
+    onCommit,
+    onDelete,
+  } = props;
   const [name, setName] = React.useState('');
+  const [changed, setChanged] = React.useState(false);
   const ctx = React.useContext(TeamContext);
   const { cardStrings } = ctx.state;
   const t = cardStrings;
-  const teamApiPull = useTeamApiPull();
-  const { CreateOrgWorkflowSteps } = useOrgWorkflowSteps();
   const [memory] = useGlobal('memory');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [isDeveloper] = useGlobal('developer');
   const [process, setProcess] = useState<string>();
   const [processOptions, setProcessOptions] = useState<OptionType[]>([]);
   const savingRef = useRef(false);
+  const [noteProjId, setNoteProjId] = useState('');
+  const [myProjects, setMyProjects] = useState<Project[]>([]);
 
-  const handleClose = () => {
+  const reset = () => {
     setName('');
+    setChanged(false);
+  };
+  const handleClose = () => {
+    reset();
     setProcess(undefined);
     onOpen && onOpen(false);
   };
@@ -57,30 +78,36 @@ export function TeamDialog(props: IProps) {
     savingRef.current = true;
     const current =
       mode === DialogMode.edit && values
-        ? values
+        ? values.team
         : ({ attributes: {} } as Organization);
     if (current.hasOwnProperty('relationships')) delete current?.relationships;
     const team = {
       ...current,
       attributes: { ...current.attributes, name },
+      relationships: {
+        noteProject: {
+          data: noteProjId ? { type: 'project', id: noteProjId } : null,
+        },
+      },
     } as Organization;
-    onCommit(team, async (id: string) => {
-      if (mode === DialogMode.add) {
-        await CreateOrgWorkflowSteps(process || defaultWorkflow, id);
+    onCommit(
+      { team, process: process || defaultWorkflow },
+      async (id: string) => {
+        setProcess(undefined);
+        savingRef.current = false;
       }
-      setProcess(undefined);
-      savingRef.current = false;
-    });
+    );
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.persist();
+    if (values?.team.attributes.name !== e.target.value) setChanged(true);
     setName(e.target.value);
   };
 
   const handleDelete = () => {
     savingRef.current = true;
-    const team = { ...values, attributes: { name } } as Organization;
+    const team = { ...values?.team, attributes: { name } } as Organization;
     onDelete && onDelete(team);
     savingRef.current = false;
   };
@@ -90,6 +117,7 @@ export function TeamDialog(props: IProps) {
   };
 
   const nameInUse = (newName: string): boolean => {
+    if (newName === values?.team.attributes.name) return false;
     const sameNameRec = organizations.filter(
       (o) => o?.attributes?.name === newName
     );
@@ -97,11 +125,20 @@ export function TeamDialog(props: IProps) {
   };
 
   useEffect(() => {
+    if (isOpen && values && projects) {
+      setMyProjects(
+        projects.filter((p) => related(p, 'organization') === values.team.id)
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values, projects, isOpen]);
+
+  useEffect(() => {
     if (isOpen && !name) {
-      setName(values?.attributes?.name || '');
-      if (!offlineOnly && values) teamApiPull(values.id);
+      setName(values?.team.attributes?.name || '');
+      setNoteProjId(values ? related(values, 'noteProject') : '');
     } else if (!isOpen) {
-      setName('');
+      reset();
     }
     if (isOpen && mode === DialogMode.add && processOptions.length === 0) {
       const opts = memory.cache.query((q: QueryBuilder) =>
@@ -121,6 +158,11 @@ export function TeamDialog(props: IProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values, isOpen]);
+
+  const handleNoteProjectChange = (e: any) => {
+    setNoteProjId(e.target.value);
+    setChanged(true);
+  };
 
   return (
     <div>
@@ -169,12 +211,45 @@ export function TeamDialog(props: IProps) {
             </TextField>
           )}
           {mode === DialogMode.edit && (
-            <DeleteExpansion
-              title={t.deleteTeam}
-              explain={t.explainTeamDelete}
-              handleDelete={handleDelete}
-              inProgress={savingRef.current}
-            />
+            <div>
+              {isDeveloper && (
+                <TextField
+                  id="select-note-project"
+                  select
+                  label={t.notesProject}
+                  helperText={t.notesHelper}
+                  value={noteProjId ?? ''}
+                  onChange={handleNoteProjectChange}
+                  SelectProps={{
+                    MenuProps: {
+                      sx: menuProps,
+                    },
+                  }}
+                  sx={textFieldProps}
+                  InputProps={{ sx: formText }}
+                  InputLabelProps={{ sx: formText }}
+                  margin="normal"
+                  variant="filled"
+                  required={true}
+                >
+                  {myProjects
+                    .sort((i, j) =>
+                      i.attributes.name <= j.attributes.name ? -1 : 1
+                    )
+                    .map((option: Project) => (
+                      <MenuItem key={option.id} value={option.id}>
+                        {option.attributes.name}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              )}
+              <DeleteExpansion
+                title={t.deleteTeam}
+                explain={t.explainTeamDelete}
+                handleDelete={handleDelete}
+                inProgress={savingRef.current}
+              />
+            </div>
           )}
         </DialogContent>
         <DialogActions>
@@ -190,7 +265,9 @@ export function TeamDialog(props: IProps) {
             id="teamCommit"
             onClick={handleCommit}
             color="primary"
-            disabled={savingRef.current || name === '' || nameInUse(name)}
+            disabled={
+              savingRef.current || name === '' || nameInUse(name) || !changed
+            }
           >
             {mode === DialogMode.add ? t.add : t.save}
           </Button>
@@ -202,6 +279,7 @@ export function TeamDialog(props: IProps) {
 
 const mapRecordsToProps = {
   organizations: (q: QueryBuilder) => q.findRecords('organization'),
+  projects: (q: QueryBuilder) => q.findRecords('project'),
 };
 
 export default withData(mapRecordsToProps)(TeamDialog) as any;

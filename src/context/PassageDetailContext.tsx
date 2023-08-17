@@ -478,6 +478,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       setCommentPlaying(!state.commentPlaying);
     };
     const handleOldVernacularPlayEnd = () => {
+      mediaStart.current = undefined;
+      mediaEnd.current = undefined;
       setState((state: ICtxState) => {
         return {
           ...state,
@@ -551,13 +553,19 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         type: 'passage',
         id: remoteIdGuid('passage', pasId ?? '', memory.keyMap) || pasId || '',
       };
+      const curPassage = findRecord(memory, 'passage', recId.id) as Passage;
+      const curCompleteStr = curPassage?.attributes.stepComplete;
+      let stepComplete = {};
+      try {
+        stepComplete = JSON.parse(curCompleteStr || '{}');
+      } catch (err) {}
       var tb = new TransformBuilder();
       var ops = [] as Operation[];
       ops.push(
         tb.replaceAttribute(
           recId,
           'stepComplete',
-          JSON.stringify({ completed })
+          JSON.stringify({ ...stepComplete, completed })
         )
       );
       ops.push(...UpdateLastModifiedBy(tb, recId, user));
@@ -751,25 +759,13 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       setSelected(id, PlayInPlayer.no, state.rowData);
     };
 
-    const handleDuration = (duration: number) => {
-      if (mediaStart.current !== undefined) {
-        mediaPosition.current = mediaStart.current;
-        mediaStart.current = undefined;
-        setState((state: ICtxState) => {
-          return {
-            ...state,
-            oldVernacularPlaying: true,
-          };
-        });
-      }
-    };
-
-    const handlePosition = (position: number) => {
-      if (mediaEnd.current) {
-        if (position >= mediaEnd.current) {
-          oldVernReset();
-        }
-      }
+    const handleLoaded = () => {
+      setState((state: ICtxState) => {
+        return {
+          ...state,
+          oldVernacularPlaying: true,
+        };
+      });
     };
 
     const setCurrentSegment = (
@@ -1086,9 +1082,8 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
           srcMediaId={state.oldVernacularPlayItem}
           requestPlay={state.oldVernacularPlaying}
           onEnded={handleOldVernacularPlayEnd}
-          onDuration={handleDuration}
-          onPosition={handlePosition}
-          position={mediaPosition.current}
+          onLoaded={handleLoaded}
+          limits={{ start: mediaStart.current, end: mediaEnd.current }}
         />
         {confirm !== '' && (
           <Confirm

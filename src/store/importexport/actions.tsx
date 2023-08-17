@@ -60,6 +60,7 @@ import { logError, orbitInfo, Severity } from '../../utils';
 import Coordinator from '@orbit/coordinator';
 import { axiosPost } from '../../utils/axios';
 import { updateBackTranslationType } from '../../crud/updateBackTranslationType';
+import { updateConsultantWorkflowStep } from '../../crud/updateConsultantWorkflowStep';
 const ipc = (window as any)?.electron;
 
 export const exportComplete = () => (dispatch: any) => {
@@ -82,7 +83,7 @@ export const exportProject =
     errorReporter: any, //global errorReporter
     pendingmsg: string,
     nodatamsg: string,
-    queuedmsg: string,
+    writingmsg: string,
     localizedArtifact: string,
     getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
     importedDate?: Moment,
@@ -90,6 +91,16 @@ export const exportProject =
     orgWorkflowSteps?: OrgWorkflowStep[]
   ) =>
   async (dispatch: any) => {
+    const sendProgress = (pct: number | string) => {
+      var msg = pendingmsg.replace(
+        typeof pct === 'number' ? '{0}' : '{0}%',
+        pct.toString()
+      );
+      dispatch({
+        payload: msg,
+        type: EXPORT_PENDING,
+      });
+    };
     dispatch({
       payload: pendingmsg.replace('{0}%', ''),
       type: EXPORT_PENDING,
@@ -119,7 +130,9 @@ export const exportProject =
         getOfflineProject,
         importedDate,
         target,
-        orgWorkflowSteps
+        orgWorkflowSteps,
+        exportType === ExportType.ITFSYNC ? undefined : sendProgress,
+        writingmsg
       )
         .then((response) => {
           dispatch({
@@ -201,7 +214,7 @@ export const exportProject =
                 }
                 if (laststartCount > 20) {
                   dispatch({
-                    payload: queuedmsg,
+                    payload: writingmsg,
                     type: EXPORT_PENDING,
                   });
                 } else {
@@ -846,13 +859,16 @@ export const importProjectToElectron =
           await saveToBackup(oparray, 'remove extra records from backup');
         }
         if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
-          updateBackTranslationType(
+          await updateBackTranslationType(
             memory,
             token,
             user,
             errorReporter,
             offlineSetup
           );
+        }
+        if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 5) {
+          await updateConsultantWorkflowStep(token, memory, user);
         }
         AddProjectLoaded(project?.id || '');
         dispatch({

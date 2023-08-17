@@ -106,7 +106,7 @@ function appMenu() {
           label: 'Community Support',
           click: () => {
             shell.openExternal(
-              'https://community.scripture.software.sil.org/c/transcriber'
+              'https://community.scripture.software.sil.org/c/apm'
             );
           },
         },

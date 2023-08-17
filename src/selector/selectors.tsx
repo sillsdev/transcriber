@@ -28,6 +28,9 @@ export const commentCardSelector = (state: IState) =>
 export const communitySelector = (state: IState) =>
   localStrings(state as IState, { layout: 'community' });
 
+export const consultantSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'consultantCheck' });
+
 export const controlSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'control' });
 

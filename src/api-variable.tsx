@@ -38,4 +38,10 @@ export const API_CONFIG = {
   sizeLimit: process.env.REACT_APP_SIZELIMIT
     ? process.env.REACT_APP_SIZELIMIT
     : '20',
+  sessions: process.env.REACT_APP_SESSIONS
+    ? process.env.REACT_APP_SESSIONS
+    : 'https://sessions.bugsnag.com',
+  notify: process.env.REACT_APP_NOTIFY
+    ? process.env.REACT_APP_NOTIFY
+    : 'https://notify.bugsnag.com',
 };

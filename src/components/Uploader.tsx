@@ -240,7 +240,7 @@ export const Uploader = (props: IProps) => {
         ? 'Project'
         : files[0]?.name.split('.')[0];
     if (createProject) planIdRef.current = await createProject(name);
-    var suffix = passageDefaultSuffix(planIdRef.current, memory);
+    var suffix = passageDefaultSuffix(planIdRef.current, memory, offline);
 
     while (
       files.findIndex(

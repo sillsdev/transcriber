@@ -1,5 +1,5 @@
 import { MediaFile } from '../model';
-import { related, VernacularTag } from '.';
+import { mediaFileName, related, VernacularTag } from '.';
 
 interface ILatest {
   [planName: string]: number;
@@ -7,7 +7,7 @@ interface ILatest {
 const versionName = (mf: MediaFile) => {
   const psg = related(mf, 'passage');
   if (psg) return psg;
-  return related(mf, 'plan') + mf.attributes.originalFile;
+  return related(mf, 'plan') + mediaFileName(mf);
 };
 export const getMediaInPlans = (
   planids: Array<string>,
