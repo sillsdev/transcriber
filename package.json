@@ -93,6 +93,7 @@
     "pack": "npm run stamp && node env-config/edPackage.js && env-cmd -f .env.electron craco build -w",
     "dist": "electron-builder --publish never",
     "dist-32": "electron-builder --publish never --ia32",
+    "dist-mac": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --publish never",
     "devs": "node env-config/changeEnv.js dev",
     "qas": "node env-config/changeEnv.js qa",
     "prods": "node env-config/changeEnv.js prod",
