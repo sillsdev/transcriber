@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useContext } from 'react';
+import { useEffect, useReducer, useContext, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import Axios from 'axios';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -76,6 +76,9 @@ interface IProps {
 export const useFetchMediaUrl = (reporter?: any) => {
   const [state, dispatch] = useReducer(stateReducer, mediaClean);
   const [memory] = useGlobal('memory');
+  const promiseResolveRef = useRef<(value: string) => void>();
+  const promiseRejectRef = useRef<(reason: any) => void>();
+
   const { accessToken } = useContext(TokenContext).state;
 
   const guidId = (id: string) => {
@@ -99,12 +102,16 @@ export const useFetchMediaUrl = (reporter?: any) => {
 
   useEffect(() => {
     let cancelRequest = false;
-    if (!state.id) return;
+    if (!state.id) {
+      promiseResolveRef.current && promiseResolveRef.current('');
+      return;
+    }
 
     const cancelled = () => {
       if (cancelRequest) {
         // setting to idle here clears the fetched url when component refreshed
         // dispatch({ payload: undefined, type: MediaSt.IDLE });
+        promiseRejectRef.current && promiseRejectRef.current('');
         return true;
       }
       return false;
@@ -128,16 +135,20 @@ export const useFetchMediaUrl = (reporter?: any) => {
             if (foundLocal || !accessToken) {
               if (!path.startsWith('http')) {
                 if (cancelled()) return;
+                var url = await safeURL(path);
                 dispatch({
-                  payload: await safeURL(path),
+                  payload: url,
                   type: MediaSt.FETCHED,
                 });
+                promiseResolveRef.current && promiseResolveRef.current(url);
                 return;
               } else if (!accessToken) {
                 dispatch({
                   payload: 'no offline file',
                   type: MediaSt.ERROR,
                 });
+                promiseRejectRef.current &&
+                  promiseRejectRef.current('no offline file');
                 return;
               }
             }
@@ -147,6 +158,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
           // we don't have it in our keymap?
           logError(Severity.error, reporter, infoMsg(e, ''));
           dispatch({ payload: e.message, type: MediaSt.ERROR });
+          promiseRejectRef.current && promiseRejectRef.current(e.message);
         }
       }
       if (cancelled()) return;
@@ -159,11 +171,14 @@ export const useFetchMediaUrl = (reporter?: any) => {
           const attr: any = strings.data.data.attributes;
           if (cancelled()) return;
           dispatch({ payload: attr['audio-url'], type: MediaSt.FETCHED });
+          promiseResolveRef.current &&
+            promiseResolveRef.current(attr['audio-url']);
         })
         .catch((e) => {
           if (cancelled()) return;
           logError(Severity.error, reporter, infoMsg(e, 'media fetch failure'));
           dispatch({ payload: e.message, type: MediaSt.ERROR });
+          promiseRejectRef.current && promiseRejectRef.current(e.message);
         });
     };
 
@@ -189,7 +204,15 @@ export const useFetchMediaUrl = (reporter?: any) => {
     });
   };
 
-  return { fetchMediaUrl, safeURL, mediaState: state };
+  const fetchMediaUrlPromise = (props: IProps) => {
+    return new Promise<string>((resolve, reject) => {
+      promiseResolveRef.current = resolve;
+      promiseRejectRef.current = reject;
+      fetchMediaUrl(props);
+    });
+  };
+
+  return { fetchMediaUrl, fetchMediaUrlPromise, safeURL, mediaState: state };
 };
 
 export default useFetchMediaUrl;
