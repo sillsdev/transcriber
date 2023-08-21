@@ -6485,7 +6485,7 @@
 		<unit id="workflowSteps.addingStep">
 			<segment>
 				<source>Adding Workflow Step:</source>
-				<target/>
+				<target>Ajout d'une étape de workflow :</target>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.backTranslation">

@@ -1,17 +1,12 @@
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { useGlobal, useRef } from 'reactn';
 import { related, remoteId } from '.';
-import {
-  IState,
-  IWorkflowStepsStrings,
-  OrgWorkflowStep,
-  WorkflowStep,
-} from '../model';
+import { IWorkflowStepsStrings, OrgWorkflowStep, WorkflowStep } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { logError, Severity, toCamel, waitForIt } from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { shallowEqual, useSelector } from 'react-redux';
-import localStrings from '../selector/localize';
+import { workflowStepsSelector } from '../selector';
 import { useSnackBar } from '../hoc/SnackBar';
 
 export const defaultWorkflow = 'transcriber';
@@ -20,9 +15,10 @@ interface ISwitches {
   [key: string]: any;
 }
 export const useOrgWorkflowSteps = () => {
-  const wfStepsSelector = (state: IState) =>
-    localStrings(state as IState, { layout: 'workflowSteps' });
-  const t: IWorkflowStepsStrings = useSelector(wfStepsSelector, shallowEqual);
+  const t: IWorkflowStepsStrings = useSelector(
+    workflowStepsSelector,
+    shallowEqual
+  );
 
   const [global] = useGlobal();
   const [memory] = useGlobal('memory');
