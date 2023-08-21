@@ -338,6 +338,17 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     setName(cleanFileName(e.target.value));
     setUserHasSetName(true);
   };
+  const gotTheBlob = (b: Blob) => {
+    setOriginalBlob(b);
+    setLoading(false);
+    onLoaded && onLoaded();
+    setAudioBlob(b);
+  };
+  const blobError = (urlorError: string) => {
+    showMessage(urlorError);
+    setLoading(false);
+    onLoaded && onLoaded();
+  };
 
   const handleLoadAudio = () => {
     showMessage(t.loading);
@@ -346,17 +357,12 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     reset();
     loadBlob(mediaState.url, (urlorError, b) => {
       if (b) {
-        setOriginalBlob(b);
-        setLoading(false);
-        onLoaded && onLoaded();
-        setAudioBlob(b);
+        gotTheBlob(b);
       } else {
         if (urlorError.includes('403')) {
           //force it to go get another (unexpired) s3 url
           //force requery for new media url
-          fetchMediaUrl({
-            id: '',
-          });
+          fetchMediaUrl({ id: '' });
           waitForIt(
             'requery url',
             () => mediaState.id === '',
@@ -364,11 +370,23 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
             500
           ).then(() => {
             fetchMediaUrl({ id: mediaId ?? '' });
+            waitForIt(
+              'requery url',
+              () => mediaState.id === mediaId,
+              () => false,
+              500
+            ).then(() => {
+              loadBlob(mediaState.url, (urlorError, b) => {
+                if (b) {
+                  gotTheBlob(b);
+                } else {
+                  blobError(urlorError as string);
+                }
+              });
+            });
           });
         } else {
-          showMessage(urlorError);
-          setLoading(false);
-          onLoaded && onLoaded();
+          blobError(urlorError as string);
         }
       }
     });
