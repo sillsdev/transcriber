@@ -61,6 +61,7 @@ export function TeamDialog(props: IProps) {
   const [process, setProcess] = useState<string>();
   const [processOptions, setProcessOptions] = useState<OptionType[]>([]);
   const savingRef = useRef(false);
+  const [saving, setSavingx] = useState(false);
   const [noteProjId, setNoteProjId] = useState('');
   const [myProjects, setMyProjects] = useState<Project[]>([]);
 
@@ -74,8 +75,14 @@ export function TeamDialog(props: IProps) {
     onOpen && onOpen(false);
   };
 
-  const handleCommit = async () => {
-    savingRef.current = true;
+  const setSaving = (saving: boolean) => {
+    setSavingx(saving);
+    savingRef.current = saving;
+  };
+
+  const handleCommit = (process: string|undefined) => async () => {
+    if (savingRef.current) return;
+    setSaving(true);
     const current =
       mode === DialogMode.edit && values
         ? values.team
@@ -94,7 +101,7 @@ export function TeamDialog(props: IProps) {
       { team, process: process || defaultWorkflow },
       async (id: string) => {
         setProcess(undefined);
-        savingRef.current = false;
+        setSaving(false);
       }
     );
   };
@@ -106,10 +113,11 @@ export function TeamDialog(props: IProps) {
   };
 
   const handleDelete = () => {
-    savingRef.current = true;
+    if (savingRef.current) return;
+    setSaving(true);
     const team = { ...values?.team, attributes: { name } } as Organization;
     onDelete && onDelete(team);
-    savingRef.current = false;
+    setSaving(false);
   };
 
   const handleProcess = (e: any) => {
@@ -177,18 +185,14 @@ export function TeamDialog(props: IProps) {
           {mode === DialogMode.add ? t.addTeam : t.teamSettings}
         </DialogTitle>
         <DialogContent>
-          {savingRef.current && (
-            <LinearProgress id="busy" variant="indeterminate" />
-          )}
+          {saving && <LinearProgress id="busy" variant="indeterminate" />}
           <TextField
             autoFocus
             margin="dense"
             id="teamName"
             label={t.teamName}
             value={name}
-            helperText={
-              !savingRef.current && name && nameInUse(name) && t.nameInUse
-            }
+            helperText={!saving && name && nameInUse(name) && t.nameInUse}
             onChange={handleChange}
             fullWidth
           />
@@ -247,7 +251,7 @@ export function TeamDialog(props: IProps) {
                 title={t.deleteTeam}
                 explain={t.explainTeamDelete}
                 handleDelete={handleDelete}
-                inProgress={savingRef.current}
+                inProgress={saving}
               />
             </div>
           )}
@@ -257,17 +261,15 @@ export function TeamDialog(props: IProps) {
             id="teamCancel"
             onClick={handleClose}
             color="primary"
-            disabled={savingRef.current}
+            disabled={saving}
           >
             {t.cancel}
           </Button>
           <Button
             id="teamCommit"
-            onClick={handleCommit}
+            onClick={handleCommit(process)}
             color="primary"
-            disabled={
-              savingRef.current || name === '' || nameInUse(name) || !changed
-            }
+            disabled={saving || name === '' || nameInUse(name) || !changed}
           >
             {mode === DialogMode.add ? t.add : t.save}
           </Button>
