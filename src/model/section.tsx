@@ -5,9 +5,9 @@ export interface Section extends BaseModel {
   attributes: {
     sequencenum: number;
     name: string;
-    graphics: string;
-    published: boolean;
-    level: number;
+    //NR?graphics: string;
+    //NR?published: boolean;
+    //NR?level: number;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
