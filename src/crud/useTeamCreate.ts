@@ -128,7 +128,7 @@ export const useTeamCreate = () => {
         logoUrl,
         publicByDefault,
         defaultParams: '{}',
-        publishingData: '{}',
+        //NR?publishingData: '{}',
       },
     } as Organization;
 

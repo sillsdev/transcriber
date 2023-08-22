@@ -133,7 +133,7 @@ const schemaDefinition: SchemaSettings = {
         logoUrl: { type: 'string' },
         publicByDefault: { type: 'boolean' },
         clusterbase: { type: 'boolean' },
-        publishingData: { type: 'string' },
+        //NR? publishingData: { type: 'string' },
 
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
@@ -146,7 +146,7 @@ const schemaDefinition: SchemaSettings = {
         groups: { type: 'hasMany', model: 'group', inverse: 'owner' },
         cluster: { type: 'hasOne', model: 'organization' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
-        notesProject: { type: 'hasOne', model: 'project' },
+        //NR?notesProject: { type: 'hasOne', model: 'project' },
       },
     },
     organizationmembership: {
@@ -300,9 +300,9 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         sequencenum: { type: 'number' },
         name: { type: 'string' },
-        graphics: { type: 'string' },
-        published: { type: 'boolean' },
-        level: { type: 'number' },
+        //NR?graphics: { type: 'string' },
+        //NR?published: { type: 'boolean' },
+        //NR?level: { type: 'number' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
@@ -347,6 +347,8 @@ const schemaDefinition: SchemaSettings = {
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
+    //NR?
+    /*
     passagenote: {
       keys: { remoteId: {} },
       attributes: {
@@ -359,7 +361,7 @@ const schemaDefinition: SchemaSettings = {
         noteSection: { type: 'hasOne', model: 'section' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
-    },
+    }, */
     passagestatechange: {
       keys: { remoteId: {} },
       attributes: {

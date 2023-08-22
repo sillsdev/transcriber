@@ -14,13 +14,13 @@ export interface Organization extends Record {
     dateUpdated: string;
     lastModifiedBy: number;
     defaultParams: string;
-    publishingData: string;
+    //NR?publishingData: string;
   };
   relationships?: {
     owner: RecordRelationship;
     groups: RecordRelationship;
     cluster: RecordRelationship;
-    noteProject: RecordRelationship;
+    //NR?noteProject: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
 }
