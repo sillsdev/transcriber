@@ -50,6 +50,9 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
     "scripture": string;
     "translationresource": string;
     "uncategorized": string;
+    "retelling": string;
+    "grammar": string;
+    "qanda": string;
 };
 
 export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
@@ -127,10 +130,13 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "delete": string;
     "deleteTeam": string;
     "draft": string;
+    "editCategory": string;
     "editWorkflow": string;
     "explainTeamDelete": string;
     "import": string;
     "language": string;
+    "longNotesProject": string;
+    "longNotes": string;
     "mediaUploaded": string;
     "members": string;
     "nameInUse": string;
@@ -150,11 +156,28 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "sectionStatus": string;
     "settings": string;
+    "notesHelper": string;
+    "notesProject": string;
     "sync": string;
     "teamName": string;
     "teamSettings": string;
     "transcriber": string;
     "uploadProgress": string;
+};
+
+export interface ICategoryStrings extends Localize.LocalizedStringsMethods {
+    "builtIn": string;
+    "discussion": string;
+    "discussions": string;
+    "ignoreInvalid": string;
+    "inUseBy": string;
+    "note": string;
+    "chapternumber": string;
+    "general": string;
+    "introPara": string;
+    "resource": string;
+    "notes": string;
+    "resources": string;
 };
 
 export interface ICommentCardStrings extends Localize.LocalizedStringsMethods {
@@ -193,8 +216,19 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
     "uploadComplete": string;
 };
 
+export interface IConsultantCheckStrings extends Localize.LocalizedStringsMethods {
+    "checked": string;
+    "compare": string;
+    "compareItems": string;
+    "furtherReview": string;
+    "noMedia": string;
+    "noTranscription": string;
+    "transcription": string;
+};
+
 export interface IControlStrings extends Localize.LocalizedStringsMethods {
     "book": string;
+    "normal": string;
     "other": string;
     "scripture": string;
 };
@@ -694,6 +728,8 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "sharedResource": string;
     "source": string;
     "startStop": string;
+    "suffix": string;
+    "suffixTip": string;
     "termsOfUse": string;
     "termsReview": string;
     "title": string;
@@ -753,6 +789,12 @@ export interface IPeerStrings extends Localize.LocalizedStringsMethods {
     "removeConfirm": string;
 };
 
+export interface IPeerCheckStrings extends Localize.LocalizedStringsMethods {
+    "afterResource": string;
+    "back3Seconds": string;
+    "resourceStart": string;
+};
+
 export interface IPermissionStrings extends Localize.LocalizedStringsMethods {
     "admin": string;
     "adminTip": string;
@@ -789,7 +831,6 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "filtered": string;
     "nonNumber": string;
     "insertFirstPassage": string;
-    "insertLastPassage": string;
     "passageBelow": string;
     "passageEnd": string;
     "passageToPrevSection": string;
@@ -857,6 +898,7 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IProjButtonsStrings extends Localize.LocalizedStringsMethods {
+    "categoryTitle": string;
     "export": string;
     "exportTitle": string;
     "import": string;
@@ -998,6 +1040,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "uploadRights": string;
     "user": string;
     "versionHistory": string;
+    "wait": string;
     "yes": string;
 };
 
@@ -1086,6 +1129,7 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
 
 export interface IToolStrings extends Localize.LocalizedStringsMethods {
     "community": string;
+    "consultantCheck": string;
     "discuss": string;
     "done": string;
     "export": string;
@@ -1166,6 +1210,8 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "cantCopy": string;
     "copyTip": string;
     "copyTranscriptions": string;
+    "creatingDownloadFile": string;
+    "writingDownloadFile": string;
     "downloading": string;
     "downloadingProject": string;
     "downloadProject": string;
@@ -1191,7 +1237,6 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "changed": string;
     "passages": string;
     "plan": string;
-    "queued": string;
     "scriptureBurrito": string;
     "sectionstate": string;
     "showHideFilter": string;
@@ -1305,6 +1350,7 @@ export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods {
+    "addingStep": string;
     "backTranslation": string;
     "communityTest1": string;
     "communityTest2": string;
@@ -1404,9 +1450,11 @@ export interface ILocalizedStrings {
 	audacityManager: IAudacityManagerStrings;
 	audioDownload: IAudioDownloadStrings;
 	cards: ICardsStrings;
+	category: ICategoryStrings;
 	commentCard: ICommentCardStrings;
 	commentEditor: ICommentEditorStrings;
 	community: ICommunityStrings;
+	consultantCheck: IConsultantCheckStrings;
 	control: IControlStrings;
 	deleteExpansion: IDeleteExpansionStrings;
 	discussionCard: IDiscussionCardStrings;
@@ -1436,6 +1484,7 @@ export interface ILocalizedStrings {
 	passageMedia: IPassageMediaStrings;
 	passageRecord: IPassageRecordStrings;
 	peer: IPeerStrings;
+	peerCheck: IPeerCheckStrings;
 	permission: IPermissionStrings;
 	planActions: IPlanActionsStrings;
 	planSheet: IPlanSheetStrings;

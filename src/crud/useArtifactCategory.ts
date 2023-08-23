@@ -14,16 +14,23 @@ interface ISwitches {
 export interface IArtifactCategory {
   slug: string;
   category: string;
+  org: string;
   id: string;
+}
+export enum ArtifactCategoryType {
+  Resource = 'resource',
+  Discussion = 'discussion',
+  Note = 'note',
 }
 const stringSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'artifactCategory' });
 
-export const useArtifactCategory = () => {
+export const useArtifactCategory = (teamId?: string) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [offline] = useGlobal('offline');
   const [organization] = useGlobal('organization');
+  const curOrg = teamId ?? organization;
   const [offlineOnly] = useGlobal('offlineOnly');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -51,10 +58,7 @@ export const useArtifactCategory = () => {
     return aRec && aRec.attributes ? aRec.attributes.categoryname : '';
   };
 
-  const getArtifactCategorys = async (
-    resource: boolean,
-    discussion: boolean
-  ) => {
+  const getArtifactCategorys = async (type: ArtifactCategoryType) => {
     const categorys: IArtifactCategory[] = [];
     /* wait for new categories remote id to fill in */
     await waitForIt(
@@ -63,59 +67,73 @@ export const useArtifactCategory = () => {
       () => offline && !offlineOnly,
       200
     );
-    const orgrecs: ArtifactCategory[] = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('artifactcategory')
-    ) as any;
-    orgrecs
-      .filter(
-        (r) =>
-          (related(r, 'organization') === organization ||
-            related(r, 'organization') === null) &&
-          Boolean(r.keys?.remoteId) !== offlineOnly &&
-          r.attributes.resource === resource &&
-          r.attributes.discussion === discussion
-      )
-      .forEach((r) =>
-        categorys.push({
-          slug: r.attributes.categoryname,
-          category: localizedArtifactCategory(r.attributes.categoryname),
-          id: r.id,
-        })
-      );
+    var orgrecs: ArtifactCategory[] = (
+      memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('artifactcategory')
+      ) as ArtifactCategory[]
+    ).filter(
+      (r) =>
+        (related(r, 'organization') === curOrg ||
+          related(r, 'organization') === null) &&
+        Boolean(r.keys?.remoteId) !== offlineOnly
+    );
+    if (type === ArtifactCategoryType.Resource)
+      orgrecs = orgrecs.filter((r) => r.attributes.resource);
+    else if (type === ArtifactCategoryType.Discussion)
+      orgrecs = orgrecs.filter((r) => r.attributes.discussion);
+    else if (type === ArtifactCategoryType.Note)
+      orgrecs = orgrecs.filter((r) => r.attributes.note);
+
+    orgrecs.forEach((r) =>
+      categorys.push({
+        slug: r.attributes.categoryname,
+        category: localizedArtifactCategory(r.attributes.categoryname),
+        org: related(r, 'organization') ?? '',
+        id: r.id,
+      })
+    );
     return categorys;
+  };
+
+  const isDuplicateCategory = async (
+    newArtifactCategory: string,
+    type: ArtifactCategoryType
+  ) => {
+    //check for duplicate
+    const orgrecs: ArtifactCategory[] = memory.cache.query((q: QueryBuilder) =>
+      q
+        .findRecords('artifactcategory')
+        .filter({ attribute: 'categoryname', value: newArtifactCategory })
+    ) as any;
+    var dup = false;
+    orgrecs.forEach((r) => {
+      var org = related(r, 'organization');
+      if (org === curOrg || !org) dup = true;
+    });
+    if (dup) return true;
+    //now check duplicate localized
+    const ac = (await getArtifactCategorys(type)).filter(
+      (c) => c.category === newArtifactCategory
+    );
+    if (ac.length > 0) return true;
+    return false;
   };
 
   const addNewArtifactCategory = async (
     newArtifactCategory: string,
-    resource: boolean,
-    discussion: boolean
+    type: ArtifactCategoryType
   ) => {
-    if (newArtifactCategory.length > 0) {
-      //check for duplicate
-      const orgrecs: ArtifactCategory[] = memory.cache.query(
-        (q: QueryBuilder) =>
-          q
-            .findRecords('artifactcategory')
-            .filter({ attribute: 'categoryname', value: newArtifactCategory })
-      ) as any;
-      var dup = false;
-      orgrecs.forEach((r) => {
-        var org = related(r, 'organization');
-        if (org === organization || !org) dup = true;
-      });
-      if (dup) return 'duplicate';
-      //now check duplicate localized
-      const ac = (await getArtifactCategorys(resource, discussion)).filter(
-        (c) => c.category === newArtifactCategory
-      );
-      if (ac.length > 0) return 'duplicate';
+    if (!/^\s*$/.test(newArtifactCategory)) {
+      if (await isDuplicateCategory(newArtifactCategory, type))
+        return 'duplicate';
 
       const artifactCategory: ArtifactCategory = {
         type: 'artifactcategory',
         attributes: {
           categoryname: newArtifactCategory,
-          resource: resource,
-          discussion: discussion,
+          resource: type === ArtifactCategoryType.Resource,
+          discussion: type === ArtifactCategoryType.Discussion,
+          note: type === ArtifactCategoryType.Note,
         },
       } as any;
       const t = new TransformBuilder();
@@ -126,7 +144,7 @@ export const useArtifactCategory = () => {
           artifactCategory,
           'organization',
           'organization',
-          organization
+          curOrg
         ),
       ];
       await memory.update(ops);
@@ -141,6 +159,7 @@ export const useArtifactCategory = () => {
 
   return {
     getArtifactCategorys,
+    isDuplicateCategory,
     addNewArtifactCategory,
     localizedArtifactCategory,
     fromLocalizedArtifactCategory,

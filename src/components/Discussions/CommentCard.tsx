@@ -66,6 +66,7 @@ const GridContainerSpread = styled(Grid)<GridProps>(({ theme }) => ({
 const GridContainerRow = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
+  flexGrow: 1,
 }));
 const GridContainerBorderedRow = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
@@ -75,7 +76,12 @@ const GridContainerBorderedRow = styled(Grid)<GridProps>(({ theme }) => ({
 const GridContainerCol = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
+  justifyContent: 'center',
   color: theme.palette.primary.dark,
+  '& audio': {
+    marginTop: theme.spacing(1),
+    height: '40px',
+  },
 }));
 
 const StyledText = styled(TextField)<TextFieldProps>(({ theme }) => ({
@@ -296,7 +302,7 @@ export const CommentCard = (props: IProps & IRecordProps) => {
               <UserAvatar {...props} userRec={author} />
             </Grid>
             {commentPlayId && mediaId === commentPlayId ? (
-              <GridContainerCol item id="commentplayer">
+              <GridContainerCol container id="commentplayer">
                 <MediaPlayer
                   srcMediaId={mediaId === commentPlayId ? commentPlayId : ''}
                   requestPlay={commentPlaying}

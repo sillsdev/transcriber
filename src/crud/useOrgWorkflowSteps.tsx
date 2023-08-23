@@ -1,17 +1,13 @@
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { useGlobal, useRef } from 'reactn';
 import { related, remoteId } from '.';
-import {
-  IState,
-  IWorkflowStepsStrings,
-  OrgWorkflowStep,
-  WorkflowStep,
-} from '../model';
+import { IWorkflowStepsStrings, OrgWorkflowStep, WorkflowStep } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { logError, Severity, toCamel, waitForIt } from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { shallowEqual, useSelector } from 'react-redux';
-import localStrings from '../selector/localize';
+import { workflowStepsSelector } from '../selector';
+import { useSnackBar } from '../hoc/SnackBar';
 
 export const defaultWorkflow = 'transcriber';
 
@@ -19,9 +15,10 @@ interface ISwitches {
   [key: string]: any;
 }
 export const useOrgWorkflowSteps = () => {
-  const wfStepsSelector = (state: IState) =>
-    localStrings(state as IState, { layout: 'workflowSteps' });
-  const t: IWorkflowStepsStrings = useSelector(wfStepsSelector, shallowEqual);
+  const t: IWorkflowStepsStrings = useSelector(
+    workflowStepsSelector,
+    shallowEqual
+  );
 
   const [global] = useGlobal();
   const [memory] = useGlobal('memory');
@@ -32,6 +29,7 @@ export const useOrgWorkflowSteps = () => {
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const creatingRef = useRef(false);
+  const { showMessage } = useSnackBar();
 
   const localizedWorkStep = (val: string) => {
     return (t as ISwitches)[toCamel(val)] || val;
@@ -48,7 +46,7 @@ export const useOrgWorkflowSteps = () => {
   };
 
   const AddOrgWFToOps = async (
-    t: TransformBuilder,
+    tb: TransformBuilder,
     wf: WorkflowStep,
     org?: string
   ) => {
@@ -62,11 +60,12 @@ export const useOrgWorkflowSteps = () => {
         ...wf.attributes,
       },
     } as OrgWorkflowStep;
-    ops.push(...AddRecord(t, wfs, user, memory));
+    ops.push(...AddRecord(tb, wfs, user, memory));
     ops.push(
-      ...ReplaceRelatedRecord(t, wfs, 'organization', 'organization', myOrgId)
+      ...ReplaceRelatedRecord(tb, wfs, 'organization', 'organization', myOrgId)
     );
     try {
+      showMessage(t.addingStep + localizedWorkStep(wfs.attributes.name));
       await memory.update(ops);
     } catch (ex) {
       logError(Severity.error, errorReporter, ex as Error);
@@ -104,12 +103,14 @@ export const useOrgWorkflowSteps = () => {
   const CreateOrgWorkflowSteps = async (process: string, org: string) => {
     creatingRef.current = true;
     const workflowsteps = (
-      memory.cache.query((q: QueryBuilder) =>
+      (await memory.query((q: QueryBuilder) =>
         q
           .findRecords('workflowstep')
           .filter({ attribute: 'process', value: process })
-      ) as WorkflowStep[]
-    ).filter((s) => Boolean(s.keys?.remoteId) !== offlineOnly);
+      )) as WorkflowStep[]
+    )
+      .filter((s) => Boolean(s.keys?.remoteId) !== offlineOnly)
+      .sort((a, b) => a.attributes.sequencenum - b.attributes.sequencenum);
     var tb = new TransformBuilder();
     //originally had them all in one ops, but it was too fast
     //we have checks on the back end for duplicate entries (using just type, datecreated, dateupdated) because orbit sometimes sends twice

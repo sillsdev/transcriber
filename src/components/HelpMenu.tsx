@@ -14,7 +14,6 @@ import path from 'path-browserify';
 import { isElectron, API_CONFIG } from '../api-variable';
 import {
   launch,
-  launchCmd,
   dataPath,
   PathType,
   execFolder,
@@ -25,6 +24,7 @@ import AboutDialog from './AboutDialog';
 import { usePlan, remoteIdGuid } from '../crud';
 import { mainSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import { ContextHelp } from './ContextHelp';
 const ipc = (window as any)?.electron;
 
 interface IProps {
@@ -44,70 +44,22 @@ export function HelpMenu(props: IProps) {
   const [developer, setDeveloper] = useGlobal('developer');
   const [aboutOpen, setAboutOpen] = React.useState(false);
   const [topic, setTopic] = React.useState<string>();
-  const [helpToggle, setHelpToggle] = React.useState(false);
   const { showMessage } = useSnackBar();
   const { getPlan } = usePlan();
-  const helpRef = React.useRef<any>();
   const t: IMainStrings = useSelector(mainSelector, shallowEqual);
-
-  interface IHelpLinkProps {
-    topic?: string;
-  }
-
-  const HelpLink = ({ topic }: IHelpLinkProps) => {
-    const topicS = topic || '';
-    return (
-      // eslint-disable-next-line jsx-a11y/anchor-has-content
-      <a
-        ref={helpRef}
-        href={API_CONFIG.help + '/' + helpLanguage() + indexName + topicS}
-        target="_blank"
-        rel="noopener noreferrer"
-      ></a>
-    );
-  };
-
-  const indexName = '/index.htm';
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setShift(event.shiftKey);
     setAnchorEl(event.currentTarget);
   };
 
-  const helpLanguage = () => {
-    // let language = navigator.language.split('-')[0];
-    // if (!['fr', 'es'].includes(language)) language = 'en';
-    // return language;
-    return 'en';
+  const handleHelp = (topic: string) => () => {
+    setTopic(topic);
+    setAnchorEl(null);
   };
 
-  const handleHelp = (topic?: string) => async () => {
-    const chmHelp = API_CONFIG.chmHelp;
-    const helpUrl = API_CONFIG.help;
-    const topicS = topic || '';
-    const topicWin = topic && decodeURIComponent(topic.slice(3));
-    if (isElectron) {
-      const folder = await execFolder();
-      // see https://stackoverflow.com/questions/22300244/open-a-chm-file-to-a-specific-topic
-      if ((await ipc?.isWindows()) && topicWin && !online) {
-        const target = `C:\\Windows\\hh.exe ${path.join(
-          folder,
-          chmHelp
-        )}::${topicWin}`;
-        launchCmd(target);
-      } else if (topic && !online) {
-        launchCmd(`xchm -c 1 ${path.join(folder, chmHelp)}`);
-      } else {
-        const target = !online
-          ? path.join(folder, chmHelp)
-          : helpUrl + '/' + helpLanguage() + indexName + topicS;
-        launch(target, online);
-      }
-    } else if (helpRef.current) {
-      setTopic(topic || '');
-      setHelpToggle(!helpToggle);
-    }
-    setAnchorEl(null);
+  const handleReset = () => {
+    setTopic(undefined);
   };
 
   const handleDownload = (url: string, inOffline?: boolean) => async () => {
@@ -149,10 +101,6 @@ export function HelpMenu(props: IProps) {
   };
 
   const spreadsheetTopic = '#t=Concepts%2FSpreadsheet_convention.htm';
-
-  React.useEffect(() => {
-    if (helpRef.current && topic !== undefined) helpRef.current.click();
-  }, [topic, helpToggle]);
 
   const planRec = React.useMemo(
     () => {
@@ -222,7 +170,7 @@ export function HelpMenu(props: IProps) {
         onClose={handle('Close')}
         sx={props?.sx}
       >
-        <StyledMenuItem id="helpHelp" onClick={handleHelp()}>
+        <StyledMenuItem id="helpHelp" onClick={handleHelp('')}>
           <ListItemIcon>
             <HelpIcon />
           </ListItemIcon>
@@ -300,7 +248,7 @@ export function HelpMenu(props: IProps) {
           <ListItemText primary={t.about} />
         </StyledMenuItem>
       </StyledMenu>
-      <HelpLink topic={topic} />
+      <ContextHelp topic={topic} reset={handleReset} />
       <AboutDialog open={aboutOpen} onClose={handleAbout(false)} />
     </div>
   );

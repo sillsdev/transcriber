@@ -235,6 +235,12 @@
 				<target>Uncategorized</target>
 			</segment>
 		</unit>
+		<unit id="artifactCategory.retelling">
+			<segment>
+				<source>Community Test Retell</source>
+				<target>Teste da comunidade Recontar</target>
+			</segment>
+		</unit>
 		<unit id="artifactType.backtranslation">
 			<segment>
 				<source>Phrase Back Translation</source>
@@ -459,8 +465,8 @@
 		</unit>
 		<unit id="audacityManager.missingImport">
 			<segment>
-				<source>Missing import file: {0}</source>
-				<target>Falta arquivo de importação: {0}</target>
+				<source>Missing import file: {0}. Please open Audacity again and use File, Export to save the contents and then use Import here.</source>
+				<target>Arquivo de importação ausente: {0}. Abra o Audacity novamente e use Arquivo, Exportar para salvar o conteúdo e, em seguida, use Importar aqui.</target>
 			</segment>
 		</unit>
 		<unit id="audacityManager.missingProject">
@@ -484,7 +490,7 @@
 		<unit id="audacityManager.tip">
 			<segment>
 				<source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
-				<target>Se você tiver um projeto Audacity existente que deseja vincular a esta passagem, clique em PROCURAR. Para criar um novo projeto Audacity com um nome criado automaticamente, clique em CRIAR.</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="audacityManager.title">
@@ -589,6 +595,12 @@
 				<target>Redação oral</target>
 			</segment>
 		</unit>
+		<unit id="cards.editCategory">
+			<segment>
+				<source>Edit Team Categories</source>
+				<target>Editar categorias da equipe</target>
+			</segment>
+		</unit>
 		<unit id="cards.editWorkflow">
 			<segment>
 				<source>Edit Workflow {0}</source>
@@ -611,6 +623,12 @@
 			<segment>
 				<source>Language: {0}</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="cards.longNotesProject">
+			<segment>
+				<source>Project with Long Notes</source>
+				<target>Projeto com notas longas</target>
 			</segment>
 		</unit>
 		<unit id="cards.mediaUploaded">
@@ -727,6 +745,12 @@
 				<target>Configurações</target>
 			</segment>
 		</unit>
+		<unit id="cards.notesHelper">
+			<segment>
+				<source>Shared explanations, rationales, footnotes, etc.</source>
+				<target>Explicações compartilhadas, justificativas, notas de rodapé, etc.</target>
+			</segment>
+		</unit>
 		<unit id="cards.sync">
 			<segment>
 				<source>Sync ({0})</source>
@@ -755,6 +779,12 @@
 			<segment>
 				<source>Upload Progress</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="category.builtIn">
+			<segment>
+				<source>System Categories</source>
+				<target>Categorias do sistema</target>
 			</segment>
 		</unit>
 		<unit id="commentCard.approve">
@@ -919,10 +949,22 @@
 				<target>{0} de {1} arquivos carregados com sucesso.</target>
 			</segment>
 		</unit>
+		<unit id="consultantCheck.checked">
+			<segment>
+				<source>Mark Checked</source>
+				<target>Marcar como verificado</target>
+			</segment>
+		</unit>
 		<unit id="control.book">
 			<segment>
 				<source>Book</source>
 				<target>Livro</target>
+			</segment>
+		</unit>
+		<unit id="control.normal">
+			<segment>
+				<source>Normal</source>
+				<target>Normal</target>
 			</segment>
 		</unit>
 		<unit id="control.other">
@@ -1210,7 +1252,7 @@
 		<unit id="electronImport.newerVersion">
 			<segment>
 				<source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
-				<target>Este arquivo foi exportado com uma versão mais recente do programa. Você deve baixar a versão mais recente antes de importar. Se você continuar, alguns dados podem não ser importados corretamente.</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="electronImport.project">
@@ -3505,6 +3547,12 @@
 				<target>Início - Parada</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.suffix">
+			<segment>
+				<source>Suffix</source>
+				<target>Sufixo</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.termsOfUse">
 			<segment>
 				<source>Terms of Use</source>
@@ -3757,6 +3805,12 @@
 				<target>Você quer remover o grupo de colegas e informações sobre quem são os membros?</target>
 			</segment>
 		</unit>
+		<unit id="peerCheck.afterResource">
+			<segment>
+				<source>Play following context</source>
+				<target>Reproduzir o seguinte contexto</target>
+			</segment>
+		</unit>
 		<unit id="permission.admin">
 			<segment>
 				<source>Admin</source>
@@ -3808,13 +3862,13 @@
 		<unit id="permission.mentorTip">
 			<segment>
 				<source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-				<target>Os comentários do mentor só serão visíveis para os CITs. Os mentores podem aprovar os comentários do CIT para torná-los visíveis para o restante da equipe.</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="permission.nspTip">
 			<segment>
 				<source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
-				<target>Grupo Geral de Pares sem permissões especiais. Utilizado para atribuir discussões a grupos de equipa.</target>
+				<target>Grupo de pares geral sem permissões especiais. Use para atribuir discussões a grupos de equipes.</target>
 			</segment>
 		</unit>
 		<unit id="planActions.assign">
@@ -3927,20 +3981,14 @@
 		</unit>
 		<unit id="planSheet.insertFirstPassage">
 			<segment>
-				<source>Add passage as first in {0} {1}</source>
-				<target>Adicionar passagem como primeiro em {0} {1}</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.insertLastPassage">
-			<segment>
-				<source>Add passage as last in {0} {1}</source>
-				<target>Adicionar passagem como último em {0} {1}</target>
+				<source>Add Passage as first in {0} {1}</source>
+				<target>Adicionar Passagem como a primeira em {0} {1}</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.passageBelow">
 			<segment>
-				<source>Insert passage below passage {0}</source>
-				<target>Inserir passagem abaixo {0}.</target>
+				<source>Add Passage below Passage {0}</source>
+				<target>Adicionar Passagem abaixo da Passagem {0}</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.passageEnd">
@@ -3993,8 +4041,8 @@
 		</unit>
 		<unit id="planSheet.sectionAbove">
 			<segment>
-				<source>Insert {0} above {1} {2}</source>
-				<target>Inserir {0} acima {1}. {2}</target>
+				<source>Add {0} above {1} {2}</source>
+				<target>Adicionar {0} acima de {1} {2}</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.sectionEnd">
@@ -4283,6 +4331,12 @@
 			<segment>
 				<source>User profile</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="projButtons.categoryTitle">
+			<segment>
+				<source>Edit Team Categories</source>
+				<target>Editar categorias da equipe</target>
 			</segment>
 		</unit>
 		<unit id="projButtons.export">
@@ -4969,6 +5023,12 @@
 				<target>Versões</target>
 			</segment>
 		</unit>
+		<unit id="shared.wait">
+			<segment>
+				<source>Please wait for action to finish.</source>
+				<target>Aguarde a conclusão da ação.</target>
+			</segment>
+		</unit>
 		<unit id="shared.yes">
 			<segment>
 				<source>Yes</source>
@@ -5353,6 +5413,12 @@
 				<target>Teste comunitário</target>
 			</segment>
 		</unit>
+		<unit id="tool.consultantCheck">
+			<segment>
+				<source>Consultant Check</source>
+				<target>Verificação do consultor</target>
+			</segment>
+		</unit>
 		<unit id="tool.discuss">
 			<segment>
 				<source>Discuss</source>
@@ -5608,7 +5674,7 @@
 		<unit id="transcriber.updateByOther2">
 			<segment>
 				<source>Transcription updated by {0}. Keep their changes? {1}</source>
-				<target>Transcrição atualizada por {0}. Manter as alterações? {1}</target>
+				<target>Transcrição atualizada por {0}. Manter suas alterações? {1}</target>
 			</segment>
 		</unit>
 		<unit id="transcribeReject.cancel">
@@ -5725,6 +5791,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.creatingDownloadFile">
+			<segment>
+				<source>Creating File...{0}%</source>
+				<target>Criando arquivo...{0}%</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.downloading">
 			<segment>
 				<source>Creation complete. Downloading {0}</source>
@@ -5797,6 +5869,18 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.exportSince">
+			<segment>
+				<source>Changes since date</source>
+				<target>Alterações desde a data</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.exportSinceGo">
+			<segment>
+				<source>Export from date</source>
+				<target>Exportar a partir da data</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.exportTooLarge">
 			<segment>
 				<source>The audio project cannot be exported. The export file is too large.</source>
@@ -5842,7 +5926,7 @@
 		<unit id="transcriptionTab.offlineData">
 			<segment>
 				<source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
-				<target>Você tem novas alterações localmente que não foram incluídas na exportação de ptf. Por favor, exporte também um arquivo itf para capturar todas as alterações.</target>
+				<target>Você tem novas alterações locais que não foram incluídas na exportação do ptf. Exporte também um arquivo itf para capturar todas as alterações.</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.changed">
@@ -6370,7 +6454,7 @@
 		<unit id="welcome.setupTeamTip">
 			<segment>
 				<source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-				<target>Configurar o projeto, dividindo o trabalho em passagens que podem ser atribuídas a vários transcriptores e editores. Transcriptores e editores podem trabalhar on-line ou off-line, baixando ou importando o projeto.</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="welcome.team">
@@ -6388,13 +6472,19 @@
 		<unit id="welcome.teamTip">
 			<segment>
 				<source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
-				<target>Um projeto foi criado on-line. Transcriptores e editores podem trabalhar online, offline baixando o projeto, ou offline importando-o.</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="welcome.title">
 			<segment>
 				<source>Getting Started</source>
 				<target>Receber</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.addingStep">
+			<segment>
+				<source>Adding Workflow Step:</source>
+				<target>Adição de etapa de fluxo de trabalho:</target>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.backTranslation">
@@ -6473,6 +6563,18 @@
 			<segment>
 				<source>Internalize</source>
 				<target>Internalizar</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.paratextConsultantCheck">
+			<segment>
+				<source>Consultant Check in Paratext</source>
+				<target>Verificação do consultor no Paratext</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.paratextPeerReview">
+			<segment>
+				<source>Peer Review in Paratext</source>
+				<target>Revisão por pares no Paratext</target>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.paratextSync">

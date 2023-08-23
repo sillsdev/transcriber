@@ -1,7 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { useGlobal } from 'reactn';
-import { ISharedStrings, IPlanActionsStrings } from '../../model';
+import {
+  ISharedStrings,
+  IPlanActionsStrings,
+  IPlanSheetStrings,
+} from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
   Button,
@@ -21,7 +24,17 @@ import MicIcon from '@mui/icons-material/Mic';
 import { elemOffset } from '../../utils';
 import { isElectron } from '../../api-variable';
 import { AudacityLogo } from '../../control';
-import { planActionsSelector, sharedSelector } from '../../selector';
+import {
+  planActionsSelector,
+  planSheetSelector,
+  sharedSelector,
+} from '../../selector';
+import {
+  InsertSectionIcon,
+  PassageBelowIcon,
+  PassageToNextIcon,
+  PassageToPrevIcon,
+} from '../../control/PlanIcons';
 
 interface IProps {
   rowIndex: number;
@@ -31,12 +44,20 @@ interface IProps {
   canAssign: boolean;
   canDelete: boolean;
   active: boolean;
+  organizedBy: string;
+  sectionSequenceNumber: string;
+  passageSequenceNumber: string;
   onPlayStatus: (mediaId: string) => void;
   onRecord: (i: number) => void;
   onUpload: (i: number) => () => void;
   onAudacity: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
+  onDisableFilter?: () => void;
+  onPassageBelow?: () => void;
+  onPassageToPrev?: () => void;
+  onPassageToNext?: () => void;
+  onSectionAbove?: () => void;
 }
 export function PlanActionMenu(props: IProps) {
   const {
@@ -53,9 +74,17 @@ export function PlanActionMenu(props: IProps) {
     canAssign,
     canDelete,
     active,
+    organizedBy,
+    sectionSequenceNumber,
+    passageSequenceNumber,
+    onDisableFilter,
+    onPassageBelow,
+    onPassageToPrev,
+    onPassageToNext,
+    onSectionAbove,
   } = props;
-  const [offlineOnly] = useGlobal('offlineOnly');
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
+  const p: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [open, setOpen] = React.useState(false);
   const [hover, setHover] = React.useState(false);
@@ -186,15 +215,77 @@ export function PlanActionMenu(props: IProps) {
                         <AssignIcon sx={{ color: 'primary.light' }} />
                       </MenuItem>
                     )}
+                    {onDisableFilter && (
+                      <MenuItem id="filtered" onClick={onDisableFilter}>
+                        {p.filtered}
+                      </MenuItem>
+                    )}
+                    {onSectionAbove && (
+                      <MenuItem
+                        id="secAbove"
+                        onClick={onSectionAbove}
+                        title={p.sectionAbove
+                          .replace('{0}', organizedBy)
+                          .replace('{1}', organizedBy)
+                          .replace('{2}', sectionSequenceNumber)}
+                      >
+                        <InsertSectionIcon />
+                      </MenuItem>
+                    )}
+
+                    {onPassageBelow && isSection && (
+                      <MenuItem
+                        id="psgAsFirst"
+                        onClick={onPassageBelow}
+                        title={p.insertFirstPassage
+                          .replace('{0}', organizedBy)
+                          .replace('{1}', sectionSequenceNumber)}
+                      >
+                        <PassageBelowIcon />
+                      </MenuItem>
+                    )}
+
+                    {onPassageToPrev && (
+                      <MenuItem
+                        id="passToPrev"
+                        onClick={onPassageToPrev}
+                        title={p.passageToPrevSection.replace(
+                          '{0}',
+                          passageSequenceNumber
+                        )}
+                      >
+                        <PassageToPrevIcon />
+                      </MenuItem>
+                    )}
+                    {onPassageBelow && isPassage && (
+                      <MenuItem
+                        id="passBelow"
+                        onClick={onPassageBelow}
+                        title={p.passageBelow.replace(
+                          '{0}',
+                          passageSequenceNumber
+                        )}
+                      >
+                        <PassageBelowIcon />
+                      </MenuItem>
+                    )}
+                    {onPassageToNext && (
+                      <MenuItem
+                        id="passToNext"
+                        onClick={onPassageToNext}
+                        title={p.passageToNextSection.replace(
+                          '{0}',
+                          passageSequenceNumber
+                        )}
+                      >
+                        <PassageToNextIcon />
+                      </MenuItem>
+                    )}
                     {isPassage && (
                       <MenuItem
                         id="planActUpload"
                         onClick={onUpload(rowIndex)}
-                        title={
-                          !offlineOnly
-                            ? ts.uploadMediaSingular
-                            : ts.importMediaSingular
-                        }
+                        title={ts.uploadMediaSingular}
                       >
                         <AddIcon sx={{ color: 'primary.light' }} />
                       </MenuItem>

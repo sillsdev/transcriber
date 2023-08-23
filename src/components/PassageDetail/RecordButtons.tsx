@@ -1,11 +1,17 @@
-import { Button, ButtonGroup } from '@mui/material';
+import { ButtonGroup, ButtonGroupProps, styled } from '@mui/material';
 import AddIcon from '@mui/icons-material/LibraryAddOutlined';
 import VersionsIcon from '@mui/icons-material/List';
 import AudioFileIcon from '@mui/icons-material/AudioFileOutlined';
-import { AudacityLogo } from '../../control';
+import { AltButton, AudacityLogo } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
 import { passageRecordSelector, sharedSelector } from '../../selector';
 import { IPassageRecordStrings, ISharedStrings } from '../../model';
+
+const StyledButtonGroup = styled(ButtonGroup)<ButtonGroupProps>(() => ({
+  '& button': {
+    margin: 0,
+  },
+}));
 
 interface IProps {
   onVersions?: () => void;
@@ -29,44 +35,44 @@ export const RecordButtons = ({
   const IconSize = { width: '14px', height: '14px' };
 
   return (
-    <ButtonGroup size="small" sx={{ my: 1 }}>
+    <StyledButtonGroup size="small" sx={{ my: 1 }}>
       {onVersions && (
-        <Button
+        <AltButton
           id="pdRecordVersions"
           onClick={onVersions}
           title={ts.versionHistory}
           startIcon={<VersionsIcon sx={IconSize} />}
         >
           {ts.versionHistory}
-        </Button>
+        </AltButton>
       )}
       {onReload && (
-        <Button
+        <AltButton
           id="pdRecordReload"
           onClick={onReload}
           startIcon={<AudioFileIcon sx={IconSize} />}
         >
           {t.loadlatest}
-        </Button>
+        </AltButton>
       )}
-      <Button
+      <AltButton
         id="pdRecordUpload"
         onClick={onUpload}
         title={ts.uploadMediaSingular}
         startIcon={<AddIcon sx={IconSize} />}
       >
         {ts.uploadMediaSingular}
-      </Button>
+      </AltButton>
       {onAudacity && (
-        <Button
+        <AltButton
           id="pdAudacity"
           onClick={onAudacity}
           title={ts.launchAudacity}
           startIcon={<AudacityLogo sx={IconSize} />}
         >
           {ts.launchAudacity}
-        </Button>
+        </AltButton>
       )}
-    </ButtonGroup>
+    </StyledButtonGroup>
   );
 };

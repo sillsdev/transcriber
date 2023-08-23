@@ -291,14 +291,14 @@ export function TranscriptionTab(
       media.length,
       token,
       errorReporter,
-      t.exportingProject,
+      t.creatingDownloadFile,
       t.noData.replace(
         '{0}',
         onlyTypeId !== undefined
           ? localizedArtifactType(artifactType)
           : t.changed
       ),
-      t.queued,
+      t.writingDownloadFile,
       localizedArtifact,
       getOfflineProject,
       importedDate,

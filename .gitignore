@@ -27,6 +27,7 @@ localization/tpi/*
 # misc
 .eslintcache
 .DS_Store
+.env
 .env.local
 .env.*.local
 .auth0*

@@ -16,7 +16,10 @@ import {
   GridProps,
   Box,
   BoxProps,
+  Stack,
+  IconButton,
 } from '@mui/material';
+import HelpIcon from '@mui/icons-material/Help';
 import {
   useAudacityProjUpdate,
   useAudacityProjRead,
@@ -39,6 +42,8 @@ import { dataPath, PathType } from '../../utils';
 import { extensions, mimes } from '.';
 import SpeakerName from '../SpeakerName';
 import { audacityManagerSelector } from '../../selector';
+import { GrowingSpacer } from '../StepEditor';
+import { ContextHelp } from '../ContextHelp';
 
 const ipc = (window as any)?.electron;
 const path = require('path-browserify');
@@ -86,6 +91,7 @@ function AudacityManager(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
   const [exists, setExists] = React.useState(false);
   const [name, setName] = React.useState('');
+  const [topic, setTopic] = React.useState<string>();
   const nameRef = React.useRef('');
   const [memory] = useGlobal('memory');
   const [changed] = useGlobal('changed');
@@ -309,6 +315,14 @@ function AudacityManager(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
 
+  const handleHelp = () => {
+    setTopic('#t=User_Interface/Dialog_boxes/Audacity_Manager_dialog_box.htm');
+  };
+
+  const handleReset = () => {
+    setTopic(undefined);
+  };
+
   return (
     <Dialog
       onClose={handleClose}
@@ -317,7 +331,15 @@ function AudacityManager(props: IProps) {
       maxWidth="md"
       disableEnforceFocus
     >
-      <DialogTitle id="manager-title">{`${t.title} - ${passageRef}`}</DialogTitle>
+      <DialogTitle id="manager-title">
+        <Stack direction="row">
+          {`${t.title} - ${passageRef}`}
+          <GrowingSpacer />
+          <IconButton color="primary" onClick={handleHelp}>
+            <HelpIcon />
+          </IconButton>
+        </Stack>
+      </DialogTitle>
       <StyledGrid container>
         {exists && name !== '' ? (
           <Grid container justifyContent="center">
@@ -378,6 +400,7 @@ function AudacityManager(props: IProps) {
             </Grid>
           </Grid>
         )}
+        <ContextHelp topic={topic} reset={handleReset} />
       </StyledGrid>
       <DialogActions>
         <Button onClick={handleClose} variant="contained" color="primary">

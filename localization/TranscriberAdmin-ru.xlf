@@ -235,6 +235,12 @@
 				<target>Uncategorized</target>
 			</segment>
 		</unit>
+		<unit id="artifactCategory.retelling">
+			<segment>
+				<source>Community Test Retell</source>
+				<target>Тест сообщества Пересказ</target>
+			</segment>
+		</unit>
 		<unit id="artifactType.backtranslation">
 			<segment>
 				<source>Phrase Back Translation</source>
@@ -459,8 +465,8 @@
 		</unit>
 		<unit id="audacityManager.missingImport">
 			<segment>
-				<source>Missing import file: {0}</source>
-				<target>Отсутствует файл импорта: {0}</target>
+				<source>Missing import file: {0}. Please open Audacity again and use File, Export to save the contents and then use Import here.</source>
+				<target>Отсутствует файл импорта: {0}. Пожалуйста, откройте Audacity снова и используйте File, Export для сохранения содержимого, а затем используйте Import здесь.</target>
 			</segment>
 		</unit>
 		<unit id="audacityManager.missingProject">
@@ -484,7 +490,7 @@
 		<unit id="audacityManager.tip">
 			<segment>
 				<source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
-				<target>"Если у вас есть существующий проект Audacity, который вы хотите связать стим отрывком, нажмите BROWSE. Чтобы создать новый проект Audacity свтоматически созданным именем, нажмите СОЗДАТЬ."</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="audacityManager.title">
@@ -589,6 +595,12 @@
 				<target>Устное редактирование</target>
 			</segment>
 		</unit>
+		<unit id="cards.editCategory">
+			<segment>
+				<source>Edit Team Categories</source>
+				<target>Редактирование категорий команды</target>
+			</segment>
+		</unit>
 		<unit id="cards.editWorkflow">
 			<segment>
 				<source>Edit Workflow {0}</source>
@@ -611,6 +623,12 @@
 			<segment>
 				<source>Language: {0}</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="cards.longNotesProject">
+			<segment>
+				<source>Project with Long Notes</source>
+				<target>Проект с длинными примечаниями</target>
 			</segment>
 		</unit>
 		<unit id="cards.mediaUploaded">
@@ -727,6 +745,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="cards.notesHelper">
+			<segment>
+				<source>Shared explanations, rationales, footnotes, etc.</source>
+				<target>Общие пояснения, обоснования, сноски и т.д.</target>
+			</segment>
+		</unit>
 		<unit id="cards.sync">
 			<segment>
 				<source>Sync ({0})</source>
@@ -755,6 +779,12 @@
 			<segment>
 				<source>Upload Progress</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="category.builtIn">
+			<segment>
+				<source>System Categories</source>
+				<target>Системные категории</target>
 			</segment>
 		</unit>
 		<unit id="commentCard.approve">
@@ -919,10 +949,22 @@
 				<target>{0} из {1} файлов загружены успешно.</target>
 			</segment>
 		</unit>
+		<unit id="consultantCheck.checked">
+			<segment>
+				<source>Mark Checked</source>
+				<target>Отметить Отмечено</target>
+			</segment>
+		</unit>
 		<unit id="control.book">
 			<segment>
 				<source>Book</source>
 				<target>Книга</target>
+			</segment>
+		</unit>
+		<unit id="control.normal">
+			<segment>
+				<source>Normal</source>
+				<target>Нормальный</target>
 			</segment>
 		</unit>
 		<unit id="control.other">
@@ -1210,7 +1252,7 @@
 		<unit id="electronImport.newerVersion">
 			<segment>
 				<source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
-				<target>Этот файл был экспортирован с помощью более новой версии программы. Передмпортом следует загрузить последнюю версию! Если вы продолжите, некоторыеанные могут быть импортированы неправильно.</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="electronImport.project">
@@ -1702,7 +1744,7 @@
 		<unit id="import.projectNotFound">
 			<segment>
 				<source>ITF does not contain current audio project. It contains audio project {0}.</source>
-				<target>ITF не содержит текущего аудиопроекта. Он содержит аудиопроект {0}.</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="import.showHideFilter">
@@ -3505,6 +3547,12 @@
 				<target>Старт - Стоп</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.suffix">
+			<segment>
+				<source>Suffix</source>
+				<target>Суффикс</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.termsOfUse">
 			<segment>
 				<source>Terms of Use</source>
@@ -3757,6 +3805,12 @@
 				<target>Вы хотите удалить одноранговую группу и информацию о том, кто является ее членами?</target>
 			</segment>
 		</unit>
+		<unit id="peerCheck.afterResource">
+			<segment>
+				<source>Play following context</source>
+				<target>Воспроизведение следующего контекста</target>
+			</segment>
+		</unit>
 		<unit id="permission.admin">
 			<segment>
 				<source>Admin</source>
@@ -3766,7 +3820,7 @@
 		<unit id="permission.adminTip">
 			<segment>
 				<source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-				<target>Нужна ли нам эта группа? Или просто использовать командного администратора? Люди в этой группе смогут выполнить любой шаг, даже если он назначен группе, в которой они не состоят.</target>
+				<target>Нужна ли нам эта группа? Или достаточно использовать team admin? Люди, входящие в эту группу, смогут выполнять любые действия, даже если они назначены группе, в которой они не состоят.</target>
 			</segment>
 		</unit>
 		<unit id="permission.consultant">
@@ -3778,7 +3832,7 @@
 		<unit id="permission.consultantTip">
 			<segment>
 				<source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
-				<target>Не уверен, что нам также нужно это разрешение, потому что неясно, какие особые вещи делают консультанты в этом программном обеспечении. Комментарии независимого консультанта будут видны всем членам команды.</target>
+				<target>Не уверен, что это право нужно, так как неясно, что особенного делают консультанты в этой программе. Комментарии независимого консультанта будут видны всем членам команды.</target>
 			</segment>
 		</unit>
 		<unit id="permission.consultantInTraining">
@@ -3808,13 +3862,13 @@
 		<unit id="permission.mentorTip">
 			<segment>
 				<source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-				<target>Комментарии наставника будут видны только CIT. Наставники могут одобрять комментарии CIT, чтобы сделать их видимыми для остальных членов команды.</target>
+				<target>Комментарии наставника будут видны только CIT. Наставники могут одобрить комментарии CIT, чтобы сделать их видимыми для остальных членов команды.</target>
 			</segment>
 		</unit>
 		<unit id="permission.nspTip">
 			<segment>
 				<source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
-				<target>Общая группа коллег без специальных разрешений. Используется для распределения обсуждений по группам команды.</target>
+				<target>Общая группа коллег без особых прав. Используется для распределения обсуждений по группам.</target>
 			</segment>
 		</unit>
 		<unit id="planActions.assign">
@@ -3927,20 +3981,14 @@
 		</unit>
 		<unit id="planSheet.insertFirstPassage">
 			<segment>
-				<source>Add passage as first in {0} {1}</source>
-				<target>Добавить отрывок первым в {0} {1}</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.insertLastPassage">
-			<segment>
-				<source>Add passage as last in {0} {1}</source>
-				<target>Добавить отрывок как последний в {0} {1}</target>
+				<source>Add Passage as first in {0} {1}</source>
+				<target>Добавить проход как первый в {0} {1}</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.passageBelow">
 			<segment>
-				<source>Insert passage below passage {0}</source>
-				<target>Вставить отрывок под отрывком {0}</target>
+				<source>Add Passage below Passage {0}</source>
+				<target>Добавить проход ниже прохода {0}</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.passageEnd">
@@ -3993,8 +4041,8 @@
 		</unit>
 		<unit id="planSheet.sectionAbove">
 			<segment>
-				<source>Insert {0} above {1} {2}</source>
-				<target>Вставить {0} выше {1} {2}</target>
+				<source>Add {0} above {1} {2}</source>
+				<target>Добавить {0} над {1} {2}</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.sectionEnd">
@@ -4283,6 +4331,12 @@
 			<segment>
 				<source>User profile</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="projButtons.categoryTitle">
+			<segment>
+				<source>Edit Team Categories</source>
+				<target>Редактировать категории команды</target>
 			</segment>
 		</unit>
 		<unit id="projButtons.export">
@@ -4969,6 +5023,12 @@
 				<target>Версии</target>
 			</segment>
 		</unit>
+		<unit id="shared.wait">
+			<segment>
+				<source>Please wait for action to finish.</source>
+				<target>Пожалуйста, дождитесь завершения действия.</target>
+			</segment>
+		</unit>
 		<unit id="shared.yes">
 			<segment>
 				<source>Yes</source>
@@ -5353,6 +5413,12 @@
 				<target>Тест сообщества</target>
 			</segment>
 		</unit>
+		<unit id="tool.consultantCheck">
+			<segment>
+				<source>Consultant Check</source>
+				<target>Проверка консультанта</target>
+			</segment>
+		</unit>
 		<unit id="tool.discuss">
 			<segment>
 				<source>Discuss</source>
@@ -5608,7 +5674,7 @@
 		<unit id="transcriber.updateByOther2">
 			<segment>
 				<source>Transcription updated by {0}. Keep their changes? {1}</source>
-				<target>Транскрипция обновлена ​​{0}. Сохранить их изменения? {1}</target>
+				<target>Транскрипция обновлена {0}. Сохранить их изменения? {1}</target>
 			</segment>
 		</unit>
 		<unit id="transcribeReject.cancel">
@@ -5725,6 +5791,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.creatingDownloadFile">
+			<segment>
+				<source>Creating File...{0}%</source>
+				<target>Создать файл...{0}%</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.downloading">
 			<segment>
 				<source>Creation complete. Downloading {0}</source>
@@ -5797,10 +5869,22 @@
 				<target>Экспорт аудиопроекта (ptf)</target>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.exportSince">
+			<segment>
+				<source>Changes since date</source>
+				<target>Изменения с даты</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.exportSinceGo">
+			<segment>
+				<source>Export from date</source>
+				<target>Экспорт с даты</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.exportTooLarge">
 			<segment>
 				<source>The audio project cannot be exported. The export file is too large.</source>
-				<target>Аудиопроект не может быть экспортирован. Экспортируемый файл слишкомелик.</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.exportType">
@@ -5842,7 +5926,7 @@
 		<unit id="transcriptionTab.offlineData">
 			<segment>
 				<source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
-				<target>У вас есть новые локальные изменения, которые не были включены в экспорт ptf. Также экспортируйте файл itf, чтобы зафиксировать все изменения.</target>
+				<target>У вас есть новые локальные изменения, которые не были включены в экспорт ptf. Пожалуйста, экспортируйте также файл itf, чтобы отразить все изменения.</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.changed">
@@ -6370,7 +6454,7 @@
 		<unit id="welcome.setupTeamTip">
 			<segment>
 				<source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-				<target>Настройте проект, разделив работу на отрывки, которые можно поручитьазличным транскрибаторам и редакторам. Транскрибаторы и редакторы могутаботать онлайн или офлайн, загружая или импортируя проект.</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="welcome.team">
@@ -6388,13 +6472,19 @@
 		<unit id="welcome.teamTip">
 			<segment>
 				<source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
-				<target>Проект был создан в режиме онлайн. Транскрайберы и редакторы могут работатьнлайн, офлайн, загрузив проект, или офлайн, импортировав его.</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="welcome.title">
 			<segment>
 				<source>Getting Started</source>
 				<target>Добро пожаловать</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.addingStep">
+			<segment>
+				<source>Adding Workflow Step:</source>
+				<target>Добавление шага рабочего процесса:</target>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.backTranslation">
@@ -6473,6 +6563,18 @@
 			<segment>
 				<source>Internalize</source>
 				<target>Интернализация</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.paratextConsultantCheck">
+			<segment>
+				<source>Consultant Check in Paratext</source>
+				<target>Проверка консультанта в Paratext</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.paratextPeerReview">
+			<segment>
+				<source>Peer Review in Paratext</source>
+				<target>Экспертная оценка в Paratext</target>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.paratextSync">

@@ -16,13 +16,19 @@ import { StyledMenu, StyledMenuItem } from '../../control';
 import { filterMenuSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 
+export enum Resolved {
+  No,
+  Yes,
+  Both,
+}
+
 export interface IFilterState {
   forYou: boolean;
-  resolved: boolean;
+  resolved: Resolved;
   latestVersion: boolean;
   allPassages: boolean;
   allSteps: boolean;
-  [key: string]: boolean;
+  [key: string]: boolean | Resolved;
 }
 
 interface IProps {
@@ -59,7 +65,7 @@ export function FilterMenu(props: IProps) {
   const anyFilter = useMemo(
     () =>
       forYou ||
-      resolved ||
+      resolved !== Resolved.No ||
       latestVersion ||
       allPassages ||
       allSteps ||
@@ -100,7 +106,13 @@ export function FilterMenu(props: IProps) {
         </StyledMenuItem>
         <StyledMenuItem id="resolved-filt" onClick={handle('resolved')}>
           <ListItemIcon>
-            {resolved ? <BoxClose id="yesres" /> : <BoxOpen id="nores" />}
+            {resolved === Resolved.Both ? (
+              t.all
+            ) : resolved === Resolved.Yes ? (
+              <BoxClose id="yesres" />
+            ) : (
+              <BoxOpen id="nores" />
+            )}
           </ListItemIcon>
           <ListItemText primary={t.resolved} />
         </StyledMenuItem>

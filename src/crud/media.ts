@@ -283,9 +283,13 @@ export const scriptureFullPath = (
   }
   return { fullPath, book, ref };
 };
+export const mediaFileName = (mf: MediaFile | undefined) =>
+  mf?.attributes?.s3file ?? mf?.attributes?.originalFile ?? '';
+
 export const nameFromTemplate = (
   mf: MediaFile,
   memory: Memory,
+  offline: boolean,
   template: string = ''
 ) => {
   const passRec = findRecord(
@@ -293,12 +297,19 @@ export const nameFromTemplate = (
     'passage',
     related(mf, 'passage')
   ) as Passage;
-  if (!passRec) return mf.attributes.originalFile;
+  if (!passRec) return mediaFileName(mf);
   if (template === '') {
-    var tmp = passageDefaultFilename(passRec, '', memory, undefined, '');
+    var tmp = passageDefaultFilename(
+      passRec,
+      '',
+      memory,
+      undefined,
+      offline,
+      ''
+    );
     const ver = mf.attributes?.versionNumber;
     const { ext } = removeExtension(
-      mf.attributes.s3file ?? mf.attributes.audioUrl
+      mf.attributes.originalFile ?? mf.attributes.audioUrl
     );
     return `${tmp}_v${ver}.${ext}`;
   } else {

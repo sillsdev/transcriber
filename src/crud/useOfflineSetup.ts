@@ -152,9 +152,9 @@ export const useOfflineSetup = () => {
   };
 
   const makeWorkflowStepsRecs = async () => {
-    const allRecs = memory.cache.query((q: QueryBuilder) =>
+    const allRecs = (await memory.query((q: QueryBuilder) =>
       q.findRecords('workflowstep')
-    ) as WorkflowStep[];
+    )) as WorkflowStep[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
     const WBT = getTypeId(
       ArtifactTypeSlug.WholeBackTranslation,
@@ -167,7 +167,7 @@ export const useOfflineSetup = () => {
     const RBT = getTypeId(ArtifactTypeSlug.Retell, true) as string;
     console.log('WBT', WBT, 'PBT', PBT);
     if (offlineRecs.length === 0) {
-      makeWorkflowProcessSteps('OBT', [
+      await makeWorkflowProcessSteps('OBT', [
         { name: 'Internalize', tool: 'resource' },
         { name: 'Record', tool: 'record' },
         { name: 'TermIdentify', tool: 'keyterm' },
@@ -178,19 +178,19 @@ export const useOfflineSetup = () => {
         { name: 'PhraseBackTranslation', tool: 'phraseBackTranslate' },
         { name: 'PBTTranscribe', tool: 'transcribe', artId: PBT },
         { name: 'PBTParatextSync', tool: 'paratext', artId: PBT },
-        { name: 'ConsultantCheck', tool: 'discuss' },
+        { name: 'ConsultantCheck', tool: 'consultantCheck' },
         { name: 'FinalReview', tool: 'record' },
         { name: 'FinalReviewText', tool: 'transcribe' },
         { name: 'Export', tool: 'export' },
         { name: 'Done', tool: 'done' },
       ]);
 
-      makeWorkflowProcessSteps('OBTs', [
+      await makeWorkflowProcessSteps('OBTs', [
         { name: 'Record', tool: 'record' },
         { name: 'Export', tool: 'export' },
       ]);
 
-      makeWorkflowProcessSteps('OBTr', [
+      await makeWorkflowProcessSteps('OBTr', [
         { name: 'Internalize', tool: 'resource' },
         { name: 'Record', tool: 'record' },
         { name: 'TeamCheck', tool: 'teamCheck' },
@@ -198,18 +198,18 @@ export const useOfflineSetup = () => {
         { name: 'CommunityTesting', tool: 'community' },
         { name: 'WholeBackTranslation', tool: 'wholeBackTranslate' },
         { name: 'PhraseBackTranslation', tool: 'phraseBackTranslate' },
-        { name: 'ConsultantCheck', tool: 'discuss' },
+        { name: 'ConsultantCheck', tool: 'consultantCheck' },
         { name: 'Export', tool: 'export' },
         { name: 'Done', tool: 'done' },
       ]);
 
-      makeWorkflowProcessSteps('OBTo', [
+      await makeWorkflowProcessSteps('OBTo', [
         { name: 'Internalize', tool: 'resource' },
         { name: 'Record', tool: 'record' },
         { name: 'TermIdentify', tool: 'keyterm' },
         { name: 'PeerReview', tool: 'teamCheck' },
         { name: 'PhraseBackTranslation', tool: 'phraseBackTranslate' },
-        { name: 'ConsultantCheck1', tool: 'discuss' },
+        { name: 'ConsultantCheck1', tool: 'consultantCheck' },
         { name: 'CommunityTesting', tool: 'community' },
         {
           name: 'RetellBackTranslation',
@@ -219,14 +219,14 @@ export const useOfflineSetup = () => {
         { name: 'PhraseBackTranslation', tool: 'phraseBackTranslate' },
         { name: 'PBTTranscribe', tool: 'transcribe', artId: PBT },
         { name: 'RetellTranscribe', tool: 'paratext', artId: RBT },
-        { name: 'ConsultantCheck2', tool: 'discuss' },
+        { name: 'ConsultantCheck2', tool: 'consultantCheck' },
         { name: 'FinalReview', tool: 'discuss' },
         { name: 'FinalRecording', tool: 'discuss' },
         { name: 'Export', tool: 'export' },
         { name: 'Done', tool: 'done' },
       ]);
 
-      makeWorkflowProcessSteps('OBS', [
+      await makeWorkflowProcessSteps('OBS', [
         { name: 'Internalize', tool: 'resource' },
         { name: 'Record', tool: 'record' },
         { name: 'TeamCheck', tool: 'teamCheck' },
@@ -234,7 +234,7 @@ export const useOfflineSetup = () => {
         { name: 'CommunityTest1', tool: 'community' },
         { name: 'CommunityTest2', tool: 'community' },
         { name: 'BackTranslation', tool: 'phraseBackTranslate' },
-        { name: 'ConsultantCheck', tool: 'discuss' },
+        { name: 'ConsultantCheck', tool: 'consultantCheck' },
         { name: 'PreliminaryApproval', tool: 'export' },
         { name: 'FinalReview', tool: 'discuss' },
         { name: 'FinalRecording', tool: 'discuss' },
@@ -242,7 +242,7 @@ export const useOfflineSetup = () => {
         { name: 'Done', tool: 'done' },
       ]);
 
-      makeWorkflowProcessSteps('draft', [
+      await makeWorkflowProcessSteps('draft', [
         { name: 'Internalize', tool: 'resource' },
         { name: 'Record', tool: 'record' },
         { name: 'TeamCheck', tool: 'teamCheck' },
@@ -251,7 +251,7 @@ export const useOfflineSetup = () => {
         { name: 'Done', tool: 'done' },
       ]);
 
-      makeWorkflowProcessSteps('transcriber', [
+      await makeWorkflowProcessSteps('transcriber', [
         { name: 'Record', tool: 'record' },
         { name: 'Transcribe', tool: 'transcribe' },
         { name: 'ParatextSync', tool: 'paratext' },
@@ -262,7 +262,7 @@ export const useOfflineSetup = () => {
     if (
       offlineRecs.filter((w) => w.attributes.process === 'Render').length === 0
     ) {
-      makeWorkflowProcessSteps('Render', [
+      await makeWorkflowProcessSteps('Render', [
         { name: 'Transcribe', tool: 'transcribe' },
         { name: 'ParatextSync', tool: 'paratext' },
         { name: 'WholeBackTranslation', tool: 'wholeBackTranslate' },

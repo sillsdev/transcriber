@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { ITemplateStrings } from '../../model';
 import {
   Divider,
@@ -84,6 +84,7 @@ export function Template(props: ITemplateProps) {
   const { matchMap, options } = props;
   const [template, setTemplatex] = useState<string>();
   const [templateInfo, setTemplateInfo] = useState(false);
+  const templateRef = useRef<HTMLDivElement>(null);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const t: ITemplateStrings = useSelector(templateSelector, shallowEqual);
@@ -105,6 +106,14 @@ export function Template(props: ITemplateProps) {
   };
   const handleClick = (newpart: string) => {
     setTemplate(template + `{${newpart}}`);
+    if (templateRef.current) {
+      const el = templateRef.current?.firstChild as HTMLLabelElement;
+      const attrs = el.attributes as any;
+      if (attrs['data-shrink'].nodeValue === 'false') {
+        el.style.translate = '12px 7px';
+        el.style.transform = 'scale(75%)';
+      }
+    }
   };
 
   const handleApply = () => {
@@ -162,6 +171,7 @@ export function Template(props: ITemplateProps) {
   return (
     <>
       <TextField
+        ref={templateRef}
         label={t.autoMatchTemplate}
         variant="filled"
         sx={{ mx: 2, width: '600px' }}

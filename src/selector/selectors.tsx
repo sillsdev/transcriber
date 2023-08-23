@@ -19,11 +19,17 @@ export const audacityManagerSelector = (state: IState) =>
 export const cardsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'cards' });
 
+export const categorySelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'category' });
+
 export const commentCardSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'commentCard' });
 
 export const communitySelector = (state: IState) =>
   localStrings(state as IState, { layout: 'community' });
+
+export const consultantSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'consultantCheck' });
 
 export const controlSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'control' });
@@ -93,6 +99,9 @@ export const passageRecordSelector = (state: IState) =>
 
 export const peerSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'peer' });
+
+export const peerCheckSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'peerCheck' });
 
 export const permissionsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'permission' });

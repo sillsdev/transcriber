@@ -17,7 +17,7 @@ export const useOfflineTeamList = () => {
     const offlineProjects = recOfType('offlineproject') as OfflineProject[];
     const projs = new Set<string>();
     offlineProjects.forEach((p) => {
-      if (p.attributes.offlineAvailable) {
+      if (p?.attributes?.offlineAvailable) {
         projs.add(related(p, 'project'));
       }
     });

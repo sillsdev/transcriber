@@ -25,7 +25,6 @@ import {
   PathType,
   Severity,
 } from '../utils';
-import AdmZip from 'adm-zip';
 import { Operation } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 const ipc = (window as any)?.electron;
@@ -70,27 +69,15 @@ export const ProjectDownload = (
   const doProjectExport = useProjectExport({
     exportProject,
     t,
-    message: t.downloadingProject,
+    message: t.creatingDownloadFile,
   });
-  const [progress, setProgressx] = React.useState<Steps>(Steps.Prepare);
-  const progressRef = React.useRef<Steps>(progress);
+  const [progress, setProgress] = React.useState<Steps>(Steps.Prepare);
   const [steps, setSteps] = React.useState<string[]>([]);
   const [currentStep, setCurrentStep] = React.useState(0);
   const [exportName, setExportName] = React.useState('');
-  const [exportUrl, setExportUrlx] = React.useState('');
-  const exportUrlRef = React.useRef('');
+  const [exportUrl, setExportUrl] = React.useState('');
   const [offlineUpdates] = React.useState<Operation[]>([]);
   const backup = coordinator.getSource('backup') as IndexedDBSource;
-
-  const setProgress = (val: Steps) => {
-    progressRef.current = val;
-    setProgressx(val);
-  };
-
-  const setExportUrl = (val: string) => {
-    exportUrlRef.current = val;
-    setExportUrlx(val);
-  };
 
   const translateError = (err: IAxiosStatus): string => {
     if (err.errStatus === 401) return ts.expiredToken;
@@ -214,9 +201,7 @@ export const ProjectDownload = (
     if (progress === Steps.Import) {
       (async () => {
         const localPath = dataPath(exportName, PathType.ZIP);
-        const zip = (await ipc?.zipOpen(localPath)) as AdmZip;
-        await ipc?.zipExtract(zip, dataPath(), true);
-        await ipc?.zipClose(zip);
+        await ipc?.zipExtractOpen(localPath, dataPath());
         offlineProjectUpdateFilesDownloaded(
           projectIds[currentStep],
           offlineUpdates,
@@ -235,17 +220,9 @@ export const ProjectDownload = (
 
   React.useEffect(() => {
     return () => {
-      if (progressRef.current !== Steps.Prepare) {
-        logError(Severity.error, errorReporter, ts.cancel);
-        if (exportUrlRef.current) URL.revokeObjectURL(exportUrlRef.current);
-        showTitledMessage(t.error, ts.cancel);
-        exportComplete();
-        setProgress(Steps.Error);
-        setTimeout(() => {
-          setBusy(false);
-          finish();
-        }, 1000);
-      }
+      exportComplete();
+      setBusy(false);
+      finish();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

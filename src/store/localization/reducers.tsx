@@ -59,6 +59,9 @@ const initialState = {
 			"scripture": "Scripture",
 			"translationresource": "Translation Resource",
 			"uncategorized": "Uncategorized",
+			"retelling": "Community Test Retell",
+			"grammar": "Grammar",
+			"qanda": "Question and Answer",
 		}
 	}),
 	"artifactType": new LocalizedStrings({
@@ -112,7 +115,7 @@ const initialState = {
 			"import": "Import",
 			"installError": "Audacity install error",
 			"loadingAudio": "Use File:Import in Audacity to load current audio if desired.",
-			"missingImport": "Missing import file: {0}",
+			"missingImport": "Missing import file: {0}. Please open Audacity again and use File, Export to save the contents and then use Import here.",
 			"missingProject": "Missing file. Use Browse to search for it or Create to make a new file.",
 			"open": "Open",
 			"saveFirst": "Save before editing",
@@ -142,10 +145,13 @@ const initialState = {
 			"delete": "Delete",
 			"deleteTeam": "Delete Team",
 			"draft": "Oral Drafting",
+			"editCategory": "Edit Team Categories",
 			"editWorkflow": "Edit Workflow {0}",
 			"explainTeamDelete": "Deleting the team will delete all audio projects of the team.",
 			"import": "Import Audio Project",
 			"language": "Language: {0}",
+			"longNotesProject": "Project with Long Notes",
+			"longNotes": "Shared Introductions, Rationales, Devotionals, Podcasts",
 			"mediaUploaded": "Audio Uploaded",
 			"members": "Members ({0})",
 			"nameInUse": "Name in use",
@@ -165,11 +171,29 @@ const initialState = {
 			"save": "Save",
 			"sectionStatus": "{0} {1}",
 			"settings": "Settings",
+			"notesHelper": "Shared explanations, rationales, footnotes, etc.",
+			"notesProject": "Project with Notes",
 			"sync": "Sync ({0})",
 			"teamName": "Team Name",
 			"teamSettings": "Team Settings",
 			"transcriber": "Transcribing",
 			"uploadProgress": "Upload Progress",
+		}
+	}),
+	"category": new LocalizedStrings({
+		"en": {
+			"builtIn": "System Categories",
+			"discussion": "Discussion",
+			"discussions": "discussion(s)",
+			"ignoreInvalid": "Ignoring invalid category change '{0}'.",
+			"inUseBy": "In use by {0} {1}",
+			"note": "Audio Note",
+			"chapternumber": "Chapter Number",
+			"general": "General Note",
+			"introPara": "Introductory Paragraph",
+			"resource": "Resource",
+			"notes": "audio note(s)",
+			"resources": "resource(s)",
 		}
 	}),
 	"commentCard": new LocalizedStrings({
@@ -211,9 +235,21 @@ const initialState = {
 			"uploadComplete": "{0} of {1} files uploaded successfully.",
 		}
 	}),
+	"consultantCheck": new LocalizedStrings({
+		"en": {
+			"checked": "Mark Checked",
+			"compare": "Compare",
+			"compareItems": "Select Items to Compare",
+			"furtherReview": "Review More",
+			"noMedia": "No Media Available",
+			"noTranscription": "No Transcription Available",
+			"transcription": "Transcription",
+		}
+	}),
 	"control": new LocalizedStrings({
 		"en": {
 			"book": "Book",
+			"normal": "Normal",
 			"other": "General",
 			"scripture": "Scripture",
 		}
@@ -736,6 +772,8 @@ const initialState = {
 			"sharedResource": "Link Shared {0} Resource",
 			"source": "Source",
 			"startStop": "Start - Stop",
+			"suffix": "Suffix",
+			"suffixTip": "A Suffix is added to the end of the Reference (if there is no Description to override it).",
 			"termsOfUse": "Terms of Use",
 			"termsReview": "Review the Terms of Use",
 			"title": "Title",
@@ -800,6 +838,13 @@ const initialState = {
 			"removeConfirm": "Do you want to remove the peer group and information about who are the members?",
 		}
 	}),
+	"peerCheck": new LocalizedStrings({
+		"en": {
+			"afterResource": "Play following context",
+			"back3Seconds": "Skip back 3 seconds",
+			"resourceStart": "Play from start",
+		}
+	}),
 	"permission": new LocalizedStrings({
 		"en": {
 			"admin": "Admin",
@@ -838,9 +883,8 @@ const initialState = {
 			"confirm": "{0} {1} Item(s). Are you sure?",
 			"filtered": "Disable filter to add rows.",
 			"nonNumber": "Do not change to non-number.",
-			"insertFirstPassage": "Add passage as first in {0} {1}",
-			"insertLastPassage": "Add passage as last in {0} {1}",
-			"passageBelow": "Insert passage below passage {0}",
+			"insertFirstPassage": "Add Passage as first in {0} {1}",
+			"passageBelow": "Add Passage below Passage {0}",
 			"passageEnd": "Add Passage to End",
 			"passageToPrevSection": "Move Passage to Previous Section",
 			"passageToNextSection": "Move Passage to Next Section",
@@ -849,7 +893,7 @@ const initialState = {
 			"resequence": "Resequence",
 			"save": "Save",
 			"saving": "Saving...",
-			"sectionAbove": "Insert {0} above {1} {2}",
+			"sectionAbove": "Add {0} above {1} {2}",
 			"sectionEnd": "Add {0} to End",
 			"selectRows": "Please select row(s) to {0}.",
 			"step": "Step",
@@ -910,6 +954,7 @@ const initialState = {
 	}),
 	"projButtons": new LocalizedStrings({
 		"en": {
+			"categoryTitle": "Edit Team Categories",
 			"export": "Export",
 			"exportTitle": "{0} Export",
 			"import": "Import",
@@ -1060,6 +1105,7 @@ const initialState = {
 			"uploadRights": "Upload Rights File",
 			"user": "Team Member",
 			"versionHistory": "Versions",
+			"wait": "Please wait for action to finish.",
 			"yes": "Yes",
 		}
 	}),
@@ -1156,6 +1202,7 @@ const initialState = {
 	"tool": new LocalizedStrings({
 		"en": {
 			"community": "Community Test",
+			"consultantCheck": "Consultant Check",
 			"discuss": "Discuss",
 			"done": "Done",
 			"export": "Export",
@@ -1242,6 +1289,8 @@ const initialState = {
 			"cantCopy": "Unable to copy to clipboard",
 			"copyTip": "Copy transcriptions to Clipboard",
 			"copyTranscriptions": "Copy Transcriptions",
+			"creatingDownloadFile": "Creating File...{0}%",
+			"writingDownloadFile": "Writing file...It could take up to 6 minutes to resume progress.",
 			"downloading": "Creation complete. Downloading {0}",
 			"downloadingProject": "Downloading...{0}%",
 			"downloadProject": "Download Audio Project",
@@ -1267,7 +1316,6 @@ const initialState = {
 			"changed": "Changed",
 			"passages": "Passages",
 			"plan": "Plan",
-			"queued": "Your export has been queued on the media server.  It could take up to 6 minutes to resume progress.  Please wait.",
 			"scriptureBurrito": "Scripture Burrito",
 			"sectionstate": "State",
 			"showHideFilter": "Show/Hide filter rows",
@@ -1389,6 +1437,7 @@ const initialState = {
 	}),
 	"workflowSteps": new LocalizedStrings({
 		"en": {
+			"addingStep": "Adding Workflow Step:",
 			"backTranslation": "Back Translate",
 			"communityTest1": "Community Test 1",
 			"communityTest2": "Community Test 2",
@@ -1496,9 +1545,11 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"audacityManager" : new LocalizedStrings(action.payload.data.audacityManager),
 				"audioDownload" : new LocalizedStrings(action.payload.data.audioDownload),
 				"cards" : new LocalizedStrings(action.payload.data.cards),
+				"category" : new LocalizedStrings(action.payload.data.category),
 				"commentCard" : new LocalizedStrings(action.payload.data.commentCard),
 				"commentEditor" : new LocalizedStrings(action.payload.data.commentEditor),
 				"community" : new LocalizedStrings(action.payload.data.community),
+				"consultantCheck" : new LocalizedStrings(action.payload.data.consultantCheck),
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
 				"discussionCard" : new LocalizedStrings(action.payload.data.discussionCard),
@@ -1528,6 +1579,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
 				"passageRecord" : new LocalizedStrings(action.payload.data.passageRecord),
 				"peer" : new LocalizedStrings(action.payload.data.peer),
+				"peerCheck" : new LocalizedStrings(action.payload.data.peerCheck),
 				"permission" : new LocalizedStrings(action.payload.data.permission),
 				"planActions" : new LocalizedStrings(action.payload.data.planActions),
 				"planSheet" : new LocalizedStrings(action.payload.data.planSheet),

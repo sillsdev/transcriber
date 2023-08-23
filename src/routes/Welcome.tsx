@@ -139,7 +139,7 @@ export function Welcome(props: IProps) {
   const checkUsers = (autoGo: boolean, prevChoice?: string) => {
     const offlineProj = (
       recOfType('offlineproject') as OfflineProject[]
-    ).filter((p) => p.attributes.offlineAvailable);
+    ).filter((p) => p?.attributes?.offlineAvailable);
     setHasOfflineProjects(offlineProj.length > 0);
     const projects = recOfType('project') as Record[];
     setHasProjects(projects.length > 0);

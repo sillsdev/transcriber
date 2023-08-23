@@ -36,7 +36,6 @@ import {
   useTeamCreate,
   useTeamUpdate,
   useTeamDelete,
-  useIsPersonalTeam,
   useNewTeamId,
   useTableType,
   usePlan,
@@ -44,6 +43,7 @@ import {
   useOfflnProjRead,
   useLoadProjectData,
   useProjectType,
+  isPersonalTeam,
 } from '../crud';
 import {
   cardsSelector,
@@ -102,7 +102,11 @@ const initState = {
   projectCreate: async (project: VProject, team: TeamIdType) => '',
   projectUpdate: (project: VProject) => {},
   projectDelete: (project: VProject) => {},
-  teamCreate: (team: Organization, cb?: (org: string) => Promise<void>) => {},
+  teamCreate: (
+    team: Organization,
+    process: string,
+    cb?: (org: string) => Promise<void>
+  ) => {},
   teamUpdate: (team: Organization) => {},
   teamDelete: async (team: Organization) => {},
   isAdmin: (team: Organization) => false,
@@ -210,7 +214,6 @@ const TeamProvider = withData(mapRecordsToProps)(
     const orbitTeamUpdate = useTeamUpdate();
     const orbitTeamDelete = useTeamDelete();
     const orbitFlatAdd = useFlatAdd(sharedStrings);
-    const isPersonal = useIsPersonalTeam();
     const getTeamId = useNewTeamId();
     const getPlanType = useTableType('plan');
     const vProject = useVProjectRead();
@@ -271,7 +274,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       return orgs
         .filter(
           (o) =>
-            !isPersonal(o.id) &&
+            !isPersonalTeam(o.id, organizations) &&
             (!isOffline || offlineOnly || teamProjects(o.id).length > 0)
         )
         .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1));
@@ -289,7 +292,7 @@ const TeamProvider = withData(mapRecordsToProps)(
         const projIds = userProjects
           .filter(
             (p) =>
-              isPersonal(related(p, 'organization')) &&
+              isPersonalTeam(related(p, 'organization'), organizations) &&
               (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
           )
           .map((p) => p.id);
@@ -357,9 +360,10 @@ const TeamProvider = withData(mapRecordsToProps)(
 
     const teamCreate = (
       team: Organization,
+      process: string,
       cb?: (org: string) => Promise<void>
     ) => {
-      orbitTeamCreate(team, cb);
+      orbitTeamCreate(team, process, cb);
     };
 
     const teamUpdate = (team: Organization) => {

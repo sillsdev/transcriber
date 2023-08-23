@@ -1,5 +1,4 @@
 import { ExportType, FileResponse } from './types';
-import AdmZip from 'adm-zip';
 import path from 'path-browserify';
 import moment, { Moment } from 'moment';
 import {
@@ -63,7 +62,9 @@ export async function electronExport(
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
   importedDate?: Moment | undefined,
   target?: string,
-  orgWorkflowSteps?: OrgWorkflowStep[]
+  orgWorkflowSteps?: OrgWorkflowStep[],
+  sendProgress?: (progress: number | string) => void,
+  writingmsg?: string
 ): Promise<FileResponse | null> {
   const onlineSerlzr = getSerializer(memory, false);
   const offlineSrlzr = getSerializer(memory, true);
@@ -133,7 +134,7 @@ export async function electronExport(
     ) as Project;
   };
   const createZip = async (
-    zip: AdmZip,
+    zip: string,
     projRec: Project,
     expType: ExportType
   ) => {
@@ -229,8 +230,8 @@ export async function electronExport(
     const AddMediaFiles = async (recs: Record[], rename: boolean) => {
       const mediapath = PathType.MEDIA + '/';
       var newname = '';
-      for (const m of recs) {
-        var mf = m as MediaFile;
+      for (var mx = 0; mx < recs.length; mx++) {
+        var mf = recs[mx] as MediaFile;
         if (!mf.attributes) return;
         const mp = dataPath(mf.attributes.audioUrl, PathType.MEDIA);
         const { fullPath } = scriptureFullPath(mf, {
@@ -238,9 +239,11 @@ export async function electronExport(
           scripturePackage,
           projRec,
         } as IExportScripturePath);
-        if (rename) newname = mediapath + nameFromTemplate(mf, memory);
+        if (rename) newname = mediapath + nameFromTemplate(mf, memory, false);
         else newname = fullPath || mediapath + path.basename(mp);
         await AddStreamEntry(mp, newname);
+        if (sendProgress && mx % 50 === 0)
+          sendProgress(Math.round((mx * 100) / recs.length));
         if (expType === ExportType.ELAN) {
           const eafCode = getMediaEaf(mf, memory);
           const name = path.basename(newname, path.extname(newname)) + '.eaf';
@@ -740,7 +743,7 @@ export async function electronExport(
   };
 
   var projects: Project[];
-  var backupZip: AdmZip | undefined;
+  var backupZip: string | undefined;
   if (
     exportType === ExportType.FULLBACKUP ||
     exportType === ExportType.ITFSYNC
@@ -759,10 +762,10 @@ export async function electronExport(
       q.findRecords('offlineproject')
     ) as OfflineProject[];
     var ids = offlineprojects
-      .filter((o) => o.attributes.offlineAvailable)
+      .filter((o) => o?.attributes?.offlineAvailable)
       .map((o) => related(o, 'project')) as string[];
     projects = projects.filter((p) => ids.includes(p.id));
-    backupZip = (await ipc?.zipOpen()) as AdmZip;
+    backupZip = await ipc?.zipOpen();
     if (exportType === ExportType.FULLBACKUP) {
       exportType = ExportType.PTF;
     } else {
@@ -777,7 +780,7 @@ export async function electronExport(
   var changedRecs = 0;
   for (var ix: number = 0; ix < projects.length; ix++) {
     let { zip, numRecs, numFiltered } = await createZip(
-      (await ipc?.zipOpen()) as AdmZip,
+      await ipc?.zipOpen(),
       projects[ix],
       exportType
     );
@@ -800,7 +803,7 @@ export async function electronExport(
         );
       if (numFiltered) {
         const itf = await createZip(
-          (await ipc?.zipOpen()) as AdmZip,
+          await ipc?.zipOpen(),
           projects[ix],
           ExportType.ITF
         );
@@ -815,7 +818,9 @@ export async function electronExport(
       if (numRecs) {
         var where = dataPath(filename);
         await createPathFolder(where);
+        if (sendProgress && writingmsg) sendProgress(writingmsg);
         await ipc?.zipWrite(zip, where);
+        await ipc?.zipClose(zip);
         return BuildFileResponse(
           where,
           filename,
@@ -828,7 +833,10 @@ export async function electronExport(
   }
   var backupWhere = dataPath(backupName);
   await createPathFolder(backupWhere);
-  if (backupZip) await ipc?.zipWrite(backupZip, backupWhere);
+  if (backupZip) {
+    if (sendProgress && writingmsg) sendProgress(writingmsg);
+    await ipc?.zipWrite(backupZip, backupWhere);
+  }
   const buffer =
     exportType === ExportType.ITF
       ? await ipc?.zipToBuffer(backupZip)

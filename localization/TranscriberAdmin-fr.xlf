@@ -235,6 +235,12 @@
 				<target>Non classé</target>
 			</segment>
 		</unit>
+		<unit id="artifactCategory.retelling">
+			<segment>
+				<source>Community Test Retell</source>
+				<target>artefactCategory.retelling Test communautaire Retell</target>
+			</segment>
+		</unit>
 		<unit id="artifactType.backtranslation">
 			<segment>
 				<source>Phrase Back Translation</source>
@@ -459,8 +465,8 @@
 		</unit>
 		<unit id="audacityManager.missingImport">
 			<segment>
-				<source>Missing import file: {0}</source>
-				<target>Fichier d'importation manquant : {0}</target>
+				<source>Missing import file: {0}. Please open Audacity again and use File, Export to save the contents and then use Import here.</source>
+				<target>audacityManager.missingImport Fichier d'importation manquant : {0}. Veuillez ouvrir Audacity à nouveau et utiliser Fichier, Exporter pour sauvegarder le contenu et ensuite utiliser Importer ici.</target>
 			</segment>
 		</unit>
 		<unit id="audacityManager.missingProject">
@@ -484,7 +490,7 @@
 		<unit id="audacityManager.tip">
 			<segment>
 				<source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
-				<target>Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur PARCOURIR. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CRÉER. </target>
+				<target>audacityManager.tip Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur BROWSE. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CREATE.</target>
 			</segment>
 		</unit>
 		<unit id="audacityManager.title">
@@ -589,6 +595,12 @@
 				<target>Rédaction orale</target>
 			</segment>
 		</unit>
+		<unit id="cards.editCategory">
+			<segment>
+				<source>Edit Team Categories</source>
+				<target>cards.editCategory Modifier les catégories de l'équipe</target>
+			</segment>
+		</unit>
 		<unit id="cards.editWorkflow">
 			<segment>
 				<source>Edit Workflow {0}</source>
@@ -611,6 +623,12 @@
 			<segment>
 				<source>Language: {0}</source>
 				<target>Langue : {0}</target>
+			</segment>
+		</unit>
+		<unit id="cards.longNotesProject">
+			<segment>
+				<source>Project with Long Notes</source>
+				<target>cards.longNotesProject Projet avec des notes longues</target>
 			</segment>
 		</unit>
 		<unit id="cards.mediaUploaded">
@@ -727,6 +745,12 @@
 				<target>Paramètres</target>
 			</segment>
 		</unit>
+		<unit id="cards.notesHelper">
+			<segment>
+				<source>Shared explanations, rationales, footnotes, etc.</source>
+				<target>cards.notesHelper Explications partagées, justifications, notes de bas de page, etc.</target>
+			</segment>
+		</unit>
 		<unit id="cards.sync">
 			<segment>
 				<source>Sync ({0})</source>
@@ -755,6 +779,12 @@
 			<segment>
 				<source>Upload Progress</source>
 				<target>Progression du téléchargement</target>
+			</segment>
+		</unit>
+		<unit id="category.builtIn">
+			<segment>
+				<source>System Categories</source>
+				<target>category.builtIn Catégories du système</target>
 			</segment>
 		</unit>
 		<unit id="commentCard.approve">
@@ -919,10 +949,22 @@
 				<target>{0} de {1} fichiers téléchargés avec succès.</target>
 			</segment>
 		</unit>
+		<unit id="consultantCheck.checked">
+			<segment>
+				<source>Mark Checked</source>
+				<target>consultantCheck.checked Marque Coché</target>
+			</segment>
+		</unit>
 		<unit id="control.book">
 			<segment>
 				<source>Book</source>
 				<target>Livre</target>
+			</segment>
+		</unit>
+		<unit id="control.normal">
+			<segment>
+				<source>Normal</source>
+				<target>control.normal Normal</target>
 			</segment>
 		</unit>
 		<unit id="control.other">
@@ -1168,7 +1210,7 @@
 		<unit id="electronImport.importOldFile">
 			<segment>
 				<source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
-				<target>Ce fichier n'a pas été exporté à partir de la dernière version. Réexportez votre fichier PTF à partir de la version en ligne.</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="electronImport.importPending">
@@ -1210,7 +1252,7 @@
 		<unit id="electronImport.newerVersion">
 			<segment>
 				<source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
-				<target>Ce fichier a été exporté avec une version plus récente du programme. Vous devriez télécharger la dernière version avant de l'importer ! Si vous continuez, certaines données risquent de ne pas être importées correctement.</target>
+				<target>electronImport.newerVersion Ce fichier a été exporté avec une version plus récente du programme. Vous devez télécharger la dernière version avant de procéder à l'importation ! Si vous continuez, certaines données pourraient ne pas être importées correctement.</target>
 			</segment>
 		</unit>
 		<unit id="electronImport.project">
@@ -1221,7 +1263,7 @@
 		</unit>
 		<unit id="electronImport.projectImported">
 			<segment>
-				<source>Audio Project {name0} was previously imported with a newer file: {date1}</source>
+				<source>Audio Project {name0} was previously imported with a newer file: {date1} </source>
 				<target>Le projet audio {nom0} a été précédemment importé avec un fichier plus récent : {date1}</target>
 			</segment>
 		</unit>
@@ -1258,7 +1300,7 @@
 		<unit id="emailUnverified.verified">
 			<segment>
 				<source>I'm verified! Carry on!</source>
-				<target>Je suis vérifié! Continuer!</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="emailUnverified.verify">
@@ -1702,7 +1744,7 @@
 		<unit id="import.projectNotFound">
 			<segment>
 				<source>ITF does not contain current audio project. It contains audio project {0}.</source>
-				<target>L'ITF ne contient pas le projet audio actuel. Il contient le projet audio {0}.</target>
+				<target>import.projectNotFound L'ITF ne contient pas le projet audio actuel. Il contient le projet audio {0}.</target>
 			</segment>
 		</unit>
 		<unit id="import.showHideFilter">
@@ -2584,7 +2626,7 @@
 		<unit id="main.inviteError">
 			<segment>
 				<source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
-				<target>Invitation non acceptée. Vous devez vous connecter avec l'e-mail auquel l'invitation a été envoyée.</target>
+				<target>main.inviteError L'invitation n'a pas été acceptée. Vous devez vous connecter à l'aide de l'adresse électronique à laquelle l'invitation a été envoyée.</target>
 			</segment>
 		</unit>
 		<unit id="main.loadingTable">
@@ -3105,8 +3147,9 @@
 		</unit>
 		<unit id="mediaUpload.invalidFile">
 			<segment>
-				<source>Not valid for this operation: {0}</source>
-				<target>Non valide pour cette opération: {0}</target>
+				<source>Not valid for this operation: {0} </source>
+				<target>mediaUpload.invalidFile Fichier non valide pour cette opération : {0}
+				</target>
 			</segment>
 		</unit>
 		<unit id="mediaUpload.ITFtask">
@@ -3505,6 +3548,12 @@
 				<target>Début - Fin</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.suffix">
+			<segment>
+				<source>Suffix</source>
+				<target>passageDetailArtifacts.suffix Suffixe</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.termsOfUse">
 			<segment>
 				<source>Terms of Use</source>
@@ -3757,6 +3806,12 @@
 				<target>Voulez-vous supprimer le groupe de pairs et les informations sur les membres qui le composent ?</target>
 			</segment>
 		</unit>
+		<unit id="peerCheck.afterResource">
+			<segment>
+				<source>Play following context</source>
+				<target>peerCheck.afterResource Lecture du contexte suivant</target>
+			</segment>
+		</unit>
 		<unit id="permission.admin">
 			<segment>
 				<source>Admin</source>
@@ -3766,7 +3821,7 @@
 		<unit id="permission.adminTip">
 			<segment>
 				<source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-				<target>Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur de l'équipe ? Les personnes de ce groupe pourront effectuer n'importe quelle étape, même si elle est assignée à un groupe dont elles ne font pas partie.</target>
+				<target>permission.adminTip Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur de l'équipe ? Les personnes appartenant à ce groupe pourront effectuer n'importe quelle étape, même si elle est assignée à un groupe dont elles ne font pas partie.</target>
 			</segment>
 		</unit>
 		<unit id="permission.consultant">
@@ -3778,7 +3833,7 @@
 		<unit id="permission.consultantTip">
 			<segment>
 				<source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
-				<target>Pas sûr que nous ayons besoin de cette autorisation non plus, car on ne sait pas très bien ce que font les consultants dans ce logiciel. Indépendant Les commentaires du consultant seront visibles par tous les membres de l'équipe.</target>
+				<target>permission.consultantTip Pas sûr que nous ayons besoin de cette permission non plus, parce qu'il n'est pas clair ce que les consultants font de spécial dans ce logiciel.</target>
 			</segment>
 		</unit>
 		<unit id="permission.consultantInTraining">
@@ -3808,13 +3863,13 @@
 		<unit id="permission.mentorTip">
 			<segment>
 				<source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-				<target>Les commentaires du mentor ne seront visibles que par les CIT. Les mentors peuvent approuver les commentaires de CIT pour les rendre visibles au reste de l'équipe.</target>
+				<target>Les commentaires du mentor ne seront visibles que par les CIT. Les mentors peuvent approuver les commentaires des CIT pour les rendre visibles au reste de l'équipe.</target>
 			</segment>
 		</unit>
 		<unit id="permission.nspTip">
 			<segment>
 				<source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
-				<target>Groupe de pairs général sans permissions spéciales. Utilisé pour assigner des discussions à des groupes d'équipe.</target>
+				<target>Groupe de pairs général sans permissions spéciales. A utiliser pour assigner des discussions à des groupes d'équipe.</target>
 			</segment>
 		</unit>
 		<unit id="planActions.assign">
@@ -3927,20 +3982,14 @@
 		</unit>
 		<unit id="planSheet.insertFirstPassage">
 			<segment>
-				<source>Add passage as first in {0} {1}</source>
+				<source>Add Passage as first in {0} {1}</source>
 				<target>Ajouter le passage en premier dans {0} {1}</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.insertLastPassage">
-			<segment>
-				<source>Add passage as last in {0} {1}</source>
-				<target>Ajouter le passage en dernier dans {0} {1}</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.passageBelow">
 			<segment>
-				<source>Insert passage below passage {0}</source>
-				<target>Insérer le passage ci-dessous passage {0}</target>
+				<source>Add Passage below Passage {0}</source>
+				<target>Ajouter le passage sous le passage {0}</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.passageEnd">
@@ -3993,8 +4042,8 @@
 		</unit>
 		<unit id="planSheet.sectionAbove">
 			<segment>
-				<source>Insert {0} above {1} {2}</source>
-				<target>Insérer {0} ci-dessus {1} {2}</target>
+				<source>Add {0} above {1} {2}</source>
+				<target>Ajouter {0} au-dessus de {1} {2}</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.sectionEnd">
@@ -4283,6 +4332,12 @@
 			<segment>
 				<source>User profile</source>
 				<target>Profil du utilisateur</target>
+			</segment>
+		</unit>
+		<unit id="projButtons.categoryTitle">
+			<segment>
+				<source>Edit Team Categories</source>
+				<target>Modifier les catégories d'équipe</target>
 			</segment>
 		</unit>
 		<unit id="projButtons.export">
@@ -4762,13 +4817,13 @@
 		<unit id="shared.expiredParatextToken">
 			<segment>
 				<source>Your paratext login has expired and can't be automatically renewed. Please log out and login again.</source>
-				<target>Votre connexion paratext a expiré et ne peut pas être renouvelée automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
+				<target>Votre login paratext a expiré et ne peut être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
 			</segment>
 		</unit>
 		<unit id="shared.expiredToken">
 			<segment>
 				<source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
-				<target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
+				<target>Votre jeton de connexion a expiré et ne peut être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
 			</segment>
 		</unit>
 		<unit id="shared.fileNotFound">
@@ -4967,6 +5022,12 @@
 			<segment>
 				<source>Versions</source>
 				<target>Versions</target>
+			</segment>
+		</unit>
+		<unit id="shared.wait">
+			<segment>
+				<source>Please wait for action to finish.</source>
+				<target>Veuillez attendre la fin de l'action.</target>
 			</segment>
 		</unit>
 		<unit id="shared.yes">
@@ -5353,6 +5414,12 @@
 				<target>Test communautaire</target>
 			</segment>
 		</unit>
+		<unit id="tool.consultantCheck">
+			<segment>
+				<source>Consultant Check</source>
+				<target>Vérification du consultant</target>
+			</segment>
+		</unit>
 		<unit id="tool.discuss">
 			<segment>
 				<source>Discuss</source>
@@ -5608,7 +5675,7 @@
 		<unit id="transcriber.updateByOther2">
 			<segment>
 				<source>Transcription updated by {0}. Keep their changes? {1}</source>
-				<target>Transcription mise à jour par {0}. Conserver leurs modifications ? {1}</target>
+				<target>Transcription mise à jour par {0}. Conserver les modifications ? {1}</target>
 			</segment>
 		</unit>
 		<unit id="transcribeReject.cancel">
@@ -5725,6 +5792,12 @@
 				<target>Copie des transcriptions</target>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.creatingDownloadFile">
+			<segment>
+				<source>Creating File...{0}%</source>
+				<target>Création du fichier...{0}%</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.downloading">
 			<segment>
 				<source>Creation complete. Downloading {0}</source>
@@ -5795,6 +5868,18 @@
 			<segment>
 				<source>Export Audio Project (ptf)</source>
 				<target>Projet audio d'exportation (ptf)</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.exportSince">
+			<segment>
+				<source>Changes since date</source>
+				<target>Modifications depuis la date</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.exportSinceGo">
+			<segment>
+				<source>Export from date</source>
+				<target>Exporter à partir de la date</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.exportTooLarge">
@@ -6370,7 +6455,7 @@
 		<unit id="welcome.setupTeamTip">
 			<segment>
 				<source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-				<target>Configurez le projet audio, en divisant le travail en passages qui peuvent être attribués à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
+				<target>Configurez le projet audio en divisant le travail en passages qui peuvent être attribués à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
 			</segment>
 		</unit>
 		<unit id="welcome.team">
@@ -6388,13 +6473,19 @@
 		<unit id="welcome.teamTip">
 			<segment>
 				<source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
-				<target>Un projet audio a été mis en place en ligne. Les transcripteurs et les éditeurs peuvent travailler en ligne, hors ligne en sélectionnant l'option Disponible hors ligne dans le menu de la fiche projet audio, ou hors ligne en l'important.</target>
+				<target>Un projet audio a été créé en ligne. Les transcripteurs et les éditeurs peuvent travailler en ligne, hors ligne en sélectionnant l'option Disponible hors ligne dans le menu de la carte du projet audio, ou hors ligne en l'important.</target>
 			</segment>
 		</unit>
 		<unit id="welcome.title">
 			<segment>
 				<source>Getting Started</source>
 				<target>Démarrage</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.addingStep">
+			<segment>
+				<source>Adding Workflow Step:</source>
+				<target>Ajout d'une étape de workflow :</target>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.backTranslation">
@@ -6473,6 +6564,18 @@
 			<segment>
 				<source>Internalize</source>
 				<target>Internalisation</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.paratextConsultantCheck">
+			<segment>
+				<source>Consultant Check in Paratext</source>
+				<target>Vérification par un consultant dans Paratext</target>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.paratextPeerReview">
+			<segment>
+				<source>Peer Review in Paratext</source>
+				<target>Révision par les pairs dans Paratext</target>
 			</segment>
 		</unit>
 		<unit id="workflowSteps.paratextSync">

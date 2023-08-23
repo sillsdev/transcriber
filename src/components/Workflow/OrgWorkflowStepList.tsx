@@ -1,6 +1,6 @@
-import { IState, IWorkflowStepsStrings, OrgWorkflowStep } from '../../model';
-import localStrings from '../../selector/localize';
+import { IWorkflowStepsStrings, OrgWorkflowStep } from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
+import { workflowStepsSelector } from '../../selector';
 import { toCamel } from '../../utils';
 import { SxProps, TextField } from '@mui/material';
 import { StyledMenuItem } from '../../control/StyledMenu';
@@ -11,8 +11,6 @@ interface IProps {
   defaultChoice: string;
   onStepFilter: (chosen: string) => void;
 }
-const wfStepsSelector = (state: IState) =>
-  localStrings(state as IState, { layout: 'workflowSteps' });
 const textFieldProps = {
   mx: 1,
   width: 'inherit',
@@ -23,7 +21,10 @@ const smallTextProps = { fontSize: 'small' } as SxProps;
 
 export function OrgWorkflowStepList(props: IProps) {
   const { stepData, onStepFilter, defaultChoice, label } = props;
-  const t: IWorkflowStepsStrings = useSelector(wfStepsSelector, shallowEqual);
+  const t: IWorkflowStepsStrings = useSelector(
+    workflowStepsSelector,
+    shallowEqual
+  );
 
   const handleToggle = (e: any) => {
     onStepFilter(e.target.value);

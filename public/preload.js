@@ -33,6 +33,7 @@ contextBridge.exposeInMainWorld('electron', {
   importOpen: async () => await ipcRenderer.invoke('importOpen'),
   execPath: async () => await ipcRenderer.invoke('execPath'),
   isWindows: async () => await ipcRenderer.invoke('isWindows'),
+  isMac: async () => await ipcRenderer.invoke('isMac'),
   isProcessRunning: async (name) =>
     await ipcRenderer.invoke('isProcessRunning', name),
   createFolder: async (folder) =>
@@ -74,6 +75,8 @@ contextBridge.exposeInMainWorld('electron', {
     await ipcRenderer.invoke('zipWrite', zip, where),
   zipExtract: async (zip, folder, replace) =>
     await ipcRenderer.invoke('zipExtract', zip, folder, replace),
+  zipExtractOpen: async (zip, folder) =>
+    await ipcRenderer.invoke('zipExtractOpen', zip, folder),
   zipClose: async (zip) => await ipcRenderer.invoke('zipClose', zip),
   downloadFile: async (url, localFile) =>
     await ipcRenderer.invoke('downloadFile', url, localFile),

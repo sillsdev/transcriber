@@ -7,7 +7,6 @@ export enum LocalKey {
   start = 'startNext', //in progress mediadownload
   passage = 'passage',
   compare = 'compare',
-  personalOrgs = 'persOrgs',
   /* Documentation for localStorage keys */
   home = 'home', // set to home folder for dataPath (to avoid async)
   connected = 'connected', // true if we're connected (used for error reporting)

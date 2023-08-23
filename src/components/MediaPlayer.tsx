@@ -1,43 +1,97 @@
-import React, { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { useFetchMediaUrl, MediaSt } from '../crud';
 import { logError, Severity } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
-import { ISharedStrings } from '../model';
-import { sharedSelector } from '../selector';
+import { IPeerCheckStrings, ISharedStrings } from '../model';
+import { peerCheckSelector, sharedSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import {
+  Chip,
+  ChipProps,
+  IconButton,
+  Slider,
+  Stack,
+  StackProps,
+  SxProps,
+  TooltipProps,
+  styled,
+} from '@mui/material';
+import { LightTooltip } from '../control/LightTooltip';
+import ReplayIcon from '@mui/icons-material/Replay';
+import SkipPrevious from '@mui/icons-material/SkipPrevious';
+import SkipNext from '@mui/icons-material/SkipNext';
+import Pause from '@mui/icons-material/Pause';
+import PlayArrow from '@mui/icons-material/PlayArrow';
+import SpeedMenu from '../control/SpeedMenu';
+import { Duration } from '../control/Duration';
+
+const StyledChip = styled(Chip)<ChipProps>(({ theme }) => ({
+  height: 'auto',
+  '&>*': {
+    padding: '4px!important',
+    margin: '4px!important',
+  },
+  '& .MuiChip-label': {
+    width: 'calc(100% - 20px)',
+  },
+  '& .MuiChip-deleteIcon': {
+    color: theme.palette.action.active,
+  },
+}));
+
+const StyledTip = styled(LightTooltip)<TooltipProps>(({ theme }) => ({
+  backgroundColor: 'transparent',
+}));
+
+const StyledStack = styled(Stack)<StackProps>(({ theme }) => ({
+  width: '100%',
+  '& audio': {
+    width: '100%',
+  },
+}));
+
+interface IMediaLimits {
+  start?: number;
+  end?: number;
+}
 
 interface IProps {
   srcMediaId: string;
   requestPlay: boolean;
   onEnded: () => void;
   onTogglePlay?: () => void;
-  onPosition?: (timeStamp: number) => void;
-  position?: number;
-  onDuration?: (timeStamp: number) => void;
   controls?: boolean;
+  limits?: IMediaLimits;
+  onLoaded?: () => void;
+  sx?: SxProps;
 }
 
 export function MediaPlayer(props: IProps) {
   const {
     srcMediaId,
     requestPlay,
+    onLoaded,
     onEnded,
     onTogglePlay,
-    onPosition,
-    position,
-    onDuration,
     controls,
+    limits,
+    sx,
   } = props;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
-  const audioRef = useRef<HTMLAudioElement>();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [value, setValue] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
   const [ready, setReady] = useState(false);
-  const timeTrack = useRef<number>();
+  const [duration, setDuration] = useState(0);
+  const [speed, setSpeed] = useState(1);
+  const timeTracker = useRef<number>(0);
+  const stop = useRef<number>(0);
   const { showMessage } = useSnackBar();
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const t: IPeerCheckStrings = useSelector(peerCheckSelector, shallowEqual);
 
   useEffect(() => {
     if (playing) {
@@ -58,7 +112,8 @@ export function MediaPlayer(props: IProps) {
   }, [srcMediaId]);
 
   useEffect(() => {
-    if (mediaState.id !== srcMediaId) return;
+    if (mediaState.id !== srcMediaId && mediaState.remoteId !== srcMediaId)
+      return;
     if (mediaState.status === MediaSt.FETCHED) setReady(true);
     if (mediaState.error) {
       if (mediaState.error.startsWith('no offline file'))
@@ -85,12 +140,14 @@ export function MediaPlayer(props: IProps) {
     if (audioRef.current && position !== undefined)
       audioRef.current.currentTime = position;
   };
+
   useEffect(() => {
-    setPosition(position);
-  }, [position]);
+    setPosition(limits?.start);
+  }, [limits?.start]);
 
   const ended = () => {
-    if (audioRef.current) audioRef.current.currentTime = 0;
+    if (audioRef.current) audioRef.current.currentTime = limits?.start ?? 0;
+    setPlaying(false);
     if (onEnded) onEnded();
   };
 
@@ -105,19 +162,31 @@ export function MediaPlayer(props: IProps) {
   };
 
   const timeUpdate = () => {
-    if (!onPosition) return;
+    if (!Boolean(limits?.end)) return;
     const el = audioRef.current as HTMLMediaElement;
     const time = Math.round(el.currentTime * 10);
-    if (time === timeTrack.current) return;
-    timeTrack.current = time;
-    onPosition(time / 10);
+    if (stop.current !== 0 && time >= stop.current) {
+      el.pause();
+      ended();
+    }
+    const start = limits?.start ?? 0;
+    const current = Math.round(
+      ((time / 10 - start) / ((limits?.end ?? 0) - start)) * 100
+    );
+    if (timeTracker.current !== current) {
+      timeTracker.current = current;
+      setValue(current);
+    }
   };
 
   const durationChange = () => {
-    setPosition(position);
+    if (limits?.end) {
+      setPosition(limits?.start);
+      stop.current = Math.round(limits?.end * 10);
+    }
     const el = audioRef.current as HTMLMediaElement;
-    if (onDuration && el?.duration) onDuration(el.duration);
-    timeTrack.current = undefined;
+    if (el?.duration) setDuration(el.duration);
+    onLoaded && onLoaded();
   };
 
   const handleError = (e: any) => {
@@ -126,18 +195,174 @@ export function MediaPlayer(props: IProps) {
     showMessage(ts.mediaError);
   };
 
-  return ready ? (
-    <audio
-      controls={controls}
-      onEnded={ended}
-      ref={audioRef as any}
-      src={mediaState.url}
-      onTimeUpdate={timeUpdate}
-      onDurationChange={durationChange}
-      onError={handleError}
-      onPause={pause}
-      onPlay={play}
-    />
+  const handleSegmentStart = () => {
+    setPosition(limits?.start ?? 0);
+    if (limits?.end) {
+      stop.current = Math.round((limits?.end ?? 0) * 10);
+    }
+  };
+
+  const handleSkipBack = () => {
+    if (audioRef.current)
+      setPosition(Math.max(audioRef.current?.currentTime - 3, 0));
+  };
+
+  const handleSkipNext = () => {
+    if (audioRef.current) setPosition(limits?.end);
+    stop.current = 0;
+  };
+
+  const handlePlayPause = () => {
+    if (audioRef.current) {
+      if (playing) audioRef.current.pause();
+      else audioRef.current.play();
+    }
+  };
+
+  const handleSliderChange = (e: Event, value: number | number[]) => {
+    const el = audioRef.current as HTMLMediaElement;
+    const curValue = Array.isArray(value) ? value[0] : value;
+    const percent = curValue / 100;
+    const start = limits?.start ?? 0;
+    const duration = (limits?.end ?? 0) - start;
+    const time = duration * percent + start;
+    el.currentTime = time;
+    timeTracker.current = Math.round((time - start) / duration);
+    setValue(timeTracker.current);
+  };
+
+  return ready && limits?.end ? (
+    <>
+      {!controls ? (
+        <></>
+      ) : (
+        <StyledChip
+          icon={
+            <>
+              <StyledTip title={t.resourceStart}>
+                <IconButton
+                  data-testid="segment-start"
+                  sx={{ alignSelf: 'center' }}
+                  onClick={handleSegmentStart}
+                >
+                  <SkipPrevious fontSize="small" />
+                </IconButton>
+              </StyledTip>
+              <StyledTip title={t.back3Seconds}>
+                <IconButton
+                  data-testid="skip-back"
+                  sx={{ alignSelf: 'center' }}
+                  onClick={handleSkipBack}
+                >
+                  <ReplayIcon fontSize="small" />
+                </IconButton>
+              </StyledTip>
+              <IconButton
+                data-testid="play-pause"
+                sx={{ alignSelf: 'center', color: 'text.primary' }}
+                onClick={handlePlayPause}
+              >
+                {playing ? (
+                  <Pause fontSize="small" />
+                ) : (
+                  <PlayArrow fontSize="small" />
+                )}
+              </IconButton>
+              <Duration
+                seconds={
+                  (audioRef.current?.currentTime ?? 0) - (limits?.start ?? 0)
+                }
+              />
+              {' / '}
+              <Duration seconds={(limits?.end ?? 0) - (limits?.start ?? 0)} />
+            </>
+          }
+          label={
+            <Stack direction="row" sx={{ px: 1 }}>
+              <Slider
+                value={value}
+                onChange={handleSliderChange}
+                size="small"
+                sx={{ color: 'text.secondary' }}
+              />
+            </Stack>
+          }
+          deleteIcon={
+            duration && limits?.end < duration ? (
+              <>
+                <StyledTip title={t.afterResource}>
+                  <IconButton
+                    data-testid="skip-next"
+                    sx={{ alignSelf: 'center' }}
+                    onClick={handleSkipNext}
+                  >
+                    <SkipNext fontSize="small" />
+                  </IconButton>
+                </StyledTip>
+                <SpeedMenu
+                  speed={speed}
+                  onSpeed={(speed: number) => {
+                    const el = audioRef.current as any; // playbackRate is new
+                    if (el) el.playbackRate = speed;
+                    setSpeed(speed);
+                  }}
+                />
+              </>
+            ) : (
+              <></>
+            )
+          }
+          onDelete={handleSkipNext}
+          sx={{ ...sx, width: '100%' }}
+        />
+      )}
+      <audio
+        onEnded={ended}
+        ref={audioRef}
+        src={mediaState.url}
+        onTimeUpdate={timeUpdate}
+        onDurationChange={durationChange}
+        onError={handleError}
+        onPause={pause}
+        onPlay={play}
+      />
+    </>
+  ) : ready ? (
+    <StyledStack direction="row" sx={{ ...sx }}>
+      {controls && (
+        <>
+          <StyledTip title={t.resourceStart}>
+            <IconButton
+              data-testid="segment-start"
+              sx={{ alignSelf: 'center' }}
+              onClick={handleSegmentStart}
+            >
+              <SkipPrevious fontSize="small" />
+            </IconButton>
+          </StyledTip>
+          <StyledTip title={t.back3Seconds}>
+            <IconButton
+              data-testid="skip-back"
+              sx={{ alignSelf: 'center' }}
+              onClick={handleSkipBack}
+            >
+              <ReplayIcon fontSize="small" />
+            </IconButton>
+          </StyledTip>
+        </>
+      )}
+      <audio
+        controls={controls}
+        onEnded={ended}
+        ref={audioRef}
+        src={mediaState.url}
+        onTimeUpdate={timeUpdate}
+        onDurationChange={durationChange}
+        onError={handleError}
+        onPause={pause}
+        onPlay={play}
+      />
+    </StyledStack>
   ) : (
     <></>
   );

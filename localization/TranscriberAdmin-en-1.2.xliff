@@ -275,6 +275,27 @@
                <context context-type="sourcefile">artifactCategory.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="artifactCategory.retelling">
+            <source>Community Test Retell</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.grammar">
+            <source>Grammar</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.qanda">
+            <source>Question and Answer</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="artifactType.backtranslation">
             <source>Phrase Back Translation</source>
             <target/>
@@ -535,7 +556,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="audacityManager.missingImport">
-            <source>Missing import file: {0}</source>
+            <source>Missing import file: {0}. Please open Audacity again and use File, Export to save the contents and then use Import here.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AudacityManager.tsx</context>
@@ -689,6 +710,13 @@
                <context context-type="sourcefile">TeamDialog.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="cards.editCategory">
+      		<source>Edit Team Categories</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="cards.editWorkflow">
             <source>Edit Workflow {0}</source>
             <target/>
@@ -715,6 +743,20 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.longNotesProject">
+            <source>Project with Long Notes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectButtons.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.longNotes">
+            <source>Shared Introductions, Rationales, Devotionals, Podcasts</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectButtons.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="cards.mediaUploaded">
@@ -850,6 +892,20 @@
                <context context-type="sourcefile">ProjectMenu.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.notesHelper">
+            <source>Shared explanations, rationales, footnotes, etc.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectButtons.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.notesProject">
+            <source>Project with Notes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectButtons.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.sync">
             <source>Sync ({0})</source>
             <target/>
@@ -885,6 +941,90 @@
                <context context-type="sourcefile">AddCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="category.builtIn">
+      		<source>System Categories</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.discussion">
+      		<source>Discussion</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.discussions">
+      		<source>discussion(s)</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.ignoreInvalid">
+      		<source>Ignoring invalid category change '{0}'.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.inUseBy">
+      		<source>In use by {0} {1}</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.note">
+      		<source>Audio Note</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.chapternumber">
+      		<source>Chapter Number</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.general">
+      		<source>General Note</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="category.introPara">
+      		<source>Introductory Paragraph</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="category.resource">
+      		<source>Resource</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryTabs.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="category.notes">
+      		<source>audio note(s)</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="category.resources">
+      		<source>resource(s)</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="commentCard.approve">
             <source>Approve</source>
             <target/>
@@ -1074,8 +1214,64 @@
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="consultantCheck.checked">
+      		<source>Mark Checked</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ConsultantCheck.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="consultantCheck.compare">
+      		<source>Compare</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ConsultantCheck.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="consultantCheck.compareItems">
+      		<source>Select Items to Compare</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ConsultantCheck.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="consultantCheck.furtherReview">
+      		<source>Review More</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ConsultantCheck.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="consultantCheck.noMedia">
+      		<source>No Media Available</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ConsultantCheckReview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="consultantCheck.noTranscription">
+      		<source>No Transcription Available</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ConsultantCheckReview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="consultantCheck.transcription">
+      		<source>Transcription</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ConsultantCheckReview.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="control.book">
       		<source>Book</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">selectPlanType.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="control.normal">
+      		<source>Normal</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">selectPlanType.tsx</context>
@@ -4092,6 +4288,20 @@
       			<context context-type="sourcefile">PassageMedia.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.suffix">
+      		<source>Suffix</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ProjectResourceConfigure.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.suffixTip">
+      		<source>A Suffix is added to the end of the Reference (if there is no Description to override it).</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PassageMedia.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.termsOfUse">
       		<source>Terms of Use</source>
       		<target/>
@@ -4386,6 +4596,27 @@
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="peerCheck.afterResource">
+      		<source>Play following context</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamCheckReference.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peerCheck.back3Seconds">
+      		<source>Skip back 3 seconds</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamCheckReference.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="peerCheck.resourceStart">
+      		<source>Play from start</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamCheckReference.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="permission.admin">
       		<source>Admin</source>
       		<target/>
@@ -4583,21 +4814,15 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.insertFirstPassage">
-            <source>Add passage as first in {0} {1}</source>
+            <source>Add Passage as first in {0} {1}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="planSheet.insertLastPassage">
-            <source>Add passage as last in {0} {1}</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">PlanSheet.tsx</context>
-            </context-group>
-         </trans-unit>
+
          <trans-unit id="planSheet.passageBelow">
-            <source>Insert passage below passage {0}</source>
+            <source>Add Passage below Passage {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -4660,7 +4885,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.sectionAbove">
-            <source>Insert {0} above {1} {2}</source>
+            <source>Add {0} above {1} {2}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -5002,13 +5227,20 @@
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="projButtons.export">
-            <source>Export</source>
+         <trans-unit id="projButtons.categoryTitle">
+            <source>Edit Team Categories</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjButtons.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="projButtons.export">
+      		<source>Export</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ProjButtons.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="projButtons.exportTitle">
             <source>{0} Export</source>
             <target/>
@@ -5801,6 +6033,13 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="shared.wait">
+      		<source>Please wait for action to finish.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ConsultantCheck.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="shared.yes">
             <source>Yes</source>
             <target/>
@@ -6249,6 +6488,13 @@
                <context context-type="sourcefile">useTools.ts</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="tool.consultantCheck">
+      		<source>Consultant Check</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useTools.ts</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="tool.discuss">
             <source>Discuss</source>
             <target/>
@@ -6683,6 +6929,20 @@
                <context context-type="sourcefile">TranscriptionTab.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="transcriptionTab.creatingDownloadFile">
+            <source>Creating File...{0}%</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcriptionTab.writingDownloadFile">
+            <source>Writing file...It could take up to 6 minutes to resume progress.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownload.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="transcriptionTab.downloading">
             <source>Creation complete. Downloading {0}</source>
             <target/>
@@ -6853,13 +7113,6 @@
          </trans-unit>
          <trans-unit id="transcriptionTab.plan">
             <source>Plan</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">TranscriptionTab.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="transcriptionTab.queued">
-            <source>Your export has been queued on the media server.  It could take up to 6 minutes to resume progress.  Please wait.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TranscriptionTab.tsx</context>
@@ -7486,6 +7739,13 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">welcome.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.addingStep">
+            <source>Adding Workflow Step:</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="workflowSteps.backTranslation">

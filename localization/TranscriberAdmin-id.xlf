@@ -235,6 +235,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="artifactCategory.retelling">
+			<segment>
+				<source>Community Test Retell</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="artifactType.backtranslation">
 			<segment>
 				<source>Phrase Back Translation</source>
@@ -459,7 +465,7 @@
 		</unit>
 		<unit id="audacityManager.missingImport">
 			<segment>
-				<source>Missing import file: {0}</source>
+				<source>Missing import file: {0}. Please open Audacity again and use File, Export to save the contents and then use Import here.</source>
 				<target/>
 			</segment>
 		</unit>
@@ -589,6 +595,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="cards.editCategory">
+			<segment>
+				<source>Edit Team Categories</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="cards.editWorkflow">
 			<segment>
 				<source>Edit Workflow {0}</source>
@@ -610,6 +622,12 @@
 		<unit id="cards.language">
 			<segment>
 				<source>Language: {0}</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="cards.longNotesProject">
+			<segment>
+				<source>Project with Long Notes</source>
 				<target/>
 			</segment>
 		</unit>
@@ -727,6 +745,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="cards.notesHelper">
+			<segment>
+				<source>Shared explanations, rationales, footnotes, etc.</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="cards.sync">
 			<segment>
 				<source>Sync ({0})</source>
@@ -754,6 +778,12 @@
 		<unit id="cards.uploadProgress">
 			<segment>
 				<source>Upload Progress</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="category.builtIn">
+			<segment>
+				<source>System Categories</source>
 				<target/>
 			</segment>
 		</unit>
@@ -919,10 +949,22 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="consultantCheck.checked">
+			<segment>
+				<source>Mark Checked</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="control.book">
 			<segment>
 				<source>Book</source>
 				<target>Buku</target>
+			</segment>
+		</unit>
+		<unit id="control.normal">
+			<segment>
+				<source>Normal</source>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="control.other">
@@ -2337,7 +2379,7 @@
 		</unit>
 		<unit id="keyTerms.termDetail">
 			<segment>
-				<source>Term Detail</source>
+				<source>Term Details</source>
 				<target/>
 			</segment>
 		</unit>
@@ -3505,6 +3547,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.suffix">
+			<segment>
+				<source>Suffix</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.termsOfUse">
 			<segment>
 				<source>Terms of Use</source>
@@ -3757,6 +3805,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="peerCheck.afterResource">
+			<segment>
+				<source>Play following context</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="permission.admin">
 			<segment>
 				<source>Admin</source>
@@ -3766,7 +3820,7 @@
 		<unit id="permission.adminTip">
 			<segment>
 				<source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-				<target>Apakah kita memerlukan grup ini? Atau cukup gunakan admin tim? Orang-orang dalam grup ini akan dapat melakukan langkah apa pun, bahkan jika itu ditugaskan ke grup yang tidak mereka ikuti.</target>
+				<target>Apakah kita memerlukan grup ini? Atau hanya menggunakan admin tim? Orang-orang di grup ini akan dapat melakukan langkah apa pun, bahkan jika ditugaskan ke grup yang bukan grup mereka.</target>
 			</segment>
 		</unit>
 		<unit id="permission.consultant">
@@ -3778,7 +3832,7 @@
 		<unit id="permission.consultantTip">
 			<segment>
 				<source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
-				<target>Tidak yakin kita juga memerlukan izin ini, karena tidak jelas apa hal khusus yang dilakukan konsultan dalam perangkat lunak ini. Komentar Konsultan Independen akan terlihat oleh semua anggota tim.</target>
+				<target>Kami juga tidak yakin apakah kami memerlukan izin ini, karena tidak jelas hal-hal khusus apa yang dilakukan oleh konsultan dalam perangkat lunak ini. Komentar Konsultan Independen akan terlihat oleh semua anggota tim.</target>
 			</segment>
 		</unit>
 		<unit id="permission.consultantInTraining">
@@ -3808,13 +3862,13 @@
 		<unit id="permission.mentorTip">
 			<segment>
 				<source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-				<target>Komentar Mentor hanya akan terlihat oleh CIT. Mentor dapat menyetujui komentar CIT agar terlihat oleh anggota tim lainnya.</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="permission.nspTip">
 			<segment>
 				<source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
-				<target>Kelompok Rekan Umum tanpa izin khusus. Gunakan untuk menugaskan diskusi ke kelompok tim.</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="planActions.assign">
@@ -3927,20 +3981,14 @@
 		</unit>
 		<unit id="planSheet.insertFirstPassage">
 			<segment>
-				<source>Add passage as first in {0} {1}</source>
-				<target>Tambahkan bagian sebagai yang pertama di {0} {1}</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.insertLastPassage">
-			<segment>
-				<source>Add passage as last in {0} {1}</source>
-				<target>Tambahkan bagian sebagai yang terakhir di {0} {1}</target>
+				<source>Add Passage as first in {0} {1}</source>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="planSheet.passageBelow">
 			<segment>
-				<source>Insert passage below passage {0}</source>
-				<target>Masukkan bagian di bawah bagian {0}</target>
+				<source>Add Passage below Passage {0}</source>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="planSheet.passageEnd">
@@ -3993,8 +4041,8 @@
 		</unit>
 		<unit id="planSheet.sectionAbove">
 			<segment>
-				<source>Insert {0} above {1} {2}</source>
-				<target>Masukkan {0} di atas {1} {2}</target>
+				<source>Add {0} above {1} {2}</source>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="planSheet.sectionEnd">
@@ -4282,6 +4330,12 @@
 		<unit id="profile.userProfile">
 			<segment>
 				<source>User profile</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="projButtons.categoryTitle">
+			<segment>
+				<source>Edit Team Categories</source>
 				<target/>
 			</segment>
 		</unit>
@@ -4969,6 +5023,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="shared.wait">
+			<segment>
+				<source>Please wait for action to finish.</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="shared.yes">
 			<segment>
 				<source>Yes</source>
@@ -5353,6 +5413,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="tool.consultantCheck">
+			<segment>
+				<source>Consultant Check</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="tool.discuss">
 			<segment>
 				<source>Discuss</source>
@@ -5608,7 +5674,7 @@
 		<unit id="transcriber.updateByOther2">
 			<segment>
 				<source>Transcription updated by {0}. Keep their changes? {1}</source>
-				<target>Transkripsi diperbarui oleh {0}. Menyimpan perubahan mereka? {1}</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="transcribeReject.cancel">
@@ -5725,6 +5791,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.creatingDownloadFile">
+			<segment>
+				<source>Creating File...{0}%</source>
+				<target>Membuat File... {0}%.</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.downloading">
 			<segment>
 				<source>Creation complete. Downloading {0}</source>
@@ -5797,6 +5869,18 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.exportSince">
+			<segment>
+				<source>Changes since date</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.exportSinceGo">
+			<segment>
+				<source>Export from date</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.exportTooLarge">
 			<segment>
 				<source>The audio project cannot be exported. The export file is too large.</source>
@@ -5842,7 +5926,7 @@
 		<unit id="transcriptionTab.offlineData">
 			<segment>
 				<source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
-				<target>Anda memiliki perubahan baru secara lokal yang tidak disertakan dalam ekspor ptf. Silakan juga ekspor file itf untuk menangkap semua perubahan.</target>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.changed">
@@ -6397,6 +6481,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="workflowSteps.addingStep">
+			<segment>
+				<source>Adding Workflow Step:</source>
+				<target>Menambahkan Langkah Alur Kerja:</target>
+			</segment>
+		</unit>
 		<unit id="workflowSteps.backTranslation">
 			<segment>
 				<source>Back Translate</source>
@@ -6472,6 +6562,18 @@
 		<unit id="workflowSteps.internalize">
 			<segment>
 				<source>Internalize</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.paratextConsultantCheck">
+			<segment>
+				<source>Consultant Check in Paratext</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="workflowSteps.paratextPeerReview">
+			<segment>
+				<source>Peer Review in Paratext</source>
 				<target/>
 			</segment>
 		</unit>

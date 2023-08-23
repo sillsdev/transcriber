@@ -5,7 +5,7 @@ interface IStringsSelectorProps {
   layout: string;
 }
 
-const langSelector = (state: IState) => state.strings.lang;
+const langSelector = (state: IState) => state.strings.lang || 'en';
 const layoutSelector = (state: IState, props: IStringsSelectorProps) =>
   state.strings[props.layout];
 

@@ -24,6 +24,7 @@ import {
   getFingerprintArray,
   waitForIt,
   LocalKey,
+  Online,
 } from './utils';
 import { updateableFiles, staticFiles, localFiles } from './crud';
 import {
@@ -49,8 +50,21 @@ const bugsnagClient = prodOrQa
       plugins: [new BugsnagReact()],
       appVersion,
       releaseStage: prod ? 'production' : 'staging',
+      autoTrackSessions: false,
+      endpoints: {
+        notify: API_CONFIG.notify,
+        sessions: API_CONFIG.sessions,
+      },
     })
   : undefined;
+Online(true, (result) => {
+  if (!result || !Bugsnag.isStarted()) {
+    localStorage.setItem(LocalKey.connected, 'false');
+  } else {
+    localStorage.setItem(LocalKey.connected, 'true');
+    Bugsnag.startSession();
+  }
+});
 const SnagBoundary = prodOrQa
   ? Bugsnag.getPlugin('react')?.createErrorBoundary(React)
   : null;

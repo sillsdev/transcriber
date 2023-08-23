@@ -23,11 +23,12 @@ import Memory from '@orbit/memory';
 import { ITokenContext } from './context/TokenProvider';
 import { API_CONFIG, isElectron } from './api-variable';
 import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
-import { orbitRetry, orbitErr, logError, infoMsg, Severity } from './utils';
+import { orbitRetry, orbitErr, logError, infoMsg, Severity, LocalKey } from './utils';
 import { electronExport } from './store/importexport/electronExport';
 import { restoreBackup } from '.';
 import { AlertSeverity } from './hoc/SnackBar';
 import { updateBackTranslationType } from './crud/updateBackTranslationType';
+import { updateConsultantWorkflowStep } from './crud/updateConsultantWorkflowStep';
 
 export const Sources = async (
   coordinator: Coordinator,
@@ -304,18 +305,23 @@ export const Sources = async (
     setLang(locale);
     localStorage.setItem('user-id', user.id);
     localStorage.setItem('online-user-id', user.id);
-    Bugsnag.setUser(user.keys?.remoteId ?? user.id);
+    if (globalStore.errorReporter && localStorage.getItem(LocalKey.connected) !== 'false')
+      Bugsnag.setUser(user.keys?.remoteId ?? user.id);
   }
   var user = localStorage.getItem('user-id') as string;
   setUser(user);
   if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
-    updateBackTranslationType(
+    await updateBackTranslationType(
       memory,
       tokenCtx.state.accessToken || '',
       user,
       globalStore.errorReporter,
       offlineSetup
     );
+  }
+  if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 5) {
+    const token = tokenCtx.state.accessToken || null;
+    await updateConsultantWorkflowStep(token, memory, user);
   }
   return { syncBuffer, syncFile, goRemote };
 };

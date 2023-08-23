@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import { TokenContext } from '../context/TokenProvider';
 import { errorStatus, IAxiosStatus } from '../store/AxiosStatus';
 import {
@@ -138,6 +138,7 @@ export function ImportTab(props: IProps & IRecordProps) {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_busy, setBusy] = useGlobal('importexportBusy');
+  const importingRef = useRef(false);
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -241,8 +242,12 @@ export function ImportTab(props: IProps & IRecordProps) {
     } else setUploadVisible(true);
   }, []);
 
+  const setImporting = (importing: boolean) => {
+    importingRef.current = importing;
+    setBusy(importing);
+  };
   const handleActionConfirmed = () => {
-    setBusy(true);
+    setImporting(true);
     handleElectronImport(importProjectToElectron, orbitError);
     setConfirmAction('');
   };
@@ -257,7 +262,7 @@ export function ImportTab(props: IProps & IRecordProps) {
       showMessage(t.noFile);
     } else {
       if (project) {
-        setBusy(true);
+        setImporting(true);
         importProjectFromElectron({
           files,
           projectid: remoteIdNum('project', project, memory.keyMap),
@@ -271,7 +276,7 @@ export function ImportTab(props: IProps & IRecordProps) {
     setUploadVisible(false);
   };
   const uploadSyncITF = (buffer: Buffer, fileName: string) => {
-    setBusy(true);
+    setImporting(true);
     importSyncFromElectron({
       filename: fileName,
       file: buffer,
@@ -654,7 +659,7 @@ export function ImportTab(props: IProps & IRecordProps) {
         }
         setImportTitle(msg);
         importComplete();
-        setBusy(false);
+        setImporting(false);
       } else {
         if (importStatus.complete) {
           //import completed ok but might have message
@@ -677,8 +682,7 @@ export function ImportTab(props: IProps & IRecordProps) {
               setDataChangeCount
             );
           else SetUserLanguage(memory, user, setLanguage);
-
-          setBusy(false);
+          setImporting(false);
         }
       }
     } else {
@@ -690,6 +694,10 @@ export function ImportTab(props: IProps & IRecordProps) {
   }, [importStatus]);
 
   const handleClose = () => {
+    if (importingRef.current) {
+      showMessage(t.importPending);
+      return;
+    }
     onOpen && onOpen(false);
   };
   const isString = (what: any) => typeof what === 'string';

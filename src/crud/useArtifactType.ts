@@ -8,25 +8,11 @@ import {
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
-import { findRecord, related, remoteId } from '.';
+import { findRecord, related, remoteId, ArtifactTypeSlug } from '.';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 
 export const VernacularTag = null; // used to test the relationship
 
-export enum ArtifactTypeSlug {
-  Vernacular = 'vernacular',
-  WholeBackTranslation = 'wholebacktranslation',
-  PhraseBackTranslation = 'backtranslation',
-  Retell = 'retell',
-  QandA = 'qanda',
-  Comment = 'comment',
-  Activity = 'activity',
-  Resource = 'resource',
-  SharedResource = 'sharedresource',
-  ProjectResource = 'projectresource',
-  IntellectualProperty = 'intellectualproperty',
-  KeyTerm = 'keyterm',
-}
 interface ISwitches {
   [key: string]: any;
 }

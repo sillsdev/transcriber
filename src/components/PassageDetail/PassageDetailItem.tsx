@@ -167,13 +167,13 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [reporter] = useGlobal('errorReporter');
   const [organization] = useGlobal('organization');
-  const [offlineOnly] = useGlobal('offlineOnly');
   const [plan] = useGlobal('plan');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
   const [coordinator] = useGlobal('coordinator');
+  const [offline] = useGlobal('offline');
   const memory = coordinator.getSource('memory') as Memory;
   const [speaker, setSpeaker] = useState('');
   const [topic, setTopic] = useState('');
@@ -275,7 +275,14 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
     if (currentSegmentIndex > 0)
       postfix += 's' + currentSegmentIndex.toString();
     setDefaultFileName(
-      passageDefaultFilename(passage, plan, memory, recordTypeId, postfix)
+      passageDefaultFilename(
+        passage,
+        plan,
+        memory,
+        recordTypeId,
+        offline,
+        postfix
+      )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
@@ -341,7 +348,7 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
   const handleSelect = (id: string, latest: boolean) => {
     //latest isn't used anymore but might be useful...so leave it
     setPlayItem(id);
-    setItemPlaying(false);
+    setItemPlaying(true);
     setCommentPlaying(false);
   };
 
@@ -419,16 +426,10 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
                             sx={buttonProp}
                             id="pdRecordUpload"
                             onClick={handleUpload}
-                            title={
-                              !offlineOnly
-                                ? ts.uploadMediaSingular
-                                : ts.importMediaSingular
-                            }
+                            title={ts.uploadMediaSingular}
                           >
                             <AddIcon />
-                            {!offlineOnly
-                              ? ts.uploadMediaSingular
-                              : ts.importMediaSingular}
+                            {ts.uploadMediaSingular}
                           </Button>
                           <GrowingSpacer />
                           {currentSegment && (

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Grid, GridProps, styled } from '@mui/material';
 import SelectMyResource from './Internalization/SelectMyResource';
 import { MediaPlayer } from '../MediaPlayer';
@@ -6,11 +6,13 @@ import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { getSegments, LocalKey, localUserKey, NamedRegions } from '../../utils';
 
 const StyledGrid = styled(Grid)<GridProps>(({ theme }) => ({
-  margin: theme.spacing(1),
+  margin: theme.spacing(2),
+  paddingRight: theme.spacing(2),
   width: '100%',
   '& audio': {
     display: 'flex',
     width: 'inherit',
+    marginRight: theme.spacing(2),
   },
 }));
 
@@ -22,16 +24,14 @@ export function TeamCheckReference() {
     setPlayItem,
     setMediaSelected,
     itemPlaying,
-    setItemPlaying,
     handleItemPlayEnd,
     handleItemTogglePlay,
     section,
     passage,
     currentstep,
   } = ctx.state;
-  const mediaStart = useRef<number | undefined>();
-  const mediaEnd = useRef<number | undefined>();
-  const mediaPosition = useRef<number | undefined>();
+  const [mediaStart, setMediaStart] = useState<number | undefined>();
+  const [mediaEnd, setMediaEnd] = useState<number | undefined>();
   const [resource, setResource] = useState('');
 
   const storeKey = (keyType?: string) =>
@@ -63,32 +63,20 @@ export function TeamCheckReference() {
       const regions = JSON.parse(segs);
       if (regions.length > 0) {
         const { start, end } = regions[0];
-        mediaStart.current = start;
-        mediaEnd.current = end;
+        setMediaStart(start);
+        setMediaEnd(end);
         setMediaSelected(id, start, end);
         return;
+      } else {
+        setMediaStart(undefined);
+        setMediaEnd(undefined);
       }
     }
     setPlayItem(id);
   };
 
   const handleEnded = () => {
-    mediaStart.current = undefined;
-    mediaEnd.current = undefined;
-    mediaPosition.current = undefined;
     handleItemPlayEnd();
-  };
-
-  const handleDuration = (duration: number) => {
-    mediaPosition.current = mediaStart.current ?? 0;
-    mediaStart.current = undefined;
-    setItemPlaying(true);
-  };
-
-  const handlePosition = (position: number) => {
-    if (mediaEnd.current && position >= mediaEnd.current) {
-      handleEnded();
-    }
   };
 
   useEffect(() => {
@@ -114,10 +102,8 @@ export function TeamCheckReference() {
           requestPlay={itemPlaying}
           onTogglePlay={handleItemTogglePlay}
           onEnded={handleEnded}
-          onDuration={handleDuration}
-          onPosition={handlePosition}
-          position={mediaPosition.current}
           controls={true}
+          limits={{ start: mediaStart, end: mediaEnd }}
         />
       </StyledGrid>
     </Grid>
