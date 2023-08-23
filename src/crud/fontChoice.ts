@@ -2,6 +2,8 @@ import { Project } from '../model';
 import { dataPath, PathType } from '../utils/dataPath';
 import { isElectron } from '../api-variable';
 
+const ipc = (window as any)?.electron;
+
 export interface FontData {
   langTag: string;
   spellCheck: boolean;
@@ -17,7 +19,7 @@ export interface FontData {
   };
 }
 
-export const getFontData = (r: Project, offline: boolean) => {
+export const getFontData = async (r: Project, offline: boolean) => {
   const langTag = r?.attributes?.language;
   const spellCheck = r?.attributes?.spellCheck;
   const fontFamily = r?.attributes?.defaultFont
@@ -30,11 +32,17 @@ export const getFontData = (r: Project, offline: boolean) => {
   const fileName = fontFamily + '.css';
   var url = 'https://s3.amazonaws.com/fonts.siltranscriber.org/' + fileName;
   if (isElectron) {
-    var local = dataPath('http', PathType.FONTS, {
+    let local = dataPath('http', PathType.FONTS, {
       localname: fileName,
     });
-    if (local !== 'http') url = 'transcribe-safe://' + local;
-    else if (offline) url = '';
+    if (local && !local.startsWith('http')) {
+      if (await ipc?.exists(local)) {
+        url = (await ipc?.isWindows())
+          ? new URL(local).toString().slice(8)
+          : local;
+        url = `transcribe-safe://${url}`;
+      }
+    }
   }
   const data: FontData = {
     langTag,

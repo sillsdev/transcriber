@@ -600,7 +600,7 @@ export function Transcriber(
   useEffect(() => {
     if (project && project !== '') {
       var r = findRecord(memory, 'project', project) as Project;
-      if (r) setProjData(getFontData(r, offline));
+      if (r) getFontData(r, offline).then((data) => setProjData(data));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);

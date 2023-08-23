@@ -107,7 +107,7 @@ const initialState = {
 			"badProjName": "Invalid Audacity project name",
 			"badProjPath": "Expected full Audacity project path name",
 			"browse": "Browse",
-			"checkDownload": "Exit to download media file before creating Audacity",
+			"checkDownload": "Return to the team screen, mark the project for offline use and change modes to let the project be downloaded. That will put the media files into a local folder where Audacity can get them.",
 			"close": "Close",
 			"closeAudacity": "Audacity is current running. Close before using this function.",
 			"create": "Create",

@@ -500,7 +500,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="audacityManager.checkDownload">
-            <source>Exit to download media file before creating Audacity</source>
+         	<source>Return to the team screen, mark the project for offline use and change modes to let the project be downloaded. That will put the media files into a local folder where Audacity can get them.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AudacityManager.tsx</context>

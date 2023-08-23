@@ -417,8 +417,8 @@
 		</unit>
 		<unit id="audacityManager.checkDownload">
 			<segment>
-				<source>Exit to download media file before creating Audacity</source>
-				<target/>
+				<source>Return to the team screen, mark the project for offline use and change modes to let the project be downloaded. That will put the media files into a local folder where Audacity can get them.</source>
+				<target>Kembali ke layar tim, tandai proyek untuk penggunaan offline dan ubah mode agar proyek dapat diunduh. Hal ini akan menempatkan file media ke dalam folder lokal di mana Audacity dapat memperolehnya.</target>
 			</segment>
 		</unit>
 		<unit id="audacityManager.close">

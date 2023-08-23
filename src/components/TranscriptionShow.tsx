@@ -88,7 +88,8 @@ function TranscriptionShow(props: IProps) {
         getTranscription(related(mediaRec, 'passage') || id, exportId)
       );
       const projRec = getMediaProjRec(mediaRec, memory, reporter);
-      if (projRec) setFontData(getFontData(projRec, offline));
+      if (projRec)
+        getFontData(projRec, offline).then((data) => setFontData(data));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [id, isMediaId, exportId]);

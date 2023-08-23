@@ -149,7 +149,7 @@
     "concurrently": "^6.5.1",
     "cross-env": "^7.0.3",
     "electron": "^22.0.0",
-    "electron-builder": "^23.6.0",
+    "electron-builder": "^24.6.3",
     "env-cmd": "^10.1.0",
     "md5-file": "^5.0.0",
     "npm-watch": "^0.10.0",
@@ -227,5 +227,7 @@
     "typescript": {
       "memoryLimit": 5000
     }
-  }
+  },
+  "main": "public/electron.js",
+  "homepage": "./"
 }
