@@ -417,8 +417,8 @@
 		</unit>
 		<unit id="audacityManager.checkDownload">
 			<segment>
-				<source>Exit to download media file before creating Audacity</source>
-				<target>Quitter pour télécharger le fichier média avant de créer Audacity</target>
+				<source>Return to the team screen, mark the project for offline use and change modes to let the project be downloaded. That will put the media files into a local folder where Audacity can get them.</source>
+				<target>Revenez à l'écran de l'équipe, marquez le projet pour une utilisation hors ligne et changez de mode pour permettre le téléchargement du projet. Cela placera les fichiers multimédias dans un dossier local où Audacity pourra les récupérer.</target>
 			</segment>
 		</unit>
 		<unit id="audacityManager.close">
