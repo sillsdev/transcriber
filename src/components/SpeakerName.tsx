@@ -107,7 +107,7 @@ export function SpeakerName({
     if (
       reason === 'blur' &&
       valueRef.current &&
-      event.relatedTarget.id !== 'uploadCancel'
+      event?.relatedTarget?.id !== 'uploadCancel'
     )
       handleChoice(valueRef.current);
   };
