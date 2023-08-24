@@ -23,7 +23,14 @@ import Memory from '@orbit/memory';
 import { ITokenContext } from './context/TokenProvider';
 import { API_CONFIG, isElectron } from './api-variable';
 import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
-import { orbitRetry, orbitErr, logError, infoMsg, Severity, LocalKey } from './utils';
+import {
+  orbitRetry,
+  orbitErr,
+  logError,
+  infoMsg,
+  Severity,
+  LocalKey,
+} from './utils';
 import { electronExport } from './store/importexport/electronExport';
 import { restoreBackup } from '.';
 import { AlertSeverity } from './hoc/SnackBar';
@@ -305,7 +312,10 @@ export const Sources = async (
     setLang(locale);
     localStorage.setItem('user-id', user.id);
     localStorage.setItem('online-user-id', user.id);
-    if (globalStore.errorReporter && localStorage.getItem(LocalKey.connected) !== 'false')
+    if (
+      globalStore.errorReporter &&
+      localStorage.getItem(LocalKey.connected) !== 'false'
+    )
       Bugsnag.setUser(user.keys?.remoteId ?? user.id);
   }
   var user = localStorage.getItem('user-id') as string;

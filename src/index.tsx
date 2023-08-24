@@ -42,7 +42,7 @@ const { auth0Domain, webClientId, apiIdentifier } = envVariables;
 const ipc = (window as any)?.electron;
 
 const prodOrQa = API_CONFIG.snagId !== '';
-const prod = API_CONFIG.host.indexOf('app.') !== -1;
+const prod = API_CONFIG.host.indexOf('api.') !== -1;
 const bugsnagClient = prodOrQa
   ? Bugsnag.start({
       hostname: API_CONFIG.endpoint,
