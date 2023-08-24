@@ -6643,7 +6643,7 @@
 				<target>Сравнить</target>
 			</segment>
 		</unit>
-		<unit id="workflowSteps.termIdentify">
+		<unit id="workflowSteps.termVerify">
 			<segment>
 				<source>Term Verify</source>
 				<target>Проверка термина</target>

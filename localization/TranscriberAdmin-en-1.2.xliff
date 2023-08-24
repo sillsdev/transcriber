@@ -7930,7 +7930,7 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="workflowSteps.termIdentify">
+      	<trans-unit id="workflowSteps.termVerify">
       		<source>Term Verify</source>
       		<target/>
       		<context-group>
