@@ -1,17 +1,14 @@
-import { TransformBuilder } from '@orbit/data';
+import { Operation, TransformBuilder } from '@orbit/data';
 import { useGlobal } from 'reactn';
-import { findRecord, related } from '.';
 import { MediaFile } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils';
-import { useMediaAttach } from './useMediaAttach';
 import path from 'path-browserify';
 
 export const useOfflnMediafileCreate = () => {
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
-  const [attachPassage] = useMediaAttach({});
   const createMedia = async (
     data: any, //from upload
     version: number,
@@ -38,55 +35,53 @@ export const useOfflnMediafileCreate = () => {
       newMediaRec.attributes.originalFile = path.basename(data.audioUrl);
     }
     const t = new TransformBuilder();
-    await memory.update([
-      ...AddRecord(t, newMediaRec, user, memory),
+    const ops: Operation[] = [];
+    ops.push(...AddRecord(t, newMediaRec, user, memory));
+    ops.push(
       ...ReplaceRelatedRecord(
         t,
         newMediaRec,
         'plan',
         'plan',
         plan || data.planId
-      ),
-    ]);
-    if (passageId) {
-      var passage = findRecord(memory, 'passage', passageId);
-      attachPassage(
-        passageId,
-        related(passage, 'section'),
-        plan,
-        newMediaRec.id
+      )
+    );
+    if (passageId)
+      ops.push(
+        ...ReplaceRelatedRecord(t, newMediaRec, 'passage', 'passage', passageId)
       );
-    }
     if (artifactTypeId)
-      await memory.update([
+      ops.push(
         ...ReplaceRelatedRecord(
           t,
           newMediaRec,
           'artifactType',
           'artifacttype',
           artifactTypeId
-        ),
-      ]);
+        )
+      );
     if (sourceMediaId)
-      await memory.update([
+      ops.push(
         ...ReplaceRelatedRecord(
           t,
           newMediaRec,
           'sourceMedia',
           'mediafile',
           sourceMediaId
-        ),
-      ]);
+        )
+      );
     if (recordedbyUserId)
-      await memory.update([
+      ops.push(
         ...ReplaceRelatedRecord(
           t,
           newMediaRec,
           'recordedbyUser',
           'user',
           recordedbyUserId
-        ),
-      ]);
+        )
+      );
+    await memory.update(ops);
+
     return newMediaRec;
   };
   return { createMedia };

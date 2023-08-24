@@ -1377,7 +1377,7 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "retellBTTranscribe": string;
     "saveFirst": string;
     "teamCheck": string;
-    "termIdentify": string;
+    "termVerify": string;
     "teamReview": string;
     "transcribe": string;
     "unsaved": string;
