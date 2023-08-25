@@ -5,7 +5,6 @@ import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
 import { styled } from '@mui/material';
 import MediaUpload, { SIZELIMIT, UploadType } from './MediaUpload';
 import {
-  findRecord,
   pullTableList,
   related,
   remoteIdNum,
@@ -24,6 +23,7 @@ import { mediaTabSelector, sharedSelector } from '../selector';
 import { passageDefaultSuffix } from '../utils/passageDefaultFilename';
 import IndexedDBSource from '@orbit/indexeddb/dist/types/source';
 import path from 'path-browserify';
+import { QueryBuilder } from '@orbit/data';
 
 const ErrorMessage = styled('span')(({ theme }) => ({
   color: theme.palette.secondary.light,
@@ -151,13 +151,23 @@ export const Uploader = (props: IProps) => {
       // offlineOnly
       var psgId = passageId || '';
       var num = 1;
-      if (mediaId) {
-        const mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFile;
-        if (mediaRec) {
-          psgId = related(mediaRec, 'passage');
-          if (!artifactTypeId)
-            //vernacular
-            num = mediaRec.attributes.versionNumber + 1;
+      if (psgId && !artifactTypeId) {
+        const mediaFiles = (
+          memory.cache.query((q: QueryBuilder) =>
+            q.findRecords('mediafile')
+          ) as MediaFile[]
+        )
+          .filter(
+            (m) =>
+              related(m, 'passage') === psgId &&
+              related(m, 'artifactType') === null
+          )
+          .sort(
+            (i, j) => j.attributes.versionNumber - i.attributes.versionNumber
+          );
+        if (mediaFiles.length > 0) {
+          //vernacular
+          num = mediaFiles[0].attributes.versionNumber + 1;
         }
       }
       const newMediaRec = await createMedia(
