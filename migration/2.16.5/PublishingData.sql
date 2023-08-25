@@ -16,7 +16,6 @@ grant all on passagetypes to transcriber;
 grant all on public.passagetypes_id_seq to transcriber;
 
 --drop table passagenotes cascade;
-/*  NEXT RELEASE
 create table passagenotes (
 	id serial primary key,
 	passageid int not null,
@@ -32,10 +31,8 @@ ALTER TABLE passagenotes ADD CONSTRAINT fk_passagenote_passage FOREIGN KEY (pass
 ALTER TABLE passagenotes ADD CONSTRAINT fk_passagenote_note FOREIGN KEY (notesectionid) REFERENCES sections(id) ON DELETE CASCADE;
 grant all on passagenotes to transcriber;
 grant all on public.passagenotes_id_seq to transcriber;
-*/
 
 delete from passagetypes;
-/*  NEXT RELEASE
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder)
 VALUES('toc1', 'longbookname', 'BKLNG', -4);
@@ -52,24 +49,25 @@ VALUES('esb', 'audionote', 'IP', -1);
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder)
 VALUES('cn', 'chapternumber', 'CN', 1);
-*/
+
 
 alter table passages add passagetypeid int;
 ALTER TABLE passages ADD CONSTRAINT fk_passages_passagetype FOREIGN KEY (passagetypeid) REFERENCES passagetypes(id) ON DELETE SET NULL;
 
-/*  NEXT RELEASE
+
 alter table sections add graphics jsonb default '{}';
 alter table sections add published bool default false;
 alter table sections add level int default 2;
+alter table sections add artifactcategoryid int;
+alter table sections add constraint fk_sections_artifactcategory foreign key (artifactcategoryid) references artifactcategorys(id) on delete set null;
 
 alter table organizations add publishingdata jsonb default '{}';
 alter table organizations add noteprojectid int;
 
 ALTER TABLE public.organizations ADD CONSTRAINT fk_organizations_noteprojectid FOREIGN KEY (noteprojectid) REFERENCES projects(id) ON DELETE SET NULL;
-*/
+
 
 alter table artifactcategorys add note bool default false;
-/* NEXT RELEASE
 alter table artifactcategorys add graphics jsonb default '{}';
 INSERT INTO public.artifactcategorys
 (organizationid, categoryname, datecreated, dateupdated, lastmodifiedby, lastmodifiedorigin, discussion, resource, note, archived)
@@ -80,4 +78,4 @@ VALUES(null, 'generalnote', current_timestamp at time zone 'utc', current_timest
 INSERT INTO public.artifactcategorys
 (organizationid, categoryname, datecreated, dateupdated, lastmodifiedby, lastmodifiedorigin, discussion, resource, note, archived)
 VALUES(null, 'introductoryparagraph', current_timestamp at time zone 'utc', current_timestamp at time zone 'utc', (select id from users where email = 'sara_hentzel@sil.org'), 'setup'::text, false, false, true, false);
-*/
+

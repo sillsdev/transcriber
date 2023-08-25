@@ -62,7 +62,7 @@ export function TeamDialog(props: IProps) {
   const [processOptions, setProcessOptions] = useState<OptionType[]>([]);
   const savingRef = useRef(false);
   const [saving, setSavingx] = useState(false);
-  //NR? const [noteProjId, setNoteProjId] = useState('');
+  const [noteProjId, setNoteProjId] = useState('');
   const [myProjects, setMyProjects] = useState<Project[]>([]);
 
   const reset = () => {
@@ -80,23 +80,22 @@ export function TeamDialog(props: IProps) {
     savingRef.current = saving;
   };
 
-  const handleCommit = (process: string | undefined) => async () => {
+  const handleCommit = (process: string|undefined) => async () => {
     if (savingRef.current) return;
     setSaving(true);
     const current =
       mode === DialogMode.edit && values
         ? values.team
         : ({ attributes: {} } as Organization);
-    //NR? if (current.hasOwnProperty('relationships')) delete current?.relationships;
+    if (current.hasOwnProperty('relationships')) delete current?.relationships;
     const team = {
       ...current,
       attributes: { ...current.attributes, name },
-      //NR?
-      /* relationships: {
+      relationships: {
         noteProject: {
           data: noteProjId ? { type: 'project', id: noteProjId } : null,
         },
-      }, */
+      },
     } as Organization;
     onCommit(
       { team, process: process || defaultWorkflow },
@@ -145,7 +144,7 @@ export function TeamDialog(props: IProps) {
   useEffect(() => {
     if (isOpen && !name) {
       setName(values?.team.attributes?.name || '');
-      //NR?setNoteProjId(values ? related(values, 'noteProject') : '');
+      setNoteProjId(values ? related(values, 'noteProject') : '');
     } else if (!isOpen) {
       reset();
     }
@@ -169,7 +168,7 @@ export function TeamDialog(props: IProps) {
   }, [values, isOpen]);
 
   const handleNoteProjectChange = (e: any) => {
-    //NR?  setNoteProjId(e.target.value);
+    setNoteProjId(e.target.value);
     setChanged(true);
   };
 
@@ -223,7 +222,7 @@ export function TeamDialog(props: IProps) {
                   select
                   label={t.notesProject}
                   helperText={t.notesHelper}
-                  value={''} //NR?noteProjId ?? ''}
+                  value={noteProjId ?? ''}
                   onChange={handleNoteProjectChange}
                   SelectProps={{
                     MenuProps: {
