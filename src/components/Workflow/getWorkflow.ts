@@ -202,9 +202,10 @@ export const getWorkflow = (
         });
         const stepRec = orgWorkflowSteps.find((s) => s.id === stepId);
         if (stepRec) {
-          item.step =
-            wfStr.getString(toCamel(stepRec.attributes.name)) ||
-            stepRec.attributes.name;
+          const strTag = toCamel(stepRec.attributes.name);
+          item.step = wfStr.hasOwnProperty(strTag)
+            ? wfStr.getString(strTag)
+            : stepRec.attributes.name;
           item.stepId = stepRec.id;
           item.discussionCount = item.passageId
             ? getDiscussionCount(item.passageId.id, item.stepId)
