@@ -15,12 +15,15 @@ export interface Organization extends Record {
     lastModifiedBy: number;
     defaultParams: string;
     publishingData: string;
+    bibleId: string;
+    iso: string;
   };
   relationships?: {
     owner: RecordRelationship;
     groups: RecordRelationship;
     cluster: RecordRelationship;
-    noteProject: RecordRelationship;
+    isoMediafile: RecordRelationship;
+    bibleMediafile: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
 }

@@ -12,6 +12,7 @@ export interface ArtifactCategory extends BaseModel {
     lastModifiedBy: number;
   };
   relationships?: {
+    titleMediafile: RecordRelationship;
     organization: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };

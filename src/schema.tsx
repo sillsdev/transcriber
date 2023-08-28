@@ -134,7 +134,8 @@ const schemaDefinition: SchemaSettings = {
         publicByDefault: { type: 'boolean' },
         clusterbase: { type: 'boolean' },
         publishingData: { type: 'string' },
-
+        bibleid: { type: 'string' },
+        iso: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
@@ -146,7 +147,8 @@ const schemaDefinition: SchemaSettings = {
         groups: { type: 'hasMany', model: 'group', inverse: 'owner' },
         cluster: { type: 'hasOne', model: 'organization' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
-        notesProject: { type: 'hasOne', model: 'project' },
+        titleMediafile: { type: 'hasOne', model: 'mediafile' },
+        isoMediafile: { type: 'hasOne', model: 'mediafile' },
       },
     },
     organizationmembership: {
@@ -300,7 +302,6 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         sequencenum: { type: 'number' },
         name: { type: 'string' },
-        graphics: { type: 'string' },
         published: { type: 'boolean' },
         level: { type: 'number' },
         dateCreated: { type: 'date-time' },
@@ -335,6 +336,10 @@ const schemaDefinition: SchemaSettings = {
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
+        startChapter: { type: 'number' },
+        startVerse: { type: 'number' },
+        endChapter: { type: 'number' },
+        endVerse: { type: 'number' },
       },
       relationships: {
         mediafiles: { type: 'hasMany', model: 'mediafile', inverse: 'passage' },
@@ -344,19 +349,7 @@ const schemaDefinition: SchemaSettings = {
           inverse: 'passages',
         },
         passagetype: { type: 'hasOne', model: 'passagetype' },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
-      },
-    },
-    passagenote: {
-      keys: { remoteId: {} },
-      attributes: {
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' }, //bkwd compat only
-      },
-      relationships: {
-        passage: { type: 'hasOne', model: 'passage' },
-        noteSection: { type: 'hasOne', model: 'section' },
+        sharedResource: { type: 'hasOne', model: 'sharedresource' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
@@ -601,13 +594,13 @@ if (
       discussion: { type: 'bool' },
       resource: { type: 'bool' },
       note: { type: 'bool' },
-      graphics: { type: 'string' },
       dateCreated: { type: 'date-time' },
       dateUpdated: { type: 'date-time' },
       lastModifiedBy: { type: 'number' }, //bkwd compat only
     },
     relationships: {
       organization: { type: 'hasOne', model: 'organization' },
+      titleMediafile: { type: 'hasOne', model: 'mediafile' },
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };
@@ -892,6 +885,8 @@ if (
       languagebcp47: { type: 'string' },
       termsOfUse: { type: 'string' },
       keywords: { type: 'string' },
+      linkurl: { type: 'string' },
+      note: { type: 'boolean' },
       dateCreated: { type: 'date-time' },
       dateUpdated: { type: 'date-time' },
     },
@@ -899,6 +894,7 @@ if (
       passage: { type: 'hasOne', model: 'passage' },
       cluster: { type: 'hasOne', model: 'organization' },
       artifactCategory: { type: 'hasOne', model: 'artifactcategory' },
+      titleMediafile: { type: 'hasOne', model: 'mediafile' },
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };
@@ -917,6 +913,26 @@ if (
     },
   };
   schemaDefinition.version = 6;
+  if (
+    parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 6 &&
+    schemaDefinition.models
+  ) {
+    schemaDefinition.models.graphic = {
+      keys: { remoteId: {} },
+      attributes: {
+        resourcetype: { type: 'string' },
+        resourceid: { type: 'string' },
+        info: { type: 'string' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
+      },
+      relationships: {
+        organization: { type: 'hasOne', model: 'organization' },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      },
+    };
+    schemaDefinition.version = 7;
+  }
 }
 export const schema = new Schema(schemaDefinition);
 
