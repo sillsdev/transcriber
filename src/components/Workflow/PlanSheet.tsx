@@ -51,6 +51,18 @@ import {
   viewModeSelector,
 } from '../../selector';
 import { useSelector, shallowEqual } from 'react-redux';
+import {
+  BookIcon,
+  ChapterNumberIcon,
+  AltBookIcon,
+  NoteIcon,
+  TitleIcon,
+} from '../../control/PlanIcons';
+import {
+  IsNoteType,
+  IsPublishingType,
+  PassageTypeEnum,
+} from '../../model/passageType';
 const MemoizedTaskAvatar = memo(TaskAvatar);
 
 const DOWN_ARROW = 'ARROWDOWN';
@@ -87,7 +99,7 @@ const ContentDiv = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     textAlign: 'left',
   },
-  '& .data-grid-container .data-grid .cell.passErr': {
+  '& .data-grid-container .data-grid .cell.refErr': {
     backgroundColor: theme.palette.warning.main,
     textAlign: 'left',
   },
@@ -324,11 +336,36 @@ export function PlanSheet(props: IProps) {
     setCurrentRow(loc.end.i);
     sheetScroll();
   };
-
-  const handleValueRender = (cell: ICell) =>
-    cell.className?.substring(0, 4) === 'book' && bookMap
+  const psgRefRender = (cell: ICell) => {
+    switch (cell.value) {
+      case PassageTypeEnum.CHAPTERNUMBER:
+        return ChapterNumberIcon;
+      case PassageTypeEnum.TITLE:
+        return TitleIcon;
+      case PassageTypeEnum.BOOK:
+        return BookIcon;
+      case PassageTypeEnum.ALTBOOK:
+        return AltBookIcon;
+      case PassageTypeEnum.NOTE:
+        return NoteIcon;
+      default:
+        return IsNoteType(cell.value.toString()) ? (
+          <div>
+            {cell.value.toString().substring(4)} {NoteIcon}
+          </div>
+        ) : (
+          cell.value
+        );
+    }
+  };
+  const handleValueRender = (cell: ICell) => {
+    return cell.className?.substring(0, 4) === 'book' && bookMap
       ? bookMap[cell.value]
+      : cell.className?.includes('ref')
+      ? psgRefRender(cell)
       : cell.value;
+  };
+  const handleDataRender = (cell: ICell) => cell.value;
 
   const handleConfirmDelete = (rowIndex: number) => () => {
     const toDelete = [rowIndex];
@@ -540,7 +577,8 @@ export function PlanSheet(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [toolsChanged]);
 
-  const refErrTest = (ref: any) => typeof ref !== 'string' || !refMatch(ref);
+  const refErrTest = (ref: any) =>
+    typeof ref !== 'string' || (!refMatch(ref) && !IsPublishingType(ref));
 
   useEffect(() => {
     if (rowData.length !== rowInfo.length) {
@@ -664,8 +702,8 @@ export function PlanSheet(props: IProps) {
                           ? 'num '
                           : '') +
                         (section ? 'set' + (passage ? 'p' : '') : 'pass') +
-                        (refCol && refCol === cellIndex && refErrTest(e)
-                          ? 'Err'
+                        (passage && refCol && refCol === cellIndex
+                          ? ' ref' + (refErrTest(e) ? 'Err' : '')
                           : ''),
                     };
               })
@@ -901,7 +939,7 @@ export function PlanSheet(props: IProps) {
           <DataSheet
             data={data as any[][]}
             valueRenderer={handleValueRender}
-            // dataRenderer={handleDataRender}
+            dataRenderer={handleDataRender}
             onContextMenu={handleContextMenu}
             onCellsChanged={handleCellsChanged}
             parsePaste={parsePaste}

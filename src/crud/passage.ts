@@ -30,33 +30,29 @@ function parseReferencePart(a: Passage, start: boolean, part: string) {
   }
   verse = TryParseInt(part, 0);
   if (start) {
-    a.startChapter = chapter;
-    a.startVerse = verse;
+    a.attributes.startChapter = chapter;
+    a.attributes.startVerse = verse;
   } else {
-    a.endChapter = chapter === 0 ? a.startChapter : chapter;
-    a.endVerse = verse === 0 ? a.startVerse : verse;
+    a.attributes.endChapter =
+      chapter === 0 ? a.attributes.startChapter : chapter;
+    a.attributes.endVerse = verse === 0 ? a.attributes.startVerse : verse;
   }
 }
-export function parseRef(a: Passage) {
-  if (a.startChapter === undefined) {
-    if (a.attributes.book === '' || (a.attributes.reference ?? '') === '') {
+export function parseRef(p: Passage) {
+  var a = p.attributes;
+  if (!a) return;
+  if (a.startChapter === undefined || a.startChapter === null) {
+    if (a.book === '' || (a.reference ?? '') === '') {
       a.startChapter = 0;
       a.endChapter = 0;
       a.startVerse = 0;
       a.endVerse = 0;
     } else {
-      let dash = a.attributes?.reference.indexOf('-');
-      let firstPart =
-        dash > 0
-          ? a.attributes.reference.substring(0, dash)
-          : a.attributes.reference;
-      parseReferencePart(a, true, firstPart);
+      let dash = a.reference.indexOf('-');
+      let firstPart = dash > 0 ? a.reference.substring(0, dash) : a.reference;
+      parseReferencePart(p, true, firstPart);
       if (dash > 0) {
-        parseReferencePart(
-          a,
-          false,
-          a.attributes.reference.substring(dash + 1)
-        );
+        parseReferencePart(p, false, a.reference.substring(dash + 1));
       } else {
         a.endChapter = a.startChapter;
         a.endVerse = a.startVerse;

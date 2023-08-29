@@ -32,6 +32,7 @@ function setup(props: HookProps) {
     wf: IWorkflow[],
     sections: Section[],
     passages: Passage[],
+    remoteToo: boolean,
     lastSaved?: string
   ) => Promise<void> = async () => {};
   const TestComponent = () => {
@@ -75,7 +76,7 @@ test('save one section and one passage', async () => {
 
   const localSave = setup({ setComplete });
 
-  await localSave(workflow, [], []);
+  await localSave(workflow, [], [], false, '2021-09-21');
 
   expect(setComplete).toHaveBeenCalled();
   const updateCalls = (memory.update as jest.Mock).mock.calls;
@@ -117,7 +118,7 @@ test('delete one section and one passage', async () => {
 
   const localSave = setup({ setComplete });
 
-  await localSave(workflow, [], [], '2021-09-21');
+  await localSave(workflow, [], [], false, '2021-09-21');
 
   expect(setComplete).toHaveBeenCalled();
   const updateCalls = (memory.update as jest.Mock).mock.calls;

@@ -272,9 +272,11 @@ export const scriptureFullPath = (
     ref = passRec?.attributes?.reference;
     book = passRec.attributes?.book;
     const lang = projRec?.attributes?.language;
-    const chap = pad3(passRec?.startChapter || 1);
-    const start = pad3(passRec?.startVerse || 1);
-    const end = pad3(passRec?.endVerse || passRec?.startVerse || 1);
+    const chap = pad3(passRec?.attributes?.startChapter || 1);
+    const start = pad3(passRec?.attributes?.startVerse || 1);
+    const end = pad3(
+      passRec?.attributes?.endVerse || passRec?.attributes?.startVerse || 1
+    );
     const ver = mf.attributes?.versionNumber;
     const { ext } = removeExtension(mp);
     if (passRec) {

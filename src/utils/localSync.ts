@@ -21,9 +21,9 @@ const vrefRe = /^([0-9]+)[^0-9]?([0-9]+)?$/;
 const vInt = (s: string) => (typeof s === 'string' ? parseInt(s) : s);
 
 const passageVerses = (p: Passage) =>
-  (p?.startVerse || 0).toString() +
-  ((p?.endVerse || 0) > (p?.startVerse || 0)
-    ? '-' + (p?.endVerse || 0).toString()
+  (p?.attributes.startVerse || 0).toString() +
+  ((p?.attributes.endVerse || 0) > (p?.attributes.startVerse || 0)
+    ? '-' + (p?.attributes.endVerse || 0).toString()
     : '');
 
 const domVnum = (v: Element) => {
@@ -369,7 +369,7 @@ const ParseTranscription = (currentPassage: Passage, transcription: string) => {
       attributes: {
         book: currentPassage.attributes.book,
         reference:
-          (currentPassage.startChapter || 0).toString() +
+          (currentPassage.attributes.startChapter || 0).toString() +
           ':' +
           match[0].replace('\\v', '').trimStart(),
         lastComment: t.trimStart().trimEnd(),
@@ -405,8 +405,8 @@ const postPass = (doc: Document, currentPI: PassageInfo, memory: Memory) => {
       var nextVerse = findNodeAfterVerse(
         doc,
         verses,
-        p?.startVerse || 0,
-        p?.endVerse || 0
+        p?.attributes.startVerse || 0,
+        p?.attributes.endVerse || 0
       );
       thisVerse = addParatextVerse(
         doc,
@@ -452,8 +452,8 @@ const getExistingVerses = (
 ) => {
   var verses = getVerses(doc.documentElement);
   const allVerses = Array<Element>();
-  var first = p?.startVerse || 0;
-  var last = p?.endVerse || 0;
+  var first = p?.attributes.startVerse || 0;
+  var last = p?.attributes.endVerse || 0;
   var exactVerse: Element | undefined;
   verses.forEach((v) => {
     var [vstart, vend] = domVnum(v);
@@ -571,7 +571,9 @@ const doChapter = async (
   let usxDom: Document = await getChapter(paths, ptProjName);
 
   passInfo = passInfo.sort(
-    (i, j) => (i.passage?.startVerse || 0) - (j.passage?.startVerse || 0)
+    (i, j) =>
+      (i.passage?.attributes.startVerse || 0) -
+      (j.passage?.attributes.startVerse || 0)
   );
   passInfo.forEach((p) => {
     postPass(usxDom, p, memory);
@@ -605,7 +607,7 @@ export const getLocalParatextText = async (
   ptProjName: string
 ) => {
   parseRef(pass);
-  const chap = pass.attributes.book + '-' + pass.startChapter;
+  const chap = pass.attributes.book + '-' + pass.attributes.startChapter;
   const paths = await paratextPaths(chap);
 
   let usxDom: Document = await getChapter(paths, ptProjName);
@@ -665,7 +667,7 @@ export const localSync = async (
   });
   ready.forEach((r) => {
     parseRef(r.passage);
-    let chap = r.passage.startChapter;
+    let chap = r.passage.attributes.startChapter;
     if (chap) {
       const k = r.passage.attributes?.book + '-' + chap;
       if (chapChg.hasOwnProperty(k)) {

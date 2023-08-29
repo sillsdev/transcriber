@@ -37,14 +37,14 @@ export function sectionRef(
     parseRef(start);
     parseRef(end);
   }
-  return start?.startChapter && end?.startChapter
-    ? `${passageBook(start, bookData)} ${start.startChapter}:${
-        start.startVerse
+  return start?.attributes.startChapter && end?.attributes.startChapter
+    ? `${passageBook(start, bookData)} ${start.attributes.startChapter}:${
+        start.attributes.startVerse
       }-${
-        end.endChapter !== start.startChapter
-          ? end.endChapter?.toString() + ':'
+        end.attributes.endChapter !== start.attributes.startChapter
+          ? end.attributes.endChapter?.toString() + ':'
           : ''
-      }${end.endVerse}`
+      }${end.attributes.endVerse}`
     : undefined;
 }
 /* build the section name = sequence + name */
