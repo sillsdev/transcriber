@@ -20,9 +20,10 @@ export interface Passage extends BaseModel {
     users: RecordHasManyRelationship;
     media: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
+    sharedResource: RecordRelationship;
     passageType: RecordRelationship;
   };
-  startChapter?: number; //calculated
+  startChapter?: number; //calculated in online db
   endChapter?: number; //calculated
   startVerse?: number; //calculated
   endVerse?: number; //calculated

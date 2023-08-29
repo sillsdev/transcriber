@@ -10,7 +10,6 @@ create table passagetypes (
 	lastmodifiedby int,
 	lastmodifiedorigin text
 	);
-CREATE UNIQUE INDEX passagetype_usfm_idx ON public.passagetypes (usfm);
 CREATE UNIQUE INDEX passagetype_abbrev_idx ON public.passagetypes (abbrev);
 grant all on passagetypes to transcriber;
 grant all on public.passagetypes_id_seq to transcriber;
