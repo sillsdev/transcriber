@@ -47,7 +47,7 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
   } = useKeyTerms();
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   parseRef(passage);
-  const { startChapter, startVerse, endVerse } = passage;
+  const { startChapter, startVerse, endVerse } = passage.attributes;
   const [term, setTerm] = useState<IKeyTerm & ILocalTerm>();
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
 

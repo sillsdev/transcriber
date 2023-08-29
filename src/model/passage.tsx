@@ -14,6 +14,10 @@ export interface Passage extends BaseModel {
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
+    startChapter?: number; //calculated in online db
+    endChapter?: number; //calculated
+    startVerse?: number; //calculated
+    endVerse?: number; //calculated
   };
   relationships?: {
     section: RecordRelationship;
@@ -23,9 +27,5 @@ export interface Passage extends BaseModel {
     sharedResource: RecordRelationship;
     passageType: RecordRelationship;
   };
-  startChapter?: number; //calculated in online db
-  endChapter?: number; //calculated
-  startVerse?: number; //calculated
-  endVerse?: number; //calculated
 }
 export default Passage;

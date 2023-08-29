@@ -1,16 +1,16 @@
-alter table passages add sharedresourceid int null;  //link to note
+alter table passages add sharedresourceid int null;  --link to note
 
 alter table passages add startchapter int generated always as 
-	(cast(substring(reference from '(\d{1,})\:') as int)) stored
+	(cast(substring(reference from '(\d{1,})\:') as int)) stored;
 alter table passages add endchapter int generated always as 
-	(cast(coalesce(substring(reference from '\d{1,}\:.*?(\d{1,})\:') ,  substring(reference from '(\d{1,})\:')) as int)) stored
+	(cast(coalesce(substring(reference from '\d{1,}\:.*?(\d{1,})\:') ,  substring(reference from '(\d{1,})\:')) as int)) stored;
 alter table passages add startverse int generated always as 
-	(cast(substring(reference from '.:(\d{1,})-?') as int)) stored
+	(cast(substring(reference from '.:(\d{1,})-?') as int)) stored;
 alter table passages add endverse int generated always as 
 	(cast(case coalesce(substring(reference from '\d{1,}\:.*?(\d{1,})\:'),'') 
 	when '' then substring(reference from '.-(\d{1,})-?') 
 	else coalesce(substring(reference from '\d{1,}\:.*?\d{1,}\:(\d{1,})'), substring(reference from '.:(\d{1,})-?'))
-end as int)) stored
+end as int)) stored;
 
 -- select * from passages where orgworkflowstepid is not null
 
@@ -35,30 +35,30 @@ ALTER TABLE artifactcategorys ADD CONSTRAINT fk_artifactcategorys_mediafile FORE
 --but we may want it to have it's own because of the usfm...so I'm going to put it in for now
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder,datecreated, dateupdated,lastmodifiedby,lastmodifiedorigin)
-VALUES('toc1', 'longbookname', 'BKLNG', -4
+VALUES('toc1', 'altbookname', 'BKALT', -4
 ,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
 
 --select * from passagetypes
 INSERT INTO public.passagetypes
-(usfm, title, abbrev, defaultorder)
-VALUES('toc2', 'shortbookname', 'BK', -3,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
+(usfm, title, abbrev, defaultorder,datecreated, dateupdated,lastmodifiedby,lastmodifiedorigin)
+VALUES('toc2', 'shortbookname', 'BOOK', -3,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
 
 
 INSERT INTO public.passagetypes
-(usfm, title, abbrev, defaultorder)
-VALUES('esb', 'audionote', 'IP', -1,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
+(usfm, title, abbrev, defaultorder,datecreated, dateupdated,lastmodifiedby,lastmodifiedorigin)
+VALUES('esb', 'audionote', 'NOTE', -1,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
 
 INSERT INTO public.passagetypes
-(usfm, title, abbrev, defaultorder)
-VALUES('cn', 'chapternumber', 'CN', 1,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
-
+(usfm, title, abbrev, defaultorder,datecreated, dateupdated,lastmodifiedby,lastmodifiedorigin)
+VALUES('cn', 'chapternumber', 'CHNUM', 1,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
 
 --will this be a passage 0 or will it be directly in the section
 --start with it as a passage and see if that works
 INSERT INTO public.passagetypes
-(usfm, title, abbrev, defaultorder)
-VALUES('cn', 'title', 'CN', 1,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org', 'setup');
-
+(usfm, title, abbrev, defaultorder,datecreated, dateupdated,lastmodifiedby,lastmodifiedorigin)
+VALUES('s', 'title', 'TITLE', 1,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
+DROP INDEX passagetype_usfm_idx;
+CREATE INDEX passagetype_usfm_idx ON public.passagetypes USING btree (usfm);
 
 --drop table graphics;
 CREATE TABLE graphics (
@@ -85,6 +85,7 @@ alter table organizations add bibleid text; --ENGCSV
 alter table organizations add iso text;
 alter table organizations add isomediafileid int;
 alter table organizations add biblemediafileid int;
+
 
 CREATE INDEX ix_organizations_bibleid ON public.organizations USING btree (bibleid);
 CREATE INDEX ix_organizations_iso ON public.organizations USING btree (iso);

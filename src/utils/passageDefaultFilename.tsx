@@ -48,11 +48,15 @@ export const passageDefaultFilename = (
     var tmp = '';
     parseRef(passage);
     var book = passage.attributes?.book ?? '';
-    if (passage.startChapter) {
-      const chap = pad3(passage.startChapter || 1);
-      const endchap = pad3(passage.endChapter || passage.startChapter);
-      const start = pad3(passage.startVerse || 1);
-      const end = pad3(passage.endVerse || passage?.startVerse || 1);
+    if (passage.attributes.startChapter) {
+      const chap = pad3(passage.attributes.startChapter || 1);
+      const endchap = pad3(
+        passage.attributes.endChapter || passage.attributes.startChapter
+      );
+      const start = pad3(passage.attributes.startVerse || 1);
+      const end = pad3(
+        passage.attributes.endVerse || passage?.attributes.startVerse || 1
+      );
       tmp =
         chap === endchap
           ? start === end
