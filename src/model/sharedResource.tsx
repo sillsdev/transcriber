@@ -8,6 +8,8 @@ export interface SharedResource extends BaseModel {
     languagebcp47: string;
     termsOfUse: string;
     keywords: string;
+    note: boolean;
+    linkurl: string;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
@@ -16,6 +18,7 @@ export interface SharedResource extends BaseModel {
     passage: RecordRelationship;
     cluster: RecordRelationship; //organization
     artifactCategory: RecordRelationship;
+    titleMediafile: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
 }

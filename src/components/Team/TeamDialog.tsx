@@ -11,7 +11,6 @@ import {
   DialogTitle,
   MenuItem,
   LinearProgress,
-  SxProps,
 } from '@mui/material';
 import {
   Organization,
@@ -23,7 +22,7 @@ import {
 } from '../../model';
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
-import { defaultWorkflow, related } from '../../crud';
+import { defaultWorkflow } from '../../crud';
 
 interface IRecordProps {
   organizations: Array<Organization>;
@@ -36,34 +35,19 @@ interface ITeamDialog {
 interface IProps extends IRecordProps, IDialog<ITeamDialog> {
   onDelete?: (team: Organization) => void;
 }
-const formText = { fontSize: 'small' } as SxProps;
-const menuProps = { width: '300px' } as SxProps;
-const textFieldProps = { mx: 1, width: '300px' } as SxProps;
-
 export function TeamDialog(props: IProps) {
-  const {
-    mode,
-    values,
-    isOpen,
-    organizations,
-    projects,
-    onOpen,
-    onCommit,
-    onDelete,
-  } = props;
+  const { mode, values, isOpen, organizations, onOpen, onCommit, onDelete } =
+    props;
   const [name, setName] = React.useState('');
   const [changed, setChanged] = React.useState(false);
   const ctx = React.useContext(TeamContext);
   const { cardStrings } = ctx.state;
   const t = cardStrings;
   const [memory] = useGlobal('memory');
-  const [isDeveloper] = useGlobal('developer');
   const [process, setProcess] = useState<string>();
   const [processOptions, setProcessOptions] = useState<OptionType[]>([]);
   const savingRef = useRef(false);
   const [saving, setSavingx] = useState(false);
-  //NR? const [noteProjId, setNoteProjId] = useState('');
-  const [myProjects, setMyProjects] = useState<Project[]>([]);
 
   const reset = () => {
     setName('');
@@ -87,16 +71,9 @@ export function TeamDialog(props: IProps) {
       mode === DialogMode.edit && values
         ? values.team
         : ({ attributes: {} } as Organization);
-    //NR? if (current.hasOwnProperty('relationships')) delete current?.relationships;
     const team = {
       ...current,
       attributes: { ...current.attributes, name },
-      //NR?
-      /* relationships: {
-        noteProject: {
-          data: noteProjId ? { type: 'project', id: noteProjId } : null,
-        },
-      }, */
     } as Organization;
     onCommit(
       { team, process: process || defaultWorkflow },
@@ -134,18 +111,8 @@ export function TeamDialog(props: IProps) {
   };
 
   useEffect(() => {
-    if (isOpen && values && projects) {
-      setMyProjects(
-        projects.filter((p) => related(p, 'organization') === values.team.id)
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values, projects, isOpen]);
-
-  useEffect(() => {
     if (isOpen && !name) {
       setName(values?.team.attributes?.name || '');
-      //NR?setNoteProjId(values ? related(values, 'noteProject') : '');
     } else if (!isOpen) {
       reset();
     }
@@ -167,11 +134,6 @@ export function TeamDialog(props: IProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values, isOpen]);
-
-  const handleNoteProjectChange = (e: any) => {
-    //NR?  setNoteProjId(e.target.value);
-    setChanged(true);
-  };
 
   return (
     <div>
@@ -217,37 +179,6 @@ export function TeamDialog(props: IProps) {
           )}
           {mode === DialogMode.edit && (
             <div>
-              {isDeveloper && (
-                <TextField
-                  id="select-note-project"
-                  select
-                  label={t.notesProject}
-                  helperText={t.notesHelper}
-                  value={''} //NR?noteProjId ?? ''}
-                  onChange={handleNoteProjectChange}
-                  SelectProps={{
-                    MenuProps: {
-                      sx: menuProps,
-                    },
-                  }}
-                  sx={textFieldProps}
-                  InputProps={{ sx: formText }}
-                  InputLabelProps={{ sx: formText }}
-                  margin="normal"
-                  variant="filled"
-                  required={true}
-                >
-                  {myProjects
-                    .sort((i, j) =>
-                      i.attributes.name <= j.attributes.name ? -1 : 1
-                    )
-                    .map((option: Project) => (
-                      <MenuItem key={option.id} value={option.id}>
-                        {option.attributes.name}
-                      </MenuItem>
-                    ))}
-                </TextField>
-              )}
               <DeleteExpansion
                 title={t.deleteTeam}
                 explain={t.explainTeamDelete}
