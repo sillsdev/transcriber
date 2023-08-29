@@ -898,7 +898,7 @@ export function ScriptureTable(
         if (!offlineOnly && numChanges > 10) {
           return await onlineSave(workflow, prevSave);
         } else {
-          await localSave(workflow, sections, passages, prevSave);
+          await localSave(workflow, sections, passages, !offlineOnly, prevSave);
           return false;
         }
       };

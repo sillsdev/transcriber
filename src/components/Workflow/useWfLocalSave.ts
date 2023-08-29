@@ -32,6 +32,7 @@ export const useWfLocalSave = (props: IProps) => {
     workflow: IWorkflow[],
     sections: Section[],
     passages: Passage[],
+    remoteToo: boolean,
     lastSaved?: string
   ) => {
     let lastSec = { id: 'never here' } as RecordIdentity;
@@ -101,6 +102,12 @@ export const useWfLocalSave = (props: IProps) => {
               title: item.comment,
             },
           } as Passage;
+          if (remoteToo) {
+            delete passRec.attributes.startChapter;
+            delete passRec.attributes.startVerse;
+            delete passRec.attributes.endChapter;
+            delete passRec.attributes.endVerse;
+          }
           const t = new TransformBuilder();
           const ops = UpdateRecord(t, passRec, user);
           if (lastSec.id !== related(curPass, 'section'))
@@ -121,7 +128,7 @@ export const useWfLocalSave = (props: IProps) => {
           await memory.update(t.removeRecord(item.passageId as RecordIdentity));
         } else {
           // Adding Passage
-          const passRec: Passage = {
+          const passRec = {
             type: 'passage',
             attributes: {
               sequencenum: item.passageSeq,
@@ -130,7 +137,7 @@ export const useWfLocalSave = (props: IProps) => {
               title: item.comment,
               state: ActivityStates.NoMedia,
             },
-          } as any;
+          } as Passage;
           const t = new TransformBuilder();
           const ops: Operation[] = [
             ...AddRecord(t, passRec, user, memory),

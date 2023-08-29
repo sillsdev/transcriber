@@ -7,13 +7,22 @@ import {
   faArrowTurnUp,
   faArrowTurnDown,
   faAnglesDown,
+  faHashtag,
+  faBookOpen,
+  faBook,
+  faComment,
 } from '@fortawesome/free-solid-svg-icons';
+import TitleTIcon from '@mui/icons-material/Title';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconButton, IconButtonProps, styled } from '@mui/material';
-
 const StyledIcon = styled(IconButton)<IconButtonProps>(({ theme }) => ({
   color: theme.palette.primary.light,
 }));
+export const BookIcon = <FontAwesomeIcon icon={faBook} />;
+export const AltBookIcon = <FontAwesomeIcon icon={faBookOpen} />;
+export const ChapterNumberIcon = <FontAwesomeIcon icon={faHashtag} />;
+export const NoteIcon = <FontAwesomeIcon icon={faComment} />;
+export const TitleIcon = <TitleTIcon fontSize="small" />;
 
 export const InsertSectionIcon = () => (
   <StyledIcon size="small">
