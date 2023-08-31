@@ -86,6 +86,7 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 import { ISTFilterState } from './filterMenu';
 import { useProjectDefaults } from '../../crud/useProjectDefaults';
 import { sharedResourceSelector } from '../../selector';
+import { usePassageType } from '../../crud/usePassageType';
 
 const SaveWait = 500;
 
@@ -232,6 +233,8 @@ export function ScriptureTable(
     assignedToMe: false,
     disabled: false,
     canHideDone: true,
+    canHidePublishing: true,
+    hidePublishing: true,
   });
   const filterParam = 'ProjectFilter';
   const resStr: IResourceStrings = useSelector(
@@ -241,6 +244,7 @@ export function ScriptureTable(
 
   const [filterState, setFilterState] =
     useState<ISTFilterState>(defaultFilterState);
+  const { PassageTypeRecordOnly } = usePassageType();
   const secNumCol = React.useMemo(() => {
     return colNames.indexOf('sectionSeq');
   }, [colNames]);
@@ -284,6 +288,14 @@ export function ScriptureTable(
   const setWorkflow = (wf: IWorkflow[]) => {
     workflowRef.current = wf;
     setWorkflowx(wf);
+    var anyPublishing = Boolean(
+      wf.find((w) => PassageTypeRecordOnly(w.reference ?? ''))
+    );
+    if (defaultFilterState.canHidePublishing !== anyPublishing)
+      setDefaultFilterState({
+        ...defaultFilterState,
+        canHidePublishing: anyPublishing,
+      });
   };
   const passNumCol = React.useMemo(() => {
     return colNames.indexOf('passageSeq');
@@ -613,7 +625,7 @@ export function ScriptureTable(
   };
 
   const isValidNumber = (value: string): boolean => {
-    return /^[0-9]+$/.test(value);
+    return /^-?[0-9]+$/.test(value);
   };
 
   interface MyWorkflow extends IWorkflow {
@@ -847,6 +859,8 @@ export function ScriptureTable(
         filter.maxStep,
         memory.keyMap
       );
+    filter.canHidePublishing = defaultFilterState.canHidePublishing;
+    filter.hidePublishing = filter.canHidePublishing && filter.hidePublishing;
     return filter;
   };
   useEffect(() => {
@@ -986,9 +1000,11 @@ export function ScriptureTable(
         wfStr,
         filterState,
         doneStepId,
-        getDiscussionCount
+        getDiscussionCount,
+        PassageTypeRecordOnly
       );
       setWorkflow(newWorkflow);
+
       getLastModified(plan);
       setUpdate(false);
     }
@@ -1038,14 +1054,41 @@ export function ScriptureTable(
   useEffect(() => {
     const newWork: IWorkflow[] = [];
     var changed = false;
-    workflowRef.current.forEach((w) => {
+    workflowRef.current.forEach((w, index) => {
       var filtered = false;
-      if (isSectionRow(w))
+      if (isSectionRow(w)) {
         filtered = isSectionFiltered(filterState, w.sectionSeq);
+        if (
+          !filtered &&
+          filterState.hidePublishing &&
+          w.kind === IwfKind.Section
+        ) {
+          var allMyPassagesArePublishing = true;
+          for (
+            var ix = index + 1;
+            ix < workflowRef.current.length &&
+            isPassageRow(workflowRef.current[ix]) &&
+            allMyPassagesArePublishing;
+            ix++
+          ) {
+            if (!PassageTypeRecordOnly(workflowRef.current[ix].reference)) {
+              allMyPassagesArePublishing = false;
+            }
+          }
+          filtered = allMyPassagesArePublishing;
+        }
+      }
 
       if (isPassageRow(w))
         filtered =
-          filtered || isPassageFiltered(w, filterState, orgSteps, doneStepId);
+          filtered ||
+          isPassageFiltered(
+            w,
+            filterState,
+            orgSteps,
+            doneStepId,
+            PassageTypeRecordOnly
+          );
       if (filtered !== w.filtered) changed = true;
       newWork.push({
         ...w,

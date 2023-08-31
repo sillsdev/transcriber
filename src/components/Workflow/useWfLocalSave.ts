@@ -16,6 +16,7 @@ import {
   isSectionRow,
   isSectionUpdated,
 } from '.';
+import { usePassageType } from '../../crud/usePassageType';
 
 interface IProps {
   setComplete: (val: number) => void;
@@ -27,6 +28,7 @@ export const useWfLocalSave = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const { GetPassageTypeRec } = usePassageType();
 
   return async (
     workflow: IWorkflow[],
@@ -89,6 +91,7 @@ export const useWfLocalSave = (props: IProps) => {
         }
       }
       if (isPassageRow(item) && isPassageUpdated(item, lastSaved)) {
+        var psgType = GetPassageTypeRec(item.reference);
         if (!isPassageAdding(item) && !item.deleted) {
           const itemId = item?.passageId?.id || '';
           const curPass = passages.filter((p) => p.id === itemId)[0];
@@ -121,6 +124,18 @@ export const useWfLocalSave = (props: IProps) => {
                 user
               )
             );
+          if (psgType?.id !== related(curPass, 'passagetype')) {
+            ops.push(
+              ...UpdateRelatedRecord(
+                t,
+                passRec,
+                'passagetype',
+                'passagetype',
+                psgType?.id,
+                user
+              )
+            );
+          }
           UpdateRelatedPassageOps(lastSec.id, plan, user, t, ops);
           await memory.update(ops);
         } else if (item.deleted) {
@@ -149,6 +164,16 @@ export const useWfLocalSave = (props: IProps) => {
               lastSec.id
             ),
           ];
+          if (psgType)
+            ops.push(
+              ...ReplaceRelatedRecord(
+                t,
+                passRec,
+                'passagetype',
+                'passagetype',
+                psgType?.id
+              )
+            );
           await memory.update(ops);
         }
       }

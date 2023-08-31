@@ -8,16 +8,19 @@ export const useLoadStatic = () => {
 
   const loadStatic = async () => {
     if (!remote) return false;
-    await memory.sync(
-      await remote.pull((q) => q.findRecords('artifactcategory'))
-    );
-    await memory.sync(await remote.pull((q) => q.findRecords('artifacttype')));
-    await memory.sync(await remote.pull((q) => q.findRecords('plantype')));
-    await memory.sync(await remote.pull((q) => q.findRecords('projecttype')));
-    await memory.sync(await remote.pull((q) => q.findRecords('role')));
-    await memory.sync(await remote.pull((q) => q.findRecords('integration')));
-    await memory.sync(await remote.pull((q) => q.findRecords('workflowstep')));
-
+    const tables = [
+      'artifactcategory',
+      'artifacttype',
+      'passagetype',
+      'plantype',
+      'projecttype',
+      'role',
+      'integration',
+      'workflowstep',
+    ];
+    for (const table of tables) {
+      await memory.sync(await remote.pull((q) => q.findRecords(table)));
+    }
     return true;
   };
 

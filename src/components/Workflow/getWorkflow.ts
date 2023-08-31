@@ -104,13 +104,15 @@ export const isPassageFiltered = (
   w: IWorkflow,
   filterState: ISTFilterState,
   orgWorkflowSteps: OrgWorkflowStep[],
-  doneStepId: string
+  doneStepId: string,
+  isPublishing: (ref?: string) => boolean
 ) => {
   const stepIndex = (stepId: string) =>
     orgWorkflowSteps.findIndex((s) => s.id === stepId);
   return (
     !filterState.disabled &&
     ((filterState.hideDone && w.stepId === doneStepId) ||
+      (filterState.hidePublishing && isPublishing(w.reference)) ||
       (filterState.assignedToMe && w.discussionCount === 0) ||
       (filterState.maxStep &&
         w.stepId &&
@@ -134,6 +136,7 @@ export const getWorkflow = (
   filterState: ISTFilterState,
   doneStepId: string,
   getDiscussionCount: (passageId: string, stepId: string) => number,
+  isPublishing: (ref?: string) => boolean,
   current?: IWorkflow[]
 ) => {
   const myWork = current || Array<IWorkflow>();
@@ -214,7 +217,13 @@ export const getWorkflow = (
         item.deleted = false;
         item.filtered =
           item.filtered ||
-          isPassageFiltered(item, filterState, orgWorkflowSteps, doneStepId);
+          isPassageFiltered(
+            item,
+            filterState,
+            orgWorkflowSteps,
+            doneStepId,
+            isPublishing
+          );
       }
       //console.log(`item ${JSON.stringify(item, null, 2)}`);
       wfPassageAdd(myWork, item, sectionIndex);

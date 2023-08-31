@@ -11,6 +11,7 @@ import {
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import { ArtifactTypeSlug, useArtifactType } from '.';
+import PassageType from '../model/passageType';
 
 export const useOfflineSetup = () => {
   const [memory] = useGlobal('memory');
@@ -365,6 +366,40 @@ export const useOfflineSetup = () => {
       await memory.sync(await backup.push(ops));
     }
   };
+  const makePassageTypeRecs = async () => {
+    const allRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('passagetype')
+    ) as PassageType[];
+    const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
+    if (offlineRecs.length === 0) {
+      const t = new TransformBuilder();
+      const ops = [
+        {
+          usfm: 'toc2',
+          title: 'altbookname',
+          abbrev: 'ALTBK',
+          defaultorder: -3,
+        },
+        { usfm: 'toc1', title: 'bookname', abbrev: 'BOOK', defaultorder: -4 },
+        { usfm: 'esb', title: 'audionote', abbrev: 'NOTE', defaultorder: 0 },
+        {
+          usfm: 'cn',
+          title: 'chapter number',
+          abbrev: 'CHNUM',
+          defaultorder: -2,
+        },
+        { usfm: 's', title: 'title', abbrev: 'TITLE', defaultorder: -1 },
+      ].map((n) => {
+        let rec = {
+          type: 'passagetype',
+          attributes: { ...n },
+        } as PassageType;
+        memory.schema.initializeRecord(rec);
+        return t.addRecord(rec);
+      });
+      await memory.sync(await backup.push(ops));
+    }
+  };
   return async () => {
     // local update only, migrate offlineproject to include offlineAvailable
     await makeRoleRecs();
@@ -379,5 +414,6 @@ export const useOfflineSetup = () => {
     if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
       await makeMoreArtifactTypeRecs();
     }
+    await makePassageTypeRecs();
   };
 };

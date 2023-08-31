@@ -27,6 +27,7 @@ export interface IWorkflow {
   reference?: string;
   comment?: string;
   passageId?: RecordIdentity;
+  sharedResourceId?: RecordIdentity;
   passageUpdated?: string;
   mediaId?: RecordIdentity;
   mediaShared: IMediaShare;

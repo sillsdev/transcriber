@@ -58,11 +58,7 @@ import {
   NoteIcon,
   TitleIcon,
 } from '../../control/PlanIcons';
-import {
-  IsNoteType,
-  IsPublishingType,
-  PassageTypeEnum,
-} from '../../model/passageType';
+import { usePassageType } from '../../crud/usePassageType';
 const MemoizedTaskAvatar = memo(TaskAvatar);
 
 const DOWN_ARROW = 'ARROWDOWN';
@@ -260,6 +256,8 @@ export function PlanSheet(props: IProps) {
   const { userIsAdmin } = useRole();
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
+  const { PassageTypeEnum, GetPassageType, PassageTypeRecordOnly } =
+    usePassageType();
 
   const handleSave = () => {
     startSave();
@@ -336,8 +334,10 @@ export function PlanSheet(props: IProps) {
     setCurrentRow(loc.end.i);
     sheetScroll();
   };
+
   const psgRefRender = (cell: ICell) => {
-    switch (cell.value) {
+    var pt = GetPassageType(cell.value);
+    switch (pt) {
       case PassageTypeEnum.CHAPTERNUMBER:
         return ChapterNumberIcon;
       case PassageTypeEnum.TITLE:
@@ -347,15 +347,14 @@ export function PlanSheet(props: IProps) {
       case PassageTypeEnum.ALTBOOK:
         return AltBookIcon;
       case PassageTypeEnum.NOTE:
-        return NoteIcon;
-      default:
-        return IsNoteType(cell.value.toString()) ? (
+        return (
           <div>
-            {cell.value.toString().substring(4)} {NoteIcon}
+            {NoteIcon}
+            {cell.value.toString().substring(PassageTypeEnum.NOTE.length)}
           </div>
-        ) : (
-          cell.value
         );
+      default:
+        return cell.value;
     }
   };
   const handleValueRender = (cell: ICell) => {
@@ -578,7 +577,7 @@ export function PlanSheet(props: IProps) {
   }, [toolsChanged]);
 
   const refErrTest = (ref: any) =>
-    typeof ref !== 'string' || (!refMatch(ref) && !IsPublishingType(ref));
+    typeof ref !== 'string' || (!refMatch(ref) && !GetPassageType(ref));
 
   useEffect(() => {
     if (rowData.length !== rowInfo.length) {
@@ -615,18 +614,19 @@ export function PlanSheet(props: IProps) {
 
           return [
             {
-              value: passage && (
-                <Badge
-                  badgeContent={rowInfo[rowIndex].discussionCount}
-                  color="secondary"
-                >
-                  <StageReport
-                    onClick={handlePassageDetail(rowIndex)}
-                    step={rowInfo[rowIndex].step || ''}
-                    tip={tv.gotowork}
-                  />
-                </Badge>
-              ),
+              value: passage &&
+                !PassageTypeRecordOnly(row[refCol].toString()) && (
+                  <Badge
+                    badgeContent={rowInfo[rowIndex].discussionCount}
+                    color="secondary"
+                  >
+                    <StageReport
+                      onClick={handlePassageDetail(rowIndex)}
+                      step={rowInfo[rowIndex].step || ''}
+                      tip={tv.gotowork}
+                    />
+                  </Badge>
+                ),
               readOnly: true,
               className:
                 iscurrent + (section ? 'set' + (passage ? 'p' : '') : 'pass'),

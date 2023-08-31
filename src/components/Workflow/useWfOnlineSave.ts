@@ -13,6 +13,7 @@ import {
   isPassageUpdated,
 } from '.';
 import { waitForIt, generateUUID } from '../../utils';
+import { usePassageType } from '../../crud/usePassageType';
 
 interface SaveRec {
   id: string;
@@ -23,6 +24,8 @@ interface SaveRec {
   book?: string;
   reference?: string;
   title: string;
+  passagetypeId?: string;
+  sharedResourceId?: string;
 }
 
 interface IProps {
@@ -35,6 +38,7 @@ export const useWfOnlineSave = (props: IProps) => {
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [plan] = useGlobal('plan');
+  const { GetPassageTypeRec } = usePassageType();
 
   const getRemoteId = async (table: string, localid: string) => {
     await waitForIt(
@@ -76,6 +80,7 @@ export const useWfOnlineSave = (props: IProps) => {
         rowRec.push(rec);
       }
       if (isPassageRow(w)) {
+        var psgType = GetPassageTypeRec(w.reference);
         let rec = {
           issection: false,
           changed: !w.deleted && isPassageUpdated(w, lastSaved),
@@ -92,6 +97,13 @@ export const useWfOnlineSave = (props: IProps) => {
             book: w.book,
             reference: w.reference,
             title: w.comment || '',
+            passagetypeId: psgType
+              ? await getRemoteId('passagetype', psgType.id)
+              : undefined,
+
+            sharedResourceId: w.sharedResourceId
+              ? await getRemoteId('sharedresource', w.sharedResourceId.id)
+              : undefined,
           };
         }
         rowRec.push(rec);

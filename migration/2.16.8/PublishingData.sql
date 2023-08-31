@@ -33,30 +33,31 @@ ALTER TABLE artifactcategorys ADD CONSTRAINT fk_artifactcategorys_mediafile FORE
 --delete from passagetypes;
 --sections will have recordings of the title and this will be a special section title
 --but we may want it to have it's own because of the usfm...so I'm going to put it in for now
-INSERT INTO public.passagetypes
-(usfm, title, abbrev, defaultorder,datecreated, dateupdated,lastmodifiedby,lastmodifiedorigin)
-VALUES('toc1', 'altbookname', 'BKALT', -4
-,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
 
 --select * from passagetypes
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder,datecreated, dateupdated,lastmodifiedby,lastmodifiedorigin)
-VALUES('toc2', 'shortbookname', 'BOOK', -3,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
+VALUES('toc1', 'shortbookname', 'BOOK', -4,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
+
+INSERT INTO public.passagetypes
+(usfm, title, abbrev, defaultorder,datecreated, dateupdated,lastmodifiedby,lastmodifiedorigin)
+VALUES('toc2', 'altbookname', 'ALTBK', -3
+,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
 
 
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder,datecreated, dateupdated,lastmodifiedby,lastmodifiedorigin)
-VALUES('esb', 'audionote', 'NOTE', -1,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
+VALUES('esb', 'audionote', 'NOTE', 0,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
 
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder,datecreated, dateupdated,lastmodifiedby,lastmodifiedorigin)
-VALUES('cn', 'chapternumber', 'CHNUM', 1,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
+VALUES('cn', 'chapternumber', 'CHNUM', -2,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
 
 --will this be a passage 0 or will it be directly in the section
 --start with it as a passage and see if that works
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder,datecreated, dateupdated,lastmodifiedby,lastmodifiedorigin)
-VALUES('s', 'title', 'TITLE', 1,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
+VALUES('s', 'title', 'TITLE', -1,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
 DROP INDEX passagetype_usfm_idx;
 CREATE INDEX passagetype_usfm_idx ON public.passagetypes USING btree (usfm);
 
@@ -70,9 +71,15 @@ CREATE TABLE graphics (
 	datecreated timestamp,
 	dateupdated timestamp,
 	lastmodifiedby int,
-	lastmodifiedorigin text
+	lastmodifiedorigin text,
+	archived bool
 );
 CREATE unique INDEX idx_graphics_resource ON public.graphics (organizationid, resourcetype, resourceid);
+create trigger archivetrigger after
+update
+    on
+    public.graphics for each row execute function archive_trigger();
+
 grant all on graphics to transcriber;
 grant all on public.graphics_id_seq to transcriber;
 

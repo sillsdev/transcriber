@@ -4768,6 +4768,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTableFilter.hidePublishing">
+         <segment>
+            <source>Hide Publishing Titles</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTableFilter.step">
          <segment>
             <source>Workflow Step</source>

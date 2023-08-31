@@ -1018,6 +1018,7 @@ const initialState = {
 			"clear": "Clear",
 			"disable": "Disable filter to add rows",
 			"hideDone": "Hide Done rows",
+			"hidePublishing": "Hide Publishing Titles",
 			"step": "Workflow Step",
 			"minimum": "Minimum",
 			"maximum": "Maximum",
