@@ -13,6 +13,8 @@ import { useOrganizedBy } from '../crud';
 import { planSheetSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
+  AddAltBookTitleIcon,
+  AddBookTitleIcon,
   InsertSectionIcon,
   PassageBelowIcon,
   PassageEndIcon,
@@ -44,6 +46,8 @@ interface IProps {
   onSectionAbove?: () => void;
   onSectionEnd?: () => void;
   onPassageEnd?: () => void;
+  onBookTitle?: () => void;
+  onAltBookTitle?: () => void;
 }
 
 export const AddSectionPassageButtons = (props: IProps) => {
@@ -61,6 +65,8 @@ export const AddSectionPassageButtons = (props: IProps) => {
     onSectionAbove,
     onSectionEnd,
     onPassageEnd,
+    onBookTitle,
+    onAltBookTitle,
   } = props;
   const [actionMenuItem, setActionMenuItem] = React.useState<any>(undefined);
   const { getOrganizedBy } = useOrganizedBy();
@@ -78,6 +84,14 @@ export const AddSectionPassageButtons = (props: IProps) => {
 
   const handleSectionAbove = () => {
     onSectionAbove && onSectionAbove();
+    handleClose();
+  };
+  const handleBookTitle = () => {
+    onBookTitle && onBookTitle();
+    handleClose();
+  };
+  const handleAltBookTitle = () => {
+    onAltBookTitle && onAltBookTitle();
     handleClose();
   };
 
@@ -121,6 +135,22 @@ export const AddSectionPassageButtons = (props: IProps) => {
         {onDisableFilter && (
           <MenuItem id="filtered" onClick={onDisableFilter}>
             {t.filtered}
+          </MenuItem>
+        )}
+        {onBookTitle && (
+          <MenuItem id="bookTitle" onClick={handleBookTitle}>
+            <StyledMenuIcon>
+              <AddBookTitleIcon />
+            </StyledMenuIcon>
+            {'Add Book Title'}
+          </MenuItem>
+        )}
+        {onAltBookTitle && (
+          <MenuItem id="altBookTitle" onClick={handleAltBookTitle}>
+            <StyledMenuIcon>
+              <AddAltBookTitleIcon />
+            </StyledMenuIcon>
+            {'Add Alternate Book Title'}
           </MenuItem>
         )}
         {onSectionAbove && (

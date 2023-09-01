@@ -80,7 +80,7 @@ export const useWfOnlineSave = (props: IProps) => {
         rowRec.push(rec);
       }
       if (isPassageRow(w)) {
-        var psgType = GetPassageTypeRec(w.reference);
+        var psgType = GetPassageTypeRec(w.passageType);
         let rec = {
           issection: false,
           changed: !w.deleted && isPassageUpdated(w, lastSaved),

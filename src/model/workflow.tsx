@@ -1,4 +1,5 @@
 import { RecordIdentity } from '@orbit/data';
+import { PassageTypeEnum } from './passageType';
 
 export enum IwfKind {
   Section,
@@ -28,6 +29,7 @@ export interface IWorkflow {
   comment?: string;
   passageId?: RecordIdentity;
   sharedResourceId?: RecordIdentity;
+  passageType?: PassageTypeEnum;
   passageUpdated?: string;
   mediaId?: RecordIdentity;
   mediaShared: IMediaShare;

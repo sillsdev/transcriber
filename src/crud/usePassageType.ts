@@ -1,33 +1,30 @@
 import { useGlobal } from 'reactn';
-import PassageType from '../model/passageType';
+import PassageType, { PassageTypeEnum } from '../model/passageType';
 import { remoteId } from './remoteId';
+import { findRecord } from './tryFindRecord';
 
 export const usePassageType = () => {
   const [memory] = useGlobal('memory');
   const [offlineOnly] = useGlobal('offlineOnly');
 
-  enum PassageTypeEnum {
-    BOOK = 'BOOK',
-    CHAPTERNUMBER = 'CHNUM',
-    TITLE = 'TITLE',
-    ALTBOOK = 'ALTBK',
-    NOTE = 'NOTE',
-  }
-  const IsNoteType = (ref?: string) =>
-    GetPassageType(ref) === PassageTypeEnum.NOTE;
-
-  const GetPassageType = (ref?: string) => {
+  const GetPassageTypeFromRef = (ref?: string) => {
     if (!ref) return undefined;
     var arr = Object.values(PassageTypeEnum).filter((v) => ref.startsWith(v));
     if (arr.length > 0) return arr[0];
     return undefined;
   };
+  const GetPassageTypeFromId = (id?: string) => {
+    if (!id) return undefined;
+    var rec = findRecord(memory, 'passagetype', id) as PassageType;
+    if (rec) return rec.attributes.abbrev as PassageTypeEnum;
+    return undefined;
+  };
 
   const PassageTypeRecordOnly = (ref?: string) =>
-    GetPassageType(ref) !== undefined && !IsNoteType(ref);
+    GetPassageTypeFromRef(ref) !== undefined &&
+    GetPassageTypeFromRef(ref) !== PassageTypeEnum.NOTE;
 
-  const GetPassageTypeRec = (ref?: string) => {
-    var pt = GetPassageType(ref);
+  const GetPassageTypeRec = (pt: PassageTypeEnum | undefined) => {
     if (pt) {
       var recs = memory.cache.query((q) =>
         q.findRecords('passagetype')
@@ -45,7 +42,7 @@ export const usePassageType = () => {
   return {
     PassageTypeRecordOnly,
     GetPassageTypeRec,
-    GetPassageType,
-    PassageTypeEnum,
+    GetPassageTypeFromRef,
+    GetPassageTypeFromId,
   };
 };

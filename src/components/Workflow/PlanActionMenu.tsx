@@ -30,6 +30,9 @@ import {
   sharedSelector,
 } from '../../selector';
 import {
+  AddChapterNumberIcon,
+  AddNoteIcon,
+  AddSectionTitleIcon,
   InsertSectionIcon,
   PassageBelowIcon,
   PassageToNextIcon,
@@ -58,6 +61,9 @@ interface IProps {
   onPassageToPrev?: () => void;
   onPassageToNext?: () => void;
   onSectionAbove?: () => void;
+  onChapterNumber?: () => void;
+  onTitle?: () => void;
+  onNote?: () => void;
 }
 export function PlanActionMenu(props: IProps) {
   const {
@@ -82,6 +88,9 @@ export function PlanActionMenu(props: IProps) {
     onPassageToPrev,
     onPassageToNext,
     onSectionAbove,
+    onChapterNumber,
+    onTitle,
+    onNote,
   } = props;
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
   const p: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
@@ -232,7 +241,28 @@ export function PlanActionMenu(props: IProps) {
                         <InsertSectionIcon />
                       </MenuItem>
                     )}
-
+                    {onChapterNumber && isSection && (
+                      <MenuItem
+                        id="chnumAsFirst"
+                        onClick={onChapterNumber}
+                        title={'insert chapter number as first {0} in {1}'
+                          .replace('{0}', organizedBy)
+                          .replace('{1}', sectionSequenceNumber)}
+                      >
+                        <AddChapterNumberIcon />
+                      </MenuItem>
+                    )}
+                    {onTitle && isSection && (
+                      <MenuItem
+                        id="chnumAsFirst"
+                        onClick={onTitle}
+                        title={'insert {0} title for {1}'
+                          .replace('{0}', organizedBy)
+                          .replace('{1}', sectionSequenceNumber)}
+                      >
+                        <AddSectionTitleIcon />
+                      </MenuItem>
+                    )}
                     {onPassageBelow && isSection && (
                       <MenuItem
                         id="psgAsFirst"
@@ -279,6 +309,24 @@ export function PlanActionMenu(props: IProps) {
                         )}
                       >
                         <PassageToNextIcon />
+                      </MenuItem>
+                    )}
+                    {isPassage && onNote && (
+                      <MenuItem
+                        id="addnote"
+                        onClick={onNote}
+                        title={'add note'}
+                      >
+                        <AddNoteIcon />
+                      </MenuItem>
+                    )}
+                    {isPassage && onChapterNumber && (
+                      <MenuItem
+                        id="addchapnum"
+                        onClick={onChapterNumber}
+                        title={'add chapter number'}
+                      >
+                        <AddChapterNumberIcon />
                       </MenuItem>
                     )}
                     {isPassage && (

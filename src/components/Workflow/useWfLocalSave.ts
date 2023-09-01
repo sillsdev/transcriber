@@ -91,7 +91,7 @@ export const useWfLocalSave = (props: IProps) => {
         }
       }
       if (isPassageRow(item) && isPassageUpdated(item, lastSaved)) {
-        var psgType = GetPassageTypeRec(item.reference);
+        const psgType = GetPassageTypeRec(item.passageType);
         if (!isPassageAdding(item) && !item.deleted) {
           const itemId = item?.passageId?.id || '';
           const curPass = passages.filter((p) => p.id === itemId)[0];

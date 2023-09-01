@@ -87,6 +87,7 @@ import { ISTFilterState } from './filterMenu';
 import { useProjectDefaults } from '../../crud/useProjectDefaults';
 import { sharedResourceSelector } from '../../selector';
 import { usePassageType } from '../../crud/usePassageType';
+import { PassageTypeEnum } from '../../model/passageType';
 
 const SaveWait = 500;
 
@@ -244,7 +245,8 @@ export function ScriptureTable(
 
   const [filterState, setFilterState] =
     useState<ISTFilterState>(defaultFilterState);
-  const { PassageTypeRecordOnly } = usePassageType();
+  const { PassageTypeRecordOnly, GetPassageTypeFromRef, GetPassageTypeFromId } =
+    usePassageType();
   const secNumCol = React.useMemo(() => {
     return colNames.indexOf('sectionSeq');
   }, [colNames]);
@@ -417,6 +419,7 @@ export function ScriptureTable(
 
   const addPassageTo = (
     myWorkflow: IWorkflow[],
+    ptype: PassageTypeEnum | undefined,
     i?: number,
     before?: boolean
   ) => {
@@ -428,11 +431,12 @@ export function ScriptureTable(
       level: flat ? 0 : 1,
       kind: flat ? IwfKind.SectionPassage : IwfKind.Passage,
       book: workflow[lastRow]?.book || workflow[lastRow - 1]?.book || '',
-      reference: '',
+      reference: ptype ?? '',
       mediaId: undefined,
       comment: '',
       passageUpdated: currentDateTime(),
       passageId: undefined,
+      passageType: ptype,
       mediaShared: shared ? IMediaShare.None : IMediaShare.NotPublic,
       deleted: false,
       filtered: false,
@@ -472,17 +476,21 @@ export function ScriptureTable(
     return ix;
   };
 
-  const addSection = (ix?: number) => {
+  const addSection = (ix?: number, ptype?: PassageTypeEnum) => {
     if (savingRef.current) {
       showMessage(t.saving);
       return;
     }
     const i = getUndelIndex(workflow, ix);
-
-    const sequenceNums = workflow.map((row, j) =>
-      !i || j < i ? (!row.deleted && row.sectionSeq) || 0 : 0
-    ) as number[];
-    const sequencenum = Math.max(...sequenceNums, 0) + 1;
+    var sequencenum = 0;
+    if (ptype === PassageTypeEnum.BOOK) sequencenum = -4;
+    else if (ptype === PassageTypeEnum.ALTBOOK) sequencenum = -3;
+    else {
+      const sequenceNums = workflow.map((row, j) =>
+        !i || j < i ? (!row.deleted && row.sectionSeq) || 0 : 0
+      ) as number[];
+      sequencenum = Math.max(...sequenceNums, 0) + 1;
+    }
     let newRow = {
       level: 0,
       kind: flat ? IwfKind.SectionPassage : IwfKind.Section,
@@ -495,16 +503,20 @@ export function ScriptureTable(
     let newData = insertAt(workflow, newRow, i);
     //if added in the middle...resequence
     if (i !== undefined) newData = wfResequence(newData);
-    addPassageTo(newData, i);
+    addPassageTo(newData, ptype, i);
   };
 
-  const addPassage = (ix?: number, before?: boolean) => {
+  const addPassage = (
+    ptype?: PassageTypeEnum,
+    ix?: number,
+    before?: boolean
+  ) => {
     if (savingRef.current) {
       showMessage(t.saving);
       return;
     }
     const i = getUndelIndex(workflow, ix);
-    addPassageTo(workflow, i, before);
+    addPassageTo(workflow, ptype, i, before);
   };
   const movePassage = (ix: number, before: boolean) => {
     if (savingRef.current) {
@@ -649,11 +661,17 @@ export function ScriptureTable(
           ? wf?.passageUpdated
           : currentDateTime();
         const value = name === 'book' ? findBook(c.value as string) : c.value;
+        var passageType =
+          name === 'reference'
+            ? GetPassageTypeFromRef(c.value as string)
+            : wf?.passageType;
+
         workflow[i] = {
           ...wf,
           [name]: isNumberCol ? parseInt(value ?? '') : value,
           sectionUpdated,
           passageUpdated,
+          passageType,
         } as IWorkflow;
       }
     });
@@ -1001,7 +1019,8 @@ export function ScriptureTable(
         filterState,
         doneStepId,
         getDiscussionCount,
-        PassageTypeRecordOnly
+        PassageTypeRecordOnly,
+        GetPassageTypeFromId
       );
       setWorkflow(newWorkflow);
 
@@ -1101,6 +1120,21 @@ export function ScriptureTable(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgSteps, filterState, doneStepId]);
 
+  const hasBookTitle = useMemo(() => {
+    console.log('calc hasBookTitle', workflow);
+    return (
+      workflow.findIndex((w) => w.passageType === PassageTypeEnum.BOOK) >= 0
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workflow]);
+
+  const hasAltBookTitle = useMemo(() => {
+    return (
+      workflow.findIndex((w) => w.passageType === PassageTypeEnum.ALTBOOK) >= 0
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [workflow]);
+
   const rowinfo = useMemo(() => {
     var totalSections = new Set(
       workflow.filter((w) => !w.deleted).map((w) => w.sectionSeq)
@@ -1165,6 +1199,8 @@ export function ScriptureTable(
         orgSteps={orgSteps}
         canSetDefault={canSetProjectDefault}
         toolId={toolId}
+        hasBookTitle={hasBookTitle}
+        hasAltBookTitle={hasAltBookTitle}
       />
       {assignSectionVisible && (
         <AssignSection

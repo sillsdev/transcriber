@@ -8,4 +8,11 @@ export interface PassageType extends Record {
     defaultorder: number;
   };
 }
+export enum PassageTypeEnum {
+  BOOK = 'BOOK',
+  CHAPTERNUMBER = 'CHNUM',
+  TITLE = 'TITLE',
+  ALTBOOK = 'ALTBK',
+  NOTE = 'NOTE',
+}
 export default PassageType;

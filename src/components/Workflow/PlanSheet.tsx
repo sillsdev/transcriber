@@ -59,6 +59,7 @@ import {
   TitleIcon,
 } from '../../control/PlanIcons';
 import { usePassageType } from '../../crud/usePassageType';
+import { PassageTypeEnum } from '../../model/passageType';
 const MemoizedTaskAvatar = memo(TaskAvatar);
 
 const DOWN_ARROW = 'ARROWDOWN';
@@ -153,14 +154,16 @@ interface IProps {
   bookMap?: BookNameMap;
   filterState: ISTFilterState;
   maximumSection: number;
+  hasBookTitle: boolean;
+  hasAltBookTitle: boolean;
   orgSteps: OrgWorkflowStep[];
   canSetDefault: boolean;
   updateData: (changes: ICellChange[]) => void;
   paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => Promise<boolean>;
-  addPassage: (i?: number, before?: boolean) => void;
+  addPassage: (ptype?: PassageTypeEnum, i?: number, before?: boolean) => void;
   movePassage: (i: number, before: boolean) => void;
-  addSection: (i?: number) => void;
+  addSection: (i?: number, ptype?: PassageTypeEnum) => void;
   lookupBook: (book: string) => string;
   resequence: () => void;
   inlinePassages: boolean;
@@ -200,6 +203,8 @@ export function PlanSheet(props: IProps) {
     onAudacity,
     onPassageDetail,
     onFilterChange,
+    hasBookTitle,
+    hasAltBookTitle,
   } = props;
   const ctx = useContext(PlanContext);
   const { projButtonStr, connected, readonly } = ctx.state;
@@ -256,11 +261,17 @@ export function PlanSheet(props: IProps) {
   const { userIsAdmin } = useRole();
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
-  const { PassageTypeEnum, GetPassageType, PassageTypeRecordOnly } =
-    usePassageType();
+  const { GetPassageTypeFromRef, PassageTypeRecordOnly } = usePassageType();
 
   const handleSave = () => {
     startSave();
+  };
+
+  const onBookTitle = () => {
+    addSection(0, PassageTypeEnum.BOOK);
+  };
+  const onAltBookTitle = () => {
+    addSection(0, PassageTypeEnum.ALTBOOK);
   };
 
   const onSectionAbove = () => {
@@ -269,14 +280,27 @@ export function PlanSheet(props: IProps) {
     while (!isSection(row)) row -= 1;
     addSection(row);
   };
+  const onChapterNumber = () => {
+    if (inlinePassages)
+      addSection(currentRow - 1, PassageTypeEnum.CHAPTERNUMBER);
+    else addPassage(PassageTypeEnum.CHAPTERNUMBER, currentRow - 1, true);
+  };
+  const onTitle = () => {
+    if (inlinePassages) addSection(currentRow - 1, PassageTypeEnum.TITLE);
+    else addPassage(PassageTypeEnum.TITLE, currentRow - 1, true);
+  };
+  const onNote = () => {
+    if (inlinePassages) addSection(currentRow - 1, PassageTypeEnum.NOTE);
+    else addPassage(PassageTypeEnum.NOTE, currentRow - 1, true);
+  };
   const onPassageBelow = () => {
-    addPassage(currentRow - 1, false);
+    addPassage(undefined, currentRow - 1, false);
   };
   const onPassageLast = () => {
     //we're on a section so find our last row and add it below it
     var row = currentRow;
     while (isPassage(row + 1)) row++;
-    addPassage(row, false);
+    addPassage(undefined, row, false);
   };
 
   const onPassageToPrev = () => {
@@ -336,7 +360,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const psgRefRender = (cell: ICell) => {
-    var pt = GetPassageType(cell.value);
+    var pt = GetPassageTypeFromRef(cell.value);
     switch (pt) {
       case PassageTypeEnum.CHAPTERNUMBER:
         return ChapterNumberIcon;
@@ -577,7 +601,7 @@ export function PlanSheet(props: IProps) {
   }, [toolsChanged]);
 
   const refErrTest = (ref: any) =>
-    typeof ref !== 'string' || (!refMatch(ref) && !GetPassageType(ref));
+    typeof ref !== 'string' || (!refMatch(ref) && !GetPassageTypeFromRef(ref));
 
   useEffect(() => {
     if (rowData.length !== rowInfo.length) {
@@ -731,6 +755,11 @@ export function PlanSheet(props: IProps) {
                     onDisableFilter={
                       !readonly && filtered ? disableFilter : undefined
                     }
+                    onChapterNumber={
+                      !readonly && !filtered ? onChapterNumber : undefined
+                    }
+                    onTitle={!readonly && !filtered ? onTitle : undefined}
+                    onNote={!readonly && !filtered ? onNote : undefined}
                     onPassageBelow={
                       !readonly && !filtered && !inlinePassages
                         ? onPassageBelow
@@ -835,7 +864,8 @@ export function PlanSheet(props: IProps) {
         filterState.minSection > 1 ||
         (filterState.maxSection > -1 &&
           filterState.maxSection < maximumSection) ||
-        filterState.assignedToMe)
+        filterState.assignedToMe ||
+        filterState.hidePublishing)
     );
   }, [filterState, maximumSection]);
 
@@ -880,6 +910,16 @@ export function PlanSheet(props: IProps) {
                   }
                   onSectionEnd={!filtered ? onSectionEnd : undefined}
                   onDisableFilter={filtered ? disableFilter : undefined}
+                  onBookTitle={
+                    !readonly && !filtered && !hasBookTitle
+                      ? onBookTitle
+                      : undefined
+                  }
+                  onAltBookTitle={
+                    !readonly && !filtered && !hasAltBookTitle
+                      ? onAltBookTitle
+                      : undefined
+                  }
                 />
                 <AltButton
                   id="planSheetImp"

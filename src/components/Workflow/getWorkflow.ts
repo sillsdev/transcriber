@@ -14,6 +14,8 @@ import { getNextStep } from '../../crud/getNextStep';
 import { getStepComplete } from '../../crud';
 import { toCamel } from '../../utils';
 import { ISTFilterState } from './filterMenu';
+import { PassageTypeEnum } from '../../model/passageType';
+import { RecordIdentity } from '@orbit/data';
 
 const wfSectionUpdate = (item: IWorkflow, rec: IWorkflow) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -137,6 +139,7 @@ export const getWorkflow = (
   doneStepId: string,
   getDiscussionCount: (passageId: string, stepId: string) => number,
   isPublishing: (ref?: string) => boolean,
+  GetPassageTypeFromId: (id?: string) => PassageTypeEnum | undefined,
   current?: IWorkflow[]
 ) => {
   const myWork = current || Array<IWorkflow>();
@@ -178,6 +181,11 @@ export const getWorkflow = (
       .sort((i, j) => i.attributes?.sequencenum - j.attributes?.sequencenum);
     sectionPassages.forEach((passage) => {
       const passAttr = passage.attributes;
+      console.log(
+        passage.attributes.reference,
+        passage.relationships?.passagetype,
+        (passage.relationships?.passagetype?.data as RecordIdentity)?.id
+      );
       if (passAttr) {
         if (!flat || !first) {
           item.level = 1;
@@ -191,6 +199,10 @@ export const getWorkflow = (
         item.comment = passAttr.title;
         item.passageUpdated = passage.attributes.dateUpdated;
         item.passageId = { type: 'passage', id: passage.id };
+        item.passageType = GetPassageTypeFromId(
+          related(passage, 'passagetype')
+        );
+        item.sharedResourceId = related(passage, 'sharedResource');
         const mediaRec = getVernacularMediaRec(passage.id, memory);
         item.mediaId = mediaRec
           ? { type: 'mediafile', id: mediaRec.id }
