@@ -15,7 +15,7 @@ export const isSectionUpdated = (wf: IWorkflow, lastSaved?: string) => {
 };
 
 export const isPassageAdding = (wf: IWorkflow) =>
-  (wf?.passageId?.id || '') === '';
+  (wf?.passage?.id || '') === '';
 
 export const isPassageUpdated = (wf: IWorkflow, lastSaved?: string) => {
   if (isPassageAdding(wf)) return true;

@@ -860,6 +860,7 @@ const initialState = {
 	}),
 	"planActions": new LocalizedStrings({
 		"en": {
+			"addNote": "Add Note",
 			"assign": "Assign",
 			"delete": "Delete",
 			"passageDetail": "Passage Detail",
@@ -874,7 +875,9 @@ const initialState = {
 	"planSheet": new LocalizedStrings({
 		"en": {
 			"action": "Action",
+			"addNote": "Add Note",
 			"addPassage": "Add Passage",
+			"addPublishingTitles": "Add Publishing Titles",
 			"addSection": "Add {0}",
 			"assigned": "Assigned",
 			"audio": "Audio",
@@ -892,6 +895,7 @@ const initialState = {
 			"resequence": "Resequence",
 			"save": "Save",
 			"saving": "Saving...",
+			"movementAbove": "Add movement above {0} {1}",
 			"sectionAbove": "Add {0} above {1} {2}",
 			"sectionEnd": "Add {0} to End",
 			"selectRows": "Please select row(s) to {0}.",
@@ -996,6 +1000,7 @@ const initialState = {
 	"scriptureTable": new LocalizedStrings({
 		"en": {
 			"book": "Book",
+			"chapter": "Chapter",
 			"description": "Description",
 			"extras": "Extras",
 			"installAudacity": "Install {Audacity} to use this feature.",
@@ -1017,6 +1022,7 @@ const initialState = {
 			"clear": "Clear",
 			"disable": "Disable filter to add rows",
 			"hideDone": "Hide Done rows",
+			"hidePublishing": "Hide Publishing Titles",
 			"step": "Workflow Step",
 			"minimum": "Minimum",
 			"maximum": "Maximum",

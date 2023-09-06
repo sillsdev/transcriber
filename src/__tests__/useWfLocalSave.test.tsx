@@ -32,7 +32,6 @@ function setup(props: HookProps) {
     wf: IWorkflow[],
     sections: Section[],
     passages: Passage[],
-    remoteToo: boolean,
     lastSaved?: string
   ) => Promise<void> = async () => {};
   const TestComponent = () => {

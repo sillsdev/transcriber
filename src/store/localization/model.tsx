@@ -808,6 +808,7 @@ export interface IPermissionStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
+    "addNote": string;
     "assign": string;
     "delete": string;
     "passageDetail": string;
@@ -821,7 +822,9 @@ export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
 
 export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "action": string;
+    "addNote": string;
     "addPassage": string;
+    "addPublishingTitles": string;
     "addSection": string;
     "assigned": string;
     "audio": string;
@@ -839,6 +842,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "resequence": string;
     "save": string;
     "saving": string;
+    "movementAbove": string;
     "sectionAbove": string;
     "sectionEnd": string;
     "selectRows": string;
@@ -937,6 +941,7 @@ export interface IResourceStrings extends Localize.LocalizedStringsMethods {
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
     "book": string;
+    "chapter": string;
     "description": string;
     "extras": string;
     "installAudacity": string;
@@ -957,6 +962,7 @@ export interface IScriptureTableFilterStrings extends Localize.LocalizedStringsM
     "clear": string;
     "disable": string;
     "hideDone": string;
+    "hidePublishing": string;
     "step": string;
     "minimum": string;
     "maximum": string;

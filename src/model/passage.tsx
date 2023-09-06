@@ -25,7 +25,7 @@ export interface Passage extends BaseModel {
     media: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
     sharedResource: RecordRelationship;
-    passageType: RecordRelationship;
+    passagetype: RecordRelationship;
   };
 }
 export default Passage;

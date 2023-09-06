@@ -4680,6 +4680,13 @@
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="planActions.addNote">
+            <source>Add Note</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planActions.assign">
             <source>Assign</source>
             <target/>
@@ -4750,8 +4757,22 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="planSheet.addNote">
+            <source>Add Note</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planSheet.addPassage">
             <source>Add Passage</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.addPublishingTitles">
+            <source>Add Publishing Titles</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -4872,6 +4893,13 @@
          </trans-unit>
          <trans-unit id="planSheet.saving">
             <source>Saving...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.movementAbove">
+            <source>Add movement above {0} {1}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -5437,6 +5465,13 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="scriptureTable.chapter">
+            <source>Chapter</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="scriptureTable.description">
             <source>Description</source>
             <target/>
@@ -5551,6 +5586,13 @@
          </trans-unit>
          <trans-unit id="scriptureTableFilter.hideDone">
             <source>Hide Done rows</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTableFilter.hidePublishing">
+            <source>Hide Publishing Titles</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>

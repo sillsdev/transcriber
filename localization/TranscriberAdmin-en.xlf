@@ -4012,6 +4012,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planActions.addNote">
+         <segment>
+            <source>Add Note</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planActions.assign">
          <segment>
             <source>Assign</source>
@@ -4072,9 +4078,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.addNote">
+         <segment>
+            <source>Add Note</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.addPassage">
          <segment>
             <source>Add Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.addPublishingTitles">
+         <segment>
+            <source>Add Publishing Titles</source>
             <target/>
          </segment>
       </unit>
@@ -4177,6 +4195,12 @@
       <unit id="planSheet.saving">
          <segment>
             <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.movementAbove">
+         <segment>
+            <source>Add movement above {0} {1}</source>
             <target/>
          </segment>
       </unit>
@@ -4660,6 +4684,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTable.chapter">
+         <segment>
+            <source>Chapter</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.description">
          <segment>
             <source>Description</source>
@@ -4759,6 +4789,12 @@
       <unit id="scriptureTableFilter.hideDone">
          <segment>
             <source>Hide Done rows</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.hidePublishing">
+         <segment>
+            <source>Hide Publishing Titles</source>
             <target/>
          </segment>
       </unit>
