@@ -1,4 +1,4 @@
-import { IwfKind, IWorkflow } from '../../model';
+import { IwfKind, IWorkflow, WorkflowLevel } from '../../model';
 
 interface MyWorkflow extends IWorkflow {
   [key: string]: any;
@@ -31,6 +31,12 @@ export const workflowSheet = (
       var value;
       if (r.kind === IwfKind.Section && c === 'passageSeq')
         value = getFilteredSection(r['sectionSeq'], filtered, unfiltered);
+      else if (
+        r.kind === IwfKind.Section &&
+        r.level === WorkflowLevel.Movement &&
+        c === 'reference'
+      )
+        value = r[c];
       else value = i > lo && i < hi ? r[c] || '' : '';
       line.push(value);
     });

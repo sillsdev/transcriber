@@ -37,7 +37,7 @@ ALTER TABLE artifactcategorys ADD CONSTRAINT fk_artifactcategorys_mediafile FORE
 --select * from passagetypes
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder,datecreated, dateupdated,lastmodifiedby,lastmodifiedorigin)
-VALUES('toc1', 'shortbookname', 'BOOK', -4,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
+VALUES('toc1', 'bookname', 'BOOK', -4,current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',(select id from users where email = 'sara_hentzel@sil.org'), 'setup');
 
 INSERT INTO public.passagetypes
 (usfm, title, abbrev, defaultorder,datecreated, dateupdated,lastmodifiedby,lastmodifiedorigin)
@@ -85,7 +85,7 @@ grant all on public.graphics_id_seq to transcriber;
 
 
 alter table sections add published bool default false;
-alter table sections add level int default 2;
+alter table sections add level int default 3;
 
 alter table organizations add publishingdata jsonb default '{}';
 alter table organizations add bibleid text; --ENGCSV

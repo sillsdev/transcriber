@@ -8,24 +8,24 @@ export const usePassageType = () => {
   const [offlineOnly] = useGlobal('offlineOnly');
 
   const GetPassageTypeFromRef = (ref?: string) => {
-    if (!ref) return undefined;
+    if (!ref) return PassageTypeEnum.PASSAGE;
     var arr = Object.values(PassageTypeEnum).filter((v) => ref.startsWith(v));
     if (arr.length > 0) return arr[0];
-    return undefined;
+    return PassageTypeEnum.PASSAGE;
   };
   const GetPassageTypeFromId = (id?: string) => {
-    if (!id) return undefined;
+    if (!id) return PassageTypeEnum.PASSAGE;
     var rec = findRecord(memory, 'passagetype', id) as PassageType;
     if (rec) return rec.attributes.abbrev as PassageTypeEnum;
-    return undefined;
+    return PassageTypeEnum.PASSAGE;
   };
 
   const PassageTypeRecordOnly = (ref?: string) =>
-    GetPassageTypeFromRef(ref) !== undefined &&
+    GetPassageTypeFromRef(ref) !== PassageTypeEnum.PASSAGE &&
     GetPassageTypeFromRef(ref) !== PassageTypeEnum.NOTE;
 
-  const GetPassageTypeRec = (pt: PassageTypeEnum | undefined) => {
-    if (pt) {
+  const GetPassageTypeRec = (pt: PassageTypeEnum) => {
+    if (pt !== PassageTypeEnum.PASSAGE) {
       var recs = memory.cache.query((q) =>
         q.findRecords('passagetype')
       ) as PassageType[];

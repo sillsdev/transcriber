@@ -304,6 +304,7 @@ export const Sources = async (
   }
   /* set the user from the token - must be done after the backup is loaded and after changes to offline are recorded */
   if (!offline) {
+    await remote.activated;
     var tr = await remote.pull((q) =>
       q.findRecords('user').filter({ attribute: 'auth0Id', value: tokData.sub })
     );

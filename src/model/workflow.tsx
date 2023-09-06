@@ -1,5 +1,6 @@
 import { RecordIdentity } from '@orbit/data';
 import { PassageTypeEnum } from './passageType';
+import Passage from './passage';
 
 export enum IwfKind {
   Section,
@@ -14,8 +15,15 @@ export enum IMediaShare {
   None,
   NotPublic,
 }
+export enum WorkflowLevel {
+  Book = 1,
+  Movement,
+  Section,
+  SubSection,
+  Passage,
+}
 export interface IWorkflow {
-  level: number;
+  level: WorkflowLevel; //currently not used anywhere
   kind: IwfKind;
   sectionSeq: number;
   title?: string;
@@ -27,9 +35,9 @@ export interface IWorkflow {
   book?: string;
   reference?: string;
   comment?: string;
-  passageId?: RecordIdentity;
+  passage?: Passage;
   sharedResourceId?: RecordIdentity;
-  passageType?: PassageTypeEnum;
+  passageType: PassageTypeEnum;
   passageUpdated?: string;
   mediaId?: RecordIdentity;
   mediaShared: IMediaShare;

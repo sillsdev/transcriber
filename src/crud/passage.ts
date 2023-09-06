@@ -38,6 +38,12 @@ function parseReferencePart(a: Passage, start: boolean, part: string) {
     a.attributes.endVerse = verse === 0 ? a.attributes.startVerse : verse;
   }
 }
+export function getStartChapter(ref: string | undefined) {
+  const startChapterPat = /(\d{1,}):/;
+  const rpat = new RegExp(startChapterPat);
+  const m = rpat.exec(ref ?? '');
+  return m ? parseInt(m[1]) : 0;
+}
 export function parseRef(p: Passage) {
   var a = p.attributes;
   if (!a) return;

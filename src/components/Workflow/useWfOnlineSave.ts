@@ -1,9 +1,9 @@
 import { useGlobal } from 'reactn';
-import { SectionPassage, IWorkflow } from '../../model';
-import { TransformBuilder, Operation } from '@orbit/data';
+import { SectionPassage, IWorkflow, Passage, WorkflowLevel } from '../../model';
+import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
 import JSONAPISource from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
-import { remoteId, remoteIdNum, remoteIdGuid } from '../../crud';
+import { remoteId, remoteIdNum, remoteIdGuid, findRecord } from '../../crud';
 import {
   isSectionRow,
   isPassageRow,
@@ -18,6 +18,7 @@ import { usePassageType } from '../../crud/usePassageType';
 interface SaveRec {
   id: string;
   issection: boolean;
+  level: number;
   changed: boolean;
   deleted: boolean;
   sequencenum: string;
@@ -63,6 +64,7 @@ export const useWfOnlineSave = (props: IProps) => {
       if (isSectionRow(w)) {
         let rec = {
           issection: true,
+          level: w.level,
           changed: !w.deleted && isSectionUpdated(w, lastSaved),
           deleted: w.deleted,
           id: isSectionAdding(w)
@@ -87,8 +89,9 @@ export const useWfOnlineSave = (props: IProps) => {
           deleted: w.deleted,
           id: isPassageAdding(w)
             ? ''
-            : await getRemoteId('passage', w.passageId?.id as string),
+            : await getRemoteId('passage', w.passage?.id as string),
         } as SaveRec;
+
         if (rec.changed) {
           anychanged = true;
           rec = {
@@ -171,14 +174,15 @@ export const useWfOnlineSave = (props: IProps) => {
                 ),
               };
             if (isPassageRow(row) && isPassageAdding(row)) {
-              row.passageId = {
-                type: 'passage',
-                id: remoteIdGuid(
+              row.passage = findRecord(
+                memory,
+                'passage',
+                remoteIdGuid(
                   'passage',
                   (outrecs[index][isSectionRow(row) ? 1 : 0] as SaveRec).id,
                   memory.keyMap
-                ),
-              };
+                )
+              ) as Passage;
             }
           });
         }
@@ -190,7 +194,8 @@ export const useWfOnlineSave = (props: IProps) => {
       deleteItems.forEach((i) => {
         const wf = workflow[i];
         if (wf.sectionId) operations.push(tb.removeRecord(wf.sectionId));
-        if (wf.passageId) operations.push(tb.removeRecord(wf.passageId));
+        if (wf.passage)
+          operations.push(tb.removeRecord(wf.passage as RecordIdentity));
       });
       if (operations.length > 0) {
         await memory.sync(await backup.push(operations));

@@ -6,6 +6,7 @@ import {
   IMediaShare,
   OrgWorkflowStep,
   IWorkflowStepsStrings,
+  WorkflowLevel,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
@@ -15,7 +16,6 @@ import { getStepComplete } from '../../crud';
 import { toCamel } from '../../utils';
 import { ISTFilterState } from './filterMenu';
 import { PassageTypeEnum } from '../../model/passageType';
-import { RecordIdentity } from '@orbit/data';
 
 const wfSectionUpdate = (item: IWorkflow, rec: IWorkflow) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -50,10 +50,10 @@ const wfPassageUpdate = (item: IWorkflow, rec: IWorkflow) => {
       rec.level = item.level;
       rec.kind = item.kind;
       rec.passageSeq = item.passageSeq;
-      rec.passageId = item.passageId;
       rec.book = item.book;
       rec.reference = item.reference;
       rec.comment = item.comment;
+      rec.passage = item.passage;
       rec.deleted = item.deleted;
     }
 };
@@ -63,9 +63,7 @@ const wfPassageAdd = (
   item: IWorkflow,
   sectionIndex?: number
 ) => {
-  let index = workflow.findIndex(
-    (w) => w?.passageId?.id === item?.passageId?.id
-  );
+  let index = workflow.findIndex((w) => w?.passage?.id === item?.passage?.id);
   if (index >= 0) {
     const rec = workflow[index];
     if (item.kind === IwfKind.SectionPassage) {
@@ -139,7 +137,7 @@ export const getWorkflow = (
   doneStepId: string,
   getDiscussionCount: (passageId: string, stepId: string) => number,
   isPublishing: (ref?: string) => boolean,
-  GetPassageTypeFromId: (id?: string) => PassageTypeEnum | undefined,
+  GetPassageTypeFromRef: (ref?: string) => PassageTypeEnum,
   current?: IWorkflow[]
 ) => {
   const myWork = current || Array<IWorkflow>();
@@ -152,7 +150,9 @@ export const getWorkflow = (
     let curSection = 1;
     let sectionIndex: number | undefined;
     if (section.attributes) {
-      item.level = 0;
+      item.level = section.attributes.level ?? WorkflowLevel.Section;
+      item.reference =
+        item.level === WorkflowLevel.Movement ? PassageTypeEnum.MOVEMENT : '';
       item.kind = flat ? IwfKind.SectionPassage : IwfKind.Section;
       item.sectionId = { type: 'section', id: section.id };
       item.sectionSeq = section.attributes.sequencenum;
@@ -181,14 +181,9 @@ export const getWorkflow = (
       .sort((i, j) => i.attributes?.sequencenum - j.attributes?.sequencenum);
     sectionPassages.forEach((passage) => {
       const passAttr = passage.attributes;
-      console.log(
-        passage.attributes.reference,
-        passage.relationships?.passagetype,
-        (passage.relationships?.passagetype?.data as RecordIdentity)?.id
-      );
       if (passAttr) {
         if (!flat || !first) {
-          item.level = 1;
+          item.level = WorkflowLevel.Passage;
           item.kind = IwfKind.Passage;
         }
         first = false;
@@ -198,10 +193,8 @@ export const getWorkflow = (
         item.reference = passAttr.reference;
         item.comment = passAttr.title;
         item.passageUpdated = passage.attributes.dateUpdated;
-        item.passageId = { type: 'passage', id: passage.id };
-        item.passageType = GetPassageTypeFromId(
-          related(passage, 'passagetype')
-        );
+        item.passage = passage;
+        item.passageType = GetPassageTypeFromRef(passAttr.reference);
         item.sharedResourceId = related(passage, 'sharedResource');
         const mediaRec = getVernacularMediaRec(passage.id, memory);
         item.mediaId = mediaRec
@@ -222,8 +215,8 @@ export const getWorkflow = (
             ? wfStr.getString(strTag)
             : stepRec.attributes.name;
           item.stepId = stepRec.id;
-          item.discussionCount = item.passageId
-            ? getDiscussionCount(item.passageId.id, item.stepId)
+          item.discussionCount = item.passage.id
+            ? getDiscussionCount(item.passage.id, item.stepId)
             : 0;
         }
         item.deleted = false;

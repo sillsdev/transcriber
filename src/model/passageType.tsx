@@ -14,5 +14,7 @@ export enum PassageTypeEnum {
   TITLE = 'TITLE',
   ALTBOOK = 'ALTBK',
   NOTE = 'NOTE',
+  MOVEMENT = 'MOVE',
+  PASSAGE = 'PASS',
 }
 export default PassageType;

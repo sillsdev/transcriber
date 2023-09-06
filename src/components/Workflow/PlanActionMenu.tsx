@@ -30,9 +30,8 @@ import {
   sharedSelector,
 } from '../../selector';
 import {
-  AddChapterNumberIcon,
   AddNoteIcon,
-  AddSectionTitleIcon,
+  InsertMovementIcon,
   InsertSectionIcon,
   PassageBelowIcon,
   PassageToNextIcon,
@@ -60,9 +59,8 @@ interface IProps {
   onPassageBelow?: () => void;
   onPassageToPrev?: () => void;
   onPassageToNext?: () => void;
+  onMovementAbove?: () => void;
   onSectionAbove?: () => void;
-  onChapterNumber?: () => void;
-  onTitle?: () => void;
   onNote?: () => void;
 }
 export function PlanActionMenu(props: IProps) {
@@ -88,8 +86,7 @@ export function PlanActionMenu(props: IProps) {
     onPassageToPrev,
     onPassageToNext,
     onSectionAbove,
-    onChapterNumber,
-    onTitle,
+    onMovementAbove,
     onNote,
   } = props;
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
@@ -229,6 +226,17 @@ export function PlanActionMenu(props: IProps) {
                         {p.filtered}
                       </MenuItem>
                     )}
+                    {onMovementAbove && (
+                      <MenuItem
+                        id="movementAbove"
+                        onClick={onMovementAbove}
+                        title={p.movementAbove
+                          .replace('{0}', organizedBy)
+                          .replace('{1}', sectionSequenceNumber)}
+                      >
+                        <InsertMovementIcon />
+                      </MenuItem>
+                    )}
                     {onSectionAbove && (
                       <MenuItem
                         id="secAbove"
@@ -239,28 +247,6 @@ export function PlanActionMenu(props: IProps) {
                           .replace('{2}', sectionSequenceNumber)}
                       >
                         <InsertSectionIcon />
-                      </MenuItem>
-                    )}
-                    {onChapterNumber && isSection && (
-                      <MenuItem
-                        id="chnumAsFirst"
-                        onClick={onChapterNumber}
-                        title={'insert chapter number as first {0} in {1}'
-                          .replace('{0}', organizedBy)
-                          .replace('{1}', sectionSequenceNumber)}
-                      >
-                        <AddChapterNumberIcon />
-                      </MenuItem>
-                    )}
-                    {onTitle && isSection && (
-                      <MenuItem
-                        id="chnumAsFirst"
-                        onClick={onTitle}
-                        title={'insert {0} title for {1}'
-                          .replace('{0}', organizedBy)
-                          .replace('{1}', sectionSequenceNumber)}
-                      >
-                        <AddSectionTitleIcon />
                       </MenuItem>
                     )}
                     {onPassageBelow && isSection && (
@@ -312,21 +298,8 @@ export function PlanActionMenu(props: IProps) {
                       </MenuItem>
                     )}
                     {isPassage && onNote && (
-                      <MenuItem
-                        id="addnote"
-                        onClick={onNote}
-                        title={'add note'}
-                      >
+                      <MenuItem id="addnote" onClick={onNote} title={t.addNote}>
                         <AddNoteIcon />
-                      </MenuItem>
-                    )}
-                    {isPassage && onChapterNumber && (
-                      <MenuItem
-                        id="addchapnum"
-                        onClick={onChapterNumber}
-                        title={'add chapter number'}
-                      >
-                        <AddChapterNumberIcon />
                       </MenuItem>
                     )}
                     {isPassage && (

@@ -11,15 +11,17 @@ export const wfResequence = (wf: IWorkflow[], sec = 1) => {
     let cur = wf[i];
     if (cur.deleted) continue;
     if (isSectionRow(cur)) {
-      sec += 1;
       pas = cur.kind === IwfKind.Section ? 0 : 1;
-      if (cur.sectionSeq !== sec) {
-        change = true;
-        cur = { ...cur, sectionSeq: sec, sectionUpdated: updatedAt };
-      }
-      if (cur.passageSeq !== pas) {
-        change = true;
-        cur = { ...cur, passageSeq: pas, passageUpdated: updatedAt };
+      if (cur.sectionSeq > 0) {
+        sec += 1;
+        if (cur.sectionSeq !== sec) {
+          change = true;
+          cur = { ...cur, sectionSeq: sec, sectionUpdated: updatedAt };
+        }
+        if (cur.passageSeq !== pas) {
+          change = true;
+          cur = { ...cur, passageSeq: pas, passageUpdated: updatedAt };
+        }
       }
     }
     if (isPassageRow(cur)) {
