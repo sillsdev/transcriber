@@ -21,6 +21,8 @@ import { rememberCurrentPassage } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { passageChooserSelector } from '../../selector';
 import { usePassageNavigate } from './usePassageNavigate';
+import { usePassageType } from '../../crud/usePassageType';
+import { PassageTypeEnum } from '../../model/passageType';
 
 interface StyledBoxProps extends BoxProps {
   width?: number;
@@ -55,6 +57,7 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
   const passageNavigate = usePassageNavigate(() => {
     setView('');
   });
+  const { GetPassageTypeFromId } = usePassageType();
 
   const t = useSelector(
     passageChooserSelector,
@@ -86,7 +89,11 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
       marks.current = [];
       passages.forEach((p) => {
         const passRec = findRecord(memory, 'passage', p.id) as Passage;
-        if (related(passRec, 'passagetype') === undefined) {
+        const psgType = GetPassageTypeFromId(related(passRec, 'passagetype'));
+        if (
+          psgType === PassageTypeEnum.PASSAGE ||
+          psgType === PassageTypeEnum.NOTE
+        ) {
           newCount++;
           let reference = passageReference(passRec, allBookData);
           if (reference.length === 0)
