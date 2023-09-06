@@ -8,6 +8,7 @@ import {
   IWorkflow,
   OrgWorkflowStep,
   IViewModeStrings,
+  WorkflowLevel,
 } from '../../model';
 import { Badge, Box, styled } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
@@ -57,12 +58,10 @@ import {
   AltBookIcon,
   NoteIcon,
   TitleIcon,
+  MovementIcon,
 } from '../../control/PlanIcons';
-import {
-  IsNoteType,
-  IsPublishingType,
-  PassageTypeEnum,
-} from '../../model/passageType';
+import { usePassageType } from '../../crud/usePassageType';
+import { PassageTypeEnum } from '../../model/passageType';
 const MemoizedTaskAvatar = memo(TaskAvatar);
 
 const DOWN_ARROW = 'ARROWDOWN';
@@ -107,6 +106,12 @@ const ContentDiv = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     textAlign: 'left',
     padding: theme.spacing(1),
+  },
+  '& .data-grid-container .data-grid .cell.bk': {
+    backgroundColor: '#f1cdcd',
+  },
+  '& .data-grid-container .data-grid .cell.movement': {
+    backgroundColor: '#cdeaf1',
   },
   '& tr td:first-of-type > span': {
     display: 'flex!important',
@@ -162,9 +167,14 @@ interface IProps {
   updateData: (changes: ICellChange[]) => void;
   paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => Promise<boolean>;
-  addPassage: (i?: number, before?: boolean) => void;
+  addPassage: (ptype?: PassageTypeEnum, i?: number, before?: boolean) => void;
   movePassage: (i: number, before: boolean) => void;
-  addSection: (i?: number) => void;
+  addSection: (
+    level: WorkflowLevel,
+    i?: number,
+    ptype?: PassageTypeEnum
+  ) => void;
+  onPublishing: () => void;
   lookupBook: (book: string) => string;
   resequence: () => void;
   inlinePassages: boolean;
@@ -204,6 +214,7 @@ export function PlanSheet(props: IProps) {
     onAudacity,
     onPassageDetail,
     onFilterChange,
+    onPublishing,
   } = props;
   const ctx = useContext(PlanContext);
   const { projButtonStr, connected, readonly } = ctx.state;
@@ -248,37 +259,63 @@ export function PlanSheet(props: IProps) {
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
   const LastCol = bookCol > 0 ? 6 : 5;
+  const isBook = (i: number) =>
+    i >= 0 && i < rowInfo.length && rowInfo[i].level === WorkflowLevel.Book;
+  const isMovement = (i: number) =>
+    i >= 0 && i < rowInfo.length && rowInfo[i].level === WorkflowLevel.Movement;
   const isSection = (i: number) =>
     i >= 0 && i < rowInfo.length ? isSectionRow(rowInfo[i]) : false;
-
   const isPassage = (i: number) =>
     i >= 0 && i < rowInfo.length ? isPassageRow(rowInfo[i]) : false;
-
+  const isTitle = (i: number) =>
+    i >= 0 && i < rowInfo.length
+      ? rowInfo[i].passageType === PassageTypeEnum.TITLE
+      : false;
+  const firstVernacularInSection = (i: number) => {
+    if (rowInfo[i].passageType !== PassageTypeEnum.PASSAGE) return false;
+    while (--i >= 0 && !isSection(i)) {
+      if (rowInfo[i].passageType === PassageTypeEnum.PASSAGE) return false;
+    }
+    return true;
+  };
   const [changed, setChanged] = useState(false); //for button enabling
   const changedRef = useRef(false); //for autosave
   const [saving, setSaving] = useState(false);
   const { userIsAdmin } = useRole();
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
+  const { GetPassageTypeFromRef, PassageTypeRecordOnly } = usePassageType();
 
   const handleSave = () => {
     startSave();
   };
 
+  const onMovementAbove = () => {
+    //we'll find a section before we get past 0
+    var row = currentRow - 1;
+    while (!isSection(row)) row -= 1;
+    addSection(WorkflowLevel.Movement, row, PassageTypeEnum.MOVEMENT);
+  };
   const onSectionAbove = () => {
     //we'll find a section before we get past 0
     var row = currentRow - 1;
     while (!isSection(row)) row -= 1;
-    addSection(row);
+    addSection(WorkflowLevel.Section, row);
+  };
+
+  const onNote = () => {
+    if (inlinePassages)
+      addSection(WorkflowLevel.Section, currentRow, PassageTypeEnum.NOTE);
+    else addPassage(PassageTypeEnum.NOTE, currentRow - 1, true);
   };
   const onPassageBelow = () => {
-    addPassage(currentRow - 1, false);
+    addPassage(undefined, currentRow - 1, false);
   };
   const onPassageLast = () => {
     //we're on a section so find our last row and add it below it
     var row = currentRow;
     while (isPassage(row + 1)) row++;
-    addPassage(row, false);
+    addPassage(undefined, row, false);
   };
 
   const onPassageToPrev = () => {
@@ -292,7 +329,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const onSectionEnd = () => {
-    addSection();
+    addSection(WorkflowLevel.Section);
   };
 
   const onPassageEnd = () => {
@@ -328,7 +365,7 @@ export function PlanSheet(props: IProps) {
     currentRowRef.current = row;
     setCurrentRowx(row);
     if (isPassage(row - 1)) {
-      rememberCurrentPassage(memory, rowInfo[row - 1].passageId?.id ?? '');
+      rememberCurrentPassage(memory, rowInfo[row - 1].passage?.id ?? '');
     }
   };
 
@@ -336,8 +373,12 @@ export function PlanSheet(props: IProps) {
     setCurrentRow(loc.end.i);
     sheetScroll();
   };
+
   const psgRefRender = (cell: ICell) => {
-    switch (cell.value) {
+    var pt = GetPassageTypeFromRef(cell.value);
+    switch (pt) {
+      case PassageTypeEnum.MOVEMENT:
+        return MovementIcon;
       case PassageTypeEnum.CHAPTERNUMBER:
         return ChapterNumberIcon;
       case PassageTypeEnum.TITLE:
@@ -348,14 +389,15 @@ export function PlanSheet(props: IProps) {
         return AltBookIcon;
       case PassageTypeEnum.NOTE:
         return NoteIcon;
+      /* This causes the cell to render endlessly
+        return (
+          <>
+            {NoteIcon}
+            {cell.value.toString().substring(PassageTypeEnum.NOTE.length)}
+          </>
+        ); */
       default:
-        return IsNoteType(cell.value.toString()) ? (
-          <div>
-            {cell.value.toString().substring(4)} {NoteIcon}
-          </div>
-        ) : (
-          cell.value
-        );
+        return cell.value;
     }
   };
   const handleValueRender = (cell: ICell) => {
@@ -363,6 +405,10 @@ export function PlanSheet(props: IProps) {
       ? bookMap[cell.value]
       : cell.className?.includes('ref')
       ? psgRefRender(cell)
+      : cell.className?.includes('num')
+      ? cell.value < 0
+        ? ''
+        : cell.value
       : cell.value;
   };
   const handleDataRender = (cell: ICell) => cell.value;
@@ -519,7 +565,7 @@ export function PlanSheet(props: IProps) {
       let row = -1;
       if (lastPasId) {
         const pasGuid = remoteIdGuid('passage', lastPasId, memory.keyMap);
-        row = rowInfo.findIndex((r) => r.passageId?.id === pasGuid);
+        row = rowInfo.findIndex((r) => r.passage?.id === pasGuid);
       }
       if (row >= 0) {
         let tbodyRef: HTMLDivElement | undefined = undefined;
@@ -578,7 +624,7 @@ export function PlanSheet(props: IProps) {
   }, [toolsChanged]);
 
   const refErrTest = (ref: any) =>
-    typeof ref !== 'string' || (!refMatch(ref) && !IsPublishingType(ref));
+    typeof ref !== 'string' || (!refMatch(ref) && !GetPassageTypeFromRef(ref));
 
   useEffect(() => {
     if (rowData.length !== rowInfo.length) {
@@ -610,26 +656,34 @@ export function PlanSheet(props: IProps) {
         rowData.map((row, rowIndex) => {
           const section = isSection(rowIndex);
           const passage = isPassage(rowIndex);
+          const movement = isMovement(rowIndex);
           const iscurrent: string =
             currentRow === rowIndex + 1 ? ' currentrow ' : '';
 
+          const calcClassName =
+            iscurrent + section
+              ? 'set' +
+                (passage ? 'p' : '') +
+                (movement ? ' movement' : isBook(rowIndex) ? ' bk' : '')
+              : 'pass';
+
           return [
             {
-              value: passage && (
-                <Badge
-                  badgeContent={rowInfo[rowIndex].discussionCount}
-                  color="secondary"
-                >
-                  <StageReport
-                    onClick={handlePassageDetail(rowIndex)}
-                    step={rowInfo[rowIndex].step || ''}
-                    tip={tv.gotowork}
-                  />
-                </Badge>
-              ),
+              value: passage &&
+                !PassageTypeRecordOnly(row[refCol].toString()) && (
+                  <Badge
+                    badgeContent={rowInfo[rowIndex].discussionCount}
+                    color="secondary"
+                  >
+                    <StageReport
+                      onClick={handlePassageDetail(rowIndex)}
+                      step={rowInfo[rowIndex].step || ''}
+                      tip={tv.gotowork}
+                    />
+                  </Badge>
+                ),
               readOnly: true,
-              className:
-                iscurrent + (section ? 'set' + (passage ? 'p' : '') : 'pass'),
+              className: calcClassName,
             } as ICell,
             {
               value: (
@@ -638,8 +692,7 @@ export function PlanSheet(props: IProps) {
                 />
               ),
               readOnly: true,
-              className:
-                iscurrent + (section ? 'set' + (passage ? 'p' : '') : 'pass'),
+              className: calcClassName,
             } as ICell,
           ]
             .concat(
@@ -661,16 +714,14 @@ export function PlanSheet(props: IProps) {
                         />
                       ),
                       readOnly: true,
-                      className:
-                        iscurrent +
-                        (section ? 'set' + (passage ? 'p' : ' ') : 'pass'),
+                      className: calcClassName,
                     } as ICell,
                   ]
                 : [
                     {
                       value: <></>,
                       readOnly: true,
-                      className: iscurrent + 'set',
+                      className: calcClassName,
                     } as ICell,
                   ]
             )
@@ -680,29 +731,26 @@ export function PlanSheet(props: IProps) {
                   ? {
                       value: e,
                       readOnly: readonly,
-                      className:
-                        'book ' +
-                        `${iscurrent} ` +
-                        (section ? ' setp' : 'pass'),
+                      className: 'book ' + calcClassName,
                       dataEditor: bookEditor,
                     }
                   : {
                       value: e,
                       readOnly:
                         readonly ||
+                        (cellIndex === SectionSeqCol && (e as number) < 0) ||
                         (section
                           ? passage
                             ? false
                             : cellIndex > 1
                           : cellIndex <= 1),
                       className:
-                        iscurrent +
                         (cellIndex === SectionSeqCol ||
                         cellIndex === PassageSeqCol
                           ? 'num '
                           : '') +
-                        (section ? 'set' + (passage ? 'p' : '') : 'pass') +
-                        (passage && refCol && refCol === cellIndex
+                        calcClassName +
+                        ((passage || movement) && refCol && refCol === cellIndex
                           ? ' ref' + (refErrTest(e) ? 'Err' : '')
                           : ''),
                     };
@@ -725,15 +773,21 @@ export function PlanSheet(props: IProps) {
                     onRecord={props.onRecord}
                     onUpload={props.onUpload}
                     onAssign={props.onAssign}
-                    canAssign={userIsAdmin}
+                    canAssign={userIsAdmin && !movement}
                     canDelete={userIsAdmin}
                     active={active - 1 === rowIndex}
                     onDisableFilter={
                       !readonly && filtered ? disableFilter : undefined
                     }
+                    onNote={!readonly && !filtered ? onNote : undefined}
                     onPassageBelow={
-                      !readonly && !filtered && !inlinePassages
+                      !readonly && !filtered && !inlinePassages && !movement
                         ? onPassageBelow
+                        : undefined
+                    }
+                    onMovementAbove={
+                      !readonly && !filtered && rowInfo.length > 0 && section
+                        ? onMovementAbove
                         : undefined
                     }
                     onSectionAbove={
@@ -746,6 +800,7 @@ export function PlanSheet(props: IProps) {
                       !filtered &&
                       !inlinePassages &&
                       passage &&
+                      !isTitle(rowIndex) &&
                       isSection(rowIndex + 1)
                         ? onPassageToNext
                         : undefined
@@ -756,28 +811,25 @@ export function PlanSheet(props: IProps) {
                       !inlinePassages &&
                       rowIndex > 1 &&
                       passage &&
-                      isSection(rowIndex - 1)
+                      !isTitle(rowIndex) &&
+                      firstVernacularInSection(rowIndex)
                         ? onPassageToPrev
                         : undefined
                     }
                   />
                 ),
                 // readOnly: true,
-                className:
-                  iscurrent +
-                  (section ? 'set' + (passage ? 'p' : ' ') : 'pass'),
+                className: calcClassName,
                 dataEditor: ActivateCell,
               } as ICell,
             ]);
         })
       );
-
       let refErr = false;
       if (refCol > 0) {
         rowData.forEach((row, rowIndex) => {
           if (isPassage(rowIndex)) {
-            const ref = row[refCol];
-            if (refErrTest(ref)) refErr = true;
+            if (refErrTest(row[refCol])) refErr = true;
           }
         });
       }
@@ -835,7 +887,8 @@ export function PlanSheet(props: IProps) {
         filterState.minSection > 1 ||
         (filterState.maxSection > -1 &&
           filterState.maxSection < maximumSection) ||
-        filterState.assignedToMe)
+        filterState.assignedToMe ||
+        filterState.hidePublishing)
     );
   }, [filterState, maximumSection]);
 
@@ -873,6 +926,11 @@ export function PlanSheet(props: IProps) {
                       ? onPassageLast
                       : undefined
                   }
+                  onMovementAbove={
+                    !filtered && currentRow > 0 && rowInfo.length > 0
+                      ? onMovementAbove
+                      : undefined
+                  }
                   onSectionAbove={
                     !filtered && currentRow > 0 && rowInfo.length > 0
                       ? onSectionAbove
@@ -880,6 +938,10 @@ export function PlanSheet(props: IProps) {
                   }
                   onSectionEnd={!filtered ? onSectionEnd : undefined}
                   onDisableFilter={filtered ? disableFilter : undefined}
+                  onPublishing={
+                    !readonly && !filtered ? onPublishing : undefined
+                  }
+                  onNote={!readonly && !filtered ? onNote : undefined}
                 />
                 <AltButton
                   id="planSheetImp"

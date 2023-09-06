@@ -16,6 +16,7 @@ import {
   isSectionRow,
   isSectionUpdated,
 } from '.';
+import { usePassageType } from '../../crud/usePassageType';
 
 interface IProps {
   setComplete: (val: number) => void;
@@ -27,12 +28,12 @@ export const useWfLocalSave = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const { GetPassageTypeRec } = usePassageType();
 
   return async (
     workflow: IWorkflow[],
     sections: Section[],
     passages: Passage[],
-    remoteToo: boolean,
     lastSaved?: string
   ) => {
     let lastSec = { id: 'never here' } as RecordIdentity;
@@ -55,6 +56,7 @@ export const useWfLocalSave = (props: IProps) => {
                 ...curSec.attributes,
                 sequencenum: item.sectionSeq,
                 name: item.title || '',
+                level: item.level,
               },
             };
             const t = new TransformBuilder();
@@ -74,6 +76,7 @@ export const useWfLocalSave = (props: IProps) => {
                 sequencenum: item.sectionSeq,
                 name: item.title || '',
                 state: ActivityStates.NoMedia,
+                level: item.level,
               },
             } as any;
             const t = new TransformBuilder();
@@ -89,8 +92,9 @@ export const useWfLocalSave = (props: IProps) => {
         }
       }
       if (isPassageRow(item) && isPassageUpdated(item, lastSaved)) {
+        const psgType = GetPassageTypeRec(item.passageType);
         if (!isPassageAdding(item) && !item.deleted) {
-          const itemId = item?.passageId?.id || '';
+          const itemId = item?.passage?.id || '';
           const curPass = passages.filter((p) => p.id === itemId)[0];
           const passRec = {
             ...curPass,
@@ -102,12 +106,6 @@ export const useWfLocalSave = (props: IProps) => {
               title: item.comment,
             },
           } as Passage;
-          if (remoteToo) {
-            delete passRec.attributes.startChapter;
-            delete passRec.attributes.startVerse;
-            delete passRec.attributes.endChapter;
-            delete passRec.attributes.endVerse;
-          }
           const t = new TransformBuilder();
           const ops = UpdateRecord(t, passRec, user);
           if (lastSec.id !== related(curPass, 'section'))
@@ -121,11 +119,23 @@ export const useWfLocalSave = (props: IProps) => {
                 user
               )
             );
+          if (psgType?.id !== related(curPass, 'passagetype')) {
+            ops.push(
+              ...UpdateRelatedRecord(
+                t,
+                passRec,
+                'passagetype',
+                'passagetype',
+                psgType?.id,
+                user
+              )
+            );
+          }
           UpdateRelatedPassageOps(lastSec.id, plan, user, t, ops);
           await memory.update(ops);
         } else if (item.deleted) {
           const t = new TransformBuilder();
-          await memory.update(t.removeRecord(item.passageId as RecordIdentity));
+          await memory.update(t.removeRecord(item.passage as RecordIdentity));
         } else {
           // Adding Passage
           const passRec = {
@@ -149,6 +159,16 @@ export const useWfLocalSave = (props: IProps) => {
               lastSec.id
             ),
           ];
+          if (psgType)
+            ops.push(
+              ...ReplaceRelatedRecord(
+                t,
+                passRec,
+                'passagetype',
+                'passagetype',
+                psgType?.id
+              )
+            );
           await memory.update(ops);
         }
       }

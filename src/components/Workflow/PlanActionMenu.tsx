@@ -30,6 +30,8 @@ import {
   sharedSelector,
 } from '../../selector';
 import {
+  AddNoteIcon,
+  InsertMovementIcon,
   InsertSectionIcon,
   PassageBelowIcon,
   PassageToNextIcon,
@@ -57,7 +59,9 @@ interface IProps {
   onPassageBelow?: () => void;
   onPassageToPrev?: () => void;
   onPassageToNext?: () => void;
+  onMovementAbove?: () => void;
   onSectionAbove?: () => void;
+  onNote?: () => void;
 }
 export function PlanActionMenu(props: IProps) {
   const {
@@ -82,6 +86,8 @@ export function PlanActionMenu(props: IProps) {
     onPassageToPrev,
     onPassageToNext,
     onSectionAbove,
+    onMovementAbove,
+    onNote,
   } = props;
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
   const p: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
@@ -220,6 +226,17 @@ export function PlanActionMenu(props: IProps) {
                         {p.filtered}
                       </MenuItem>
                     )}
+                    {onMovementAbove && (
+                      <MenuItem
+                        id="movementAbove"
+                        onClick={onMovementAbove}
+                        title={p.movementAbove
+                          .replace('{0}', organizedBy)
+                          .replace('{1}', sectionSequenceNumber)}
+                      >
+                        <InsertMovementIcon />
+                      </MenuItem>
+                    )}
                     {onSectionAbove && (
                       <MenuItem
                         id="secAbove"
@@ -232,7 +249,6 @@ export function PlanActionMenu(props: IProps) {
                         <InsertSectionIcon />
                       </MenuItem>
                     )}
-
                     {onPassageBelow && isSection && (
                       <MenuItem
                         id="psgAsFirst"
@@ -279,6 +295,11 @@ export function PlanActionMenu(props: IProps) {
                         )}
                       >
                         <PassageToNextIcon />
+                      </MenuItem>
+                    )}
+                    {isPassage && onNote && (
+                      <MenuItem id="addnote" onClick={onNote} title={t.addNote}>
+                        <AddNoteIcon />
                       </MenuItem>
                     )}
                     {isPassage && (

@@ -55,6 +55,7 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
   const passageNavigate = usePassageNavigate(() => {
     setView('');
   });
+
   const t = useSelector(
     passageChooserSelector,
     shallowEqual
@@ -81,25 +82,28 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
   useEffect(() => {
     const passages = related(section, 'passages') as Passage[];
     if (Array.isArray(passages)) {
-      const newCount = passages.length;
-      if (passageCount !== newCount) setPassageCount(newCount);
-      const newSize = newCount > 1 ? 48 : 0;
-      if (chooserSize !== newSize) setChooserSize(newSize);
+      var newCount = 0;
       marks.current = [];
       passages.forEach((p) => {
         const passRec = findRecord(memory, 'passage', p.id) as Passage;
-        let reference = passageReference(passRec, allBookData);
-        if (reference.length === 0)
-          reference = `${section?.attributes?.sequencenum}.${
-            passRec?.attributes?.sequencenum || 1
-          }`;
-        if (marks.current.findIndex((m) => m.label === reference) > -1)
-          reference += '#' + passRec?.attributes?.sequencenum.toString();
-        marks.current.push({
-          value: passRec?.attributes?.sequencenum || -1,
-          label: reference,
-        });
+        if (related(passRec, 'passagetype') === undefined) {
+          newCount++;
+          let reference = passageReference(passRec, allBookData);
+          if (reference.length === 0)
+            reference = `${section?.attributes?.sequencenum}.${
+              passRec?.attributes?.sequencenum || 1
+            }`;
+          if (marks.current.findIndex((m) => m.label === reference) > -1)
+            reference += '#' + passRec?.attributes?.sequencenum.toString();
+          marks.current.push({
+            value: passRec?.attributes?.sequencenum || -1,
+            label: reference,
+          });
+        }
       });
+      if (passageCount !== newCount) setPassageCount(newCount);
+      const newSize = newCount > 1 ? 48 : 0;
+      if (chooserSize !== newSize) setChooserSize(newSize);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [section]);

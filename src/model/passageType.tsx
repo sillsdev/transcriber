@@ -8,20 +8,13 @@ export interface PassageType extends Record {
     defaultorder: number;
   };
 }
-
 export enum PassageTypeEnum {
   BOOK = 'BOOK',
   CHAPTERNUMBER = 'CHNUM',
   TITLE = 'TITLE',
-  ALTBOOK = 'BKALT',
+  ALTBOOK = 'ALTBK',
   NOTE = 'NOTE',
+  MOVEMENT = 'MOVE',
+  PASSAGE = 'PASS',
 }
-export const IsNoteType = (ref: string) => ref.startsWith(PassageTypeEnum.NOTE);
-export const IsPublishingType = (ref: string) =>
-  Object.values(PassageTypeEnum).includes(ref as PassageTypeEnum) ||
-  IsNoteType(ref);
-
-export const PassageTypeRecordOnly = (ref: string) =>
-  IsPublishingType(ref) && !IsNoteType(ref);
-
 export default PassageType;

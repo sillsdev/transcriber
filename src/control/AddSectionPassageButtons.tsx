@@ -13,6 +13,9 @@ import { useOrganizedBy } from '../crud';
 import { planSheetSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
+  AddNoteIcon,
+  AddPublishingIcon,
+  InsertMovementIcon,
   InsertSectionIcon,
   PassageBelowIcon,
   PassageEndIcon,
@@ -41,9 +44,12 @@ interface IProps {
   handleNoContextMenu: () => void;
   onPassageBelow?: () => void;
   onPassageLast?: () => void;
+  onMovementAbove?: () => void;
   onSectionAbove?: () => void;
   onSectionEnd?: () => void;
   onPassageEnd?: () => void;
+  onPublishing?: () => void;
+  onNote?: () => void;
 }
 
 export const AddSectionPassageButtons = (props: IProps) => {
@@ -58,9 +64,12 @@ export const AddSectionPassageButtons = (props: IProps) => {
     isPassage,
     handleNoContextMenu,
     onPassageBelow,
+    onMovementAbove,
     onSectionAbove,
     onSectionEnd,
     onPassageEnd,
+    onPublishing,
+    onNote,
   } = props;
   const [actionMenuItem, setActionMenuItem] = React.useState<any>(undefined);
   const { getOrganizedBy } = useOrganizedBy();
@@ -76,8 +85,17 @@ export const AddSectionPassageButtons = (props: IProps) => {
     handleNoContextMenu();
   };
 
+  const handleMovementAbove = () => {
+    onMovementAbove && onMovementAbove();
+    handleClose();
+  };
+
   const handleSectionAbove = () => {
     onSectionAbove && onSectionAbove();
+    handleClose();
+  };
+  const handlePublishing = () => {
+    onPublishing && onPublishing();
     handleClose();
   };
 
@@ -123,6 +141,16 @@ export const AddSectionPassageButtons = (props: IProps) => {
             {t.filtered}
           </MenuItem>
         )}
+        {onMovementAbove && (
+          <MenuItem id="secAbove" onClick={handleMovementAbove}>
+            <StyledMenuIcon>
+              <InsertMovementIcon />
+            </StyledMenuIcon>
+            {t.movementAbove
+              .replace('{0}', organizedBy)
+              .replace('{1}', sectionSequenceNumber)}
+          </MenuItem>
+        )}
         {onSectionAbove && (
           <MenuItem id="secAbove" onClick={handleSectionAbove}>
             <StyledMenuIcon>
@@ -140,6 +168,14 @@ export const AddSectionPassageButtons = (props: IProps) => {
               <SectionEndIcon />
             </StyledMenuIcon>
             {t.sectionEnd.replace('{0}', organizedBy)}
+          </MenuItem>
+        )}
+        {onPublishing && (
+          <MenuItem id="bookTitle" onClick={handlePublishing}>
+            <StyledMenuIcon>
+              <AddPublishingIcon />
+            </StyledMenuIcon>
+            {t.addPublishingTitles}
           </MenuItem>
         )}
       </Menu>
@@ -180,6 +216,11 @@ export const AddSectionPassageButtons = (props: IProps) => {
               <PassageEndIcon />
             </StyledMenuIcon>
             {t.passageEnd}
+          </MenuItem>
+        )}
+        {onNote && (
+          <MenuItem id="addnote" onClick={onNote} title={t.addNote}>
+            <AddNoteIcon />
           </MenuItem>
         )}
       </Menu>

@@ -28,6 +28,8 @@ export interface ISTFilterState {
   hideDone: boolean;
   disabled: boolean;
   canHideDone: boolean;
+  canHidePublishing: boolean;
+  hidePublishing: boolean;
 }
 const btnProp = { m: 1 } as SxProps;
 interface IProps {
@@ -173,6 +175,21 @@ export function FilterMenu(props: IProps) {
                 />
               }
               label={t.hideDone}
+            />
+          )}
+          {localState.canHidePublishing && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  id="publishingfilter"
+                  sx={iconMargin}
+                  checked={localState.hidePublishing}
+                  onChange={(event) =>
+                    handle('hidePublishing', event.target.checked)
+                  }
+                />
+              }
+              label={t.hidePublishing}
             />
           )}
         </Box>

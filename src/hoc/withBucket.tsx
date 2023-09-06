@@ -7,11 +7,11 @@ export const withBucket = (Component: any) => {
     const [coordinator] = useGlobal('coordinator');
     const remote = coordinator.getSource('remote') as JSONAPISource;
     const resetRequests = () => {
-      return remote.requestQueue.clear();
+      return remote && remote.requestQueue.clear();
     };
 
     const isRequestQueueEmpty = () => {
-      return remote.requestQueue.empty;
+      return !remote || remote.requestQueue.empty;
     };
 
     return (
