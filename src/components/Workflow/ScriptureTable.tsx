@@ -70,6 +70,7 @@ import {
   workflowSheet,
   isSectionFiltered,
   isPassageFiltered,
+  nextNum,
 } from '.';
 import { debounce } from 'lodash';
 import AudacityManager from './AudacityManager';
@@ -353,7 +354,8 @@ export function ScriptureTable(
     return newArr;
   };
 
-  const movePassageDown = (data: IWorkflow[], index: number) => {
+  /*
+  const xmovePassageDown = (data: IWorkflow[], index: number) => {
     var origrowid = { ...data[index] };
     var newrowid = { ...data[index + 1] };
 
@@ -367,6 +369,7 @@ export function ScriptureTable(
     data[index] = origrowid;
     data[index + 1] = newrowid;
   };
+*/
 
   const SkipPublishing = true;
   const NoSkip = false;
@@ -388,7 +391,24 @@ export function ScriptureTable(
     if (sectionIndex < 0 || sectionIndex === myWorkflow.length) return -1;
     return sectionIndex;
   };
+
+  const swapRows = (myWorkflow: IWorkflow[], i: number, j: number) => {
+    let passageRow = { ...myWorkflow[i] };
+    let swapRow = { ...myWorkflow[j] };
+    return updateRowAt(updateRowAt(myWorkflow, passageRow, j), swapRow, i);
+  };
+
   const movePassageTo = (
+    myWorkflow: IWorkflow[],
+    i: number,
+    before: boolean
+  ) => {
+    let mySectionIndex = findSection(myWorkflow, i, true, NoSkip);
+    myWorkflow = swapRows(myWorkflow, i, before ? i - 1 : i + 1);
+    return wfResequencePassages(myWorkflow, mySectionIndex, flat);
+  };
+
+  const movePassageToNextSection = (
     myWorkflow: IWorkflow[],
     i: number,
     before: boolean
@@ -419,12 +439,7 @@ export function ScriptureTable(
         endRowIndex = findSection(myWorkflow, endRowIndex - 1, true, false);
 
       while (i > endRowIndex) {
-        let swapRow = { ...myWorkflow[i - 1] };
-        myWorkflow = updateRowAt(
-          updateRowAt(myWorkflow, passageRow, i - 1),
-          swapRow,
-          i
-        );
+        myWorkflow = swapRows(myWorkflow, i, i - 1);
         i--;
       }
       myWorkflow = wfResequencePassages(
@@ -440,12 +455,7 @@ export function ScriptureTable(
       )
         endRowIndex++;
       while (i < endRowIndex) {
-        let swapRow = { ...myWorkflow[i + 1] };
-        myWorkflow = updateRowAt(
-          updateRowAt(myWorkflow, passageRow, i + 1),
-          swapRow,
-          i
-        );
+        myWorkflow = swapRows(myWorkflow, i, i + 1);
         i++;
       }
       myWorkflow = wfResequencePassages(
@@ -502,15 +512,16 @@ export function ScriptureTable(
         newRow,
         index < lastRow ? index + 1 : undefined
       );
+      /* how could this have ever been true? We've checked flat and section row above
       if (
         before &&
         isSectionRow(myWorkflow[index]) &&
         isPassageRow(myWorkflow[index])
       ) {
         //move passage data from section row to new empty row
-        movePassageDown(myWorkflow, index);
-      }
-      while (!isSectionRow(myWorkflow[index])) index -= 1;
+        xmovePassageDown(myWorkflow, index);
+      } */
+      while (index >= 0 && !isSectionRow(myWorkflow[index])) index -= 1;
       return wfResequencePassages(myWorkflow, index, flat);
     }
   };
@@ -520,17 +531,26 @@ export function ScriptureTable(
     if (ix !== undefined) return getByIndex(workflow, ix).i;
     return ix;
   };
-  const nextSecSequence = (wf: IWorkflow[], i?: number) => {
+  const nextSecSequence = (
+    wf: IWorkflow[],
+    i?: number,
+    flattype?: PassageTypeEnum
+  ) => {
     const sequenceNums = wf.map((row, j) =>
       !i || j < i ? (!row.deleted && row.sectionSeq) || 0 : 0
     ) as number[];
-    return Math.max(...sequenceNums, 0) + 1;
+    return nextNum(Math.max(...sequenceNums, 0), flattype);
   };
-  const newSection = (level: WorkflowLevel, wf: IWorkflow[], i?: number) => {
+  const newSection = (
+    level: WorkflowLevel,
+    wf: IWorkflow[],
+    i?: number,
+    type?: PassageTypeEnum
+  ) => {
     let newRow = {
       level,
       kind: flat ? IwfKind.SectionPassage : IwfKind.Section,
-      sectionSeq: nextSecSequence(wf, i),
+      sectionSeq: nextSecSequence(wf, i, type),
       passageSeq: 0,
       reference: '',
     } as IWorkflow;
@@ -570,14 +590,18 @@ export function ScriptureTable(
     );
     setChanged(true);
   };
-  const movePassage = (ix: number, before: boolean) => {
+  const movePassage = (ix: number, before: boolean, nextSection: boolean) => {
     if (savingRef.current) {
       showMessage(t.saving);
       return;
     }
     if (flat) return;
     const i = getUndelIndex(workflow, ix);
-    if (i !== undefined) movePassageTo(workflow, i, before);
+    if (i !== undefined) {
+      if (nextSection) movePassageToNextSection(workflow, i, before);
+      else setWorkflow(movePassageTo(workflow, i, before));
+      setChanged(true);
+    }
   };
   const getByIndex = (wf: IWorkflow[], index: number) => {
     let n = 0;
@@ -685,7 +709,7 @@ export function ScriptureTable(
   };
 
   const isValidNumber = (value: string): boolean => {
-    return /^-?[0-9]+$/.test(value);
+    return /^-?[0-9.]+$/.test(value);
   };
 
   interface MyWorkflow extends IWorkflow {
@@ -1217,9 +1241,13 @@ export function ScriptureTable(
       return addPassageTo(WorkflowLevel.Book, newwf, PassageTypeEnum.ALTBOOK);
     };
 
-    const isKind = (row: number, kind: PassageTypeEnum) => {
-      return row >= 0 && row < workflow.length
-        ? workflow[row].passageType === kind && workflow[row].deleted === false
+    const isKind = (
+      row: number,
+      kind: PassageTypeEnum,
+      wf: IWorkflow[] = workflow
+    ) => {
+      return row >= 0 && row < wf.length
+        ? wf[row].passageType === kind && wf[row].deleted === false
         : false;
     };
     const chapterNumberTitle = (chapter: number) => t.chapter + ' ' + chapter;
@@ -1227,7 +1255,12 @@ export function ScriptureTable(
     const addChapterNumber = (newwf: IWorkflow[], chapter: number) => {
       const title = chapterNumberTitle(chapter);
       if (flat) {
-        let newRow = newSection(WorkflowLevel.Section, newwf);
+        let newRow = newSection(
+          WorkflowLevel.Section,
+          newwf,
+          undefined,
+          PassageTypeEnum.CHAPTERNUMBER
+        );
         newwf = newwf.concat([newRow]);
       }
       return addPassageTo(
@@ -1252,26 +1285,26 @@ export function ScriptureTable(
       (w.passage && w.passage.attributes.startChapter) ??
       getStartChapter(w.reference);
 
-    const chapterChanged = (w: IWorkflow) => startChapter(w) !== currentChapter;
+    const chapterChanged = (w: IWorkflow) =>
+      w.passageType === PassageTypeEnum.PASSAGE &&
+      startChapter(w) !== currentChapter;
 
     var currentChapter = 0;
     var newworkflow: IWorkflow[] = [];
     if (bookTitleIndex < 0) newworkflow = AddBook(newworkflow);
     if (altBookTitleIndex < 0) newworkflow = AddAltBook(newworkflow);
-    var nextpsg = 1;
+    var nextpsg = 0;
     workflow.forEach((w, index) => {
       //if flat the title has to come before the section
       //otherwise we want it as the first passage in the section
       if (isSectionRow(w)) {
+        nextpsg = 0;
         if (isPassageRow(w)) {
-          //flat and this is a vernacular...is there a title before us?
+          //flat and this is a vernacular...
           if (w.passageType === PassageTypeEnum.PASSAGE && !w.deleted) {
-            //do we need a chapter number?
+            //do we need a chapter number? check our new one
             if (chapterChanged(w)) {
-              if (
-                newworkflow[newworkflow.length - 2].passageType !==
-                PassageTypeEnum.CHAPTERNUMBER
-              ) {
+              if (!isKind(index - 2, PassageTypeEnum.CHAPTERNUMBER)) {
                 newworkflow = addChapterNumber(newworkflow, startChapter(w));
               }
               currentChapter = startChapter(w);
@@ -1293,7 +1326,6 @@ export function ScriptureTable(
             },
           ]);
         } else {
-          nextpsg = 1;
           //copy the section
           //we won't change sequence numbers on hierarchical
           newworkflow = newworkflow.concat([{ ...w }]);
@@ -1318,7 +1350,7 @@ export function ScriptureTable(
                 newworkflow,
                 startChapter(workflow[vernpsg])
               );
-              nextpsg++;
+              nextpsg += 0.01;
             }
             currentChapter = startChapter(workflow[vernpsg]);
           }
@@ -1330,7 +1362,7 @@ export function ScriptureTable(
             !isKind(index + 2, PassageTypeEnum.TITLE)
           ) {
             newworkflow = addTitle(newworkflow, index);
-            nextpsg++;
+            nextpsg += 0.01;
           }
         }
       } //just a passage
@@ -1348,11 +1380,19 @@ export function ScriptureTable(
             !isKind(index - 2, PassageTypeEnum.CHAPTERNUMBER)
           ) {
             newworkflow = addChapterNumber(newworkflow, startChapter(w));
-            nextpsg++;
+            nextpsg += 0.01;
           }
           currentChapter = startChapter(w);
         }
-        newworkflow = newworkflow.concat([{ ...w, passageSeq: nextpsg++ }]);
+        nextpsg = nextNum(nextpsg, w.passageType);
+        newworkflow = newworkflow.concat([
+          {
+            ...w,
+            passageSeq: nextpsg,
+            passageUpdated:
+              w.passageSeq !== nextpsg ? currentDateTime() : w.passageUpdated,
+          },
+        ]);
       }
     });
     setWorkflow(newworkflow);
