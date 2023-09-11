@@ -854,24 +854,28 @@ function WSAudioPlayer(props: IProps) {
                       id="wsAudioDeleteRegionTip"
                       title={t.deleteRegion}
                     >
-                      <IconButton
-                        id="wsAudioDeleteRegion"
-                        onClick={handleDeleteRegion}
-                        disabled={recording}
-                      >
-                        <FaHandScissors />
-                      </IconButton>
+                      <span>
+                        <IconButton
+                          id="wsAudioDeleteRegion"
+                          onClick={handleDeleteRegion}
+                          disabled={recording}
+                        >
+                          <FaHandScissors />
+                        </IconButton>
+                      </span>
                     </LightTooltip>
                   )}
                   {canUndo && !oneShotUsed && (
                     <LightTooltip id="wsUndoTip" title={t.undoTip}>
-                      <IconButton
-                        id="wsUndo"
-                        onClick={handleUndo}
-                        disabled={recording}
-                      >
-                        <UndoIcon />
-                      </IconButton>
+                      <span>
+                        <IconButton
+                          id="wsUndo"
+                          onClick={handleUndo}
+                          disabled={recording}
+                        >
+                          <UndoIcon />
+                        </IconButton>
+                      </span>
                     </LightTooltip>
                   )}
                   {hasRegion === 0 && (
