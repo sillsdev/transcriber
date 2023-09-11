@@ -404,13 +404,27 @@ export function PlanSheet(props: IProps) {
     sheetScroll();
   };
 
+  const typeAndArg = (val: string, len: number, icon: JSX.Element) =>
+    val.length > len + 1 ? (
+      <>
+        {icon}
+        {val.substring(len)}
+      </>
+    ) : (
+      icon
+    );
+
   const psgRefRender = (cell: ICell) => {
     var pt = GetPassageTypeFromRef(cell.value);
     switch (pt) {
       case PassageTypeEnum.MOVEMENT:
         return MovementIcon;
       case PassageTypeEnum.CHAPTERNUMBER:
-        return ChapterNumberIcon;
+        return typeAndArg(
+          cell.value.toString(),
+          PassageTypeEnum.CHAPTERNUMBER.length,
+          ChapterNumberIcon
+        );
       case PassageTypeEnum.TITLE:
         return TitleIcon;
       case PassageTypeEnum.BOOK:
@@ -418,14 +432,11 @@ export function PlanSheet(props: IProps) {
       case PassageTypeEnum.ALTBOOK:
         return AltBookIcon;
       case PassageTypeEnum.NOTE:
-        return NoteIcon;
-      /* This causes the cell to render endlessly
-        return (
-          <>
-            {NoteIcon}
-            {cell.value.toString().substring(PassageTypeEnum.NOTE.length)}
-          </>
-        ); */
+        return typeAndArg(
+          cell.value.toString(),
+          PassageTypeEnum.NOTE.length,
+          NoteIcon
+        );
       default:
         return cell.value;
     }
@@ -436,7 +447,7 @@ export function PlanSheet(props: IProps) {
       : cell.className?.includes('ref')
       ? psgRefRender(cell)
       : cell.className?.includes('num')
-      ? cell.value < 0
+      ? cell.value < 0 || Math.floor(cell.value) !== cell.value
         ? ''
         : cell.value
       : cell.value;
@@ -654,7 +665,8 @@ export function PlanSheet(props: IProps) {
   }, [toolsChanged]);
 
   const refErrTest = (ref: any) =>
-    typeof ref !== 'string' || (!refMatch(ref) && !GetPassageTypeFromRef(ref));
+    typeof ref !== 'string' ||
+    (!refMatch(ref) && GetPassageTypeFromRef(ref) === PassageTypeEnum.PASSAGE);
 
   useEffect(() => {
     if (rowData.length !== rowInfo.length) {
@@ -1033,7 +1045,6 @@ export function PlanSheet(props: IProps) {
                   onPublishing={
                     !readonly && !filtered ? onPublishing : undefined
                   }
-                  onNote={!readonly && !filtered ? onNote : undefined}
                 />
                 <AltButton
                   id="planSheetImp"
