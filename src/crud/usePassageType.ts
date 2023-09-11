@@ -2,10 +2,12 @@ import { useGlobal } from 'reactn';
 import PassageType, { PassageTypeEnum } from '../model/passageType';
 import { remoteId } from './remoteId';
 import { findRecord } from './tryFindRecord';
+import { useSnackBar } from '../hoc/SnackBar';
 
 export const usePassageType = () => {
   const [memory] = useGlobal('memory');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const { showMessage } = useSnackBar();
 
   const GetPassageTypeFromRef = (ref?: string) => {
     if (!ref) return PassageTypeEnum.PASSAGE;
@@ -38,11 +40,17 @@ export const usePassageType = () => {
     }
     return undefined;
   };
-
+  const CheckIt = (whereAmI: string) => {
+    var len = (
+      memory.cache.query((q) => q.findRecords('passagetype')) as PassageType[]
+    ).filter((p) => Boolean(p?.keys?.remoteId)).length;
+    if (len > 5) showMessage(whereAmI + 'passagetype ' + len.toString());
+  };
   return {
     PassageTypeRecordOnly,
     GetPassageTypeRec,
     GetPassageTypeFromRef,
     GetPassageTypeFromId,
+    CheckIt,
   };
 };

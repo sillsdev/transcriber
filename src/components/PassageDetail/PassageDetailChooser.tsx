@@ -57,7 +57,7 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
   const passageNavigate = usePassageNavigate(() => {
     setView('');
   });
-  const { GetPassageTypeFromId } = usePassageType();
+  const { GetPassageTypeFromId, CheckIt } = usePassageType();
 
   const t = useSelector(
     passageChooserSelector,
@@ -89,6 +89,7 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
       marks.current = [];
       passages.forEach((p) => {
         const passRec = findRecord(memory, 'passage', p.id) as Passage;
+        CheckIt('PassageDetailChooser');
         const psgType = GetPassageTypeFromId(related(passRec, 'passagetype'));
         if (
           psgType === PassageTypeEnum.PASSAGE ||

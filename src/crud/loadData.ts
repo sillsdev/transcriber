@@ -33,6 +33,8 @@ import Coordinator from '@orbit/coordinator';
 import { getFingerprint, currentDateTime, orbitErr } from '../utils';
 import { ReplaceRelatedRecord } from '../model/baseModel';
 
+import PassageType from '../model/passageType';
+
 const completePerTable = 3;
 
 const saveOfflineProject = async (
@@ -256,6 +258,7 @@ export async function LoadData(
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   var tb: TransformBuilder = new TransformBuilder();
   const ser = getSerializer(memory);
+  //const { CheckIt } = usePassageType();
 
   try {
     let start = 0;
@@ -300,7 +303,13 @@ export async function LoadData(
         //bail - never expect to be here
         start = -1;
       }
+      //CheckIt();
+      var len = (
+        memory.cache.query((q) => q.findRecords('passagetype')) as PassageType[]
+      ).filter((p) => Boolean(p?.keys?.remoteId)).length;
+      if (len > 5) console.log('orgdata passagetype ' + len.toString());
     } while (start > -1);
+
     await cleanUpMemberships(memory, backup);
   } catch (rejected: any) {
     orbitError(orbitErr(rejected, 'load data rejected'));
@@ -319,6 +328,7 @@ export async function LoadProjectData(
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
+  //const { CheckIt } = usePassageType();
   if (projectsLoaded.includes(project)) return true;
   if (!remote || !online) throw new Error('offline.');
 
@@ -365,6 +375,14 @@ export async function LoadProjectData(
           undefined,
           orbitError
         );
+        //CheckIt();
+        var len = (
+          memory.cache.query((q) =>
+            q.findRecords('passagetype')
+          ) as PassageType[]
+        ).filter((p) => Boolean(p?.keys?.remoteId)).length;
+        if (len > 5) console.log('projdata passagetype ' + len.toString());
+
         if (start === 0) {
           var oparray: Operation[] = [];
           offlineProjectUpdateSnapshot(

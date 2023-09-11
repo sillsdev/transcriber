@@ -1,5 +1,5 @@
 import { useGlobal } from 'reactn';
-import { SectionPassage, IWorkflow, Passage, WorkflowLevel } from '../../model';
+import { SectionPassage, IWorkflow, Passage } from '../../model';
 import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
 import JSONAPISource from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -39,7 +39,7 @@ export const useWfOnlineSave = (props: IProps) => {
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [plan] = useGlobal('plan');
-  const { GetPassageTypeRec } = usePassageType();
+  const { GetPassageTypeRec, CheckIt } = usePassageType();
 
   const getRemoteId = async (table: string, localid: string) => {
     await waitForIt(
@@ -201,6 +201,7 @@ export const useWfOnlineSave = (props: IProps) => {
         await memory.sync(await backup.push(operations));
       }
     }
+    CheckIt('useWfOnlineSave');
     return hasNew || deleteItems.length > 0;
   };
 };

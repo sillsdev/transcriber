@@ -104,6 +104,16 @@ export const PassageEndIcon = () => (
     </span>
   </StyledIcon>
 );
+export const PassageUpIcon = () => (
+  <StyledIcon size="small">
+    <FontAwesomeIcon icon={faArrowUp} transform="shrink-2" />
+  </StyledIcon>
+);
+export const PassageDownIcon = () => (
+  <StyledIcon size="small">
+    <FontAwesomeIcon icon={faArrowDown} transform="shrink-2" />
+  </StyledIcon>
+);
 export const PassageToPrevIcon = () => (
   <StyledIcon size="small">
     <span className="fa-layers fa-fw fa-sm">
