@@ -62,6 +62,7 @@ import {
 } from '../../control/PlanIcons';
 import { usePassageType } from '../../crud/usePassageType';
 import { PassageTypeEnum } from '../../model/passageType';
+
 const MemoizedTaskAvatar = memo(TaskAvatar);
 
 const DOWN_ARROW = 'ARROWDOWN';
@@ -168,7 +169,7 @@ interface IProps {
   paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => Promise<boolean>;
   addPassage: (ptype?: PassageTypeEnum, i?: number, before?: boolean) => void;
-  movePassage: (i: number, before: boolean) => void;
+  movePassage: (i: number, before: boolean, section: boolean) => void;
   addSection: (
     level: WorkflowLevel,
     i?: number,
@@ -259,10 +260,7 @@ export function PlanSheet(props: IProps) {
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
   const LastCol = bookCol > 0 ? 6 : 5;
-  const isBook = (i: number) =>
-    i >= 0 && i < rowInfo.length && rowInfo[i].level === WorkflowLevel.Book;
-  const isMovement = (i: number) =>
-    i >= 0 && i < rowInfo.length && rowInfo[i].level === WorkflowLevel.Movement;
+
   const isSection = (i: number) =>
     i >= 0 && i < rowInfo.length ? isSectionRow(rowInfo[i]) : false;
   const isPassage = (i: number) =>
@@ -278,6 +276,27 @@ export function PlanSheet(props: IProps) {
     }
     return true;
   };
+  const isBook = (i: number) =>
+    i >= 0 &&
+    i < rowInfo.length &&
+    (rowInfo[i].level === WorkflowLevel.Book ||
+      rowInfo[i].passageType === PassageTypeEnum.BOOK ||
+      rowInfo[i].passageType === PassageTypeEnum.ALTBOOK);
+  const isMovement = (i: number) =>
+    i >= 0 && i < rowInfo.length && rowInfo[i].level === WorkflowLevel.Movement;
+  const isInMovement = (i: number) => {
+    if (
+      i >= 0 &&
+      i < rowInfo.length &&
+      (rowInfo[i].passageType === PassageTypeEnum.NOTE ||
+        rowInfo[i].passageType === PassageTypeEnum.TITLE)
+    ) {
+      var sec = i - 1;
+      while (sec > 0 && !isSection(sec)) sec--;
+      return isMovement(sec);
+    }
+    return false;
+  };
   const [changed, setChanged] = useState(false); //for button enabling
   const changedRef = useRef(false); //for autosave
   const [saving, setSaving] = useState(false);
@@ -285,6 +304,9 @@ export function PlanSheet(props: IProps) {
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const { GetPassageTypeFromRef, PassageTypeRecordOnly } = usePassageType();
+  const moveUp = true;
+  const moveDown = false;
+  const moveSection = true;
 
   const handleSave = () => {
     startSave();
@@ -320,12 +342,20 @@ export function PlanSheet(props: IProps) {
 
   const onPassageToPrev = () => {
     //convert from currentRow with includes header
-    movePassage(currentRow - 1, true);
+    movePassage(currentRow - 1, moveUp, moveSection);
   };
 
   const onPassageToNext = () => {
     //convert from currentRow with includes header
-    movePassage(currentRow - 1, false);
+    movePassage(currentRow - 1, moveDown, moveSection);
+  };
+  const onPassageUp = () => {
+    //convert from currentRow with includes header
+    movePassage(currentRow - 1, moveUp, !moveSection);
+  };
+  const onPassageDown = () => {
+    //convert from currentRow with includes header
+    movePassage(currentRow - 1, moveDown, !moveSection);
   };
 
   const onSectionEnd = () => {
@@ -657,6 +687,8 @@ export function PlanSheet(props: IProps) {
           const section = isSection(rowIndex);
           const passage = isPassage(rowIndex);
           const movement = isMovement(rowIndex);
+          const book = isBook(rowIndex);
+          const title = isTitle(rowIndex);
           const iscurrent: string =
             currentRow === rowIndex + 1 ? ' currentrow ' : '';
 
@@ -664,7 +696,7 @@ export function PlanSheet(props: IProps) {
             iscurrent + section
               ? 'set' +
                 (passage ? 'p' : '') +
-                (movement ? ' movement' : isBook(rowIndex) ? ' bk' : '')
+                (movement ? ' movement' : book ? ' bk' : '')
               : 'pass';
 
           return [
@@ -739,11 +771,12 @@ export function PlanSheet(props: IProps) {
                       readOnly:
                         readonly ||
                         (cellIndex === SectionSeqCol && (e as number) < 0) ||
-                        (section
+                        cellIndex === PassageSeqCol ||
+                        section
                           ? passage
                             ? false
                             : cellIndex > 1
-                          : cellIndex <= 1),
+                          : cellIndex <= 1,
                       className:
                         (cellIndex === SectionSeqCol ||
                         cellIndex === PassageSeqCol
@@ -773,26 +806,54 @@ export function PlanSheet(props: IProps) {
                     onRecord={props.onRecord}
                     onUpload={props.onUpload}
                     onAssign={props.onAssign}
-                    canAssign={userIsAdmin && !movement}
+                    canAssign={userIsAdmin && !movement && !book}
                     canDelete={userIsAdmin}
                     active={active - 1 === rowIndex}
                     onDisableFilter={
                       !readonly && filtered ? disableFilter : undefined
                     }
-                    onNote={!readonly && !filtered ? onNote : undefined}
+                    onNote={
+                      !readonly && !filtered && !isTitle(rowIndex + 1)
+                        ? onNote
+                        : undefined
+                    }
                     onPassageBelow={
-                      !readonly && !filtered && !inlinePassages && !movement
+                      !readonly &&
+                      !filtered &&
+                      !inlinePassages &&
+                      !movement &&
+                      !isInMovement(rowIndex) &&
+                      !book &&
+                      !isTitle(rowIndex + 1)
                         ? onPassageBelow
                         : undefined
                     }
                     onMovementAbove={
-                      !readonly && !filtered && rowInfo.length > 0 && section
+                      !readonly &&
+                      !filtered &&
+                      rowInfo.length > 0 &&
+                      section &&
+                      !book
                         ? onMovementAbove
                         : undefined
                     }
                     onSectionAbove={
-                      !readonly && !filtered && rowInfo.length > 0 && section
+                      !readonly &&
+                      !filtered &&
+                      rowInfo.length > 0 &&
+                      section &&
+                      !book
                         ? onSectionAbove
+                        : undefined
+                    }
+                    onPassageDown={
+                      !readonly &&
+                      !filtered &&
+                      passage &&
+                      !title &&
+                      !book &&
+                      !isSection(rowIndex + 1)
+                        ? onPassageDown
                         : undefined
                     }
                     onPassageToNext={
@@ -800,9 +861,22 @@ export function PlanSheet(props: IProps) {
                       !filtered &&
                       !inlinePassages &&
                       passage &&
-                      !isTitle(rowIndex) &&
+                      !title &&
+                      !book &&
                       isSection(rowIndex + 1)
                         ? onPassageToNext
+                        : undefined
+                    }
+                    onPassageUp={
+                      !readonly &&
+                      !filtered &&
+                      rowIndex > 1 &&
+                      passage &&
+                      !isTitle(rowIndex - 1) &&
+                      !title &&
+                      !book &&
+                      !isSection(rowIndex - 1)
+                        ? onPassageUp
                         : undefined
                     }
                     onPassageToPrev={
@@ -811,7 +885,8 @@ export function PlanSheet(props: IProps) {
                       !inlinePassages &&
                       rowIndex > 1 &&
                       passage &&
-                      !isTitle(rowIndex) &&
+                      !title &&
+                      !book &&
                       firstVernacularInSection(rowIndex)
                         ? onPassageToPrev
                         : undefined
@@ -913,8 +988,21 @@ export function PlanSheet(props: IProps) {
                   handleNoContextMenu={handleNoContextMenu}
                   sectionSequenceNumber={currentRowSectionNum}
                   passageSequenceNumber={currentRowPassageNum}
+                  onNote={
+                    !readonly && !filtered && !isTitle(currentRow)
+                      ? onNote
+                      : undefined
+                  }
                   onPassageBelow={
-                    !filtered && !inlinePassages ? onPassageBelow : undefined
+                    !readonly &&
+                    !filtered &&
+                    !inlinePassages &&
+                    !isMovement(currentRow - 1) &&
+                    !isInMovement(currentRow - 1) &&
+                    !isBook(currentRow - 1) &&
+                    !isTitle(currentRow)
+                      ? onPassageBelow
+                      : undefined
                   }
                   onPassageEnd={
                     !filtered && currentRow !== rowInfo.length
@@ -927,7 +1015,11 @@ export function PlanSheet(props: IProps) {
                       : undefined
                   }
                   onMovementAbove={
-                    !filtered && currentRow > 0 && rowInfo.length > 0
+                    !readonly &&
+                    !filtered &&
+                    rowInfo.length > 0 &&
+                    currentRow > 0 &&
+                    isSection(currentRow - 1)
                       ? onMovementAbove
                       : undefined
                   }

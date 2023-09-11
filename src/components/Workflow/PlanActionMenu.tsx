@@ -34,8 +34,10 @@ import {
   InsertMovementIcon,
   InsertSectionIcon,
   PassageBelowIcon,
+  PassageDownIcon,
   PassageToNextIcon,
   PassageToPrevIcon,
+  PassageUpIcon,
 } from '../../control/PlanIcons';
 
 interface IProps {
@@ -61,6 +63,8 @@ interface IProps {
   onPassageToNext?: () => void;
   onMovementAbove?: () => void;
   onSectionAbove?: () => void;
+  onPassageUp?: () => void;
+  onPassageDown?: () => void;
   onNote?: () => void;
 }
 export function PlanActionMenu(props: IProps) {
@@ -85,6 +89,8 @@ export function PlanActionMenu(props: IProps) {
     onPassageBelow,
     onPassageToPrev,
     onPassageToNext,
+    onPassageUp,
+    onPassageDown,
     onSectionAbove,
     onMovementAbove,
     onNote,
@@ -260,7 +266,30 @@ export function PlanActionMenu(props: IProps) {
                         <PassageBelowIcon />
                       </MenuItem>
                     )}
-
+                    {onPassageBelow && isPassage && (
+                      <MenuItem
+                        id="passBelow"
+                        onClick={onPassageBelow}
+                        title={p.passageBelow.replace(
+                          '{0}',
+                          passageSequenceNumber
+                        )}
+                      >
+                        <PassageBelowIcon />
+                      </MenuItem>
+                    )}
+                    {onPassageUp && (
+                      <MenuItem
+                        id="passUp"
+                        onClick={onPassageUp}
+                        title={'xxMove Passage {0} up'.replace(
+                          '{0}',
+                          passageSequenceNumber
+                        )}
+                      >
+                        <PassageUpIcon />
+                      </MenuItem>
+                    )}
                     {onPassageToPrev && (
                       <MenuItem
                         id="passToPrev"
@@ -273,16 +302,17 @@ export function PlanActionMenu(props: IProps) {
                         <PassageToPrevIcon />
                       </MenuItem>
                     )}
-                    {onPassageBelow && isPassage && (
+
+                    {onPassageDown && (
                       <MenuItem
-                        id="passBelow"
-                        onClick={onPassageBelow}
-                        title={p.passageBelow.replace(
+                        id="passDown"
+                        onClick={onPassageDown}
+                        title={'xxMove Passage {0} down'.replace(
                           '{0}',
                           passageSequenceNumber
                         )}
                       >
-                        <PassageBelowIcon />
+                        <PassageDownIcon />
                       </MenuItem>
                     )}
                     {onPassageToNext && (

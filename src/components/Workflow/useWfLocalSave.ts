@@ -28,7 +28,7 @@ export const useWfLocalSave = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const { GetPassageTypeRec } = usePassageType();
+  const { GetPassageTypeRec, CheckIt } = usePassageType();
 
   return async (
     workflow: IWorkflow[],
@@ -173,5 +173,6 @@ export const useWfLocalSave = (props: IProps) => {
         }
       }
     }
+    CheckIt('WFLocalSave');
   };
 };

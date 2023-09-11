@@ -1,7 +1,16 @@
-import { IWorkflow, IwfKind } from '../../model';
+import { IWorkflow, IwfKind, WorkflowLevel } from '../../model';
 import { isSectionRow, isPassageRow } from '.';
 import { currentDateTime } from '../../utils';
+import { PassageTypeEnum } from '../../model/passageType';
 
+export const nextNum = (
+  lastNum: number,
+  passageType: PassageTypeEnum | undefined
+) => {
+  if (!passageType || passageType === PassageTypeEnum.PASSAGE)
+    return Math.floor(lastNum + 1);
+  else return lastNum + 0.01;
+};
 export const wfResequence = (wf: IWorkflow[], sec = 1) => {
   const updatedAt = currentDateTime();
   let change = false;
@@ -13,7 +22,13 @@ export const wfResequence = (wf: IWorkflow[], sec = 1) => {
     if (isSectionRow(cur)) {
       pas = cur.kind === IwfKind.Section ? 0 : 1;
       if (cur.sectionSeq > 0) {
-        sec += 1;
+        sec = nextNum(
+          sec,
+          cur.passageType ??
+            (cur.level === WorkflowLevel.Movement
+              ? PassageTypeEnum.MOVEMENT
+              : PassageTypeEnum.PASSAGE)
+        );
         if (cur.sectionSeq !== sec) {
           change = true;
           cur = { ...cur, sectionSeq: sec, sectionUpdated: updatedAt };
@@ -25,6 +40,7 @@ export const wfResequence = (wf: IWorkflow[], sec = 1) => {
       }
     }
     if (isPassageRow(cur)) {
+      pas = nextNum(pas, cur.passageType);
       if (cur.passageSeq !== pas) {
         change = true;
         cur = { ...cur, passageSeq: pas, passageUpdated: updatedAt };
@@ -34,7 +50,6 @@ export const wfResequence = (wf: IWorkflow[], sec = 1) => {
         cur = { ...cur, sectionSeq: sec, sectionUpdated: updatedAt };
       }
     }
-    pas += 1;
     wf[i] = cur;
   }
   return change ? [...wf] : wf;
@@ -46,7 +61,7 @@ export const wfResequencePassages = (
   flat: boolean
 ) => {
   const updatedAt = currentDateTime();
-  let pas = 1;
+  let pas = 0;
   let change = false;
   for (
     let i = sectionIndex + (flat ? 0 : 1);
@@ -54,11 +69,11 @@ export const wfResequencePassages = (
     i += 1
   ) {
     if (wf[i].deleted) continue;
+    pas = nextNum(pas, wf[i].passageType);
     if (wf[i].passageSeq !== pas) {
       change = true;
       wf[i] = { ...wf[i], passageSeq: pas, passageUpdated: updatedAt };
     }
-    pas += 1;
   }
   return change ? [...wf] : wf;
 };

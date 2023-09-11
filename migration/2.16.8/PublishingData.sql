@@ -1,3 +1,10 @@
+--drop views so we can change sequencenum types
+drop VIEW public.vwpassagestatehistoryemails;
+drop view public.vw_projects;
+drop view resources;
+drop view vw_userdata;
+alter table passages alter column sequencenum type numeric(6,2);
+alter table sections alter column sequencenum type numeric(6,2);
 alter table passages add sharedresourceid int null;  --link to note
 
 alter table passages add startchapter int generated always as 
