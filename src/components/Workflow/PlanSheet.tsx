@@ -864,7 +864,8 @@ export function PlanSheet(props: IProps) {
                       passage &&
                       !title &&
                       !book &&
-                      !isSection(rowIndex + 1)
+                      !isSection(rowIndex + 1) &&
+                      rowIndex < rowInfo.length - 1
                         ? onPassageDown
                         : undefined
                     }
