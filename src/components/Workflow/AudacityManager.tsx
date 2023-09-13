@@ -26,7 +26,7 @@ import {
   useAudacityProjDelete,
   useAudProjName,
   usePassageRec,
-  passageDescription,
+  passageDescText,
 } from '../../crud';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { debounce } from 'lodash';
@@ -300,7 +300,7 @@ function AudacityManager(props: IProps) {
         nameRef.current = '';
       }
       const passRec = getPassage(passageId.id);
-      setPassageRef(passageDescription(passRec, allBookData));
+      setPassageRef(passageDescText(passRec, allBookData));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passageId?.id]);

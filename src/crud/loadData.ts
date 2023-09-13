@@ -258,7 +258,7 @@ export async function LoadData(
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   var tb: TransformBuilder = new TransformBuilder();
   const ser = getSerializer(memory);
-  //const { CheckIt } = usePassageType();
+  //const { checkIt } = usePassageType();
 
   try {
     let start = 0;
@@ -303,7 +303,7 @@ export async function LoadData(
         //bail - never expect to be here
         start = -1;
       }
-      //CheckIt();
+      //checkIt();
       var len = (
         memory.cache.query((q) => q.findRecords('passagetype')) as PassageType[]
       ).filter((p) => Boolean(p?.keys?.remoteId)).length;
@@ -328,7 +328,7 @@ export async function LoadProjectData(
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
-  //const { CheckIt } = usePassageType();
+  //const { checkIt } = usePassageType();
   if (projectsLoaded.includes(project)) return true;
   if (!remote || !online) throw new Error('offline.');
 
@@ -375,7 +375,7 @@ export async function LoadProjectData(
           undefined,
           orbitError
         );
-        //CheckIt();
+        //checkIt();
         var len = (
           memory.cache.query((q) =>
             q.findRecords('passagetype')

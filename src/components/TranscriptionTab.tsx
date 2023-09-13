@@ -61,7 +61,7 @@ import {
   sectionTranscriberName,
   sectionCompare,
   passageCompare,
-  passageDescription,
+  passageRefText,
   getVernacularMediaRec,
   getAllMediaRecs,
   getMediaEaf,
@@ -74,6 +74,7 @@ import {
   usePassageState,
   VernacularTag,
   usePlanType,
+  PassageReference,
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -82,10 +83,11 @@ import AudioDownload from './AudioDownload';
 import { SelectExportType, iconMargin } from '../control';
 import AudioExportMenu from './AudioExportMenu';
 import moment, { Moment } from 'moment';
+import { isPassageTypeRecord } from '../control/RefRender';
 
 interface IRow {
   id: string;
-  name: string;
+  name: React.ReactNode;
   state: string;
   planName: string;
   transcriber: string;
@@ -94,6 +96,7 @@ interface IRow {
   updated: string;
   action: string;
   parentId: string;
+  sort: string;
 }
 const getChildRows = (row: any, rootRows: any[]) => {
   const childRows = rootRows.filter((r) => r.parentId === (row ? row.id : ''));
@@ -107,11 +110,6 @@ const getSection = (section: Section) => {
       ? section.attributes.name
       : '';
   return sectionNumber(section) + ' ' + name;
-};
-
-/* build the passage name = sequence + book + reference */
-const getReference = (passage: Passage, bookData: BookName[] = []) => {
-  return passageDescription(passage, bookData);
 };
 
 interface IStateProps {
@@ -337,7 +335,7 @@ export function TranscriptionTab(
           let sectionHead = '-----\n' + getSection(section) + '\n';
           sectionpassages.forEach((passage: Passage) => {
             // const state = passage?.attributes?.state ||'';
-            const ref = getReference(passage, bookData);
+            const ref = passageRefText(passage, bookData);
             const transcription = getTranscription(passage.id, exportId);
             if (transcription !== '') {
               if (planName && planName !== '') {
@@ -522,21 +520,24 @@ export function TranscriptionTab(
             updated: dateOrTime(section?.attributes?.dateUpdated, lang),
             action: '',
             parentId: '',
+            sort: (section.attributes.sequencenum || 0).toFixed(2).toString(),
           });
           sectionpassages.forEach((passage: Passage) => {
             const state = activityState.getString(getPassageState(passage));
-            rowData.push({
-              id: passage.id,
-              name: getReference(passage, bookData),
-              state: state,
-              planName: planRec.attributes.name,
-              editor: '',
-              transcriber: '',
-              passages: '',
-              updated: dateOrTime(passage.attributes.dateUpdated, lang),
-              action: passage.id,
-              parentId: section.id,
-            } as IRow);
+            if (!isPassageTypeRecord(passage?.attributes?.reference)) {
+              rowData.push({
+                id: passage.id,
+                name: PassageReference(passage, bookData),
+                state: state,
+                planName: planRec.attributes.name,
+                editor: '',
+                transcriber: '',
+                passages: '',
+                updated: dateOrTime(passage.attributes.dateUpdated, lang),
+                action: passage.id,
+                parentId: section.id,
+              } as IRow);
+            }
           });
         });
     });
@@ -844,7 +845,7 @@ export function TranscriptionTab(
             ]}
             sorting={[
               { columnName: 'planName', direction: 'asc' },
-              { columnName: 'name', direction: 'asc' },
+              { columnName: 'sort', direction: 'asc' },
             ]}
             treeColumn={'name'}
             showfilters={filter}

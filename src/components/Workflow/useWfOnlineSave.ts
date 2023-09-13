@@ -39,7 +39,7 @@ export const useWfOnlineSave = (props: IProps) => {
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [plan] = useGlobal('plan');
-  const { GetPassageTypeRec, CheckIt } = usePassageType();
+  const { getPassageTypeRec, checkIt } = usePassageType();
 
   const getRemoteId = async (table: string, localid: string) => {
     await waitForIt(
@@ -82,7 +82,7 @@ export const useWfOnlineSave = (props: IProps) => {
         rowRec.push(rec);
       }
       if (isPassageRow(w)) {
-        var psgType = GetPassageTypeRec(w.passageType);
+        var psgType = getPassageTypeRec(w.passageType);
         let rec = {
           issection: false,
           changed: !w.deleted && isPassageUpdated(w, lastSaved),
@@ -201,7 +201,7 @@ export const useWfOnlineSave = (props: IProps) => {
         await memory.sync(await backup.push(operations));
       }
     }
-    CheckIt('useWfOnlineSave');
+    checkIt('useWfOnlineSave');
     return hasNew || deleteItems.length > 0;
   };
 };

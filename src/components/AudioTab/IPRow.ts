@@ -1,8 +1,10 @@
+import React from 'react';
+
 export interface IPRow {
   id: string;
   sectionId: string;
   sectionDesc: string;
-  reference: string;
+  reference: React.ReactNode;
   attached: string;
   sort: string;
   book: string;

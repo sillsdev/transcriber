@@ -15,7 +15,7 @@ import {
   related,
   sectionNumber,
   passageNumber,
-  passageReference,
+  PassageReference,
 } from '../crud';
 import { NextAction } from './TaskFlag';
 import TaskAvatar from './TaskAvatar';
@@ -91,7 +91,7 @@ export function TaskItem(props: IProps) {
             <div>
               <Box sx={rowProp}>
                 <Typography>
-                  {passageReference(passage, allBookData)}
+                  {PassageReference(passage, allBookData)}
                 </Typography>
                 {!flat && (
                   <>

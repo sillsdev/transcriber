@@ -16,6 +16,10 @@ import { getStepComplete } from '../../crud';
 import { toCamel } from '../../utils';
 import { ISTFilterState } from './filterMenu';
 import { PassageTypeEnum } from '../../model/passageType';
+import {
+  passageTypeFromRef,
+  isPassageTypeRecord,
+} from '../../control/RefRender';
 
 const wfSectionUpdate = (item: IWorkflow, rec: IWorkflow) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -104,15 +108,14 @@ export const isPassageFiltered = (
   w: IWorkflow,
   filterState: ISTFilterState,
   orgWorkflowSteps: OrgWorkflowStep[],
-  doneStepId: string,
-  isPublishing: (ref?: string) => boolean
+  doneStepId: string
 ) => {
   const stepIndex = (stepId: string) =>
     orgWorkflowSteps.findIndex((s) => s.id === stepId);
   return (
     !filterState.disabled &&
     ((filterState.hideDone && w.stepId === doneStepId) ||
-      (filterState.hidePublishing && isPublishing(w.reference)) ||
+      (filterState.hidePublishing && isPassageTypeRecord(w.reference)) ||
       (filterState.assignedToMe && w.discussionCount === 0) ||
       (filterState.maxStep &&
         w.stepId &&
@@ -136,8 +139,6 @@ export const getWorkflow = (
   filterState: ISTFilterState,
   doneStepId: string,
   getDiscussionCount: (passageId: string, stepId: string) => number,
-  isPublishing: (ref?: string) => boolean,
-  GetPassageTypeFromRef: (ref?: string) => PassageTypeEnum,
   current?: IWorkflow[]
 ) => {
   const myWork = current || Array<IWorkflow>();
@@ -194,7 +195,7 @@ export const getWorkflow = (
         item.comment = passAttr.title;
         item.passageUpdated = passage.attributes.dateUpdated;
         item.passage = passage;
-        item.passageType = GetPassageTypeFromRef(passAttr.reference);
+        item.passageType = passageTypeFromRef(passAttr.reference);
         item.sharedResourceId = related(passage, 'sharedResource');
         const mediaRec = getVernacularMediaRec(passage.id, memory);
         item.mediaId = mediaRec
@@ -222,13 +223,7 @@ export const getWorkflow = (
         item.deleted = false;
         item.filtered =
           item.filtered ||
-          isPassageFiltered(
-            item,
-            filterState,
-            orgWorkflowSteps,
-            doneStepId,
-            isPublishing
-          );
+          isPassageFiltered(item, filterState, orgWorkflowSteps, doneStepId);
       }
       //console.log(`item ${JSON.stringify(item, null, 2)}`);
       wfPassageAdd(myWork, item, sectionIndex);

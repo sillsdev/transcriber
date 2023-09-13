@@ -1,5 +1,5 @@
 import { Section, Passage, IState, BookName } from '../../../model';
-import { passageDescription, sectionNumber } from '../../../crud';
+import { passageDescText, sectionNumber } from '../../../crud';
 import { useSelector } from 'react-redux';
 
 export interface IInfo {
@@ -16,7 +16,7 @@ const getSection = (section: Section) => {
 };
 
 const getPassage = (info: IInfo, bookData: BookName[]) => {
-  return `${info.secNum}.${passageDescription(
+  return `${info.secNum}.${passageDescText(
     info.rec as Passage,
     bookData
   ).trim()}`;

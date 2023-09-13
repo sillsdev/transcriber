@@ -29,7 +29,7 @@ import {
   sectionNumber,
   sectionCompare,
   passageCompare,
-  passageDescription,
+  passageDescText,
   useOrganizedBy,
   findRecord,
   usePlanType,
@@ -73,7 +73,7 @@ const getSection = (
 
 /* build the passage name = sequence + book + reference */
 const getReference = (passage: Passage, bookData: BookName[] = []) => {
-  return passageDescription(passage, bookData);
+  return passageDescText(passage, bookData);
 };
 
 interface IRecordProps {
