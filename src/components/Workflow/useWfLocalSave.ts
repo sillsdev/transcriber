@@ -28,7 +28,7 @@ export const useWfLocalSave = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const { GetPassageTypeRec, CheckIt } = usePassageType();
+  const { getPassageTypeRec, checkIt } = usePassageType();
 
   return async (
     workflow: IWorkflow[],
@@ -92,7 +92,7 @@ export const useWfLocalSave = (props: IProps) => {
         }
       }
       if (isPassageRow(item) && isPassageUpdated(item, lastSaved)) {
-        const psgType = GetPassageTypeRec(item.passageType);
+        const psgType = getPassageTypeRec(item.passageType);
         if (!isPassageAdding(item) && !item.deleted) {
           const itemId = item?.passage?.id || '';
           const curPass = passages.filter((p) => p.id === itemId)[0];
@@ -173,6 +173,6 @@ export const useWfLocalSave = (props: IProps) => {
         }
       }
     }
-    CheckIt('WFLocalSave');
+    checkIt('WFLocalSave');
   };
 };

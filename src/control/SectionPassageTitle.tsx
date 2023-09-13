@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { Grid, GridProps, styled, Typography } from '@mui/material';
-import { passageReference, sectionDescription } from '../crud';
+import { passageRefText, PassageReference, sectionDescription } from '../crud';
 import { BookName, Passage, Section, Plan } from '../model';
 import { QueryBuilder } from '@orbit/data';
 
@@ -29,8 +29,8 @@ export const SectionPassageTitle = (props: IProps) => {
   }, [plan]);
 
   const passNum = !isFlat ? passage : undefined;
-  const ref = passageReference(passage, allBookData);
-  const refText = ref !== '' ? ` - ${ref}` : '';
+  const ref = passageRefText(passage, allBookData);
+  const refDelim = ref !== '' ? `\u00A0-\u00A0` : '';
 
   return (
     <GridRoot container direction="row">
@@ -40,7 +40,9 @@ export const SectionPassageTitle = (props: IProps) => {
           id="sectionpassagetitle"
           sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
         >
-          {sectionDescription(section, passNum) + refText}
+          {sectionDescription(section, passNum)}
+          {refDelim}
+          {PassageReference(passage, allBookData)}
         </Typography>
       </Grid>
     </GridRoot>

@@ -30,7 +30,7 @@ import {
   sectionEditorName,
   sectionTranscriberName,
   sectionCompare,
-  passageDescription,
+  PassageDescription,
   passageCompare,
   useOrganizedBy,
   usePassageState,
@@ -55,12 +55,13 @@ const AssignmentDiv = styled('div')(() => ({
 
 interface IRow {
   id: string;
-  name: string;
+  name: React.ReactNode;
   state: string;
   transcriber: string;
   editor: string;
   passages: string;
   parentId: string;
+  sort: string;
 }
 const getChildRows = (row: any, rootRows: any[]) => {
   const childRows = rootRows.filter((r) => r.parentId === (row ? row.id : ''));
@@ -148,6 +149,7 @@ export function AssignmentTable(props: IProps) {
         transcriber: sectionTranscriberName(section, users),
         passages: '0', //string so we can have blank, alternatively we could format in the tree to not show on passage rows
         parentId: '',
+        sort: (section.attributes?.sequencenum || 0).toFixed(2).toString(),
       };
       rowData.push(sectionRow);
       const sectionps = passages
@@ -157,7 +159,7 @@ export function AssignmentTable(props: IProps) {
       sectionps.forEach(function (passage: Passage) {
         rowData.push({
           id: passage.id,
-          name: passageDescription(passage, allBookData),
+          name: PassageDescription(passage, allBookData),
           state: activityState.getString(getPassageState(passage)),
           editor: '',
           transcriber: '',
@@ -305,7 +307,7 @@ export function AssignmentTable(props: IProps) {
               { columnName: 'name', groupingEnabled: false },
               { columnName: 'passages', groupingEnabled: false },
             ]}
-            sorting={[{ columnName: 'name', direction: 'asc' }]}
+            sorting={[{ columnName: 'sort', direction: 'asc' }]}
             treeColumn={'name'}
             showfilters={filter}
             showgroups={filter}

@@ -89,8 +89,11 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 import { ISTFilterState } from './filterMenu';
 import { useProjectDefaults } from '../../crud/useProjectDefaults';
 import { sharedResourceSelector } from '../../selector';
-import { usePassageType } from '../../crud/usePassageType';
 import { PassageTypeEnum } from '../../model/passageType';
+import {
+  passageTypeFromRef,
+  isPassageTypeRecord,
+} from '../../control/RefRender';
 
 const SaveWait = 500;
 
@@ -248,7 +251,6 @@ export function ScriptureTable(
 
   const [filterState, setFilterState] =
     useState<ISTFilterState>(defaultFilterState);
-  const { PassageTypeRecordOnly, GetPassageTypeFromRef } = usePassageType();
   const secNumCol = React.useMemo(() => {
     return colNames.indexOf('sectionSeq');
   }, [colNames]);
@@ -293,7 +295,7 @@ export function ScriptureTable(
     workflowRef.current = wf;
     setWorkflowx(wf);
     var anyPublishing = Boolean(
-      wf.find((w) => PassageTypeRecordOnly(w.reference ?? ''))
+      wf.find((w) => isPassageTypeRecord(w.reference ?? ''))
     );
     if (defaultFilterState.canHidePublishing !== anyPublishing)
       setDefaultFilterState({
@@ -735,7 +737,7 @@ export function ScriptureTable(
         const value = name === 'book' ? findBook(c.value as string) : c.value;
         var passageType =
           name === 'reference'
-            ? GetPassageTypeFromRef(c.value as string)
+            ? passageTypeFromRef(c.value as string)
             : wf?.passageType;
 
         workflow[i] = {
@@ -1094,9 +1096,7 @@ export function ScriptureTable(
         wfStr,
         filterState,
         doneStepId,
-        getDiscussionCount,
-        PassageTypeRecordOnly,
-        GetPassageTypeFromRef
+        getDiscussionCount
       );
       setWorkflow(newWorkflow);
 
@@ -1166,7 +1166,7 @@ export function ScriptureTable(
             allMyPassagesArePublishing;
             ix++
           ) {
-            if (!PassageTypeRecordOnly(workflowRef.current[ix].reference)) {
+            if (!isPassageTypeRecord(workflowRef.current[ix].reference)) {
               allMyPassagesArePublishing = false;
             }
           }
@@ -1176,14 +1176,7 @@ export function ScriptureTable(
 
       if (isPassageRow(w))
         filtered =
-          filtered ||
-          isPassageFiltered(
-            w,
-            filterState,
-            orgSteps,
-            doneStepId,
-            PassageTypeRecordOnly
-          );
+          filtered || isPassageFiltered(w, filterState, orgSteps, doneStepId);
       if (filtered !== w.filtered) changed = true;
       newWork.push({
         ...w,

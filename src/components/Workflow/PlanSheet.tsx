@@ -52,16 +52,12 @@ import {
   viewModeSelector,
 } from '../../selector';
 import { useSelector, shallowEqual } from 'react-redux';
-import {
-  BookIcon,
-  ChapterNumberIcon,
-  AltBookIcon,
-  NoteIcon,
-  TitleIcon,
-  MovementIcon,
-} from '../../control/PlanIcons';
-import { usePassageType } from '../../crud/usePassageType';
 import { PassageTypeEnum } from '../../model/passageType';
+import {
+  refRender,
+  passageTypeFromRef,
+  isPassageTypeRecord,
+} from '../../control/RefRender';
 
 const MemoizedTaskAvatar = memo(TaskAvatar);
 
@@ -303,7 +299,6 @@ export function PlanSheet(props: IProps) {
   const { userIsAdmin } = useRole();
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
-  const { GetPassageTypeFromRef, PassageTypeRecordOnly } = usePassageType();
   const moveUp = true;
   const moveDown = false;
   const moveSection = true;
@@ -404,48 +399,11 @@ export function PlanSheet(props: IProps) {
     sheetScroll();
   };
 
-  const typeAndArg = (val: string, len: number, icon: JSX.Element) =>
-    val.length > len + 1 ? (
-      <>
-        {icon}
-        {val.substring(len)}
-      </>
-    ) : (
-      icon
-    );
-
-  const psgRefRender = (cell: ICell) => {
-    var pt = GetPassageTypeFromRef(cell.value);
-    switch (pt) {
-      case PassageTypeEnum.MOVEMENT:
-        return MovementIcon;
-      case PassageTypeEnum.CHAPTERNUMBER:
-        return typeAndArg(
-          cell.value.toString(),
-          PassageTypeEnum.CHAPTERNUMBER.length,
-          ChapterNumberIcon
-        );
-      case PassageTypeEnum.TITLE:
-        return TitleIcon;
-      case PassageTypeEnum.BOOK:
-        return BookIcon;
-      case PassageTypeEnum.ALTBOOK:
-        return AltBookIcon;
-      case PassageTypeEnum.NOTE:
-        return typeAndArg(
-          cell.value.toString(),
-          PassageTypeEnum.NOTE.length,
-          NoteIcon
-        );
-      default:
-        return cell.value;
-    }
-  };
   const handleValueRender = (cell: ICell) => {
     return cell.className?.substring(0, 4) === 'book' && bookMap
       ? bookMap[cell.value]
       : cell.className?.includes('ref')
-      ? psgRefRender(cell)
+      ? refRender(cell.value)
       : cell.className?.includes('num')
       ? cell.value < 0 || Math.floor(cell.value) !== cell.value
         ? ''
@@ -666,7 +624,7 @@ export function PlanSheet(props: IProps) {
 
   const refErrTest = (ref: any) =>
     typeof ref !== 'string' ||
-    (!refMatch(ref) && GetPassageTypeFromRef(ref) === PassageTypeEnum.PASSAGE);
+    (!refMatch(ref) && passageTypeFromRef(ref) === PassageTypeEnum.PASSAGE);
 
   useEffect(() => {
     if (rowData.length !== rowInfo.length) {
@@ -714,7 +672,7 @@ export function PlanSheet(props: IProps) {
           return [
             {
               value: passage &&
-                !PassageTypeRecordOnly(row[refCol].toString()) && (
+                !isPassageTypeRecord(row[refCol].toString()) && (
                   <Badge
                     badgeContent={rowInfo[rowIndex].discussionCount}
                     color="secondary"

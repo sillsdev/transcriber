@@ -1,6 +1,7 @@
 import { Section, Passage, User, BookName } from '../model';
 import { parseRef, passageBook, related } from '.';
 import { numCompare } from '../utils/sort';
+import { whole } from '../utils';
 
 function sectionReviewer(s: Section, users: Array<User>) {
   let user = users.filter((u) => u.id === related(s, 'editor'));
@@ -19,7 +20,8 @@ export function sectionTranscriberName(s: Section, users: Array<User>) {
   return user == null || !user.attributes ? '' : user.attributes.name;
 }
 export function sectionNumber(section: Section) {
-  return section?.attributes?.sequencenum?.toString().padStart(3, ' ') || '';
+  const num = whole(section?.attributes?.sequencenum);
+  return num ? num.padStart(3, ' ') : '';
 }
 export function sectionCompare(a: Section, b: Section) {
   return numCompare(a.attributes.sequencenum, b.attributes.sequencenum);
@@ -47,9 +49,10 @@ export function sectionRef(
       }${end.attributes.endVerse}`
     : undefined;
 }
+
 /* build the section name = sequence + name */
 export function sectionDescription(section: Section, passage?: Passage) {
   const name = section?.attributes?.name || '';
-  const passNum = passage ? `.${passage.attributes?.sequencenum}` : '';
+  const passNum = passage ? `.${whole(passage.attributes?.sequencenum)}` : '';
   return sectionNumber(section) + passNum + '\u00A0\u00A0 ' + name;
 }

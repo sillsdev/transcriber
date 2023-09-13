@@ -44,7 +44,7 @@ import { useElectronImport } from '../routes/ElectronImport';
 import { useGlobal } from 'reactn';
 import {
   remoteIdNum,
-  passageDescription,
+  PassageDescription,
   remoteIdGuid,
   useOrganizedBy,
   useOfflnProjRead,
@@ -131,7 +131,7 @@ export function ImportTab(props: IProps & IRecordProps) {
   interface IRow {
     plan: string;
     section: string;
-    passage: string;
+    passage: React.ReactNode;
     other: string;
     old: string;
     imported: string;
@@ -628,7 +628,7 @@ export function ImportTab(props: IProps & IRecordProps) {
             section: section
               ? section.attributes.sequencenum + ' ' + section.attributes.name
               : '',
-            passage: passage ? passageDescription(passage, allBookData) : '',
+            passage: passage ? PassageDescription(passage, allBookData) : '',
             other: other,
             old: old,
             imported: imported,

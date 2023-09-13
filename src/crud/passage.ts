@@ -1,10 +1,10 @@
 import { Passage, BookName } from '../model';
 import { numCompare } from '../utils/sort';
+import { whole } from '../utils';
 
 export function passageNumber(passage: Passage) {
-  return passage.attributes && passage.attributes.sequencenum
-    ? passage.attributes.sequencenum.toString().padStart(3, ' ')
-    : '';
+  const seq = whole(passage?.attributes?.sequencenum);
+  return seq ? seq.padStart(3, ' ') : '';
 }
 
 export function passageCompare(a: Passage, b: Passage) {
@@ -78,20 +78,15 @@ export function passageBook(passage: Passage, bookData: BookName[] = []) {
   return book;
 }
 /* build the passage ref = book + reference */
-export function passageReference(passage: Passage, bookData: BookName[] = []) {
+export function passageRefText(passage: Passage, bookData: BookName[] = []) {
   var book = passageBook(passage, bookData);
   book += ' ';
   return book + passage.attributes?.reference;
 }
 
 /* build the passage name = sequence + book + reference */
-export function passageDescription(
-  passage: Passage,
-  bookData: BookName[] = []
-) {
+export function passageDescText(passage: Passage, bookData: BookName[] = []) {
   return (
-    passageNumber(passage) +
-    '\u00A0\u00A0' +
-    passageReference(passage, bookData)
+    passageNumber(passage) + '\u00A0\u00A0' + passageRefText(passage, bookData)
   );
 }

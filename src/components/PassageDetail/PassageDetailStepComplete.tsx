@@ -5,7 +5,7 @@ import CompleteIcon from '@mui/icons-material/CheckBoxOutlined';
 import NotCompleteIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { IPassageDetailStepCompleteStrings } from '../../model';
-import { getPasIdByNum } from '../../crud';
+import { nextPasId } from '../../crud';
 import { usePassageNavigate } from './usePassageNavigate';
 import { passageDetailStepCompleteSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -46,8 +46,7 @@ export const PassageDetailStepComplete = () => {
   const handleToggleComplete = () => {
     const curStatus = complete;
     setStepComplete(currentstep, !complete);
-    const seq = passage?.attributes?.sequencenum;
-    const pasId = getPasIdByNum(section, seq + 1, memory);
+    const pasId = nextPasId(section, passage.id, memory);
     if (pasId && !curStatus) {
       rememberCurrentPassage(memory, pasId);
       setView(`/detail/${prjId}/${pasId}`);
