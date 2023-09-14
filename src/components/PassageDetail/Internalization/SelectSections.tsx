@@ -37,6 +37,8 @@ import {
 } from '../../../crud';
 import { transcriptionTabSelector } from '../../../selector';
 import { eqSet } from '../../../utils';
+import { passageTypeFromRef } from '../../../control/RefRender';
+import { PassageTypeEnum } from '../../../model/passageType';
 
 const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -189,15 +191,18 @@ export function SelectSections(props: IProps) {
             parentId: '',
           });
         sectionpassages.forEach((passage: Passage) => {
-          rowData.push({
-            id: passage.id,
-            name: `${sectionNumber(section)}.${getReference(
-              passage,
-              bookData
-            )}`,
-            passages: '',
-            parentId: isFlat || passageCount === 1 ? '' : section.id,
-          } as IRow);
+          const passType = passageTypeFromRef(passage.attributes?.reference);
+          if (passType === PassageTypeEnum.PASSAGE) {
+            rowData.push({
+              id: passage.id,
+              name: `${sectionNumber(section)}.${getReference(
+                passage,
+                bookData
+              )}`,
+              passages: '',
+              parentId: isFlat || passageCount === 1 ? '' : section.id,
+            } as IRow);
+          }
         });
       });
 
