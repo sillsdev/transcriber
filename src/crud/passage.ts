@@ -1,9 +1,9 @@
 import { Passage, BookName } from '../model';
 import { numCompare } from '../utils/sort';
-import { whole } from '../utils';
+import { positiveWholeOnly } from '../utils';
 
 export function passageNumber(passage: Passage) {
-  const seq = whole(passage?.attributes?.sequencenum);
+  const seq = positiveWholeOnly(passage?.attributes?.sequencenum);
   return seq ? seq.padStart(3, ' ') : '';
 }
 
