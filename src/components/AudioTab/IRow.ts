@@ -1,3 +1,4 @@
+import React from 'react';
 import MediaActions from './MediaActions';
 
 export interface IRow {
@@ -10,7 +11,7 @@ export interface IRow {
   fileName: string;
   sectionId: string;
   sectionDesc: string;
-  reference: string;
+  reference: React.ReactNode;
   duration: string;
   size: number;
   version: string;
