@@ -766,6 +766,7 @@ export function PlanSheet(props: IProps) {
                     rowIndex={rowIndex}
                     isSection={section}
                     isPassage={passage}
+                    psgType={rowInfo[rowIndex].passageType}
                     organizedBy={organizedBy}
                     sectionSequenceNumber={row[SectionSeqCol].toString()}
                     passageSequenceNumber={row[PassageSeqCol].toString()}

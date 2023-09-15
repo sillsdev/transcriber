@@ -3874,6 +3874,48 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageType.BOOK">
+         <segment>
+            <source>Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageType.ALTBK">
+         <segment>
+            <source>Friendly Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageType.CHNUM">
+         <segment>
+            <source>Chapter number</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageType.TITLE">
+         <segment>
+            <source>Title</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageType.MOVE">
+         <segment>
+            <source>Movement</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageType.PASS">
+         <segment>
+            <source>Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageType.NOTE">
+         <segment>
+            <source>Note</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4135,6 +4177,18 @@
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.moveUp">
+         <segment>
+            <source>Move {pt} {0} up</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.moveDown">
+         <segment>
+            <source>Move {pt} {0} down</source>
             <target/>
          </segment>
       </unit>
