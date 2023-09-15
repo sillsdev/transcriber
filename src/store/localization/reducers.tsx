@@ -822,6 +822,17 @@ const initialState = {
 			"uncompressed": "Uncompressed",
 		}
 	}),
+	"passageType": new LocalizedStrings({
+		"en": {
+			"BOOK": "Book",
+			"ALTBK": "Friendly Book",
+			"CHNUM": "Chapter number",
+			"TITLE": "Title",
+			"MOVE": "Movement",
+			"PASS": "Passage",
+			"NOTE": "Note",
+		}
+	}),
 	"peer": new LocalizedStrings({
 		"en": {
 			"peerDescription": "Peer Groups allow you to assign tasks to a group rather than an individual.",
@@ -884,6 +895,8 @@ const initialState = {
 			"bookSelect": "Select Book...",
 			"confirm": "{0} {1} Item(s). Are you sure?",
 			"filtered": "Disable filter to add rows.",
+			"moveUp": "Move {pt} {0} up",
+			"moveDown": "Move {pt} {0} down",
 			"nonNumber": "Do not change to non-number.",
 			"insertFirstPassage": "Add Passage as first in {0} {1}",
 			"passageBelow": "Add Passage below Passage {0}",
@@ -1583,6 +1596,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"passageDetailToolbar" : new LocalizedStrings(action.payload.data.passageDetailToolbar),
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
 				"passageRecord" : new LocalizedStrings(action.payload.data.passageRecord),
+				"passageType" : new LocalizedStrings(action.payload.data.passageType),
 				"peer" : new LocalizedStrings(action.payload.data.peer),
 				"peerCheck" : new LocalizedStrings(action.payload.data.peerCheck),
 				"permission" : new LocalizedStrings(action.payload.data.permission),

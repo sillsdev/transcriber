@@ -4512,6 +4512,55 @@
                <context context-type="sourcefile">passageRecord.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageType.BOOK">
+      		<source>Book</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageType.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageType.ALTBK">
+      		<source>Friendly Book</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageType.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageType.CHNUM">
+      		<source>Chapter number</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageType.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageType.TITLE">
+      		<source>Title</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageType.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageType.MOVE">
+      		<source>Movement</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageType.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageType.PASS">
+      		<source>Passage</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageType.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageType.NOTE">
+      		<source>Note</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageType.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="peer.peerDescription">
       		<source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
       		<target/>
@@ -4820,6 +4869,20 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="planSheet.moveUp">
+      		<source>Move {pt} {0} up</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="planSheet.moveDown">
+      		<source>Move {pt} {0} down</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="planSheet.nonNumber">
             <source>Do not change to non-number.</source>
             <target/>

@@ -4,6 +4,7 @@ import {
   ISharedStrings,
   IPlanActionsStrings,
   IPlanSheetStrings,
+  IPassageTypeStrings,
 } from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
@@ -25,6 +26,7 @@ import { elemOffset } from '../../utils';
 import { isElectron } from '../../api-variable';
 import { AudacityLogo } from '../../control';
 import {
+  passageTypeSelector,
   planActionsSelector,
   planSheetSelector,
   sharedSelector,
@@ -44,6 +46,7 @@ interface IProps {
   rowIndex: number;
   isSection: boolean;
   isPassage: boolean;
+  psgType: string;
   readonly: boolean;
   canAssign: boolean;
   canDelete: boolean;
@@ -72,6 +75,7 @@ export function PlanActionMenu(props: IProps) {
     rowIndex,
     isSection,
     isPassage,
+    psgType,
     readonly,
     onPlayStatus,
     onRecord,
@@ -98,6 +102,10 @@ export function PlanActionMenu(props: IProps) {
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
   const p: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const ty: IPassageTypeStrings = useSelector(
+    passageTypeSelector,
+    shallowEqual
+  );
   const [open, setOpen] = React.useState(false);
   const [hover, setHover] = React.useState(false);
   const top = React.useRef<number>(0);
@@ -282,10 +290,9 @@ export function PlanActionMenu(props: IProps) {
                       <MenuItem
                         id="passUp"
                         onClick={onPassageUp}
-                        title={'xxMove Passage {0} up'.replace(
-                          '{0}',
-                          passageSequenceNumber
-                        )}
+                        title={p.moveUp
+                          .replace('{pt}', ty.getString(psgType))
+                          .replace('{0}', passageSequenceNumber)}
                       >
                         <PassageUpIcon />
                       </MenuItem>
@@ -307,10 +314,9 @@ export function PlanActionMenu(props: IProps) {
                       <MenuItem
                         id="passDown"
                         onClick={onPassageDown}
-                        title={'xxMove Passage {0} down'.replace(
-                          '{0}',
-                          passageSequenceNumber
-                        )}
+                        title={p.moveDown
+                          .replace('{pt}', ty.getString(psgType))
+                          .replace('{0}', passageSequenceNumber)}
                       >
                         <PassageDownIcon />
                       </MenuItem>

@@ -774,6 +774,16 @@ export interface IPassageRecordStrings extends Localize.LocalizedStringsMethods 
     "uncompressed": string;
 };
 
+export interface IPassageTypeStrings extends Localize.LocalizedStringsMethods {
+    "BOOK": string;
+    "ALTBK": string;
+    "CHNUM": string;
+    "TITLE": string;
+    "MOVE": string;
+    "PASS": string;
+    "NOTE": string;
+};
+
 export interface IPeerStrings extends Localize.LocalizedStringsMethods {
     "peerDescription": string;
     "editPeerGroup": string;
@@ -831,6 +841,8 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "bookSelect": string;
     "confirm": string;
     "filtered": string;
+    "moveUp": string;
+    "moveDown": string;
     "nonNumber": string;
     "insertFirstPassage": string;
     "passageBelow": string;
@@ -1488,6 +1500,7 @@ export interface ILocalizedStrings {
 	passageDetailToolbar: IPassageDetailToolbarStrings;
 	passageMedia: IPassageMediaStrings;
 	passageRecord: IPassageRecordStrings;
+	passageType: IPassageTypeStrings;
 	peer: IPeerStrings;
 	peerCheck: IPeerCheckStrings;
 	permission: IPermissionStrings;
