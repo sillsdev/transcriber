@@ -49,16 +49,6 @@ export const AddNoteIcon = () => (
     </span>
   </StyledIcon>
 );
-/* MAYBE WE'LL NEED THIS?
-export const AddChapterNumberIcon = () => (
-  <StyledIcon size="small">
-    <span className="fa-layers fa-fw fa-sm">
-      <FontAwesomeIcon icon={faArrowDown} transform="shrink-2" />
-      <FontAwesomeIcon icon={faHashtag} transform="right-8 shrink-2" />
-      <FontAwesomeIcon icon={faPlus} transform="shrink-4 up-4 right-16" />
-    </span>
-  </StyledIcon>
-); */
 export const InsertMovementIcon = () => (
   <StyledIcon size="small">
     <span className="fa-layers fa-fw fa-sm">
