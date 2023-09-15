@@ -220,7 +220,10 @@ export const AddSectionPassageButtons = (props: IProps) => {
         )}
         {onNote && (
           <MenuItem id="addnote" onClick={onNote} title={t.addNote}>
-            <AddNoteIcon />
+            <StyledMenuIcon>
+              <AddNoteIcon />
+            </StyledMenuIcon>
+            {t.addNote}
           </MenuItem>
         )}
       </Menu>

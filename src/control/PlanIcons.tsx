@@ -43,7 +43,7 @@ export const AddNoteIcon = () => (
       <FontAwesomeIcon icon={faArrowDown} transform="shrink-2" />
       <FontAwesomeIcon
         icon={faMessage as IconProp}
-        transform="right-10 shrink-2"
+        transform="right-10 shrink-4"
       />
       <FontAwesomeIcon icon={faPlus} transform="shrink-4 up-4 right-16" />
     </span>
