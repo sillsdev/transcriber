@@ -8,39 +8,22 @@ import {
 } from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
+  Box,
   Button,
+  Popper,
   Grow,
   Paper,
-  Popper,
-  MenuItem,
-  MenuList,
   ClickAwayListener,
-  Box,
 } from '@mui/material';
 import MoreIcon from '@mui/icons-material/MoreHoriz';
-import AssignIcon from '@mui/icons-material/PeopleAltOutlined';
-import DeleteIcon from '@mui/icons-material/DeleteOutline';
-import AddIcon from '@mui/icons-material/LibraryAddOutlined';
-import MicIcon from '@mui/icons-material/Mic';
 import { elemOffset } from '../../utils';
-import { isElectron } from '../../api-variable';
-import { AudacityLogo } from '../../control';
 import {
   passageTypeSelector,
   planActionsSelector,
   planSheetSelector,
   sharedSelector,
 } from '../../selector';
-import {
-  AddNoteIcon,
-  InsertMovementIcon,
-  InsertSectionIcon,
-  PassageBelowIcon,
-  PassageDownIcon,
-  PassageToNextIcon,
-  PassageToPrevIcon,
-  PassageUpIcon,
-} from '../../control/PlanIcons';
+import { PlanMoreMenuItems } from './PlanMoreMenuItems';
 
 interface IProps {
   rowIndex: number;
@@ -71,34 +54,7 @@ interface IProps {
   onNote?: () => void;
 }
 export function PlanActionMenu(props: IProps) {
-  const {
-    rowIndex,
-    isSection,
-    isPassage,
-    psgType,
-    readonly,
-    onPlayStatus,
-    onRecord,
-    onUpload,
-    onAudacity,
-    onAssign,
-    onDelete,
-    canAssign,
-    canDelete,
-    active,
-    organizedBy,
-    sectionSequenceNumber,
-    passageSequenceNumber,
-    onDisableFilter,
-    onPassageBelow,
-    onPassageToPrev,
-    onPassageToNext,
-    onPassageUp,
-    onPassageDown,
-    onSectionAbove,
-    onMovementAbove,
-    onNote,
-  } = props;
+  const { active } = props;
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
   const p: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
@@ -112,11 +68,6 @@ export function PlanActionMenu(props: IProps) {
   const height = React.useRef<number>(0);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
   const menuRef = React.useRef<HTMLDivElement>(null);
-
-  const handleRecord = (index: number) => () => {
-    onPlayStatus('');
-    onRecord(index);
-  };
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -133,7 +84,7 @@ export function PlanActionMenu(props: IProps) {
     setOpen(false);
   };
 
-  function handleListKeyDown(event: React.KeyboardEvent) {
+  function onKey(event: React.KeyboardEvent) {
     if (event.key === 'Tab') {
       event.preventDefault();
       setOpen(false);
@@ -220,161 +171,15 @@ export function PlanActionMenu(props: IProps) {
             >
               <Paper>
                 <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList
-                    autoFocusItem={open}
-                    id="menu-list-grow"
-                    onKeyDown={handleListKeyDown}
-                    sx={{ display: 'flex' }}
-                  >
-                    {isSection && canAssign && !readonly && (
-                      <MenuItem
-                        id="planActAssign"
-                        title={t.assign}
-                        onClick={onAssign([rowIndex])}
-                      >
-                        <AssignIcon sx={{ color: 'primary.light' }} />
-                      </MenuItem>
-                    )}
-                    {onDisableFilter && (
-                      <MenuItem id="filtered" onClick={onDisableFilter}>
-                        {p.filtered}
-                      </MenuItem>
-                    )}
-                    {onMovementAbove && (
-                      <MenuItem
-                        id="movementAbove"
-                        onClick={onMovementAbove}
-                        title={p.movementAbove
-                          .replace('{0}', organizedBy)
-                          .replace('{1}', sectionSequenceNumber)}
-                      >
-                        <InsertMovementIcon />
-                      </MenuItem>
-                    )}
-                    {onSectionAbove && (
-                      <MenuItem
-                        id="secAbove"
-                        onClick={onSectionAbove}
-                        title={p.sectionAbove
-                          .replace('{0}', organizedBy)
-                          .replace('{1}', organizedBy)
-                          .replace('{2}', sectionSequenceNumber)}
-                      >
-                        <InsertSectionIcon />
-                      </MenuItem>
-                    )}
-                    {onPassageBelow && isSection && (
-                      <MenuItem
-                        id="psgAsFirst"
-                        onClick={onPassageBelow}
-                        title={p.insertFirstPassage
-                          .replace('{0}', organizedBy)
-                          .replace('{1}', sectionSequenceNumber)}
-                      >
-                        <PassageBelowIcon />
-                      </MenuItem>
-                    )}
-                    {onPassageBelow && isPassage && (
-                      <MenuItem
-                        id="passBelow"
-                        onClick={onPassageBelow}
-                        title={p.passageBelow.replace(
-                          '{0}',
-                          passageSequenceNumber
-                        )}
-                      >
-                        <PassageBelowIcon />
-                      </MenuItem>
-                    )}
-                    {onPassageUp && (
-                      <MenuItem
-                        id="passUp"
-                        onClick={onPassageUp}
-                        title={p.moveUp
-                          .replace('{pt}', ty.getString(psgType))
-                          .replace('{0}', passageSequenceNumber)}
-                      >
-                        <PassageUpIcon />
-                      </MenuItem>
-                    )}
-                    {onPassageToPrev && (
-                      <MenuItem
-                        id="passToPrev"
-                        onClick={onPassageToPrev}
-                        title={p.passageToPrevSection.replace(
-                          '{0}',
-                          passageSequenceNumber
-                        )}
-                      >
-                        <PassageToPrevIcon />
-                      </MenuItem>
-                    )}
-
-                    {onPassageDown && (
-                      <MenuItem
-                        id="passDown"
-                        onClick={onPassageDown}
-                        title={p.moveDown
-                          .replace('{pt}', ty.getString(psgType))
-                          .replace('{0}', passageSequenceNumber)}
-                      >
-                        <PassageDownIcon />
-                      </MenuItem>
-                    )}
-                    {onPassageToNext && (
-                      <MenuItem
-                        id="passToNext"
-                        onClick={onPassageToNext}
-                        title={p.passageToNextSection.replace(
-                          '{0}',
-                          passageSequenceNumber
-                        )}
-                      >
-                        <PassageToNextIcon />
-                      </MenuItem>
-                    )}
-                    {isPassage && onNote && (
-                      <MenuItem id="addnote" onClick={onNote} title={t.addNote}>
-                        <AddNoteIcon />
-                      </MenuItem>
-                    )}
-                    {isPassage && (
-                      <MenuItem
-                        id="planActUpload"
-                        onClick={onUpload(rowIndex)}
-                        title={ts.uploadMediaSingular}
-                      >
-                        <AddIcon sx={{ color: 'primary.light' }} />
-                      </MenuItem>
-                    )}
-                    {isPassage && (
-                      <MenuItem
-                        id="planActRec"
-                        onClick={handleRecord(rowIndex)}
-                        title={t.recordAudio}
-                      >
-                        <MicIcon sx={{ color: 'primary.light' }} />
-                      </MenuItem>
-                    )}
-                    {isElectron && isPassage && (
-                      <MenuItem
-                        id="planActAud"
-                        title={ts.launchAudacity}
-                        onClick={onAudacity(rowIndex)}
-                      >
-                        <AudacityLogo />
-                      </MenuItem>
-                    )}
-                    {canDelete && !readonly && (
-                      <MenuItem
-                        id="planActDel"
-                        title={t.delete}
-                        onClick={onDelete(rowIndex)}
-                      >
-                        <DeleteIcon sx={{ color: 'primary.light' }} />
-                      </MenuItem>
-                    )}
-                  </MenuList>
+                  <PlanMoreMenuItems
+                    {...props}
+                    open={open}
+                    onKey={onKey}
+                    t={t}
+                    p={p}
+                    ts={ts}
+                    ty={ty}
+                  />
                 </ClickAwayListener>
               </Paper>
             </Grow>

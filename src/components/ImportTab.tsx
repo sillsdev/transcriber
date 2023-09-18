@@ -629,7 +629,11 @@ export function ImportTab(props: IProps & IRecordProps) {
               ? section.attributes.sequencenum + ' ' + section.attributes.name
               : '',
             passage: passage
-              ? PassageDescription(passage, allBookData, false) //flat here?
+              ? PassageDescription({
+                  passage,
+                  bookData: allBookData,
+                  flat: false,
+                }) //flat here?
               : '',
             other: other,
             old: old,

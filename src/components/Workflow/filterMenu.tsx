@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { IScriptureTableFilterStrings, OrgWorkflowStep } from '../../model';
 import {
   IconButton,
@@ -97,9 +97,11 @@ export function FilterMenu(props: IProps) {
   const handleDisabled = (event: React.ChangeEvent<HTMLInputElement>) => {
     apply({ ...localState, disabled: event.target.checked }, false);
   };
-  useEffect(() => {
-    setLocalState(props.state);
-  }, [props.state]);
+  // useEffect(() => {
+  //   console.log(`FilterMenu: useEffect: ${JSON.stringify(localState)}`);
+  //   setLocalState(props.state);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [props.state]);
 
   const filterChange = (what: string, value: any) => {
     var newstate = { ...localState } as any;

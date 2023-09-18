@@ -46,10 +46,12 @@ export const useCheckOnline = () => {
     Online(forceCheck || !offline, (result) => {
       if (connected !== result) {
         localStorage.setItem(LocalKey.connected, `${result && !offline}`);
-        if (result) {
-          Bugsnag.resumeSession();
-        } else {
-          Bugsnag.pauseSession();
+        if (API_CONFIG.snagId !== '') {
+          if (result) {
+            Bugsnag.resumeSession();
+          } else {
+            Bugsnag.pauseSession();
+          }
         }
         setConnected(result);
         if (result) {
