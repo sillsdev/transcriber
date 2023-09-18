@@ -91,7 +91,7 @@ export function TaskItem(props: IProps) {
             <div>
               <Box sx={rowProp}>
                 <Typography>
-                  {PassageReference(passage, allBookData)}
+                  {PassageReference(passage, allBookData, flat)}
                 </Typography>
                 {!flat && (
                   <>

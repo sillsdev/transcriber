@@ -18,8 +18,11 @@ import {
  * the reference value is not provided, the default passage type 'PASSAGE' is
  * returned.
  */
-export const passageTypeFromRef = (ref?: string): PassageTypeEnum => {
-  if (!ref) {
+export const passageTypeFromRef = (
+  ref: string | undefined,
+  flat: boolean
+): PassageTypeEnum => {
+  if (flat || !ref) {
     return PassageTypeEnum.PASSAGE;
   }
 
@@ -39,8 +42,11 @@ export const passageTypeFromRef = (ref?: string): PassageTypeEnum => {
  * to a passage type that will not follow the full workflow but rather just be
  * recorded.
  */
-export const isPassageTypeRecord = (ref?: string): boolean => {
-  const passageType = passageTypeFromRef(ref);
+export const isPublishingTitle = (
+  ref: string | undefined,
+  flat: boolean
+): boolean => {
+  const passageType = passageTypeFromRef(ref, flat);
   return (
     passageType !== PassageTypeEnum.PASSAGE &&
     passageType !== PassageTypeEnum.NOTE
@@ -88,8 +94,8 @@ const ArgType = ({ value, type, icon }: AtProps) => {
  * @param value - The value used to determine the passage type.
  * @returns The corresponding icon component based on the passage type.
  */
-export const refRender = (value: any) => {
-  const pt = passageTypeFromRef(value);
+export const refRender = (value: any, flat: boolean) => {
+  const pt = passageTypeFromRef(value, flat);
 
   switch (pt) {
     case PassageTypeEnum.MOVEMENT:

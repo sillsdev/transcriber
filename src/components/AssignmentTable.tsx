@@ -159,7 +159,7 @@ export function AssignmentTable(props: IProps) {
       sectionps.forEach(function (passage: Passage) {
         rowData.push({
           id: passage.id,
-          name: PassageDescription(passage, allBookData),
+          name: PassageDescription(passage, allBookData, true),
           state: activityState.getString(getPassageState(passage)),
           editor: '',
           transcriber: '',

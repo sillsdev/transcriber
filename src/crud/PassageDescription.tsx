@@ -4,16 +4,17 @@ import { passageNumber } from './passage';
 
 export const PassageDescription = (
   passage: Passage,
-  bookData: BookName[] = []
+  bookData: BookName[] = [],
+  flat:boolean
 ) => {
   const num = passageNumber(passage);
   return num ? (
     <>
       {num}
       {'\u00A0\u00A0'}
-      {PassageReference(passage, bookData)}
+      {PassageReference(passage, bookData, flat)}
     </>
   ) : (
-    <>{PassageReference(passage, bookData)}</>
+    <>{PassageReference(passage, bookData, flat)}</>
   );
 };

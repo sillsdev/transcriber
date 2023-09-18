@@ -83,7 +83,7 @@ import AudioDownload from './AudioDownload';
 import { SelectExportType, iconMargin } from '../control';
 import AudioExportMenu from './AudioExportMenu';
 import moment, { Moment } from 'moment';
-import { isPassageTypeRecord } from '../control/RefRender';
+import { isPublishingTitle } from '../control/RefRender';
 
 interface IRow {
   id: string;
@@ -239,6 +239,11 @@ export function TranscriptionTab(
         : localizedArtifactType(artifactType),
     [artifactType, localizedArtifactType]
   );
+  const flat = useMemo(
+    () => projectPlans.length > 0 && projectPlans[0].attributes.flat,
+    [projectPlans]
+  );
+
   const defaultHiddenColumnNames = useMemo(
     () =>
       (planColumn ? ['planName'] : []).concat(
@@ -524,10 +529,10 @@ export function TranscriptionTab(
           });
           sectionpassages.forEach((passage: Passage) => {
             const state = activityState.getString(getPassageState(passage));
-            if (!isPassageTypeRecord(passage?.attributes?.reference)) {
+            if (!isPublishingTitle(passage?.attributes?.reference, flat)) {
               rowData.push({
                 id: passage.id,
-                name: PassageReference(passage, bookData),
+                name: PassageReference(passage, bookData, flat),
                 state: state,
                 planName: planRec.attributes.name,
                 editor: '',

@@ -191,7 +191,10 @@ export function SelectSections(props: IProps) {
             parentId: '',
           });
         sectionpassages.forEach((passage: Passage) => {
-          const passType = passageTypeFromRef(passage.attributes?.reference);
+          const passType = passageTypeFromRef(
+            passage.attributes?.reference,
+            isFlat
+          );
           if (passType === PassageTypeEnum.PASSAGE) {
             rowData.push({
               id: passage.id,
