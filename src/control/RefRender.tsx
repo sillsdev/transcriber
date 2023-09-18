@@ -8,42 +8,94 @@ import {
   MovementIcon,
 } from './PlanIcons';
 
-export const passageTypeFromRef = (ref?: string) => {
-  if (!ref) return PassageTypeEnum.PASSAGE;
-  var arr = Object.values(PassageTypeEnum).filter((v) => ref.startsWith(v));
-  if (arr.length > 0) return arr[0];
-  return PassageTypeEnum.PASSAGE;
+/**
+ * Returns the passage type corresponding to the provided reference value.
+ * If the reference value is not provided, the default passage type 'PASSAGE'
+ * is returned.
+ *
+ * @param ref - A string representing a reference value.
+ * @returns The passage type corresponding to the provided reference value. If
+ * the reference value is not provided, the default passage type 'PASSAGE' is
+ * returned.
+ */
+export const passageTypeFromRef = (ref?: string): PassageTypeEnum => {
+  if (!ref) {
+    return PassageTypeEnum.PASSAGE;
+  }
+
+  const matchingValue = Object.values(PassageTypeEnum).find((value) =>
+    ref.startsWith(value)
+  );
+
+  return matchingValue || PassageTypeEnum.PASSAGE;
 };
 
-export const isPassageTypeRecord = (ref?: string) =>
-  passageTypeFromRef(ref) !== PassageTypeEnum.PASSAGE &&
-  passageTypeFromRef(ref) !== PassageTypeEnum.NOTE;
+/**
+ * Determines whether a given reference string corresponds to a passage type
+ * which should just be recorded or not.
+ *
+ * @param ref - An optional string representing a reference.
+ * @returns A boolean value indicating whether the given reference corresponds
+ * to a passage type that will not follow the full workflow but rather just be
+ * recorded.
+ */
+export const isPassageTypeRecord = (ref?: string): boolean => {
+  const passageType = passageTypeFromRef(ref);
+  return (
+    passageType !== PassageTypeEnum.PASSAGE &&
+    passageType !== PassageTypeEnum.NOTE
+  );
+};
 
 interface AtProps {
   value: any;
   type: PassageTypeEnum;
   icon: JSX.Element;
 }
+/**
+ * Renders a JSX element based on the provided parameters.
+ * If the length of the `value` parameter is less than or equal to the length
+ * of `type` plus one, it returns the `icon` parameter.
+ * Otherwise, it returns a JSX element that includes the `icon` parameter, a
+ * non-breaking space character, and a substring of the `value` parameter
+ * starting from the length of `type`.
+ *
+ * @param value - The value to be rendered.
+ * @param type - The type of the passage.
+ * @param icon - The icon component to be rendered.
+ * @returns The rendered output, which includes the `icon` parameter, a
+ * non-breaking space character, and a substring of the `value` parameter.
+ */
 const ArgType = ({ value, type, icon }: AtProps) => {
   const len = type.length;
-  const val = value.toString();
-  if (val.length <= len + 1) return icon;
+  const val = String(value);
+  if (val.length <= len + 1) {
+    return icon;
+  }
   return (
     <>
       {icon}
-      {`\u00A0`}
+      {'\u00A0'}
       {val.substring(len)}
     </>
   );
 };
 
+/**
+ * Determines the passage type based on the input value and returns the
+ * corresponding icon component.
+ *
+ * @param value - The value used to determine the passage type.
+ * @returns The corresponding icon component based on the passage type.
+ */
 export const refRender = (value: any) => {
   const pt = passageTypeFromRef(value);
+
   switch (pt) {
     case PassageTypeEnum.MOVEMENT:
       return MovementIcon;
     case PassageTypeEnum.CHAPTERNUMBER:
-      return <ArgType value type={pt} icon={ChapterNumberIcon} />;
+      return <ArgType value={value} type={pt} icon={ChapterNumberIcon} />;
     case PassageTypeEnum.TITLE:
       return TitleIcon;
     case PassageTypeEnum.BOOK:
@@ -51,7 +103,7 @@ export const refRender = (value: any) => {
     case PassageTypeEnum.ALTBOOK:
       return AltBookIcon;
     case PassageTypeEnum.NOTE:
-      return <ArgType value type={pt} icon={NoteIcon} />;
+      return <ArgType value={value} type={pt} icon={NoteIcon} />;
     default:
       return value;
   }
