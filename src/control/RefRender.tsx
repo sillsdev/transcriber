@@ -19,16 +19,23 @@ export const isPassageTypeRecord = (ref?: string) =>
   passageTypeFromRef(ref) !== PassageTypeEnum.PASSAGE &&
   passageTypeFromRef(ref) !== PassageTypeEnum.NOTE;
 
-const typeAndArg = (val: string, len: number, icon: JSX.Element) =>
-  val.length > len + 1 ? (
+interface AtProps {
+  value: any;
+  type: PassageTypeEnum;
+  icon: JSX.Element;
+}
+const ArgType = ({ value, type, icon }: AtProps) => {
+  const len = type.length;
+  const val = value.toString();
+  if (val.length <= len + 1) return icon;
+  return (
     <>
       {icon}
       {`\u00A0`}
       {val.substring(len)}
     </>
-  ) : (
-    icon
   );
+};
 
 export const refRender = (value: any) => {
   const pt = passageTypeFromRef(value);
@@ -36,11 +43,7 @@ export const refRender = (value: any) => {
     case PassageTypeEnum.MOVEMENT:
       return MovementIcon;
     case PassageTypeEnum.CHAPTERNUMBER:
-      return typeAndArg(
-        value.toString(),
-        PassageTypeEnum.CHAPTERNUMBER.length,
-        ChapterNumberIcon
-      );
+      return <ArgType value type={pt} icon={ChapterNumberIcon} />;
     case PassageTypeEnum.TITLE:
       return TitleIcon;
     case PassageTypeEnum.BOOK:
@@ -48,11 +51,7 @@ export const refRender = (value: any) => {
     case PassageTypeEnum.ALTBOOK:
       return AltBookIcon;
     case PassageTypeEnum.NOTE:
-      return typeAndArg(
-        value.toString(),
-        PassageTypeEnum.NOTE.length,
-        NoteIcon
-      );
+      return <ArgType value type={pt} icon={NoteIcon} />;
     default:
       return value;
   }
