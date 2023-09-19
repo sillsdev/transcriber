@@ -278,8 +278,10 @@ export function PlanSheet(props: IProps) {
     (rowInfo[i].level === WorkflowLevel.Book ||
       rowInfo[i].passageType === PassageTypeEnum.BOOK ||
       rowInfo[i].passageType === PassageTypeEnum.ALTBOOK);
+
   const isMovement = (i: number) =>
     i >= 0 && i < rowInfo.length && rowInfo[i].level === WorkflowLevel.Movement;
+
   const isInMovement = (i: number) => {
     if (
       i >= 0 &&
@@ -293,6 +295,7 @@ export function PlanSheet(props: IProps) {
     }
     return false;
   };
+
   const [changed, setChanged] = useState(false); //for button enabling
   const changedRef = useRef(false); //for autosave
   const [saving, setSaving] = useState(false);
@@ -944,6 +947,16 @@ export function PlanSheet(props: IProps) {
     );
   }, [filterState, maximumSection]);
 
+  const dataRowisSection = useMemo(() => {
+    return isSection(currentRow - 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRow]);
+
+  const dataRowisBook = useMemo(() => {
+    return isBook(currentRow - 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRow]);
+
   const disableFilter = () => {
     onFilterChange({ ...filterState, disabled: true }, false);
   };
@@ -959,7 +972,7 @@ export function PlanSheet(props: IProps) {
                   inlinePassages={inlinePassages}
                   numRows={rowInfo.length}
                   readonly={readonly}
-                  isSection={isSection(currentRow - 1)}
+                  isSection={dataRowisSection}
                   isPassage={isPassage(currentRow - 1)}
                   mouseposition={position}
                   handleNoContextMenu={handleNoContextMenu}
@@ -976,7 +989,7 @@ export function PlanSheet(props: IProps) {
                     !inlinePassages &&
                     !isMovement(currentRow - 1) &&
                     !isInMovement(currentRow - 1) &&
-                    !isBook(currentRow - 1) &&
+                    !dataRowisBook &&
                     !isTitle(currentRow)
                       ? onPassageBelow
                       : undefined
@@ -987,21 +1000,24 @@ export function PlanSheet(props: IProps) {
                       : undefined
                   }
                   onPassageLast={
-                    !filtered && isSection(currentRow - 1)
-                      ? onPassageLast
-                      : undefined
+                    !filtered && dataRowisSection ? onPassageLast : undefined
                   }
                   onMovementAbove={
                     !readonly &&
                     !filtered &&
+                    !inlinePassages &&
+                    !dataRowisBook &&
                     rowInfo.length > 0 &&
                     currentRow > 0 &&
-                    isSection(currentRow - 1)
+                    dataRowisSection
                       ? onMovementAbove
                       : undefined
                   }
                   onSectionAbove={
-                    !filtered && currentRow > 0 && rowInfo.length > 0
+                    !filtered &&
+                    !dataRowisBook &&
+                    currentRow > 0 &&
+                    rowInfo.length > 0
                       ? onSectionAbove
                       : undefined
                   }
