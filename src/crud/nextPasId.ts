@@ -1,7 +1,7 @@
 import { Section, Passage } from '../model';
 import Memory from '@orbit/memory';
 import { related, findRecord } from '.';
-import { isPassageTypeRecord } from '../control/RefRender';
+import { isPublishingTitle } from '../control/RefRender';
 
 export const nextPasId = (
   section: Section,
@@ -19,7 +19,7 @@ export const nextPasId = (
           'passage',
           passages[curIndex].id
         ) as Passage;
-        if (!isPassageTypeRecord(passRec?.attributes?.reference)) {
+        if (!isPublishingTitle(passRec?.attributes?.reference, false)) {
           pasId = passRec?.keys?.remoteId || passRec?.id;
           break;
         }
@@ -31,7 +31,7 @@ export const nextPasId = (
             'passage',
             passages[curIndex].id
           ) as Passage;
-          if (!isPassageTypeRecord(passRec?.attributes?.reference)) {
+          if (!isPublishingTitle(passRec?.attributes?.reference, false)) {
             pasId = passRec?.keys?.remoteId || passRec?.id;
             break;
           }

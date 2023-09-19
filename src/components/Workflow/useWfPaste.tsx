@@ -3,6 +3,7 @@ import {
   IScriptureTableStrings,
   IwfKind,
   IWorkflow,
+  WorkflowLevel,
 } from '../../model';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { currentDateTime } from '../../utils/currentDateTime';
@@ -31,11 +32,11 @@ export const useWfPaste = (props: IProps) => {
   const { getOrganizedBy } = useOrganizedBy();
 
   const isBlankOrValidNumber = (value: string): boolean => {
-    return /^[0-9]*$/.test(value);
+    return /^\s*-?\d*\.?\d*$/.test(value);
   };
 
   const isValidNumber = (value: string): boolean => {
-    return /^[0-9]+$/.test(value);
+    return /^-?\d*\.?\d+$/.test(value);
   };
 
   const validTable = (rows: string[][]) => {
@@ -141,11 +142,11 @@ export const useWfPaste = (props: IProps) => {
             } else wf[c] = val;
           });
           if (wf.passageSeq) {
-            wf.level = flat ? 0 : 1;
+            wf.level = WorkflowLevel.Passage;
             wf.kind = flat ? IwfKind.SectionPassage : IwfKind.Passage;
             wf.mediaShared = shared ? IMediaShare.None : IMediaShare.NotPublic;
           } else {
-            wf.level = 0;
+            wf.level = WorkflowLevel.Section;
             wf.kind = flat ? IwfKind.SectionPassage : IwfKind.Section;
             if (wf.passageSeq === undefined) {
               wf.passageSeq = 1;

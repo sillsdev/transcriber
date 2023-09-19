@@ -19,9 +19,10 @@ import { usePassageNavigate } from './usePassageNavigate';
 import { PassageTypeEnum } from '../../model/passageType';
 import {
   passageTypeFromRef,
-  isPassageTypeRecord,
+  isPublishingTitle,
   refRender,
 } from '../../control/RefRender';
+import { RecordIdentity } from '@orbit/data';
 
 interface StyledBoxProps extends BoxProps {
   width?: number;
@@ -78,34 +79,39 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
   };
 
   useEffect(() => {
-    const passages = related(section, 'passages') as Passage[];
-    if (Array.isArray(passages)) {
+    const passageids = related(section, 'passages') as RecordIdentity[];
+    if (Array.isArray(passageids)) {
+      const passages = passageids.map(
+        (p) => findRecord(memory, 'passage', p.id) as Passage
+      );
       var newCount = 0;
       marks.current = [];
-      passages.forEach((p, i) => {
-        const passRec = findRecord(memory, 'passage', p.id) as Passage;
-        const psgType = passageTypeFromRef(passRec?.attributes?.reference);
-        if (!isPassageTypeRecord(passRec?.attributes?.reference)) {
-          newCount++;
-          let reference: React.ReactNode = '';
-          if (psgType === PassageTypeEnum.PASSAGE) {
-            reference = passageRefText(passRec, allBookData);
-            if ((reference as string).length === 0)
-              reference = `${section?.attributes?.sequencenum}.${
-                passRec?.attributes?.sequencenum || 1
-              }`;
-          } else {
-            reference = refRender(passRec?.attributes?.reference);
+      passages
+        .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum)
+        .forEach((p, i) => {
+          const psgType = passageTypeFromRef(p.attributes?.reference, false);
+          if (!isPublishingTitle(p.attributes?.reference, false)) {
+            newCount++;
+            let reference: React.ReactNode = '';
+            if (psgType === PassageTypeEnum.PASSAGE) {
+              reference = passageRefText(p, allBookData);
+              if ((reference as string).length === 0)
+                reference = `${section?.attributes?.sequencenum}.${
+                  p.attributes?.sequencenum || 1
+                }`;
+            } else {
+              //must be a note
+              reference = refRender(p.attributes?.reference, false);
+            }
+            if (marks.current.findIndex((m) => m.label === reference) > -1)
+              reference += '#' + p.attributes?.sequencenum.toString();
+            marks.current.push({
+              value: i,
+              label: reference,
+              id: p.id,
+            });
           }
-          if (marks.current.findIndex((m) => m.label === reference) > -1)
-            reference += '#' + passRec?.attributes?.sequencenum.toString();
-          marks.current.push({
-            value: i,
-            label: reference,
-            id: passRec.id,
-          });
-        }
-      });
+        });
       if (passageCount !== newCount) setPassageCount(newCount);
       const newSize = newCount > 1 ? 48 : 0;
       if (chooserSize !== newSize) setChooserSize(newSize);

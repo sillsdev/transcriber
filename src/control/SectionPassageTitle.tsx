@@ -42,7 +42,7 @@ export const SectionPassageTitle = (props: IProps) => {
         >
           {sectionDescription(section, passNum)}
           {refDelim}
-          {PassageReference(passage, allBookData)}
+          {PassageReference(passage, allBookData, isFlat)}
         </Typography>
       </Grid>
     </GridRoot>

@@ -9,86 +9,86 @@ import {
   AltBookIcon,
   // NoteIcon,
 } from './PlanIcons';
-import {
-  passageTypeFromRef,
-  isPassageTypeRecord,
-  refRender,
-} from './RefRender';
+import { passageTypeFromRef, isPublishingTitle, refRender } from './RefRender';
 
 describe('passageTypeFromRef', () => {
   // Returns the correct passage type when a valid reference value is provided.
   it('should return the correct passage type when a valid reference value is provided', () => {
     // Test case 1: ref starts with 'BOOK'
-    expect(passageTypeFromRef('BOOK')).toBe(PassageTypeEnum.BOOK);
+    expect(passageTypeFromRef('BOOK', false)).toBe(PassageTypeEnum.BOOK);
 
     // Test case 2: ref starts with 'CHNUM'
-    expect(passageTypeFromRef('CHNUM 12')).toBe(PassageTypeEnum.CHAPTERNUMBER);
+    expect(passageTypeFromRef('CHNUM 12', false)).toBe(
+      PassageTypeEnum.CHAPTERNUMBER
+    );
 
     // Test case 3: ref starts with 'TITLE'
-    expect(passageTypeFromRef('TITLE')).toBe(PassageTypeEnum.TITLE);
+    expect(passageTypeFromRef('TITLE', false)).toBe(PassageTypeEnum.TITLE);
 
     // Test case 4: ref starts with 'ALTBK'
-    expect(passageTypeFromRef('ALTBK')).toBe(PassageTypeEnum.ALTBOOK);
+    expect(passageTypeFromRef('ALTBK', false)).toBe(PassageTypeEnum.ALTBOOK);
 
     // Test case 5: ref starts with 'NOTE'
-    expect(passageTypeFromRef('NOTE Devotional')).toBe(PassageTypeEnum.NOTE);
+    expect(passageTypeFromRef('NOTE Devotional', false)).toBe(
+      PassageTypeEnum.NOTE
+    );
 
     // Test case 6: ref starts with 'MOVE'
-    expect(passageTypeFromRef('MOVE')).toBe(PassageTypeEnum.MOVEMENT);
+    expect(passageTypeFromRef('MOVE', false)).toBe(PassageTypeEnum.MOVEMENT);
   });
   // Returns the default passage type 'PASSAGE' for a reference value that does not match any passage type.
   it('should return the default passage type `PASSAGE` when the reference value does not match any passage type', () => {
     // Test case 1: ref is undefined
-    expect(passageTypeFromRef()).toBe(PassageTypeEnum.PASSAGE);
+    expect(passageTypeFromRef('', true)).toBe(PassageTypeEnum.PASSAGE);
 
     // Test case 2: ref is an empty string
-    expect(passageTypeFromRef('')).toBe(PassageTypeEnum.PASSAGE);
+    expect(passageTypeFromRef('', false)).toBe(PassageTypeEnum.PASSAGE);
 
     // Test case 3: ref does not match any passage type
-    expect(passageTypeFromRef('ABC')).toBe(PassageTypeEnum.PASSAGE);
+    expect(passageTypeFromRef('ABC', false)).toBe(PassageTypeEnum.PASSAGE);
   });
 });
 
-describe('isPassageTypeRecord', () => {
+describe('isPublishingTitle', () => {
   // Returns true for a valid book reference.
   it('should return true when the reference is a valid book reference', () => {
-    expect(isPassageTypeRecord('BOOK')).toBe(true);
+    expect(isPublishingTitle('BOOK', false)).toBe(true);
   });
   // Returns true for a valid chapter number reference.
   it('should return true when the reference is a valid chapter number', () => {
-    expect(isPassageTypeRecord('CHNUM')).toBe(true);
+    expect(isPublishingTitle('CHNUM', false)).toBe(true);
   });
 
   // Returns true for a valid title reference.
   it('should return true when the reference is a valid title reference', () => {
-    expect(isPassageTypeRecord('TITLE')).toBe(true);
+    expect(isPublishingTitle('TITLE', false)).toBe(true);
   });
 
   // Returns true for a valid alternate book reference.
   it('should return true when the reference is a valid alternate book reference', () => {
-    expect(isPassageTypeRecord('ALTBK')).toBe(true);
+    expect(isPublishingTitle('ALTBK', false)).toBe(true);
   });
 
   // Returns false for a valid note reference.
   it('should return false when given a valid note reference', () => {
-    expect(isPassageTypeRecord('NOTE Devotional')).toBe(false);
+    expect(isPublishingTitle('NOTE Devotional', false)).toBe(false);
   });
 
   // Returns false for a valid passage reference.
   it('should return false when given a valid passage reference', () => {
-    expect(isPassageTypeRecord('1:1-4')).toBe(false);
+    expect(isPublishingTitle('1:1-4', false)).toBe(false);
   });
 });
 
 describe('refRender', () => {
   // Returns the corresponding icon component based on the passage type.
   it('should return the corresponding icon component based on the passage type', () => {
-    expect(refRender(PassageTypeEnum.MOVEMENT)).toBe(MovementIcon);
+    expect(refRender(PassageTypeEnum.MOVEMENT, false)).toBe(MovementIcon);
     // expect(refRender(PassageTypeEnum.CHAPTERNUMBER)).toBe(ChapterNumberIcon);
-    expect(refRender(PassageTypeEnum.TITLE)).toBe(TitleIcon);
-    expect(refRender(PassageTypeEnum.BOOK)).toBe(BookIcon);
-    expect(refRender(PassageTypeEnum.ALTBOOK)).toBe(AltBookIcon);
+    expect(refRender(PassageTypeEnum.TITLE, false)).toBe(TitleIcon);
+    expect(refRender(PassageTypeEnum.BOOK, false)).toBe(BookIcon);
+    expect(refRender(PassageTypeEnum.ALTBOOK, false)).toBe(AltBookIcon);
     // expect(refRender(PassageTypeEnum.NOTE)).toEqual(NoteIcon);
-    expect(refRender('1:1-4')).toBe('1:1-4');
+    expect(refRender('1:1-4', false)).toBe('1:1-4');
   });
 });

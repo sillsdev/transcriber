@@ -25,7 +25,7 @@ import {
 } from '../model';
 import { OptionType } from '../model';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import {
   related,
   useFlatAdd,
@@ -44,6 +44,7 @@ import {
   useLoadProjectData,
   useProjectType,
   isPersonalTeam,
+  findRecord,
 } from '../crud';
 import {
   cardsSelector,
@@ -323,8 +324,17 @@ const TeamProvider = withData(mapRecordsToProps)(
     };
 
     const projectSections = (plan: Plan) => {
-      const sectionIds: string[] | null = related(plan, 'sections');
-      return sectionIds ? sectionIds.length.toString() : '<na>';
+      const sectionIds: RecordIdentity[] | null = related(plan, 'sections');
+      if (!sectionIds) return '<na>';
+      const sections = sectionIds.map(
+        (s) => findRecord(memory, 'section', s.id) as Section
+      );
+      var num = sections.filter(
+        (s) =>
+          s.attributes?.sequencenum > 0 &&
+          Math.floor(s.attributes.sequencenum) === s.attributes.sequencenum
+      ).length;
+      return num > 0 ? num.toString() : '<na>';
     };
 
     const getProject = (plan: Plan) => {

@@ -32,7 +32,7 @@ import { withData } from 'react-orbitjs';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
-import { Box, Link } from '@mui/material';
+import { Badge, Box, Link } from '@mui/material';
 import { useSnackBar } from '../../hoc/SnackBar';
 import PlanSheet, { ICellChange } from './PlanSheet';
 import {
@@ -90,10 +90,7 @@ import { ISTFilterState } from './filterMenu';
 import { useProjectDefaults } from '../../crud/useProjectDefaults';
 import { sharedResourceSelector } from '../../selector';
 import { PassageTypeEnum } from '../../model/passageType';
-import {
-  passageTypeFromRef,
-  isPassageTypeRecord,
-} from '../../control/RefRender';
+import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
 
 const SaveWait = 500;
 
@@ -295,7 +292,7 @@ export function ScriptureTable(
     workflowRef.current = wf;
     setWorkflowx(wf);
     var anyPublishing = Boolean(
-      wf.find((w) => isPassageTypeRecord(w.reference ?? ''))
+      wf.find((w) => isPublishingTitle(w.reference ?? '', flat))
     );
     if (defaultFilterState.canHidePublishing !== anyPublishing)
       setDefaultFilterState({
@@ -737,7 +734,7 @@ export function ScriptureTable(
         const value = name === 'book' ? findBook(c.value as string) : c.value;
         var passageType =
           name === 'reference'
-            ? passageTypeFromRef(c.value as string)
+            ? passageTypeFromRef(c.value as string, flat)
             : wf?.passageType;
 
         workflow[i] = {
@@ -1108,7 +1105,7 @@ export function ScriptureTable(
   }, [plan, sections, passages, mediafiles, flat, shared, orgSteps, lastSaved]);
 
   interface ILocal {
-    [key: string]: string;
+    [key: string]: any;
   }
 
   // Reset column widths based on sheet content
@@ -1166,7 +1163,7 @@ export function ScriptureTable(
             allMyPassagesArePublishing;
             ix++
           ) {
-            if (!isPassageTypeRecord(workflowRef.current[ix].reference)) {
+            if (!isPublishingTitle(workflowRef.current[ix].reference, flat)) {
               allMyPassagesArePublishing = false;
             }
           }
@@ -1209,7 +1206,7 @@ export function ScriptureTable(
 
       let newRow = {
         level: WorkflowLevel.Book,
-        kind: flat ? IwfKind.SectionPassage : IwfKind.Section,
+        kind: IwfKind.Section,
         sectionSeq: sequencenum,
         passageSeq: 0,
         reference: PassageTypeEnum.BOOK,
@@ -1219,18 +1216,6 @@ export function ScriptureTable(
       return addPassageTo(WorkflowLevel.Book, newwf, PassageTypeEnum.BOOK);
     };
     const AddAltBook = (newwf: IWorkflow[]) => {
-      if (flat) {
-        const sequencenum = -3;
-        let newRow = {
-          level: WorkflowLevel.Book,
-          kind: IwfKind.SectionPassage,
-          sectionSeq: sequencenum,
-          passageSeq: 0,
-          reference: PassageTypeEnum.ALTBOOK,
-          title: '',
-        } as IWorkflow;
-        newwf = newwf.concat([newRow]);
-      }
       return addPassageTo(WorkflowLevel.Book, newwf, PassageTypeEnum.ALTBOOK);
     };
 
@@ -1247,15 +1232,6 @@ export function ScriptureTable(
 
     const addChapterNumber = (newwf: IWorkflow[], chapter: number) => {
       const title = chapterNumberTitle(chapter);
-      if (flat) {
-        let newRow = newSection(
-          WorkflowLevel.Section,
-          newwf,
-          undefined,
-          PassageTypeEnum.CHAPTERNUMBER
-        );
-        newwf = newwf.concat([newRow]);
-      }
       return addPassageTo(
         WorkflowLevel.Section,
         newwf,
@@ -1266,13 +1242,7 @@ export function ScriptureTable(
       );
     };
     const addTitle = (newwf: IWorkflow[], row: number) => {
-      if (flat)
-        newwf = newwf.concat([newSection(WorkflowLevel.Section, newwf)]);
-      return addPassageTo(
-        flat ? WorkflowLevel.Section : WorkflowLevel.Passage,
-        newwf,
-        PassageTypeEnum.TITLE
-      );
+      return addPassageTo(WorkflowLevel.Passage, newwf, PassageTypeEnum.TITLE);
     };
     const startChapter = (w: IWorkflow) =>
       (w.passage && w.passage.attributes.startChapter) ??
@@ -1292,71 +1262,44 @@ export function ScriptureTable(
       //otherwise we want it as the first passage in the section
       if (isSectionRow(w)) {
         nextpsg = 0;
-        if (isPassageRow(w)) {
-          //flat and this is a vernacular...
-          if (w.passageType === PassageTypeEnum.PASSAGE && !w.deleted) {
-            //do we need a chapter number? check our new one
-            if (chapterChanged(w)) {
-              if (!isKind(index - 2, PassageTypeEnum.CHAPTERNUMBER)) {
-                newworkflow = addChapterNumber(newworkflow, startChapter(w));
-              }
-              currentChapter = startChapter(w);
+
+        //copy the section
+        //we won't change sequence numbers on hierarchical
+        newworkflow = newworkflow.concat([{ ...w }]);
+        //do I need a chapter number?
+        var vernpsg = workflow.findIndex(
+          (r) =>
+            !r.deleted &&
+            r.passageType === PassageTypeEnum.PASSAGE &&
+            r.sectionSeq === w.sectionSeq &&
+            r.passageSeq > 0
+        );
+        if (vernpsg > 0 && chapterChanged(workflow[vernpsg])) {
+          var check = index;
+          var gotit = false;
+          while (check++ < vernpsg) {
+            if (isKind(check, PassageTypeEnum.CHAPTERNUMBER)) {
+              gotit = true;
             }
-            //do we have a title right before us?
-            if (!isKind(index - 1, PassageTypeEnum.TITLE))
-              newworkflow = addTitle(newworkflow, index);
           }
-          //copy this row now
-          var nextSect = nextSecSequence(newworkflow);
-          newworkflow = newworkflow.concat([
-            {
-              ...w,
-              sectionSeq: nextSect,
-              sectionUpdated:
-                nextSect === w.sectionSeq
-                  ? w.sectionUpdated
-                  : currentDateTime(),
-            },
-          ]);
-        } else {
-          //copy the section
-          //we won't change sequence numbers on hierarchical
-          newworkflow = newworkflow.concat([{ ...w }]);
-          //do I need a chapter number?
-          var vernpsg = workflow.findIndex(
-            (r) =>
-              !r.deleted &&
-              r.passageType === PassageTypeEnum.PASSAGE &&
-              r.sectionSeq === w.sectionSeq &&
-              r.passageSeq > 0
-          );
-          if (vernpsg > 0 && chapterChanged(workflow[vernpsg])) {
-            var check = index;
-            var gotit = false;
-            while (check++ < vernpsg) {
-              if (isKind(check, PassageTypeEnum.CHAPTERNUMBER)) {
-                gotit = true;
-              }
-            }
-            if (!gotit) {
-              newworkflow = addChapterNumber(
-                newworkflow,
-                startChapter(workflow[vernpsg])
-              );
-              nextpsg += 0.01;
-            }
-            currentChapter = startChapter(workflow[vernpsg]);
-          }
-          //see if my first or second passage is a title - first might be chap number
-          if (
-            !isKind(index + 1, PassageTypeEnum.BOOK) &&
-            !isKind(index + 1, PassageTypeEnum.ALTBOOK) &&
-            !isKind(index + 1, PassageTypeEnum.TITLE) &&
-            !isKind(index + 2, PassageTypeEnum.TITLE)
-          ) {
-            newworkflow = addTitle(newworkflow, index);
+          if (!gotit) {
+            newworkflow = addChapterNumber(
+              newworkflow,
+              startChapter(workflow[vernpsg])
+            );
             nextpsg += 0.01;
           }
+          currentChapter = startChapter(workflow[vernpsg]);
+        }
+        //see if my first or second passage is a title - first might be chap number
+        if (
+          !isKind(index + 1, PassageTypeEnum.BOOK) &&
+          !isKind(index + 1, PassageTypeEnum.ALTBOOK) &&
+          !isKind(index + 1, PassageTypeEnum.TITLE) &&
+          !isKind(index + 2, PassageTypeEnum.TITLE)
+        ) {
+          newworkflow = addTitle(newworkflow, index);
+          nextpsg += 0.01;
         }
       } //just a passage
       else {
@@ -1395,11 +1338,35 @@ export function ScriptureTable(
     var totalSections = new Set(
       workflow.filter((w) => !w.deleted).map((w) => w.sectionSeq)
     ).size;
+    var regularSections = new Set(
+      workflow
+        .filter(
+          (w) =>
+            !w.deleted &&
+            w.sectionSeq > 0 &&
+            Math.floor(w.sectionSeq) === w.sectionSeq
+        )
+        .map((w) => w.sectionSeq)
+    ).size;
     var filtered = workflow.filter((w) => !w.deleted && !w.filtered);
     var showingSections = new Set(filtered.map((w) => w.sectionSeq)).size;
     if (showingSections < totalSections) {
-      local.sectionSeq =
-        organizedBy + ' (' + showingSections + '/' + totalSections + ')';
+      local.sectionSeq = (
+        <Badge
+          badgeContent=" "
+          variant="dot"
+          color="secondary"
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+        >
+          {organizedBy +
+            (showingSections < regularSections
+              ? ' (' + showingSections + '/' + regularSections + ')'
+              : '')}
+        </Badge>
+      );
     }
     return filtered;
     // eslint-disable-next-line react-hooks/exhaustive-deps

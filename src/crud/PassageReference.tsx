@@ -4,16 +4,17 @@ import { passageBook } from './passage';
 
 export const PassageReference = (
   passage: Passage,
-  bookData: BookName[] = []
+  bookData: BookName[] = [],
+  flat: boolean
 ) => {
   const book = passageBook(passage, bookData);
   return book ? (
     <>
       {book}
       {`\u00A0`}
-      {refRender(passage?.attributes?.reference)}
+      {refRender(passage?.attributes?.reference, flat)}
     </>
   ) : (
-    <>{refRender(passage?.attributes?.reference)}</>
+    <>{refRender(passage?.attributes?.reference, flat)}</>
   );
 };
