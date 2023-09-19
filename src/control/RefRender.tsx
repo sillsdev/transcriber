@@ -8,16 +8,16 @@ import {
   MovementIcon,
 } from './PlanIcons';
 
-export const passageTypeFromRef = (ref?: string) => {
-  if (!ref) return PassageTypeEnum.PASSAGE;
+export const passageTypeFromRef = (ref?: string, flat?: boolean) => {
+  if (flat || !ref) return PassageTypeEnum.PASSAGE;
   var arr = Object.values(PassageTypeEnum).filter((v) => ref.startsWith(v));
   if (arr.length > 0) return arr[0];
   return PassageTypeEnum.PASSAGE;
 };
 
-export const isPassageTypeRecord = (ref?: string) =>
-  passageTypeFromRef(ref) !== PassageTypeEnum.PASSAGE &&
-  passageTypeFromRef(ref) !== PassageTypeEnum.NOTE;
+export const isPublishingTitle = (ref?: string, flat?: boolean) =>
+  passageTypeFromRef(ref, flat) !== PassageTypeEnum.PASSAGE &&
+  passageTypeFromRef(ref, flat) !== PassageTypeEnum.NOTE;
 
 const typeAndArg = (val: string, len: number, icon: JSX.Element) =>
   val.length > len + 1 ? (
@@ -30,8 +30,16 @@ const typeAndArg = (val: string, len: number, icon: JSX.Element) =>
     icon
   );
 
-export const refRender = (value: any) => {
-  const pt = passageTypeFromRef(value);
+/**
+ * Determines the passage type based on the input value and returns the
+ * corresponding icon component.
+ *
+ * @param value - The value used to determine the passage type.
+ * @returns The corresponding icon component based on the passage type.
+ */
+export const refRender = (value: any, flat: boolean) => {
+  const pt = passageTypeFromRef(value, flat);
+
   switch (pt) {
     case PassageTypeEnum.MOVEMENT:
       return MovementIcon;

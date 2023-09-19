@@ -25,7 +25,7 @@ export const passageRow = (
     id: passage.id,
     sectionId: section.id,
     sectionDesc: getSection([section]),
-    reference: getReference([passage], allBookData),
+    reference: getReference([passage], allBookData, false),
     attached: isAttached(passage, media) ? StatusL.Yes : StatusL.No,
     sort: `${pad(section.attributes.sequencenum)}.${pad(
       passage.attributes.sequencenum

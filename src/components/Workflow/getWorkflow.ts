@@ -16,10 +16,7 @@ import { getStepComplete } from '../../crud';
 import { toCamel } from '../../utils';
 import { ISTFilterState } from './filterMenu';
 import { PassageTypeEnum } from '../../model/passageType';
-import {
-  passageTypeFromRef,
-  isPassageTypeRecord,
-} from '../../control/RefRender';
+import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
 
 const wfSectionUpdate = (item: IWorkflow, rec: IWorkflow) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -115,7 +112,8 @@ export const isPassageFiltered = (
   return (
     !filterState.disabled &&
     ((filterState.hideDone && w.stepId === doneStepId) ||
-      (filterState.hidePublishing && isPassageTypeRecord(w.reference)) ||
+      (filterState.hidePublishing &&
+        isPublishingTitle(w.reference, w.kind === IwfKind.SectionPassage)) ||
       (filterState.assignedToMe && w.discussionCount === 0) ||
       (filterState.maxStep &&
         w.stepId &&
@@ -195,7 +193,7 @@ export const getWorkflow = (
         item.comment = passAttr.title;
         item.passageUpdated = passage.attributes.dateUpdated;
         item.passage = passage;
-        item.passageType = passageTypeFromRef(passAttr.reference);
+        item.passageType = passageTypeFromRef(passAttr.reference, flat);
         item.sharedResourceId = related(passage, 'sharedResource');
         const mediaRec = getVernacularMediaRec(passage.id, memory);
         item.mediaId = mediaRec

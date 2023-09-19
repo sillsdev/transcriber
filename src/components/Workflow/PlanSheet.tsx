@@ -56,7 +56,7 @@ import { PassageTypeEnum } from '../../model/passageType';
 import {
   refRender,
   passageTypeFromRef,
-  isPassageTypeRecord,
+  isPublishingTitle,
 } from '../../control/RefRender';
 
 const MemoizedTaskAvatar = memo(TaskAvatar);
@@ -403,7 +403,7 @@ export function PlanSheet(props: IProps) {
     return cell.className?.substring(0, 4) === 'book' && bookMap
       ? bookMap[cell.value]
       : cell.className?.includes('ref')
-      ? refRender(cell.value)
+      ? refRender(cell.value, inlinePassages)
       : cell.className?.includes('num')
       ? cell.value < 0 || Math.floor(cell.value) !== cell.value
         ? ''
@@ -624,7 +624,8 @@ export function PlanSheet(props: IProps) {
 
   const refErrTest = (ref: any) =>
     typeof ref !== 'string' ||
-    (!refMatch(ref) && passageTypeFromRef(ref) === PassageTypeEnum.PASSAGE);
+    (!refMatch(ref) &&
+      passageTypeFromRef(ref, inlinePassages) === PassageTypeEnum.PASSAGE);
 
   useEffect(() => {
     if (rowData.length !== rowInfo.length) {
@@ -672,7 +673,7 @@ export function PlanSheet(props: IProps) {
           return [
             {
               value: passage &&
-                !isPassageTypeRecord(row[refCol].toString()) && (
+                !isPublishingTitle(row[refCol].toString(), inlinePassages) && (
                   <Badge
                     badgeContent={rowInfo[rowIndex].discussionCount}
                     color="secondary"
@@ -784,7 +785,10 @@ export function PlanSheet(props: IProps) {
                       !readonly && filtered ? disableFilter : undefined
                     }
                     onNote={
-                      !readonly && !filtered && !isTitle(rowIndex + 1)
+                      !readonly &&
+                      !filtered &&
+                      !inlinePassages &&
+                      !isTitle(rowIndex + 1)
                         ? onNote
                         : undefined
                     }
@@ -802,6 +806,7 @@ export function PlanSheet(props: IProps) {
                     onMovementAbove={
                       !readonly &&
                       !filtered &&
+                      !inlinePassages &&
                       rowInfo.length > 0 &&
                       section &&
                       !book
@@ -1003,7 +1008,9 @@ export function PlanSheet(props: IProps) {
                   onSectionEnd={!filtered ? onSectionEnd : undefined}
                   onDisableFilter={filtered ? disableFilter : undefined}
                   onPublishing={
-                    !readonly && !filtered ? onPublishing : undefined
+                    !readonly && !filtered && !inlinePassages
+                      ? onPublishing
+                      : undefined
                   }
                 />
                 <AltButton
