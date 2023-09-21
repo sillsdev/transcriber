@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo, memo, FC } from 'react';
 import { IPlanActionsStrings, IMediaShare } from '../../model';
 import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
 import PauseIcon from '@mui/icons-material/Pause';
@@ -35,25 +35,27 @@ interface IProps {
   onHistory: (i: number) => () => void;
 }
 
-export function PlanAudioActions(props: IProps) {
+interface FcProps extends IProps {
+  disabled: boolean;
+  t: IPlanActionsStrings;
+}
+
+const Actions: FC<FcProps> = memo((props: FcProps) => {
   const {
     rowIndex,
     isPassage,
-    mediaId,
     mediaShared,
-    onPlayStatus,
     onHistory,
+    onPlayStatus,
+    mediaId,
     isPlaying,
+    disabled,
+    t,
   } = props;
-  const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
 
   const handlePlayStatus = () => () => {
     onPlayStatus(mediaId);
   };
-
-  const disabled = useMemo(() => {
-    return (mediaId || '') === '';
-  }, [mediaId]);
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -88,5 +90,16 @@ export function PlanAudioActions(props: IProps) {
       )}
     </Box>
   );
+});
+
+export function PlanAudioActions(props: IProps) {
+  const { mediaId } = props;
+  const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
+
+  const disabled = useMemo(() => {
+    return (mediaId || '') === '';
+  }, [mediaId]);
+
+  return <Actions {...props} disabled={disabled} t={t} />;
 }
 export default PlanAudioActions;

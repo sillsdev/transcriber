@@ -1,20 +1,26 @@
+import { FC } from 'react';
 import { BookName, Passage } from '../model';
 import { PassageReference } from './PassageReference';
 import { passageNumber } from './passage';
 
-export const PassageDescription = (
-  passage: Passage,
-  bookData: BookName[] = [],
-  flat:boolean
-) => {
+interface IProps {
+  passage: Passage;
+  bookData: BookName[];
+  flat: boolean;
+}
+export const PassageDescription: FC<IProps> = ({
+  passage,
+  bookData = [],
+  flat,
+}: IProps) => {
   const num = passageNumber(passage);
   return num ? (
     <>
       {num}
       {'\u00A0\u00A0'}
-      {PassageReference(passage, bookData, flat)}
+      <PassageReference passage={passage} bookData={bookData} flat={flat} />
     </>
   ) : (
-    <>{PassageReference(passage, bookData, flat)}</>
+    <PassageReference passage={passage} bookData={bookData} flat={flat} />
   );
 };

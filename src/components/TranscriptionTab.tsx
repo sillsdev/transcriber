@@ -532,7 +532,13 @@ export function TranscriptionTab(
             if (!isPublishingTitle(passage?.attributes?.reference, flat)) {
               rowData.push({
                 id: passage.id,
-                name: PassageReference(passage, bookData, flat),
+                name: (
+                  <PassageReference
+                    passage={passage}
+                    bookData={bookData}
+                    flat={flat}
+                  />
+                ),
                 state: state,
                 planName: planRec.attributes.name,
                 editor: '',

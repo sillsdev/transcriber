@@ -1,7 +1,7 @@
 import { MediaFile, Passage, Section, BookName } from '../../model';
 import { related } from '../../crud';
 import { refMatch } from '../../utils';
-import { IPRow, getSection, getReference, isAttached, pad } from '.';
+import { IPRow, getSection, GetReference, isAttached, pad } from '.';
 
 enum StatusL {
   No = 'N',
@@ -25,7 +25,9 @@ export const passageRow = (
     id: passage.id,
     sectionId: section.id,
     sectionDesc: getSection([section]),
-    reference: getReference([passage], allBookData, false),
+    reference: (
+      <GetReference passage={[passage]} bookData={allBookData} flat={false} />
+    ),
     attached: isAttached(passage, media) ? StatusL.Yes : StatusL.No,
     sort: `${pad(section.attributes.sequencenum)}.${pad(
       passage.attributes.sequencenum

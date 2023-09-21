@@ -54,10 +54,11 @@ import {
 import { useSelector, shallowEqual } from 'react-redux';
 import { PassageTypeEnum } from '../../model/passageType';
 import {
-  refRender,
+  RefRender,
   passageTypeFromRef,
   isPublishingTitle,
 } from '../../control/RefRender';
+import React from 'react';
 
 const MemoizedTaskAvatar = memo(TaskAvatar);
 
@@ -405,8 +406,6 @@ export function PlanSheet(props: IProps) {
   const handleValueRender = (cell: ICell) => {
     return cell.className?.substring(0, 4) === 'book' && bookMap
       ? bookMap[cell.value]
-      : cell.className?.includes('ref')
-      ? refRender(cell.value, inlinePassages)
       : cell.className?.includes('num')
       ? cell.value < 0 || Math.floor(cell.value) !== cell.value
         ? ''
@@ -598,7 +597,7 @@ export function PlanSheet(props: IProps) {
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowInfo, sheetRef, toRow]);
+  }, [rowInfo, toRow]);
 
   useEffect(() => {
     changedRef.current = isChanged(toolId);
@@ -740,6 +739,25 @@ export function PlanSheet(props: IProps) {
                       className: 'book ' + calcClassName,
                       dataEditor: bookEditor,
                     }
+                  : cellIndex === refCol
+                  ? {
+                      value:
+                        passageTypeFromRef(e as string, inlinePassages) !==
+                        PassageTypeEnum.PASSAGE ? (
+                          <RefRender
+                            value={e as string}
+                            flat={inlinePassages}
+                          />
+                        ) : (
+                          e
+                        ),
+                      readOnly:
+                        readonly ||
+                        passageTypeFromRef(e as string, inlinePassages) !==
+                          PassageTypeEnum.PASSAGE,
+                      className:
+                        calcClassName + ' ref' + (refErrTest(e) ? 'Err' : ''),
+                    }
                   : {
                       value: e,
                       readOnly:
@@ -755,11 +773,7 @@ export function PlanSheet(props: IProps) {
                         (cellIndex === SectionSeqCol ||
                         cellIndex === PassageSeqCol
                           ? 'num '
-                          : '') +
-                        calcClassName +
-                        ((passage || movement) && refCol && refCol === cellIndex
-                          ? ' ref' + (refErrTest(e) ? 'Err' : '')
-                          : ''),
+                          : '') + calcClassName,
                     };
               })
             )
