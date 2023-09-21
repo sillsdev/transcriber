@@ -756,7 +756,8 @@ export function PlanSheet(props: IProps) {
                         passageTypeFromRef(e as string, inlinePassages) !==
                           PassageTypeEnum.PASSAGE,
                       className:
-                        calcClassName + ' ref' + (refErrTest(e) ? 'Err' : ''),
+                        calcClassName +
+                        (passage ? ' ref' + (refErrTest(e) ? 'Err' : '') : ''),
                     }
                   : {
                       value: e,
