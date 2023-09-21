@@ -172,6 +172,7 @@ interface IProps {
     i?: number,
     ptype?: PassageTypeEnum
   ) => void;
+  toggleSectionPublish: (i: number) => void;
   onPublishing: () => void;
   lookupBook: (book: string) => string;
   resequence: () => void;
@@ -213,6 +214,7 @@ export function PlanSheet(props: IProps) {
     onPassageDetail,
     onFilterChange,
     onPublishing,
+    toggleSectionPublish,
   } = props;
   const ctx = useContext(PlanContext);
   const { projButtonStr, connected, readonly } = ctx.state;
@@ -309,6 +311,10 @@ export function PlanSheet(props: IProps) {
 
   const handleSave = () => {
     startSave();
+  };
+
+  const onPublish = () => {
+    toggleSectionPublish(currentRow - 1);
   };
 
   const onMovementAbove = () => {
@@ -785,6 +791,7 @@ export function PlanSheet(props: IProps) {
                     isSection={section}
                     isPassage={passage}
                     psgType={rowInfo[rowIndex].passageType}
+                    published={rowInfo[rowIndex].published}
                     organizedBy={organizedBy}
                     sectionSequenceNumber={row[SectionSeqCol].toString()}
                     passageSequenceNumber={row[PassageSeqCol].toString()}
@@ -800,6 +807,16 @@ export function PlanSheet(props: IProps) {
                     active={active - 1 === rowIndex}
                     onDisableFilter={
                       !readonly && filtered ? disableFilter : undefined
+                    }
+                    onPublish={
+                      !readonly &&
+                      !inlinePassages &&
+                      rowInfo.length > 0 &&
+                      section &&
+                      !book &&
+                      !movement
+                        ? onPublish
+                        : undefined
                     }
                     onNote={
                       !readonly &&

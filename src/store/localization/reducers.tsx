@@ -905,6 +905,7 @@ const initialState = {
 			"passageToPrevSection": "Move Passage to Previous Section",
 			"passageToNextSection": "Move Passage to Next Section",
 			"pasting": "Pasting",
+			"publish": "Publish {0} {1}",
 			"refErr": "This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)",
 			"resequence": "Resequence",
 			"save": "Save",
@@ -915,6 +916,7 @@ const initialState = {
 			"selectRows": "Please select row(s) to {0}.",
 			"step": "Step",
 			"tablePaste": "Paste Spreadsheet",
+			"unpublish": "Unpublish {0} {1}",
 			"useCtrlV": "Select a column head and use CTRL-V to append table rows.",
 		}
 	}),

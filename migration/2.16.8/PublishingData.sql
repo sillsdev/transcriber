@@ -99,13 +99,56 @@ alter table organizations add bibleid text; --ENGCSV
 alter table organizations add iso text;
 alter table organizations add isomediafileid int;
 alter table organizations add biblemediafileid int;
+alter table organizations add anypublished bool default false;
 
+CREATE OR REPLACE FUNCTION public.publish_trigger()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+declare 
+	org record;
+	myorg cursor
+		for
+		SELECT *
+		FROM public.organizations
+		where id = (select organizationid from projects p inner join plans pl on pl.projectid = p.id where pl.id = new.planid)
+		for UPDATE;
+begin
+	RAISE NOTICE 'here %', new.id; 
+			
+    if new.published = true AND new.published != old.published then
+		open myorg;
+		loop --just so the exit works
+		 	fetch myorg into org;
+				exit when not found;
+			if (org.anypublished = false) then
+			RAISE NOTICE 'update %', new.id; 
+				update organizations 
+				set anypublished = true,
+					dateupdated=current_timestamp, 
+					lastmodifiedorigin='publish' 
+					where current of myorg;
+		
+		 	end if;
+		 	exit; -- just wanted to do the first one
+	 	end loop;
+	 	close myorg;
+	 end if;
+	 return new;
+end;
+$function$
+;
+
+
+create trigger publishtrigger after
+update
+    on
+    public.sections for each row execute function publish_trigger();
 
 CREATE INDEX ix_organizations_bibleid ON public.organizations USING btree (bibleid);
 CREATE INDEX ix_organizations_iso ON public.organizations USING btree (iso);
 ALTER TABLE organizations ADD CONSTRAINT fk_organizations_biblemediafile FOREIGN KEY (biblemediafileid) REFERENCES mediafiles(id) ON DELETE CASCADE;
 ALTER TABLE organizations ADD CONSTRAINT fk_organizations_isomediafile FOREIGN KEY (isomediafileid) REFERENCES mediafiles(id) ON DELETE CASCADE;
-
 
 --there are no default artifact categories for notes
 --delete from artifactcategorys a where note = true;

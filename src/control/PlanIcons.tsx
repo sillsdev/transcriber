@@ -12,6 +12,8 @@ import {
   faBook,
   faBookmark,
   faArchway,
+  faGlobe,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 //things I've tried! faFileAudio, faVolumeHigh,
 import { faMessage } from '@fortawesome/free-regular-svg-icons';
@@ -27,6 +29,24 @@ export const AltBookIcon = <FontAwesomeIcon icon={faBookOpen} />;
 export const ChapterNumberIcon = <FontAwesomeIcon icon={faHashtag} />;
 export const NoteIcon = <FontAwesomeIcon icon={faMessage as IconProp} />;
 export const TitleIcon = <FontAwesomeIcon icon={faBookmark} />;
+
+export const PublishIcon = () => (
+  <StyledIcon size="small">
+    <FontAwesomeIcon icon={faGlobe} />
+  </StyledIcon>
+);
+export const UnPublishIcon = () => (
+  <StyledIcon size="small">
+    <span className="fa-layers fa-fw fa-sm">
+      <FontAwesomeIcon icon={faGlobe} />
+      <FontAwesomeIcon
+        icon={faXmark}
+        transform="grow-3"
+        style={{ color: 'Tomato' }}
+      />
+    </span>
+  </StyledIcon>
+);
 
 export const AddPublishingIcon = () => (
   <StyledIcon size="small">

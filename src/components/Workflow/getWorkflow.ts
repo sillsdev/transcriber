@@ -168,6 +168,7 @@ export const getWorkflow = (
       item.passageSeq = 0;
       item.deleted = false;
       item.filtered = isSectionFiltered(filterState, item.sectionSeq);
+      item.published = section.attributes.published;
       curSection = item.sectionSeq;
     }
     let first = true;

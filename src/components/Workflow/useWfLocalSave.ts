@@ -57,6 +57,7 @@ export const useWfLocalSave = (props: IProps) => {
                 sequencenum: item.sectionSeq,
                 name: item.title || '',
                 level: item.level,
+                published: item.published,
               },
             };
             const t = new TransformBuilder();
@@ -77,6 +78,7 @@ export const useWfLocalSave = (props: IProps) => {
                 name: item.title || '',
                 state: ActivityStates.NoMedia,
                 level: item.level,
+                published: item.published, //or false?
               },
             } as any;
             const t = new TransformBuilder();

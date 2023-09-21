@@ -414,6 +414,7 @@ export const useOfflineSetup = () => {
     if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
       await makeMoreArtifactTypeRecs();
     }
-    await makePassageTypeRecs();
+    if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 5)
+      await makePassageTypeRecs();
   };
 };

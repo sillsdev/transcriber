@@ -552,6 +552,7 @@ export function ScriptureTable(
       sectionSeq: nextSecSequence(wf, i, type),
       passageSeq: 0,
       reference: '',
+      published: false,
     } as IWorkflow;
     let prevRowIdx = i ? i - 1 : wf.length - 1;
     if (prevRowIdx >= 0) newRow.book = wf[prevRowIdx].book;
@@ -1191,6 +1192,19 @@ export function ScriptureTable(
     return workflow[firstbook]?.book ?? '';
   };
 
+  const toggleSectionPublish = (index: number) => {
+    const { wf } = getByIndex(workflow, index);
+    if (wf) {
+      const newwf = [...workflow];
+      newwf[index] = {
+        ...wf,
+        published: !wf.published,
+        sectionUpdated: currentDateTime(),
+      };
+      setWorkflow(newwf);
+      setChanged(true);
+    }
+  };
   const onPublishing = () => {
     const bookTitleIndex = workflow.findIndex(
       (w) => w.passageType === PassageTypeEnum.BOOK
@@ -1423,6 +1437,7 @@ export function ScriptureTable(
         canSetDefault={canSetProjectDefault}
         toolId={toolId}
         onPublishing={onPublishing}
+        toggleSectionPublish={toggleSectionPublish}
       />
       {assignSectionVisible && (
         <AssignSection
