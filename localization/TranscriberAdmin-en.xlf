@@ -4228,6 +4228,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.publish">
+         <segment>
+            <source>Publish {0} {1}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.refErr">
          <segment>
             <source>This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
@@ -4285,6 +4291,12 @@
       <unit id="planSheet.tablePaste">
          <segment>
             <source>Paste Spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.unpublish">
+         <segment>
+            <source>Unpublish {0} {1}</source>
             <target/>
          </segment>
       </unit>

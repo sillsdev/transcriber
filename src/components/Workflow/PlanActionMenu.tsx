@@ -30,6 +30,7 @@ interface IProps {
   isSection: boolean;
   isPassage: boolean;
   psgType: string;
+  published: boolean;
   readonly: boolean;
   canAssign: boolean;
   canDelete: boolean;
@@ -52,6 +53,7 @@ interface IProps {
   onPassageUp?: () => void;
   onPassageDown?: () => void;
   onNote?: () => void;
+  onPublish?: () => void;
 }
 export function PlanActionMenu(props: IProps) {
   const { active } = props;

@@ -27,6 +27,7 @@ interface SaveRec {
   title: string;
   passagetypeId?: string;
   sharedResourceId?: string;
+  published: boolean;
 }
 
 interface IProps {
@@ -65,6 +66,7 @@ export const useWfOnlineSave = (props: IProps) => {
         let rec = {
           issection: true,
           level: w.level,
+          published: w.published,
           changed: !w.deleted && isSectionUpdated(w, lastSaved),
           deleted: w.deleted,
           id: isSectionAdding(w)

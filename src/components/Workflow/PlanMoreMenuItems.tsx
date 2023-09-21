@@ -21,6 +21,8 @@ import {
   PassageToNextIcon,
   PassageToPrevIcon,
   PassageUpIcon,
+  PublishIcon,
+  UnPublishIcon,
 } from '../../control/PlanIcons';
 
 interface IProps {
@@ -29,6 +31,7 @@ interface IProps {
   rowIndex: number;
   isSection: boolean;
   isPassage: boolean;
+  published: boolean;
   psgType: string;
   readonly: boolean;
   canAssign: boolean;
@@ -52,6 +55,7 @@ interface IProps {
   onPassageUp?: () => void;
   onPassageDown?: () => void;
   onNote?: () => void;
+  onPublish?: () => void;
   t: IPlanActionsStrings;
   p: IPlanSheetStrings;
   ts: ISharedStrings;
@@ -69,6 +73,7 @@ export const PlanMoreMenuItems: FC<
       isPassage,
       psgType,
       readonly,
+      published,
       onUpload,
       onAudacity,
       onAssign,
@@ -89,6 +94,7 @@ export const PlanMoreMenuItems: FC<
       onSectionAbove,
       onMovementAbove,
       onNote,
+      onPublish,
       t,
       p,
       ts,
@@ -112,6 +118,28 @@ export const PlanMoreMenuItems: FC<
         onKeyDown={handleListKeyDown}
         sx={{ display: 'flex' }}
       >
+        {onPublish &&
+          (published ? (
+            <MenuItem
+              id="unpublish"
+              onClick={onPublish}
+              title={p.unpublish
+                .replace('{0}', organizedBy)
+                .replace('{1}', sectionSequenceNumber)}
+            >
+              <UnPublishIcon />
+            </MenuItem>
+          ) : (
+            <MenuItem
+              id="publish"
+              onClick={onPublish}
+              title={p.publish
+                .replace('{0}', organizedBy)
+                .replace('{1}', sectionSequenceNumber)}
+            >
+              <PublishIcon />
+            </MenuItem>
+          ))}
         {isSection && canAssign && !readonly && (
           <MenuItem
             id="planActAssign"

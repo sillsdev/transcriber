@@ -4933,6 +4933,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="planSheet.publish">
+            <source>Publish {0} {1}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planSheet.refErr">
             <source>This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
             <target/>
@@ -4998,6 +5005,13 @@
          </trans-unit>
          <trans-unit id="planSheet.tablePaste">
             <source>Paste Spreadsheet</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.unpublish">
+            <source>Unpublish {0} {1}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
