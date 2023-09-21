@@ -18,7 +18,9 @@ export const useHome = () => {
   const goHome = () => {
     resetProject();
     if (!home) setHome(true);
-    navigate('/team');
+    setTimeout(() => {
+      navigate('/team');
+    }, 100);
   };
   const leaveHome = () => {
     if (home) setHome(false);

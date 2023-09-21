@@ -20,7 +20,7 @@ import { PassageTypeEnum } from '../../model/passageType';
 import {
   passageTypeFromRef,
   isPublishingTitle,
-  refRender,
+  RefRender,
 } from '../../control/RefRender';
 import { RecordIdentity } from '@orbit/data';
 
@@ -101,7 +101,9 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
                 }`;
             } else {
               //must be a note
-              reference = refRender(p.attributes?.reference, false);
+              reference = (
+                <RefRender value={p.attributes?.reference} flat={false} />
+              );
             }
             if (marks.current.findIndex((m) => m.label === reference) > -1)
               reference += '#' + p.attributes?.sequencenum.toString();

@@ -1358,7 +1358,7 @@ export function ScriptureTable(
           color="secondary"
           anchorOrigin={{
             vertical: 'top',
-            horizontal: 'left',
+            horizontal: 'right',
           }}
         >
           {organizedBy +

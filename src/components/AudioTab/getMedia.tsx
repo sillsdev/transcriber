@@ -1,6 +1,6 @@
 import { MediaFile, Passage, Section, BookName } from '../../model';
 import { mediaFileName, related } from '../../crud';
-import { IRow, getSection, getReference } from '.';
+import { IRow, getSection, GetReference } from '.';
 
 export interface IGetMedia {
   planName: string;
@@ -32,7 +32,9 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
     fileName: mediaFileName(f),
     sectionId: sectionId,
     sectionDesc: getSection(section),
-    reference: getReference(passage, allBookData, false),
+    reference: (
+      <GetReference passage={passage} bookData={allBookData} flat={false} />
+    ),
     duration: f.attributes.duration ? f.attributes.duration.toString() : '',
     size: Math.round((f.attributes.filesize / 1024 / 1024) * 10) / 10.0,
     version: f.attributes.versionNumber
