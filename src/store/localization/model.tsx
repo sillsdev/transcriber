@@ -851,6 +851,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "passageToPrevSection": string;
     "passageToNextSection": string;
     "pasting": string;
+    "publish": string;
     "refErr": string;
     "resequence": string;
     "save": string;
@@ -861,6 +862,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "selectRows": string;
     "step": string;
     "tablePaste": string;
+    "unpublish": string;
     "useCtrlV": string;
 };
 

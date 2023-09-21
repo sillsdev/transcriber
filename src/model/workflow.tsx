@@ -46,6 +46,7 @@ export interface IWorkflow {
   deleted: boolean;
   filtered: boolean;
   discussionCount: number;
+  published: boolean;
 }
 
 export const flatScrColNames = [
