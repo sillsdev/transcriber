@@ -759,6 +759,7 @@ export function PlanSheet(props: IProps) {
                         ),
                       readOnly:
                         readonly ||
+                        section ||
                         passageTypeFromRef(e as string, inlinePassages) !==
                           PassageTypeEnum.PASSAGE,
                       className:
