@@ -714,6 +714,10 @@ export function PlanSheet(props: IProps) {
                         <PlanAudioActions
                           rowIndex={rowIndex}
                           isPassage={passage}
+                          isNote={
+                            rowInfo[rowIndex].passageType ===
+                            PassageTypeEnum.NOTE
+                          }
                           mediaId={rowInfo[rowIndex].mediaId?.id || ''}
                           mediaShared={rowInfo[rowIndex].mediaShared}
                           onPlayStatus={handlePlayStatus}

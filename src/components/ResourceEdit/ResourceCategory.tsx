@@ -5,7 +5,7 @@ import { ArtifactCategoryType } from '../../crud';
 
 export const ResourceCategory = (props: IResourceState) => {
   const { state, setState } = props;
-  const { category } = state;
+  const { category, note } = state;
 
   const handleChange = (category: string) => {
     setState && setState((state) => ({ ...state, category, changed: true }));
@@ -14,7 +14,7 @@ export const ResourceCategory = (props: IResourceState) => {
   return (
     <SelectArtifactCategory
       disabled={!setState}
-      type={ArtifactCategoryType.Resource}
+      type={!note ? ArtifactCategoryType.Resource : ArtifactCategoryType.Note}
       initCategory={category}
       onCategoryChange={setState ? handleChange : undefined}
       required={false}

@@ -5486,6 +5486,20 @@
       			<context context-type="sourcefile">ResourceOverview.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="resource.link">
+      		<source>Link</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.noteSettings">
+      		<source>Note Settings</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="resource.overview">
       		<source>Overview</source>
       		<target/>

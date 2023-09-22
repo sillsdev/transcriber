@@ -4702,6 +4702,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="resource.link">
+         <segment>
+            <source>Link</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.noteSettings">
+         <segment>
+            <source>Note Settings</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="resource.overview">
          <segment>
             <source>Overview</source>

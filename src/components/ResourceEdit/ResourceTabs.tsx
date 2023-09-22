@@ -3,7 +3,12 @@ import { Tabs, Tab, Typography, Box } from '@mui/material';
 import VersionDlg from '../AudioTab/VersionDlg';
 import ResourceOverview, { IResourceDialog } from './ResourceOverview';
 import ResourceRefs from './ResourceRefs';
-import { DialogMode, IResourceStrings, SharedResource } from '../../model';
+import {
+  DialogMode,
+  IResourceStrings,
+  Passage,
+  SharedResource,
+} from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { sharedResourceSelector } from '../../selector';
 import { withData } from 'react-orbitjs';
@@ -15,10 +20,13 @@ import {
   useSharedResUpdate,
   useSharedResDelete,
   useRole,
+  findRecord,
 } from '../../crud';
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { useSnackBar } from '../../hoc/SnackBar';
+import { passageTypeFromRef } from '../../control/RefRender';
+import { PassageTypeEnum } from '../../model/passageType';
 
 interface IRecordProps {
   sharedResources: SharedResource[];
@@ -43,7 +51,7 @@ function TabPanel(props: TabPanelProps) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <Typography component={'div'}>{children}</Typography>
         </Box>
       )}
     </div>
@@ -76,6 +84,7 @@ export function ResourceTabs({
   });
   const deleteSharedResource = useSharedResDelete();
   const { userIsAdmin } = useRole();
+  const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { showMessage } = useSnackBar();
@@ -91,10 +100,30 @@ export function ResourceTabs({
     [passId, value]
   );
 
+  const isNote = React.useMemo(
+    () => {
+      const passRec = findRecord(memory, 'passage', passId) as
+        | Passage
+        | undefined;
+      return (
+        passageTypeFromRef(passRec?.attributes?.reference) ===
+        PassageTypeEnum.NOTE
+      );
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [passId]
+  );
+
   const values = React.useMemo(() => {
     if (sharedResRec) {
-      const { title, description, languagebcp47, termsOfUse, keywords } =
-        sharedResRec.attributes;
+      const {
+        title,
+        description,
+        languagebcp47,
+        termsOfUse,
+        keywords,
+        linkurl,
+      } = sharedResRec.attributes;
       const lgParts = languagebcp47.split('|');
       const bcp47 = lgParts.length === 1 ? languagebcp47 : lgParts[1];
       const languageName = lgParts.length === 1 ? '' : lgParts[0];
@@ -105,11 +134,13 @@ export function ResourceTabs({
         languageName,
         terms: termsOfUse,
         keywords,
+        linkurl,
+        note: isNote,
         category: related(sharedResRec, 'artifactCategory'),
       } as IResourceDialog;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sharedResources, passId]);
+  }, [sharedResources, passId, isNote]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -124,6 +155,7 @@ export function ResourceTabs({
       languageName,
       terms,
       keywords,
+      linkurl,
       category,
     } = values;
     if (sharedResRec) {
@@ -138,6 +170,8 @@ export function ResourceTabs({
             languagebcp47: `${languageName}|${bcp47}`,
             termsOfUse: terms,
             keywords,
+            linkurl,
+            note: isNote,
           },
         } as SharedResource,
         category
@@ -149,6 +183,8 @@ export function ResourceTabs({
         languagebcp47: `${languageName}|${bcp47}`,
         termsOfUse: terms,
         keywords,
+        linkurl,
+        note: isNote,
         category,
       });
     }
@@ -196,6 +232,7 @@ export function ResourceTabs({
           }
           values={values}
           isOpen={true}
+          isNote={isNote}
           onOpen={handleOverOpen}
           onCommit={handleCommit}
           onDelete={handleDelete}
