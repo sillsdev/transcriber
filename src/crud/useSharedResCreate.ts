@@ -1,7 +1,8 @@
 import { useGlobal } from 'reactn';
 import { RecordIdentity, TransformBuilder } from '@orbit/data';
-import { SharedResource } from '../model';
+import { ArtifactCategory, SharedResource } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
+import { findRecord } from './tryFindRecord';
 
 interface IProps {
   title: string;
@@ -9,6 +10,8 @@ interface IProps {
   languagebcp47: string;
   termsOfUse: string;
   keywords: string;
+  linkurl: string;
+  note: boolean;
   category: string;
 }
 
@@ -28,6 +31,8 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
     termsOfUse,
     keywords,
     category, // id of artifactCateogy
+    linkurl,
+    note,
   }: IProps) => {
     const sharedRes: SharedResource = {
       type: 'sharedresource',
@@ -37,6 +42,8 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
         languagebcp47,
         termsOfUse,
         keywords,
+        linkurl,
+        note,
       },
     } as SharedResource;
     memory.schema.initializeRecord(sharedRes);
@@ -66,6 +73,21 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
           category
         )
       );
+    }
+    if (note) {
+      const catRec = findRecord(memory, 'artifactcategory', category) as
+        | ArtifactCategory
+        | undefined;
+      if (catRec) {
+        const passRecId = { type: 'passage', id: passage.id };
+        ops.push(
+          t.replaceAttribute(
+            passRecId,
+            'reference',
+            `NOTE ${catRec.attributes.categoryname}`
+          )
+        );
+      }
     }
     await memory.update(ops);
   };
