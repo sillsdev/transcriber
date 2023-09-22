@@ -18,6 +18,7 @@ import {
   ResourceKeywords,
   ResourceTerms,
   ResourceTitle,
+  ResourceLink,
 } from '.';
 import { useGlobal } from 'reactn';
 import { useOrgDefaults } from '../../crud';
@@ -129,7 +130,7 @@ export default function ResourceOverview(props: IProps) {
         <ResourceDescription state={state} setState={updateState} />
         <ResourceCategory state={state} setState={updateState} />
         <ResourceKeywords state={state} setState={updateState} />
-        {!isNote && (
+        {!isNote ? (
           <>
             <ResourceTerms state={state} setState={updateState} />
             <Language
@@ -140,6 +141,8 @@ export default function ResourceOverview(props: IProps) {
               disabled={mode === Mode.view}
             />
           </>
+        ) : (
+          <ResourceLink state={state} setState={updateState} />
         )}
       </Stack>
       <Divider sx={{ mt: 2 }} />

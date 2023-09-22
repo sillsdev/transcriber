@@ -1003,6 +1003,8 @@ const initialState = {
 			"description": "Description",
 			"errorData": "Do you want to save and discard data with errors?",
 			"keywords": "Keywords",
+			"link": "Link",
+			"noteSettings": "Note Settings",
 			"overview": "Overview",
 			"references": "References",
 			"resourceEdit": "Resource Edit",

@@ -1487,7 +1487,7 @@ export function ScriptureTable(
           shared
             ? resStr.resourceEdit
             : isNote
-            ? 'xx Note settings'
+            ? resStr.noteSettings
             : ts.versionHistory
         }
         isOpen={versionItem !== ''}

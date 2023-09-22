@@ -1,7 +1,8 @@
 import { useGlobal } from 'reactn';
 import { RecordIdentity, TransformBuilder } from '@orbit/data';
-import { SharedResource } from '../model';
+import { ArtifactCategory, SharedResource } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
+import { findRecord } from './tryFindRecord';
 
 interface IProps {
   title: string;
@@ -72,6 +73,21 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
           category
         )
       );
+    }
+    if (note) {
+      const catRec = findRecord(memory, 'artifactcategory', category) as
+        | ArtifactCategory
+        | undefined;
+      if (catRec) {
+        const passRecId = { type: 'passage', id: passage.id };
+        ops.push(
+          t.replaceAttribute(
+            passRecId,
+            'reference',
+            `NOTE ${catRec.attributes.categoryname}`
+          )
+        );
+      }
     }
     await memory.update(ops);
   };
