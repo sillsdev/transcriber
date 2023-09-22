@@ -86,7 +86,7 @@ export const SelectArtifactCategory = (props: IProps) => {
   useEffect(() => {
     getCategorys().then((cats) => setArtifactCategorys(cats));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [artifactCategories]);
+  }, [artifactCategories, type]);
 
   const categoryAdded = (newId: string) => {
     getCategorys().then((cats) => {

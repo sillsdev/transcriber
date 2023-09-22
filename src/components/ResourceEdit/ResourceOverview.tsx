@@ -32,6 +32,8 @@ export interface IResourceDialog {
   spellCheck: boolean;
   terms: string;
   keywords: string;
+  linkurl: string;
+  note: boolean;
   category: string;
   changed: boolean;
 }
@@ -45,6 +47,8 @@ const initState: IResourceDialog = {
   spellCheck: false,
   terms: '',
   keywords: '',
+  linkurl: '',
+  note: false,
   category: '',
   changed: false,
 };
@@ -55,12 +59,14 @@ export interface IResourceState {
 }
 
 interface IProps extends IDialog<IResourceDialog> {
+  isNote: boolean;
   nameInUse?: (newName: string) => boolean;
   onDelete?: () => void;
 }
 
 export default function ResourceOverview(props: IProps) {
-  const { mode, values, isOpen, onOpen, onCommit, onCancel, onDelete } = props;
+  const { mode, values, isOpen, isNote, onOpen, onCommit, onCancel, onDelete } =
+    props;
 
   const [isDeveloper] = useGlobal('developer');
   const [state, setState] = React.useState({ ...initState });
@@ -77,6 +83,12 @@ export default function ResourceOverview(props: IProps) {
   useEffect(() => {
     setState(!values ? { ...initState } : { ...values, changed: false });
   }, [values, isOpen]);
+
+  useEffect(() => {
+    setState(
+      !values ? { ...initState, note: isNote } : { ...values, note: isNote }
+    );
+  }, [values, isNote]);
 
   const handleClose = () => {
     if (onOpen) onOpen(false);
@@ -117,14 +129,18 @@ export default function ResourceOverview(props: IProps) {
         <ResourceDescription state={state} setState={updateState} />
         <ResourceCategory state={state} setState={updateState} />
         <ResourceKeywords state={state} setState={updateState} />
-        <ResourceTerms state={state} setState={updateState} />
-        <Language
-          {...state}
-          onChange={handleLanguageChange}
-          hideSpelling
-          hideFont
-          disabled={mode === Mode.view}
-        />
+        {!isNote && (
+          <>
+            <ResourceTerms state={state} setState={updateState} />
+            <Language
+              {...state}
+              onChange={handleLanguageChange}
+              hideSpelling
+              hideFont
+              disabled={mode === Mode.view}
+            />
+          </>
+        )}
       </Stack>
       <Divider sx={{ mt: 2 }} />
       <ActionRow>
@@ -143,7 +159,9 @@ export default function ResourceOverview(props: IProps) {
           <PriButton
             id="resSave"
             onClick={handleAdd}
-            disabled={title === '' || bcp47 === 'und' || !state.changed}
+            disabled={
+              title === '' || (bcp47 === 'und' && !isNote) || !state.changed
+            }
           >
             {mode === Mode.add ? t.add : ts.save}
           </PriButton>

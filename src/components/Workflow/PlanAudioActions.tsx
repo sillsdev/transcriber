@@ -2,6 +2,7 @@ import { useMemo, memo, FC } from 'react';
 import { IPlanActionsStrings, IMediaShare } from '../../model';
 import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
 import PauseIcon from '@mui/icons-material/Pause';
+import SettingIcon from '@mui/icons-material/Settings';
 import SharedCheckbox from '@mui/icons-material/CheckBoxOutlined';
 import NotSharedCheckbox from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import VersionsIcon from '@mui/icons-material/List';
@@ -28,6 +29,7 @@ const StyledIconButton = styled(IconButton, {
 interface IProps {
   rowIndex: number;
   isPassage: boolean;
+  isNote: boolean;
   mediaId: string;
   mediaShared: IMediaShare;
   isPlaying: boolean;
@@ -44,6 +46,7 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
   const {
     rowIndex,
     isPassage,
+    isNote,
     mediaShared,
     onHistory,
     onPlayStatus,
@@ -66,10 +69,12 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
           title={
             mediaShared !== IMediaShare.NotPublic ? t.resourceEdit : t.versions
           }
-          disabled={disabled}
+          disabled={disabled && !isNote}
           onClick={onHistory(rowIndex)}
         >
-          {mediaShared === IMediaShare.NotPublic ? (
+          {isNote ? (
+            <SettingIcon />
+          ) : mediaShared === IMediaShare.NotPublic ? (
             <VersionsIcon />
           ) : mediaShared === IMediaShare.None ? (
             <NotSharedCheckbox />

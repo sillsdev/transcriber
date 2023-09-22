@@ -204,6 +204,7 @@ export function ScriptureTable(
   const cancelled = useRef(false);
   const uploadItem = useRef<IWorkflow>();
   const [versionItem, setVersionItem] = useState('');
+  const [isNote, setIsNote] = useState(false);
   const [defaultFilename, setDefaultFilename] = useState('');
   const { getPlan } = usePlan();
   const localSave = useWfLocalSave({ setComplete });
@@ -858,6 +859,7 @@ export function ScriptureTable(
       waitForPassageId(i, () => {
         const { wf } = getByIndex(workflowRef.current, i);
         setVersionItem(wf?.passage?.id || '');
+        setIsNote(wf?.passageType === PassageTypeEnum.NOTE);
       });
     });
   };
@@ -1481,11 +1483,17 @@ export function ScriptureTable(
         />
       )}
       <BigDialog
-        title={shared ? resStr.resourceEdit : ts.versionHistory}
+        title={
+          shared
+            ? resStr.resourceEdit
+            : isNote
+            ? 'xx Note settings'
+            : ts.versionHistory
+        }
         isOpen={versionItem !== ''}
         onOpen={handleVerHistClose}
       >
-        {shared ? (
+        {shared || isNote ? (
           <ResourceTabs passId={versionItem} onOpen={handleVerHistClose} />
         ) : (
           <VersionDlg passId={versionItem} />

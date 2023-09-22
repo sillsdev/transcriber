@@ -9,6 +9,8 @@ interface IProps {
   languagebcp47: string;
   termsOfUse: string;
   keywords: string;
+  linkurl: string;
+  note: boolean;
   category: string;
 }
 
@@ -28,6 +30,8 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
     termsOfUse,
     keywords,
     category, // id of artifactCateogy
+    linkurl,
+    note,
   }: IProps) => {
     const sharedRes: SharedResource = {
       type: 'sharedresource',
@@ -37,6 +41,8 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
         languagebcp47,
         termsOfUse,
         keywords,
+        linkurl,
+        note,
       },
     } as SharedResource;
     memory.schema.initializeRecord(sharedRes);
