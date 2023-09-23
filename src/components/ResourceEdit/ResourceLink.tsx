@@ -22,7 +22,6 @@ export const ResourceLink = (props: IResourceState) => {
 
   return (
     <TextField
-      required
       margin="dense"
       id="link"
       label={t.link}
