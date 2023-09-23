@@ -316,6 +316,7 @@ const schemaDefinition: SchemaSettings = {
           model: 'passage',
           inverse: 'section',
         },
+        titleMediafile: { type: 'hasOne', model: 'mediafile' },
         editor: { type: 'hasOne', model: 'user' },
         transcriber: { type: 'hasOne', model: 'user' },
         group: { type: 'hasOne', model: 'group' },
