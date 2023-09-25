@@ -118,6 +118,8 @@ export interface IAudioDownloadStrings extends Localize.LocalizedStringsMethods 
 export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "add": string;
     "addTeam": string;
+    "bibleid": string;
+    "bibleidexists": string;
     "cancel": string;
     "connectParatext": string;
     "copyComplete": string;
@@ -132,6 +134,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "draft": string;
     "editCategory": string;
     "editWorkflow": string;
+    "explainPublishing": string;
     "explainTeamDelete": string;
     "import": string;
     "language": string;
@@ -153,6 +156,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "process": string;
     "projectCreated": string;
     "Render": string;
+    "publishing": string;
     "save": string;
     "sectionStatus": string;
     "settings": string;

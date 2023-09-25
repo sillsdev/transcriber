@@ -23,14 +23,17 @@ import {
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
 import { defaultWorkflow } from '../../crud';
+import PublishExpansion from '../PublishExpansion';
 
 interface IRecordProps {
   organizations: Array<Organization>;
   projects: Array<Project>;
 }
-interface ITeamDialog {
+export interface ITeamDialog {
   team: Organization;
   process?: string;
+  titleMediafile: string;
+  isoMediafile: string;
 }
 interface IProps extends IRecordProps, IDialog<ITeamDialog> {
   onDelete?: (team: Organization) => void;
@@ -39,6 +42,12 @@ export function TeamDialog(props: IProps) {
   const { mode, values, isOpen, organizations, onOpen, onCommit, onDelete } =
     props;
   const [name, setName] = React.useState('');
+  const [iso, setIso] = React.useState('');
+  const [bibleId, setBibleId] = React.useState('');
+  const [defaultParams, setDefaultParams] = React.useState('');
+  const [titleMediafile, setTitleMediafile] = React.useState('');
+  const [isoMediafile, setIsoMediafile] = React.useState('');
+  const [publishingData, setPublishingData] = React.useState('');
   const [changed, setChanged] = React.useState(false);
   const ctx = React.useContext(TeamContext);
   const { cardStrings } = ctx.state;
@@ -73,15 +82,49 @@ export function TeamDialog(props: IProps) {
         : ({ attributes: {} } as Organization);
     const team = {
       ...current,
-      attributes: { ...current.attributes, name },
+      attributes: {
+        ...current.attributes,
+        name,
+        iso,
+        bibleId,
+        defaultParams,
+        publishingData,
+      },
     } as Organization;
     onCommit(
-      { team, process: process || defaultWorkflow },
+      {
+        team,
+        titleMediafile,
+        isoMediafile,
+        process: process || defaultWorkflow,
+      },
       async (id: string) => {
         setProcess(undefined);
         setSaving(false);
       }
     );
+  };
+  const setValue = (what: string, value: string) => {
+    switch (what) {
+      case 'iso':
+        setIso(value);
+        break;
+      case 'bibleId':
+        setBibleId(value);
+        break;
+      case 'defaultParams':
+        setDefaultParams(value);
+        break;
+      case 'titleMediafile':
+        setTitleMediafile(value);
+        break;
+      case 'isoMediafile':
+        setIsoMediafile(value);
+        break;
+      case 'publishingData':
+        setPublishingData(value);
+        break;
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -177,6 +220,15 @@ export function TeamDialog(props: IProps) {
                 ))}
             </TextField>
           )}
+          <div>
+            <PublishExpansion
+              t={t}
+              team={values?.team ?? ({} as Organization)}
+              setValue={setValue}
+              organizations={organizations}
+            />
+            ;
+          </div>
           {mode === DialogMode.edit && (
             <div>
               <DeleteExpansion

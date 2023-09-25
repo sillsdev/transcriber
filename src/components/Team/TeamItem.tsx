@@ -8,7 +8,7 @@ import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
 import { StepEditor } from '../StepEditor';
 import GroupTabs from '../GroupTabs';
 import { ProjectCard, AddCard } from '.';
-import TeamDialog from './TeamDialog';
+import TeamDialog, { ITeamDialog } from './TeamDialog';
 import { useRole, defaultWorkflow } from '../../crud';
 import Confirm from '../AlertDialog';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -46,10 +46,10 @@ export const TeamItem = (props: IProps) => {
   };
 
   const handleCommitSettings = (
-    values: { team: Organization; process: string },
+    values:ITeamDialog,
     cb?: (id: string) => Promise<void>
   ) => {
-    teamUpdate(values.team);
+    teamUpdate(values.team, values.isoMediafile, values.titleMediafile);
     cb && cb(values.team.id);
     setEditOpen(false);
   };

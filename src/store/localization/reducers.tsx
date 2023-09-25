@@ -133,6 +133,8 @@ const initialState = {
 		"en": {
 			"add": "Add",
 			"addTeam": "Add Team",
+			"bibleid": "Bible Id",
+			"bibleidexists": "Bible Id already exists.",
 			"cancel": "Cancel",
 			"connectParatext": "Connect a Paratext Project",
 			"copyComplete": "Copy Complete {0}",
@@ -147,6 +149,7 @@ const initialState = {
 			"draft": "Oral Drafting",
 			"editCategory": "Edit Team Categories",
 			"editWorkflow": "Edit Workflow {0}",
+			"explainPublishing": "Information to use when publishing audio created by this team.",
 			"explainTeamDelete": "Deleting the team will delete all audio projects of the team.",
 			"import": "Import Audio Project",
 			"language": "Language: {0}",
@@ -168,6 +171,7 @@ const initialState = {
 			"process": "Default Workflow",
 			"projectCreated": "Audio Project Created",
 			"Render": "Render to Paratext",
+			"publishing": "Publishing",
 			"save": "Save",
 			"sectionStatus": "{0} {1}",
 			"settings": "Settings",
@@ -916,7 +920,7 @@ const initialState = {
 			"selectRows": "Please select row(s) to {0}.",
 			"step": "Step",
 			"tablePaste": "Paste Spreadsheet",
-			"unpublish": "Unpublish {0} {1}",
+			"unpublish": "Remove {0} {1} from published list.",
 			"useCtrlV": "Select a column head and use CTRL-V to append table rows.",
 		}
 	}),

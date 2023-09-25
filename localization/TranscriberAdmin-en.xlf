@@ -538,6 +538,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.bibleid">
+         <segment>
+            <source>Bible Id</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.bibleidexists">
+         <segment>
+            <source>Bible Id already exists.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
@@ -619,6 +631,12 @@
       <unit id="cards.editWorkflow">
          <segment>
             <source>Edit Workflow {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.explainPublishing">
+         <segment>
+            <source>Information to use when publishing audio created by this team.</source>
             <target/>
          </segment>
       </unit>
@@ -745,6 +763,12 @@
       <unit id="cards.Render">
          <segment>
             <source>Render to Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.publishing">
+         <segment>
+            <source>Publishing</source>
             <target/>
          </segment>
       </unit>
@@ -4302,7 +4326,7 @@
       </unit>
       <unit id="planSheet.unpublish">
          <segment>
-            <source>Unpublish {0} {1}</source>
+            <source>Remove {0} {1} from published list.</source>
             <target/>
          </segment>
       </unit>
