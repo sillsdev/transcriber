@@ -1,5 +1,5 @@
-import { IWorkflow } from '../../model';
-import { workflowSheet } from '.';
+import { ISheet } from '../../model';
+import { workSheet } from '.';
 
 interface ILocalName {
   [key: string]: string;
@@ -15,14 +15,14 @@ interface IMinWidth {
   [key: string]: number;
 }
 
-export const wfColumnHeads = (
-  wf: IWorkflow[],
+export const shtColumnHeads = (
+  ws: ISheet[],
   width: number,
   colNames: string[],
   localName: ILocalName,
   minWidth: IMinWidth
 ) => {
-  const sheet: Array<Array<any>> = workflowSheet(wf, colNames, wf);
+  const sheet: Array<Array<any>> = workSheet(ws, colNames, ws);
   const colMx: Array<number> = sheet.reduce(
     (prev, cur) =>
       cur.map((v, i) =>

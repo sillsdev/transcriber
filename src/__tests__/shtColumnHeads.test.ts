@@ -1,5 +1,5 @@
-import { IWorkflow, IwfKind, levScrColNames } from '../model';
-import { wfColumnHeads } from '../components/Workflow';
+import { ISheet, IwsKind, levScrColNames } from '../model';
+import { shtColumnHeads } from '../components/Sheet';
 
 interface StrMap {
   [key: string]: string;
@@ -9,10 +9,10 @@ interface NumMap {
   [key: string]: number;
 }
 
-const workflow = [
+const sheet = [
   {
     level: 0,
-    kind: IwfKind.SectionPassage,
+    kind: IwsKind.SectionPassage,
     sectionSeq: 1,
     title: 'The Temptation of Jesus',
     passageSeq: 1,
@@ -23,7 +23,7 @@ const workflow = [
   },
   {
     level: 0,
-    kind: IwfKind.SectionPassage,
+    kind: IwsKind.SectionPassage,
     sectionSeq: 2,
     title: 'Jesus Casts Out a Demon',
     passageSeq: 1,
@@ -34,7 +34,7 @@ const workflow = [
   },
   {
     level: 0,
-    kind: IwfKind.SectionPassage,
+    kind: IwsKind.SectionPassage,
     sectionSeq: 3,
     title: 'Jesus Heals and Preaches',
     passageSeq: 1,
@@ -45,7 +45,7 @@ const workflow = [
   },
   {
     level: 0,
-    kind: IwfKind.SectionPassage,
+    kind: IwsKind.SectionPassage,
     sectionSeq: 4,
     title: 'The First Disciples',
     passageSeq: 1,
@@ -56,7 +56,7 @@ const workflow = [
   },
   {
     level: 0,
-    kind: IwfKind.SectionPassage,
+    kind: IwsKind.SectionPassage,
     sectionSeq: 5,
     title: 'Jesus Heals a Man with Leprosy',
     passageSeq: 1,
@@ -67,7 +67,7 @@ const workflow = [
   },
   {
     level: 0,
-    kind: IwfKind.SectionPassage,
+    kind: IwsKind.SectionPassage,
     sectionSeq: 6,
     title: 'Jesus Heals a Paralyzed Man',
     passageSeq: 1,
@@ -76,7 +76,7 @@ const workflow = [
     comment: '',
     deleted: false,
   },
-] as IWorkflow[];
+] as ISheet[];
 
 const minWidth: NumMap = {
   sectionSeq: 60,
@@ -92,7 +92,7 @@ test('no data gives minimum widths', () => {
   const colNames = levScrColNames;
   const localName: StrMap = {};
   levScrColNames.forEach((c) => (localName[c] = c));
-  const { colHead, colAdd } = wfColumnHeads(
+  const { colHead, colAdd } = shtColumnHeads(
     [],
     1,
     colNames,
@@ -112,7 +112,7 @@ test('no data with wide screen gives minimum widths', () => {
   const colNames = levScrColNames;
   const localName: StrMap = {};
   levScrColNames.forEach((c) => (localName[c] = c));
-  const { colHead, colAdd } = wfColumnHeads(
+  const { colHead, colAdd } = shtColumnHeads(
     [],
     2400,
     colNames,
@@ -132,8 +132,8 @@ test('data gives minimum widths', () => {
   const colNames = levScrColNames;
   const localName: StrMap = {};
   levScrColNames.forEach((c) => (localName[c] = c));
-  const { colHead, colAdd } = wfColumnHeads(
-    workflow,
+  const { colHead, colAdd } = shtColumnHeads(
+    sheet,
     1,
     colNames,
     localName,
@@ -152,8 +152,8 @@ test('data with wide screen assigns extra widths', () => {
   const colNames = levScrColNames;
   const localName: StrMap = {};
   levScrColNames.forEach((c) => (localName[c] = c));
-  const { colHead, colAdd } = wfColumnHeads(
-    workflow,
+  const { colHead, colAdd } = shtColumnHeads(
+    sheet,
     2400,
     colNames,
     localName,

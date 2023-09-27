@@ -1,10 +1,10 @@
-import { IWorkflow, IwfKind } from '../model';
-import { isSectionRow, isPassageRow } from '../components/Workflow';
+import { ISheet, IwsKind } from '../model';
+import { isSectionRow, isPassageRow } from '../components/Sheet';
 
 test('return true for section row if valid hierarchy section', () => {
-  const workflowItem: IWorkflow = {
+  const workflowItem: ISheet = {
     level: 0,
-    kind: IwfKind.Section,
+    kind: IwsKind.Section,
     sectionSeq: 1,
     title: 'Intro',
     sectionId: { type: 'section', id: 's1' },
@@ -18,9 +18,9 @@ test('return true for section row if valid hierarchy section', () => {
 });
 
 test('return true for section row if valid flat section', () => {
-  const workflowItem: IWorkflow = {
+  const workflowItem: ISheet = {
     level: 0,
-    kind: IwfKind.SectionPassage,
+    kind: IwsKind.SectionPassage,
     sectionSeq: 1,
     title: 'Intro',
     passageSeq: 1,
@@ -39,9 +39,9 @@ test('return true for section row if valid flat section', () => {
 });
 
 test('return false for section row if hierarchy passage', () => {
-  const workflowItem: IWorkflow = {
+  const workflowItem: ISheet = {
     level: 1,
-    kind: IwfKind.Passage,
+    kind: IwsKind.Passage,
     sectionSeq: 1,
     passageSeq: 1,
     book: 'LUK',
@@ -55,9 +55,9 @@ test('return false for section row if hierarchy passage', () => {
 });
 
 test('return false for passage row if valid hierarchy section', () => {
-  const workflowItem: IWorkflow = {
+  const workflowItem: ISheet = {
     level: 0,
-    kind: IwfKind.Section,
+    kind: IwsKind.Section,
     sectionSeq: 1,
     title: 'Intro',
     sectionId: { type: 'section', id: 's1' },
@@ -71,9 +71,9 @@ test('return false for passage row if valid hierarchy section', () => {
 });
 
 test('return true for passage row if valid flat passage', () => {
-  const workflowItem: IWorkflow = {
+  const workflowItem: ISheet = {
     level: 0,
-    kind: IwfKind.SectionPassage,
+    kind: IwsKind.SectionPassage,
     sectionSeq: 1,
     title: 'Intro',
     passageSeq: 1,
@@ -92,9 +92,9 @@ test('return true for passage row if valid flat passage', () => {
 });
 
 test('return true for passage row if hierarchy passage', () => {
-  const workflowItem: IWorkflow = {
+  const workflowItem: ISheet = {
     level: 1,
-    kind: IwfKind.Passage,
+    kind: IwsKind.Passage,
     sectionSeq: 1,
     passageSeq: 1,
     book: 'LUK',

@@ -1,9 +1,42 @@
 import { render } from '@testing-library/react';
 import { setGlobal } from 'reactn';
-import { Section, Passage, IWorkflow, IwfKind, IMediaShare } from '../model';
-import { DataProvider } from 'react-orbitjs';
-import { useWfLocalSave } from '../components/Workflow';
+import {
+  Section,
+  Passage,
+  ISheet,
+  IwsKind,
+  IMediaShare,
+  SheetLevel,
+} from '../model';
+import {
+  DataProvider as DataProviderBar,
+  DataProviderProps,
+} from 'react-orbitjs';
+import { useWfLocalSave } from '../components/Sheet';
 import { memory } from '../schema';
+import { PropsWithChildren } from 'react';
+import { PassageTypeEnum } from '../model/passageType';
+
+const DataProvider = (props: DataProviderProps & PropsWithChildren) => {
+  return <DataProviderBar {...props} />;
+};
+
+const defaultSheet: ISheet = {
+  level: SheetLevel.Section,
+  kind: IwsKind.SectionPassage,
+  sectionSeq: 1,
+  title: 'Jesus on trial before Pilate',
+  passageSeq: 1,
+  book: 'LUK',
+  reference: '10:20-100',
+  comment: '',
+  deleted: false,
+  mediaShared: IMediaShare.NotPublic,
+  passageType: PassageTypeEnum.PASSAGE,
+  filtered: false,
+  discussionCount: 0,
+  published: false,
+};
 
 // see https://jestjs.io/docs/mock-functions#mocking-modules
 jest.mock('../schema', () => {
@@ -29,7 +62,7 @@ interface HookProps {
 }
 function setup(props: HookProps) {
   let returnVal: (
-    wf: IWorkflow[],
+    ws: ISheet[],
     sections: Section[],
     passages: Passage[],
     lastSaved?: string
@@ -58,10 +91,11 @@ test('save one section and one passage', async () => {
   setGlobal(globals);
 
   const setComplete = jest.fn((val: number) => {});
-  const workflow: IWorkflow[] = [
+  const worksheet: ISheet[] = [
     {
-      level: 0,
-      kind: IwfKind.SectionPassage,
+      ...defaultSheet,
+      level: SheetLevel.Section,
+      kind: IwsKind.SectionPassage,
       sectionSeq: 1,
       title: 'The Temptation of Jesus',
       passageSeq: 1,
@@ -75,7 +109,7 @@ test('save one section and one passage', async () => {
 
   const localSave = setup({ setComplete });
 
-  await localSave(workflow, [], [], false, '2021-09-21');
+  await localSave(worksheet, [], [], '2021-09-21');
 
   expect(setComplete).toHaveBeenCalled();
   const updateCalls = (memory.update as jest.Mock).mock.calls;
@@ -96,10 +130,10 @@ test('delete one section and one passage', async () => {
   setGlobal(globals);
 
   const setComplete = jest.fn((val: number) => {});
-  const workflow: IWorkflow[] = [
+  const worksheet: ISheet[] = [
     {
-      level: 0,
-      kind: IwfKind.SectionPassage,
+      ...defaultSheet,
+      kind: IwsKind.SectionPassage,
       sectionSeq: 1,
       title: 'The Temptation of Jesus',
       sectionId: { type: 'section', id: 's1' },
@@ -108,7 +142,7 @@ test('delete one section and one passage', async () => {
       book: 'LUK',
       reference: '4:1-13',
       comment: '',
-      passageId: { type: 'passage', id: 'pa1' },
+      passage: { type: 'passage', id: 'pa1' } as Passage,
       passageUpdated: '2021-09-22',
       deleted: true,
       mediaShared: IMediaShare.NotPublic,
@@ -117,7 +151,7 @@ test('delete one section and one passage', async () => {
 
   const localSave = setup({ setComplete });
 
-  await localSave(workflow, [], [], false, '2021-09-21');
+  await localSave(worksheet, [], [], '2021-09-21');
 
   expect(setComplete).toHaveBeenCalled();
   const updateCalls = (memory.update as jest.Mock).mock.calls;
@@ -139,10 +173,10 @@ test('update section and passage', async () => {
   setGlobal(globals);
 
   const setComplete = jest.fn((val: number) => {});
-  const workflow: IWorkflow[] = [
+  const worksheet: ISheet[] = [
     {
-      level: 0,
-      kind: IwfKind.SectionPassage,
+      ...defaultSheet,
+      kind: IwsKind.SectionPassage,
       sectionSeq: 1,
       title: 'The Temptation of Jesus',
       sectionId: { type: 'section', id: 's1' },
@@ -151,7 +185,7 @@ test('update section and passage', async () => {
       book: 'LUK',
       reference: '4:1-13',
       comment: '',
-      passageId: { type: 'passage', id: 'pa1' },
+      passage: { type: 'passage', id: 'pa1' } as Passage,
       passageUpdated: '2021-09-22',
       deleted: false,
       mediaShared: IMediaShare.NotPublic,
@@ -165,6 +199,9 @@ test('update section and passage', async () => {
       attributes: {
         sequencenum: 2,
         name: 'old title',
+        graphics: '{}',
+        published: false,
+        level: 1,
         dateCreated: '2021-09-21',
         dateUpdated: '2021-09-21',
         lastModifiedBy: 1,
@@ -193,7 +230,7 @@ test('update section and passage', async () => {
 
   const localSave = setup({ setComplete });
 
-  await localSave(workflow, sections, passages, '2021-09-21');
+  await localSave(worksheet, sections, passages, '2021-09-21');
 
   expect(setComplete).toHaveBeenCalled();
   const updateCalls = (memory.update as jest.Mock).mock.calls;
@@ -214,10 +251,10 @@ test('no update if same date', async () => {
   setGlobal(globals);
 
   const setComplete = jest.fn((val: number) => {});
-  const workflow: IWorkflow[] = [
+  const worksheet: ISheet[] = [
     {
-      level: 0,
-      kind: IwfKind.SectionPassage,
+      ...defaultSheet,
+      kind: IwsKind.SectionPassage,
       sectionSeq: 1,
       title: 'The Temptation of Jesus',
       sectionId: { type: 'section', id: 's1' },
@@ -226,7 +263,7 @@ test('no update if same date', async () => {
       book: 'LUK',
       reference: '4:1-13',
       comment: '',
-      passageId: { type: 'passage', id: 'pa1' },
+      passage: { type: 'passage', id: 'pa1' } as Passage,
       passageUpdated: '2021-09-22',
       deleted: false,
       mediaShared: IMediaShare.NotPublic,
@@ -240,6 +277,9 @@ test('no update if same date', async () => {
       attributes: {
         sequencenum: 2,
         name: 'old title',
+        graphics: '{}',
+        published: false,
+        level: 1,
         dateCreated: '2021-09-21',
         dateUpdated: '2021-09-21',
         lastModifiedBy: 1,
@@ -268,7 +308,7 @@ test('no update if same date', async () => {
 
   const localSave = setup({ setComplete });
 
-  await localSave(workflow, sections, passages, '2021-09-22');
+  await localSave(worksheet, sections, passages, '2021-09-22');
 
   expect(setComplete).toHaveBeenCalled();
   const updateCalls = (memory.update as jest.Mock).mock.calls;

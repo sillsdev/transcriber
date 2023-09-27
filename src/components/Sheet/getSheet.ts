@@ -1,12 +1,12 @@
 import {
-  IWorkflow,
-  IwfKind,
+  ISheet,
+  IwsKind,
   Section,
   Passage,
   IMediaShare,
   OrgWorkflowStep,
   IWorkflowStepsStrings,
-  WorkflowLevel,
+  SheetLevel,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
@@ -18,7 +18,7 @@ import { ISTFilterState } from './filterMenu';
 import { PassageTypeEnum } from '../../model/passageType';
 import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
 
-const wfSectionUpdate = (item: IWorkflow, rec: IWorkflow) => {
+const shtSectionUpdate = (item: ISheet, rec: ISheet) => {
   if (item.sectionUpdated && rec.sectionUpdated)
     if (item?.sectionUpdated > rec?.sectionUpdated) {
       rec.level = item.level;
@@ -31,21 +31,19 @@ const wfSectionUpdate = (item: IWorkflow, rec: IWorkflow) => {
     }
 };
 
-const wfSectionAdd = (workflow: IWorkflow[], item: IWorkflow) => {
-  let index = workflow.findIndex(
-    (w) => w?.sectionId?.id === item?.sectionId?.id
-  );
+const shtSectionAdd = (sheet: ISheet[], item: ISheet) => {
+  let index = sheet.findIndex((w) => w?.sectionId?.id === item?.sectionId?.id);
   if (index >= 0) {
-    const rec = workflow[index];
-    wfSectionUpdate(item, rec);
+    const rec = sheet[index];
+    shtSectionUpdate(item, rec);
   } else {
-    index = workflow.length;
-    workflow.push(item);
+    index = sheet.length;
+    sheet.push(item);
   }
   return index;
 };
 
-const wfPassageUpdate = (item: IWorkflow, rec: IWorkflow) => {
+const shtPassageUpdate = (item: ISheet, rec: ISheet) => {
   if (item.passageUpdated && rec.passageUpdated)
     if (item.passageUpdated > rec.passageUpdated) {
       rec.level = item.level;
@@ -59,40 +57,40 @@ const wfPassageUpdate = (item: IWorkflow, rec: IWorkflow) => {
     }
 };
 
-const wfPassageAdd = (
-  workflow: IWorkflow[],
-  item: IWorkflow,
+const shtPassageAdd = (
+  sheet: ISheet[],
+  item: ISheet,
   sectionIndex?: number
 ) => {
-  let index = workflow.findIndex((w) => w?.passage?.id === item?.passage?.id);
+  let index = sheet.findIndex((w) => w?.passage?.id === item?.passage?.id);
   if (index >= 0) {
-    const rec = workflow[index];
-    if (item.kind === IwfKind.SectionPassage) {
-      wfSectionUpdate(item, rec);
+    const rec = sheet[index];
+    if (item.kind === IwsKind.SectionPassage) {
+      shtSectionUpdate(item, rec);
     }
-    wfPassageUpdate(item, rec);
+    shtPassageUpdate(item, rec);
     return;
   } else if (sectionIndex && sectionIndex >= 0) {
     let indexAt = sectionIndex + 1;
-    while (indexAt < workflow.length) {
+    while (indexAt < sheet.length) {
       if (
-        item.kind !== IwfKind.Passage ||
-        item.passageSeq < workflow[indexAt].passageSeq
+        item.kind !== IwsKind.Passage ||
+        item.passageSeq < sheet[indexAt].passageSeq
       )
         break;
       indexAt += 1;
     }
-    while (indexAt < workflow.length) {
-      const saved = workflow[indexAt];
-      workflow[indexAt] = item;
+    while (indexAt < sheet.length) {
+      const saved = sheet[indexAt];
+      sheet[indexAt] = item;
       item = saved;
       indexAt += 1;
     }
   }
-  workflow.push(item);
+  sheet.push(item);
 };
 
-const initItem = {} as IWorkflow;
+const initItem = {} as ISheet;
 export const isSectionFiltered = (
   filterState: ISTFilterState,
   sectionSeq: number
@@ -102,7 +100,7 @@ export const isSectionFiltered = (
     (filterState.maxSection > -1 && sectionSeq > filterState.maxSection));
 
 export const isPassageFiltered = (
-  w: IWorkflow,
+  w: ISheet,
   filterState: ISTFilterState,
   orgWorkflowSteps: OrgWorkflowStep[],
   doneStepId: string
@@ -113,7 +111,7 @@ export const isPassageFiltered = (
     !filterState.disabled &&
     ((filterState.hideDone && w.stepId === doneStepId) ||
       (filterState.hidePublishing &&
-        isPublishingTitle(w.reference, w.kind === IwfKind.SectionPassage)) ||
+        isPublishingTitle(w.reference, w.kind === IwsKind.SectionPassage)) ||
       (filterState.assignedToMe && w.discussionCount === 0) ||
       (filterState.maxStep &&
         w.stepId &&
@@ -125,7 +123,7 @@ export const isPassageFiltered = (
       (filterState.maxSection > -1 && w.sectionSeq > filterState.maxSection))
   );
 };
-export const getWorkflow = (
+export const getSheet = (
   plan: string,
   sections: Section[],
   passages: Passage[],
@@ -137,9 +135,9 @@ export const getWorkflow = (
   filterState: ISTFilterState,
   doneStepId: string,
   getDiscussionCount: (passageId: string, stepId: string) => number,
-  current?: IWorkflow[]
+  current?: ISheet[]
 ) => {
-  const myWork = current || Array<IWorkflow>();
+  const myWork = current || Array<ISheet>();
   let plansections = sections
     .filter((s) => related(s, 'plan') === plan)
     .sort((i, j) => i.attributes?.sequencenum - j.attributes?.sequencenum);
@@ -149,10 +147,10 @@ export const getWorkflow = (
     let curSection = 1;
     let sectionIndex: number | undefined;
     if (section.attributes) {
-      item.level = section.attributes.level ?? WorkflowLevel.Section;
+      item.level = section.attributes.level ?? SheetLevel.Section;
       item.reference =
-        item.level === WorkflowLevel.Movement ? PassageTypeEnum.MOVEMENT : '';
-      item.kind = flat ? IwfKind.SectionPassage : IwfKind.Section;
+        item.level === SheetLevel.Movement ? PassageTypeEnum.MOVEMENT : '';
+      item.kind = flat ? IwsKind.SectionPassage : IwsKind.Section;
       item.sectionId = { type: 'section', id: section.id };
       item.sectionSeq = section.attributes.sequencenum;
       item.title = section?.attributes?.name;
@@ -172,8 +170,8 @@ export const getWorkflow = (
       curSection = item.sectionSeq;
     }
     let first = true;
-    if (item.kind === IwfKind.Section) {
-      sectionIndex = wfSectionAdd(myWork, item);
+    if (item.kind === IwsKind.Section) {
+      sectionIndex = shtSectionAdd(myWork, item);
       item = { ...initItem };
     }
     const sectionPassages = passages
@@ -183,8 +181,8 @@ export const getWorkflow = (
       const passAttr = passage.attributes;
       if (passAttr) {
         if (!flat || !first) {
-          item.level = WorkflowLevel.Passage;
-          item.kind = IwfKind.Passage;
+          item.level = SheetLevel.Passage;
+          item.kind = IwsKind.Passage;
         }
         first = false;
         item.sectionSeq = curSection;
@@ -225,7 +223,7 @@ export const getWorkflow = (
           isPassageFiltered(item, filterState, orgWorkflowSteps, doneStepId);
       }
       //console.log(`item ${JSON.stringify(item, null, 2)}`);
-      wfPassageAdd(myWork, item, sectionIndex);
+      shtPassageAdd(myWork, item, sectionIndex);
       item = { ...initItem };
     });
   });
