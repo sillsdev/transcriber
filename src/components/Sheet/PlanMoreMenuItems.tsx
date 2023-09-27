@@ -24,6 +24,7 @@ import {
   PublishIcon,
   UnPublishIcon,
 } from '../../control/PlanIcons';
+import { ExtraIcon } from '.';
 
 interface IProps {
   open: boolean;
@@ -47,15 +48,8 @@ interface IProps {
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
   onDisableFilter?: () => void;
-  onPassageBelow?: () => void;
-  onPassageToPrev?: () => void;
-  onPassageToNext?: () => void;
-  onMovementAbove?: () => void;
-  onSectionAbove?: () => void;
-  onPassageUp?: () => void;
-  onPassageDown?: () => void;
-  onNote?: () => void;
-  onPublish?: () => void;
+  showIcon: (icon: ExtraIcon) => boolean;
+  onAction: (what: ExtraIcon) => void;
   t: IPlanActionsStrings;
   p: IPlanSheetStrings;
   ts: ISharedStrings;
@@ -86,15 +80,8 @@ export const PlanMoreMenuItems: FC<
       onPlayStatus,
       onRecord,
       onDisableFilter,
-      onPassageBelow,
-      onPassageToPrev,
-      onPassageToNext,
-      onPassageUp,
-      onPassageDown,
-      onSectionAbove,
-      onMovementAbove,
-      onNote,
-      onPublish,
+      showIcon,
+      onAction,
       t,
       p,
       ts,
@@ -118,11 +105,11 @@ export const PlanMoreMenuItems: FC<
         onKeyDown={handleListKeyDown}
         sx={{ display: 'flex' }}
       >
-        {onPublish &&
+        {showIcon(ExtraIcon.Publish) &&
           (published ? (
             <MenuItem
               id="unpublish"
-              onClick={onPublish}
+              onClick={() => onAction(ExtraIcon.Publish)}
               title={p.unpublish
                 .replace('{0}', organizedBy)
                 .replace('{1}', sectionSequenceNumber)}
@@ -132,7 +119,7 @@ export const PlanMoreMenuItems: FC<
           ) : (
             <MenuItem
               id="publish"
-              onClick={onPublish}
+              onClick={() => onAction(ExtraIcon.Publish)}
               title={p.publish
                 .replace('{0}', organizedBy)
                 .replace('{1}', sectionSequenceNumber)}
@@ -154,10 +141,10 @@ export const PlanMoreMenuItems: FC<
             {p.filtered}
           </MenuItem>
         )}
-        {onMovementAbove && (
+        {showIcon(ExtraIcon.MovementAbove) && (
           <MenuItem
             id="movementAbove"
-            onClick={onMovementAbove}
+            onClick={() => onAction(ExtraIcon.MovementAbove)}
             title={p.movementAbove
               .replace('{0}', organizedBy)
               .replace('{1}', sectionSequenceNumber)}
@@ -165,10 +152,10 @@ export const PlanMoreMenuItems: FC<
             <InsertMovementIcon />
           </MenuItem>
         )}
-        {onSectionAbove && (
+        {showIcon(ExtraIcon.SectionAbove) && (
           <MenuItem
             id="secAbove"
-            onClick={onSectionAbove}
+            onClick={() => onAction(ExtraIcon.SectionAbove)}
             title={p.sectionAbove
               .replace('{0}', organizedBy)
               .replace('{1}', organizedBy)
@@ -177,10 +164,10 @@ export const PlanMoreMenuItems: FC<
             <InsertSectionIcon />
           </MenuItem>
         )}
-        {onPassageBelow && isSection && (
+        {showIcon(ExtraIcon.PassageBelow) && isSection && (
           <MenuItem
             id="psgAsFirst"
-            onClick={onPassageBelow}
+            onClick={() => onAction(ExtraIcon.PassageBelow)}
             title={p.insertFirstPassage
               .replace('{0}', organizedBy)
               .replace('{1}', sectionSequenceNumber)}
@@ -188,19 +175,19 @@ export const PlanMoreMenuItems: FC<
             <PassageBelowIcon />
           </MenuItem>
         )}
-        {onPassageBelow && isPassage && (
+        {showIcon(ExtraIcon.PassageBelow) && isPassage && (
           <MenuItem
             id="passBelow"
-            onClick={onPassageBelow}
+            onClick={() => onAction(ExtraIcon.PassageBelow)}
             title={p.passageBelow.replace('{0}', passageSequenceNumber)}
           >
             <PassageBelowIcon />
           </MenuItem>
         )}
-        {onPassageUp && (
+        {showIcon(ExtraIcon.PassageUp) && (
           <MenuItem
             id="passUp"
-            onClick={onPassageUp}
+            onClick={() => onAction(ExtraIcon.PassageUp)}
             title={p.moveUp
               .replace('{pt}', ty.getString(psgType))
               .replace('{0}', passageSequenceNumber)}
@@ -208,20 +195,20 @@ export const PlanMoreMenuItems: FC<
             <PassageUpIcon />
           </MenuItem>
         )}
-        {onPassageToPrev && (
+        {showIcon(ExtraIcon.PassageToPrev) && (
           <MenuItem
             id="passToPrev"
-            onClick={onPassageToPrev}
+            onClick={() => onAction(ExtraIcon.PassageToPrev)}
             title={p.passageToPrevSection.replace('{0}', passageSequenceNumber)}
           >
             <PassageToPrevIcon />
           </MenuItem>
         )}
 
-        {onPassageDown && (
+        {showIcon(ExtraIcon.PassageDown) && (
           <MenuItem
             id="passDown"
-            onClick={onPassageDown}
+            onClick={() => onAction(ExtraIcon.PassageDown)}
             title={p.moveDown
               .replace('{pt}', ty.getString(psgType))
               .replace('{0}', passageSequenceNumber)}
@@ -229,17 +216,21 @@ export const PlanMoreMenuItems: FC<
             <PassageDownIcon />
           </MenuItem>
         )}
-        {onPassageToNext && (
+        {showIcon(ExtraIcon.PassageToNext) && (
           <MenuItem
             id="passToNext"
-            onClick={onPassageToNext}
+            onClick={() => onAction(ExtraIcon.PassageToNext)}
             title={p.passageToNextSection.replace('{0}', passageSequenceNumber)}
           >
             <PassageToNextIcon />
           </MenuItem>
         )}
-        {isPassage && onNote && (
-          <MenuItem id="addnote" onClick={onNote} title={t.addNote}>
+        {isPassage && showIcon(ExtraIcon.Note) && (
+          <MenuItem
+            id="addnote"
+            onClick={() => onAction(ExtraIcon.Note)}
+            title={t.addNote}
+          >
             <AddNoteIcon />
           </MenuItem>
         )}

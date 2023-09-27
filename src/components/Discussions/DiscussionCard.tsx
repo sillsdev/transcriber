@@ -58,7 +58,7 @@ import SelectUser from '../../control/SelectUser';
 import { LightTooltip, StageReport } from '../../control';
 import SelectArtifactCategory, {
   ScriptureEnum,
-} from '../Workflow/SelectArtifactCategory';
+} from '../Sheet/SelectArtifactCategory';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { removeExtension, startEnd, waitForIt } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';

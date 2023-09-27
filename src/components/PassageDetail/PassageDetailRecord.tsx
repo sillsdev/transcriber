@@ -19,7 +19,7 @@ import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import MediaRecord from '../MediaRecord';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import Uploader from '../Uploader';
-import AudacityManager from '../Workflow/AudacityManager';
+import AudacityManager from '../Sheet/AudacityManager';
 import { isElectron } from '../../api-variable';
 import { PriButton } from '../../control';
 import BigDialog from '../../hoc/BigDialog';

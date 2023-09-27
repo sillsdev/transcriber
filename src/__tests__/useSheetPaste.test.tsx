@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
-import { IScriptureTableStrings, IwfKind, IWorkflow } from '../model';
-import { useWfPaste } from '../components/Workflow';
+import { IScriptureTableStrings, IwsKind, ISheet } from '../model';
+import { useWfPaste } from '../components/Sheet';
 
 // see https://jestjs.io/docs/mock-functions#mocking-modules
 jest.mock('../crud/useOrganizedBy', () => {
@@ -139,7 +139,7 @@ test('paste hieararchical', () => {
     [
       {
         level: 0,
-        kind: IwfKind.Section,
+        kind: IwsKind.Section,
         sectionSeq: 1,
         title: 'Luke wrote this book about Jesus for Theophilus',
         passageSeq: 0,
@@ -150,7 +150,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 1,
         title: '',
         passageSeq: 1,
@@ -161,7 +161,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 0,
-        kind: IwfKind.Section,
+        kind: IwsKind.Section,
         sectionSeq: 2,
         title: 'An angel said that John the Baptizer would be born',
         passageSeq: 0,
@@ -172,7 +172,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 2,
         title: '',
         passageSeq: 1,
@@ -183,7 +183,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 2,
         title: '',
         passageSeq: 2,
@@ -194,7 +194,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 2,
         title: '',
         passageSeq: 3,
@@ -205,7 +205,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 2,
         title: '',
         passageSeq: 4,
@@ -216,7 +216,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 2,
         title: '',
         passageSeq: 5,
@@ -227,7 +227,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 0,
-        kind: IwfKind.Section,
+        kind: IwsKind.Section,
         sectionSeq: 3,
         title: 'An angel told Mary that Jesus would be born',
         passageSeq: 0,
@@ -238,7 +238,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 3,
         title: '',
         passageSeq: 1,
@@ -249,7 +249,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 3,
         title: '',
         passageSeq: 2,
@@ -260,7 +260,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 3,
         title: '',
         passageSeq: 3,
@@ -271,7 +271,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 0,
-        kind: IwfKind.Section,
+        kind: IwsKind.Section,
         sectionSeq: 4,
         title: 'Mary visited Elizabeth',
         passageSeq: 0,
@@ -282,7 +282,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 4,
         title: '',
         passageSeq: 1,
@@ -293,7 +293,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 0,
-        kind: IwfKind.Section,
+        kind: IwsKind.Section,
         sectionSeq: 5,
         title: 'Mary praised God',
         passageSeq: 0,
@@ -304,7 +304,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 5,
         title: '',
         passageSeq: 1,
@@ -315,7 +315,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 0,
-        kind: IwfKind.Section,
+        kind: IwsKind.Section,
         sectionSeq: 6,
         title: 'John the Baptizer was born and received his name',
         passageSeq: 0,
@@ -326,7 +326,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 6,
         title: '',
         passageSeq: 1,
@@ -337,7 +337,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 6,
         title: '',
         passageSeq: 2,
@@ -348,7 +348,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 6,
         title: '',
         passageSeq: 3,
@@ -359,7 +359,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 0,
-        kind: IwfKind.Section,
+        kind: IwsKind.Section,
         sectionSeq: 7,
         title: 'Zechariah prophesied and praised God',
         passageSeq: 0,
@@ -370,7 +370,7 @@ test('paste hieararchical', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 7,
         title: '',
         passageSeq: 1,
@@ -379,7 +379,7 @@ test('paste hieararchical', () => {
         comment: '',
         deleted: false,
       },
-    ] as IWorkflow[]
+    ] as ISheet[]
   ).map((i) => ({
     ...i,
     passageUpdated,
@@ -453,7 +453,7 @@ test('paste flat', () => {
     [
       {
         level: 0,
-        kind: IwfKind.SectionPassage,
+        kind: IwsKind.SectionPassage,
         sectionSeq: 1,
         title: 'The Temptation of Jesus',
         passageSeq: 1,
@@ -464,7 +464,7 @@ test('paste flat', () => {
       },
       {
         level: 0,
-        kind: IwfKind.SectionPassage,
+        kind: IwsKind.SectionPassage,
         sectionSeq: 2,
         title: 'Jesus Casts Out a Demon',
         passageSeq: 1,
@@ -475,7 +475,7 @@ test('paste flat', () => {
       },
       {
         level: 0,
-        kind: IwfKind.SectionPassage,
+        kind: IwsKind.SectionPassage,
         sectionSeq: 3,
         title: 'Jesus Heals and Preaches',
         passageSeq: 1,
@@ -486,7 +486,7 @@ test('paste flat', () => {
       },
       {
         level: 0,
-        kind: IwfKind.SectionPassage,
+        kind: IwsKind.SectionPassage,
         sectionSeq: 4,
         title: 'The First Disciples',
         passageSeq: 1,
@@ -497,7 +497,7 @@ test('paste flat', () => {
       },
       {
         level: 0,
-        kind: IwfKind.SectionPassage,
+        kind: IwsKind.SectionPassage,
         sectionSeq: 5,
         title: 'Jesus Heals a Man with Leprosy',
         passageSeq: 1,
@@ -508,7 +508,7 @@ test('paste flat', () => {
       },
       {
         level: 0,
-        kind: IwfKind.SectionPassage,
+        kind: IwsKind.SectionPassage,
         sectionSeq: 6,
         title: 'Jesus Heals a Paralyzed Man',
         passageSeq: 1,
@@ -517,7 +517,7 @@ test('paste flat', () => {
         comment: '',
         deleted: false,
       },
-    ] as IWorkflow[]
+    ] as ISheet[]
   ).map((i) => ({ ...i, passageUpdated, sectionUpdated }));
   expect(addedWorkflow).toEqual(testValue);
 });
@@ -583,7 +583,7 @@ test('paste flat data into hierarchy', () => {
     [
       {
         level: 0,
-        kind: IwfKind.Section,
+        kind: IwsKind.Section,
         sectionSeq: 1,
         title: 'The Temptation of Jesus',
         passageSeq: 0,
@@ -594,7 +594,7 @@ test('paste flat data into hierarchy', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 1,
         title: 'The Temptation of Jesus',
         passageSeq: 1,
@@ -605,7 +605,7 @@ test('paste flat data into hierarchy', () => {
       },
       {
         level: 0,
-        kind: IwfKind.Section,
+        kind: IwsKind.Section,
         sectionSeq: 2,
         title: 'Jesus Casts Out a Demon',
         passageSeq: 0,
@@ -616,7 +616,7 @@ test('paste flat data into hierarchy', () => {
       },
       {
         level: 1,
-        kind: IwfKind.Passage,
+        kind: IwsKind.Passage,
         sectionSeq: 2,
         title: 'Jesus Casts Out a Demon',
         passageSeq: 1,
@@ -625,7 +625,7 @@ test('paste flat data into hierarchy', () => {
         comment: '',
         deleted: false,
       },
-    ] as IWorkflow[]
+    ] as ISheet[]
   ).map((i) => ({ ...i, passageUpdated, sectionUpdated }));
   expect(addedWorkflow).toEqual(testValue);
 });

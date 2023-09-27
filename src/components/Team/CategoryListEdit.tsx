@@ -30,7 +30,7 @@ import { useGlobal } from 'reactn';
 import { Operation, TransformBuilder } from '@orbit/data';
 import { UpdateRecord } from '../../model/baseModel';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { NewArtifactCategory } from '../Workflow/NewArtifactCategory';
+import { NewArtifactCategory } from '../Sheet/NewArtifactCategory';
 
 interface IProps {
   type: ArtifactCategoryType;

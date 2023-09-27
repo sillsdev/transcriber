@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ArtifactTypeSlug } from '../../crud';
-import SelectArtifactType from '../Workflow/SelectArtifactType';
+import SelectArtifactType from '../Sheet/SelectArtifactType';
 
 interface IProps {
   toolSettings: string;

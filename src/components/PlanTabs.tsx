@@ -17,7 +17,7 @@ import {
 import localStrings from '../selector/localize';
 import { AppBar, Tabs, Tab, Box } from '@mui/material';
 import grey from '@mui/material/colors/grey';
-import ScriptureTable from './Workflow/ScriptureTable';
+import ScriptureTable from './Sheet/ScriptureTable';
 import AudioTab from '../components/AudioTab/AudioTab';
 import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';

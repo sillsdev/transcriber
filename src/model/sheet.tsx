@@ -2,7 +2,7 @@ import { RecordIdentity } from '@orbit/data';
 import { PassageTypeEnum } from './passageType';
 import Passage from './passage';
 
-export enum IwfKind {
+export enum IwsKind {
   Section,
   Passage,
   SectionPassage,
@@ -15,16 +15,16 @@ export enum IMediaShare {
   None,
   NotPublic,
 }
-export enum WorkflowLevel {
+export enum SheetLevel {
   Book = 1,
   Movement,
   Section,
   SubSection,
   Passage,
 }
-export interface IWorkflow {
-  level: WorkflowLevel; //currently not used anywhere
-  kind: IwfKind;
+export interface ISheet {
+  level: SheetLevel; //currently not used anywhere
+  kind: IwsKind;
   sectionSeq: number;
   title?: string;
   transcriber?: RecordIdentity;

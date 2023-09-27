@@ -1,5 +1,5 @@
 import { useGlobal } from 'reactn';
-import { Section, Passage, ActivityStates, IWorkflow } from '../../model';
+import { Section, Passage, ActivityStates, ISheet } from '../../model';
 import {
   AddRecord,
   ReplaceRelatedRecord,
@@ -31,20 +31,20 @@ export const useWfLocalSave = (props: IProps) => {
   const { getPassageTypeRec, checkIt } = usePassageType();
 
   return async (
-    workflow: IWorkflow[],
+    sheet: ISheet[],
     sections: Section[],
     passages: Passage[],
     lastSaved?: string
   ) => {
     let lastSec = { id: 'never here' } as RecordIdentity;
-    const numRecs = workflow.length;
+    const numRecs = sheet.length;
     for (let rIdx = 0; rIdx < numRecs; rIdx += 1) {
       // if numRecs >= 200, status set in caller
       if ((offlineOnly || numRecs < 200) && rIdx % 20 === 0) {
         //this is slow...so find a happy medium between info and speed
         setComplete(((rIdx / numRecs) * 100) | 0);
       }
-      const item = workflow[rIdx];
+      const item = sheet[rIdx];
       if (isSectionRow(item)) {
         if (isSectionUpdated(item, lastSaved)) {
           if (!isSectionAdding(item) && !item.deleted) {

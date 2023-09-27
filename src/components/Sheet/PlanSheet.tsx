@@ -1,25 +1,22 @@
-import { useState, useEffect, useRef, useContext, memo, useMemo } from 'react';
+import { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import {
   IPlanSheetStrings,
   ISharedStrings,
   BookNameMap,
   OptionType,
-  IWorkflow,
+  ISheet,
   OrgWorkflowStep,
-  IViewModeStrings,
-  WorkflowLevel,
+  SheetLevel,
 } from '../../model';
-import { Badge, Box, styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { useSnackBar } from '../../hoc/SnackBar';
 import DataSheet from 'react-datasheet';
 import Confirm from '../AlertDialog';
-import BookSelect from '../BookSelect';
 import {
   AddSectionPassageButtons,
   ProjButtons,
-  StageReport,
   TabActions,
   ActionHeight,
   GrowingSpacer,
@@ -29,40 +26,30 @@ import {
 } from '../../control';
 import 'react-datasheet/lib/react-datasheet.css';
 import {
-  refMatch,
   cleanClipboard,
   localUserKey,
   LocalKey,
   rememberCurrentPassage,
 } from '../../utils';
-import { isPassageRow, isSectionRow } from '.';
-import { remoteIdGuid, useOrganizedBy, useRole } from '../../crud';
-import TaskAvatar from '../TaskAvatar';
+import { remoteIdGuid, useRole } from '../../crud';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
-import PlanActionMenu from './PlanActionMenu';
 import { TabAppBar } from '../../control';
-import PlanAudioActions from './PlanAudioActions';
 import { HotKeyContext } from '../../context/HotKeyContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import FilterMenu, { ISTFilterState } from './filterMenu';
-import {
-  planSheetSelector,
-  sharedSelector,
-  viewModeSelector,
-} from '../../selector';
+import { planSheetSelector, sharedSelector } from '../../selector';
 import { useSelector, shallowEqual } from 'react-redux';
 import { PassageTypeEnum } from '../../model/passageType';
-import {
-  RefRender,
-  passageTypeFromRef,
-  isPublishingTitle,
-} from '../../control/RefRender';
-import React from 'react';
-
-const MemoizedTaskAvatar = memo(TaskAvatar);
+import { rowTypes } from './rowTypes';
+import { useRefErrTest } from './useRefErrTest';
+import { ExtraIcon } from '.';
+import { usePlanSheetFill } from './usePlanSheetFill';
+import { useShowIcon } from './useShowIcon';
 
 const DOWN_ARROW = 'ARROWDOWN';
+export const SectionSeqCol = 0;
+export const PassageSeqCol = 2;
 
 const ContentDiv = styled('div')(({ theme }) => ({
   paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)})`,
@@ -136,7 +123,7 @@ const initialPosition = {
   j: 0,
 };
 
-interface ICell {
+export interface ICell {
   value: any;
   readOnly?: boolean;
   width?: number;
@@ -154,7 +141,7 @@ interface IProps {
   toolId: string;
   columns: Array<ICell>;
   rowData: Array<Array<string | number>>;
-  rowInfo: Array<IWorkflow>;
+  rowInfo: Array<ISheet>;
   bookCol: number;
   bookSuggestions?: OptionType[];
   bookMap?: BookNameMap;
@@ -167,11 +154,7 @@ interface IProps {
   action: (what: string, where: number[]) => Promise<boolean>;
   addPassage: (ptype?: PassageTypeEnum, i?: number, before?: boolean) => void;
   movePassage: (i: number, before: boolean, section: boolean) => void;
-  addSection: (
-    level: WorkflowLevel,
-    i?: number,
-    ptype?: PassageTypeEnum
-  ) => void;
+  addSection: (level: SheetLevel, i?: number, ptype?: PassageTypeEnum) => void;
   toggleSectionPublish: (i: number) => void;
   onPublishing: () => void;
   lookupBook: (book: string) => string;
@@ -254,57 +237,14 @@ export function PlanSheet(props: IProps) {
   const [toRow, setToRow] = useState(0);
   const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const tv: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
   const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
-  const SectionSeqCol = 0;
-  const PassageSeqCol = 2;
-  const LastCol = bookCol > 0 ? 6 : 5;
-
-  const isSection = (i: number) =>
-    i >= 0 && i < rowInfo.length ? isSectionRow(rowInfo[i]) : false;
-  const isPassage = (i: number) =>
-    i >= 0 && i < rowInfo.length ? isPassageRow(rowInfo[i]) : false;
-  const isTitle = (i: number) =>
-    i >= 0 && i < rowInfo.length
-      ? rowInfo[i].passageType === PassageTypeEnum.TITLE
-      : false;
-  const firstVernacularInSection = (i: number) => {
-    if (rowInfo[i].passageType !== PassageTypeEnum.PASSAGE) return false;
-    while (--i >= 0 && !isSection(i)) {
-      if (rowInfo[i].passageType === PassageTypeEnum.PASSAGE) return false;
-    }
-    return true;
-  };
-  const isBook = (i: number) =>
-    i >= 0 &&
-    i < rowInfo.length &&
-    (rowInfo[i].level === WorkflowLevel.Book ||
-      rowInfo[i].passageType === PassageTypeEnum.BOOK ||
-      rowInfo[i].passageType === PassageTypeEnum.ALTBOOK);
-
-  const isMovement = (i: number) =>
-    i >= 0 && i < rowInfo.length && rowInfo[i].level === WorkflowLevel.Movement;
-
-  const isInMovement = (i: number) => {
-    if (
-      i >= 0 &&
-      i < rowInfo.length &&
-      (rowInfo[i].passageType === PassageTypeEnum.NOTE ||
-        rowInfo[i].passageType === PassageTypeEnum.TITLE)
-    ) {
-      var sec = i - 1;
-      while (sec > 0 && !isSection(sec)) sec--;
-      return isMovement(sec);
-    }
-    return false;
-  };
-
+  const { isPassage, isSection } = rowTypes(rowInfo);
+  const showIcon = useShowIcon({ readonly, rowInfo, inlinePassages });
   const [changed, setChanged] = useState(false); //for button enabling
   const changedRef = useRef(false); //for autosave
   const [saving, setSaving] = useState(false);
   const { userIsAdmin } = useRole();
-  const { getOrganizedBy } = useOrganizedBy();
-  const [organizedBy] = useState(getOrganizedBy(true));
+  const refErrTest = useRefErrTest();
   const moveUp = true;
   const moveDown = false;
   const moveSection = true;
@@ -321,18 +261,18 @@ export function PlanSheet(props: IProps) {
     //we'll find a section before we get past 0
     var row = currentRow - 1;
     while (!isSection(row)) row -= 1;
-    addSection(WorkflowLevel.Movement, row, PassageTypeEnum.MOVEMENT);
+    addSection(SheetLevel.Movement, row, PassageTypeEnum.MOVEMENT);
   };
   const onSectionAbove = () => {
     //we'll find a section before we get past 0
     var row = currentRow - 1;
     while (!isSection(row)) row -= 1;
-    addSection(WorkflowLevel.Section, row);
+    addSection(SheetLevel.Section, row);
   };
 
   const onNote = () => {
     if (inlinePassages)
-      addSection(WorkflowLevel.Section, currentRow, PassageTypeEnum.NOTE);
+      addSection(SheetLevel.Section, currentRow, PassageTypeEnum.NOTE);
     else addPassage(PassageTypeEnum.NOTE, currentRow - 1, true);
   };
   const onPassageBelow = () => {
@@ -364,11 +304,33 @@ export function PlanSheet(props: IProps) {
   };
 
   const onSectionEnd = () => {
-    addSection(WorkflowLevel.Section);
+    addSection(SheetLevel.Section);
   };
 
   const onPassageEnd = () => {
     addPassage();
+  };
+
+  interface IActionMap {
+    [key: number]: () => void;
+  }
+  const actionMap: IActionMap = {
+    [ExtraIcon.Publish]: onPublish,
+    [ExtraIcon.Publishing]: onPublishing,
+    [ExtraIcon.Note]: onNote,
+    [ExtraIcon.PassageBelow]: onPassageBelow,
+    [ExtraIcon.MovementAbove]: onMovementAbove,
+    [ExtraIcon.SectionAbove]: onSectionAbove,
+    [ExtraIcon.PassageDown]: onPassageDown,
+    [ExtraIcon.PassageToNext]: onPassageToNext,
+    [ExtraIcon.PassageUp]: onPassageUp,
+    [ExtraIcon.PassageToPrev]: onPassageToPrev,
+    [ExtraIcon.PassageLast]: onPassageLast,
+    [ExtraIcon.SectionEnd]: onSectionEnd,
+    [ExtraIcon.PassageEnd]: onPassageEnd,
+  };
+  const onAction = (what: ExtraIcon) => {
+    actionMap[what]();
   };
 
   const sheetScroll = () => {
@@ -447,7 +409,7 @@ export function PlanSheet(props: IProps) {
     setCheck(Array<number>());
   };
 
-  const handlePlayStatus = (mediaId: string) => {
+  const onPlayStatus = (mediaId: string) => {
     if (mediaId === srcMediaId) {
       setMediaPlaying(!mediaPlaying);
     } else {
@@ -457,10 +419,6 @@ export function PlanSheet(props: IProps) {
 
   const handleAudacity = (i: number) => () => {
     onAudacity && onAudacity(i);
-  };
-
-  const handlePassageDetail = (i: number) => () => {
-    onPassageDetail && onPassageDetail(i);
   };
 
   const handleCellsChanged = (changes: Array<ICellChange>) => {
@@ -514,31 +472,27 @@ export function PlanSheet(props: IProps) {
     resequence();
   };
 
-  const handleSetPreventSave = (val: boolean) => {
+  const onSetPreventSave = (val: boolean) => {
     preventSave.current = val;
   };
 
-  const ActivateCell = (props: any) => {
-    useEffect(() => {
-      setActive(currentRowRef.current);
-      props.onRevert();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props]);
-    return <></>;
+  const doSetActive = () => setActive(currentRowRef.current);
+
+  const disableFilter = () => {
+    onFilterChange({ ...filterState, disabled: true }, false);
   };
 
-  const bookEditor = (props: any) => {
-    if (readonly) return <></>;
-    return (
-      <BookSelect
-        id="book"
-        suggestions={suggestionRef.current ? suggestionRef.current : []}
-        placeHolder={t.bookSelect}
-        setPreventSave={handleSetPreventSave}
-        {...props}
-      />
-    );
-  };
+  const planSheetFill = usePlanSheetFill({
+    ...props,
+    onSetPreventSave,
+    doSetActive,
+    disableFilter,
+    onPlayStatus,
+    onPassageDetail,
+    onAction,
+    onAudacity: handleAudacity,
+    onDelete: handleConfirmDelete,
+  });
 
   const handleAutoSave = () => {
     if (changedRef.current && !preventSave.current && !global.alertOpen) {
@@ -630,10 +584,33 @@ export function PlanSheet(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [toolsChanged]);
 
-  const refErrTest = (ref: any) =>
-    typeof ref !== 'string' ||
-    (!refMatch(ref) &&
-      passageTypeFromRef(ref, inlinePassages) === PassageTypeEnum.PASSAGE);
+  const warningTest = (refCol: number) => {
+    let refErr = false;
+    if (refCol > 0) {
+      rowData.forEach((row, rowIndex) => {
+        if (isPassage(rowIndex)) {
+          if (refErrTest(row[refCol])) refErr = true;
+        }
+      });
+    }
+    if (refErr && !warning) setWarning(t.refErr);
+    else if (!refErr && warning) setWarning(undefined);
+  };
+
+  const filtered = useMemo(() => {
+    // console.log('filtered useMemo', filterState);
+    return (
+      !filterState.disabled &&
+      (filterState.minStep !== '' ||
+        filterState.maxStep !== '' ||
+        filterState.hideDone ||
+        filterState.minSection > 1 ||
+        (filterState.maxSection > -1 &&
+          filterState.maxSection < maximumSection) ||
+        filterState.assignedToMe ||
+        filterState.hidePublishing)
+    );
+  }, [filterState, maximumSection]);
 
   useEffect(() => {
     if (rowData.length !== rowInfo.length) {
@@ -641,292 +618,16 @@ export function PlanSheet(props: IProps) {
     } else {
       const refCol = bookCol + 1;
 
-      let data = [
-        [
-          {
-            value: t.step,
-            readOnly: true,
-          } as ICell,
-          {
-            value: t.assigned,
-            readOnly: true,
-          } as ICell,
-          {
-            value: t.action,
-            readOnly: true,
-            width: userIsAdmin ? 50 : 20,
-          } as ICell,
-        ].concat(
-          columns.map((col) => {
-            return { ...col, readOnly: true };
-          })
-        ),
-      ].concat(
-        rowData.map((row, rowIndex) => {
-          const section = isSection(rowIndex);
-          const passage = isPassage(rowIndex);
-          const movement = isMovement(rowIndex);
-          const book = isBook(rowIndex);
-          const title = isTitle(rowIndex);
-          const iscurrent: string =
-            currentRow === rowIndex + 1 ? ' currentrow ' : '';
-
-          const calcClassName =
-            iscurrent + section
-              ? 'set' +
-                (passage ? 'p' : '') +
-                (movement ? ' movement' : book ? ' bk' : '')
-              : 'pass';
-
-          return [
-            {
-              value: passage &&
-                !isPublishingTitle(row[refCol].toString(), inlinePassages) && (
-                  <Badge
-                    badgeContent={rowInfo[rowIndex].discussionCount}
-                    color="secondary"
-                  >
-                    <StageReport
-                      onClick={handlePassageDetail(rowIndex)}
-                      step={rowInfo[rowIndex].step || ''}
-                      tip={tv.gotowork}
-                    />
-                  </Badge>
-                ),
-              readOnly: true,
-              className: calcClassName,
-            } as ICell,
-            {
-              value: (
-                <MemoizedTaskAvatar
-                  assigned={rowInfo[rowIndex].transcriber?.id || ''}
-                />
-              ),
-              readOnly: true,
-              className: calcClassName,
-            } as ICell,
-          ]
-            .concat(
-              passage
-                ? [
-                    {
-                      value: (
-                        <PlanAudioActions
-                          rowIndex={rowIndex}
-                          isPassage={passage}
-                          isNote={
-                            rowInfo[rowIndex].passageType ===
-                            PassageTypeEnum.NOTE
-                          }
-                          mediaId={rowInfo[rowIndex].mediaId?.id || ''}
-                          mediaShared={rowInfo[rowIndex].mediaShared}
-                          onPlayStatus={handlePlayStatus}
-                          onHistory={props.onHistory}
-                          isPlaying={
-                            srcMediaId === rowInfo[rowIndex].mediaId?.id &&
-                            mediaPlaying
-                          }
-                        />
-                      ),
-                      readOnly: true,
-                      className: calcClassName,
-                    } as ICell,
-                  ]
-                : [
-                    {
-                      value: <></>,
-                      readOnly: true,
-                      className: calcClassName,
-                    } as ICell,
-                  ]
-            )
-            .concat(
-              row.slice(0, LastCol).map((e, cellIndex) => {
-                return cellIndex === bookCol && passage
-                  ? {
-                      value: e,
-                      readOnly: readonly,
-                      className: 'book ' + calcClassName,
-                      dataEditor: bookEditor,
-                    }
-                  : cellIndex === refCol
-                  ? {
-                      value:
-                        passageTypeFromRef(e as string, inlinePassages) !==
-                        PassageTypeEnum.PASSAGE ? (
-                          <RefRender
-                            value={e as string}
-                            flat={inlinePassages}
-                          />
-                        ) : (
-                          e
-                        ),
-                      readOnly:
-                        readonly ||
-                        section ||
-                        passageTypeFromRef(e as string, inlinePassages) !==
-                          PassageTypeEnum.PASSAGE,
-                      className:
-                        calcClassName +
-                        (passage ? ' ref' + (refErrTest(e) ? 'Err' : '') : ''),
-                    }
-                  : {
-                      value: e,
-                      readOnly:
-                        readonly ||
-                        (cellIndex === SectionSeqCol && (e as number) < 0) ||
-                        cellIndex === PassageSeqCol ||
-                        section
-                          ? passage
-                            ? false
-                            : cellIndex > 1
-                          : cellIndex <= 1,
-                      className:
-                        (cellIndex === SectionSeqCol ||
-                        cellIndex === PassageSeqCol
-                          ? 'num '
-                          : '') + calcClassName,
-                    };
-              })
-            )
-            .concat([
-              {
-                value: (
-                  <PlanActionMenu
-                    rowIndex={rowIndex}
-                    isSection={section}
-                    isPassage={passage}
-                    psgType={rowInfo[rowIndex].passageType}
-                    published={rowInfo[rowIndex].published}
-                    organizedBy={organizedBy}
-                    sectionSequenceNumber={row[SectionSeqCol].toString()}
-                    passageSequenceNumber={row[PassageSeqCol].toString()}
-                    readonly={readonly || check.length > 0}
-                    onDelete={handleConfirmDelete}
-                    onPlayStatus={handlePlayStatus}
-                    onAudacity={handleAudacity}
-                    onRecord={props.onRecord}
-                    onUpload={props.onUpload}
-                    onAssign={props.onAssign}
-                    canAssign={userIsAdmin && !movement && !book}
-                    canDelete={userIsAdmin}
-                    active={active - 1 === rowIndex}
-                    onDisableFilter={
-                      !readonly && filtered ? disableFilter : undefined
-                    }
-                    onPublish={
-                      !readonly &&
-                      !inlinePassages &&
-                      rowInfo.length > 0 &&
-                      section &&
-                      !book &&
-                      !movement
-                        ? onPublish
-                        : undefined
-                    }
-                    onNote={
-                      !readonly &&
-                      !filtered &&
-                      !inlinePassages &&
-                      !isTitle(rowIndex + 1)
-                        ? onNote
-                        : undefined
-                    }
-                    onPassageBelow={
-                      !readonly &&
-                      !filtered &&
-                      !inlinePassages &&
-                      !movement &&
-                      !isInMovement(rowIndex) &&
-                      !book &&
-                      !isTitle(rowIndex + 1)
-                        ? onPassageBelow
-                        : undefined
-                    }
-                    onMovementAbove={
-                      !readonly &&
-                      !filtered &&
-                      !inlinePassages &&
-                      rowInfo.length > 0 &&
-                      section &&
-                      !book
-                        ? onMovementAbove
-                        : undefined
-                    }
-                    onSectionAbove={
-                      !readonly &&
-                      !filtered &&
-                      rowInfo.length > 0 &&
-                      section &&
-                      !book
-                        ? onSectionAbove
-                        : undefined
-                    }
-                    onPassageDown={
-                      !readonly &&
-                      !filtered &&
-                      passage &&
-                      !title &&
-                      !book &&
-                      !isSection(rowIndex + 1) &&
-                      rowIndex < rowInfo.length - 1
-                        ? onPassageDown
-                        : undefined
-                    }
-                    onPassageToNext={
-                      !readonly &&
-                      !filtered &&
-                      !inlinePassages &&
-                      passage &&
-                      !title &&
-                      !book &&
-                      isSection(rowIndex + 1)
-                        ? onPassageToNext
-                        : undefined
-                    }
-                    onPassageUp={
-                      !readonly &&
-                      !filtered &&
-                      rowIndex > 1 &&
-                      passage &&
-                      !isTitle(rowIndex - 1) &&
-                      !title &&
-                      !book &&
-                      !isSection(rowIndex - 1)
-                        ? onPassageUp
-                        : undefined
-                    }
-                    onPassageToPrev={
-                      !readonly &&
-                      !filtered &&
-                      !inlinePassages &&
-                      rowIndex > 1 &&
-                      passage &&
-                      !title &&
-                      !book &&
-                      firstVernacularInSection(rowIndex)
-                        ? onPassageToPrev
-                        : undefined
-                    }
-                  />
-                ),
-                // readOnly: true,
-                className: calcClassName,
-                dataEditor: ActivateCell,
-              } as ICell,
-            ]);
-        })
+      const data = planSheetFill(
+        refCol,
+        currentRow,
+        srcMediaId,
+        mediaPlaying,
+        check,
+        active,
+        filtered
       );
-      let refErr = false;
-      if (refCol > 0) {
-        rowData.forEach((row, rowIndex) => {
-          if (isPassage(rowIndex)) {
-            if (refErrTest(row[refCol])) refErr = true;
-          }
-        });
-      }
-      if (refErr && !warning) setWarning(t.refErr);
-      else if (!refErr && warning) setWarning(undefined);
+      warningTest(refCol);
       setData(data);
     }
 
@@ -969,34 +670,10 @@ export function PlanSheet(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRow, rowData, rowInfo]);
 
-  const filtered = useMemo(() => {
-    // console.log('filtered useMemo', filterState);
-    return (
-      !filterState.disabled &&
-      (filterState.minStep !== '' ||
-        filterState.maxStep !== '' ||
-        filterState.hideDone ||
-        filterState.minSection > 1 ||
-        (filterState.maxSection > -1 &&
-          filterState.maxSection < maximumSection) ||
-        filterState.assignedToMe ||
-        filterState.hidePublishing)
-    );
-  }, [filterState, maximumSection]);
-
   const dataRowisSection = useMemo(() => {
     return isSection(currentRow - 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRow]);
-
-  const dataRowisBook = useMemo(() => {
-    return isBook(currentRow - 1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentRow]);
-
-  const disableFilter = () => {
-    onFilterChange({ ...filterState, disabled: true }, false);
-  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -1015,56 +692,9 @@ export function PlanSheet(props: IProps) {
                   handleNoContextMenu={handleNoContextMenu}
                   sectionSequenceNumber={currentRowSectionNum}
                   passageSequenceNumber={currentRowPassageNum}
-                  onNote={
-                    !readonly && !filtered && !isTitle(currentRow)
-                      ? onNote
-                      : undefined
-                  }
-                  onPassageBelow={
-                    !readonly &&
-                    !filtered &&
-                    !inlinePassages &&
-                    !isMovement(currentRow - 1) &&
-                    !isInMovement(currentRow - 1) &&
-                    !dataRowisBook &&
-                    !isTitle(currentRow)
-                      ? onPassageBelow
-                      : undefined
-                  }
-                  onPassageEnd={
-                    !filtered && currentRow !== rowInfo.length
-                      ? onPassageEnd
-                      : undefined
-                  }
-                  onPassageLast={
-                    !filtered && dataRowisSection ? onPassageLast : undefined
-                  }
-                  onMovementAbove={
-                    !readonly &&
-                    !filtered &&
-                    !inlinePassages &&
-                    !dataRowisBook &&
-                    rowInfo.length > 0 &&
-                    currentRow > 0 &&
-                    dataRowisSection
-                      ? onMovementAbove
-                      : undefined
-                  }
-                  onSectionAbove={
-                    !filtered &&
-                    !dataRowisBook &&
-                    currentRow > 0 &&
-                    rowInfo.length > 0
-                      ? onSectionAbove
-                      : undefined
-                  }
-                  onSectionEnd={!filtered ? onSectionEnd : undefined}
-                  onDisableFilter={filtered ? disableFilter : undefined}
-                  onPublishing={
-                    !readonly && !filtered && !inlinePassages
-                      ? onPublishing
-                      : undefined
-                  }
+                  onDisableFilter={disableFilter}
+                  showIcon={showIcon(filtered, currentRow - 1)}
+                  onAction={onAction}
                 />
                 <AltButton
                   id="planSheetImp"

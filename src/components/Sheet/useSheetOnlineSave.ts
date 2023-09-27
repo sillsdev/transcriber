@@ -1,5 +1,5 @@
 import { useGlobal } from 'reactn';
-import { SectionPassage, IWorkflow, Passage } from '../../model';
+import { SectionPassage, ISheet, Passage } from '../../model';
 import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
 import JSONAPISource from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -52,14 +52,14 @@ export const useWfOnlineSave = (props: IProps) => {
     return remoteId(table, localid, memory.keyMap);
   };
 
-  // return Promise<boolean>: true if deep changes in workflow
-  return async (workflow: IWorkflow[], lastSaved?: string) => {
+  // return Promise<boolean>: true if deep changes in sheet
+  return async (sheet: ISheet[], lastSaved?: string) => {
     let hasNew = false;
     const recs: SaveRec[][] = [];
     const deleteItems: number[] = [];
     var anychanged = false;
-    for (let ix = 0; ix < workflow.length; ix += 1) {
-      const w = workflow[ix];
+    for (let ix = 0; ix < sheet.length; ix += 1) {
+      const w = sheet[ix];
       if (w.deleted) deleteItems.push(ix);
       const rowRec: SaveRec[] = [];
       if (isSectionRow(w)) {
@@ -153,7 +153,7 @@ export const useWfOnlineSave = (props: IProps) => {
         await memory.sync(
           await remote.pull((q) => q.findRecord({ type: 'plan', id: plan }))
         );
-        const anyNew = workflow.reduce(
+        const anyNew = sheet.reduce(
           (prev, cur) =>
             prev ||
             (isSectionRow(cur) && isSectionAdding(cur)) ||
@@ -165,7 +165,7 @@ export const useWfOnlineSave = (props: IProps) => {
           //set the ids in the sheet
           //outrecs is an array of arrays of IRecords
           const outrecs = JSON.parse(rec.attributes.data);
-          workflow.forEach((row, index) => {
+          sheet.forEach((row, index) => {
             if (isSectionRow(row) && isSectionAdding(row))
               row.sectionId = {
                 type: 'section',
@@ -194,10 +194,10 @@ export const useWfOnlineSave = (props: IProps) => {
       const tb = new TransformBuilder();
       const operations: Operation[] = [];
       deleteItems.forEach((i) => {
-        const wf = workflow[i];
-        if (wf.sectionId) operations.push(tb.removeRecord(wf.sectionId));
-        if (wf.passage)
-          operations.push(tb.removeRecord(wf.passage as RecordIdentity));
+        const ws = sheet[i];
+        if (ws.sectionId) operations.push(tb.removeRecord(ws.sectionId));
+        if (ws.passage)
+          operations.push(tb.removeRecord(ws.passage as RecordIdentity));
       });
       if (operations.length > 0) {
         await memory.sync(await backup.push(operations));
