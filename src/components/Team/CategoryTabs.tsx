@@ -7,7 +7,6 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { categorySelector } from '../../selector';
 import { ICategoryStrings } from '../../model';
 import { ArtifactCategoryType } from '../../crud';
-import { useGlobal } from 'reactn';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -45,7 +44,6 @@ interface IProps {
 
 export default function CategoryTabs({ teamId, onClose }: IProps) {
   const [value, setValue] = React.useState(0);
-  const [isDeveloper] = useGlobal('developer');
   const t: ICategoryStrings = useSelector(categorySelector, shallowEqual);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -58,7 +56,7 @@ export default function CategoryTabs({ teamId, onClose }: IProps) {
         <Tabs value={value} onChange={handleChange} aria-label="category tabs">
           <Tab label={t.resource} {...a11yProps(0)} />
           <Tab label={t.discussion} {...a11yProps(1)} />
-          {isDeveloper && <Tab label={t.note} {...a11yProps(2)} />}
+          <Tab label={t.note} {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -75,15 +73,13 @@ export default function CategoryTabs({ teamId, onClose }: IProps) {
           onClose={onClose}
         />
       </TabPanel>
-      {isDeveloper && (
-        <TabPanel value={value} index={2}>
-          <CategoryList
-            type={ArtifactCategoryType.Note}
-            teamId={teamId}
-            onClose={onClose}
-          />
-        </TabPanel>
-      )}
+      <TabPanel value={value} index={2}>
+        <CategoryList
+          type={ArtifactCategoryType.Note}
+          teamId={teamId}
+          onClose={onClose}
+        />
+      </TabPanel>
     </Box>
   );
 }
