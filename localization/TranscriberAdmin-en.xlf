@@ -4264,6 +4264,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.graphic">
+         <segment>
+            <source>Graphic</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.moveUp">
          <segment>
             <source>Move {pt} {0} up</source>

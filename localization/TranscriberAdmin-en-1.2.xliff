@@ -4974,6 +4974,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="planSheet.graphic">
+      		<source>Graphic</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="planSheet.moveUp">
       		<source>Move {pt} {0} up</source>
       		<target/>

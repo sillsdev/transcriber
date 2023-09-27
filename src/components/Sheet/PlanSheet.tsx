@@ -490,6 +490,7 @@ export function PlanSheet(props: IProps) {
     onPlayStatus,
     onPassageDetail,
     onAction,
+    filterState,
     onAudacity: handleAudacity,
     onDelete: handleConfirmDelete,
   });
@@ -618,15 +619,15 @@ export function PlanSheet(props: IProps) {
     } else {
       const refCol = bookCol + 1;
 
-      const data = planSheetFill(
+      const data = planSheetFill({
         refCol,
         currentRow,
         srcMediaId,
         mediaPlaying,
         check,
         active,
-        filtered
-      );
+        filtered,
+      });
       warningTest(refCol);
       setData(data);
     }
