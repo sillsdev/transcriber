@@ -16,7 +16,7 @@ import {
 } from '../../../selector';
 import SelectArtifactCategory, {
   ScriptureEnum,
-} from '../../Workflow/SelectArtifactCategory';
+} from '../../Sheet/SelectArtifactCategory';
 import { ResourceTypeEnum } from './PassageDetailArtifacts';
 
 interface IProps {

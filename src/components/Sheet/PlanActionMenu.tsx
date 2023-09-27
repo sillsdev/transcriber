@@ -24,6 +24,7 @@ import {
   sharedSelector,
 } from '../../selector';
 import { PlanMoreMenuItems } from './PlanMoreMenuItems';
+import { ExtraIcon } from '.';
 
 interface IProps {
   rowIndex: number;
@@ -45,15 +46,8 @@ interface IProps {
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
   onDisableFilter?: () => void;
-  onPassageBelow?: () => void;
-  onPassageToPrev?: () => void;
-  onPassageToNext?: () => void;
-  onMovementAbove?: () => void;
-  onSectionAbove?: () => void;
-  onPassageUp?: () => void;
-  onPassageDown?: () => void;
-  onNote?: () => void;
-  onPublish?: () => void;
+  showIcon: (icon: ExtraIcon) => boolean;
+  onAction: (what: ExtraIcon) => void;
 }
 export function PlanActionMenu(props: IProps) {
   const { active } = props;

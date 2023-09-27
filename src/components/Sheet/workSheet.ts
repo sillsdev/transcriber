@@ -1,13 +1,13 @@
-import { IwfKind, IWorkflow, WorkflowLevel } from '../../model';
+import { IwsKind, ISheet, SheetLevel } from '../../model';
 
-interface MyWorkflow extends IWorkflow {
+interface MyWorkflow extends ISheet {
   [key: string]: any;
 }
 
 const getFilteredSection = (
   section: number,
-  filtered: IWorkflow[],
-  unfiltered: IWorkflow[]
+  filtered: ISheet[],
+  unfiltered: ISheet[]
 ) => {
   var totalPassages =
     unfiltered.filter((w) => !w.deleted && w.sectionSeq === section).length - 1;
@@ -17,23 +17,23 @@ const getFilteredSection = (
     ? '(' + showingPassages + '/' + totalPassages + ')'
     : '';
 };
-export const workflowSheet = (
-  filtered: IWorkflow[],
+export const workSheet = (
+  filtered: ISheet[],
   cols: string[],
-  unfiltered: IWorkflow[]
+  unfiltered: ISheet[]
 ) => {
   const results = Array<Array<any>>();
   filtered.forEach((r: MyWorkflow) => {
-    const hi = r.kind === IwfKind.Section ? 2 : 99;
-    const lo = r.kind === IwfKind.Passage ? 1 : -1;
+    const hi = r.kind === IwsKind.Section ? 2 : 99;
+    const lo = r.kind === IwsKind.Passage ? 1 : -1;
     const line = Array<any>();
     cols.forEach((c, i) => {
       var value;
-      if (r.kind === IwfKind.Section && c === 'passageSeq')
+      if (r.kind === IwsKind.Section && c === 'passageSeq')
         value = getFilteredSection(r['sectionSeq'], filtered, unfiltered);
       else if (
-        r.kind === IwfKind.Section &&
-        r.level === WorkflowLevel.Movement &&
+        r.kind === IwsKind.Section &&
+        r.level === SheetLevel.Movement &&
         c === 'reference'
       )
         value = r[c];

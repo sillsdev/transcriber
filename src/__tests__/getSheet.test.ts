@@ -3,11 +3,11 @@ import '@testing-library/jest-dom/extend-expect';
 import {
   Section,
   Passage,
-  IWorkflow,
+  ISheet,
   OrgWorkflowStep,
   IWorkflowStepsStrings,
 } from '../model';
-import { getWorkflow } from '../components/Workflow';
+import { getSheet } from '../components/Sheet';
 import { memory } from '../schema';
 
 const wfStr = {
@@ -279,35 +279,25 @@ afterEach(cleanup);
 
 test('empty input gives empty output', async () => {
   expect(
-    getWorkflow('', [], [], false, false, memory, [], wfStr, getDiscussionCount)
+    getSheet('', [], [], false, false, memory, [], wfStr, getDiscussionCount)
   ).toEqual([]);
 });
 
 test('empty flat input gives empty output', async () => {
   expect(
-    getWorkflow('', [], [], true, false, memory, [], wfStr, getDiscussionCount)
+    getSheet('', [], [], true, false, memory, [], wfStr, getDiscussionCount)
   ).toEqual([]);
 });
 
 test('empty input with plan id gives empty output', async () => {
   expect(
-    getWorkflow(
-      'pl1',
-      [],
-      [],
-      false,
-      false,
-      memory,
-      [],
-      wfStr,
-      getDiscussionCount
-    )
+    getSheet('pl1', [], [], false, false, memory, [], wfStr, getDiscussionCount)
   ).toEqual([]);
 });
 
 test('one section gives output', async () => {
   expect(
-    getWorkflow(
+    getSheet(
       'pl1',
       [s1],
       [],
@@ -331,12 +321,12 @@ test('one section gives output', async () => {
       editor: undefined,
       deleted: false,
     },
-  ] as IWorkflow[]);
+  ] as ISheet[]);
 });
 
 test('one section and one passage gives output', async () => {
   expect(
-    getWorkflow(
+    getSheet(
       'pl1',
       [s1],
       [pa1],
@@ -374,12 +364,12 @@ test('one section and one passage gives output', async () => {
       mediaShared: 3,
       deleted: false,
     },
-  ] as IWorkflow[]);
+  ] as ISheet[]);
 });
 
 test('one section and two passages gives output', async () => {
   expect(
-    getWorkflow(
+    getSheet(
       'pl1',
       [s1],
       [pa1, pa2],
@@ -432,12 +422,12 @@ test('one section and two passages gives output', async () => {
       mediaId: undefined,
       mediaShared: 3,
     },
-  ] as IWorkflow[]);
+  ] as ISheet[]);
 });
 
 test('one section and two passages with flat output', async () => {
   expect(
-    getWorkflow(
+    getSheet(
       'pl1',
       [s1],
       [pa1, pa2],
@@ -483,12 +473,12 @@ test('one section and two passages with flat output', async () => {
       mediaShared: 3,
       deleted: false,
     },
-  ] as IWorkflow[]);
+  ] as ISheet[]);
 });
 
 test('one section and three passages out of order', async () => {
   expect(
-    getWorkflow(
+    getSheet(
       'pl1',
       [s1],
       [pa3, pa1, pa2],
@@ -555,12 +545,12 @@ test('one section and three passages out of order', async () => {
       mediaShared: 3,
       deleted: false,
     },
-  ] as IWorkflow[]);
+  ] as ISheet[]);
 });
 
 test('one flat section and with one passage gives output', async () => {
   expect(
-    getWorkflow(
+    getSheet(
       'pl1',
       [s1],
       [pa1],
@@ -591,12 +581,12 @@ test('one flat section and with one passage gives output', async () => {
       mediaShared: 3,
       deleted: false,
     },
-  ] as IWorkflow[]);
+  ] as ISheet[]);
 });
 
 test('two flat sections and one from another plan gives output', async () => {
   expect(
-    getWorkflow(
+    getSheet(
       'pl1',
       [s1, s2, s3],
       [pa1, pa4, pa11],
@@ -647,12 +637,12 @@ test('two flat sections and one from another plan gives output', async () => {
       mediaShared: 3,
       deleted: false,
     },
-  ] as IWorkflow[]);
+  ] as ISheet[]);
 });
 
 test('two sections and passages with one from another plan', async () => {
   expect(
-    getWorkflow(
+    getSheet(
       'pl1',
       [s1, s2, s3],
       [pa11, pa3, pa1, pa4, pa2],
@@ -745,11 +735,11 @@ test('two sections and passages with one from another plan', async () => {
       mediaShared: 3,
       deleted: false,
     },
-  ] as IWorkflow[]);
+  ] as ISheet[]);
 });
 
 test('update one flat section to two flat section ignoring other plan', async () => {
-  const workflow = getWorkflow(
+  const sheet = getSheet(
     'pl1',
     [s1, s3],
     [pa1, pa11],
@@ -761,7 +751,7 @@ test('update one flat section to two flat section ignoring other plan', async ()
     wfStr,
     getDiscussionCount
   );
-  expect(workflow).toEqual([
+  expect(sheet).toEqual([
     {
       level: 0,
       kind: 2,
@@ -773,7 +763,7 @@ test('update one flat section to two flat section ignoring other plan', async ()
       comment: 'salutation',
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa1' },
+      passage: { type: 'passage', id: 'pa1' } as Passage,
       passageUpdated: '2021-09-15',
       transcriber: undefined,
       editor: undefined,
@@ -781,8 +771,8 @@ test('update one flat section to two flat section ignoring other plan', async ()
       mediaShared: 3,
       deleted: false,
     },
-  ] as IWorkflow[]);
-  const updated = getWorkflow(
+  ] as ISheet[]);
+  const updated = getSheet(
     'pl1',
     [s1, s2, s3],
     [pa1, pa4, pa11],
@@ -793,7 +783,7 @@ test('update one flat section to two flat section ignoring other plan', async ()
     [],
     wfStr,
     getDiscussionCount,
-    workflow
+    sheet
   );
   expect(updated).toEqual([
     {
@@ -807,7 +797,7 @@ test('update one flat section to two flat section ignoring other plan', async ()
       comment: 'salutation',
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa1' },
+      passage: { type: 'passage', id: 'pa1' } as Passage,
       passageUpdated: '2021-09-15',
       transcriber: undefined,
       editor: undefined,
@@ -834,12 +824,12 @@ test('update one flat section to two flat section ignoring other plan', async ()
       mediaShared: 3,
       deleted: false,
     },
-  ] as IWorkflow[]);
+  ] as ISheet[]);
 });
 
 test('one section and one passage with step gives output', async () => {
   expect(
-    getWorkflow(
+    getSheet(
       'pl1',
       [s1],
       [pa1],
@@ -878,7 +868,7 @@ test('one section and one passage with step gives output', async () => {
       mediaShared: 3,
       deleted: false,
     },
-  ] as IWorkflow[]);
+  ] as ISheet[]);
 });
 
 test('two flat sections with steps gives output', async () => {
@@ -891,7 +881,7 @@ test('two flat sections with steps gives output', async () => {
     },
   } as Passage;
   expect(
-    getWorkflow(
+    getSheet(
       'pl1',
       [s1, s2],
       [pa1b, pa4, pa11],
@@ -944,5 +934,5 @@ test('two flat sections with steps gives output', async () => {
       mediaShared: 3,
       deleted: false,
     },
-  ] as IWorkflow[]);
+  ] as ISheet[]);
 });

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArtifactTypeSlug, remoteIdGuid, useArtifactType } from '../../crud';
-import SelectArtifactType from '../Workflow/SelectArtifactType';
+import SelectArtifactType from '../Sheet/SelectArtifactType';
 import { ILanguage, Language } from '../../control';
 import { useGlobal } from 'reactn';
 

@@ -1,16 +1,16 @@
 import {
   IMediaShare,
   IScriptureTableStrings,
-  IwfKind,
-  IWorkflow,
-  WorkflowLevel,
+  IwsKind,
+  ISheet,
+  SheetLevel,
 } from '../../model';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { currentDateTime } from '../../utils/currentDateTime';
 import { parseInt } from 'lodash';
 import { useOrganizedBy } from '../../crud/useOrganizedBy';
 
-interface MyWorkflow extends IWorkflow {
+interface MySheet extends ISheet {
   [key: string]: any;
 }
 
@@ -103,7 +103,7 @@ export const useWfPaste = (props: IProps) => {
 
   return (rows: string[][]) => {
     const valid = validTable(rows);
-    let addedWorkflow: IWorkflow[] = [];
+    let addedWorkflow: ISheet[] = [];
     if (valid) {
       const startRow = isBlankOrValidNumber(rows[0][secNumCol]) ? 0 : 1;
       if (!flat) {
@@ -128,32 +128,32 @@ export const useWfPaste = (props: IProps) => {
             isValidNumber(row2[secNumCol]) || isValidNumber(row2[passNumCol])
         )
         .forEach((r) => {
-          const wf = { deleted: false } as MyWorkflow;
+          const ws = { deleted: false } as MySheet;
           colNames.forEach((c, i) => {
             const val = r[i];
-            if (c === 'book') wf.book = findBook(val);
+            if (c === 'book') ws.book = findBook(val);
             else if (c === 'sectionSeq') {
               if (isValidNumber(val)) lastSec = parseInt(val);
-              wf.sectionSeq = lastSec;
-              wf.sectionUpdated = updatedAt;
+              ws.sectionSeq = lastSec;
+              ws.sectionUpdated = updatedAt;
             } else if (c === 'passageSeq') {
-              wf.passageSeq = isValidNumber(val) ? parseInt(val) : 0;
-              wf.passageUpdated = updatedAt;
-            } else wf[c] = val;
+              ws.passageSeq = isValidNumber(val) ? parseInt(val) : 0;
+              ws.passageUpdated = updatedAt;
+            } else ws[c] = val;
           });
-          if (wf.passageSeq) {
-            wf.level = WorkflowLevel.Passage;
-            wf.kind = flat ? IwfKind.SectionPassage : IwfKind.Passage;
-            wf.mediaShared = shared ? IMediaShare.None : IMediaShare.NotPublic;
+          if (ws.passageSeq) {
+            ws.level = SheetLevel.Passage;
+            ws.kind = flat ? IwsKind.SectionPassage : IwsKind.Passage;
+            ws.mediaShared = shared ? IMediaShare.None : IMediaShare.NotPublic;
           } else {
-            wf.level = WorkflowLevel.Section;
-            wf.kind = flat ? IwfKind.SectionPassage : IwfKind.Section;
-            if (wf.passageSeq === undefined) {
-              wf.passageSeq = 1;
-              wf.passageUpdated = updatedAt;
+            ws.level = SheetLevel.Section;
+            ws.kind = flat ? IwsKind.SectionPassage : IwsKind.Section;
+            if (ws.passageSeq === undefined) {
+              ws.passageSeq = 1;
+              ws.passageUpdated = updatedAt;
             }
           }
-          addedWorkflow.push(wf);
+          addedWorkflow.push(ws);
         });
     }
     return { valid, addedWorkflow };

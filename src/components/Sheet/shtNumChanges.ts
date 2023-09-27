@@ -4,13 +4,10 @@ import {
   isSectionUpdated,
   isPassageUpdated,
 } from '.';
-import { IWorkflow } from '../../model';
+import { ISheet } from '../../model';
 
-export const wfNumChanges = (
-  workflow: IWorkflow[],
-  lastSaved: string | undefined
-) =>
-  workflow.reduce((prev, cur) => {
+export const shtNumChanges = (sheet: ISheet[], lastSaved: string | undefined) =>
+  sheet.reduce((prev, cur) => {
     let secChange = false;
     if (isSectionRow(cur) && isSectionUpdated(cur, lastSaved)) {
       secChange = true;

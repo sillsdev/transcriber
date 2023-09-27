@@ -1,19 +1,19 @@
-import { IWorkflow, IwfKind, IMediaShare } from '../model';
-import { wfResequence } from '../components/Workflow';
+import { ISheet, IwsKind, IMediaShare } from '../model';
+import { shtResequence } from '../components/Sheet';
 
 test('resequence empty give empty', () => {
-  expect(wfResequence([])).toEqual([]);
+  expect(shtResequence([])).toEqual([]);
 });
 
 test('resequence empty give empty with section num', () => {
-  expect(wfResequence([], 1)).toEqual([]);
+  expect(shtResequence([], 1)).toEqual([]);
 });
 
 test('resequence 3 sections', () => {
-  const workflow: IWorkflow[] = [
+  const sheet: ISheet[] = [
     {
       level: 0,
-      kind: IwfKind.Section,
+      kind: IwsKind.Section,
       sectionSeq: 3,
       title: 'Luke wrote this book about Jesus for Theophilus',
       passageSeq: 0,
@@ -25,7 +25,7 @@ test('resequence 3 sections', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 3,
       title: '',
       passageSeq: 1,
@@ -37,7 +37,7 @@ test('resequence 3 sections', () => {
     },
     {
       level: 0,
-      kind: IwfKind.Section,
+      kind: IwsKind.Section,
       sectionSeq: 2,
       title: 'An angel said that John the Baptizer would be born',
       passageSeq: 0,
@@ -49,7 +49,7 @@ test('resequence 3 sections', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
       passageSeq: 1,
@@ -61,7 +61,7 @@ test('resequence 3 sections', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
       passageSeq: 2,
@@ -73,7 +73,7 @@ test('resequence 3 sections', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
       passageSeq: 3,
@@ -85,7 +85,7 @@ test('resequence 3 sections', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
       passageSeq: 4,
@@ -97,7 +97,7 @@ test('resequence 3 sections', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
       passageSeq: 5,
@@ -109,7 +109,7 @@ test('resequence 3 sections', () => {
     },
     {
       level: 0,
-      kind: IwfKind.Section,
+      kind: IwsKind.Section,
       sectionSeq: 1,
       title: 'An angel told Mary that Jesus would be born',
       passageSeq: 0,
@@ -121,7 +121,7 @@ test('resequence 3 sections', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 1,
       title: '',
       passageSeq: 1,
@@ -133,7 +133,7 @@ test('resequence 3 sections', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 1,
       title: '',
       passageSeq: 2,
@@ -145,7 +145,7 @@ test('resequence 3 sections', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 1,
       title: '',
       passageSeq: 3,
@@ -157,8 +157,8 @@ test('resequence 3 sections', () => {
     },
   ];
 
-  const reseq = wfResequence(workflow);
-  expect(reseq.length).toBe(workflow.length);
+  const reseq = shtResequence(sheet);
+  expect(reseq.length).toBe(sheet.length);
   expect(reseq[0].sectionSeq).toBe(1);
   expect(reseq.map((i) => `${i.sectionSeq}.${i.passageSeq}`)).toEqual([
     '1.0',
@@ -177,10 +177,10 @@ test('resequence 3 sections', () => {
 });
 
 test('correct sequence is unchanged', () => {
-  const workflow: IWorkflow[] = [
+  const sheet: ISheet[] = [
     {
       level: 0,
-      kind: IwfKind.Section,
+      kind: IwsKind.Section,
       sectionSeq: 1,
       title: 'Luke wrote this book about Jesus for Theophilus',
       passageSeq: 0,
@@ -192,7 +192,7 @@ test('correct sequence is unchanged', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 1,
       title: '',
       passageSeq: 1,
@@ -204,7 +204,7 @@ test('correct sequence is unchanged', () => {
     },
     {
       level: 0,
-      kind: IwfKind.Section,
+      kind: IwsKind.Section,
       sectionSeq: 2,
       title: 'An angel said that John the Baptizer would be born',
       passageSeq: 0,
@@ -216,7 +216,7 @@ test('correct sequence is unchanged', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
       passageSeq: 1,
@@ -228,7 +228,7 @@ test('correct sequence is unchanged', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
       passageSeq: 2,
@@ -240,7 +240,7 @@ test('correct sequence is unchanged', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
       passageSeq: 3,
@@ -252,7 +252,7 @@ test('correct sequence is unchanged', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
       passageSeq: 4,
@@ -264,7 +264,7 @@ test('correct sequence is unchanged', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
       passageSeq: 5,
@@ -276,7 +276,7 @@ test('correct sequence is unchanged', () => {
     },
     {
       level: 0,
-      kind: IwfKind.Section,
+      kind: IwsKind.Section,
       sectionSeq: 3,
       title: 'An angel told Mary that Jesus would be born',
       passageSeq: 0,
@@ -288,7 +288,7 @@ test('correct sequence is unchanged', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 3,
       title: '',
       passageSeq: 1,
@@ -300,7 +300,7 @@ test('correct sequence is unchanged', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 3,
       title: '',
       passageSeq: 2,
@@ -312,7 +312,7 @@ test('correct sequence is unchanged', () => {
     },
     {
       level: 1,
-      kind: IwfKind.Passage,
+      kind: IwsKind.Passage,
       sectionSeq: 3,
       title: '',
       passageSeq: 3,
@@ -324,8 +324,8 @@ test('correct sequence is unchanged', () => {
     },
   ];
 
-  const reseq = wfResequence(workflow);
-  expect(reseq.length).toBe(workflow.length);
+  const reseq = shtResequence(sheet);
+  expect(reseq.length).toBe(sheet.length);
   expect(reseq[0].sectionSeq).toBe(1);
   expect(reseq.map((i) => `${i.sectionSeq}.${i.passageSeq}`)).toEqual([
     '1.0',
@@ -344,10 +344,10 @@ test('correct sequence is unchanged', () => {
 });
 
 test('flat set sections in order, passage is 1', () => {
-  const workflow: IWorkflow[] = [
+  const sheet: ISheet[] = [
     {
       level: 0,
-      kind: IwfKind.SectionPassage,
+      kind: IwsKind.SectionPassage,
       sectionSeq: 1,
       title: 'The Temptation of Jesus',
       passageSeq: 1,
@@ -359,7 +359,7 @@ test('flat set sections in order, passage is 1', () => {
     },
     {
       level: 0,
-      kind: IwfKind.SectionPassage,
+      kind: IwsKind.SectionPassage,
       sectionSeq: 2,
       title: 'Jesus Casts Out a Demon',
       passageSeq: 1,
@@ -371,7 +371,7 @@ test('flat set sections in order, passage is 1', () => {
     },
     {
       level: 0,
-      kind: IwfKind.SectionPassage,
+      kind: IwsKind.SectionPassage,
       sectionSeq: 3,
       title: 'Jesus Heals and Preaches',
       passageSeq: 1,
@@ -383,7 +383,7 @@ test('flat set sections in order, passage is 1', () => {
     },
     {
       level: 0,
-      kind: IwfKind.SectionPassage,
+      kind: IwsKind.SectionPassage,
       sectionSeq: 4,
       title: 'The First Disciples',
       passageSeq: 1,
@@ -395,7 +395,7 @@ test('flat set sections in order, passage is 1', () => {
     },
     {
       level: 0,
-      kind: IwfKind.SectionPassage,
+      kind: IwsKind.SectionPassage,
       sectionSeq: 5,
       title: 'Jesus Heals a Man with Leprosy',
       passageSeq: 1,
@@ -407,7 +407,7 @@ test('flat set sections in order, passage is 1', () => {
     },
     {
       level: 0,
-      kind: IwfKind.SectionPassage,
+      kind: IwsKind.SectionPassage,
       sectionSeq: 6,
       title: 'Jesus Heals a Paralyzed Man',
       passageSeq: 1,
@@ -419,8 +419,8 @@ test('flat set sections in order, passage is 1', () => {
     },
   ];
 
-  const reseq = wfResequence(workflow);
-  expect(reseq.length).toBe(workflow.length);
+  const reseq = shtResequence(sheet);
+  expect(reseq.length).toBe(sheet.length);
   expect(reseq[0].sectionSeq).toBe(1);
   expect(reseq.map((i) => `${i.sectionSeq}.${i.passageSeq}`)).toEqual([
     '1.1',

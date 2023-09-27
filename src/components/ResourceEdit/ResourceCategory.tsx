@@ -1,6 +1,6 @@
 import React from 'react';
 import { IResourceState } from '.';
-import SelectArtifactCategory from '../Workflow/SelectArtifactCategory';
+import SelectArtifactCategory from '../Sheet/SelectArtifactCategory';
 import { ArtifactCategoryType } from '../../crud';
 
 export const ResourceCategory = (props: IResourceState) => {
