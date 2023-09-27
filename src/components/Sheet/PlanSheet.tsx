@@ -166,6 +166,7 @@ interface IProps {
   onUpload: (i: number) => () => void;
   onRecord: (i: number) => void;
   onHistory: (i: number) => () => void;
+  onGraphic: (i: number) => void;
   onFilterChange: (
     newstate: ISTFilterState | undefined,
     isDefault: boolean

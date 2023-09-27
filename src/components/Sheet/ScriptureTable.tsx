@@ -858,6 +858,13 @@ export function ScriptureTable(
     });
   };
 
+  const handleGraphic = (i: number) => {
+    saveIfChanged(() => {
+      const { ws } = getByIndex(workflowRef.current, i);
+      console.log(`adding graphics for ${JSON.stringify(ws)}`);
+    });
+  };
+
   const handleAudacityImport = (i: number, list: File[]) => {
     saveIfChanged(() => {
       showUpload(i, false, list);
@@ -1419,6 +1426,7 @@ export function ScriptureTable(
         onUpload={handleUpload}
         onRecord={handleRecord}
         onHistory={handleVersions}
+        onGraphic={handleGraphic}
         onFilterChange={onFilterChange}
         filterState={filterState}
         maximumSection={sheet[sheet.length - 1]?.sectionSeq ?? 0}

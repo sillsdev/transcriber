@@ -60,6 +60,7 @@ interface IProps {
   onAudacity: (rowIndex: number) => () => void;
   onRecord: (rowIndex: number) => void;
   onUpload: (rowIndex: number) => () => void;
+  onGraphic: (rowIndex: number) => void;
   onAssign: (where: number[]) => () => void;
   disableFilter: () => void;
   onAction: (what: ExtraIcon) => void;
@@ -84,6 +85,7 @@ interface IProps {
  * @param {Function} props.onAudacity - A callback function for launching audacity.
  * @param {Function} props.onRecord - A callback function for handling record.
  * @param {Function} props.onUpload - A callback function for handling upload.
+ * @param {Function} props.onGraphic - A callback function for handling adding a graphic.
  * @param {Function} props.onAssign - A callback function for handling assign.
  * @param {boolean} props.disableFilter - A callback function to disable the filtering.
  * @param {Function} props.onAction - A callback function for handling action.
@@ -106,6 +108,7 @@ export const usePlanSheetFill = ({
   onAudacity,
   onRecord,
   onUpload,
+  onGraphic,
   onAssign,
   disableFilter,
   onAction,
@@ -128,7 +131,7 @@ export const usePlanSheetFill = ({
   };
 
   const handleGraphic = (i: number) => () => {
-    console.log(`Clicked graphic for row ${i}`);
+    onGraphic && onGraphic(i);
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps

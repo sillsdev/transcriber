@@ -250,6 +250,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactCategory.graphic">
+         <segment>
+            <source>Graphic</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactCategory.qanda">
          <segment>
             <source>Question and Answer</source>
@@ -3343,6 +3349,18 @@
       <unit id="mediaUpload.dragDropSingle">
          <segment>
             <source>Drag and drop a file here, or click here to browse for the file.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.graphicTask">
+         <segment>
+            <source>Drag and drop a file here, or click here to browse for the file.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.graphicTitle">
+         <segment>
+            <source>Upload Graphic</source>
             <target/>
          </segment>
       </unit>

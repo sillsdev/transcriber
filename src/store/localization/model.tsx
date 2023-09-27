@@ -52,6 +52,7 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
     "uncategorized": string;
     "retelling": string;
     "grammar": string;
+    "graphic": string;
     "qanda": string;
 };
 
@@ -667,6 +668,8 @@ export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
     "cancel": string;
     "dragDropMultiple": string;
     "dragDropSingle": string;
+    "graphicTask": string;
+    "graphicTitle": string;
     "intellectualPropertyTask": string;
     "intellectualPropertyTitle": string;
     "invalidFile": string;
