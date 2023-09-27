@@ -5,46 +5,54 @@ import {
   useEffect,
   useRef,
   useContext,
+  useMemo,
 } from 'react';
 import {
   IconButton,
-  OutlinedInput,
-  OutlinedInputProps,
   InputLabel,
   InputAdornment,
   FormControl,
   Typography,
   TypographyProps,
   Tooltip,
+  TextField,
+  FormControlLabel,
 } from '@mui/material';
 // import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/MicOutlined';
+import PlayIcon from '@mui/icons-material/PlayArrow';
 import CancelIcon from '@mui/icons-material/CancelOutlined';
 import CheckIcon from '@mui/icons-material/Check';
 import { styled } from '@mui/material';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import * as actions from '../store';
-import { IKeyTermsStrings } from '../model';
+import { IMediaTitleStrings } from '../model';
 import { useSnackBar } from '../hoc/SnackBar';
-import { keyTermsSelector } from '../selector';
+import { mediaTitleSelector, pickerSelector } from '../selector';
 import { waitForIt } from '../utils';
 import MediaRecord from '../components/MediaRecord';
 import MediaPlayer from '../components/MediaPlayer';
-import { ArtifactTypeSlug, remoteIdNum, useArtifactType } from '../crud';
+import {
+  ArtifactTypeSlug,
+  pullTableList,
+  remoteId,
+  remoteIdGuid,
+  remoteIdNum,
+  useArtifactType,
+  useOfflnMediafileCreate,
+} from '../crud';
 import { useGlobal } from 'reactn';
 import { TokenContext } from '../context/TokenProvider';
 import { UploadType } from '../components/MediaUpload';
+import { LanguagePicker } from 'mui-language-picker';
+import { ILanguage } from './Language';
+import { UnsavedContext } from '../context/UnsavedContext';
+import JSONAPISource from '@orbit/jsonapi';
+import IndexedDBSource from '@orbit/indexeddb';
 
 const ColumnDiv = styled('div')(() => ({
   display: 'flex',
   flexDirection: 'column',
-}));
-
-const StyledInput = styled(OutlinedInput)<OutlinedInputProps>(() => ({
-  '& input': {
-    paddingTop: '1px',
-    paddingBottom: '1px',
-  },
 }));
 
 const StatusMessage = styled(Typography)<TypographyProps>(({ theme }) => ({
@@ -52,85 +60,147 @@ const StatusMessage = styled(Typography)<TypographyProps>(({ theme }) => ({
   alignSelf: 'center',
   color: theme.palette.primary.dark,
 }));
-interface ITitle {
-  title: string;
-  mediaId: string | undefined;
-}
+
 interface IProps {
-  row: ITitle;
+  titlekey: string;
+  label: string;
+  mediaId: string;
+  title: string;
   defaultFilename: string;
+  language?: ILanguage;
+  onTextChange?: (txt: string) => string;
+  onLangChange?: (lang: ILanguage) => void;
+  useplan?: string;
   /*
   canRecord: () => boolean;
   onOk: (row: ITitle) => void;
   onCancel: () => void;
   setCanSaveRecording: (canSave: boolean) => void;
-  onTextChange: (txt: string, row: ITitle) => void;
   onSetRecordRow: (row: ITitle | undefined) => void;
   */
-  onChanged: (changed: boolean) => void;
   onRecording: (recording: boolean) => void;
-  afterUploadCb: (mediaId: string) => Promise<void>;
+  onMediaIdChange: (mediaId: string) => void;
 }
 
 export default function MediaTitle(props: IProps) {
   const {
-    row,
+    titlekey,
+    label,
+    mediaId,
+    title,
     defaultFilename,
-    //onOk,
-    //onCancel,
-    //canRecord,
-    //setCanSaveRecording,
-    //onTextChange,
-    //onSetRecordRow,
-    onChanged,
+    language,
+    onTextChange,
+    onLangChange,
     onRecording,
-    afterUploadCb,
+    onMediaIdChange,
+    useplan,
   } = props;
   const dispatch = useDispatch();
   const uploadFiles = (files: File[]) => dispatch(actions.uploadFiles(files));
   const nextUpload = (props: actions.NextUploadProps) =>
     dispatch(actions.nextUpload(props));
-  const uploadComplete = () => dispatch(actions.uploadComplete);
+  const uploadComplete = () => {
+    doRecordRef.current = false;
+    dispatch(actions.uploadComplete);
+  };
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
+  const [reporter] = useGlobal('errorReporter');
+  const [coordinator] = useGlobal('coordinator');
+  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [user] = useGlobal('user');
   const [offline] = useGlobal('offline');
-  const [mediaId, setMediaId] = useState(row.mediaId);
-  const [canSave, setCanSave] = useState(false);
-  const [curText, setCurText] = useState(row.title ?? '');
+  const [offlineOnly] = useGlobal('offlineOnly');
+  const [canSaveRecording, setCanSaveRecording] = useState(false);
+  const [curText, setCurText] = useState(title ?? '');
   const [startRecord, setStartRecord] = useState(false);
   const [statusText, setStatusText] = useState('');
+  const [helperText, setHelperText] = useState('');
   const fileList = useRef<File[]>();
   const doRecordRef = useRef(false);
+  const langRef = useRef(language);
   const [recording, setRecording] = useState(false);
   const [playing, setPlaying] = useState(false);
   // const [myChanged, setMyChanged] = useState(false);
   const { getTypeId } = useArtifactType();
   const tokenCtx = useContext(TokenContext);
   const { accessToken } = tokenCtx.state;
-
-  const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
+  const langEl = useRef<any>();
+  const t: IMediaTitleStrings = useSelector(mediaTitleSelector, shallowEqual);
   const saving = useRef(false);
+  const lt = useSelector(pickerSelector, shallowEqual);
   const { showMessage } = useSnackBar();
-  const getPlanId = () => remoteIdNum('plan', plan, memory.keyMap) || plan;
-
-  const TitleId = getTypeId(ArtifactTypeSlug.Title);
+  const {
+    toolChanged,
+    toolsChanged,
+    startSave,
+    saveRequested,
+    clearRequested,
+    clearCompleted,
+    // isChanged,
+  } = useContext(UnsavedContext).state;
+  const mediaIdRef = useRef<string>();
+  const { createMedia } = useOfflnMediafileCreate();
 
   useEffect(() => {
-    setMediaId(row.mediaId ?? '');
-    setCurText(row.title ?? '');
+    if (saveRequested(toolId) && canSaveRecording) handleOk();
+    else if (clearRequested(toolId)) {
+      reset();
+      clearCompleted(toolId);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [row]);
+  }, [toolsChanged, canSaveRecording]);
+
+  const getPlanId = () => {
+    if (useplan) return remoteIdNum('plan', useplan, memory.keyMap) || useplan;
+    return remoteIdNum('plan', plan, memory.keyMap) || plan;
+  };
+  const TitleId = useMemo(() => {
+    var id = getTypeId(ArtifactTypeSlug.Title) as string;
+    return remoteId('artifacttype', id, memory.keyMap) || id;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offlineOnly]);
+
+  const toolId = useMemo(() => 'MediaTitle' + titlekey, [titlekey]);
+  const recToolId = useMemo(() => toolId + 'rec', [toolId]);
+
+  useEffect(() => {
+    setCurText(title ?? '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [title]);
 
   const handleSetCanSave = (valid: boolean) => {
-    if (valid !== canSave) {
-      setCanSave(valid);
-      //setCanSaveRecording(valid);
-      if (valid) onChanged(true);
+    if (valid !== canSaveRecording) {
+      setCanSaveRecording(valid);
+      //if (valid) onChanged(true);
     }
   };
 
+  const afterUploadCb = async (mediaId: string) => {
+    console.log('afterUploadCb', toolId, mediaId);
+    if (mediaId) {
+      waitForIt(
+        'mediaId',
+        () => remoteIdGuid('mediafile', mediaId, memory.keyMap) !== undefined,
+        () => false,
+        100
+      ).then(() => {
+        onMediaIdChange(
+          remoteIdGuid('mediafile', mediaId, memory.keyMap) ?? mediaId
+        );
+        toolChanged(toolId, false);
+        reset();
+      });
+    }
+  };
   const onMyRecording = (r: boolean) => {
+    if (doRecordRef.current) setRecording(false);
+    if (r) {
+      toolChanged(toolId, true);
+      toolChanged(recToolId, true);
+    }
     setRecording(r);
     onRecording(r);
   };
@@ -141,48 +211,114 @@ export default function MediaTitle(props: IProps) {
       return;
     }
     setCurText(e.target.value);
-    //onTextChange(e.target.value, row);
-    onChanged(true);
+    if (language) return;
+    if (onTextChange) {
+      var err = onTextChange(e.target.value);
+      console.log('text change', err);
+      setHelperText(err);
+    }
   };
 
-  const handleRecord = () => {
+  const handlePlay = (e: any) => {
+    e.stopPropagation();
+    setPlaying(true);
+  };
+  const handleRecord = (e: any) => {
+    e.stopPropagation();
+    if (getPlanId() === '') {
+      showMessage(t.noplan);
+      return;
+    }
     setPlaying(false);
     setStartRecord(true);
-    //onSetRecordRow(row);
   };
-
-  const handleOk = () => {
+  const setCode = (bcp47: string) => {
+    setCurText(bcp47);
+    if (langRef.current) {
+      langRef.current = { ...langRef.current, bcp47 };
+      onLangChange && onLangChange(langRef.current);
+    }
+  };
+  const setLangname = (languageName: string) => {
+    if (langRef.current) {
+      langRef.current = { ...langRef.current, languageName };
+      onLangChange && onLangChange(langRef.current);
+    }
+  };
+  const setFont = (font: string) => {
+    if (langRef.current) {
+      langRef.current = { ...langRef.current, font };
+      onLangChange && onLangChange(langRef.current);
+    }
+  };
+  const handleOk = (e?: any) => {
+    e?.stopPropagation();
     if (saving.current) {
       showMessage(t.saving);
       return;
     }
     saving.current = true;
-    //onOk(row);
+    if (!saveRequested(recToolId)) {
+      startSave(recToolId);
+    }
     setStatusText(t.saving);
-    if (doRecordRef.current) setRecording(false);
-    onRecording(false);
+    onMyRecording(false);
+  };
+
+  const handleLangPick = (e: any) => {
+    langEl.current?.click();
+    e.stopPropagation();
   };
 
   const reset = () => {
-    if (doRecordRef.current) setRecording(false);
+    setRecording(false);
     setStatusText('');
-    setCurText('');
     doRecordRef.current = false;
     saving.current = false;
-    //onSetRecordRow(undefined);
-    onRecording(false);
+    onMyRecording(false);
   };
 
-  const handleCancel = () => {
-    //onCancel();
+  const handleCancel = (e: any) => {
+    e.stopPropagation();
+    toolChanged(recToolId, false);
     reset();
   };
   const getUserId = () =>
     remoteIdNum('user', user || '', memory.keyMap) || user;
 
-  const itemComplete = () => {};
+  const itemComplete = async (n: number, success: boolean, data?: any) => {
+    console.log('itemComplete', n, success, data);
+    const uploadList = fileList.current;
+    if (!uploadList) return; // This should never happen
+    if (data?.stringId) {
+      mediaIdRef.current = data?.stringId;
+    } else if (success && data) {
+      // offlineOnly
+      var num = 1;
+      mediaIdRef.current = (
+        await createMedia(data, num, uploadList[n].size, '', TitleId, '', user)
+      ).id;
+    }
+    if (!offline && mediaIdRef.current) {
+      pullTableList(
+        'mediafile',
+        Array(mediaIdRef.current),
+        memory,
+        remote,
+        backup,
+        reporter
+      ).then(() => {
+        uploadComplete();
+        afterUploadCb(mediaIdRef.current ?? '');
+      });
+    } else {
+      uploadComplete();
+      afterUploadCb(mediaIdRef.current ?? '');
+    }
+  };
 
   const uploadMedia = async (files: File[]) => {
+    console.log('uploadMedia', files);
     uploadFiles(files);
     fileList.current = files;
     const mediaFile = {
@@ -235,73 +371,110 @@ export default function MediaTitle(props: IProps) {
   };
   return (
     <ColumnDiv>
-      <FormControl sx={{ width: 'max-content' }} variant="outlined">
+      <FormControl sx={{ width: 'max-content', py: 1 }} variant="outlined">
         <InputLabel htmlFor="outlined-adornment-term">{'\u200B'}</InputLabel>
-        <StyledInput
+        <TextField
           id="outlined-adornment-term"
+          label={label}
           value={curText}
+          onClick={language ? handleLangPick : undefined}
+          onKeyDown={language ? handleLangPick : undefined}
           onChange={handleTextChange}
+          helperText={helperText}
           size="small"
-          multiline
-          placeholder={'xx Title'}
-          startAdornment={
-            <InputAdornment position="start">
-              <Tooltip title={t.record}>
-                <IconButton
-                  id="record-translation"
-                  aria-label="record target term"
-                  onClick={handleRecord}
-                  onMouseDown={handleMouseDownSave}
-                  disabled={recording}
-                  edge="start"
-                >
-                  <MicIcon fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            </InputAdornment>
-          }
-          endAdornment={
-            <InputAdornment position="end">
-              {hasContent() && (
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
                 <>
-                  <Tooltip title={t.save}>
-                    <span>
-                      <IconButton
-                        id="save-translation"
-                        aria-label="save target term"
-                        onClick={handleOk}
-                        onMouseDown={handleMouseDownSave}
-                        disabled={recording || (!canSave && !curText)}
-                        edge="end"
-                      >
-                        <CheckIcon fontSize="small" />
-                      </IconButton>
-                    </span>
-                  </Tooltip>
-                  <Tooltip title={t.cancel}>
-                    <span>
-                      <IconButton
-                        id="cancel-translation"
-                        aria-label="save target term"
-                        onClick={handleCancel}
-                        onMouseDown={handleMouseDownSave}
-                        disabled={recording}
-                        edge="end"
-                      >
-                        <CancelIcon fontSize="small" />
-                      </IconButton>{' '}
-                    </span>
+                  {mediaId && (
+                    <IconButton
+                      id="play-recording"
+                      aria-label="play"
+                      onClick={handlePlay}
+                      onMouseDown={handleMouseDownSave}
+                      disabled={recording}
+                      edge="start"
+                    >
+                      <PlayIcon fontSize="small" />
+                    </IconButton>
+                  )}
+                  <Tooltip title={t.record}>
+                    <IconButton
+                      id="record-translation"
+                      aria-label="record target term"
+                      onClick={handleRecord}
+                      onMouseDown={handleMouseDownSave}
+                      disabled={recording}
+                      edge="start"
+                    >
+                      <MicIcon fontSize="small" />
+                    </IconButton>
                   </Tooltip>
                 </>
-              )}
-            </InputAdornment>
-          }
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                {hasContent() && canSaveRecording && (
+                  <>
+                    <Tooltip title={t.save}>
+                      <span>
+                        <IconButton
+                          id="save-translation"
+                          aria-label="save target term"
+                          onClick={handleOk}
+                          onMouseDown={handleMouseDownSave}
+                          disabled={recording}
+                          edge="end"
+                        >
+                          <CheckIcon fontSize="small" />
+                        </IconButton>
+                      </span>
+                    </Tooltip>
+                    <Tooltip title={t.cancel}>
+                      <span>
+                        <IconButton
+                          id="cancel-translation"
+                          aria-label="save target term"
+                          onClick={handleCancel}
+                          onMouseDown={handleMouseDownSave}
+                          disabled={recording}
+                          edge="end"
+                        >
+                          <CancelIcon fontSize="small" />
+                        </IconButton>
+                      </span>
+                    </Tooltip>
+                  </>
+                )}
+              </InputAdornment>
+            ),
+          }}
         />
+        {language && (
+          <FormControlLabel
+            sx={{ display: 'none' }}
+            id="language-code"
+            ref={langEl}
+            control={
+              <LanguagePicker
+                value={language.bcp47}
+                name={language.languageName}
+                font={language.font}
+                setCode={setCode}
+                setName={setLangname}
+                setFont={setFont}
+                t={lt}
+              />
+            }
+            label=""
+          />
+        )}
       </FormControl>
       {doRecordRef.current && (
         <MediaRecord
-          toolId={'MediaTitle'}
-          onRecording={onRecording}
+          toolId={recToolId}
+          onRecording={onMyRecording}
           uploadMethod={uploadMedia}
           defaultFilename={defaultFilename}
           allowWave={false}

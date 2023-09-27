@@ -9,15 +9,13 @@ import {
   FormGroup,
   Box,
   styled,
-  TextField,
   Grid,
   GridProps,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { ILanguage, Language } from '../control';
+import { ILanguage } from '../control';
 import { related, useOrgDefaults } from '../crud';
 import MediaTitle from '../control/MediaTitle';
-import MediaTitleActions from '../control/MediaTitleActions';
 
 const GridContainerRow = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
@@ -26,7 +24,7 @@ const GridContainerRow = styled(Grid)<GridProps>(({ theme }) => ({
 }));
 
 const initLang = {
-  bcp47: 'und',
+  bcp47: '',
   languageName: '',
   font: '',
   spellCheck: false,
@@ -39,17 +37,20 @@ const Heading = styled(Typography)<TypographyProps>(({ theme }) => ({
 
 interface IProps {
   t: ICardsStrings;
-  team: Organization;
+  team?: Organization;
   setValue: (what: string, value: string) => void;
+  onChanged: (changed: boolean) => void;
+  // setCanSave: (canSave: boolean) => void;
   organizations: Array<Organization>;
+  teamplan: string | undefined;
 }
 
 export function PublishExpansion(props: IProps) {
-  const { t, team, setValue, organizations } = props;
+  const { t, team, teamplan, setValue, onChanged, organizations } = props;
   const [isoMediafile, setIsoMediafilex] = useState('');
-  const [titleMediafile, setTitleMediafilex] = useState('');
+  const [bibleMediafile, setBibleMediafilex] = useState('');
   const [bibleId, setBibleId] = useState('');
-  const [publishingData, setPublishingData] = useState('');
+  //TOOD const [publishingData, setPublishingData] = useState('{}');
   const { getDefault, setDefault } = useOrgDefaults();
   const [language, setLanguagex] = React.useState<ILanguage>(initLang);
   const languageRef = useRef<ILanguage>(initLang);
@@ -57,46 +58,66 @@ export function PublishExpansion(props: IProps) {
   const setLanguage = (language: ILanguage, init?: boolean) => {
     languageRef.current = language;
     setLanguagex(language);
-    console.log('setLanguage', language, init);
-    if (init && !team.attributes?.iso && language.bcp47 !== 'und') {
+    if (
+      init &&
+      !team?.attributes?.iso &&
+      language.bcp47 &&
+      language.bcp47 !== 'und'
+    ) {
       setValue('iso', language.bcp47);
     }
     if (!init) {
-      setDefault('langProps', language, team);
-      setValue('defaultParams', team.attributes.defaultParams);
+      var t = team ?? ({ attributes: { defaultParams: '{}' } } as Organization);
+      setDefault('langProps', language, t);
+      setValue('defaultParams', t.attributes.defaultParams ?? '{}');
       setValue('iso', language.bcp47);
     }
   };
 
   useEffect(() => {
-    setBibleId(team.attributes.bibleId);
-    setPublishingData(team.attributes.publishingData || '{}');
-    setIsoMediafilex(related(team, 'isoMediafile') as string);
-    setTitleMediafilex(related(team, 'titleMediafile') as string);
-    const language = getDefault('langProps', team) as typeof initLang;
-    setLanguage(language ?? initLang, true);
+    if (team) {
+      setBibleId(team.attributes?.bibleId);
+      //TODO setPublishingData(team.attributes?.publishingData || '{}');
+      setIsoMediafilex(related(team, 'isoMediafile') as string);
+      setBibleMediafilex(related(team, 'bibleMediafile') as string);
+    }
+    const language = team
+      ? (getDefault('langProps', team) as typeof initLang)
+      : initLang;
+
+    console.log('useEffect', language);
+    setLanguage(language, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [team]);
-  const setTitleMediafile = (mediaId: string) => {
-    setTitleMediafilex(mediaId);
-    setValue('titleMediafile', mediaId);
+
+  const setBibleMediafile = (mediaId: string) => {
+    setBibleMediafilex(mediaId);
+    setValue('bibleMediafile', mediaId);
   };
   const setIsoMediafile = (mediaId: string) => {
     setIsoMediafilex(mediaId);
     setValue('isoMediafile', mediaId);
   };
-  const handleChangeBibleId = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.persist();
-    setBibleId(e.target.value);
-    if (team.attributes.bibleId !== e.target.value)
-      setValue('bibleId', e.target.value);
+  const handleChangeBibleId = (value: string) => {
+    if (!bibleIdIsValid(value)) {
+      return t.bibleidexists;
+    }
+    setBibleId(value);
+    if (team?.attributes?.bibleId !== value) setValue('bibleId', value);
+    return '';
   };
-  const onChanged = (changed: boolean) => {
-    //tell someone!
+  const onRecording = (recording: boolean) => {
+    if (recording) {
+      onChanged(true);
+    }
   };
   const handleLanguageChange = (lang: ILanguage) => {
     setLanguage(lang);
+    onChanged(true);
   };
+
+  //TODO
+  /*
   const handleChangePublishingData = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -104,17 +125,20 @@ export function PublishExpansion(props: IProps) {
     setValue('publishingData', e.target.value);
     setPublishingData(e.target.value);
   };
-  const bibleIdInUse = (newName: string): boolean => {
-    if (newName === team.attributes.bibleId) return false;
+  */
+  const bibleIdIsValid = (newName: string): boolean => {
+    if (newName === team?.attributes?.bibleId) return true;
+    //TODO: Is there a format?
+    //TODO: check bible brain also
     const sameNameRec = organizations.filter(
-      (o) => o?.attributes?.bibleId === bibleId
+      (o) => o?.attributes?.bibleId === newName
     );
-    return sameNameRec.length > 0;
+    return sameNameRec.length === 0;
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Accordion onChange={() => console.log('according change')}>
+    <Box sx={{ width: '100%', my: 1 }}>
+      <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -134,53 +158,32 @@ export function PublishExpansion(props: IProps) {
             }}
           >
             <div>
-              <GridContainerRow item>
-                <Language
-                  {...language}
-                  hideFont
-                  hideSpelling
-                  onChange={handleLanguageChange}
-                />
-                <MediaTitleActions
-                  mediaId={titleMediafile}
-                  defaultFilename={team.attributes.slug + 'title'}
-                  setMediaId={setTitleMediafile}
-                />
-                <MediaTitle
-                  row={{ mediaId: isoMediafile, title: language.bcp47 }}
-                  defaultFilename={team.attributes.slug + 'iso'}
-                  onChanged={onChanged}
-                  onRecording={(recording: boolean) => {}}
-                  afterUploadCb={async (mediaId) => {
-                    console.log('new mediaid', mediaId);
-                    setTitleMediafile(mediaId);
-                  }}
-                />
-              </GridContainerRow>
-              <GridContainerRow item>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  id="bibleid"
-                  label={t.bibleid}
-                  value={bibleId}
-                  helperText={
-                    bibleId && bibleIdInUse(bibleId) && t.bibleidexists
-                  }
-                  onChange={handleChangeBibleId}
-                  fullWidth
-                />
-                <MediaTitle
-                  row={{ mediaId: titleMediafile, title: bibleId }}
-                  defaultFilename={team.attributes.slug + 'title'}
-                  onChanged={() => {}}
-                  onRecording={() => {}}
-                  afterUploadCb={async (mediaId) => {
-                    console.log('new mediaid', mediaId);
-                    setIsoMediafile(mediaId);
-                  }}
-                />
-              </GridContainerRow>
+              <MediaTitle
+                titlekey={'iso'}
+                language={language}
+                label={t.language.replace(': {0}', '')}
+                mediaId={isoMediafile}
+                title={language.bcp47}
+                defaultFilename={(team?.attributes?.slug ?? '') + 'iso'}
+                onLangChange={handleLanguageChange}
+                onRecording={onRecording}
+                useplan={teamplan}
+                onMediaIdChange={(mediaId: string) => setIsoMediafile(mediaId)}
+              />
+              <GridContainerRow item></GridContainerRow>
+              <MediaTitle
+                titlekey={'bibleId'}
+                label={t.bibleid}
+                mediaId={bibleMediafile}
+                title={bibleId}
+                defaultFilename={(team?.attributes?.slug ?? '') + 'bible'}
+                onTextChange={handleChangeBibleId}
+                onRecording={onRecording}
+                useplan={teamplan}
+                onMediaIdChange={(mediaId: string) =>
+                  setBibleMediafile(mediaId)
+                }
+              />
             </div>
           </FormGroup>
         </AccordionDetails>

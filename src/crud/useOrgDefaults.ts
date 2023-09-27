@@ -13,7 +13,7 @@ export const useOrgDefaults = () => {
   const [offline] = useGlobal('offline');
 
   const getDefault = (label: string, org: Organization) => {
-    const json = JSON.parse(org.attributes.defaultParams ?? '{}');
+    const json = JSON.parse(org.attributes?.defaultParams ?? '{}');
     if (json[label])
       if (typeof json[label] === 'string') return JSON.parse(json[label]);
       else return json[label];
@@ -28,7 +28,7 @@ export const useOrgDefaults = () => {
     return org ? getDefault(label, org) : undefined;
   };
   const setDefault = (label: string, value: any, org: Organization) => {
-    const json = JSON.parse(org.attributes.defaultParams ?? '{}');
+    const json = JSON.parse(org.attributes?.defaultParams ?? '{}');
     json[label] = JSON.stringify(value);
     org.attributes.defaultParams = JSON.stringify(json);
   };

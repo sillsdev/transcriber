@@ -121,6 +121,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "bibleid": string;
     "bibleidexists": string;
     "cancel": string;
+    "closeNoSave": string;
     "connectParatext": string;
     "copyComplete": string;
     "copyNew": string;
@@ -167,6 +168,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "teamSettings": string;
     "transcriber": string;
     "uploadProgress": string;
+    "yes": string;
 };
 
 export interface ICategoryStrings extends Localize.LocalizedStringsMethods {
@@ -648,6 +650,15 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "version": string;
     "versionHistory": string;
     "viewAssociations": string;
+};
+
+export interface IMediaTitleStrings extends Localize.LocalizedStringsMethods {
+    "cancel": string;
+    "noplan": string;
+    "record": string;
+    "recording": string;
+    "save": string;
+    "saving": string;
 };
 
 export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
@@ -1501,6 +1512,7 @@ export interface ILocalizedStrings {
 	main: IMainStrings;
 	mediaActions: IMediaActionsStrings;
 	mediaTab: IMediaTabStrings;
+	mediaTitle: IMediaTitleStrings;
 	mediaUpload: IMediaUploadStrings;
 	newProject: INewProjectStrings;
 	passageChooser: IPassageChooserStrings;

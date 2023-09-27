@@ -646,6 +646,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.closeNoSave">
+            <source>Close without Saving?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.connectParatext">
             <source>Connect a Paratext Project</source>
             <target/>
@@ -964,6 +971,13 @@
          </trans-unit>
          <trans-unit id="cards.uploadProgress">
             <source>Upload Progress</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.yes">
+            <source>Yes</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AddCard.tsx</context>
@@ -3807,6 +3821,48 @@
          </trans-unit>
          <trans-unit id="mediaTab.viewAssociations">
             <source>View Associations</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.cancel">
+            <source>Cancel Recording</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.noplan">
+            <source>Unable to record until you have created a project.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.record">
+            <source>Record</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.recording">
+            <source>Recording...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.save">
+            <source>Save Recording</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.saving">
+            <source>Saving...</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaTab.tsx</context>

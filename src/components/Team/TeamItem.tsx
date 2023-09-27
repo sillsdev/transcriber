@@ -46,10 +46,10 @@ export const TeamItem = (props: IProps) => {
   };
 
   const handleCommitSettings = (
-    values:ITeamDialog,
+    values: ITeamDialog,
     cb?: (id: string) => Promise<void>
   ) => {
-    teamUpdate(values.team, values.isoMediafile, values.titleMediafile);
+    teamUpdate(values.team, values.bibleMediafile, values.isoMediafile);
     cb && cb(values.team.id);
     setEditOpen(false);
   };
@@ -120,6 +120,7 @@ export const TeamItem = (props: IProps) => {
         onOpen={setEditOpen}
         onCommit={handleCommitSettings}
         onDelete={handleDeleteTeam}
+
       />
       <BigDialog
         title={t.members.replace('{0}', team?.attributes?.name || '')}

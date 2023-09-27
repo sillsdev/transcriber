@@ -30,12 +30,13 @@ end as int)) stored;
 alter table sharedresources add note bool default false;
 alter table sharedresources add titlemediafileid int;
 alter table sharedresources add linkurl text; -- optional link to survey, more info, etc
-ALTER TABLE sharedresources ADD CONSTRAINT fk_sharedresources_mediafile FOREIGN KEY (titlemediafileid) REFERENCES mediafiles(id) ON DELETE CASCADE;
+ALTER TABLE sharedresources ADD CONSTRAINT fk_sharedresources_mediafile FOREIGN KEY (titlemediafileid) REFERENCES mediafiles(id) ON DELETE set NULL;
+ALTER TABLE sharedresources ADD CONSTRAINT fk_sharedresources_artifactcategory FOREIGN KEY (artifactcategoryid) REFERENCES artifactcategorys(id) ON DELETE set NULL;
 CREATE INDEX ix_sharedresources_note ON public.sharedresources USING btree (note, artifactcategoryid, title);
 CREATE INDEX ix_sharedresources_language ON public.sharedresources USING btree (languagebcp47);
 
 alter table artifactcategorys add titlemediafileid int;
-ALTER TABLE artifactcategorys ADD CONSTRAINT fk_artifactcategorys_mediafile FOREIGN KEY (titlemediafileid) REFERENCES mediafiles(id) ON DELETE CASCADE;
+ALTER TABLE artifactcategorys ADD CONSTRAINT fk_artifactcategorys_mediafile FOREIGN KEY (titlemediafileid) REFERENCES mediafiles(id) ON DELETE set NULL;
 
 --select * from passagetypes;
 --delete from passagetypes;

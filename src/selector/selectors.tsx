@@ -72,6 +72,8 @@ export const keyTermsSelector = (state: IState) =>
 
 export const mediaActionsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'mediaActions' });
+export const mediaTitleSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'mediaTitle' });
 
 export const mediaUploadSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'mediaUpload' });
@@ -109,10 +111,10 @@ export const permissionsSelector = (state: IState) =>
 export const pickerSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'languagePicker' });
 
-  export const passageTypeSelector = (state: IState) =>
+export const passageTypeSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'passageType' });
 
-  export const planSheetSelector = (state: IState) =>
+export const planSheetSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'planSheet' });
 
 export const planActionsSelector = (state: IState) =>

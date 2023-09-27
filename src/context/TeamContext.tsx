@@ -110,7 +110,7 @@ const initState = {
   ) => {},
   teamUpdate: (
     team: Organization,
-    titleMediafile: string,
+    bibleMediafile: string,
     isoMediafile: string
   ) => {},
   teamDelete: async (team: Organization) => {},
@@ -382,10 +382,10 @@ const TeamProvider = withData(mapRecordsToProps)(
 
     const teamUpdate = (
       team: Organization,
-      titleMediafile: string,
+      bibleMediafile: string,
       isoMediafile: string
     ) => {
-      orbitTeamUpdate(team, titleMediafile, isoMediafile);
+      orbitTeamUpdate(team, bibleMediafile, isoMediafile);
     };
 
     const teamDelete = async (team: Organization) => {

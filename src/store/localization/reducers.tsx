@@ -136,6 +136,7 @@ const initialState = {
 			"bibleid": "Bible Id",
 			"bibleidexists": "Bible Id already exists.",
 			"cancel": "Cancel",
+			"closeNoSave": "Close without Saving?",
 			"connectParatext": "Connect a Paratext Project",
 			"copyComplete": "Copy Complete {0}",
 			"copyNew": "Copy project to new team.",
@@ -182,6 +183,7 @@ const initialState = {
 			"teamSettings": "Team Settings",
 			"transcriber": "Transcribing",
 			"uploadProgress": "Upload Progress",
+			"yes": "Yes",
 		}
 	}),
 	"category": new LocalizedStrings({
@@ -688,6 +690,16 @@ const initialState = {
 			"version": "Version",
 			"versionHistory": "Version History",
 			"viewAssociations": "View Associations",
+		}
+	}),
+	"mediaTitle": new LocalizedStrings({
+		"en": {
+			"cancel": "Cancel Recording",
+			"noplan": "Unable to record until you have created a project.",
+			"record": "Record",
+			"recording": "Recording...",
+			"save": "Save Recording",
+			"saving": "Saving...",
 		}
 	}),
 	"mediaUpload": new LocalizedStrings({
@@ -1597,6 +1609,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"main" : new LocalizedStrings(action.payload.data.main),
 				"mediaActions" : new LocalizedStrings(action.payload.data.mediaActions),
 				"mediaTab" : new LocalizedStrings(action.payload.data.mediaTab),
+				"mediaTitle" : new LocalizedStrings(action.payload.data.mediaTitle),
 				"mediaUpload" : new LocalizedStrings(action.payload.data.mediaUpload),
 				"newProject" : new LocalizedStrings(action.payload.data.newProject),
 				"passageChooser" : new LocalizedStrings(action.payload.data.passageChooser),

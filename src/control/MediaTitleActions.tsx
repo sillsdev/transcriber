@@ -55,30 +55,23 @@ export default function MediaTitleActions(props: IProps) {
   };
   return (
     <div>
-      <IconButton
-        id="langplay"
-        aria-label="language play"
-        color="default"
-        disabled={mediaId === undefined}
-        onClick={handlePlay}
-      >
-        <PlayIcon />
-      </IconButton>
-      <IconButton
-        id="langupload"
-        aria-label="language upload"
-        color="default"
-        onClick={handleUpload}
-      >
-        <AddIcon />
-      </IconButton>
+      {mediaId !== undefined && (
+        <IconButton
+          id="langplay"
+          aria-label="language play"
+          color="default"
+          onClick={handlePlay}
+        >
+          <PlayIcon fontSize="small" />
+        </IconButton>
+      )}
       <IconButton
         id="langrecord"
         aria-label="language record"
         color="default"
         onClick={handleRecord}
       >
-        <MicIcon />
+        <MicIcon fontSize="small" />
       </IconButton>
 
       <Uploader
