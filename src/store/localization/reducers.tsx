@@ -133,7 +133,10 @@ const initialState = {
 		"en": {
 			"add": "Add",
 			"addTeam": "Add Team",
+			"bibleid": "Bible Id",
+			"bibleidexists": "Bible Id already exists.",
 			"cancel": "Cancel",
+			"closeNoSave": "Close without Saving?",
 			"connectParatext": "Connect a Paratext Project",
 			"copyComplete": "Copy Complete {0}",
 			"copyNew": "Copy project to new team.",
@@ -147,6 +150,7 @@ const initialState = {
 			"draft": "Oral Drafting",
 			"editCategory": "Edit Team Categories",
 			"editWorkflow": "Edit Workflow {0}",
+			"explainPublishing": "Information to use when publishing audio created by this team.",
 			"explainTeamDelete": "Deleting the team will delete all audio projects of the team.",
 			"import": "Import Audio Project",
 			"language": "Language: {0}",
@@ -168,6 +172,7 @@ const initialState = {
 			"process": "Default Workflow",
 			"projectCreated": "Audio Project Created",
 			"Render": "Render to Paratext",
+			"publishing": "Publishing",
 			"save": "Save",
 			"sectionStatus": "{0} {1}",
 			"settings": "Settings",
@@ -178,6 +183,7 @@ const initialState = {
 			"teamSettings": "Team Settings",
 			"transcriber": "Transcribing",
 			"uploadProgress": "Upload Progress",
+			"yes": "Yes",
 		}
 	}),
 	"category": new LocalizedStrings({
@@ -685,6 +691,16 @@ const initialState = {
 			"viewAssociations": "View Associations",
 		}
 	}),
+	"mediaTitle": new LocalizedStrings({
+		"en": {
+			"cancel": "Cancel Recording",
+			"noplan": "Unable to record until you have created a project.",
+			"record": "Record",
+			"recording": "Recording...",
+			"save": "Save Recording",
+			"saving": "Saving...",
+		}
+	}),
 	"mediaUpload": new LocalizedStrings({
 		"en": {
 			"cancel": "Cancel",
@@ -915,7 +931,7 @@ const initialState = {
 			"selectRows": "Please select row(s) to {0}.",
 			"step": "Step",
 			"tablePaste": "Paste Spreadsheet",
-			"unpublish": "Unpublish {0} {1}",
+			"unpublish": "Remove {0} {1} from published list.",
 			"useCtrlV": "Select a column head and use CTRL-V to append table rows.",
 		}
 	}),
@@ -1592,6 +1608,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"main" : new LocalizedStrings(action.payload.data.main),
 				"mediaActions" : new LocalizedStrings(action.payload.data.mediaActions),
 				"mediaTab" : new LocalizedStrings(action.payload.data.mediaTab),
+				"mediaTitle" : new LocalizedStrings(action.payload.data.mediaTitle),
 				"mediaUpload" : new LocalizedStrings(action.payload.data.mediaUpload),
 				"newProject" : new LocalizedStrings(action.payload.data.newProject),
 				"passageChooser" : new LocalizedStrings(action.payload.data.passageChooser),

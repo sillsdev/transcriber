@@ -118,7 +118,10 @@ export interface IAudioDownloadStrings extends Localize.LocalizedStringsMethods 
 export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "add": string;
     "addTeam": string;
+    "bibleid": string;
+    "bibleidexists": string;
     "cancel": string;
+    "closeNoSave": string;
     "connectParatext": string;
     "copyComplete": string;
     "copyNew": string;
@@ -132,6 +135,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "draft": string;
     "editCategory": string;
     "editWorkflow": string;
+    "explainPublishing": string;
     "explainTeamDelete": string;
     "import": string;
     "language": string;
@@ -153,6 +157,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "process": string;
     "projectCreated": string;
     "Render": string;
+    "publishing": string;
     "save": string;
     "sectionStatus": string;
     "settings": string;
@@ -163,6 +168,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "teamSettings": string;
     "transcriber": string;
     "uploadProgress": string;
+    "yes": string;
 };
 
 export interface ICategoryStrings extends Localize.LocalizedStringsMethods {
@@ -643,6 +649,15 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "version": string;
     "versionHistory": string;
     "viewAssociations": string;
+};
+
+export interface IMediaTitleStrings extends Localize.LocalizedStringsMethods {
+    "cancel": string;
+    "noplan": string;
+    "record": string;
+    "recording": string;
+    "save": string;
+    "saving": string;
 };
 
 export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
@@ -1496,6 +1511,7 @@ export interface ILocalizedStrings {
 	main: IMainStrings;
 	mediaActions: IMediaActionsStrings;
 	mediaTab: IMediaTabStrings;
+	mediaTitle: IMediaTitleStrings;
 	mediaUpload: IMediaUploadStrings;
 	newProject: INewProjectStrings;
 	passageChooser: IPassageChooserStrings;

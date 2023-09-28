@@ -95,7 +95,7 @@ export const useTeamCreate = () => {
 
   const createOrg = async (props: ICreateOrgProps) => {
     const { orgRec, process } = props;
-
+    console.log('createorg', orgRec, process);
     const memory = coordinator.getSource('memory') as Memory;
     await memory.update((t: TransformBuilder) => [
       ...AddRecord(t, orgRec, user, memory),
@@ -116,8 +116,17 @@ export const useTeamCreate = () => {
     process: string,
     cb?: (org: string) => void
   ) => {
-    const { name, description, websiteUrl, logoUrl, publicByDefault } =
-      organization?.attributes;
+    const {
+      name,
+      description,
+      websiteUrl,
+      logoUrl,
+      publicByDefault,
+      iso,
+      bibleId,
+      publishingData,
+      defaultParams,
+    } = organization?.attributes;
     let orgRec = {
       type: 'organization',
       attributes: {
@@ -127,8 +136,10 @@ export const useTeamCreate = () => {
         websiteUrl,
         logoUrl,
         publicByDefault,
-        defaultParams: '{}',
-        publishingData: '{}',
+        iso,
+        bibleId,
+        defaultParams,
+        publishingData,
       },
     } as Organization;
 

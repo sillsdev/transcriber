@@ -108,7 +108,11 @@ const initState = {
     process: string,
     cb?: (org: string) => Promise<void>
   ) => {},
-  teamUpdate: (team: Organization) => {},
+  teamUpdate: (
+    team: Organization,
+    bibleMediafile: string,
+    isoMediafile: string
+  ) => {},
   teamDelete: async (team: Organization) => {},
   isAdmin: (team: Organization) => false,
   isProjectAdmin: (team: Organization) => false,
@@ -376,8 +380,12 @@ const TeamProvider = withData(mapRecordsToProps)(
       orbitTeamCreate(team, process, cb);
     };
 
-    const teamUpdate = (team: Organization) => {
-      orbitTeamUpdate(team);
+    const teamUpdate = (
+      team: Organization,
+      bibleMediafile: string,
+      isoMediafile: string
+    ) => {
+      orbitTeamUpdate(team, bibleMediafile, isoMediafile);
     };
 
     const teamDelete = async (team: Organization) => {
