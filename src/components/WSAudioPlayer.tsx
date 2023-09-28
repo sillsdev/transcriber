@@ -202,6 +202,7 @@ function WSAudioPlayer(props: IProps) {
   const markersRef = useRef<IMarker[]>([]);
   const [duration, setDurationx] = useState(0);
   const justPlayButton = allowRecord;
+  const [processingRecording, setProcessingRecordingx] = useState(false);
   const processRecordRef = useRef(false);
   const { showMessage } = useSnackBar();
   const t: IWsAudioPlayerStrings = useSelector(
@@ -274,6 +275,10 @@ function WSAudioPlayer(props: IProps) {
     onRecordDataAvailable
   );
 
+  const setProcessingRecording = (value: boolean) => {
+    setProcessingRecordingx(value);
+    processRecordRef.current = value;
+  };
   //#region hotkey handlers
   const handleFaster = () => {
     if (playbackRef.current === MAX_SPEED || recordingRef.current) return false;
@@ -342,7 +347,7 @@ function WSAudioPlayer(props: IProps) {
       wsStartRecord();
       setRecording(startRecording(500));
     } else {
-      processRecordRef.current = true;
+      setProcessingRecording(true);
       stopRecording();
       wsStopRecord();
       setRecording(false);
@@ -575,13 +580,14 @@ function WSAudioPlayer(props: IProps) {
       recordOverwritePosition.current || recordStartPosition.current
     );
     recordOverwritePosition.current = undefined;
-    processRecordRef.current = false;
+    setProcessingRecording(false);
     setReady(true);
     handleChanged();
   }
 
   function onRecordError(e: any) {
-    processRecordRef.current = false;
+    setProcessingRecording(false);
+
     if (autostartTimer.current && e.error === 'No mediaRecorder') {
       cleanupAutoStart();
       launchTimer();
@@ -737,9 +743,7 @@ function WSAudioPlayer(props: IProps) {
                             id="wsAudioRecord"
                             sx={{ color: 'red' }}
                             onClick={handleRecorder}
-                            disabled={
-                              playingRef.current || processRecordRef.current
-                            }
+                            disabled={playing || processingRecording}
                           >
                             {recording ? <FaStopCircle /> : <FaDotCircle />}
                           </IconButton>
@@ -821,8 +825,8 @@ function WSAudioPlayer(props: IProps) {
                                 disabled={
                                   !ready ||
                                   recording ||
-                                  playingRef.current ||
-                                  processRecordRef.current
+                                  playing ||
+                                  processingRecording
                                 }
                               >
                                 <SilenceIcon />

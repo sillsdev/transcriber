@@ -366,6 +366,26 @@ export const useOfflineSetup = () => {
       await memory.sync(await backup.push(ops));
     }
   };
+  const makeTitleArtifactTypeRec = async () => {
+    const allRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('artifacttype')
+    ) as WorkflowStep[];
+    const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
+    if (offlineRecs.length < 10) {
+      const t = new TransformBuilder();
+      const ops = ['title', 'graphic'].map((n) => {
+        let rec = {
+          type: 'artifacttype',
+          attributes: {
+            typename: n,
+          },
+        } as ArtifactType;
+        memory.schema.initializeRecord(rec);
+        return t.addRecord(rec);
+      });
+      await memory.sync(await backup.push(ops));
+    }
+  };
   const makePassageTypeRecs = async () => {
     const allRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('passagetype')
@@ -414,7 +434,9 @@ export const useOfflineSetup = () => {
     if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
       await makeMoreArtifactTypeRecs();
     }
-    if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 5)
+    if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 5) {
       await makePassageTypeRecs();
+      makeTitleArtifactTypeRec();
+    }
   };
 };

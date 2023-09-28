@@ -625,8 +625,29 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.bibleid">
+            <source>Bible Id</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.bibleidexists">
+            <source>Bible Id already exists.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.cancel">
             <source>Cancel</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.closeNoSave">
+            <source>Close without Saving?</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
@@ -719,6 +740,13 @@
       	</trans-unit>
          <trans-unit id="cards.editWorkflow">
             <source>Edit Workflow {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TeamDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.explainPublishing">
+            <source>Information to use when publishing audio created by this team.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TeamDialog.tsx</context>
@@ -871,6 +899,13 @@
                <context context-type="sourcefile">TeamDialog.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.publishing">
+            <source>Publishing</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TeamDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.save">
             <source>Save</source>
             <target/>
@@ -936,6 +971,13 @@
          </trans-unit>
          <trans-unit id="cards.uploadProgress">
             <source>Upload Progress</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.yes">
+            <source>Yes</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AddCard.tsx</context>
@@ -3784,6 +3826,48 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="mediaTitle.cancel">
+            <source>Cancel Recording</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.noplan">
+            <source>Unable to record until you have created a project.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.record">
+            <source>Record</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.recording">
+            <source>Recording...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.save">
+            <source>Save Recording</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.saving">
+            <source>Saving...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="mediaUpload.cancel">
             <source>Cancel</source>
             <target/>
@@ -5018,7 +5102,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.unpublish">
-            <source>Unpublish {0} {1}</source>
+            <source>Remove {0} {1} from published list.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>

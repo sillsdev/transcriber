@@ -538,9 +538,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.bibleid">
+         <segment>
+            <source>Bible Id</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.bibleidexists">
+         <segment>
+            <source>Bible Id already exists.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.closeNoSave">
+         <segment>
+            <source>Close without Saving?</source>
             <target/>
          </segment>
       </unit>
@@ -619,6 +637,12 @@
       <unit id="cards.editWorkflow">
          <segment>
             <source>Edit Workflow {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.explainPublishing">
+         <segment>
+            <source>Information to use when publishing audio created by this team.</source>
             <target/>
          </segment>
       </unit>
@@ -748,6 +772,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.publishing">
+         <segment>
+            <source>Publishing</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.save">
          <segment>
             <source>Save</source>
@@ -805,6 +835,12 @@
       <unit id="cards.uploadProgress">
          <segment>
             <source>Upload Progress</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.yes">
+         <segment>
+            <source>Yes</source>
             <target/>
          </segment>
       </unit>
@@ -3244,6 +3280,42 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTitle.cancel">
+         <segment>
+            <source>Cancel Recording</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.noplan">
+         <segment>
+            <source>Unable to record until you have created a project.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.record">
+         <segment>
+            <source>Record</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.recording">
+         <segment>
+            <source>Recording...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.save">
+         <segment>
+            <source>Save Recording</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.saving">
+         <segment>
+            <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>
@@ -4302,7 +4374,7 @@
       </unit>
       <unit id="planSheet.unpublish">
          <segment>
-            <source>Unpublish {0} {1}</source>
+            <source>Remove {0} {1} from published list.</source>
             <target/>
          </segment>
       </unit>

@@ -5,6 +5,7 @@ drop view resources;
 drop view vw_userdata;
 alter table passages alter column sequencenum type numeric(6,2);
 alter table sections alter column sequencenum type numeric(6,2);
+alter table sections add titlemediafileid int;
 alter table passages add sharedresourceid int null;  --link to note
 
 alter table passages add startchapter int generated always as 
@@ -29,12 +30,13 @@ end as int)) stored;
 alter table sharedresources add note bool default false;
 alter table sharedresources add titlemediafileid int;
 alter table sharedresources add linkurl text; -- optional link to survey, more info, etc
-ALTER TABLE sharedresources ADD CONSTRAINT fk_sharedresources_mediafile FOREIGN KEY (titlemediafileid) REFERENCES mediafiles(id) ON DELETE CASCADE;
+ALTER TABLE sharedresources ADD CONSTRAINT fk_sharedresources_mediafile FOREIGN KEY (titlemediafileid) REFERENCES mediafiles(id) ON DELETE set NULL;
+ALTER TABLE sharedresources ADD CONSTRAINT fk_sharedresources_artifactcategory FOREIGN KEY (artifactcategoryid) REFERENCES artifactcategorys(id) ON DELETE set NULL;
 CREATE INDEX ix_sharedresources_note ON public.sharedresources USING btree (note, artifactcategoryid, title);
 CREATE INDEX ix_sharedresources_language ON public.sharedresources USING btree (languagebcp47);
 
 alter table artifactcategorys add titlemediafileid int;
-ALTER TABLE artifactcategorys ADD CONSTRAINT fk_artifactcategorys_mediafile FOREIGN KEY (titlemediafileid) REFERENCES mediafiles(id) ON DELETE CASCADE;
+ALTER TABLE artifactcategorys ADD CONSTRAINT fk_artifactcategorys_mediafile FOREIGN KEY (titlemediafileid) REFERENCES mediafiles(id) ON DELETE set NULL;
 
 --select * from passagetypes;
 --delete from passagetypes;
@@ -149,6 +151,11 @@ CREATE INDEX ix_organizations_bibleid ON public.organizations USING btree (bible
 CREATE INDEX ix_organizations_iso ON public.organizations USING btree (iso);
 ALTER TABLE organizations ADD CONSTRAINT fk_organizations_biblemediafile FOREIGN KEY (biblemediafileid) REFERENCES mediafiles(id) ON DELETE CASCADE;
 ALTER TABLE organizations ADD CONSTRAINT fk_organizations_isomediafile FOREIGN KEY (isomediafileid) REFERENCES mediafiles(id) ON DELETE CASCADE;
+
+select * from artifacttypes a 
+INSERT INTO public.artifacttypes
+(organizationid, typename, datecreated, dateupdated, lastmodifiedby, archived, lastmodifiedorigin)
+VALUES(null, 'title', current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',null, false, 'setup'::text);
 
 --there are no default artifact categories for notes
 --delete from artifactcategorys a where note = true;
