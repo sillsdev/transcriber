@@ -48,6 +48,9 @@ import {
   remoteId,
   remoteIdGuid,
   getStartChapter,
+  useArtifactType,
+  ArtifactTypeSlug,
+  findRecord,
 } from '../../crud';
 import {
   lookupBook,
@@ -92,6 +95,7 @@ import { sharedResourceSelector } from '../../selector';
 import { PassageTypeEnum } from '../../model/passageType';
 import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
 import { UploadType } from '../MediaUpload';
+import { useGraphicCreate } from '../../crud/useGraphicCreate';
 
 const SaveWait = 500;
 
@@ -208,7 +212,10 @@ export function ScriptureTable(
   const [isNote, setIsNote] = useState(false);
   const [defaultFilename, setDefaultFilename] = useState('');
   const [artifactTypeId, setArtifactTypeId] = useState<string>();
+  const artifactTypeSlugRef = useRef<ArtifactTypeSlug>();
   const [uploadType, setUploadType] = useState<UploadType>();
+  const { getTypeId } = useArtifactType();
+  const graphicCreate = useGraphicCreate();
   const { getPlan } = usePlan();
   const localSave = useWfLocalSave({ setComplete });
   const onlineSave = useWfOnlineSave({ setComplete });
@@ -862,9 +869,36 @@ export function ScriptureTable(
   };
 
   const handleGraphic = (i: number) => {
+    const graphicId = getTypeId(ArtifactTypeSlug.Graphic);
+    if (!graphicId) return;
     saveIfChanged(() => {
+      artifactTypeSlugRef.current = ArtifactTypeSlug.Graphic;
+      setArtifactTypeId(graphicId);
+      setUploadType(UploadType.Graphic);
       const { ws } = getByIndex(workflowRef.current, i);
-      console.log(`adding graphics for ${JSON.stringify(ws)}`);
+      const secId = ws?.sectionId?.id ?? related(ws?.passage, 'section');
+      const secRec = secId
+        ? (findRecord(memory, 'section', secId) as Section)
+        : undefined;
+      const planId = related(secRec, 'plan') as string | undefined;
+      const planRec = planId
+        ? (findRecord(memory, 'plan', planId) as Plan)
+        : undefined;
+      const defaultName =
+        ws?.kind === IwsKind.Section
+          ? `${planRec?.attributes.name ?? ''}_${ws?.sectionSeq}_${
+              planRec?.keys?.remoteId || planRec?.id
+            }_${secRec?.keys?.remoteId || secRec?.id}_graphic`
+          : `${ws?.book ?? ''}_${ws?.reference ?? ''}_${ws?.sectionSeq ?? ''}_${
+              ws?.passageSeq ?? ''
+            }_${planRec?.keys?.remoteId || planRec?.id}_${
+              secRec?.keys?.remoteId || secRec?.id
+            }_${ws?.passage?.keys?.remoteId || ws?.passage?.id}_graphic`;
+      console.log(`defaultName: ${defaultName}`);
+      setDefaultFilename(defaultName);
+      uploadItem.current = ws;
+      setRecordAudio(false);
+      setUploadVisible(true);
     });
   };
 
@@ -1393,6 +1427,31 @@ export function ScriptureTable(
   if (view !== '') return <StickyRedirect to={view} />;
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
+    if (
+      artifactTypeSlugRef.current === ArtifactTypeSlug.Graphic &&
+      mediaRemoteIds
+    ) {
+      const ws = uploadItem.current;
+      const resourceType = ws?.kind === IwsKind.Section ? 'section' : 'passage';
+      const secRec =
+        ws?.kind === IwsKind.Section
+          ? (findRecord(memory, 'section', ws?.sectionId?.id ?? '') as Section)
+          : undefined;
+      const resourceId =
+        ws?.kind === IwsKind.Section
+          ? parseInt(secRec?.keys?.remoteId ?? '0')
+          : parseInt(ws?.passage?.keys?.remoteId ?? '0');
+      const info = '{}';
+      const mediafileId = remoteIdGuid(
+        'mediafile',
+        mediaRemoteIds[0],
+        memory.keyMap
+      );
+      await graphicCreate({ resourceType, resourceId, info }, mediafileId);
+      setArtifactTypeId(undefined);
+      setUploadType(undefined);
+      artifactTypeSlugRef.current = undefined;
+    }
     uploadItem.current = undefined;
     if (importList) {
       setImportList(undefined);
@@ -1459,6 +1518,8 @@ export function ScriptureTable(
         finish={afterUpload}
         cancelled={cancelled}
         passageId={uploadItem.current?.passage?.id}
+        artifactTypeId={artifactTypeId}
+        uploadType={uploadType}
         performedBy={speaker}
         onSpeakerChange={handleNameChange}
         ready={isReady}
