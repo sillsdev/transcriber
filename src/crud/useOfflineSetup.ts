@@ -373,7 +373,7 @@ export const useOfflineSetup = () => {
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
     if (offlineRecs.length < 10) {
       const t = new TransformBuilder();
-      const ops = ['title'].map((n) => {
+      const ops = ['title', 'graphic'].map((n) => {
         let rec = {
           type: 'artifacttype',
           attributes: {
