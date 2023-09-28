@@ -68,12 +68,14 @@ const initialState = {
 		"en": {
 			"backtranslation": "Phrase Back Translation",
 			"comment": "Comment",
+			"graphic": "Graphic",
 			"projectresource": "General Resource",
 			"qanda": "Community Test Question and Answer",
 			"resource": "Resource",
 			"retell": "Community Test Retell",
 			"sharedresource": "Shared Resource",
 			"testing": "Testing",
+			"title": "Title",
 			"vernacular": "Vernacular",
 			"wholebacktranslation": "Whole Back Translation",
 		}
