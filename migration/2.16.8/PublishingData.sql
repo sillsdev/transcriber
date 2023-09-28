@@ -8,15 +8,15 @@ alter table sections alter column sequencenum type numeric(6,2);
 alter table sections add titlemediafileid int;
 alter table passages add sharedresourceid int null;  --link to note
 
-alter table passages add startchapter int generated always as 
+alter table passages add startchapter int generated always as
 	(cast(substring(reference from '(\d{1,})\:') as int)) stored;
-alter table passages add endchapter int generated always as 
+alter table passages add endchapter int generated always as
 	(cast(coalesce(substring(reference from '\d{1,}\:.*?(\d{1,})\:') ,  substring(reference from '(\d{1,})\:')) as int)) stored;
-alter table passages add startverse int generated always as 
+alter table passages add startverse int generated always as
 	(cast(substring(reference from '.:(\d{1,})-?') as int)) stored;
-alter table passages add endverse int generated always as 
-	(cast(case coalesce(substring(reference from '\d{1,}\:.*?(\d{1,})\:'),'') 
-	when '' then substring(reference from '.-(\d{1,})-?') 
+alter table passages add endverse int generated always as
+	(cast(case coalesce(substring(reference from '\d{1,}\:.*?(\d{1,})\:'),'')
+	when '' then substring(reference from '.-(\d{1,})-?')
 	else coalesce(substring(reference from '\d{1,}\:.*?\d{1,}\:(\d{1,})'), substring(reference from '.:(\d{1,})-?'))
 end as int)) stored;
 
@@ -76,6 +76,7 @@ CREATE TABLE graphics (
 	organizationid int not null,
 	resourcetype text NOT NULL,
 	resourceid int NOT NULL,
+	mediafileid int not null,
 	info jsonb DEFAULT '{}',
 	datecreated timestamp,
 	dateupdated timestamp,
@@ -107,7 +108,7 @@ CREATE OR REPLACE FUNCTION public.publish_trigger()
  RETURNS trigger
  LANGUAGE plpgsql
 AS $function$
-declare 
+declare
 	org record;
 	myorg cursor
 		for
@@ -116,21 +117,21 @@ declare
 		where id = (select organizationid from projects p inner join plans pl on pl.projectid = p.id where pl.id = new.planid)
 		for UPDATE;
 begin
-	RAISE NOTICE 'here %', new.id; 
-			
+	RAISE NOTICE 'here %', new.id;
+
     if new.published = true AND new.published != old.published then
 		open myorg;
 		loop --just so the exit works
 		 	fetch myorg into org;
 				exit when not found;
 			if (org.anypublished = false) then
-			RAISE NOTICE 'update %', new.id; 
-				update organizations 
+			RAISE NOTICE 'update %', new.id;
+				update organizations
 				set anypublished = true,
-					dateupdated=current_timestamp, 
-					lastmodifiedorigin='publish' 
+					dateupdated=current_timestamp,
+					lastmodifiedorigin='publish'
 					where current of myorg;
-		
+
 		 	end if;
 		 	exit; -- just wanted to do the first one
 	 	end loop;
@@ -152,19 +153,21 @@ CREATE INDEX ix_organizations_iso ON public.organizations USING btree (iso);
 ALTER TABLE organizations ADD CONSTRAINT fk_organizations_biblemediafile FOREIGN KEY (biblemediafileid) REFERENCES mediafiles(id) ON DELETE CASCADE;
 ALTER TABLE organizations ADD CONSTRAINT fk_organizations_isomediafile FOREIGN KEY (isomediafileid) REFERENCES mediafiles(id) ON DELETE CASCADE;
 
-select * from artifacttypes a 
+select * from artifacttypes a
 INSERT INTO public.artifacttypes
 (organizationid, typename, datecreated, dateupdated, lastmodifiedby, archived, lastmodifiedorigin)
 VALUES(null, 'title', current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',null, false, 'setup'::text);
-
+INSERT INTO public.artifacttypes
+(organizationid, typename, datecreated, dateupdated, lastmodifiedby, archived, lastmodifiedorigin)
+VALUES(null, 'graphic', current_timestamp at time zone 'utc', current_timestamp at time zone 'utc',null, false, 'setup'::text);
 --there are no default artifact categories for notes
 --delete from artifactcategorys a where note = true;
 
 
 --note TYPE:
 --book friendly name  >> passage type
--- chapter number >> passage type  
-/* DON'T NEED THESE 
+-- chapter number >> passage type
+/* DON'T NEED THESE
 INSERT INTO public.artifactcategorys
 (organizationid, categoryname, datecreated, dateupdated, lastmodifiedby, lastmodifiedorigin, discussion, resource, note, archived)
 VALUES(null, 'chapternumber', current_timestamp at time zone 'utc', current_timestamp at time zone 'utc', (select id from users where email = 'sara_hentzel@sil.org'), 'setup'::text, false, false, true, false);
