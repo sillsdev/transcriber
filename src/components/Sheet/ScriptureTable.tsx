@@ -91,6 +91,7 @@ import { useProjectDefaults } from '../../crud/useProjectDefaults';
 import { sharedResourceSelector } from '../../selector';
 import { PassageTypeEnum } from '../../model/passageType';
 import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
+import { UploadType } from '../MediaUpload';
 
 const SaveWait = 500;
 
@@ -206,6 +207,8 @@ export function ScriptureTable(
   const [versionItem, setVersionItem] = useState('');
   const [isNote, setIsNote] = useState(false);
   const [defaultFilename, setDefaultFilename] = useState('');
+  const [artifactTypeId, setArtifactTypeId] = useState<string>();
+  const [uploadType, setUploadType] = useState<UploadType>();
   const { getPlan } = usePlan();
   const localSave = useWfLocalSave({ setComplete });
   const onlineSave = useWfOnlineSave({ setComplete });
