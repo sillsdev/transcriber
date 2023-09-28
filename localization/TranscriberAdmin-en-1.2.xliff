@@ -310,6 +310,13 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="artifactType.graphic">
+            <source>Graphic</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="artifactType.projectresource">
       		<source>General Resource</source>
       		<target/>
@@ -347,6 +354,13 @@
          </trans-unit>
          <trans-unit id="artifactType.testing">
             <source>Testing</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.title">
+            <source>Title</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AlertDialog.tsx</context>

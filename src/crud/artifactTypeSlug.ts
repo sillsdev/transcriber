@@ -12,4 +12,5 @@ export enum ArtifactTypeSlug {
   IntellectualProperty = 'intellectualproperty',
   KeyTerm = 'keyterm',
   Title = 'title',
+  Graphic = 'graphic',
 }

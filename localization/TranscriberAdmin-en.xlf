@@ -268,6 +268,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactType.graphic">
+         <segment>
+            <source>Graphic</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactType.projectresource">
          <segment>
             <source>General Resource</source>
@@ -301,6 +307,12 @@
       <unit id="artifactType.testing">
          <segment>
             <source>Testing</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.title">
+         <segment>
+            <source>Title</source>
             <target/>
          </segment>
       </unit>
