@@ -183,7 +183,9 @@ export default function MediaTitle(props: IProps) {
     if (mediaId) {
       waitForIt(
         'mediaId',
-        () => remoteIdGuid('mediafile', mediaId, memory.keyMap) !== undefined,
+        () =>
+          offlineOnly ||
+          remoteIdGuid('mediafile', mediaId, memory.keyMap) !== undefined,
         () => false,
         100
       ).then(() => {
@@ -318,7 +320,6 @@ export default function MediaTitle(props: IProps) {
   };
 
   const uploadMedia = async (files: File[]) => {
-    console.log('uploadMedia', files);
     uploadFiles(files);
     fileList.current = files;
     const mediaFile = {
@@ -400,8 +401,8 @@ export default function MediaTitle(props: IProps) {
                   )}
                   <Tooltip title={t.record}>
                     <IconButton
-                      id="record-translation"
-                      aria-label="record target term"
+                      id="record"
+                      aria-label="record"
                       onClick={handleRecord}
                       onMouseDown={handleMouseDownSave}
                       disabled={recording}
