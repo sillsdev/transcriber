@@ -11,6 +11,7 @@ export interface Graphic extends Record {
   };
   relationships?: {
     organization: RecordRelationship;
+    mediafile: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
 }

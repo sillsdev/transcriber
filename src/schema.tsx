@@ -929,6 +929,7 @@ if (
       },
       relationships: {
         organization: { type: 'hasOne', model: 'organization' },
+        mediafile: { type: 'hasOne', model: 'mediafile' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     };
