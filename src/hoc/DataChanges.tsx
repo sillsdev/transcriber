@@ -42,11 +42,9 @@ import { electronExport } from '../store/importexport/electronExport';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import {
   ExportType,
-  GroupMembership,
   Invitation,
   IState,
   OfflineProject,
-  OrganizationMembership,
   PassageStateChange,
   Plan,
   VProject,
@@ -145,28 +143,34 @@ export const doDataChanges = async (
   };
 
   const reloadOrgs = async (localId: string) => {
-    const orgmem = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'organizationmembership', id: localId })
-    ) as OrganizationMembership;
-    if (related(orgmem, 'user') === user) {
-      memory.sync(await remote.pull((q) => q.findRecords('organization')));
-      memory.sync(await remote.pull((q) => q.findRecords('orgworkflowstep')));
-      memory.sync(
-        await remote.pull((q) => q.findRecords('organizationmembership'))
+    const orgmem = findRecord(memory, 'organizationmembership', localId);
+    if (orgmem) {
+      if (related(orgmem, 'user') === user) {
+        memory.sync(await remote.pull((q) => q.findRecords('organization')));
+        memory.sync(await remote.pull((q) => q.findRecords('orgworkflowstep')));
+        memory.sync(
+          await remote.pull((q) => q.findRecords('organizationmembership'))
+        );
+      }
+    } else
+      memory.update((tb) =>
+        tb.removeRecord({ type: 'organizationmembership', id: localId })
       );
-    }
   };
 
   const reloadProjects = async (localId: string) => {
-    const grpmem = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'groupmembership', id: localId })
-    ) as GroupMembership;
-    if (related(grpmem, 'user') === user) {
-      memory.sync(await remote.pull((q) => q.findRecords('group')));
-      memory.sync(await remote.pull((q) => q.findRecords('project')));
-      memory.sync(await remote.pull((q) => q.findRecords('plan')));
-      memory.sync(await remote.pull((q) => q.findRecords('groupmembership')));
-    }
+    const grpmem = findRecord(memory, 'groupmembership', localId);
+    if (grpmem) {
+      if (related(grpmem, 'user') === user) {
+        memory.sync(await remote.pull((q) => q.findRecords('group')));
+        memory.sync(await remote.pull((q) => q.findRecords('project')));
+        memory.sync(await remote.pull((q) => q.findRecords('plan')));
+        memory.sync(await remote.pull((q) => q.findRecords('groupmembership')));
+      }
+    } else
+      memory.update((tb) =>
+        tb.removeRecord({ type: 'groupmembership', id: localId })
+      );
   };
 
   const processDataChanges = async (

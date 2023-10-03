@@ -783,6 +783,7 @@ export function Transcriber(
   const handleSave = async () => {
     //this needs to use the refs because it is called from a timer, which
     //apparently remembers the values when it is kicked off...not when it is run
+    console.log('handleSave');
     await save(
       nextOnSave[stateRef.current] ?? stateRef.current,
       playedSecsRef.current,
@@ -797,6 +798,7 @@ export function Transcriber(
     segments: string | undefined,
     thiscomment: string | undefined
   ) => {
+    console.log('transcription save');
     if (transcriptionRef.current && mediaRef.current) {
       saving.current = true;
       let transcription = transcriptionRef.current.firstChild.value;
@@ -922,7 +924,7 @@ export function Transcriber(
   const handleAutosave = async () => {
     if (!playingRef.current && !saving.current && transcriptionRef.current) {
       const transcription = transcriptionRef.current.firstChild.value;
-      if (transcriptionIn.current || '' !== transcription) {
+      if ((transcriptionIn.current ?? '') !== transcription) {
         await handleSave();
       }
     }
