@@ -76,7 +76,7 @@ CREATE TABLE graphics (
 	organizationid int not null,
 	resourcetype text NOT NULL,
 	resourceid int NOT NULL,
-	mediafileid int not null,
+	mediafileid int null,
 	info jsonb DEFAULT '{}',
 	datecreated timestamp,
 	dateupdated timestamp,
