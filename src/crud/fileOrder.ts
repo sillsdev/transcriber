@@ -6,6 +6,7 @@ export interface fileInfo {
 export const updateableFiles = [
   { table: 'comment', sort: 'J' },
   { table: 'discussion', sort: 'I' },
+  { table: 'graphic', sort: 'I' },
   { table: 'groupmembership', sort: 'D' },
   { table: 'intellectualproperty', sort: 'I' },
   { table: 'mediafile', sort: 'H' },

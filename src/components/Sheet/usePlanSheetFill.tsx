@@ -34,6 +34,8 @@ import { ISTFilterState } from './filterMenu';
 type ICellEditor = (props: any) => JSX.Element;
 type IRow = (string | number)[];
 
+const pointer = { cursor: 'pointer' };
+
 export interface IFillProps {
   refCol: number;
   currentRow: number;
@@ -294,16 +296,28 @@ export const usePlanSheetFill = ({
   const graphicValue = (rowIndex: number) => {
     if (
       !isSection(rowIndex) &&
-      passageTypeFromRef(rowInfo[rowIndex].reference, inlinePassages) !==
-        PassageTypeEnum.NOTE
+      ![PassageTypeEnum.NOTE, PassageTypeEnum.CHAPTERNUMBER].includes(
+        passageTypeFromRef(rowInfo[rowIndex].reference, inlinePassages)
+      )
     ) {
       return <></>;
+    }
+    if (rowInfo[rowIndex].graphicUri) {
+      return (
+        <Avatar
+          sx={pointer}
+          src={rowInfo[rowIndex].graphicUri}
+          variant="rounded"
+          onClick={handleGraphic(rowIndex)}
+        />
+      );
     }
     return (
       <Avatar
         {...stringAvatar(
           rowInfo[rowIndex].reference ||
-            `${organizedBy} ${rowInfo[rowIndex].sectionSeq}`
+            `${organizedBy} ${rowInfo[rowIndex].sectionSeq}`,
+          pointer
         )}
         variant="rounded"
         onClick={handleGraphic(rowIndex)}

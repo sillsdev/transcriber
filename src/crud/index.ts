@@ -99,3 +99,5 @@ export * from './useUpdateRecord';
 export * from './PassageReference';
 export * from './PassageDescription';
 export * from './nextPasId';
+export * from './useGraphicCreate';
+export * from './useGraphicUpdate';

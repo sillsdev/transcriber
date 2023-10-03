@@ -25,6 +25,7 @@ import {
   Discussion,
   IResourceStrings,
   SheetLevel,
+  Graphic,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import * as actions from '../../store';
@@ -51,6 +52,7 @@ import {
   useArtifactType,
   ArtifactTypeSlug,
   findRecord,
+  useGraphicUpdate,
 } from '../../crud';
 import {
   lookupBook,
@@ -74,6 +76,7 @@ import {
   isSectionFiltered,
   isPassageFiltered,
   nextNum,
+  ApmDim,
 } from '.';
 import { debounce } from 'lodash';
 import AudacityManager from './AudacityManager';
@@ -96,6 +99,11 @@ import { PassageTypeEnum } from '../../model/passageType';
 import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
 import { UploadType } from '../MediaUpload';
 import { useGraphicCreate } from '../../crud/useGraphicCreate';
+import {
+  CompressedImages,
+  GraphicUploader,
+  IGraphicInfo,
+} from '../GraphicUploader';
 
 const SaveWait = 500;
 
@@ -118,6 +126,7 @@ interface IRecordProps {
   passages: Array<Passage>;
   sections: Array<Section>;
   mediafiles: Array<MediaFile>;
+  graphics: Array<Graphic>;
   discussions: Array<Discussion>;
   groupmemberships: Array<GroupMembership>;
   workflowSteps: WorkflowStep[];
@@ -150,6 +159,7 @@ export function ScriptureTable(
     passages,
     sections,
     mediafiles,
+    graphics,
     discussions,
     groupmemberships,
     workflowSteps,
@@ -204,6 +214,7 @@ export function ScriptureTable(
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
   const [assignSections, setAssignSections] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
+  const [uploadGraphicVisible, setUploadGraphicVisible] = useState(false);
   const [recordAudio, setRecordAudio] = useState(true);
   const [importList, setImportList] = useState<File[]>();
   const cancelled = useRef(false);
@@ -212,10 +223,10 @@ export function ScriptureTable(
   const [isNote, setIsNote] = useState(false);
   const [defaultFilename, setDefaultFilename] = useState('');
   const [artifactTypeId, setArtifactTypeId] = useState<string>();
-  const artifactTypeSlugRef = useRef<ArtifactTypeSlug>();
   const [uploadType, setUploadType] = useState<UploadType>();
   const { getTypeId } = useArtifactType();
   const graphicCreate = useGraphicCreate();
+  const graphicUpdate = useGraphicUpdate();
   const { getPlan } = usePlan();
   const localSave = useWfLocalSave({ setComplete });
   const onlineSave = useWfOnlineSave({ setComplete });
@@ -868,11 +879,14 @@ export function ScriptureTable(
     });
   };
 
+  const handleUploadGraphicVisible = (v: boolean) => {
+    setUploadGraphicVisible(v);
+  };
+
   const handleGraphic = (i: number) => {
     const graphicId = getTypeId(ArtifactTypeSlug.Graphic);
     if (!graphicId) return;
     saveIfChanged(() => {
-      artifactTypeSlugRef.current = ArtifactTypeSlug.Graphic;
       setArtifactTypeId(graphicId);
       setUploadType(UploadType.Graphic);
       const { ws } = getByIndex(workflowRef.current, i);
@@ -898,8 +912,44 @@ export function ScriptureTable(
       setDefaultFilename(defaultName);
       uploadItem.current = ws;
       setRecordAudio(false);
-      setUploadVisible(true);
+      setUploadGraphicVisible(true);
     });
+  };
+
+  const afterConvert = async (images: CompressedImages[]) => {
+    const ws = uploadItem.current;
+    const resourceType = ws?.kind === IwsKind.Section ? 'section' : 'passage';
+    const secRec =
+      ws?.kind === IwsKind.Section
+        ? (findRecord(memory, 'section', ws?.sectionId?.id ?? '') as Section)
+        : undefined;
+    const resourceId =
+      ws?.kind === IwsKind.Section
+        ? parseInt(secRec?.keys?.remoteId ?? '0')
+        : parseInt(ws?.passage?.keys?.remoteId ?? '0');
+    const infoData: IGraphicInfo = {};
+    images.forEach((image) => {
+      infoData[image.dimension.toString()] = image;
+    });
+    const info = JSON.stringify(infoData);
+    const graphicRec = graphics.find(
+      (g) =>
+        g.attributes.resourceType === resourceType &&
+        g.attributes.resourceId === resourceId
+    );
+    if (graphicRec) {
+      await graphicUpdate({
+        ...graphicRec,
+        attributes: { ...graphicRec.attributes, info },
+      });
+    } else {
+      await graphicCreate(
+        { resourceType, resourceId, info },
+        'e7e5529a-0841-478b-85c6-9452a1a26888'
+      );
+    }
+    setArtifactTypeId(undefined);
+    setUploadType(undefined);
   };
 
   const handleAudacityImport = (i: number, list: File[]) => {
@@ -1124,6 +1174,7 @@ export function ScriptureTable(
         plan,
         sections,
         passages,
+        graphics,
         flat,
         shared,
         memory,
@@ -1140,7 +1191,17 @@ export function ScriptureTable(
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plan, sections, passages, mediafiles, flat, shared, orgSteps, lastSaved]);
+  }, [
+    plan,
+    sections,
+    passages,
+    mediafiles,
+    graphics,
+    flat,
+    shared,
+    orgSteps,
+    lastSaved,
+  ]);
 
   interface ILocal {
     [key: string]: any;
@@ -1427,31 +1488,6 @@ export function ScriptureTable(
   if (view !== '') return <StickyRedirect to={view} />;
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
-    if (
-      artifactTypeSlugRef.current === ArtifactTypeSlug.Graphic &&
-      mediaRemoteIds
-    ) {
-      const ws = uploadItem.current;
-      const resourceType = ws?.kind === IwsKind.Section ? 'section' : 'passage';
-      const secRec =
-        ws?.kind === IwsKind.Section
-          ? (findRecord(memory, 'section', ws?.sectionId?.id ?? '') as Section)
-          : undefined;
-      const resourceId =
-        ws?.kind === IwsKind.Section
-          ? parseInt(secRec?.keys?.remoteId ?? '0')
-          : parseInt(ws?.passage?.keys?.remoteId ?? '0');
-      const info = '{}';
-      const mediafileId = remoteIdGuid(
-        'mediafile',
-        mediaRemoteIds[0],
-        memory.keyMap
-      );
-      await graphicCreate({ resourceType, resourceId, info }, mediafileId);
-      setArtifactTypeId(undefined);
-      setUploadType(undefined);
-      artifactTypeSlugRef.current = undefined;
-    }
     uploadItem.current = undefined;
     if (importList) {
       setImportList(undefined);
@@ -1524,6 +1560,16 @@ export function ScriptureTable(
         onSpeakerChange={handleNameChange}
         ready={isReady}
       />
+      <GraphicUploader
+        dimension={[1024, 512, ApmDim]}
+        defaultFilename={defaultFilename}
+        isOpen={uploadGraphicVisible}
+        onOpen={handleUploadGraphicVisible}
+        showMessage={showMessage}
+        finish={afterConvert}
+        cancelled={cancelled}
+        uploadType={uploadType}
+      />
       {audacityItem?.ws?.passage && (
         <AudacityManager
           item={audacityItem?.index}
@@ -1586,6 +1632,7 @@ const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  graphics: (q: QueryBuilder) => q.findRecords('graphic'),
   discussions: (q: QueryBuilder) => q.findRecords('discussion'),
   groupmemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
   workflowSteps: (q: QueryBuilder) => q.findRecords('workflowstep'),

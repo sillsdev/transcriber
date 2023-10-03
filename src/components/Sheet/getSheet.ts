@@ -7,6 +7,7 @@ import {
   OrgWorkflowStep,
   IWorkflowStepsStrings,
   SheetLevel,
+  Graphic,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
@@ -17,6 +18,10 @@ import { toCamel } from '../../utils';
 import { ISTFilterState } from './filterMenu';
 import { PassageTypeEnum } from '../../model/passageType';
 import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
+import { IGraphicInfo } from '../GraphicUploader';
+
+export const ApmDim = 40;
+const apmDimStr = `${ApmDim}`;
 
 const shtSectionUpdate = (item: ISheet, rec: ISheet) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -127,6 +132,7 @@ export const getSheet = (
   plan: string,
   sections: Section[],
   passages: Passage[],
+  graphics: Graphic[],
   flat: boolean,
   projectShared: boolean,
   memory: Memory,
@@ -167,6 +173,17 @@ export const getSheet = (
       item.deleted = false;
       item.filtered = isSectionFiltered(filterState, item.sectionSeq);
       item.published = section.attributes.published;
+      const graphicRec = graphics.find(
+        (g) =>
+          g.attributes.resourceType === 'section' &&
+          g.attributes.resourceId === parseInt(section?.keys?.remoteId ?? '0')
+      );
+      if (graphicRec) {
+        const info: IGraphicInfo = JSON.parse(graphicRec.attributes.info);
+        if (info.hasOwnProperty(apmDimStr)) {
+          item.graphicUri = info[apmDimStr].content;
+        }
+      }
       curSection = item.sectionSeq;
     }
     let first = true;
@@ -221,6 +238,24 @@ export const getSheet = (
         item.filtered =
           item.filtered ||
           isPassageFiltered(item, filterState, orgWorkflowSteps, doneStepId);
+        if (
+          [PassageTypeEnum.NOTE, PassageTypeEnum.CHAPTERNUMBER].includes(
+            item.passageType
+          )
+        ) {
+          const graphicRec = graphics.find(
+            (g) =>
+              g.attributes.resourceType === 'passage' &&
+              g.attributes.resourceId ===
+                parseInt(passage?.keys?.remoteId ?? '0')
+          );
+          if (graphicRec) {
+            const info: IGraphicInfo = JSON.parse(graphicRec.attributes.info);
+            if (info.hasOwnProperty(apmDimStr)) {
+              item.graphicUri = info[apmDimStr].content;
+            }
+          }
+        }
       }
       //console.log(`item ${JSON.stringify(item, null, 2)}`);
       shtPassageAdd(myWork, item, sectionIndex);
