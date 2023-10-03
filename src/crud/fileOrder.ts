@@ -25,6 +25,7 @@ export const staticFiles = [
   { table: 'activitystate', sort: 'B' },
   { table: 'artifactcategory', sort: 'C' },
   { table: 'artifacttype', sort: 'C' },
+  { table: 'graphic', sort: 'I' },
   { table: 'group', sort: 'C' },
   { table: 'integration', sort: 'B' },
   { table: 'invitation', sort: 'D' },

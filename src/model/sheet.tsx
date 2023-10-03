@@ -47,6 +47,7 @@ export interface ISheet {
   filtered: boolean;
   discussionCount: number;
   published: boolean;
+  graphicUri?: string;
 }
 
 export const flatScrColNames = [

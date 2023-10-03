@@ -250,6 +250,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactCategory.graphic">
+         <segment>
+            <source>Graphic</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactCategory.qanda">
          <segment>
             <source>Question and Answer</source>
@@ -3346,6 +3352,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.graphicTask">
+         <segment>
+            <source>Drag and drop a file here, or click here to browse for the file.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.graphicTitle">
+         <segment>
+            <source>Upload Graphic</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
          <segment>
             <source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
@@ -4261,6 +4279,12 @@
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.graphic">
+         <segment>
+            <source>Graphic</source>
             <target/>
          </segment>
       </unit>
