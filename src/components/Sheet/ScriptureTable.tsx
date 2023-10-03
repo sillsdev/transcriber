@@ -49,8 +49,6 @@ import {
   remoteId,
   remoteIdGuid,
   getStartChapter,
-  useArtifactType,
-  ArtifactTypeSlug,
   findRecord,
   useGraphicUpdate,
 } from '../../crud';
@@ -222,9 +220,7 @@ export function ScriptureTable(
   const [versionItem, setVersionItem] = useState('');
   const [isNote, setIsNote] = useState(false);
   const [defaultFilename, setDefaultFilename] = useState('');
-  const [artifactTypeId, setArtifactTypeId] = useState<string>();
   const [uploadType, setUploadType] = useState<UploadType>();
-  const { getTypeId } = useArtifactType();
   const graphicCreate = useGraphicCreate();
   const graphicUpdate = useGraphicUpdate();
   const { getPlan } = usePlan();
@@ -884,10 +880,7 @@ export function ScriptureTable(
   };
 
   const handleGraphic = (i: number) => {
-    const graphicId = getTypeId(ArtifactTypeSlug.Graphic);
-    if (!graphicId) return;
     saveIfChanged(() => {
-      setArtifactTypeId(graphicId);
       setUploadType(UploadType.Graphic);
       const { ws } = getByIndex(workflowRef.current, i);
       const secId = ws?.sectionId?.id ?? related(ws?.passage, 'section');
@@ -911,7 +904,6 @@ export function ScriptureTable(
       console.log(`defaultName: ${defaultName}`);
       setDefaultFilename(defaultName);
       uploadItem.current = ws;
-      setRecordAudio(false);
       setUploadGraphicVisible(true);
     });
   };
@@ -945,7 +937,6 @@ export function ScriptureTable(
     } else {
       await graphicCreate({ resourceType, resourceId, info });
     }
-    setArtifactTypeId(undefined);
     setUploadType(undefined);
   };
 
@@ -1551,7 +1542,6 @@ export function ScriptureTable(
         finish={afterUpload}
         cancelled={cancelled}
         passageId={uploadItem.current?.passage?.id}
-        artifactTypeId={artifactTypeId}
         uploadType={uploadType}
         performedBy={speaker}
         onSpeakerChange={handleNameChange}
