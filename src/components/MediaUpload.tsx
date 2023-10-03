@@ -17,7 +17,7 @@ import { mediaUploadSelector } from '../selector';
 import { API_CONFIG } from '../api-variable';
 
 const FileDrop =
-  process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
+  process.env.NODE_ENV !== 'test' ? require('react-file-drop').FileDrop : <></>;
 
 const MyLabel = styled('label')(({ theme }) => ({
   display: 'flex',

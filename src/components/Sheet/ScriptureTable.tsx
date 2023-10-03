@@ -943,10 +943,7 @@ export function ScriptureTable(
         attributes: { ...graphicRec.attributes, info },
       });
     } else {
-      await graphicCreate(
-        { resourceType, resourceId, info },
-        'e7e5529a-0841-478b-85c6-9452a1a26888'
-      );
+      await graphicCreate({ resourceType, resourceId, info });
     }
     setArtifactTypeId(undefined);
     setUploadType(undefined);

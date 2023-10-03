@@ -55,6 +55,7 @@
     "react-datasheet": "^1.4.12",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.5",
+    "react-file-drop": "^3.1.6",
     "react-hot-loader": "^4.13.1",
     "react-icons": "^3.11.0",
     "react-localization": "^1.0.18",

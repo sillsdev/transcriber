@@ -6,7 +6,6 @@ export interface fileInfo {
 export const updateableFiles = [
   { table: 'comment', sort: 'J' },
   { table: 'discussion', sort: 'I' },
-  { table: 'graphic', sort: 'I' },
   { table: 'groupmembership', sort: 'D' },
   { table: 'intellectualproperty', sort: 'I' },
   { table: 'mediafile', sort: 'H' },
@@ -26,6 +25,7 @@ export const staticFiles = [
   { table: 'activitystate', sort: 'B' },
   { table: 'artifactcategory', sort: 'C' },
   { table: 'artifacttype', sort: 'C' },
+  { table: 'graphic', sort: 'I' },
   { table: 'group', sort: 'C' },
   { table: 'integration', sort: 'B' },
   { table: 'invitation', sort: 'D' },

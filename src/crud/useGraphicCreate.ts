@@ -14,7 +14,7 @@ export const useGraphicCreate = () => {
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
 
-  return async (attributes: GraphicAttributes, mediafileId: string) => {
+  return async (attributes: GraphicAttributes, mediafileId?: string) => {
     const graphicRec = {
       type: 'graphic',
       attributes: {
@@ -32,14 +32,18 @@ export const useGraphicCreate = () => {
         'organization',
         organization
       ),
-      ...ReplaceRelatedRecord(
-        t,
-        graphicRec,
-        'mediafile',
-        'mediafile',
-        mediafileId
-      ),
     ];
+    if (mediafileId) {
+      ops.push(
+        ...ReplaceRelatedRecord(
+          t,
+          graphicRec,
+          'mediafile',
+          'mediafile',
+          mediafileId
+        )
+      );
+    }
     await memory.update(ops);
   };
 };
