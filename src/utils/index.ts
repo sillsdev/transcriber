@@ -69,3 +69,4 @@ export * from './useBookN';
 export * from './bcvKey';
 export * from './rangeAdd';
 export * from './positiveWholeOnly';
+export * from './stringAvatar';

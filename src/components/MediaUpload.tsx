@@ -17,7 +17,7 @@ import { mediaUploadSelector } from '../selector';
 import { API_CONFIG } from '../api-variable';
 
 const FileDrop =
-  process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
+  process.env.NODE_ENV !== 'test' ? require('react-file-drop').FileDrop : <></>;
 
 const MyLabel = styled('label')(({ theme }) => ({
   display: 'flex',
@@ -48,6 +48,7 @@ export enum UploadType {
   LOGO = 4 /* do we need separate ones for org and avatar? */,
   ProjectResource = 5,
   IntellectualProperty = 6,
+  Graphic = 7,
 }
 const PROJECTRESOURCE_SIZELIMIT = 50;
 const NO_SIZELIMIT = 10000;
@@ -172,6 +173,7 @@ function MediaUpload(props: IProps) {
     'FUTURE TODO',
     t.resourceTitle,
     t.intellectualPropertyTitle,
+    t.graphicTitle,
   ];
   const text = [
     t.task,
@@ -181,6 +183,7 @@ function MediaUpload(props: IProps) {
     'FUTURE TODO',
     t.projectResourceTask,
     t.intellectualPropertyTask,
+    t.graphicTask,
   ];
 
   const handleAddOrSave = () => {
@@ -269,6 +272,7 @@ function MediaUpload(props: IProps) {
         '.jpg, .svg, .png',
         '.mp3, .m4a, .wav, .ogg, .pdf',
         '.mp3, .m4a, .wav, .ogg, .pdf, .png, .jpg',
+        '.png, .jpg',
       ].map((s) => s)[uploadType]
     );
     setAcceptMime(
@@ -280,6 +284,7 @@ function MediaUpload(props: IProps) {
         'image/jpeg, image/svg+xml, image/png',
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf',
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf, image/png, image/jpeg',
+        'image/png, image/jpeg',
       ].map((s) => s)[uploadType]
     );
     var size = SIZELIMIT(uploadType);

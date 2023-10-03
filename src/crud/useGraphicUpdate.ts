@@ -1,15 +1,15 @@
 import { useGlobal } from 'reactn';
-import { SectionResource } from '../model';
+import { Graphic } from '../model';
 import { TransformBuilder } from '@orbit/data';
 import { UpdateRecord } from '../model/baseModel';
 
-export const useSecResUpdate = () => {
+export const useGraphicUpdate = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
-  return async (secResRec: SectionResource) => {
+  return async (graphicRec: Graphic) => {
     await memory.update((t: TransformBuilder) =>
-      UpdateRecord(t, secResRec, user)
+      UpdateRecord(t, graphicRec, user)
     );
   };
 };

@@ -166,6 +166,7 @@ interface IProps {
   onUpload: (i: number) => () => void;
   onRecord: (i: number) => void;
   onHistory: (i: number) => () => void;
+  onGraphic: (i: number) => void;
   onFilterChange: (
     newstate: ISTFilterState | undefined,
     isDefault: boolean
@@ -490,6 +491,7 @@ export function PlanSheet(props: IProps) {
     onPlayStatus,
     onPassageDetail,
     onAction,
+    filterState,
     onAudacity: handleAudacity,
     onDelete: handleConfirmDelete,
   });
@@ -618,15 +620,15 @@ export function PlanSheet(props: IProps) {
     } else {
       const refCol = bookCol + 1;
 
-      const data = planSheetFill(
+      const data = planSheetFill({
         refCol,
         currentRow,
         srcMediaId,
         mediaPlaying,
         check,
         active,
-        filtered
-      );
+        filtered,
+      });
       warningTest(refCol);
       setData(data);
     }

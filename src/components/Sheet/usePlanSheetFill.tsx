@@ -10,7 +10,7 @@ import { planSheetSelector, viewModeSelector } from '../../selector';
 import { useOrganizedBy, useRole } from '../../crud';
 import { rowTypes } from './rowTypes';
 import { StageReport } from '../../control';
-import { Badge } from '@mui/material';
+import { Avatar, Badge } from '@mui/material';
 import PlanAudioActions from './PlanAudioActions';
 import {
   RefRender,
@@ -28,9 +28,23 @@ import { SectionSeqCol, PassageSeqCol } from './PlanSheet';
 import { useGlobal } from 'reactn';
 import { useShowIcon } from './useShowIcon';
 import { ExtraIcon } from '.';
+import { stringAvatar } from '../../utils';
+import { ISTFilterState } from './filterMenu';
 
 type ICellEditor = (props: any) => JSX.Element;
 type IRow = (string | number)[];
+
+const pointer = { cursor: 'pointer' };
+
+export interface IFillProps {
+  refCol: number;
+  currentRow: number;
+  srcMediaId: string;
+  mediaPlaying: boolean;
+  check: number[];
+  active: number;
+  filtered: boolean;
+}
 
 interface IProps {
   columns: ICell[];
@@ -39,6 +53,7 @@ interface IProps {
   inlinePassages: boolean;
   bookCol: number;
   bookSuggestions?: OptionType[];
+  filterState: ISTFilterState;
   onPassageDetail: (rowIndex: number) => void;
   onPlayStatus: (mediaId: string) => void;
   onHistory: (rowIndex: number) => () => void;
@@ -47,6 +62,7 @@ interface IProps {
   onAudacity: (rowIndex: number) => () => void;
   onRecord: (rowIndex: number) => void;
   onUpload: (rowIndex: number) => () => void;
+  onGraphic: (rowIndex: number) => void;
   onAssign: (where: number[]) => () => void;
   disableFilter: () => void;
   onAction: (what: ExtraIcon) => void;
@@ -71,6 +87,7 @@ interface IProps {
  * @param {Function} props.onAudacity - A callback function for launching audacity.
  * @param {Function} props.onRecord - A callback function for handling record.
  * @param {Function} props.onUpload - A callback function for handling upload.
+ * @param {Function} props.onGraphic - A callback function for handling adding a graphic.
  * @param {Function} props.onAssign - A callback function for handling assign.
  * @param {boolean} props.disableFilter - A callback function to disable the filtering.
  * @param {Function} props.onAction - A callback function for handling action.
@@ -84,6 +101,7 @@ export const usePlanSheetFill = ({
   inlinePassages,
   bookCol,
   bookSuggestions,
+  filterState,
   onPassageDetail,
   onPlayStatus,
   onHistory,
@@ -92,6 +110,7 @@ export const usePlanSheetFill = ({
   onAudacity,
   onRecord,
   onUpload,
+  onGraphic,
   onAssign,
   disableFilter,
   onAction,
@@ -111,6 +130,10 @@ export const usePlanSheetFill = ({
 
   const handlePassageDetail = (i: number) => () => {
     onPassageDetail && onPassageDetail(i);
+  };
+
+  const handleGraphic = (i: number) => () => {
+    onGraphic && onGraphic(i);
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -142,8 +165,8 @@ export const usePlanSheetFill = ({
 
   const MemoizedTaskAvatar = memo(TaskAvatar);
 
-  const titleRow = (columns: ICell[]) => [
-    [
+  const titleRow = (columns: ICell[], filterState: ISTFilterState) => {
+    const titles = [
       {
         value: t.step,
         readOnly: true,
@@ -157,20 +180,36 @@ export const usePlanSheetFill = ({
         readOnly: true,
         width: userIsAdmin ? 50 : 20,
       } as ICell,
-    ].concat(
-      columns.map((col) => {
+    ];
+    if (!filterState.hidePublishing)
+      titles.push({
+        value: t.graphic,
+        readOnly: true,
+        width: 60,
+      } as ICell);
+    columns
+      .map((col) => {
         return { ...col, readOnly: true };
       })
-    ),
-  ];
+      .forEach((c) => titles.push(c));
+    return [titles];
+  };
 
-  const stepCell = (
-    passage: boolean,
-    row: IRow,
-    refCol: number,
-    rowIndex: number,
-    calcClassName: string
-  ) =>
+  interface StepCellProps {
+    passage: boolean;
+    row: IRow;
+    refCol: number;
+    rowIndex: number;
+    calcClassName: string;
+  }
+
+  const stepCell = ({
+    passage,
+    row,
+    refCol,
+    rowIndex,
+    calcClassName,
+  }: StepCellProps) =>
     ({
       value: passage &&
         !isPublishingTitle(row[refCol].toString(), inlinePassages) && (
@@ -200,12 +239,19 @@ export const usePlanSheetFill = ({
       className: calcClassName,
     } as ICell);
 
-  const actionValue = (
-    passage: boolean,
-    rowIndex: number,
-    srcMediaId: string,
-    mediaPlaying: boolean
-  ) => {
+  interface ActionValueProps {
+    passage: boolean;
+    rowIndex: number;
+    srcMediaId: string;
+    mediaPlaying: boolean;
+  }
+
+  const actionValue = ({
+    passage,
+    rowIndex,
+    srcMediaId,
+    mediaPlaying,
+  }: ActionValueProps) => {
     if (!passage) return <></>;
     return (
       <PlanAudioActions
@@ -221,15 +267,19 @@ export const usePlanSheetFill = ({
     );
   };
 
-  const actionCell = (
-    passage: boolean,
-    rowIndex: number,
-    calcClassName: string,
-    srcMediaId: string,
-    mediaPlaying: boolean
-  ) =>
+  interface ActionCellProps extends ActionValueProps {
+    calcClassName: string;
+  }
+
+  const actionCell = ({
+    passage,
+    rowIndex,
+    calcClassName,
+    srcMediaId,
+    mediaPlaying,
+  }: ActionCellProps) =>
     ({
-      value: actionValue(passage, rowIndex, srcMediaId, mediaPlaying),
+      value: actionValue({ passage, rowIndex, srcMediaId, mediaPlaying }),
       readOnly: true,
       className: calcClassName,
     } as ICell);
@@ -243,13 +293,53 @@ export const usePlanSheetFill = ({
     return e;
   };
 
+  const graphicValue = (rowIndex: number) => {
+    if (
+      !isSection(rowIndex) &&
+      ![PassageTypeEnum.NOTE, PassageTypeEnum.CHAPTERNUMBER].includes(
+        passageTypeFromRef(rowInfo[rowIndex].reference, inlinePassages)
+      )
+    ) {
+      return <></>;
+    }
+    if (rowInfo[rowIndex].graphicUri) {
+      return (
+        <Avatar
+          sx={pointer}
+          src={rowInfo[rowIndex].graphicUri}
+          variant="rounded"
+          onClick={handleGraphic(rowIndex)}
+        />
+      );
+    }
+    return (
+      <Avatar
+        {...stringAvatar(
+          rowInfo[rowIndex].reference ||
+            `${organizedBy} ${rowInfo[rowIndex].sectionSeq}`,
+          pointer
+        )}
+        variant="rounded"
+        onClick={handleGraphic(rowIndex)}
+      />
+    );
+  };
+
+  const graphicCell = (rowIndex: number, calcClassName: string) => ({
+    value: graphicValue(rowIndex),
+    readOnly: true,
+    className: calcClassName,
+  });
+
+  interface RowCellsProps {
+    section: boolean;
+    passage: boolean;
+    refCol: number;
+    calcClassName: string;
+  }
+
   const rowCells =
-    (
-      section: boolean,
-      passage: boolean,
-      refCol: number,
-      calcClassName: string
-    ) =>
+    ({ section, passage, refCol, calcClassName }: RowCellsProps) =>
     (e: string | number, cellIndex: number) => {
       if (cellIndex === bookCol && passage)
         return {
@@ -288,18 +378,31 @@ export const usePlanSheetFill = ({
       };
     };
 
-  const extrasCell = (
-    section: boolean,
-    passage: boolean,
-    rowIndex: number,
-    calcClassName: string,
-    row: IRow,
-    check: number[],
-    movement: boolean,
-    book: boolean,
-    active: number,
-    filtered: boolean
-  ) =>
+  interface ExtrasCellProps {
+    section: boolean;
+    passage: boolean;
+    rowIndex: number;
+    calcClassName: string;
+    row: IRow;
+    check: number[];
+    movement: boolean;
+    book: boolean;
+    active: number;
+    filtered: boolean;
+  }
+
+  const extrasCell = ({
+    section,
+    passage,
+    rowIndex,
+    calcClassName,
+    row,
+    check,
+    movement,
+    book,
+    active,
+    filtered,
+  }: ExtrasCellProps) =>
     ({
       value: (
         <PlanActionMenu
@@ -331,16 +434,21 @@ export const usePlanSheetFill = ({
       dataEditor: ActivateCell,
     } as ICell);
 
+  interface EachRowProps extends IFillProps {
+    filterState: ISTFilterState;
+  }
+
   const eachRow =
-    (
-      refCol: number,
-      currentRow: number,
-      srcMediaId: string,
-      mediaPlaying: boolean,
-      check: number[],
-      active: number,
-      filtered: boolean
-    ) =>
+    ({
+      refCol,
+      currentRow,
+      srcMediaId,
+      mediaPlaying,
+      check,
+      active,
+      filtered,
+      filterState,
+    }: EachRowProps) =>
     (row: IRow, rowIndex: number) => {
       const section = isSection(rowIndex);
       const passage = isPassage(rowIndex);
@@ -357,18 +465,26 @@ export const usePlanSheetFill = ({
           : 'pass';
 
       const sheetRow = [
-        stepCell(passage, row, refCol, rowIndex, calcClassName),
+        stepCell({ passage, row, refCol, rowIndex, calcClassName }),
         assignmentCell(rowIndex, calcClassName),
-        actionCell(passage, rowIndex, calcClassName, srcMediaId, mediaPlaying),
+        actionCell({
+          passage,
+          rowIndex,
+          calcClassName,
+          srcMediaId,
+          mediaPlaying,
+        }),
       ];
+      if (!filterState.hidePublishing)
+        sheetRow.push(graphicCell(rowIndex, calcClassName));
       row
         .slice(0, LastCol)
-        .map(rowCells(section, passage, refCol, calcClassName))
+        .map(rowCells({ section, passage, refCol, calcClassName }))
         .forEach((c) => {
           sheetRow.push(c);
         });
       sheetRow.push(
-        extrasCell(
+        extrasCell({
           section,
           passage,
           rowIndex,
@@ -378,34 +494,16 @@ export const usePlanSheetFill = ({
           movement,
           book,
           active,
-          filtered
-        )
+          filtered,
+        })
       );
       return sheetRow;
     };
 
-  return (
-    refCol: number,
-    currentRow: number,
-    srcMediaId: string,
-    mediaPlaying: boolean,
-    check: number[],
-    active: number,
-    filtered: boolean
-  ) => {
-    const data = titleRow(columns);
+  return (props: IFillProps) => {
+    const data = titleRow(columns, filterState);
     rowData
-      .map(
-        eachRow(
-          refCol,
-          currentRow,
-          srcMediaId,
-          mediaPlaying,
-          check,
-          active,
-          filtered
-        )
-      )
+      .map(eachRow({ ...props, filterState }))
       .forEach((r) => data.push(r));
     return data;
   };

@@ -289,6 +289,13 @@
                <context context-type="sourcefile">artifactCategory.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="artifactCategory.graphic">
+      		<source>Graphic</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">artifactCategory.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="artifactCategory.qanda">
             <source>Question and Answer</source>
             <target/>
@@ -3896,6 +3903,20 @@
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="mediaUpload.graphicTask">
+      		<source>Drag and drop a file here, or click here to browse for the file.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaUpload.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaUpload.graphicTitle">
+      		<source>Upload Graphic</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaUpload.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="mediaUpload.intellectualPropertyTask">
       		<source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
       		<target/>
@@ -4967,6 +4988,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="planSheet.graphic">
+      		<source>Graphic</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="planSheet.moveUp">
       		<source>Move {pt} {0} up</source>
       		<target/>
