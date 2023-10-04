@@ -61,16 +61,16 @@ export function PublishExpansion(props: IProps) {
     if (
       init &&
       !team?.attributes?.iso &&
-      language.bcp47 &&
-      language.bcp47 !== 'und'
+      language?.bcp47 &&
+      language?.bcp47 !== 'und'
     ) {
-      setValue('iso', language.bcp47);
+      setValue('iso', language?.bcp47);
     }
     if (!init) {
       var t = team ?? ({ attributes: { defaultParams: '{}' } } as Organization);
       setDefault('langProps', language, t);
       setValue('defaultParams', t.attributes.defaultParams ?? '{}');
-      setValue('iso', language.bcp47);
+      setValue('iso', language?.bcp47);
     }
   };
 
@@ -163,7 +163,7 @@ export function PublishExpansion(props: IProps) {
                 language={language}
                 label={t.language.replace(': {0}', '')}
                 mediaId={isoMediafile}
-                title={language.bcp47}
+                title={language?.bcp47}
                 defaultFilename={(team?.attributes?.slug ?? '') + 'iso'}
                 onLangChange={handleLanguageChange}
                 onRecording={onRecording}
