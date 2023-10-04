@@ -192,7 +192,7 @@ export function ProvideRights(props: IProps & IRecordProps) {
         <Box sx={rowProp}>
           <Button
             sx={buttonProp}
-            id="pdRecordUpload"
+            id="spkr-upload"
             onClick={handleUpload}
             title={ts.uploadRights}
           >
@@ -216,13 +216,15 @@ export function ProvideRights(props: IProps & IRecordProps) {
           size={200}
         />
         <Box sx={rowProp}>
-          <Button onClick={handleLater}>{t.later}</Button>
+          <Button id="spkr-later" onClick={handleLater}>
+            {t.later}
+          </Button>
           <Typography variant="caption" sx={statusProps}>
             {statusText}
           </Typography>
           <GrowingSpacer />
           <PriButton
-            id="rec-save"
+            id="spkr-save"
             sx={buttonProp}
             onClick={handleSave}
             disabled={!canSave}
