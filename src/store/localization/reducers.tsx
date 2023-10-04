@@ -710,7 +710,7 @@ const initialState = {
 			"cancel": "Cancel",
 			"dragDropMultiple": "Drag and drop files here, or click here to browse for the files.",
 			"dragDropSingle": "Drag and drop a file here, or click here to browse for the file.",
-			"graphicTask": "Drag and drop a file here, or click here to browse for the file.",
+			"graphicTask": "Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.",
 			"graphicTitle": "Upload Graphic",
 			"intellectualPropertyTask": "Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.",
 			"intellectualPropertyTitle": "Upload Intellectual Property Release",

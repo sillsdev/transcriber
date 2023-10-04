@@ -272,7 +272,7 @@ function MediaUpload(props: IProps) {
         '.jpg, .svg, .png',
         '.mp3, .m4a, .wav, .ogg, .pdf',
         '.mp3, .m4a, .wav, .ogg, .pdf, .png, .jpg',
-        '.png, .jpg',
+        '.png, .jpg, .webp',
       ].map((s) => s)[uploadType]
     );
     setAcceptMime(
@@ -284,7 +284,7 @@ function MediaUpload(props: IProps) {
         'image/jpeg, image/svg+xml, image/png',
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf',
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf, image/png, image/jpeg',
-        'image/png, image/jpeg',
+        'image/png, image/jpeg image/webp',
       ].map((s) => s)[uploadType]
     );
     var size = SIZELIMIT(uploadType);

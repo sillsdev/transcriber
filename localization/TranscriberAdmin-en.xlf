@@ -3354,7 +3354,7 @@
       </unit>
       <unit id="mediaUpload.graphicTask">
          <segment>
-            <source>Drag and drop a file here, or click here to browse for the file.</source>
+            <source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
             <target/>
          </segment>
       </unit>

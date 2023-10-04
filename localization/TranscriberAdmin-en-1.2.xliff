@@ -3911,7 +3911,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="mediaUpload.graphicTask">
-      		<source>Drag and drop a file here, or click here to browse for the file.</source>
+      		<source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">MediaUpload.tsx</context>
