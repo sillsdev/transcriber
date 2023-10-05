@@ -181,7 +181,7 @@ export const usePlanSheetFill = ({
         width: userIsAdmin ? 50 : 20,
       } as ICell,
     ];
-    if (!filterState.hidePublishing)
+    if (!filterState.hidePublishing && filterState.canHidePublishing)
       titles.push({
         value: t.graphic,
         readOnly: true,
@@ -475,7 +475,7 @@ export const usePlanSheetFill = ({
           mediaPlaying,
         }),
       ];
-      if (!filterState.hidePublishing)
+      if (!filterState.hidePublishing && filterState.canHidePublishing)
         sheetRow.push(graphicCell(rowIndex, calcClassName));
       row
         .slice(0, LastCol)

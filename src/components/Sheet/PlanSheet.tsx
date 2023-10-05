@@ -427,7 +427,10 @@ export function PlanSheet(props: IProps) {
     const colChanges = changes.map((c) => ({
       ...c,
       row: c.row - 1,
-      col: c.col - 3,
+      col:
+        !filterState.hidePublishing && filterState.canHidePublishing
+          ? c.col - 4
+          : c.col - 3,
     }));
     updateData(colChanges);
   };
