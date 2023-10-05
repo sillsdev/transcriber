@@ -303,8 +303,8 @@ export function ScriptureTable(
       }
       setProjectDefault(filterParam, def);
     }
-    if (filter) setFilterState(filter);
-    else setFilterState(defaultFilterState);
+    if (filter) setFilterState(() => filter);
+    else setFilterState(getFilter(defaultFilterState));
   };
   const setSheet = (ws: ISheet[]) => {
     workflowRef.current = ws;
@@ -313,10 +313,10 @@ export function ScriptureTable(
       ws.find((w) => isPublishingTitle(w.reference ?? '', flat))
     );
     if (defaultFilterState.canHidePublishing !== anyPublishing)
-      setDefaultFilterState({
-        ...defaultFilterState,
+      setDefaultFilterState((fs) => ({
+        ...fs,
         canHidePublishing: anyPublishing,
-      });
+      }));
   };
   const passNumCol = React.useMemo(() => {
     return colNames.indexOf('passageSeq');
@@ -1013,11 +1013,9 @@ export function ScriptureTable(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); //do this once to get the default;
 
-  const getFilter = () => {
+  const getFilter = (fs: ISTFilterState) => {
     var filter =
-      getLocalDefault(filterParam) ??
-      getProjectDefault(filterParam) ??
-      defaultFilterState;
+      getLocalDefault(filterParam) ?? getProjectDefault(filterParam) ?? fs;
 
     if (filter.minStep && !isNaN(Number(filter.minStep)))
       filter.minStep = remoteIdGuid(
@@ -1031,12 +1029,12 @@ export function ScriptureTable(
         filter.maxStep,
         memory.keyMap
       );
-    filter.canHidePublishing = defaultFilterState.canHidePublishing;
+    filter.canHidePublishing = fs.canHidePublishing;
     filter.hidePublishing = filter.canHidePublishing && filter.hidePublishing;
     return filter;
   };
   useEffect(() => {
-    setFilterState(getFilter());
+    setFilterState(getFilter(defaultFilterState));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project, defaultFilterState]);
 
@@ -1062,10 +1060,10 @@ export function ScriptureTable(
     );
 
     if (defaultFilterState.canHideDone !== Boolean(tmp))
-      setDefaultFilterState({
-        ...defaultFilterState,
+      setDefaultFilterState((fs) => ({
+        ...fs,
         canHideDone: Boolean(tmp),
-      });
+      }));
     return tmp?.id ?? 'noDoneStep';
   }, [defaultFilterState, orgSteps]);
 
