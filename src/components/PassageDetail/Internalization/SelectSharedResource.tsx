@@ -395,7 +395,9 @@ export const SelectSharedResource = (props: IProps) => {
           sx={{ width: '325px' }}
         >
           {referenceLevel.map((rl) => (
-            <MenuItem value={rl.value}>{rl.label}</MenuItem>
+            <MenuItem key={rl.value} value={rl.value}>
+              {rl.label}
+            </MenuItem>
           ))}
         </ReferenceLevel>
       </Stack>
