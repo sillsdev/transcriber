@@ -375,9 +375,9 @@ export default function MediaTitle(props: IProps) {
   return (
     <ColumnDiv>
       <FormControl sx={{ width: 'max-content', py: 1 }} variant="outlined">
-        <InputLabel htmlFor={`${idPrefix}-adornment`}>{'\u200B'}</InputLabel>
+        <InputLabel htmlFor={`${idPrefix}adornment`}>{'\u200B'}</InputLabel>
         <TextField
-          id={`${idPrefix}-adornment`}
+          id={`${idPrefix}adornment`}
           label={label}
           value={curText}
           onClick={language ? handleLangPick : undefined}
@@ -391,7 +391,7 @@ export default function MediaTitle(props: IProps) {
                 <>
                   {mediaId && (
                     <IconButton
-                      id={`${idPrefix}-play`}
+                      id={`${idPrefix}play`}
                       aria-label="play"
                       onClick={handlePlay}
                       onMouseDown={handleMouseDownSave}
@@ -403,7 +403,7 @@ export default function MediaTitle(props: IProps) {
                   )}
                   <Tooltip title={t.record}>
                     <IconButton
-                      id={`${idPrefix}-record`}
+                      id={`${idPrefix}record`}
                       aria-label="record"
                       onClick={handleRecord}
                       onMouseDown={handleMouseDownSave}
@@ -423,7 +423,7 @@ export default function MediaTitle(props: IProps) {
                     <Tooltip title={t.save}>
                       <span>
                         <IconButton
-                          id={`${idPrefix}-save`}
+                          id={`${idPrefix}save`}
                           aria-label="save target term"
                           onClick={handleOk}
                           onMouseDown={handleMouseDownSave}
@@ -437,7 +437,7 @@ export default function MediaTitle(props: IProps) {
                     <Tooltip title={t.cancel}>
                       <span>
                         <IconButton
-                          id={`${idPrefix}-cancel`}
+                          id={`${idPrefix}cancel`}
                           aria-label="save target term"
                           onClick={handleCancel}
                           onMouseDown={handleMouseDownSave}
@@ -457,7 +457,7 @@ export default function MediaTitle(props: IProps) {
         {language && (
           <FormControlLabel
             sx={{ display: 'none' }}
-            id={`${idPrefix}-language`}
+            id={`${idPrefix}language`}
             ref={langEl}
             control={
               <LanguagePicker
