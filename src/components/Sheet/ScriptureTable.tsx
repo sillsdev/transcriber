@@ -102,8 +102,10 @@ import {
   GraphicUploader,
   IGraphicInfo,
 } from '../GraphicUploader';
+import Confirm from '../AlertDialog';
 
 const SaveWait = 500;
+export const FilterParam = 'ProjectFilter';
 
 interface IStateProps {
   t: IScriptureTableStrings;
@@ -194,6 +196,8 @@ export function ScriptureTable(
   const [sheet, setSheetx] = useState<ISheet[]>([]);
   const workflowRef = useRef<ISheet[]>([]);
   const [, setComplete] = useGlobal('progress');
+  const [confirmPublishingVisible, setConfirmPublishingVisible] =
+    useState(false);
   const [view, setView] = useState('');
   const [audacityItem, setAudacityItem] = React.useState<AudacityInfo>();
   const [lastSaved, setLastSaved] = React.useState<string>();
@@ -258,7 +262,6 @@ export function ScriptureTable(
     canHidePublishing: true,
     hidePublishing: true,
   });
-  const filterParam = 'ProjectFilter';
   const resStr: IResourceStrings = useSelector(
     sharedResourceSelector,
     shallowEqual
@@ -282,7 +285,7 @@ export function ScriptureTable(
     filter: ISTFilterState | undefined,
     projDefault: boolean
   ) => {
-    setLocalDefault(filterParam, filter);
+    setLocalDefault(FilterParam, filter);
     if (projDefault) {
       var def;
       if (filter) {
@@ -301,7 +304,7 @@ export function ScriptureTable(
             memory.keyMap
           );
       }
-      setProjectDefault(filterParam, def);
+      setProjectDefault(FilterParam, def);
     }
     if (filter) setFilterState(() => filter);
     else setFilterState(getFilter(defaultFilterState));
@@ -1016,7 +1019,7 @@ export function ScriptureTable(
 
   const getFilter = (fs: ISTFilterState) => {
     var filter =
-      getLocalDefault(filterParam) ?? getProjectDefault(filterParam) ?? fs;
+      getLocalDefault(FilterParam) ?? getProjectDefault(FilterParam) ?? fs;
 
     if (filter.minStep && !isNaN(Number(filter.minStep)))
       filter.minStep = remoteIdGuid(
@@ -1290,7 +1293,15 @@ export function ScriptureTable(
       setChanged(true);
     }
   };
+
   const onPublishing = () => {
+    setConfirmPublishingVisible(true);
+  };
+  const onPublishingReject = () => {
+    setConfirmPublishingVisible(false);
+  };
+  const onPublishingConfirm = () => {
+    setConfirmPublishingVisible(false);
     const bookTitleIndex = sheet.findIndex(
       (w) => w.passageType === PassageTypeEnum.BOOK
     );
@@ -1590,6 +1601,14 @@ export function ScriptureTable(
           <VersionDlg passId={versionItem} />
         )}
       </BigDialog>
+      {confirmPublishingVisible && (
+        <Confirm
+          title={t.confirmPublish}
+          text={t.publishingWarning}
+          yesResponse={onPublishingConfirm}
+          noResponse={onPublishingReject}
+        />
+      )}
     </Box>
   );
 }

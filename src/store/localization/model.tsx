@@ -980,6 +980,7 @@ export interface IResourceStrings extends Localize.LocalizedStringsMethods {
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
     "book": string;
     "chapter": string;
+    "confirmPublish": string;
     "description": string;
     "extras": string;
     "installAudacity": string;
@@ -988,6 +989,7 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "pasteInvalidColumns": string;
     "pasteInvalidSections": string;
     "pasteNoRows": string;
+    "publishingWarning": string;
     "reference": string;
     "saveFirst": string;
     "saving": string;
@@ -1336,6 +1338,7 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "backtranslation": string;
     "cancel": string;
     "configure": string;
+    "cannotChangeLayout": string;
     "correctformat": string;
     "description": string;
     "edit": string;

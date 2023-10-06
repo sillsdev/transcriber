@@ -4882,6 +4882,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTable.confirmPublish">
+         <segment>
+            <source>Are you sure you want to add publishing rows?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.description">
          <segment>
             <source>Description</source>
@@ -4927,6 +4933,12 @@
       <unit id="scriptureTable.pasteNoRows">
          <segment>
             <source>No Rows in clipboard.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.publishingWarning">
+         <segment>
+            <source>Once publishing rows are added, there is no automated way to remove them. Publishing projects cannot be made flat projects.</source>
             <target/>
          </segment>
       </unit>
@@ -6547,6 +6559,12 @@
       <unit id="vProject.configure">
          <segment>
             <source>Configure</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.cannotChangeLayout">
+         <segment>
+            <source>Publishing projects cannot be made flat.</source>
             <target/>
          </segment>
       </unit>

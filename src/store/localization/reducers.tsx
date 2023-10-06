@@ -1041,6 +1041,7 @@ const initialState = {
 		"en": {
 			"book": "Book",
 			"chapter": "Chapter",
+			"confirmPublish": "Are you sure you want to add publishing rows?",
 			"description": "Description",
 			"extras": "Extras",
 			"installAudacity": "Install {Audacity} to use this feature.",
@@ -1049,6 +1050,7 @@ const initialState = {
 			"pasteInvalidColumns": "Invalid number of columns ({0}). Expecting {1} columns.",
 			"pasteInvalidSections": "Invalid {0} number(s):",
 			"pasteNoRows": "No Rows in clipboard.",
+			"publishingWarning": "Once publishing rows are added, there is no automated way to remove them. Publishing projects cannot be made flat projects.",
 			"reference": "Reference",
 			"saveFirst": "You must save changes first!",
 			"saving": "Saving...",
@@ -1423,6 +1425,7 @@ const initialState = {
 			"backtranslation": "Back Translation",
 			"cancel": "Cancel",
 			"configure": "Configure",
+			"cannotChangeLayout": "Publishing projects cannot be made flat.",
 			"correctformat": "Please enter in the format: singular/plural",
 			"description": "Description",
 			"edit": "Edit",
