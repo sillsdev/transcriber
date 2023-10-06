@@ -9,7 +9,7 @@ export const useMyNavigate = () => {
     checkHome(to);
     setTimeout(() => {
       navigate(to, options);
-    }, 100);
+    }, 200);
   }
   return myNavigate;
 };
