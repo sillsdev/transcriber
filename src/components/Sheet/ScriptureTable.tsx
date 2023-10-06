@@ -876,6 +876,7 @@ export function ScriptureTable(
   };
 
   const handleUploadGraphicVisible = (v: boolean) => {
+    setUploadType(undefined);
     setUploadGraphicVisible(v);
   };
 
