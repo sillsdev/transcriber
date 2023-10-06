@@ -20,6 +20,7 @@ import { Options } from '.';
 import RenderLogo from '../../../control/RenderLogo';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import { useOrganizedBy, useRole } from '../../../crud';
+import { useCanBeFlat } from '../../../crud/useCanBeFlat';
 
 const StyledAccordionSummary = styled(AccordionSummary)<AccordionSummaryProps>(
   ({ theme }) => ({
@@ -61,6 +62,7 @@ const RenderCustomize = () => {
 export function ProjectExpansion(props: IProjectDialogState) {
   const { state, setState } = props;
   const { organizedBy, isPublic } = state;
+  const canBeFlat = useCanBeFlat();
   const { localizedOrganizedBy, fromLocalizedOrganizedBy } = useOrganizedBy();
   const { userIsSharedContentCreator } = useRole();
   const [localOrgBy, setLocalOrgBy] = useState('');
@@ -79,6 +81,10 @@ export function ProjectExpansion(props: IProjectDialogState) {
     setState((state) => ({ ...state, isPublic: val }));
   };
   const handleLayoutChange = (val: string) => {
+    if (!canBeFlat()) {
+      showMessage(t.cannotChangeLayout);
+      return;
+    }
     setState((state) => ({ ...state, flat: val === t.flat }));
   };
 

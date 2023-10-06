@@ -353,7 +353,7 @@ export const usePlanSheetFill = ({
           value: refValue(e),
           readOnly:
             readonly ||
-            section ||
+            !passage ||
             passageTypeFromRef(e as string, inlinePassages) !==
               PassageTypeEnum.PASSAGE,
           className:
@@ -366,10 +366,10 @@ export const usePlanSheetFill = ({
           readonly ||
           (cellIndex === SectionSeqCol && (e as number) < 0) ||
           cellIndex === PassageSeqCol ||
-          section
-            ? passage
-              ? false
-              : cellIndex > 1
+          passage
+            ? false
+            : section
+            ? cellIndex > 1
             : cellIndex <= 1,
         className:
           (cellIndex === SectionSeqCol || cellIndex === PassageSeqCol
