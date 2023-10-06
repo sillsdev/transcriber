@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  useCallback,
+} from 'react';
 import { shallowEqual } from 'react-redux';
 import {
   IState,
@@ -314,20 +320,24 @@ export function AudioTab(props: IProps & IRecordProps) {
     }
   };
 
-  const matchMap = (pat: string, options: IMatchData) => {
-    if (pdata.length === 0 || data.length === 0) return;
-    const result = makeMatchMap(pat, options, allBookData);
-    if (result) {
-      const { found, newMap } = result;
-      if (found) {
-        setAttachMap(newMap);
-        showMessage(t.matchAdded.replace('{0}', found.toString()));
-        handleSave(newMap);
-        return;
+  const matchMap = useCallback(
+    (pat: string, options: IMatchData) => {
+      if (pdata.length === 0 || data.length === 0) return;
+      const result = makeMatchMap(pat, options, allBookData);
+      if (result) {
+        const { found, newMap } = result;
+        if (found) {
+          setAttachMap(newMap);
+          showMessage(t.matchAdded.replace('{0}', found.toString()));
+          handleSave(newMap);
+          return;
+        }
       }
-    }
-    showMessage(t.noMatch);
-  };
+      showMessage(t.noMatch);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [allBookData, pdata, data]
+  );
 
   return (
     <Box sx={{ display: 'flex' }}>

@@ -21,7 +21,7 @@ export const makeMatchMap = (
   Object.keys(newMap).forEach((k) => usedPass.add(newMap[k]));
   let found = 0;
   data.forEach((dr, dn) => {
-    if (dr.reference === '') {
+    if (!dr.passId) {
       const m = rpat.exec(dr.fileName);
       if (m) {
         for (let i = 0; i < pdata.length; i++) {
