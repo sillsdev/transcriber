@@ -7,7 +7,9 @@ export const useMyNavigate = () => {
 
   function myNavigate(to: To, options?: NavigateOptions) {
     checkHome(to);
-    navigate(to, options);
+    setTimeout(() => {
+      navigate(to, options);
+    }, 200);
   }
   return myNavigate;
 };
