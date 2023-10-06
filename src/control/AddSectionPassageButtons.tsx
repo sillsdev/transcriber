@@ -157,7 +157,7 @@ export const AddSectionPassageButtons = (props: IProps) => {
             <StyledMenuIcon>
               <AddPublishingIcon />
             </StyledMenuIcon>
-            {t.addPublishingTitles}
+            {t.addPublishing}
           </MenuItem>
         )}
       </Menu>

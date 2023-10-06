@@ -855,7 +855,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "action": string;
     "addNote": string;
     "addPassage": string;
-    "addPublishingTitles": string;
+    "addPublishing": string;
     "addSection": string;
     "assigned": string;
     "audio": string;

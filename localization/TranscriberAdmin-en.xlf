@@ -4240,9 +4240,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.addPublishingTitles">
+      <unit id="planSheet.addPublishing">
          <segment>
-            <source>Add Publishing Titles</source>
+            <source>Add Publishing Rows</source>
             <target/>
          </segment>
       </unit>
@@ -4998,7 +4998,7 @@
       </unit>
       <unit id="scriptureTableFilter.hidePublishing">
          <segment>
-            <source>Hide Publishing Titles</source>
+            <source>Hide Publishing Rows</source>
             <target/>
          </segment>
       </unit>

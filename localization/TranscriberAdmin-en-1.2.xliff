@@ -4946,8 +4946,8 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="planSheet.addPublishingTitles">
-            <source>Add Publishing Titles</source>
+         <trans-unit id="planSheet.addPublishing">
+            <source>Add Publishing Rows</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -5830,7 +5830,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="scriptureTableFilter.hidePublishing">
-            <source>Hide Publishing Titles</source>
+            <source>Hide Publishing Rows</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
