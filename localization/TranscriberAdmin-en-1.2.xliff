@@ -4939,8 +4939,8 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="planSheet.addPublishingTitles">
-            <source>Add Publishing Titles</source>
+         <trans-unit id="planSheet.addPublishing">
+            <source>Add Publishing Rows</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -5689,6 +5689,13 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="scriptureTable.confirmPublish">
+      		<source>Are you sure you want to add publishing rows?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ScriptureTable.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="scriptureTable.description">
             <source>Description</source>
             <target/>
@@ -5745,6 +5752,13 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="scriptureTable.publishingWarning">
+      		<source>Once publishing rows are added, there is no automated way to remove them. Publishing projects cannot be made flat projects.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ScriptureTable.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="scriptureTable.reference">
             <source>Reference</source>
             <target/>
@@ -5809,7 +5823,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="scriptureTableFilter.hidePublishing">
-            <source>Hide Publishing Titles</source>
+            <source>Hide Publishing Rows</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -7636,6 +7650,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="vProject.cannotChangeLayout">
+      		<source>Publishing projects cannot be made flat.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">addCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="vProject.correctformat">
             <source>Please enter in the format: singular/plural</source>
             <target/>
