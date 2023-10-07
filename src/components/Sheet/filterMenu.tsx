@@ -98,7 +98,6 @@ export function FilterMenu(props: IProps) {
     apply({ ...localState, disabled: event.target.checked }, false);
   };
   useEffect(() => {
-    console.log(`FilterMenu: useEffect: ${JSON.stringify(localState)}`);
     setLocalState(props.state);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.state]);
