@@ -175,7 +175,7 @@ export function Template(props: ITemplateProps) {
         label={t.autoMatchTemplate}
         variant="filled"
         sx={{ mx: 2, width: '600px' }}
-        value={template}
+        value={template ?? ''}
         onChange={handleTemplateChange}
         helperText={template === '{SECT}' ? t.renderExportTemplate : undefined}
         InputProps={{
