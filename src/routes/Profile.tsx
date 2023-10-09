@@ -54,6 +54,8 @@ import {
   getParatextDataPath,
   waitForIt,
   useMyNavigate,
+  localUserKey,
+  LocalKey,
 } from '../utils';
 import moment from 'moment-timezone';
 import {
@@ -341,7 +343,7 @@ export function Profile(props: IProps) {
       setEditId(null);
     }
     saving.current = false;
-    setView('Team');
+    setView('/team');
   };
 
   const handleAdd = async () => {
@@ -393,7 +395,7 @@ export function Profile(props: IProps) {
     if (editId) {
       setEditId(null);
     }
-    setView('Team');
+    setView('/team');
   };
 
   const handleCancel = () => {
@@ -425,7 +427,12 @@ export function Profile(props: IProps) {
         return;
       }
     }
-    setView('Team');
+    const view = localStorage.getItem(localUserKey(LocalKey.url));
+    if (view && !/Profile/i.test(view)) {
+      setView(view);
+    } else {
+      setView('/team');
+    }
   };
   const handleCancelAborted = () => {
     setConfirmCancel(undefined);
@@ -467,6 +474,7 @@ export function Profile(props: IProps) {
 
   useEffect(() => {
     if (isOffline) getParatextDataPath().then((val) => setPtPath(val));
+    setView('');
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
@@ -568,8 +576,10 @@ export function Profile(props: IProps) {
     (locale || '') !== '';
 
   if (/Logout/i.test(view)) navigate('/logout');
-  if (/access/i.test(view)) navigate('/');
-  if (/Team/i.test(view)) return <StickyRedirect to="/team" />;
+  else if (/access/i.test(view)) navigate('/');
+  else if (view && !/Profile/i.test(view)) {
+    return <StickyRedirect to={view} />;
+  }
 
   return (
     <Box id="Profile" sx={{ width: '100%' }}>

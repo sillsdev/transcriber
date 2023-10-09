@@ -40,7 +40,6 @@ import {
 import { withBucket } from '../../hoc/withBucket';
 import { usePlan, useLoadStatic } from '../../crud';
 import Busy from '../Busy';
-import StickyRedirect from '../StickyRedirect';
 import CloudOffIcon from '@mui/icons-material/CloudOff';
 import ProjectDownloadAlert from '../ProjectDownloadAlert';
 import { axiosPost } from '../../utils/axios';
@@ -191,8 +190,9 @@ export const AppHead = (props: IProps) => {
       });
       return;
     }
-    if (!lastpath.endsWith('null'))
+    if (!lastpath.endsWith('null')) {
       localStorage.setItem(localUserKey(LocalKey.url), lastpath);
+    }
     if (!/Close/i.test(what)) {
       if (/ClearLogout/i.test(what)) {
         forceLogin();
@@ -353,7 +353,9 @@ export const AppHead = (props: IProps) => {
   const handleTermsClose = () => setShowTerms('');
 
   if (view === 'Error') navigate('/error');
-  if (view === 'Profile') return <StickyRedirect to="/profile" />;
+  if (view === 'Profile') {
+    navigate('/profile');
+  }
   if (view === 'Logout') navigate('/logout');
   if (view === 'Access') navigate('/');
   if (view === 'Terms') navigate('/terms');

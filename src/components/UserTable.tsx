@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { useLocation } from 'react-router-dom';
-import { localizeRole, LocalKey, localUserKey } from '../utils';
+import { localizeRole, LocalKey, localUserKey, useMyNavigate } from '../utils';
 import { shallowEqual } from 'react-redux';
 import {
   User,
@@ -24,7 +23,6 @@ import Invite, { IInviteData } from './Invite';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
 import UserAdd from './UserAdd';
-import StickyRedirect from './StickyRedirect';
 import {
   related,
   RemoveUserFromOrg,
@@ -77,7 +75,7 @@ export function UserTable(props: IProps & IRecordProps) {
   const { users, roles, organizationMemberships } = props;
   const t: IUsertableStrings = useSelector(usertableSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const { pathname } = useLocation();
+  // const { pathname } = useLocation();
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
   const [, setEditId] = useGlobal('editUserId');
@@ -117,6 +115,7 @@ export function UserTable(props: IProps & IRecordProps) {
   const [view, setView] = useState('');
   const addToOrgAndGroup = useAddToOrgAndGroup();
   const teamDelete = useTeamDelete();
+  const navigate = useMyNavigate();
 
   const handleInvite = () => {
     setDialogVisible(true);
@@ -130,7 +129,6 @@ export function UserTable(props: IProps & IRecordProps) {
   };
 
   const doEdit = (userId: string) => {
-    localStorage.setItem(localUserKey(LocalKey.url), pathname);
     setEditId(userId);
     setView('Profile');
   };
@@ -258,7 +256,9 @@ export function UserTable(props: IProps & IRecordProps) {
     return <Table.Cell {...props} />;
   };
 
-  if (/profile/i.test(view)) return <StickyRedirect to="/profile" />;
+  if (/profile/i.test(view)) {
+    navigate('/profile');
+  }
   return (
     <Box sx={{ display: 'flex' }}>
       <div>
