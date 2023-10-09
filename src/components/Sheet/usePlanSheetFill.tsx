@@ -24,7 +24,7 @@ import PlanActionMenu from './PlanActionMenu';
 import { PlanContext } from '../../context/PlanContext';
 import BookSelect from '../BookSelect';
 import { useRefErrTest } from './useRefErrTest';
-import { SectionSeqCol, PassageSeqCol } from './PlanSheet';
+import { SectionSeqCol } from './PlanSheet';
 import { useGlobal } from 'reactn';
 import { useShowIcon } from './useShowIcon';
 import { ExtraIcon } from '.';
@@ -212,6 +212,7 @@ export const usePlanSheetFill = ({
   }: StepCellProps) =>
     ({
       value: passage &&
+        refCol > 0 &&
         !isPublishingTitle(row[refCol].toString(), inlinePassages) && (
           <Badge
             badgeContent={rowInfo[rowIndex].discussionCount}
@@ -338,6 +339,11 @@ export const usePlanSheetFill = ({
     calcClassName: string;
   }
 
+  const passageSeqCol = useMemo(
+    () => (inlinePassages ? -1 : 2),
+    [inlinePassages]
+  );
+
   const rowCells =
     ({ section, passage, refCol, calcClassName }: RowCellsProps) =>
     (e: string | number, cellIndex: number) => {
@@ -348,7 +354,7 @@ export const usePlanSheetFill = ({
           className: 'book ' + calcClassName,
           dataEditor: bookEditor,
         };
-      if (cellIndex === refCol)
+      if (cellIndex === refCol && !inlinePassages)
         return {
           value: refValue(e),
           readOnly:
@@ -365,14 +371,14 @@ export const usePlanSheetFill = ({
         readOnly:
           readonly ||
           (cellIndex === SectionSeqCol && (e as number) < 0) ||
-          cellIndex === PassageSeqCol ||
+          cellIndex === passageSeqCol ||
           passage
             ? false
             : section
             ? cellIndex > 1
             : cellIndex <= 1,
         className:
-          (cellIndex === SectionSeqCol || cellIndex === PassageSeqCol
+          (cellIndex === SectionSeqCol || cellIndex === passageSeqCol
             ? 'num '
             : '') + calcClassName,
       };
@@ -413,7 +419,9 @@ export const usePlanSheetFill = ({
           published={rowInfo[rowIndex].published}
           organizedBy={organizedBy}
           sectionSequenceNumber={row[SectionSeqCol].toString()}
-          passageSequenceNumber={row[PassageSeqCol].toString()}
+          passageSequenceNumber={row[
+            passageSeqCol >= 0 ? passageSeqCol : 0
+          ].toString()}
           readonly={readonly || check.length > 0}
           onDelete={onDelete}
           onPlayStatus={onPlayStatus}
