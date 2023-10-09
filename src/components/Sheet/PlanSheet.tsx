@@ -49,7 +49,6 @@ import { useShowIcon } from './useShowIcon';
 
 const DOWN_ARROW = 'ARROWDOWN';
 export const SectionSeqCol = 0;
-export const PassageSeqCol = 2;
 
 const ContentDiv = styled('div')(({ theme }) => ({
   paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)})`,
@@ -621,7 +620,7 @@ export function PlanSheet(props: IProps) {
     if (rowData.length !== rowInfo.length) {
       setData([]);
     } else {
-      const refCol = bookCol + 1;
+      const refCol = inlinePassages ? -1 : bookCol + 1;
 
       const data = planSheetFill({
         refCol,
@@ -669,11 +668,13 @@ export function PlanSheet(props: IProps) {
   }, [currentRow, rowData, rowInfo]);
 
   const currentRowPassageNum = useMemo(() => {
-    return currentRowRef.current > 0 && isPassage(currentRowRef.current - 1)
-      ? rowData[currentRowRef.current - 1][PassageSeqCol].toString()
-      : '';
+    return currentRowRef.current < 0 || !isPassage(currentRowRef.current - 1)
+      ? ''
+      : rowInfo[
+          currentRowRef.current - 1
+        ].passage?.attributes.sequencenum?.toString() ?? '';
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentRow, rowData, rowInfo]);
+  }, [currentRow, rowData, rowInfo, inlinePassages]);
 
   const dataRowisSection = useMemo(() => {
     return isSection(currentRow - 1);
