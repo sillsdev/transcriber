@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useGlobal } from 'reactn';
 import { LocalKey, localUserKey, useHome } from '../utils';
@@ -22,22 +22,29 @@ export const TeamScreen = () => {
   const [view, setView] = useState('');
   const { startClear } = useContext(UnsavedContext).state;
   const { resetProject } = useHome();
+  const loaded = useRef(false);
 
   useEffect(() => {
     startClear();
     setHome(true);
+    loaded.current = true;
+    return () => {
+      loaded.current = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (project !== '' && plan && !home) {
-      const remProjId = remoteId('plan', plan, memory.keyMap);
-      const loc = `/plan/${remProjId || plan}/0`;
-      if (loc !== localStorage.getItem(localUserKey(LocalKey.url))) {
-        setView(loc);
-      } else {
-        localStorage.setItem(localUserKey(LocalKey.url), '/team');
-        resetProject();
+    if (loaded.current) {
+      if (project !== '' && plan && !home) {
+        const remProjId = remoteId('plan', plan, memory.keyMap);
+        const loc = `/plan/${remProjId || plan}/0`;
+        if (loc !== localStorage.getItem(localUserKey(LocalKey.url))) {
+          setView(loc);
+        } else {
+          localStorage.setItem(localUserKey(LocalKey.url), '/team');
+          resetProject();
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
