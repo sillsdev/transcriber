@@ -48,6 +48,7 @@ export interface IFillProps {
 
 interface IProps {
   columns: ICell[];
+  colSlugs: string[];
   rowData: IRow[];
   rowInfo: ISheet[];
   inlinePassages: boolean;
@@ -74,6 +75,7 @@ interface IProps {
  *
  * @param {Object} props - The props object containing various configuration options.
  * @param {Array} props.columns - An array of column definitions for the plan sheet.
+ * @param {Array} props.colSlugs - An array of strings with slugs for columns.
  * @param {Array} props.rowData - An array of row data for the plan sheet.
  * @param {Array} props.rowInfo - An array of additional information for each row in the plan sheet.
  * @param {Array} props.inlinePassages - True if section and passage on the same line.
@@ -96,6 +98,7 @@ interface IProps {
  */
 export const usePlanSheetFill = ({
   columns,
+  colSlugs,
   rowData,
   rowInfo,
   inlinePassages,

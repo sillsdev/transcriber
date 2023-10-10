@@ -1502,6 +1502,7 @@ export function ScriptureTable(
       <PlanSheet
         {...props}
         columns={columns}
+        colSlugs={colNames}
         rowData={rowdata}
         rowInfo={rowinfo}
         bookCol={colNames.findIndex((v) => v === 'book')}

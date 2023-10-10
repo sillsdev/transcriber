@@ -139,6 +139,7 @@ export interface ICellChange {
 interface IProps {
   toolId: string;
   columns: Array<ICell>;
+  colSlugs: Array<string>;
   rowData: Array<Array<string | number>>;
   rowInfo: Array<ISheet>;
   bookCol: number;
@@ -176,6 +177,7 @@ export function PlanSheet(props: IProps) {
   const {
     toolId,
     columns,
+    colSlugs,
     rowData,
     rowInfo,
     bookCol,
