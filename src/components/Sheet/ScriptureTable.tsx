@@ -1505,7 +1505,6 @@ export function ScriptureTable(
         colSlugs={colNames}
         rowData={rowdata}
         rowInfo={rowinfo}
-        bookCol={colNames.findIndex((v) => v === 'book')}
         bookMap={bookMap}
         bookSuggestions={bookSuggestions}
         action={handleDelete}

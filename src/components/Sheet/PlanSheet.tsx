@@ -142,7 +142,6 @@ interface IProps {
   colSlugs: Array<string>;
   rowData: Array<Array<string | number>>;
   rowInfo: Array<ISheet>;
-  bookCol: number;
   bookSuggestions?: OptionType[];
   bookMap?: BookNameMap;
   filterState: ISTFilterState;
@@ -180,7 +179,6 @@ export function PlanSheet(props: IProps) {
     colSlugs,
     rowData,
     rowInfo,
-    bookCol,
     bookSuggestions,
     bookMap,
     filterState,
@@ -622,10 +620,7 @@ export function PlanSheet(props: IProps) {
     if (rowData.length !== rowInfo.length) {
       setData([]);
     } else {
-      const refCol = inlinePassages ? -1 : bookCol + 1;
-
       const data = planSheetFill({
-        refCol,
         currentRow,
         srcMediaId,
         mediaPlaying,
@@ -633,21 +628,14 @@ export function PlanSheet(props: IProps) {
         active,
         filtered,
       });
-      warningTest(refCol);
+      if (colSlugs.indexOf('book') > -1) {
+        warningTest(colSlugs.indexOf('reference'));
+      }
       setData(data);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    rowData,
-    rowInfo,
-    bookCol,
-    columns,
-    srcMediaId,
-    mediaPlaying,
-    currentRow,
-    check,
-  ]);
+  }, [rowData, rowInfo, columns, srcMediaId, mediaPlaying, currentRow, check]);
 
   useEffect(() => {
     //if I set playing when I set the mediaId, it plays a bit of the old

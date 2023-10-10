@@ -37,7 +37,6 @@ type IRow = (string | number)[];
 const pointer = { cursor: 'pointer' };
 
 export interface IFillProps {
-  refCol: number;
   currentRow: number;
   srcMediaId: string;
   mediaPlaying: boolean;
@@ -52,7 +51,6 @@ interface IProps {
   rowData: IRow[];
   rowInfo: ISheet[];
   inlinePassages: boolean;
-  bookCol: number;
   bookSuggestions?: OptionType[];
   filterState: ISTFilterState;
   onPassageDetail: (rowIndex: number) => void;
@@ -79,7 +77,6 @@ interface IProps {
  * @param {Array} props.rowData - An array of row data for the plan sheet.
  * @param {Array} props.rowInfo - An array of additional information for each row in the plan sheet.
  * @param {Array} props.inlinePassages - True if section and passage on the same line.
- * @param {number} props.bookCol - The index of the column that represents the book name.
  * @param {Array} props.bookSuggestions - An array of book suggestions for the book select input.
  * @param {Function} props.onPassageDetail - A callback function for handling passage detail.
  * @param {Function} props.onPlayStatus - A callback function for handling play status.
@@ -102,7 +99,6 @@ export const usePlanSheetFill = ({
   rowData,
   rowInfo,
   inlinePassages,
-  bookCol,
   bookSuggestions,
   filterState,
   onPassageDetail,
@@ -121,7 +117,6 @@ export const usePlanSheetFill = ({
 }: IProps) => {
   const ctx = useContext(PlanContext);
   const { readonly } = ctx.state;
-  const LastCol = bookCol > 0 ? 6 : 5;
   const [planId] = useGlobal('plan');
   const { userIsAdmin } = useRole();
   const refErrTest = useRefErrTest();
@@ -350,6 +345,7 @@ export const usePlanSheetFill = ({
   const rowCells =
     ({ section, passage, refCol, calcClassName }: RowCellsProps) =>
     (e: string | number, cellIndex: number) => {
+      const bookCol = colSlugs.indexOf('book');
       if (cellIndex === bookCol && passage)
         return {
           value: e,
@@ -357,17 +353,20 @@ export const usePlanSheetFill = ({
           className: 'book ' + calcClassName,
           dataEditor: bookEditor,
         };
-      if (cellIndex === refCol && !inlinePassages)
+      if (cellIndex === refCol)
         return {
           value: refValue(e),
           readOnly:
             readonly ||
             !passage ||
+            !inlinePassages ||
             passageTypeFromRef(e as string, inlinePassages) !==
               PassageTypeEnum.PASSAGE,
           className:
             calcClassName +
-            (passage ? ' ref' + (refErrTest(e) ? 'Err' : '') : ''),
+            (passage
+              ? ' ref' + (bookCol > 0 && refErrTest(e) ? 'Err' : '')
+              : ''),
         };
       return {
         value: e,
@@ -451,7 +450,6 @@ export const usePlanSheetFill = ({
 
   const eachRow =
     ({
-      refCol,
       currentRow,
       srcMediaId,
       mediaPlaying,
@@ -461,6 +459,8 @@ export const usePlanSheetFill = ({
       filterState,
     }: EachRowProps) =>
     (row: IRow, rowIndex: number) => {
+      const lastCol = colSlugs.indexOf('book') > 0 ? 6 : 5;
+      const refCol = colSlugs.indexOf('reference');
       const section = isSection(rowIndex);
       const passage = isPassage(rowIndex);
       const movement = isMovement(rowIndex);
@@ -489,7 +489,7 @@ export const usePlanSheetFill = ({
       if (!filterState.hidePublishing && filterState.canHidePublishing)
         sheetRow.push(graphicCell(rowIndex, calcClassName));
       row
-        .slice(0, LastCol)
+        .slice(0, lastCol)
         .map(rowCells({ section, passage, refCol, calcClassName }))
         .forEach((c) => {
           sheetRow.push(c);
