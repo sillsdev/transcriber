@@ -158,7 +158,7 @@ export const AppHead = (props: IProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const saving = useMemo(() => anySaving(), [toolsChanged]);
   const { showMessage } = useSnackBar();
-  const { loadStatic, checkStaticTables } = useLoadStatic();
+  const { loadStatic } = useLoadStatic();
   const tv: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
 
   const handleUserMenuAction = (
@@ -332,7 +332,6 @@ export const AppHead = (props: IProps) => {
   }, [updates, version, lang]);
 
   useEffect(() => {
-    if (remote && latestVersion) checkStaticTables(latestVersion);
     setCssVars(
       latestVersion !== '' && latestVersion !== version && isElectron
         ? threeIcon

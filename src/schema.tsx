@@ -784,7 +784,7 @@ if (
       idList: { type: 'number' },
       s3file: { type: 'string' },
       dateCreated: { type: 'string' },
-      dateUpdated: { type: 'string' },
+      dateUpdated: { type: 'date-time' },
       lastModifiedBy: { type: 'number' },
     },
     relationships: {
@@ -931,6 +931,14 @@ if (
         organization: { type: 'hasOne', model: 'organization' },
         mediafile: { type: 'hasOne', model: 'mediafile' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      },
+    };
+    schemaDefinition.models.vwChecksum = {
+      keys: { remoteId: {} },
+      attributes: {
+        name: { type: 'string' },
+        projectId: { type: 'number' },
+        checksum: { type: 'number' },
       },
     };
     schemaDefinition.version = 7;
