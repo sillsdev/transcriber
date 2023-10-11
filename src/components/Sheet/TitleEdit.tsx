@@ -32,8 +32,7 @@ export function TitleEdit({ title, onChanged, ws }: IProps) {
 
   return (
     <MediaTitle
-      idPrefix="title-"
-      titlekey={'title'}
+      titlekey={`title-${ws.sectionSeq}`}
       label={'\u200B'} // zero-width space
       mediaId={titleMediafile}
       title={titlex}
