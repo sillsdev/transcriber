@@ -126,6 +126,8 @@ export const AppHead = (props: IProps) => {
   const [errorReporter] = useGlobal('errorReporter');
   const [coordinator] = useGlobal('coordinator');
   const [user] = useGlobal('user');
+  const [, setProject] = useGlobal('project');
+  const [, setPlan] = useGlobal('plan');
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [isOffline] = useGlobal('offline');
   const [connected] = useGlobal('connected');
@@ -213,6 +215,10 @@ export const AppHead = (props: IProps) => {
   };
 
   const handleUserMenu = (what: string) => {
+    if (/\/team/i.test(pathname)) {
+      setProject('');
+      setPlan('');
+    }
     handleUserMenuAction(what, pathname, setView, resetRequests);
   };
 
