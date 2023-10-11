@@ -459,7 +459,6 @@ export const usePlanSheetFill = ({
       filterState,
     }: EachRowProps) =>
     (row: IRow, rowIndex: number) => {
-      const lastCol = colSlugs.indexOf('book') > 0 ? 6 : 5;
       const refCol = colSlugs.indexOf('reference');
       const section = isSection(rowIndex);
       const passage = isPassage(rowIndex);
@@ -489,7 +488,7 @@ export const usePlanSheetFill = ({
       if (!filterState.hidePublishing && filterState.canHidePublishing)
         sheetRow.push(graphicCell(rowIndex, calcClassName));
       row
-        .slice(0, lastCol)
+        .slice(0, 6) // quits when it runs out of columns
         .map(rowCells({ section, passage, refCol, calcClassName }))
         .forEach((c) => {
           sheetRow.push(c);
