@@ -283,6 +283,9 @@ export default function MediaTitle(props: IProps) {
   };
 
   const handleCancel = (e: any) => {
+    setCurText(title ?? '');
+    onTextChange && onTextChange(title ?? '');
+    onMediaIdChange(mediaId);
     e.stopPropagation();
     toolChanged(recToolId, false);
     reset();
@@ -418,7 +421,7 @@ export default function MediaTitle(props: IProps) {
             ),
             endAdornment: (
               <InputAdornment position="end">
-                {hasContent() && canSaveRecording && (
+                {(hasContent() || canSaveRecording) && (
                   <>
                     <Tooltip title={t.save}>
                       <span>

@@ -30,6 +30,7 @@ import { useShowIcon } from './useShowIcon';
 import { ExtraIcon } from '.';
 import { stringAvatar } from '../../utils';
 import { ISTFilterState } from './filterMenu';
+import { TitleEdit } from './TitleEdit';
 
 type ICellEditor = (props: any) => JSX.Element;
 type IRow = (string | number)[];
@@ -283,6 +284,18 @@ export const usePlanSheetFill = ({
       className: calcClassName,
     } as ICell);
 
+  const onChanged = (changed: boolean) => {};
+
+  const TitleValue = (e: string | number, rowIndex: number) => {
+    return (
+      <TitleEdit
+        title={e as string}
+        ws={rowInfo[rowIndex]}
+        onChanged={onChanged}
+      />
+    );
+  };
+
   const refValue = (e: string | number) => {
     if (
       passageTypeFromRef(e as string, inlinePassages) !==
@@ -330,22 +343,24 @@ export const usePlanSheetFill = ({
     className: calcClassName,
   });
 
-  interface RowCellsProps {
-    section: boolean;
-    passage: boolean;
-    refCol: number;
-    calcClassName: string;
-  }
-
   const passageSeqCol = useMemo(
     () => (inlinePassages ? -1 : 2),
     [inlinePassages]
   );
 
+  interface RowCellsProps {
+    section: boolean;
+    passage: boolean;
+    refCol: number;
+    calcClassName: string;
+    rowIndex: number;
+  }
+
   const rowCells =
-    ({ section, passage, refCol, calcClassName }: RowCellsProps) =>
+    ({ section, passage, refCol, calcClassName, rowIndex }: RowCellsProps) =>
     (e: string | number, cellIndex: number) => {
       const bookCol = colSlugs.indexOf('book');
+      const titleCol = colSlugs.indexOf('title');
       if (cellIndex === bookCol && passage)
         return {
           value: e,
@@ -353,6 +368,18 @@ export const usePlanSheetFill = ({
           className: 'book ' + calcClassName,
           dataEditor: bookEditor,
         };
+      if (
+        cellIndex === titleCol &&
+        !passage &&
+        !filterState.hidePublishing &&
+        filterState.canHidePublishing
+      ) {
+        return {
+          value: TitleValue(e, rowIndex),
+          readOnly: true,
+          className: calcClassName,
+        };
+      }
       if (cellIndex === refCol)
         return {
           value: refValue(e),
@@ -489,7 +516,7 @@ export const usePlanSheetFill = ({
         sheetRow.push(graphicCell(rowIndex, calcClassName));
       row
         .slice(0, 6) // quits when it runs out of columns
-        .map(rowCells({ section, passage, refCol, calcClassName }))
+        .map(rowCells({ section, passage, refCol, calcClassName, rowIndex }))
         .forEach((c) => {
           sheetRow.push(c);
         });
