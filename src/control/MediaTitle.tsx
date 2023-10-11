@@ -283,8 +283,6 @@ export default function MediaTitle(props: IProps) {
   };
 
   const handleCancel = (e: any) => {
-    setCurText(title ?? '');
-    onTextChange && onTextChange(title ?? '');
     onMediaIdChange(mediaId);
     e.stopPropagation();
     toolChanged(recToolId, false);
@@ -371,7 +369,7 @@ export default function MediaTitle(props: IProps) {
     event.preventDefault();
   };
 
-  const hasContent = () => doRecordRef.current || Boolean(curText);
+  const hasContent = () => doRecordRef.current;
   const playEnded = () => {
     setPlaying(false);
   };
@@ -421,8 +419,8 @@ export default function MediaTitle(props: IProps) {
             ),
             endAdornment: (
               <InputAdornment position="end">
-                {(hasContent() || canSaveRecording) && (
-                  <>
+                <>
+                  {canSaveRecording && hasContent() && (
                     <Tooltip title={t.save}>
                       <span>
                         <IconButton
@@ -437,6 +435,8 @@ export default function MediaTitle(props: IProps) {
                         </IconButton>
                       </span>
                     </Tooltip>
+                  )}
+                  {hasContent() && (
                     <Tooltip title={t.cancel}>
                       <span>
                         <IconButton
@@ -451,8 +451,8 @@ export default function MediaTitle(props: IProps) {
                         </IconButton>
                       </span>
                     </Tooltip>
-                  </>
-                )}
+                  )}
+                </>
               </InputAdornment>
             ),
           }}
