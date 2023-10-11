@@ -184,6 +184,10 @@ export const getSheet = (
           item.graphicUri = info[apmDimStr].content;
         }
       }
+      const titleMediaId = related(section, 'titleMediafile');
+      item.titleMediaId = titleMediaId
+        ? { type: 'mediafile', id: titleMediaId }
+        : undefined;
       curSection = item.sectionSeq;
     }
     let first = true;

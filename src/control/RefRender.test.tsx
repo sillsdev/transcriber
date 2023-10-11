@@ -4,7 +4,6 @@ import { PassageTypeEnum } from '../model/passageType';
 import {
   MovementIcon,
   // ChapterNumberIcon,
-  TitleIcon,
   BookIcon,
   AltBookIcon,
   // NoteIcon,
@@ -19,9 +18,6 @@ describe('passageTypeFromRef', () => {
 
     // Test case 2: ref starts with 'CHNUM'
     expect(passageTypeFromRef('CHNUM 12')).toBe(PassageTypeEnum.CHAPTERNUMBER);
-
-    // Test case 3: ref starts with 'TITLE'
-    expect(passageTypeFromRef('TITLE')).toBe(PassageTypeEnum.TITLE);
 
     // Test case 4: ref starts with 'ALTBK'
     expect(passageTypeFromRef('ALTBK')).toBe(PassageTypeEnum.ALTBOOK);
@@ -83,9 +79,6 @@ describe('RefRender', () => {
       MovementIcon
     );
     // expect(RefRender(PassageTypeEnum.CHAPTERNUMBER)).toBe(ChapterNumberIcon);
-    expect(<RefRender value={PassageTypeEnum.TITLE} flat={false} />).toBe(
-      TitleIcon
-    );
     expect(<RefRender value={PassageTypeEnum.BOOK} flat={false} />).toBe(
       BookIcon
     );

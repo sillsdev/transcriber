@@ -207,12 +207,11 @@ export function ScriptureTable(
     saveRequested,
     startSave,
     saveCompleted,
-    clearRequested,
-    clearCompleted,
     waitForSave,
     toolChanged,
     toolsChanged,
     isChanged,
+    anySaving,
   } = useContext(UnsavedContext).state;
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
   const [assignSections, setAssignSections] = useState<number[]>([]);
@@ -497,8 +496,6 @@ export function ScriptureTable(
     let lastRow = myWorkflow.length - 1;
     while (lastRow >= 0 && myWorkflow[lastRow].deleted) lastRow -= 1;
     let index = i === undefined && lastRow >= 0 ? lastRow : i || 0;
-    if (ptype === PassageTypeEnum.MOVEMENT && !flat)
-      ptype = PassageTypeEnum.TITLE;
     let newRow = {
       ...myWorkflow[index],
       level: flat && level ? level : SheetLevel.Passage,
@@ -764,6 +761,20 @@ export function ScriptureTable(
       }
     });
     if (changes.length > 0) {
+      setSheet([...sheet]);
+      setChanged(true);
+    }
+  };
+
+  const updateTitleMedia = (index: number, mediaId: string) => {
+    const { ws, i } = getByIndex(sheet, index);
+    if (ws) {
+      const sectionUpdated = currentDateTime();
+      sheet[i] = {
+        ...ws,
+        titleMediaId: mediaId ? { type: 'mediafile', id: mediaId } : undefined,
+        sectionUpdated,
+      } as ISheet;
       setSheet([...sheet]);
       setChanged(true);
     }
@@ -1116,20 +1127,27 @@ export function ScriptureTable(
     };
     myChangedRef.current = isChanged(toolId);
     if (saveRequested(toolId)) {
-      if (offlineOnly) {
-        save();
-      } else {
-        checkOnline((online) => {
-          if (!online) {
-            saveCompleted(toolId, ts.NoSaveOffline);
-            showMessage(ts.NoSaveOffline);
-            setSaving(false);
-          } else {
-            save();
-          }
-        });
-      }
-    } else if (clearRequested(toolId)) clearCompleted(toolId);
+      waitForIt(
+        'saving sheet recordings',
+        () => !anySaving(toolId),
+        () => false,
+        10000
+      ).finally(() => {
+        if (offlineOnly) {
+          save();
+        } else {
+          checkOnline((online) => {
+            if (!online) {
+              saveCompleted(toolId, ts.NoSaveOffline);
+              showMessage(ts.NoSaveOffline);
+              setSaving(false);
+            } else {
+              save();
+            }
+          });
+        }
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
@@ -1293,24 +1311,27 @@ export function ScriptureTable(
       (w) => w.passageType === PassageTypeEnum.ALTBOOK
     );
 
-    const AddBook = (newwf: ISheet[]) => {
-      const sequencenum = -4;
+    const alternateName = (name: string) =>
+      t.alternateName.replace('{0}', name);
+
+    const AddBook = (newwf: ISheet[], passageType: PassageTypeEnum) => {
+      const sequencenum = passageType === PassageTypeEnum.BOOK ? -4 : -3;
       var book = firstBook();
-      const title = book ? bookMap[book] : '';
+      const baseName = book ? bookMap[book] : '';
+      const title =
+        passageType === PassageTypeEnum.BOOK
+          ? baseName
+          : alternateName(baseName);
 
       let newRow = {
         level: SheetLevel.Book,
         kind: IwsKind.Section,
         sectionSeq: sequencenum,
         passageSeq: 0,
-        reference: PassageTypeEnum.BOOK,
+        reference: passageType,
         title,
       } as ISheet;
-      newwf = newwf.concat([newRow]);
-      return addPassageTo(SheetLevel.Book, newwf, PassageTypeEnum.BOOK);
-    };
-    const AddAltBook = (newwf: ISheet[]) => {
-      return addPassageTo(SheetLevel.Book, newwf, PassageTypeEnum.ALTBOOK);
+      return newwf.concat([newRow]);
     };
 
     const isKind = (
@@ -1322,7 +1343,8 @@ export function ScriptureTable(
         ? ws[row].passageType === kind && ws[row].deleted === false
         : false;
     };
-    const chapterNumberTitle = (chapter: number) => t.chapter + ' ' + chapter;
+    const chapterNumberTitle = (chapter: number) =>
+      t.chapter.replace('{0}', chapter.toString());
 
     const addChapterNumber = (newwf: ISheet[], chapter: number) => {
       const title = chapterNumberTitle(chapter);
@@ -1335,9 +1357,6 @@ export function ScriptureTable(
         title
       );
     };
-    const addTitle = (newwf: ISheet[], row: number) => {
-      return addPassageTo(SheetLevel.Passage, newwf, PassageTypeEnum.TITLE);
-    };
     const startChapter = (w: ISheet) =>
       (w.passage && w.passage.attributes.startChapter) ??
       getStartChapter(w.reference);
@@ -1348,8 +1367,10 @@ export function ScriptureTable(
 
     var currentChapter = 0;
     var newworkflow: ISheet[] = [];
-    if (bookTitleIndex < 0) newworkflow = AddBook(newworkflow);
-    if (altBookTitleIndex < 0) newworkflow = AddAltBook(newworkflow);
+    if (bookTitleIndex < 0)
+      newworkflow = AddBook(newworkflow, PassageTypeEnum.BOOK);
+    if (altBookTitleIndex < 0)
+      newworkflow = AddBook(newworkflow, PassageTypeEnum.ALTBOOK);
     var nextpsg = 0;
     sheet.forEach((w, index) => {
       //if flat the title has to come before the section
@@ -1384,16 +1405,6 @@ export function ScriptureTable(
             nextpsg += 0.01;
           }
           currentChapter = startChapter(sheet[vernpsg]);
-        }
-        //see if my first or second passage is a title - first might be chap number
-        if (
-          !isKind(index + 1, PassageTypeEnum.BOOK) &&
-          !isKind(index + 1, PassageTypeEnum.ALTBOOK) &&
-          !isKind(index + 1, PassageTypeEnum.TITLE) &&
-          !isKind(index + 2, PassageTypeEnum.TITLE)
-        ) {
-          newworkflow = addTitle(newworkflow, index);
-          nextpsg += 0.01;
         }
       } //just a passage
       else {
@@ -1496,6 +1507,7 @@ export function ScriptureTable(
         addPassage={addPassage}
         movePassage={movePassage}
         updateData={updateData}
+        updateTitleMedia={updateTitleMedia}
         paste={handleTablePaste}
         lookupBook={handleLookupBook}
         resequence={handleResequence}

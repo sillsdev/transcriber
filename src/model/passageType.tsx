@@ -11,7 +11,6 @@ export interface PassageType extends Record {
 export enum PassageTypeEnum {
   BOOK = 'BOOK',
   CHAPTERNUMBER = 'CHNUM',
-  TITLE = 'TITLE',
   ALTBOOK = 'ALTBK',
   NOTE = 'NOTE',
   MOVEMENT = 'MOVE',

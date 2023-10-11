@@ -4870,6 +4870,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTable.alternateName">
+         <segment>
+            <source>{0} Alternate Name</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.book">
          <segment>
             <source>Book</source>
@@ -4878,7 +4884,7 @@
       </unit>
       <unit id="scriptureTable.chapter">
          <segment>
-            <source>Chapter</source>
+            <source>Chapter {0}</source>
             <target/>
          </segment>
       </unit>

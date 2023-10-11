@@ -10,7 +10,6 @@ import {
   faHashtag,
   faBookOpen,
   faBook,
-  faBookmark,
   faArchway,
   faGlobe,
   faXmark,
@@ -28,7 +27,6 @@ export const BookIcon = <FontAwesomeIcon icon={faBook} />;
 export const AltBookIcon = <FontAwesomeIcon icon={faBookOpen} />;
 export const ChapterNumberIcon = <FontAwesomeIcon icon={faHashtag} />;
 export const NoteIcon = <FontAwesomeIcon icon={faMessage as IconProp} />;
-export const TitleIcon = <FontAwesomeIcon icon={faBookmark} />;
 
 export const PublishIcon = () => (
   <StyledIcon size="small">

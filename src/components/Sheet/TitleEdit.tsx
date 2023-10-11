@@ -6,11 +6,21 @@ import { getDefaultName } from './getDefaultName';
 
 interface IProps {
   title: string;
-  onChanged: (changed: boolean) => void;
+  mediaId: string;
   ws: ISheet;
+  onStartRecording: (changed: boolean) => void;
+  onTextChange: (value: string) => void;
+  onMediaIdChange: (mediaId: string) => void;
 }
 
-export function TitleEdit({ title, onChanged, ws }: IProps) {
+export function TitleEdit({
+  title,
+  mediaId,
+  ws,
+  onStartRecording,
+  onTextChange,
+  onMediaIdChange,
+}: IProps) {
   const [planId] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [titlex, setTitle] = useState(title || '');
@@ -20,14 +30,24 @@ export function TitleEdit({ title, onChanged, ws }: IProps) {
     setTitle(title);
   }, [title]);
 
+  useEffect(() => {
+    setTitleMediafile(mediaId);
+  }, [mediaId]);
+
   const handleChangeTitle = (value: string) => {
+    onTextChange(value);
     setTitle(value);
     return '';
   };
   const onRecording = (recording: boolean) => {
     if (recording) {
-      onChanged(true);
+      onStartRecording(true);
     }
+  };
+
+  const handleChangeTitleMedia = (mediaId: string) => {
+    setTitleMediafile(mediaId);
+    onMediaIdChange(mediaId);
   };
 
   return (
@@ -40,7 +60,7 @@ export function TitleEdit({ title, onChanged, ws }: IProps) {
       onTextChange={handleChangeTitle}
       onRecording={onRecording}
       useplan={planId}
-      onMediaIdChange={(mediaId: string) => setTitleMediafile(mediaId)}
+      onMediaIdChange={handleChangeTitleMedia}
     />
   );
 }

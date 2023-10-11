@@ -5,7 +5,7 @@ import {
   IViewModeStrings,
   OptionType,
 } from '../../model';
-import { ICell } from './PlanSheet';
+import { ICell, ICellChange } from './PlanSheet';
 import { planSheetSelector, viewModeSelector } from '../../selector';
 import { useOrganizedBy, useRole } from '../../crud';
 import { rowTypes } from './rowTypes';
@@ -67,6 +67,9 @@ interface IProps {
   disableFilter: () => void;
   onAction: (what: ExtraIcon) => void;
   doSetActive: () => void;
+  cellsChanged: (changes: ICellChange[]) => void;
+  titleMediaChanged: (index: number, mediaId: string) => void;
+  onStartRecording?: () => void;
 }
 
 /**
@@ -92,6 +95,9 @@ interface IProps {
  * @param {boolean} props.disableFilter - A callback function to disable the filtering.
  * @param {Function} props.onAction - A callback function for handling action.
  * @param {Function} props.doSetActive - A callback function for setting the active row.
+ * @param {Function} props.cellsChanged - A callback function for handling cell edits.
+ * @param {Function} props.titleMediaChanged - A callback function for title media recorded.
+ * @param {Function} props.onStartRecording - A callback function for recorder buffer contains recording.
  * @returns {Function} - A function that generates the data for filling a plan sheet based on the provided props.
  */
 export const usePlanSheetFill = ({
@@ -115,6 +121,9 @@ export const usePlanSheetFill = ({
   disableFilter,
   onAction,
   doSetActive,
+  cellsChanged,
+  titleMediaChanged,
+  onStartRecording,
 }: IProps) => {
   const ctx = useContext(PlanContext);
   const { readonly } = ctx.state;
@@ -284,14 +293,39 @@ export const usePlanSheetFill = ({
       className: calcClassName,
     } as ICell);
 
-  const onChanged = (changed: boolean) => {};
+  const TitleValue = (
+    e: string | number,
+    rowIndex: number,
+    cellIndex: number
+  ) => {
+    const handleTextChange = (value: string) => {
+      const change: ICellChange = {
+        cell: null,
+        row: rowIndex,
+        col: cellIndex,
+        value,
+      };
+      cellsChanged([change]);
+    };
 
-  const TitleValue = (e: string | number, rowIndex: number) => {
+    const handleMediaIdChange = (mediaId: string) => {
+      titleMediaChanged(rowIndex, mediaId);
+    };
+
+    const handleRecording = (inProgress: boolean) => {
+      if (inProgress) {
+        onStartRecording && onStartRecording();
+      }
+    };
+
     return (
       <TitleEdit
         title={e as string}
+        mediaId={rowInfo[rowIndex].titleMediaId?.id || ''}
         ws={rowInfo[rowIndex]}
-        onChanged={onChanged}
+        onStartRecording={handleRecording}
+        onTextChange={handleTextChange}
+        onMediaIdChange={handleMediaIdChange}
       />
     );
   };
@@ -375,7 +409,7 @@ export const usePlanSheetFill = ({
         filterState.canHidePublishing
       ) {
         return {
-          value: TitleValue(e, rowIndex),
+          value: TitleValue(e, rowIndex, cellIndex),
           readOnly: true,
           className: calcClassName,
         };
@@ -386,9 +420,9 @@ export const usePlanSheetFill = ({
           readOnly:
             readonly ||
             !passage ||
-            !inlinePassages ||
-            passageTypeFromRef(e as string, inlinePassages) !==
-              PassageTypeEnum.PASSAGE,
+            (!inlinePassages &&
+              passageTypeFromRef(e as string, inlinePassages) !==
+                PassageTypeEnum.PASSAGE),
           className:
             calcClassName +
             (passage
