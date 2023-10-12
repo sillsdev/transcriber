@@ -5682,6 +5682,13 @@
       			<context context-type="sourcefile">ResourceOverview.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="scriptureTable.alternateName">
+      		<source>{0} Alternate Name</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ScriptureTable.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="scriptureTable.book">
             <source>Book</source>
             <target/>
@@ -5690,7 +5697,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="scriptureTable.chapter">
-            <source>Chapter</source>
+            <source>Chapter {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>

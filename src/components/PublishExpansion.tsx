@@ -159,8 +159,7 @@ export function PublishExpansion(props: IProps) {
           >
             <div>
               <MediaTitle
-                idPrefix="iso-"
-                titlekey={'iso'}
+                titlekey={'iso-'}
                 language={language}
                 label={t.language.replace(': {0}', '')}
                 mediaId={isoMediafile}
@@ -173,8 +172,7 @@ export function PublishExpansion(props: IProps) {
               />
               <GridContainerRow item></GridContainerRow>
               <MediaTitle
-                idPrefix="bibleId-"
-                titlekey={'bibleId'}
+                titlekey={'bibleId-'}
                 label={t.bibleid}
                 mediaId={bibleMediafile}
                 title={bibleId}

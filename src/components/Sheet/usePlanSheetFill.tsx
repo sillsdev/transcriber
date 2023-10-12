@@ -5,7 +5,7 @@ import {
   IViewModeStrings,
   OptionType,
 } from '../../model';
-import { ICell } from './PlanSheet';
+import { ICell, ICellChange } from './PlanSheet';
 import { planSheetSelector, viewModeSelector } from '../../selector';
 import { useOrganizedBy, useRole } from '../../crud';
 import { rowTypes } from './rowTypes';
@@ -30,6 +30,7 @@ import { useShowIcon } from './useShowIcon';
 import { ExtraIcon } from '.';
 import { stringAvatar } from '../../utils';
 import { ISTFilterState } from './filterMenu';
+import { TitleEdit } from './TitleEdit';
 
 type ICellEditor = (props: any) => JSX.Element;
 type IRow = (string | number)[];
@@ -66,6 +67,9 @@ interface IProps {
   disableFilter: () => void;
   onAction: (what: ExtraIcon) => void;
   doSetActive: () => void;
+  cellsChanged: (changes: ICellChange[]) => void;
+  titleMediaChanged: (index: number, mediaId: string) => void;
+  onStartRecording?: () => void;
 }
 
 /**
@@ -91,6 +95,9 @@ interface IProps {
  * @param {boolean} props.disableFilter - A callback function to disable the filtering.
  * @param {Function} props.onAction - A callback function for handling action.
  * @param {Function} props.doSetActive - A callback function for setting the active row.
+ * @param {Function} props.cellsChanged - A callback function for handling cell edits.
+ * @param {Function} props.titleMediaChanged - A callback function for title media recorded.
+ * @param {Function} props.onStartRecording - A callback function for recorder buffer contains recording.
  * @returns {Function} - A function that generates the data for filling a plan sheet based on the provided props.
  */
 export const usePlanSheetFill = ({
@@ -114,6 +121,9 @@ export const usePlanSheetFill = ({
   disableFilter,
   onAction,
   doSetActive,
+  cellsChanged,
+  titleMediaChanged,
+  onStartRecording,
 }: IProps) => {
   const ctx = useContext(PlanContext);
   const { readonly } = ctx.state;
@@ -283,6 +293,43 @@ export const usePlanSheetFill = ({
       className: calcClassName,
     } as ICell);
 
+  const TitleValue = (
+    e: string | number,
+    rowIndex: number,
+    cellIndex: number
+  ) => {
+    const handleTextChange = (value: string) => {
+      const change: ICellChange = {
+        cell: null,
+        row: rowIndex,
+        col: cellIndex,
+        value,
+      };
+      cellsChanged([change]);
+    };
+
+    const handleMediaIdChange = (mediaId: string) => {
+      titleMediaChanged(rowIndex, mediaId);
+    };
+
+    const handleRecording = (inProgress: boolean) => {
+      if (inProgress) {
+        onStartRecording && onStartRecording();
+      }
+    };
+
+    return (
+      <TitleEdit
+        title={e as string}
+        mediaId={rowInfo[rowIndex].titleMediaId?.id || ''}
+        ws={rowInfo[rowIndex]}
+        onStartRecording={handleRecording}
+        onTextChange={handleTextChange}
+        onMediaIdChange={handleMediaIdChange}
+      />
+    );
+  };
+
   const refValue = (e: string | number) => {
     if (
       passageTypeFromRef(e as string, inlinePassages) !==
@@ -330,22 +377,24 @@ export const usePlanSheetFill = ({
     className: calcClassName,
   });
 
-  interface RowCellsProps {
-    section: boolean;
-    passage: boolean;
-    refCol: number;
-    calcClassName: string;
-  }
-
   const passageSeqCol = useMemo(
     () => (inlinePassages ? -1 : 2),
     [inlinePassages]
   );
 
+  interface RowCellsProps {
+    section: boolean;
+    passage: boolean;
+    refCol: number;
+    calcClassName: string;
+    rowIndex: number;
+  }
+
   const rowCells =
-    ({ section, passage, refCol, calcClassName }: RowCellsProps) =>
+    ({ section, passage, refCol, calcClassName, rowIndex }: RowCellsProps) =>
     (e: string | number, cellIndex: number) => {
       const bookCol = colSlugs.indexOf('book');
+      const titleCol = colSlugs.indexOf('title');
       if (cellIndex === bookCol && passage)
         return {
           value: e,
@@ -353,15 +402,27 @@ export const usePlanSheetFill = ({
           className: 'book ' + calcClassName,
           dataEditor: bookEditor,
         };
+      if (
+        cellIndex === titleCol &&
+        !passage &&
+        !filterState.hidePublishing &&
+        filterState.canHidePublishing
+      ) {
+        return {
+          value: TitleValue(e, rowIndex, cellIndex),
+          readOnly: true,
+          className: calcClassName,
+        };
+      }
       if (cellIndex === refCol)
         return {
           value: refValue(e),
           readOnly:
             readonly ||
             !passage ||
-            !inlinePassages ||
-            passageTypeFromRef(e as string, inlinePassages) !==
-              PassageTypeEnum.PASSAGE,
+            (!inlinePassages &&
+              passageTypeFromRef(e as string, inlinePassages) !==
+                PassageTypeEnum.PASSAGE),
           className:
             calcClassName +
             (passage
@@ -489,7 +550,7 @@ export const usePlanSheetFill = ({
         sheetRow.push(graphicCell(rowIndex, calcClassName));
       row
         .slice(0, 6) // quits when it runs out of columns
-        .map(rowCells({ section, passage, refCol, calcClassName }))
+        .map(rowCells({ section, passage, refCol, calcClassName, rowIndex }))
         .forEach((c) => {
           sheetRow.push(c);
         });

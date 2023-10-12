@@ -19,7 +19,6 @@ export const useShowIcon = ({ readonly, rowInfo, inlinePassages }: IProps) => {
     isMovement,
     isInMovement,
     isBook,
-    isTitle,
     firstVernacularInSection,
   } = rowTypes(rowInfo);
 
@@ -32,15 +31,13 @@ export const useShowIcon = ({ readonly, rowInfo, inlinePassages }: IProps) => {
         isSection(rowIndex) &&
         !isBook(rowIndex) &&
         !isMovement(rowIndex),
-      [ExtraIcon.Note]:
-        !readonly && !filtered && !inlinePassages && !isTitle(rowIndex + 1),
+      [ExtraIcon.Note]: !readonly && !filtered && !inlinePassages,
       [ExtraIcon.PassageBelow]:
         !readonly &&
         !filtered &&
         !inlinePassages &&
         !isInMovement(rowIndex) &&
-        !isBook(rowIndex) &&
-        !isTitle(rowIndex + 1),
+        !isBook(rowIndex),
       [ExtraIcon.MovementAbove]:
         !readonly &&
         !filtered &&
@@ -59,7 +56,6 @@ export const useShowIcon = ({ readonly, rowInfo, inlinePassages }: IProps) => {
         !filtered &&
         !inlinePassages &&
         isPassage(rowIndex) &&
-        !isTitle(rowIndex + 1) &&
         !isBook(rowIndex) &&
         !isSection(rowIndex + 1) &&
         rowIndex < rowInfo.length - 1,
@@ -68,7 +64,6 @@ export const useShowIcon = ({ readonly, rowInfo, inlinePassages }: IProps) => {
         !filtered &&
         !inlinePassages &&
         isPassage(rowIndex) &&
-        !isTitle(rowIndex + 1) &&
         !isBook(rowIndex) &&
         isSection(rowIndex + 1),
       [ExtraIcon.PassageUp]:
@@ -77,8 +72,6 @@ export const useShowIcon = ({ readonly, rowInfo, inlinePassages }: IProps) => {
         !inlinePassages &&
         rowIndex > 1 &&
         isPassage(rowIndex) &&
-        !isTitle(rowIndex - 1) &&
-        !isTitle(rowIndex) &&
         !isBook(rowIndex) &&
         !isSection(rowIndex - 1),
       [ExtraIcon.PassageToPrev]:
@@ -87,7 +80,6 @@ export const useShowIcon = ({ readonly, rowInfo, inlinePassages }: IProps) => {
         !inlinePassages &&
         rowIndex > 1 &&
         isPassage(rowIndex) &&
-        !isTitle(rowIndex - 1) &&
         !isBook(rowIndex) &&
         firstVernacularInSection(rowIndex),
       [ExtraIcon.PassageEnd]: !filtered && rowIndex !== rowInfo.length - 1,

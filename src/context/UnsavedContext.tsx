@@ -39,7 +39,7 @@ const initState = {
     resolvedMethod: (() => any) | undefined,
     waitCount: number
   ) => {},
-  anySaving: () => false,
+  anySaving: (butMyTooId?: string) => false,
   saveRequested: (toolId: string) => false,
   clearRequested: (toolId: string) => false,
   isChanged: (toolId: string) => false,
@@ -190,9 +190,13 @@ const UnsavedProvider = connect(
   const clearCompleted = (toolId: string) => {
     saveCompleted(toolId);
   };
-  const anySaving = () => {
+  // check for any saving except myToolId (if provided)
+  const anySaving = (myToolId?: string) => {
     const reducer = (prev: string, id: string) => {
-      return prev || (toolsChangedRef.current[id].startSave ? 'yes' : '');
+      return (
+        prev ||
+        (id !== myToolId && toolsChangedRef.current[id].startSave ? 'yes' : '')
+      );
     };
     var saving = Object.keys(toolsChangedRef.current).reduce(reducer, '');
     return Boolean(saving);

@@ -1039,8 +1039,9 @@ const initialState = {
 	}),
 	"scriptureTable": new LocalizedStrings({
 		"en": {
+			"alternateName": "{0} Alternate Name",
 			"book": "Book",
-			"chapter": "Chapter",
+			"chapter": "Chapter {0}",
 			"confirmPublish": "Are you sure you want to add publishing rows?",
 			"description": "Description",
 			"extras": "Extras",

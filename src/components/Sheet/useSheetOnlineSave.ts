@@ -28,6 +28,7 @@ interface SaveRec {
   passagetypeId?: string;
   sharedResourceId?: string;
   published: boolean;
+  titlemediafile: string;
 }
 
 interface IProps {
@@ -67,6 +68,10 @@ export const useWfOnlineSave = (props: IProps) => {
           issection: true,
           level: w.level,
           published: w.published,
+          titlemediafile:
+            (w?.titleMediaId?.id &&
+              (await getRemoteId('mediafile', w?.titleMediaId?.id))) ||
+            '',
           changed: !w.deleted && isSectionUpdated(w, lastSaved),
           deleted: w.deleted,
           id: isSectionAdding(w)
