@@ -149,6 +149,7 @@ interface IProps {
   orgSteps: OrgWorkflowStep[];
   canSetDefault: boolean;
   updateData: (changes: ICellChange[]) => void;
+  updateTitleMedia: (index: number, mediaId: string) => void;
   paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => Promise<boolean>;
   addPassage: (ptype?: PassageTypeEnum, i?: number, before?: boolean) => void;
@@ -186,6 +187,7 @@ export function PlanSheet(props: IProps) {
     orgSteps,
     canSetDefault,
     updateData,
+    updateTitleMedia,
     action,
     addPassage,
     movePassage,
@@ -230,6 +232,7 @@ export function PlanSheet(props: IProps) {
     isChanged,
     clearRequested,
     clearCompleted,
+    toolChanged,
   } = useContext(UnsavedContext).state;
   const [srcMediaId, setSrcMediaId] = useState('');
   const [mediaPlaying, setMediaPlaying] = useState(false);
@@ -496,6 +499,9 @@ export function PlanSheet(props: IProps) {
     filterState,
     onAudacity: handleAudacity,
     onDelete: handleConfirmDelete,
+    cellsChanged: updateData,
+    titleMediaChanged: updateTitleMedia,
+    onStartRecording: () => toolChanged(toolId),
   });
 
   const handleAutoSave = () => {

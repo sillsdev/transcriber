@@ -5,7 +5,6 @@ import {
   ChapterNumberIcon,
   AltBookIcon,
   NoteIcon,
-  TitleIcon,
   MovementIcon,
 } from './PlanIcons';
 
@@ -26,7 +25,6 @@ interface PtMap {
 const typeMap: PtMap = {
   [PassageTypeEnum.MOVEMENT]: PassageTypeEnum.MOVEMENT,
   [PassageTypeEnum.CHAPTERNUMBER]: PassageTypeEnum.CHAPTERNUMBER,
-  [PassageTypeEnum.TITLE]: PassageTypeEnum.TITLE,
   [PassageTypeEnum.BOOK]: PassageTypeEnum.BOOK,
   [PassageTypeEnum.ALTBOOK]: PassageTypeEnum.ALTBOOK,
   [PassageTypeEnum.NOTE]: PassageTypeEnum.NOTE,
@@ -127,7 +125,6 @@ interface IPtMap {
 const passageTypeMap: IPtMap = {
   [PassageTypeEnum.MOVEMENT]: MovementIcon,
   [PassageTypeEnum.CHAPTERNUMBER]: ChapterNumberIcon,
-  [PassageTypeEnum.TITLE]: TitleIcon,
   [PassageTypeEnum.BOOK]: BookIcon,
   [PassageTypeEnum.ALTBOOK]: AltBookIcon,
 };

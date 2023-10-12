@@ -61,7 +61,19 @@ export const useWfLocalSave = (props: IProps) => {
               },
             };
             const t = new TransformBuilder();
-            const ops = UpdateRecord(t, secRec, user);
+            const ops: Operation[] = [...UpdateRecord(t, secRec, user)];
+            if (item?.titleMediaId?.id !== related(curSec, 'titleMediafile')) {
+              ops.push(
+                ...UpdateRelatedRecord(
+                  t,
+                  secRec,
+                  'titleMediafile',
+                  'mediafile',
+                  item?.titleMediaId?.id,
+                  user
+                )
+              );
+            }
             await memory.update(ops);
             lastSec = secRec;
           } else if (item.deleted) {
@@ -82,10 +94,21 @@ export const useWfLocalSave = (props: IProps) => {
               },
             } as any;
             const t = new TransformBuilder();
-            await memory.update([
+            const ops: Operation[] = [
               ...AddRecord(t, newRec, user, memory),
               ...ReplaceRelatedRecord(t, newRec, 'plan', 'plan', plan),
-            ]);
+            ];
+            if (item?.titleMediaId?.id)
+              ops.push(
+                ...ReplaceRelatedRecord(
+                  t,
+                  newRec,
+                  'titleMediafile',
+                  'mediafile',
+                  item?.titleMediaId?.id
+                )
+              );
+            await memory.update(ops);
             item.sectionId = { type: 'section', id: newRec.id };
             lastSec = newRec;
           }

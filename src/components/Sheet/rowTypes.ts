@@ -7,10 +7,6 @@ export const rowTypes = (rowInfo: ISheet[]) => {
     i >= 0 && i < rowInfo.length ? isSectionRow(rowInfo[i]) : false;
   const isPassage = (i: number) =>
     i >= 0 && i < rowInfo.length ? isPassageRow(rowInfo[i]) : false;
-  const isTitle = (i: number) =>
-    i >= 0 && i < rowInfo.length
-      ? rowInfo[i].passageType === PassageTypeEnum.TITLE
-      : false;
   const firstVernacularInSection = (i: number) => {
     if (rowInfo[i].passageType !== PassageTypeEnum.PASSAGE) return false;
     while (--i >= 0 && !isSection(i)) {
@@ -32,8 +28,7 @@ export const rowTypes = (rowInfo: ISheet[]) => {
     if (
       i >= 0 &&
       i < rowInfo.length &&
-      (rowInfo[i].passageType === PassageTypeEnum.NOTE ||
-        rowInfo[i].passageType === PassageTypeEnum.TITLE)
+      rowInfo[i].passageType === PassageTypeEnum.NOTE
     ) {
       var sec = i - 1;
       while (sec > 0 && !isSection(sec)) sec--;
@@ -44,7 +39,6 @@ export const rowTypes = (rowInfo: ISheet[]) => {
   return {
     isSection,
     isPassage,
-    isTitle,
     firstVernacularInSection,
     isBook,
     isMovement,

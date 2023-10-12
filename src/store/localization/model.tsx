@@ -977,6 +977,7 @@ export interface IResourceStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
+    "alternateName": string;
     "book": string;
     "chapter": string;
     "confirmPublish": string;
