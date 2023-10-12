@@ -583,10 +583,18 @@ export function ScriptureTable(
       return;
     }
     const i = getUndelIndex(sheet, ix);
-    let newData = insertAt(sheet, newSection(level, sheet, i), i);
+    let newRow = newSection(level, sheet, i);
+    if (ptype === PassageTypeEnum.MOVEMENT) {
+      newRow = { ...newRow, reference: ptype };
+    }
+    let newData = insertAt(sheet, newRow, i);
     //if added in the middle...resequence
     if (i !== undefined) newData = shtResequence(newData);
-    setSheet(addPassageTo(level, newData, ptype, i));
+    if (ptype === PassageTypeEnum.MOVEMENT) {
+      setSheet(newData);
+    } else {
+      setSheet(addPassageTo(level, newData, ptype, i));
+    }
     setChanged(true);
   };
 
