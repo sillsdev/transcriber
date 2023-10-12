@@ -154,11 +154,17 @@ export const getSheet = (
     let sectionIndex: number | undefined;
     if (section.attributes) {
       item.level = section.attributes.level ?? SheetLevel.Section;
-      item.reference =
-        item.level === SheetLevel.Movement ? PassageTypeEnum.MOVEMENT : '';
       item.kind = flat ? IwsKind.SectionPassage : IwsKind.Section;
       item.sectionId = { type: 'section', id: section.id };
       item.sectionSeq = section.attributes.sequencenum;
+      item.reference =
+        item.level === SheetLevel.Movement
+          ? PassageTypeEnum.MOVEMENT
+          : item.level === SheetLevel.Book && item.sectionSeq === -4
+          ? PassageTypeEnum.BOOK
+          : item.level === SheetLevel.Book && item.sectionSeq === -3
+          ? PassageTypeEnum.ALTBOOK
+          : '';
       item.title = section?.attributes?.name;
       const transcriber = related(section, 'transcriber');
       item.transcriber =
