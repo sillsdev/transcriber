@@ -58,7 +58,6 @@ import { TokenContext } from '../context/TokenProvider';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { ReplaceRelatedRecord } from '../model/baseModel';
 import { useSanityCheck } from '../crud/useSanityCheck';
-import MemorySource from '@orbit/memory/dist/types/memory-source';
 interface IStateProps {}
 
 interface IDispatchProps {
@@ -108,6 +107,36 @@ export const processDataChanges = async (pdc: {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const reloadOrgs = async (localId: string) => {
+    const orgmem = findRecord(memory, 'organizationmembership', localId);
+    if (orgmem) {
+      if (related(orgmem, 'user') === user) {
+        memory.sync(await remote.pull((q) => q.findRecords('organization')));
+        memory.sync(await remote.pull((q) => q.findRecords('orgworkflowstep')));
+        memory.sync(
+          await remote.pull((q) => q.findRecords('organizationmembership'))
+        );
+      }
+    } else
+      memory.update((tb) =>
+        tb.removeRecord({ type: 'organizationmembership', id: localId })
+      );
+  };
+
+  const reloadProjects = async (localId: string) => {
+    const grpmem = findRecord(memory, 'groupmembership', localId);
+    if (grpmem) {
+      if (related(grpmem, 'user') === user) {
+        memory.sync(await remote.pull((q) => q.findRecords('group')));
+        memory.sync(await remote.pull((q) => q.findRecords('project')));
+        memory.sync(await remote.pull((q) => q.findRecords('plan')));
+        memory.sync(await remote.pull((q) => q.findRecords('groupmembership')));
+      }
+    } else
+      memory.update((tb) =>
+        tb.removeRecord({ type: 'groupmembership', id: localId })
+      );
+  };
   const processTableChanges = async (t: Transform[], cb?: () => void) => {
     const setRelated = (
       newOps: Operation[],
@@ -154,45 +183,13 @@ export const processDataChanges = async (pdc: {
       }
     };
 
-    const reloadOrgs = async (localId: string) => {
-      const orgmem = findRecord(memory, 'organizationmembership', localId);
-      if (orgmem) {
-        if (related(orgmem, 'user') === user) {
-          memory.sync(await remote.pull((q) => q.findRecords('organization')));
-          memory.sync(
-            await remote.pull((q) => q.findRecords('orgworkflowstep'))
-          );
-          memory.sync(
-            await remote.pull((q) => q.findRecords('organizationmembership'))
-          );
-        }
-      } else
-        memory.update((tb) =>
-          tb.removeRecord({ type: 'organizationmembership', id: localId })
-        );
-    };
-
-    const reloadProjects = async (localId: string) => {
-      const grpmem = findRecord(memory, 'groupmembership', localId);
-      if (grpmem) {
-        if (related(grpmem, 'user') === user) {
-          memory.sync(await remote.pull((q) => q.findRecords('group')));
-          memory.sync(await remote.pull((q) => q.findRecords('project')));
-          memory.sync(await remote.pull((q) => q.findRecords('plan')));
-          memory.sync(
-            await remote.pull((q) => q.findRecords('groupmembership'))
-          );
-        }
-      } else
-        memory.update((tb) =>
-          tb.removeRecord({ type: 'groupmembership', id: localId })
-        );
-    };
     for (const tr of t) {
       const tb = new TransformBuilder();
       const localOps: Operation[] = [];
       let upRec: UpdateRecordOperation;
+
       await memory.sync(await backup.push(tr.operations));
+
       for (const o of tr.operations) {
         if (o.op === 'updateRecord') {
           upRec = o as UpdateRecordOperation;
@@ -311,10 +308,10 @@ export const processDataChanges = async (pdc: {
         if (localId) {
           switch (table.type) {
             case 'organizationmembership':
-              reloadOrgs(localId, memory, remote, user);
+              reloadOrgs(localId);
               break;
             case 'groupmembership':
-              reloadProjects(localId, memory, remote, user);
+              reloadProjects(localId);
               break;
           }
           operations.push(tb.removeRecord({ type: table.type, id: localId }));
@@ -407,6 +404,7 @@ export const doDataChanges = async (
           if (startNext === start) tries--;
           else start = startNext;
         }
+
         if (startNext === -1)
           await updateSnapshotDate(p, nextTime, startNext + 1); //done
         else if (startNext > 0)

@@ -14,7 +14,6 @@ import {
 } from '@mui/material';
 import ExitIcon from '@mui/icons-material/ExitToApp';
 import AccountIcon from '@mui/icons-material/AccountCircle';
-import ReloadIcon from '@mui/icons-material/Refresh';
 import ClearIcon from '@mui/icons-material/Clear';
 import { StyledMenu, StyledMenuItem } from '../control';
 import UserAvatar from './UserAvatar';
@@ -116,14 +115,6 @@ export function UserMenu(props: IProps) {
               <AccountIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary={t.myAccount} />
-          </StyledMenuItem>
-        )}
-        {shift && (
-          <StyledMenuItem id="reload" onClick={handleAction('ReloadStatic')}>
-            <ListItemIcon>
-              <ReloadIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary={t.reloadStatic} />
           </StyledMenuItem>
         )}
         {shift && !isElectron && (

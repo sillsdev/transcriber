@@ -38,7 +38,7 @@ import {
   useMyNavigate,
 } from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
-import { usePlan, useLoadStatic } from '../../crud';
+import { usePlan } from '../../crud';
 import Busy from '../Busy';
 import CloudOffIcon from '@mui/icons-material/CloudOff';
 import ProjectDownloadAlert from '../ProjectDownloadAlert';
@@ -158,7 +158,6 @@ export const AppHead = (props: IProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const saving = useMemo(() => anySaving(), [toolsChanged]);
   const { showMessage } = useSnackBar();
-  const { loadStatic } = useLoadStatic();
   const tv: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
 
   const handleUserMenuAction = (
@@ -169,10 +168,6 @@ export const AppHead = (props: IProps) => {
   ) => {
     if (/terms|privacy/i.test(what)) {
       setShowTerms(what);
-      return;
-    }
-    if (/ReloadStatic/.test(what)) {
-      loadStatic();
       return;
     }
     if (isElectron && /ClearLogout/i.test(what)) {

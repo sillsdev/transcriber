@@ -3357,13 +3357,6 @@
                <context context-type="sourcefile">AboutDialog.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="main.reloadStatic">
-      		<source>Reload static tables</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">UserMenu.tsx</context>
-      		</context-group>
-      	</trans-unit>
          <trans-unit id="main.reportIssue">
             <source>Report an Issue</source>
             <target/>

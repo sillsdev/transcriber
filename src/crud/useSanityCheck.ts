@@ -125,13 +125,6 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
             record: { type: 'organization', id: org },
           })
         ) as BaseModel[];
-      const orgKeyTermRows = () =>
-        memory.cache.query((q) =>
-          q.findRecords('orgkeyterm').filter({
-            relation: 'organization',
-            record: { type: 'organization', id: org },
-          })
-        ) as BaseModel[];
 
       const sectionRows = () =>
         memory.cache.query((q) =>
@@ -170,13 +163,16 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           (sr) => psgs.find((id) => id === related(sr, 'passage')) !== undefined
         );
       };
-      const organizationmembershipRows = () =>
+      const filterByOrg = (table: string) =>
         memory.cache.query((q) =>
-          q.findRecords('organizationmembership').filter({
+          q.findRecords(table).filter({
             relation: 'organization',
             record: { type: 'organization', id: org },
           })
         ) as BaseModel[];
+      const organizationmembershipRows = () =>
+        filterByOrg('organizationmembership');
+
       switch (table) {
         case 'activitystate':
         case 'artifacttype':
@@ -231,54 +227,19 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
             })
           ) as BaseModel[];
         case 'invitation':
-          return memory.cache.query((q) =>
-            q.findRecords('invitation').filter({
-              relation: 'organization',
-              record: { type: 'organization', id: org },
-            })
-          ) as BaseModel[];
+          return filterByOrg(table);
         case 'mediafile':
           return mediafileRows();
         case 'organization':
           return [findRecord(memory, 'organization', org)];
+
         case 'organizationmembership':
-          return memory.cache.query((q) =>
-            q.findRecords('organizationmembership').filter({
-              relation: 'organization',
-              record: { type: 'organization', id: org },
-            })
-          ) as BaseModel[];
         case 'orgkeyterm':
-          return orgKeyTermRows();
         case 'orgkeytermreference':
-          var orgkeyterms = orgKeyTermRows().map((okt) => okt.id);
-          return (
-            memory.cache.query((q) =>
-              q.findRecords('orgkeytermreference')
-            ) as BaseModel[]
-          ).filter(
-            (oktr) =>
-              orgkeyterms.find((id) => id === related(oktr, 'orgkeyterm')) !==
-              undefined
-          );
         case 'orgkeytermtarget':
-          var terms = orgKeyTermRows().map((okt) => okt.id);
-          return (
-            memory.cache.query((q) =>
-              q.findRecords('orgkeytermtarget')
-            ) as BaseModel[]
-          ).filter(
-            (oktt) =>
-              terms.find((id) => id === related(oktt, 'orgkeyterm')) !==
-              undefined
-          );
         case 'orgworkflowstep':
-          return memory.cache.query((q) =>
-            q.findRecords('orgworkflowstep').filter({
-              relation: 'organization',
-              record: { type: 'organization', id: org },
-            })
-          ) as BaseModel[];
+          return filterByOrg(table);
+
         case 'passage':
           return passageRows();
         case 'passagestatechange':
