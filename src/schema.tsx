@@ -792,7 +792,7 @@ if (
       idList: { type: 'number' },
       s3file: { type: 'string' },
       dateCreated: { type: 'string' },
-      dateUpdated: { type: 'string' },
+      dateUpdated: { type: 'date-time' },
       lastModifiedBy: { type: 'number' },
     },
     relationships: {
@@ -919,6 +919,20 @@ if (
     },
   };
   schemaDefinition.version = 6;
+  if (
+    parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 6 &&
+    schemaDefinition.models
+  ) {
+    schemaDefinition.models.vwChecksum = {
+      keys: { remoteId: {} },
+      attributes: {
+        name: { type: 'string' },
+        projectId: { type: 'number' },
+        checksum: { type: 'number' },
+      },
+    };
+    schemaDefinition.version = 7;
+  }
 }
 export const schema = new Schema(schemaDefinition);
 

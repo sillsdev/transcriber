@@ -57,3 +57,5 @@ export * from './keyTerm';
 export * from './sharedResource';
 export * from './sharedResourceReference';
 export * from './bookRef';
+export * from './graphic';
+export * from './vwChecksum';

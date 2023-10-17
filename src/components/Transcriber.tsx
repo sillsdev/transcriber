@@ -922,7 +922,7 @@ export function Transcriber(
   const handleAutosave = async () => {
     if (!playingRef.current && !saving.current && transcriptionRef.current) {
       const transcription = transcriptionRef.current.firstChild.value;
-      if (transcriptionIn.current || '' !== transcription) {
+      if ((transcriptionIn.current ?? '') !== transcription) {
         await handleSave();
       }
     }
