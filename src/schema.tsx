@@ -135,6 +135,7 @@ const schemaDefinition: SchemaSettings = {
         clusterbase: { type: 'boolean' },
         publishingData: { type: 'string' },
         bibleId: { type: 'string' },
+        bibleName: { type: 'string' },
         iso: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },

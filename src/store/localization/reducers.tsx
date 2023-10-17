@@ -138,6 +138,7 @@ const initialState = {
 			"addTeam": "Add Team",
 			"bibleid": "Bible Id",
 			"bibleidexists": "Bible Id already exists.",
+			"biblename": "Name of Bible",
 			"cancel": "Cancel",
 			"closeNoSave": "Close without Saving?",
 			"connectParatext": "Connect a Paratext Project",

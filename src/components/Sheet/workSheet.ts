@@ -33,7 +33,7 @@ export const workSheet = (
         value = getFilteredSection(r['sectionSeq'], filtered, unfiltered);
       else if (
         r.kind === IwsKind.Section &&
-        r.level === SheetLevel.Movement &&
+        r.level <= SheetLevel.Movement &&
         c === 'reference'
       )
         value = r[c];

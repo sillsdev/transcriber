@@ -99,6 +99,7 @@ alter table sections add level int default 3;
 
 alter table organizations add publishingdata jsonb default '{}';
 alter table organizations add bibleid text; --ENGCSV
+alter table organizations add biblename text; --English Common Version
 alter table organizations add iso text;
 alter table organizations add isomediafileid int;
 alter table organizations add biblemediafileid int;
