@@ -59,3 +59,4 @@ export * from './sharedResourceReference';
 export * from './bookRef';
 export * from './vwChecksum';
 export * from './graphic';
+export * from './vwChecksum';
