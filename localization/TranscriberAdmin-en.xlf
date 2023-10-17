@@ -568,6 +568,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.biblename">
+         <segment>
+            <source>Name of Bible</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>

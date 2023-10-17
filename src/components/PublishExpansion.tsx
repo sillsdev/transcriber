@@ -11,6 +11,7 @@ import {
   styled,
   Grid,
   GridProps,
+  TextField,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ILanguage } from '../control';
@@ -50,6 +51,7 @@ export function PublishExpansion(props: IProps) {
   const [isoMediafile, setIsoMediafilex] = useState('');
   const [bibleMediafile, setBibleMediafilex] = useState('');
   const [bibleId, setBibleId] = useState('');
+  const [bibleName, setBibleName] = useState('');
   //TOOD const [publishingData, setPublishingData] = useState('{}');
   const { getDefault, setDefault } = useOrgDefaults();
   const [language, setLanguagex] = React.useState<ILanguage>(initLang);
@@ -65,18 +67,21 @@ export function PublishExpansion(props: IProps) {
       language?.bcp47 !== 'und'
     ) {
       setValue('iso', language?.bcp47);
+      setValue('languageName', language?.languageName);
     }
     if (!init) {
       var t = team ?? ({ attributes: { defaultParams: '{}' } } as Organization);
       setDefault('langProps', language, t);
       setValue('defaultParams', t.attributes.defaultParams ?? '{}');
       setValue('iso', language?.bcp47);
+      setValue('languageName', language?.languageName);
     }
   };
 
   useEffect(() => {
     if (team) {
       setBibleId(team.attributes?.bibleId);
+      setBibleName(team.attributes?.bibleName);
       //TODO setPublishingData(team.attributes?.publishingData || '{}');
       setIsoMediafilex(related(team, 'isoMediafile') as string);
       setBibleMediafilex(related(team, 'bibleMediafile') as string);
@@ -98,12 +103,18 @@ export function PublishExpansion(props: IProps) {
     setIsoMediafilex(mediaId);
     setValue('isoMediafile', mediaId);
   };
-  const handleChangeBibleId = (value: string) => {
-    if (!bibleIdIsValid(value)) {
+  const handleChangeBibleId = (event: any) => {
+    if (!bibleIdIsValid(event.target.value)) {
       return t.bibleidexists;
     }
-    setBibleId(value);
-    if (team?.attributes?.bibleId !== value) setValue('bibleId', value);
+    setBibleId(event.target.value);
+    if (team?.attributes?.bibleId !== event.target.value)
+      setValue('bibleId', event.target.value);
+    return '';
+  };
+  const handleChangeBibleName = (value: string) => {
+    setBibleName(value);
+    if (team?.attributes?.bibleName !== value) setValue('bibleName', value);
     return '';
   };
   const onRecording = (recording: boolean) => {
@@ -163,26 +174,35 @@ export function PublishExpansion(props: IProps) {
                 language={language}
                 label={t.language.replace(': {0}', '')}
                 mediaId={isoMediafile}
-                title={language?.bcp47}
+                title={''}
                 defaultFilename={(team?.attributes?.slug ?? '') + 'iso'}
                 onLangChange={handleLanguageChange}
                 onRecording={onRecording}
                 useplan={teamplan}
                 onMediaIdChange={(mediaId: string) => setIsoMediafile(mediaId)}
               />
-              <GridContainerRow item></GridContainerRow>
+
               <MediaTitle
-                titlekey={'bibleId-'}
-                label={t.bibleid}
+                titlekey={'bibleName-'}
+                label={t.biblename}
                 mediaId={bibleMediafile}
-                title={bibleId}
+                title={bibleName}
                 defaultFilename={(team?.attributes?.slug ?? '') + 'bible'}
-                onTextChange={handleChangeBibleId}
+                onTextChange={handleChangeBibleName}
                 onRecording={onRecording}
                 useplan={teamplan}
                 onMediaIdChange={(mediaId: string) =>
                   setBibleMediafile(mediaId)
                 }
+              />
+              <GridContainerRow item></GridContainerRow>
+              <TextField
+                id="bibleid"
+                label={t.bibleid}
+                value={bibleId}
+                onChange={handleChangeBibleId}
+                variant="outlined"
+                sx={{ width: '100%' }}
               />
             </div>
           </FormGroup>

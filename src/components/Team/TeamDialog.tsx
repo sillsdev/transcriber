@@ -58,6 +58,7 @@ export function TeamDialog(props: IProps) {
   const [name, setName] = React.useState('');
   const [iso, setIso] = React.useState('');
   const [bibleId, setBibleId] = React.useState('');
+  const [bibleName, setBibleName] = React.useState('');
   const [defaultParams, setDefaultParams] = React.useState('');
   const bibleMediafileRef = useRef('');
   const isoMediafileRef = useRef('');
@@ -125,6 +126,7 @@ export function TeamDialog(props: IProps) {
           name,
           iso,
           bibleId,
+          bibleName,
           defaultParams,
           publishingData,
         },
@@ -149,6 +151,9 @@ export function TeamDialog(props: IProps) {
         break;
       case 'bibleId':
         setBibleId(value);
+        break;
+      case 'bibleName':
+        setBibleName(value);
         break;
       case 'defaultParams':
         setDefaultParams(value);
@@ -218,6 +223,7 @@ export function TeamDialog(props: IProps) {
           setName(values.team.attributes?.name || '');
           setIso(values.team.attributes?.iso || '');
           setBibleId(values.team.attributes?.bibleId || '');
+          setBibleName(values.team.attributes?.bibleName || '');
           setIsoMediafile(related(values.team, 'isoMediafile') as string);
           setBibleMediafile(related(values.team, 'bibleMediafile') as string);
           setPublishingData(values.team.attributes?.publishingData || '{}');
@@ -268,14 +274,16 @@ export function TeamDialog(props: IProps) {
             onChange={handleChange}
             fullWidth
           />
-          <PublishExpansion
-            t={t}
-            team={values?.team}
-            teamplan={teamplan}
-            onChanged={setChanged}
-            setValue={setValue}
-            organizations={organizations}
-          />
+          {mode !== DialogMode.add && (
+            <PublishExpansion
+              t={t}
+              team={values?.team}
+              teamplan={teamplan}
+              onChanged={setChanged}
+              setValue={setValue}
+              organizations={organizations}
+            />
+          )}
           {mode === DialogMode.add && (
             <TextField
               id="process"

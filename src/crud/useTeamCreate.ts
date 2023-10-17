@@ -122,9 +122,6 @@ export const useTeamCreate = () => {
       websiteUrl,
       logoUrl,
       publicByDefault,
-      iso,
-      bibleId,
-      publishingData,
       defaultParams,
     } = organization?.attributes;
     let orgRec = {
@@ -136,10 +133,7 @@ export const useTeamCreate = () => {
         websiteUrl,
         logoUrl,
         publicByDefault,
-        iso,
-        bibleId,
         defaultParams,
-        publishingData,
       },
     } as Organization;
 

@@ -16,6 +16,7 @@ export interface Organization extends Record {
     defaultParams: string;
     publishingData: string;
     bibleId: string;
+    bibleName: string;
     iso: string;
   };
   relationships?: {
