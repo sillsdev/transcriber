@@ -10,6 +10,7 @@ export const updateableFiles = [
   { table: 'intellectualproperty', sort: 'I' },
   { table: 'mediafile', sort: 'H' },
   { table: 'orgkeyterm', sort: 'C' },
+  { table: 'orgkeytermreference', sort: 'I' },
   { table: 'orgkeytermtarget', sort: 'I' },
   { table: 'passage', sort: 'G' },
   { table: 'passagestatechange', sort: 'H' },
