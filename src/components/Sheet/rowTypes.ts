@@ -14,12 +14,7 @@ export const rowTypes = (rowInfo: ISheet[]) => {
     }
     return true;
   };
-  const isBook = (i: number) =>
-    i >= 0 &&
-    i < rowInfo.length &&
-    (rowInfo[i].level === SheetLevel.Book ||
-      rowInfo[i].passageType === PassageTypeEnum.BOOK ||
-      rowInfo[i].passageType === PassageTypeEnum.ALTBOOK);
+  const isBook = (i: number) => rowInfo[i]?.level === SheetLevel.Book;
 
   const isMovement = (i: number) =>
     i >= 0 && i < rowInfo.length && rowInfo[i].level === SheetLevel.Movement;

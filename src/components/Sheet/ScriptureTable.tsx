@@ -1338,6 +1338,7 @@ export function ScriptureTable(
         passageSeq: 0,
         reference: passageType,
         title,
+        passageType: passageType,
       } as ISheet;
       return newwf.concat([newRow]);
     };
