@@ -75,8 +75,8 @@ export function PublishExpansion(props: IProps) {
       var t = team ?? ({ attributes: { defaultParams: '{}' } } as Organization);
       setDefault('langProps', language, t);
       setValue('defaultParams', t.attributes.defaultParams ?? '{}');
-      setValue('iso', language?.bcp47);
-      setValue('languageName', language?.languageName);
+      setValue('iso', language?.bcp47 ?? '');
+      setValue('languageName', language?.languageName ?? '');
     }
   };
 
@@ -89,10 +89,10 @@ export function PublishExpansion(props: IProps) {
       setBibleMediafilex(related(team, 'bibleMediafile') as string);
     }
     const language = team
-      ? (getDefault('langProps', team) as typeof initLang)
+      ? (getDefault('langProps', team) as typeof initLang) ?? initLang
       : initLang;
 
-    console.log('useEffect', language);
+    // console.log('useEffect', language);
     setLanguage(language, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [team]);
