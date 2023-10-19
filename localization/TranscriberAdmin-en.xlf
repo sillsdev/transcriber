@@ -568,6 +568,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.bibleIdExplain">
+         <segment>
+            <source>Explain Bible Id</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.biblename">
          <segment>
             <source>Name of Bible</source>
@@ -2881,12 +2887,6 @@
       <unit id="main.reliesOn">
          <segment>
             <source>{0} relies on other works</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="main.reloadStatic">
-         <segment>
-            <source>Reload static tables</source>
             <target/>
          </segment>
       </unit>

@@ -123,6 +123,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "addTeam": string;
     "bibleid": string;
     "bibleidexists": string;
+    "bibleIdExplain": string;
     "biblename": string;
     "cancel": string;
     "closeNoSave": string;
@@ -578,7 +579,6 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "project": string;
     "orgRole": string;
     "reliesOn": string;
-    "reloadStatic": string;
     "reportIssue": string;
     "reports": string;
     "reportWhenOnline": string;
