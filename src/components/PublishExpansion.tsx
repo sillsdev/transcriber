@@ -12,9 +12,11 @@ import {
   Grid,
   GridProps,
   TextField,
+  Link,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { ILanguage } from '../control';
+import InfoIcon from '@mui/icons-material/Info';
+import { ILanguage, LightTooltip } from '../control';
 import { related, useOrgDefaults } from '../crud';
 import MediaTitle from '../control/MediaTitle';
 
@@ -195,15 +197,27 @@ export function PublishExpansion(props: IProps) {
                   setBibleMediafile(mediaId)
                 }
               />
-              <GridContainerRow item></GridContainerRow>
-              <TextField
-                id="bibleid"
-                label={t.bibleid}
-                value={bibleId}
-                onChange={handleChangeBibleId}
-                variant="outlined"
-                sx={{ width: '100%' }}
-              />
+              <GridContainerRow item>
+                <TextField
+                  id="bibleid"
+                  label={t.bibleid}
+                  value={bibleId}
+                  onChange={handleChangeBibleId}
+                  variant="outlined"
+                  sx={{ width: '100%' }}
+                />
+                <LightTooltip title={t.bibleIdExplain}>
+                  <Link
+                    href="https://www.faithcomesbyhearing.com/bible-brain/core-concepts"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <InfoIcon
+                      sx={{ fontSize: 'small', color: 'text.secondary' }}
+                    />
+                  </Link>
+                </LightTooltip>
+              </GridContainerRow>
             </div>
           </FormGroup>
         </AccordionDetails>

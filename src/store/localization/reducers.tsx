@@ -138,6 +138,7 @@ const initialState = {
 			"addTeam": "Add Team",
 			"bibleid": "Bible Id",
 			"bibleidexists": "Bible Id already exists.",
+			"bibleIdExplain": "Explain Bible Id",
 			"biblename": "Name of Bible",
 			"cancel": "Cancel",
 			"closeNoSave": "Close without Saving?",
