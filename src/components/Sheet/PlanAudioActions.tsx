@@ -2,13 +2,13 @@ import { useMemo, memo, FC } from 'react';
 import { IPlanActionsStrings, IMediaShare } from '../../model';
 import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
 import PauseIcon from '@mui/icons-material/Pause';
-import SettingIcon from '@mui/icons-material/Settings';
 import SharedCheckbox from '@mui/icons-material/CheckBoxOutlined';
 import NotSharedCheckbox from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import VersionsIcon from '@mui/icons-material/List';
 import { shallowEqual, useSelector } from 'react-redux';
 import { IconButton, Box, IconButtonProps, styled } from '@mui/material';
 import { planActionsSelector } from '../../selector';
+import EditIcon from '@mui/icons-material/EditOutlined';
 
 // see: https://mui.com/material-ui/customization/how-to-customize/
 interface StyledIconButtonProps extends IconButtonProps {
@@ -67,13 +67,17 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
           id="passageShare"
           shared={mediaShared === IMediaShare.OldVersionOnly}
           title={
-            mediaShared !== IMediaShare.NotPublic ? t.resourceEdit : t.versions
+            isNote
+              ? t.noteSettings
+              : mediaShared !== IMediaShare.NotPublic
+              ? t.resourceEdit
+              : t.versions
           }
           disabled={disabled && !isNote}
           onClick={onHistory(rowIndex)}
         >
           {isNote ? (
-            <SettingIcon />
+            <EditIcon />
           ) : mediaShared === IMediaShare.NotPublic ? (
             <VersionsIcon />
           ) : mediaShared === IMediaShare.None ? (

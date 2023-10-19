@@ -897,6 +897,7 @@ const initialState = {
 			"addNote": "Add Note",
 			"assign": "Assign",
 			"delete": "Delete",
+			"noteSettings": "Settings for Notes",
 			"passageDetail": "Passage Detail",
 			"playpause": "Play/Pause",
 			"recordAudio": "Record/Edit Audio",
