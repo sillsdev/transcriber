@@ -4883,6 +4883,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="planActions.noteSettings">
+      		<source>Settings for Notes</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="planActions.passageDetail">
             <source>Passage Detail</source>
             <target/>

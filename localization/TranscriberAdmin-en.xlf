@@ -4186,6 +4186,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planActions.noteSettings">
+         <segment>
+            <source>Settings for Notes</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planActions.passageDetail">
          <segment>
             <source>Passage Detail</source>

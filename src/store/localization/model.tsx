@@ -843,6 +843,7 @@ export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
     "addNote": string;
     "assign": string;
     "delete": string;
+    "noteSettings": string;
     "passageDetail": string;
     "playpause": string;
     "recordAudio": string;
