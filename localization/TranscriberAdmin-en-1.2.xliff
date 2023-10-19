@@ -660,7 +660,14 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="cards.biblename">
+      	<trans-unit id="cards.bibleIdExplain">
+      		<source>Explain Bible Id</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">addCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="cards.biblename">
             <source>Name of Bible</source>
             <target/>
             <context-group>
@@ -787,13 +794,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="cards.import">
-            <source>Import Audio Project</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">addCard.tsx</context>
-            </context-group>
-         </trans-unit>
+      	<trans-unit id="cards.import">
+      		<source>Import Audio Project</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">addCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="cards.language">
             <source>Language: {0}</source>
             <target/>
