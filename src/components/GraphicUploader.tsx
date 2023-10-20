@@ -18,7 +18,7 @@ export interface CompressedImages {
 }
 
 export interface IGraphicInfo {
-  [key: string]: CompressedImages;
+  [key: string]: CompressedImages | string | undefined;
 }
 
 interface IProps {
@@ -30,6 +30,7 @@ interface IProps {
   finish?: (images: CompressedImages[]) => void; // when conversion complete
   cancelled: React.MutableRefObject<boolean>;
   uploadType?: UploadType;
+  metadata?: JSX.Element;
 }
 export function GraphicUploader(props: IProps) {
   const {
@@ -41,6 +42,7 @@ export function GraphicUploader(props: IProps) {
     cancelled,
     uploadType,
     finish,
+    metadata,
   } = props;
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
   const [errorReporter] = useGlobal('errorReporter');
@@ -115,6 +117,7 @@ export function GraphicUploader(props: IProps) {
       uploadType={uploadType || UploadType.Media}
       uploadMethod={uploadMedia}
       cancelMethod={uploadCancel}
+      metaData={metadata}
     />
   );
 }

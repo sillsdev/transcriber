@@ -670,6 +670,8 @@ const initialState = {
 			"fileAttached": "File already attached",
 			"fileName": "File Name",
 			"filter": "Filter",
+			"graphicRightsAdd": "Add {0}",
+			"graphicRightsTitle": "Graphics Rights holder",
 			"loadingTable": "Loading data",
 			"matchAdded": "Match complete: {0} new associations",
 			"mediaAssociations": "Audio Associations",

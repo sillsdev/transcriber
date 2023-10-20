@@ -48,6 +48,7 @@ export interface ISheet {
   discussionCount: number;
   published: boolean;
   graphicUri?: string;
+  graphicRights?: string;
   titleMediaId?: RecordIdentity;
 }
 
