@@ -25,7 +25,7 @@ export const ResourceLink = (props: IResourceState) => {
       margin="dense"
       id="link"
       label={t.link}
-      value={linkurl}
+      value={linkurl ?? ''}
       onChange={setState ? handleChangeLink : undefined}
       fullWidth
     />
