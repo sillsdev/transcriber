@@ -3160,6 +3160,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.graphicRightsAdd">
+         <segment>
+            <source>Add {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.graphicRightsTitle">
+         <segment>
+            <source>Graphics Rights holder</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.loadingTable">
          <segment>
             <source>Loading data</source>

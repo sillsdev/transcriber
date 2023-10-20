@@ -75,6 +75,7 @@ import {
   isPassageFiltered,
   nextNum,
   ApmDim,
+  Rights,
 } from '.';
 import { debounce } from 'lodash';
 import AudacityManager from './AudacityManager';
@@ -104,6 +105,7 @@ import {
 } from '../GraphicUploader';
 import Confirm from '../AlertDialog';
 import { getDefaultName } from './getDefaultName';
+import GraphicRights from '../GraphicRights';
 
 const SaveWait = 500;
 export const FilterParam = 'ProjectFilter';
@@ -916,6 +918,11 @@ export function ScriptureTable(
     });
   };
 
+  const handleRightsChange = (graphicRights: string) => {
+    const ws = uploadItem.current;
+    if (ws) uploadItem.current = { ...ws, graphicRights };
+  };
+
   const afterConvert = async (images: CompressedImages[]) => {
     const ws = uploadItem.current;
     const resourceType = ws?.kind === IwsKind.Section ? 'section' : 'passage';
@@ -927,7 +934,7 @@ export function ScriptureTable(
       ws?.kind === IwsKind.Section
         ? parseInt(secRec?.keys?.remoteId ?? '0')
         : parseInt(ws?.passage?.keys?.remoteId ?? '0');
-    const infoData: IGraphicInfo = {};
+    const infoData: IGraphicInfo = { [Rights]: ws?.graphicRights };
     images.forEach((image) => {
       infoData[image.dimension.toString()] = image;
     });
@@ -1575,6 +1582,7 @@ export function ScriptureTable(
         finish={afterConvert}
         cancelled={cancelled}
         uploadType={uploadType}
+        metadata={<GraphicRights value={''} onChange={handleRightsChange} />}
       />
       {audacityItem?.ws?.passage && (
         <AudacityManager

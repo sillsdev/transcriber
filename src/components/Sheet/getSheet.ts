@@ -18,10 +18,11 @@ import { toCamel } from '../../utils';
 import { ISTFilterState } from './filterMenu';
 import { PassageTypeEnum } from '../../model/passageType';
 import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
-import { IGraphicInfo } from '../GraphicUploader';
+import { CompressedImages, IGraphicInfo } from '../GraphicUploader';
 
 export const ApmDim = 40;
 const apmDimStr = `${ApmDim}`;
+export const Rights = 'rights';
 
 const shtSectionUpdate = (item: ISheet, rec: ISheet) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -190,7 +191,8 @@ export const getSheet = (
       if (graphicRec) {
         const info: IGraphicInfo = JSON.parse(graphicRec.attributes.info);
         if (info.hasOwnProperty(apmDimStr)) {
-          item.graphicUri = info[apmDimStr].content;
+          item.graphicUri = (info[apmDimStr] as CompressedImages).content;
+          item.graphicRights = info[Rights] as string | undefined;
         }
       }
       const titleMediaId = related(section, 'titleMediafile');
@@ -271,7 +273,8 @@ export const getSheet = (
           if (graphicRec) {
             const info: IGraphicInfo = JSON.parse(graphicRec.attributes.info);
             if (info.hasOwnProperty(apmDimStr)) {
-              item.graphicUri = info[apmDimStr].content;
+              item.graphicUri = (info[apmDimStr] as CompressedImages).content;
+              item.graphicRights = info[Rights] as string | undefined;
             }
           }
         }

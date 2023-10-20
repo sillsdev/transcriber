@@ -3686,6 +3686,20 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="mediaTab.graphicRightsAdd">
+      		<source>Add {0}</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaTab.graphicRightsTitle">
+      		<source>Graphics Rights holder</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="mediaTab.loadingTable">
             <source>Loading data</source>
             <target/>
