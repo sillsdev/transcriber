@@ -81,7 +81,7 @@ const PlanProvider = withData(mapRecordsToProps)(
     const [offlineOnly] = useGlobal('offlineOnly');
     const getPlanType = usePlanType();
     const { userIsAdmin } = useRole();
-    const { setProjectDefault } = useProjectDefaults();
+    const { setProjectDefault, getProjectDefault } = useProjectDefaults();
     const [readonly, setReadOnly] = useState(
       (isOffline && !offlineOnly) || !userIsAdmin
     );
@@ -109,9 +109,7 @@ const PlanProvider = withData(mapRecordsToProps)(
         ) as Project;
       if (projRec !== null) {
         const shared = projRec?.attributes?.isPublic || false;
-        const projDefStr = projRec?.attributes?.defaultParams || '{}';
-        const projDef = JSON.parse(projDefStr);
-        const hidePublishing = projDef[ProjectHidePublishing] || true;
+        const hidePublishing = getProjectDefault(ProjectHidePublishing) ?? true;
         if (
           shared !== state.shared ||
           hidePublishing !== state[ProjectHidePublishing]

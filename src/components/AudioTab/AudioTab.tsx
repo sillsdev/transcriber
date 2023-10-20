@@ -43,19 +43,12 @@ import { useMediaAttach } from '../../crud/useMediaAttach';
 import Memory from '@orbit/memory';
 import PassageChooser from './PassageChooser';
 import Template from './Template';
-import {
-  getMedia,
-  getPassages,
-  IAttachMap,
-  IGetMedia,
-  IPassageData,
-  IPRow,
-  IRow,
-} from '.';
+import { getMedia, IAttachMap, IGetMedia, IPRow, IRow } from '.';
 import { IMatchData, makeMatchMap } from './makeRefMap';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { useSelector } from 'react-redux';
 import { mediaTabSelector, sharedSelector } from '../../selector';
+import { IPassageData, getPassages } from './getPassages';
 
 interface IRecordProps {
   mediaFiles: Array<MediaFile>;
