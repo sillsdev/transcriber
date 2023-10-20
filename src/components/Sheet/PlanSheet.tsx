@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef, useContext, useMemo } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  useMemo,
+  MouseEventHandler,
+} from 'react';
 import { useGlobal } from 'reactn';
 import {
   IPlanSheetStrings,
@@ -9,8 +16,10 @@ import {
   OrgWorkflowStep,
   SheetLevel,
 } from '../../model';
-import { Box, styled } from '@mui/material';
+import { Box, IconButton, styled } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
+import PublishOffIcon from '@mui/icons-material/PublicOffOutlined';
+import PublishOnIcon from '@mui/icons-material/PublicOutlined';
 import { useSnackBar } from '../../hoc/SnackBar';
 import DataSheet from 'react-datasheet';
 import Confirm from '../AlertDialog';
@@ -23,6 +32,7 @@ import {
   AltButton,
   PriButton,
   iconMargin,
+  LightTooltip,
 } from '../../control';
 import 'react-datasheet/lib/react-datasheet.css';
 import {
@@ -202,7 +212,14 @@ export function PlanSheet(props: IProps) {
     toggleSectionPublish,
   } = props;
   const ctx = useContext(PlanContext);
-  const { projButtonStr, connected, readonly } = ctx.state;
+  const {
+    hidePublishing,
+    canHidePublishing,
+    projButtonStr,
+    connected,
+    readonly,
+    togglePublishing,
+  } = ctx.state;
 
   const [memory] = useGlobal('memory');
   const [global] = useGlobal();
@@ -429,10 +446,7 @@ export function PlanSheet(props: IProps) {
     const colChanges = changes.map((c) => ({
       ...c,
       row: c.row - 1,
-      col:
-        !filterState.hidePublishing && filterState.canHidePublishing
-          ? c.col - 4
-          : c.col - 3,
+      col: !hidePublishing && canHidePublishing ? c.col - 4 : c.col - 3,
     }));
     updateData(colChanges);
   };
@@ -496,7 +510,8 @@ export function PlanSheet(props: IProps) {
     onPlayStatus,
     onPassageDetail,
     onAction,
-    filterState,
+    hidePublishing,
+    canHidePublishing,
     onAudacity: handleAudacity,
     onDelete: handleConfirmDelete,
     cellsChanged: updateData,
@@ -607,6 +622,10 @@ export function PlanSheet(props: IProps) {
     else if (!refErr && warning) setWarning(undefined);
   };
 
+  const handlePublishToggle: MouseEventHandler<HTMLButtonElement> = () => {
+    togglePublishing();
+  };
+
   const filtered = useMemo(() => {
     // console.log('filtered useMemo', filterState);
     return (
@@ -617,8 +636,7 @@ export function PlanSheet(props: IProps) {
         filterState.minSection > 1 ||
         (filterState.maxSection > -1 &&
           filterState.maxSection < maximumSection) ||
-        filterState.assignedToMe ||
-        filterState.hidePublishing)
+        filterState.assignedToMe)
     );
   }, [filterState, maximumSection]);
 
@@ -726,6 +744,18 @@ export function PlanSheet(props: IProps) {
             )}
 
             <GrowingSpacer />
+            <LightTooltip
+              sx={{ backgroundColor: 'transparent' }}
+              title={hidePublishing ? t.showPublishing : t.hidePublishing}
+            >
+              <IconButton onClick={handlePublishToggle}>
+                {hidePublishing ? (
+                  <PublishOnIcon sx={{ color: 'primary.light' }} />
+                ) : (
+                  <PublishOffIcon sx={{ color: 'primary.light' }} />
+                )}
+              </IconButton>
+            </LightTooltip>
             <FilterMenu
               canSetDefault={canSetDefault}
               state={filterState}

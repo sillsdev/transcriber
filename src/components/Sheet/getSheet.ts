@@ -115,8 +115,6 @@ export const isPassageFiltered = (
   return (
     !filterState.disabled &&
     ((filterState.hideDone && w.stepId === doneStepId) ||
-      (filterState.hidePublishing &&
-        isPublishingTitle(w.reference, w.kind === IwsKind.SectionPassage)) ||
       (filterState.assignedToMe && w.discussionCount === 0) ||
       (filterState.maxStep &&
         w.stepId &&

@@ -29,7 +29,6 @@ import { useGlobal } from 'reactn';
 import { useShowIcon } from './useShowIcon';
 import { ExtraIcon } from '.';
 import { stringAvatar } from '../../utils';
-import { ISTFilterState } from './filterMenu';
 import { TitleEdit } from './TitleEdit';
 
 type ICellEditor = (props: any) => JSX.Element;
@@ -53,7 +52,8 @@ interface IProps {
   rowInfo: ISheet[];
   inlinePassages: boolean;
   bookSuggestions?: OptionType[];
-  filterState: ISTFilterState;
+  hidePublishing: boolean;
+  canHidePublishing: boolean;
   onPassageDetail: (rowIndex: number) => void;
   onPlayStatus: (mediaId: string) => void;
   onHistory: (rowIndex: number) => () => void;
@@ -82,6 +82,8 @@ interface IProps {
  * @param {Array} props.rowInfo - An array of additional information for each row in the plan sheet.
  * @param {Array} props.inlinePassages - True if section and passage on the same line.
  * @param {Array} props.bookSuggestions - An array of book suggestions for the book select input.
+ * @param {Array} props.hidePublishing - True if publishing rows hidden.
+ * @param {Array} props.canHidePublishing - True if publishing rows can be hidden.
  * @param {Function} props.onPassageDetail - A callback function for handling passage detail.
  * @param {Function} props.onPlayStatus - A callback function for handling play status.
  * @param {Function} props.onHistory - A callback function for handling history.
@@ -107,7 +109,8 @@ export const usePlanSheetFill = ({
   rowInfo,
   inlinePassages,
   bookSuggestions,
-  filterState,
+  hidePublishing,
+  canHidePublishing,
   onPassageDetail,
   onPlayStatus,
   onHistory,
@@ -173,7 +176,7 @@ export const usePlanSheetFill = ({
 
   const MemoizedTaskAvatar = memo(TaskAvatar);
 
-  const titleRow = (columns: ICell[], filterState: ISTFilterState) => {
+  const titleRow = (columns: ICell[]) => {
     const titles = [
       {
         value: t.step,
@@ -189,7 +192,7 @@ export const usePlanSheetFill = ({
         width: userIsAdmin ? 50 : 20,
       } as ICell,
     ];
-    if (!filterState.hidePublishing && filterState.canHidePublishing)
+    if (!hidePublishing && canHidePublishing)
       titles.push({
         value: t.graphic,
         readOnly: true,
@@ -405,8 +408,8 @@ export const usePlanSheetFill = ({
       if (
         cellIndex === titleCol &&
         !passage &&
-        !filterState.hidePublishing &&
-        filterState.canHidePublishing
+        !hidePublishing &&
+        canHidePublishing
       ) {
         return {
           value: TitleValue(e, rowIndex, cellIndex),
@@ -505,10 +508,6 @@ export const usePlanSheetFill = ({
       dataEditor: ActivateCell,
     } as ICell);
 
-  interface EachRowProps extends IFillProps {
-    filterState: ISTFilterState;
-  }
-
   const eachRow =
     ({
       currentRow,
@@ -517,8 +516,7 @@ export const usePlanSheetFill = ({
       check,
       active,
       filtered,
-      filterState,
-    }: EachRowProps) =>
+    }: IFillProps) =>
     (row: IRow, rowIndex: number) => {
       const refCol = colSlugs.indexOf('reference');
       const section = isSection(rowIndex);
@@ -546,7 +544,7 @@ export const usePlanSheetFill = ({
           mediaPlaying,
         }),
       ];
-      if (!filterState.hidePublishing && filterState.canHidePublishing)
+      if (!hidePublishing && canHidePublishing)
         sheetRow.push(graphicCell(rowIndex, calcClassName));
       row
         .slice(0, 6) // quits when it runs out of columns
@@ -572,10 +570,8 @@ export const usePlanSheetFill = ({
     };
 
   return (props: IFillProps) => {
-    const data = titleRow(columns, filterState);
-    rowData
-      .map(eachRow({ ...props, filterState }))
-      .forEach((r) => data.push(r));
+    const data = titleRow(columns);
+    rowData.map(eachRow({ ...props })).forEach((r) => data.push(r));
     return data;
   };
 };
