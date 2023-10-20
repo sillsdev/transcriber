@@ -16,6 +16,9 @@ import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { usePlanType, useRole } from '../crud';
 import { useCheckOnline, useInterval } from '../utils';
+import { useProjectDefaults } from '../crud/useProjectDefaults';
+
+export const ProjectHidePublishing = 'hidePublishing';
 
 interface IStateProps {
   projButtonStr: IProjButtonsStrings;
@@ -48,6 +51,10 @@ const initState = {
   scripture: false,
   flat: false,
   shared: false,
+  canHidePublishing: true,
+  hidePublishing: true,
+  togglePublishing: () => {},
+  setCanPublish: (canPublish: boolean) => {},
 };
 
 export type ICtxState = typeof initState;
@@ -74,6 +81,7 @@ const PlanProvider = withData(mapRecordsToProps)(
     const [offlineOnly] = useGlobal('offlineOnly');
     const getPlanType = usePlanType();
     const { userIsAdmin } = useRole();
+    const { setProjectDefault } = useProjectDefaults();
     const [readonly, setReadOnly] = useState(
       (isOffline && !offlineOnly) || !userIsAdmin
     );
@@ -99,13 +107,34 @@ const PlanProvider = withData(mapRecordsToProps)(
         projRec = memory.cache.query((q: QueryBuilder) =>
           q.findRecord({ type: 'project', id: project })
         ) as Project;
-      if (projRec !== null && projRec.attributes.isPublic !== state.shared)
-        setState((state) => ({
-          ...state,
-          shared: projRec?.attributes.isPublic || false,
-        }));
+      if (projRec !== null) {
+        const shared = projRec?.attributes?.isPublic || false;
+        const projDefStr = projRec?.attributes?.defaultParams || '{}';
+        const projDef = JSON.parse(projDefStr);
+        const hidePublishing = projDef[ProjectHidePublishing] || true;
+        if (
+          shared !== state.shared ||
+          hidePublishing !== state[ProjectHidePublishing]
+        ) {
+          setState((state) => ({
+            ...state,
+            shared,
+            hidePublishing,
+          }));
+        }
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [project]);
+
+    const setCanPublish = (canHidePublishing: boolean) => {
+      setState((state) => ({ ...state, canHidePublishing }));
+    };
+
+    const togglePublishing = () => {
+      const { hidePublishing } = state;
+      setProjectDefault(ProjectHidePublishing, !hidePublishing);
+      setState((state) => ({ ...state, hidePublishing: !hidePublishing }));
+    };
 
     React.useEffect(() => {
       const newValue = (isOffline && !offlineOnly) || !userIsAdmin;
@@ -125,6 +154,8 @@ const PlanProvider = withData(mapRecordsToProps)(
             ...state,
             connected,
             readonly,
+            togglePublishing,
+            setCanPublish,
           },
           setState,
         }}

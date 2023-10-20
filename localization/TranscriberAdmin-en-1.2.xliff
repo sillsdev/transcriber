@@ -5016,6 +5016,13 @@
       			<context context-type="sourcefile">PlanSheet.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="planSheet.hidePublishing">
+      		<source>Hide publishing information</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="planSheet.moveUp">
       		<source>Move {pt} {0} up</source>
       		<target/>
@@ -5115,6 +5122,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="planSheet.showPublishing">
+      		<source>Show publishing information</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="planSheet.movementAbove">
             <source>Add movement above {0} {1}</source>
             <target/>

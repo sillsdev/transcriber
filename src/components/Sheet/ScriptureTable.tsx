@@ -183,7 +183,14 @@ export function ScriptureTable(
   const updateRef = useRef(false);
   const { showMessage } = useSnackBar();
   const ctx = React.useContext(PlanContext);
-  const { flat, scripture, shared } = ctx.state;
+  const {
+    flat,
+    scripture,
+    shared,
+    hidePublishing,
+    canHidePublishing,
+    setCanPublish,
+  } = ctx.state;
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState<string>(getOrganizedBy(true));
   const [saveColAdd, setSaveColAdd] = useState<number[]>();
@@ -259,8 +266,6 @@ export function ScriptureTable(
     assignedToMe: false,
     disabled: false,
     canHideDone: true,
-    canHidePublishing: true,
-    hidePublishing: true,
   });
   const resStr: IResourceStrings = useSelector(
     sharedResourceSelector,
@@ -312,14 +317,10 @@ export function ScriptureTable(
   const setSheet = (ws: ISheet[]) => {
     workflowRef.current = ws;
     setSheetx(ws);
-    var anyPublishing = Boolean(
-      ws.find((w) => isPublishingTitle(w.reference ?? '', flat))
-    );
-    if (defaultFilterState.canHidePublishing !== anyPublishing)
-      setDefaultFilterState((fs) => ({
-        ...fs,
-        canHidePublishing: anyPublishing,
-      }));
+    var anyPublishing = !shared
+      ? Boolean(ws.find((w) => isPublishingTitle(w.reference ?? '', flat)))
+      : false;
+    if (canHidePublishing !== anyPublishing) setCanPublish(anyPublishing);
   };
   const passNumCol = React.useMemo(() => {
     return colNames.indexOf('passageSeq');
@@ -1036,8 +1037,6 @@ export function ScriptureTable(
         filter.maxStep,
         memory.keyMap
       );
-    filter.canHidePublishing = fs.canHidePublishing;
-    filter.hidePublishing = filter.canHidePublishing && filter.hidePublishing;
     return filter;
   };
   useEffect(() => {
@@ -1201,6 +1200,7 @@ export function ScriptureTable(
     shared,
     orgSteps,
     lastSaved,
+    hidePublishing,
   ]);
 
   interface ILocal {
@@ -1249,11 +1249,7 @@ export function ScriptureTable(
       var filtered = false;
       if (isSectionRow(w)) {
         filtered = isSectionFiltered(filterState, w.sectionSeq);
-        if (
-          !filtered &&
-          filterState.hidePublishing &&
-          w.kind === IwsKind.Section
-        ) {
+        if (!filtered && hidePublishing && w.kind === IwsKind.Section) {
           var allMyPassagesArePublishing = true;
           for (
             var ix = index + 1;
@@ -1283,7 +1279,7 @@ export function ScriptureTable(
       setSheet(newWork);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orgSteps, filterState, doneStepId]);
+  }, [orgSteps, filterState, doneStepId, hidePublishing]);
 
   const firstBook = () => {
     const firstbook = sheet.findIndex((b) => b.book !== undefined);

@@ -865,6 +865,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "confirm": string;
     "filtered": string;
     "graphic": string;
+    "hidePublishing": string;
     "moveUp": string;
     "moveDown": string;
     "nonNumber": string;
@@ -879,6 +880,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "resequence": string;
     "save": string;
     "saving": string;
+    "showPublishing": string;
     "movementAbove": string;
     "sectionAbove": string;
     "sectionEnd": string;
