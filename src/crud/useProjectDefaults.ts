@@ -21,7 +21,7 @@ export const useProjectDefaults = () => {
   const setProjectDefault = (label: string, value: any) => {
     const proj = findRecord(memory, 'project', project) as Project;
     const json = JSON.parse(proj.attributes.defaultParams ?? '{}');
-    if (value) json[label] = JSON.stringify(value);
+    if (value !== undefined) json[label] = JSON.stringify(value);
     else delete json[label];
     proj.attributes.defaultParams = JSON.stringify(json);
     memory.update((t: TransformBuilder) => UpdateRecord(t, proj, user));

@@ -1,7 +1,9 @@
 import { MediaFile, Passage, Section, BookName } from '../../model';
 import { related } from '../../crud';
 import { refMatch } from '../../utils';
-import { IPRow, getSection, GetReference, isAttached, pad } from '.';
+import { IPRow, isAttached, pad } from '.';
+import { GetReference } from './GetReference';
+import { getSection } from './getSection';
 
 enum StatusL {
   No = 'N',

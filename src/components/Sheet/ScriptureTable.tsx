@@ -1180,6 +1180,7 @@ export function ScriptureTable(
         orgSteps,
         wfStr,
         filterState,
+        hidePublishing,
         doneStepId,
         getDiscussionCount
       );
@@ -1268,7 +1269,14 @@ export function ScriptureTable(
 
       if (isPassageRow(w))
         filtered =
-          filtered || isPassageFiltered(w, filterState, orgSteps, doneStepId);
+          filtered ||
+          isPassageFiltered(
+            w,
+            filterState,
+            hidePublishing,
+            orgSteps,
+            doneStepId
+          );
       if (filtered !== w.filtered) changed = true;
       newWork.push({
         ...w,

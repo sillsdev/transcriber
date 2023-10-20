@@ -1,6 +1,8 @@
 import { MediaFile, Passage, Section, BookName } from '../../model';
 import { mediaFileName, related } from '../../crud';
-import { IRow, getSection, GetReference } from '.';
+import { IRow } from '.';
+import { GetReference } from './GetReference';
+import { getSection } from './getSection';
 
 export interface IGetMedia {
   planName: string;

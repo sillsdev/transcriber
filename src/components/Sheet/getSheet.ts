@@ -107,11 +107,13 @@ export const isSectionFiltered = (
 export const isPassageFiltered = (
   w: ISheet,
   filterState: ISTFilterState,
+  hidePublishing: boolean,
   orgWorkflowSteps: OrgWorkflowStep[],
   doneStepId: string
 ) => {
   const stepIndex = (stepId: string) =>
     orgWorkflowSteps.findIndex((s) => s.id === stepId);
+  if (hidePublishing && isPublishingTitle(w.reference)) return true;
   return (
     !filterState.disabled &&
     ((filterState.hideDone && w.stepId === doneStepId) ||
@@ -137,6 +139,7 @@ export const getSheet = (
   orgWorkflowSteps: OrgWorkflowStep[],
   wfStr: IWorkflowStepsStrings,
   filterState: ISTFilterState,
+  hidePublishing: boolean,
   doneStepId: string,
   getDiscussionCount: (passageId: string, stepId: string) => number,
   current?: ISheet[]
@@ -247,7 +250,13 @@ export const getSheet = (
         item.deleted = false;
         item.filtered =
           item.filtered ||
-          isPassageFiltered(item, filterState, orgWorkflowSteps, doneStepId);
+          isPassageFiltered(
+            item,
+            filterState,
+            hidePublishing,
+            orgWorkflowSteps,
+            doneStepId
+          );
         if (
           [PassageTypeEnum.NOTE, PassageTypeEnum.CHAPTERNUMBER].includes(
             item.passageType
