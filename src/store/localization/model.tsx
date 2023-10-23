@@ -568,7 +568,6 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "project": string;
     "orgRole": string;
     "reliesOn": string;
-    "reloadStatic": string;
     "reportIssue": string;
     "reports": string;
     "reportWhenOnline": string;
