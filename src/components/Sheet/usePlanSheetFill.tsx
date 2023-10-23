@@ -398,6 +398,7 @@ export const usePlanSheetFill = ({
     (e: string | number, cellIndex: number) => {
       const bookCol = colSlugs.indexOf('book');
       const titleCol = colSlugs.indexOf('title');
+      const descCol = colSlugs.indexOf('comment');
       if (cellIndex === bookCol && passage)
         return {
           value: e,
@@ -417,6 +418,30 @@ export const usePlanSheetFill = ({
           className: calcClassName,
         };
       }
+      if (
+        /CHNUM/.test(rowData[rowIndex][refCol] as string) &&
+        !hidePublishing &&
+        canHidePublishing
+      ) {
+        if (cellIndex === titleCol) {
+          return {
+            value: TitleValue(
+              rowData[rowIndex][descCol] as string,
+              rowIndex,
+              descCol
+            ),
+            readOnly: true,
+            className: calcClassName,
+          };
+        } else if (cellIndex === descCol) {
+          return {
+            value: '',
+            readOnly: readonly,
+            className: calcClassName,
+          };
+        }
+      }
+
       if (cellIndex === refCol)
         return {
           value: refValue(e),
