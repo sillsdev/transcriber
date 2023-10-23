@@ -83,7 +83,7 @@ import AssignSection from '../AssignSection';
 import StickyRedirect from '../StickyRedirect';
 import Uploader from '../Uploader';
 import { useMediaAttach } from '../../crud/useMediaAttach';
-import { UpdateRecord } from '../../model/baseModel';
+import { UpdateRecord, UpdateRelatedRecord } from '../../model/baseModel';
 import { PlanContext } from '../../context/PlanContext';
 import stringReplace from 'react-string-replace';
 import BigDialog from '../../hoc/BigDialog';
@@ -777,17 +777,56 @@ export function ScriptureTable(
     }
   };
 
-  const updateTitleMedia = (index: number, mediaId: string) => {
+  const updateTitleMedia = async (index: number, mediaId: string) => {
     const { ws, i } = getByIndex(sheet, index);
     if (ws) {
-      const sectionUpdated = currentDateTime();
-      sheet[i] = {
-        ...ws,
-        titleMediaId: mediaId ? { type: 'mediafile', id: mediaId } : undefined,
-        sectionUpdated,
-      } as ISheet;
-      setSheet([...sheet]);
-      setChanged(true);
+      if (isSectionRow(ws)) {
+        const sectionUpdated = currentDateTime();
+        sheet[i] = {
+          ...ws,
+          titleMediaId: mediaId
+            ? { type: 'mediafile', id: mediaId }
+            : undefined,
+          sectionUpdated,
+        } as ISheet;
+        setSheet([...sheet]);
+        setChanged(true);
+      }
+      // Used for recording chapter numbers (CHNUM)
+      if (isPassageRow(ws)) {
+        const passageUpdated = currentDateTime();
+        sheet[i] = {
+          ...ws,
+          mediaId: mediaId ? { type: 'mediafile', id: mediaId } : undefined,
+          passageUpdated,
+        } as ISheet;
+        setSheet([...sheet]);
+        setChanged(true);
+        if (ws?.passage?.id) {
+          const mediaRec = findRecord(memory, 'mediafile', mediaId) as
+            | MediaFile
+            | undefined;
+          if (mediaRec)
+            await memory.update((t) => [
+              ...UpdateRelatedRecord(
+                t,
+                mediaRec,
+                'passage',
+                'passage',
+                ws?.passage?.id as string,
+                user
+              ),
+              ...UpdateRelatedRecord(
+                t,
+                mediaRec,
+                'artifactType',
+                'artifacttype',
+                VernacularTag as any,
+                user
+              ),
+            ]);
+        }
+      }
     }
   };
 
