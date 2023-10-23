@@ -807,16 +807,24 @@ export function ScriptureTable(
             | MediaFile
             | undefined;
           if (mediaRec)
-            await memory.update((t) =>
-              UpdateRelatedRecord(
+            await memory.update((t) => [
+              ...UpdateRelatedRecord(
                 t,
                 mediaRec,
                 'passage',
                 'passage',
                 ws?.passage?.id as string,
                 user
-              )
-            );
+              ),
+              ...UpdateRelatedRecord(
+                t,
+                mediaRec,
+                'artifactType',
+                'artifacttype',
+                VernacularTag as any,
+                user
+              ),
+            ]);
         }
       }
     }
