@@ -33,7 +33,7 @@ interface IProps {
   userRec: User;
 }
 export const burritoMetadata = ({ projRec, userRec }: IProps) => {
-  const created = moment().locale('en').format('YYYY-MM-DDThh:mm:ss.SSSSSSZ');
+  const created = moment().locale('en').format('YYYY-MM-DDTHH:mm:ss.SSSSSSZ');
   let meta = {
     meta: {
       version: '0.3.1',

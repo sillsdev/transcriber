@@ -207,7 +207,7 @@ export const getMediaEaf = (
   updateXml(
     '@DATE',
     xmlDoc,
-    moment().locale('en').format('YYYY-MM-DDTHH:MM:SSZ')
+    moment().locale('en').format('YYYY-MM-DDTHH:mm:ssZ')
   );
   // updateXml("*[local-name()='ANNOTATION_VALUE']", xmlDoc, encTranscript);
   updateXml('@DEFAULT_LOCALE', xmlDoc, lang ? lang : 'en');

@@ -91,7 +91,7 @@ export const useElectronImport = () => {
     for (let entry of zipEntries) {
       if (entry.entryName === 'SILTranscriber') {
         exportDate = await getData(zip, 'SILTranscriber');
-        exportTime = moment.utc(exportDate, 'YYYY-MM-DDTHH:MM:SS.SSSSSSSZ');
+        exportTime = moment.utc(exportDate, 'YYYY-MM-DDTHH:mm:ss.SSSSSSSZ');
         valid = true;
         if (isOfflinePtf.current) break;
       } else if (entry.entryName === 'Offline') {
