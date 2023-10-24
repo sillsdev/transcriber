@@ -186,6 +186,13 @@ export function PassageDetailPlayer(props: IProps) {
           forceRefresh();
         });
     }
+    if (
+      (!segmentsRef.current || segmentsRef.current === '{}') &&
+      duration &&
+      setCurrentSegment
+    ) {
+      setCurrentSegment({ start: 0, end: duration }, -1);
+    }
   };
 
   const setPlayerSegments = (segments: string) => {
