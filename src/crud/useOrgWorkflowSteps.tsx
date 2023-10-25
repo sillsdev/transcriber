@@ -9,7 +9,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { workflowStepsSelector } from '../selector';
 import { useSnackBar } from '../hoc/SnackBar';
 
-export const defaultWorkflow = 'transcriber';
+export const defaultWorkflow = 'draft';
 
 interface ISwitches {
   [key: string]: any;
@@ -152,6 +152,7 @@ export const useOrgWorkflowSteps = () => {
     //     org
     //   );
     // }
+    console.warn('orgsteps', orgsteps);
     return orgsteps.filter((s) => showAll || s.attributes.sequencenum >= 0);
   };
 

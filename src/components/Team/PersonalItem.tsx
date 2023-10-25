@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { Grid } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
@@ -6,7 +6,7 @@ import { TeamContext } from '../../context/TeamContext';
 import BigDialog from '../../hoc/BigDialog';
 import { ProjectCard, AddCard } from '.';
 import { StepEditor } from '../StepEditor';
-import { useNewTeamId, defaultWorkflow } from '../../crud';
+import { defaultWorkflow } from '../../crud';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { TeamPaper, TeamHeadDiv, TeamName, AltButton } from '../../control';
 import { QueryBuilder } from '@orbit/data';
@@ -18,17 +18,14 @@ interface Records {
 }
 
 export const PersonalItem = (props: Records) => {
-  const { organizations } = props;
   const ctx = React.useContext(TeamContext);
-  const { personalProjects, cardStrings } = ctx.state;
+  const { personalTeam, personalProjects, cardStrings } = ctx.state;
   const t = cardStrings;
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [changed] = useGlobal('changed');
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [showWorkflow, setShowWorkflow] = useState(false);
-  const [org, setOrg] = useState('');
-  const getTeamId = useNewTeamId();
 
   const handleWorkflow = (isOpen: boolean) => {
     if (changed) {
@@ -42,13 +39,6 @@ export const PersonalItem = (props: Records) => {
   };
   const canModify = (offline: boolean, offlineOnly: boolean) =>
     !offline || offlineOnly;
-
-  useEffect(() => {
-    getTeamId(undefined).then((val: string) => {
-      setOrg(val);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [organizations]);
 
   return (
     <TeamPaper id="PersonalItem">
@@ -75,7 +65,7 @@ export const PersonalItem = (props: Records) => {
         isOpen={showWorkflow}
         onOpen={handleWorkflow}
       >
-        <StepEditor process={defaultWorkflow} org={org} />
+        <StepEditor process={defaultWorkflow} org={personalTeam} />
       </BigDialog>
     </TeamPaper>
   );

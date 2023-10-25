@@ -30,7 +30,6 @@ import {
   usePlan,
   useTypeId,
   useOrgDefaults,
-  useNewTeamId,
 } from '../../crud';
 import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
@@ -81,6 +80,7 @@ export const AddCard = (props: IProps) => {
     vProjectStrings,
     bookSuggestions,
     teamProjects,
+    personalTeam,
     personalProjects,
     loadProject,
   } = ctx.state;
@@ -118,8 +118,6 @@ export const AddCard = (props: IProps) => {
   const [view, setView] = useState('');
   const [recordAudio, setRecordAudio] = useState(false);
   const speakerRef = useRef<string>();
-  const getTeamId = useNewTeamId();
-  const [org, setOrg] = useState(team?.id ?? '');
   const { getPlan } = usePlan();
   const getTypeId = useTypeId();
 
@@ -176,26 +174,17 @@ export const AddCard = (props: IProps) => {
     handleSolutionHide();
   };
 
-  const getOrgBeforeUpload = () => {
-    if (team === null) {
-      getTeamId(undefined).then((val: string) => {
-        setOrg(val);
-        setUploadVisible(true);
-      });
-    } else setUploadVisible(true);
-  };
-
   const handleUpload = () => {
     setType('other');
     setRecordAudio(false);
-    getOrgBeforeUpload();
+    setUploadVisible(true);
     setInProgress(true);
   };
 
   const handleRecord = () => {
     setType('other');
     setRecordAudio(true);
-    getOrgBeforeUpload();
+    setUploadVisible(true);
     setInProgress(true);
   };
 
@@ -438,7 +427,7 @@ export const AddCard = (props: IProps) => {
         cancelled={cancelled}
         defaultFilename={book?.value}
         allowWave={true}
-        team={org}
+        team={personalTeam}
         performedBy={speakerRef.current}
         onSpeakerChange={handleNameChange}
       />
