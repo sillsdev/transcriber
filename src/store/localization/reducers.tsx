@@ -659,6 +659,7 @@ const initialState = {
 			"fileAttached": "File already attached",
 			"fileName": "File Name",
 			"filter": "Filter",
+			"latestVersion": "Latest Version",
 			"loadingTable": "Loading data",
 			"matchAdded": "Match complete: {0} new associations",
 			"mediaAssociations": "Audio Associations",

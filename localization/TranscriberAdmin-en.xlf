@@ -3094,6 +3094,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.latestVersion">
+         <segment>
+            <source>Latest Version</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.loadingTable">
          <segment>
             <source>Loading data</source>
