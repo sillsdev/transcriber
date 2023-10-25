@@ -1,4 +1,5 @@
-import { useGlobal, useRef } from 'reactn';
+import {useMemo, useRef} from 'react';
+import { useGlobal } from 'reactn';
 import {
   Organization,
   OrganizationMembership,
@@ -11,7 +12,6 @@ import { useCheckOnline, cleanFileName } from '../utils';
 import { offlineError, useOrgWorkflowSteps, useProjectType, useRole } from '.';
 import { useSnackBar } from '../hoc/SnackBar';
 import Memory from '@orbit/memory';
-import Coordinator from '@orbit/coordinator';
 import { TransformBuilder } from '@orbit/data';
 import { setDefaultProj, allUsersRec } from '.';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
@@ -34,12 +34,12 @@ export const useTeamCreate = () => {
   const checkOnline = useCheckOnline();
   const workingOnItRef = useRef(false);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+
+  const memory = useMemo(() => coordinator.getSource('memory') as Memory, [coordinator]);
+
   const OrgRelated = async (
-    coordinator: Coordinator,
     orgRec: Organization,
-    user: string
   ) => {
-    const memory = coordinator.getSource('memory') as Memory;
 
     let orgMember: OrganizationMembership = {
       type: 'organizationmembership',
@@ -96,13 +96,12 @@ export const useTeamCreate = () => {
   const createOrg = async (props: ICreateOrgProps) => {
     const { orgRec, process } = props;
 
-    const memory = coordinator.getSource('memory') as Memory;
     await memory.update((t: TransformBuilder) => [
       ...AddRecord(t, orgRec, user, memory),
       ...ReplaceRelatedRecord(t, orgRec, 'owner', 'user', user),
-    ]);
+    ])
     if (!offlineOnly) await teamApiPull(orgRec.id); // Update slug value
-    await OrgRelated(coordinator, orgRec, user);
+    await OrgRelated(orgRec);
     await CreateOrgWorkflowSteps(process, orgRec.id);
     setOrganization(orgRec.id);
     setOrgRole(RoleNames.Admin);

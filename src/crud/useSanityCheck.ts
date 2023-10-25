@@ -1,4 +1,5 @@
-import { useContext, useGlobal } from 'reactn';
+import { useContext } from 'react';
+import { useGlobal } from 'reactn';
 import { findRecord, related, staticFiles, updateableFiles } from '.';
 import Memory from '@orbit/memory';
 import moment from 'moment';

@@ -392,12 +392,10 @@ export function Access(
     offlineOnly ||
     (isElectron && selectedUser !== '')
   ) {
-    navigate('/loading');
-  }
-  if (/Logout/i.test(view)) {
+    setTimeout(() => navigate('/loading'), 500);
+  } else if (/Logout/i.test(view)) {
     navigate('/logout');
-  }
-  if (whichUsers === '') navigate('/');
+  } else if (whichUsers === '') setTimeout(() => navigate('/'), 500);
 
   const handleCurUser = () => {
     handleSelect(curUser?.id || '');

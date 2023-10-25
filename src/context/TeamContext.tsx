@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
-import { useGlobal, useEffect } from 'reactn';
+import { useGlobal } from 'reactn';
 import { shallowEqual, useSelector } from 'react-redux';
 import * as actions from '../store';
 import {
@@ -88,6 +88,7 @@ const initState = {
   planTypes: Array<PlanType>(),
   isDeleting: false,
   teams: Array<Organization>(),
+  personalTeam: '',
   personalProjects: Array<VProject>(),
   teamProjects: (teamId: string) => Array<VProject>(),
   teamMembers: (teamId: string) => 0,
@@ -345,6 +346,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     };
 
     const projectCreate = async (project: VProject, team: TeamIdType) => {
+      console.log('TeamContext projectCreate calling getTeamId:team', team);
       const teamId = await getTeamId(team?.id);
       return await vProjectCreate(project, teamId);
     };
@@ -424,6 +426,12 @@ const TeamProvider = withData(mapRecordsToProps)(
     }, [projects, groupMemberships, user, isOffline]);
 
     useEffect(() => {
+      if (!state.personalTeam) {
+        getTeamId(undefined).then((personalTeam: string) => {
+          console.log(`TeamContext useEffect personalTeam: ${personalTeam}`);
+          if (personalTeam) setState((state) => ({ ...state, personalTeam }));
+        });
+      }
       setState((state) => ({
         ...state,
         teams: getTeams(),

@@ -1,5 +1,6 @@
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
-import { useGlobal, useRef } from 'reactn';
+import { useRef } from 'react';
+import { useGlobal } from 'reactn';
 import { related, remoteId } from '.';
 import { IWorkflowStepsStrings, OrgWorkflowStep, WorkflowStep } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
@@ -9,7 +10,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { workflowStepsSelector } from '../selector';
 import { useSnackBar } from '../hoc/SnackBar';
 
-export const defaultWorkflow = 'transcriber';
+export const defaultWorkflow = 'draft';
 
 interface ISwitches {
   [key: string]: any;
@@ -152,6 +153,7 @@ export const useOrgWorkflowSteps = () => {
     //     org
     //   );
     // }
+    console.warn('orgsteps', orgsteps);
     return orgsteps.filter((s) => showAll || s.attributes.sequencenum >= 0);
   };
 

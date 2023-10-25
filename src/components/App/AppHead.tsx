@@ -177,7 +177,7 @@ export const AppHead = (props: IProps) => {
     const remote = coordinator.getSource('remote');
     if (isElectron && /Logout/i.test(what)) {
       localStorage.removeItem('user-id');
-      checkSavedFn(async () => {
+      checkSavedFn(() => {
         waitForIt(
           'logout on electron...',
           () => !remote || !connected || remote.requestQueue.length === 0,
@@ -238,17 +238,18 @@ export const AppHead = (props: IProps) => {
     // remote?.getCurrentWindow().close();
   };
 
+  const handleUnload = (e: any) => {
+    if (pathname === '/') return true;
+    if (pathname.startsWith('/access')) return true;
+    if (!exitAlert && isElectron && isMounted()) setExitAlert(true);
+    if (!globalStore.enableOffsite) {
+      e.preventDefault();
+      e.returnValue = '';
+      return true;
+    }
+  };
+
   useEffect(() => {
-    const handleUnload = (e: any) => {
-      if (pathname === '/') return true;
-      if (pathname.startsWith('/access')) return true;
-      if (!exitAlert && isElectron && isMounted()) setExitAlert(true);
-      if (!globalStore.enableOffsite) {
-        e.preventDefault();
-        e.returnValue = '';
-        return true;
-      }
-    };
     window.addEventListener('beforeunload', handleUnload);
     if (!user) {
       //are we here from a deeplink?
@@ -356,8 +357,8 @@ export const AppHead = (props: IProps) => {
   if (view === 'Profile') {
     navigate('/profile');
   }
-  if (view === 'Logout') navigate('/logout');
-  if (view === 'Access') navigate('/');
+  if (view === 'Logout') setTimeout(() => navigate('/logout'), 500);
+  if (view === 'Access') setTimeout(() => navigate('/'), 500);
   if (view === 'Terms') navigate('/terms');
   if (view === 'Privacy') navigate('/privacy');
   return (
