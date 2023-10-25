@@ -1,4 +1,4 @@
-import {useMemo, useRef} from 'react';
+import { useMemo, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import {
   Organization,
@@ -35,12 +35,12 @@ export const useTeamCreate = () => {
   const workingOnItRef = useRef(false);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
-  const memory = useMemo(() => coordinator.getSource('memory') as Memory, [coordinator]);
+  const memory = useMemo(
+    () => coordinator.getSource('memory') as Memory,
+    [coordinator]
+  );
 
-  const OrgRelated = async (
-    orgRec: Organization,
-  ) => {
-
+  const OrgRelated = async (orgRec: Organization) => {
     let orgMember: OrganizationMembership = {
       type: 'organizationmembership',
       attributes: {},
@@ -91,23 +91,28 @@ export const useTeamCreate = () => {
   interface ICreateOrgProps {
     orgRec: Organization;
     process: string;
+    cb: (oId: string) => void;
   }
 
   const createOrg = async (props: ICreateOrgProps) => {
-    const { orgRec, process } = props;
+    const { orgRec, process, cb } = props;
 
     await memory.update((t: TransformBuilder) => [
       ...AddRecord(t, orgRec, user, memory),
       ...ReplaceRelatedRecord(t, orgRec, 'owner', 'user', user),
-    ])
+    ]);
     if (!offlineOnly) await teamApiPull(orgRec.id); // Update slug value
-    await OrgRelated(orgRec);
-    await CreateOrgWorkflowSteps(process, orgRec.id);
-    setOrganization(orgRec.id);
-    setOrgRole(RoleNames.Admin);
-    setDefaultProj(orgRec.id, memory, setProject, setProjectType);
-
-    return orgRec.id;
+    OrgRelated(orgRec).then(() => {
+      CreateOrgWorkflowSteps(process, orgRec.id).then(() => {
+        setOrganization(orgRec.id);
+        setOrgRole(RoleNames.Admin);
+        setDefaultProj(orgRec.id, memory, (id: string) => {
+          setProject(id);
+          setProjectType(id);
+        });
+        cb(orgRec.id);
+      });
+    });
   };
 
   return (
@@ -131,12 +136,15 @@ export const useTeamCreate = () => {
       },
     } as Organization;
 
+    const handleCreated = (oId: string) => {
+      cb && cb(oId);
+    };
+
     if (!workingOnItRef.current) {
       workingOnItRef.current = true;
-      createOrg({ orgRec, process })
-        .then((org: string) => {
+      createOrg({ orgRec, process, cb: handleCreated })
+        .then(() => {
           workingOnItRef.current = false;
-          if (cb) cb(org);
         })
         .catch((err) => {
           checkOnline((online) => {

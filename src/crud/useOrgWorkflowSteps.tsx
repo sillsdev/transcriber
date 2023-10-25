@@ -82,9 +82,9 @@ export const useOrgWorkflowSteps = () => {
       200
     );
 
-    var orgworkflowsteps = memory.cache.query((q: QueryBuilder) =>
+    let orgworkflowsteps = (await memory.query((q: QueryBuilder) =>
       q.findRecords('orgworkflowstep')
-    ) as OrgWorkflowStep[];
+    )) as OrgWorkflowStep[];
     if (orgworkflowsteps.length === 0 && remote) {
       //check remote
       orgworkflowsteps = (await remote.query((q: QueryBuilder) =>
@@ -110,7 +110,7 @@ export const useOrgWorkflowSteps = () => {
           .filter({ attribute: 'process', value: process })
       )) as WorkflowStep[]
     )
-      .filter((s) => Boolean(s.keys?.remoteId) !== offlineOnly)
+      .filter((s) => Boolean(s?.keys?.remoteId) !== offlineOnly)
       .sort((a, b) => a.attributes.sequencenum - b.attributes.sequencenum);
     var tb = new TransformBuilder();
     //originally had them all in one ops, but it was too fast
