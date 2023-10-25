@@ -1,5 +1,6 @@
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
-import { useGlobal, useRef } from 'reactn';
+import { useRef } from 'react';
+import { useGlobal } from 'reactn';
 import { related, remoteId } from '.';
 import { IWorkflowStepsStrings, OrgWorkflowStep, WorkflowStep } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';

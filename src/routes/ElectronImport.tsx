@@ -16,7 +16,8 @@ import {
   useProjectsLoaded,
 } from '../utils';
 import { isElectron } from '../api-variable';
-import { useContext, useGlobal, useRef } from 'reactn';
+import { useContext, useRef } from 'react';
+import { useGlobal } from 'reactn';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';

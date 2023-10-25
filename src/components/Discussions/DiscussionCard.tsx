@@ -1,5 +1,5 @@
-import { useContext, useMemo, useRef, useState } from 'react';
-import { useEffect, useGlobal } from 'reactn';
+import { useEffect, useContext, useMemo, useRef, useState } from 'react';
+import { useGlobal } from 'reactn';
 import {
   Box,
   BoxProps,

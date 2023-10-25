@@ -1,4 +1,5 @@
-import { useGlobal, useState } from 'reactn';
+import { useState } from 'react';
+import { useGlobal } from 'reactn';
 import { IState, IArtifactCategoryStrings, ArtifactCategory } from '../model';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';

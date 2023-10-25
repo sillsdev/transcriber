@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useGlobal, useEffect } from 'reactn';
+import React, { useState, useEffect } from 'react';
+import { useGlobal } from 'reactn';
 import { IProjButtonsStrings } from '../model';
 import { Divider, Menu, MenuItem } from '@mui/material';
 import DropDownIcon from '@mui/icons-material/ArrowDropDown';
