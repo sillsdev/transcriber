@@ -116,7 +116,8 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           memory.cache.query((q) => q.findRecords('discussion')) as BaseModel[]
         ).filter(
           (d) =>
-            mediafiles.find((id) => id === related(d, 'medifile')) !== undefined
+            mediafiles.find((id) => id === related(d, 'mediafile')) !==
+            undefined
         );
       };
       const groupRows = () =>
