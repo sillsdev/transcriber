@@ -238,7 +238,7 @@
 		<unit id="artifactCategory.retelling">
 			<segment>
 				<source>Community Test Retell</source>
-				<target>artefactCategory.retelling Test communautaire Retell</target>
+				<target>Test de la communauté Répétition</target>
 			</segment>
 		</unit>
 		<unit id="artifactType.backtranslation">
