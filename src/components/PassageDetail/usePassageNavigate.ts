@@ -17,13 +17,17 @@ export const usePassageNavigate = (cb: () => void) => {
           checkSavedFn(() => {
             if (!view.endsWith('null'))
               localStorage.setItem(localUserKey(LocalKey.url), view);
-            navigate(view);
+            setTimeout(() => {
+              navigate(view);
+              setTimeout(() => {
+                // Jump to first uncompleted step
+                setCurrentStep('');
+              }, 500); // go to first step
+            }, 500); // go to next passage
             cb();
-            // Jump to first uncompleted step
-            setCurrentStep('');
           });
         }
       }
-    }, 1000);
+    }, 1000); // Make sure this step is complete
   };
 };
