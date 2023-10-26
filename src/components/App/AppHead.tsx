@@ -354,11 +354,9 @@ export const AppHead = (props: IProps) => {
   const handleTermsClose = () => setShowTerms('');
 
   if (view === 'Error') navigate('/error');
-  if (view === 'Profile') {
-    navigate('/profile');
-  }
+  if (view === 'Profile') setTimeout(() => navigate('/profile'), 200);
   if (view === 'Logout') setTimeout(() => navigate('/logout'), 500);
-  if (view === 'Access') setTimeout(() => navigate('/'), 500);
+  if (view === 'Access') setTimeout(() => navigate('/'), 200);
   if (view === 'Terms') navigate('/terms');
   if (view === 'Privacy') navigate('/privacy');
   return (
