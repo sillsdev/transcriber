@@ -103,7 +103,7 @@ export const useVProjectCreate = () => {
       ) as Plan[];
       let tmp = '';
       let findit = (fnd: string) =>
-        plans.findIndex((p) => p.attributes.slug === fnd);
+        plans.findIndex((p) => p.attributes?.slug === fnd);
       while (findit(slug + tmp) > 0) {
         tmp = ((parseInt(tmp) ?? 0) + 1).toString();
       }
