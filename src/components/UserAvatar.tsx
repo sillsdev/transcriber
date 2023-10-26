@@ -34,7 +34,7 @@ export function UserAvatar(props: IProps) {
         attributes: { avatarUrl: null, name: '', familyName: '' },
       };
 
-  const source = useAvatarSource(curUser.attributes.familyName || '', curUser);
+  const source = useAvatarSource(curUser.attributes?.familyName || '', curUser);
 
   return source ? (
     <Avatar
