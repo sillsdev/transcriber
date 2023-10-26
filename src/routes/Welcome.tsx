@@ -306,7 +306,7 @@ export function Welcome(props: IProps) {
   };
 
   if (!isElectron || whichUsers !== null) {
-    setTimeout(() => navigate('/access/' + whichUsers), 500);
+    setTimeout(() => navigate('/access/' + whichUsers), 200);
   }
 
   return (
