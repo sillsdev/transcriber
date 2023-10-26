@@ -7,8 +7,7 @@ import { remoteIdGuid } from '.';
 export const setDefaultProj = async (
   orgId: string,
   memory: Memory,
-  setProject: (value: string) => void,
-  setProjectType: (projectId: string) => string
+  cb: (pId: string) => void
 ) => {
   let projs: Project[] | null = memory.cache.query((q: QueryBuilder) =>
     q.findRecords('project')
@@ -26,7 +25,6 @@ export const setDefaultProj = async (
         memory.keyMap
       ) || '';
     var p = projs.find((p) => p.id === projKey) || projs[0];
-    setProject(p.id);
-    setProjectType(p.id);
+    cb(p.id);
   }
 };

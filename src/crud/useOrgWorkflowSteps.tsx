@@ -1,7 +1,7 @@
 import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { useRef } from 'react';
 import { useGlobal } from 'reactn';
-import { related, remoteId } from '.';
+import { related } from '.';
 import { IWorkflowStepsStrings, OrgWorkflowStep, WorkflowStep } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { logError, Severity, toCamel, waitForIt } from '../utils';
@@ -52,8 +52,12 @@ export const useOrgWorkflowSteps = () => {
     org?: string
   ) => {
     let myOrgId = org ?? global.organization;
-    let myOrgRemoteId = remoteId('organization', myOrgId, memory.keyMap);
-    if (!offline && !myOrgRemoteId) return; // offline users won't have an org remoteId
+    // NB: The remoteId was not updated even though this always gets created online
+    // let myOrgRemoteId = remoteId('organization', myOrgId, memory.keyMap);
+    // if (!offline && !myOrgRemoteId) {
+    //   console.error(`no org remoteId for ${myOrgId}`);
+    //   return; // offline users won't have an org remoteId
+    // }
     var ops: Operation[] = [];
     const wfs = {
       type: 'orgworkflowstep',
@@ -82,7 +86,7 @@ export const useOrgWorkflowSteps = () => {
       200
     );
 
-    var orgworkflowsteps = memory.cache.query((q: QueryBuilder) =>
+    let orgworkflowsteps = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('orgworkflowstep')
     ) as OrgWorkflowStep[];
     if (orgworkflowsteps.length === 0 && remote) {
@@ -110,11 +114,15 @@ export const useOrgWorkflowSteps = () => {
           .filter({ attribute: 'process', value: process })
       )) as WorkflowStep[]
     )
-      .filter((s) => Boolean(s.keys?.remoteId) !== offlineOnly)
+      .filter((s) => Boolean(s?.keys?.remoteId) !== offlineOnly)
       .sort((a, b) => a.attributes.sequencenum - b.attributes.sequencenum);
     var tb = new TransformBuilder();
     //originally had them all in one ops, but it was too fast
     //we have checks on the back end for duplicate entries (using just type, datecreated, dateupdated) because orbit sometimes sends twice
+    if (workflowsteps.length === 0)
+      console.error(
+        `no workflow steps: process=${process} org=${org} offline=${offline} offlineOnly=${offlineOnly}`
+      );
     for (var ix = 0; ix < workflowsteps.length; ix++)
       await AddOrgWFToOps(tb, workflowsteps[ix], org);
     creatingRef.current = false;
