@@ -241,6 +241,12 @@
 				<target>Prueba comunitaria Retell</target>
 			</segment>
 		</unit>
+		<unit id="artifactCategory.grammar">
+			<segment>
+				<source>Grammar</source>
+				<target>Gramática</target>
+			</segment>
+		</unit>
 		<unit id="artifactType.backtranslation">
 			<segment>
 				<source>Phrase Back Translation</source>
@@ -490,7 +496,7 @@
 		<unit id="audacityManager.tip">
 			<segment>
 				<source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
-				<target>Si tiene un proyecto Audacity existente que desea vincular a este pasaje, haga clic en BUSCAR. Para crear un nuevo proyecto Audacity con un nombre creado automáticamente, haga clic en CREAR.</target>
+				<target>Si tiene un proyecto Audacity existente que desea vincular a este pasaje, haga clic en BROWSE. Para crear un nuevo proyecto Audacity con un nombre creado automáticamente, haga clic en CREAR.</target>
 			</segment>
 		</unit>
 		<unit id="audacityManager.title">
@@ -631,6 +637,12 @@
 				<target>Proyecto con Notas Largas</target>
 			</segment>
 		</unit>
+		<unit id="cards.longNotes">
+			<segment>
+				<source>Shared Introductions, Rationales, Devotionals, Podcasts</source>
+				<target>Introducciones Compartidas, Razonamientos, Devocionales, Podcasts</target>
+			</segment>
+		</unit>
 		<unit id="cards.mediaUploaded">
 			<segment>
 				<source>Audio Uploaded</source>
@@ -751,6 +763,12 @@
 				<target>Explicaciones compartidas, justificaciones, notas a pie de página, etc.</target>
 			</segment>
 		</unit>
+		<unit id="cards.notesProject">
+			<segment>
+				<source>Project with Notes</source>
+				<target>Proyecto con Notas</target>
+			</segment>
+		</unit>
 		<unit id="cards.sync">
 			<segment>
 				<source>Sync ({0})</source>
@@ -785,6 +803,12 @@
 			<segment>
 				<source>System Categories</source>
 				<target>Categorías del Sistema</target>
+			</segment>
+		</unit>
+		<unit id="category.discussion">
+			<segment>
+				<source>Discussion</source>
+				<target>Debate</target>
 			</segment>
 		</unit>
 		<unit id="commentCard.approve">
@@ -953,6 +977,12 @@
 			<segment>
 				<source>Mark Checked</source>
 				<target>Marcar Comprobado</target>
+			</segment>
+		</unit>
+		<unit id="consultantCheck.compare">
+			<segment>
+				<source>Compare</source>
+				<target>Comparar</target>
 			</segment>
 		</unit>
 		<unit id="control.book">
@@ -1210,7 +1240,7 @@
 		<unit id="electronImport.importOldFile">
 			<segment>
 				<source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
-				<target>Este archivo no se exportó desde la última versión. Vuelva a exportar el archivo PTF desde la versión en línea.</target>
+				<target>Este archivo no se exportó desde la última versión. Vuelva a exportar su archivo PTF desde la versión en línea.</target>
 			</segment>
 		</unit>
 		<unit id="electronImport.importPending">
@@ -2695,12 +2725,6 @@
 				<target>{0} depende de otras obras</target>
 			</segment>
 		</unit>
-		<unit id="main.reloadStatic">
-			<segment>
-				<source>Reload static tables</source>
-				<target>Recarga de tablas estáticas</target>
-			</segment>
-		</unit>
 		<unit id="main.reportIssue">
 			<segment>
 				<source>Report an Issue</source>
@@ -2969,6 +2993,12 @@
 			<segment>
 				<source>Filter</source>
 				<target>Filtro</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.latestVersion">
+			<segment>
+				<source>Latest Version</source>
+				<target>Última versión</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.loadingTable">
@@ -3553,6 +3583,12 @@
 				<target>Sufijo</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.suffixTip">
+			<segment>
+				<source>A Suffix is added to the end of the Reference (if there is no Description to override it).</source>
+				<target>Se añade un Sufijo al final de la Referencia (si no hay una Descripción que lo anule).</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.termsOfUse">
 			<segment>
 				<source>Terms of Use</source>
@@ -3811,6 +3847,12 @@
 				<target>Reproduce el siguiente contexto</target>
 			</segment>
 		</unit>
+		<unit id="peerCheck.back3Seconds">
+			<segment>
+				<source>Skip back 3 seconds</source>
+				<target>Retroceder 3 segundos</target>
+			</segment>
+		</unit>
 		<unit id="permission.admin">
 			<segment>
 				<source>Admin</source>
@@ -3820,7 +3862,7 @@
 		<unit id="permission.adminTip">
 			<segment>
 				<source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-				<target>¿Necesitamos este grupo? ¿O basta con utilizar team admin? Las personas de este grupo podrán realizar cualquier paso, aunque esté asignado a un grupo en el que no estén.</target>
+				<target>¿Necesitamos este grupo? ¿O basta con utilizar team admin? Las personas de este grupo podrán realizar cualquier paso, aunque esté asignado a un grupo en el que no se encuentren.</target>
 			</segment>
 		</unit>
 		<unit id="permission.consultant">
@@ -3832,7 +3874,7 @@
 		<unit id="permission.consultantTip">
 			<segment>
 				<source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
-				<target>Tampoco estoy seguro de que necesitemos este permiso, porque no está claro qué cosas especiales hacen los consultores en este software. Los comentarios de los consultores independientes serán visibles para todos los miembros del equipo.</target>
+				<target>Tampoco estoy seguro de que necesitemos este permiso, porque no está claro qué cosas especiales hacen los consultores en este software. Los comentarios de los Consultores Independientes serán visibles para todos los miembros del equipo.</target>
 			</segment>
 		</unit>
 		<unit id="permission.consultantInTraining">
@@ -3862,13 +3904,13 @@
 		<unit id="permission.mentorTip">
 			<segment>
 				<source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-				<target>Los comentarios de los tutores sólo serán visibles para los CIT. Los mentores pueden aprobar los comentarios de los CIT para que sean visibles para el resto del equipo.</target>
+				<target>Los comentarios de los mentores sólo serán visibles para los CIT. Los mentores pueden aprobar los comentarios de los CIT para hacerlos visibles al resto del equipo.</target>
 			</segment>
 		</unit>
 		<unit id="permission.nspTip">
 			<segment>
 				<source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
-				<target>Grupo de compañeros general sin permisos especiales. Utilícelo para asignar debates a grupos de equipos.</target>
+				<target>Grupo de compañeros general sin permisos especiales. Utilícelo para asignar debates a grupos de equipo.</target>
 			</segment>
 		</unit>
 		<unit id="planActions.assign">
@@ -4816,13 +4858,13 @@
 		<unit id="shared.expiredParatextToken">
 			<segment>
 				<source>Your paratext login has expired and can't be automatically renewed. Please log out and login again.</source>
-				<target>Tu sesión de paratext ha caducado y no puede ser renovada automáticamente. Por favor, cierre la sesión y vuelva a iniciarla.</target>
+				<target>Su inicio de sesión en paratext ha caducado y no puede renovarse automáticamente. Cierre la sesión y vuelva a iniciarla.</target>
 			</segment>
 		</unit>
 		<unit id="shared.expiredToken">
 			<segment>
 				<source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
-				<target>Su nombre de usuario ha caducado y no puede ser renovado automáticamente. Cierre la sesión y vuelva a iniciarla.</target>
+				<target>Su nombre de usuario ha caducado y no se puede renovar automáticamente. Cierre la sesión y vuelva a iniciarla.</target>
 			</segment>
 		</unit>
 		<unit id="shared.fileNotFound">
@@ -5674,7 +5716,7 @@
 		<unit id="transcriber.updateByOther2">
 			<segment>
 				<source>Transcription updated by {0}. Keep their changes? {1}</source>
-				<target>Transcripción actualizada por {0}. ¿Mantiene sus cambios? {1}</target>
+				<target>Transcripción actualizada por {0}. ¿Mantener sus cambios? {1}</target>
 			</segment>
 		</unit>
 		<unit id="transcribeReject.cancel">
@@ -5795,6 +5837,12 @@
 			<segment>
 				<source>Creating File...{0}%</source>
 				<target>Creando fichero...{0}%.</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.writingDownloadFile">
+			<segment>
+				<source>Writing file...It could take up to 6 minutes to resume progress.</source>
+				<target>Escribiendo archivo...Podría tardar hasta 6 minutos en reanudar el progreso.</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.downloading">
@@ -5926,7 +5974,7 @@
 		<unit id="transcriptionTab.offlineData">
 			<segment>
 				<source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
-				<target>Tiene nuevos cambios localmente que no fueron incluidos en la exportación ptf. Por favor, exporte también un archivo itf para capturar todos los cambios.</target>
+				<target>Tiene nuevos cambios localmente que no fueron incluidos en la exportación ptf. Por favor, exporta también un archivo itf para capturar todos los cambios.</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.changed">

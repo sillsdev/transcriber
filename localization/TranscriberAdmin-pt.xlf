@@ -241,6 +241,12 @@
 				<target>Teste da comunidade Recontar</target>
 			</segment>
 		</unit>
+		<unit id="artifactCategory.grammar">
+			<segment>
+				<source>Grammar</source>
+				<target>Gramática</target>
+			</segment>
+		</unit>
 		<unit id="artifactType.backtranslation">
 			<segment>
 				<source>Phrase Back Translation</source>
@@ -631,6 +637,12 @@
 				<target>Projeto com notas longas</target>
 			</segment>
 		</unit>
+		<unit id="cards.longNotes">
+			<segment>
+				<source>Shared Introductions, Rationales, Devotionals, Podcasts</source>
+				<target>Introduções partilhadas, fundamentos, devocionais, podcasts</target>
+			</segment>
+		</unit>
 		<unit id="cards.mediaUploaded">
 			<segment>
 				<source>Audio Uploaded</source>
@@ -751,6 +763,12 @@
 				<target>Explicações compartilhadas, justificativas, notas de rodapé, etc.</target>
 			</segment>
 		</unit>
+		<unit id="cards.notesProject">
+			<segment>
+				<source>Project with Notes</source>
+				<target>Projeto com notas</target>
+			</segment>
+		</unit>
 		<unit id="cards.sync">
 			<segment>
 				<source>Sync ({0})</source>
@@ -785,6 +803,12 @@
 			<segment>
 				<source>System Categories</source>
 				<target>Categorias do sistema</target>
+			</segment>
+		</unit>
+		<unit id="category.discussion">
+			<segment>
+				<source>Discussion</source>
+				<target>Discussão</target>
 			</segment>
 		</unit>
 		<unit id="commentCard.approve">
@@ -953,6 +977,12 @@
 			<segment>
 				<source>Mark Checked</source>
 				<target>Marcar como verificado</target>
+			</segment>
+		</unit>
+		<unit id="consultantCheck.compare">
+			<segment>
+				<source>Compare</source>
+				<target>Comparar</target>
 			</segment>
 		</unit>
 		<unit id="control.book">
@@ -2695,12 +2725,6 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="main.reloadStatic">
-			<segment>
-				<source>Reload static tables</source>
-				<target>Recarregar tabelas estáticas</target>
-			</segment>
-		</unit>
 		<unit id="main.reportIssue">
 			<segment>
 				<source>Report an Issue</source>
@@ -2969,6 +2993,12 @@
 			<segment>
 				<source>Filter</source>
 				<target>Filtrar</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.latestVersion">
+			<segment>
+				<source>Latest Version</source>
+				<target>Versão mais recente</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.loadingTable">
@@ -3553,6 +3583,12 @@
 				<target>Sufixo</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.suffixTip">
+			<segment>
+				<source>A Suffix is added to the end of the Reference (if there is no Description to override it).</source>
+				<target>Um sufixo é adicionado ao final da referência (se não houver uma descrição que o substitua).</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.termsOfUse">
 			<segment>
 				<source>Terms of Use</source>
@@ -3811,6 +3847,12 @@
 				<target>Reproduzir o seguinte contexto</target>
 			</segment>
 		</unit>
+		<unit id="peerCheck.back3Seconds">
+			<segment>
+				<source>Skip back 3 seconds</source>
+				<target>Saltar 3 segundos para trás</target>
+			</segment>
+		</unit>
 		<unit id="permission.admin">
 			<segment>
 				<source>Admin</source>
@@ -3868,7 +3910,7 @@
 		<unit id="permission.nspTip">
 			<segment>
 				<source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
-				<target>Grupo de pares geral sem permissões especiais. Use para atribuir discussões a grupos de equipes.</target>
+				<target>Grupo de pares geral sem permissões especiais. Utilizar para atribuir discussões a grupos de equipas.</target>
 			</segment>
 		</unit>
 		<unit id="planActions.assign">
@@ -5674,7 +5716,7 @@
 		<unit id="transcriber.updateByOther2">
 			<segment>
 				<source>Transcription updated by {0}. Keep their changes? {1}</source>
-				<target>Transcrição atualizada por {0}. Manter suas alterações? {1}</target>
+				<target>Transcrição actualizada por {0}. Manter as suas alterações? {1}</target>
 			</segment>
 		</unit>
 		<unit id="transcribeReject.cancel">
@@ -5795,6 +5837,12 @@
 			<segment>
 				<source>Creating File...{0}%</source>
 				<target>Criando arquivo...{0}%</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.writingDownloadFile">
+			<segment>
+				<source>Writing file...It could take up to 6 minutes to resume progress.</source>
+				<target>A escrever ficheiro... Pode demorar até 6 minutos a retomar o progresso.</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.downloading">
@@ -5926,7 +5974,7 @@
 		<unit id="transcriptionTab.offlineData">
 			<segment>
 				<source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
-				<target>Você tem novas alterações locais que não foram incluídas na exportação do ptf. Exporte também um arquivo itf para capturar todas as alterações.</target>
+				<target>Tem novas alterações locais que não foram incluídas na exportação ptf. Por favor, exporte também um ficheiro itf para capturar todas as alterações.</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.changed">

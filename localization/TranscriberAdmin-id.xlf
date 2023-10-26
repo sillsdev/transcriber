@@ -241,6 +241,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="artifactCategory.grammar">
+			<segment>
+				<source>Grammar</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="artifactType.backtranslation">
 			<segment>
 				<source>Phrase Back Translation</source>
@@ -631,6 +637,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="cards.longNotes">
+			<segment>
+				<source>Shared Introductions, Rationales, Devotionals, Podcasts</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="cards.mediaUploaded">
 			<segment>
 				<source>Audio Uploaded</source>
@@ -751,6 +763,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="cards.notesProject">
+			<segment>
+				<source>Project with Notes</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="cards.sync">
 			<segment>
 				<source>Sync ({0})</source>
@@ -784,6 +802,12 @@
 		<unit id="category.builtIn">
 			<segment>
 				<source>System Categories</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="category.discussion">
+			<segment>
+				<source>Discussion</source>
 				<target/>
 			</segment>
 		</unit>
@@ -952,6 +976,12 @@
 		<unit id="consultantCheck.checked">
 			<segment>
 				<source>Mark Checked</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="consultantCheck.compare">
+			<segment>
+				<source>Compare</source>
 				<target/>
 			</segment>
 		</unit>
@@ -2695,12 +2725,6 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="main.reloadStatic">
-			<segment>
-				<source>Reload static tables</source>
-				<target/>
-			</segment>
-		</unit>
 		<unit id="main.reportIssue">
 			<segment>
 				<source>Report an Issue</source>
@@ -2969,6 +2993,12 @@
 			<segment>
 				<source>Filter</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="mediaTab.latestVersion">
+			<segment>
+				<source>Latest Version</source>
+				<target>Versi Terbaru</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.loadingTable">
@@ -3553,6 +3583,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.suffixTip">
+			<segment>
+				<source>A Suffix is added to the end of the Reference (if there is no Description to override it).</source>
+				<target/>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.termsOfUse">
 			<segment>
 				<source>Terms of Use</source>
@@ -3808,6 +3844,12 @@
 		<unit id="peerCheck.afterResource">
 			<segment>
 				<source>Play following context</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="peerCheck.back3Seconds">
+			<segment>
+				<source>Skip back 3 seconds</source>
 				<target/>
 			</segment>
 		</unit>
@@ -5795,6 +5837,12 @@
 			<segment>
 				<source>Creating File...{0}%</source>
 				<target>Membuat File... {0}%.</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.writingDownloadFile">
+			<segment>
+				<source>Writing file...It could take up to 6 minutes to resume progress.</source>
+				<target/>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.downloading">
