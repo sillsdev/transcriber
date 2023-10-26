@@ -50,11 +50,12 @@ export const SelectUser = (props: IProps) => {
             orgusers.includes(u.id)
         )
         .sort((i, j) =>
-          (i.attributes.familyName || '') < (j.attributes.familyName || '')
+          (i.attributes?.familyName || '') < (j.attributes?.familyName || '')
             ? -1
-            : (i.attributes.familyName || '') > (j.attributes.familyName || '')
+            : (i.attributes?.familyName || '') >
+              (j.attributes?.familyName || '')
             ? 1
-            : (i.attributes.givenName || '') <= (j.attributes.givenName || '')
+            : (i.attributes?.givenName || '') <= (j.attributes?.givenName || '')
             ? -1
             : 1
         )
