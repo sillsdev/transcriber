@@ -326,7 +326,6 @@ const TeamProvider = withData(mapRecordsToProps)(
     };
 
     const projectCreate = async (project: VProject, team: TeamIdType) => {
-      console.log('TeamContext projectCreate calling getTeamId:team', team);
       const teamId = await getTeamId(team?.id);
       return await vProjectCreate(project, teamId);
     };
@@ -426,7 +425,6 @@ const TeamProvider = withData(mapRecordsToProps)(
     useEffect(() => {
       if (!state.personalTeam) {
         getTeamId(undefined).then((personalTeam: string) => {
-          console.log(`TeamContext useEffect personalTeam: ${personalTeam}`);
           if (personalTeam) setState((state) => ({ ...state, personalTeam }));
         });
       }

@@ -47,7 +47,6 @@ export function ResourceRefs({
   const handleAddWord = () => {};
 
   const handleCommit = (refs: BookRef[]) => {
-    console.log(JSON.stringify(refs, null, 2));
     const shaRefRecs = readShaRefRecs(res?.id || '');
     if (shaRefRecs.length === 0) {
       createShaRefRecs(refs);

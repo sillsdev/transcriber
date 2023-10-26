@@ -91,28 +91,26 @@ export const useTeamCreate = () => {
   interface ICreateOrgProps {
     orgRec: Organization;
     process: string;
-    cb: (oId: string) => void;
   }
 
   const createOrg = async (props: ICreateOrgProps) => {
-    const { orgRec, process, cb } = props;
+    const { orgRec, process } = props;
 
     await memory.update((t: TransformBuilder) => [
       ...AddRecord(t, orgRec, user, memory),
       ...ReplaceRelatedRecord(t, orgRec, 'owner', 'user', user),
     ]);
     if (!offlineOnly) await teamApiPull(orgRec.id); // Update slug value
-    OrgRelated(orgRec).then(() => {
-      CreateOrgWorkflowSteps(process, orgRec.id).then(() => {
-        setOrganization(orgRec.id);
-        setOrgRole(RoleNames.Admin);
-        setDefaultProj(orgRec.id, memory, (id: string) => {
-          setProject(id);
-          setProjectType(id);
-        });
-        cb(orgRec.id);
-      });
+    await OrgRelated(orgRec);
+    await CreateOrgWorkflowSteps(process, orgRec.id);
+    setOrganization(orgRec.id);
+    setOrgRole(RoleNames.Admin);
+    setDefaultProj(orgRec.id, memory, (pid: string) => {
+      setProject(pid);
+      setProjectType(pid);
     });
+
+    return orgRec.id;
   };
 
   return (
@@ -136,15 +134,12 @@ export const useTeamCreate = () => {
       },
     } as Organization;
 
-    const handleCreated = (oId: string) => {
-      cb && cb(oId);
-    };
-
     if (!workingOnItRef.current) {
       workingOnItRef.current = true;
-      createOrg({ orgRec, process, cb: handleCreated })
-        .then(() => {
+      createOrg({ orgRec, process })
+        .then((org: string) => {
           workingOnItRef.current = false;
+          if (cb) cb(org);
         })
         .catch((err) => {
           checkOnline((online) => {

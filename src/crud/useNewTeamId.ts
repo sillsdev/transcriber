@@ -46,7 +46,6 @@ export const useNewTeamId = () => {
   const newPersonal = async () => {
     if (!globals.user) return;
     teamRef.current = await getPersonalId();
-    console.warn(`newPersonal ${teamRef.current}`);
     if (!teamRef.current) {
       const userRec = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'user', id: globals.user })
@@ -60,7 +59,6 @@ export const useNewTeamId = () => {
         defaultWorkflow,
         (org: string) => {
           teamRef.current = org;
-          console.warn(`newPersonal org=${org}`);
         }
       );
     }

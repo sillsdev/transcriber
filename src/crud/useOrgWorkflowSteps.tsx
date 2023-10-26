@@ -119,10 +119,6 @@ export const useOrgWorkflowSteps = () => {
     var tb = new TransformBuilder();
     //originally had them all in one ops, but it was too fast
     //we have checks on the back end for duplicate entries (using just type, datecreated, dateupdated) because orbit sometimes sends twice
-    if (workflowsteps.length === 0)
-      console.error(
-        `no workflow steps: process=${process} org=${org} offline=${offline} offlineOnly=${offlineOnly}`
-      );
     for (var ix = 0; ix < workflowsteps.length; ix++)
       await AddOrgWFToOps(tb, workflowsteps[ix], org);
     creatingRef.current = false;
@@ -161,7 +157,6 @@ export const useOrgWorkflowSteps = () => {
     //     org
     //   );
     // }
-    console.warn('orgsteps', orgsteps);
     return orgsteps.filter((s) => showAll || s.attributes.sequencenum >= 0);
   };
 
