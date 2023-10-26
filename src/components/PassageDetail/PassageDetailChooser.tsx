@@ -79,7 +79,11 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
   }, [passage]);
 
   useEffect(() => {
-    const passages = related(section, 'passages') as Passage[];
+    // Next line doesn't work in desktop app
+    // const passages = related(section, 'passages') as Passage[];
+    const passages = (
+      memory.cache.query((q) => q.findRecords('passage')) as Passage[]
+    ).filter((p) => related(p, 'section') === section?.id);
     if (Array.isArray(passages)) {
       const newCount = passages.length;
       if (passageCount !== newCount) setPassageCount(newCount);
