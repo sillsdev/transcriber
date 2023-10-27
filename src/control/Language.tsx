@@ -16,6 +16,7 @@ export interface ILanguage {
   bcp47: string;
   languageName: string;
   font: string;
+  rtl: boolean;
   spellCheck: boolean;
 }
 
@@ -28,11 +29,12 @@ interface IProps extends ILanguage {
 }
 
 export const Language = (props: IProps) => {
-  const { bcp47, languageName, font, spellCheck, sx, onChange } = props;
+  const { bcp47, languageName, font, rtl, spellCheck, sx, onChange } = props;
   const [state, setState] = React.useState<ILanguage>({
     bcp47,
     languageName,
     font,
+    rtl,
     spellCheck,
   });
   const t = useSelector(vProjectSelector, shallowEqual);
@@ -50,6 +52,10 @@ export const Language = (props: IProps) => {
 
   const handleFont = (font: string) => {
     setState((state) => ({ ...state, font }));
+  };
+
+  const handleDir = (rtl: boolean) => {
+    setState((state) => ({ ...state, rtl }));
   };
 
   const handleSpellCheckChange = (e: any) => {
@@ -98,6 +104,7 @@ export const Language = (props: IProps) => {
               setCode={handleBcp47}
               setName={handleLanguage}
               setFont={handleFont}
+              setDir={handleDir}
               t={lt}
               disabled={props.disabled}
             />

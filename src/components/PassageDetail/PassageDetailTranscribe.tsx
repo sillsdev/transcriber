@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ISharedStrings } from '../../model';
 import { Grid, Typography, Box, BoxProps, styled } from '@mui/material';
 import { TranscriberProvider } from '../../context/TranscriberContext';
@@ -39,9 +39,16 @@ export function PassageDetailTranscribe({
   artifactTypeId,
   onFilter,
 }: IProps) {
-  const { mediafileId } = usePassageDetailContext();
+  const { mediafileId, currentstep, orgWorkflowSteps } =
+    usePassageDetailContext();
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [topFilter, setTopFilter] = useState(false);
+
+  const stepSettings = useMemo(() => {
+    if (!currentstep || !orgWorkflowSteps) return null;
+    const step = orgWorkflowSteps.find((s) => s.id === currentstep);
+    return step ? JSON.parse(step?.attributes?.tool ?? '{}')?.settings : null;
+  }, [currentstep, orgWorkflowSteps]);
 
   const handleTopFilter = (top: boolean) => {
     setTopFilter(top);
@@ -58,7 +65,10 @@ export function PassageDetailTranscribe({
             </TableContainer>
             {!topFilter && (
               <TranscriberContainer>
-                <Transcriber defaultWidth={width - TaskTableWidth} />
+                <Transcriber
+                  defaultWidth={width - TaskTableWidth}
+                  stepSettings={stepSettings}
+                />
               </TranscriberContainer>
             )}
           </Box>
