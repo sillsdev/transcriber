@@ -9,6 +9,7 @@ interface LangState {
   bcp47: string;
   languageName: string;
   font: string;
+  rtl: boolean;
   spellCheck: boolean;
   changed: boolean;
 }
@@ -18,6 +19,7 @@ const initLang = {
   bcp47: 'und',
   languageName: '',
   font: '',
+  rtl: false,
   spellCheck: false,
   changed: false,
 };
@@ -47,13 +49,15 @@ export const TranscribeStepSettings = ({ toolSettings, onChange }: IProps) => {
   };
 
   const handleLanguageChange = (val: ILanguage) => {
-    if (lgState.bcp47 !== val.bcp47) {
+    if (lgState.bcp47 !== val.bcp47 || lgState.font !== val.font) {
       setLgState((state) => ({ ...state, ...val, changed: true }));
       const json = toolSettings ? JSON.parse(toolSettings) : {};
       onChange(
         JSON.stringify({
           ...json,
           language: `${val.languageName}|${val.bcp47}`,
+          font: val.font,
+          rtl: val.rtl,
         })
       );
     }
@@ -83,6 +87,8 @@ export const TranscribeStepSettings = ({ toolSettings, onChange }: IProps) => {
         artId: json.artifactTypeId,
         languageName,
         bcp47,
+        font: json.font,
+        rtl: json.rtl,
       }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

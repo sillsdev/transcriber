@@ -213,6 +213,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
 interface IProps {
   defaultWidth: number;
+  stepSettings?: string;
 }
 
 interface ITrans {
@@ -224,6 +225,7 @@ export function Transcriber(
   props: IProps & IStateProps & IDispatchProps & IRecordProps
 ) {
   const {
+    stepSettings,
     mediafiles,
     projintegrations,
     integrations,
@@ -598,12 +600,24 @@ export function Transcriber(
   }, [paratextIntegration, project, projintegrations]);
 
   useEffect(() => {
-    if (project && project !== '') {
-      var r = findRecord(memory, 'project', project) as Project;
-      if (r) getFontData(r, offline).then((data) => setProjData(data));
+    const lgSettings = JSON.parse(stepSettings || '{}');
+    const [language] = lgSettings?.language?.split('|') ?? ['', 'und'];
+    if (artifactTypeSlug === ArtifactTypeSlug.Vernacular || !language) {
+      if (project) {
+        const r = findRecord(memory, 'project', project) as Project | undefined;
+        if (r) getFontData(r, offline).then((data) => setProjData(data));
+      }
+    } else {
+      const defaultFont = lgSettings?.font;
+      const rtl = lgSettings?.rtl ?? false;
+      const spellCheck = lgSettings?.spellCheck ?? false;
+      const rec = {
+        attributes: { language, spellCheck, defaultFont, rtl },
+      } as Project;
+      getFontData(rec, offline).then((data) => setProjData(data));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project]);
+  }, [project, artifactTypeSlug]);
 
   useEffect(() => {
     const newAssigned = rowData[index]?.assigned;

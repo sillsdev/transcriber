@@ -29,6 +29,7 @@ export interface IResourceDialog {
   bcp47: string;
   languageName: string;
   font: string;
+  rtl: boolean;
   spellCheck: boolean;
   terms: string;
   keywords: string;
@@ -42,6 +43,7 @@ const initState: IResourceDialog = {
   bcp47: 'und',
   languageName: '',
   font: '',
+  rtl: false,
   spellCheck: false,
   terms: '',
   keywords: '',
