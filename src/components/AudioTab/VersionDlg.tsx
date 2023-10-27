@@ -18,6 +18,7 @@ import { IRow, getMedia, IGetMedia } from '.';
 import AudioTable from './AudioTable';
 import { ActionRow, GrowingDiv } from '../StepEditor';
 import SelectLatest from './SelectLatest';
+import { UpdateRecord } from '../../model/baseModel';
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -39,6 +40,7 @@ export const VersionDlg = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const { getPlan } = usePlan();
+  const [user] = useGlobal('user');
   const { userIsAdmin } = useRole();
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [playItem, setPlayItem] = useState('');
@@ -51,16 +53,15 @@ export const VersionDlg = (props: IProps) => {
   const handleLatest = (version: number) => {
     const id = data.find((d) => parseInt(d.version) === version)?.id;
     const nextVersion = Math.max(...versions) + 1;
-    if (id)
-      memory
-        .update((t) =>
-          t.replaceAttribute(
-            { type: 'mediafile', id },
-            'versionNumber',
-            nextVersion
-          )
-        )
-        .then(() => handleRefresh());
+    if (id) {
+      const pi = mediaFiles.find((m) => m.id === id);
+      if (pi) {
+        pi.attributes.versionNumber = nextVersion;
+        memory
+          .update((t) => UpdateRecord(t, pi, user))
+          .then(() => handleRefresh());
+      }
+    }
   };
 
   useEffect(() => {
