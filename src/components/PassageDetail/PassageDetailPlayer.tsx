@@ -103,7 +103,10 @@ export function PassageDetailPlayer(props: IProps) {
 
   const loadSegments = () => {
     const segs = mediafileRef.current?.attributes?.segments || '{}';
-    if (allowSegment) segmentsRef.current = getSegments(allowSegment, segs);
+    if (allowSegment) {
+      segmentsRef.current = getSegments(allowSegment, segs);
+      setSegmentToWhole();
+    }
     setDefaultSegments(segmentsRef.current);
     onSegment && onSegment(segmentsRef.current);
   };
