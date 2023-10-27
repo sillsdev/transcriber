@@ -170,7 +170,8 @@ export function PassageDetailPlayer(props: IProps) {
   const setSegmentToWhole = () => {
     if (allowSegment && setCurrentSegment && durationRef.current) {
       var segs = JSON.parse(segmentsRef.current || '{}');
-      if ((segs.regions?.length ?? 0) === 0) {
+      //might be "[]"
+      if ((segs.regions?.length ?? 0) < 3) {
         setCurrentSegment({ start: 0, end: durationRef.current }, -1);
       }
     }
