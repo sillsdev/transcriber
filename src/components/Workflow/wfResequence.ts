@@ -2,11 +2,18 @@ import { IWorkflow, IwfKind } from '../../model';
 import { isSectionRow, isPassageRow } from '.';
 import { currentDateTime } from '../../utils';
 
-export const wfResequence = (wf: IWorkflow[], sec = 1) => {
+export const wfResequence = (wf: IWorkflow[]) => {
+  //TODO CHECK THIS WITH MOVEMENTS ETC NEXT RELEASE!
+  const minSection = () => {
+    let ms = wf.reduce((min, cur) =>
+      isSectionRow(cur) && cur.sectionSeq < min.sectionSeq ? cur : min
+    );
+    return ms ? ms.sectionSeq : 1;
+  };
   const updatedAt = currentDateTime();
   let change = false;
   let pas = 0;
-  sec -= 1;
+  let sec = minSection() - 1;
   for (let i = 0; i < wf.length; i += 1) {
     let cur = wf[i];
     if (cur.deleted) continue;
