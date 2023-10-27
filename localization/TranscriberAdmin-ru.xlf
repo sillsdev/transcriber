@@ -241,6 +241,12 @@
 				<target>Тест сообщества Пересказ</target>
 			</segment>
 		</unit>
+		<unit id="artifactCategory.grammar">
+			<segment>
+				<source>Grammar</source>
+				<target>Грамматика</target>
+			</segment>
+		</unit>
 		<unit id="artifactType.backtranslation">
 			<segment>
 				<source>Phrase Back Translation</source>
@@ -631,6 +637,12 @@
 				<target>Проект с длинными примечаниями</target>
 			</segment>
 		</unit>
+		<unit id="cards.longNotes">
+			<segment>
+				<source>Shared Introductions, Rationales, Devotionals, Podcasts</source>
+				<target>Общие введения, обоснования, посвящения, подкасты</target>
+			</segment>
+		</unit>
 		<unit id="cards.mediaUploaded">
 			<segment>
 				<source>Audio Uploaded</source>
@@ -751,6 +763,12 @@
 				<target>Общие пояснения, обоснования, сноски и т.д.</target>
 			</segment>
 		</unit>
+		<unit id="cards.notesProject">
+			<segment>
+				<source>Project with Notes</source>
+				<target>Проект с заметками</target>
+			</segment>
+		</unit>
 		<unit id="cards.sync">
 			<segment>
 				<source>Sync ({0})</source>
@@ -785,6 +803,12 @@
 			<segment>
 				<source>System Categories</source>
 				<target>Системные категории</target>
+			</segment>
+		</unit>
+		<unit id="category.discussion">
+			<segment>
+				<source>Discussion</source>
+				<target>Обсуждение</target>
 			</segment>
 		</unit>
 		<unit id="commentCard.approve">
@@ -953,6 +977,12 @@
 			<segment>
 				<source>Mark Checked</source>
 				<target>Отметить Отмечено</target>
+			</segment>
+		</unit>
+		<unit id="consultantCheck.compare">
+			<segment>
+				<source>Compare</source>
+				<target>Сравнить</target>
 			</segment>
 		</unit>
 		<unit id="control.book">
@@ -2695,12 +2725,6 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="main.reloadStatic">
-			<segment>
-				<source>Reload static tables</source>
-				<target>Перезагрузка статических таблиц</target>
-			</segment>
-		</unit>
 		<unit id="main.reportIssue">
 			<segment>
 				<source>Report an Issue</source>
@@ -2969,6 +2993,12 @@
 			<segment>
 				<source>Filter</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="mediaTab.latestVersion">
+			<segment>
+				<source>Latest Version</source>
+				<target>Последняя версия</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.loadingTable">
@@ -3553,6 +3583,12 @@
 				<target>Суффикс</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.suffixTip">
+			<segment>
+				<source>A Suffix is added to the end of the Reference (if there is no Description to override it).</source>
+				<target>В конце ссылки добавляется суффикс (если нет описания, которое можно было бы отменить).</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.termsOfUse">
 			<segment>
 				<source>Terms of Use</source>
@@ -3811,6 +3847,12 @@
 				<target>Воспроизведение следующего контекста</target>
 			</segment>
 		</unit>
+		<unit id="peerCheck.back3Seconds">
+			<segment>
+				<source>Skip back 3 seconds</source>
+				<target>Пропустить 3 секунды назад</target>
+			</segment>
+		</unit>
 		<unit id="permission.admin">
 			<segment>
 				<source>Admin</source>
@@ -3820,7 +3862,7 @@
 		<unit id="permission.adminTip">
 			<segment>
 				<source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-				<target>Нужна ли нам эта группа? Или достаточно использовать team admin? Люди, входящие в эту группу, смогут выполнять любые действия, даже если они назначены группе, в которой они не состоят.</target>
+				<target>Нужна ли нам эта группа? Или достаточно использовать команду Администратор? Люди, входящие в эту группу, смогут выполнять любые действия, даже если они назначены группе, в которой они не состоят.</target>
 			</segment>
 		</unit>
 		<unit id="permission.consultant">
@@ -3934,7 +3976,7 @@
 		<unit id="planSheet.addPassage">
 			<segment>
 				<source>Add Passage</source>
-				<target/>
+				<target>Добавить отрывок</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.addSection">
@@ -5797,6 +5839,12 @@
 				<target>Создать файл...{0}%</target>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.writingDownloadFile">
+			<segment>
+				<source>Writing file...It could take up to 6 minutes to resume progress.</source>
+				<target>Запись файла... Возобновление работы может занять до 6 минут.</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.downloading">
 			<segment>
 				<source>Creation complete. Downloading {0}</source>
@@ -5926,7 +5974,7 @@
 		<unit id="transcriptionTab.offlineData">
 			<segment>
 				<source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
-				<target>У вас есть новые локальные изменения, которые не были включены в экспорт ptf. Пожалуйста, экспортируйте также файл itf, чтобы отразить все изменения.</target>
+				<target>У вас есть новые локальные изменения, которые не были включены в экспорт ptf. Пожалуйста, экспортируйте также файл itf, чтобы зафиксировать все изменения.</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.changed">

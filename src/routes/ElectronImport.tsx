@@ -16,7 +16,8 @@ import {
   useProjectsLoaded,
 } from '../utils';
 import { isElectron } from '../api-variable';
-import { useContext, useGlobal, useRef } from 'reactn';
+import { useContext, useRef } from 'react';
+import { useGlobal } from 'reactn';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -91,7 +92,7 @@ export const useElectronImport = () => {
     for (let entry of zipEntries) {
       if (entry.entryName === 'SILTranscriber') {
         exportDate = await getData(zip, 'SILTranscriber');
-        exportTime = moment.utc(exportDate, 'YYYY-MM-DDTHH:MM:SS.SSSSSSSZ');
+        exportTime = moment.utc(exportDate, 'YYYY-MM-DDTHH:mm:ss.SSSSSSSZ');
         valid = true;
         if (isOfflinePtf.current) break;
       } else if (entry.entryName === 'Offline') {

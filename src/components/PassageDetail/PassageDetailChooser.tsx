@@ -11,7 +11,7 @@ import {
   SxProps,
 } from '@mui/material';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import { related, findRecord, passageRefText, remoteId } from '../../crud';
+import { related, passageRefText, remoteId } from '../../crud';
 import { rememberCurrentPassage } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { passageChooserSelector } from '../../selector';
@@ -22,7 +22,6 @@ import {
   isPublishingTitle,
   RefRender,
 } from '../../control/RefRender';
-import { RecordIdentity } from '@orbit/data';
 
 interface StyledBoxProps extends BoxProps {
   width?: number;
@@ -79,47 +78,46 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
   };
 
   useEffect(() => {
-    const passageids = related(section, 'passages') as RecordIdentity[];
-    if (Array.isArray(passageids)) {
-      const passages = passageids.map(
-        (p) => findRecord(memory, 'passage', p.id) as Passage
-      );
-      var newCount = 0;
-      marks.current = [];
-      passages
-        .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum)
-        .forEach((p, i) => {
-          const psgType = passageTypeFromRef(p.attributes?.reference, false);
-          if (!isPublishingTitle(p.attributes?.reference, false)) {
-            newCount++;
-            let reference: React.ReactNode = '';
-            if (psgType === PassageTypeEnum.PASSAGE) {
-              reference = passageRefText(p, allBookData);
-              if ((reference as string).length === 0)
-                reference = `${section?.attributes?.sequencenum}.${
-                  p.attributes?.sequencenum || 1
-                }`;
-            } else {
-              //must be a note
-              reference = (
-                <RefRender value={p.attributes?.reference} flat={false} />
-              );
-            }
-            if (marks.current.findIndex((m) => m.label === reference) > -1)
-              reference += '#' + p.attributes?.sequencenum.toString();
-            marks.current.push({
-              value: i,
-              label: reference,
-              id: p.id,
-            });
+    // Next line doesn't work in desktop app
+    // const passages = related(section, 'passages') as Passage[];
+    const passages = (
+      memory.cache.query((q) => q.findRecords('passage')) as Passage[]
+    ).filter((p) => related(p, 'section') === section?.id);
+    var newCount = 0;
+    marks.current = [];
+    passages
+      .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum)
+      .forEach((p, i) => {
+        const psgType = passageTypeFromRef(p.attributes?.reference, false);
+        if (!isPublishingTitle(p.attributes?.reference, false)) {
+          newCount++;
+          let reference: React.ReactNode = '';
+          if (psgType === PassageTypeEnum.PASSAGE) {
+            reference = passageRefText(p, allBookData);
+            if ((reference as string).length === 0)
+              reference = `${section?.attributes?.sequencenum}.${
+                p.attributes?.sequencenum || 1
+              }`;
+          } else {
+            //must be a note
+            reference = (
+              <RefRender value={p.attributes?.reference} flat={false} />
+            );
           }
-        });
-      if (passageCount !== newCount) setPassageCount(newCount);
-      const newSize = newCount > 1 ? 48 : 0;
-      if (chooserSize !== newSize) setChooserSize(newSize);
-    }
+          if (marks.current.findIndex((m) => m.label === reference) > -1)
+            reference += '#' + p.attributes?.sequencenum.toString();
+          marks.current.push({
+            value: i,
+            label: reference,
+            id: p.id,
+          });
+        }
+      });
+    if (newCount !== passageCount) setPassageCount(newCount);
+    const newSize = newCount > 1 ? 48 : 0;
+    if (chooserSize !== newSize) setChooserSize(newSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [section]);
+  }, [section, allBookData]);
 
   useEffect(() => {
     const passId = passage.id;

@@ -3700,13 +3700,20 @@
       			<context context-type="sourcefile">MediaTab.tsx</context>
       		</context-group>
       	</trans-unit>
-         <trans-unit id="mediaTab.loadingTable">
-            <source>Loading data</source>
+         <trans-unit id="mediaTab.latestVersion">
+            <source>Latest Version</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">MediaTab.tsx</context>
+               <context context-type="sourcefile">SelectLatest.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="mediaTab.loadingTable">
+      		<source>Loading data</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="mediaTab.matchAdded">
             <source>Match complete: {0} new associations</source>
             <target/>

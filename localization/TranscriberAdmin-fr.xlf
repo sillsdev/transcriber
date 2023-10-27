@@ -238,7 +238,13 @@
 		<unit id="artifactCategory.retelling">
 			<segment>
 				<source>Community Test Retell</source>
-				<target>artefactCategory.retelling Test communautaire Retell</target>
+				<target>Test de la communauté Répétition</target>
+			</segment>
+		</unit>
+		<unit id="artifactCategory.grammar">
+			<segment>
+				<source>Grammar</source>
+				<target>Grammaire</target>
 			</segment>
 		</unit>
 		<unit id="artifactType.backtranslation">
@@ -490,7 +496,7 @@
 		<unit id="audacityManager.tip">
 			<segment>
 				<source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
-				<target>audacityManager.tip Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur BROWSE. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CREATE.</target>
+				<target>Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur BROWSE. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CRÉER.</target>
 			</segment>
 		</unit>
 		<unit id="audacityManager.title">
@@ -631,6 +637,12 @@
 				<target>cards.longNotesProject Projet avec des notes longues</target>
 			</segment>
 		</unit>
+		<unit id="cards.longNotes">
+			<segment>
+				<source>Shared Introductions, Rationales, Devotionals, Podcasts</source>
+				<target>Introductions partagées, raisonnements, dévotionnels, podcasts</target>
+			</segment>
+		</unit>
 		<unit id="cards.mediaUploaded">
 			<segment>
 				<source>Audio Uploaded</source>
@@ -751,6 +763,12 @@
 				<target>cards.notesHelper Explications partagées, justifications, notes de bas de page, etc.</target>
 			</segment>
 		</unit>
+		<unit id="cards.notesProject">
+			<segment>
+				<source>Project with Notes</source>
+				<target>Projet avec notes</target>
+			</segment>
+		</unit>
 		<unit id="cards.sync">
 			<segment>
 				<source>Sync ({0})</source>
@@ -785,6 +803,12 @@
 			<segment>
 				<source>System Categories</source>
 				<target>category.builtIn Catégories du système</target>
+			</segment>
+		</unit>
+		<unit id="category.discussion">
+			<segment>
+				<source>Discussion</source>
+				<target>Discussion</target>
 			</segment>
 		</unit>
 		<unit id="commentCard.approve">
@@ -953,6 +977,12 @@
 			<segment>
 				<source>Mark Checked</source>
 				<target>consultantCheck.checked Marque Coché</target>
+			</segment>
+		</unit>
+		<unit id="consultantCheck.compare">
+			<segment>
+				<source>Compare</source>
+				<target>Comparer</target>
 			</segment>
 		</unit>
 		<unit id="control.book">
@@ -1252,7 +1282,7 @@
 		<unit id="electronImport.newerVersion">
 			<segment>
 				<source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
-				<target>electronImport.newerVersion Ce fichier a été exporté avec une version plus récente du programme. Vous devez télécharger la dernière version avant de procéder à l'importation ! Si vous continuez, certaines données pourraient ne pas être importées correctement.</target>
+				<target>Ce fichier a été exporté avec une version plus récente du programme. Vous devriez télécharger la dernière version avant de l'importer ! Si vous continuez, certaines données pourraient ne pas être importées correctement.</target>
 			</segment>
 		</unit>
 		<unit id="electronImport.project">
@@ -1744,7 +1774,7 @@
 		<unit id="import.projectNotFound">
 			<segment>
 				<source>ITF does not contain current audio project. It contains audio project {0}.</source>
-				<target>import.projectNotFound L'ITF ne contient pas le projet audio actuel. Il contient le projet audio {0}.</target>
+				<target>ITF ne contient pas le projet audio actuel. Il contient le projet audio {0}.</target>
 			</segment>
 		</unit>
 		<unit id="import.showHideFilter">
@@ -2626,7 +2656,7 @@
 		<unit id="main.inviteError">
 			<segment>
 				<source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
-				<target>main.inviteError L'invitation n'a pas été acceptée. Vous devez vous connecter à l'aide de l'adresse électronique à laquelle l'invitation a été envoyée.</target>
+				<target>L'invitation n'a pas été acceptée. Vous devez vous connecter avec l'email auquel l'invitation a été envoyée.</target>
 			</segment>
 		</unit>
 		<unit id="main.loadingTable">
@@ -2693,12 +2723,6 @@
 			<segment>
 				<source>{0} relies on other works</source>
 				<target>{0} s'appuie sur d'autres travaux</target>
-			</segment>
-		</unit>
-		<unit id="main.reloadStatic">
-			<segment>
-				<source>Reload static tables</source>
-				<target>Recharger les tables statiques</target>
 			</segment>
 		</unit>
 		<unit id="main.reportIssue">
@@ -2969,6 +2993,12 @@
 			<segment>
 				<source>Filter</source>
 				<target>Filtre</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.latestVersion">
+			<segment>
+				<source>Latest Version</source>
+				<target>Dernière version</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.loadingTable">
@@ -3554,6 +3584,12 @@
 				<target>passageDetailArtifacts.suffix Suffixe</target>
 			</segment>
 		</unit>
+		<unit id="passageDetailArtifacts.suffixTip">
+			<segment>
+				<source>A Suffix is added to the end of the Reference (if there is no Description to override it).</source>
+				<target>Un suffixe est ajouté à la fin de la référence (s'il n'y a pas de description pour le remplacer).</target>
+			</segment>
+		</unit>
 		<unit id="passageDetailArtifacts.termsOfUse">
 			<segment>
 				<source>Terms of Use</source>
@@ -3812,6 +3848,12 @@
 				<target>peerCheck.afterResource Lecture du contexte suivant</target>
 			</segment>
 		</unit>
+		<unit id="peerCheck.back3Seconds">
+			<segment>
+				<source>Skip back 3 seconds</source>
+				<target>Sauter en arrière de 3 secondes</target>
+			</segment>
+		</unit>
 		<unit id="permission.admin">
 			<segment>
 				<source>Admin</source>
@@ -3821,7 +3863,7 @@
 		<unit id="permission.adminTip">
 			<segment>
 				<source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-				<target>permission.adminTip Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur de l'équipe ? Les personnes appartenant à ce groupe pourront effectuer n'importe quelle étape, même si elle est assignée à un groupe dont elles ne font pas partie.</target>
+				<target>Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur d'équipe ? Les membres de ce groupe pourront effectuer n'importe quelle étape, même si elle est assignée à un groupe dont ils ne font pas partie.</target>
 			</segment>
 		</unit>
 		<unit id="permission.consultant">
@@ -3833,7 +3875,7 @@
 		<unit id="permission.consultantTip">
 			<segment>
 				<source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
-				<target>permission.consultantTip Pas sûr que nous ayons besoin de cette permission non plus, parce qu'il n'est pas clair ce que les consultants font de spécial dans ce logiciel.</target>
+				<target>Nous ne sommes pas sûrs d'avoir besoin de cette autorisation non plus, car on ne sait pas très bien ce que les consultants font de particulier dans ce logiciel. Les commentaires du consultant indépendant seront visibles par tous les membres de l'équipe.</target>
 			</segment>
 		</unit>
 		<unit id="permission.consultantInTraining">
@@ -4817,7 +4859,7 @@
 		<unit id="shared.expiredParatextToken">
 			<segment>
 				<source>Your paratext login has expired and can't be automatically renewed. Please log out and login again.</source>
-				<target>Votre login paratext a expiré et ne peut être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
+				<target>Votre login paratext a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
 			</segment>
 		</unit>
 		<unit id="shared.expiredToken">
@@ -5798,6 +5840,12 @@
 				<target>Création du fichier...{0}%</target>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.writingDownloadFile">
+			<segment>
+				<source>Writing file...It could take up to 6 minutes to resume progress.</source>
+				<target>L'écriture du fichier...La reprise de la progression peut prendre jusqu'à 6 minutes.</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.downloading">
 			<segment>
 				<source>Creation complete. Downloading {0}</source>
@@ -6473,7 +6521,7 @@
 		<unit id="welcome.teamTip">
 			<segment>
 				<source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
-				<target>Un projet audio a été créé en ligne. Les transcripteurs et les éditeurs peuvent travailler en ligne, hors ligne en sélectionnant l'option Disponible hors ligne dans le menu de la carte du projet audio, ou hors ligne en l'important.</target>
+				<target>Un projet audio a été créé en ligne. Les transcripteurs et les éditeurs peuvent travailler en ligne, hors ligne en sélectionnant l'option Disponible hors ligne dans le menu de la carte de projet audio, ou hors ligne en l'important.</target>
 			</segment>
 		</unit>
 		<unit id="welcome.title">

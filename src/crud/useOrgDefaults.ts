@@ -1,5 +1,6 @@
 import { TransformBuilder } from '@orbit/data';
-import { useGlobal, useMemo } from 'reactn';
+import { useMemo } from 'react';
+import { useGlobal } from 'reactn';
 import { Organization, RoleNames } from '../model';
 import { UpdateRecord } from '../model/baseModel';
 import { findRecord } from './tryFindRecord';

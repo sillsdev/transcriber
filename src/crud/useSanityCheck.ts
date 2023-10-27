@@ -1,4 +1,5 @@
-import { useContext, useGlobal } from 'reactn';
+import { useContext } from 'react';
+import { useGlobal } from 'reactn';
 import { findRecord, related, staticFiles, updateableFiles } from '.';
 import Memory from '@orbit/memory';
 import moment from 'moment';
@@ -62,10 +63,12 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
       var sum = 0;
       //assume sorted if beforeThis is set
       rows.forEach((mf) => {
-        var num = stringToDateNum(mf.attributes.dateUpdated);
-        if (beforeThis && num > beforeThis) return sum;
+        if (mf) {
+          var num = stringToDateNum(mf.attributes.dateUpdated);
+          if (beforeThis && num > beforeThis) return sum;
 
-        sum += num % 100000000;
+          sum += num % 100000000;
+        }
       });
       return sum;
     };
@@ -115,7 +118,8 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           memory.cache.query((q) => q.findRecords('discussion')) as BaseModel[]
         ).filter(
           (d) =>
-            mediafiles.find((id) => id === related(d, 'medifile')) !== undefined
+            mediafiles.find((id) => id === related(d, 'mediafile')) !==
+            undefined
         );
       };
       const groupRows = () =>
@@ -342,8 +346,8 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
     };
 
     var project = findRecord(memory, 'project', projectId) as Project;
-    var remoteProjectId = project.keys?.remoteId ?? '';
-    if (!isOffline && project.keys?.remoteId) {
+    var remoteProjectId = project?.keys?.remoteId ?? '';
+    if (!isOffline && project?.keys?.remoteId) {
       var tables = staticFiles
         .concat(updateableFiles)
         .sort((i, j) => (i.sort <= j.sort ? -1 : 1))

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
-import { useGlobal, useEffect } from 'reactn';
+import { useGlobal } from 'reactn';
 import { shallowEqual, useSelector } from 'react-redux';
 import * as actions from '../store';
 import {
@@ -89,6 +89,7 @@ const initState = {
   planTypes: Array<PlanType>(),
   isDeleting: false,
   teams: Array<Organization>(),
+  personalTeam: '',
   personalProjects: Array<VProject>(),
   teamProjects: (teamId: string) => Array<VProject>(),
   teamMembers: (teamId: string) => 0,
@@ -195,7 +196,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [memory] = useGlobal('memory');
     const [isOffline] = useGlobal('offline');
     const [offlineOnly] = useGlobal('offlineOnly');
-    const [userProjects, setUserProjects] = useState(projects);
+    const userProjects = useRef(projects);
     const [importOpen, setImportOpen] = useState(false);
     const [importProject, setImportProject] = useState<VProject>();
     const [state, setState] = useState({
@@ -292,29 +293,9 @@ const TeamProvider = withData(mapRecordsToProps)(
         'Training'
       );
     };
-    useEffect(() => {
-      const getPersonalProjects = () => {
-        const projIds = userProjects
-          .filter(
-            (p) =>
-              isPersonalTeam(related(p, 'organization'), organizations) &&
-              (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
-          )
-          .map((p) => p.id);
-        return plans
-          .filter((p) => projIds.includes(related(p, 'project')))
-          .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1))
-          .map((p) => vProject(p));
-      };
-      setState((state) => ({
-        ...state,
-        personalProjects: getPersonalProjects(),
-      }));
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isOffline, plans, userProjects]);
 
     const teamProjects = (teamId: string) => {
-      const projIds = userProjects
+      const projIds = userProjects.current
         .filter(
           (p) =>
             related(p, 'organization') === teamId &&
@@ -425,6 +406,19 @@ const TeamProvider = withData(mapRecordsToProps)(
     }, [lang, allBookData]);
 
     useEffect(() => {
+      const getPersonalProjects = () => {
+        const projIds = userProjects.current
+          .filter(
+            (p) =>
+              isPersonalTeam(related(p, 'organization'), organizations) &&
+              (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
+          )
+          .map((p) => p.id);
+        return plans
+          .filter((p) => projIds.includes(related(p, 'project')))
+          .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1))
+          .map((p) => vProject(p));
+      };
       /* after deleting a project, sometimes we get here before the projects
        ** list is updated.  So, get an updated list all the time
        */
@@ -435,13 +429,23 @@ const TeamProvider = withData(mapRecordsToProps)(
       const grpIds = groupMemberships
         .filter((gm) => related(gm, 'user') === user)
         .map((gm) => related(gm, 'group'));
-      setUserProjects(
-        projs.filter((p) => grpIds.includes(related(p, 'group')))
+
+      userProjects.current = projs.filter((p) =>
+        grpIds.includes(related(p, 'group'))
       );
+      setState((state) => ({
+        ...state,
+        personalProjects: getPersonalProjects(),
+      }));
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [projects, groupMemberships, user, isOffline]);
+    }, [projects, plans, groupMemberships, user, isOffline]);
 
     useEffect(() => {
+      if (!state.personalTeam) {
+        getTeamId(undefined).then((personalTeam: string) => {
+          if (personalTeam) setState((state) => ({ ...state, personalTeam }));
+        });
+      }
       setState((state) => ({
         ...state,
         teams: getTeams(),

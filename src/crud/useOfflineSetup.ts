@@ -166,7 +166,7 @@ export const useOfflineSetup = () => {
       true
     ) as string;
     const RBT = getTypeId(ArtifactTypeSlug.Retell, true) as string;
-    console.log('WBT', WBT, 'PBT', PBT);
+    // console.log('WBT', WBT, 'PBT', PBT);
     if (offlineRecs.length === 0) {
       await makeWorkflowProcessSteps('OBT', [
         { name: 'Internalize', tool: 'resource' },
@@ -247,7 +247,7 @@ export const useOfflineSetup = () => {
         { name: 'Internalize', tool: 'resource' },
         { name: 'Record', tool: 'record' },
         { name: 'TeamCheck', tool: 'teamCheck' },
-        { name: 'Transcribe', tool: 'transcribe"}' },
+        { name: 'Transcribe', tool: 'transcribe' },
         { name: 'ParatextSync', tool: 'paratext' },
         { name: 'Done', tool: 'done' },
       ]);

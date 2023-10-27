@@ -16,6 +16,8 @@ import { QueryBuilder } from '@orbit/data';
 import { related, useArtifactType, usePlan } from '../../crud';
 import { IRow, getMedia, IGetMedia } from '.';
 import AudioTable from './AudioTable';
+import { ActionRow, GrowingDiv } from '../StepEditor';
+import SelectLatest from './SelectLatest';
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -35,13 +37,31 @@ export const VersionDlg = (props: IProps) => {
   const { passId, allBookData } = props;
   const { mediaFiles, passages, sections } = props;
   const [plan] = useGlobal('plan');
+  const [memory] = useGlobal('memory');
   const { getPlan } = usePlan();
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [playItem, setPlayItem] = useState('');
   const [data, setData] = useState<IRow[]>([]);
+  const [versions, setVersions] = useState<number[]>([]);
   const [refresh, setRefresh] = useState(0);
   const { IsVernacularMedia } = useArtifactType();
   const handleRefresh = () => setRefresh(refresh + 1);
+
+  const handleLatest = (version: number) => {
+    const id = data.find((d) => parseInt(d.version) === version)?.id;
+    const nextVersion = Math.max(...versions) + 1;
+    if (id)
+      memory
+        .update((t) =>
+          t.replaceAttribute(
+            { type: 'mediafile', id },
+            'versionNumber',
+            nextVersion
+          )
+        )
+        .then(() => handleRefresh());
+  };
+
   useEffect(() => {
     const playChange = data[0]?.playIcon !== playItem;
     const media: MediaFile[] = mediaFiles.filter(
@@ -57,18 +77,26 @@ export const VersionDlg = (props: IProps) => {
       isPassageDate: false,
     };
     const newData = getMedia(media, mediaData);
-    if (newData.length !== data.length || playChange || refresh)
+    if (newData.length !== data.length || playChange || refresh) {
       setData(newData);
+      setVersions(newData.map((d) => parseInt(d.version)));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaFiles, sections, passages, planRec, passId, playItem, refresh]);
 
   return (
-    <AudioTable
-      data={data}
-      setRefresh={handleRefresh}
-      playItem={playItem}
-      setPlayItem={setPlayItem}
-    />
+    <>
+      <AudioTable
+        data={data}
+        setRefresh={handleRefresh}
+        playItem={playItem}
+        setPlayItem={setPlayItem}
+      />
+      <ActionRow>
+        <GrowingDiv />
+        <SelectLatest versions={versions} onChange={handleLatest} />
+      </ActionRow>
+    </>
   );
 };
 

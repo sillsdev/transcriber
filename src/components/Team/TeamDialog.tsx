@@ -289,7 +289,7 @@ export function TeamDialog(props: IProps) {
               id="process"
               select
               label={t.process}
-              value={process || ''}
+              value={process || defaultWorkflow}
               onChange={handleProcess}
               sx={{ my: 2, width: '300px' }}
             >

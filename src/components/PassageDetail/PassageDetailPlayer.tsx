@@ -99,6 +99,7 @@ export function PassageDetailPlayer(props: IProps) {
   const playingRef = useRef(playing);
   const savingRef = useRef(false);
   const mediafileRef = useRef<MediaFile>();
+  const durationRef = useRef(0);
 
   const loadSegments = () => {
     const segs = mediafileRef.current?.attributes?.segments || '{}';
@@ -112,11 +113,12 @@ export function PassageDetailPlayer(props: IProps) {
   }, [playerMediafile]);
 
   useEffect(() => {
-    if (allowSegment && suggestedSegments) {
-      segmentsRef.current = suggestedSegments;
-      setDefaultSegments(segmentsRef.current);
-      onSegment && onSegment(segmentsRef.current);
-    }
+    if (allowSegment)
+      if (suggestedSegments) {
+        segmentsRef.current = suggestedSegments;
+        setDefaultSegments(segmentsRef.current);
+        onSegment && onSegment(segmentsRef.current);
+      } else setSegmentToWhole();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowSegment, suggestedSegments]);
 
@@ -162,7 +164,16 @@ export function PassageDetailPlayer(props: IProps) {
     }
   };
 
+  const setSegmentToWhole = () => {
+    if (allowSegment && setCurrentSegment && durationRef.current) {
+      var segs = JSON.parse(segmentsRef.current || '{}');
+      if ((segs.regions?.length ?? 0) === 0) {
+        setCurrentSegment({ start: 0, end: durationRef.current }, -1);
+      }
+    }
+  };
   const onDuration = (duration: number) => {
+    durationRef.current = duration;
     if (
       mediafileRef.current &&
       !Boolean(mediafileRef.current.attributes.sourceSegments) &&
@@ -186,6 +197,7 @@ export function PassageDetailPlayer(props: IProps) {
           forceRefresh();
         });
     }
+    setSegmentToWhole();
   };
 
   const setPlayerSegments = (segments: string) => {
