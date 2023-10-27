@@ -600,14 +600,14 @@ export function Transcriber(
   }, [paratextIntegration, project, projintegrations]);
 
   useEffect(() => {
-    if (artifactTypeSlug === ArtifactTypeSlug.Vernacular) {
+    const lgSettings = JSON.parse(stepSettings || '{}');
+    const [language] = lgSettings?.language?.split('|') ?? ['', 'und'];
+    if (artifactTypeSlug === ArtifactTypeSlug.Vernacular || !language) {
       if (project) {
         const r = findRecord(memory, 'project', project) as Project | undefined;
         if (r) getFontData(r, offline).then((data) => setProjData(data));
       }
     } else {
-      const lgSettings = JSON.parse(stepSettings || '{}');
-      const [language] = lgSettings?.language?.split('|') ?? ['', 'und'];
       const defaultFont = lgSettings?.font;
       const rtl = lgSettings?.rtl ?? false;
       const spellCheck = lgSettings?.spellCheck ?? false;
