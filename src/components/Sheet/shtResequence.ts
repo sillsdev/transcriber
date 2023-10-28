@@ -12,10 +12,20 @@ export const nextNum = (
   else return lastNum + 0.01;
 };
 export const shtResequence = (ws: ISheet[], sec = 1) => {
+  //TODO CHECK THIS WITH MOVEMENTS ETC NEXT RELEASE!
+  const minSection = () => {
+    let ms = ws.reduce((min, cur) =>
+      isSectionRow(cur) && cur.sectionSeq < min.sectionSeq ? cur : min
+    );
+    return ms ? ms.sectionSeq : 1;
+  };
   const updatedAt = currentDateTime();
   let change = false;
   let pas = 0;
-  sec -= 1;
+  if (sec === 1) {
+    sec = minSection() - 1;
+  }
+
   for (let i = 0; i < ws.length; i += 1) {
     let cur = ws[i];
     if (cur.deleted) continue;
