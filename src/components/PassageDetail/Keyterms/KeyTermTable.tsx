@@ -25,6 +25,7 @@ import {
 import Confirm from '../../AlertDialog';
 import MediaPlayer from '../../MediaPlayer';
 import AddIcon from '@mui/icons-material/Add';
+import { useCallback } from 'react';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -185,13 +186,17 @@ export default function KeyTermTable({
     return `${row.fileName}-${row.target.length}-${uuid.slice(0, 4)}`;
   };
 
-  const onOk = (row: IKeyTermRow) => {
-    rowRef.current = row;
-    // If we have a recording, save after upload
-    if (!canSaveRecording) {
-      afterUploadCb(''); // save without recording
-    }
-  };
+  const onOk = useCallback(
+    (row: IKeyTermRow) => {
+      rowRef.current = row;
+      // If we have a recording, save after upload
+      if (!canSaveRecording) {
+        afterUploadCb(''); // save without recording
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [canSaveRecording]
+  );
 
   const onCancel = () => {
     reset();
