@@ -8,7 +8,7 @@ function sectionReviewer(s: Section, users: Array<User>) {
 }
 export function sectionEditorName(s: Section, users: Array<User>) {
   let user = sectionReviewer(s, users);
-  return user == null || !user.attributes ? '' : user.attributes.name;
+  return user == null || user.attributes?.name || '';
 }
 function sectionTranscriber(s: Section, users: Array<User>) {
   let user = users.filter((u) => u.id === related(s, 'transcriber'));
@@ -16,7 +16,7 @@ function sectionTranscriber(s: Section, users: Array<User>) {
 }
 export function sectionTranscriberName(s: Section, users: Array<User>) {
   let user = sectionTranscriber(s, users);
-  return user == null || !user.attributes ? '' : user.attributes.name;
+  return user == null || user.attributes?.name || '';
 }
 export function sectionNumber(section: Section) {
   return section?.attributes?.sequencenum?.toString().padStart(3, ' ') || '';
