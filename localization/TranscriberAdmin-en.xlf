@@ -6784,6 +6784,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="workflowSteps.review">
+         <segment>
+            <source>Review Transcription</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="workflowSteps.saveFirst">
          <segment>
             <source>Save before changing step?</source>

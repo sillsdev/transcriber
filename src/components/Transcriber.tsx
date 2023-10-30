@@ -214,6 +214,8 @@ const mapStateToProps = (state: IState): IStateProps => ({
 interface IProps {
   defaultWidth: number;
   stepSettings?: string;
+  hasChecking?: boolean;
+  setComplete?: (complete: boolean) => void;
 }
 
 interface ITrans {
@@ -226,6 +228,8 @@ export function Transcriber(
 ) {
   const {
     stepSettings,
+    hasChecking,
+    setComplete,
     mediafiles,
     projintegrations,
     integrations,
@@ -741,10 +745,13 @@ export function Transcriber(
   const handleSubmit = async () => {
     if (next.hasOwnProperty(state)) {
       let nextState = next[state];
+      if (nextState === ActivityStates.Transcribed && !hasChecking)
+        nextState = ActivityStates.Approved;
       if (nextState === ActivityStates.Approved && noParatext)
         nextState = ActivityStates.Done;
       await save(nextState, 0, segmentsRef.current, '');
       forcePosition(0);
+      if (setComplete) setComplete(true);
     } else {
       logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
     }
@@ -901,6 +908,7 @@ export function Transcriber(
         )
       );
       setLastSaved(currentDateTime());
+      if (setComplete) setComplete(false);
     }
   };
   const handleReopen = async () => {

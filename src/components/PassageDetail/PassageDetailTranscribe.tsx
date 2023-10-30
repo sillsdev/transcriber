@@ -7,6 +7,7 @@ import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { sharedSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import TaskTable, { TaskTableWidth } from '../TaskTable';
+import { ToolSlug } from '../../crud';
 
 interface TableContainerProps extends BoxProps {
   topFilter?: boolean;
@@ -39,16 +40,51 @@ export function PassageDetailTranscribe({
   artifactTypeId,
   onFilter,
 }: IProps) {
-  const { mediafileId, currentstep, orgWorkflowSteps } =
-    usePassageDetailContext();
+  const {
+    mediafileId,
+    currentstep,
+    orgWorkflowSteps,
+    setStepComplete,
+    setCurrentStep,
+  } = usePassageDetailContext();
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [topFilter, setTopFilter] = useState(false);
+
+  const hasChecking = useMemo(() => {
+    if (!orgWorkflowSteps) return false;
+    let found = false;
+    let count = 0;
+    for (let s of orgWorkflowSteps.sort(
+      (a, b) =>
+        (a.attributes.sequencenum ?? 0) - (b.attributes.sequencenum ?? 0)
+    )) {
+      if (s.id === currentstep) found = true;
+      if (!found) continue;
+      const json = JSON.parse(s?.attributes?.tool ?? '{}');
+      if (json.tool === ToolSlug.Transcribe) {
+        const settings = JSON.parse(json?.settings || '{}');
+        if (!settings?.artifactTypeId) {
+          count++;
+        }
+      } else if (json.tool === ToolSlug.Paratext) {
+        break;
+      }
+    }
+    return count > 1;
+  }, [currentstep, orgWorkflowSteps]);
 
   const stepSettings = useMemo(() => {
     if (!currentstep || !orgWorkflowSteps) return null;
     const step = orgWorkflowSteps.find((s) => s.id === currentstep);
     return step ? JSON.parse(step?.attributes?.tool ?? '{}')?.settings : null;
   }, [currentstep, orgWorkflowSteps]);
+
+  const handleComplete = (complete: boolean) => {
+    setTimeout(() => {
+      setStepComplete(currentstep, complete);
+      if (complete) setTimeout(() => setCurrentStep(''), 500);
+    }, 500);
+  };
 
   const handleTopFilter = (top: boolean) => {
     setTopFilter(top);
@@ -73,7 +109,13 @@ export function PassageDetailTranscribe({
             )}
           </Box>
         )}
-        {artifactTypeId == null && <Transcriber defaultWidth={width} />}
+        {artifactTypeId == null && (
+          <Transcriber
+            defaultWidth={width}
+            hasChecking={hasChecking}
+            setComplete={handleComplete}
+          />
+        )}
       </Grid>
     </TranscriberProvider>
   ) : (
