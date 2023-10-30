@@ -39,7 +39,7 @@ export function UserAvatar(props: IProps) {
   return source ? (
     <Avatar
       id="srcuser"
-      alt={curUser.attributes.name}
+      alt={curUser.attributes?.name || ''}
       src={source}
       sx={avatarSize(small)}
     />
