@@ -165,6 +165,16 @@ VALUES(null, 'graphic', current_timestamp at time zone 'utc', current_timestamp 
 --delete from artifactcategorys a where note = true;
 
 
+update workflowsteps set sequencenum =sequencenum +1, dateupdated = current_timestamp at time zone 'utc' where process = 'draft' and sequencenum > 4;
+INSERT INTO public.workflowsteps
+(process, "name", sequencenum, tool, permissions, datecreated, dateupdated, lastmodifiedby, archived, lastmodifiedorigin)
+VALUES('draft', 'Review', 5, '{"tool": "transcribe"}', '{}', current_timestamp at time zone 'utc', current_timestamp at time zone 'utc', null, false, 'setup'::text);
+
+update workflowsteps set sequencenum =sequencenum +1, dateupdated = current_timestamp at time zone 'utc' where process = 'OBT' and sequencenum > 5;
+INSERT INTO public.workflowsteps
+(process, "name", sequencenum, tool, permissions, datecreated, dateupdated, lastmodifiedby, archived, lastmodifiedorigin)
+VALUES('OBT', 'Review', 6, '{"tool": "transcribe"}', '{}', current_timestamp at time zone 'utc', current_timestamp at time zone 'utc', null, false, 'setup'::text);
+
 --note TYPE:
 --book friendly name  >> passage type
 -- chapter number >> passage type
