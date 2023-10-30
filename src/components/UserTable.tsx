@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { localizeRole, LocalKey, localUserKey, useMyNavigate } from '../utils';
 import { shallowEqual } from 'react-redux';
@@ -237,20 +237,27 @@ export function UserTable(props: IProps & IRecordProps) {
           aria-label={'del-' + value}
           color="default"
           onClick={handleDelete(value)}
-          disabled={isCurrentUser(value)}
+          disabled={userIsAdmin && admins.length === 1}
         >
           <DeleteIcon />
         </IconButton>
       </>
     </Table.Cell>
   );
+  const admins = useMemo(
+    () => data.filter((d) => d.role === RoleNames.Admin),
+    [data]
+  );
   const canEdit = () => {
     return userIsAdmin && (!offline || offlineOnly);
+  };
+  const canEditOrcanDeleteSelf = (value: string) => {
+    return (userIsAdmin || isCurrentUser(value)) && (!offline || offlineOnly);
   };
   const Cell = (props: any) => {
     const { column } = props;
     if (column.name === 'action') {
-      if (canEdit()) return <ActionCell {...props} />;
+      if (canEditOrcanDeleteSelf(props.value)) return <ActionCell {...props} />;
       else return <></>;
     }
     return <Table.Cell {...props} />;

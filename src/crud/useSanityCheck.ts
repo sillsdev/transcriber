@@ -81,10 +81,6 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           .checksum ?? 0;
       if (cs !== remoteCs) {
         console.log(remoteProjectId, name, cs, remoteCs);
-        rows = rows.sort(
-          (i, j) =>
-            Number(i.keys?.remoteId ?? '0') - Number(j.keys?.remoteid ?? '0')
-        );
         rows
           .sort(
             (i, j) =>
@@ -106,12 +102,14 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
       var org = related(project, 'organization');
 
       const mediafileRows = () =>
-        memory.cache.query((q) =>
-          q.findRecords('mediafile').filter({
-            relation: 'plan',
-            record: { type: 'plan', id: plan.id },
-          })
-        ) as BaseModel[];
+        (
+          memory.cache.query((q) =>
+            q.findRecords('mediafile').filter({
+              relation: 'plan',
+              record: { type: 'plan', id: plan.id },
+            })
+          ) as BaseModel[]
+        ).filter((x) => Boolean(x?.keys?.remoteId));
       const discussionRows = () => {
         var mediafiles = mediafileRows().map((m) => m.id);
         return (
@@ -123,20 +121,25 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
         );
       };
       const groupRows = () =>
-        memory.cache.query((q) =>
-          q.findRecords('group').filter({
-            relation: 'owner',
-            record: { type: 'organization', id: org },
-          })
-        ) as BaseModel[];
+        (
+          memory.cache.query((q) =>
+            q.findRecords('group').filter({
+              relation: 'owner',
+              record: { type: 'organization', id: org },
+            })
+          ) as BaseModel[]
+        ).filter((x) => Boolean(x?.keys?.remoteId));
 
       const sectionRows = () =>
-        memory.cache.query((q) =>
-          q.findRecords('section').filter({
-            relation: 'plan',
-            record: { type: 'plan', id: plan.id },
-          })
-        ) as BaseModel[];
+        (
+          memory.cache.query((q) =>
+            q.findRecords('section').filter({
+              relation: 'plan',
+              record: { type: 'plan', id: plan.id },
+            })
+          ) as BaseModel[]
+        ).filter((x) => Boolean(x?.keys?.remoteId));
+
       const passageRows = () => {
         var sections = sectionRows().map((s) => s.id);
         return (
@@ -146,6 +149,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
             sections.find((id) => id === related(p, 'section')) !== undefined
         );
       };
+
       const sectionResourceRows = () => {
         var sections = sectionRows().map((s) => s.id);
         return (
@@ -167,6 +171,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           (sr) => psgs.find((id) => id === related(sr, 'passage')) !== undefined
         );
       };
+
       const filterByOrg = (table: string) =>
         memory.cache.query((q) =>
           q.findRecords(table).filter({
@@ -186,11 +191,15 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
         case 'projecttype':
         case 'role':
         case 'workflowstep':
-          return memory.cache.query((q) => q.findRecords(table)) as BaseModel[];
+          return (
+            memory.cache.query((q) => q.findRecords(table)) as BaseModel[]
+          ).filter((x) => Boolean(x?.keys?.remoteId));
         case 'artifactcategory':
-          var acs = memory.cache.query((q) =>
-            q.findRecords('artifactcategory')
-          ) as BaseModel[];
+          var acs = (
+            memory.cache.query((q) =>
+              q.findRecords('artifactcategory')
+            ) as BaseModel[]
+          ).filter((x) => Boolean(x?.keys?.remoteId));
           return acs.filter(
             (ac) =>
               related(ac, 'organization') === org ||
@@ -224,12 +233,6 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
         case 'group':
           return groupRows();
         case 'intellectualproperty':
-          return memory.cache.query((q) =>
-            q.findRecords('intellectualproperty').filter({
-              relation: 'organization',
-              record: { type: 'organization', id: org },
-            })
-          ) as BaseModel[];
         case 'invitation':
           return filterByOrg(table);
         case 'mediafile':

@@ -13,11 +13,12 @@ import {
 } from '../../model';
 import localStrings from '../../selector/localize';
 import { QueryBuilder } from '@orbit/data';
-import { related, useArtifactType, usePlan } from '../../crud';
+import { related, useArtifactType, usePlan, useRole } from '../../crud';
 import { IRow, getMedia, IGetMedia } from '.';
 import AudioTable from './AudioTable';
 import { ActionRow, GrowingDiv } from '../StepEditor';
 import SelectLatest from './SelectLatest';
+import { UpdateRecord } from '../../model/baseModel';
 
 interface IStateProps {
   t: IMediaTabStrings;
@@ -39,6 +40,8 @@ export const VersionDlg = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const { getPlan } = usePlan();
+  const [user] = useGlobal('user');
+  const { userIsAdmin } = useRole();
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [playItem, setPlayItem] = useState('');
   const [data, setData] = useState<IRow[]>([]);
@@ -50,16 +53,15 @@ export const VersionDlg = (props: IProps) => {
   const handleLatest = (version: number) => {
     const id = data.find((d) => parseInt(d.version) === version)?.id;
     const nextVersion = Math.max(...versions) + 1;
-    if (id)
-      memory
-        .update((t) =>
-          t.replaceAttribute(
-            { type: 'mediafile', id },
-            'versionNumber',
-            nextVersion
-          )
-        )
-        .then(() => handleRefresh());
+    if (id) {
+      const pi = mediaFiles.find((m) => m.id === id);
+      if (pi) {
+        pi.attributes.versionNumber = nextVersion;
+        memory
+          .update((t) => UpdateRecord(t, pi, user))
+          .then(() => handleRefresh());
+      }
+    }
   };
 
   useEffect(() => {
@@ -92,10 +94,12 @@ export const VersionDlg = (props: IProps) => {
         playItem={playItem}
         setPlayItem={setPlayItem}
       />
-      <ActionRow>
-        <GrowingDiv />
-        <SelectLatest versions={versions} onChange={handleLatest} />
-      </ActionRow>
+      {userIsAdmin && (
+        <ActionRow>
+          <GrowingDiv />
+          <SelectLatest versions={versions} onChange={handleLatest} />
+        </ActionRow>
+      )}
     </>
   );
 };

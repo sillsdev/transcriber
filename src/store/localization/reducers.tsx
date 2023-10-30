@@ -1518,6 +1518,7 @@ const initialState = {
 			"record": "Record",
 			"retellBackTranslation": "Retell Back Translation",
 			"retellBTTranscribe": "Retell BT Transcribe",
+			"review": "Review Transcription",
 			"saveFirst": "Save before changing step?",
 			"teamCheck": "Compare",
 			"termVerify": "Term Verify",

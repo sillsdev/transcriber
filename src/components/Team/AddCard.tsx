@@ -60,6 +60,7 @@ const initLang = {
   bcp47: 'und',
   languageName: '',
   font: '',
+  rtl: false,
   spellCheck: false,
 };
 
@@ -229,7 +230,7 @@ export const AddCard = (props: IProps) => {
       tags,
       organizedBy,
     } = values;
-    setLanguage({ bcp47, languageName, font, spellCheck });
+    setLanguage({ bcp47, languageName, font, rtl, spellCheck });
     projectCreate(
       {
         attributes: {

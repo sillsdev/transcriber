@@ -1429,6 +1429,7 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "record": string;
     "retellBackTranslation": string;
     "retellBTTranscribe": string;
+    "review": string;
     "saveFirst": string;
     "teamCheck": string;
     "termVerify": string;

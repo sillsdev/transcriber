@@ -8252,6 +8252,13 @@
       			<context context-type="sourcefile">passageDetail.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="workflowSteps.review">
+      		<source>Review Transcription</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageDetail.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="workflowSteps.saveFirst">
             <source>Save before changing step?</source>
             <target/>

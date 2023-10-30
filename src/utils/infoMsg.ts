@@ -4,8 +4,7 @@ import { Severity } from '.';
 import { IAxiosStatus } from '../store/AxiosStatus';
 
 export const infoMsg = (e: Error, info: string) => {
-  e.name = info + e.name;
-  return e;
+  return { ...e, name: info + e.name };
 };
 
 export const axiosError = (e: IAxiosStatus) =>

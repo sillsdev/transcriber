@@ -173,6 +173,7 @@ export const useOfflineSetup = () => {
         { name: 'Record', tool: 'record' },
         { name: 'TermIdentify', tool: 'keyterm' },
         { name: 'Transcribe', tool: 'transcribe' },
+        { name: 'Review', tool: 'transcribe' },
         { name: 'ParatextSync', tool: 'paratext' },
         { name: 'ParatextPeerReview', tool: 'discuss' },
         { name: 'CommunityTesting', tool: 'community' },
@@ -248,6 +249,7 @@ export const useOfflineSetup = () => {
         { name: 'Record', tool: 'record' },
         { name: 'TeamCheck', tool: 'teamCheck' },
         { name: 'Transcribe', tool: 'transcribe' },
+        { name: 'Review', tool: 'transcribe' },
         { name: 'ParatextSync', tool: 'paratext' },
         { name: 'Done', tool: 'done' },
       ]);

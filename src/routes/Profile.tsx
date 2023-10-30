@@ -212,11 +212,7 @@ export function Profile(props: IProps) {
     }
     toolChanged(toolId, true);
     setName(e.target.value);
-    if (
-      !currentUser ||
-      !currentUser.attributes.givenName ||
-      currentUser.attributes.givenName === ''
-    ) {
+    if (!currentUser || (currentUser.attributes?.givenName || '') === '') {
       const parts = e.target.value.split(' ');
       setGiven(parts[0]);
       if (parts.length > 1) {
@@ -834,7 +830,7 @@ export function Profile(props: IProps) {
           {(!isOffline || offlineOnly) &&
             !editId &&
             currentUser &&
-            currentUser.attributes.name !== currentUser.attributes.email && (
+            currentUser.attributes?.name !== currentUser.attributes?.email && (
               <DeleteExpansion
                 title={t.deleteUser}
                 explain={t.deleteExplained}

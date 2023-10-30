@@ -213,6 +213,9 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
 interface IProps {
   defaultWidth: number;
+  stepSettings?: string;
+  hasChecking?: boolean;
+  setComplete?: (complete: boolean) => void;
 }
 
 interface ITrans {
@@ -224,6 +227,9 @@ export function Transcriber(
   props: IProps & IStateProps & IDispatchProps & IRecordProps
 ) {
   const {
+    stepSettings,
+    hasChecking,
+    setComplete,
     mediafiles,
     projintegrations,
     integrations,
@@ -598,12 +604,24 @@ export function Transcriber(
   }, [paratextIntegration, project, projintegrations]);
 
   useEffect(() => {
-    if (project && project !== '') {
-      var r = findRecord(memory, 'project', project) as Project;
-      if (r) getFontData(r, offline).then((data) => setProjData(data));
+    const lgSettings = JSON.parse(stepSettings || '{}');
+    const [language] = lgSettings?.language?.split('|') ?? ['', 'und'];
+    if (artifactTypeSlug === ArtifactTypeSlug.Vernacular || !language) {
+      if (project) {
+        const r = findRecord(memory, 'project', project) as Project | undefined;
+        if (r) getFontData(r, offline).then((data) => setProjData(data));
+      }
+    } else {
+      const defaultFont = lgSettings?.font;
+      const rtl = lgSettings?.rtl ?? false;
+      const spellCheck = lgSettings?.spellCheck ?? false;
+      const rec = {
+        attributes: { language, spellCheck, defaultFont, rtl },
+      } as Project;
+      getFontData(rec, offline).then((data) => setProjData(data));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project]);
+  }, [project, artifactTypeSlug]);
 
   useEffect(() => {
     const newAssigned = rowData[index]?.assigned;
@@ -727,10 +745,13 @@ export function Transcriber(
   const handleSubmit = async () => {
     if (next.hasOwnProperty(state)) {
       let nextState = next[state];
+      if (nextState === ActivityStates.Transcribed && !hasChecking)
+        nextState = ActivityStates.Approved;
       if (nextState === ActivityStates.Approved && noParatext)
         nextState = ActivityStates.Done;
       await save(nextState, 0, segmentsRef.current, '');
       forcePosition(0);
+      if (setComplete) setComplete(true);
     } else {
       logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
     }
@@ -887,6 +908,7 @@ export function Transcriber(
         )
       );
       setLastSaved(currentDateTime());
+      if (setComplete) setComplete(false);
     }
   };
   const handleReopen = async () => {
