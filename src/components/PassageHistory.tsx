@@ -86,7 +86,7 @@ export function PassageHistory(props: IProps) {
 
       const nameFromId = (psc: PassageStateChange) => {
         const user = userFromId(psc);
-        return user ? user.attributes.name : '';
+        return user?.attributes?.name || '';
       };
       return (
         <ListItem

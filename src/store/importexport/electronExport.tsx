@@ -203,7 +203,7 @@ export async function electronExport(
           var dp = dataPath(user.attributes.avatarUrl, PathType.AVATARS, {
             localname:
               remoteId('user', user.id, memory.keyMap) +
-              user.attributes.familyName +
+              (user.attributes?.familyName || '') +
               '.png',
           });
           await AddStreamEntry(dp, avatarpath + path.basename(dp));
