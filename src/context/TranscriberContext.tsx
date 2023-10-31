@@ -110,10 +110,11 @@ const TranscriberContext = React.createContext({} as IContext);
 interface IProps {
   children: React.ReactElement;
   artifactTypeId?: string | null | undefined;
+  curRole?: string;
 }
 const TranscriberProvider = withData(mapRecordsToProps)(
   (props: IProps & IRecordProps) => {
-    const { artifactTypeId } = props;
+    const { artifactTypeId, curRole } = props;
     const [isDetail] = useState(artifactTypeId !== undefined);
     const { passages, mediafiles, sections } = props;
     const todoStr: IToDoTableStrings = useSelector(
@@ -240,6 +241,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       onlyAvailable: boolean,
       playItem: string
     ) => {
+      if (curRole && curRole !== role && role !== 'view') return;
       const planName = getPlanName(planRec);
       const planType = getPlanType(planRec);
 

@@ -50,39 +50,89 @@ export function PassageDetailTranscribe({
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [topFilter, setTopFilter] = useState(false);
 
+  const parsedSteps = useMemo(() => {
+    if (!orgWorkflowSteps) return [];
+    return orgWorkflowSteps
+      .sort(
+        (a, b) =>
+          (a.attributes.sequencenum ?? 0) - (b.attributes.sequencenum ?? 0)
+      )
+      .map((s) => ({
+        id: s.id,
+        tool: JSON.parse(s?.attributes?.tool ?? '{}').tool,
+        settings: JSON.parse(s?.attributes?.tool ?? '{}').settings,
+      }));
+  }, [orgWorkflowSteps]);
+
   const hasChecking = useMemo(() => {
-    if (!orgWorkflowSteps) return false;
+    if (!currentstep || !parsedSteps) return false;
     let found = false;
     let count = 0;
-    for (let s of orgWorkflowSteps.sort(
-      (a, b) =>
-        (a.attributes.sequencenum ?? 0) - (b.attributes.sequencenum ?? 0)
-    )) {
+    for (let s of parsedSteps) {
       if (s.id === currentstep) found = true;
       if (!found) continue;
-      const json = JSON.parse(s?.attributes?.tool ?? '{}');
-      if (json.tool === ToolSlug.Transcribe) {
-        const settings = JSON.parse(json?.settings || '{}');
-        if (!settings?.artifactTypeId) {
+      if (s.tool === ToolSlug.Transcribe) {
+        if (!s.settings?.artifactTypeId) {
           count++;
         }
-      } else if (json.tool === ToolSlug.Paratext) {
+      } else if (s.tool === ToolSlug.Paratext) {
         break;
       }
     }
     return count > 1;
-  }, [currentstep, orgWorkflowSteps]);
+  }, [currentstep, parsedSteps]);
 
   const stepSettings = useMemo(() => {
-    if (!currentstep || !orgWorkflowSteps) return null;
-    const step = orgWorkflowSteps.find((s) => s.id === currentstep);
-    return step ? JSON.parse(step?.attributes?.tool ?? '{}')?.settings : null;
-  }, [currentstep, orgWorkflowSteps]);
+    if (!currentstep || !parsedSteps) return null;
+    const step = parsedSteps.find((s) => s.id === currentstep);
+    return step ? step.settings : null;
+  }, [currentstep, parsedSteps]);
+
+  const nextStep = useMemo(() => {
+    if (!currentstep || !parsedSteps) return null;
+    let found = false;
+    for (let s of parsedSteps) {
+      if (s.id === currentstep) {
+        found = true;
+        continue;
+      }
+      if (!found) continue;
+      return s.id;
+    }
+    return null;
+  }, [currentstep, parsedSteps]);
+
+  const curRole = useMemo(() => {
+    if (!currentstep || !parsedSteps) return undefined;
+    let found = false;
+    let count = 0;
+    let previousTypeId: string | null | undefined = undefined;
+    for (let s of parsedSteps) {
+      if (s.id === currentstep) found = true;
+      if (!found) {
+        previousTypeId =
+          s.tool !== ToolSlug.Transcribe
+            ? undefined
+            : s.settings?.artifactTypeId ?? null;
+        continue;
+      }
+      if (s.tool === ToolSlug.Transcribe) {
+        if (!s.settings?.artifactTypeId) {
+          count++;
+        }
+      } else if (s.tool === ToolSlug.Paratext) {
+        break;
+      }
+    }
+    if (count === 1 && previousTypeId === null) return 'editor';
+    if (count > 0) return 'transcriber';
+    return undefined;
+  }, [currentstep, parsedSteps]);
 
   const handleComplete = (complete: boolean) => {
     setTimeout(() => {
       setStepComplete(currentstep, complete);
-      if (complete) setTimeout(() => setCurrentStep(''), 500);
+      if (complete) setTimeout(() => setCurrentStep(nextStep || ''), 500);
     }, 500);
   };
 
@@ -92,7 +142,7 @@ export function PassageDetailTranscribe({
   };
 
   return Boolean(mediafileId) ? (
-    <TranscriberProvider artifactTypeId={artifactTypeId}>
+    <TranscriberProvider artifactTypeId={artifactTypeId} curRole={curRole}>
       <Grid container direction="column">
         {artifactTypeId && (
           <Box sx={{ display: 'flex', flexDirection: 'row' }}>
