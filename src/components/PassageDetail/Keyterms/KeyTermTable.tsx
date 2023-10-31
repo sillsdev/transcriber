@@ -115,19 +115,27 @@ export default function KeyTermTable({
     toolChanged(`${rowRef.current?.index}`, false);
     rowRef.current = undefined;
   };
+
   const saveKeyTermTarget = useKeyTermSave({ cb: reset });
-  const afterUploadCb = async (mediaRemId: string) => {
-    if (rowRef.current) {
-      const { term, index } = rowRef.current;
-      saveKeyTermTarget({
-        term,
-        termIndex: index,
-        mediaRemId,
-        target: targetText,
-      });
-    }
-  };
+
+  const afterUploadCb = useCallback(
+    async (mediaRemId: string) => {
+      if (rowRef.current) {
+        const { term, index } = rowRef.current;
+        saveKeyTermTarget({
+          term,
+          termIndex: index,
+          mediaRemId,
+          target: targetText,
+        });
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [targetText]
+  );
+
   const { keyTermId } = useArtifactType();
+
   const uploadMedia = useMediaUpload({ artifactId: keyTermId, afterUploadCb });
 
   const handleTermClick = (term: number) => () => {
@@ -186,17 +194,13 @@ export default function KeyTermTable({
     return `${row.fileName}-${row.target.length}-${uuid.slice(0, 4)}`;
   };
 
-  const onOk = useCallback(
-    (row: IKeyTermRow) => {
-      rowRef.current = row;
-      // If we have a recording, save after upload
-      if (!canSaveRecording) {
-        afterUploadCb(''); // save without recording
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [canSaveRecording]
-  );
+  const onOk = (row: IKeyTermRow) => {
+    rowRef.current = row;
+    // If we have a recording, save after upload
+    if (!canSaveRecording) {
+      afterUploadCb(''); // save without recording
+    }
+  };
 
   const onCancel = () => {
     reset();

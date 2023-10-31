@@ -177,7 +177,7 @@ const initState = {
   getProjectResources: async () => [] as MediaFile[],
   workflow: Array<SimpleWf>(),
   psgCompleted: [] as StepComplete[],
-  setStepComplete: (stepId: string, complete: boolean) => {},
+  setStepComplete: async (stepId: string, complete: boolean) => {},
   stepComplete: (stepId: string) => {
     return false;
   },
@@ -529,7 +529,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       return Boolean(step?.complete);
     };
 
-    const setStepComplete = (stepid: string, complete: boolean) => {
+    const setStepComplete = async (stepid: string, complete: boolean) => {
       var completed = [...state.psgCompleted];
       var remId = remoteId('orgworkflowstep', stepid, memory.keyMap) || stepid;
       var step = completed.find((s) => s.stepid === remId);
@@ -580,7 +580,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
         user,
         memory
       );
-      memory.update(ops);
+      await memory.update(ops);
     };
 
     const getSharedResources = async () => {

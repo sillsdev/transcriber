@@ -326,7 +326,10 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
           tool === ToolSlug.Transcribe ||
           tool === ToolSlug.ConsultantCheck ||
           tool === ToolSlug.KeyTerm) && (
-          <Paper sx={{ p: 0, margin: 'auto', width: `calc(100% - 32px)` }}>
+          <Paper
+            key={currentstep}
+            sx={{ p: 0, margin: 'auto', width: `calc(100% - 32px)` }}
+          >
             <Wrapper>
               <SplitPane
                 defaultSize={widthRef.current - discussionSize.width - 16}
@@ -405,7 +408,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
         {(tool === ToolSlug.Community ||
           tool === ToolSlug.PhraseBackTranslate ||
           tool === ToolSlug.WholeBackTranslate) && (
-          <Grid container direction="row" sx={rowProps}>
+          <Grid key={currentstep} container direction="row" sx={rowProps}>
             <Grid item xs={12}>
               <PassageDetailItem
                 width={width}

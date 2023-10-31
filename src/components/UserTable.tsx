@@ -237,7 +237,7 @@ export function UserTable(props: IProps & IRecordProps) {
           aria-label={'del-' + value}
           color="default"
           onClick={handleDelete(value)}
-          disabled={userIsAdmin && admins.length === 1}
+          disabled={isCurrentUser(value) && userIsAdmin && admins.length === 1}
         >
           <DeleteIcon />
         </IconButton>
