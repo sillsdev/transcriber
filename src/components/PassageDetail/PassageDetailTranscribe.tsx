@@ -153,21 +153,23 @@ export function PassageDetailTranscribe({
       200
     ).then(() => {
       setStepComplete(currentstep, complete);
-      if (complete)
-        setCurrentStep(nextStep || '');
+      if (complete) setCurrentStep(nextStep || '');
     });
   };
 
-  const handleReopen = () => {
+  const uncompletedSteps = () => {
     setStepComplete(currentstep, false);
     if (hasChecking && nextStep) setStepComplete(nextStep, false);
     if (curRole === 'editor' && prevStep) setStepComplete(prevStep, false);
   };
 
+  const handleReopen = () => {
+    uncompletedSteps();
+    setCurrentStep(curRole === 'editor' ? prevStep || '' : '');
+  };
+
   const handleReject = (reason: string) => {
-    setStepComplete(currentstep, false);
-    if (hasChecking && nextStep) setStepComplete(nextStep, false);
-    if (curRole === 'editor' && prevStep) setStepComplete(prevStep, false);
+    uncompletedSteps();
     if (reason === ActivityStates.NeedsNewRecording) {
       const recordStep = parsedSteps.find((s) => s.tool === ToolSlug.Record);
       if (recordStep) {
