@@ -150,6 +150,8 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
     setPlayerSize,
     orgWorkflowSteps,
     mediafileId,
+    setStepComplete,
+    setCurrentStep,
   } = ctx.state;
   const minWidthRef = React.useRef(800);
   const { tool, settings } = useStepTool(currentstep);
@@ -198,6 +200,11 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
       height: discussionSize.height,
     });
   }, 50);
+
+  const handleSyncComplete = (step: string, complete: boolean) => {
+    setStepComplete(step, complete);
+    setCurrentStep('');
+  };
 
   const handleHorzSplitSize = debounce((e: number) => {
     setPlayerSize(e);
@@ -315,7 +322,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
             <IntegrationTab
               artifactType={artifactSlug as ArtifactTypeSlug}
               passage={ctx.state.passage}
-              setStepComplete={ctx.state.setStepComplete as any}
+              setStepComplete={handleSyncComplete}
               currentstep={currentstep}
             />
           </Stack>

@@ -1,8 +1,6 @@
 import { useGlobal } from 'reactn';
-import { ISharedStrings, Plan } from '../model';
+import { Plan } from '../model';
 import { QueryBuilder } from '@orbit/data';
-import { useSelector, shallowEqual } from 'react-redux';
-import { sharedSelector } from '../selector';
 
 export const usePlan = () => {
   const [memory] = useGlobal('memory');

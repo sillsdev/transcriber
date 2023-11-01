@@ -30,6 +30,7 @@ const initLang = {
   bcp47: '',
   languageName: '',
   font: '',
+  rtl: false,
   spellCheck: false,
 };
 

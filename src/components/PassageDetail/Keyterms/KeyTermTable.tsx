@@ -98,7 +98,7 @@ export default function KeyTermTable({
   const [confirm, setConfirm] = React.useState<string>();
   const deleteId = React.useRef<string>();
   const [adding, setAdding] = React.useState<number[]>([]);
-  const { toolChanged } = React.useContext(UnsavedContext).state;
+  const { saveCompleted } = React.useContext(UnsavedContext).state;
   const {
     setSelected,
     commentPlaying,
@@ -112,7 +112,7 @@ export default function KeyTermTable({
   const reset = () => {
     setTargetText('');
     setCanSaveRecording(false);
-    toolChanged(`${rowRef.current?.index}`, false);
+    saveCompleted(`${rowRef.current?.index}`);
     rowRef.current = undefined;
   };
 

@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ITranscribeRejectStrings, ActivityStates, MediaFile } from '../model';
+import {
+  ITranscribeRejectStrings,
+  ActivityStates,
+  MediaFile,
+  ITranscriberStrings,
+} from '../model';
 import {
   Button,
   Dialog,
@@ -14,7 +19,7 @@ import {
   TextField,
 } from '@mui/material';
 import { commentProps } from '../control';
-import { transcribeRejectSelector } from '../selector';
+import { transcribeRejectSelector, transcriberSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 
 interface IProps {
@@ -30,10 +35,11 @@ function TranscribeReject(props: IProps) {
   const [next, setNext] = useState<ActivityStates>();
   const [comment, setComment] = useState('');
   const [inProcess, setInProcess] = useState(false);
-  const t: ITranscribeRejectStrings = useSelector(
+  const tr: ITranscribeRejectStrings = useSelector(
     transcribeRejectSelector,
     shallowEqual
   );
+  const t: ITranscriberStrings = useSelector(transcriberSelector, shallowEqual);
 
   const handleSave = () => {
     doAddOrSave();
@@ -88,13 +94,13 @@ function TranscribeReject(props: IProps) {
         aria-labelledby="transRejectDlg"
         disableEnforceFocus
       >
-        <DialogTitle id="transRejectDlg">{t.rejectTitle}</DialogTitle>
+        <DialogTitle id="transRejectDlg">{tr.rejectTitle}</DialogTitle>
         <DialogContent>
           <FormControl component="fieldset" sx={{ m: 3 }}>
-            <FormLabel component="legend">{t.rejectReason}</FormLabel>
+            <FormLabel component="legend">{tr.rejectReason}</FormLabel>
             <RadioGroup
-              aria-label={t.rejectReason}
-              name={t.rejectReason}
+              aria-label={tr.rejectReason}
+              name={tr.rejectReason}
               value={next}
               onChange={handleChange}
             >
@@ -102,25 +108,25 @@ function TranscribeReject(props: IProps) {
                 id="needsAudio"
                 value={ActivityStates.NeedsNewRecording}
                 control={<Radio color="primary" />}
-                label={t.needsAudio}
+                label={tr.needsAudio}
               />
               <FormControlLabel
                 id="needsCorrection"
                 value={ActivityStates.NeedsNewTranscription}
                 control={<Radio color="primary" />}
-                label={t.needsCorrection}
+                label={tr.needsCorrection}
               />
               <FormControlLabel
                 id="incomplete"
                 value={ActivityStates.Incomplete}
                 control={<Radio color="primary" />}
-                label={t.incomplete}
+                label={tr.incomplete}
               />
             </RadioGroup>
           </FormControl>
           <TextField
             id="reject-comment"
-            label={t.comment}
+            label={tr.comment}
             variant="filled"
             multiline
             maxRows={5}
@@ -136,7 +142,7 @@ function TranscribeReject(props: IProps) {
             variant="outlined"
             color="primary"
           >
-            {t.cancel}
+            {tr.cancel}
           </Button>
           <Button
             id="transcriberReject.save"
@@ -150,7 +156,7 @@ function TranscribeReject(props: IProps) {
               inProcess
             }
           >
-            {t.next}
+            {t.reject}
           </Button>
         </DialogActions>
       </Dialog>

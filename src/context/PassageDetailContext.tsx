@@ -246,6 +246,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const dispatch = useDispatch();
     const fetchBooks = (lang: string) => dispatch(actions.fetchBooks(lang));
     const { pasId, prjId } = useParams();
+    const [globals] = useGlobal();
     const [memory] = useGlobal('memory');
     const [coordinator] = useGlobal('coordinator');
     const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -271,7 +272,6 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
     const { localizedArtifactCategory } = useArtifactCategory();
     const { localizedWorkStep } = useOrgWorkflowSteps();
     const getStepsBusy = useRef<boolean>(false);
-    const [changed] = useGlobal('changed');
     const mediaStart = useRef<number | undefined>();
     const mediaEnd = useRef<number | undefined>();
     const mediaPosition = useRef<number | undefined>();
@@ -318,7 +318,7 @@ const PassageDetailProvider = withData(mapRecordsToProps)(
       });
     };
     const setCurrentStep = (stepId: string) => {
-      if (changed) {
+      if (globals.changed) {
         setConfirm(stepId);
       } else {
         handleSetCurrentStep(stepId);

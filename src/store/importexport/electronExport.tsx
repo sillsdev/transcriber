@@ -354,9 +354,16 @@ export async function electronExport(
       return ds;
     };
     const OrgKeyTerms = (remoteIds: boolean) => {
-      var kts = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('orgkeyterm')
-      ) as OrgKeyterm[];
+      var kts = (
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('orgkeyterm')
+        ) as OrgKeyterm[]
+      ).filter(
+        (r) =>
+          Boolean(
+            remoteId('organization', related(r, 'organization'), memory.keyMap)
+          ) === needsRemoteIds
+      );
 
       if (remoteIds) {
         kts.forEach((kt) => {
@@ -368,9 +375,16 @@ export async function electronExport(
     };
 
     const OrgKeyTermTargets = (remoteIds: boolean) => {
-      var ktts = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('orgkeytermtarget')
-      ) as OrgKeytermTarget[];
+      var ktts = (
+        memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('orgkeytermtarget')
+        ) as OrgKeytermTarget[]
+      ).filter(
+        (r) =>
+          Boolean(
+            remoteId('organization', related(r, 'organization'), memory.keyMap)
+          ) === needsRemoteIds
+      );
 
       if (remoteIds) {
         ktts.forEach((ktt) => {
