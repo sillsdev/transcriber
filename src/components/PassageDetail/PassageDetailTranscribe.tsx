@@ -8,6 +8,8 @@ import { sharedSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import TaskTable, { TaskTableWidth } from '../TaskTable';
 import { ToolSlug } from '../../crud';
+import { waitForIt } from '../../utils';
+import { useGlobal } from 'reactn';
 
 interface TableContainerProps extends BoxProps {
   topFilter?: boolean;
@@ -49,6 +51,7 @@ export function PassageDetailTranscribe({
   } = usePassageDetailContext();
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [topFilter, setTopFilter] = useState(false);
+  const [globals] = useGlobal();
 
   const parsedSteps = useMemo(() => {
     if (!orgWorkflowSteps) return [];
@@ -130,10 +133,16 @@ export function PassageDetailTranscribe({
   }, [currentstep, parsedSteps]);
 
   const handleComplete = (complete: boolean) => {
-    setTimeout(() => {
+    waitForIt(
+      'change cleared afert save',
+      () => !globals.changed,
+      () => false,
+      200
+    ).then(() => {
       setStepComplete(currentstep, complete);
-      if (complete) setTimeout(() => setCurrentStep(nextStep || ''), 500);
-    }, 500);
+      if (complete)
+        setCurrentStep(nextStep || '');
+    });
   };
 
   const handleTopFilter = (top: boolean) => {
