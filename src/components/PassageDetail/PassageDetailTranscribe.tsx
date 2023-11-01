@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ISharedStrings } from '../../model';
+import { ActivityStates, ISharedStrings } from '../../model';
 import { Grid, Typography, Box, BoxProps, styled } from '@mui/material';
 import { TranscriberProvider } from '../../context/TranscriberContext';
 import Transcriber from '../../components/Transcriber';
@@ -105,6 +105,19 @@ export function PassageDetailTranscribe({
     return null;
   }, [currentstep, parsedSteps]);
 
+  const prevStep = useMemo(() => {
+    if (!currentstep || !parsedSteps) return null;
+    let found = '';
+    for (let s of parsedSteps) {
+      if (s.id === currentstep) {
+        break;
+      } else {
+        found = s.id;
+      }
+    }
+    return found;
+  }, [currentstep, parsedSteps]);
+
   const curRole = useMemo(() => {
     if (!currentstep || !parsedSteps) return undefined;
     let found = false;
@@ -140,9 +153,32 @@ export function PassageDetailTranscribe({
       200
     ).then(() => {
       setStepComplete(currentstep, complete);
-      if (complete)
-        setCurrentStep(nextStep || '');
+      if (complete) setCurrentStep(nextStep || '');
     });
+  };
+
+  const uncompletedSteps = () => {
+    setStepComplete(currentstep, false);
+    if (hasChecking && nextStep) setStepComplete(nextStep, false);
+    if (curRole === 'editor' && prevStep) setStepComplete(prevStep, false);
+  };
+
+  const handleReopen = () => {
+    uncompletedSteps();
+    setCurrentStep(curRole === 'editor' ? prevStep || '' : '');
+  };
+
+  const handleReject = (reason: string) => {
+    uncompletedSteps();
+    if (reason === ActivityStates.NeedsNewRecording) {
+      const recordStep = parsedSteps.find((s) => s.tool === ToolSlug.Record);
+      if (recordStep) {
+        setStepComplete(recordStep.id, false);
+        setCurrentStep(recordStep.id);
+        return;
+      }
+    }
+    setCurrentStep(curRole === 'editor' ? prevStep || '' : '');
   };
 
   const handleTopFilter = (top: boolean) => {
@@ -163,6 +199,8 @@ export function PassageDetailTranscribe({
                 <Transcriber
                   defaultWidth={width - TaskTableWidth}
                   stepSettings={stepSettings}
+                  onReject={handleReject}
+                  onReopen={handleReopen}
                 />
               </TranscriberContainer>
             )}
@@ -173,6 +211,8 @@ export function PassageDetailTranscribe({
             defaultWidth={width}
             hasChecking={hasChecking}
             setComplete={handleComplete}
+            onReject={handleReject}
+            onReopen={handleReopen}
           />
         )}
       </Grid>

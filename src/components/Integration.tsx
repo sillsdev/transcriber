@@ -119,7 +119,8 @@ interface IProps {
   artifactType?: ArtifactTypeSlug;
   passage?: Passage;
   currentstep?: string;
-  setStepComplete?: (stepId: string, complete: boolean) => {};
+  setStepComplete?: (stepId: string, complete: boolean) => void;
+  setCurrentStep?: (stepId: string) => void;
 }
 
 export function IntegrationPanel(
@@ -140,6 +141,7 @@ export function IntegrationPanel(
     passage,
     currentstep,
     setStepComplete,
+    setCurrentStep,
   } = props;
   const {
     getUserName,
@@ -343,8 +345,10 @@ export function IntegrationPanel(
     );
     showMessage(translateParatextErr(err, ts) || t.syncComplete);
     resetCount();
-    if (setStepComplete && currentstep && !err)
+    if (setStepComplete && currentstep && !err) {
       setStepComplete(currentstep, true);
+      if (setCurrentStep) setCurrentStep('');
+    }
     setSyncing(false);
   };
 
@@ -589,8 +593,10 @@ export function IntegrationPanel(
           setLanguage,
           setDataChangeCount
         );
-        if (setStepComplete && currentstep && !paratext_syncStatus.errStatus)
+        if (setStepComplete && currentstep && !paratext_syncStatus.errStatus) {
           setStepComplete(currentstep, true);
+          if (setCurrentStep) setCurrentStep('');
+        }
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

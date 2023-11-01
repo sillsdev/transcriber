@@ -216,6 +216,8 @@ interface IProps {
   stepSettings?: string;
   hasChecking?: boolean;
   setComplete?: (complete: boolean) => void;
+  onReopen?: () => void;
+  onReject?: (reason: string) => void;
 }
 
 interface ITrans {
@@ -230,6 +232,8 @@ export function Transcriber(
     stepSettings,
     hasChecking,
     setComplete,
+    onReopen,
+    onReject,
     mediafiles,
     projintegrations,
     integrations,
@@ -709,6 +713,7 @@ export function Transcriber(
     );
     //todo ?? if (IsVernacular(media))
     setLastSaved(currentDateTime());
+    if (onReject) onReject(media.attributes.transcriptionstate);
   };
   const handleRejectCancel = () => setRejectVisible(false);
 
@@ -917,7 +922,7 @@ export function Transcriber(
       () => !remote || !connected || remote.requestQueue.length === 0,
       () => false,
       20
-    ).then(() => doReopen());
+    ).then(() => doReopen().then(() => onReopen && onReopen()));
   };
 
   const getTranscription = () => {
