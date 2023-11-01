@@ -1,5 +1,10 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { IStepEditorStrings, IState, OrgWorkflowStep } from '../../model';
+import {
+  IStepEditorStrings,
+  IState,
+  OrgWorkflowStep,
+  IWorkflowStepsStrings,
+} from '../../model';
 import { Button, Box } from '@mui/material';
 import localStrings from '../../selector/localize';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
@@ -26,6 +31,7 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
 import { TranscribeStepSettings } from './TranscribeStepSettings';
 import { ParatextStepSettings } from './ParatextStepSettings';
+import { workflowStepsSelector } from '../../selector';
 
 export interface IStepRow {
   id: string;
@@ -54,6 +60,10 @@ export const StepEditor = ({ process, org }: IProps) => {
   const [rows, setRows] = useState<IStepRow[]>([]);
   const [showAll, setShowAll] = useState(false);
   const se: IStepEditorStrings = useSelector(stepEditorSelector, shallowEqual);
+  const st: IWorkflowStepsStrings = useSelector(
+    workflowStepsSelector,
+    shallowEqual
+  );
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const {
@@ -71,6 +81,7 @@ export const StepEditor = ({ process, org }: IProps) => {
   const { localizedTool } = useTools();
   const { localizedArtifactTypeFromId } = useArtifactType();
   const [toolSettingsRow, setToolSettingsRow] = useState(-1);
+  const toolRef = useRef<number>();
   const settingsTools = [ToolSlug.Transcribe, ToolSlug.Paratext];
   const mxSeq = useMemo(() => {
     let max = 0;
@@ -100,8 +111,21 @@ export const StepEditor = ({ process, org }: IProps) => {
     return rows.filter((r) => r.id !== exceptId).map((r) => r.name);
   };
 
+  interface INameMap {
+    [key: string]: string;
+  }
+  const nameMap: INameMap = {
+    [st.transcribe]: st.review,
+  };
+
   const mangleName = (name: string, orgNames: string[], index?: number) => {
-    const baseName = name;
+    const hasTool = rows.some((r, i) => {
+      const settings = r.settings ? JSON.parse(r.settings) : undefined;
+      if (!settings) return localizedTool(r.tool) === name && i !== index;
+      return false;
+    });
+    let baseName = hasTool ? nameMap[name] ?? name : name;
+    name = baseName;
     let count = 1;
     while (true) {
       const i = orgNames.indexOf(name);
@@ -127,6 +151,33 @@ export const StepEditor = ({ process, org }: IProps) => {
   };
   const setToolSettingsOpen = (open: boolean) => {
     if (!open) setToolSettingsRow(-1);
+    if (toolRef.current) {
+      const settings = rows[toolRef.current].settings
+        ? JSON.parse(rows[toolRef.current].settings)
+        : {};
+      const artId =
+        remoteIdGuid('artifacttype', settings?.artifactTypeId, memory.keyMap) ??
+        settings?.artifactTypeId;
+      const artSlug = artId
+        ? `${localizedArtifactTypeFromId(artId).split(' ')[0]} `
+        : '';
+      const lang = settings?.language
+        ? ` ${settings.language?.split('|')[0]}`
+        : '';
+      let name = artSlug + localizedTool(rows[toolRef.current].tool) + lang;
+      name = mangleName(name, getOrgNames(), toolRef.current);
+      setRows(
+        rows.map((r, i) =>
+          i === toolRef.current
+            ? {
+                ...r,
+                name,
+              }
+            : r
+        )
+      );
+      toolRef.current = undefined;
+    }
   };
   const handleSettingsChange = (settings: string) => {
     setRows(
@@ -139,11 +190,11 @@ export const StepEditor = ({ process, org }: IProps) => {
     toolChanged(toolId, true);
   };
   const handleToolChange = (tool: string, index: number) => {
+    if (settingsTools.includes(tool as ToolSlug)) toolRef.current = index;
+    setToolSettingsRow(index); //bring up Settings editor
     let name = rows[index].name;
     if (name.includes(se.nextStep))
       name = mangleName(localizedTool(tool), getOrgNames());
-    //bring up Settings editor
-    setToolSettingsRow(index);
     setRows(
       rows.map((r, i) =>
         i === index
