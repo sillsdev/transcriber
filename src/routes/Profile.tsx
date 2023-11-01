@@ -392,7 +392,7 @@ export function Profile(props: IProps) {
         );
         if (offlineOnly) localStorage.setItem('user-id', userRec.id);
       }
-      toolChanged(toolId, false);
+      saveCompleted(toolId);
     }
     if (finishAdd) {
       finishAdd();
