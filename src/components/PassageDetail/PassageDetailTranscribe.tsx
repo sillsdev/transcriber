@@ -136,7 +136,7 @@ export function PassageDetailTranscribe({
         if (!s.settings?.artifactTypeId) {
           count++;
         }
-      } else if (s.tool === ToolSlug.Paratext) {
+      } else {
         break;
       }
     }
