@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="es" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
       <unit id="access.availableUsers">
@@ -823,6 +823,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="category.ignoreInvalid">
+         <segment>
+            <source>Ignoring invalid category change '{0}'.</source>
+            <target>Ignorar cambio de categoría no válido '{0}'</target>
+         </segment>
+      </unit>
       <unit id="commentCard.approve">
          <segment>
             <source>Approve</source>
@@ -1001,6 +1007,12 @@
          <segment>
             <source>Select Items to Compare</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.furtherReview">
+         <segment>
+            <source>Review More</source>
+            <target>Revisar más</target>
          </segment>
       </unit>
       <unit id="control.book">
@@ -5179,6 +5191,12 @@
             <target>Añadir</target>
          </segment>
       </unit>
+      <unit id="stepEditor.backtranslation">
+         <segment>
+            <source>Phrase BT</source>
+            <target>Frase BT</target>
+         </segment>
+      </unit>
       <unit id="stepEditor.changes">
          <segment>
             <source>{0} change(s)</source>
@@ -5227,6 +5245,18 @@
             <target>Un paso visible y añadido al final de la lista.</target>
          </segment>
       </unit>
+      <unit id="stepEditor.qanda">
+         <segment>
+            <source>Q and A</source>
+            <target>Q y A</target>
+         </segment>
+      </unit>
+      <unit id="stepEditor.retell">
+         <segment>
+            <source>Retell</source>
+            <target>Volver a contar</target>
+         </segment>
+      </unit>
       <unit id="stepEditor.saving">
          <segment>
             <source>Saving ...</source>
@@ -5261,6 +5291,12 @@
          <segment>
             <source>Tool</source>
             <target>Herramienta</target>
+         </segment>
+      </unit>
+      <unit id="stepEditor.wholebacktranslation">
+         <segment>
+            <source>Whole BT</source>
+            <target>BT completo</target>
          </segment>
       </unit>
       <unit id="taskItem.assign">
@@ -6706,7 +6742,7 @@
       <unit id="workflowSteps.review">
          <segment>
             <source>Review Transcription</source>
-         	<target>Revisar la transcripción</target>
+            <target>Revisar la transcripción</target>
          </segment>
       </unit>
       <unit id="workflowSteps.saveFirst">

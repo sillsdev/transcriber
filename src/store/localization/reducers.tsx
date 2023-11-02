@@ -1187,6 +1187,7 @@ const initialState = {
 	"stepEditor": new LocalizedStrings({
 		"en": {
 			"add": "Add",
+			"backtranslation": "Phrase BT",
 			"changes": "{0} change(s)",
 			"hide": "Hide",
 			"inProgress": "In progress...",
@@ -1195,12 +1196,15 @@ const initialState = {
 			"nextStep": "Next Step",
 			"oneHidden": "One step hidden",
 			"oneVisible": "One step visible and added to the end of the list.",
+			"qanda": "Q and A",
+			"retell": "Retell",
 			"saving": "Saving ...",
 			"show": "Show",
 			"showAll": "Show all",
 			"stepAdded": "Step added to the end of the list.",
 			"stepsHidden": "{0} steps hidden",
 			"tool": "Tool",
+			"wholebacktranslation": "Whole BT",
 		}
 	}),
 	"taskItem": new LocalizedStrings({

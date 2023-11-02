@@ -1117,6 +1117,7 @@ export interface ISpellingStrings extends Localize.LocalizedStringsMethods {
 
 export interface IStepEditorStrings extends Localize.LocalizedStringsMethods {
     "add": string;
+    "backtranslation": string;
     "changes": string;
     "hide": string;
     "inProgress": string;
@@ -1125,12 +1126,15 @@ export interface IStepEditorStrings extends Localize.LocalizedStringsMethods {
     "nextStep": string;
     "oneHidden": string;
     "oneVisible": string;
+    "qanda": string;
+    "retell": string;
     "saving": string;
     "show": string;
     "showAll": string;
     "stepAdded": string;
     "stepsHidden": string;
     "tool": string;
+    "wholebacktranslation": string;
 };
 
 export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
