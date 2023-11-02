@@ -5260,6 +5260,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="stepEditor.backtranslation">
+         <segment>
+            <source>Phrase BT</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="stepEditor.changes">
          <segment>
             <source>{0} change(s)</source>
@@ -5308,6 +5314,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="stepEditor.qanda">
+         <segment>
+            <source>Q and A</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.retell">
+         <segment>
+            <source>Retell</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="stepEditor.saving">
          <segment>
             <source>Saving ...</source>
@@ -5341,6 +5359,12 @@
       <unit id="stepEditor.tool">
          <segment>
             <source>Tool</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="stepEditor.wholebacktranslation">
+         <segment>
+            <source>Whole BT</source>
             <target/>
          </segment>
       </unit>

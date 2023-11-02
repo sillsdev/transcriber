@@ -6138,6 +6138,13 @@
                <context context-type="sourcefile">StepName.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="stepEditor.backtranslation">
+      		<source>Phrase BT</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">StepEditor.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="stepEditor.changes">
             <source>{0} change(s)</source>
             <target/>
@@ -6194,6 +6201,20 @@
                <context context-type="sourcefile">StepEditor.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="stepEditor.qanda">
+      		<source>Q and A</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">StepEditor.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="stepEditor.retell">
+      		<source>Retell</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">StepEditor.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="stepEditor.saving">
             <source>Saving ...</source>
             <target/>
@@ -6236,6 +6257,13 @@
                <context context-type="sourcefile">StepTool.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="stepEditor.wholebacktranslation">
+      		<source>Whole BT</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">StepEditor.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="taskItem.assign">
             <source>Assign {0}</source>
             <target/>
