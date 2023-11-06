@@ -120,29 +120,17 @@ export function PassageDetailTranscribe({
 
   const curRole = useMemo(() => {
     if (!currentstep || !parsedSteps) return undefined;
-    let found = false;
     let count = 0;
-    let previousTypeId: string | null | undefined = undefined;
     for (let s of parsedSteps) {
-      if (s.id === currentstep) found = true;
-      if (!found) {
-        previousTypeId =
-          s.tool !== ToolSlug.Transcribe
-            ? undefined
-            : s.settings?.artifactTypeId ?? null;
-        continue;
-      }
       if (s.tool === ToolSlug.Transcribe) {
         if (!s.settings?.artifactTypeId) {
           count++;
         }
-      } else {
-        break;
       }
+      if (s.id === currentstep) break;
     }
-    if (count === 1 && previousTypeId === null) return 'editor';
-    if (count > 0) return 'transcriber';
-    return undefined;
+    if (count > 1) return 'editor';
+    return 'transcriber';
   }, [currentstep, parsedSteps]);
 
   const handleComplete = (complete: boolean) => {
