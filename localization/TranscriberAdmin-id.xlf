@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="id" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
       <unit id="access.availableUsers">
@@ -829,6 +829,12 @@
             <target>Mengabaikan perubahan kategori yang tidak valid '{0}'</target>
          </segment>
       </unit>
+      <unit id="category.inUseBy">
+         <segment>
+            <source>In use by {0} {1}</source>
+            <target>Digunakan oleh {0} {1}</target>
+         </segment>
+      </unit>
       <unit id="commentCard.approve">
          <segment>
             <source>Approve</source>
@@ -1013,6 +1019,12 @@
          <segment>
             <source>Review More</source>
             <target>Tinjau Lebih Lanjut</target>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.noMedia">
+         <segment>
+            <source>No Media Available</source>
+            <target>Tidak Ada Media yang Tersedia</target>
          </segment>
       </unit>
       <unit id="control.book">
@@ -5733,8 +5745,8 @@
       </unit>
       <unit id="transcriber.saveReviewTip">
          <segment>
-            <source>Save position and comment</source>
-            <target/>
+            <source>Save transcript, position and segments</source>
+            <target>Menyimpan transkrip, posisi, dan segmen</target>
          </segment>
       </unit>
       <unit id="transcriber.saveTip">

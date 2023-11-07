@@ -4,70 +4,70 @@
     <body>
       <trans-unit id="access.availableUsers">
         <source>Other Users</source>
-        <target state="needs-translation">Other Users</target>
+        <target state="translated">其他用户</target>
         <context-group>
           <context context-type="sourcefile">access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="access.back">
         <source>Back</source>
-        <target state="needs-translation">Back</target>
+        <target state="translated">后去</target>
         <context-group>
           <context context-type="sourcefile">access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="access.cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
         <context-group>
           <context context-type="sourcefile">access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="access.createUser">
         <source>Add a new user</source>
-        <target state="needs-translation">Add a new user</target>
+        <target state="translated">添加新用户</target>
         <context-group>
           <context context-type="sourcefile">access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="access.currentUser">
         <source>Current User</source>
-        <target state="needs-translation">Current User</target>
+        <target state="translated">当前用户</target>
         <context-group>
           <context context-type="sourcefile">access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="access.importSnapshot">
         <source>Import Audio Project</source>
-        <target state="needs-translation">Import Audio Project</target>
+        <target state="translated">导入音频项目</target>
         <context-group>
           <context context-type="sourcefile">access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="access.logIn">
         <source>Log In</source>
-        <target state="needs-translation">Log In</target>
+        <target state="translated">登录</target>
         <context-group>
           <context context-type="sourcefile">access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="access.logout">
         <source>Log Out</source>
-        <target state="needs-translation">Log Out</target>
+        <target state="translated">登出</target>
         <context-group>
           <context context-type="sourcefile">access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="access.mustBeOnline">
         <source>You must be connected to the Internet to Log In!</source>
-        <target state="needs-translation">You must be connected to the Internet to Log In!</target>
+        <target state="translated">您必须连接到网路才可以做这件事！</target>
         <context-group>
           <context context-type="sourcefile">access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="access.noOnlineUsers1">
         <source>To allow offline use:</source>
-        <target state="needs-translation">To allow offline use:</target>
+        <target state="translated">允许离线使用：</target>
         <context-group>
           <context context-type="sourcefile">access.tsx</context>
         </context-group>
@@ -88,98 +88,98 @@
       </trans-unit>
       <trans-unit id="access.noOnlineUsers4">
         <source>Create a personal audio project.</source>
-        <target state="needs-translation">Create a personal audio project.</target>
+        <target state="translated">创建个人音频项目。</target>
         <context-group>
           <context context-type="sourcefile">access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="access.offlineUsers">
         <source>Offline Users</source>
-        <target state="needs-translation">Offline Users</target>
+        <target state="translated">离线用户</target>
         <context-group>
           <context context-type="sourcefile">access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="access.title">
         <source>Connection Mode</source>
-        <target state="needs-translation">Connection Mode</target>
+        <target state="translated">连接模式</target>
         <context-group>
           <context context-type="sourcefile">access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activityState.approved">
         <source>Ready to Sync</source>
-        <target state="needs-translation">Ready to Sync</target>
+        <target state="translated">准备同步</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activityState.done">
         <source>Done</source>
-        <target state="needs-translation">Done</target>
+        <target state="translated">完成</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activityState.incomplete">
         <source>Incomplete</source>
-        <target state="needs-translation">Incomplete</target>
+        <target state="translated">不完全</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activityState.needsNewRecording">
         <source>Recording Needed</source>
-        <target state="needs-translation">Recording Needed</target>
+        <target state="translated">需要录音</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activityState.needsNewTranscription">
         <source>Correction Needed</source>
-        <target state="needs-translation">Correction Needed</target>
+        <target state="translated">需要校正</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activityState.noMedia">
         <source>No Recording</source>
-        <target state="needs-translation">No Recording</target>
+        <target state="translated">没有录音</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activityState.review">
         <source>Review</source>
-        <target state="needs-translation">Review</target>
+        <target state="translated">复习</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activityState.reviewing">
         <source>Reviewing</source>
-        <target state="needs-translation">Reviewing</target>
+        <target state="translated">复习中</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activityState.synced">
         <source>Synced</source>
-        <target state="needs-translation">Synced</target>
+        <target state="translated">已同步</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activityState.transcribe">
         <source>Transcribe</source>
-        <target state="needs-translation">Transcribe</target>
+        <target state="translated">转写</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="activityState.transcribed">
         <source>Transcribed</source>
-        <target state="needs-translation">Transcribed</target>
+        <target state="translated">已转录</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
@@ -200,77 +200,77 @@
       </trans-unit>
       <trans-unit id="alert.areYouSure">
         <source>Are you sure?</source>
-        <target state="needs-translation">Are you sure?</target>
+        <target state="translated">您确定吗？</target>
         <context-group>
           <context context-type="sourcefile">AlertDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="alert.confirmation">
         <source>Confirmation</source>
-        <target state="needs-translation">Confirmation</target>
+        <target state="translated">确认</target>
         <context-group>
           <context context-type="sourcefile">AlertDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="alert.delete">
         <source>Continue with Delete?</source>
-        <target state="needs-translation">Continue with Delete?</target>
+        <target state="translated">继续删除？</target>
         <context-group>
           <context context-type="sourcefile">AlertDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="alert.no">
         <source>No</source>
-        <target state="needs-translation">No</target>
+        <target state="translated">不是</target>
         <context-group>
           <context context-type="sourcefile">AlertDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="alert.yes">
         <source>Yes</source>
-        <target state="needs-translation">Yes</target>
+        <target state="translated">是的</target>
         <context-group>
           <context context-type="sourcefile">AlertDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="artifactCategory.activity">
         <source>Activity</source>
-        <target state="needs-translation">Activity</target>
+        <target state="translated">活动</target>
         <context-group>
           <context context-type="sourcefile">artifactCategory.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="artifactCategory.biblestory">
         <source>Bible Story</source>
-        <target state="needs-translation">Bible Story</target>
+        <target state="translated">圣经故事</target>
         <context-group>
           <context context-type="sourcefile">artifactCategory.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="artifactCategory.bookintro">
         <source>Book Introduction</source>
-        <target state="needs-translation">Book Introduction</target>
+        <target state="translated">书介绍(&amp;I)</target>
         <context-group>
           <context context-type="sourcefile">artifactCategory.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="artifactCategory.scripture">
         <source>Scripture</source>
-        <target state="needs-translation">Scripture</target>
+        <target state="translated">经文</target>
         <context-group>
           <context context-type="sourcefile">artifactCategory.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="artifactCategory.translationresource">
         <source>Translation Resource</source>
-        <target state="needs-translation">Translation Resource</target>
+        <target state="translated">翻译资源</target>
         <context-group>
           <context context-type="sourcefile">artifactCategory.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="artifactCategory.uncategorized">
         <source>Uncategorized</source>
-        <target state="needs-translation">Uncategorized</target>
+        <target state="translated">未分类</target>
         <context-group>
           <context context-type="sourcefile">artifactCategory.tsx</context>
         </context-group>
@@ -284,14 +284,14 @@
       </trans-unit>
       <trans-unit id="artifactCategory.grammar">
         <source>Grammar</source>
-        <target state="needs-translation">Grammar</target>
+        <target state="translated">语法</target>
         <context-group>
           <context context-type="sourcefile">artifactCategory.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="artifactCategory.qanda">
         <source>Question and Answer</source>
-        <target state="needs-translation">Question and Answer</target>
+        <target state="translated">问题与答案</target>
         <context-group>
           <context context-type="sourcefile">artifactCategory.tsx</context>
         </context-group>
@@ -305,14 +305,14 @@
       </trans-unit>
       <trans-unit id="artifactType.comment">
         <source>Comment</source>
-        <target state="needs-translation">Comment</target>
+        <target state="translated">注释</target>
         <context-group>
           <context context-type="sourcefile">AlertDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="artifactType.projectresource">
         <source>General Resource</source>
-        <target state="needs-translation">General Resource</target>
+        <target state="translated">通用资源</target>
         <context-group>
           <context context-type="sourcefile">AlertDialog.tsx</context>
         </context-group>
@@ -326,7 +326,7 @@
       </trans-unit>
       <trans-unit id="artifactType.resource">
         <source>Resource</source>
-        <target state="needs-translation">Resource</target>
+        <target state="translated">资源</target>
         <context-group>
           <context context-type="sourcefile">AlertDialog.tsx</context>
         </context-group>
@@ -340,21 +340,21 @@
       </trans-unit>
       <trans-unit id="artifactType.sharedresource">
         <source>Shared Resource</source>
-        <target state="needs-translation">Shared Resource</target>
+        <target state="translated">共享资源</target>
         <context-group>
           <context context-type="sourcefile">AlertDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="artifactType.testing">
         <source>Testing</source>
-        <target state="needs-translation">Testing</target>
+        <target state="translated">测试中</target>
         <context-group>
           <context context-type="sourcefile">AlertDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="artifactType.vernacular">
         <source>Vernacular</source>
-        <target state="needs-translation">Vernacular</target>
+        <target state="translated">土语</target>
         <context-group>
           <context context-type="sourcefile">AlertDialog.tsx</context>
         </context-group>
@@ -368,63 +368,63 @@
       </trans-unit>
       <trans-unit id="assignmentTable.assignSec">
         <source>Assign {0}</source>
-        <target state="needs-translation">Assign {0}</target>
+        <target state="translated">分配 {0}</target>
         <context-group>
           <context context-type="sourcefile">assignmentTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assignmentTable.delete">
         <source>Delete</source>
-        <target state="needs-translation">Delete</target>
+        <target state="translated">删除</target>
         <context-group>
           <context context-type="sourcefile">assignmentTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assignmentTable.filter">
         <source>Filter</source>
-        <target state="needs-translation">Filter</target>
+        <target state="translated">筛选</target>
         <context-group>
           <context context-type="sourcefile">assignmentTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assignmentTable.passages">
         <source>Passages</source>
-        <target state="needs-translation">Passages</target>
+        <target state="translated">经文段落</target>
         <context-group>
           <context context-type="sourcefile">assignmentTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assignmentTable.removeSec">
         <source>Remove Assignment</source>
-        <target state="needs-translation">Remove Assignment</target>
+        <target state="translated">解除任务</target>
         <context-group>
           <context context-type="sourcefile">assignmentTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assignmentTable.role">
         <source>Role</source>
-        <target state="needs-translation">Role</target>
+        <target state="translated">角色</target>
         <context-group>
           <context context-type="sourcefile">assignmentTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assignmentTable.sectionstate">
         <source>State</source>
-        <target state="needs-translation">State</target>
+        <target state="translated">状态</target>
         <context-group>
           <context context-type="sourcefile">assignmentTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assignmentTable.selectRowsToAssign">
         <source>Please select row(s) to assign.</source>
-        <target state="needs-translation">Please select row(s) to assign.</target>
+        <target state="translated">请选择要分配的文件。</target>
         <context-group>
           <context context-type="sourcefile">assignmentTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assignmentTable.selectRowsToRemove">
         <source>Please select row(s) to remove assignment.</source>
-        <target state="needs-translation">Please select row(s) to remove assignment.</target>
+        <target state="translated">请选择要分配的文件。</target>
         <context-group>
           <context context-type="sourcefile">assignmentTable.tsx</context>
         </context-group>
@@ -438,35 +438,35 @@
       </trans-unit>
       <trans-unit id="assignmentTable.title">
         <source>Assignments</source>
-        <target state="needs-translation">Assignments</target>
+        <target state="translated">作业</target>
         <context-group>
           <context context-type="sourcefile">AssignmentTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assignSection.close">
         <source>Close</source>
-        <target state="needs-translation">Close</target>
+        <target state="translated">关闭</target>
         <context-group>
           <context context-type="sourcefile">AssignSection.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assignSection.role">
         <source>Role</source>
-        <target state="needs-translation">Role</target>
+        <target state="translated">角色</target>
         <context-group>
           <context context-type="sourcefile">AssignSection.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assignSection.title">
         <source>Assign {0}</source>
-        <target state="needs-translation">Assign {0}</target>
+        <target state="translated">分配 {0}</target>
         <context-group>
           <context context-type="sourcefile">AssignSection.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="assignSection.users">
         <source>Members</source>
-        <target state="needs-translation">Members</target>
+        <target state="translated">成员</target>
         <context-group>
           <context context-type="sourcefile">AssignSection.tsx</context>
         </context-group>
@@ -494,7 +494,7 @@
       </trans-unit>
       <trans-unit id="audacityManager.browse">
         <source>Browse</source>
-        <target state="needs-translation">Browse</target>
+        <target state="translated">浏览</target>
         <context-group>
           <context context-type="sourcefile">AudacityManager.tsx</context>
         </context-group>
@@ -508,7 +508,7 @@
       </trans-unit>
       <trans-unit id="audacityManager.close">
         <source>Close</source>
-        <target state="needs-translation">Close</target>
+        <target state="translated">关闭</target>
         <context-group>
           <context context-type="sourcefile">AudacityManager.tsx</context>
         </context-group>
@@ -522,7 +522,7 @@
       </trans-unit>
       <trans-unit id="audacityManager.create">
         <source>Create</source>
-        <target state="needs-translation">Create</target>
+        <target state="translated">创建</target>
         <context-group>
           <context context-type="sourcefile">AudacityManager.tsx</context>
         </context-group>
@@ -536,7 +536,7 @@
       </trans-unit>
       <trans-unit id="audacityManager.import">
         <source>Import</source>
-        <target state="needs-translation">Import</target>
+        <target state="translated">输入</target>
         <context-group>
           <context context-type="sourcefile">AudacityManager.tsx</context>
         </context-group>
@@ -571,14 +571,14 @@
       </trans-unit>
       <trans-unit id="audacityManager.open">
         <source>Open</source>
-        <target state="needs-translation">Open</target>
+        <target state="translated">打开</target>
         <context-group>
           <context context-type="sourcefile">AudacityManager.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="audacityManager.saveFirst">
         <source>Save before editing</source>
-        <target state="needs-translation">Save before editing</target>
+        <target state="translated">编辑前保存</target>
         <context-group>
           <context context-type="sourcefile">AudacityManager.tsx</context>
         </context-group>
@@ -606,28 +606,28 @@
       </trans-unit>
       <trans-unit id="audioDownload.downloadMedia">
         <source>Download Audio</source>
-        <target state="needs-translation">Download Audio</target>
+        <target state="translated">音频下载</target>
         <context-group>
           <context context-type="sourcefile">AudioDownload.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.add">
         <source>Add</source>
-        <target state="needs-translation">Add</target>
+        <target state="translated">添加</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.addTeam">
         <source>Add Team</source>
-        <target state="needs-translation">Add Team</target>
+        <target state="translated">添加团队</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
@@ -641,14 +641,14 @@
       </trans-unit>
       <trans-unit id="cards.copyComplete">
         <source>Copy Complete {0}</source>
-        <target state="needs-translation">Copy Complete {0}</target>
+        <target state="translated">复制完整的 {0}</target>
         <context-group>
           <context context-type="sourcefile">ProjectCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.copyNew">
         <source>Copy project to new team.</source>
-        <target state="needs-translation">Copy project to new team.</target>
+        <target state="translated">复制项目到新团队。</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
@@ -662,7 +662,7 @@
       </trans-unit>
       <trans-unit id="cards.copyStatus">
         <source>Copy to {0}</source>
-        <target state="needs-translation">Copy to {0}</target>
+        <target state="translated">复制到 {0}</target>
         <context-group>
           <context context-type="sourcefile">ProjectCard.tsx</context>
         </context-group>
@@ -676,7 +676,7 @@
       </trans-unit>
       <trans-unit id="cards.creatorEmail">
         <source>Email</source>
-        <target state="needs-translation">Email</target>
+        <target state="translated">电子邮件</target>
         <context-group>
           <context context-type="sourcefile">ProjectCard.tsx</context>
         </context-group>
@@ -690,28 +690,28 @@
       </trans-unit>
       <trans-unit id="cards.delete">
         <source>Delete</source>
-        <target state="needs-translation">Delete</target>
+        <target state="translated">删除</target>
         <context-group>
           <context context-type="sourcefile">ProjectMenu.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.deleteTeam">
         <source>Delete Team</source>
-        <target state="needs-translation">Delete Team</target>
+        <target state="translated">移除团队</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.draft">
         <source>Oral Drafting</source>
-        <target state="needs-translation">Oral Drafting</target>
+        <target state="translated">口头起稿</target>
         <context-group>
           <context context-type="sourcefile">TeamDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.editCategory">
         <source>Edit Team Categories</source>
-        <target state="needs-translation">Edit Team Categories</target>
+        <target state="translated">编辑团队范畴</target>
         <context-group>
           <context context-type="sourcefile">TeamDialog.tsx</context>
         </context-group>
@@ -725,21 +725,21 @@
       </trans-unit>
       <trans-unit id="cards.explainTeamDelete">
         <source>Deleting the team will delete all audio projects of the team.</source>
-        <target state="needs-translation">Deleting the team will delete all audio projects of the team.</target>
+        <target state="translated">删除团队将删除团队的所有音频项目。</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.import">
         <source>Import Audio Project</source>
-        <target state="needs-translation">Import Audio Project</target>
+        <target state="translated">导入音频项目</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.language">
         <source>Language: {0}</source>
-        <target state="needs-translation">Language: {0}</target>
+        <target state="translated">语言: {0}</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
@@ -760,49 +760,49 @@
       </trans-unit>
       <trans-unit id="cards.mediaUploaded">
         <source>Audio Uploaded</source>
-        <target state="needs-translation">Audio Uploaded</target>
+        <target state="translated">音频已上传</target>
         <context-group>
           <context context-type="sourcefile">AddCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.members">
         <source>Members ({0})</source>
-        <target state="needs-translation">Members ({0})</target>
+        <target state="translated">成員({0})</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.nameInUse">
         <source>Name in use</source>
-        <target state="needs-translation">Name in use</target>
+        <target state="translated">正在使用的名称</target>
         <context-group>
           <context context-type="sourcefile">TeamDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.newProject">
         <source>New Audio Project</source>
-        <target state="needs-translation">New Audio Project</target>
+        <target state="translated">音频方案</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.OBS">
         <source>Storying</source>
-        <target state="needs-translation">Storying</target>
+        <target state="translated">故事</target>
         <context-group>
           <context context-type="sourcefile">TeamDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.OBT">
         <source>Oral Bible Translation (complete)</source>
-        <target state="needs-translation">Oral Bible Translation (complete)</target>
+        <target state="translated">口头圣经翻译(完整)</target>
         <context-group>
           <context context-type="sourcefile">TeamDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.OBTs">
         <source>Oral Bible Translation (Simple)</source>
-        <target state="needs-translation">Oral Bible Translation (Simple)</target>
+        <target state="translated">口头圣经翻译(简单)</target>
         <context-group>
           <context context-type="sourcefile">TeamDialog.tsx</context>
         </context-group>
@@ -823,14 +823,14 @@
       </trans-unit>
       <trans-unit id="cards.offline">
         <source>Offline</source>
-        <target state="needs-translation">Offline</target>
+        <target state="translated">离线</target>
         <context-group>
           <context context-type="sourcefile">ProjectCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.offlineAvail">
         <source>Offline Available</source>
-        <target state="needs-translation">Offline Available</target>
+        <target state="translated">离线可用</target>
         <context-group>
           <context context-type="sourcefile">ProjectMenu.tsx</context>
         </context-group>
@@ -844,7 +844,7 @@
       </trans-unit>
       <trans-unit id="cards.personalProjects">
         <source>Personal Audio Projects</source>
-        <target state="needs-translation">Personal Audio Projects</target>
+        <target state="translated">个人音频项目</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
@@ -858,7 +858,7 @@
       </trans-unit>
       <trans-unit id="cards.projectCreated">
         <source>Audio Project Created</source>
-        <target state="needs-translation">Audio Project Created</target>
+        <target state="translated">音频项目已创建</target>
         <context-group>
           <context context-type="sourcefile">AddCard.tsx</context>
         </context-group>
@@ -872,7 +872,7 @@
       </trans-unit>
       <trans-unit id="cards.save">
         <source>Save</source>
-        <target state="needs-translation">Save</target>
+        <target state="translated">保存</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
@@ -886,7 +886,7 @@
       </trans-unit>
       <trans-unit id="cards.settings">
         <source>Settings</source>
-        <target state="needs-translation">Settings</target>
+        <target state="translated">设置</target>
         <context-group>
           <context context-type="sourcefile">ProjectMenu.tsx</context>
         </context-group>
@@ -907,21 +907,21 @@
       </trans-unit>
       <trans-unit id="cards.sync">
         <source>Sync ({0})</source>
-        <target state="needs-translation">Sync ({0})</target>
+        <target state="translated">同步 ({0})</target>
         <context-group>
           <context context-type="sourcefile">ProjectButtons.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.teamName">
         <source>Team Name</source>
-        <target state="needs-translation">Team Name</target>
+        <target state="translated">团队名称</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cards.teamSettings">
         <source>Team Settings</source>
-        <target state="needs-translation">Team Settings</target>
+        <target state="translated">团队设置</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
@@ -935,7 +935,7 @@
       </trans-unit>
       <trans-unit id="cards.uploadProgress">
         <source>Upload Progress</source>
-        <target state="needs-translation">Upload Progress</target>
+        <target state="translated">上传进度</target>
         <context-group>
           <context context-type="sourcefile">AddCard.tsx</context>
         </context-group>
@@ -949,14 +949,14 @@
       </trans-unit>
       <trans-unit id="category.discussion">
         <source>Discussion</source>
-        <target state="needs-translation">Discussion</target>
+        <target state="translated">讨论</target>
         <context-group>
           <context context-type="sourcefile">CategoryTabs.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="category.discussions">
         <source>discussion(s)</source>
-        <target state="needs-translation">discussion(s)</target>
+        <target state="translated">讨论</target>
         <context-group>
           <context context-type="sourcefile">CategoryListEdit.tsx</context>
         </context-group>
@@ -977,7 +977,7 @@
       </trans-unit>
       <trans-unit id="category.note">
         <source>Audio Note</source>
-        <target state="needs-translation">Audio Note</target>
+        <target state="translated">音频笔记</target>
         <context-group>
           <context context-type="sourcefile">CategoryTabs.tsx</context>
         </context-group>
@@ -1005,49 +1005,49 @@
       </trans-unit>
       <trans-unit id="category.resource">
         <source>Resource</source>
-        <target state="needs-translation">Resource</target>
+        <target state="translated">资源</target>
         <context-group>
           <context context-type="sourcefile">CategoryTabs.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="category.notes">
         <source>audio note(s)</source>
-        <target state="needs-translation">audio note(s)</target>
+        <target state="translated">音频笔记(s)</target>
         <context-group>
           <context context-type="sourcefile">CategoryListEdit.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="category.resources">
         <source>resource(s)</source>
-        <target state="needs-translation">resource(s)</target>
+        <target state="translated">资源</target>
         <context-group>
           <context context-type="sourcefile">CategoryListEdit.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="commentCard.approve">
         <source>Approve</source>
-        <target state="needs-translation">Approve</target>
+        <target state="translated">批准</target>
         <context-group>
           <context context-type="sourcefile">CommentCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="commentCard.approved">
         <source>Approved</source>
-        <target state="needs-translation">Approved</target>
+        <target state="translated">已批准</target>
         <context-group>
           <context context-type="sourcefile">CommentCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="commentCard.confirmDelete">
         <source>Delete this comment?</source>
-        <target state="needs-translation">Delete this comment?</target>
+        <target state="translated">确认要删除该留言吗？</target>
         <context-group>
           <context context-type="sourcefile">CommentCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="commentCard.playOrStop">
         <source>Play / Stop</source>
-        <target state="needs-translation">Play / Stop</target>
+        <target state="translated">播放/停止</target>
         <context-group>
           <context context-type="sourcefile">CommentCard.tsx</context>
         </context-group>
@@ -1061,63 +1061,63 @@
       </trans-unit>
       <trans-unit id="commentCard.unapproved">
         <source>Unapproved</source>
-        <target state="needs-translation">Unapproved</target>
+        <target state="translated">未批准</target>
         <context-group>
           <context context-type="sourcefile">CommentCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="commentEditor.comment">
         <source>Comment</source>
-        <target state="needs-translation">Comment</target>
+        <target state="translated">注释</target>
         <context-group>
           <context context-type="sourcefile">CommentCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="commentEditor.record">
         <source>Record Comment</source>
-        <target state="needs-translation">Record Comment</target>
+        <target state="translated">录音注释</target>
         <context-group>
           <context context-type="sourcefile">CommentCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="commentEditor.recordUnavailable">
         <source>Another recorder is open.</source>
-        <target state="needs-translation">Another recorder is open.</target>
+        <target state="translated">另一个录音机正在打开。</target>
         <context-group>
           <context context-type="sourcefile">CommentCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="commentEditor.saving">
         <source>Saving...</source>
-        <target state="needs-translation">Saving...</target>
+        <target state="translated">保存中...</target>
         <context-group>
           <context context-type="sourcefile">CommentCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="commentEditor.unsaved">
         <source>Unsaved</source>
-        <target state="needs-translation">Unsaved</target>
+        <target state="translated">未保存</target>
         <context-group>
           <context context-type="sourcefile">CommentCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="community.addSpeaker">
         <source>Add '{0}'</source>
-        <target state="needs-translation">Add '{0}'</target>
+        <target state="translated">添加 {0}</target>
         <context-group>
           <context context-type="sourcefile">SpeakerName.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="community.deleteItem">
         <source>Delete Item</source>
-        <target state="needs-translation">Delete Item</target>
+        <target state="translated">删除此项目</target>
         <context-group>
           <context context-type="sourcefile">Community.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="community.later">
         <source>Do later</source>
-        <target state="needs-translation">Do later</target>
+        <target state="translated">一会再做</target>
         <context-group>
           <context context-type="sourcefile">SpeakerName.tsx</context>
         </context-group>
@@ -1145,7 +1145,7 @@
       </trans-unit>
       <trans-unit id="community.record">
         <source>Record</source>
-        <target state="needs-translation">Record</target>
+        <target state="translated">录音</target>
         <context-group>
           <context context-type="sourcefile">Community.tsx</context>
         </context-group>
@@ -1173,7 +1173,7 @@
       </trans-unit>
       <trans-unit id="community.segment">
         <source>Segment</source>
-        <target state="needs-translation">Segment</target>
+        <target state="translated">段</target>
         <context-group>
           <context context-type="sourcefile">Community.tsx</context>
         </context-group>
@@ -1187,7 +1187,7 @@
       </trans-unit>
       <trans-unit id="community.topic">
         <source>Topic</source>
-        <target state="needs-translation">Topic</target>
+        <target state="translated">主题</target>
         <context-group>
           <context context-type="sourcefile">Community.tsx</context>
         </context-group>
@@ -1201,14 +1201,14 @@
       </trans-unit>
       <trans-unit id="community.unsaved">
         <source>Unsaved</source>
-        <target state="needs-translation">Unsaved</target>
+        <target state="translated">未保存</target>
         <context-group>
           <context context-type="sourcefile">Community.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="community.uploadComplete">
         <source>{0} of {1} files uploaded successfully.</source>
-        <target state="needs-translation">{0} of {1} files uploaded successfully.</target>
+        <target state="translated">{0} 中的 {1} 文件上传成功。</target>
         <context-group>
           <context context-type="sourcefile">Community.tsx</context>
         </context-group>
@@ -1222,14 +1222,14 @@
       </trans-unit>
       <trans-unit id="consultantCheck.compare">
         <source>Compare</source>
-        <target state="needs-translation">Compare</target>
+        <target state="translated">比较</target>
         <context-group>
           <context context-type="sourcefile">ConsultantCheck.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="consultantCheck.compareItems">
         <source>Select Items to Compare</source>
-        <target state="needs-translation">Select Items to Compare</target>
+        <target state="translated">选择要比较的项目</target>
         <context-group>
           <context context-type="sourcefile">ConsultantCheck.tsx</context>
         </context-group>
@@ -1264,35 +1264,35 @@
       </trans-unit>
       <trans-unit id="control.book">
         <source>Book</source>
-        <target state="needs-translation">Book</target>
+        <target state="translated">书</target>
         <context-group>
           <context context-type="sourcefile">selectPlanType.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="control.normal">
         <source>Normal</source>
-        <target state="needs-translation">Normal</target>
+        <target state="translated">正常</target>
         <context-group>
           <context context-type="sourcefile">selectPlanType.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="control.other">
         <source>General</source>
-        <target state="needs-translation">General</target>
+        <target state="translated">通用</target>
         <context-group>
           <context context-type="sourcefile">selectPlanType.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="control.scripture">
         <source>Scripture</source>
-        <target state="needs-translation">Scripture</target>
+        <target state="translated">经文</target>
         <context-group>
           <context context-type="sourcefile">selectPlanType.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="deleteExpansion.advanced">
         <source>Advanced</source>
-        <target state="needs-translation">Advanced</target>
+        <target state="translated">高级</target>
         <context-group>
           <context context-type="sourcefile">DeleteExpansion.tsx</context>
         </context-group>
@@ -1306,21 +1306,21 @@
       </trans-unit>
       <trans-unit id="deleteExpansion.delete">
         <source>Delete</source>
-        <target state="needs-translation">Delete</target>
+        <target state="translated">删除</target>
         <context-group>
           <context context-type="sourcefile">DeleteExpansion.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionCard.addComment">
         <source>Add</source>
-        <target state="needs-translation">Add</target>
+        <target state="translated">添加</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionCard.assign">
         <source>Assign to a Group or Team Member</source>
-        <target state="needs-translation">Assign to a Group or Team Member</target>
+        <target state="translated">分配给团队成员</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
@@ -1334,56 +1334,56 @@
       </trans-unit>
       <trans-unit id="discussionCard.groupuser">
         <source>Group/Team Member</source>
-        <target state="needs-translation">Group/Team Member</target>
+        <target state="translated">组/团队成员</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionCard.assignGroup">
         <source>Assign to a Group</source>
-        <target state="needs-translation">Assign to a Group</target>
+        <target state="translated">分配给一个组</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionCard.assignUser">
         <source>Assign to a Team Member</source>
-        <target state="needs-translation">Assign to a Team Member</target>
+        <target state="translated">分配给团队成员</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionCard.category">
         <source>Category: {0}</source>
-        <target state="needs-translation">Category: {0}</target>
+        <target state="translated">范畴: {0}</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionCard.changeAssignment">
         <source>Change Assignment</source>
-        <target state="needs-translation">Change Assignment</target>
+        <target state="translated">改变任务</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionCard.collapse">
         <source>Show/Hide Comments</source>
-        <target state="needs-translation">Show/Hide Comments</target>
+        <target state="translated">显示/隐藏注释</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionCard.comments">
         <source>Comments: {0}</source>
-        <target state="needs-translation">Comments: {0}</target>
+        <target state="translated">注释： {0}</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionCard.confirmDelete">
         <source>Delete this discussion and all commments?</source>
-        <target state="needs-translation">Delete this discussion and all commments?</target>
+        <target state="translated">删除此讨论和所有逗号？</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
@@ -1404,7 +1404,7 @@
       </trans-unit>
       <trans-unit id="discussionCard.or">
         <source>or</source>
-        <target state="needs-translation">or</target>
+        <target state="translated">或者</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
@@ -1418,14 +1418,14 @@
       </trans-unit>
       <trans-unit id="discussionCard.resolved">
         <source>Resolve</source>
-        <target state="needs-translation">Resolve</target>
+        <target state="translated">解决</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionCard.topic">
         <source>Topic</source>
-        <target state="needs-translation">Topic</target>
+        <target state="translated">主题</target>
         <context-group>
           <context context-type="sourcefile">DiscussionCard.tsx</context>
         </context-group>
@@ -1439,21 +1439,21 @@
       </trans-unit>
       <trans-unit id="discussionList.add">
         <source>Add Discussion</source>
-        <target state="needs-translation">Add Discussion</target>
+        <target state="translated">添加讨论</target>
         <context-group>
           <context context-type="sourcefile">discussionList.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionList.categoryList">
         <source>Category List</source>
-        <target state="needs-translation">Category List</target>
+        <target state="translated">范畴目录</target>
         <context-group>
           <context context-type="sourcefile">discussionList.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionList.collapse">
         <source>Show/Hide All Comments</source>
-        <target state="needs-translation">Show/Hide All Comments</target>
+        <target state="translated">显示/隐藏注释</target>
         <context-group>
           <context context-type="sourcefile">discussionList.tsx</context>
         </context-group>
@@ -1481,35 +1481,35 @@
       </trans-unit>
       <trans-unit id="discussionList.title">
         <source>Discussions</source>
-        <target state="needs-translation">Discussions</target>
+        <target state="translated">讨论</target>
         <context-group>
           <context context-type="sourcefile">discussionList.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionMenu.delete">
         <source>Delete</source>
-        <target state="needs-translation">Delete</target>
+        <target state="translated">删除</target>
         <context-group>
           <context context-type="sourcefile">DiscussionMenu.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionMenu.edit">
         <source>Edit</source>
-        <target state="needs-translation">Edit</target>
+        <target state="translated">编辑</target>
         <context-group>
           <context context-type="sourcefile">DiscussionMenu.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionMenu.move">
         <source>Move</source>
-        <target state="needs-translation">Move</target>
+        <target state="translated">移动</target>
         <context-group>
           <context context-type="sourcefile">DiscussionMenu.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="discussionMenu.reopen">
         <source>Reopen</source>
-        <target state="needs-translation">Reopen</target>
+        <target state="translated">重新打开</target>
         <context-group>
           <context context-type="sourcefile">DiscussionMenu.tsx</context>
         </context-group>
@@ -1544,7 +1544,7 @@
       </trans-unit>
       <trans-unit id="electronImport.importComplete">
         <source>Import Complete</source>
-        <target state="needs-translation">Import Complete</target>
+        <target state="translated">导入已完成</target>
         <context-group>
           <context context-type="sourcefile">electronImport.tsx</context>
         </context-group>
@@ -1572,7 +1572,7 @@
       </trans-unit>
       <trans-unit id="electronImport.importProject">
         <source>Import Audio Project</source>
-        <target state="needs-translation">Import Audio Project</target>
+        <target state="translated">导入音频项目</target>
         <context-group>
           <context context-type="sourcefile">electronImport.tsx</context>
         </context-group>
@@ -1593,7 +1593,7 @@
       </trans-unit>
       <trans-unit id="electronImport.members">
         <source>Members</source>
-        <target state="needs-translation">Members</target>
+        <target state="translated">成员</target>
         <context-group>
           <context context-type="sourcefile">electronImport.tsx</context>
         </context-group>
@@ -1614,7 +1614,7 @@
       </trans-unit>
       <trans-unit id="electronImport.project">
         <source>Audio Project</source>
-        <target state="needs-translation">Audio Project</target>
+        <target state="translated">音频方案</target>
         <context-group>
           <context context-type="sourcefile">electronImport.tsx</context>
         </context-group>
@@ -1642,28 +1642,28 @@
       </trans-unit>
       <trans-unit id="emailUnverified.emailUnverified">
         <source>Your email is unverified.</source>
-        <target state="needs-translation">Your email is unverified.</target>
+        <target state="translated">您的电子邮件尚未验证。</target>
         <context-group>
           <context context-type="sourcefile">EmailUnverified.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="emailUnverified.logout">
         <source>Logout</source>
-        <target state="needs-translation">Logout</target>
+        <target state="translated">登出</target>
         <context-group>
           <context context-type="sourcefile">EmailUnverified.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="emailUnverified.resend">
         <source>Resend the authorization email</source>
-        <target state="needs-translation">Resend the authorization email</target>
+        <target state="translated">重新发送授权电子邮件</target>
         <context-group>
           <context context-type="sourcefile">EmailUnverified.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="emailUnverified.verified">
         <source>I'm verified!  Carry on!</source>
-        <target state="needs-translation">I'm verified!  Carry on!</target>
+        <target state="translated">我已验证了！骑车！</target>
         <context-group>
           <context context-type="sourcefile">EmailUnverified.tsx</context>
         </context-group>
@@ -1677,7 +1677,7 @@
       </trans-unit>
       <trans-unit id="filterMenu.all">
         <source>All</source>
-        <target state="needs-translation">All</target>
+        <target state="translated">全部</target>
         <context-group>
           <context context-type="sourcefile">filterMenu.tsx</context>
         </context-group>
@@ -1698,7 +1698,7 @@
       </trans-unit>
       <trans-unit id="filterMenu.category">
         <source>Category</source>
-        <target state="needs-translation">Category</target>
+        <target state="translated">范畴</target>
         <context-group>
           <context context-type="sourcefile">filterMenu.tsx</context>
         </context-group>
@@ -1726,7 +1726,7 @@
       </trans-unit>
       <trans-unit id="filterMenu.resolved">
         <source>Resolved</source>
-        <target state="needs-translation">Resolved</target>
+        <target state="translated">已解决</target>
         <context-group>
           <context context-type="sourcefile">filterMenu.tsx</context>
         </context-group>
@@ -1740,21 +1740,21 @@
       </trans-unit>
       <trans-unit id="grid.all">
         <source>All</source>
-        <target state="needs-translation">All</target>
+        <target state="translated">全部</target>
         <context-group>
           <context context-type="sourcefile">shapingTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="grid.avg">
         <source>Avg</source>
-        <target state="needs-translation">Avg</target>
+        <target state="translated">平均：</target>
         <context-group>
           <context context-type="sourcefile">shapingTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="grid.contains">
         <source>Contains</source>
-        <target state="needs-translation">Contains</target>
+        <target state="translated">包含</target>
         <context-group>
           <context context-type="sourcefile">shapingTable.tsx</context>
         </context-group>
@@ -1789,14 +1789,14 @@
       </trans-unit>
       <trans-unit id="grid.greaterThan">
         <source>Greater than</source>
-        <target state="needs-translation">Greater than</target>
+        <target state="translated">大于</target>
         <context-group>
           <context context-type="sourcefile">shapingTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="grid.greaterThanOrEqual">
         <source>Greater than or equal to</source>
-        <target state="needs-translation">Greater than or equal to</target>
+        <target state="translated">大于或等于</target>
         <context-group>
           <context context-type="sourcefile">shapingTable.tsx</context>
         </context-group>
@@ -1810,28 +1810,28 @@
       </trans-unit>
       <trans-unit id="grid.lessThan">
         <source>Less than</source>
-        <target state="needs-translation">Less than</target>
+        <target state="translated">少于</target>
         <context-group>
           <context context-type="sourcefile">shapingTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="grid.lessThanOrEqual">
         <source>Less than or equal to</source>
-        <target state="needs-translation">Less than or equal to</target>
+        <target state="translated">小于或等于</target>
         <context-group>
           <context context-type="sourcefile">shapingTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="grid.max">
         <source>Max</source>
-        <target state="needs-translation">Max</target>
+        <target state="translated">最多</target>
         <context-group>
           <context context-type="sourcefile">shapingTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="grid.min">
         <source>Min</source>
-        <target state="needs-translation">Min</target>
+        <target state="translated">最小</target>
         <context-group>
           <context context-type="sourcefile">shapingTable.tsx</context>
         </context-group>
@@ -1845,21 +1845,21 @@
       </trans-unit>
       <trans-unit id="grid.noData">
         <source>No data</source>
-        <target state="needs-translation">No data</target>
+        <target state="translated">没有数据</target>
         <context-group>
           <context context-type="sourcefile">shapingTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="grid.notcontains">
         <source>Does not contain</source>
-        <target state="needs-translation">Does not contain</target>
+        <target state="translated">不包含</target>
         <context-group>
           <context context-type="sourcefile">shapingTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="grid.notEqual">
         <source>Does not equal</source>
-        <target state="needs-translation">Does not equal</target>
+        <target state="translated">不等于</target>
         <context-group>
           <context context-type="sourcefile">shapingTable.tsx</context>
         </context-group>
@@ -1915,7 +1915,7 @@
       </trans-unit>
       <trans-unit id="groupTabs.roles">
         <source>Roles</source>
-        <target state="needs-translation">Roles</target>
+        <target state="translated">角色</target>
         <context-group>
           <context context-type="sourcefile">GroupTabs.tsx</context>
         </context-group>
@@ -1971,7 +1971,7 @@
       </trans-unit>
       <trans-unit id="hotKey.or">
         <source>or</source>
-        <target state="needs-translation">or</target>
+        <target state="translated">或者</target>
         <context-group>
           <context context-type="sourcefile">hotKeyContext.tsx</context>
         </context-group>
@@ -1999,7 +1999,7 @@
       </trans-unit>
       <trans-unit id="import.close">
         <source>Close</source>
-        <target state="needs-translation">Close</target>
+        <target state="translated">关闭</target>
         <context-group>
           <context context-type="sourcefile">Import.tsx</context>
         </context-group>
@@ -2013,14 +2013,14 @@
       </trans-unit>
       <trans-unit id="import.copy">
         <source>Copy Report</source>
-        <target state="needs-translation">Copy Report</target>
+        <target state="translated">复制报表</target>
         <context-group>
           <context context-type="sourcefile">Import.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="import.copyfail">
         <source>Copy Failed</source>
-        <target state="needs-translation">Copy Failed</target>
+        <target state="translated">复制失败</target>
         <context-group>
           <context context-type="sourcefile">Import.tsx</context>
         </context-group>
@@ -2034,7 +2034,7 @@
       </trans-unit>
       <trans-unit id="import.family">
         <source>Family Name</source>
-        <target state="needs-translation">Family Name</target>
+        <target state="translated">姓</target>
         <context-group>
           <context context-type="sourcefile">import.tsx</context>
         </context-group>
@@ -2055,21 +2055,21 @@
       </trans-unit>
       <trans-unit id="import.given">
         <source>Given Name</source>
-        <target state="needs-translation">Given Name</target>
+        <target state="translated">名字</target>
         <context-group>
           <context context-type="sourcefile">import.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="import.import">
         <source>Import</source>
-        <target state="needs-translation">Import</target>
+        <target state="translated">导入</target>
         <context-group>
           <context context-type="sourcefile">Import.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="import.importComplete">
         <source>Import Complete</source>
-        <target state="needs-translation">Import Complete</target>
+        <target state="translated">导入完毕</target>
         <context-group>
           <context context-type="sourcefile">import.tsx</context>
         </context-group>
@@ -2083,21 +2083,21 @@
       </trans-unit>
       <trans-unit id="import.importPending">
         <source>Import In Progress...</source>
-        <target state="needs-translation">Import In Progress...</target>
+        <target state="translated">导入进行中...</target>
         <context-group>
           <context context-type="sourcefile">import.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="import.importProject">
         <source>Import Audio Project</source>
-        <target state="needs-translation">Import Audio Project</target>
+        <target state="translated">导入音频项目</target>
         <context-group>
           <context context-type="sourcefile">import.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="import.importSync">
         <source>Syncing offline changes</source>
-        <target state="needs-translation">Syncing offline changes</target>
+        <target state="translated">同步离线更改</target>
         <context-group>
           <context context-type="sourcefile">electronImport.tsx</context>
         </context-group>
@@ -2125,7 +2125,7 @@
       </trans-unit>
       <trans-unit id="import.noFile">
         <source>Please select file to be uploaded.</source>
-        <target state="needs-translation">Please select file to be uploaded.</target>
+        <target state="translated">请选择要上传的文件。</target>
         <context-group>
           <context context-type="sourcefile">import.tsx</context>
         </context-group>
@@ -2146,7 +2146,7 @@
       </trans-unit>
       <trans-unit id="import.other">
         <source>Other</source>
-        <target state="needs-translation">Other</target>
+        <target state="translated">其他</target>
         <context-group>
           <context context-type="sourcefile">import.tsx</context>
         </context-group>
@@ -2167,14 +2167,14 @@
       </trans-unit>
       <trans-unit id="import.plan">
         <source>Audio Project</source>
-        <target state="needs-translation">Audio Project</target>
+        <target state="translated">音频方案</target>
         <context-group>
           <context context-type="sourcefile">import.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="import.projectDeleted">
         <source>Audio Project {0} has been deleted online.</source>
-        <target state="needs-translation">Audio Project {0} has been deleted online.</target>
+        <target state="translated">{0} 音频项目已在线删除。</target>
         <context-group>
           <context context-type="sourcefile">import.tsx</context>
         </context-group>
@@ -2195,7 +2195,7 @@
       </trans-unit>
       <trans-unit id="import.state">
         <source>State</source>
-        <target state="needs-translation">State</target>
+        <target state="translated">状态</target>
         <context-group>
           <context context-type="sourcefile">import.tsx</context>
         </context-group>
@@ -2216,14 +2216,14 @@
       </trans-unit>
       <trans-unit id="import.unassigned">
         <source>unassigned</source>
-        <target state="needs-translation">unassigned</target>
+        <target state="translated">未分配</target>
         <context-group>
           <context context-type="sourcefile">import.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="import.username">
         <source>Name</source>
-        <target state="needs-translation">Name</target>
+        <target state="translated">名称</target>
         <context-group>
           <context context-type="sourcefile">import.tsx</context>
         </context-group>
@@ -2251,7 +2251,7 @@
       </trans-unit>
       <trans-unit id="integration.countReady">
         <source>Passages ready to sync: </source>
-        <target state="needs-translation">Passages ready to sync: </target>
+        <target state="translated">通道已准备好同步： </target>
         <context-group>
           <context context-type="sourcefile">integration.tsx</context>
         </context-group>
@@ -2272,7 +2272,7 @@
       </trans-unit>
       <trans-unit id="integration.no">
         <source>No</source>
-        <target state="needs-translation">No</target>
+        <target state="translated">不是</target>
         <context-group>
           <context context-type="sourcefile">integration.tsx</context>
         </context-group>
@@ -2286,14 +2286,14 @@
       </trans-unit>
       <trans-unit id="integration.offline">
         <source>Offline</source>
-        <target state="needs-translation">Offline</target>
+        <target state="translated">离线</target>
         <context-group>
           <context context-type="sourcefile">integration.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="integration.onestory">
         <source>One Story</source>
-        <target state="needs-translation">One Story</target>
+        <target state="translated">一个故事</target>
         <context-group>
           <context context-type="sourcefile">integration.tsx</context>
         </context-group>
@@ -2377,7 +2377,7 @@
       </trans-unit>
       <trans-unit id="integration.render">
         <source>Render</source>
-        <target state="needs-translation">Render</target>
+        <target state="translated">译写</target>
         <context-group>
           <context context-type="sourcefile">integration.tsx</context>
         </context-group>
@@ -2398,28 +2398,28 @@
       </trans-unit>
       <trans-unit id="integration.sync">
         <source>Sync</source>
-        <target state="needs-translation">Sync</target>
+        <target state="translated">同步</target>
         <context-group>
           <context context-type="sourcefile">integration.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="integration.syncComplete">
         <source>Sync Complete!</source>
-        <target state="needs-translation">Sync Complete!</target>
+        <target state="translated">同步完成</target>
         <context-group>
           <context context-type="sourcefile">integration.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="integration.syncError">
         <source>Sync error:</source>
-        <target state="needs-translation">Sync error:</target>
+        <target state="translated">同步出错</target>
         <context-group>
           <context context-type="sourcefile">integration.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="integration.syncPending">
         <source>Syncing...</source>
-        <target state="needs-translation">Syncing...</target>
+        <target state="translated">同步中...</target>
         <context-group>
           <context context-type="sourcefile">integration.tsx</context>
         </context-group>
@@ -2440,35 +2440,35 @@
       </trans-unit>
       <trans-unit id="integration.yes">
         <source>Yes</source>
-        <target state="needs-translation">Yes</target>
+        <target state="translated">是的</target>
         <context-group>
           <context context-type="sourcefile">integration.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invitationTable.accepted">
         <source>Accepted</source>
-        <target state="needs-translation">Accepted</target>
+        <target state="translated">已接受</target>
         <context-group>
           <context context-type="sourcefile">InvitationTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invitationTable.action">
         <source>Action</source>
-        <target state="needs-translation">Action</target>
+        <target state="translated">行动</target>
         <context-group>
           <context context-type="sourcefile">InvitationTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invitationTable.delete">
         <source>Delete</source>
-        <target state="needs-translation">Delete</target>
+        <target state="translated">删除</target>
         <context-group>
           <context context-type="sourcefile">InvitationTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invitationTable.email">
         <source>Email</source>
-        <target state="needs-translation">Email</target>
+        <target state="translated">电子邮件</target>
         <context-group>
           <context context-type="sourcefile">InvitationTable.tsx</context>
         </context-group>
@@ -2482,21 +2482,21 @@
       </trans-unit>
       <trans-unit id="invitationTable.invite">
         <source>Invite</source>
-        <target state="needs-translation">Invite</target>
+        <target state="translated">邀请</target>
         <context-group>
           <context context-type="sourcefile">InvitationTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invitationTable.noData">
         <source>No invitations</source>
-        <target state="needs-translation">No invitations</target>
+        <target state="translated">没有邀请</target>
         <context-group>
           <context context-type="sourcefile">InvitationTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invitationTable.role">
         <source>Team Role</source>
-        <target state="needs-translation">Team Role</target>
+        <target state="translated">团队角色</target>
         <context-group>
           <context context-type="sourcefile">InvitationTable.tsx</context>
         </context-group>
@@ -2517,56 +2517,56 @@
       </trans-unit>
       <trans-unit id="invite.addInvite">
         <source>Invite Person</source>
-        <target state="needs-translation">Invite Person</target>
+        <target state="translated">邀请别人</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invite.allUsersProjects">
         <source>Audio Projects</source>
-        <target state="needs-translation">Audio Projects</target>
+        <target state="translated">音频方案</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invite.alreadyInvited">
         <source>Already invited!</source>
-        <target state="needs-translation">Already invited!</target>
+        <target state="translated">邀请过了</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invite.cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invite.detail">
         <source>{0} Detail</source>
-        <target state="needs-translation">{0} Detail</target>
+        <target state="translated">{0} 详情</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invite.editInvite">
         <source>Edit Invite</source>
-        <target state="needs-translation">Edit Invite</target>
+        <target state="translated">编辑邀请</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invite.email">
         <source>Email</source>
-        <target state="needs-translation">Email</target>
+        <target state="translated">电子邮件</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invite.emailsubject">
         <source>{0} Invitation</source>
-        <target state="needs-translation">{0} Invitation</target>
+        <target state="translated">{0} 邀请</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
@@ -2580,7 +2580,7 @@
       </trans-unit>
       <trans-unit id="invite.invalidEmail">
         <source>Invalid email address</source>
-        <target state="needs-translation">Invalid email address</target>
+        <target state="translated">电子邮件地址无效</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
@@ -2601,7 +2601,7 @@
       </trans-unit>
       <trans-unit id="invite.member">
         <source>Member</source>
-        <target state="needs-translation">Member</target>
+        <target state="translated">成员</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
@@ -2622,49 +2622,49 @@
       </trans-unit>
       <trans-unit id="invite.organization">
         <source>Team</source>
-        <target state="needs-translation">Team</target>
+        <target state="translated">团队</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invite.questions">
         <source>Questions? Contact</source>
-        <target state="needs-translation">Questions? Contact</target>
+        <target state="translated">有问题？联系我们</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invite.resend">
         <source>Resend</source>
-        <target state="needs-translation">Resend</target>
+        <target state="translated">重新发送</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invite.role">
         <source>Team Role</source>
-        <target state="needs-translation">Team Role</target>
+        <target state="translated">团队角色</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invite.save">
         <source>Save</source>
-        <target state="needs-translation">Save</target>
+        <target state="translated">保存</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invite.selectTeamRole">
         <source>Select team role.</source>
-        <target state="needs-translation">Select team role.</target>
+        <target state="translated">选择团队角色。</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="invite.send">
         <source>Send</source>
-        <target state="needs-translation">Send</target>
+        <target state="translated">发送</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
@@ -2678,21 +2678,21 @@
       </trans-unit>
       <trans-unit id="keyTerms.addTargetWord">
         <source>Add Translation</source>
-        <target state="needs-translation">Add Translation</target>
+        <target state="translated">添加译文</target>
         <context-group>
           <context context-type="sourcefile">TargetWordAdd.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="keyTerms.all">
         <source>All</source>
-        <target state="needs-translation">All</target>
+        <target state="translated">全部</target>
         <context-group>
           <context context-type="sourcefile">useKeyTerms.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="keyTerms.aramaic">
         <source>Aramaic</source>
-        <target state="needs-translation">Aramaic</target>
+        <target state="translated">阿拉米文</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
@@ -2713,14 +2713,14 @@
       </trans-unit>
       <trans-unit id="keyTerms.cancel">
         <source>Cancel Translation</source>
-        <target state="needs-translation">Cancel Translation</target>
+        <target state="translated">取消翻译</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="keyTerms.category">
         <source>Category</source>
-        <target state="needs-translation">Category</target>
+        <target state="translated">范畴</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
@@ -2734,14 +2734,14 @@
       </trans-unit>
       <trans-unit id="keyTerms.chipDeleteNoLabel">
         <source>Delete translation from {0}? Are you sure?</source>
-        <target state="needs-translation">Delete translation from {0}? Are you sure?</target>
+        <target state="translated">从 {0}删除翻译吗？您确定吗？</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="keyTerms.definition">
         <source>Definition</source>
-        <target state="needs-translation">Definition</target>
+        <target state="translated">定义</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
@@ -2755,56 +2755,56 @@
       </trans-unit>
       <trans-unit id="keyTerms.exclude">
         <source>Exclude</source>
-        <target state="needs-translation">Exclude</target>
+        <target state="translated">排除</target>
         <context-group>
           <context context-type="sourcefile">KeyTermExclude.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="keyTerms.fauna">
         <source>Fauna</source>
-        <target state="needs-translation">Fauna</target>
+        <target state="translated">动物群</target>
         <context-group>
           <context context-type="sourcefile">useKeyTerms.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="keyTerms.flora">
         <source>Flora</source>
-        <target state="needs-translation">Flora</target>
+        <target state="translated">植物群</target>
         <context-group>
           <context context-type="sourcefile">useKeyTerms.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="keyTerms.gloss">
         <source>Gloss</source>
-        <target state="needs-translation">Gloss</target>
+        <target state="translated">释义</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="keyTerms.greek">
         <source>Greek</source>
-        <target state="needs-translation">Greek</target>
+        <target state="translated">希腊语</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="keyTerms.hebrew">
         <source>Hebrew</source>
-        <target state="needs-translation">Hebrew</target>
+        <target state="translated">希伯来语</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="keyTerms.hide">
         <source>Hide</source>
-        <target state="needs-translation">Hide</target>
+        <target state="translated">隐藏</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="keyTerms.index">
         <source>Index</source>
-        <target state="needs-translation">Index</target>
+        <target state="translated">索引</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
@@ -2874,14 +2874,14 @@
       </trans-unit>
       <trans-unit id="keyTerms.save">
         <source>Save Translation</source>
-        <target state="needs-translation">Save Translation</target>
+        <target state="translated">保存翻译</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="keyTerms.saving">
         <source>Saving...</source>
-        <target state="needs-translation">Saving...</target>
+        <target state="translated">保存中...</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
@@ -2937,21 +2937,21 @@
       </trans-unit>
       <trans-unit id="keyTerms.unsaved">
         <source>Unsaved.</source>
-        <target state="needs-translation">Unsaved.</target>
+        <target state="translated">未保存</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="keyTerms.word">
         <source>Word</source>
-        <target state="needs-translation">Word</target>
+        <target state="translated">词</target>
         <context-group>
           <context context-type="sourcefile">KeyTermSort.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="languagePicker.cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
         <context-group>
           <context context-type="sourcefile">LanguagePicker.tsx</context>
         </context-group>
@@ -2979,7 +2979,7 @@
       </trans-unit>
       <trans-unit id="languagePicker.font">
         <source>Font</source>
-        <target state="needs-translation">Font</target>
+        <target state="translated">字体</target>
         <context-group>
           <context context-type="sourcefile">LanguagePicker.tsx</context>
         </context-group>
@@ -2993,7 +2993,7 @@
       </trans-unit>
       <trans-unit id="languagePicker.language">
         <source>Language</source>
-        <target state="needs-translation">Language</target>
+        <target state="translated">语言</target>
         <context-group>
           <context context-type="sourcefile">LanguagePicker.tsx</context>
         </context-group>
@@ -3021,7 +3021,7 @@
       </trans-unit>
       <trans-unit id="languagePicker.select">
         <source>Save</source>
-        <target state="needs-translation">Save</target>
+        <target state="translated">保存</target>
         <context-group>
           <context context-type="sourcefile">LanguagePicker.tsx</context>
         </context-group>
@@ -3042,14 +3042,14 @@
       </trans-unit>
       <trans-unit id="main.about">
         <source>About</source>
-        <target state="needs-translation">About</target>
+        <target state="translated">关于</target>
         <context-group>
           <context context-type="sourcefile">apphead.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="main.admin">
         <source>Admin</source>
-        <target state="needs-translation">Admin</target>
+        <target state="translated">管理</target>
         <context-group>
           <context context-type="sourcefile">drawer.tsx</context>
         </context-group>
@@ -3063,14 +3063,14 @@
       </trans-unit>
       <trans-unit id="main.cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
         <context-group>
           <context context-type="sourcefile">ResetAlert.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="main.cantCopy">
         <source>Unable to copy to clipboard</source>
-        <target state="needs-translation">Unable to copy to clipboard</target>
+        <target state="translated">无法复制到剪贴板</target>
         <context-group>
           <context context-type="sourcefile">AboutDialog.tsx</context>
         </context-group>
@@ -3091,7 +3091,7 @@
       </trans-unit>
       <trans-unit id="main.continue">
         <source>Continue</source>
-        <target state="needs-translation">Continue</target>
+        <target state="translated">继续</target>
         <context-group>
           <context context-type="sourcefile">TokenProvider.tsx</context>
         </context-group>
@@ -3126,7 +3126,7 @@
       </trans-unit>
       <trans-unit id="main.details">
         <source>Details</source>
-        <target state="needs-translation">Details</target>
+        <target state="translated">细节</target>
         <context-group>
           <context context-type="sourcefile">HelpMenu.tsx</context>
         </context-group>
@@ -3140,14 +3140,14 @@
       </trans-unit>
       <trans-unit id="main.exit">
         <source>Exit</source>
-        <target state="needs-translation">Exit</target>
+        <target state="translated">退出</target>
         <context-group>
           <context context-type="sourcefile">TokenProvider.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="main.export">
         <source>Export</source>
-        <target state="needs-translation">Export</target>
+        <target state="translated">导出</target>
         <context-group>
           <context context-type="sourcefile">drawer.tsx</context>
         </context-group>
@@ -3175,7 +3175,7 @@
       </trans-unit>
       <trans-unit id="main.helpCenter">
         <source>Help Center</source>
-        <target state="needs-translation">Help Center</target>
+        <target state="translated">帮助中心</target>
         <context-group>
           <context context-type="sourcefile">HelpMenu.tsx</context>
         </context-group>
@@ -3196,7 +3196,7 @@
       </trans-unit>
       <trans-unit id="main.import">
         <source>Import</source>
-        <target state="needs-translation">Import</target>
+        <target state="translated">导入</target>
         <context-group>
           <context context-type="sourcefile">drawer.tsx</context>
         </context-group>
@@ -3217,7 +3217,7 @@
       </trans-unit>
       <trans-unit id="main.loadingTable">
         <source>Busy...please wait.</source>
-        <target state="needs-translation">Busy...please wait.</target>
+        <target state="translated">忙...请稍候。</target>
         <context-group>
           <context context-type="sourcefile">drawer.tsx</context>
         </context-group>
@@ -3231,21 +3231,21 @@
       </trans-unit>
       <trans-unit id="main.logout">
         <source>Log Out</source>
-        <target state="needs-translation">Log Out</target>
+        <target state="translated">登出</target>
         <context-group>
           <context context-type="sourcefile">UserMenu.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="main.media">
         <source>Audio</source>
-        <target state="needs-translation">Audio</target>
+        <target state="translated">音频</target>
         <context-group>
           <context context-type="sourcefile">drawer.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="main.myAccount">
         <source>My Account</source>
-        <target state="needs-translation">My Account</target>
+        <target state="translated">我的账户</target>
         <context-group>
           <context context-type="sourcefile">UserMenu.tsx</context>
         </context-group>
@@ -3259,7 +3259,7 @@
       </trans-unit>
       <trans-unit id="main.passages">
         <source>Passages</source>
-        <target state="needs-translation">Passages</target>
+        <target state="translated">经文段落</target>
         <context-group>
           <context context-type="sourcefile">drawer.tsx</context>
         </context-group>
@@ -3273,14 +3273,14 @@
       </trans-unit>
       <trans-unit id="main.project">
         <source>Audio Project</source>
-        <target state="needs-translation">Audio Project</target>
+        <target state="translated">音频方案</target>
         <context-group>
           <context context-type="sourcefile">drawer.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="main.orgRole">
         <source>Role:</source>
-        <target state="needs-translation">Role:</target>
+        <target state="translated">角色：</target>
         <context-group>
           <context context-type="sourcefile">UserMenu.tsx</context>
         </context-group>
@@ -3322,7 +3322,7 @@
       </trans-unit>
       <trans-unit id="main.saving">
         <source>Saving...</source>
-        <target state="needs-translation">Saving...</target>
+        <target state="translated">保存中...</target>
         <context-group>
           <context context-type="sourcefile">drawer.tsx</context>
         </context-group>
@@ -3343,7 +3343,7 @@
       </trans-unit>
       <trans-unit id="main.settings">
         <source>Settings</source>
-        <target state="needs-translation">Settings</target>
+        <target state="translated">设置</target>
         <context-group>
           <context context-type="sourcefile">drawer.tsx</context>
         </context-group>
@@ -3357,14 +3357,14 @@
       </trans-unit>
       <trans-unit id="main.tasks">
         <source>Tasks</source>
-        <target state="needs-translation">Tasks</target>
+        <target state="translated">任务</target>
         <context-group>
           <context context-type="sourcefile">drawer.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="main.team">
         <source>Team</source>
-        <target state="needs-translation">Team</target>
+        <target state="translated">团队</target>
         <context-group>
           <context context-type="sourcefile">AboutDialog.tsx</context>
         </context-group>
@@ -3378,7 +3378,7 @@
       </trans-unit>
       <trans-unit id="main.thanks">
         <source>Thanks to</source>
-        <target state="needs-translation">Thanks to</target>
+        <target state="translated">谢谢：</target>
         <context-group>
           <context context-type="sourcefile">AboutDialog.tsx</context>
         </context-group>
@@ -3392,7 +3392,7 @@
       </trans-unit>
       <trans-unit id="main.UnsavedData">
         <source>Unsaved Data</source>
-        <target state="needs-translation">Unsaved Data</target>
+        <target state="translated">未保存的数据</target>
         <context-group>
           <context context-type="sourcefile">drawer.tsx</context>
         </context-group>
@@ -3413,28 +3413,28 @@
       </trans-unit>
       <trans-unit id="mediaActions.attach">
         <source>Associate</source>
-        <target state="needs-translation">Associate</target>
+        <target state="translated">关联</target>
         <context-group>
           <context context-type="sourcefile">MediaActions.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaActions.delete">
         <source>Delete</source>
-        <target state="needs-translation">Delete</target>
+        <target state="translated">删除</target>
         <context-group>
           <context context-type="sourcefile">MediaActions.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaActions.detach">
         <source>Disassociate</source>
-        <target state="needs-translation">Disassociate</target>
+        <target state="translated">取消关联</target>
         <context-group>
           <context context-type="sourcefile">MediaActions.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaActions.download">
         <source>Download</source>
-        <target state="needs-translation">Download</target>
+        <target state="translated">下载</target>
         <context-group>
           <context context-type="sourcefile">MediaActions.tsx</context>
         </context-group>
@@ -3448,21 +3448,21 @@
       </trans-unit>
       <trans-unit id="mediaActions.edit">
         <source>Edit</source>
-        <target state="needs-translation">Edit</target>
+        <target state="translated">编辑</target>
         <context-group>
           <context context-type="sourcefile">MediaActions.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaActions.pause">
         <source>Pause</source>
-        <target state="needs-translation">Pause</target>
+        <target state="translated">暂停</target>
         <context-group>
           <context context-type="sourcefile">MediaActions.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaActions.play">
         <source>Play</source>
-        <target state="needs-translation">Play</target>
+        <target state="translated">播放</target>
         <context-group>
           <context context-type="sourcefile">MediaActions.tsx</context>
         </context-group>
@@ -3476,35 +3476,35 @@
       </trans-unit>
       <trans-unit id="mediaTab.action">
         <source>Action</source>
-        <target state="needs-translation">Action</target>
+        <target state="translated">行动</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaTab.actions">
         <source>Actions</source>
-        <target state="needs-translation">Actions</target>
+        <target state="translated">行动</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaTab.all">
         <source>All</source>
-        <target state="needs-translation">All</target>
+        <target state="translated">全部</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaTab.alreadyAssociated">
         <source>Show Passages Already Associated</source>
-        <target state="needs-translation">Show Passages Already Associated</target>
+        <target state="translated">显示已关联的路径</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaTab.associated">
         <source>Associated</source>
-        <target state="needs-translation">Associated</target>
+        <target state="translated">关联的</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
@@ -3525,14 +3525,14 @@
       </trans-unit>
       <trans-unit id="mediaTab.book">
         <source>Book</source>
-        <target state="needs-translation">Book</target>
+        <target state="translated">书</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaTab.cancelling">
         <source>Cancelling with {0} of {1} completed.</source>
-        <target state="needs-translation">Cancelling with {0} of {1} completed.</target>
+        <target state="translated">{0} 的 {1} 取消已完成。</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
@@ -3553,21 +3553,21 @@
       </trans-unit>
       <trans-unit id="mediaTab.date">
         <source>Date</source>
-        <target state="needs-translation">Date</target>
+        <target state="translated">日期</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaTab.delete">
         <source>Delete</source>
-        <target state="needs-translation">Delete</target>
+        <target state="translated">删除</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaTab.deleteConfirm">
         <source>Delete {0}? Are you sure?</source>
-        <target state="needs-translation">Delete {0}? Are you sure?</target>
+        <target state="translated">删除 {0}？您确定吗？</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
@@ -3581,21 +3581,21 @@
       </trans-unit>
       <trans-unit id="mediaTab.duration">
         <source>Length (s)</source>
-        <target state="needs-translation">Length (s)</target>
+        <target state="translated">长度(s)</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaTab.fileAttached">
         <source>File already attached</source>
-        <target state="needs-translation">File already attached</target>
+        <target state="translated">文件已经附加了</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaTab.fileName">
         <source>File Name</source>
-        <target state="needs-translation">File Name</target>
+        <target state="translated">文件名</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
@@ -3616,7 +3616,7 @@
       </trans-unit>
       <trans-unit id="mediaTab.loadingTable">
         <source>Loading data</source>
-        <target state="needs-translation">Loading data</target>
+        <target state="translated">正在加载数据</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
@@ -3644,7 +3644,7 @@
       </trans-unit>
       <trans-unit id="mediaTab.none">
         <source>None</source>
-        <target state="needs-translation">None</target>
+        <target state="translated">无</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
@@ -3693,28 +3693,28 @@
       </trans-unit>
       <trans-unit id="mediaTab.save">
         <source>Save</source>
-        <target state="needs-translation">Save</target>
+        <target state="translated">保存</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaTab.saving">
         <source>Saving...</source>
-        <target state="needs-translation">Saving...</target>
+        <target state="translated">保存中...</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaTab.savingComplete">
         <source>Saving complete.</source>
-        <target state="needs-translation">Saving complete.</target>
+        <target state="translated">保存成功</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaTab.selectFiles">
         <source>Please select files to be uploaded.</source>
-        <target state="needs-translation">Please select files to be uploaded.</target>
+        <target state="translated">请选择要上传的文件。</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
@@ -3735,7 +3735,7 @@
       </trans-unit>
       <trans-unit id="mediaTab.size">
         <source>Size (MB)</source>
-        <target state="needs-translation">Size (MB)</target>
+        <target state="translated">大小 (MB)</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
@@ -3756,7 +3756,7 @@
       </trans-unit>
       <trans-unit id="mediaTab.uploadComplete">
         <source>{0} of {1} files uploaded successfully.</source>
-        <target state="needs-translation">{0} of {1} files uploaded successfully.</target>
+        <target state="translated">{0} 中的 {1} 文件上传成功。</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
@@ -3784,7 +3784,7 @@
       </trans-unit>
       <trans-unit id="mediaUpload.cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
         <context-group>
           <context context-type="sourcefile">MediaUpload.tsx</context>
         </context-group>
@@ -3868,7 +3868,7 @@
       </trans-unit>
       <trans-unit id="mediaUpload.resourceTitle">
         <source>Upload Resources</source>
-        <target state="needs-translation">Upload Resources</target>
+        <target state="translated">上传资源</target>
         <context-group>
           <context context-type="sourcefile">MediaUpload.tsx</context>
         </context-group>
@@ -3882,35 +3882,35 @@
       </trans-unit>
       <trans-unit id="mediaUpload.title">
         <source>Upload Audio</source>
-        <target state="needs-translation">Upload Audio</target>
+        <target state="translated">上传音频</target>
         <context-group>
           <context context-type="sourcefile">MediaUpload.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaUpload.toobig">
         <source>Too large: {0}. File Limit is {1}MB</source>
-        <target state="needs-translation">Too large: {0}. File Limit is {1}MB</target>
+        <target state="translated">太大: {0}. 文件限制为 {1}MB</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="mediaUpload.upload">
         <source>Upload</source>
-        <target state="needs-translation">Upload</target>
+        <target state="translated">上传</target>
         <context-group>
           <context context-type="sourcefile">MediaUpload.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="newProject.audioProduct">
         <source>Audio Product</source>
-        <target state="needs-translation">Audio Product</target>
+        <target state="translated">音频产品</target>
         <context-group>
           <context context-type="sourcefile">NewProject.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="newProject.blank">
         <source>Audio Project</source>
-        <target state="needs-translation">Audio Project</target>
+        <target state="translated">音频方案</target>
         <context-group>
           <context context-type="sourcefile">NewProject.tsx</context>
         </context-group>
@@ -3987,28 +3987,28 @@
       </trans-unit>
       <trans-unit id="newProject.newProject">
         <source>Create New Audio Project</source>
-        <target state="needs-translation">Create New Audio Project</target>
+        <target state="translated">创建新音频项目</target>
         <context-group>
           <context context-type="sourcefile">NewProject.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="newProject.startRecording">
         <source>Start Recording</source>
-        <target state="needs-translation">Start Recording</target>
+        <target state="translated">开始录音</target>
         <context-group>
           <context context-type="sourcefile">NewProject.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="newProject.textProduct">
         <source>Text Product</source>
-        <target state="needs-translation">Text Product</target>
+        <target state="translated">文本产品</target>
         <context-group>
           <context context-type="sourcefile">NewProject.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="newProject.uploadAudio">
         <source>Bulk Upload</source>
-        <target state="needs-translation">Bulk Upload</target>
+        <target state="translated">批量上传</target>
         <context-group>
           <context context-type="sourcefile">NewProject.tsx</context>
         </context-group>
@@ -4029,56 +4029,56 @@
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.action">
         <source>Action</source>
-        <target state="needs-translation">Action</target>
+        <target state="translated">行动</target>
         <context-group>
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.activity">
         <source>Add Activity</source>
-        <target state="needs-translation">Add Activity</target>
+        <target state="translated">添加活动</target>
         <context-group>
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.add">
         <source>Add</source>
-        <target state="needs-translation">Add</target>
+        <target state="translated">添加</target>
         <context-group>
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.allLevel">
         <source>All Resources</source>
-        <target state="needs-translation">All Resources</target>
+        <target state="translated">所有资源</target>
         <context-group>
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.allResources">
         <source>Show resources for all passages</source>
-        <target state="needs-translation">Show resources for all passages</target>
+        <target state="translated">显示所有段落的资源</target>
         <context-group>
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.bookLevel">
         <source>Resources for the Book</source>
-        <target state="needs-translation">Resources for the Book</target>
+        <target state="translated">书的资源</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.canceling">
         <source>Canceling resource creation</source>
-        <target state="needs-translation">Canceling resource creation</target>
+        <target state="translated">取消资源创建</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.category">
         <source>Category</source>
-        <target state="needs-translation">Category</target>
+        <target state="translated">范畴</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
@@ -4099,14 +4099,14 @@
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.clipboard">
         <source>clipboard</source>
-        <target state="needs-translation">clipboard</target>
+        <target state="translated">剪贴板</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.completed">
         <source>Completed</source>
-        <target state="needs-translation">Completed</target>
+        <target state="translated">已完成</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
@@ -4120,21 +4120,21 @@
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.copyToClipboard">
         <source>Copy to Clipboard</source>
-        <target state="needs-translation">Copy to Clipboard</target>
+        <target state="translated">复制到剪贴板</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.createResources">
         <source>Create Resources</source>
-        <target state="needs-translation">Create Resources</target>
+        <target state="translated">创建资源</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.deleteConfirm">
         <source>Delete Resource?</source>
-        <target state="needs-translation">Delete Resource?</target>
+        <target state="translated">删除资源吗？</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
@@ -4148,14 +4148,14 @@
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.editResource">
         <source>Edit Resource</source>
-        <target state="needs-translation">Edit Resource</target>
+        <target state="translated">编辑资源</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.generalResources">
         <source>General Resources</source>
-        <target state="needs-translation">General Resources</target>
+        <target state="translated">通用资源</target>
         <context-group>
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
@@ -4169,7 +4169,7 @@
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.language">
         <source>Language</source>
-        <target state="needs-translation">Language</target>
+        <target state="translated">语言</target>
         <context-group>
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
@@ -4183,7 +4183,7 @@
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.no">
         <source>No</source>
-        <target state="needs-translation">No</target>
+        <target state="translated">不是</target>
         <context-group>
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
@@ -4225,7 +4225,7 @@
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.projectResourceSheet">
         <source>Project Resource Sheet</source>
-        <target state="needs-translation">Project Resource Sheet</target>
+        <target state="translated">项目资源表</target>
         <context-group>
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
@@ -4246,21 +4246,21 @@
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.resource">
         <source>Resource</source>
-        <target state="needs-translation">Resource</target>
+        <target state="translated">资源</target>
         <context-group>
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.resourcesDeleted">
         <source> ({0} resources will be deleted.)</source>
-        <target state="needs-translation"> ({0} resources will be deleted.)</target>
+        <target state="translated"> ({0} 资源将被删除)</target>
         <context-group>
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.selectBook">
         <source>Select Book</source>
-        <target state="needs-translation">Select Book</target>
+        <target state="translated">选择书籍</target>
         <context-group>
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
@@ -4281,14 +4281,14 @@
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.startStop">
         <source>Start - Stop</source>
-        <target state="needs-translation">Start - Stop</target>
+        <target state="translated">开始/停止</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.suffix">
         <source>Suffix</source>
-        <target state="needs-translation">Suffix</target>
+        <target state="translated">后缀</target>
         <context-group>
           <context context-type="sourcefile">ProjectResourceConfigure.tsx</context>
         </context-group>
@@ -4316,7 +4316,7 @@
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.title">
         <source>Title</source>
-        <target state="needs-translation">Title</target>
+        <target state="translated">标题</target>
         <context-group>
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
@@ -4330,7 +4330,7 @@
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.tip1a">
         <source>Resources for:</source>
-        <target state="needs-translation">Resources for:</target>
+        <target state="translated">资源：</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
@@ -4358,7 +4358,7 @@
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.upload">
         <source>Upload Resources</source>
-        <target state="needs-translation">Upload Resources</target>
+        <target state="translated">上传资源</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
@@ -4386,7 +4386,7 @@
       </trans-unit>
       <trans-unit id="passageDetailArtifacts.yes">
         <source>Yes</source>
-        <target state="needs-translation">Yes</target>
+        <target state="translated">是的</target>
         <context-group>
           <context context-type="sourcefile">AddResource.tsx</context>
         </context-group>
@@ -4400,7 +4400,7 @@
       </trans-unit>
       <trans-unit id="passageDetailStepComplete.title">
         <source>Step Complete</source>
-        <target state="needs-translation">Step Complete</target>
+        <target state="translated">步骤已完成</target>
         <context-group>
           <context context-type="sourcefile">passageDetailStepComplete.tsx</context>
         </context-group>
@@ -4414,14 +4414,14 @@
       </trans-unit>
       <trans-unit id="passageMedia.close">
         <source>Close</source>
-        <target state="needs-translation">Close</target>
+        <target state="translated">关闭</target>
         <context-group>
           <context context-type="sourcefile">PassageMedia.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageRecord.cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
         <context-group>
           <context context-type="sourcefile">passageRecord.tsx</context>
         </context-group>
@@ -4442,14 +4442,14 @@
       </trans-unit>
       <trans-unit id="passageRecord.defaultFilename">
         <source>MyRecording</source>
-        <target state="needs-translation">MyRecording</target>
+        <target state="translated">我的录制</target>
         <context-group>
           <context context-type="sourcefile">passageRecord.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageRecord.fileName">
         <source>Name</source>
-        <target state="needs-translation">Name</target>
+        <target state="translated">名称</target>
         <context-group>
           <context context-type="sourcefile">passageRecord.tsx</context>
         </context-group>
@@ -4477,14 +4477,14 @@
       </trans-unit>
       <trans-unit id="passageRecord.save">
         <source>Save</source>
-        <target state="needs-translation">Save</target>
+        <target state="translated">保存</target>
         <context-group>
           <context context-type="sourcefile">passageRecord.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="passageRecord.saving">
         <source>Saving...</source>
-        <target state="needs-translation">Saving...</target>
+        <target state="translated">保存中...</target>
         <context-group>
           <context context-type="sourcefile">passageRecord.tsx</context>
         </context-group>
@@ -4498,7 +4498,7 @@
       </trans-unit>
       <trans-unit id="passageRecord.toobig">
         <source>File is too large. File Limit is {1}MB</source>
-        <target state="needs-translation">File is too large. File Limit is {1}MB</target>
+        <target state="translated">文件过大。文件限制为 {1}MB</target>
         <context-group>
           <context context-type="sourcefile">MediaTab.tsx</context>
         </context-group>
@@ -4554,7 +4554,7 @@
       </trans-unit>
       <trans-unit id="peer.member">
         <source>Member</source>
-        <target state="needs-translation">Member</target>
+        <target state="translated">成员</target>
         <context-group>
           <context context-type="sourcefile">Peer.tsx</context>
         </context-group>
@@ -4582,7 +4582,7 @@
       </trans-unit>
       <trans-unit id="peer.remove">
         <source>Remove</source>
-        <target state="needs-translation">Remove</target>
+        <target state="translated">删除</target>
         <context-group>
           <context context-type="sourcefile">GroupDialog.tsx</context>
         </context-group>
@@ -4617,7 +4617,7 @@
       </trans-unit>
       <trans-unit id="permission.admin">
         <source>Admin</source>
-        <target state="needs-translation">Admin</target>
+        <target state="translated">管理</target>
         <context-group>
           <context context-type="sourcefile">GroupDialog.tsx</context>
         </context-group>
@@ -4659,7 +4659,7 @@
       </trans-unit>
       <trans-unit id="permission.nsp">
         <source>General</source>
-        <target state="needs-translation">General</target>
+        <target state="translated">通用</target>
         <context-group>
           <context context-type="sourcefile">GroupDialog.tsx</context>
         </context-group>
@@ -4687,14 +4687,14 @@
       </trans-unit>
       <trans-unit id="planActions.assign">
         <source>Assign</source>
-        <target state="needs-translation">Assign</target>
+        <target state="translated">分配</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="planActions.delete">
         <source>Delete</source>
-        <target state="needs-translation">Delete</target>
+        <target state="translated">删除</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
@@ -4722,14 +4722,14 @@
       </trans-unit>
       <trans-unit id="planActions.resourceEdit">
         <source>Resource Edit</source>
-        <target state="needs-translation">Resource Edit</target>
+        <target state="translated">资源编辑</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="planActions.resources">
         <source>Resources</source>
-        <target state="needs-translation">Resources</target>
+        <target state="translated">资源</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
@@ -4750,7 +4750,7 @@
       </trans-unit>
       <trans-unit id="planSheet.action">
         <source>Action</source>
-        <target state="needs-translation">Action</target>
+        <target state="translated">行动</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
@@ -4764,28 +4764,28 @@
       </trans-unit>
       <trans-unit id="planSheet.addSection">
         <source>Add {0}</source>
-        <target state="needs-translation">Add {0}</target>
+        <target state="translated">添加 {0}</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="planSheet.assigned">
         <source>Assigned</source>
-        <target state="needs-translation">Assigned</target>
+        <target state="translated">已分配</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="planSheet.audio">
         <source>Audio</source>
-        <target state="needs-translation">Audio</target>
+        <target state="translated">音频</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="planSheet.bookSelect">
         <source>Select Book...</source>
-        <target state="needs-translation">Select Book...</target>
+        <target state="translated">选择书籍</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
@@ -4848,7 +4848,7 @@
       </trans-unit>
       <trans-unit id="planSheet.pasting">
         <source>Pasting</source>
-        <target state="needs-translation">Pasting</target>
+        <target state="translated">粘贴中</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
@@ -4869,28 +4869,28 @@
       </trans-unit>
       <trans-unit id="planSheet.save">
         <source>Save</source>
-        <target state="needs-translation">Save</target>
+        <target state="translated">保存</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="planSheet.saving">
         <source>Saving...</source>
-        <target state="needs-translation">Saving...</target>
+        <target state="translated">保存中...</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="planSheet.sectionAbove">
         <source>Add {0} above {1} {2}</source>
-        <target state="needs-translation">Add {0} above {1} {2}</target>
+        <target state="translated">添加 {0} 以上 {1} {2}</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="planSheet.sectionEnd">
         <source>Add {0} to End</source>
-        <target state="needs-translation">Add {0} to End</target>
+        <target state="translated">添加 {0} 到结束</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
@@ -4925,7 +4925,7 @@
       </trans-unit>
       <trans-unit id="planTabs.assignments">
         <source>Assignments</source>
-        <target state="needs-translation">Assignments</target>
+        <target state="translated">任务</target>
         <context-group>
           <context context-type="sourcefile">PlanTabs.tsx</context>
         </context-group>
@@ -4981,7 +4981,7 @@
       </trans-unit>
       <trans-unit id="profile.add">
         <source>Add</source>
-        <target state="needs-translation">Add</target>
+        <target state="translated">添加</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
@@ -4995,7 +4995,7 @@
       </trans-unit>
       <trans-unit id="profile.cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
@@ -5009,7 +5009,7 @@
       </trans-unit>
       <trans-unit id="profile.close">
         <source>Close</source>
-        <target state="needs-translation">Close</target>
+        <target state="translated">关闭</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
@@ -5044,42 +5044,42 @@
       </trans-unit>
       <trans-unit id="profile.deleteUser">
         <source>Delete User</source>
-        <target state="needs-translation">Delete User</target>
+        <target state="translated">删除用户</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.discardChanges">
         <source>Discard unsaved Changes?</source>
-        <target state="needs-translation">Discard unsaved Changes?</target>
+        <target state="translated">要放弃未保存的改动吗？</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.discardChangesExplained">
         <source>Discard unsaved Changes? ({0})</source>
-        <target state="needs-translation">Discard unsaved Changes? ({0})</target>
+        <target state="translated">要放弃未保存的改动吗({0})？</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.email">
         <source>Email</source>
-        <target state="needs-translation">Email</target>
+        <target state="translated">电子邮件</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.family">
         <source>Family Name</source>
-        <target state="needs-translation">Family Name</target>
+        <target state="translated">姓</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.given">
         <source>Given Name</source>
-        <target state="needs-translation">Given Name</target>
+        <target state="translated">名字</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
@@ -5107,35 +5107,35 @@
       </trans-unit>
       <trans-unit id="profile.locked">
         <source>Locked</source>
-        <target state="needs-translation">Locked</target>
+        <target state="translated">锁住</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.logout">
         <source>Logout</source>
-        <target state="needs-translation">Logout</target>
+        <target state="translated">登出</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.name">
         <source>Full Name</source>
-        <target state="needs-translation">Full Name</target>
+        <target state="translated">姓名</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.nameNotEmail">
         <source>Please choose a name other than your email address.</source>
-        <target state="needs-translation">Please choose a name other than your email address.</target>
+        <target state="translated">请选择您的电子邮件地址以外的名称。</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.next">
         <source>Next</source>
-        <target state="needs-translation">Next</target>
+        <target state="translated">下一个</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
@@ -5170,21 +5170,21 @@
       </trans-unit>
       <trans-unit id="profile.phone">
         <source>Phone</source>
-        <target state="needs-translation">Phone</target>
+        <target state="translated">手机号码</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.role">
         <source>Team Role</source>
-        <target state="needs-translation">Team Role</target>
+        <target state="translated">团队角色</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="profile.save">
         <source>Save</source>
-        <target state="needs-translation">Save</target>
+        <target state="translated">保存</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
@@ -5205,7 +5205,7 @@
       </trans-unit>
       <trans-unit id="profile.timezone">
         <source>Time zone</source>
-        <target state="needs-translation">Time zone</target>
+        <target state="translated">时区</target>
         <context-group>
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
@@ -5226,35 +5226,35 @@
       </trans-unit>
       <trans-unit id="projButtons.categoryTitle">
         <source>Edit Team Categories</source>
-        <target state="needs-translation">Edit Team Categories</target>
+        <target state="translated">编辑团队范畴</target>
         <context-group>
           <context context-type="sourcefile">ProjButtons.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projButtons.export">
         <source>Export</source>
-        <target state="needs-translation">Export</target>
+        <target state="translated">导出</target>
         <context-group>
           <context context-type="sourcefile">ProjButtons.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projButtons.exportTitle">
         <source>{0} Export</source>
-        <target state="needs-translation">{0} Export</target>
+        <target state="translated">{0} 导出</target>
         <context-group>
           <context context-type="sourcefile">ProjButtons.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projButtons.import">
         <source>Import</source>
-        <target state="needs-translation">Import</target>
+        <target state="translated">导入</target>
         <context-group>
           <context context-type="sourcefile">ProjButtons.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projButtons.importExport">
         <source>Import / Export</source>
-        <target state="needs-translation">Import / Export</target>
+        <target state="translated">导入和导出</target>
         <context-group>
           <context context-type="sourcefile">ProjButtons.tsx</context>
         </context-group>
@@ -5289,49 +5289,49 @@
       </trans-unit>
       <trans-unit id="projectDownload.download">
         <source>Download?</source>
-        <target state="needs-translation">Download?</target>
+        <target state="translated">下载吗？</target>
         <context-group>
           <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projectDownload.downloadLater">
         <source>Download Later</source>
-        <target state="needs-translation">Download Later</target>
+        <target state="translated">后来下载</target>
         <context-group>
           <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="projectDownload.downloadMb">
         <source>Download {0}MB of offline audio project files?</source>
-        <target state="needs-translation">Download {0}MB of offline audio project files?</target>
+        <target state="translated">下载离线音频项目文件的 {0}MB 吗？</target>
         <context-group>
           <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.action">
         <source>Action</source>
-        <target state="needs-translation">Action</target>
+        <target state="translated">行动</target>
         <context-group>
           <context context-type="sourcefile">Access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.add">
         <source>Add</source>
-        <target state="needs-translation">Add</target>
+        <target state="translated">添加</target>
         <context-group>
           <context context-type="sourcefile">ResourceOverview.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.book">
         <source>Book</source>
-        <target state="needs-translation">Book</target>
+        <target state="translated">书</target>
         <context-group>
           <context context-type="sourcefile">Access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.bookSelect">
         <source>Select Book</source>
-        <target state="needs-translation">Select Book</target>
+        <target state="translated">选择书籍</target>
         <context-group>
           <context context-type="sourcefile">Access.tsx</context>
         </context-group>
@@ -5345,14 +5345,14 @@
       </trans-unit>
       <trans-unit id="resource.delete">
         <source>Delete</source>
-        <target state="needs-translation">Delete</target>
+        <target state="translated">删除</target>
         <context-group>
           <context context-type="sourcefile">ResourceOverview.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="resource.deleteConfirm">
         <source>Delete {0}</source>
-        <target state="needs-translation">Delete {0}</target>
+        <target state="translated">删除 {0}</target>
         <context-group>
           <context context-type="sourcefile">Access.tsx</context>
         </context-group>
@@ -5394,7 +5394,7 @@
       </trans-unit>
       <trans-unit id="resource.resourceEdit">
         <source>Resource Edit</source>
-        <target state="needs-translation">Resource Edit</target>
+        <target state="translated">资源编辑</target>
         <context-group>
           <context context-type="sourcefile">ResourceOverview.tsx</context>
         </context-group>
@@ -5408,7 +5408,7 @@
       </trans-unit>
       <trans-unit id="resource.saving">
         <source>Saving...</source>
-        <target state="needs-translation">Saving...</target>
+        <target state="translated">保存中...</target>
         <context-group>
           <context context-type="sourcefile">ResourceOverview.tsx</context>
         </context-group>
@@ -5422,7 +5422,7 @@
       </trans-unit>
       <trans-unit id="resource.title">
         <source>Title</source>
-        <target state="needs-translation">Title</target>
+        <target state="translated">标题</target>
         <context-group>
           <context context-type="sourcefile">ResourceOverview.tsx</context>
         </context-group>
@@ -5436,7 +5436,7 @@
       </trans-unit>
       <trans-unit id="scriptureTable.book">
         <source>Book</source>
-        <target state="needs-translation">Book</target>
+        <target state="translated">书</target>
         <context-group>
           <context context-type="sourcefile">ScriptureTable.tsx</context>
         </context-group>
@@ -5464,7 +5464,7 @@
       </trans-unit>
       <trans-unit id="scriptureTable.loadingTable">
         <source>Loading data</source>
-        <target state="needs-translation">Loading data</target>
+        <target state="translated">正在加载数据</target>
         <context-group>
           <context context-type="sourcefile">ScriptureTable.tsx</context>
         </context-group>
@@ -5492,7 +5492,7 @@
       </trans-unit>
       <trans-unit id="scriptureTable.pasteNoRows">
         <source>No Rows in clipboard.</source>
-        <target state="needs-translation">No Rows in clipboard.</target>
+        <target state="translated">剪贴板中没有行。</target>
         <context-group>
           <context context-type="sourcefile">ScriptureTable.tsx</context>
         </context-group>
@@ -5506,21 +5506,21 @@
       </trans-unit>
       <trans-unit id="scriptureTable.saveFirst">
         <source>You must save changes first!</source>
-        <target state="needs-translation">You must save changes first!</target>
+        <target state="translated">您必须先保存更改！</target>
         <context-group>
           <context context-type="sourcefile">ScriptureTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="scriptureTable.saving">
         <source>Saving...</source>
-        <target state="needs-translation">Saving...</target>
+        <target state="translated">保存中...</target>
         <context-group>
           <context context-type="sourcefile">ScriptureTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="scriptureTable.title">
         <source>Title</source>
-        <target state="needs-translation">Title</target>
+        <target state="translated">标题</target>
         <context-group>
           <context context-type="sourcefile">ScriptureTable.tsx</context>
         </context-group>
@@ -5590,21 +5590,21 @@
       </trans-unit>
       <trans-unit id="sectionResources.close">
         <source>Close</source>
-        <target state="needs-translation">Close</target>
+        <target state="translated">关闭</target>
         <context-group>
           <context context-type="sourcefile">sectionResources.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sectionResources.role">
         <source>Role</source>
-        <target state="needs-translation">Role</target>
+        <target state="translated">角色</target>
         <context-group>
           <context context-type="sourcefile">sectionResources.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sectionResources.title">
         <source>Assign {0}</source>
-        <target state="needs-translation">Assign {0}</target>
+        <target state="translated">分配 {0}</target>
         <context-group>
           <context context-type="sourcefile">sectionResources.tsx</context>
         </context-group>
@@ -5618,28 +5618,28 @@
       </trans-unit>
       <trans-unit id="selectArtifactCategory.addNewCategory">
         <source>Add New Category</source>
-        <target state="needs-translation">Add New Category</target>
+        <target state="translated">添加新范畴</target>
         <context-group>
           <context context-type="sourcefile">selectArtifactCategory.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="selectArtifactCategory.artifactCategory">
         <source>Category</source>
-        <target state="needs-translation">Category</target>
+        <target state="translated">范畴</target>
         <context-group>
           <context context-type="sourcefile">selectArtifactCategory.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="selectArtifactCategory.duplicateCategory">
         <source>Category already exists.</source>
-        <target state="needs-translation">Category already exists.</target>
+        <target state="translated">范畴已存在。</target>
         <context-group>
           <context context-type="sourcefile">selectArtifactCategory.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="selectArtifactCategory.newArtifactCategory">
         <source>New Category</source>
-        <target state="needs-translation">New Category</target>
+        <target state="translated">新范畴</target>
         <context-group>
           <context context-type="sourcefile">selectArtifactCategory.tsx</context>
         </context-group>
@@ -5688,7 +5688,7 @@
       </trans-unit>
       <trans-unit id="selectRecording.filename">
         <source>File Name</source>
-        <target state="needs-translation">File Name</target>
+        <target state="translated">文件名</target>
         <context-group>
           <context context-type="sourcefile">selectRecording.tsx</context>
         </context-group>
@@ -5723,14 +5723,14 @@
       </trans-unit>
       <trans-unit id="selectRecording.topic">
         <source>Topic</source>
-        <target state="needs-translation">Topic</target>
+        <target state="translated">主题</target>
         <context-group>
           <context context-type="sourcefile">selectRecording.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="shared.admin">
         <source>Admin</source>
-        <target state="needs-translation">Admin</target>
+        <target state="translated">管理</target>
         <context-group>
           <context context-type="sourcefile">Access.tsx</context>
         </context-group>
@@ -5751,7 +5751,7 @@
       </trans-unit>
       <trans-unit id="shared.cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
         <context-group>
           <context context-type="sourcefile">Access.tsx</context>
         </context-group>
@@ -5765,21 +5765,21 @@
       </trans-unit>
       <trans-unit id="shared.delete">
         <source>Delete {0}. Are you sure?</source>
-        <target state="needs-translation">Delete {0}. Are you sure?</target>
+        <target state="translated">删除 {0}？您确定吗？</target>
         <context-group>
           <context context-type="sourcefile">AlertDialog.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="shared.description">
         <source>Description</source>
-        <target state="needs-translation">Description</target>
+        <target state="translated">描述</target>
         <context-group>
           <context context-type="sourcefile">ResourceData.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="shared.editor">
         <source>Editor</source>
-        <target state="needs-translation">Editor</target>
+        <target state="translated">编辑者</target>
         <context-group>
           <context context-type="sourcefile">Access.tsx</context>
         </context-group>
@@ -5800,14 +5800,14 @@
       </trans-unit>
       <trans-unit id="shared.fileNotFound">
         <source>The audio file has not been downloaded or has been deleted.</source>
-        <target state="needs-translation">The audio file has not been downloaded or has been deleted.</target>
+        <target state="translated">音频文件尚未下载或已删除。</target>
         <context-group>
           <context context-type="sourcefile">integration.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="shared.importMediaSingular">
         <source>Import Audio</source>
-        <target state="needs-translation">Import Audio</target>
+        <target state="translated">导入音频</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
@@ -5828,7 +5828,7 @@
       </trans-unit>
       <trans-unit id="shared.lastEdit">
         <source>Last save {0}</source>
-        <target state="needs-translation">Last save {0}</target>
+        <target state="translated">上次保存 {0}</target>
         <context-group>
           <context context-type="sourcefile">LastEdit.tsx</context>
         </context-group>
@@ -5877,21 +5877,21 @@
       </trans-unit>
       <trans-unit id="shared.no">
         <source>No</source>
-        <target state="needs-translation">No</target>
+        <target state="translated">不是</target>
         <context-group>
           <context context-type="sourcefile">Access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="shared.noAudio">
         <source>No Audio Available!</source>
-        <target state="needs-translation">No Audio Available!</target>
+        <target state="translated">没有可用的音频！</target>
         <context-group>
           <context context-type="sourcefile">Access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="shared.NoSaveOffline">
         <source>Unable to save while offline.</source>
-        <target state="needs-translation">Unable to save while offline.</target>
+        <target state="translated">离线时无法保存</target>
         <context-group>
           <context context-type="sourcefile">Access.tsx</context>
         </context-group>
@@ -5954,14 +5954,14 @@
       </trans-unit>
       <trans-unit id="shared.save">
         <source>Save</source>
-        <target state="needs-translation">Save</target>
+        <target state="translated">保存</target>
         <context-group>
           <context context-type="sourcefile">Access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="shared.saving">
         <source>Saving...</source>
-        <target state="needs-translation">Saving...</target>
+        <target state="translated">保存中...</target>
         <context-group>
           <context context-type="sourcefile">drawer.tsx</context>
         </context-group>
@@ -5975,7 +5975,7 @@
       </trans-unit>
       <trans-unit id="shared.teamrole">
         <source>Team Role</source>
-        <target state="needs-translation">Team Role</target>
+        <target state="translated">团队角色</target>
         <context-group>
           <context context-type="sourcefile">integration.tsx</context>
         </context-group>
@@ -5996,14 +5996,14 @@
       </trans-unit>
       <trans-unit id="shared.uploadMediaPlural">
         <source>Upload Audio</source>
-        <target state="needs-translation">Upload Audio</target>
+        <target state="translated">上传音频</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="shared.uploadMediaSingular">
         <source>Upload Audio</source>
-        <target state="needs-translation">Upload Audio</target>
+        <target state="translated">上传音频</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
         </context-group>
@@ -6017,7 +6017,7 @@
       </trans-unit>
       <trans-unit id="shared.user">
         <source>Team Member</source>
-        <target state="needs-translation">Team Member</target>
+        <target state="translated">團隊成員</target>
         <context-group>
           <context context-type="sourcefile">integration.tsx</context>
         </context-group>
@@ -6031,21 +6031,21 @@
       </trans-unit>
       <trans-unit id="shared.wait">
         <source>Please wait for action to finish.</source>
-        <target state="needs-translation">Please wait for action to finish.</target>
+        <target state="translated">请等待行动结束</target>
         <context-group>
           <context context-type="sourcefile">ConsultantCheck.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="shared.yes">
         <source>Yes</source>
-        <target state="needs-translation">Yes</target>
+        <target state="translated">是的</target>
         <context-group>
           <context context-type="sourcefile">Access.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="sortMenu.assignment">
         <source>Assigned To</source>
-        <target state="needs-translation">Assigned To</target>
+        <target state="translated">已分配到</target>
         <context-group>
           <context context-type="sourcefile">filterMenu.tsx</context>
         </context-group>
@@ -6073,14 +6073,14 @@
       </trans-unit>
       <trans-unit id="spelling.addToDict">
         <source>Add to dictionary</source>
-        <target state="needs-translation">Add to dictionary</target>
+        <target state="translated">添加至词典</target>
         <context-group>
           <context context-type="sourcefile">SpellingTabs.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="spelling.close">
         <source>Close</source>
-        <target state="needs-translation">Close</target>
+        <target state="translated">关闭</target>
         <context-group>
           <context context-type="sourcefile">Spelling.tsx</context>
         </context-group>
@@ -6129,7 +6129,7 @@
       </trans-unit>
       <trans-unit id="stepEditor.add">
         <source>Add</source>
-        <target state="needs-translation">Add</target>
+        <target state="translated">添加</target>
         <context-group>
           <context context-type="sourcefile">StepName.tsx</context>
         </context-group>
@@ -6213,21 +6213,21 @@
       </trans-unit>
       <trans-unit id="stepEditor.saving">
         <source>Saving ...</source>
-        <target state="needs-translation">Saving ...</target>
+        <target state="translated">保存中...</target>
         <context-group>
           <context context-type="sourcefile">StepItem.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="stepEditor.show">
         <source>Show</source>
-        <target state="needs-translation">Show</target>
+        <target state="translated">显示</target>
         <context-group>
           <context context-type="sourcefile">StepItem.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="stepEditor.showAll">
         <source>Show all</source>
-        <target state="needs-translation">Show all</target>
+        <target state="translated">全部显示</target>
         <context-group>
           <context context-type="sourcefile">StepEditor.tsx</context>
         </context-group>
@@ -6248,7 +6248,7 @@
       </trans-unit>
       <trans-unit id="stepEditor.tool">
         <source>Tool</source>
-        <target state="needs-translation">Tool</target>
+        <target state="translated">工具</target>
         <context-group>
           <context context-type="sourcefile">StepTool.tsx</context>
         </context-group>
@@ -6262,7 +6262,7 @@
       </trans-unit>
       <trans-unit id="taskItem.assign">
         <source>Assign {0}</source>
-        <target state="needs-translation">Assign {0}</target>
+        <target state="translated">分配 {0}</target>
         <context-group>
           <context context-type="sourcefile">TaskHead.tsx</context>
         </context-group>
@@ -6276,21 +6276,21 @@
       </trans-unit>
       <trans-unit id="taskItem.unassign">
         <source>Unassign {0}</source>
-        <target state="needs-translation">Unassign {0}</target>
+        <target state="translated">取消分配 {0}</target>
         <context-group>
           <context context-type="sourcefile">TaskHead.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="teamCheckReference.resource">
         <source>Resource</source>
-        <target state="needs-translation">Resource</target>
+        <target state="translated">资源</target>
         <context-group>
           <context context-type="sourcefile">template.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="teamCheckReference.resourcehelper">
         <source>Scripture or Bible Story Resource</source>
-        <target state="needs-translation">Scripture or Bible Story Resource</target>
+        <target state="translated">经文或圣经故事的资源</target>
         <context-group>
           <context context-type="sourcefile">template.tsx</context>
         </context-group>
@@ -6325,7 +6325,7 @@
       </trans-unit>
       <trans-unit id="template.bookname">
         <source>Book name</source>
-        <target state="needs-translation">Book name</target>
+        <target state="translated">书名</target>
         <context-group>
           <context context-type="sourcefile">template.tsx</context>
         </context-group>
@@ -6381,14 +6381,14 @@
       </trans-unit>
       <trans-unit id="toDoTable.action">
         <source>Action</source>
-        <target state="needs-translation">Action</target>
+        <target state="translated">行动</target>
         <context-group>
           <context context-type="sourcefile">ToDoTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toDoTable.assigned">
         <source>Assigned</source>
-        <target state="needs-translation">Assigned</target>
+        <target state="translated">已分配</target>
         <context-group>
           <context context-type="sourcefile">ToDoTable.tsx</context>
         </context-group>
@@ -6423,14 +6423,14 @@
       </trans-unit>
       <trans-unit id="toDoTable.loadingTable">
         <source>Loading data</source>
-        <target state="needs-translation">Loading data</target>
+        <target state="translated">正在加载数据</target>
         <context-group>
           <context context-type="sourcefile">ToDoTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="toDoTable.no">
         <source>No</source>
-        <target state="needs-translation">No</target>
+        <target state="translated">不是</target>
         <context-group>
           <context context-type="sourcefile">ToDoTable.tsx</context>
         </context-group>
@@ -6451,7 +6451,7 @@
       </trans-unit>
       <trans-unit id="toDoTable.project">
         <source>Audio Project</source>
-        <target state="needs-translation">Audio Project</target>
+        <target state="translated">音频方案</target>
         <context-group>
           <context context-type="sourcefile">ToDoTable.tsx</context>
         </context-group>
@@ -6479,7 +6479,7 @@
       </trans-unit>
       <trans-unit id="toDoTable.title">
         <source>Title</source>
-        <target state="needs-translation">Title</target>
+        <target state="translated">标题</target>
         <context-group>
           <context context-type="sourcefile">TaskItem.tsx</context>
         </context-group>
@@ -6500,7 +6500,7 @@
       </trans-unit>
       <trans-unit id="toDoTable.yes">
         <source>Yes</source>
-        <target state="needs-translation">Yes</target>
+        <target state="translated">是的</target>
         <context-group>
           <context context-type="sourcefile">ToDoTable.tsx</context>
         </context-group>
@@ -6584,7 +6584,7 @@
       </trans-unit>
       <trans-unit id="tool.teamCheck">
         <source>Compare</source>
-        <target state="needs-translation">Compare</target>
+        <target state="translated">比较</target>
         <context-group>
           <context context-type="sourcefile">useTools.ts</context>
         </context-group>
@@ -6612,35 +6612,35 @@
       </trans-unit>
       <trans-unit id="transcribeAddNote.addNoteTitle">
         <source>Add Note</source>
-        <target state="needs-translation">Add Note</target>
+        <target state="translated">添加注释</target>
         <context-group>
           <context context-type="sourcefile">transcribeAddNote.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="transcribeAddNote.cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
         <context-group>
           <context context-type="sourcefile">transcribeAddNote.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="transcribeAddNote.save">
         <source>Save</source>
-        <target state="needs-translation">Save</target>
+        <target state="translated">保存</target>
         <context-group>
           <context context-type="sourcefile">transcribeAddNote.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="transcriber.addNote">
         <source>Add Note</source>
-        <target state="needs-translation">Add Note</target>
+        <target state="translated">添加注释</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="transcriber.comment">
         <source>Comment</source>
-        <target state="needs-translation">Comment</target>
+        <target state="translated">注释</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
@@ -6654,7 +6654,7 @@
       </trans-unit>
       <trans-unit id="transcriber.done">
         <source>Completed</source>
-        <target state="needs-translation">Completed</target>
+        <target state="translated">已完成</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
@@ -6675,7 +6675,7 @@
       </trans-unit>
       <trans-unit id="transcriber.invalidReference">
         <source>Book or Reference is invalid.</source>
-        <target state="needs-translation">Book or Reference is invalid.</target>
+        <target state="translated">书籍或引用无效。</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
@@ -6745,7 +6745,7 @@
       </trans-unit>
       <trans-unit id="transcriber.reopen">
         <source>Reopen</source>
-        <target state="needs-translation">Reopen</target>
+        <target state="translated">重新打开</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
@@ -6759,28 +6759,28 @@
       </trans-unit>
       <trans-unit id="transcriber.save">
         <source>Save</source>
-        <target state="needs-translation">Save</target>
+        <target state="translated">保存</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="transcriber.saveReviewTip">
-        <source>Save position and comment</source>
-        <target state="needs-translation">Save position and comment</target>
+        <source>Save position and segments</source>
+        <target state="needs-translation">Save position and segments</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="transcriber.saveTip">
         <source>Save changes and comment</source>
-        <target state="needs-translation">Save changes and comment</target>
+        <target state="translated">保存更改和评论</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="transcriber.saving">
         <source>Saving...</source>
-        <target state="needs-translation">Saving...</target>
+        <target state="translated">保存中...</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
@@ -6822,21 +6822,21 @@
       </trans-unit>
       <trans-unit id="transcribeReject.cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
         <context-group>
           <context context-type="sourcefile">transcribeReject.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="transcribeReject.comment">
         <source>Additional Comment</source>
-        <target state="needs-translation">Additional Comment</target>
+        <target state="translated">额外注释</target>
         <context-group>
           <context context-type="sourcefile">transcribeReject.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="transcribeReject.incomplete">
         <source>Incomplete</source>
-        <target state="needs-translation">Incomplete</target>
+        <target state="translated">不完全</target>
         <context-group>
           <context context-type="sourcefile">transcribeReject.tsx</context>
         </context-group>
@@ -6878,14 +6878,14 @@
       </trans-unit>
       <trans-unit id="transcriptionShow.cantCopy">
         <source>Unable to copy to clipboard</source>
-        <target state="needs-translation">Unable to copy to clipboard</target>
+        <target state="translated">无法复制到剪贴板</target>
         <context-group>
           <context context-type="sourcefile">TranscriptionShow.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="transcriptionShow.close">
         <source>Close</source>
-        <target state="needs-translation">Close</target>
+        <target state="translated">关闭</target>
         <context-group>
           <context context-type="sourcefile">TranscriptionShow.tsx</context>
         </context-group>
@@ -6927,14 +6927,14 @@
       </trans-unit>
       <trans-unit id="transcriptionTab.cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
         <context-group>
           <context context-type="sourcefile">ExportTab.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="transcriptionTab.cantCopy">
         <source>Unable to copy to clipboard</source>
-        <target state="needs-translation">Unable to copy to clipboard</target>
+        <target state="translated">无法复制到剪贴板</target>
         <context-group>
           <context context-type="sourcefile">TranscriptionTab.tsx</context>
         </context-group>
@@ -6955,7 +6955,7 @@
       </trans-unit>
       <trans-unit id="transcriptionTab.creatingDownloadFile">
         <source>Creating File...{0}%</source>
-        <target state="needs-translation">Creating File...{0}%</target>
+        <target state="translated">正在创建文件...{0}%</target>
         <context-group>
           <context context-type="sourcefile">ProjectDownload.tsx</context>
         </context-group>
@@ -6969,21 +6969,21 @@
       </trans-unit>
       <trans-unit id="transcriptionTab.downloading">
         <source>Creation complete. Downloading {0}</source>
-        <target state="needs-translation">Creation complete. Downloading {0}</target>
+        <target state="translated">创建完成。正在下载 {0}</target>
         <context-group>
           <context context-type="sourcefile">ExportTab.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="transcriptionTab.downloadingProject">
         <source>Downloading...{0}%</source>
-        <target state="needs-translation">Downloading...{0}%</target>
+        <target state="translated">正在下载...{0}%</target>
         <context-group>
           <context context-type="sourcefile">ProjectDownload.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="transcriptionTab.downloadProject">
         <source>Download Audio Project</source>
-        <target state="needs-translation">Download Audio Project</target>
+        <target state="translated">下载音频项目</target>
         <context-group>
           <context context-type="sourcefile">DownloadProject.tsx</context>
         </context-group>
@@ -7109,7 +7109,7 @@
       </trans-unit>
       <trans-unit id="transcriptionTab.noData">
         <source>No {0} Data.</source>
-        <target state="needs-translation">No {0} Data.</target>
+        <target state="translated">没有 {0} 数据。</target>
         <context-group>
           <context context-type="sourcefile">TranscriptionTab.tsx</context>
         </context-group>
@@ -7193,28 +7193,28 @@
       </trans-unit>
       <trans-unit id="uploadProgress.cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
         <context-group>
           <context context-type="sourcefile">UploadProgress.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="uploadProgress.canceling">
         <source>Canceling...</source>
-        <target state="needs-translation">Canceling...</target>
+        <target state="translated">取消中...</target>
         <context-group>
           <context context-type="sourcefile">UploadProgress.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="uploadProgress.progressTitle">
         <source>Progress</source>
-        <target state="needs-translation">Progress</target>
+        <target state="translated">进程</target>
         <context-group>
           <context context-type="sourcefile">UploadProgress.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="userListMode.logOut">
         <source>Log Out</source>
-        <target state="needs-translation">Log Out</target>
+        <target state="translated">登出</target>
         <context-group>
           <context context-type="sourcefile">UserListMode.tsx</context>
         </context-group>
@@ -7235,28 +7235,28 @@
       </trans-unit>
       <trans-unit id="usertable.action">
         <source>Action</source>
-        <target state="needs-translation">Action</target>
+        <target state="translated">行动</target>
         <context-group>
           <context context-type="sourcefile">UserTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="usertable.addMember">
         <source>Add Member</source>
-        <target state="needs-translation">Add Member</target>
+        <target state="translated">添加成员</target>
         <context-group>
           <context context-type="sourcefile">UserTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="usertable.addNewUser">
         <source>Add New Member</source>
-        <target state="needs-translation">Add New Member</target>
+        <target state="translated">添加新成员</target>
         <context-group>
           <context context-type="sourcefile">UserAdd.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="usertable.cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
         <context-group>
           <context context-type="sourcefile">UserTable.tsx</context>
         </context-group>
@@ -7270,14 +7270,14 @@
       </trans-unit>
       <trans-unit id="usertable.delete">
         <source>Delete</source>
-        <target state="needs-translation">Delete</target>
+        <target state="translated">删除</target>
         <context-group>
           <context context-type="sourcefile">UserTable.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="usertable.email">
         <source>Email</source>
-        <target state="needs-translation">Email</target>
+        <target state="translated">电子邮件</target>
         <context-group>
           <context context-type="sourcefile">UserTable.tsx</context>
         </context-group>
@@ -7347,7 +7347,7 @@
       </trans-unit>
       <trans-unit id="viewMode.audioProject">
         <source>Audio Project Setup</source>
-        <target state="needs-translation">Audio Project Setup</target>
+        <target state="translated">音频项目已创建</target>
         <context-group>
           <context context-type="sourcefile">ViewMode.tsx</context>
         </context-group>
@@ -7375,7 +7375,7 @@
       </trans-unit>
       <trans-unit id="vProject.add">
         <source>Add</source>
-        <target state="needs-translation">Add</target>
+        <target state="translated">添加</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
@@ -7396,7 +7396,7 @@
       </trans-unit>
       <trans-unit id="vProject.cancel">
         <source>Cancel</source>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">取消</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
@@ -7431,7 +7431,7 @@
       </trans-unit>
       <trans-unit id="vProject.editorSettings">
         <source>Editor Settings</source>
-        <target state="needs-translation">Editor Settings</target>
+        <target state="translated">编辑器设置</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
@@ -7501,7 +7501,7 @@
       </trans-unit>
       <trans-unit id="vProject.newProject">
         <source>{0} Audio Project Settings</source>
-        <target state="needs-translation">{0} Audio Project Settings</target>
+        <target state="translated">{0} 音频项目设置</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
@@ -7564,7 +7564,7 @@
       </trans-unit>
       <trans-unit id="vProject.save">
         <source>Save</source>
-        <target state="needs-translation">Save</target>
+        <target state="translated">保存</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
@@ -7592,7 +7592,7 @@
       </trans-unit>
       <trans-unit id="vProject.sharedResources">
         <source>Shared Resources</source>
-        <target state="needs-translation">Shared Resources</target>
+        <target state="translated">共享的资源</target>
         <context-group>
           <context context-type="sourcefile">addCard.tsx</context>
         </context-group>
@@ -7739,7 +7739,7 @@
       </trans-unit>
       <trans-unit id="welcome.team">
         <source>Work in a team audio project</source>
-        <target state="needs-translation">Work in a team audio project</target>
+        <target state="translated">在团队音频项目中工作</target>
         <context-group>
           <context context-type="sourcefile">welcome.tsx</context>
         </context-group>
@@ -7956,7 +7956,7 @@
       </trans-unit>
       <trans-unit id="workflowSteps.teamCheck">
         <source>Compare</source>
-        <target state="needs-translation">Compare</target>
+        <target state="translated">比较</target>
         <context-group>
           <context context-type="sourcefile">passageDetail.tsx</context>
         </context-group>
@@ -7984,7 +7984,7 @@
       </trans-unit>
       <trans-unit id="workflowSteps.unsaved">
         <source>Unsaved content</source>
-        <target state="needs-translation">Unsaved content</target>
+        <target state="translated">未保存的内容</target>
         <context-group>
           <context context-type="sourcefile">passageDetail.tsx</context>
         </context-group>
@@ -8019,7 +8019,7 @@
       </trans-unit>
       <trans-unit id="workflowSteps.none">
         <source>(None)</source>
-        <target state="needs-translation">(None)</target>
+        <target state="translated">(无)</target>
         <context-group>
           <context context-type="sourcefile">passageDetail.tsx</context>
         </context-group>
@@ -8047,7 +8047,7 @@
       </trans-unit>
       <trans-unit id="wsAudioPlayer.deleteRecording">
         <source>Delete Entire Recording</source>
-        <target state="needs-translation">Delete Entire Recording</target>
+        <target state="translated">删除整个录音</target>
         <context-group>
           <context context-type="sourcefile">wsAudioPlayer.tsx</context>
         </context-group>
@@ -8145,7 +8145,7 @@
       </trans-unit>
       <trans-unit id="wsAudioPlayer.saveSegments">
         <source>Save Segments</source>
-        <target state="needs-translation">Save Segments</target>
+        <target state="translated">保存段</target>
         <context-group>
           <context context-type="sourcefile">wsAudioPlayer.tsx</context>
         </context-group>
@@ -8208,7 +8208,7 @@
       </trans-unit>
       <trans-unit id="wsAudioPlayerSegment.close">
         <source>Close</source>
-        <target state="needs-translation">Close</target>
+        <target state="translated">关闭</target>
         <context-group>
           <context context-type="sourcefile">wsAudioPlayer.tsx</context>
         </context-group>

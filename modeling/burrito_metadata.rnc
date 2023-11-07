@@ -1,0 +1,107 @@
+﻿default namespace = ""
+
+start =
+  element burrito {
+    element meta {
+      (element templateName { xsd:string } |
+      element dateCreated { xsd:dateTime } |
+      element version { xsd:string { pattern = "\d+\.\d+(\.\d+)?" } } |
+      element category { xsd:string } |
+      element generator {
+        element softwareName { xsd:string },
+        element softwareVersion { xsd:string { pattern = "\d+\.\d+(\.\d+)?" } },
+        element userId { xsd:NMTOKEN },
+        element userName { xsd:string }
+      } |
+      element defaultLocale { xsd:string { pattern = "[a-z]{2,3}(-[A-Za-z]{4})?(-[A-Z]{2})?(-[a-z]+)?" } } |
+      element normalization { xsd:NCName } |
+      element comments { xsd:string } )+
+    },
+    element idAuthorities { idAuthority+ },
+    element identification {
+      (element name { xsd:string } |
+      element description { xsd:string } |
+      element abbreviation { xsd:NMTOKEN } |
+      attribute primary { xsd:IDREF } |
+      attribute upstream { xsd:IDREF } |
+      element revisionString { text } )+
+    },
+    element confidential { xsd:boolean },
+    element type {
+      element flavorType {
+        ( name |
+        element flavor {
+          name,
+          element formats {
+            element format1 {
+              element compression { xsd:NCName }
+            }
+          }
+        } ),
+        element currentScope { scope+ }
+      }
+    },
+    element relationships { relationship+ },
+    element languages { language+ },
+    element targetAreas { targetArea+ },
+    element agencies { agency+ },
+    element ingredients {  ingredient+ },
+    element localizedNames { localizedName+ },
+    element copyright {
+      (element licenses { item+ } |
+      element publicDomain { xsd:boolean } |
+      element shortStatements {
+        lang,
+        element statement { text }
+      } )+
+    }
+  }
+idAuthority = element idAuthority {
+      attribute id { xsd:ID },
+      xsd:string
+    }
+book = attribute book { xsd:string { pattern = "[1-3A-Z]{3}" } }
+range = attribute range { xsd:string { pattern = "[1-9]\d*:[1-9]\d*(([1-9]\d*:)?[1-9]\d*)?" } }
+scope = element scope { book, range*  }
+lang = attribute lang { xsd:string { pattern = "[a-z]{2,3}(-[A-Za-z]{4})?(-[A-Z]{2})?(-[a-z]+)?" } }
+name = element name { lang, xsd:string }
+language = element language {
+      (element tag { xsd:string { pattern = "[a-z]{2,3}(-[A-Za-z]{4})?(-[A-Z]{2})?(-[a-z]+)?" } } |
+      element name  { xsd:string } |
+      element numberingSystem { xsd:NMTOKEN } |
+      element rod  { xsd:NMTOKEN } |
+      element scriptDirection { "ltr" | "rtl" } )
+  }
+targetArea = element targetArea { xsd:string { pattern = "\d{3}" } }
+agency = element agency {
+  attribute id { xsd:ID },
+  (name+ |
+  element abbr { xsd:NMTOKEN } |
+  element url { xsd:anyURI } |
+  element roles { "rightsAdmin" | "rightsHolder" | "content" | "publication" | "management" | "finance" | "qa" }+ )+
+  }
+item = element item {
+  attribute ingredient { xsd:IDREF },
+  element url { xsd:anyURI }
+  }
+relationship = element relationship {
+  attribute id { xsd:IDREF },
+  attribute revision { xsd:nonNegativeInteger },
+  attribute variant { xsd:NMTOKEN },
+  element relationshipType { "source" | "target" | "expression" | "parascriptural" | "peripheral" },
+  element flavor { "textTranslation" | "audioTranslation" | "typesetScripture" | "signLanguageVideoTranslation" | "embossedBrailleScipture" | "glossedTextStory" }
+  }
+size = element size { xsd:nonNegativeInteger }
+mimeType = element mimeType { text } 
+checksum = element checksum {
+  attribute type { "md5" | "sha3-256" | "sha3-512" },
+  text
+  }
+role = element role { "periph" | "teaching" | "PoD" | "versification" | "localeData" | "dict" | "copyright" | "x-role" }
+ingredient = element ingredient { attribute id { xsd:ID }, lang, (size | mimeType | checksum | scope | role)+ }
+localizedName = element localizedName {
+  attribute id { xsd:IDREF },
+  element short { xsd:string },
+  element long { xsd:string },
+  element abbr { xsd:string }
+}

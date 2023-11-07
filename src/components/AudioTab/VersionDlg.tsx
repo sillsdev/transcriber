@@ -13,7 +13,7 @@ import {
 } from '../../model';
 import localStrings from '../../selector/localize';
 import { QueryBuilder } from '@orbit/data';
-import { related, useArtifactType, usePlan, useRole } from '../../crud';
+import { related, useArtifactType, usePlan } from '../../crud';
 import { IRow, getMedia, IGetMedia } from '.';
 import AudioTable from './AudioTable';
 import { ActionRow, GrowingDiv } from '../StepEditor';
@@ -41,7 +41,6 @@ export const VersionDlg = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const { getPlan } = usePlan();
   const [user] = useGlobal('user');
-  const { userIsAdmin } = useRole();
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [playItem, setPlayItem] = useState('');
   const [data, setData] = useState<IRow[]>([]);
@@ -94,12 +93,10 @@ export const VersionDlg = (props: IProps) => {
         playItem={playItem}
         setPlayItem={setPlayItem}
       />
-      {userIsAdmin && (
-        <ActionRow>
-          <GrowingDiv />
-          <SelectLatest versions={versions} onChange={handleLatest} />
-        </ActionRow>
-      )}
+      <ActionRow>
+        <GrowingDiv />
+        <SelectLatest versions={versions} onChange={handleLatest} />
+      </ActionRow>
     </>
   );
 };
