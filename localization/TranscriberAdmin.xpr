@@ -2628,6 +2628,8 @@
         </options>
     </meta>
     <projectTree name="TranscriberAdmin.xpr">
+        <file name="../modeling/audio_nav.rnc"/>
+        <file name="../modeling/burrito_metadata.rnc"/>
         <file name="captureFallback.xsl"/>
         <file name="CombineStrings-12.xsl"/>
         <file name="compareToEn.xsl"/>

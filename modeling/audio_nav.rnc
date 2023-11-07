@@ -1,0 +1,45 @@
+﻿datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
+
+start = element audioNav { ( book | extra )+ }
+
+book = element book { title, scope, ( section | note )+ }
+extra = element extra { title, section+ }
+title = element title {
+  attribute ingredient { xsd:IDREF },
+  attribute graphic { xsd:IDREF }, 
+  xsd:string }
+bookId = attribute book { xsd:string { pattern = "[1-3A-Z]{3}" } }
+range = attribute range { xsd:string { pattern = "[1-9]\d*:[1-9]\d*(([1-9]\d*:)?[1-9]\d*)?" } }
+scope = element scope { bookId, range*  }
+section = element section { title, ( section | passage )+ }
+passage = element passage { scope, media, note*, ingredient*, term*, bt* }
+term = element term { attribute id { xsd:NMTOKEN }, ( ingredient | text )+ }
+bt = element bt {
+  attribute btType {"wbt" | "pbt"},
+  attribute timestamp { xsd:IDREF }?,
+  ingredient,
+  transcript?
+  }
+version = attribute version { xsd:nonNegativeInteger }
+media = element media {ingredient, version, rights?, segment*, transcript, discussion* }
+rights = attribute idAuthority { xsd:IDREF }
+discussion = element discussion { topic, comment+ }
+topic = attribute topic { xsd:string }
+comment = element comment { attribute author { xsd:string }, ( ingredient | text )+ }
+ingredient = attribute ingredient { xsd:IDREF }
+segment = element segment {
+  attribute segType { "verse" | "bt" },
+  timestamp+
+  }
+timestamp = element timestamp {
+  attribute start { xsd:decimal },
+  attribute end { xsd:decimal },
+  attribute id { xsd:ID }
+  }
+lang = attribute lang { xsd:string { pattern = "[a-z]{2,3}(-[A-Za-z]{4})?(-[A-Z]{2})?(-[a-z]+)?" } }
+scriptDir = attribute dir { "ltr" | "rtl" }
+fontName = attribute font { xsd:string }
+transcript = element transcript { lang, scriptDir?, fontName?, xsd:string }
+color = attribute color { xsd:string { pattern = "#[0-9A-F]{6}" } }
+category = element category { color, title }
+note = element note { ingredient, title, category }
