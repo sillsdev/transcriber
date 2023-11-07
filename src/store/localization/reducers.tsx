@@ -1254,7 +1254,7 @@ const initialState = {
 			"reopen": "Reopen",
 			"reviewing": "Started to review",
 			"save": "Save",
-			"saveReviewTip": "Save position and comment",
+			"saveReviewTip": "Save transcript, position and segments",
 			"saveTip": "Save changes and comment",
 			"saving": "Saving...",
 			"submit": "Submit",

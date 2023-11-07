@@ -6769,7 +6769,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="transcriber.saveReviewTip">
-            <source>Save position and comment</source>
+            <source>Save transcript, position and segments</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>
