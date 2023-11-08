@@ -694,18 +694,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="cards.longNotesProject">
-         <segment>
-            <source>Project with Long Notes</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="cards.longNotes">
-         <segment>
-            <source>Shared Introductions, Rationales, Devotionals, Podcasts</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="cards.mediaUploaded">
          <segment>
             <source>Audio Uploaded</source>
@@ -3268,12 +3256,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="mediaTab.selectRows">
-         <segment>
-            <source>Please select row(s) to {0}.</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="mediaTab.showHideFilter">
          <segment>
             <source>Show/Hide filter rows</source>
@@ -4429,12 +4411,6 @@
       <unit id="planSheet.sectionEnd">
          <segment>
             <source>Add {0} to End</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="planSheet.selectRows">
-         <segment>
-            <source>Please select row(s) to {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -6553,12 +6529,6 @@
       <unit id="usertable.phone">
          <segment>
             <source>Phone</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="usertable.selectRows">
-         <segment>
-            <source>Please select row(s) to {0}.</source>
             <target/>
          </segment>
       </unit>
