@@ -808,20 +808,6 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="cards.longNotesProject">
-            <source>Project with Long Notes</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">ProjectButtons.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="cards.longNotes">
-            <source>Shared Introductions, Rationales, Devotionals, Podcasts</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">ProjectButtons.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="cards.mediaUploaded">
             <source>Audio Uploaded</source>
             <target/>
@@ -3812,13 +3798,6 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaTab.selectRows">
-            <source>Please select row(s) to {0}.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">MediaTab.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="mediaTab.showHideFilter">
             <source>Show/Hide filter rows</source>
             <target/>
@@ -5166,13 +5145,6 @@
          </trans-unit>
          <trans-unit id="planSheet.sectionEnd">
             <source>Add {0} to End</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">PlanSheet.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="planSheet.selectRows">
-            <source>Please select row(s) to {0}.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -7650,13 +7622,7 @@
                <context context-type="sourcefile">UserTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="usertable.selectRows">
-            <source>Please select row(s) to {0}.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">UserTable.tsx</context>
-            </context-group>
-         </trans-unit>
+
          <trans-unit id="usertable.selectUser">
             <source>Select User</source>
             <target/>

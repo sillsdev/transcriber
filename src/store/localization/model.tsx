@@ -144,8 +144,6 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "explainTeamDelete": string;
     "import": string;
     "language": string;
-    "longNotesProject": string;
-    "longNotes": string;
     "mediaUploaded": string;
     "members": string;
     "nameInUse": string;
@@ -648,7 +646,6 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "saving": string;
     "savingComplete": string;
     "selectFiles": string;
-    "selectRows": string;
     "showHideFilter": string;
     "size": string;
     "toobig": string;
@@ -887,7 +884,6 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "movementAbove": string;
     "sectionAbove": string;
     "sectionEnd": string;
-    "selectRows": string;
     "step": string;
     "tablePaste": string;
     "unpublish": string;
@@ -1331,7 +1327,6 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "locale": string;
     "name": string;
     "phone": string;
-    "selectRows": string;
     "selectUser": string;
     "showHideFilter": string;
     "timezone": string;
