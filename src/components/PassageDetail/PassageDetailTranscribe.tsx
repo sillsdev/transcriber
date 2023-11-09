@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { ActivityStates, ISharedStrings } from '../../model';
+import { useContext, useMemo, useState } from 'react';
+import { ActivityStates, ISharedStrings, MediaFile } from '../../model';
 import { Grid, Typography, Box, BoxProps, styled } from '@mui/material';
 import { TranscriberProvider } from '../../context/TranscriberContext';
 import Transcriber from '../../components/Transcriber';
@@ -10,6 +10,7 @@ import TaskTable, { TaskTableWidth } from '../TaskTable';
 import { ToolSlug } from '../../crud';
 import { waitForIt } from '../../utils';
 import { useGlobal } from 'reactn';
+import { PassageDetailContext } from '../../context/PassageDetailContext';
 
 interface TableContainerProps extends BoxProps {
   topFilter?: boolean;
@@ -49,6 +50,7 @@ export function PassageDetailTranscribe({
     setStepComplete,
     setCurrentStep,
   } = usePassageDetailContext();
+  const { setState } = useContext(PassageDetailContext);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [topFilter, setTopFilter] = useState(false);
   const [globals] = useGlobal();
@@ -166,6 +168,10 @@ export function PassageDetailTranscribe({
     setCurrentStep(curRole === 'editor' ? prevStep || '' : '');
   };
 
+  const handleReloadPlayer = (playerMediafile: MediaFile) => {
+    setState((s) => ({ ...s, playerMediafile }));
+  };
+
   const handleTopFilter = (top: boolean) => {
     setTopFilter(top);
     onFilter && onFilter(top);
@@ -186,6 +192,7 @@ export function PassageDetailTranscribe({
                   stepSettings={stepSettings}
                   onReject={handleReject}
                   onReopen={handleReopen}
+                  onReloadPlayer={handleReloadPlayer}
                 />
               </TranscriberContainer>
             )}
@@ -198,6 +205,7 @@ export function PassageDetailTranscribe({
             setComplete={handleComplete}
             onReject={handleReject}
             onReopen={handleReopen}
+            onReloadPlayer={handleReloadPlayer}
           />
         )}
       </Grid>
