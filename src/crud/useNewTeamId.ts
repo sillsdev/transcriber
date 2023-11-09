@@ -8,6 +8,8 @@ import related from './related';
 
 export const useNewTeamId = () => {
   const [memory] = useGlobal('memory');
+  const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [globals] = useGlobal();
   const teamRef = React.useRef<string>();
   const orbitTeamCreate = useTeamCreate();
@@ -72,7 +74,7 @@ export const useNewTeamId = () => {
       const testId = await getPersonalId();
       if (testId) {
         teamId = testId;
-      } else {
+      } else if (!isOffline || offlineOnly) {
         await newPersonal();
         await waitForIt(
           'create new team',
@@ -81,7 +83,7 @@ export const useNewTeamId = () => {
           100
         );
         teamId = teamRef.current as string;
-      }
+      } else teamId = '';
     }
     return teamId;
   };
