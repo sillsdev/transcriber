@@ -60,36 +60,36 @@ export function PassageDetailTranscribe({
         (a, b) =>
           (a.attributes.sequencenum ?? 0) - (b.attributes.sequencenum ?? 0)
       )
-      .map((s) => ({
+      .map((s, ix) => ({
         id: s.id,
+        sequencenum: ix,
         tool: JSON.parse(s?.attributes?.tool ?? '{}').tool,
-        settings: JSON.parse(s?.attributes?.tool ?? '{}').settings,
+        settings:
+          (JSON.parse(s?.attributes?.tool ?? '{}').settings ?? '') === ''
+            ? '{}'
+            : JSON.parse(s?.attributes?.tool ?? '{}').settings,
       }));
   }, [orgWorkflowSteps]);
-
-  const hasChecking = useMemo(() => {
-    if (!currentstep || !parsedSteps) return false;
-    let found = false;
-    let count = 0;
-    for (let s of parsedSteps) {
-      if (s.id === currentstep) found = true;
-      if (!found) continue;
-      if (s.tool === ToolSlug.Transcribe) {
-        if (!s.settings?.artifactTypeId) {
-          count++;
-        }
-      } else if (s.tool === ToolSlug.Paratext) {
-        break;
-      }
-    }
-    return count > 1;
-  }, [currentstep, parsedSteps]);
 
   const stepSettings = useMemo(() => {
     if (!currentstep || !parsedSteps) return null;
     const step = parsedSteps.find((s) => s.id === currentstep);
     return step ? step.settings : null;
   }, [currentstep, parsedSteps]);
+
+  const vernacularSteps = useMemo(() => {
+    return parsedSteps.filter(
+      (s) =>
+        s.tool === ToolSlug.Transcribe && !JSON.parse(s.settings).artifactTypeId
+    );
+  }, [parsedSteps]);
+
+  const hasChecking = useMemo(() => {
+    return (
+      vernacularSteps.length > 1 &&
+      vernacularSteps[1].sequencenum === vernacularSteps[0].sequencenum + 1
+    );
+  }, [vernacularSteps]);
 
   const nextStep = useMemo(() => {
     if (!currentstep || !parsedSteps) return null;
@@ -119,19 +119,13 @@ export function PassageDetailTranscribe({
   }, [currentstep, parsedSteps]);
 
   const curRole = useMemo(() => {
-    if (!currentstep || !parsedSteps) return undefined;
-    let count = 0;
-    for (let s of parsedSteps) {
-      if (s.tool === ToolSlug.Transcribe) {
-        if (!s.settings?.artifactTypeId) {
-          count++;
-        }
-      }
-      if (s.id === currentstep) break;
-    }
-    if (count > 1) return 'editor';
-    return 'transcriber';
-  }, [currentstep, parsedSteps]);
+    if (!currentstep) return undefined;
+
+    if (!hasChecking) return 'transcriber';
+    if (JSON.parse(stepSettings).artifactTypeId) return 'transcriber';
+    if (vernacularSteps[0].id === currentstep) return 'transcriber';
+    return 'editor';
+  }, [currentstep, vernacularSteps, stepSettings, hasChecking]);
 
   const handleComplete = (complete: boolean) => {
     waitForIt(
@@ -153,7 +147,10 @@ export function PassageDetailTranscribe({
 
   const handleReopen = () => {
     uncompletedSteps();
-    setCurrentStep(curRole === 'editor' ? prevStep || '' : '');
+    //we only want to move if we're on a vernacular editor step
+    //and do we want to move then anyway?
+    //if (hasChecking && vernacularSteps[1].id === currentstep)
+    //  setCurrentStep(prevStep || '');
   };
 
   const handleReject = (reason: string) => {
