@@ -111,16 +111,23 @@ export const StepEditor = ({ process, org }: IProps) => {
     return rows.filter((r) => r.id !== exceptId).map((r) => r.name);
   };
 
-  const mangleName = (name: string, orgNames: string[], index?: number) => {
-    const hasTranscribe =
-      name === st.transcribe &&
-      rows.some((r, i) => {
-        const settings = r.settings ? JSON.parse(r.settings) : undefined;
-        if (!settings) return r.tool === ToolSlug.Transcribe && i !== index;
-        return false;
-      });
-    let baseName = hasTranscribe ? st.review : name;
-    name = baseName;
+  const mangleName = (
+    name: string,
+    orgNames: string[],
+    index?: number,
+    mangleTranscribe: boolean = true
+  ) => {
+    if (mangleTranscribe) {
+      const hasTranscribe =
+        name === st.transcribe &&
+        rows.some((r, i) => {
+          const settings = r.settings ? JSON.parse(r.settings) : undefined;
+          if (!settings) return r.tool === ToolSlug.Transcribe && i !== index;
+          return false;
+        });
+      name = hasTranscribe ? st.review : name;
+    }
+    let baseName = name;
     let count = 1;
     while (true) {
       const i = orgNames.indexOf(name);
@@ -282,7 +289,9 @@ export const StepEditor = ({ process, org }: IProps) => {
           if (name !== row.name) {
             name = mangleName(
               row.name,
-              getOrgNames(id).concat(Array.from(orgNames))
+              getOrgNames(id).concat(Array.from(orgNames)),
+              ix,
+              false
             );
             orgNames.add(name);
           }
@@ -309,7 +318,8 @@ export const StepEditor = ({ process, org }: IProps) => {
         const name = mangleName(
           row.name,
           getOrgNames().concat(Array.from(orgNames)),
-          ix
+          ix,
+          false
         );
         const rec = {
           type: 'orgworkflowstep',
