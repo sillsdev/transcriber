@@ -144,15 +144,11 @@ export function PassageDetailTranscribe({
   const uncompletedSteps = () => {
     setStepComplete(currentstep, false);
     if (hasChecking && nextStep) setStepComplete(nextStep, false);
-    if (curRole === 'editor' && prevStep) setStepComplete(prevStep, false);
+    if (curRole === 'editor' && prevStep) setCurrentStep(prevStep || '');
   };
 
   const handleReopen = () => {
     uncompletedSteps();
-    //we only want to move if we're on a vernacular editor step
-    //and do we want to move then anyway?
-    //if (hasChecking && vernacularSteps[1].id === currentstep)
-    //  setCurrentStep(prevStep || '');
   };
 
   const handleReject = (reason: string) => {
