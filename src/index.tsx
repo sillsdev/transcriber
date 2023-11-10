@@ -155,12 +155,11 @@ const AuthApp = () => {
   const onRedirectingCallbck = (appState?: { returnTo?: string }) => {
     //user has requested a specific path
     //remember it to come back to after loading
-    localStorage.setItem(
-      LocalKey.deeplink,
-      appState && appState.returnTo
-        ? appState.returnTo
-        : window.location.pathname
-    );
+    if (appState?.returnTo) {
+      localStorage.setItem(LocalKey.deeplink, appState.returnTo);
+    } else {
+      localStorage.removeItem(LocalKey.deeplink);
+    }
   };
 
   return (
