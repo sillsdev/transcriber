@@ -218,6 +218,7 @@ interface IProps {
   setComplete?: (complete: boolean) => void;
   onReopen?: () => void;
   onReject?: (reason: string) => void;
+  onReloadPlayer?: (mediafile: MediaFile) => void;
 }
 
 interface ITrans {
@@ -234,6 +235,7 @@ export function Transcriber(
     setComplete,
     onReopen,
     onReject,
+    onReloadPlayer,
     mediafiles,
     projintegrations,
     integrations,
@@ -755,6 +757,7 @@ export function Transcriber(
       if (nextState === ActivityStates.Approved && noParatext)
         nextState = ActivityStates.Done;
       await save(nextState, 0, segmentsRef.current, '');
+      onReloadPlayer && onReloadPlayer(mediaRef.current);
       forcePosition(0);
       if (setComplete) setComplete(true);
     } else {

@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { ActivityStates, ISharedStrings } from '../../model';
+import { useContext, useMemo, useState } from 'react';
+import { ActivityStates, ISharedStrings, MediaFile } from '../../model';
 import { Grid, Typography, Box, BoxProps, styled } from '@mui/material';
 import { TranscriberProvider } from '../../context/TranscriberContext';
 import Transcriber from '../../components/Transcriber';
@@ -10,6 +10,7 @@ import TaskTable, { TaskTableWidth } from '../TaskTable';
 import { ToolSlug } from '../../crud';
 import { waitForIt } from '../../utils';
 import { useGlobal } from 'reactn';
+import { PassageDetailContext } from '../../context/PassageDetailContext';
 
 interface TableContainerProps extends BoxProps {
   topFilter?: boolean;
@@ -49,6 +50,7 @@ export function PassageDetailTranscribe({
     setStepComplete,
     setCurrentStep,
   } = usePassageDetailContext();
+  const { setState } = useContext(PassageDetailContext);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [topFilter, setTopFilter] = useState(false);
   const [globals] = useGlobal();
@@ -60,36 +62,36 @@ export function PassageDetailTranscribe({
         (a, b) =>
           (a.attributes.sequencenum ?? 0) - (b.attributes.sequencenum ?? 0)
       )
-      .map((s) => ({
+      .map((s, ix) => ({
         id: s.id,
+        sequencenum: ix,
         tool: JSON.parse(s?.attributes?.tool ?? '{}').tool,
-        settings: JSON.parse(s?.attributes?.tool ?? '{}').settings,
+        settings:
+          (JSON.parse(s?.attributes?.tool ?? '{}').settings ?? '') === ''
+            ? '{}'
+            : JSON.parse(s?.attributes?.tool ?? '{}').settings,
       }));
   }, [orgWorkflowSteps]);
-
-  const hasChecking = useMemo(() => {
-    if (!currentstep || !parsedSteps) return false;
-    let found = false;
-    let count = 0;
-    for (let s of parsedSteps) {
-      if (s.id === currentstep) found = true;
-      if (!found) continue;
-      if (s.tool === ToolSlug.Transcribe) {
-        if (!s.settings?.artifactTypeId) {
-          count++;
-        }
-      } else if (s.tool === ToolSlug.Paratext) {
-        break;
-      }
-    }
-    return count > 1;
-  }, [currentstep, parsedSteps]);
 
   const stepSettings = useMemo(() => {
     if (!currentstep || !parsedSteps) return null;
     const step = parsedSteps.find((s) => s.id === currentstep);
     return step ? step.settings : null;
   }, [currentstep, parsedSteps]);
+
+  const vernacularSteps = useMemo(() => {
+    return parsedSteps.filter(
+      (s) =>
+        s.tool === ToolSlug.Transcribe && !JSON.parse(s.settings).artifactTypeId
+    );
+  }, [parsedSteps]);
+
+  const hasChecking = useMemo(() => {
+    return (
+      vernacularSteps.length > 1 &&
+      vernacularSteps[1].sequencenum === vernacularSteps[0].sequencenum + 1
+    );
+  }, [vernacularSteps]);
 
   const nextStep = useMemo(() => {
     if (!currentstep || !parsedSteps) return null;
@@ -119,19 +121,13 @@ export function PassageDetailTranscribe({
   }, [currentstep, parsedSteps]);
 
   const curRole = useMemo(() => {
-    if (!currentstep || !parsedSteps) return undefined;
-    let count = 0;
-    for (let s of parsedSteps) {
-      if (s.tool === ToolSlug.Transcribe) {
-        if (!s.settings?.artifactTypeId) {
-          count++;
-        }
-      }
-      if (s.id === currentstep) break;
-    }
-    if (count > 1) return 'editor';
-    return 'transcriber';
-  }, [currentstep, parsedSteps]);
+    if (!currentstep) return undefined;
+
+    if (!hasChecking) return 'transcriber';
+    if (JSON.parse(stepSettings).artifactTypeId) return 'transcriber';
+    if (vernacularSteps[0].id === currentstep) return 'transcriber';
+    return 'editor';
+  }, [currentstep, vernacularSteps, stepSettings, hasChecking]);
 
   const handleComplete = (complete: boolean) => {
     waitForIt(
@@ -148,12 +144,11 @@ export function PassageDetailTranscribe({
   const uncompletedSteps = () => {
     setStepComplete(currentstep, false);
     if (hasChecking && nextStep) setStepComplete(nextStep, false);
-    if (curRole === 'editor' && prevStep) setStepComplete(prevStep, false);
+    if (curRole === 'editor' && prevStep) setCurrentStep(prevStep || '');
   };
 
   const handleReopen = () => {
     uncompletedSteps();
-    setCurrentStep(curRole === 'editor' ? prevStep || '' : '');
   };
 
   const handleReject = (reason: string) => {
@@ -167,6 +162,10 @@ export function PassageDetailTranscribe({
       }
     }
     setCurrentStep(curRole === 'editor' ? prevStep || '' : '');
+  };
+
+  const handleReloadPlayer = (playerMediafile: MediaFile) => {
+    setState((s) => ({ ...s, playerMediafile }));
   };
 
   const handleTopFilter = (top: boolean) => {
@@ -189,6 +188,7 @@ export function PassageDetailTranscribe({
                   stepSettings={stepSettings}
                   onReject={handleReject}
                   onReopen={handleReopen}
+                  onReloadPlayer={handleReloadPlayer}
                 />
               </TranscriberContainer>
             )}
@@ -201,6 +201,7 @@ export function PassageDetailTranscribe({
             setComplete={handleComplete}
             onReject={handleReject}
             onReopen={handleReopen}
+            onReloadPlayer={handleReloadPlayer}
           />
         )}
       </Grid>
