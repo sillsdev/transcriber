@@ -8,6 +8,7 @@ import pt from '../assets/pt.json';
 import ru from '../assets/ru.json';
 import sw from '../assets/sw.json';
 import ta from '../assets/ta.json';
+import zh from '../assets/zh.json';
 
 interface ILangDes {
   type: string;
@@ -24,8 +25,8 @@ interface ILdml {
     };
   };
 }
-const ldmlProd: ILdml = { en, es, fr, id, pt, ru };
-const ldmlDev: ILdml = { en, fr, ar, es, ha, id, ru, sw, pt, ta };
+const ldmlProd: ILdml = { en, es, fr, id, pt, ru, zh };
+const ldmlDev: ILdml = { en, fr, ar, es, ha, id, ru, sw, pt, ta, zh };
 
 export const localeDefault = (isDev: boolean, bcp47?: string) => {
   const code1 = bcp47 && bcp47.split('-')[0];
