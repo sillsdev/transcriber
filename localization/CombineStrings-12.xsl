@@ -16,6 +16,7 @@
 	<xsl:variable name="ha" select="document('TranscriberAdmin-en-1.2-ha.xml')"/>
 	<xsl:variable name="id" select="document('TranscriberAdmin-en-1.2-id.xml')"/>
 	<xsl:variable name="ru" select="document('TranscriberAdmin-en-1.2-ru.xml')"/>
+	<xsl:variable name="zh" select="document('TranscriberAdmin-en-1.2-zh.xml')"/>
 	<xsl:variable name="sw" select="document('TranscriberAdmin-en-1.2-sw.xml')"/>
 	
 	<xsl:output indent="yes"/>
@@ -34,6 +35,7 @@
 					<xsl:copy-of select="$ha//*[local-name() = $section]/ha"/>
 					<xsl:copy-of select="$id//*[local-name() = $section]/id"/>
 					<xsl:copy-of select="$ru//*[local-name() = $section]/ru"/>
+					<xsl:copy-of select="$zh//*[local-name() = $section]/zh"/>
 					<xsl:copy-of select="$sw//*[local-name() = $section]/sw"/>
 				</xsl:element>
 			</xsl:for-each>

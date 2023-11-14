@@ -8,6 +8,7 @@ import ru from '../assets/ru.json';
 import sw from '../assets/sw.json';
 import pt from '../assets/pt.json';
 import ta from '../assets/ta.json';
+import zh from '../assets/zh.json';
 
 interface ILangDes {
   type: string;
@@ -26,7 +27,7 @@ interface ILdml {
   };
 }
 
-const ldml: ILdml = { en, fr, ar, es, ha, id, ru, sw, pt, ta };
+const ldml: ILdml = { en, fr, ar, es, ha, id, ru, sw, pt, ta, zh };
 
 export const langName = (loc: string, opt: string): string => {
   return ldml[loc].ldml.localeDisplayNames.languages.language
