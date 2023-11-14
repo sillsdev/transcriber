@@ -5,14 +5,13 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
-import { TeamContext } from '../../../context/TeamContext';
+import { IVProjectStrings } from '../../../model';
 import FontSize from '../../FontSize';
 import { IProjectDialogState } from './ProjectDialog';
 
 export const EditorSettings = (props: IProjectDialogState) => {
   const { state, setState } = props;
-  const ctx = React.useContext(TeamContext);
-  const t = ctx.state.vProjectStrings;
+  const t: IVProjectStrings = state.vProjectStrings;
   const { font, fontSize, rtl } = state;
 
   const handleChangeRtl = () => {

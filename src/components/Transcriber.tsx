@@ -29,6 +29,7 @@ import {
   Integration,
   ProjectIntegration,
   IActivityStateStrings,
+  IVProjectStrings,
 } from '../model';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import {
@@ -79,7 +80,7 @@ import {
 } from '../utils';
 import { isElectron } from '../api-variable';
 import { TokenContext } from '../context/TokenProvider';
-import { debounce } from 'lodash';
+import { debounce, set } from 'lodash';
 import { AllDone } from './AllDone';
 import { LastEdit } from '../control';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
@@ -94,7 +95,7 @@ import { HotKeyContext } from '../context/HotKeyContext';
 import TaskFlag from './TaskFlag';
 import Spelling from './Spelling';
 import { UnsavedContext } from '../context/UnsavedContext';
-import { activitySelector } from '../selector';
+import { activitySelector, vProjectSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import usePassageDetailContext from '../context/usePassageDetailContext';
 import { IRegionParams } from '../crud/useWavesurferRegions';
@@ -102,6 +103,14 @@ import PassageDetailPlayer, {
   SaveSegments,
 } from './PassageDetail/PassageDetailPlayer';
 import { PlayInPlayer } from '../context/PassageDetailContext';
+import Settings from '@mui/icons-material/Settings';
+import {
+  EditorSettings,
+  IProjectDialog,
+  IProjectDialogState,
+  initProjectState,
+} from './Team/ProjectDialog';
+import BigDialog from '../hoc/BigDialog';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -287,6 +296,12 @@ export function Transcriber(
       state === ActivityStates.TranscribeReady
   );
 
+  const [showSettings, setShowSettings] = useState(false);
+  const [settingsState, setSettingsState] = useState<IProjectDialog>();
+  const vProjectStrings: IVProjectStrings = useSelector(
+    vProjectSelector,
+    shallowEqual
+  );
   const [textValue, setTextValue] = useState('');
   const [lastSaved, setLastSaved] = useState('');
   const [defaultPosition, setDefaultPosition] = useState(0.0);
@@ -792,6 +807,42 @@ export function Transcriber(
     }
   };
 
+  const handleEditorSettings = (isOpen: boolean) => {
+    if (!isOpen) {
+      setShowSettings(false);
+      return;
+    }
+    setSettingsState({
+      rtl: projData?.fontDir === 'rtl',
+      fontSize: projData?.fontSize,
+      spellCheck: projData?.spellCheck,
+      vProjectStrings,
+    } as IProjectDialog);
+    setShowSettings(true);
+  };
+
+  useEffect(() => {
+    if (projData && settingsState) {
+      let newData = projData;
+      let change = false;
+      if (settingsState?.rtl !== (newData.fontDir === 'rtl')) {
+        change = true;
+        newData = { ...newData, fontDir: settingsState?.rtl ? 'rtl' : 'ltr' };
+      }
+      if (settingsState?.fontSize !== newData.fontSize) {
+        change = true;
+        newData = { ...newData, fontSize: settingsState.fontSize };
+      }
+      if (settingsState?.spellCheck !== newData.spellCheck) {
+        change = true;
+        newData = { ...newData, spellCheck: settingsState.spellCheck };
+      }
+      if (change) setProjData(newData);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settingsState]);
+
   const nextOnSave: { [key: string]: string } = {
     incomplete: ActivityStates.Transcribing,
     needsNewTranscription: ActivityStates.Transcribing,
@@ -1145,6 +1196,11 @@ export function Transcriber(
                   ta={ta}
                   state={mediafile?.attributes?.transcriptionstate || ''}
                 />
+                <LightTooltip title={vProjectStrings.editorSettings}>
+                  <IconButton onClick={() => handleEditorSettings(true)}>
+                    <Settings />
+                  </IconButton>
+                </LightTooltip>
                 {isElectron && <Spelling />}
               </Grid>
               <Grid item xs>
@@ -1243,6 +1299,16 @@ export function Transcriber(
             noResponse={handleUpdateRefused}
           />
         )}
+        <BigDialog
+          title={vProjectStrings.editorSettings}
+          isOpen={showSettings}
+          onOpen={handleEditorSettings}
+        >
+          <EditorSettings
+            state={settingsState ?? initProjectState}
+            setState={setSettingsState as any}
+          />
+        </BigDialog>
       </Paper>
     </GrowingDiv>
   );
