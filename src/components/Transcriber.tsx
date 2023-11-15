@@ -80,7 +80,7 @@ import {
 } from '../utils';
 import { isElectron } from '../api-variable';
 import { TokenContext } from '../context/TokenProvider';
-import { debounce, set } from 'lodash';
+import { debounce } from 'lodash';
 import { AllDone } from './AllDone';
 import { LastEdit } from '../control';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
@@ -107,7 +107,6 @@ import Settings from '@mui/icons-material/Settings';
 import {
   EditorSettings,
   IProjectDialog,
-  IProjectDialogState,
   initProjectState,
 } from './Team/ProjectDialog';
 import BigDialog from '../hoc/BigDialog';
