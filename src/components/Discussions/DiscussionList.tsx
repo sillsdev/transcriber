@@ -34,7 +34,7 @@ import { useGlobal } from 'reactn';
 import { useDiscussionOrg, useOrgDefaults } from '../../crud';
 import FilterMenu, { IFilterState, Resolved } from './FilterMenu';
 import Confirm from '../AlertDialog';
-import { onlyUnique, waitForIt } from '../../utils';
+import { onlyUnique, prettySegment, waitForIt } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import SortMenu, { ISortState } from './SortMenu';
 import { discussionListSelector } from '../../selector';
@@ -261,11 +261,20 @@ export function DiscussionList(props: IProps & IRecordProps) {
   };
   const resetDiscussionList = () => {
     if (adding) {
+      const whole = prettySegment({
+        start: 0,
+        end: playerMediafile?.attributes?.duration || 0,
+      });
+      const lastDot = whole.lastIndexOf('.');
+      const topic =
+        currentSegment.slice(0, lastDot) !== whole.slice(0, lastDot)
+          ? currentSegment ?? ''
+          : '';
       setDisplayDiscussions([
         {
           type: 'discussion',
           attributes: {
-            subject: currentSegment || '',
+            subject: topic,
           },
         } as any as Discussion,
       ]);
