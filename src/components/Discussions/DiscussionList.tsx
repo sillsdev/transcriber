@@ -455,7 +455,7 @@ export function DiscussionList(props: IProps & IRecordProps) {
     }
   };
   const isMediaMissing = () => {
-    return rowData.length === 0 || !rowData[0].isVernacular;
+    return rowData.length === 0 || !mediafileId;
   };
 
   const filterStatus = useMemo(
