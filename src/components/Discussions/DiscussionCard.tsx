@@ -97,7 +97,7 @@ const DiscussionCardRoot = styled(Box)<BoxProps>(() => ({
   },
 }));
 
-const EditContainer = styled('div')(({ theme }) => ({
+const EditContainer = styled(Box)<BoxProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   display: 'flex',
   flexDirection: 'column',
@@ -887,254 +887,263 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   };
   return (
     <DiscussionCardRoot>
-      <StyledCard
-        ref={cardRef}
-        key={discussion.id}
-        id={id}
-        resolved={discussion.attributes.resolved}
-        highlight={Boolean(
-          myRegion?.start && myRegion?.start === highlightDiscussion
-        )}
-        onClick={handleSelect(discussion)}
-      >
-        <CardContent
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            color: 'primary.contrastText',
-          }}
-        >
-          {editing ? (
-            <EditContainer>
-              <TextField
-                autoFocus
-                margin="dense"
-                id={`topic-${discussion.id || 'new'}`}
-                value={editSubject}
-                onChange={handleSubjectChange}
-                placeholder={t.topic}
-                required
-                fullWidth
-              />
-              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                <SelectGroup
-                  id={`group-${discussion.id}`}
-                  org={false}
-                  initGroup={assignedGroup?.id || ''}
-                  onChange={handleGroupChange}
-                  required={false}
-                  label={t.assignGroup}
-                />
-                <Typography
-                  variant="h6"
-                  component="h2"
-                  sx={{ m: 1, mt: 3, color: 'primary.dark' }}
-                >
-                  {t.or}
-                </Typography>
-                <SelectUser
-                  id={`user-${discussion.id}`}
-                  initUser={assignedUser?.id || ''}
-                  onChange={handleUserChange}
-                  required={false}
-                  label={t.assignUser}
-                />
-              </Box>
-              <SelectArtifactCategory
-                id={`category-${discussion.id}`}
-                initCategory={editCategory}
-                onCategoryChange={onCategoryChange}
-                allowNew={userIsAdmin && (!offline || offlineOnly)}
-                required={false}
-                scripture={ScriptureEnum.hide}
-                type={ArtifactCategoryType.Discussion}
-              />
-              {onAddComplete && (
-                <CommentEditor
-                  toolId={NewCommentToolId}
-                  comment={commentText.current}
-                  refresh={refresh}
-                  setCanSaveRecording={setCanSaveRecording}
-                  fileName={fileName(editSubject, '')}
-                  uploadMethod={uploadMedia}
-                  onTextChange={handleTextChange}
-                  cancelOnlyIfChanged={true}
-                />
-              )}
-              <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                <Button
-                  id={`ok-${discussion.id}`}
-                  onClick={handleSave}
-                  sx={lightButton}
-                  disabled={
-                    editSubject === '' ||
-                    !(canSaveRecording || myComments.length > 0 || comment)
-                  }
-                >
-                  {discussion.id ? ts.save : t.addComment}
-                </Button>
-                <Button
-                  id={`cancel-${discussion.id}`}
-                  onClick={handleCancel}
-                  sx={lightButton}
-                >
-                  {ts.cancel}
-                </Button>
-              </Box>
-            </EditContainer>
-          ) : (
-            <Grid container sx={titleProps}>
-              <Grid item sx={topicItemProps}>
-                {myRegion &&
-                  related(discussion, 'mediafile') === mediafileId && (
-                    <IconButton
-                      id={`locate-${discussion.id}`}
-                      size="small"
-                      sx={lightButton}
-                      title={t.locate}
-                      onClick={handleLocateClick}
-                    >
-                      <LocationIcon fontSize="small" />
-                    </IconButton>
-                  )}
-                {myRegion &&
-                  related(discussion, 'mediafile') !== mediafileId && (
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <OldVernVersion
-                        id={discussion.id}
-                        oldVernVer={version}
-                        mediaId={related(discussion, 'mediafile')}
-                        text={discussion.attributes?.subject}
-                      />
-                    </Box>
-                  )}
-                <Typography
-                  variant="h6"
-                  component="h2"
-                  sx={topicProps}
-                  title={discussionDescription()}
-                >
-                  {discussion.attributes?.subject}
-                </Typography>
-              </Grid>
-              <Grid item sx={tilteCtrlProps}>
-                {assignedGroup && (
-                  <LightTooltip title={t.changeAssignment}>
-                    <IconButton onClick={handleAssignedClick} sx={{ p: '1px' }}>
-                      <GroupAvatar groupRec={assignedGroup} org={false} />
-                    </IconButton>
-                  </LightTooltip>
-                )}
-                {assignedUser && (
-                  <LightTooltip title={t.changeAssignment}>
-                    <IconButton onClick={handleAssignedClick} sx={{ p: '1px' }}>
-                      <UserAvatar userRec={assignedUser} />
-                    </IconButton>
-                  </LightTooltip>
-                )}
-                {changeAssignment && (
-                  <SelectDiscussionAssignment
-                    id={`group-${discussion.id}`}
-                    org={false}
-                    initAssigned={editAssigned}
-                    onChange={handleAssignedChange}
-                    required={false}
-                    label={t.assign}
-                    userPrefix={userPrefix}
-                    groupPrefix={groupPrefix}
-                  />
-                )}
-                {!discussion.attributes.resolved && (
-                  <IconButton
-                    id={`resolveDiscussion-${discussion.id}`}
-                    sx={lightButton}
-                    title={t.resolved}
-                    onClick={handleResolveButton}
-                  >
-                    <ResolveIcon />
-                  </IconButton>
-                )}
-                <DiscussionMenu
-                  id={`menu-${discussion.id}`}
-                  action={handleDiscussionAction}
-                  resolved={discussion.attributes.resolved || false}
-                  canSet={Boolean(currentSegment)}
-                />
-              </Grid>
-            </Grid>
+      <>
+        <StyledCard
+          ref={cardRef}
+          key={discussion.id}
+          id={id}
+          resolved={discussion.attributes.resolved}
+          highlight={Boolean(
+            myRegion?.start && myRegion?.start === highlightDiscussion
           )}
-
-          <Box
+          onClick={handleSelect(discussion)}
+        >
+          <CardContent
             sx={{
-              width: '100%',
               display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              color: 'primary.contrastText',
             }}
           >
-            <SmallButton
-              id={`collapseDiscussion-${discussion.id}`}
-              title={t.collapse}
-              onClick={handleToggleCollapse}
-            >
-              {showComments ? <HideIcon /> : <ShowIcon />}
-            </SmallButton>
-            <Typography variant="body2" component="p">
-              {t.comments.replace('{0}', myComments.length.toString())}
-            </Typography>
-            {artifactCategory && artifactCategory !== '' && (
-              <Chip
-                size="small"
-                label={t.category.replace('{0}', artifactCategory)}
-              />
-            )}
-            {step && <StageReport step={step} />}
-            {reference && (
-              <Typography
-                variant="body2"
-                component="p"
-                title={reference}
-                sx={{ overflow: 'hidden' }}
-              >
-                {reference}
-              </Typography>
-            )}
-          </Box>
-          {showComments && !onAddComplete && (
-            <Grid container sx={cardFlowProps}>
-              {myComments.map((i, j) => (
-                <CommentCard
-                  key={i.id}
-                  comment={i}
-                  approvalStatus={approvalStatus(i.attributes?.visible)}
-                  discussion={discussion}
-                  commentNumber={j}
-                  onEditing={handleEditCard}
+            {editing ? (
+              <EditContainer>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id={`topic-${discussion.id || 'new'}`}
+                  value={editSubject}
+                  onChange={handleSubjectChange}
+                  placeholder={t.topic}
+                  required
+                  fullWidth
                 />
-              ))}
-              {!discussion.attributes.resolved && !editCard && (
-                <ReplyCard
-                  discussion={discussion}
-                  commentNumber={myComments.length}
+                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                  <SelectGroup
+                    id={`group-${discussion.id}`}
+                    org={false}
+                    initGroup={assignedGroup?.id || ''}
+                    onChange={handleGroupChange}
+                    required={false}
+                    label={t.assignGroup}
+                  />
+                  <Typography
+                    variant="h6"
+                    component="h2"
+                    sx={{ m: 1, mt: 3, color: 'primary.dark' }}
+                  >
+                    {t.or}
+                  </Typography>
+                  <SelectUser
+                    id={`user-${discussion.id}`}
+                    initUser={assignedUser?.id || ''}
+                    onChange={handleUserChange}
+                    required={false}
+                    label={t.assignUser}
+                  />
+                </Box>
+                <SelectArtifactCategory
+                  id={`category-${discussion.id}`}
+                  initCategory={editCategory}
+                  onCategoryChange={onCategoryChange}
+                  allowNew={userIsAdmin && (!offline || offlineOnly)}
+                  required={false}
+                  scripture={ScriptureEnum.hide}
+                  type={ArtifactCategoryType.Discussion}
+                />
+                {onAddComplete && (
+                  <CommentEditor
+                    toolId={NewCommentToolId}
+                    comment={commentText.current}
+                    refresh={refresh}
+                    setCanSaveRecording={setCanSaveRecording}
+                    fileName={fileName(editSubject, '')}
+                    uploadMethod={uploadMedia}
+                    onTextChange={handleTextChange}
+                    cancelOnlyIfChanged={true}
+                  />
+                )}
+                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                  <Button
+                    id={`ok-${discussion.id}`}
+                    onClick={handleSave}
+                    sx={lightButton}
+                    disabled={
+                      !mediafileId ||
+                      editSubject === '' ||
+                      !(canSaveRecording || myComments.length > 0 || comment)
+                    }
+                  >
+                    {discussion.id ? ts.save : t.addComment}
+                  </Button>
+                  <Button
+                    id={`cancel-${discussion.id}`}
+                    onClick={handleCancel}
+                    sx={lightButton}
+                  >
+                    {ts.cancel}
+                  </Button>
+                </Box>
+              </EditContainer>
+            ) : (
+              <Grid container sx={titleProps}>
+                <Grid item sx={topicItemProps}>
+                  {myRegion &&
+                    related(discussion, 'mediafile') === mediafileId && (
+                      <IconButton
+                        id={`locate-${discussion.id}`}
+                        size="small"
+                        sx={lightButton}
+                        title={t.locate}
+                        onClick={handleLocateClick}
+                      >
+                        <LocationIcon fontSize="small" />
+                      </IconButton>
+                    )}
+                  {myRegion &&
+                    related(discussion, 'mediafile') !== mediafileId && (
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <OldVernVersion
+                          id={discussion.id}
+                          oldVernVer={version}
+                          mediaId={related(discussion, 'mediafile')}
+                          text={discussion.attributes?.subject}
+                        />
+                      </Box>
+                    )}
+                  <Typography
+                    variant="h6"
+                    component="h2"
+                    sx={topicProps}
+                    title={discussionDescription()}
+                  >
+                    {discussion.attributes?.subject}
+                  </Typography>
+                </Grid>
+                <Grid item sx={tilteCtrlProps}>
+                  {assignedGroup && (
+                    <LightTooltip title={t.changeAssignment}>
+                      <IconButton
+                        onClick={handleAssignedClick}
+                        sx={{ p: '1px' }}
+                      >
+                        <GroupAvatar groupRec={assignedGroup} org={false} />
+                      </IconButton>
+                    </LightTooltip>
+                  )}
+                  {assignedUser && (
+                    <LightTooltip title={t.changeAssignment}>
+                      <IconButton
+                        onClick={handleAssignedClick}
+                        sx={{ p: '1px' }}
+                      >
+                        <UserAvatar userRec={assignedUser} />
+                      </IconButton>
+                    </LightTooltip>
+                  )}
+                  {changeAssignment && (
+                    <SelectDiscussionAssignment
+                      id={`group-${discussion.id}`}
+                      org={false}
+                      initAssigned={editAssigned}
+                      onChange={handleAssignedChange}
+                      required={false}
+                      label={t.assign}
+                      userPrefix={userPrefix}
+                      groupPrefix={groupPrefix}
+                    />
+                  )}
+                  {!discussion.attributes.resolved && (
+                    <IconButton
+                      id={`resolveDiscussion-${discussion.id}`}
+                      sx={lightButton}
+                      title={t.resolved}
+                      onClick={handleResolveButton}
+                    >
+                      <ResolveIcon />
+                    </IconButton>
+                  )}
+                  <DiscussionMenu
+                    id={`menu-${discussion.id}`}
+                    action={handleDiscussionAction}
+                    resolved={discussion.attributes.resolved || false}
+                    canSet={Boolean(currentSegment)}
+                  />
+                </Grid>
+              </Grid>
+            )}
+
+            <Box
+              sx={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <SmallButton
+                id={`collapseDiscussion-${discussion.id}`}
+                title={t.collapse}
+                onClick={handleToggleCollapse}
+              >
+                {showComments ? <HideIcon /> : <ShowIcon />}
+              </SmallButton>
+              <Typography variant="body2" component="p">
+                {t.comments.replace('{0}', myComments.length.toString())}
+              </Typography>
+              {artifactCategory && artifactCategory !== '' && (
+                <Chip
+                  size="small"
+                  label={t.category.replace('{0}', artifactCategory)}
                 />
               )}
-            </Grid>
-          )}
-        </CardContent>
-      </StyledCard>
-      {confirmAction === '' || (
-        <Confirm
-          text={t.confirmDelete}
-          yesResponse={handleActionConfirmed}
-          noResponse={handleActionRefused}
-        />
-      )}
-      {showMove && (
-        <BigDialog title={t.move} isOpen={showMove} onOpen={moveClose}>
-          <DiscussionMove onSelect={handleDoMove} />
-        </BigDialog>
-      )}
+              {step && <StageReport step={step} />}
+              {reference && (
+                <Typography
+                  variant="body2"
+                  component="p"
+                  title={reference}
+                  sx={{ overflow: 'hidden' }}
+                >
+                  {reference}
+                </Typography>
+              )}
+            </Box>
+            {showComments && !onAddComplete && (
+              <Grid container sx={cardFlowProps}>
+                {myComments.map((i, j) => (
+                  <CommentCard
+                    key={i.id}
+                    comment={i}
+                    approvalStatus={approvalStatus(i.attributes?.visible)}
+                    discussion={discussion}
+                    commentNumber={j}
+                    onEditing={handleEditCard}
+                  />
+                ))}
+                {!discussion.attributes.resolved && !editCard && (
+                  <ReplyCard
+                    discussion={discussion}
+                    commentNumber={myComments.length}
+                  />
+                )}
+              </Grid>
+            )}
+          </CardContent>
+        </StyledCard>
+        {confirmAction === '' || (
+          <Confirm
+            text={t.confirmDelete}
+            yesResponse={handleActionConfirmed}
+            noResponse={handleActionRefused}
+          />
+        )}
+        {showMove && (
+          <BigDialog title={t.move} isOpen={showMove} onOpen={moveClose}>
+            <DiscussionMove onSelect={handleDoMove} />
+          </BigDialog>
+        )}
+      </>
     </DiscussionCardRoot>
   );
 };
