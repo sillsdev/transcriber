@@ -1,3 +1,52 @@
+audio-project-manager (2.16.8.0)  experimental; urgency=high
+
+  * TT-1611 Fix deep link (#1385)
+  * TT-4800 All can choose version (#1377)
+  * TT-4800 Allow any version to be latest (#1346)
+  * TT-5243 only use remote records to calc checksum (#1355)
+  * TT-5256 find correct version number (#1298)
+  * TT-5257 suppress no localization warning (#1299)
+  * TT-5268 Missing Work flow (#1342)
+  * TT-5275 Saving Term Text (#1362)
+  * TT-5290 brute force sync (#1330)
+  * TT-5316 Fix Auto match (#1324)
+  * TT-5349 My Account cancel (#1326)
+  * TT-5349 My Account stay on team screen (#1328)
+  * TT-5357 Fix step complete (#1350)
+  * TT-5361 set the current segment to the entire recording (#1340)
+  * TT-5399 Set current segment when allowSegment changes (#1344)
+  * TT-5400 check regions...ignore other stuff (#1347)
+  * TT-5403 Shorten transitions (#1352)
+  * TT-5405 check for segment after load (#1360)
+  * TT-5406 re-sequence from min number not always from 1 (#1361)
+  * TT-5407 undefined while reading family name (#1353)
+  * TT-5407 off line user has no attributes? (#1358)
+  * TT-5408 Use transcriber step language (#1356)
+  * TT-5411 set date-updated and last-modified-by for version (#1357)
+  * TT-5421 Separate Transcribe and checking (#1364)
+  * TT-5422 Compile Chinese Interface
+  * TT-5424 Allow user to remove themselves from a team (#1365)
+  * TT-5425 Save Text only (#1368)
+  * TT-5427 If we don't have a plan, leave it blank (#1369)
+  * TT-5429 allow admin to delete others
+  * TT-5430 Editor settings on Transcriber (#1386)
+  * TT-5432 Handle Reopen & Reject (#1375)
+  * TT-5433 Submit Transcriptions without confirmation (#1374)
+  * TT-5436 Customize names with artifact and language (#1376)
+  * TT-5437 Review General Projects
+  * TT-5438 Restore segments on Reopen (#1384)
+  * TT-5438 change save tooltip
+  * TT-5438 reload player media on Transcriber save (#1383)
+  * TT-5441 don't mangle the transcribe names again on saving (#1381)
+  * TT-5442 Two review steps (#1378)
+  * TT-5444 parse the settings before checking artifactid (#1380)
+  * TT-5447 don't create personal if we're offline (#1382)
+  * TT-5449 Segment for topic is less than whole (#1388)
+  * TT-5450 Don't add discussions if no media
+  * TT-5450 No discussion on PBT without recording
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 16 Nov 2023 10:19:00 -0600
+
 audio-project-manager (2.16.6.0)  experimental; urgency=high
 
   * TT-3040 Category Edit (#1239)
