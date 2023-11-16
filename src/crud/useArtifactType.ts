@@ -72,6 +72,7 @@ export const useArtifactType = () => {
     artifacts
       .filter(
         (r) =>
+          Boolean(r.relationships) &&
           (related(r, 'organization') === organization ||
             related(r, 'organization') === null) &&
           Boolean(r.keys?.remoteId) !== offlineOnly

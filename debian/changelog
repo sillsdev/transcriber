@@ -1,3 +1,9 @@
+audio-project-manager (2.16.9.0)  experimental; urgency=high
+
+  * update sanity check checksum logic
+
+ -- Greg Trihus <greg_trihus@sil.org>  Fri, 17 Nov 2023 14:49:00 -0600
+
 audio-project-manager (2.16.8.0)  experimental; urgency=high
 
   * TT-1611 Fix deep link (#1385)
