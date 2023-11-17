@@ -36,7 +36,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
       const api =
         API_CONFIG.host + `/api/datachanges/project/${project}/${table}/`;
       let start = 1;
-      let tries = 5;
+      let tries = 2;
       let startNext = 0;
       while (startNext >= 0 && tries > 0) {
         startNext = await processDataChanges({
@@ -51,51 +51,44 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           setDataChangeCount: (value: number) => {},
           cb,
         });
+        console.log(table, 'startNext', startNext, start);
         if (startNext === start) tries--;
         else start = startNext;
       }
     };
     const getChecksum = (
-      rows: BaseModel[],
+      rows: { id: string; num: number }[],
       name: string,
       beforeThis?: number
     ) => {
       var sum = 0;
-      //assume sorted if beforeThis is set
-      rows.forEach((mf) => {
+      var sorted = beforeThis ? rows.sort((i, j) => i.num - j.num) : rows;
+      sorted.forEach((mf) => {
         if (mf) {
-          var num = stringToDateNum(mf.attributes.dateUpdated);
-          if (beforeThis && num > beforeThis) return sum;
+          if (beforeThis && mf.num > beforeThis) return sum;
 
-          sum += num % 100000000;
+          sum += mf.num % 100000000;
         }
       });
       return sum;
     };
 
-    const compareChecksum = (remoteRows: VwChecksum[], name: string) => {
-      var rows = getTableRows(name) as BaseModel[];
+    const compareChecksum = async (remoteRows: VwChecksum[], name: string) => {
+      var rows = removeDups(getTableRows(name) as BaseModel[]);
       var cs = getChecksum(rows, name);
       var remoteCs =
         remoteRows.filter((t) => t.attributes.name === name)[0]?.attributes
           .checksum ?? 0;
       if (cs !== remoteCs) {
         console.log(remoteProjectId, name, cs, remoteCs);
-        rows
-          .sort(
-            (i, j) =>
-              Number(i.keys?.remoteId ?? '0') - Number(j.keys?.remoteid ?? '0')
-          )
-          .forEach((mf) => {
-            console.log(
-              mf.keys?.remoteId,
-              mf.attributes.dateUpdated,
-              stringToDateNum(mf.attributes.dateUpdated) % 100000000
-            );
-          });
-        promises.push(refreshTable(name, rows.length, remoteCs));
+        console.log(
+          rows
+            .sort((i, j) => parseInt(i.id) - parseInt(j.id))
+            .map((r) => r.id)
+            .join(',')
+        );
+        await refreshTable(name, rows.length, remoteCs);
       }
-      return cs === remoteCs;
     };
 
     const getTableRows = (table: string) => {
@@ -109,15 +102,16 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
               record: { type: 'plan', id: plan.id },
             })
           ) as BaseModel[]
-        ).filter((x) => Boolean(x?.keys?.remoteId));
+        ).filter((x) => Boolean(x?.keys?.remoteId) && Boolean(x.relationships));
       const discussionRows = () => {
         var mediafiles = mediafileRows().map((m) => m.id);
         return (
           memory.cache.query((q) => q.findRecords('discussion')) as BaseModel[]
         ).filter(
           (d) =>
+            Boolean(d.relationships) &&
             mediafiles.find((id) => id === related(d, 'mediafile')) !==
-            undefined
+              undefined
         );
       };
       const groupRows = () =>
@@ -193,13 +187,17 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
         case 'workflowstep':
           return (
             memory.cache.query((q) => q.findRecords(table)) as BaseModel[]
-          ).filter((x) => Boolean(x?.keys?.remoteId));
+          ).filter(
+            (x) => Boolean(x?.keys?.remoteId) && Boolean(x.relationships)
+          );
         case 'artifactcategory':
           var acs = (
             memory.cache.query((q) =>
               q.findRecords('artifactcategory')
             ) as BaseModel[]
-          ).filter((x) => Boolean(x?.keys?.remoteId));
+          ).filter(
+            (x) => Boolean(x?.keys?.remoteId) && Boolean(x.relationships)
+          );
           return acs.filter(
             (ac) =>
               related(ac, 'organization') === org ||
@@ -313,23 +311,39 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           return [];
       }
     };
-
+    const removeDups = (rows: BaseModel[]) => {
+      rows = rows.filter((r) => r.relationships !== null);
+      var uniqueids = new Set(rows.map((mf) => mf.keys?.remoteId || '0'));
+      var unique = new Array<{ id: string; num: number }>();
+      uniqueids.forEach((id) =>
+        unique.push({
+          id,
+          num:
+            stringToDateNum(
+              rows.find((r) => r.keys?.remoteId === id)?.attributes
+                .dateUpdated ?? ''
+            ) ?? 0,
+        })
+      );
+      //if (unique.length < rows.length) console.log('DUPLICATES', rows);
+      return unique;
+    };
     const refreshTable = async (
       table: string,
       numrows: number,
       remoteCS: number
     ) => {
-      const cb = () => {
-        var rows = getTableRows(table) as BaseModel[];
+      const tryagain = async () => {
+        var rows = removeDups(getTableRows(table) as BaseModel[]);
         var cs = getChecksum(rows, table);
         if (cs !== remoteCS) {
-          //get a years worth of changes
-          refreshTable(table, 0, remoteCS);
+          //get the whole thing
+          await refreshTable(table, 0, remoteCS);
         }
       };
 
       var now = moment().valueOf();
-      var since = now - 1000 * 60 * 60 * 24 * 365; //365 days
+      var since = now - 1000 * 60 * 60 * 24 * 365 * 4; //365*4 days
       if (numrows > 500) {
         //try to avoid bringing down the whole table
         since = now - 1000 * 60 * 60 * 24 * 14; //14 days
@@ -341,8 +355,8 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           table,
           dtSince,
           errorReporter,
-          cb: numrows > 0 ? cb : undefined,
         });
+        if (numrows > 500) await tryagain(); //second time we call in with 0
       } catch (err: any) {
         logError(Severity.error, errorReporter, err.message);
       }
@@ -363,14 +377,15 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
       ) as Plan[];
       var plan = plans[0];
 
-      var promises: Promise<void>[] = [];
       var checksums = (await remote.query((q) =>
         q
           .findRecords('vwchecksum')
           .filter({ attribute: 'project-id', value: project.keys?.remoteId })
       )) as VwChecksum[];
-      tables.forEach((t) => compareChecksum(checksums, t));
-      await Promise.all(promises);
+      //we have to do these one by one because if mediafiles isn't right, discussions won't be right etc.
+      for (var ix = 0; ix < tables.length; ix++) {
+        await compareChecksum(checksums, tables[ix]);
+      }
     }
   };
 };

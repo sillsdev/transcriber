@@ -182,7 +182,15 @@ export const processDataChanges = async (pdc: {
       const localOps: Operation[] = [];
       let upRec: UpdateRecordOperation;
 
-      await memory.sync(await backup.push(tr.operations));
+      await memory.sync(
+        await backup.push(
+          tr.operations.filter(
+            (o) =>
+              o.op !== 'updateRecord' ||
+              Boolean((o as UpdateRecordOperation).record.relationships)
+          )
+        )
+      );
 
       for (const o of tr.operations) {
         if (o.op === 'updateRecord') {
@@ -281,13 +289,12 @@ export const processDataChanges = async (pdc: {
     for (const table of changes) {
       if (table.ids.length > 0) {
         if (!remote) return started;
-        remote
-          .pull((q: QueryBuilder) =>
-            q
-              .findRecords(table.type)
-              .filter({ attribute: 'id-list', value: table.ids.join('|') })
-          )
-          .then(async (t: Transform[]) => await processTableChanges(t, cb));
+        var t = await remote.pull((q: QueryBuilder) =>
+          q
+            .findRecords(table.type)
+            .filter({ attribute: 'id-list', value: table.ids.join('|') })
+        );
+        await processTableChanges(t, cb);
       }
     }
     setDataChangeCount(deletes.length);

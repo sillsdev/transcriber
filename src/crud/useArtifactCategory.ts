@@ -74,6 +74,7 @@ export const useArtifactCategory = (teamId?: string) => {
       ) as ArtifactCategory[]
     ).filter(
       (r) =>
+        Boolean(r.relationships) &&
         (related(r, 'organization') === curOrg ||
           related(r, 'organization') === null) &&
         Boolean(r.keys?.remoteId) !== offlineOnly
