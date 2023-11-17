@@ -14,17 +14,11 @@ export interface Organization extends Record {
     dateUpdated: string;
     lastModifiedBy: number;
     defaultParams: string;
-    publishingData: string;
-    bibleId: string;
-    bibleName: string;
-    iso: string;
   };
   relationships?: {
     owner: RecordRelationship;
     groups: RecordRelationship;
     cluster: RecordRelationship;
-    isoMediafile: RecordRelationship;
-    bibleMediafile: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
 }

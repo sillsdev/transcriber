@@ -133,10 +133,6 @@ const schemaDefinition: SchemaSettings = {
         logoUrl: { type: 'string' },
         publicByDefault: { type: 'boolean' },
         clusterbase: { type: 'boolean' },
-        publishingData: { type: 'string' },
-        bibleId: { type: 'string' },
-        bibleName: { type: 'string' },
-        iso: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' }, //bkwd compat only
@@ -148,8 +144,7 @@ const schemaDefinition: SchemaSettings = {
         groups: { type: 'hasMany', model: 'group', inverse: 'owner' },
         cluster: { type: 'hasOne', model: 'organization' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
-        bibleMediafile: { type: 'hasOne', model: 'mediafile' },
-        isoMediafile: { type: 'hasOne', model: 'mediafile' },
+        bible: { type: 'hasOne', model: 'bible' },
       },
     },
     organizationmembership: {
@@ -934,6 +929,38 @@ if (
   parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 7 &&
   schemaDefinition.models
 ) {
+  schemaDefinition.models.bible = {
+    keys: { remoteId: {} },
+    attributes: {
+      bibleId: { type: 'string' },
+      abbr: { type: 'string' },
+      bibleName: { type: 'string' },
+      description: { type: 'string' },
+      publishingData: { type: 'string' },
+      anyPublished: { type: 'boolean' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+    },
+    relationships: {
+      isomediafile: { type: 'hasOne', model: 'mediafile' },
+      biblemediafile: { type: 'hasOne', model: 'mediafile' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
+  schemaDefinition.models.organizationbible = {
+    keys: { remoteId: {} },
+    attributes: {
+      ownerorg: { type: 'boolean' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
+    },
+    relationships: {
+      bible: { type: 'hasOne', model: 'bible' },
+      organization: { type: 'hasOne', model: 'organization' },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+    },
+  };
   schemaDefinition.models.graphic = {
     keys: { remoteId: {} },
     attributes: {

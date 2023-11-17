@@ -60,3 +60,5 @@ export * from './bookRef';
 export * from './vwChecksum';
 export * from './graphic';
 export * from './vwChecksum';
+export * from './bible';
+export * from './organizationBible';
