@@ -202,7 +202,7 @@ export function PublishExpansion(props: IProps) {
                 <TextField
                   id="bibleid"
                   label={t.bibleid}
-                  value={bibleId}
+                  value={bibleId ?? ''}
                   onChange={handleChangeBibleId}
                   variant="outlined"
                   sx={{ width: '100%' }}
