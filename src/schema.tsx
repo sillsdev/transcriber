@@ -144,7 +144,6 @@ const schemaDefinition: SchemaSettings = {
         groups: { type: 'hasMany', model: 'group', inverse: 'owner' },
         cluster: { type: 'hasOne', model: 'organization' },
         lastModifiedByUser: { type: 'hasOne', model: 'user' },
-        bible: { type: 'hasOne', model: 'bible' },
       },
     },
     organizationmembership: {
@@ -933,7 +932,6 @@ if (
     keys: { remoteId: {} },
     attributes: {
       bibleId: { type: 'string' },
-      abbr: { type: 'string' },
       bibleName: { type: 'string' },
       description: { type: 'string' },
       publishingData: { type: 'string' },
@@ -976,6 +974,7 @@ if (
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };
+
   schemaDefinition.version = 8;
 }
 

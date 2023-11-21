@@ -16,6 +16,7 @@ export interface Organization extends Record {
     defaultParams: string;
   };
   relationships?: {
+    bible: RecordRelationship;
     owner: RecordRelationship;
     groups: RecordRelationship;
     cluster: RecordRelationship;

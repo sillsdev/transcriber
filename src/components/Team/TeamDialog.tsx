@@ -21,6 +21,7 @@ import {
   WorkflowStep,
   Project,
   Plan,
+  Bible,
 } from '../../model';
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
@@ -28,14 +29,17 @@ import { defaultWorkflow, related } from '../../crud';
 import PublishExpansion from '../PublishExpansion';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { waitForIt } from '../../utils';
+import { useBible } from '../../crud/useBible';
 
 interface IRecordProps {
+  bibles: Array<Bible>;
   organizations: Array<Organization>;
   projects: Array<Project>;
   plans: Array<Plan>;
 }
 export interface ITeamDialog {
   team: Organization;
+  bible?: Bible;
   process?: string;
   bibleMediafile: string;
   isoMediafile: string;
@@ -48,6 +52,7 @@ export function TeamDialog(props: IProps) {
     mode,
     values,
     isOpen,
+    bibles,
     organizations,
     projects,
     plans,
@@ -57,7 +62,10 @@ export function TeamDialog(props: IProps) {
   } = props;
   const [name, setName] = React.useState('');
   const [iso, setIso] = React.useState('');
+  const [bible, setBible] = React.useState<Bible | undefined>(values?.bible);
   const [bibleId, setBibleId] = React.useState('');
+  const [readonly, setReadonly] = useState(false);
+  const [bibleIdError, setBibleIdError] = useState('');
   const [bibleName, setBibleName] = React.useState('');
   const [defaultParams, setDefaultParams] = React.useState('');
   const bibleMediafileRef = useRef('');
@@ -75,6 +83,7 @@ export function TeamDialog(props: IProps) {
   const [confirm, setConfirm] = React.useState(false);
   const { anySaving, toolsChanged, startSave, clearRequested } =
     useContext(UnsavedContext).state;
+  const { getBible, getBibleOwner, getOrgBible } = useBible();
 
   const reset = () => {
     setName('');
@@ -83,6 +92,9 @@ export function TeamDialog(props: IProps) {
     setProcess(undefined);
     setSaving(false);
     setConfirm(false);
+    setBibleId('');
+    setBible(undefined);
+    setReadonly(false);
     onOpen && onOpen(false);
     Object.keys(toolsChanged).forEach((t) => clearRequested(t));
   };
@@ -119,21 +131,32 @@ export function TeamDialog(props: IProps) {
         mode === DialogMode.edit && values
           ? values.team
           : ({ attributes: {} } as Organization);
+
       const team = {
         ...current,
         attributes: {
           ...current.attributes,
           name,
-          iso,
-          bibleId,
-          bibleName,
           defaultParams,
-          publishingData,
         },
       } as Organization;
+      let newbible =
+        getOrgBible(team.id) ?? ({ ...bible, type: 'bible' } as Bible);
+      newbible = {
+        ...newbible,
+        attributes: {
+          ...newbible.attributes,
+          bibleId,
+          bibleName,
+          iso,
+          publishingData,
+        },
+      } as Bible;
+
       onCommit(
         {
           team,
+          bible: newbible,
           bibleMediafile: bibleMediafileRef.current,
           isoMediafile: isoMediafileRef.current,
           process: process || defaultWorkflow,
@@ -151,6 +174,9 @@ export function TeamDialog(props: IProps) {
         break;
       case 'bibleId':
         setBibleId(value);
+        break;
+      case 'bibleIdError':
+        setBibleIdError(value);
         break;
       case 'bibleName':
         setBibleName(value);
@@ -221,12 +247,7 @@ export function TeamDialog(props: IProps) {
         setDefaultParams(values?.team.attributes?.defaultParams || '{}');
         if (values) {
           setName(values.team.attributes?.name || '');
-          setIso(values.team.attributes?.iso || '');
-          setBibleId(values.team.attributes?.bibleId || '');
-          setBibleName(values.team.attributes?.bibleName || '');
-          setIsoMediafile(related(values.team, 'isoMediafile') as string);
-          setBibleMediafile(related(values.team, 'bibleMediafile') as string);
-          setPublishingData(values.team.attributes?.publishingData || '{}');
+          setBibleId(getOrgBible(values.team.id)?.attributes?.bibleId || '');
         }
       }
     } else reset();
@@ -249,6 +270,27 @@ export function TeamDialog(props: IProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values, isOpen]);
+
+  useEffect(() => {
+    if (isOpen)
+      if (bibleId && bibleId.length > 5) {
+        let newbible = getBible(bibleId);
+        setBible(newbible);
+        if (newbible) {
+          setIso(newbible?.attributes?.iso || '');
+          setBibleName(newbible?.attributes?.bibleName || '');
+          setIsoMediafile(related(newbible, 'isoMediafile') as string);
+          setBibleMediafile(related(newbible, 'bibleMediafile') as string);
+          setPublishingData(newbible?.attributes?.publishingData || '{}');
+          var owner = getBibleOwner(newbible.id);
+          setReadonly(owner !== values?.team.id);
+        } else setReadonly(false);
+      } else {
+        setBible(undefined);
+        setReadonly(false);
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bibleId]);
 
   return (
     <div>
@@ -278,10 +320,12 @@ export function TeamDialog(props: IProps) {
             <PublishExpansion
               t={t}
               team={values?.team}
+              bible={bible}
               teamplan={teamplan}
               onChanged={setChanged}
               setValue={setValue}
-              organizations={organizations}
+              bibles={bibles}
+              readonly={readonly}
             />
           )}
           {mode === DialogMode.add && (
@@ -326,7 +370,13 @@ export function TeamDialog(props: IProps) {
             id="teamCommit"
             onClick={handleCommit(process)}
             color="primary"
-            disabled={saving || name === '' || nameInUse(name) || !changed}
+            disabled={
+              saving ||
+              name === '' ||
+              nameInUse(name) ||
+              !changed ||
+              bibleIdError !== ''
+            }
           >
             {mode === DialogMode.add ? t.add : t.save}
           </Button>
@@ -346,6 +396,7 @@ export function TeamDialog(props: IProps) {
 }
 
 const mapRecordsToProps = {
+  bibles: (q: QueryBuilder) => q.findRecords('bible'),
   organizations: (q: QueryBuilder) => q.findRecords('organization'),
   projects: (q: QueryBuilder) => q.findRecords('project'),
   plans: (q: QueryBuilder) => q.findRecords('plan'),

@@ -80,6 +80,7 @@ interface IProps {
   */
   onRecording: (recording: boolean) => void;
   onMediaIdChange: (mediaId: string) => void;
+  disabled?: boolean;
 }
 
 export default function MediaTitle(props: IProps) {
@@ -95,6 +96,7 @@ export default function MediaTitle(props: IProps) {
     onRecording,
     onMediaIdChange,
     useplan,
+    disabled,
   } = props;
   const dispatch = useDispatch();
   const uploadFiles = (files: File[]) => dispatch(actions.uploadFiles(files));
@@ -185,7 +187,6 @@ export default function MediaTitle(props: IProps) {
   };
 
   const afterUploadCb = async (mediaId: string) => {
-    console.log('afterUploadCb', toolId, mediaId);
     if (mediaId) {
       waitForIt(
         'mediaId',
@@ -301,7 +302,6 @@ export default function MediaTitle(props: IProps) {
     remoteIdNum('user', user || '', memory.keyMap) || user;
 
   const itemComplete = async (n: number, success: boolean, data?: any) => {
-    console.log('itemComplete', n, success, data);
     const uploadList = fileList.current;
     if (!uploadList) return; // This should never happen
     if (data?.stringId) {
@@ -394,6 +394,7 @@ export default function MediaTitle(props: IProps) {
         helperText={helperText}
         size="small"
         multiline
+        disabled={disabled}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -410,18 +411,20 @@ export default function MediaTitle(props: IProps) {
                     <PlayIcon fontSize="small" />
                   </IconButton>
                 )}
-                <Tooltip title={t.record}>
-                  <IconButton
-                    id={`${titlekey}record`}
-                    aria-label="record"
-                    onClick={handleRecord}
-                    onMouseDown={handleMouseDownSave}
-                    disabled={recording}
-                    edge="start"
-                  >
-                    <MicIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
+                {disabled || (
+                  <Tooltip title={t.record}>
+                    <IconButton
+                      id={`${titlekey}record`}
+                      aria-label="record"
+                      onClick={handleRecord}
+                      onMouseDown={handleMouseDownSave}
+                      disabled={recording}
+                      edge="start"
+                    >
+                      <MicIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                )}
               </>
             </InputAdornment>
           ),
@@ -472,7 +475,11 @@ export default function MediaTitle(props: IProps) {
 
   return (
     <ColumnDiv>
-      <FormControl sx={{ width: 'max-content', py: 1 }} variant="outlined">
+      <FormControl
+        sx={{ width: 'max-content', py: 1 }}
+        variant="outlined"
+        disabled={disabled}
+      >
         <InputLabel htmlFor={`${titlekey}adornment`}>{'\u200B'}</InputLabel>
         {TitleText}
         {language && (
