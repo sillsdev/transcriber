@@ -9,7 +9,7 @@ import { StepEditor } from '../StepEditor';
 import GroupTabs from '../GroupTabs';
 import { ProjectCard, AddCard } from '.';
 import TeamDialog, { ITeamDialog } from './TeamDialog';
-import { useRole, defaultWorkflow } from '../../crud';
+import { useRole, defaultWorkflow, useBible } from '../../crud';
 import Confirm from '../AlertDialog';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { TeamPaper, TeamHeadDiv, TeamName, AltButton } from '../../control';
@@ -31,10 +31,12 @@ export const TeamItem = (props: IProps) => {
   const { teamProjects, teamMembers, teamUpdate, teamDelete, isAdmin } =
     ctx.state;
   const t = ctx.state.cardStrings;
+  const { createBible, updateBible } = useBible();
   const [openMember, setOpenMember] = useState(false);
   const { setMyOrgRole } = useRole();
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [changed] = useGlobal('changed');
+
   const handleMembers = (team: Organization) => () => {
     setOrganization(team.id);
     setMyOrgRole(team.id);
@@ -45,11 +47,28 @@ export const TeamItem = (props: IProps) => {
     setEditOpen(true);
   };
 
-  const handleCommitSettings = (
+  const handleCommitSettings = async (
     values: ITeamDialog,
     cb?: (id: string) => Promise<void>
   ) => {
-    teamUpdate(values.team, values.bibleMediafile, values.isoMediafile);
+    if (values.bible)
+      if (!values.bible.id) {
+        await createBible(
+          values.bible,
+          values.bibleMediafile,
+          values.isoMediafile,
+          values.team.id
+        );
+      } else
+        await updateBible(
+          values.bible,
+          values.bibleMediafile,
+          values.isoMediafile,
+          values.team.id
+        );
+
+    teamUpdate(values.team);
+
     cb && cb(values.team.id);
     setEditOpen(false);
   };
@@ -120,7 +139,6 @@ export const TeamItem = (props: IProps) => {
         onOpen={setEditOpen}
         onCommit={handleCommitSettings}
         onDelete={handleDeleteTeam}
-
       />
       <BigDialog
         title={t.members.replace('{0}', team?.attributes?.name || '')}

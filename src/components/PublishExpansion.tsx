@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ICardsStrings, Organization } from '../model';
+import { Bible, ICardsStrings, Organization } from '../model';
 import {
   Accordion,
   AccordionSummary,
@@ -17,7 +17,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoIcon from '@mui/icons-material/Info';
 import { ILanguage, LightTooltip } from '../control';
-import { related, useOrgDefaults } from '../crud';
+import { related, useOrgDefaults, useBible } from '../crud';
 import MediaTitle from '../control/MediaTitle';
 
 const GridContainerRow = styled(Grid)<GridProps>(({ theme }) => ({
@@ -42,35 +42,43 @@ const Heading = styled(Typography)<TypographyProps>(({ theme }) => ({
 interface IProps {
   t: ICardsStrings;
   team?: Organization;
+  bible?: Bible;
+  readonly?: boolean;
   setValue: (what: string, value: string) => void;
   onChanged: (changed: boolean) => void;
   // setCanSave: (canSave: boolean) => void;
-  organizations: Array<Organization>;
+  bibles: Array<Bible>;
   teamplan: string | undefined;
 }
 
 export function PublishExpansion(props: IProps) {
-  const { t, team, teamplan, setValue, onChanged, organizations } = props;
+  const { t, team, bible, readonly, teamplan, setValue, onChanged, bibles } =
+    props;
   const [isoMediafile, setIsoMediafilex] = useState('');
   const [bibleMediafile, setBibleMediafilex] = useState('');
   const [bibleId, setBibleId] = useState('');
+  const [bibleIdError, setBibleIdError] = useState('');
   const [bibleName, setBibleName] = useState('');
-  //TOOD const [publishingData, setPublishingData] = useState('{}');
   const { getDefault, setDefault } = useOrgDefaults();
   const [language, setLanguagex] = React.useState<ILanguage>(initLang);
   const languageRef = useRef<ILanguage>(initLang);
+  const { getPublishingData, setPublishingData } = useBible();
 
   const setLanguage = (language: ILanguage, init?: boolean) => {
     languageRef.current = language;
     setLanguagex(language);
+    var b = bible ?? ({ attributes: { publishingData: '{}' } } as Bible);
+
     if (
       init &&
-      !team?.attributes?.iso &&
+      !bible?.attributes?.iso &&
       language?.bcp47 &&
       language?.bcp47 !== 'und'
     ) {
       setValue('iso', language?.bcp47);
       setValue('languageName', language?.languageName);
+      setPublishingData('langProps', language, b);
+      setValue('publishingData', b.attributes.publishingData ?? '{}');
     }
     if (!init) {
       var t = team ?? ({ attributes: { defaultParams: '{}' } } as Organization);
@@ -78,25 +86,28 @@ export function PublishExpansion(props: IProps) {
       setValue('defaultParams', t.attributes.defaultParams ?? '{}');
       setValue('iso', language?.bcp47 ?? '');
       setValue('languageName', language?.languageName ?? '');
+      setPublishingData('langProps', language, b);
+      setValue('publishingData', b.attributes.publishingData ?? '{}');
     }
   };
 
   useEffect(() => {
-    if (team) {
-      setBibleId(team.attributes?.bibleId);
-      setBibleName(team.attributes?.bibleName);
-      //TODO setPublishingData(team.attributes?.publishingData || '{}');
-      setIsoMediafilex(related(team, 'isoMediafile') as string);
-      setBibleMediafilex(related(team, 'bibleMediafile') as string);
+    if (bible) {
+      setBibleId(bible.attributes?.bibleId);
+      setBibleName(bible.attributes?.bibleName);
+      //TODO setPublishingData(bible.attributes?.publishingData || '{}');
+      setIsoMediafilex(related(bible, 'isoMediafile') as string);
+      setBibleMediafilex(related(bible, 'bibleMediafile') as string);
     }
-    const language = team
-      ? (getDefault('langProps', team) as typeof initLang) ?? initLang
-      : initLang;
+    var lang = getPublishingData('langProps', bible);
+    if (!lang)
+      lang = team
+        ? (getDefault('langProps', team) as typeof initLang) ?? initLang
+        : initLang;
 
-    // console.log('useEffect', language);
-    setLanguage(language, true);
+    setLanguage(lang, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [team]);
+  }, [team, bible]);
 
   const setBibleMediafile = (mediaId: string) => {
     setBibleMediafilex(mediaId);
@@ -108,16 +119,20 @@ export function PublishExpansion(props: IProps) {
   };
   const handleChangeBibleId = (event: any) => {
     if (!bibleIdIsValid(event.target.value)) {
-      return t.bibleidexists;
+      setBibleIdError(t.bibleidexists);
+      setValue('bibleIdError', t.bibleidexists);
+    } else {
+      setBibleIdError('');
+      setValue('bibleIdError', '');
     }
     setBibleId(event.target.value);
-    if (team?.attributes?.bibleId !== event.target.value)
+    if (bible?.attributes?.bibleId !== event.target.value)
       setValue('bibleId', event.target.value);
     return '';
   };
   const handleChangeBibleName = (value: string) => {
     setBibleName(value);
-    if (team?.attributes?.bibleName !== value) setValue('bibleName', value);
+    if (bible?.attributes?.bibleName !== value) setValue('bibleName', value);
     return '';
   };
   const onRecording = (recording: boolean) => {
@@ -141,10 +156,10 @@ export function PublishExpansion(props: IProps) {
   };
   */
   const bibleIdIsValid = (newName: string): boolean => {
-    if (newName === team?.attributes?.bibleId) return true;
+    if (newName === bible?.attributes?.bibleId) return true;
     //TODO: Is there a format?
     //TODO: check bible brain also
-    const sameNameRec = organizations.filter(
+    const sameNameRec = bibles.filter(
       (o) => o?.attributes?.bibleId === newName
     );
     return sameNameRec.length === 0;
@@ -171,6 +186,28 @@ export function PublishExpansion(props: IProps) {
               borderColor: 'secondary.main',
             }}
           >
+            <GridContainerRow item>
+              <TextField
+                id="bibleid"
+                label={t.bibleid}
+                value={bibleId ?? ''}
+                onChange={handleChangeBibleId}
+                variant="outlined"
+                helperText={bibleIdError}
+                sx={{ width: '100%' }}
+              />
+              <LightTooltip title={t.bibleIdExplain}>
+                <Link
+                  href="https://www.faithcomesbyhearing.com/bible-brain/core-concepts"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <InfoIcon
+                    sx={{ fontSize: 'small', color: 'text.secondary' }}
+                  />
+                </Link>
+              </LightTooltip>
+            </GridContainerRow>{' '}
             <div>
               <MediaTitle
                 titlekey={'iso-'}
@@ -183,6 +220,7 @@ export function PublishExpansion(props: IProps) {
                 onRecording={onRecording}
                 useplan={teamplan}
                 onMediaIdChange={(mediaId: string) => setIsoMediafile(mediaId)}
+                disabled={readonly}
               />
 
               <MediaTitle
@@ -197,6 +235,7 @@ export function PublishExpansion(props: IProps) {
                 onMediaIdChange={(mediaId: string) =>
                   setBibleMediafile(mediaId)
                 }
+                disabled={readonly}
               />
               <GridContainerRow item>
                 <TextField

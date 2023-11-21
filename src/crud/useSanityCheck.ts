@@ -51,7 +51,6 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           setDataChangeCount: (value: number) => {},
           cb,
         });
-        console.log(table, 'startNext', startNext, start);
         if (startNext === start) tries--;
         else start = startNext;
       }

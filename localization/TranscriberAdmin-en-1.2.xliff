@@ -654,7 +654,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="cards.bibleidexists">
-            <source>Bible Id already exists.</source>
+            <source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>

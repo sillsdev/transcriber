@@ -101,3 +101,4 @@ export * from './PassageDescription';
 export * from './nextPasId';
 export * from './useGraphicCreate';
 export * from './useGraphicUpdate';
+export * from './useBible';
