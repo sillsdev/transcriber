@@ -940,8 +940,8 @@ if (
       dateUpdated: { type: 'date-time' },
     },
     relationships: {
-      isomediafile: { type: 'hasOne', model: 'mediafile' },
-      biblemediafile: { type: 'hasOne', model: 'mediafile' },
+      isoMediafile: { type: 'hasOne', model: 'mediafile' },
+      bibleMediafile: { type: 'hasOne', model: 'mediafile' },
       lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };

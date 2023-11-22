@@ -207,7 +207,7 @@ export function PublishExpansion(props: IProps) {
                   />
                 </Link>
               </LightTooltip>
-            </GridContainerRow>{' '}
+            </GridContainerRow>
             <div>
               <MediaTitle
                 titlekey={'iso-'}
@@ -222,7 +222,6 @@ export function PublishExpansion(props: IProps) {
                 onMediaIdChange={(mediaId: string) => setIsoMediafile(mediaId)}
                 disabled={readonly}
               />
-
               <MediaTitle
                 titlekey={'bibleName-'}
                 label={t.biblename}
@@ -237,27 +236,6 @@ export function PublishExpansion(props: IProps) {
                 }
                 disabled={readonly}
               />
-              <GridContainerRow item>
-                <TextField
-                  id="bibleid"
-                  label={t.bibleid}
-                  value={bibleId ?? ''}
-                  onChange={handleChangeBibleId}
-                  variant="outlined"
-                  sx={{ width: '100%' }}
-                />
-                <LightTooltip title={t.bibleIdExplain}>
-                  <Link
-                    href="https://www.faithcomesbyhearing.com/bible-brain/core-concepts"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <InfoIcon
-                      sx={{ fontSize: 'small', color: 'text.secondary' }}
-                    />
-                  </Link>
-                </LightTooltip>
-              </GridContainerRow>
             </div>
           </FormGroup>
         </AccordionDetails>
