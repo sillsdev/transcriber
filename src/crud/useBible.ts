@@ -25,7 +25,7 @@ export const useBible = () => {
       memory.cache.query((q: any) =>
         q.findRecords('organizationbible')
       ) as OrganizationBible[]
-    ).filter((b) => b.id === bibleid && b.attributes.ownerorg);
+    ).filter((b) => related(b, 'bible') === bibleid && b.attributes.ownerorg);
 
     if (bibles.length > 0) return related(bibles[0], 'organization');
     return undefined;

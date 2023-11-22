@@ -25,11 +25,10 @@ import {
 } from '../../model';
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
-import { defaultWorkflow, related } from '../../crud';
+import { defaultWorkflow, related, useBible } from '../../crud';
 import PublishExpansion from '../PublishExpansion';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { waitForIt } from '../../utils';
-import { useBible } from '../../crud/useBible';
 
 interface IRecordProps {
   bibles: Array<Bible>;
