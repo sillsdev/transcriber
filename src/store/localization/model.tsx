@@ -123,6 +123,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "addTeam": string;
     "bibleid": string;
     "bibleidexists": string;
+    "bibleidformat": string;
     "bibleIdExplain": string;
     "biblename": string;
     "cancel": string;

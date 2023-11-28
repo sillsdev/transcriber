@@ -564,7 +564,13 @@
       </unit>
       <unit id="cards.bibleidexists">
          <segment>
-            <source>Bible Id already exists.</source>
+            <source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.bibleidformat">
+         <segment>
+            <source>Bible Id must be at least 6 characters.</source>
             <target/>
          </segment>
       </unit>
@@ -3307,12 +3313,6 @@
       <unit id="mediaTitle.cancel">
          <segment>
             <source>Cancel Recording</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="mediaTitle.noplan">
-         <segment>
-            <source>Unable to record until you have created a project.</source>
             <target/>
          </segment>
       </unit>

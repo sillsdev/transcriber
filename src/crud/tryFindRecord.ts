@@ -3,6 +3,7 @@ import Memory from '@orbit/memory';
 
 export const findRecord = (memory: Memory, table: string, id: string) => {
   try {
+    if ((id ?? '') === '') return undefined;
     return memory.cache.query((q: QueryBuilder) =>
       q.findRecord({
         type: table,

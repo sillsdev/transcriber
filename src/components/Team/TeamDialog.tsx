@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -53,8 +53,6 @@ export function TeamDialog(props: IProps) {
     isOpen,
     bibles,
     organizations,
-    projects,
-    plans,
     onOpen,
     onCommit,
     onDelete,
@@ -79,6 +77,8 @@ export function TeamDialog(props: IProps) {
   const [processOptions, setProcessOptions] = useState<OptionType[]>([]);
   const savingRef = useRef(false);
   const [saving, setSavingx] = useState(false);
+  const recordingRef = useRef(false);
+  const [recording, setRecordingx] = useState(false);
   const [confirm, setConfirm] = React.useState(false);
   const { anySaving, toolsChanged, startSave, clearRequested } =
     useContext(UnsavedContext).state;
@@ -109,62 +109,67 @@ export function TeamDialog(props: IProps) {
     setSavingx(saving);
     savingRef.current = saving;
   };
+  const setRecording = (recording: boolean) => {
+    setRecordingx(recording);
+    recordingRef.current = recording;
+  };
   const setBibleMediafile = (value: string) => {
     bibleMediafileRef.current = value;
   };
   const setIsoMediafile = (value: string) => {
     isoMediafileRef.current = value;
   };
-  const handleCommit = (process: string | undefined) => async () => {
+  const handleCommit = (process: string | undefined) => () => {
     if (savingRef.current) return;
     setSaving(true);
-    Object.keys(toolsChanged).forEach((t) => startSave(t));
+    startSave();
+    //wait a beat for the save to register
+    setTimeout(() => {
+      waitForIt(
+        'anySaving',
+        () => !anySaving(),
+        () => false,
+        10000
+      ).finally(() => {
+        const current =
+          mode === DialogMode.edit && values
+            ? values.team
+            : ({ attributes: {} } as Organization);
 
-    waitForIt(
-      'anySaving',
-      () => !anySaving(),
-      () => false,
-      10000
-    ).finally(() => {
-      const current =
-        mode === DialogMode.edit && values
-          ? values.team
-          : ({ attributes: {} } as Organization);
-
-      const team = {
-        ...current,
-        attributes: {
-          ...current.attributes,
-          name,
-          defaultParams,
-        },
-      } as Organization;
-      let newbible =
-        getOrgBible(team.id) ?? ({ ...bible, type: 'bible' } as Bible);
-      newbible = {
-        ...newbible,
-        attributes: {
-          ...newbible.attributes,
-          bibleId,
-          bibleName,
-          iso,
-          publishingData,
-        },
-      } as Bible;
-
-      onCommit(
-        {
-          team,
-          bible: newbible,
-          bibleMediafile: bibleMediafileRef.current,
-          isoMediafile: isoMediafileRef.current,
-          process: process || defaultWorkflow,
-        },
-        async (id: string) => {
-          reset();
-        }
-      );
-    });
+        const team = {
+          ...current,
+          attributes: {
+            ...current.attributes,
+            name,
+            defaultParams,
+          },
+        } as Organization;
+        let newbible =
+          getOrgBible(team.id) ?? ({ ...bible, type: 'bible' } as Bible);
+        newbible = {
+          ...newbible,
+          attributes: {
+            ...newbible.attributes,
+            bibleId,
+            bibleName,
+            iso,
+            publishingData,
+          },
+        } as Bible;
+        onCommit(
+          {
+            team,
+            bible: newbible,
+            bibleMediafile: bibleMediafileRef.current,
+            isoMediafile: isoMediafileRef.current,
+            process: process || defaultWorkflow,
+          },
+          async (id: string) => {
+            reset();
+          }
+        );
+      });
+    }, 100);
   };
   const setValue = (what: string, value: string) => {
     switch (what) {
@@ -223,22 +228,6 @@ export function TeamDialog(props: IProps) {
     );
     return sameNameRec.length > 0;
   };
-  const teamplan = useMemo(() => {
-    var projs = projects
-      .filter((p) => related(p, 'organization') === values?.team.id)
-      .sort((i, j) =>
-        i.attributes.dateCreated <= j.attributes.dateCreated ? -1 : 1
-      );
-    if (projs.length > 0) {
-      var pplans = plans
-        .filter((p) => related(p, 'project') === projs[0].id)
-        .sort((i, j) =>
-          i.attributes.dateCreated <= j.attributes.dateCreated ? -1 : 1
-        );
-      if (pplans.length > 0) return pplans[0].id;
-    }
-    return undefined;
-  }, [plans, projects, values?.team.id]);
 
   useEffect(() => {
     if (isOpen) {
@@ -246,7 +235,7 @@ export function TeamDialog(props: IProps) {
         setDefaultParams(values?.team.attributes?.defaultParams || '{}');
         if (values) {
           setName(values.team.attributes?.name || '');
-          setBibleId(getOrgBible(values.team.id)?.attributes?.bibleId || '');
+          setBible(getOrgBible(values.team.id));
         }
       }
     } else reset();
@@ -274,22 +263,27 @@ export function TeamDialog(props: IProps) {
     if (isOpen)
       if (bibleId && bibleId.length > 5) {
         let newbible = getBible(bibleId);
-        setBible(newbible);
-        if (newbible) {
-          setIso(newbible?.attributes?.iso || '');
-          setBibleName(newbible?.attributes?.bibleName || '');
-          setIsoMediafile(related(newbible, 'isoMediafile') as string);
-          setBibleMediafile(related(newbible, 'bibleMediafile') as string);
-          setPublishingData(newbible?.attributes?.publishingData || '{}');
-          var owner = getBibleOwner(newbible.id);
-          setReadonly(owner !== values?.team.id);
-        } else setReadonly(false);
+        if (bible !== newbible) setBible(newbible);
       } else {
         setBible(undefined);
         setReadonly(false);
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bibleId]);
+
+  useEffect(() => {
+    if (bible) {
+      setBibleId(bible.attributes?.bibleId || '');
+      setIso(bible?.attributes?.iso || '');
+      setBibleName(bible?.attributes?.bibleName || '');
+      setIsoMediafile(related(bible, 'isoMediafile') as string);
+      setBibleMediafile(related(bible, 'bibleMediafile') as string);
+      setPublishingData(bible?.attributes?.publishingData || '{}');
+      var owner = getBibleOwner(bible.id);
+      setReadonly(owner !== values?.team.id);
+    } else setReadonly(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bible]);
 
   return (
     <div>
@@ -320,8 +314,8 @@ export function TeamDialog(props: IProps) {
               t={t}
               team={values?.team}
               bible={bible}
-              teamplan={teamplan}
               onChanged={setChanged}
+              onRecording={setRecording}
               setValue={setValue}
               bibles={bibles}
               readonly={readonly}
@@ -370,6 +364,7 @@ export function TeamDialog(props: IProps) {
             onClick={handleCommit(process)}
             color="primary"
             disabled={
+              recording ||
               saving ||
               name === '' ||
               nameInUse(name) ||
