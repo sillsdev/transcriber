@@ -19,6 +19,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import { ILanguage, LightTooltip } from '../control';
 import { related, useOrgDefaults, useBible } from '../crud';
 import MediaTitle from '../control/MediaTitle';
+import { useBibleMedia } from '../crud/useBibleMedia';
 
 const GridContainerRow = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
@@ -46,29 +47,30 @@ interface IProps {
   readonly?: boolean;
   setValue: (what: string, value: string) => void;
   onChanged: (changed: boolean) => void;
+  onRecording: (recording: boolean) => void;
   // setCanSave: (canSave: boolean) => void;
   bibles: Array<Bible>;
-  teamplan: string | undefined;
 }
 
 export function PublishExpansion(props: IProps) {
-  const { t, team, bible, readonly, teamplan, setValue, onChanged, bibles } =
+  const { t, team, bible, readonly, setValue, onChanged, onRecording, bibles } =
     props;
   const [isoMediafile, setIsoMediafilex] = useState('');
   const [bibleMediafile, setBibleMediafilex] = useState('');
   const [bibleId, setBibleId] = useState('');
-  const [bibleIdError, setBibleIdError] = useState('');
+  const [bibleIdError, setBibleIdErrorx] = useState('');
   const [bibleName, setBibleName] = useState('');
   const { getDefault, setDefault } = useOrgDefaults();
   const [language, setLanguagex] = React.useState<ILanguage>(initLang);
   const languageRef = useRef<ILanguage>(initLang);
   const { getPublishingData, setPublishingData } = useBible();
+  const { getBibleMediaPlan } = useBibleMedia();
+  const [mediaplan, setMediaplan] = useState('');
 
   const setLanguage = (language: ILanguage, init?: boolean) => {
     languageRef.current = language;
     setLanguagex(language);
     var b = bible ?? ({ attributes: { publishingData: '{}' } } as Bible);
-
     if (
       init &&
       !bible?.attributes?.iso &&
@@ -90,6 +92,12 @@ export function PublishExpansion(props: IProps) {
       setValue('publishingData', b.attributes.publishingData ?? '{}');
     }
   };
+  useEffect(() => {
+    getBibleMediaPlan().then((plan) => {
+      setMediaplan(plan.id);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (bible) {
@@ -109,6 +117,10 @@ export function PublishExpansion(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [team, bible]);
 
+  const setBibleIdError = (error: string) => {
+    setBibleIdErrorx(error);
+    setValue('bibleIdError', error);
+  };
   const setBibleMediafile = (mediaId: string) => {
     setBibleMediafilex(mediaId);
     setValue('bibleMediafile', mediaId);
@@ -118,13 +130,8 @@ export function PublishExpansion(props: IProps) {
     setValue('isoMediafile', mediaId);
   };
   const handleChangeBibleId = (event: any) => {
-    if (!bibleIdIsValid(event.target.value)) {
-      setBibleIdError(t.bibleidexists);
-      setValue('bibleIdError', t.bibleidexists);
-    } else {
-      setBibleIdError('');
-      setValue('bibleIdError', '');
-    }
+    setBibleIdError(bibleIdIsValid(event.target.value));
+
     setBibleId(event.target.value);
     if (bible?.attributes?.bibleId !== event.target.value)
       setValue('bibleId', event.target.value);
@@ -135,10 +142,11 @@ export function PublishExpansion(props: IProps) {
     if (bible?.attributes?.bibleName !== value) setValue('bibleName', value);
     return '';
   };
-  const onRecording = (recording: boolean) => {
+  const onMyRecording = (recording: boolean) => {
     if (recording) {
       onChanged(true);
     }
+    onRecording && onRecording(recording);
   };
   const handleLanguageChange = (lang: ILanguage) => {
     setLanguage(lang);
@@ -155,14 +163,15 @@ export function PublishExpansion(props: IProps) {
     setPublishingData(e.target.value);
   };
   */
-  const bibleIdIsValid = (newName: string): boolean => {
-    if (newName === bible?.attributes?.bibleId) return true;
+  const bibleIdIsValid = (newName: string): string => {
+    if (newName === bible?.attributes?.bibleId) return '';
     //TODO: Is there a format?
+    if (newName.length < 6) return t.bibleidformat;
     //TODO: check bible brain also
     const sameNameRec = bibles.filter(
       (o) => o?.attributes?.bibleId === newName
     );
-    return sameNameRec.length === 0;
+    return sameNameRec.length === 0 ? '' : t.bibleidexists;
   };
 
   return (
@@ -217,8 +226,8 @@ export function PublishExpansion(props: IProps) {
                 title={''}
                 defaultFilename={(team?.attributes?.slug ?? '') + 'iso'}
                 onLangChange={handleLanguageChange}
-                onRecording={onRecording}
-                useplan={teamplan}
+                onRecording={onMyRecording}
+                useplan={mediaplan}
                 onMediaIdChange={(mediaId: string) => setIsoMediafile(mediaId)}
                 disabled={readonly}
               />
@@ -229,8 +238,8 @@ export function PublishExpansion(props: IProps) {
                 title={bibleName}
                 defaultFilename={(team?.attributes?.slug ?? '') + 'bible'}
                 onTextChange={handleChangeBibleName}
-                onRecording={onRecording}
-                useplan={teamplan}
+                onRecording={onMyRecording}
+                useplan={mediaplan}
                 onMediaIdChange={(mediaId: string) =>
                   setBibleMediafile(mediaId)
                 }

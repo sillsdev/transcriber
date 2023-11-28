@@ -52,6 +52,7 @@ import { TokenContext } from '../context/TokenProvider';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { ReplaceRelatedRecord } from '../model/baseModel';
 import { useSanityCheck } from '../crud/useSanityCheck';
+import { useBibleMedia } from '../crud/useBibleMedia';
 interface IStateProps {}
 
 interface IDispatchProps {
@@ -485,6 +486,7 @@ export function DataChanges(props: IProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const saving = useMemo(() => anySaving(), [toolsChanged]);
   const doSanityCheck = useSanityCheck(setLanguage);
+  const { getBibleMediaProject, getBibleMediaPlan } = useBibleMedia();
 
   useEffect(() => {
     const defaultBusyDelay = 1000;
@@ -540,6 +542,9 @@ export function DataChanges(props: IProps) {
         setDataChangeCount
       );
       if (check) {
+        //make sure we have a bible media project and plan downloaded
+        await getBibleMediaPlan();
+        await doSanityCheck((await getBibleMediaProject()).id);
         for (var ix = 0; ix < projectsLoaded.length; ix++)
           await doSanityCheck(projectsLoaded[ix]);
       }

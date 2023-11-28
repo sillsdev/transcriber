@@ -103,7 +103,7 @@ export default function MediaTitle(props: IProps) {
   const nextUpload = (props: actions.NextUploadProps) =>
     dispatch(actions.nextUpload(props));
   const uploadComplete = () => {
-    doRecordRef.current = false;
+    setShowRecorder(false);
     dispatch(actions.uploadComplete);
   };
   const [plan] = useGlobal('plan');
@@ -121,7 +121,7 @@ export default function MediaTitle(props: IProps) {
   const [statusText, setStatusText] = useState('');
   const [helperText, setHelperText] = useState('');
   const fileList = useRef<File[]>();
-  const doRecordRef = useRef(false);
+  const [showRecorder, setShowRecorder] = useState(false);
   const langRef = useRef(language);
   const [recording, setRecording] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -139,6 +139,7 @@ export default function MediaTitle(props: IProps) {
     toolsChanged,
     startSave,
     saveRequested,
+    saveCompleted,
     clearRequested,
     clearCompleted,
     // isChanged,
@@ -147,7 +148,9 @@ export default function MediaTitle(props: IProps) {
   const { createMedia } = useOfflnMediafileCreate();
 
   useEffect(() => {
-    if (saveRequested(toolId) && canSaveRecording) handleOk();
+    if (saveRequested(toolId) && !saving.current)
+      if (canSaveRecording) handleOk();
+      else saveCompleted(toolId);
     else if (clearRequested(toolId)) {
       reset();
       clearCompleted(toolId);
@@ -155,10 +158,12 @@ export default function MediaTitle(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, canSaveRecording]);
 
-  const getPlanId = () => {
+  const PlanId = useMemo(() => {
     if (useplan) return remoteIdNum('plan', useplan, memory.keyMap) || useplan;
     return remoteIdNum('plan', plan, memory.keyMap) || plan;
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plan, useplan]);
+
   const TitleId = useMemo(() => {
     var id = getTypeId(ArtifactTypeSlug.Title) as string;
     return remoteId('artifacttype', id, memory.keyMap) || id;
@@ -199,13 +204,11 @@ export default function MediaTitle(props: IProps) {
         onMediaIdChange(
           remoteIdGuid('mediafile', mediaId, memory.keyMap) ?? mediaId
         );
-        toolChanged(toolId, false);
         reset();
       });
     }
   };
   const onMyRecording = (r: boolean) => {
-    if (doRecordRef.current) setRecording(false);
     if (r) {
       toolChanged(toolId, true);
       toolChanged(recToolId, true);
@@ -235,10 +238,6 @@ export default function MediaTitle(props: IProps) {
   };
   const handleRecord = (e: any) => {
     e.stopPropagation();
-    if (getPlanId() === '') {
-      showMessage(t.noplan);
-      return;
-    }
     setPlaying(false);
     setStartRecord(true);
   };
@@ -286,16 +285,18 @@ export default function MediaTitle(props: IProps) {
 
   const reset = () => {
     setRecording(false);
+    setShowRecorder(false);
     setStatusText('');
-    doRecordRef.current = false;
     saving.current = false;
+    setCanSaveRecording(false);
     onMyRecording(false);
+    toolChanged(toolId, false);
+    toolChanged(recToolId, false);
   };
 
   const handleCancel = (e: any) => {
     onMediaIdChange(mediaId);
     e.stopPropagation();
-    toolChanged(recToolId, false);
     reset();
   };
   const getUserId = () =>
@@ -335,7 +336,7 @@ export default function MediaTitle(props: IProps) {
     uploadFiles(files);
     fileList.current = files;
     const mediaFile = {
-      planId: getPlanId(),
+      planId: PlanId,
       versionNumber: 1,
       originalFile: files[0].name,
       contentType: files[0].type,
@@ -356,21 +357,15 @@ export default function MediaTitle(props: IProps) {
   };
   useEffect(() => {
     if (startRecord)
-      try {
-        waitForIt(
-          'stop playing',
-          () => true, //canRecord(),
-          () => false,
-          100
-        ).then(() => {
-          doRecordRef.current = true;
-          setStartRecord(false);
-        });
-      } catch {
-        //do it anyway...
-        doRecordRef.current = true;
+      waitForIt(
+        'stop playing',
+        () => !playing, //canRecord(),
+        () => false,
+        100
+      ).finally(() => {
         setStartRecord(false);
-      }
+        setShowRecorder(true);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startRecord, playing]);
 
@@ -378,7 +373,6 @@ export default function MediaTitle(props: IProps) {
     event.preventDefault();
   };
 
-  const hasContent = () => doRecordRef.current;
   const playEnded = () => {
     setPlaying(false);
   };
@@ -431,12 +425,12 @@ export default function MediaTitle(props: IProps) {
           endAdornment: (
             <InputAdornment position="end">
               <>
-                {canSaveRecording && hasContent() && (
+                {canSaveRecording && (
                   <Tooltip title={t.save}>
                     <span>
                       <IconButton
                         id={`${titlekey}save`}
-                        aria-label="save target term"
+                        aria-label="save title"
                         onClick={handleOk}
                         onMouseDown={handleMouseDownSave}
                         disabled={recording}
@@ -447,12 +441,12 @@ export default function MediaTitle(props: IProps) {
                     </span>
                   </Tooltip>
                 )}
-                {hasContent() && (
+                {showRecorder && (
                   <Tooltip title={t.cancel}>
                     <span>
                       <IconButton
                         id={`${titlekey}cancel`}
-                        aria-label="save target term"
+                        aria-label="cancel title"
                         onClick={handleCancel}
                         onMouseDown={handleMouseDownSave}
                         disabled={recording}
@@ -502,7 +496,7 @@ export default function MediaTitle(props: IProps) {
           />
         )}
       </FormControl>
-      {doRecordRef.current && (
+      {showRecorder && (
         <MediaRecord
           toolId={recToolId}
           onRecording={onMyRecording}

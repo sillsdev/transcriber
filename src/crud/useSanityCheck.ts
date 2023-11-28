@@ -178,6 +178,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
       switch (table) {
         case 'activitystate':
         case 'artifacttype':
+        case 'bible':
         case 'integration':
         case 'passagetype':
         case 'plantype':
@@ -237,6 +238,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
         case 'organization':
           return [findRecord(memory, 'organization', org)];
 
+        case 'organizationbible':
         case 'organizationmembership':
         case 'orgkeyterm':
         case 'orgkeytermreference':
