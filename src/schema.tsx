@@ -933,6 +933,7 @@ if (
     attributes: {
       bibleId: { type: 'string' },
       bibleName: { type: 'string' },
+      iso: { type: 'string' },
       description: { type: 'string' },
       publishingData: { type: 'string' },
       anyPublished: { type: 'boolean' },

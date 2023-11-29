@@ -660,6 +660,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.bibleidformat">
+            <source>Bible Id must be at least 6 characters.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="cards.bibleIdExplain">
       		<source>Explain Bible Id</source>
       		<target/>
@@ -3856,13 +3863,6 @@
          </trans-unit>
          <trans-unit id="mediaTitle.cancel">
             <source>Cancel Recording</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">MediaTab.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="mediaTitle.noplan">
-            <source>Unable to record until you have created a project.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaTab.tsx</context>
