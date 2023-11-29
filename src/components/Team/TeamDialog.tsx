@@ -62,6 +62,7 @@ export function TeamDialog(props: IProps) {
   const [bible, setBible] = React.useState<Bible | undefined>(values?.bible);
   const [bibleId, setBibleId] = React.useState('');
   const [readonly, setReadonly] = useState(false);
+  const [owner, setOwner] = useState('');
   const [bibleIdError, setBibleIdError] = useState('');
   const [bibleName, setBibleName] = React.useState('');
   const [defaultParams, setDefaultParams] = React.useState('');
@@ -93,7 +94,6 @@ export function TeamDialog(props: IProps) {
     setConfirm(false);
     setBibleId('');
     setBible(undefined);
-    setReadonly(false);
     onOpen && onOpen(false);
     Object.keys(toolsChanged).forEach((t) => clearRequested(t));
   };
@@ -144,18 +144,22 @@ export function TeamDialog(props: IProps) {
             defaultParams,
           },
         } as Organization;
-        let newbible =
-          getOrgBible(team.id) ?? ({ ...bible, type: 'bible' } as Bible);
-        newbible = {
-          ...newbible,
-          attributes: {
-            ...newbible.attributes,
-            bibleId,
-            bibleName,
-            iso,
-            publishingData,
-          },
-        } as Bible;
+        let newbible = undefined;
+        if (bibleId.length > 0 && bibleIdError === '') {
+          newbible =
+            getOrgBible(team.id) ?? ({ ...bible, type: 'bible' } as Bible);
+          if (bibleId)
+            newbible = {
+              ...newbible,
+              attributes: {
+                ...newbible.attributes,
+                bibleId,
+                bibleName,
+                iso,
+                publishingData,
+              },
+            } as Bible;
+        }
         onCommit(
           {
             team,
@@ -266,10 +270,17 @@ export function TeamDialog(props: IProps) {
         if (bible !== newbible) setBible(newbible);
       } else {
         setBible(undefined);
-        setReadonly(false);
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bibleId]);
+
+  useEffect(() => {
+    setReadonly(
+      (owner && owner !== values?.team.id) ||
+        bibleIdError.length > 0 ||
+        bibleId.length === 0
+    );
+  }, [owner, bibleIdError, bibleId, values]);
 
   useEffect(() => {
     if (bible) {
@@ -279,9 +290,8 @@ export function TeamDialog(props: IProps) {
       setIsoMediafile(related(bible, 'isoMediafile') as string);
       setBibleMediafile(related(bible, 'bibleMediafile') as string);
       setPublishingData(bible?.attributes?.publishingData || '{}');
-      var owner = getBibleOwner(bible.id);
-      setReadonly(owner !== values?.team.id);
-    } else setReadonly(false);
+      setOwner(getBibleOwner(bible.id));
+    } else setOwner('');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bible]);
 

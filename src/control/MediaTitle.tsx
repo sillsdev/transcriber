@@ -242,7 +242,7 @@ export default function MediaTitle(props: IProps) {
     setStartRecord(true);
   };
   const setLanguageTitle = (lang: ILanguage) =>
-    setCurText(`${lang.languageName} (${lang.bcp47})`);
+    setCurText(lang.bcp47 ? `${lang.languageName} (${lang.bcp47})` : '');
 
   const setCode = (bcp47: string) => {
     if (langRef.current) {
@@ -464,7 +464,7 @@ export default function MediaTitle(props: IProps) {
       />
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [curText, recording, mediaId, canSaveRecording]
+    [curText, recording, mediaId, canSaveRecording, disabled]
   );
 
   return (
