@@ -494,7 +494,8 @@ export function ScriptureTable(
     ptype: PassageTypeEnum | undefined,
     i?: number,
     before?: boolean,
-    title?: string
+    title?: string,
+    reference?: string
   ) => {
     let lastRow = myWorkflow.length - 1;
     while (lastRow >= 0 && myWorkflow[lastRow].deleted) lastRow -= 1;
@@ -504,7 +505,7 @@ export function ScriptureTable(
       level: flat && level ? level : SheetLevel.Passage,
       kind: flat ? IwsKind.SectionPassage : IwsKind.Passage,
       book: firstBook(),
-      reference: ptype ?? '',
+      reference: reference ?? ptype ?? '',
       mediaId: undefined,
       comment: title ?? '',
       passageUpdated: currentDateTime(),
@@ -1413,7 +1414,8 @@ export function ScriptureTable(
         PassageTypeEnum.CHAPTERNUMBER,
         undefined,
         undefined,
-        title
+        title,
+        PassageTypeEnum.CHAPTERNUMBER + ' ' + chapter.toString()
       );
     };
     const startChapter = (w: ISheet) =>

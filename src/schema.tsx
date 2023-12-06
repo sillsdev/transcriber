@@ -963,8 +963,8 @@ if (
   schemaDefinition.models.graphic = {
     keys: { remoteId: {} },
     attributes: {
-      resourcetype: { type: 'string' },
-      resourceid: { type: 'string' },
+      resourceType: { type: 'string' },
+      resourceId: { type: 'string' },
       info: { type: 'string' },
       dateCreated: { type: 'date-time' },
       dateUpdated: { type: 'date-time' },
