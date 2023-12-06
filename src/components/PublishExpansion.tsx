@@ -204,6 +204,7 @@ export function PublishExpansion(props: IProps) {
                 variant="outlined"
                 helperText={bibleIdError}
                 sx={{ width: '100%' }}
+                required
               />
               <LightTooltip title={t.bibleIdExplain}>
                 <Link
