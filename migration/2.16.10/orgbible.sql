@@ -35,5 +35,72 @@ CREATE RULE rule_archivenotdelete AS
 -- public.organizationbibles foreign keys
 
 ALTER TABLE public.organizationbibles ADD CONSTRAINT fk_organizationbibles_lastmodifiedby FOREIGN KEY (lastmodifiedby) REFERENCES public.users(id) ON DELETE SET NULL;
-ALTER TABLE public.organizationbibles ADD CONSTRAINT fk_organizationbibless_organizationid FOREIGN KEY (organizationid) REFERENCES public.organizations(id) ON DELETE set NULL;
+ALTER TABLE public.organizationbibles ADD CONSTRAINT fk_organizationbibless_organizationid FOREIGN KEY (organizationid) REFERENCES public.organizations(id) ON DELETE CASCADE;
+ALTER TABLE public.organizationbibles DROP CONSTRAINT fk_organizationbibles_bibleid;
 ALTER TABLE public.organizationbibles ADD CONSTRAINT fk_organizationbibles_bibleid FOREIGN KEY (bibleid) REFERENCES public.bibles(id) ON DELETE CASCADE;
+
+CREATE OR REPLACE FUNCTION update_published() 
+RETURNS TRIGGER 
+LANGUAGE plpgsql
+AS $function$
+declare anypub integer;
+begin
+
+	select count(*) 
+	into anypub
+	from projects p
+		inner join plans pl on pl.projectid = p.id
+		inner join sections s on s.planid = pl.id
+	where published = true and p.organizationid = new.organizationid;
+	if (anypub > 0) then
+	/* when we insert an organizationbible record update the bible published */
+    	UPDATE bibles set anypublished =  true where id = new.bibleid;
+    end if;
+    RETURN new;
+end;
+$function$
+;
+CREATE TRIGGER update_published
+     AFTER INSERT ON organizationbibles
+     FOR EACH ROW
+     EXECUTE PROCEDURE update_published();
+    
+CREATE OR REPLACE FUNCTION public.publish_trigger()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+declare
+	bible record;
+	mybible cursor
+		for
+		SELECT *
+		FROM public.bibles
+		where id = (select bibleid FROM organizationbibles ob 
+						INNER JOIN projects p ON p.organizationid = ob.organizationid 
+						inner join plans pl on pl.projectid = p.id where pl.id = new.planid)
+		for UPDATE;
+begin
+	RAISE NOTICE 'here %', new.id;
+
+    if new.published = true AND new.published != old.published then
+		open mybible;
+		loop --just so the exit works
+		 	fetch mybible into bible;
+				exit when not found;
+			if (bible.anypublished = false) then
+			RAISE NOTICE 'update %', new.id;
+				update bibles
+				set anypublished = true,
+					dateupdated=current_timestamp,
+					lastmodifiedorigin='publish'
+					where current of mybible;
+
+		 	end if;
+		 	exit; -- just wanted to do the first one
+	 	end loop;
+	 	close mybible;
+	 end if;
+	 return new;
+end;
+$function$
+;
