@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import {
   Table,
@@ -26,8 +26,8 @@ import { toCamel } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { peerSelector } from '../../selector';
 import { usePeerGroups, IUserName } from './usePeerGroups';
-import { useOrbitData } from '../../hoc/useOrbitData';
 import { InitializedRecord } from '@orbit/records';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
 export function Peer() {
   const memberships = useOrbitData<GroupMembership[]>('groupmembership');
@@ -36,7 +36,6 @@ export function Peer() {
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
   const { userNames, peerGroups, check, cAdd, cDelete, cKey } = usePeerGroups();
-  const [inUse, setInUse] = useState<string[]>([]);
   const { getRoleId, getMyOrgRole } = useRole();
   const t = useSelector(peerSelector, shallowEqual) as IPeerStrings;
   const { localizePermission } = usePermissions();
@@ -133,12 +132,11 @@ export function Peer() {
     [organization, offline]
   );
 
-  useEffect(() => {
-    setInUse(
-      peerGroups.map((c) => c.attributes.name.toLocaleLowerCase()).sort()
-    );
+  const inUse = useMemo(
+    () => peerGroups.map((c) => c.attributes.name.toLocaleLowerCase()).sort(),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [peerGroups]);
+    [peerGroups]
+  );
 
   return (
     <TableContainer component={Paper}>

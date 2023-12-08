@@ -23,6 +23,24 @@ import {
   TableRow,
 } from '@mui/material';
 
+interface IColSpec {
+  name: string;
+  title: string;
+  width: number;
+  align: string;
+  wordWrapEnabled: boolean;
+  hidden: boolean;
+  sort?: (a: any, b: any) => number;
+  isFiltered: boolean;
+  filterValue?: string;
+  filterOperation?: string;
+}
+
+const style = (c: IColSpec) =>
+  ({
+    whiteSpace: c.wordWrapEnabled ? 'break-spaces' : 'nowrap',
+  } as CSSProperties);
+
 interface IProps {
   columns: Array<Column>;
   columnWidths?: Array<TableColumnWidthInfo>;
@@ -135,18 +153,6 @@ function ShapingTable(props: IProps) {
     return true;
   };
 
-  interface IColSpec {
-    name: string;
-    title: string;
-    width: number;
-    align: string;
-    wordWrapEnabled: boolean;
-    hidden: boolean;
-    sort?: (a: any, b: any) => number;
-    isFiltered: boolean;
-    filterValue?: string;
-    filterOperation?: string;
-  }
   const colSpec = React.useMemo(() => {
     const colSpec: IColSpec[] = columns.map((c) => {
       const col = {
@@ -290,17 +296,14 @@ function ShapingTable(props: IProps) {
                     )}
                     {colSpec.map((c, n) => {
                       const value = r[c.name];
-                      const style = {
-                        whiteSpace: c.wordWrapEnabled
-                          ? 'break-spaces'
-                          : 'nowrap',
-                      } as CSSProperties;
+
                       const props = {
                         value,
                         row: r,
                         column: c,
-                        style,
-                        align: c.align,
+                        style: style(c),
+                        align: c.align as any,
+                        key: `cell-${c.name}`,
                       };
                       return c.hidden ? (
                         <></>
@@ -309,9 +312,7 @@ function ShapingTable(props: IProps) {
                       ) : !r[c.name] && noDataCell ? (
                         noDataCell(props)
                       ) : (
-                        <TableCell sx={style} align={c.align as any}>
-                          {value}
-                        </TableCell>
+                        <TableCell {...props}>{value}</TableCell>
                       );
                     })}
                   </>

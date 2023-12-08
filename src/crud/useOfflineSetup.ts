@@ -27,14 +27,14 @@ export const useOfflineSetup = () => {
   const [coordinator] = useGlobal('coordinator');
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const { getTypeId } = useArtifactType();
+  const rn = new StandardRecordNormalizer({ schema: memory.schema });
+
   const makeTypeRecs = async (kind: string) => {
     const allTypeRecs = memory.cache.query((q) =>
       q.findRecords(`${kind}type`)
     ) as unknown as ProjectTypeD[];
     const offlineTypeRecs = allTypeRecs.filter((r) => !r?.keys?.remoteId);
     if (offlineTypeRecs.length === 0) {
-      const rn = new StandardRecordNormalizer({ schema: memory.schema });
-
       let scriptureRec: ProjectType = {
         type: `${kind}type`,
         attributes: {
@@ -63,7 +63,6 @@ export const useOfflineSetup = () => {
       q.findRecords('integration')
     ) as Integration[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
-    const rn = new StandardRecordNormalizer({ schema: memory.schema });
     if (offlineRecs.length === 0) {
       let paratextRec = {
         type: 'integration',
@@ -104,7 +103,6 @@ export const useOfflineSetup = () => {
       q.findRecords('role')
     ) as Role[];
     const offlineRoleRecs = allRoleRecs.filter((r) => !r?.keys?.remoteId);
-    const rn = new StandardRecordNormalizer({ schema: memory.schema });
     if (offlineRoleRecs.length === 0) {
       let adminRec = {
         type: 'role',
@@ -139,7 +137,6 @@ export const useOfflineSetup = () => {
 
   const makeWorkflowProcessSteps = async (process: string, steps: ISteps[]) => {
     const t = new RecordTransformBuilder();
-    const rn = new StandardRecordNormalizer({ schema: memory.schema });
     let ops = steps.map((step, ix) => {
       const toolSettings = step.artId
         ? `, "settings":{"artifactTypeId": "${step.artId}"}`
@@ -286,8 +283,8 @@ export const useOfflineSetup = () => {
       ]);
     }
   };
+
   const makeArtifactCategoryRecs = async () => {
-    const rn = new StandardRecordNormalizer({ schema: memory.schema });
     const allRecs = memory.cache.query((q) =>
       q.findRecords('artifactcategory')
     ) as WorkflowStep[];
@@ -316,8 +313,8 @@ export const useOfflineSetup = () => {
       await memory.sync((t) => ops);
     }
   };
+
   const makeArtifactTypeRecs = async () => {
-    const rn = new StandardRecordNormalizer({ schema: memory.schema });
     const allRecs = memory.cache.query((q) =>
       q.findRecords('artifacttype')
     ) as WorkflowStep[];
@@ -362,8 +359,8 @@ export const useOfflineSetup = () => {
       await memory.sync((t) => ops);
     }
   };
+
   const makeMoreArtifactTypeRecs = async () => {
-    const rn = new StandardRecordNormalizer({ schema: memory.schema });
     const allRecs = memory.cache.query((q) =>
       q.findRecords('artifacttype')
     ) as WorkflowStep[];
@@ -384,8 +381,8 @@ export const useOfflineSetup = () => {
       await memory.sync((t) => ops);
     }
   };
+
   const makeTitleArtifactTypeRec = async () => {
-    const rn = new StandardRecordNormalizer({ schema: memory.schema });
     const allRecs = memory.cache.query((q) =>
       q.findRecords('artifacttype')
     ) as WorkflowStep[];
@@ -406,8 +403,8 @@ export const useOfflineSetup = () => {
       await memory.sync((t) => ops);
     }
   };
+
   const makePassageTypeRecs = async () => {
-    const rn = new StandardRecordNormalizer({ schema: memory.schema });
     const allRecs = memory.cache.query((q) =>
       q.findRecords('passagetype')
     ) as PassageType[];

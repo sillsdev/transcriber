@@ -18,110 +18,101 @@ import IndexedDBSource from '@orbit/indexeddb';
 import IndexedDBBucket from '@orbit/indexeddb-bucket';
 import JSONAPISource from '@orbit/jsonapi';
 import { RecordTransform } from '@orbit/records';
-// import { NetworkError } from '@orbit/jsonapi';
+import { NetworkError } from '@orbit/jsonapi';
 import { Bucket } from '@orbit/core';
 import Memory from '@orbit/memory';
 import { ITokenContext } from './context/TokenProvider';
 import { API_CONFIG, isElectron } from './api-variable';
-import { logError, infoMsg, Severity, LocalKey } from './utils';
+import {
+  logError,
+  infoMsg,
+  Severity,
+  LocalKey,
+  orbitErr,
+  orbitRetry,
+} from './utils';
 import { electronExport } from './store/importexport/electronExport';
 import { restoreBackup } from '.';
 import { AlertSeverity } from './hoc/SnackBar';
 import { updateBackTranslationType } from './crud/updateBackTranslationType';
 import { updateConsultantWorkflowStep } from './crud/updateConsultantWorkflowStep';
 import { serializersSettings } from './serializers/serializersFor';
-
+import { State } from 'reactn/default';
 type StategyError = (...args: unknown[]) => unknown;
 
 interface PullStratErrProps {
   tokenCtx: ITokenContext;
   orbitError: (ex: IApiError) => void;
+  setOrbitRetries: (r: number) => void;
+  showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void;
+  memory: Memory;
   remote: JSONAPISource;
+  globalStore: State;
 }
 
 const pullError =
-  ({ tokenCtx, orbitError, remote }: PullStratErrProps) =>
+  ({
+    tokenCtx,
+    orbitError,
+    setOrbitRetries,
+    showMessage,
+    memory,
+    remote,
+    globalStore,
+  }: PullStratErrProps) =>
   (transform: RecordTransform, ex: IApiError) => {
     console.log('***** api pull fail', transform, ex);
     if (ex.response.status === 401) {
       tokenCtx?.state.logout();
+    } else if (ex instanceof NetworkError) {
+      if (globalStore.orbitRetries > 0) {
+        setOrbitRetries(globalStore.orbitRetries - 1);
+        // When network errors are encountered, try again in 3s
+        orbitError(orbitRetry(null, 'NetworkError - will try again soon'));
+        setTimeout(() => {
+          remote.requestQueue.retry();
+        }, 3000);
+      } else {
+        //ran out of retries -- bucket will retry later
+      }
     } else {
-      orbitError(ex);
-      return remote?.requestQueue.error;
+      // When non-network errors occur, notify the user and
+      // reset state.
+      const data = (ex as any).data;
+      const detail =
+        data?.errors &&
+        Array.isArray(data.errors) &&
+        data.errors.length > 0 &&
+        data.errors[0].meta &&
+        data.errors[0].meta.stackTrace[0];
+
+      if (detail?.includes('Entity has been deleted')) {
+        console.log('***attempt to update deleted record');
+        showMessage(detail);
+      } else {
+        const response = ex.response as any;
+        const url: string = response?.url ?? '';
+        let myOp = transform.operations;
+        if (Array.isArray(myOp)) myOp = myOp[0];
+        let label =
+          ((transform.options && transform.options.label) ||
+            myOp.op + (url ? ` in ` + url.split('/').pop() + `: ` : '')) +
+            detail ?? '';
+        orbitError(orbitErr(ex, `Unable to complete "${label}"`));
+      }
+
+      // Roll back memory to position before transform
+      if (memory.transformLog.contains(transform.id)) {
+        //don't do this -- resets error to 0 and takes user away from continue/logout screen
+        //orbitError(
+        //  orbitInfo(null, 'Rolling back - transform:' + transform.id)
+        //);
+        memory.rollback(transform.id, -1);
+      }
+
+      return remote.requestQueue.skip();
     }
   };
-
-// interface PushStratErrProps {
-//   orbitError: (ex: IApiError) => void;
-//   coordinator: Coordinator;
-//   globalStore: any;
-//   setOrbitRetries: (r: number) => void;
-//   showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void;
-// }
-
-// const pushError =
-//   ({
-//     coordinator,
-//     orbitError,
-//     globalStore,
-//     setOrbitRetries,
-//     showMessage,
-//   }: PushStratErrProps) =>
-//   (transform: RecordTransform, ex: IApiError) => {
-//     console.log('***** api pushfail');
-//     const remote = coordinator.getSource('remote');
-//     const memory = coordinator.getSource('memory') as Memory;
-//     //we're passing in the whole dang store because anything futher down
-//     //was not updated
-//     if (ex instanceof NetworkError) {
-//       if (globalStore.orbitRetries > 0) {
-//         setOrbitRetries(globalStore.orbitRetries - 1);
-//         // When network errors are encountered, try again in 3s
-//         orbitError(orbitRetry(null, 'NetworkError - will try again soon'));
-//         setTimeout(() => {
-//           remote.requestQueue.retry();
-//         }, 3000);
-//       } else {
-//         //ran out of retries -- bucket will retry later
-//       }
-//     } else {
-//       // When non-network errors occur, notify the user and
-//       // reset state.
-//       const data = (ex as any).data;
-//       const detail =
-//         data?.errors &&
-//         Array.isArray(data.errors) &&
-//         data.errors.length > 0 &&
-//         data.errors[0].meta &&
-//         data.errors[0].meta.stackTrace[0];
-
-//       if (detail?.includes('Entity has been deleted')) {
-//         console.log('***attempt to update deleted record');
-//         showMessage(detail);
-//       } else {
-//         const response = ex.response as any;
-//         const url: string = response?.url ?? '';
-//         let myOp = transform.operations;
-//         if (Array.isArray(myOp)) myOp = myOp[0];
-//         let label =
-//           ((transform.options && transform.options.label) ||
-//             myOp.op + (url ? ` in ` + url.split('/').pop() + `: ` : '')) +
-//             detail ?? '';
-//         orbitError(orbitErr(ex, `Unable to complete "${label}"`));
-//       }
-
-//       // Roll back memory to position before transform
-//       if (memory.transformLog.contains(transform.id)) {
-//         //don't do this -- resets error to 0 and takes user away from continue/logout screen
-//         //orbitError(
-//         //  orbitInfo(null, 'Rolling back - transform:' + transform.id)
-//         //);
-//         memory.rollback(transform.id, -1);
-//       }
-
-//       return remote.requestQueue.skip();
-//     }
-//   };
 
 export const Sources = async (
   coordinator: Coordinator,
@@ -132,7 +123,7 @@ export const Sources = async (
   orbitError: (ex: IApiError) => void,
   setOrbitRetries: (r: number) => void,
   setLang: (locale: string) => void,
-  globalStore: any,
+  globalStore: State,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
   offlineSetup: () => Promise<void>,
   showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void
@@ -209,7 +200,11 @@ export const Sources = async (
           action: pullError({
             tokenCtx,
             orbitError,
+            setOrbitRetries,
+            showMessage,
+            memory,
             remote,
+            globalStore,
           }) as unknown as StategyError,
           blocking: true,
         })
@@ -233,22 +228,6 @@ export const Sources = async (
 
     // Trap error updating data (token expired or offline)
     // See: https://github.com/orbitjs/todomvc-ember-orbit
-    // if (!coordinator.strategyNames.includes('remote-push-fail'))
-    //   coordinator.addStrategy(
-    //     new RequestStrategy({
-    //       name: 'remote-push-fail',
-    //       source: 'remote',
-    //       on: 'pushFail',
-    //       action: pushError({
-    //         coordinator,
-    //         orbitError,
-    //         globalStore,
-    //         setOrbitRetries,
-    //         showMessage,
-    //       }) as unknown as StategyError,
-    //       blocking: true,
-    //     })
-    //   );
 
     // Update the remote server whenever the memory is updated
     if (!coordinator.strategyNames.includes('remote-update'))
