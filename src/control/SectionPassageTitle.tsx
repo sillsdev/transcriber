@@ -3,7 +3,6 @@ import { useGlobal } from 'reactn';
 import { Grid, GridProps, styled, Typography } from '@mui/material';
 import { passageRefText, PassageReference, sectionDescription } from '../crud';
 import { BookName, Passage, Section, Plan } from '../model';
-import { QueryBuilder } from '@orbit/data';
 
 const GridRoot = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
@@ -22,7 +21,7 @@ export const SectionPassageTitle = (props: IProps) => {
 
   const isFlat = useMemo(() => {
     const plans = (
-      memory.cache.query((q: QueryBuilder) => q.findRecords('plan')) as Plan[]
+      memory.cache.query((q) => q.findRecords('plan')) as Plan[]
     ).filter((p) => p.id === plan);
     return plans.length === 0 || plans[0].attributes?.flat;
     // eslint-disable-next-line react-hooks/exhaustive-deps

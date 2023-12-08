@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation, useParams } from 'react-router-dom';
 import { IState, IMainStrings, IViewModeStrings } from '../../model';
-import { connect, shallowEqual, useSelector } from 'react-redux';
-import localStrings from '../../selector/localize';
+import { shallowEqual, useSelector } from 'react-redux';
 import {
   AppBar,
   Toolbar,
@@ -47,7 +46,7 @@ import moment from 'moment';
 import { useSnackBar, AlertSeverity } from '../../hoc/SnackBar';
 import PolicyDialog from '../PolicyDialog';
 import JSONAPISource from '@orbit/jsonapi';
-import { viewModeSelector } from '../../selector';
+import { mainSelector, viewModeSelector } from '../../selector';
 import { useHome } from '../../utils/useHome';
 const ipc = (window as any)?.electron;
 
@@ -101,24 +100,16 @@ const ProjectName = ({ setView, switchTo }: INameProps) => {
   );
 };
 
-interface IStateProps {
-  t: IMainStrings;
-  orbitStatus: number | undefined;
-  orbitErrorMsg: string;
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'main' }),
-  orbitStatus: state.orbit.status,
-  orbitErrorMsg: state.orbit.message,
-});
-
-interface IProps extends IStateProps {
+interface IProps {
   resetRequests: () => Promise<void>;
   switchTo: boolean;
 }
 
 export const AppHead = (props: IProps) => {
-  const { resetRequests, switchTo, t, orbitStatus, orbitErrorMsg } = props;
+  const { resetRequests, switchTo } = props;
+  const orbitStatus = useSelector((state: IState) => state.orbit.status);
+  const orbitErrorMsg = useSelector((state: IState) => state.orbit.message);
+  const t: IMainStrings = useSelector(mainSelector, shallowEqual);
   const { pathname } = useLocation();
   const navigate = useMyNavigate();
   const [home] = useGlobal('home');
@@ -458,4 +449,4 @@ export const AppHead = (props: IProps) => {
   );
 };
 
-export default withBucket(connect(mapStateToProps)(AppHead));
+export default withBucket(AppHead);

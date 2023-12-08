@@ -70,3 +70,4 @@ export * from './bcvKey';
 export * from './rangeAdd';
 export * from './positiveWholeOnly';
 export * from './stringAvatar';
+export * from './ReactIsInDevelopmentMode';

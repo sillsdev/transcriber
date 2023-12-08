@@ -1,20 +1,25 @@
-import { Project, OfflineProject } from '../model';
+import { Project, OfflineProject, OfflineProjectD } from '../model';
 import Memory from '@orbit/memory';
-import { Operation, TransformBuilder } from '@orbit/data';
+import {
+  RecordIdentity,
+  RecordOperation,
+  RecordTransformBuilder,
+  StandardRecordNormalizer,
+} from '@orbit/records';
 import { currentDateTime } from '../utils';
 import { ReplaceRelatedRecord } from '../model/baseModel';
 
 export const offlineProjectCreate = (
   project: Project,
-  ops: Operation[],
+  ops: RecordOperation[],
   memory: Memory,
   fingerprint: string,
   snapshotDate: string,
   fileDownloadDate: string,
   defaultAvailable?: boolean
 ) => {
-  const tb = new TransformBuilder();
-  const proj: OfflineProject = {
+  const tb = new RecordTransformBuilder();
+  let proj: OfflineProject = {
     type: 'offlineproject',
     attributes: {
       computerfp: fingerprint,
@@ -25,7 +30,16 @@ export const offlineProjectCreate = (
       dateUpdated: currentDateTime(),
     },
   } as OfflineProject;
-  memory.schema.initializeRecord(proj);
-  ops.push(tb.addRecord(proj));
-  ops.push(...ReplaceRelatedRecord(tb, proj, 'project', 'project', project.id));
+  const rn = new StandardRecordNormalizer({ schema: memory.schema });
+  proj = rn.normalizeRecord(proj) as OfflineProjectD;
+  ops.push(tb.addRecord(proj).toOperation());
+  ops.push(
+    ...ReplaceRelatedRecord(
+      tb,
+      proj as RecordIdentity,
+      'project',
+      'project',
+      project.id
+    )
+  );
 };

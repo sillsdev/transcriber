@@ -1,25 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { IState, IMainStrings } from '../model';
-import localStrings from '../selector/localize';
+import { IMainStrings } from '../model';
 import { waitForIt } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from '../components/AlertDialog';
-
-interface IStateProps {
-  t: IMainStrings;
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'main' }),
-});
-
-interface IDispatchProps {}
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators({}, dispatch),
-});
+import { useSelector } from 'react-redux';
+import { mainSelector } from '../selector';
 
 export interface IRowData {}
 
@@ -55,9 +42,6 @@ interface IContext {
 
 const UnsavedContext = React.createContext({} as IContext);
 
-interface IProps extends IStateProps, IDispatchProps {
-  children: React.ReactElement;
-}
 interface SaveInfo {
   startSave: boolean;
   clearChanged: boolean;
@@ -66,12 +50,8 @@ interface SaveInfo {
 interface IIndexableSaveInfo<SaveInfo> {
   [key: string]: SaveInfo;
 }
-const UnsavedProvider = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)((props: IProps) => {
-  const { t } = props;
-  // const [memory] = useGlobal('memory');
+const UnsavedProvider = (props: PropsWithChildren) => {
+  const t: IMainStrings = useSelector(mainSelector);
   const [importexportBusy] = useGlobal('importexportBusy');
   const [busy, setBusy] = useGlobal('remoteBusy');
   const [alertOpen, setAlertOpen] = useGlobal('alertOpen'); //global because planSheet checks it
@@ -352,5 +332,5 @@ const UnsavedProvider = connect(
       )}
     </UnsavedContext.Provider>
   );
-});
+};
 export { UnsavedContext, UnsavedProvider };

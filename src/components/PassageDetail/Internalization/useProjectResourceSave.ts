@@ -1,7 +1,16 @@
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { Section, MediaFile, SectionResource } from '../../../model';
-import { Operation, TransformBuilder } from '@orbit/data';
+import {
+  MediaFile,
+  MediaFileD,
+  SectionResource,
+  SectionResourceD,
+} from '../../../model';
+import {
+  RecordIdentity,
+  RecordOperation,
+  RecordTransformBuilder,
+} from '@orbit/records';
 import {
   ArtifactTypeSlug,
   related,
@@ -22,7 +31,7 @@ import {
 import { useFullReference, IInfo } from '.';
 
 interface IProps {
-  t: TransformBuilder;
+  t: RecordTransformBuilder;
   media: MediaFile;
   i: IInfo;
   topicIn: string;
@@ -34,7 +43,7 @@ interface IProps {
 export const useProjectResourceSave = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const AddSectionResource = useSecResCreate({} as Section);
+  const AddSectionResource = useSecResCreate({} as RecordIdentity);
   const { getTypeId } = useArtifactType();
   const fullReference = useFullReference();
 
@@ -48,7 +57,7 @@ export const useProjectResourceSave = () => {
     const { t, media, i, topicIn, limitValue, mediafiles, sectionResources } =
       props;
     let topic = topicIn;
-    const ops: Operation[] = [];
+    const ops: RecordOperation[] = [];
     var medResRec: MediaFile | undefined = undefined;
     if (i.rec.type === 'passage')
       medResRec = mediafiles.find(
@@ -99,7 +108,7 @@ export const useProjectResourceSave = () => {
             {
               ...medResRec,
               attributes: { ...attr, segments },
-            } as MediaFile,
+            } as MediaFileD,
             user
           )
         );
@@ -113,7 +122,7 @@ export const useProjectResourceSave = () => {
             {
               ...medResRec,
               attributes: { ...attr, topic },
-            } as MediaFile,
+            } as MediaFileD,
             user
           )
         );
@@ -140,7 +149,7 @@ export const useProjectResourceSave = () => {
                   ...secResRec.attributes,
                   description: topic,
                 },
-              } as SectionResource,
+              } as SectionResourceD,
               user
             )
           );
@@ -178,7 +187,7 @@ export const useProjectResourceSave = () => {
       ops.push(
         ...UpdateRelatedRecord(
           t,
-          newMedia,
+          newMedia as MediaFileD,
           'artifactType',
           'artifacttype',
           resourceType,
@@ -189,7 +198,7 @@ export const useProjectResourceSave = () => {
         ops.push(
           ...UpdateRelatedRecord(
             t,
-            newMedia,
+            newMedia as MediaFileD,
             'passage',
             'passage',
             i.rec.id,
@@ -200,7 +209,7 @@ export const useProjectResourceSave = () => {
       ops.push(
         ...UpdateRelatedRecord(
           t,
-          newMedia,
+          newMedia as MediaFileD,
           'sourceMedia',
           'mediafile',
           media.id,
@@ -216,7 +225,7 @@ export const useProjectResourceSave = () => {
       await AddSectionResource(
         cnt,
         topic,
-        newMedia,
+        newMedia as RecordIdentity,
         i.rec.type === 'passage' ? i.rec.id : undefined,
         secId
       );

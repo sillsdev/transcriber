@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
-import { IState, MediaFile, ITranscriptionShowStrings } from '../model';
-import localStrings from '../selector/localize';
+import { MediaFile, ITranscriptionShowStrings } from '../model';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import {
   Button,
   TextField,
@@ -25,16 +21,10 @@ import {
   useTranscription,
   related,
 } from '../crud';
+import { useSelector, shallowEqual } from 'react-redux';
+import { transcriptionShowSelector } from '../selector';
 
-interface IStateProps {
-  t: ITranscriptionShowStrings;
-}
-
-interface IRecordProps {
-  mediafiles: Array<MediaFile>;
-}
-
-interface IProps extends IRecordProps, IStateProps {
+interface IProps {
   id: string;
   isMediaId?: boolean;
   visible: boolean;
@@ -45,7 +35,7 @@ interface IProps extends IRecordProps, IStateProps {
 
 function TranscriptionShow(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
-  const { id, isMediaId, t, visible, closeMethod, exportId, version } = props;
+  const { id, isMediaId, visible, closeMethod, exportId, version } = props;
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [open, setOpen] = useState(visible);
@@ -54,6 +44,10 @@ function TranscriptionShow(props: IProps) {
   const [fontData, setFontData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
   const getTranscription = useTranscription(true, undefined, version);
+  const t: ITranscriptionShowStrings = useSelector(
+    transcriptionShowSelector,
+    shallowEqual
+  );
   const loadStatus = (status: string) => {
     setFontStatus(status);
   };
@@ -80,7 +74,7 @@ function TranscriptionShow(props: IProps) {
   useEffect(() => {
     if (id) {
       let mediaRec = isMediaId
-        ? (memory.cache.query((q: QueryBuilder) =>
+        ? (memory.cache.query((q) =>
             q.findRecord({ type: 'mediafile', id })
           ) as MediaFile)
         : null;
@@ -165,14 +159,4 @@ function TranscriptionShow(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'transcriptionShow' }),
-});
-
-const mapRecordsToProps = {
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(TranscriptionShow) as any
-) as any;
+export default TranscriptionShow;

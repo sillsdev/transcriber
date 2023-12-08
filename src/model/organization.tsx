@@ -1,6 +1,7 @@
-import { Record, RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
+import { BaseModel } from './baseModel';
 
-export interface Organization extends Record {
+export interface Organization extends BaseModel {
   attributes: {
     name: string;
     slug: string;
@@ -23,5 +24,7 @@ export interface Organization extends Record {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type OrganizationD = Organization & InitializedRecord;
 
 export default Organization;

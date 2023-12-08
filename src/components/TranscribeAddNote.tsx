@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Passage,
+  PassageD,
   ITranscribeAddNoteStrings,
-  PassageStateChange,
+  PassageStateChangeD,
 } from '../model';
 import {
   Button,
@@ -17,11 +17,11 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { commentProps } from '../control';
 
 interface IProps {
-  passageIn?: Passage;
-  pscIn?: PassageStateChange;
+  passageIn?: PassageD;
+  pscIn?: PassageStateChangeD;
   visible: boolean;
-  addMethod?: (passageRec: Passage) => void;
-  editMethod?: (psc: PassageStateChange) => void;
+  addMethod?: (passageRec: PassageD) => void;
+  editMethod?: (psc: PassageStateChangeD) => void;
   cancelMethod?: () => void;
 }
 
@@ -53,7 +53,7 @@ function TranscribeAddNote(props: IProps) {
           ...passageIn?.attributes,
           lastComment: comment,
         },
-      } as Passage;
+      } as PassageD;
       if (addMethod) {
         addMethod(passage);
       }

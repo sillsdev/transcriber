@@ -11,17 +11,13 @@ import {
 } from '@mui/material';
 import { shallowEqual } from 'react-redux';
 import {
-  Comment,
-  Discussion,
-  Group,
-  GroupMembership,
+  CommentD,
+  DiscussionD,
   ICommentCardStrings,
   MediaFile,
-  User,
+  UserD,
 } from '../../model';
 import Confirm from '../AlertDialog';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   findRecord,
@@ -47,6 +43,7 @@ import { OldVernVersion } from '../../control/OldVernVersion';
 import { useArtifactType } from '../../crud';
 import { useSelector } from 'react-redux';
 import { commentCardSelector } from '../../selector';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -91,34 +88,20 @@ const StyledText = styled(TextField)<TextFieldProps>(({ theme }) => ({
   },
 }));
 
-interface IRecordProps {
-  mediafiles: Array<MediaFile>;
-  users: Array<User>;
-  groups: Array<Group>;
-  memberships: Array<GroupMembership>;
-}
-
 interface IProps {
-  comment: Comment;
-  discussion: Discussion;
+  comment: CommentD;
+  discussion: DiscussionD;
   commentNumber: number;
   onEditing: (val: boolean) => void;
   approvalStatus: boolean | undefined;
 }
 
-export const CommentCard = (props: IProps & IRecordProps) => {
-  const {
-    comment,
-    discussion,
-    commentNumber,
-    users,
-    groups,
-    memberships,
-    onEditing,
-    approvalStatus,
-  } = props;
+export const CommentCard = (props: IProps) => {
+  const { comment, discussion, commentNumber, onEditing, approvalStatus } =
+    props;
+  const users = useOrbitData<UserD[]>('user');
   const t: ICommentCardStrings = useSelector(commentCardSelector, shallowEqual);
-  const [author, setAuthor] = useState<User>();
+  const [author, setAuthor] = useState<UserD>();
   const [lang] = useGlobal('lang');
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
@@ -150,11 +133,7 @@ export const CommentCard = (props: IProps & IRecordProps) => {
     setApprovedx(value);
     approvedRef.current = value;
   };
-  const { getAuthor, hasPermission } = usePermissions({
-    users,
-    groups,
-    memberships,
-  });
+  const { getAuthor, hasPermission } = usePermissions();
 
   const reset = () => {
     setEditing(false);
@@ -167,12 +146,7 @@ export const CommentCard = (props: IProps & IRecordProps) => {
     toolChanged(comment.id, changed && valid);
   };
 
-  const saveComment = useSaveComment({
-    cb: reset,
-    users,
-    groups,
-    memberships,
-  });
+  const saveComment = useSaveComment({ cb: reset });
   const afterUploadcb = async (mediaId: string) => {
     saveComment(
       discussion.id,
@@ -219,7 +193,7 @@ export const CommentCard = (props: IProps & IRecordProps) => {
     }
   };
   const handleDelete = () => {
-    memory.update((t: TransformBuilder) =>
+    memory.update((t) =>
       t.removeRecord({
         type: 'comment',
         id: comment.id,
@@ -405,12 +379,4 @@ export const CommentCard = (props: IProps & IRecordProps) => {
     </StyledWrapper>
   );
 };
-const mapRecordsToProps = {
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  groups: (q: QueryBuilder) => q.findRecords('group'),
-  memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-};
-export default withData(mapRecordsToProps)(CommentCard) as any as (
-  props: IProps
-) => JSX.Element;
+export default CommentCard;

@@ -1,24 +1,20 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { User } from '../model';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
+import { UserD } from '../model';
 import { Avatar } from '@mui/material';
 import { makeAbbr } from '../utils';
 import { useAvatarSource } from '../crud';
 import { avatarSize } from '../control';
+import { useOrbitData } from '../hoc/useOrbitData';
 
-interface IRecordProps {
-  users: Array<User>;
-}
-
-interface IProps extends IRecordProps {
-  userRec?: User;
+interface IProps {
+  userRec?: UserD;
   small?: boolean;
 }
 
 export function UserAvatar(props: IProps) {
-  const { userRec, users, small } = props;
+  const { userRec, small } = props;
+  const users = useOrbitData<UserD[]>('user');
   const [user] = useGlobal('user');
 
   const curUserRec = userRec
@@ -52,8 +48,4 @@ export function UserAvatar(props: IProps) {
   );
 }
 
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-};
-
-export default withData(mapRecordsToProps)(UserAvatar) as any;
+export default UserAvatar;

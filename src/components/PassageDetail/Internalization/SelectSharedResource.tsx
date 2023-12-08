@@ -11,10 +11,11 @@ import {
   ISharedStrings,
   IState,
   Passage,
+  PassageD,
   Resource,
   SharedResourceReference,
 } from '../../../model';
-import ShapingTable from '../../ShapingTable';
+import DataTable from '../../DataTable';
 import {
   findRecord,
   related,
@@ -36,7 +37,6 @@ import {
   sharedSelector,
 } from '../../../selector';
 import { useGlobal } from 'reactn';
-import { QueryBuilder } from '@orbit/data';
 import BigDialog from '../../../hoc/BigDialog';
 import {
   Box,
@@ -51,6 +51,7 @@ import {
 } from '@mui/material';
 import { ResourceTypeEnum } from './PassageDetailArtifacts';
 import BookSelect, { OptionType } from '../../BookSelect';
+import { RecordKeyMap } from '@orbit/records';
 
 export enum RefLevel {
   All,
@@ -183,7 +184,7 @@ export const SelectSharedResource = (props: IProps) => {
       setFindRef(passage.attributes.reference);
     } else if (scope === ResourceTypeEnum.sectionResource) {
       const secRefs: string[] = [];
-      const passages = related(section, 'passages') as Passage[];
+      const passages = related(section, 'passages') as PassageD[];
       passages.forEach((recId) => {
         const passRec = findRecord(memory, 'passage', recId.id) as Passage;
         secRefs.push(passRec.attributes.reference);
@@ -203,11 +204,11 @@ export const SelectSharedResource = (props: IProps) => {
           remoteIdNum(
             'sharedresource',
             related(sr, 'sharedResource'),
-            memory.keyMap
+            memory.keyMap as RecordKeyMap
           )
         );
       };
-      const refRecs = memory.cache.query((q: QueryBuilder) =>
+      const refRecs = memory.cache.query((q) =>
         q.findRecords('sharedresourcereference')
       ) as SharedResourceReference[];
       const bookRefs = refRecs.filter((r) => r.attributes.book === bookCd);
@@ -401,7 +402,7 @@ export const SelectSharedResource = (props: IProps) => {
           ))}
         </ReferenceLevel>
       </Stack>
-      <ShapingTable
+      <DataTable
         columns={columnDefs}
         columnWidths={columnWidths}
         columnFormatting={columnFormatting}

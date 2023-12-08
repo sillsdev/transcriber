@@ -1,8 +1,8 @@
 import { useGlobal } from 'reactn';
 import { Project } from '../model';
-import { TransformBuilder } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import { findRecord, useOfflnProjCreate, useOfflnProjRead } from '.';
+import { RecordTransformBuilder } from '@orbit/records';
 
 export const useOfflineAvailToggle = () => {
   const [memory] = useGlobal('memory');
@@ -15,17 +15,17 @@ export const useOfflineAvailToggle = () => {
     if (offlineProject.attributes) {
       // local update only, migrate offlineproject to include offlineAvailable
       const backup = coordinator.getSource('backup') as IndexedDBSource;
-      await memory.sync(
-        await backup.push((t: TransformBuilder) => [
-          t.updateRecord({
-            ...offlineProject,
-            attributes: {
-              ...offlineProject.attributes,
-              offlineAvailable: !offlineProject?.attributes?.offlineAvailable,
-            },
-          }),
-        ])
-      );
+      const transform = (t: RecordTransformBuilder) => [
+        t.updateRecord({
+          ...offlineProject,
+          attributes: {
+            ...offlineProject.attributes,
+            offlineAvailable: !offlineProject?.attributes?.offlineAvailable,
+          },
+        }),
+      ];
+      await backup.sync(transform);
+      await memory.sync(transform);
     } else {
       var project = findRecord(memory, 'project', projectId) as Project;
       await createOP(project); //created as true

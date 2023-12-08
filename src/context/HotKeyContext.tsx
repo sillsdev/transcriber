@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { connect } from 'react-redux';
-import { IHotKeyStrings, IState } from '../model';
-import localStrings from '../selector/localize';
+import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { IHotKeyStrings } from '../model';
 import { useMounted } from '../utils';
+import { useSelector } from 'react-redux';
+import { hotKeySelector } from '../selector';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 const initState = {
   subscribe: (key: string, cb: () => boolean) => {},
@@ -20,15 +20,6 @@ interface IContext {
 }
 
 const HotKeyContext = React.createContext({} as IContext);
-interface IStateProps {
-  t: IHotKeyStrings;
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'hotKey' }),
-});
-interface IProps extends IStateProps {
-  children: any;
-}
 interface hotKeyInfo {
   key: string;
   ctrl?: boolean;
@@ -37,8 +28,8 @@ interface hotKeyInfo {
   cb: () => boolean;
 }
 
-const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
-  const { t } = props;
+const HotKeyProvider = (props: PropsWithChildren) => {
+  const t: IHotKeyStrings = useSelector(hotKeySelector);
   const hotKeys = useRef<hotKeyInfo[]>([]);
 
   const [state, setState] = useState({
@@ -179,6 +170,6 @@ const HotKeyProvider = connect(mapStateToProps)((props: IProps) => {
       <div onKeyDown={handleKeyDown}>{props.children}</div>
     </HotKeyContext.Provider>
   );
-});
+};
 
 export { HotKeyContext, HotKeyProvider };

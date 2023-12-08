@@ -56,6 +56,7 @@ import { useRefErrTest } from './useRefErrTest';
 import { ExtraIcon } from '.';
 import { usePlanSheetFill } from './usePlanSheetFill';
 import { useShowIcon } from './useShowIcon';
+import { RecordKeyMap } from '@orbit/records';
 
 const DOWN_ARROW = 'ARROWDOWN';
 export const SectionSeqCol = 0;
@@ -550,7 +551,11 @@ export function PlanSheet(props: IProps) {
       const lastPasId = localStorage.getItem(localUserKey(LocalKey.passage));
       let row = -1;
       if (lastPasId) {
-        const pasGuid = remoteIdGuid('passage', lastPasId, memory.keyMap);
+        const pasGuid = remoteIdGuid(
+          'passage',
+          lastPasId,
+          memory.keyMap as RecordKeyMap
+        );
         row = rowInfo.findIndex((r) => r.passage?.id === pasGuid);
       }
       if (row >= 0) {

@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 
 export interface Invitation extends BaseModel {
@@ -19,4 +19,7 @@ export interface Invitation extends BaseModel {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type InvitationD = Invitation & InitializedRecord;
+
 export default Invitation;

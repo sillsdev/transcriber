@@ -4,16 +4,14 @@ import {
   ArtifactCategory,
   Discussion,
   IArtifactCategoryStrings,
-  IState,
 } from '../../model';
-import localStrings from '../../selector/localize';
-import QueryBuilder from '@orbit/data/dist/types/query-builder';
-import { connect } from 'react-redux';
-import { withData } from 'react-orbitjs';
 import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import SelectedIcon from '@mui/icons-material/CheckBoxOutlined';
 import NotSelectedIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import { related, useDiscussionOrg } from '../../crud';
+import { useOrbitData } from '../../hoc/useOrbitData';
+import { shallowEqual, useSelector } from 'react-redux';
+import { artifactCategorySelector } from '../../selector';
 
 export interface CatData {
   id: string;
@@ -22,22 +20,21 @@ export interface CatData {
   count: number;
 }
 
-interface IStateProps {
-  t: IArtifactCategoryStrings;
-}
-interface IRecordProps {
-  discussions: Discussion[];
-  artifactCategory: ArtifactCategory[];
-}
-interface IProps extends IStateProps, IRecordProps {
+interface IProps {
   catFilter: CatData[];
   onCatFilter: (catData: CatData[]) => void;
 }
 
 export function CategoryList(props: IProps) {
-  const { catFilter, onCatFilter, discussions, artifactCategory, t } = props;
+  const { catFilter, onCatFilter } = props;
+  const discussions = useOrbitData<Discussion[]>('discussion');
+  const artifactCategory = useOrbitData<ArtifactCategory[]>('artifactcategory');
   const [organization] = useGlobal('organization');
   const discussionOrg = useDiscussionOrg();
+  const t: IArtifactCategoryStrings = useSelector(
+    artifactCategorySelector,
+    shallowEqual
+  );
 
   const handleToggle = (id: string) => () => {
     onCatFilter(
@@ -103,14 +100,4 @@ export function CategoryList(props: IProps) {
   );
 }
 
-const mapStateToProps = (catFilter: IState): IStateProps => ({
-  t: localStrings(catFilter, { layout: 'artifactCategory' }),
-});
-const mapRecordsToProps = {
-  discussions: (q: QueryBuilder) => q.findRecords('discussion'),
-  artifactCategory: (q: QueryBuilder) => q.findRecords('artifactcategory'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(CategoryList) as any as any
-) as any;
+export default CategoryList;

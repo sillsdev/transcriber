@@ -1,14 +1,23 @@
-import { KeyMap, Record } from '@orbit/data';
+import { RecordKeyMap, InitializedRecord } from '@orbit/records';
 
-export const remoteIdGuid = (table: string, remoteId: string, keyMap: KeyMap) =>
-  keyMap.keyToId(table, 'remoteId', remoteId);
-export const remoteId = (table: string, localId: string, keyMap: KeyMap) =>
-  keyMap.idToKey(table, 'remoteId', localId);
-export const remoteIdNum = (table: string, localId: string, keyMap: KeyMap) =>
-  parseInt(remoteId(table, localId, keyMap));
+export const remoteIdGuid = (
+  table: string,
+  remoteId: string,
+  keyMap: RecordKeyMap
+) => keyMap.keyToId(table, 'remoteId', remoteId);
+export const remoteId = (
+  table: string,
+  localId: string,
+  keyMap: RecordKeyMap
+) => keyMap.idToKey(table, 'remoteId', localId);
+export const remoteIdNum = (
+  table: string,
+  localId: string,
+  keyMap: RecordKeyMap
+) => parseInt(remoteId(table, localId, keyMap) as string);
 export const waitForRemoteId = async (
-  rec: Record,
-  keyMap: KeyMap
+  rec: InitializedRecord,
+  keyMap: RecordKeyMap
 ): Promise<string> => {
   let maxTries = 5 * 60; // 300 tries for five minutes
   while (maxTries > 0) {
@@ -22,7 +31,7 @@ export const waitForRemoteId = async (
 export const waitForLocalId = async (
   table: string,
   remoteId: string,
-  keyMap: KeyMap
+  keyMap: RecordKeyMap
 ) => {
   let maxTries = 5 * 60; // 300 tries for five minutes
   while (maxTries > 0) {

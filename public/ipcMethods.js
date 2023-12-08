@@ -11,7 +11,6 @@ const { createAuthWindow, createLogoutWindow } = require('./auth-process');
 const authService = require('./auth-service');
 const fs = require('fs-extra');
 const unzipper = require('unzipper');
-const execa = require('execa');
 const AdmZip = require('adm-zip');
 const {
   downloadFile,
@@ -19,6 +18,11 @@ const {
   downloadClose,
 } = require('./downloadFile');
 const generateUUID = require('./generateUUID');
+const convert = require('xml-js');
+const ChildProcess = require('child_process');
+// Importing a ESM module https://stackoverflow.com/questions/69041454/error-require-of-es-modules-is-not-supported-when-importing-node-fetch
+const execa = (...args) =>
+  import('execa').then(({ default: execa }) => execa(...args));
 
 const ipcMethods = () => {
   ipcMain.handle('availSpellLangs', async () => {
@@ -61,7 +65,7 @@ const ipcMethods = () => {
     ]);
     const cmd = platformMap.get(process.platform);
     return new Promise((resolve, reject) => {
-      require('child_process').exec(cmd, (err, stdout, stderr) => {
+      ChildProcess.exec(cmd, (err, stdout, stderr) => {
         if (err) reject(err);
 
         resolve(stdout.toLowerCase().indexOf(name.toLowerCase()) > -1);
@@ -164,8 +168,6 @@ const ipcMethods = () => {
     }
   });
 
-  const convert = require('xml-js');
-
   ipcMain.handle('fileJson', async (event, settings) => {
     if (fs.existsSync(settings)) {
       const data = fs.readFileSync(settings, 'utf-8');
@@ -256,12 +258,19 @@ const ipcMethods = () => {
   });
   ipcMain.handle('zipExtractOpen', async (event, zip, folder) => {
     return new Promise((resolve, reject) => {
-      unzipper.Open.file(zip).then((d) =>
-        d.extract({ path: folder, concurrency: 5 })
-        .then(() => resolve())
-        .catch((err) => { reject(err); }))
-      .catch((err) => { reject(err); });
-    })
+      unzipper.Open.file(zip)
+        .then((d) =>
+          d
+            .extract({ path: folder, concurrency: 5 })
+            .then(() => resolve())
+            .catch((err) => {
+              reject(err);
+            })
+        )
+        .catch((err) => {
+          reject(err);
+        });
+    });
   });
 
   ipcMain.handle('zipClose', async (event, zip) => {

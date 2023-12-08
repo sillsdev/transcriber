@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { Role, RoleNames, User } from '../model';
-import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
+import { Role, RoleD, RoleNames, User } from '../model';
+import { InitializedRecord } from '@orbit/records';
 import { findRecord, related } from '../crud';
 import { logError, Severity } from '../utils';
 import { ReplaceRelatedRecord } from '../model/baseModel';
@@ -14,13 +14,13 @@ export const useRole = () => {
   const [errorReporter] = useGlobal('errorReporter');
 
   interface IUniqueRoles {
-    [key: string]: Role;
+    [key: string]: RoleD;
   }
 
   const roles = React.useMemo(() => {
     const uniqueRoles = {} as IUniqueRoles;
     const allRoles = (
-      memory.cache.query((q: QueryBuilder) => q.findRecords('role')) as Role[]
+      memory.cache.query((q) => q.findRecords('role')) as RoleD[]
     ).filter((r) => r.attributes.orgRole);
     allRoles.forEach((r) => {
       if (offlineOnly !== Boolean(r?.keys?.remoteId)) {
@@ -50,12 +50,6 @@ export const useRole = () => {
   const userIsOrgAdmin = (orgId: string) =>
     getMyOrgRole(orgId) === RoleNames.Admin;
 
-  const getRoleId = function (role: RoleNames): string {
-    let findit = getRoleRec(role);
-    if (findit.length > 0) return findit[0].id;
-    return '';
-  };
-
   const getRoleRec = (role: RoleNames) =>
     roles.filter(
       (r) =>
@@ -64,17 +58,23 @@ export const useRole = () => {
         r.attributes.roleName.toLowerCase() === role.toLowerCase()
     );
 
+  const getRoleId = function (role: RoleNames): string {
+    let findit = getRoleRec(role);
+    if (findit.length > 0) return findit[0].id;
+    return '';
+  };
+
   const getMbrRoleRec = (relate: string, id: string, userId: string) => {
     const tableName = 'organizationmembership';
-    const table = memory.cache.query((q: QueryBuilder) =>
+    const table = memory.cache.query((q) =>
       q.findRecords(tableName)
-    ) as Record[];
+    ) as InitializedRecord[];
     return table.filter(
       (tbl) => related(tbl, 'user') === userId && related(tbl, relate) === id
     );
   };
 
-  const getMbrRole = (memberRecs: Record[]) => {
+  const getMbrRole = (memberRecs: InitializedRecord[]) => {
     if (memberRecs.length === 1) {
       var roleId = related(memberRecs[0], 'role');
       if (!roleId) {
@@ -85,11 +85,11 @@ export const useRole = () => {
           `missing role:${memberRecs[0].keys?.remoteId}`
         );
         roleId = getRoleId(RoleNames.Admin);
-        memory.update((t: TransformBuilder) => [
+        memory.update((t) => [
           ...ReplaceRelatedRecord(t, memberRecs[0], 'role', 'role', roleId),
         ]);
       }
-      const roleRec = memory.cache.query((q: QueryBuilder) =>
+      const roleRec = memory.cache.query((q) =>
         q.findRecord({ type: 'role', id: roleId })
       ) as Role;
 
@@ -106,7 +106,7 @@ export const useRole = () => {
 
   const setMyOrgRole = (orgId: string) => {
     const role = getMyOrgRole(orgId);
-    setOrgRole(role);
+    if (role !== orgRole) setOrgRole(role);
     return role;
   };
 

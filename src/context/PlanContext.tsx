@@ -1,42 +1,23 @@
 import React, { useEffect, useState } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
+import { shallowEqual } from 'react-redux';
 import {
-  IState,
   IMainStrings,
   IProjButtonsStrings,
-  Project,
+  ProjectD,
   MediaFile,
   Discussion,
   GroupMembership,
 } from '../model';
-import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import { usePlanType, useRole } from '../crud';
 import { useCheckOnline, useInterval } from '../utils';
 import { useProjectDefaults } from '../crud/useProjectDefaults';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { useSelector } from 'react-redux';
+import { projButtonsSelector } from '../selector';
 
 export const ProjectHidePublishing = 'hidePublishing';
-
-interface IStateProps {
-  projButtonStr: IProjButtonsStrings;
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-  projButtonStr: localStrings(state, { layout: 'projButtons' }),
-});
-
-interface IRecordProps {
-  mediafiles: MediaFile[];
-  discussions: Discussion[];
-  groupmemberships: GroupMembership[];
-}
-const mapRecordsToProps = {
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  discussions: (q: QueryBuilder) => q.findRecords('discussion'),
-  groupmemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-};
 
 export interface IRowData {}
 
@@ -66,102 +47,106 @@ interface IContext {
 
 const PlanContext = React.createContext({} as IContext);
 
-interface IProps extends IStateProps, IRecordProps {
+interface IProps {
   children: React.ReactElement;
 }
 
-const PlanProvider = withData(mapRecordsToProps)(
-  connect(mapStateToProps)((props: IProps) => {
-    const { projButtonStr, mediafiles, discussions, groupmemberships } = props;
-    const [memory] = useGlobal('memory');
-    const [plan] = useGlobal('plan');
-    const [project] = useGlobal('project');
-    const [connected] = useGlobal('connected');
-    const [isOffline] = useGlobal('offline');
-    const [offlineOnly] = useGlobal('offlineOnly');
-    const getPlanType = usePlanType();
-    const { userIsAdmin } = useRole();
-    const { setProjectDefault, getProjectDefault } = useProjectDefaults();
-    const [readonly, setReadOnly] = useState(
-      (isOffline && !offlineOnly) || !userIsAdmin
-    );
-    const [state, setState] = useState({
-      ...initState,
-      projButtonStr,
-      mediafiles,
-      discussions,
-      groupmemberships,
-    });
-    const checkOnline = useCheckOnline();
+const PlanProvider = (props: IProps) => {
+  const mediafiles = useOrbitData<MediaFile[]>('mediafile');
+  const discussions = useOrbitData<Discussion[]>('discussion');
+  const groupmemberships = useOrbitData<GroupMembership[]>('groupmembership');
+  const projButtonStr: IProjButtonsStrings = useSelector(
+    projButtonsSelector,
+    shallowEqual
+  );
+  const [memory] = useGlobal('memory');
+  const [plan] = useGlobal('plan');
+  const [project] = useGlobal('project');
+  const [connected] = useGlobal('connected');
+  const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
+  const getPlanType = usePlanType();
+  const { userIsAdmin } = useRole();
+  const { setProjectDefault, getProjectDefault } = useProjectDefaults();
+  const [readonly, setReadOnly] = useState(
+    (isOffline && !offlineOnly) || !userIsAdmin
+  );
+  const [state, setState] = useState({
+    ...initState,
+    projButtonStr,
+    mediafiles,
+    discussions,
+    groupmemberships,
+  });
+  const checkOnline = useCheckOnline();
 
-    useEffect(() => {
-      const { scripture, flat } = getPlanType(plan);
-      if (flat !== state.flat || scripture !== state.scripture)
-        setState((state) => ({ ...state, flat, scripture }));
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [plan]);
+  useEffect(() => {
+    const { scripture, flat } = getPlanType(plan);
+    if (flat !== state.flat || scripture !== state.scripture)
+      setState((state) => ({ ...state, flat, scripture }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plan]);
 
-    useEffect(() => {
-      let projRec: Project | null = null;
-      if (project && project !== '')
-        projRec = memory.cache.query((q: QueryBuilder) =>
-          q.findRecord({ type: 'project', id: project })
-        ) as Project;
-      if (projRec !== null) {
-        const shared = projRec?.attributes?.isPublic || false;
-        const hidePublishing = getProjectDefault(ProjectHidePublishing) ?? true;
-        if (
-          shared !== state.shared ||
-          hidePublishing !== state[ProjectHidePublishing]
-        ) {
-          setState((state) => ({
-            ...state,
-            shared,
-            hidePublishing,
-          }));
-        }
+  useEffect(() => {
+    let projRec: ProjectD | null = null;
+    if (project && project !== '')
+      projRec = memory.cache.query((q) =>
+        q.findRecord({ type: 'project', id: project })
+      ) as ProjectD;
+    if (projRec !== null) {
+      const shared = projRec?.attributes?.isPublic || false;
+      const hidePublishing = getProjectDefault(ProjectHidePublishing) ?? true;
+      if (
+        shared !== state.shared ||
+        hidePublishing !== state[ProjectHidePublishing]
+      ) {
+        setState((state) => ({
+          ...state,
+          shared,
+          hidePublishing,
+        }));
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [project]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project]);
 
-    const setCanPublish = (canHidePublishing: boolean) => {
-      setState((state) => ({ ...state, canHidePublishing }));
-    };
+  const setCanPublish = (canHidePublishing: boolean) => {
+    setState((state) => ({ ...state, canHidePublishing }));
+  };
 
-    const togglePublishing = () => {
-      const { hidePublishing } = state;
-      setProjectDefault(ProjectHidePublishing, !hidePublishing);
-      setState((state) => ({ ...state, hidePublishing: !hidePublishing }));
-    };
+  const togglePublishing = () => {
+    const { hidePublishing } = state;
+    setProjectDefault(ProjectHidePublishing, !hidePublishing);
+    setState((state) => ({ ...state, hidePublishing: !hidePublishing }));
+  };
 
-    React.useEffect(() => {
-      const newValue = (isOffline && !offlineOnly) || !userIsAdmin;
-      if (readonly !== newValue) setReadOnly(newValue);
-    }, [userIsAdmin, isOffline, offlineOnly, readonly]);
+  React.useEffect(() => {
+    const newValue = (isOffline && !offlineOnly) || !userIsAdmin;
+    if (readonly !== newValue) setReadOnly(newValue);
+  }, [userIsAdmin, isOffline, offlineOnly, readonly]);
 
-    //do this every 30 seconds to warn they can't save
-    useInterval(
-      () => checkOnline((result: boolean) => {}),
-      isOffline ? null : 1000 * 30
-    );
+  //do this every 30 seconds to warn they can't save
+  useInterval(
+    () => checkOnline((result: boolean) => {}),
+    isOffline ? null : 1000 * 30
+  );
 
-    return (
-      <PlanContext.Provider
-        value={{
-          state: {
-            ...state,
-            connected,
-            readonly,
-            togglePublishing,
-            setCanPublish,
-          },
-          setState,
-        }}
-      >
-        {props.children}
-      </PlanContext.Provider>
-    );
-  })
-);
+  return (
+    <PlanContext.Provider
+      value={{
+        state: {
+          ...state,
+          connected,
+          readonly,
+          togglePublishing,
+          setCanPublish,
+        },
+        setState,
+      }}
+    >
+      {props.children}
+    </PlanContext.Provider>
+  );
+};
 
 export { PlanContext, PlanProvider };

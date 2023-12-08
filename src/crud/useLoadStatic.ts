@@ -1,5 +1,6 @@
 import { useGlobal } from 'reactn';
 import JSONAPISource from '@orbit/jsonapi';
+import { pullRemoteToMemory } from './syncToMemory';
 
 export const useLoadStatic = () => {
   const [memory] = useGlobal('memory');
@@ -19,7 +20,7 @@ export const useLoadStatic = () => {
       'workflowstep',
     ];
     for (const table of tables) {
-      await memory.sync(await remote.pull((q) => q.findRecords(table)));
+      await pullRemoteToMemory({ table, memory, remote });
     }
     return true;
   };

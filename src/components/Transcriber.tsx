@@ -9,7 +9,6 @@ import React, {
 } from 'react';
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
-import { connect } from 'react-redux';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import {
   default as SplitPaneBar,
@@ -24,6 +23,7 @@ import {
   Project,
   ActivityStates,
   Passage,
+  PassageD,
   Section,
   IState,
   Integration,
@@ -31,7 +31,6 @@ import {
   IActivityStateStrings,
   IVProjectStrings,
 } from '../model';
-import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import {
   Grid,
   Paper,
@@ -84,10 +83,7 @@ import { debounce } from 'lodash';
 import { AllDone } from './AllDone';
 import { LastEdit } from '../control';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
-import { withData } from 'react-orbitjs';
-import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
-import { bindActionCreators } from 'redux';
 import { translateParatextError } from '../utils/translateParatextError';
 import TranscribeAddNote from './TranscribeAddNote';
 import PassageHistory from './PassageHistory';
@@ -110,6 +106,14 @@ import {
   initProjectState,
 } from './Team/ProjectDialog';
 import BigDialog from '../hoc/BigDialog';
+import { useOrbitData } from '../hoc/useOrbitData';
+import {
+  InitializedRecord,
+  RecordTransformBuilder,
+  RecordOperation,
+  RecordKeyMap,
+} from '@orbit/records';
+import { useDispatch } from 'react-redux';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -180,45 +184,6 @@ const Pane = (props: PaneProps & PropsWithChildren) => {
   return <PaneBar {...props} className={props.className || 'pane'} />;
 };
 
-interface IRecordProps {
-  mediafiles: MediaFile[];
-  integrations: Integration[];
-  projintegrations: ProjectIntegration[];
-}
-const mapRecordsToProps = {
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  integrations: (q: QueryBuilder) => q.findRecords('integration'),
-  projintegrations: (q: QueryBuilder) => q.findRecords('projectintegration'),
-};
-
-const mapDispatchToProps = (dispatch: any) => ({
-  ...bindActionCreators(
-    {
-      getUserName: action.getUserName,
-      getParatextText: action.getParatextText,
-      getParatextTextLocal: action.getParatextTextLocal,
-      resetParatextText: action.resetParatextText,
-    },
-    dispatch
-  ),
-});
-
-interface IDispatchProps {
-  getUserName: typeof action.getUserName;
-  getParatextText: typeof action.getParatextText;
-  getParatextTextLocal: typeof action.getParatextTextLocal;
-  resetParatextText: typeof action.resetParatextText;
-}
-interface IStateProps {
-  paratext_textStatus?: IAxiosStatus;
-  paratext_username: string; // state.paratext.username
-  paratext_usernameStatus?: IAxiosStatus;
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-  paratext_textStatus: state.paratext.textStatus,
-  paratext_username: state.paratext.username,
-  paratext_usernameStatus: state.paratext.usernameStatus,
-});
 interface IProps {
   defaultWidth: number;
   stepSettings?: string;
@@ -234,9 +199,7 @@ interface ITrans {
   position: number;
 }
 
-export function Transcriber(
-  props: IProps & IStateProps & IDispatchProps & IRecordProps
-) {
+export function Transcriber(props: IProps) {
   const {
     stepSettings,
     hasChecking,
@@ -244,17 +207,52 @@ export function Transcriber(
     onReopen,
     onReject,
     onReloadPlayer,
-    mediafiles,
-    projintegrations,
-    integrations,
-    paratext_textStatus,
-    paratext_username,
-    paratext_usernameStatus,
-    getUserName,
-    getParatextText,
-    getParatextTextLocal,
-    resetParatextText,
   } = props;
+  const paratext_textStatus = useSelector(
+    (state: IState) => state.paratext.textStatus
+  );
+  const paratext_username = useSelector(
+    (state: IState) => state.paratext.username
+  );
+  const paratext_usernameStatus = useSelector(
+    (state: IState) => state.paratext.usernameStatus
+  );
+  const dispatch = useDispatch();
+  const resetParatextText = () => dispatch(action.resetParatextText());
+  const getUserName = (token: string, errorReporter: any, msg: string) =>
+    dispatch(action.getUserName(token, errorReporter, msg));
+  const getParatextText = (
+    token: string,
+    passageId: number,
+    artifactId: string | null,
+    errorReporter: any,
+    pendingmsg: string
+  ) =>
+    dispatch(
+      action.getParatextText(
+        token,
+        passageId,
+        artifactId,
+        errorReporter,
+        pendingmsg
+      )
+    );
+  const getParatextTextLocal = (
+    ptPath: string,
+    passage: Passage,
+    ptProjName: string,
+    errorReporter: any,
+    pendingmsg: string
+  ) =>
+    dispatch(
+      action.getParatextTextLocal(
+        ptPath,
+        passage,
+        ptProjName,
+        errorReporter,
+        pendingmsg
+      )
+    );
   const {
     rowData,
     index,
@@ -265,6 +263,10 @@ export function Transcriber(
     allDone,
     artifactId,
   } = useTodo();
+  const mediafiles = useOrbitData<MediaFile[]>('mediafile');
+  const integrations = useOrbitData<Integration[]>('integration');
+  const projintegrations =
+    useOrbitData<ProjectIntegration[]>('projectintegration');
 
   const { slug } = useParams();
   const { section, passage, mediafile, state, role } = rowData[index] || {
@@ -467,7 +469,8 @@ export function Transcriber(
             integrationSlug(artifactTypeSlug, offlineOnly) &&
           Boolean(i.keys?.remoteId) !== offlineOnly
       );
-      if (intfind > -1) setParatextIntegration(integrations[intfind].id);
+      if (intfind > -1)
+        setParatextIntegration(integrations[intfind].id as string);
     };
     if (playerSize < INIT_PLAYER_HEIGHT) setPlayerSize(INIT_PLAYER_HEIGHT);
     getParatextIntegration();
@@ -502,7 +505,8 @@ export function Transcriber(
             integrationSlug(artifactTypeSlug, offlineOnly) &&
           Boolean(i.keys?.remoteId) !== offlineOnly
       );
-      if (intfind > -1) setParatextIntegration(integrations[intfind].id);
+      if (intfind > -1)
+        setParatextIntegration(integrations[intfind].id as string);
     };
 
     getParatextIntegration();
@@ -698,8 +702,17 @@ export function Transcriber(
     } else {
       getParatextText(
         accessToken || '',
-        remoteIdNum('passage', passage.id, memory.keyMap),
-        artifactId && remoteId('artifacttype', artifactId, memory.keyMap),
+        remoteIdNum(
+          'passage',
+          passage.id as string,
+          memory.keyMap as RecordKeyMap
+        ),
+        artifactId &&
+          (remoteId(
+            'artifacttype',
+            artifactId,
+            memory.keyMap as RecordKeyMap
+          ) as string),
         errorReporter,
         t.pullParatextStart
       );
@@ -717,11 +730,11 @@ export function Transcriber(
     setRejectVisible(false);
     await memory.update(
       UpdateMediaStateOps(
-        media.id,
-        passage.id,
+        media.id as string,
+        passage.id as string,
         media.attributes.transcriptionstate,
         user,
-        new TransformBuilder(),
+        new RecordTransformBuilder(),
         [],
         memory,
         comment
@@ -733,11 +746,11 @@ export function Transcriber(
   };
   const handleRejectCancel = () => setRejectVisible(false);
 
-  const handleAddNote = async (pass: Passage) => {
+  const handleAddNote = async (pass: PassageD) => {
     setAddNoteVisible(false);
-    var ops = [] as Operation[];
+    var ops = [] as RecordOperation[];
     AddPassageStateChangeToOps(
-      new TransformBuilder(),
+      new RecordTransformBuilder(),
       ops,
       pass.id,
       '',
@@ -787,14 +800,14 @@ export function Transcriber(
   };
 
   const handleAssign = async (curState: string) => {
-    const secRec = findRecord(memory, 'section', section.id);
+    const secRec = findRecord(memory, 'section', section.id as string);
     const role = stateRole[curState];
     if (secRec && role) {
       const assigned = related(secRec, role);
       if (!assigned || assigned === '') {
         await memory.update(
           UpdateRelatedRecord(
-            new TransformBuilder(),
+            new RecordTransformBuilder(),
             section,
             role,
             'user',
@@ -880,8 +893,8 @@ export function Transcriber(
       saving.current = true;
       let transcription = transcriptionRef.current.firstChild.value;
       const curState = stateRef.current;
-      const tb = new TransformBuilder();
-      let ops: Operation[] = [];
+      const tb = new RecordTransformBuilder();
+      let ops: RecordOperation[] = [];
       //todo
       //always update the state, because we need the dateupdated to be updated
       if (stateRef.current !== nextState || thiscomment)
@@ -911,7 +924,7 @@ export function Transcriber(
               ),
               transcriptionstate: nextState,
             },
-          } as any as MediaFile,
+          } as InitializedRecord & MediaFile,
           user
         )
       );
@@ -959,7 +972,7 @@ export function Transcriber(
           passage.id,
           previous[state],
           user,
-          new TransformBuilder(),
+          new RecordTransformBuilder(),
           [],
           memory,
           ''
@@ -1313,6 +1326,4 @@ export function Transcriber(
   );
 }
 
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(Transcriber as any) as any
-) as any as (props: IProps) => JSX.Element;
+export default Transcriber;

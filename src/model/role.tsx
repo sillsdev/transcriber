@@ -1,4 +1,8 @@
-import { Record, RecordRelationship } from '@orbit/data';
+import {
+  InitializedRecord,
+  RecordRelationship,
+  UninitializedRecord,
+} from '@orbit/records';
 
 export enum RoleNames {
   Admin = 'Admin',
@@ -6,7 +10,7 @@ export enum RoleNames {
   SuperAdmin = 'SuperAdmin',
 }
 
-export interface Role extends Record {
+export interface Role extends UninitializedRecord {
   attributes: {
     orgRole: boolean;
     roleName: string;
@@ -16,4 +20,7 @@ export interface Role extends Record {
     users: RecordRelationship;
   };
 }
+
+export type RoleD = Role & InitializedRecord;
+
 export default Role;

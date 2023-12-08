@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 
 export interface Discussion extends BaseModel {
@@ -21,4 +21,7 @@ export interface Discussion extends BaseModel {
     orgWorkflowStep: RecordRelationship;
   };
 }
+
+export type DiscussionD = Discussion & InitializedRecord;
+
 export default Discussion;

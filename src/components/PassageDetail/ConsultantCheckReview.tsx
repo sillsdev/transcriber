@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { MediaFile } from '../../model';
+import { MediaFileD } from '../../model';
 import {
   ArtifactTypeSlug,
   useArtifactType,
@@ -41,7 +41,7 @@ export default function ConsultantCheckReview({
   playId,
 }: IProps) {
   const { rowData, mediafileId } = usePassageDetailContext();
-  const [allMedia, setAllMedia] = useState<MediaFile[]>([]);
+  const [allMedia, setAllMedia] = useState<MediaFileD[]>([]);
   const { localizedArtifactType } = useArtifactType();
   const t = useSelector(consultantSelector, shallowEqual);
 

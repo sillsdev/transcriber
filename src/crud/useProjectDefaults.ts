@@ -1,7 +1,6 @@
-import { TransformBuilder } from '@orbit/data';
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { Project, RoleNames } from '../model';
+import { Project, ProjectD, RoleNames } from '../model';
 import { UpdateRecord } from '../model/baseModel';
 import { findRecord } from './tryFindRecord';
 
@@ -20,12 +19,12 @@ export const useProjectDefaults = () => {
     return undefined;
   };
   const setProjectDefault = (label: string, value: any) => {
-    const proj = findRecord(memory, 'project', project) as Project;
+    const proj = findRecord(memory, 'project', project) as ProjectD;
     const json = JSON.parse(proj.attributes.defaultParams ?? '{}');
     if (value !== undefined) json[label] = JSON.stringify(value);
     else delete json[label];
     proj.attributes.defaultParams = JSON.stringify(json);
-    memory.update((t: TransformBuilder) => UpdateRecord(t, proj, user));
+    memory.update((t) => UpdateRecord(t, proj, user));
   };
 
   const canSetProjectDefault = useMemo(

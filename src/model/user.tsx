@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 export enum DigestPreference {
   noDigest = 0,
@@ -37,6 +37,8 @@ export interface User extends BaseModel {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type UserD = User & InitializedRecord;
 
 export interface CurrentUser extends User {
   attributes: {

@@ -1,9 +1,12 @@
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { related, remoteIdGuid } from '../crud';
-import { ActivityStates, PassageStateChange, User } from '../model';
-import { withData } from 'react-orbitjs';
+import {
+  ActivityStates,
+  PassageStateChange,
+  PassageStateChangeD,
+  UserD,
+} from '../model';
 import Confirm from './AlertDialog';
 import {
   IconButton,
@@ -22,23 +25,21 @@ import TranscribeAddNote from './TranscribeAddNote';
 import { UpdateRecord } from '../model/baseModel';
 import { dateOrTime } from '../utils';
 import { useUser } from '../crud';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { RecordKeyMap } from '@orbit/records';
 
-interface IStateProps {}
-interface IDispatchProps {}
-interface IRecordProps {
-  passagestatechanges: Array<PassageStateChange>;
-}
-
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+interface IProps {
   passageId: string;
   boxHeight: number;
 }
 
 export function PassageHistory(props: IProps) {
-  const { passageId, boxHeight, passagestatechanges } = props;
+  const { passageId, boxHeight } = props;
+  const passagestatechanges =
+    useOrbitData<PassageStateChangeD[]>('passagestatechange');
   const [memory] = useGlobal('memory');
   const [historyContent, setHistoryContent] = useState<any[]>();
-  const [curStateChanges, setCurStateChanges] = useState<PassageStateChange[]>(
+  const [curStateChanges, setCurStateChanges] = useState<PassageStateChangeD[]>(
     []
   );
   const [user] = useGlobal('user');
@@ -67,18 +68,18 @@ export function PassageHistory(props: IProps) {
 
   useEffect(() => {
     const historyItem = (
-      psc: PassageStateChange,
+      psc: PassageStateChangeD,
       comment: JSX.Element | string,
       type: string,
       editable: boolean
     ) => {
-      const userFromId = (psc: PassageStateChange): User => {
+      const userFromId = (psc: PassageStateChange): UserD => {
         var id = related(psc, 'lastModifiedByUser');
         if (!id && psc.attributes?.lastModifiedBy) {
           id = remoteIdGuid(
             'user',
             psc.attributes.lastModifiedBy.toString(),
-            memory.keyMap
+            memory.keyMap as RecordKeyMap
           );
         }
         return getUserRec(id);
@@ -187,9 +188,9 @@ export function PassageHistory(props: IProps) {
   const handleListItemClick = (id: string, editable: boolean) => {
     if (editable) setSelectedId(id);
   };
-  const handleEditNote = async (psc: PassageStateChange) => {
+  const handleEditNote = async (psc: PassageStateChangeD) => {
     setEditNoteVisible(false);
-    memory.update((t: TransformBuilder) => UpdateRecord(t, psc, user));
+    memory.update((t) => UpdateRecord(t, psc, user));
   };
   const handleEditNoteCancel = () => setEditNoteVisible(false);
 
@@ -240,7 +241,4 @@ export function PassageHistory(props: IProps) {
   );
 }
 
-const mapRecordsToProps = {
-  passagestatechanges: (q: QueryBuilder) => q.findRecords('passagestatechange'),
-};
-export default withData(mapRecordsToProps)(PassageHistory as any) as any;
+export default PassageHistory;

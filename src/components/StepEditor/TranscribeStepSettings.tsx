@@ -3,6 +3,7 @@ import { ArtifactTypeSlug, remoteIdGuid, useArtifactType } from '../../crud';
 import SelectArtifactType from '../Sheet/SelectArtifactType';
 import { ILanguage, Language } from '../../control';
 import { useGlobal } from 'reactn';
+import { RecordKeyMap } from '@orbit/records';
 
 interface LangState {
   artId: string;
@@ -71,7 +72,11 @@ export const TranscribeStepSettings = ({ toolSettings, onChange }: IProps) => {
   const hasLang = useMemo(() => {
     const id =
       (lgState.artId &&
-        remoteIdGuid('artifacttype', lgState.artId, memory.keyMap)) ??
+        remoteIdGuid(
+          'artifacttype',
+          lgState.artId,
+          memory.keyMap as RecordKeyMap
+        )) ??
       lgState.artId;
     return id && langSlugs.includes(slugFromId(id) as ArtifactTypeSlug);
     // eslint-disable-next-line react-hooks/exhaustive-deps

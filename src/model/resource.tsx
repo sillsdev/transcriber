@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 
 export interface Resource extends BaseModel {

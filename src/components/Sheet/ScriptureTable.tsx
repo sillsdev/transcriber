@@ -1,20 +1,16 @@
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { bindActionCreators } from 'redux';
-import { connect, shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import {
   IState,
   Section,
-  Passage,
   IPlanSheetStrings,
   IScriptureTableStrings,
-  BookNameMap,
-  BookName,
   ISharedStrings,
   MediaFile,
-  OptionType,
-  Plan,
+  MediaFileD,
+  PlanD,
   ISheet,
   IwsKind,
   IMediaShare,
@@ -25,14 +21,14 @@ import {
   Discussion,
   IResourceStrings,
   SheetLevel,
-  Graphic,
+  GraphicD,
+  SectionD,
+  PassageD,
+  OrgWorkflowStepD,
 } from '../../model';
-import localStrings from '../../selector/localize';
 import * as actions from '../../store';
-import { withData } from 'react-orbitjs';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
-import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
 import { Badge, Box, Link } from '@mui/material';
 import { useSnackBar } from '../../hoc/SnackBar';
 import PlanSheet, { ICellChange } from './PlanSheet';
@@ -93,7 +89,13 @@ import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { ISTFilterState } from './filterMenu';
 import { useProjectDefaults } from '../../crud/useProjectDefaults';
-import { sharedResourceSelector } from '../../selector';
+import {
+  planSheetSelector,
+  scriptureTableSelector,
+  sharedResourceSelector,
+  sharedSelector,
+  workflowStepsSelector,
+} from '../../selector';
 import { PassageTypeEnum } from '../../model/passageType';
 import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
 import { UploadType } from '../MediaUpload';
@@ -106,35 +108,11 @@ import {
 import Confirm from '../AlertDialog';
 import { getDefaultName } from './getDefaultName';
 import GraphicRights from '../GraphicRights';
+import { useOrbitData } from '../../hoc/useOrbitData';
+import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 
 const SaveWait = 500;
 export const FilterParam = 'ProjectFilter';
-
-interface IStateProps {
-  t: IScriptureTableStrings;
-  wfStr: IWorkflowStepsStrings;
-  s: IPlanSheetStrings;
-  ts: ISharedStrings;
-  lang: string;
-  bookSuggestions: OptionType[];
-  bookMap: BookNameMap;
-  allBookData: BookName[];
-}
-
-interface IDispatchProps {
-  fetchBooks: typeof actions.fetchBooks;
-}
-
-interface IRecordProps {
-  passages: Array<Passage>;
-  sections: Array<Section>;
-  mediafiles: Array<MediaFile>;
-  graphics: Array<Graphic>;
-  discussions: Array<Discussion>;
-  groupmemberships: Array<GroupMembership>;
-  workflowSteps: WorkflowStep[];
-  orgWorkflowSteps: OrgWorkflowStep[];
-}
 
 interface IProps {
   colNames: string[];
@@ -145,29 +123,34 @@ interface AudacityInfo {
   index: number;
 }
 
-export function ScriptureTable(
-  props: IProps & IStateProps & IDispatchProps & IRecordProps
-) {
-  const {
-    t,
-    wfStr,
-    s,
-    ts,
-    lang,
-    colNames,
-    bookSuggestions,
-    bookMap,
-    allBookData,
-    fetchBooks,
-    passages,
-    sections,
-    mediafiles,
-    graphics,
-    discussions,
-    groupmemberships,
-    workflowSteps,
-    orgWorkflowSteps,
-  } = props;
+export function ScriptureTable(props: IProps) {
+  const { colNames } = props;
+  const passages = useOrbitData<PassageD[]>('passage');
+  const sections = useOrbitData<SectionD[]>('section');
+  const mediafiles = useOrbitData<MediaFile[]>('mediafile');
+  const discussions = useOrbitData<Discussion[]>('discussion');
+  const groupmemberships = useOrbitData<GroupMembership[]>('groupmembership');
+  const graphics = useOrbitData<GraphicD[]>('graphic');
+  const workflowSteps = useOrbitData<WorkflowStep[]>('workflowstep');
+  const orgWorkflowSteps = useOrbitData<OrgWorkflowStep[]>('orgworkflowstep');
+  const t: IScriptureTableStrings = useSelector(
+    scriptureTableSelector,
+    shallowEqual
+  );
+  const wfStr: IWorkflowStepsStrings = useSelector(
+    workflowStepsSelector,
+    shallowEqual
+  );
+  const s: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const lang = useSelector((state: IState) => state.strings.lang);
+  const bookSuggestions = useSelector(
+    (state: IState) => state.books.suggestions
+  );
+  const bookMap = useSelector((state: IState) => state.books.map);
+  const allBookData = useSelector((state: IState) => state.books.bookData);
+  const dispatch = useDispatch();
+  const fetchBooks = (lang: string) => dispatch(actions.fetchBooks(lang));
   const { prjId } = useParams();
   const [width, setWidth] = React.useState(window.innerWidth);
   const [project] = useGlobal('project');
@@ -239,13 +222,11 @@ export function ScriptureTable(
   const { getPlan } = usePlan();
   const localSave = useWfLocalSave({ setComplete });
   const onlineSave = useWfOnlineSave({ setComplete });
-  const [detachPassage] = useMediaAttach({
-    ...props,
-  });
+  const [detachPassage] = useMediaAttach();
   const checkOnline = useCheckOnline();
   const [speaker, setSpeaker] = useState('');
   const getStepsBusy = useRef(false);
-  const [orgSteps, setOrgSteps] = useState<OrgWorkflowStep[]>([]);
+  const [orgSteps, setOrgSteps] = useState<OrgWorkflowStepD[]>([]);
   const {
     getProjectDefault,
     setProjectDefault,
@@ -302,14 +283,14 @@ export function ScriptureTable(
           def.minStep = remoteId(
             'orgworkflowstep',
             filter.minStep,
-            memory.keyMap
-          );
+            memory.keyMap as RecordKeyMap
+          ) as string;
         if (filter.maxStep)
           def.maxStep = remoteId(
             'orgworkflowstep',
             filter.maxStep,
-            memory.keyMap
-          );
+            memory.keyMap as RecordKeyMap
+          ) as string;
       }
       setProjectDefault(FilterParam, def);
     }
@@ -646,7 +627,7 @@ export function ScriptureTable(
     if (ws.passage) {
       var attached = mediafiles.filter(
         (m) => related(m, 'passage') === ws.passage?.id
-      );
+      ) as MediaFileD[];
       for (let ix = 0; ix < attached.length; ix++) {
         await detachPassage(
           ws.passage?.id || '',
@@ -805,7 +786,7 @@ export function ScriptureTable(
         setChanged(true);
         if (ws?.passage?.id) {
           const mediaRec = findRecord(memory, 'mediafile', mediaId) as
-            | MediaFile
+            | MediaFileD
             | undefined;
           if (mediaRec)
             await memory.update((t) => [
@@ -853,7 +834,8 @@ export function ScriptureTable(
       waitForPassageId(i, () => {
         const { ws } = getByIndex(workflowRef.current, i);
         const id = ws?.passage?.id || '';
-        const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
+        const passageRemoteId =
+          remoteIdNum('passage', id, memory.keyMap as RecordKeyMap) || id;
         setView(`/detail/${prjId}/${passageRemoteId}`);
       });
     });
@@ -1016,7 +998,7 @@ export function ScriptureTable(
   };
 
   const updateLastModified = async () => {
-    var planRec = getPlan(plan) as Plan;
+    var planRec = getPlan(plan) as PlanD;
     if (planRec !== null) {
       //don't use sections here, it hasn't been updated yet
       var plansections = memory.cache.query((qb) =>
@@ -1035,9 +1017,7 @@ export function ScriptureTable(
           );
       } finally {
         //do this even if the wait above failed
-        await memory.update((t: TransformBuilder) =>
-          UpdateRecord(t, planRec, user)
-        );
+        await memory.update((t) => UpdateRecord(t, planRec, user));
       }
     }
   };
@@ -1076,13 +1056,13 @@ export function ScriptureTable(
       filter.minStep = remoteIdGuid(
         'orgworkflowstep',
         filter.minStep,
-        memory.keyMap
+        memory.keyMap as RecordKeyMap
       );
     if (filter.maxStep && !isNaN(Number(filter.maxStep)))
       filter.maxStep = remoteIdGuid(
         'orgworkflowstep',
         filter.maxStep,
-        memory.keyMap
+        memory.keyMap as RecordKeyMap
       );
     return filter;
   };
@@ -1096,11 +1076,10 @@ export function ScriptureTable(
       getStepsBusy.current = true;
       getFilteredSteps((orgSteps) => {
         getStepsBusy.current = false;
-        setOrgSteps(
-          orgSteps.sort(
-            (i, j) => i.attributes.sequencenum - j.attributes.sequencenum
-          )
+        const newOrgSteps = orgSteps.sort(
+          (i, j) => i.attributes.sequencenum - j.attributes.sequencenum
         );
+        setOrgSteps(newOrgSteps);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1671,37 +1650,4 @@ export function ScriptureTable(
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'scriptureTable' }),
-  wfStr: localStrings(state, { layout: 'workflowSteps' }),
-  s: localStrings(state, { layout: 'planSheet' }),
-  ts: localStrings(state, { layout: 'shared' }),
-  lang: state.strings.lang,
-  bookSuggestions: state.books.suggestions,
-  bookMap: state.books.map,
-  allBookData: state.books.bookData,
-});
-
-const mapDispatchToProps = (dispatch: any) => ({
-  ...bindActionCreators(
-    {
-      fetchBooks: actions.fetchBooks,
-    },
-    dispatch
-  ),
-});
-
-const mapRecordsToProps = {
-  passages: (q: QueryBuilder) => q.findRecords('passage'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  graphics: (q: QueryBuilder) => q.findRecords('graphic'),
-  discussions: (q: QueryBuilder) => q.findRecords('discussion'),
-  groupmemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-  workflowSteps: (q: QueryBuilder) => q.findRecords('workflowstep'),
-  orgWorkflowSteps: (q: QueryBuilder) => q.findRecords('orgworkflowstep'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(ScriptureTable as any) as any
-) as any;
+export default ScriptureTable;

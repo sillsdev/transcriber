@@ -1,11 +1,10 @@
 import { useGlobal } from 'reactn';
-import { SharedResource } from '../model';
-import { TransformBuilder } from '@orbit/data';
+import { RecordIdentity } from '@orbit/records';
 
 export const useSharedResDelete = () => {
   const [memory] = useGlobal('memory');
 
-  return async (sharedResRec: SharedResource) => {
-    await memory.update((t: TransformBuilder) => t.removeRecord(sharedResRec));
+  return async (sharedResRec: RecordIdentity) => {
+    await memory.update((t) => t.removeRecord(sharedResRec));
   };
 };

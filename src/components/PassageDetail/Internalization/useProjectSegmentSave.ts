@@ -1,5 +1,5 @@
 import { useGlobal } from 'reactn';
-import { MediaFile } from '../../../model';
+import { MediaFile, MediaFileD } from '../../../model';
 import { UpdateRecord } from '../../../model/baseModel';
 
 interface IProps {
@@ -20,7 +20,7 @@ export const useProjectSegmentSave = () => {
           attributes: {
             segments: segments,
           },
-        } as any as MediaFile,
+        } as any as MediaFileD,
         user
       ),
     ]);

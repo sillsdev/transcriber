@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
+import { shallowEqual } from 'react-redux';
 import {
   IState,
   Passage,
@@ -9,16 +9,11 @@ import {
   IAssignmentTableStrings,
   IActivityStateStrings,
   Role,
-  BookName,
   ISharedStrings,
   MediaFile,
 } from '../model';
-import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { RecordIdentity } from '@orbit/records';
 import { styled } from '@mui/material';
-import FilterIcon from '@mui/icons-material/FilterList';
-import SelectAllIcon from '@mui/icons-material/SelectAll';
 import { AltButton } from '../control';
 import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
@@ -41,10 +36,17 @@ import {
   TabActions,
   PaddedBox,
   GrowingSpacer,
-  iconMargin,
+  FilterButton,
 } from '../control';
 import { ReplaceRelatedRecord, UpdateLastModifiedBy } from '../model/baseModel';
 import { PlanContext } from '../context/PlanContext';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { useSelector } from 'react-redux';
+import {
+  activitySelector,
+  assignmentSelector,
+  sharedSelector,
+} from '../selector';
 
 const AssignmentDiv = styled('div')(() => ({
   display: 'flex',
@@ -68,37 +70,26 @@ const getChildRows = (row: any, rootRows: any[]) => {
   return childRows.length ? childRows : null;
 };
 
-interface IStateProps {
-  activityState: IActivityStateStrings;
-  t: IAssignmentTableStrings;
-  ts: ISharedStrings;
-  allBookData: BookName[];
-}
-
-interface IRecordProps {
-  passages: Array<Passage>;
-  mediafiles: Array<MediaFile>;
-  sections: Array<Section>;
-  users: Array<User>;
-  roles: Array<Role>;
-}
-
-interface IProps extends IStateProps, IRecordProps {
+interface IProps {
   action?: (what: string, where: number[]) => boolean;
 }
 
 export function AssignmentTable(props: IProps) {
-  const {
-    activityState,
-    t,
-    ts,
-    passages,
-    mediafiles,
-    sections,
-    users,
-    roles,
-    allBookData,
-  } = props;
+  const t: IAssignmentTableStrings = useSelector(
+    assignmentSelector,
+    shallowEqual
+  );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const activityState: IActivityStateStrings = useSelector(
+    activitySelector,
+    shallowEqual
+  );
+  const allBookData = useSelector((state: IState) => state.books.bookData);
+  const passages = useOrbitData<Passage[]>('passage');
+  const sections = useOrbitData<Section[]>('section');
+  const mediafiles = useOrbitData<MediaFile[]>('mediafile');
+  const users = useOrbitData<User[]>('user');
+  const roles = useOrbitData<Role[]>('role');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [plan] = useGlobal('plan');
@@ -107,6 +98,7 @@ export function AssignmentTable(props: IProps) {
   const { flat } = ctx.state;
   const [data, setData] = useState(Array<IRow>());
   const [check, setCheck] = useState(Array<number>());
+  const [selectedSections, setSelectedSections] = useState<Section[]>([]);
   const [confirmAction, setConfirmAction] = useState('');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
@@ -142,7 +134,7 @@ export function AssignmentTable(props: IProps) {
 
     plansections.forEach(function (section) {
       sectionRow = {
-        id: section.id,
+        id: section.id as string,
         name: sectionDescription(section),
         state: '',
         editor: sectionEditorName(section, users),
@@ -198,24 +190,18 @@ export function AssignmentTable(props: IProps) {
       }
     }
   };
-  const getSelectedSections = () => {
-    let selected = Array<Section>();
-    let one: any;
-    check.forEach((c) => {
-      one = sections.find(function (s) {
-        return c < data.length ? s.id === data[c].id : undefined;
-      });
-      if (one !== undefined) selected.push(one);
-    });
-    //setSelectedSections(selected);
-    return selected;
-  };
 
   const RemoveOneAssignment = async (s: Section) => {
-    await memory.update((t: TransformBuilder) => [
-      ...UpdateLastModifiedBy(t, s, user),
-      ...ReplaceRelatedRecord(t, s, 'transcriber', 'user', ''),
-      ...ReplaceRelatedRecord(t, s, 'editor', 'user', ''),
+    await memory.update((t) => [
+      ...UpdateLastModifiedBy(t, s as RecordIdentity, user),
+      ...ReplaceRelatedRecord(
+        t,
+        s as RecordIdentity,
+        'transcriber',
+        'user',
+        ''
+      ),
+      ...ReplaceRelatedRecord(t, s as RecordIdentity, 'editor', 'user', ''),
       ...UpdateLastModifiedBy(
         t,
         { type: 'plan', id: related(s, 'plan') },
@@ -226,9 +212,8 @@ export function AssignmentTable(props: IProps) {
 
   const handleRemoveAssignmentsConfirmed = async () => {
     setConfirmAction('');
-    let sections = getSelectedSections();
-    for (let i = 0; i < sections.length; i += 1)
-      await RemoveOneAssignment(sections[i]);
+    for (let i = 0; i < selectedSections.length; i += 1)
+      await RemoveOneAssignment(selectedSections[i]);
   };
   const handleRemoveAssignmentsRefused = () => setConfirmAction('');
 
@@ -251,6 +236,20 @@ export function AssignmentTable(props: IProps) {
     activityState,
     allBookData,
   ]);
+
+  useEffect(() => {
+    let selected = Array<Section>();
+    let one: any;
+    check.forEach((c) => {
+      one = sections.find(function (s) {
+        return c < data.length ? s.id === data[c].id : undefined;
+      });
+      if (one !== undefined) selected.push(one);
+    });
+    setSelectedSections(selected);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [check]);
 
   return (
     <AssignmentDiv id="AssignmentTable">
@@ -280,20 +279,7 @@ export function AssignmentTable(props: IProps) {
               </>
             )}
             <GrowingSpacer />
-            <AltButton
-              id="assignFilt"
-              key="filter"
-              aria-label={t.filter}
-              onClick={handleFilter}
-              title={t.showHideFilter}
-            >
-              {t.filter}
-              {filter ? (
-                <SelectAllIcon sx={iconMargin} />
-              ) : (
-                <FilterIcon sx={iconMargin} />
-              )}
-            </AltButton>
+            <FilterButton filter={filter} onFilter={handleFilter} />
           </TabActions>
         </TabAppBar>
         <PaddedBox>
@@ -321,7 +307,7 @@ export function AssignmentTable(props: IProps) {
         </PaddedBox>
       </div>
       <AssignSection
-        sections={getSelectedSections()}
+        sections={selectedSections}
         visible={assignSectionVisible}
         closeMethod={handleAssignSection(false)}
       />
@@ -338,21 +324,4 @@ export function AssignmentTable(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'assignmentTable' }),
-  ts: localStrings(state, { layout: 'shared' }),
-  activityState: localStrings(state, { layout: 'activityState' }),
-  allBookData: state.books.bookData,
-});
-
-const mapRecordsToProps = {
-  passages: (q: QueryBuilder) => q.findRecords('passage'),
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  roles: (q: QueryBuilder) => q.findRecords('role'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(AssignmentTable) as any
-) as any;
+export default AssignmentTable;

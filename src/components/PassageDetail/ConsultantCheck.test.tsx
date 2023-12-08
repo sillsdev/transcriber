@@ -96,8 +96,8 @@ jest.mock('./ConsultantCheckCompare', () => (props: any) => (
 jest.mock('../../model/baseModel', () => ({
   UpdateRecord: jest.fn(),
 }));
-jest.mock('@orbit/data', () => ({
-  TransformBuilder: jest.fn(),
+jest.mock('@orbit/records', () => ({
+  RecordTransformBuilder: jest.fn(),
 }));
 jest.mock('../../hoc/SnackBar', () => ({
   useSnackBar: () => ({

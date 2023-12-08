@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 
 export interface Section extends BaseModel {
@@ -23,4 +23,7 @@ export interface Section extends BaseModel {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type SectionD = Section & InitializedRecord;
+
 export default Section;

@@ -1,13 +1,14 @@
-import { Record } from '@orbit/data';
+import { InitializedRecord, UninitializedRecord } from '@orbit/records';
 
-export interface PassageType extends Record {
+export interface PassageType extends UninitializedRecord {
   attributes: {
     usfm: string;
     title: string;
     abbrev: string;
-    defaultorder: number;
+    defaultOrder: number;
   };
 }
+
 export enum PassageTypeEnum {
   BOOK = 'BOOK',
   CHAPTERNUMBER = 'CHNUM',
@@ -16,4 +17,7 @@ export enum PassageTypeEnum {
   MOVEMENT = 'MOVE',
   PASSAGE = 'PASS',
 }
+
+export type PassageTypeD = PassageType & InitializedRecord;
+
 export default PassageType;

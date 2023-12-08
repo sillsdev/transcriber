@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useGlobal } from 'reactn';
-import { Passage, IPassageChooserStrings } from '../../model';
+import { IPassageChooserStrings, PassageD } from '../../model';
 import {
   Typography,
   Box,
@@ -22,6 +22,7 @@ import {
   isPublishingTitle,
   RefRender,
 } from '../../control/RefRender';
+import { RecordKeyMap } from '@orbit/records';
 
 interface StyledBoxProps extends BoxProps {
   width?: number;
@@ -67,7 +68,8 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
     if (typeof newValue === 'number') {
       if (newValue !== value) {
         const selId = marks.current[newValue]?.id;
-        const pasId = remoteId('passage', selId, memory.keyMap) || selId;
+        const pasId =
+          remoteId('passage', selId, memory.keyMap as RecordKeyMap) || selId;
         if (pasId) {
           rememberCurrentPassage(memory, pasId);
           setView(`/detail/${prjId}/${pasId}`);
@@ -81,7 +83,7 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
     // Next line doesn't work in desktop app
     // const passages = related(section, 'passages') as Passage[];
     const passages = (
-      memory.cache.query((q) => q.findRecords('passage')) as Passage[]
+      memory.cache.query((q) => q.findRecords('passage')) as PassageD[]
     ).filter((p) => related(p, 'section') === section?.id);
     var newCount = 0;
     marks.current = [];

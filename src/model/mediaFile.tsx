@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 
 export interface MediaFile extends BaseModel {
@@ -43,4 +43,7 @@ export interface MediaFile extends BaseModel {
     sourceMedia: RecordRelationship;
   };
 }
+
+export type MediaFileD = MediaFile & InitializedRecord;
+
 export default MediaFile;

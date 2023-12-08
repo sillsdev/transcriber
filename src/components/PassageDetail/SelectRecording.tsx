@@ -17,7 +17,6 @@ import { ISelectRecordingStrings, IState } from '../../model';
 import { IRow, PassageDetailContext } from '../../context/PassageDetailContext';
 import { ArtifactTypeSlug, useArtifactType } from '../../crud';
 import { dateOrTime, prettySegment, removeExtension } from '../../utils';
-import { connect } from 'react-redux';
 import { ItemDescription } from '../../control/MediaDescription';
 import { selectRecordingSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -34,12 +33,15 @@ const StyledCell = styled(TableCell, {
 }));
 
 interface IHeaderProps {
-  t: ISelectRecordingStrings;
   showTopic: boolean;
   showType: boolean;
 }
 
-const RecordingHeader = ({ t, showTopic, showType }: IHeaderProps) => {
+const RecordingHeader = ({ showTopic, showType }: IHeaderProps) => {
+  const t: ISelectRecordingStrings = useSelector(
+    selectRecordingSelector,
+    shallowEqual
+  );
   return (
     <TableRow key={0}>
       {showType && <TableCell>{t.artifactType}</TableCell>}
@@ -97,11 +99,7 @@ const RecordingInfo = (iprops: IInfoProps) => {
   );
 };
 
-interface IStateProps {
-  lang: string;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   inItem?: string;
   label?: string;
   onChange?: (resource: string, latest: boolean) => void;
@@ -110,7 +108,8 @@ interface IProps extends IStateProps {
   latestVernacular: number;
 }
 export const SelectRecording = (props: IProps) => {
-  const { lang, onChange, inItem, tags, latestVernacular } = props;
+  const { onChange, inItem, tags, latestVernacular } = props;
+  const lang = useSelector((state: IState) => state.strings.lang);
   const ctx = useContext(PassageDetailContext);
   const { rowData } = ctx.state;
   const [item, setItem] = useState('');
@@ -165,11 +164,7 @@ export const SelectRecording = (props: IProps) => {
           <TableContainer component={Paper}>
             <Table size="small" aria-label="a dense table">
               <TableHead>
-                <RecordingHeader
-                  t={t}
-                  showTopic={showTopic}
-                  showType={showType}
-                />
+                <RecordingHeader showTopic={showTopic} showType={showType} />
               </TableHead>
               <TableBody>
                 {rowData
@@ -204,7 +199,4 @@ export const SelectRecording = (props: IProps) => {
     </>
   );
 };
-const mapStateToProps = (state: IState): IStateProps => ({
-  lang: state.strings.lang,
-});
-export default connect(mapStateToProps)(SelectRecording) as any;
+export default SelectRecording;

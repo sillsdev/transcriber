@@ -8,6 +8,9 @@ export class DateAndNullSerializer extends DateSerializer {
 
 export class DateTimeAndNullSerializer extends DateTimeSerializer {
   serialize(arg: Date): string {
-    return arg ? super.serialize(new Date(arg)) : '';
+    return arg ? super.serialize(arg) : '';
+  }
+  deserialize(arg: string): Date {
+    return arg ? super.deserialize(arg) : new Date();
   }
 }

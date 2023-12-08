@@ -1,8 +1,8 @@
 import { useEffect, useState, useContext, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import {
-  MediaFile,
-  SectionResource,
+  MediaFileD,
+  SectionResourceD,
   ISharedStrings,
   IPassageDetailArtifactsStrings,
 } from '../../../model';
@@ -29,7 +29,7 @@ import { isVisual } from '../../../utils';
 import { ActionRow, AltButton } from '../../../control';
 
 interface IProps {
-  onSelect?: (media: MediaFile) => void;
+  onSelect?: (media: MediaFileD) => void;
   onOpen?: (open: boolean) => void;
 }
 
@@ -39,29 +39,29 @@ export const SelectProjectResource = (props: IProps) => {
   const [complete, setComplete] = useGlobal('progress');
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [resource, setResouce] = useState<MediaFile[]>([]);
+  const [resource, setResouce] = useState<MediaFileD[]>([]);
   const ctx = useContext(PassageDetailContext);
   const { getProjectResources } = ctx.state;
-  const [confirm, setConfirm] = useState<MediaFile | undefined>();
+  const [confirm, setConfirm] = useState<MediaFileD | undefined>();
   const { localizedArtifactCategory, slugFromId } = useArtifactCategory();
   const t: IPassageDetailArtifactsStrings = useSelector(
     passageDetailArtifactsSelector,
     shallowEqual
   );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const media = useRef<MediaFile[]>();
+  const media = useRef<MediaFileD[]>();
 
-  const handleSelect = (m: MediaFile) => {
+  const handleSelect = (m: MediaFileD) => {
     onSelect && onSelect(m);
     onOpen && onOpen(false);
   };
 
-  const handleClick = (m: MediaFile) => () => handleSelect(m);
+  const handleClick = (m: MediaFileD) => () => handleSelect(m);
 
-  const handleDelete = (m: MediaFile) => () => {
+  const handleDelete = (m: MediaFileD) => () => {
     const mediafiles = memory.cache.query((q) =>
       q.findRecords('mediafile')
-    ) as MediaFile[];
+    ) as MediaFileD[];
     const affected = mediafiles.filter(
       (r) => related(r, 'sourceMedia') === m.id
     );
@@ -77,7 +77,7 @@ export const SelectProjectResource = (props: IProps) => {
       let n = 0;
       const secResources = memory.cache.query((q) =>
         q.findRecords('sectionresource')
-      ) as SectionResource[];
+      ) as SectionResourceD[];
       for (let m of media.current) {
         const secRes = secResources.find(
           (r) => related(r, 'mediafile') === m.id

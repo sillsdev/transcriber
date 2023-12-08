@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { ITag } from '.';
 import { BaseModel } from './baseModel';
 
@@ -21,4 +21,7 @@ export interface Plan extends BaseModel {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type PlanD = Plan & InitializedRecord;
+
 export default Plan;

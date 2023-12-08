@@ -6,14 +6,14 @@ import { passageDetailArtifactsSelector } from '../../../selector';
 import {
   IState,
   Passage,
+  PassageD,
   Section,
+  SectionD,
   Plan,
   BookName,
   IPassageDetailArtifactsStrings,
 } from '../../../model';
 import { ITranscriptionTabStrings } from '../../../model';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import {
   Box,
   Button,
@@ -39,6 +39,8 @@ import { transcriptionTabSelector } from '../../../selector';
 import { eqSet } from '../../../utils';
 import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
+import { RecordIdentity } from '@orbit/records';
+import { useOrbitData } from '../../../hoc/useOrbitData';
 
 const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -78,19 +80,16 @@ const getReference = (passage: Passage, bookData: BookName[] = []) => {
   return passageDescText(passage, bookData);
 };
 
-interface IRecordProps {
-  passages: Array<Passage>;
-  sections: Array<Section>;
-}
-
-interface IProps extends IRecordProps {
+interface IProps {
   title: string;
   visual?: boolean;
   onSelect?: (items: RecordIdentity[]) => void;
 }
 
 export function SelectSections(props: IProps) {
-  const { passages, sections, visual, title, onSelect } = props;
+  const { visual, title, onSelect } = props;
+  const passages = useOrbitData<PassageD[]>('passage');
+  const sections = useOrbitData<SectionD[]>('section');
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const [data, setData] = useState(Array<IRow>());
@@ -170,8 +169,8 @@ export function SelectSections(props: IProps) {
   }, [isFlat]);
 
   const getSections = (
-    passages: Array<Passage>,
-    sections: Array<Section>,
+    passages: PassageD[],
+    sections: SectionD[],
     bookData: BookName[]
   ) => {
     const rowData: IRow[] = [];
@@ -286,9 +285,4 @@ export function SelectSections(props: IProps) {
   );
 }
 
-const mapRecordsToProps = {
-  passages: (q: QueryBuilder) => q.findRecords('passage'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
-};
-
-export default withData(mapRecordsToProps)(SelectSections) as any;
+export default SelectSections;

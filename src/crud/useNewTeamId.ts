@@ -1,10 +1,10 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { Organization, User } from '../model';
-import { QueryBuilder } from '@orbit/data';
+import { Organization, OrganizationD, User } from '../model';
 import { waitForIt } from '../utils';
 import { useTeamCreate, isPersonalTeam, remoteIdNum, defaultWorkflow } from '.';
 import related from './related';
+import { RecordKeyMap } from '@orbit/records';
 
 export const useNewTeamId = () => {
   const [memory] = useGlobal('memory');
@@ -21,9 +21,9 @@ export const useNewTeamId = () => {
       () => false,
       100
     );
-    const orgs = (await memory.query((q: QueryBuilder) =>
+    const orgs = (await memory.query((q) =>
       q.findRecords('organization')
-    )) as Organization[];
+    )) as OrganizationD[];
     //Ugh, there's more than one per person.  Always get the last one created
     const orgRecs = orgs
       .filter(
@@ -32,8 +32,8 @@ export const useNewTeamId = () => {
       )
       .sort((a, b) =>
         Boolean(a.keys?.remoteId) && Boolean(b.keys?.remoteId)
-          ? remoteIdNum('organization', b.id, memory.keyMap) -
-            remoteIdNum('organization', a.id, memory.keyMap)
+          ? remoteIdNum('organization', b.id, memory.keyMap as RecordKeyMap) -
+            remoteIdNum('organization', a.id, memory.keyMap as RecordKeyMap)
           : b >= a
           ? 1
           : -1
@@ -49,7 +49,7 @@ export const useNewTeamId = () => {
     if (!globals.user) return;
     teamRef.current = await getPersonalId();
     if (!teamRef.current) {
-      const userRec = memory.cache.query((q: QueryBuilder) =>
+      const userRec = memory.cache.query((q) =>
         q.findRecord({ type: 'user', id: globals.user })
       ) as User;
       const userName = userRec?.attributes?.name ?? 'user';

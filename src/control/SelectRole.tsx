@@ -1,30 +1,24 @@
 import { MenuItem, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { ISharedStrings, IState, Role } from '../model';
+import { ISharedStrings, RoleD } from '../model';
 import { localizeRole } from '../utils';
-import { QueryBuilder } from '@orbit/data';
 import { useGlobal } from 'reactn';
-import { withData } from 'react-orbitjs';
-import localStrings from '../selector/localize';
-import { connect } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
+import { sharedSelector } from '../selector';
+import { useOrbitData } from '../hoc/useOrbitData';
 
-interface IStateProps {
-  ts: ISharedStrings;
-}
-interface IRecordProps {
-  roles: Array<Role>;
-}
-interface IProps extends IStateProps, IRecordProps {
+interface IProps {
   initRole?: string;
-  required: boolean;
-  disabled: boolean;
+  required?: boolean;
+  disabled?: boolean;
   label?: string;
   rowid?: string;
   onChange: (role: string, rowid?: string) => void;
 }
 export const SelectRole = (props: IProps) => {
-  const { ts, roles, onChange, initRole, required, disabled, label, rowid } =
-    props;
+  const { onChange, initRole, required, disabled, label, rowid } = props;
+  const roles = useOrbitData<RoleD[]>('role');
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [offlineOnly] = useGlobal('offlineOnly');
   const [role, setRole] = useState(initRole);
 
@@ -66,7 +60,7 @@ export const SelectRole = (props: IProps) => {
         .sort((i, j) =>
           i.attributes.roleName <= j.attributes.roleName ? -1 : 1
         )
-        .map((option: Role) => (
+        .map((option) => (
           <MenuItem key={option.id} value={option.id}>
             {option.attributes.roleName}
           </MenuItem>
@@ -74,14 +68,5 @@ export const SelectRole = (props: IProps) => {
     </TextField>
   );
 };
-const mapStateToProps = (state: IState): IStateProps => ({
-  ts: localStrings(state, { layout: 'shared' }),
-});
 
-const mapRecordsToProps = {
-  roles: (q: QueryBuilder) => q.findRecords('role'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(SelectRole) as any
-) as any;
+export default SelectRole;

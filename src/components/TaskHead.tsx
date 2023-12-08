@@ -16,7 +16,6 @@ import {
   Box,
   SxProps,
 } from '@mui/material';
-import { TransformBuilder } from '@orbit/data';
 import { sectionNumber, sectionDescription, useOrganizedBy } from '../crud';
 import PeopleIconOutline from '@mui/icons-material/PeopleAltOutlined';
 import { TaskAvatar } from './TaskAvatar';
@@ -63,7 +62,7 @@ export function TaskHead(props: IProps) {
       setMenuItem(null);
     } else {
       if (role) {
-        memory.update((t: TransformBuilder) =>
+        memory.update((t) =>
           UpdateRelatedRecord(
             t,
             section,

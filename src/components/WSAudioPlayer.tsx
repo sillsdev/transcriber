@@ -791,11 +791,10 @@ function WSAudioPlayer(props: IProps) {
                 <>
                   <Grid item>
                     <WSAudioPlayerZoom
-                      startBig={allowRecord || false}
+                      // startBig={allowRecord || false}
                       ready={ready}
                       wsZoom={wsZoom}
                       wsPctWidth={wsPctWidth}
-                      t={t}
                     ></WSAudioPlayerZoom>
                   </Grid>
                   <VertDivider id="wsAudioDiv3" />
@@ -916,7 +915,6 @@ function WSAudioPlayer(props: IProps) {
                   wsAddOrRemoveRegion={wsAddOrRemoveRegion}
                   wsClearRegions={wsClearRegions}
                   setBusy={setBusy}
-                  t={t}
                 />
               )}
             </Grid>
@@ -1177,8 +1175,10 @@ function WSAudioPlayer(props: IProps) {
             )}
             {confirmAction === '' || (
               <Confirm
-                jsx={<span></span>}
-                text={confirmAction}
+                jsx={
+                  typeof confirmAction !== 'string' ? confirmAction : undefined
+                }
+                text={typeof confirmAction === 'string' ? confirmAction : ''}
                 yesResponse={handleActionConfirmed}
                 noResponse={handleActionRefused}
               />

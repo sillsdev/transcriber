@@ -36,10 +36,7 @@ import {
 } from '../../crud';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import Memory from '@orbit/memory';
-import { TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import { NamedRegions } from '../../utils';
 import styledHtml from 'styled-components';
 import {
@@ -148,10 +145,6 @@ const Pane = (props: PaneProps & PropsWithChildren) => {
   return <PaneBar {...props} className={props.className || 'pane'} />;
 };
 
-interface IRecordProps {
-  mediafiles: Array<MediaFile>;
-}
-
 interface IProps {
   ready?: () => boolean;
   width: number;
@@ -160,7 +153,7 @@ interface IProps {
   showTopic: boolean;
 }
 
-export function PassageDetailItem(props: IProps & IRecordProps) {
+export function PassageDetailItem(props: IProps) {
   const { width, slugs, segments, showTopic } = props;
   const oneTryOnly = slugs.includes(ArtifactTypeSlug.WholeBackTranslation);
   const t: ICommunityStrings = useSelector(communitySelector, shallowEqual);
@@ -358,9 +351,7 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
 
   const handleDeleteConfirmed = () => {
     memory
-      .update((t: TransformBuilder) =>
-        t.removeRecord({ type: 'mediafile', id: confirm })
-      )
+      .update((t) => t.removeRecord({ type: 'mediafile', id: confirm }))
       .finally(() => {
         setConfirm('');
         setPlayItem('');
@@ -528,7 +519,6 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
                             >
                               <SelectRecording
                                 onChange={handleSelect}
-                                ts={ts}
                                 tags={slugs}
                                 latestVernacular={currentVersion}
                               />
@@ -606,9 +596,4 @@ export function PassageDetailItem(props: IProps & IRecordProps) {
   );
 }
 
-const mapRecordsToProps = {
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-};
-export default withData(mapRecordsToProps)(PassageDetailItem) as any as (
-  props: IProps
-) => JSX.Element;
+export default PassageDetailItem;

@@ -1,16 +1,15 @@
 import { useGlobal } from 'reactn';
-import { QueryBuilder } from '@orbit/data';
-import { SectionResource, SectionResourceUser } from '../model';
+import { SectionResourceD, SectionResourceUserD } from '../model';
 import { related } from '.';
 
 export const useSecResUserRead = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
-  return async (resource: SectionResource) => {
-    const sectionResourceUsers = memory.cache.query((q: QueryBuilder) =>
+  return async (resource: SectionResourceD) => {
+    const sectionResourceUsers = memory.cache.query((q) =>
       q.findRecords('sectionresourceuser')
-    ) as SectionResourceUser[];
+    ) as SectionResourceUserD[];
     const rec = sectionResourceUsers.filter(
       (r) =>
         related(r, 'sectionresource') === resource.id &&

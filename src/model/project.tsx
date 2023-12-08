@@ -1,6 +1,7 @@
-import { Record, RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
+import { BaseModel } from './baseModel';
 
-export interface Project extends Record {
+export interface Project extends BaseModel {
   attributes: {
     name: string;
     slug: string;
@@ -31,4 +32,7 @@ export interface Project extends Record {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type ProjectD = Project & InitializedRecord;
+
 export default Project;

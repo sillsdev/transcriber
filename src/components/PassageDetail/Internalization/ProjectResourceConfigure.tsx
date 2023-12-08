@@ -6,6 +6,7 @@ import {
   ITranscriptionTabStrings,
   ISharedStrings,
   MediaFile,
+  MediaFileD,
   SectionResource,
 } from '../../../model';
 import {
@@ -21,8 +22,6 @@ import {
 import SkipIcon from '@mui/icons-material/NotInterested';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
-import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
 import PassageDetailPlayer from '../PassageDetailPlayer';
 import { parseRegions, IRegion } from '../../../crud/useWavesurferRegions';
 import { prettySegment, cleanClipboard } from '../../../utils';
@@ -46,6 +45,8 @@ import {
   LightTooltip,
   PriButton,
 } from '../../../control';
+import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
+import { useOrbitData } from '../../../hoc/useOrbitData';
 
 const NotTable = 408;
 
@@ -99,19 +100,16 @@ interface ICellChange {
   value: string | null;
 }
 
-interface IRecordProps {
-  sectionResources: SectionResource[];
-  mediafiles: MediaFile[];
-}
-
-interface IProps extends IRecordProps {
-  media: MediaFile | undefined;
+interface IProps {
+  media: MediaFileD | undefined;
   items: RecordIdentity[];
   onOpen?: (open: boolean) => void;
 }
 
 export const ProjectResourceConfigure = (props: IProps) => {
-  const { media, items, onOpen, mediafiles, sectionResources } = props;
+  const { media, items, onOpen } = props;
+  const mediafiles = useOrbitData<MediaFile[]>('mediafile');
+  const sectionResources = useOrbitData<SectionResource[]>('sectionresource');
   const [memory] = useGlobal('memory');
   const [, setComplete] = useGlobal('progress');
   const [data, setData] = useState<ICell[][]>([]);
@@ -218,7 +216,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     if (!savingRef.current) {
       savingRef.current = true;
       if (media) {
-        const t = new TransformBuilder();
+        const t = new RecordTransformBuilder();
         let ix = 0;
         const d = dataRef.current;
         const total = infoRef.current.length;
@@ -582,9 +580,4 @@ export const ProjectResourceConfigure = (props: IProps) => {
   );
 };
 
-const mapRecordsToProps = {
-  sectionResources: (q: QueryBuilder) => q.findRecords('sectionresource'),
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-};
-
-export default withData(mapRecordsToProps)(ProjectResourceConfigure) as any;
+export default ProjectResourceConfigure;

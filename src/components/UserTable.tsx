@@ -4,18 +4,14 @@ import { localizeRole, LocalKey, localUserKey, useMyNavigate } from '../utils';
 import { shallowEqual } from 'react-redux';
 import {
   User,
-  Role,
+  RoleD,
   OrganizationMembership,
   IUsertableStrings,
   ISharedStrings,
   RoleNames,
 } from '../model';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import { IconButton, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import FilterIcon from '@mui/icons-material/FilterList';
-import SelectAllIcon from '@mui/icons-material/SelectAll';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
@@ -34,12 +30,14 @@ import {
 import {
   GrowingSpacer,
   PriButton,
-  AltButton,
   ActionRow,
   iconMargin,
+  FilterButton,
 } from '../control';
 import { useSelector } from 'react-redux';
 import { sharedSelector, usertableSelector } from '../selector';
+import { RecordIdentity } from '@orbit/records';
+import { useOrbitData } from '../hoc/useOrbitData';
 
 interface IRow {
   type: string;
@@ -61,18 +59,12 @@ const getName = (om: OrganizationMembership, users: User[]) => {
   return u && u.length > 0 && u[0].attributes && u[0].attributes.name;
 };
 
-interface IRecordProps {
-  users: Array<User>;
-  roles: Array<Role>;
-  organizationMemberships: Array<OrganizationMembership>;
-}
-
-interface IProps {
-  projectRole?: boolean;
-}
-
-export function UserTable(props: IProps & IRecordProps) {
-  const { users, roles, organizationMemberships } = props;
+export function UserTable() {
+  const users = useOrbitData<User[]>('user');
+  const roles = useOrbitData<RoleD[]>('role');
+  const organizationMemberships = useOrbitData<OrganizationMembership[]>(
+    'organizationmembership'
+  );
   const t: IUsertableStrings = useSelector(usertableSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   // const { pathname } = useLocation();
@@ -150,7 +142,7 @@ export function UserTable(props: IProps & IRecordProps) {
     doEdit('Add');
   };
 
-  const handleAddExisting = (userId: string) => {
+  const handleAddExisting = (userId: string) => () => {
     setAddOpen(false);
     const userRec = users.filter((u) => u?.id === userId);
     if (userRec.length > 0) addToOrgAndGroup(userRec[0], false);
@@ -295,19 +287,7 @@ export function UserTable(props: IProps & IRecordProps) {
             </>
           )}
           <GrowingSpacer />
-          <AltButton
-            key="filter"
-            aria-label={t.filter}
-            onClick={handleFilter}
-            title={t.showHideFilter}
-          >
-            {t.filter}
-            {filter ? (
-              <SelectAllIcon sx={iconMargin} />
-            ) : (
-              <FilterIcon sx={iconMargin} />
-            )}
-          </AltButton>
+          <FilterButton filter={filter} onFilter={handleFilter} />
         </ActionRow>
         <ShapingTable
           columns={columnDefs}
@@ -333,6 +313,7 @@ export function UserTable(props: IProps & IRecordProps) {
       />
       {deleteItem !== '' ? (
         <Confirm
+          text={''}
           yesResponse={handleDeleteConfirmed}
           noResponse={handleDeleteRefused}
         />
@@ -343,13 +324,4 @@ export function UserTable(props: IProps & IRecordProps) {
   );
 }
 
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  roles: (q: QueryBuilder) => q.findRecords('role'),
-  organizationMemberships: (q: QueryBuilder) =>
-    q.findRecords('organizationmembership'),
-};
-
-export default withData(mapRecordsToProps)(UserTable) as any as (
-  props: IProps
-) => JSX.Element;
+export default UserTable;

@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-import CloseIcon from '@mui/icons-material/Close';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import useTodo from '../context/useTodo';
 import ShapingTable from './ShapingTable';
@@ -511,11 +510,11 @@ export function TaskTable(props: IProps) {
               project={projectId}
               justFilter={isDetail}
             />
-            {filter && (
+            {/** filter && (
               <IconButton id="taskFiltClose" onClick={handleToggleFilter}>
                 <CloseIcon />
               </IconButton>
-            )}
+            ) **/}
           </Header>
           <ShapingTable
             columns={columns}

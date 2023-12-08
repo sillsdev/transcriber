@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { useGlobal } from 'reactn';
-import { IState, IArtifactCategoryStrings, ArtifactCategory } from '../model';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import {
+  IState,
+  IArtifactCategoryStrings,
+  ArtifactCategory,
+  ArtifactCategoryD,
+} from '../model';
+import { RecordTransformBuilder } from '@orbit/records';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { related, findRecord } from '.';
@@ -68,10 +73,10 @@ export const useArtifactCategory = (teamId?: string) => {
       () => offline && !offlineOnly,
       200
     );
-    var orgrecs: ArtifactCategory[] = (
-      memory.cache.query((q: QueryBuilder) =>
+    var orgrecs: ArtifactCategoryD[] = (
+      memory.cache.query((q) =>
         q.findRecords('artifactcategory')
-      ) as ArtifactCategory[]
+      ) as ArtifactCategoryD[]
     ).filter(
       (r) =>
         Boolean(r.relationships) &&
@@ -102,7 +107,7 @@ export const useArtifactCategory = (teamId?: string) => {
     type: ArtifactCategoryType
   ) => {
     //check for duplicate
-    const orgrecs: ArtifactCategory[] = memory.cache.query((q: QueryBuilder) =>
+    const orgrecs: ArtifactCategory[] = memory.cache.query((q) =>
       q
         .findRecords('artifactcategory')
         .filter({ attribute: 'categoryname', value: newArtifactCategory })
@@ -129,7 +134,7 @@ export const useArtifactCategory = (teamId?: string) => {
       if (await isDuplicateCategory(newArtifactCategory, type))
         return 'duplicate';
 
-      const artifactCategory: ArtifactCategory = {
+      const artifactCategory: ArtifactCategoryD = {
         type: 'artifactcategory',
         attributes: {
           categoryname: newArtifactCategory,
@@ -138,7 +143,7 @@ export const useArtifactCategory = (teamId?: string) => {
           note: type === ArtifactCategoryType.Note,
         },
       } as any;
-      const t = new TransformBuilder();
+      const t = new RecordTransformBuilder();
       var ops = [
         ...AddRecord(t, artifactCategory, user, memory),
         ...ReplaceRelatedRecord(

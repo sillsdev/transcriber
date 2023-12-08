@@ -1,12 +1,22 @@
 import { useGlobal } from 'reactn';
-import { Section, Passage, ActivityStates, ISheet } from '../../model';
+import {
+  SectionD,
+  Passage,
+  PassageD,
+  ActivityStates,
+  ISheet,
+} from '../../model';
 import {
   AddRecord,
   ReplaceRelatedRecord,
   UpdateRecord,
   UpdateRelatedRecord,
 } from '../../model/baseModel';
-import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
+import {
+  RecordOperation,
+  RecordIdentity,
+  RecordTransformBuilder,
+} from '@orbit/records';
 import { related, UpdateRelatedPassageOps } from '../../crud';
 import {
   isPassageAdding,
@@ -32,8 +42,8 @@ export const useWfLocalSave = (props: IProps) => {
 
   return async (
     sheet: ISheet[],
-    sections: Section[],
-    passages: Passage[],
+    sections: SectionD[],
+    passages: PassageD[],
     lastSaved?: string
   ) => {
     let lastSec = { id: 'never here' } as RecordIdentity;
@@ -50,7 +60,7 @@ export const useWfLocalSave = (props: IProps) => {
           if (!isSectionAdding(item) && !item.deleted) {
             const itemId = item?.sectionId?.id || '';
             const curSec = sections.filter((s) => s.id === itemId)[0];
-            const secRec = {
+            const secRec: SectionD = {
               ...curSec,
               attributes: {
                 ...curSec.attributes,
@@ -60,8 +70,8 @@ export const useWfLocalSave = (props: IProps) => {
                 published: item.published,
               },
             };
-            const t = new TransformBuilder();
-            const ops: Operation[] = [...UpdateRecord(t, secRec, user)];
+            const t = new RecordTransformBuilder();
+            const ops: RecordOperation[] = [...UpdateRecord(t, secRec, user)];
             if (item?.titleMediaId?.id !== related(curSec, 'titleMediafile')) {
               ops.push(
                 ...UpdateRelatedRecord(
@@ -77,7 +87,7 @@ export const useWfLocalSave = (props: IProps) => {
             await memory.update(ops);
             lastSec = secRec;
           } else if (item.deleted) {
-            const t = new TransformBuilder();
+            const t = new RecordTransformBuilder();
             await memory.update(
               t.removeRecord(item.sectionId as RecordIdentity)
             );
@@ -88,13 +98,12 @@ export const useWfLocalSave = (props: IProps) => {
               attributes: {
                 sequencenum: item.sectionSeq,
                 name: item.title || '',
-                state: ActivityStates.NoMedia,
                 level: item.level,
                 published: item.published, //or false?
               },
             } as any;
-            const t = new TransformBuilder();
-            const ops: Operation[] = [
+            const t = new RecordTransformBuilder();
+            const ops: RecordOperation[] = [
               ...AddRecord(t, newRec, user, memory),
               ...ReplaceRelatedRecord(t, newRec, 'plan', 'plan', plan),
             ];
@@ -130,8 +139,8 @@ export const useWfLocalSave = (props: IProps) => {
               reference: item.reference,
               title: item.comment,
             },
-          } as Passage;
-          const t = new TransformBuilder();
+          } as PassageD;
+          const t = new RecordTransformBuilder();
           const ops = UpdateRecord(t, passRec, user);
           if (lastSec.id !== related(curPass, 'section'))
             ops.push(
@@ -159,7 +168,7 @@ export const useWfLocalSave = (props: IProps) => {
           UpdateRelatedPassageOps(lastSec.id, plan, user, t, ops);
           await memory.update(ops);
         } else if (item.deleted) {
-          const t = new TransformBuilder();
+          const t = new RecordTransformBuilder();
           await memory.update(t.removeRecord(item.passage as RecordIdentity));
         } else {
           // Adding Passage
@@ -173,12 +182,12 @@ export const useWfLocalSave = (props: IProps) => {
               state: ActivityStates.NoMedia,
             },
           } as Passage;
-          const t = new TransformBuilder();
-          const ops: Operation[] = [
+          const t = new RecordTransformBuilder();
+          const ops: RecordOperation[] = [
             ...AddRecord(t, passRec, user, memory),
             ...ReplaceRelatedRecord(
               t,
-              passRec,
+              passRec as PassageD,
               'section',
               'section',
               lastSec.id
@@ -188,7 +197,7 @@ export const useWfLocalSave = (props: IProps) => {
             ops.push(
               ...ReplaceRelatedRecord(
                 t,
-                passRec,
+                passRec as PassageD,
                 'passagetype',
                 'passagetype',
                 psgType?.id

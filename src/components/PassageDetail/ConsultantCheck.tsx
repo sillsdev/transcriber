@@ -11,7 +11,7 @@ import {
   Typography,
   TableBody,
 } from '@mui/material';
-import { OrgWorkflowStep, Passage } from '../../model';
+import { OrgWorkflowStep, Passage, PassageD } from '../../model';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import {
   ToolSlug,
@@ -134,7 +134,7 @@ export function ConsultantCheck({ width }: IProps) {
     setApproved(newApproved);
     try {
       const pasRec = findRecord(memory, 'passage', passage?.id) as
-        | Passage
+        | PassageD
         | undefined;
       const stepComplete = pasRec?.attributes?.stepComplete
         ? JSON.parse(pasRec?.attributes?.stepComplete)
@@ -152,7 +152,7 @@ export function ConsultantCheck({ width }: IProps) {
           attributes: {
             ...pasRec.attributes,
             stepComplete: newStepComplete,
-          } as any,
+          },
         });
       }
     } catch (err) {}

@@ -1,21 +1,19 @@
 import React, { useContext } from 'react';
 import { TokenContext } from '../context/TokenProvider';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
-  IState,
-  MediaFile,
+  MediaFileD,
   IProjectDownloadStrings,
   OfflineProject,
-  Project,
+  ProjectD,
 } from '../model';
-import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import Alert from './AlertDialog';
 import ProjectDownload from './ProjectDownload';
 import { dataPath, PathType } from '../utils';
 import { related, useProjectPlans, getMediaInPlans } from '../crud';
 import { isElectron } from '../api-variable';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { projectDownloadSelector } from '../selector';
 
 const ipc = (window as any)?.electron;
 
@@ -23,23 +21,16 @@ interface PlanProject {
   [planId: string]: string;
 }
 
-interface IStateProps {
-  t: IProjectDownloadStrings;
-}
-
-interface IRecordProps {
-  offlineProjects: Array<OfflineProject>;
-  projects: Array<Project>;
-  mediafiles: Array<MediaFile>;
-}
-
-interface IProps extends IStateProps, IRecordProps {
+interface IProps {
   cb: () => void;
 }
 
 export const ProjectDownloadAlert = (props: IProps) => {
-  const { cb, t } = props;
-  const { offlineProjects, mediafiles, projects } = props;
+  const { cb } = props;
+  const t: IProjectDownloadStrings = useSelector(projectDownloadSelector);
+  const offlineProjects = useOrbitData<OfflineProject[]>('offlineproject');
+  const projects = useOrbitData<ProjectD[]>('project');
+  const mediafiles = useOrbitData<MediaFileD[]>('mediafile');
   const tokenCtx = useContext(TokenContext);
   const [alert, setAlert] = React.useState(false);
   const [downloadSize, setDownloadSize] = React.useState(0);
@@ -54,12 +45,12 @@ export const ProjectDownloadAlert = (props: IProps) => {
     let planIds = Array<string>();
     const planProject: PlanProject = {};
     ops.forEach((offlineProjRec) => {
-      var projectId = related(offlineProjRec, 'project');
+      var projectId = related(offlineProjRec, 'project') as string;
       const project = projects.find((pr) => pr.id === projectId);
       if (project?.keys?.remoteId) {
         projectPlans(projectId).forEach((pl) => {
-          planIds.push(pl.id);
-          planProject[pl.id] = projectId;
+          planIds.push(pl.id as string);
+          planProject[pl.id as string] = projectId;
         });
       }
     });
@@ -117,16 +108,4 @@ export const ProjectDownloadAlert = (props: IProps) => {
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'projectDownload' }),
-});
-
-const mapRecordsToProps = {
-  offlineProjects: (q: QueryBuilder) => q.findRecords('offlineproject'),
-  projects: (q: QueryBuilder) => q.findRecords('project'),
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(ProjectDownloadAlert) as any
-) as any;
+export default ProjectDownloadAlert;

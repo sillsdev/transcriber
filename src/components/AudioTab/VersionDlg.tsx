@@ -1,42 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
-import { withData } from 'react-orbitjs';
 import {
-  IState,
   MediaFile,
+  MediaFileD,
   Passage,
   Section,
   Plan,
   BookName,
-  IMediaTabStrings,
+  IState,
 } from '../../model';
-import localStrings from '../../selector/localize';
-import { QueryBuilder } from '@orbit/data';
 import { related, useArtifactType, usePlan } from '../../crud';
 import { IRow, getMedia, IGetMedia } from '.';
 import AudioTable from './AudioTable';
 import { ActionRow, GrowingDiv } from '../StepEditor';
 import SelectLatest from './SelectLatest';
 import { UpdateRecord } from '../../model/baseModel';
+import { useOrbitData } from '../../hoc/useOrbitData';
+import { useSelector } from 'react-redux';
 
-interface IStateProps {
-  t: IMediaTabStrings;
-  allBookData: BookName[];
-}
-
-interface IRecordProps {
-  mediaFiles: Array<MediaFile>;
-  passages: Array<Passage>;
-  sections: Array<Section>;
-}
-
-interface IProps extends IStateProps, IRecordProps {
+interface IProps {
   passId: string;
 }
 export const VersionDlg = (props: IProps) => {
-  const { passId, allBookData } = props;
-  const { mediaFiles, passages, sections } = props;
+  const { passId } = props;
+  const mediaFiles = useOrbitData<MediaFile[]>('mediafile');
+  const sections = useOrbitData<Section[]>('section');
+  const passages = useOrbitData<Passage[]>('passage');
+
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const { getPlan } = usePlan();
@@ -48,12 +38,15 @@ export const VersionDlg = (props: IProps) => {
   const [refresh, setRefresh] = useState(0);
   const { IsVernacularMedia } = useArtifactType();
   const handleRefresh = () => setRefresh(refresh + 1);
+  const allBookData: BookName[] = useSelector(
+    (state: IState) => state.books.bookData
+  );
 
   const handleLatest = (version: number) => {
     const id = data.find((d) => parseInt(d.version) === version)?.id;
     const nextVersion = Math.max(...versions) + 1;
     if (id) {
-      const pi = mediaFiles.find((m) => m.id === id);
+      const pi = mediaFiles.find((m) => m.id === id) as MediaFileD | undefined;
       if (pi) {
         pi.attributes.versionNumber = nextVersion;
         memory
@@ -101,17 +94,4 @@ export const VersionDlg = (props: IProps) => {
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'mediaTab' }),
-  allBookData: state.books.bookData,
-});
-
-const mapRecordsToProps = {
-  mediaFiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  passages: (q: QueryBuilder) => q.findRecords('passage'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(VersionDlg) as any
-) as any;
+export default VersionDlg;

@@ -1,5 +1,5 @@
 import { useGlobal } from 'reactn';
-import { RecordIdentity, TransformBuilder } from '@orbit/data';
+import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
 import { ArtifactCategory, SharedResource } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { findRecord } from './tryFindRecord';
@@ -46,17 +46,22 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
         note,
       },
     } as SharedResource;
-    memory.schema.initializeRecord(sharedRes);
-    const t = new TransformBuilder();
+    const t = new RecordTransformBuilder();
     const ops = [
       ...AddRecord(t, sharedRes, user, memory),
-      ...ReplaceRelatedRecord(t, sharedRes, 'passage', 'passage', passage.id),
+      ...ReplaceRelatedRecord(
+        t,
+        sharedRes as RecordIdentity,
+        'passage',
+        'passage',
+        passage.id
+      ),
     ];
     if (cluster) {
       ops.push(
         ...ReplaceRelatedRecord(
           t,
-          sharedRes,
+          sharedRes as RecordIdentity,
           'cluster',
           'organization',
           cluster.id
@@ -67,7 +72,7 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
       ops.push(
         ...ReplaceRelatedRecord(
           t,
-          sharedRes,
+          sharedRes as RecordIdentity,
           'artifactCategory',
           'artifactcategory',
           category
@@ -81,11 +86,13 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
       if (catRec) {
         const passRecId = { type: 'passage', id: passage.id };
         ops.push(
-          t.replaceAttribute(
-            passRecId,
-            'reference',
-            `NOTE ${catRec.attributes.categoryname}`
-          )
+          t
+            .replaceAttribute(
+              passRecId,
+              'reference',
+              `NOTE ${catRec.attributes.categoryname}`
+            )
+            .toOperation()
         );
       }
     }

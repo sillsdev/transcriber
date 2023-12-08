@@ -3,7 +3,7 @@ import { User } from '../model';
 import { dataPath, PathType } from '../utils/dataPath';
 import { remoteId } from '../crud';
 import { isElectron } from '../api-variable';
-import { RecordIdentity } from '@orbit/data';
+import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 import { useGlobal } from 'reactn';
 const ipc = (window as any)?.electron;
 
@@ -15,7 +15,10 @@ export const useAvatarSource = (name: string, rec: RecordIdentity) => {
     (async () => {
       const url = (rec as User)?.attributes?.avatarUrl;
       let src = dataPath(url || name, PathType.AVATARS, {
-        localname: remoteId(rec.type, rec.id, memory.keyMap) + name + '.png',
+        localname:
+          remoteId(rec.type, rec.id, memory.keyMap as RecordKeyMap) +
+          name +
+          '.png',
       });
       if (src && isElectron && !src.startsWith('http')) {
         if (await ipc?.exists(src)) {

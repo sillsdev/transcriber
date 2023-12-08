@@ -7,22 +7,18 @@ import {
   BookRef,
   SharedResource,
   SharedResourceReference,
+  SharedResourceReferenceD,
   IResourceStrings,
   DialogMode,
 } from '../../model';
 import ReferenceTable from './ResRefTable';
 import { rangeAdd, useBookN } from '../../utils';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedResourceSelector } from '../../selector';
 import { related } from '../../crud';
 import { useSnackBar } from '../../hoc/SnackBar';
-
-interface RecordProps {
-  sharedResourceReferences: SharedResourceReference[];
-}
+import { useOrbitData } from '../../hoc/useOrbitData';
 
 interface ResourceRefsProps {
   res?: SharedResource;
@@ -30,12 +26,10 @@ interface ResourceRefsProps {
   onOpen: () => void;
 }
 
-export function ResourceRefs({
-  res,
-  mode,
-  onOpen,
-  sharedResourceReferences,
-}: ResourceRefsProps & RecordProps) {
+export function ResourceRefs({ res, mode, onOpen }: ResourceRefsProps) {
+  const sharedResourceReferences = useOrbitData<SharedResourceReferenceD[]>(
+    'sharedresourcereference'
+  );
   const readShaRefRecs = useShaRefRead();
   const createShaRefRecs = useShaRefCreate(res || ({} as SharedResource));
   const updateShaRefRecs = useShaRefUpdate();
@@ -183,11 +177,4 @@ export function ResourceRefs({
   );
 }
 
-const mapRecordsToProps = {
-  sharedResourceReferences: (q: QueryBuilder) =>
-    q.findRecords('sharedresourcereference'),
-};
-
-export default withData(mapRecordsToProps)(ResourceRefs as any) as any as (
-  props: ResourceRefsProps
-) => JSX.Element;
+export default ResourceRefs;

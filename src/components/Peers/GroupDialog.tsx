@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Group,
-  GroupMembership,
-  IPeerStrings,
-  ISharedStrings,
-  User,
-} from '../../model';
+import { GroupD, IPeerStrings, ISharedStrings } from '../../model';
 import {
   Button,
   IconButton,
@@ -27,32 +21,16 @@ import { peerSelector, sharedSelector } from '../../selector';
 import Confirm from '../AlertDialog';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { usePermissions } from '../../crud/usePermissions';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
 
-interface IRecordProps {
-  users: Array<User>;
-  groups: Array<Group>;
-  memberships: Array<GroupMembership>;
-}
-interface IProps extends IRecordProps {
-  cur?: Group;
+interface IProps {
+  cur?: GroupD;
   save: (name: string, permissions: string, id?: string) => void;
   remove?: (id: string) => void;
   isAdmin: boolean;
   inUse: string[];
 }
 
-export const GroupDialog = ({
-  cur,
-  save,
-  remove,
-  isAdmin,
-  inUse,
-  users,
-  groups,
-  memberships,
-}: IProps) => {
+export const GroupDialog = ({ cur, save, remove, isAdmin, inUse }: IProps) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [confirm, setConfirm] = useState<string>();
@@ -62,11 +40,9 @@ export const GroupDialog = ({
     localizedPermissions,
     permissionTip,
     getPermissionFromJson,
-  } = usePermissions({ users, groups, memberships });
-  const [permissionTitles] = useState(localizedPermissions());
-  const [permissions, setPermissions] = React.useState(
-    getPermissionFromJson(cur?.attributes.permissions ?? '')
-  );
+  } = usePermissions();
+  const [permissionTitles, setPermissionTitles] = useState<string[]>([]);
+  const [permissions, setPermissions] = React.useState('');
   const t = useSelector(peerSelector, shallowEqual) as IPeerStrings;
   const ts = useSelector(sharedSelector, shallowEqual) as ISharedStrings;
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,7 +86,17 @@ export const GroupDialog = ({
   };
 
   React.useEffect(() => {
-    if (cur) setName(cur.attributes?.name);
+    const newName = cur?.attributes?.name ?? '';
+    if (name !== newName) setName(newName);
+    const newPermissions = getPermissionFromJson(
+      cur?.attributes.permissions ?? ''
+    );
+    if (permissions !== newPermissions) {
+      setPermissions(newPermissions);
+      setPermissionTitles(localizedPermissions());
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cur]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -216,10 +202,4 @@ export const GroupDialog = ({
   );
 };
 
-const mapRecordsToProps = {
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  groups: (q: QueryBuilder) => q.findRecords('group'),
-  memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-};
-export default withData(mapRecordsToProps)(GroupDialog as any) as any;
+export default GroupDialog;

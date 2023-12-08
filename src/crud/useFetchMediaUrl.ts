@@ -7,6 +7,7 @@ import { remoteIdGuid, remoteId } from '../crud';
 import { dataPath, PathType } from '../utils/dataPath';
 import { MediaFile } from '../model';
 import { infoMsg, logError, Severity } from '../utils';
+import { RecordKeyMap } from '@orbit/records';
 const ipc = (window as any)?.electron;
 // See: https://www.smashingmagazine.com/2020/07/custom-react-hook-fetch-cache-data/
 
@@ -80,12 +81,14 @@ export const useFetchMediaUrl = (reporter?: any) => {
 
   const guidId = (id: string) => {
     return !isNaN(Number(id))
-      ? remoteIdGuid('mediafile', id, memory.keyMap)
+      ? (remoteIdGuid('mediafile', id, memory.keyMap as RecordKeyMap) as string)
       : id;
   };
 
   const remId = (id: string) => {
-    return isNaN(Number(id)) ? remoteId('mediafile', id, memory.keyMap) : id;
+    return isNaN(Number(id))
+      ? (remoteId('mediafile', id, memory.keyMap as RecordKeyMap) as string)
+      : id;
   };
 
   const safeURL = async (path: string) => {
@@ -130,20 +133,20 @@ export const useFetchMediaUrl = (reporter?: any) => {
             const foundLocal = await ipc?.exists(path);
             if (foundLocal || !accessToken) {
               if (!path.startsWith('http')) {
-              if (cancelled()) return;
-              dispatch({
-                payload: await safeURL(path),
-                type: MediaSt.FETCHED,
-              });
-              return;
-            } else if (!accessToken) {
-              dispatch({
-                payload: 'no offline file',
-                type: MediaSt.ERROR,
-              });
-              return;
+                if (cancelled()) return;
+                dispatch({
+                  payload: await safeURL(path),
+                  type: MediaSt.FETCHED,
+                });
+                return;
+              } else if (!accessToken) {
+                dispatch({
+                  payload: 'no offline file',
+                  type: MediaSt.ERROR,
+                });
+                return;
+              }
             }
-          }
           }
         } catch (e: any) {
           if (cancelled()) return;

@@ -1,6 +1,5 @@
 import { useGlobal } from 'reactn';
 import { VProject, Project, Plan, Group } from '../model';
-import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import { related, useTypeId, useOfflnProjCreate } from '.';
 import {
   useProjectsLoaded,
@@ -10,6 +9,8 @@ import {
 } from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
+import { InitializedRecord } from '@orbit/records';
+import { recToMemory } from './syncToMemory';
 
 export const useVProjectCreate = () => {
   const [memory] = useGlobal('memory');
@@ -24,7 +25,7 @@ export const useVProjectCreate = () => {
   const getTypeId = useTypeId();
 
   const getGroupId = (teamId: string) => {
-    const grpRecs = memory.cache.query((q: QueryBuilder) =>
+    const grpRecs = memory.cache.query((q) =>
       q.findRecords('group')
     ) as Group[];
     const selected = grpRecs.filter(
@@ -69,13 +70,12 @@ export const useVProjectCreate = () => {
         defaultParams: '{}',
       },
     } as Project;
-    memory.schema.initializeRecord(project);
-    await memory.update((t: TransformBuilder) => [
-      t.addRecord(project),
+    await memory.update((t) => [
+      ...AddRecord(t, project, user, memory),
       // We use the plan type and not the project type
       ...ReplaceRelatedRecord(
         t,
-        project,
+        project as InitializedRecord,
         'projecttype',
         'projecttype',
         getTypeId(
@@ -83,24 +83,34 @@ export const useVProjectCreate = () => {
           'project'
         )
       ),
-      ...ReplaceRelatedRecord(t, project, 'group', 'group', getGroupId(teamId)),
       ...ReplaceRelatedRecord(
         t,
-        project,
+        project as InitializedRecord,
+        'group',
+        'group',
+        getGroupId(teamId)
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        project as InitializedRecord,
         'organization',
         'organization',
         teamId
       ),
-      ...ReplaceRelatedRecord(t, project, 'owner', 'user', user),
+      ...ReplaceRelatedRecord(
+        t,
+        project as InitializedRecord,
+        'owner',
+        'user',
+        user
+      ),
     ]);
     await offlineProjectCreate(project);
-    AddProjectLoaded(project.id);
+    AddProjectLoaded(project.id as string);
     let slug = cleanFileName(name).substring(0, 6);
     if (offlineOnly) {
       //see if slug is unique
-      const plans = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('plan')
-      ) as Plan[];
+      const plans = memory.cache.query((q) => q.findRecords('plan')) as Plan[];
       let tmp = '';
       let findit = (fnd: string) =>
         plans.findIndex((p) => p.attributes?.slug === fnd);
@@ -119,27 +129,32 @@ export const useVProjectCreate = () => {
         slug: slug,
       },
     } as any;
-    memory.schema.initializeRecord(plan);
-    await memory.update((t: TransformBuilder) => [
+    await memory.update((t) => [
       ...AddRecord(t, plan, user, memory),
       ...ReplaceRelatedRecord(
         t,
-        plan,
+        plan as InitializedRecord,
         'plantype',
         'plantype',
         getTypeId(type, 'plan')
       ),
-      ...ReplaceRelatedRecord(t, plan, 'project', 'project', project.id),
+      ...ReplaceRelatedRecord(
+        t,
+        plan as InitializedRecord,
+        'project',
+        'project',
+        project.id
+      ),
     ]);
     //fetch the slug from the server
     if (!offlineOnly) {
       const remote = coordinator.getSource('remote') as JSONAPISource;
-      await memory.sync(
-        await remote.pull((q: any) =>
-          q.findRecord({ type: 'plan', id: plan.id })
-        )
-      );
+      await recToMemory({
+        recId: { type: 'plan', id: plan.id as string },
+        memory,
+        remote,
+      });
     }
-    return plan.id;
+    return plan.id as string;
   };
 };

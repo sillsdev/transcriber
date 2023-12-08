@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
-import {
-  IState,
-  MediaFile,
-  IAudioDownloadStrings,
-  ISharedStrings,
-} from '../model';
-import localStrings from '../selector/localize';
+import { MediaFile, IAudioDownloadStrings, ISharedStrings } from '../model';
 import { IconButton, IconButtonProps, styled } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/GetAppOutlined';
 import {
@@ -18,23 +11,23 @@ import {
 } from '../crud';
 import { loadBlob, removeExtension } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
+import { useSelector } from 'react-redux';
+import { audioDownloadSelector, sharedSelector } from '../selector';
+import { RecordKeyMap } from '@orbit/records';
 
 const StyledIcon = styled(IconButton)<IconButtonProps>(({ theme }) => ({
   color: theme.palette.primary.light,
 }));
 
-interface IStateProps {
-  t: IAudioDownloadStrings;
-  ts: ISharedStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   title?: string;
   mediaId: string;
 }
 
 export const AudioDownload = (props: IProps) => {
-  const { mediaId, title, t, ts } = props;
+  const { mediaId, title } = props;
+  const t: IAudioDownloadStrings = useSelector(audioDownloadSelector);
+  const ts: ISharedStrings = useSelector(sharedSelector);
   const [memory] = useGlobal('memory');
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
@@ -44,7 +37,9 @@ export const AudioDownload = (props: IProps) => {
   const { showMessage } = useSnackBar();
 
   const handleDownload = () => {
-    const id = remoteIdGuid('mediafile', mediaId, memory.keyMap) || mediaId;
+    const id =
+      remoteIdGuid('mediafile', mediaId, memory.keyMap as RecordKeyMap) ||
+      mediaId;
     const mediaRec = memory.cache.query((q) =>
       q.findRecord({ type: 'mediafile', id })
     ) as MediaFile;
@@ -111,9 +106,4 @@ export const AudioDownload = (props: IProps) => {
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'audioDownload' }),
-  ts: localStrings(state, { layout: 'shared' }),
-});
-
-export default connect(mapStateToProps)(AudioDownload) as any;
+export default AudioDownload;

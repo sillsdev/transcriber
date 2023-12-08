@@ -25,6 +25,7 @@ import { usePlan, remoteIdGuid } from '../crud';
 import { mainSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { ContextHelp } from './ContextHelp';
+import { RecordKeyMap } from '@orbit/records';
 const ipc = (window as any)?.electron;
 
 interface IProps {
@@ -106,7 +107,9 @@ export function HelpMenu(props: IProps) {
     () => {
       const match = /\/plan\/([0-9a-f-]+)\/0/.exec(pathname);
       const planId =
-        match && (remoteIdGuid('plan', match[1], memory.keyMap) || match[1]);
+        match &&
+        (remoteIdGuid('plan', match[1], memory.keyMap as RecordKeyMap) ||
+          match[1]);
       return planId && getPlan(planId);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

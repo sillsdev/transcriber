@@ -1,35 +1,24 @@
 import { MenuItem, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {
-  GroupMembership,
-  ISharedStrings,
   IDiscussionCardStrings,
   User,
   Group,
   OrganizationMembership,
 } from '../model';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { useSelector, shallowEqual } from 'react-redux';
 import { discussionCardSelector } from '../selector';
 import { related } from '../crud';
 import { useGlobal } from 'reactn';
+import { useOrbitData } from '../hoc/useOrbitData';
 
-interface IStateProps {
-  ts: ISharedStrings;
-}
-interface IRecordProps {
-  users: User[];
-  groups: Group[];
-  memberships: GroupMembership[];
-  orgmems: OrganizationMembership[];
-}
-interface IProps extends IStateProps, IRecordProps {
+interface IProps {
+  id?: string;
   org: boolean;
   initAssignment?: string;
-  required: boolean;
-  disabled: boolean;
+  required?: boolean;
+  disabled?: boolean;
   label?: string;
   userPrefix: string;
   groupPrefix: string;
@@ -38,10 +27,6 @@ interface IProps extends IStateProps, IRecordProps {
 
 export const SelectDiscussionAssignment = (props: IProps) => {
   const {
-    users,
-    groups,
-    memberships,
-    orgmems,
     onChange,
     initAssignment,
     required,
@@ -49,8 +34,13 @@ export const SelectDiscussionAssignment = (props: IProps) => {
     label,
     userPrefix,
     groupPrefix,
+    id: idIn,
   } = props;
-  const { peerGroups } = usePeerGroups({ users, groups, memberships });
+  const users = useOrbitData<User[]>('user');
+  const orgmems = useOrbitData<OrganizationMembership[]>(
+    'organizationmembership'
+  );
+  const { peerGroups } = usePeerGroups();
   const [orgUsers, setOrgUsers] = useState<User[]>([]);
   const [offlineOnly] = useGlobal('offlineOnly');
   const [organization] = useGlobal('organization');
@@ -94,7 +84,7 @@ export const SelectDiscussionAssignment = (props: IProps) => {
   }, [organization, users, orgmems, offlineOnly]);
   return (
     <TextField
-      id="selectassignment"
+      id={idIn || 'selectassignment'}
       sx={{ mx: 1, display: 'flex', flexGrow: 1, minWidth: '8rem' }}
       select
       label={t.groupuser}
@@ -122,11 +112,4 @@ export const SelectDiscussionAssignment = (props: IProps) => {
   );
 };
 
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-  groups: (q: QueryBuilder) => q.findRecords('group'),
-  orgmems: (q: QueryBuilder) => q.findRecords('organizationmembership'),
-};
-
-export default withData(mapRecordsToProps)(SelectDiscussionAssignment) as any;
+export default SelectDiscussionAssignment;

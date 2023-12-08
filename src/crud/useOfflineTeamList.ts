@@ -2,12 +2,11 @@ import { useGlobal } from 'reactn';
 import {
   User,
   OfflineProject,
-  Project,
   Organization,
   OrganizationMembership,
+  ProjectD,
 } from '../model';
 import { useRecOfType, related } from '../crud';
-import { QueryBuilder } from '@orbit/data';
 
 export const useOfflineTeamList = () => {
   const recOfType = useRecOfType();
@@ -28,7 +27,7 @@ export const useOfflineTeamList = () => {
     members.forEach((m) => {
       if (related(m, 'user') === u.id) orgs.add(related(m, 'organization'));
     });
-    const projects = recOfType('project') as Project[];
+    const projects = recOfType('project') as ProjectD[];
     const offlineOrgs = new Set<string>();
     projects.forEach((p) => {
       const olOrg = related(p, 'organization');
@@ -38,7 +37,7 @@ export const useOfflineTeamList = () => {
     });
     const groupName = Array<string>();
     Array.from(offlineOrgs).forEach((id) => {
-      const orgRec = memory.cache.query((q: QueryBuilder) =>
+      const orgRec = memory.cache.query((q) =>
         q.findRecord({ type: 'organization', id })
       ) as Organization;
       const name = orgRec.attributes.name;

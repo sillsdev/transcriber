@@ -2,19 +2,17 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
-import { connect, shallowEqual, useSelector } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import {
   IState,
   IAccessStrings,
-  User,
+  UserD,
   GroupMembership,
-  Project,
+  ProjectD,
   Plan,
   Section,
 } from '../model';
 import { TokenContext } from '../context/TokenProvider';
-import localStrings from '../selector/localize';
 import * as action from '../store';
 import {
   Typography,
@@ -32,9 +30,6 @@ import {
   useMyNavigate,
 } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
-import { IAxiosStatus } from '../store/AxiosStatus';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
 import { API_CONFIG, isElectron } from '../api-variable';
 import ImportTab from '../components/ImportTab';
 import Confirm from '../components/AlertDialog';
@@ -45,6 +40,8 @@ import { AltButton, PriButton, UserListItem } from '../control';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import UserListMode, { ListMode } from '../control/userListMode';
 import { accessSelector } from '../selector';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { useDispatch } from 'react-redux';
 const ipc = (window as any)?.electron;
 
 const SectionHead = styled(Typography)<TypographyProps>(({ theme }) => ({
@@ -64,8 +61,7 @@ const ActionBox = styled(Box)<BoxProps>(({ theme }) => ({
 }));
 
 interface ICurrentUser {
-  curUser: User;
-  users: User[];
+  curUser: UserD;
   action?: () => void;
   goOnline: () => void;
   showTeams: boolean;
@@ -73,7 +69,6 @@ interface ICurrentUser {
 
 const CurrentUser = ({
   curUser,
-  users,
   action,
   goOnline,
   showTeams,
@@ -86,7 +81,6 @@ const CurrentUser = ({
       <Box sx={{ pt: 2 }}>
         <UserListItem
           u={curUser}
-          users={users}
           onSelect={action ? action : goOnline}
           showTeams={showTeams}
         />
@@ -95,25 +89,6 @@ const CurrentUser = ({
   );
 };
 
-interface IRecordProps {
-  users: Array<User>;
-  groupMemberships: Array<GroupMembership>;
-  projects: Array<Project>;
-  plans: Array<Plan>;
-  sections: Array<Section>;
-}
-
-interface IStateProps {
-  t: IAccessStrings;
-  importStatus: IAxiosStatus | undefined;
-}
-
-interface IDispatchProps {
-  fetchLocalization: typeof action.fetchLocalization;
-  setLanguage: typeof action.setLanguage;
-}
-
-interface IProps {}
 export const goOnline = (email?: string) => {
   const lastTime = localStorage.getItem('electron-lastTime');
   localStorage.removeItem('auth-id');
@@ -133,21 +108,20 @@ export const switchUser = async () => {
     goOnline();
   }, 2000);
 };
-export function Access(
-  props: IProps & IRecordProps & IStateProps & IDispatchProps
-) {
-  const {
-    t,
-    importStatus,
-    users,
-    groupMemberships,
-    projects,
-    plans,
-    sections,
-  } = props;
+export function Access() {
+  const t: IAccessStrings = useSelector(accessSelector, shallowEqual);
+  const users = useOrbitData<UserD[]>('user');
+  const groupMemberships = useOrbitData<GroupMembership[]>('groupmembership');
+  const projects = useOrbitData<ProjectD[]>('project');
+  const plans = useOrbitData<Plan[]>('plan');
+  const sections = useOrbitData<Section[]>('section');
+  const importStatus = useSelector(
+    (state: IState) => state.importexport.importexportStatus
+  );
+  const dispatch = useDispatch();
+  const setLanguage = (lang: string) => dispatch(action.setLanguage(lang));
   const { pathname } = useLocation();
   const navigate = useMyNavigate();
-  const { setLanguage } = props;
   const { loginWithRedirect, isAuthenticated } = useAuth0();
   const [offline, setOffline] = useGlobal('offline');
   const [isDeveloper] = useGlobal('developer');
@@ -159,7 +133,7 @@ export function Access(
   const { logout, accessToken, expiresAt } = tokenCtx.state;
   const [importOpen, setImportOpen] = useState(false);
   const [view, setView] = useState('');
-  const [curUser, setCurUser] = useState<User>();
+  const [curUser, setCurUser] = useState<UserD>();
   const [whichUsers, setWhichUsers] = useState(
     pathname.substring('/access/'.length)
   );
@@ -403,7 +377,7 @@ export function Access(
 
   return (
     <Box sx={{ width: '100%' }}>
-      <AppHead {...props} />
+      <AppHead />
       {isElectron && (
         <Box sx={{ display: 'block' }}>
           <SectionHead>Hello I'm under the AppHead</SectionHead>
@@ -441,7 +415,6 @@ export function Access(
                       <>
                         <CurrentUser
                           curUser={curUser}
-                          users={users}
                           showTeams={false}
                           goOnline={handleGoOnline}
                         />
@@ -476,7 +449,6 @@ export function Access(
                       <>
                         <CurrentUser
                           curUser={curUser}
-                          users={users}
                           action={handleCurUser}
                           goOnline={handleGoOnline}
                           showTeams={true}
@@ -498,7 +470,6 @@ export function Access(
                     <>
                       <CurrentUser
                         curUser={curUser}
-                        users={users}
                         action={handleLogout}
                         goOnline={handleGoOnline}
                         showTeams={false}
@@ -519,7 +490,6 @@ export function Access(
                 <UserList
                   isSelected={isOfflineUserWithProjects}
                   select={handleSelect}
-                  title={t.offlineUsers}
                 />
               )}
               {isDeveloper && (
@@ -547,34 +517,11 @@ export function Access(
           yesResponse={handleGoOnlineConfirmed}
           noResponse={handleGoOnlineRefused}
           no={t.cancel}
+          text={''}
         />
       )}
     </Box>
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'access' }),
-  importStatus: state.importexport.importexportStatus,
-});
-
-const mapDispatchToProps = (dispatch: any) => ({
-  ...bindActionCreators(
-    {
-      fetchLocalization: action.fetchLocalization,
-      setLanguage: action.setLanguage,
-    },
-    dispatch
-  ),
-});
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-  projects: (q: QueryBuilder) => q.findRecords('project'),
-  plans: (q: QueryBuilder) => q.findRecords('plan'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(Access as any) as any
-) as any as (props: IProps) => JSX.Element;
+export default Access;

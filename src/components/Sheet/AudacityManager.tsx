@@ -30,7 +30,7 @@ import {
 } from '../../crud';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { debounce } from 'lodash';
-import { RecordIdentity } from '@orbit/data';
+import { RecordIdentity } from '@orbit/records';
 import {
   launchAudacity,
   loadBlob,

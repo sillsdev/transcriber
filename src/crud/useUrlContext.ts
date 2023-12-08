@@ -1,6 +1,7 @@
 import { remoteIdGuid } from './remoteId';
 import { useGlobal } from 'reactn';
 import { usePlan, useVProjectRead, related, useProjectType, useRole } from '.';
+import { RecordKeyMap } from '@orbit/records';
 
 export const useUrlContext = () => {
   const [memory] = useGlobal('memory');
@@ -13,7 +14,9 @@ export const useUrlContext = () => {
   const { setProjectType } = useProjectType();
 
   return (planRemId: string) => {
-    let planId = remoteIdGuid('plan', planRemId, memory.keyMap) || planRemId;
+    let planId =
+      remoteIdGuid('plan', planRemId, memory.keyMap as RecordKeyMap) ||
+      planRemId;
     if (planId && planId !== plan) setPlan(planId);
     else planId = plan;
     const planRec = getPlan(planId);

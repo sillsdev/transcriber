@@ -2,22 +2,23 @@ import { useMemo, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import {
   Organization,
-  OrganizationMembership,
-  Group,
-  GroupMembership,
   RoleNames,
   ISharedStrings,
+  OrganizationD,
+  OrganizationMembershipD,
+  GroupMembershipD,
+  GroupD,
 } from '../model';
 import { useCheckOnline, cleanFileName } from '../utils';
 import { offlineError, useOrgWorkflowSteps, useProjectType, useRole } from '.';
 import { useSnackBar } from '../hoc/SnackBar';
 import Memory from '@orbit/memory';
-import { TransformBuilder } from '@orbit/data';
 import { setDefaultProj, allUsersRec } from '.';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { useTeamApiPull } from './useTeamApiPull';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../selector';
+import { RecordIdentity } from '@orbit/records';
 
 export const useTeamCreate = () => {
   const { CreateOrgWorkflowSteps } = useOrgWorkflowSteps();
@@ -40,35 +41,35 @@ export const useTeamCreate = () => {
     [coordinator]
   );
 
-  const OrgRelated = async (orgRec: Organization) => {
-    let orgMember: OrganizationMembership = {
+  const OrgRelated = async (orgRec: OrganizationD) => {
+    let orgMember: OrganizationMembershipD = {
       type: 'organizationmembership',
       attributes: {},
-    } as OrganizationMembership;
-    let groupMbr: GroupMembership = {
+    } as OrganizationMembershipD;
+    let groupMbr: GroupMembershipD = {
       type: 'groupmembership',
       attributes: {},
-    } as GroupMembership;
+    } as GroupMembershipD;
 
     const orgRoleId = getRoleId(RoleNames.Admin);
 
     let allUsersGroup = allUsersRec(memory, orgRec.id);
     if (!allUsersGroup) {
-      let group: Group = {
+      let group: GroupD = {
         type: 'group',
         attributes: {
           name: `All users of ${orgRec.attributes.name}`,
           abbreviation: `all-users`,
           allUsers: true,
         },
-      } as Group;
-      await memory.update((t: TransformBuilder) => [
+      } as GroupD;
+      await memory.update((t) => [
         ...AddRecord(t, group, user, memory),
         ...ReplaceRelatedRecord(t, group, 'owner', 'organization', orgRec.id),
       ]);
       allUsersGroup = group;
     }
-    await memory.update((t: TransformBuilder) => [
+    await memory.update((t) => [
       ...AddRecord(t, orgMember, user, memory),
       ...ReplaceRelatedRecord(t, orgMember, 'user', 'user', user),
       ...ReplaceRelatedRecord(
@@ -80,7 +81,7 @@ export const useTeamCreate = () => {
       ),
       ...ReplaceRelatedRecord(t, orgMember, 'role', 'role', orgRoleId),
     ]);
-    await memory.update((t: TransformBuilder) => [
+    await memory.update((t) => [
       ...AddRecord(t, groupMbr, user, memory),
       ...ReplaceRelatedRecord(t, groupMbr, 'user', 'user', user),
       ...ReplaceRelatedRecord(t, groupMbr, 'group', 'group', allUsersGroup?.id),
@@ -95,21 +96,27 @@ export const useTeamCreate = () => {
 
   const createOrg = async (props: ICreateOrgProps) => {
     const { orgRec, process } = props;
-    await memory.update((t: TransformBuilder) => [
+    await memory.update((t) => [
       ...AddRecord(t, orgRec, user, memory),
-      ...ReplaceRelatedRecord(t, orgRec, 'owner', 'user', user),
+      ...ReplaceRelatedRecord(
+        t,
+        orgRec as RecordIdentity,
+        'owner',
+        'user',
+        user
+      ),
     ]);
-    if (!offlineOnly) await teamApiPull(orgRec.id); // Update slug value
-    await OrgRelated(orgRec);
-    await CreateOrgWorkflowSteps(process, orgRec.id);
-    setOrganization(orgRec.id);
+    if (!offlineOnly) await teamApiPull(orgRec.id as string); // Update slug value
+    await OrgRelated(orgRec as OrganizationD);
+    await CreateOrgWorkflowSteps(process, orgRec.id as string);
+    setOrganization(orgRec.id as string);
     setOrgRole(RoleNames.Admin);
-    setDefaultProj(orgRec.id, memory, (pid: string) => {
+    setDefaultProj(orgRec.id as string, memory, (pid: string) => {
       setProject(pid);
       setProjectType(pid);
     });
 
-    return orgRec.id;
+    return orgRec.id as string;
   };
 
   return (

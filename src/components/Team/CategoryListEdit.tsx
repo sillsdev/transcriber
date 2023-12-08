@@ -18,6 +18,7 @@ import {
 import { ActionRow, AltButton, PriButton } from '../StepEditor';
 import {
   ArtifactCategory,
+  ArtifactCategoryD,
   Discussion,
   ICategoryStrings,
   ISharedStrings,
@@ -27,7 +28,7 @@ import {
 import { useSelector, shallowEqual } from 'react-redux';
 import { categorySelector, sharedSelector } from '../../selector';
 import { useGlobal } from 'reactn';
-import { Operation, TransformBuilder } from '@orbit/data';
+import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 import { UpdateRecord } from '../../model/baseModel';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { NewArtifactCategory } from '../Sheet/NewArtifactCategory';
@@ -83,8 +84,8 @@ export default function CategoryList({ type, teamId, onClose }: IProps) {
 
   const handleSave = async () => {
     const recs = edited.filter((r) => !deleted.includes(r[0])).map((r) => r[1]);
-    const t = new TransformBuilder();
-    const ops: Operation[] = [];
+    const t = new RecordTransformBuilder();
+    const ops: RecordOperation[] = [];
     for (const r of recs) {
       if (
         !/^\s*$/.test(r.category) &&
@@ -102,7 +103,7 @@ export default function CategoryList({ type, teamId, onClose }: IProps) {
               {
                 ...rec,
                 attributes: { ...rec.attributes, categoryname: r.category },
-              } as ArtifactCategory,
+              } as ArtifactCategoryD,
               user
             )
           );
@@ -111,7 +112,7 @@ export default function CategoryList({ type, teamId, onClose }: IProps) {
       }
     }
     for (const id of deleted) {
-      ops.push(t.removeRecord({ type: 'artifactcategory', id }));
+      ops.push(t.removeRecord({ type: 'artifactcategory', id }).toOperation());
     }
     await memory.update(ops);
     onClose && onClose();

@@ -1,8 +1,12 @@
 import { useGlobal } from 'reactn';
-import { ISharedStrings, ActivityStates, MediaFile } from '../model';
+import {
+  ISharedStrings,
+  ActivityStates,
+  MediaFile,
+  MediaFileD,
+} from '../model';
 import { orbitErr } from '../utils';
 import * as actions from '../store';
-import { TransformBuilder, Operation } from '@orbit/data';
 import {
   AddPassageStateChangeToOps,
   findRecord,
@@ -16,10 +20,9 @@ import { sharedSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { ReplaceRelatedRecord, UpdateLastModifiedBy } from '../model/baseModel';
 import { useDispatch } from 'react-redux';
+import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 
-interface IProps {}
-
-export const useMediaAttach = (props: IProps) => {
+export const useMediaAttach = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
@@ -33,8 +36,8 @@ export const useMediaAttach = (props: IProps) => {
     plan: string,
     mediaId: string
   ) => {
-    var tb = new TransformBuilder();
-    var ops: Operation[] = [];
+    var tb = new RecordTransformBuilder();
+    var ops: RecordOperation[] = [];
     var mediaRI = { type: 'mediafile', id: mediaId };
     var mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFile;
     if (!mediaRec) return;
@@ -43,16 +46,18 @@ export const useMediaAttach = (props: IProps) => {
       if (isVernacular && plan) {
         var media = getMediaInPlans(
           [plan],
-          memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[],
+          memory.cache.query((q) => q.findRecords('mediafile')) as MediaFileD[],
           VernacularTag,
           true
         ).filter((m) => related(m, 'passage') === passage);
         ops.push(
-          tb.replaceAttribute(
-            mediaRI,
-            'versionNumber',
-            media.length > 0 ? media[0].attributes.versionNumber + 1 : 1
-          )
+          tb
+            .replaceAttribute(
+              mediaRI,
+              'versionNumber',
+              media.length > 0 ? media[0].attributes.versionNumber + 1 : 1
+            )
+            .toOperation()
         );
         const passRecId = { type: 'passage', id: passage };
         ops.push(...UpdateLastModifiedBy(tb, passRecId, user));
@@ -86,8 +91,8 @@ export const useMediaAttach = (props: IProps) => {
     plan: string,
     mediaId: string
   ) => {
-    var tb = new TransformBuilder();
-    var ops: Operation[] = [];
+    var tb = new RecordTransformBuilder();
+    var ops: RecordOperation[] = [];
     const mediaRecId = { type: 'mediafile', id: mediaId };
     const mediaRec = memory.cache.query((q) =>
       q.findRecord(mediaRecId)
@@ -104,7 +109,7 @@ export const useMediaAttach = (props: IProps) => {
     );
 
     ops.push(
-      tb.replaceAttribute(mediaRecId, 'versionNumber', 1),
+      tb.replaceAttribute(mediaRecId, 'versionNumber', 1).toOperation(),
       ...ReplaceRelatedRecord(tb, mediaRecId, 'passage', 'passage', null)
     );
     const passRecId = { type: 'passage', id: passage };

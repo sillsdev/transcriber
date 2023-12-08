@@ -1,6 +1,6 @@
-import { Record } from '@orbit/data';
+import { UninitializedRecord } from '@orbit/records';
 
-export interface ProjData extends Record {
+export interface ProjData extends UninitializedRecord {
   attributes: {
     json: string;
     startnext: number;

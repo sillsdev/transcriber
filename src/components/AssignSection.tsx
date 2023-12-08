@@ -1,17 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
+import { shallowEqual } from 'react-redux';
 import {
-  IState,
   Section,
+  SectionD,
   IAssignSectionStrings,
-  User,
   ISharedStrings,
   OrganizationMembership,
+  UserD,
 } from '../model';
-import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   Dialog,
   DialogActions,
@@ -47,21 +44,79 @@ import {
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
 import { UpdateLastModifiedBy, UpdateRelatedRecord } from '../model/baseModel';
 import { PriButton } from '../control';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { useSelector } from 'react-redux';
+import { assignSectionSelector, sharedSelector } from '../selector';
 
 const headProps = { display: 'flex', alignItems: 'center' } as SxProps;
 const gridProps = { m: 'auto', p: 1 } as SxProps;
 
-interface IStateProps {
-  t: IAssignSectionStrings;
-  ts: ISharedStrings;
+interface SectionListProps {
+  sections: Array<Section>;
+  users: UserD[];
 }
 
-interface IRecordProps {
-  users: Array<User>;
-  orgMemberships: Array<OrganizationMembership>;
+function SectionList({ sections, users }: SectionListProps) {
+  return (
+    <>
+      {sections.map((p) => {
+        return (
+          <TableRow key={p.id}>
+            <TableCell component="th" scope="row">
+              {sectionNumber(p) + ' ' + p.attributes.name}
+            </TableCell>
+            <TableCell align="right">{sectionEditorName(p, users)} </TableCell>
+            <TableCell align="right">
+              {sectionTranscriberName(p, users)}
+            </TableCell>
+          </TableRow>
+        );
+      })}
+    </>
+  );
 }
 
-interface IProps extends IStateProps, IRecordProps {
+interface UserListProps {
+  id?: string;
+  users: UserD[];
+  memberIds: string[];
+  selected: string;
+  select: (id: string) => () => void;
+}
+
+function UserList({ id, users, memberIds, selected, select }: UserListProps) {
+  return (
+    <>
+      {users
+        .filter((u) => u.attributes && memberIds.indexOf(u.id) !== -1)
+        .map((m) => {
+          const labelId = 'user-' + m.attributes.name;
+          return (
+            <ListItem
+              id={`${id}-${m.id}`}
+              key={`${id}-${m.id}`}
+              role="listitem"
+              onClick={select(m.id as string)}
+            >
+              <ListItemIcon>
+                <Radio
+                  checked={selected === m.id}
+                  tabIndex={-1}
+                  inputProps={{ 'aria-labelledby': labelId }}
+                />
+              </ListItemIcon>
+              <ListItemAvatar>
+                <UserAvatar userRec={m} />
+              </ListItemAvatar>
+              <ListItemText id={labelId} primary={m.attributes.name} />
+            </ListItem>
+          );
+        })}
+    </>
+  );
+}
+
+interface IProps {
   sections: Array<Section>;
   visible: boolean;
   closeMethod?: () => void;
@@ -71,16 +126,25 @@ export enum TranscriberActors {
   Editor = 'Editor',
 }
 function AssignSection(props: IProps) {
-  const { users, orgMemberships, sections, t, ts, visible, closeMethod } =
-    props;
+  const { sections, visible, closeMethod } = props;
+  const t: IAssignSectionStrings = useSelector(
+    assignSectionSelector,
+    shallowEqual
+  );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const users = useOrbitData<UserD[]>('user');
+  const orgMemberships = useOrbitData<OrganizationMembership[]>(
+    'organizationmembership'
+  );
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [open, setOpen] = useState(visible);
+  const [memberIds, setMemberIds] = useState<string[]>([]);
   const [selectedTranscriber, setSelectedTranscriber] = useState('');
   const [selectedReviewer, setSelectedReviewer] = useState('');
   const { getOrganizedBy } = useOrganizedBy();
-  const [organizedBy] = useState(getOrganizedBy(false));
+  const [organizedBy, setOrganizedBy] = useState('');
 
   const handleClose = () => {
     if (closeMethod) {
@@ -94,10 +158,10 @@ function AssignSection(props: IProps) {
     userId: string,
     role: TranscriberActors
   ) => {
-    await memory.update((t: TransformBuilder) => [
+    await memory.update((t) => [
       ...UpdateRelatedRecord(
         t,
-        section,
+        section as SectionD,
         role.toLowerCase(),
         'user',
         userId,
@@ -127,81 +191,41 @@ function AssignSection(props: IProps) {
   };
 
   const doSetSelected = (section: Section) => {
-    setSelectedTranscriber(related(section, 'transcriber'));
-    setSelectedReviewer(related(section, 'editor'));
+    const newTranscriber = related(section, 'transcriber');
+    if (selectedTranscriber !== newTranscriber) {
+      setSelectedTranscriber(related(section, 'transcriber'));
+    }
+    const newReviewer = related(section, 'editor');
+    if (selectedReviewer !== newReviewer) {
+      setSelectedReviewer(related(section, 'editor'));
+    }
   };
 
   useEffect(() => {
-    setOpen(visible);
+    const newIds: string[] = orgMemberships
+      .filter((gm) => related(gm, 'organization') === organization)
+      .map((gm) => related(gm, 'user'))
+      .sort();
+    setMemberIds(newIds);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orgMemberships, organization]);
+
+  useEffect(() => {
+    const newOrganizedBy = getOrganizedBy(false);
+    if (organizedBy !== newOrganizedBy) {
+      setOrganizedBy(newOrganizedBy);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (open !== visible) {
+      setOpen(visible);
+    }
     doSetSelected(sections[0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, sections]);
 
-  const memberIds = orgMemberships
-    .filter((gm) => related(gm, 'organization') === organization)
-    .map((gm) => related(gm, 'user'));
-
-  const transcriberUserList = users
-    .filter((u) => u.attributes && memberIds.indexOf(u.id) !== -1)
-    .map((m, index) => {
-      const labelId = 'user-' + m.attributes.name;
-      return (
-        <ListItem
-          id={`assignTranscriber-${index}`}
-          key={index}
-          role="listitem"
-          onClick={handleSelectTranscriber(m.id)}
-        >
-          <ListItemIcon>
-            <Radio
-              checked={selectedTranscriber === m.id}
-              tabIndex={-1}
-              inputProps={{ 'aria-labelledby': labelId }}
-            />
-          </ListItemIcon>
-          <ListItemAvatar>
-            <UserAvatar {...props} userRec={m} />
-          </ListItemAvatar>
-          <ListItemText id={labelId} primary={m.attributes.name} />
-        </ListItem>
-      );
-    });
-
-  const editorUserList = users
-    .filter((u) => u.attributes && memberIds.indexOf(u.id) !== -1)
-    .map((m, index) => {
-      const labelId = 'user-' + m.attributes.name;
-      return (
-        <ListItem
-          id={`assignReview-${index}`}
-          key={index}
-          role="listitem"
-          onClick={handleSelectReviewer(m.id)}
-        >
-          <ListItemIcon>
-            <Radio
-              checked={selectedReviewer === m.id}
-              tabIndex={-1}
-              inputProps={{ 'aria-labelledby': labelId }}
-            />
-          </ListItemIcon>
-          <ListItemAvatar>
-            <UserAvatar {...props} userRec={m} />
-          </ListItemAvatar>
-          <ListItemText id={labelId} primary={m.attributes.name} />
-        </ListItem>
-      );
-    });
-  const sectionList = sections.map((p, index) => {
-    return (
-      <TableRow key={index}>
-        <TableCell component="th" scope="row">
-          {sectionNumber(p) + ' ' + p.attributes.name}
-        </TableCell>
-        <TableCell align="right">{sectionEditorName(p, users)} </TableCell>
-        <TableCell align="right">{sectionTranscriberName(p, users)}</TableCell>
-      </TableRow>
-    );
-  });
   return (
     <div>
       <Dialog
@@ -242,7 +266,9 @@ function AssignSection(props: IProps) {
                     </TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>{sectionList}</TableBody>
+                <TableBody>
+                  <SectionList sections={sections} users={users} />
+                </TableBody>
               </Table>
             </Paper>
           </Grid>
@@ -262,7 +288,13 @@ function AssignSection(props: IProps) {
                     </IconButton>
                     {ts.editor}
                   </ListItem>
-                  {editorUserList}
+                  <UserList
+                    id={'assignEditor'}
+                    users={users}
+                    memberIds={memberIds}
+                    selected={selectedReviewer}
+                    select={handleSelectReviewer}
+                  />
                 </List>
               </Paper>
             </Grid>
@@ -273,7 +305,13 @@ function AssignSection(props: IProps) {
                     <TranscriberIcon />
                     {ts.transcriber}
                   </ListItem>
-                  {transcriberUserList}
+                  <UserList
+                    id={'assignTranscriber'}
+                    users={users}
+                    memberIds={memberIds}
+                    selected={selectedTranscriber}
+                    select={handleSelectTranscriber}
+                  />
                 </List>
               </Paper>
             </Grid>
@@ -289,16 +327,4 @@ function AssignSection(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'assignSection' }),
-  ts: localStrings(state, { layout: 'shared' }),
-});
-
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  orgMemberships: (q: QueryBuilder) => q.findRecords('organizationmembership'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(AssignSection) as any
-) as any;
+export default AssignSection;

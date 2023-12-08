@@ -1,4 +1,4 @@
-import { MediaFile } from '../model';
+import { MediaFile, MediaFileD } from '../model';
 import { mediaFileName, related, VernacularTag } from '.';
 
 interface ILatest {
@@ -11,7 +11,7 @@ const versionName = (mf: MediaFile) => {
 };
 export const getMediaInPlans = (
   planids: Array<string>,
-  mediaFiles: Array<MediaFile>,
+  mediaFiles: MediaFileD[],
   onlyTypeId: string | null | undefined, // null for vernacular
   onlyLatest: boolean
 ) => {

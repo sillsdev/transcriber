@@ -1,25 +1,17 @@
 import { render } from '@testing-library/react';
 import { setGlobal } from 'reactn';
 import {
-  Section,
-  Passage,
   ISheet,
   IwsKind,
   IMediaShare,
   SheetLevel,
+  SectionD,
+  PassageD,
 } from '../model';
-import {
-  DataProvider as DataProviderBar,
-  DataProviderProps,
-} from 'react-orbitjs';
 import { useWfLocalSave } from '../components/Sheet';
 import { memory } from '../schema';
-import { PropsWithChildren } from 'react';
 import { PassageTypeEnum } from '../model/passageType';
-
-const DataProvider = (props: DataProviderProps & PropsWithChildren) => {
-  return <DataProviderBar {...props} />;
-};
+import DataProvider from '../hoc/DataProvider';
 
 const defaultSheet: ISheet = {
   level: SheetLevel.Section,
@@ -63,8 +55,8 @@ interface HookProps {
 function setup(props: HookProps) {
   let returnVal: (
     ws: ISheet[],
-    sections: Section[],
-    passages: Passage[],
+    sections: SectionD[],
+    passages: PassageD[],
     lastSaved?: string
   ) => Promise<void> = async () => {};
   const TestComponent = () => {
@@ -142,7 +134,7 @@ test('delete one section and one passage', async () => {
       book: 'LUK',
       reference: '4:1-13',
       comment: '',
-      passage: { type: 'passage', id: 'pa1' } as Passage,
+      passage: { type: 'passage', id: 'pa1' } as PassageD,
       passageUpdated: '2021-09-22',
       deleted: true,
       mediaShared: IMediaShare.NotPublic,
@@ -185,14 +177,14 @@ test('update section and passage', async () => {
       book: 'LUK',
       reference: '4:1-13',
       comment: '',
-      passage: { type: 'passage', id: 'pa1' } as Passage,
+      passage: { type: 'passage', id: 'pa1' } as PassageD,
       passageUpdated: '2021-09-22',
       deleted: false,
       mediaShared: IMediaShare.NotPublic,
     },
   ];
 
-  const sections: Section[] = [
+  const sections: SectionD[] = [
     {
       type: 'section',
       id: 's1',
@@ -209,7 +201,7 @@ test('update section and passage', async () => {
     },
   ];
 
-  const passages: Passage[] = [
+  const passages: PassageD[] = [
     {
       type: 'passage',
       id: 'pa1',
@@ -225,7 +217,7 @@ test('update section and passage', async () => {
         dateUpdated: '2021-09-21',
         lastModifiedBy: 2,
       },
-    } as Passage,
+    } as PassageD,
   ];
 
   const localSave = setup({ setComplete });
@@ -263,14 +255,14 @@ test('no update if same date', async () => {
       book: 'LUK',
       reference: '4:1-13',
       comment: '',
-      passage: { type: 'passage', id: 'pa1' } as Passage,
+      passage: { type: 'passage', id: 'pa1' } as PassageD,
       passageUpdated: '2021-09-22',
       deleted: false,
       mediaShared: IMediaShare.NotPublic,
     },
   ];
 
-  const sections: Section[] = [
+  const sections: SectionD[] = [
     {
       type: 'section',
       id: 's1',
@@ -287,7 +279,7 @@ test('no update if same date', async () => {
     },
   ];
 
-  const passages: Passage[] = [
+  const passages: PassageD[] = [
     {
       type: 'passage',
       id: 'pa1',
@@ -303,7 +295,7 @@ test('no update if same date', async () => {
         dateUpdated: '2021-09-21',
         lastModifiedBy: 2,
       },
-    } as Passage,
+    } as PassageD,
   ];
 
   const localSave = setup({ setComplete });

@@ -65,13 +65,12 @@ class SelectEditor extends PureComponent<IProps, SelectState> {
     return (
       <Select
         autoFocus
-        openOnFocus
-        closeOnSelect
+        openMenuOnFocus
+        closeMenuOnSelect
         placeholder={this.props.placeHolder || 'Select Book...'}
         value={this.props.value}
         menuShouldScrollIntoView
         onChange={this.handleChange}
-        onInputKeyDown={this.handleKeyDown}
         onKeyDown={this.handleKeyDown}
         options={this.props.suggestions}
       />

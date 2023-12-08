@@ -1,13 +1,14 @@
 import {
   ISheet,
   IwsKind,
-  Section,
-  Passage,
   IMediaShare,
   OrgWorkflowStep,
   IWorkflowStepsStrings,
   SheetLevel,
-  Graphic,
+  SectionD,
+  PassageD,
+  GraphicD,
+  OrgWorkflowStepD,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
@@ -131,13 +132,13 @@ export const isPassageFiltered = (
 };
 export const getSheet = (
   plan: string,
-  sections: Section[],
-  passages: Passage[],
-  graphics: Graphic[],
+  sections: SectionD[],
+  passages: PassageD[],
+  graphics: GraphicD[],
   flat: boolean,
   projectShared: boolean,
   memory: Memory,
-  orgWorkflowSteps: OrgWorkflowStep[],
+  orgWorkflowSteps: OrgWorkflowStepD[],
   wfStr: IWorkflowStepsStrings,
   filterState: ISTFilterState,
   hidePublishing: boolean,

@@ -1,6 +1,5 @@
 import { useGlobal } from 'reactn';
 import { Plan, IState, IVProjectStrings } from '../model';
-import { QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 
@@ -56,9 +55,7 @@ export const useOrganizedBy = () => {
     if (!planId || planId === '') planId = plan;
     if (!planId || planId === '')
       return localizedOrganizedBy('section', singular);
-    const planRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('plan')
-    ) as Plan[];
+    const planRec = memory.cache.query((q) => q.findRecords('plan')) as Plan[];
     const selected = planRec.filter((p) => p.id === planId);
     if (selected.length > 0) {
       return localizedOrganizedBy(

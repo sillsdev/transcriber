@@ -5,7 +5,7 @@ import {
   related,
   VernacularTag,
 } from '../crud';
-import { Passage, Plan, Section } from '../model';
+import { Passage, PassageD, Plan, Section } from '../model';
 import Memory from '@orbit/memory';
 import { cleanFileName } from '.';
 
@@ -37,7 +37,7 @@ const noPassageRef = (passage: Passage, memory: Memory) => {
   );
 };
 export const passageDefaultFilename = (
-  passage: Passage,
+  passage: PassageD,
   planId: string,
   memory: Memory,
   artifactType: string | null | undefined,

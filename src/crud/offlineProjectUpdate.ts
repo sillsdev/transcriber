@@ -1,6 +1,6 @@
 import { OfflineProject } from '../model';
 import Memory from '@orbit/memory';
-import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
+import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 import { related } from '.';
 import { currentDateTime } from '../utils';
 
@@ -8,7 +8,7 @@ export const offlineProjectFromProject = (
   memory: Memory,
   projectid: string
 ) => {
-  const orec = memory.cache.query((q: QueryBuilder) =>
+  const orec = memory.cache.query((q) =>
     q.findRecords('offlineproject')
   ) as OfflineProject[];
   const oprecs = orec.filter((r) => related(r, 'project') === projectid);
@@ -19,13 +19,13 @@ export const offlineProjectFromProject = (
 };
 export const offlineProjectUpdateSnapshot = (
   projectid: string,
-  ops: Operation[],
+  ops: RecordOperation[],
   memory: Memory,
   newDate: string,
   startNext: number,
   filesToo: boolean
 ) => {
-  const tb = new TransformBuilder();
+  const tb = new RecordTransformBuilder();
   const oprec = offlineProjectFromProject(memory, projectid);
   if (oprec) {
     const proj = {
@@ -41,18 +41,18 @@ export const offlineProjectUpdateSnapshot = (
       proj.attributes.offlineAvailable = true;
       proj.attributes.fileDownloadDate = newDate;
     }
-    ops.push(tb.updateRecord(proj));
+    ops.push(tb.updateRecord(proj).toOperation());
     return true;
   } else return false;
 };
 
 export const offlineProjectUpdateFilesDownloaded = (
   projectid: string,
-  ops: Operation[],
+  ops: RecordOperation[],
   memory: Memory,
   newDate: string
 ) => {
-  const tb = new TransformBuilder();
+  const tb = new RecordTransformBuilder();
   const oprec = offlineProjectFromProject(memory, projectid);
   if (oprec) {
     const proj = {
@@ -62,7 +62,7 @@ export const offlineProjectUpdateFilesDownloaded = (
         dateUpdated: currentDateTime(),
       },
     } as OfflineProject;
-    ops.push(tb.updateRecord(proj));
+    ops.push(tb.updateRecord(proj).toOperation());
     return true;
   } else return false;
 };

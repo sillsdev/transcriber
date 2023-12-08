@@ -9,7 +9,13 @@ import {
   styled,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { VProject, DialogMode, OptionType, Project, Plan } from '../../model';
+import {
+  VProject,
+  DialogMode,
+  OptionType,
+  Project,
+  ProjectD,
+} from '../../model';
 import {
   ProjectDialog,
   IProjectDialog,
@@ -36,7 +42,7 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
 import NewProjectGrid from './NewProjectGrid';
 import { restoreScroll, useHome } from '../../utils';
-import { RecordIdentity } from '@orbit/data';
+import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 
 const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   minWidth: 275,
@@ -289,10 +295,12 @@ export const AddCard = (props: IProps) => {
             spellCheck: languageRef.current.spellCheck,
             defaultFont: languageRef.current.font,
           },
-        } as Project;
+        } as ProjectD;
         await memory.update((t) => [
           ...UpdateRecord(t, updProj, user),
-          t.replaceAttribute(planRec as Plan, 'name', newName),
+          t
+            .replaceAttribute(planRec as RecordIdentity, 'name', newName)
+            .toOperation(),
         ]);
         return planRef.current;
       }
@@ -322,7 +330,7 @@ export const AddCard = (props: IProps) => {
     if (!offlineOnly)
       await waitForRemoteId(
         { type: 'plan', id: planRef.current },
-        memory.keyMap
+        memory.keyMap as RecordKeyMap
       );
     stepRef.current = 1;
     return planRef.current;
@@ -357,7 +365,11 @@ export const AddCard = (props: IProps) => {
       // Allow time for last check mark
       setInProgress(false);
       stepRef.current = 0;
-      setView(`/plan/${remoteId('plan', planId, memory.keyMap) || planId}/0`);
+      setView(
+        `/plan/${
+          remoteId('plan', planId, memory.keyMap as RecordKeyMap) || planId
+        }/0`
+      );
     }, 1000);
   };
 

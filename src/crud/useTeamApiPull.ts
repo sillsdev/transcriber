@@ -1,5 +1,6 @@
 import JSONAPISource from '@orbit/jsonapi';
 import { useGlobal } from 'reactn';
+import { recToMemory } from './syncToMemory';
 
 export const useTeamApiPull = () => {
   const [memory] = useGlobal('memory');
@@ -8,9 +9,11 @@ export const useTeamApiPull = () => {
 
   const teamRead = async (id: string) => {
     if (remote)
-      return await memory.sync(
-        await remote.pull((q) => q.findRecord({ type: 'organization', id }))
-      );
+      return await recToMemory({
+        recId: { type: 'organization', id },
+        memory,
+        remote,
+      });
   };
   return teamRead;
 };
