@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 export interface OrgKeyterm extends BaseModel {
   attributes: {
@@ -16,5 +16,7 @@ export interface OrgKeyterm extends BaseModel {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type OrgKeytermD = OrgKeyterm & InitializedRecord;
 
 export default OrgKeyterm;

@@ -49,6 +49,7 @@ import { ILanguage } from './Language';
 import { UnsavedContext } from '../context/UnsavedContext';
 import JSONAPISource from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
+import { RecordKeyMap } from '@orbit/records';
 
 const ColumnDiv = styled('div')(() => ({
   display: 'flex',
@@ -158,15 +159,16 @@ export default function MediaTitle(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, canSaveRecording]);
 
-  const PlanId = useMemo(() => {
-    if (useplan) return remoteIdNum('plan', useplan, memory.keyMap) || useplan;
-    return remoteIdNum('plan', plan, memory.keyMap) || plan;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plan, useplan]);
-
+  const getPlanId = () => {
+    if (useplan)
+      return (
+        remoteIdNum('plan', useplan, memory.keyMap as RecordKeyMap) || useplan
+      );
+    return remoteIdNum('plan', plan, memory.keyMap as RecordKeyMap) || plan;
+  };
   const TitleId = useMemo(() => {
     var id = getTypeId(ArtifactTypeSlug.Title) as string;
-    return remoteId('artifacttype', id, memory.keyMap) || id;
+    return remoteId('artifacttype', id, memory.keyMap as RecordKeyMap) || id;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offlineOnly]);
 
@@ -197,12 +199,14 @@ export default function MediaTitle(props: IProps) {
         'mediaId',
         () =>
           offlineOnly ||
-          remoteIdGuid('mediafile', mediaId, memory.keyMap) !== undefined,
+          remoteIdGuid('mediafile', mediaId, memory.keyMap as RecordKeyMap) !==
+            undefined,
         () => false,
         100
       ).then(() => {
         onMediaIdChange(
-          remoteIdGuid('mediafile', mediaId, memory.keyMap) ?? mediaId
+          remoteIdGuid('mediafile', mediaId, memory.keyMap as RecordKeyMap) ??
+            mediaId
         );
         reset();
       });
@@ -300,7 +304,7 @@ export default function MediaTitle(props: IProps) {
     reset();
   };
   const getUserId = () =>
-    remoteIdNum('user', user || '', memory.keyMap) || user;
+    remoteIdNum('user', user || '', memory.keyMap as RecordKeyMap) || user;
 
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     const uploadList = fileList.current;
@@ -336,7 +340,7 @@ export default function MediaTitle(props: IProps) {
     uploadFiles(files);
     fileList.current = files;
     const mediaFile = {
-      planId: PlanId,
+      planId: getPlanId(),
       versionNumber: 1,
       originalFile: files[0].name,
       contentType: files[0].type,

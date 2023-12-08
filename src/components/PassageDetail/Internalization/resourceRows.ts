@@ -1,8 +1,8 @@
 import {
   ArtifactCategory,
   ArtifactType,
-  MediaFile,
-  SectionResource,
+  MediaFileD,
+  SectionResourceD,
   SectionResourceUser,
 } from '../../../model';
 import { related, VernacularTag } from '../../../crud';
@@ -23,8 +23,8 @@ interface DataProps {
 
 interface RowProps extends DataProps {
   newRow: IRow[];
-  r: SectionResource | null;
-  media: MediaFile | undefined;
+  r: SectionResourceD | null;
+  media: MediaFileD | undefined;
   sourceversion: number;
 }
 
@@ -66,7 +66,7 @@ export const oneMediaRow = ({
     artifactCategory: localizedCategory(catNameSlug),
     done,
     editAction: null,
-    mediafile: media || ({} as MediaFile),
+    mediafile: media || ({} as MediaFileD),
     resource: r,
     isResource: isResource(typeNameSlug),
     passageId: (r ? related(r, 'passage') : related(media, 'passage')) || '',
@@ -80,7 +80,7 @@ export const oneMediaRow = ({
 };
 
 interface MediaProps extends DataProps {
-  mediafiles: MediaFile[];
+  mediafiles: MediaFileD[];
 }
 
 export const mediaRows = (props: MediaProps) => {
@@ -118,8 +118,8 @@ export const mediaRows = (props: MediaProps) => {
 };
 
 interface IProps extends DataProps {
-  res: SectionResource[];
-  mediafiles: MediaFile[];
+  res: SectionResourceD[];
+  mediafiles: MediaFileD[];
 }
 
 export const resourceRows = (props: IProps) => {

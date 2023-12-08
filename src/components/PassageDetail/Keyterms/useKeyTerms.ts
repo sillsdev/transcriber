@@ -139,7 +139,7 @@ export const useKeyTerms = () => {
     start: number,
     end?: number,
     sort?: SortBy // force refresh on sort change
-  ) => {
+  ): IKeyTerm[] => {
     if (sort) handleSortCompare(sort);
     const bookn = bookN(book);
     let termSet = new Set<number>();

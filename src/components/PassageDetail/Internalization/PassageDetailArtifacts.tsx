@@ -7,29 +7,21 @@ import {
   useCallback,
 } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
 import {
   IPassageDetailArtifactsStrings,
-  IState,
   Passage,
   Section,
-} from '../../../model';
-import localStrings from '../../../selector/localize';
-import {
-  SectionResource,
+  MediaFileD,
+  SectionResourceD,
   MediaFile,
-  ArtifactCategory,
   ArtifactType,
-  SectionResourceUser,
   Resource,
 } from '../../../model';
-import { withData } from 'react-orbitjs';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import {
   PassageDetailContext,
   PlayInPlayer,
 } from '../../../context/PassageDetailContext';
-import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import Uploader from '../../Uploader';
 import AddResource from './AddResource';
@@ -75,6 +67,14 @@ import {
   removeExtension,
   isVisual,
 } from '../../../utils';
+import { useOrbitData } from '../../../hoc/useOrbitData';
+import {
+  RecordIdentity,
+  RecordKeyMap,
+  RecordTransformBuilder,
+} from '@orbit/records';
+import { shallowEqual, useSelector } from 'react-redux';
+import { passageDetailArtifactsSelector } from '../../../selector';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -87,26 +87,15 @@ const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   },
 }));
 
-interface IRecordProps {
-  sectionResources: SectionResource[];
-  mediafiles: MediaFile[];
-  artifactTypes: ArtifactType[];
-  categories: ArtifactCategory[]; // used by resourceRows
-  userResources: SectionResourceUser[]; // used by resourceRows
-}
-
-interface IStateProps {
-  t: IPassageDetailArtifactsStrings;
-}
-
-interface IProps extends IStateProps, IRecordProps {}
 export enum ResourceTypeEnum {
   sectionResource,
   passageResource,
   projectResource,
 }
-export function PassageDetailArtifacts(props: IProps) {
-  const { sectionResources, mediafiles, artifactTypes, t } = props;
+export function PassageDetailArtifacts() {
+  const sectionResources = useOrbitData<SectionResourceD[]>('sectionresource');
+  const mediafiles = useOrbitData<MediaFile[]>('mediafile');
+  const artifactTypes = useOrbitData<ArtifactType[]>('artifacttype');
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -144,9 +133,9 @@ export function PassageDetailArtifacts(props: IProps) {
   const [projectResourceVisible, setProjectResourceVisible] = useState(false);
   const [projResPassageVisible, setProjResPassageVisible] = useState(false);
   const [projResWizVisible, setProjResWizVisible] = useState(false);
-  const [projResSetup, setProjResSetup] = useState(new Array<MediaFile>());
+  const [projResSetup, setProjResSetup] = useState(new Array<MediaFileD>());
   const [editResource, setEditResource] = useState<
-    SectionResource | undefined
+    SectionResourceD | undefined
   >();
   const [artifactTypeId, setArtifactTypeId] = useState<string>();
   const [uploadType, setUploadType] = useState<UploadType>(UploadType.Resource);
@@ -158,7 +147,7 @@ export function PassageDetailArtifacts(props: IProps) {
     ResourceTypeEnum.sectionResource
   );
   const projIdentRef = useRef<RecordIdentity[]>([]);
-  const projMediaRef = useRef<MediaFile>();
+  const projMediaRef = useRef<MediaFileD>();
   const [allResources, setAllResources] = useState(false);
   const { showMessage } = useSnackBar();
   const [confirm, setConfirm] = useState('');
@@ -167,6 +156,11 @@ export function PassageDetailArtifacts(props: IProps) {
   const [mediaEnd, setMediaEnd] = useState<number | undefined>();
   const projectResourceSave = useProjectResourceSave();
   const { userIsAdmin } = useRole();
+  const t: IPassageDetailArtifactsStrings = useSelector(
+    passageDetailArtifactsSelector,
+    shallowEqual
+  );
+
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
       (t) =>
@@ -232,7 +226,7 @@ export function PassageDetailArtifacts(props: IProps) {
     setDisplayId('');
   };
 
-  const handleDone = async (id: string, res: SectionResource | null) => {
+  const handleDone = async (id: string, res: SectionResourceD | null) => {
     if (!res) return;
     const rec = await ReadSectionResourceUser(res);
     if (rec !== null) {
@@ -292,7 +286,9 @@ export function PassageDetailArtifacts(props: IProps) {
   };
 
   const handleEdit = (id: string) => {
-    const secRes = sectionResources.find((r) => related(r, 'mediafile') === id);
+    const secRes = sectionResources.find(
+      (r) => related(r, 'mediafile') === id
+    ) as SectionResourceD;
     setEditResource(secRes);
     resourceTypeRef.current = Boolean(related(secRes, 'passage'))
       ? ResourceTypeEnum.passageResource
@@ -332,9 +328,9 @@ export function PassageDetailArtifacts(props: IProps) {
       }
       const mf = mediafiles.find(
         (m) => m.id === related(editResource, 'mediafile')
-      );
+      ) as MediaFileD | undefined;
       if (mf && catIdRef.current) {
-        await memory.update((t: TransformBuilder) => [
+        await memory.update((t) => [
           ...ReplaceRelatedRecord(
             t,
             mf,
@@ -345,7 +341,7 @@ export function PassageDetailArtifacts(props: IProps) {
         ]);
       }
       if (mf && isPassageResource() !== Boolean(related(mf, 'passage'))) {
-        await memory.update((t: TransformBuilder) => [
+        await memory.update((t) => [
           ...ReplaceRelatedRecord(
             t,
             mf,
@@ -418,19 +414,21 @@ export function PassageDetailArtifacts(props: IProps) {
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     let cnt = rowData.length;
-    var projRes = new Array<MediaFile>();
+    var projRes = new Array<MediaFileD>();
     if (mediaRemoteIds) {
       for (const remId of mediaRemoteIds) {
         cnt += 1;
-        const id = remoteIdGuid('mediafile', remId, memory.keyMap) || remId;
+        const id =
+          remoteIdGuid('mediafile', remId, memory.keyMap as RecordKeyMap) ||
+          remId;
         const mediaRecId = { type: 'mediafile', id };
         if (descriptionRef.current) {
-          await memory.update((t: TransformBuilder) => [
+          await memory.update((t) => [
             t.replaceAttribute(mediaRecId, 'topic', descriptionRef.current),
           ]);
         }
         if (catIdRef.current) {
-          await memory.update((t: TransformBuilder) => [
+          await memory.update((t) => [
             ...ReplaceRelatedRecord(
               t,
               mediaRecId,
@@ -441,7 +439,7 @@ export function PassageDetailArtifacts(props: IProps) {
           ]);
         }
         if (isPassageResource()) {
-          await memory.update((t: TransformBuilder) => [
+          await memory.update((t) => [
             ...ReplaceRelatedRecord(
               t,
               mediaRecId,
@@ -459,7 +457,7 @@ export function PassageDetailArtifacts(props: IProps) {
             isPassageResource() ? passage.id : null
           );
         } else {
-          projRes.push(findRecord(memory, 'mediafile', id) as MediaFile);
+          projRes.push(findRecord(memory, 'mediafile', id) as MediaFileD);
         }
       }
       if (projRes.length) setProjResSetup(projRes);
@@ -506,7 +504,7 @@ export function PassageDetailArtifacts(props: IProps) {
     }
   };
 
-  const handleSelectProjectResource = (m: MediaFile) => {
+  const handleSelectProjectResource = (m: MediaFileD) => {
     setSelected(m.id, PlayInPlayer.yes);
     projMediaRef.current = m;
     setVisual(isVisual(m));
@@ -515,7 +513,7 @@ export function PassageDetailArtifacts(props: IProps) {
   };
 
   const writeVisualResource = async (items: RecordIdentity[]) => {
-    const t = new TransformBuilder();
+    const t = new RecordTransformBuilder();
     let cnt = 0;
     const total = items.length;
     for (let i of items) {
@@ -763,18 +761,4 @@ export function PassageDetailArtifacts(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'passageDetailArtifacts' }),
-});
-
-const mapRecordsToProps = {
-  sectionResources: (q: QueryBuilder) => q.findRecords('sectionresource'),
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  categories: (q: QueryBuilder) => q.findRecords('artifactcategory'),
-  artifactTypes: (q: QueryBuilder) => q.findRecords('artifacttype'),
-  userResources: (q: QueryBuilder) => q.findRecords('sectionresourceuser'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(PassageDetailArtifacts) as any as any
-) as any;
+export default PassageDetailArtifacts;

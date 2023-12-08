@@ -1,6 +1,5 @@
 import { useGlobal } from 'reactn';
-import { VProject, Plan, Project } from '../model';
-import { QueryBuilder } from '@orbit/data';
+import { VProjectD, Plan, ProjectD } from '../model';
 import { related, useTableType } from '.';
 
 export const useVProjectRead = () => {
@@ -20,9 +19,9 @@ export const useVProjectRead = () => {
 
   return (plan: Plan) => {
     const projectId = related(plan, 'project');
-    const projects = memory.cache.query((q: QueryBuilder) =>
+    const projects = memory.cache.query((q) =>
       q.findRecords('project')
-    ) as Project[];
+    ) as ProjectD[];
     const projectRecs = projects.filter((p) => p.id === projectId);
     if (projectRecs.length > 0) {
       return {
@@ -39,8 +38,8 @@ export const useVProjectRead = () => {
           ...projectRecs[0].relationships,
           ...plan.relationships,
         },
-      } as VProject;
+      } as VProjectD;
     }
-    return plan as VProject;
+    return plan as VProjectD;
   };
 };

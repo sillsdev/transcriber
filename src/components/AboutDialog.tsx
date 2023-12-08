@@ -1,8 +1,6 @@
 /* eslint-disable no-template-curly-in-string */
 import React from 'react';
-import { IMainStrings, IState } from '../model';
-import { connect } from 'react-redux';
-import localStrings from '../selector/localize';
+import { IMainStrings } from '../model';
 import {
   Dialog,
   DialogTitle,
@@ -29,6 +27,8 @@ import stringReplace from 'react-string-replace';
 import { useSnackBar } from '../hoc/SnackBar';
 import { ApmLogo } from '../control/ApmLogo';
 import { StyledHeading } from '../control';
+import { mainSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 const version = require('../../package.json').version;
 const copyright = require('../../package.json').build.copyright;
 const author = require('../../package.json').author.name;
@@ -133,17 +133,14 @@ const LicenseAccordion = ({ title, url, text, product, kid }: LicenseProps) => {
   );
 };
 
-interface IStateProps {
-  t: IMainStrings;
-}
-
-interface AboutDialogProps extends IStateProps {
+interface AboutDialogProps {
   open: boolean;
   onClose: () => void;
 }
 
 function AboutDialog(props: AboutDialogProps) {
-  const { onClose, open, t } = props;
+  const { onClose, open } = props;
+  const t: IMainStrings = useSelector(mainSelector, shallowEqual);
   const { showMessage } = useSnackBar();
 
   const handleClose = () => onClose();
@@ -205,8 +202,4 @@ function AboutDialog(props: AboutDialogProps) {
     </Dialog>
   );
 }
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'main' }),
-});
-
-export default connect(mapStateToProps)(AboutDialog);
+export default AboutDialog;

@@ -1,6 +1,10 @@
-import { Record, RecordRelationship } from '@orbit/data';
+import {
+  InitializedRecord,
+  RecordRelationship,
+  UninitializedRecord,
+} from '@orbit/records';
 
-export interface PlanType extends Record {
+export interface PlanType extends UninitializedRecord {
   attributes: {
     name: string;
     description: string;
@@ -9,4 +13,7 @@ export interface PlanType extends Record {
     plans: RecordRelationship;
   };
 }
+
+export type PlanTypeD = PlanType & InitializedRecord;
+
 export default PlanType;

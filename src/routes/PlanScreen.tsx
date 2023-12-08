@@ -38,7 +38,8 @@ export const PlanScreen = () => {
   }, [prjId]);
 
   React.useEffect(() => {
-    if (project === '' && organization !== '') setView('/team');
+    if (project === '' && organization !== '' && view !== '/team')
+      setView('/team');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project, organization]);
 

@@ -1,6 +1,12 @@
 import { useGlobal } from 'reactn';
-import { SectionPassage, ISheet, Passage } from '../../model';
-import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
+import { SectionPassage, SectionPassageD, ISheet, PassageD } from '../../model';
+import {
+  RecordTransformBuilder,
+  RecordOperation,
+  RecordIdentity,
+  StandardRecordNormalizer,
+  RecordKeyMap,
+} from '@orbit/records';
 import JSONAPISource from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
 import { remoteId, remoteIdNum, remoteIdGuid, findRecord } from '../../crud';
@@ -14,6 +20,7 @@ import {
 } from '.';
 import { waitForIt, generateUUID } from '../../utils';
 import { usePassageType } from '../../crud/usePassageType';
+import { pullRemoteToMemory } from '../../crud/syncToMemory';
 
 interface SaveRec {
   id: string;
@@ -46,11 +53,12 @@ export const useWfOnlineSave = (props: IProps) => {
   const getRemoteId = async (table: string, localid: string) => {
     await waitForIt(
       'remoteId',
-      () => remoteId(table, localid, memory.keyMap) !== undefined,
+      () =>
+        remoteId(table, localid, memory.keyMap as RecordKeyMap) !== undefined,
       () => false,
       100
     );
-    return remoteId(table, localid, memory.keyMap);
+    return remoteId(table, localid, memory.keyMap as RecordKeyMap);
   };
 
   // return Promise<boolean>: true if deep changes in sheet
@@ -108,7 +116,7 @@ export const useWfOnlineSave = (props: IProps) => {
             reference: w.reference,
             title: w.comment || '',
             passagetypeId: psgType
-              ? await getRemoteId('passagetype', psgType.id)
+              ? await getRemoteId('passagetype', psgType.id as string)
               : undefined,
 
             sharedResourceId: w.sharedResourceId
@@ -121,17 +129,18 @@ export const useWfOnlineSave = (props: IProps) => {
       recs.push(rowRec);
     }
     if (anychanged || deleteItems.length > 0) {
-      const sp: SectionPassage = {
+      let sp: SectionPassage = {
         attributes: {
           data: JSON.stringify(recs),
-          planId: remoteIdNum('plan', plan, memory.keyMap),
+          planId: remoteIdNum('plan', plan, memory.keyMap as RecordKeyMap),
           uuid: generateUUID(),
         },
         type: 'sectionpassage',
       } as SectionPassage;
-      memory.schema.initializeRecord(sp);
+      const rn = new StandardRecordNormalizer({ schema: memory.schema });
+      sp = rn.normalizeRecord(sp) as SectionPassageD;
       setComplete(20);
-      var rec = await memory.update((t: TransformBuilder) => t.addRecord(sp), {
+      let rec = await memory.update((t) => t.addRecord(sp), {
         label: 'Update Plan Section and Passages',
         sources: {
           remote: {
@@ -144,20 +153,17 @@ export const useWfOnlineSave = (props: IProps) => {
       //null only if sent twice by orbit
       if (rec) {
         setComplete(50);
-        var filterrec = {
-          attribute: 'plan-id',
-          value: remoteId('plan', plan, memory.keyMap),
-        };
+        const filter = [
+          {
+            attribute: 'plan-id',
+            value: remoteId('plan', plan, memory.keyMap as RecordKeyMap),
+          },
+        ];
         //must wait for these...in case they they navigate away before done
-        await memory.sync(
-          await remote.pull((q) => q.findRecords('section').filter(filterrec))
-        );
-        await memory.sync(
-          await remote.pull((q) => q.findRecords('passage').filter(filterrec))
-        );
-        await memory.sync(
-          await remote.pull((q) => q.findRecord({ type: 'plan', id: plan }))
-        );
+        for (const table of ['section', 'passage']) {
+          await pullRemoteToMemory({ table, memory, remote, filter });
+        }
+        await pullRemoteToMemory({ table: 'plan', memory, remote });
         const anyNew = sheet.reduce(
           (prev, cur) =>
             prev ||
@@ -169,7 +175,7 @@ export const useWfOnlineSave = (props: IProps) => {
         if (anyNew) {
           //set the ids in the sheet
           //outrecs is an array of arrays of IRecords
-          const outrecs = JSON.parse(rec.attributes.data);
+          const outrecs = JSON.parse((rec as any)?.attributes?.data);
           sheet.forEach((row, index) => {
             if (isSectionRow(row) && isSectionAdding(row))
               row.sectionId = {
@@ -177,8 +183,8 @@ export const useWfOnlineSave = (props: IProps) => {
                 id: remoteIdGuid(
                   'section',
                   (outrecs[index][0] as SaveRec).id,
-                  memory.keyMap
-                ),
+                  memory.keyMap as RecordKeyMap
+                ) as string,
               };
             if (isPassageRow(row) && isPassageAdding(row)) {
               row.passage = findRecord(
@@ -187,25 +193,29 @@ export const useWfOnlineSave = (props: IProps) => {
                 remoteIdGuid(
                   'passage',
                   (outrecs[index][isSectionRow(row) ? 1 : 0] as SaveRec).id,
-                  memory.keyMap
-                )
-              ) as Passage;
+                  memory.keyMap as RecordKeyMap
+                ) as string
+              ) as PassageD;
             }
           });
         }
       }
     }
     if (deleteItems.length > 0) {
-      const tb = new TransformBuilder();
-      const operations: Operation[] = [];
+      const tb = new RecordTransformBuilder();
+      const operations: RecordOperation[] = [];
       deleteItems.forEach((i) => {
         const ws = sheet[i];
-        if (ws.sectionId) operations.push(tb.removeRecord(ws.sectionId));
+        if (ws.sectionId)
+          operations.push(tb.removeRecord(ws.sectionId).toOperation());
         if (ws.passage)
-          operations.push(tb.removeRecord(ws.passage as RecordIdentity));
+          operations.push(
+            tb.removeRecord(ws.passage as RecordIdentity).toOperation()
+          );
       });
       if (operations.length > 0) {
-        await memory.sync(await backup.push(operations));
+        await backup.sync((t) => operations);
+        await memory.sync((t) => operations);
       }
     }
     checkIt('useWfOnlineSave');

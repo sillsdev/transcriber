@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
 import {
-  IState,
   Plan,
   Section,
   Role,
@@ -14,51 +12,34 @@ import {
   MediaFile,
   ActivityStates,
 } from '../model';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import TreeChart, {
   IPlanRow,
   IWork,
   ITargetWork,
 } from '../components/TreeChart';
 import { related } from '../crud';
-import localStrings from '../selector/localize';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { shallowEqual, useSelector } from 'react-redux';
+import { activitySelector, sharedSelector } from '../selector';
 
-interface IStateProps {
-  ts: ISharedStrings;
-  ta: IActivityStateStrings;
-}
-
-interface IRecordProps {
-  plans: Array<Plan>;
-  sections: Array<Section>;
-  roles: Array<Role>;
-  passages: Array<Passage>;
-  users: Array<User>;
-  mediafiles: Array<MediaFile>;
-}
-
-interface IProps extends IStateProps, IRecordProps {
+interface IProps {
   selectedPlan?: string;
 }
 
 export function Visualize(props: IProps) {
-  const {
-    plans,
-    sections,
-    roles,
-    passages,
-    mediafiles,
-    users,
-    selectedPlan,
-    ts,
-    ta,
-  } = props;
+  const { selectedPlan } = props;
+  const plans = useOrbitData<Plan[]>('plan');
+  const sections = useOrbitData<Section[]>('section');
+  const roles = useOrbitData<Role[]>('role');
+  const users = useOrbitData<User[]>('user');
+  const mediafiles = useOrbitData<MediaFile[]>('mediafile');
+  const passages = useOrbitData<Passage[]>('passage');
   const [project] = useGlobal('project');
   const [rows, setRows] = useState<Array<IPlanRow>>([]);
   const [data1, setData1] = useState<Array<IWork>>([]);
   const [data2, setData2] = useState<Array<IWork>>([]);
-
+  const ta: IActivityStateStrings = useSelector(activitySelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   interface ITotal {
     [key: string]: number;
   }
@@ -185,20 +166,4 @@ export function Visualize(props: IProps) {
   return <TreeChart rows={rows} data1={data1} data2={data2} />;
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  ts: localStrings(state, { layout: 'shared' }),
-  ta: localStrings(state, { layout: 'activityState' }),
-});
-
-const mapRecordsToProps = {
-  plans: (q: QueryBuilder) => q.findRecords('plan'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
-  roles: (q: QueryBuilder) => q.findRecords('role'),
-  passages: (q: QueryBuilder) => q.findRecords('passage'),
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  users: (q: QueryBuilder) => q.findRecords('user'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(Visualize) as any
-) as any;
+export default Visualize;

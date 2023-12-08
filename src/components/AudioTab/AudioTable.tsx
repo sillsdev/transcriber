@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { shallowEqual, useSelector } from 'react-redux';
 import { PlanContext } from '../../context/PlanContext';
-import { IState, IMediaTabStrings, MediaFile } from '../../model';
+import { IState, IMediaTabStrings, MediaFileD } from '../../model';
 import { Button, Checkbox, FormControlLabel } from '@mui/material';
-import { TransformBuilder } from '@orbit/data';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from './VersionDlg';
@@ -20,6 +19,7 @@ import { IRow } from '.';
 import { Sorting } from '@devexpress/dx-react-grid';
 import { UpdateRecord } from '../../model/baseModel';
 import { mediaTabSelector } from '../../selector';
+import { RecordKeyMap } from '@orbit/records';
 
 interface IProps {
   data: IRow[];
@@ -136,9 +136,9 @@ export const AudioTable = (props: IProps) => {
   const handleChangeReadyToShare = (id: string) => () => {
     const mediaRec = memory.cache.query((q) =>
       q.findRecord({ type: 'mediafile', id: id })
-    ) as MediaFile;
+    ) as MediaFileD;
     mediaRec.attributes.readyToShare = !mediaRec.attributes.readyToShare;
-    memory.update((t: TransformBuilder) => UpdateRecord(t, mediaRec, user));
+    memory.update((t) => UpdateRecord(t, mediaRec, user));
     setRefresh();
   };
   const handleCloseTranscription = () => {
@@ -151,7 +151,7 @@ export const AudioTable = (props: IProps) => {
   };
 
   const handleDelete = async (i: number) => {
-    await memory.update((t: TransformBuilder) =>
+    await memory.update((t) =>
       t.removeRecord({
         type: 'mediafile',
         id: data[i].id,
@@ -283,11 +283,13 @@ export const AudioTable = (props: IProps) => {
   const Cell = (props: ICell) => {
     const { column, row } = props;
     if (column.name === 'actions') {
-      const mediaId = remoteId('mediafile', row.id, memory.keyMap) || row.id;
+      const mediaId =
+        remoteId('mediafile', row.id, memory.keyMap as RecordKeyMap) || row.id;
       return <PlayCell {...props} mediaId={mediaId} />;
     }
     if (column.name === 'detach') {
-      const mediaId = remoteId('mediafile', row.id, memory.keyMap) || row.id;
+      const mediaId =
+        remoteId('mediafile', row.id, memory.keyMap as RecordKeyMap) || row.id;
       return <DetachCell {...props} mediaId={mediaId} />;
     }
     if (column.name === 'version' && onAttach) {

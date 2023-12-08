@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 
 export interface Group extends BaseModel {
@@ -19,4 +19,7 @@ export interface Group extends BaseModel {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type GroupD = Group & InitializedRecord;
+
 export default Group;

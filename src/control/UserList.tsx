@@ -1,27 +1,23 @@
 import React, { ReactElement } from 'react';
-import { User } from '../model';
+import { UserD } from '../model';
 import { List } from '@mui/material';
 import { UserListItem } from '.';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
+import { useOrbitData } from '../hoc/useOrbitData';
 
 export interface ListAction {
   [key: string]: ReactElement;
 }
 
-interface IRecordProps {
-  users: Array<User>;
-}
-
-interface IProps extends IRecordProps {
+interface IProps {
   isSelected: (userId: string) => boolean;
-  curId: string | undefined;
+  curId?: string | undefined;
   select?: (userId: string) => void;
-  showTeams: boolean;
+  showTeams?: boolean;
 }
 
 export const UserList = (props: IProps) => {
-  const { users, isSelected, curId, select, showTeams } = props;
+  const { isSelected, curId, select, showTeams } = props;
+  const users = useOrbitData<UserD[]>('user');
 
   return (
     <>
@@ -38,9 +34,8 @@ export const UserList = (props: IProps) => {
             <UserListItem
               u={u}
               key={i}
-              users={users}
               onSelect={select}
-              showTeams={showTeams}
+              showTeams={showTeams ?? false}
             />
           ))}
       </List>
@@ -48,8 +43,4 @@ export const UserList = (props: IProps) => {
   );
 };
 
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-};
-
-export default withData(mapRecordsToProps)(UserList) as any;
+export default UserList;

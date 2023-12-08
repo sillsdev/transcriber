@@ -1,5 +1,5 @@
 import { IApiError } from '../model';
-import { ServerError } from '@orbit/data';
+import { ServerError } from '@orbit/jsonapi';
 import { Severity } from '.';
 import { IAxiosStatus } from '../store/AxiosStatus';
 

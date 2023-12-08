@@ -1,13 +1,19 @@
 import xpath from 'xpath';
 import { DOMParser, XMLSerializer } from 'xmldom';
-import { Passage, ActivityStates, MediaFile, Section } from '../model';
+import {
+  Passage,
+  ActivityStates,
+  Section,
+  PassageD,
+  MediaFileD,
+} from '../model';
 import Memory from '@orbit/memory';
-import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
+import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 import { related, parseRef, UpdateMediaStateOps } from '../crud';
 import { getReadWriteProg } from './paratextPath';
 
 interface PassageInfo {
-  passage: Passage;
+  passage: PassageD;
   mediaId: string;
   transcription: string;
 }
@@ -179,7 +185,7 @@ const addSection = (
   memory: Memory,
   addNumbers = true
 ) => {
-  var sections = memory.cache.query((q: QueryBuilder) =>
+  var sections = memory.cache.query((q) =>
     q.findRecords('section')
   ) as Section[];
   /* get the section for this passage to get the plan */
@@ -581,8 +587,8 @@ const doChapter = async (
 
   const { stdoutw } = await writeChapter(paths, ptProjName, usxDom);
   if (stdoutw) console.log(stdoutw);
-  var ops: Operation[] = [];
-  var tb = new TransformBuilder();
+  var ops: RecordOperation[] = [];
+  var tb = new RecordTransformBuilder();
   for (let p of passInfo) {
     var cmt = p.passage.attributes.lastComment;
     p.passage.attributes.lastComment = '';
@@ -617,8 +623,8 @@ export const getLocalParatextText = async (
 export const localSync = async (
   plan: string,
   ptProjName: string,
-  mediafiles: MediaFile[],
-  passages: Passage[],
+  mediafiles: MediaFileD[],
+  passages: PassageD[],
   memory: Memory,
   userId: string,
   passage: Passage | undefined,

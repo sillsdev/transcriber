@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { IState, IMediaTabStrings } from '../../model';
+import { IMediaTabStrings } from '../../model';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
-import localStrings from '../../selector/localize';
 import { FormControlLabel, Switch, Radio } from '@mui/material';
 import ShapingTable from '../ShapingTable';
 import { useOrganizedBy, useRole } from '../../crud';
 import { IRow, IPRow } from '.';
 import { Sorting } from '@devexpress/dx-react-grid';
+import { useSelector } from 'react-redux';
+import { mediaTabSelector } from '../../selector';
 
-interface IStateProps {
-  t: IMediaTabStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   data: IPRow[];
   row: number;
   doAttach: (row: number, pRow: number) => void;
@@ -25,7 +21,8 @@ interface IProps extends IStateProps {
 }
 
 export const PassageChooser = (props: IProps) => {
-  const { data, row, t, visible, uploadMedia } = props;
+  const { data, row, visible, uploadMedia } = props;
+  const t: IMediaTabStrings = useSelector(mediaTabSelector);
   const { doAttach, setVisible, setUploadMedia, mediaRow } = props;
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
@@ -141,8 +138,4 @@ export const PassageChooser = (props: IProps) => {
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'mediaTab' }),
-});
-
-export default connect(mapStateToProps)(PassageChooser) as any;
+export default PassageChooser;

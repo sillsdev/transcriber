@@ -1,10 +1,6 @@
-import { ISharedStrings, IState, Group } from '../model';
-import { connect } from 'react-redux';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
+import { GroupD } from '../model';
 import { Avatar, AvatarProps, styled } from '@mui/material';
 import { makeAbbr } from '../utils';
-import localStrings from '../selector/localize';
 import { useAvatarSource } from '../crud';
 
 // see: https://mui.com/material-ui/customization/how-to-customize/
@@ -25,16 +21,8 @@ const StyledAvatar = styled(Avatar, {
       }),
 }));
 
-interface IStateProps {
-  ts: ISharedStrings;
-}
-
-interface IRecordProps {
-  groups: Array<Group>;
-}
-
-interface IProps extends IStateProps, IRecordProps {
-  groupRec: Group;
+interface IProps {
+  groupRec: GroupD;
   small?: boolean;
 }
 
@@ -53,13 +41,4 @@ export function GroupAvatar(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  ts: localStrings(state, { layout: 'shared' }),
-});
-const mapRecordsToProps = {
-  groups: (q: QueryBuilder) => q.findRecords('group'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(GroupAvatar) as any
-) as any;
+export default GroupAvatar;

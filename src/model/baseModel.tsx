@@ -1,14 +1,18 @@
 import {
-  Record,
-  TransformBuilder,
+  RecordOperation,
+  UninitializedRecord,
+  RecordTransformBuilder,
   RecordRelationship,
   RecordIdentity,
-} from '@orbit/data';
+  StandardRecordNormalizer,
+  InitializedRecord,
+} from '@orbit/records';
+import { Dict } from '@orbit/utils';
 import Memory from '@orbit/memory';
 import { related } from '../crud';
 import { currentDateTime } from '../utils';
 
-export interface BaseModel extends Record {
+export interface BaseModel extends UninitializedRecord {
   attributes: {
     dateCreated: string;
     dateUpdated: string;
@@ -19,68 +23,82 @@ export interface BaseModel extends Record {
   };
 }
 
+export type BaseModelD = BaseModel & InitializedRecord;
+
 export const UpdateRecord = (
-  t: TransformBuilder,
-  rec: BaseModel,
+  t: RecordTransformBuilder,
+  rec: BaseModel & InitializedRecord,
   user: string
-): any => {
+): RecordOperation[] => {
   rec.attributes.dateUpdated = currentDateTime();
-  return [t.updateRecord(rec), ...UpdateLastModifiedBy(t, rec, user)];
+  return [
+    t.updateRecord(rec).toOperation(),
+    ...UpdateLastModifiedBy(t, rec, user),
+  ];
 };
 
 export const AddRecord = (
-  t: TransformBuilder,
-  rec: BaseModel,
+  t: RecordTransformBuilder,
+  rec: UninitializedRecord,
   user: string,
   memory: Memory
-): any => {
-  memory.schema.initializeRecord(rec);
-  if (!rec.attributes) rec.attributes = {} as any;
-  rec.attributes.dateCreated = currentDateTime();
-  return [t.addRecord(rec), ...UpdateLastModifiedBy(t, rec, user)];
+): RecordOperation[] => {
+  const rn = new StandardRecordNormalizer({ schema: memory.schema });
+  rec = rn.normalizeRecord(rec);
+  if (!rec.attributes) rec.attributes = {} as Dict<unknown>;
+  (rec.attributes as Dict<unknown>).dateCreated = currentDateTime();
+  return [
+    t.addRecord(rec).toOperation(),
+    ...UpdateLastModifiedBy(t, rec as InitializedRecord, user),
+  ];
 };
 export const UpdateLastModifiedBy = (
-  t: TransformBuilder,
+  t: RecordTransformBuilder,
   rec: RecordIdentity,
   user: string
-): any => {
+): RecordOperation[] => {
   return [
-    t.replaceAttribute(rec, 'dateUpdated', currentDateTime()),
+    t.replaceAttribute(rec, 'dateUpdated', currentDateTime()).toOperation(),
     ...ReplaceRelatedRecord(t, rec, 'lastModifiedByUser', 'user', user),
   ];
 };
 export const ReplaceRelatedRecord = (
-  t: TransformBuilder,
-  rec: BaseModel | RecordIdentity,
+  t: RecordTransformBuilder,
+  rec: (BaseModel & InitializedRecord) | RecordIdentity,
   relationship: string,
   relatedType: string,
   newId: string | undefined | null
-): any => {
+): RecordOperation[] => {
   if (related(rec, relationship) !== undefined)
     return [
-      t.replaceRelatedRecord(
-        rec,
-        relationship,
-        newId
-          ? {
-              type: relatedType,
-              id: newId,
-            }
-          : null
-      ),
+      t
+        .replaceRelatedRecord(
+          rec,
+          relationship,
+          newId
+            ? {
+                type: relatedType,
+                id: newId,
+              }
+            : null
+        )
+        .toOperation(),
     ];
   else if (newId)
     return [
-      t.addToRelatedRecords(rec, relationship, {
-        type: relatedType,
-        id: newId,
-      }),
+      t
+        .addToRelatedRecords(rec, relationship, {
+          type: relatedType,
+          id: newId,
+        })
+        .toOperation(),
     ];
+  return [];
 };
 
 export const UpdateRelatedRecord = (
-  t: TransformBuilder,
-  rec: BaseModel,
+  t: RecordTransformBuilder,
+  rec: BaseModel & InitializedRecord,
   relationship: string,
   relatedType: string,
   newId: string | undefined,

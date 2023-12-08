@@ -14,8 +14,6 @@ import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import Memory from '@orbit/memory';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import MediaRecord from '../MediaRecord';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import Uploader from '../Uploader';
@@ -28,10 +26,9 @@ import { PlanProvider } from '../../context/PlanContext';
 import SpeakerName from '../SpeakerName';
 import { sharedSelector } from '../../selector';
 import { RecordButtons } from './RecordButtons';
+import { useOrbitData } from '../../hoc/useOrbitData';
+import { RecordIdentity } from '@orbit/records';
 
-interface IRecordProps {
-  mediafiles: Array<MediaFile>;
-}
 interface IProps {
   ready?: () => boolean;
   width?: number;
@@ -39,8 +36,9 @@ interface IProps {
 
 const SaveWait = 500;
 
-export function PassageDetailRecord(props: IProps & IRecordProps) {
-  const { ready, mediafiles } = props;
+export function PassageDetailRecord(props: IProps) {
+  const { ready } = props;
+  const mediafiles = useOrbitData<MediaFile[]>('mediafile');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const {
     startSave,
@@ -285,10 +283,4 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   );
 }
 
-const mapRecordsToProps = {
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-};
-
-export default withData(mapRecordsToProps)(PassageDetailRecord) as any as (
-  props: IProps
-) => JSX.Element;
+export default PassageDetailRecord;

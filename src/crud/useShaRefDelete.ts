@@ -1,12 +1,12 @@
 import { useGlobal } from 'reactn';
-import { SharedResourceReference } from '../model';
-import { TransformBuilder } from '@orbit/data';
+import { SharedResourceReferenceD } from '../model';
+import { RecordTransformBuilder } from '@orbit/records';
 
 export const useShaRefDelete = () => {
   const [memory] = useGlobal('memory');
 
-  return async (shaRefRecs: SharedResourceReference[]) => {
-    const t = new TransformBuilder();
+  return async (shaRefRecs: SharedResourceReferenceD[]) => {
+    const t = new RecordTransformBuilder();
     const ops = [];
     for (const shaRefRec of shaRefRecs) {
       ops.push(t.removeRecord(shaRefRec));

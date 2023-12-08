@@ -2,7 +2,7 @@ import React, { useContext, useState, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { Grid } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
-import { Organization, DialogMode } from '../../model';
+import { Organization, DialogMode, OrganizationD } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
 import { StepEditor } from '../StepEditor';
@@ -13,9 +13,10 @@ import { useRole, defaultWorkflow, useBible } from '../../crud';
 import Confirm from '../AlertDialog';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { TeamPaper, TeamHeadDiv, TeamName, AltButton } from '../../control';
+import { RecordIdentity } from '@orbit/records';
 
 interface IProps {
-  team: Organization;
+  team: OrganizationD;
 }
 
 export const TeamItem = (props: IProps) => {
@@ -26,7 +27,7 @@ export const TeamItem = (props: IProps) => {
   const [busy] = useGlobal('remoteBusy');
   const [editOpen, setEditOpen] = useState(false);
   const [showWorkflow, setShowWorkflow] = useState(false);
-  const [deleteItem, setDeleteItem] = useState<Organization>();
+  const [deleteItem, setDeleteItem] = useState<RecordIdentity>();
   const ctx = React.useContext(TeamContext);
   const { teamProjects, teamMembers, teamUpdate, teamDelete, isAdmin } =
     ctx.state;
@@ -36,8 +37,7 @@ export const TeamItem = (props: IProps) => {
   const { setMyOrgRole } = useRole();
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [changed] = useGlobal('changed');
-
-  const handleMembers = (team: Organization) => () => {
+  const handleMembers = (team: OrganizationD) => () => {
     setOrganization(team.id);
     setMyOrgRole(team.id);
     setOpenMember(true);
@@ -73,7 +73,7 @@ export const TeamItem = (props: IProps) => {
     setEditOpen(false);
   };
 
-  const handleDeleteTeam = (team: Organization) => {
+  const handleDeleteTeam = (team: RecordIdentity) => {
     setDeleteItem(team);
   };
 
@@ -134,7 +134,7 @@ export const TeamItem = (props: IProps) => {
       </TeamHeadDiv>
       <TeamDialog
         mode={DialogMode.edit}
-        values={{ team }}
+        values={{ team } as ITeamDialog}
         isOpen={editOpen}
         onOpen={setEditOpen}
         onCommit={handleCommitSettings}
@@ -160,6 +160,7 @@ export const TeamItem = (props: IProps) => {
       </BigDialog>
       {deleteItem && (
         <Confirm
+          text={''}
           yesResponse={handleDeleteConfirmed}
           noResponse={handleDeleteRefused}
         />

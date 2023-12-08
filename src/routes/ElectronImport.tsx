@@ -1,7 +1,6 @@
 import path from 'path-browserify';
 import moment, { Moment } from 'moment';
-import { Project, IElectronImportStrings, IState, IApiError } from '../model';
-import { QueryBuilder } from '@orbit/data';
+import { IElectronImportStrings, IState, IApiError, ProjectD } from '../model';
 import {
   remoteIdGuid,
   useArtifactType,
@@ -24,6 +23,7 @@ import { useSnackBar } from '../hoc/SnackBar';
 import IndexedDBSource from '@orbit/indexeddb';
 import { TokenContext } from '../context/TokenProvider';
 import { ImportProjectToElectronProps } from '../store';
+import { RecordKeyMap } from '@orbit/records';
 const ipc = (window as any)?.electron;
 
 export interface IImportData {
@@ -133,7 +133,7 @@ export const useElectronImport = () => {
         users.push(u.attributes.name);
         if (
           user === '' ||
-          remoteIdGuid('user', u.id, memory.keyMap) ||
+          remoteIdGuid('user', u.id, memory.keyMap as RecordKeyMap) ||
           u.id === user
         )
           userInProject = true;
@@ -177,14 +177,16 @@ export const useElectronImport = () => {
     );
 
     //if we already have projects...check dates
-    const projectRecs = memory.cache.query((q: QueryBuilder) =>
+    const projectRecs = memory.cache.query((q) =>
       q.findRecords('project')
-    ) as Project[];
+    ) as ProjectD[];
     if (projectRecs && projectRecs.length > 0) {
       var projectNames: string = '';
       var id = importProj.id;
       const proj = projectRecs.find(
-        (pr) => pr.id === (remoteIdGuid('project', id, memory.keyMap) || id)
+        (pr) =>
+          pr.id ===
+          (remoteIdGuid('project', id, memory.keyMap as RecordKeyMap) || id)
       );
 
       if (project !== '' && project !== proj?.id) {

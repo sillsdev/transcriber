@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation } from 'react-router-dom';
 import { parseQuery } from '../utils/parseQuery';
-import { IState, IWelcomeStrings, User, OfflineProject } from '../model';
-import { Record } from '@orbit/data';
+import { IState, IWelcomeStrings, User, OfflineProject, UserD } from '../model';
+import { InitializedRecord, RecordTransformBuilder } from '@orbit/records';
 import * as action from '../store';
 import { Typography, Grid, Box, BoxProps, SxProps } from '@mui/material';
 import { useCheckOnline, localeDefault, useMyNavigate } from '../utils';
 import { isElectron } from '../api-variable';
 import AppHead from '../components/App/AppHead';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import MemorySource from '@orbit/memory';
 import ImportTab from '../components/ImportTab';
 import OfflineIcon from '@mui/icons-material/CloudOff';
@@ -119,7 +118,11 @@ export function Welcome(props: IProps) {
   const [, setOffline] = useGlobal('offline');
   const checkOnline = useCheckOnline();
 
-  const hasRecs = (recType: string, iRecs?: Record[], offline?: Boolean) => {
+  const hasRecs = (
+    recType: string,
+    iRecs?: InitializedRecord[],
+    offline?: Boolean
+  ) => {
     const recs = iRecs || recOfType(recType);
     const offlineRecs = recs.filter((u) =>
       u.keys?.remoteId === undefined ? !offline : offline
@@ -128,7 +131,7 @@ export function Welcome(props: IProps) {
   };
 
   const userTypes = () => {
-    const users = recOfType('user') as User[];
+    const users = recOfType('user') as UserD[];
     const offlineUsers = hasRecs('user', users);
     setHasOfflineUsers(offlineUsers);
     const onlineUsers = hasRecs('user', users, true);
@@ -141,7 +144,7 @@ export function Welcome(props: IProps) {
       recOfType('offlineproject') as OfflineProject[]
     ).filter((p) => p?.attributes?.offlineAvailable);
     setHasOfflineProjects(offlineProj.length > 0);
-    const projects = recOfType('project') as Record[];
+    const projects = recOfType('project') as InitializedRecord[];
     setHasProjects(projects.length > 0);
 
     const { users, onlineUsers, offlineUsers } = userTypes();
@@ -236,11 +239,10 @@ export function Welcome(props: IProps) {
   };
 
   const AddUserLocalOnly = async (userRec: User) => {
-    await memory.sync(
-      await backup.push((t: TransformBuilder) =>
-        AddRecord(t, userRec, user, memory)
-      )
-    );
+    const transform = (t: RecordTransformBuilder) =>
+      AddRecord(t, userRec, user, memory);
+    await backup.sync(transform);
+    await memory.sync(transform);
   };
 
   const addQuickUser = async () => {
@@ -256,13 +258,13 @@ export function Welcome(props: IProps) {
         locale: localeDefault(isDeveloper),
         isLocked: false,
         uilanguagebcp47: '',
-        digestPreference: false,
+        digestPreference: 0,
         newsPreference: false,
       },
     } as any;
     await AddUserLocalOnly(userRec);
     await offlineSetup();
-    return userRec.id;
+    return userRec.id as string;
   };
 
   const handleQuickOffline = () => {
@@ -272,9 +274,7 @@ export function Welcome(props: IProps) {
       localStorage.setItem('autoaddProject', 'true');
 
     if (hasOfflineUsers) {
-      const users = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('user')
-      ) as User[];
+      const users = memory.cache.query((q) => q.findRecords('user')) as UserD[];
       var quickUsers = users.filter(
         (u) =>
           u.keys?.remoteId === undefined &&

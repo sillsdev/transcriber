@@ -1,7 +1,7 @@
-import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
+import { RecordIdentity } from '@orbit/records';
 import MemorySource from '@orbit/memory';
 import { AxiosError } from 'axios';
-import { ArtifactType, MediaFile } from '../model';
+import { ArtifactType, MediaFileD } from '../model';
 import { UpdateRelatedRecord } from '../model/baseModel';
 import { logError, Severity } from '../utils';
 import { axiosGet } from '../utils/axios';
@@ -26,7 +26,7 @@ export const updateBackTranslationType = async (
     );
   } else {
     //offline
-    var artifacttypes = memory.cache.query((q: QueryBuilder) =>
+    var artifacttypes = memory.cache.query((q) =>
       q.findRecords('artifacttype')
     ) as ArtifactType[];
     var bt = artifacttypes.find(
@@ -51,16 +51,16 @@ export const updateBackTranslationType = async (
       }
     }
 
-    var mediafiles = memory.cache.query((q: QueryBuilder) =>
+    var mediafiles = memory.cache.query((q) =>
       q
         .findRecords('mediafile')
         .filter({ relation: 'artifactType', record: bt as RecordIdentity })
-    ) as MediaFile[];
+    ) as MediaFileD[];
     var nosegs = mediafiles.filter(
       (m) => (m.attributes.sourceSegments?.length ?? 0) === 0
     );
     nosegs.forEach((m) =>
-      memory.update((t: TransformBuilder) =>
+      memory.update((t) =>
         UpdateRelatedRecord(t, m, 'artifactType', 'artifacttype', wbt?.id, user)
       )
     );

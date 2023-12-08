@@ -1,12 +1,11 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import { Graphic, IMediaTabStrings } from '../model';
 import { Rights } from './Sheet';
 import { shallowEqual, useSelector } from 'react-redux';
 import { mediaTabSelector } from '../selector';
+import { useOrbitData } from '../hoc/useOrbitData';
 
 interface RightsHolderOption {
   inputValue?: string;
@@ -15,16 +14,14 @@ interface RightsHolderOption {
 
 const filter = createFilterOptions<RightsHolderOption>();
 
-interface IRecordProps {
-  graphics: Array<Graphic>;
-}
 interface IProps {
   value: string;
   onChange: (value: string) => void;
 }
 
-export function GraphicRights(props: IProps & IRecordProps) {
-  const { graphics, onChange } = props;
+export function GraphicRights(props: IProps) {
+  const { onChange } = props;
+  const graphics = useOrbitData<Graphic[]>('graphic');
   const [value, setValuex] = React.useState<RightsHolderOption | null>(null);
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
 
@@ -119,10 +116,4 @@ export function GraphicRights(props: IProps & IRecordProps) {
   );
 }
 
-const mapRecordsToProps = {
-  graphics: (q: QueryBuilder) => q.findRecords('graphic'),
-};
-
-export default withData(mapRecordsToProps)(GraphicRights) as any as (
-  props: IProps
-) => JSX.Element;
+export default GraphicRights;

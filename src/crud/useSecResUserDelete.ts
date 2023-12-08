@@ -1,6 +1,5 @@
 import { useGlobal } from 'reactn';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { SectionResource, SectionResourceUser } from '../model';
+import { SectionResourceD, SectionResourceUserD } from '../model';
 import { related } from '.';
 import { logError, Severity } from '../utils';
 
@@ -9,14 +8,14 @@ export const useSecResUserDelete = () => {
   const [user] = useGlobal('user');
   const [reporter] = useGlobal('errorReporter');
 
-  return async (resource: SectionResource, resUser?: SectionResourceUser) => {
+  return async (resource: SectionResourceD, resUser?: SectionResourceUserD) => {
     if (resUser) {
-      memory.update((t: TransformBuilder) => t.removeRecord(resUser));
+      memory.update((t) => t.removeRecord(resUser));
       return;
     }
-    const sectionResourceUsers = memory.cache.query((q: QueryBuilder) =>
+    const sectionResourceUsers = memory.cache.query((q) =>
       q.findRecords('sectionresourceuser')
-    ) as SectionResourceUser[];
+    ) as SectionResourceUserD[];
     const rec = sectionResourceUsers.filter(
       (r) =>
         related(r, 'sectionresource') === resource.id &&
@@ -30,6 +29,6 @@ export const useSecResUserDelete = () => {
       );
       return;
     }
-    memory.update((t: TransformBuilder) => t.removeRecord(rec[0]));
+    memory.update((t) => t.removeRecord(rec[0]));
   };
 };

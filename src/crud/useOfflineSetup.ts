@@ -7,21 +7,32 @@ import {
   RoleNames,
   WorkflowStep,
   Integration,
+  ProjectTypeD,
+  IntegrationD,
+  RoleD,
+  WorkflowStepD,
+  ArtifactCategoryD,
+  ArtifactTypeD,
 } from '../model';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import {
+  RecordTransformBuilder,
+  StandardRecordNormalizer,
+} from '@orbit/records';
 import IndexedDBSource from '@orbit/indexeddb';
 import { ArtifactTypeSlug, useArtifactType } from '.';
-import PassageType from '../model/passageType';
+import PassageType, { PassageTypeD } from '../model/passageType';
 
 export const useOfflineSetup = () => {
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const { getTypeId } = useArtifactType();
+  const rn = new StandardRecordNormalizer({ schema: memory.schema });
+
   const makeTypeRecs = async (kind: string) => {
-    const allTypeRecs = memory.cache.query((q: QueryBuilder) =>
+    const allTypeRecs = memory.cache.query((q) =>
       q.findRecords(`${kind}type`)
-    ) as ProjectType[];
+    ) as unknown as ProjectTypeD[];
     const offlineTypeRecs = allTypeRecs.filter((r) => !r?.keys?.remoteId);
     if (offlineTypeRecs.length === 0) {
       let scriptureRec: ProjectType = {
@@ -30,25 +41,25 @@ export const useOfflineSetup = () => {
           name: 'Scripture',
         },
       } as any;
-      memory.schema.initializeRecord(scriptureRec);
+      scriptureRec = rn.normalizeRecord(scriptureRec) as ProjectTypeD;
       let otherRec: ProjectType = {
         type: `${kind}type`,
         attributes: {
           name: kind === 'project' ? 'Generic' : 'Other',
         },
       } as any;
-      memory.schema.initializeRecord(otherRec);
-      await memory.sync(
-        await backup.push((t: TransformBuilder) => [
-          t.addRecord(scriptureRec),
-          t.addRecord(otherRec),
-        ])
-      );
+      otherRec = rn.normalizeRecord(otherRec) as ProjectTypeD;
+      const transform = (t: RecordTransformBuilder) => [
+        t.addRecord(scriptureRec),
+        t.addRecord(otherRec),
+      ];
+      await backup.sync(transform);
+      await memory.sync(transform);
     }
   };
 
   const makeIntegrationRecs = async () => {
-    const allRecs = memory.cache.query((q: QueryBuilder) =>
+    const allRecs = memory.cache.query((q) =>
       q.findRecords('integration')
     ) as Integration[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
@@ -59,10 +70,9 @@ export const useOfflineSetup = () => {
           name: 'paratext',
         },
       } as Integration;
-      memory.schema.initializeRecord(paratextRec);
-      await memory.sync(
-        await backup.push((t: TransformBuilder) => [t.addRecord(paratextRec)])
-      );
+      paratextRec = rn.normalizeRecord(paratextRec) as IntegrationD;
+      await backup.sync((t) => [t.addRecord(paratextRec)]);
+      await memory.sync((t) => [t.addRecord(paratextRec)]);
     }
     if (
       offlineRecs.filter(
@@ -75,25 +85,21 @@ export const useOfflineSetup = () => {
           name: 'paratextwholebacktranslation',
         },
       } as Integration;
-      memory.schema.initializeRecord(wbtRec);
+      wbtRec = rn.normalizeRecord(wbtRec) as IntegrationD;
       let pbtRec = {
         type: 'integration',
         attributes: {
           name: 'paratextbacktranslation',
         },
       } as Integration;
-      memory.schema.initializeRecord(pbtRec);
-      await memory.sync(
-        await backup.push((t: TransformBuilder) => [
-          t.addRecord(wbtRec),
-          t.addRecord(pbtRec),
-        ])
-      );
+      pbtRec = rn.normalizeRecord(pbtRec) as IntegrationD;
+      await backup.sync((t) => [t.addRecord(wbtRec), t.addRecord(pbtRec)]);
+      await memory.sync((t) => [t.addRecord(wbtRec), t.addRecord(pbtRec)]);
     }
   };
 
   const makeRoleRecs = async () => {
-    const allRoleRecs = memory.cache.query((q: QueryBuilder) =>
+    const allRoleRecs = memory.cache.query((q) =>
       q.findRecords('role')
     ) as Role[];
     const offlineRoleRecs = allRoleRecs.filter((r) => !r?.keys?.remoteId);
@@ -105,7 +111,7 @@ export const useOfflineSetup = () => {
           roleName: RoleNames.Admin,
         },
       } as Role;
-      memory.schema.initializeRecord(adminRec);
+      adminRec = rn.normalizeRecord(adminRec) as RoleD;
       let memberRec = {
         type: 'role',
         attributes: {
@@ -113,14 +119,13 @@ export const useOfflineSetup = () => {
           roleName: RoleNames.Member,
         },
       } as Role;
-      memory.schema.initializeRecord(memberRec);
-
-      await memory.sync(
-        await backup.push((t: TransformBuilder) => [
-          t.addRecord(adminRec),
-          t.addRecord(memberRec),
-        ])
-      );
+      memberRec = rn.normalizeRecord(memberRec) as RoleD;
+      const transform = (t: RecordTransformBuilder) => [
+        t.addRecord(adminRec),
+        t.addRecord(memberRec),
+      ];
+      await backup.sync(transform);
+      await memory.sync(transform);
     }
   };
 
@@ -131,7 +136,7 @@ export const useOfflineSetup = () => {
   }
 
   const makeWorkflowProcessSteps = async (process: string, steps: ISteps[]) => {
-    const t = new TransformBuilder();
+    const t = new RecordTransformBuilder();
     let ops = steps.map((step, ix) => {
       const toolSettings = step.artId
         ? `, "settings":{"artifactTypeId": "${step.artId}"}`
@@ -146,14 +151,15 @@ export const useOfflineSetup = () => {
           permissions: '{}',
         },
       } as WorkflowStep;
-      memory.schema.initializeRecord(rec);
+      rec = rn.normalizeRecord(rec) as WorkflowStepD;
       return t.addRecord(rec);
     });
-    await memory.sync(await backup.push(ops));
+    await backup.sync((t) => ops);
+    await memory.sync((t) => ops);
   };
 
   const makeWorkflowStepsRecs = async () => {
-    const allRecs = (await memory.query((q: QueryBuilder) =>
+    const allRecs = (await memory.query((q) =>
       q.findRecords('workflowstep')
     )) as WorkflowStep[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
@@ -277,13 +283,14 @@ export const useOfflineSetup = () => {
       ]);
     }
   };
+
   const makeArtifactCategoryRecs = async () => {
-    const allRecs = memory.cache.query((q: QueryBuilder) =>
+    const allRecs = memory.cache.query((q) =>
       q.findRecords('artifactcategory')
     ) as WorkflowStep[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
     if (offlineRecs.length === 0) {
-      const t = new TransformBuilder();
+      const t = new RecordTransformBuilder();
       const ops = [
         'activity',
         'biblestory',
@@ -299,19 +306,21 @@ export const useOfflineSetup = () => {
             categoryname: n,
           },
         } as ArtifactCategory;
-        memory.schema.initializeRecord(rec);
+        rec = rn.normalizeRecord(rec) as ArtifactCategoryD;
         return t.addRecord(rec);
       });
-      await memory.sync(await backup.push(ops));
+      await backup.sync((t) => ops);
+      await memory.sync((t) => ops);
     }
   };
+
   const makeArtifactTypeRecs = async () => {
-    const allRecs = memory.cache.query((q: QueryBuilder) =>
+    const allRecs = memory.cache.query((q) =>
       q.findRecords('artifacttype')
     ) as WorkflowStep[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
     if (offlineRecs.length === 0) {
-      const t = new TransformBuilder();
+      const t = new RecordTransformBuilder();
       const ops = [
         'activity',
         'backtranslation',
@@ -328,13 +337,14 @@ export const useOfflineSetup = () => {
             typename: n,
           },
         } as ArtifactType;
-        memory.schema.initializeRecord(rec);
+        rec = rn.normalizeRecord(rec) as ArtifactTypeD;
         return t.addRecord(rec);
       });
-      await memory.sync(await backup.push(ops));
+      await backup.sync((t) => ops);
+      await memory.sync((t) => ops);
     }
     if (offlineRecs.length < 10) {
-      const t = new TransformBuilder();
+      const t = new RecordTransformBuilder();
       const ops = ['intellectualproperty', 'wholebacktranslation'].map((n) => {
         let rec = {
           type: 'artifacttype',
@@ -342,19 +352,21 @@ export const useOfflineSetup = () => {
             typename: n,
           },
         } as ArtifactType;
-        memory.schema.initializeRecord(rec);
+        rec = rn.normalizeRecord(rec) as ArtifactTypeD;
         return t.addRecord(rec);
       });
-      await memory.sync(await backup.push(ops));
+      await backup.sync((t) => ops);
+      await memory.sync((t) => ops);
     }
   };
+
   const makeMoreArtifactTypeRecs = async () => {
-    const allRecs = memory.cache.query((q: QueryBuilder) =>
+    const allRecs = memory.cache.query((q) =>
       q.findRecords('artifacttype')
     ) as WorkflowStep[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
     if (offlineRecs.length < 10) {
-      const t = new TransformBuilder();
+      const t = new RecordTransformBuilder();
       const ops = ['intellectualproperty', 'wholebacktranslation'].map((n) => {
         let rec = {
           type: 'artifacttype',
@@ -362,19 +374,21 @@ export const useOfflineSetup = () => {
             typename: n,
           },
         } as ArtifactType;
-        memory.schema.initializeRecord(rec);
+        rec = rn.normalizeRecord(rec) as ArtifactTypeD;
         return t.addRecord(rec);
       });
-      await memory.sync(await backup.push(ops));
+      await backup.sync((t) => ops);
+      await memory.sync((t) => ops);
     }
   };
+
   const makeTitleArtifactTypeRec = async () => {
-    const allRecs = memory.cache.query((q: QueryBuilder) =>
+    const allRecs = memory.cache.query((q) =>
       q.findRecords('artifacttype')
     ) as WorkflowStep[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
     if (offlineRecs.length < 10) {
-      const t = new TransformBuilder();
+      const t = new RecordTransformBuilder();
       const ops = ['title', 'graphic'].map((n) => {
         let rec = {
           type: 'artifacttype',
@@ -382,44 +396,47 @@ export const useOfflineSetup = () => {
             typename: n,
           },
         } as ArtifactType;
-        memory.schema.initializeRecord(rec);
+        rec = rn.normalizeRecord(rec) as ArtifactTypeD;
         return t.addRecord(rec);
       });
-      await memory.sync(await backup.push(ops));
+      await backup.sync((t) => ops);
+      await memory.sync((t) => ops);
     }
   };
+
   const makePassageTypeRecs = async () => {
-    const allRecs = memory.cache.query((q: QueryBuilder) =>
+    const allRecs = memory.cache.query((q) =>
       q.findRecords('passagetype')
     ) as PassageType[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
     if (offlineRecs.length === 0) {
-      const t = new TransformBuilder();
+      const t = new RecordTransformBuilder();
       const ops = [
         {
           usfm: 'toc2',
           title: 'altbookname',
           abbrev: 'ALTBK',
-          defaultorder: -3,
+          defaultOrder: -3,
         },
-        { usfm: 'toc1', title: 'bookname', abbrev: 'BOOK', defaultorder: -4 },
-        { usfm: 'esb', title: 'audionote', abbrev: 'NOTE', defaultorder: 0 },
+        { usfm: 'toc1', title: 'bookname', abbrev: 'BOOK', defaultOrder: -4 },
+        { usfm: 'esb', title: 'audionote', abbrev: 'NOTE', defaultOrder: 0 },
         {
           usfm: 'cn',
           title: 'chapter number',
           abbrev: 'CHNUM',
-          defaultorder: -2,
+          defaultOrder: -2,
         },
-        { usfm: 's', title: 'title', abbrev: 'TITLE', defaultorder: -1 },
+        { usfm: 's', title: 'title', abbrev: 'TITLE', defaultOrder: -1 },
       ].map((n) => {
         let rec = {
           type: 'passagetype',
           attributes: { ...n },
         } as PassageType;
-        memory.schema.initializeRecord(rec);
+        rec = rn.normalizeRecord(rec) as PassageTypeD;
         return t.addRecord(rec);
       });
-      await memory.sync(await backup.push(ops));
+      await backup.sync((t) => ops);
+      await memory.sync((t) => ops);
     }
   };
   return async () => {

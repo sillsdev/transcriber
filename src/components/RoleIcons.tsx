@@ -1,37 +1,32 @@
 import Transcriber from '@mui/icons-material/ReceiptOutlined';
 import Editor from '@mui/icons-material/RateReviewOutlined';
 import { Tooltip } from '@mui/material';
-import React, { FunctionComponent } from 'react';
-import { connect } from 'react-redux';
-import { IState } from '../model/state';
+import { useSelector } from 'react-redux';
 import { ISharedStrings } from '../model';
-import localStrings from '../selector/localize';
+import { sharedSelector } from '../selector';
 
-interface IStateProps {
-  ts: ISharedStrings;
-}
-interface IProps extends IStateProps {}
+export const TranscriberIcon = () => {
+  const ts: ISharedStrings = useSelector(sharedSelector);
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  ts: localStrings(state, { layout: 'shared' }),
-});
+  return (
+    <Tooltip title={ts.transcriber}>
+      <>
+        <Transcriber />
+        {'\u00A0'}
+      </>
+    </Tooltip>
+  );
+};
 
-const TranscriberIconSnippet: FunctionComponent<IProps> = ({ ts }) => (
-  <Tooltip title={ts.transcriber}>
-    <>
-      <Transcriber />
-      {'\u00A0'}
-    </>
-  </Tooltip>
-);
-export const TranscriberIcon = connect(mapStateToProps)(TranscriberIconSnippet);
+export const EditorIcon = () => {
+  const ts: ISharedStrings = useSelector(sharedSelector);
 
-const EditorIconSnippet: FunctionComponent<IProps> = ({ ts }) => (
-  <Tooltip title={ts.editor}>
-    <>
-      <Editor />
-      {'\u00A0'}
-    </>
-  </Tooltip>
-);
-export const EditorIcon = connect(mapStateToProps)(EditorIconSnippet);
+  return (
+    <Tooltip title={ts.editor}>
+      <>
+        <Editor />
+        {'\u00A0'}
+      </>
+    </Tooltip>
+  );
+};

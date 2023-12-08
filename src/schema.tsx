@@ -1,41 +1,31 @@
 import {
-  KeyMap,
-  Operation,
-  Schema,
-  SchemaSettings,
-  TransformBuilder,
-} from '@orbit/data';
-import Memory from '@orbit/memory';
+  RecordKeyMap,
+  RecordTransformBuilder,
+  RecordSchemaSettings,
+  RecordSchema,
+  RecordOperation,
+} from '@orbit/records';
+import { MemorySource } from '@orbit/memory';
 import IndexedDBSource from '@orbit/indexeddb';
 import Coordinator from '@orbit/coordinator';
 import { isElectron } from './api-variable';
 import { getFingerprint } from './utils';
 import { offlineProjectCreate, related } from './crud';
-import { MediaFile } from './model';
+import { MediaFileD, OrganizationD, PassageD, ProjectD } from './model';
 
-const schemaDefinition: SchemaSettings = {
-  pluralize: (word: string) => {
-    if (!word) return word;
-    if (word.endsWith('y')) return word.substring(0, word.length - 1) + 'ies';
-    return word + 's';
-  },
-  singularize: (word: string) => {
-    if (!word) return word;
-    if (word.endsWith('ies')) return word.substring(0, word.length - 3) + 'y';
-    return word.substring(0, word.length - 1);
-  },
+const schemaDefinition: RecordSchemaSettings = {
   models: {
     activitystate: {
       keys: { remoteId: {} },
       attributes: {
         state: { type: 'string' },
         sequencenum: { type: 'number' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     group: {
@@ -46,19 +36,19 @@ const schemaDefinition: SchemaSettings = {
         ownerId: { type: 'number' },
         permissions: { type: 'string' },
         allUsers: { type: 'boolean' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
-        owner: { type: 'hasOne', model: 'organization', inverse: 'groups' },
-        projects: { type: 'hasMany', model: 'project', inverse: 'group' },
+        owner: { kind: 'hasOne', type: 'organization', inverse: 'groups' },
+        projects: { kind: 'hasMany', type: 'project', inverse: 'group' },
         groupMemberships: {
-          type: 'hasMany',
-          model: 'groupmembership',
+          kind: 'hasMany',
+          type: 'groupmembership',
           inverse: 'group',
         },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     groupmembership: {
@@ -66,15 +56,15 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         font: { type: 'string' },
         fontSize: { type: 'string' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
-        user: { type: 'hasOne', model: 'user', inverse: 'groupMemberships' },
-        group: { type: 'hasOne', model: 'group', inverse: 'groupMemberships' },
-        role: { type: 'hasOne', model: 'role' },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        user: { kind: 'hasOne', type: 'user', inverse: 'groupMemberships' },
+        group: { kind: 'hasOne', type: 'group', inverse: 'groupMemberships' },
+        role: { kind: 'hasOne', type: 'role' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     integration: {
@@ -82,17 +72,17 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         url: { type: 'string' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         projectIntegrations: {
-          type: 'hasMany',
-          model: 'projectintegration',
+          kind: 'hasMany',
+          type: 'projectintegration',
           inverse: 'integration',
         },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     invitation: {
@@ -103,24 +93,24 @@ const schemaDefinition: SchemaSettings = {
         invitedBy: { type: 'string' },
         strings: { type: 'string' },
         accepted: { type: 'boolean' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastUpdatedBy: { type: 'number' },
       },
       relationships: {
         organization: {
-          type: 'hasOne',
-          model: 'organization',
+          kind: 'hasOne',
+          type: 'organization',
         },
         role: {
-          type: 'hasOne',
-          model: 'role',
+          kind: 'hasOne',
+          type: 'role',
         },
         allUsersRole: {
-          type: 'hasOne',
-          model: 'role',
+          kind: 'hasOne',
+          type: 'role',
         },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     organization: {
@@ -133,35 +123,35 @@ const schemaDefinition: SchemaSettings = {
         logoUrl: { type: 'string' },
         publicByDefault: { type: 'boolean' },
         clusterbase: { type: 'boolean' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
         defaultParams: { type: 'string' },
       },
       relationships: {
-        owner: { type: 'hasOne', model: 'user' },
-        users: { type: 'hasMany', model: 'user' },
-        groups: { type: 'hasMany', model: 'group', inverse: 'owner' },
-        cluster: { type: 'hasOne', model: 'organization' },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        owner: { kind: 'hasOne', type: 'user' },
+        users: { kind: 'hasMany', type: 'user' },
+        groups: { kind: 'hasMany', type: 'group', inverse: 'owner' },
+        cluster: { kind: 'hasOne', type: 'organization' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     organizationmembership: {
       keys: { remoteId: {} },
       attributes: {
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         user: {
-          type: 'hasOne',
-          model: 'user',
+          kind: 'hasOne',
+          type: 'user',
           inverse: 'organizationMemberships',
         },
-        organization: { type: 'hasOne', model: 'organization' },
-        role: { type: 'hasOne', model: 'role' },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        organization: { kind: 'hasOne', type: 'organization' },
+        role: { kind: 'hasOne', type: 'role' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     plan: {
@@ -173,17 +163,17 @@ const schemaDefinition: SchemaSettings = {
         flat: { type: 'boolean' },
         sectionCount: { type: 'number' },
         slug: { type: 'string' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
-        owner: { type: 'hasOne', model: 'user' },
-        project: { type: 'hasOne', model: 'project', inverse: 'plans' },
-        plantype: { type: 'hasOne', model: 'plantype', inverse: 'plans' },
-        sections: { type: 'hasMany', model: 'section', inverse: 'plan' },
-        mediafiles: { type: 'hasMany', model: 'mediafile', inverse: 'plan' },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        owner: { kind: 'hasOne', type: 'user' },
+        project: { kind: 'hasOne', type: 'project', inverse: 'plans' },
+        plantype: { kind: 'hasOne', type: 'plantype', inverse: 'plans' },
+        sections: { kind: 'hasMany', type: 'section', inverse: 'plan' },
+        mediafiles: { kind: 'hasMany', type: 'mediafile', inverse: 'plan' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     plantype: {
@@ -191,13 +181,13 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         description: { type: 'string' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
-        plans: { type: 'hasMany', model: 'plan', inverse: 'plantype' },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        plans: { kind: 'hasMany', type: 'plan', inverse: 'plantype' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     project: {
@@ -215,52 +205,52 @@ const schemaDefinition: SchemaSettings = {
         spellCheck: { type: 'boolean' },
         allowClaim: { type: 'boolean' },
         isPublic: { type: 'boolean' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
-        dateExported: { type: 'date-time' },
-        dateImported: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
+        dateExported: { type: 'string' }, // datetime
+        dateImported: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
         defaultParams: { type: 'string' },
       },
       relationships: {
         projecttype: {
-          type: 'hasOne',
-          model: 'projecttype',
+          kind: 'hasOne',
+          type: 'projecttype',
           inverse: 'projects',
         },
-        owner: { type: 'hasOne', model: 'user' },
-        organization: { type: 'hasOne', model: 'organization' },
-        group: { type: 'hasOne', model: 'group', inverse: 'projects' },
+        owner: { kind: 'hasOne', type: 'user' },
+        organization: { kind: 'hasOne', type: 'organization' },
+        group: { kind: 'hasOne', type: 'group', inverse: 'projects' },
         projectIntegrations: {
-          type: 'hasMany',
-          model: 'projectintegration',
+          kind: 'hasMany',
+          type: 'projectintegration',
           inverse: 'project',
         },
-        // sections: { type: 'hasMany', model: 'section', inverse: 'project' },
-        plans: { type: 'hasMany', model: 'plan', inverse: 'project' },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        // sections: { kind: 'hasMany', type: 'section', inverse: 'project' },
+        plans: { kind: 'hasMany', type: 'plan', inverse: 'project' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     projectintegration: {
       keys: { remoteId: {} },
       attributes: {
         settings: { type: 'string' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         integration: {
-          type: 'hasOne',
-          model: 'integration',
+          kind: 'hasOne',
+          type: 'integration',
           inverse: 'projectIntegrations',
         },
         project: {
-          type: 'hasOne',
-          model: 'project',
+          kind: 'hasOne',
+          type: 'project',
           inverse: 'projectIntegrations',
         },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     projecttype: {
@@ -268,13 +258,13 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         description: { type: 'string' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
-        projects: { type: 'hasMany', model: 'project', inverse: 'projecttype' },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        projects: { kind: 'hasMany', type: 'project', inverse: 'projecttype' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     role: {
@@ -283,13 +273,13 @@ const schemaDefinition: SchemaSettings = {
         orgRole: { type: 'boolean' },
         groupRole: { type: 'boolean' }, //bkwd compat only
         roleName: { type: 'string' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
-        userRoles: { type: 'hasMany', model: 'organizationalmembership' },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        userRoles: { kind: 'hasMany', type: 'organizationalmembership' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     section: {
@@ -299,23 +289,23 @@ const schemaDefinition: SchemaSettings = {
         name: { type: 'string' },
         published: { type: 'boolean' },
         level: { type: 'number' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
-        // projects: { type: 'hasMany', model: 'project', inverse: 'sections' },
-        plan: { type: 'hasOne', model: 'plan', inverse: 'sections' },
+        // projects: { kind: 'hasMany', type: 'project', inverse: 'sections' },
+        plan: { kind: 'hasOne', type: 'plan', inverse: 'sections' },
         passages: {
-          type: 'hasMany',
-          model: 'passage',
+          kind: 'hasMany',
+          type: 'passage',
           inverse: 'section',
         },
-        titleMediafile: { type: 'hasOne', model: 'mediafile' },
-        editor: { type: 'hasOne', model: 'user' },
-        transcriber: { type: 'hasOne', model: 'user' },
-        group: { type: 'hasOne', model: 'group' },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        titleMediafile: { kind: 'hasOne', type: 'mediafile' },
+        editor: { kind: 'hasOne', type: 'user' },
+        transcriber: { kind: 'hasOne', type: 'user' },
+        group: { kind: 'hasOne', type: 'group' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     passage: {
@@ -329,8 +319,8 @@ const schemaDefinition: SchemaSettings = {
         title: { type: 'string' },
         lastComment: { type: 'string' },
         stepComplete: { type: 'string' }, //json
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
         startChapter: { type: 'number' },
         startVerse: { type: 'number' },
@@ -338,15 +328,15 @@ const schemaDefinition: SchemaSettings = {
         endVerse: { type: 'number' },
       },
       relationships: {
-        mediafiles: { type: 'hasMany', model: 'mediafile', inverse: 'passage' },
+        mediafiles: { kind: 'hasMany', type: 'mediafile', inverse: 'passage' },
         section: {
-          type: 'hasOne',
-          model: 'section',
+          kind: 'hasOne',
+          type: 'section',
           inverse: 'passages',
         },
-        passagetype: { type: 'hasOne', model: 'passagetype' },
-        sharedResource: { type: 'hasOne', model: 'sharedresource' },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        passagetype: { kind: 'hasOne', type: 'passagetype' },
+        sharedResource: { kind: 'hasOne', type: 'sharedresource' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     passagestatechange: {
@@ -354,14 +344,14 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         state: { type: 'string' },
         comments: { type: 'string' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
         offlineId: { type: 'string' },
       },
       relationships: {
-        passage: { type: 'hasOne', model: 'passage' },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        passage: { kind: 'hasOne', type: 'passage' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     passagetype: {
@@ -371,13 +361,13 @@ const schemaDefinition: SchemaSettings = {
         title: { type: 'string' },
         abbrev: { type: 'string' },
         defaultOrder: { type: 'number' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
         offlineId: { type: 'string' },
       },
       relationships: {
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     mediafile: {
@@ -396,12 +386,12 @@ const schemaDefinition: SchemaSettings = {
         filesize: { type: 'number' },
         position: { type: 'number' },
         segments: { type: 'string' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
         languagebcp47: { type: 'string' },
-        link: { type: 'bool' },
-        readyToShare: { type: 'bool' },
+        link: { type: 'boolean' },
+        readyToShare: { type: 'boolean' },
         performedBy: { type: 'string' },
         resourcePassageId: { type: 'number' },
         offlineId: { type: 'string' },
@@ -411,15 +401,15 @@ const schemaDefinition: SchemaSettings = {
         topic: { type: 'string' },
       },
       relationships: {
-        artifactType: { type: 'hasOne', model: 'artifacttype' },
-        artifactCategory: { type: 'hasOne', model: 'artifactcategory' },
-        orgWorkflowStep: { type: 'hasOne', model: 'orgworkflowstep' },
-        plan: { type: 'hasOne', model: 'plan', inverse: 'mediafiles' },
-        passage: { type: 'hasOne', model: 'passage', inverse: 'mediafiles' },
-        resourcePassage: { type: 'hasOne', model: 'passage' },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
-        recordedbyUser: { type: 'hasOne', model: 'user' },
-        sourceMedia: { type: 'hasOne', model: 'mediafile' },
+        artifactType: { kind: 'hasOne', type: 'artifacttype' },
+        artifactCategory: { kind: 'hasOne', type: 'artifactcategory' },
+        orgWorkflowStep: { kind: 'hasOne', type: 'orgworkflowstep' },
+        plan: { kind: 'hasOne', type: 'plan', inverse: 'mediafiles' },
+        passage: { kind: 'hasOne', type: 'passage', inverse: 'mediafiles' },
+        resourcePassage: { kind: 'hasOne', type: 'passage' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
+        recordedbyUser: { kind: 'hasOne', type: 'user' },
+        sourceMedia: { kind: 'hasOne', type: 'mediafile' },
       },
     },
     user: {
@@ -446,22 +436,22 @@ const schemaDefinition: SchemaSettings = {
         newsPreference: { type: 'boolean' },
         sharedContentAdmin: { type: 'boolean' },
         sharedContentCreator: { type: 'boolean' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         organizationMemberships: {
-          type: 'hasMany',
-          model: 'organizationmembership',
+          kind: 'hasMany',
+          type: 'organizationmembership',
           inverse: 'user',
         },
         groupMemberships: {
-          type: 'hasMany',
-          model: 'groupmembership',
+          kind: 'hasMany',
+          type: 'groupmembership',
           inverse: 'user',
         },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     currentuser: {
@@ -484,17 +474,17 @@ const schemaDefinition: SchemaSettings = {
         progressbarTypeid: { type: 'number' },
         avatarUrl: { type: 'string' },
         hotKeys: { type: 'string' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         organizationMemberships: {
-          type: 'hasMany',
-          model: 'organizationmembership',
+          kind: 'hasMany',
+          type: 'organizationmembership',
         },
-        groupMemberships: { type: 'hasMany', model: 'groupmembership' },
-        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+        groupMemberships: { kind: 'hasMany', type: 'groupmembership' },
+        lastModifiedByUser: { kind: 'hasOne', type: 'user' },
       },
     },
     orgdata: {
@@ -537,20 +527,21 @@ if (
     keys: { remoteId: {} },
     attributes: {
       computerfp: { type: 'string' },
-      snapshotDate: { type: 'date-time' },
+      snapshotDate: { type: 'string' }, // datetime
       offlineAvailable: { type: 'boolean' },
-      exportedDate: { type: 'date-time' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      exportedDate: { type: 'string' }, // datetime
+      fileDownloadDate: { type: 'string' }, // datetime
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
       lastModifiedBy: { type: 'number' }, //bkwd compat only
       startNext: { type: 'number' },
     },
     relationships: {
       project: {
-        type: 'hasOne',
-        model: 'project',
+        kind: 'hasOne',
+        type: 'project',
       },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
   delete schemaDefinition.models.project.attributes?.dateImported;
@@ -565,16 +556,16 @@ if (
     keys: { remoteId: {} },
     attributes: {
       audacityName: { type: 'string' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
       lastModifiedBy: { type: 'number' }, //bkwd compat only
     },
     relationships: {
       passage: {
-        type: 'hasOne',
-        model: 'passage',
+        kind: 'hasOne',
+        type: 'passage',
       },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.version = 3;
@@ -587,30 +578,30 @@ if (
     keys: { remoteId: {} },
     attributes: {
       categoryname: { type: 'string' },
-      discussion: { type: 'bool' },
-      resource: { type: 'bool' },
-      note: { type: 'bool' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      discussion: { type: 'boolean' },
+      resource: { type: 'boolean' },
+      note: { type: 'boolean' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
       lastModifiedBy: { type: 'number' }, //bkwd compat only
     },
     relationships: {
-      organization: { type: 'hasOne', model: 'organization' },
-      titleMediafile: { type: 'hasOne', model: 'mediafile' },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      organization: { kind: 'hasOne', type: 'organization' },
+      titleMediafile: { kind: 'hasOne', type: 'mediafile' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.models.artifacttype = {
     keys: { remoteId: {} },
     attributes: {
       typename: { type: 'string' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
       lastModifiedBy: { type: 'number' }, //bkwd compat only
     },
     relationships: {
-      organization: { type: 'hasOne', model: 'organization' },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      organization: { kind: 'hasOne', type: 'organization' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.models.workflowstep = {
@@ -621,12 +612,12 @@ if (
       sequencenum: { type: 'number' },
       tool: { type: 'string' },
       permissions: { type: 'string' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
       lastModifiedBy: { type: 'number' }, //bkwd compat only
     },
     relationships: {
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.models.orgworkflowstep = {
@@ -637,13 +628,13 @@ if (
       sequencenum: { type: 'number' },
       tool: { type: 'string' },
       permissions: { type: 'string' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
       lastModifiedBy: { type: 'number' }, //bkwd compat only
     },
     relationships: {
-      organization: { type: 'hasOne', model: 'organization' },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      organization: { kind: 'hasOne', type: 'organization' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.models.discussion = {
@@ -651,24 +642,24 @@ if (
     attributes: {
       segments: { type: 'string' },
       subject: { type: 'string' },
-      resolved: { type: 'bool' },
+      resolved: { type: 'boolean' },
       tool: { type: 'string' },
       permissions: { type: 'string' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
       lastModifiedBy: { type: 'number' }, //bkwd compat only
       offlineId: { type: 'string' },
       offlineMediafileId: { type: 'string' },
     },
     relationships: {
-      mediafile: { type: 'hasOne', model: 'mediafile' },
-      group: { type: 'hasOne', model: 'group' },
-      user: { type: 'hasOne', model: 'user' },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
-      artifactCategory: { type: 'hasOne', model: 'artifactcategory' },
+      mediafile: { kind: 'hasOne', type: 'mediafile' },
+      group: { kind: 'hasOne', type: 'group' },
+      user: { kind: 'hasOne', type: 'user' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
+      artifactCategory: { kind: 'hasOne', type: 'artifactcategory' },
       orgWorkflowStep: {
-        type: 'hasOne',
-        model: 'orgworkflowstep',
+        kind: 'hasOne',
+        type: 'orgworkflowstep',
       },
     },
   };
@@ -676,8 +667,8 @@ if (
     keys: { remoteId: {} },
     attributes: {
       commentText: { type: 'string' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
       lastModifiedBy: { type: 'number' }, //bkwd compat only
       offlineId: { type: 'string' },
       offlineDiscussionId: { type: 'string' },
@@ -685,10 +676,10 @@ if (
       visible: { type: 'string' },
     },
     relationships: {
-      discussion: { type: 'hasOne', model: 'discussion' },
-      mediafile: { type: 'hasOne', model: 'mediafile' },
-      user: { type: 'hasOne', model: 'user' },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      discussion: { kind: 'hasOne', type: 'discussion' },
+      mediafile: { kind: 'hasOne', type: 'mediafile' },
+      user: { kind: 'hasOne', type: 'user' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.models.sectionresource = {
@@ -696,52 +687,52 @@ if (
     attributes: {
       sequenceNum: { type: 'number' },
       description: { type: 'string' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
       lastModifiedBy: { type: 'number' }, //bkwd compat only
     },
     relationships: {
       section: {
-        type: 'hasOne',
-        model: 'section',
+        kind: 'hasOne',
+        type: 'section',
       },
       passage: {
-        type: 'hasOne',
-        model: 'passage',
+        kind: 'hasOne',
+        type: 'passage',
       },
       project: {
-        type: 'hasOne',
-        model: 'project',
+        kind: 'hasOne',
+        type: 'project',
       },
       mediafile: {
-        type: 'hasOne',
-        model: 'mediafile',
+        kind: 'hasOne',
+        type: 'mediafile',
       },
       orgWorkflowStep: {
-        type: 'hasOne',
-        model: 'orgworkflowstep',
+        kind: 'hasOne',
+        type: 'orgworkflowstep',
       },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
 
   schemaDefinition.models.sectionresourceuser = {
     keys: { remoteId: {} },
     attributes: {
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
       lastModifiedBy: { type: 'number' }, //bkwd compat only
     },
     relationships: {
       sectionresource: {
-        type: 'hasOne',
-        model: 'sectionresource',
+        kind: 'hasOne',
+        type: 'sectionresource',
       },
       user: {
-        type: 'hasOne',
-        model: 'user',
+        kind: 'hasOne',
+        type: 'user',
       },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.models.resource = {
@@ -779,12 +770,12 @@ if (
       idList: { type: 'number' },
       s3file: { type: 'string' },
       dateCreated: { type: 'string' },
-      dateUpdated: { type: 'date-time' },
+      dateUpdated: { type: 'string' }, // datetime
       lastModifiedBy: { type: 'number' },
     },
     relationships: {
-      passage: { type: 'hasOne', model: 'passage' },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      passage: { kind: 'hasOne', type: 'passage' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
 }
@@ -797,22 +788,22 @@ if (
     attributes: {
       rightsHolder: { type: 'string' },
       notes: { type: 'string' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
       lastModifiedBy: { type: 'number' },
       offlineId: { type: 'string' },
       offlineMediafileId: { type: 'string' },
     },
     relationships: {
       organization: {
-        type: 'hasOne',
-        model: 'organization',
+        kind: 'hasOne',
+        type: 'organization',
       },
       releaseMediafile: {
-        type: 'hasOne',
-        model: 'mediafile',
+        kind: 'hasOne',
+        type: 'mediafile',
       },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
 
@@ -830,12 +821,12 @@ if (
       definition: { type: 'string' },
       category: { type: 'string' },
       offlineId: { type: 'string' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
     },
     relationships: {
-      organization: { type: 'hasOne', model: 'organization' },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      organization: { kind: 'hasOne', type: 'organization' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.models.orgkeytermtarget = {
@@ -846,13 +837,13 @@ if (
       target: { type: 'string' },
       offlineId: { type: 'string' },
       offlineMediafileId: { type: 'string' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
     },
     relationships: {
-      organization: { type: 'hasOne', model: 'organization' },
-      mediafile: { type: 'hasOne', model: 'mediafile' },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      organization: { kind: 'hasOne', type: 'organization' },
+      mediafile: { kind: 'hasOne', type: 'mediafile' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.models.orgkeytermreference = {
@@ -863,14 +854,14 @@ if (
       target: { type: 'string' },
       offlineId: { type: 'string' },
       offlineMediafileId: { type: 'string' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
     },
     relationships: {
-      orgkeyterm: { type: 'hasOne', model: 'orgkeyterm' },
-      project: { type: 'hasOne', model: 'project' },
-      section: { type: 'hasOne', model: 'section' },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      orgkeyterm: { kind: 'hasOne', type: 'orgkeyterm' },
+      project: { kind: 'hasOne', type: 'project' },
+      section: { kind: 'hasOne', type: 'section' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.models.sharedresource = {
@@ -883,15 +874,15 @@ if (
       keywords: { type: 'string' },
       linkurl: { type: 'string' },
       note: { type: 'boolean' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
     },
     relationships: {
-      passage: { type: 'hasOne', model: 'passage' },
-      cluster: { type: 'hasOne', model: 'organization' },
-      artifactCategory: { type: 'hasOne', model: 'artifactcategory' },
-      titleMediafile: { type: 'hasOne', model: 'mediafile' },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      passage: { kind: 'hasOne', type: 'passage' },
+      cluster: { kind: 'hasOne', type: 'organization' },
+      artifactCategory: { kind: 'hasOne', type: 'artifactcategory' },
+      titleMediafile: { kind: 'hasOne', type: 'mediafile' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.models.sharedresourcereference = {
@@ -900,12 +891,12 @@ if (
       book: { type: 'string' },
       chapter: { type: 'number' },
       verses: { type: 'string' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
     },
     relationships: {
-      sharedResource: { type: 'hasOne', model: 'sharedresource' },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      sharedResource: { kind: 'hasOne', type: 'sharedresource' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.version = 6;
@@ -914,7 +905,7 @@ if (
   parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 6 &&
   schemaDefinition.models
 ) {
-  schemaDefinition.models.vwChecksum = {
+  schemaDefinition.models.vwchecksum = {
     keys: { remoteId: {} },
     attributes: {
       name: { type: 'string' },
@@ -937,27 +928,27 @@ if (
       description: { type: 'string' },
       publishingData: { type: 'string' },
       anyPublished: { type: 'boolean' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
     },
     relationships: {
-      isoMediafile: { type: 'hasOne', model: 'mediafile' },
-      bibleMediafile: { type: 'hasOne', model: 'mediafile' },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      isoMediafile: { kind: 'hasOne', type: 'mediafile' },
+      bibleMediafile: { kind: 'hasOne', type: 'mediafile' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.models.organizationbible = {
     keys: { remoteId: {} },
     attributes: {
       ownerorg: { type: 'boolean' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
       lastModifiedBy: { type: 'number' }, //bkwd compat only
     },
     relationships: {
-      bible: { type: 'hasOne', model: 'bible' },
-      organization: { type: 'hasOne', model: 'organization' },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      bible: { kind: 'hasOne', type: 'bible' },
+      organization: { kind: 'hasOne', type: 'organization' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
   schemaDefinition.models.graphic = {
@@ -966,95 +957,120 @@ if (
       resourceType: { type: 'string' },
       resourceId: { type: 'string' },
       info: { type: 'string' },
-      dateCreated: { type: 'date-time' },
-      dateUpdated: { type: 'date-time' },
+      dateCreated: { type: 'string' }, // datetime
+      dateUpdated: { type: 'string' }, // datetime
     },
     relationships: {
-      organization: { type: 'hasOne', model: 'organization' },
-      mediafile: { type: 'hasOne', model: 'mediafile' },
-      lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      organization: { kind: 'hasOne', type: 'organization' },
+      mediafile: { kind: 'hasOne', type: 'mediafile' },
+      lastModifiedByUser: { kind: 'hasOne', type: 'user' },
     },
   };
 
   schemaDefinition.version = 8;
 }
 
-export const schema = new Schema(schemaDefinition);
+export const schema = new RecordSchema(schemaDefinition);
 
-export const keyMap = new KeyMap();
+export const keyMap = new RecordKeyMap();
 
-export const memory = new Memory({ schema, keyMap });
-const findMissingModels = (schema: Schema, db: IDBDatabase) => {
+export const memory = new MemorySource({
+  schema,
+  keyMap,
+  // validatorFor: buildValidatorFor({
+  //   validators: {[StandardValidators.DateTime]: DateTimeValidator}},
+  // }),
+});
+const findMissingModels = (schema: RecordSchema, db: IDBDatabase) => {
   return Object.keys(schema.models).filter(
     (model) => !db.objectStoreNames.contains(model)
   );
 };
 const SaveOfflineProjectInfo = async (
   backup: IndexedDBSource,
-  memory: Memory
+  memory: MemorySource
 ) => {
   if (isElectron) {
-    var t = await backup.pull((q) => q.findRecords('project'));
-    const ops: Operation[] = [];
-    var fingerprint = t[0].operations.length > 0 ? await getFingerprint() : '';
-    t[0].operations.forEach((r: any) => {
+    let recs = (await backup.query((q) =>
+      q.findRecords('project')
+    )) as ProjectD[];
+    if (!Array.isArray(recs)) recs = [recs];
+    const ops: RecordOperation[] = [];
+    var fingerprint = recs.length > 0 ? await getFingerprint() : '';
+    recs.forEach((r: ProjectD) => {
       offlineProjectCreate(
-        r.record,
+        r,
         ops,
         memory,
         fingerprint,
-        r.record.attributes.dateImported,
-        r.record.attributes.dateImported,
+        r.attributes.dateImported as string,
+        r.attributes.dateImported as string,
         true
       );
     });
-    await backup.push(ops);
+    await backup.sync((t) => ops);
     await memory.update(ops);
     console.log('done with upgrade to v2');
   }
 };
-const UpdatePublicFlags = async (backup: IndexedDBSource, memory: Memory) => {
-  var p = await backup.pull((q) => q.findRecords('project'));
-  const ops: Operation[] = [];
-  const tb = new TransformBuilder();
-  p[0].operations.forEach((r: any) => {
-    r.record.attributes = { ...r.record.attributes, isPublic: false };
-    ops.push(tb.updateRecord(r.record));
+const UpdatePublicFlags = async (
+  backup: IndexedDBSource,
+  memory: MemorySource
+) => {
+  let pRecs = (await backup.query((q) =>
+    q.findRecords('project')
+  )) as ProjectD[];
+  if (!Array.isArray(pRecs)) pRecs = [pRecs];
+  const ops: RecordOperation[] = [];
+  const tb = new RecordTransformBuilder();
+  pRecs.forEach((r: ProjectD) => {
+    r.attributes = { ...r.attributes, isPublic: false };
+    ops.push(tb.updateRecord(r).toOperation());
   });
-  var o = await backup.pull((q) => q.findRecords('organization'));
-  o[0].operations.forEach((r: any) => {
-    r.record.attributes = { ...r.record.attributes, publicByDefault: false };
-    ops.push(tb.updateRecord(r.record));
+  let oRecs = (await backup.query((q) =>
+    q.findRecords('organization')
+  )) as OrganizationD[];
+  if (!Array.isArray(oRecs)) oRecs = [oRecs];
+  oRecs.forEach((r: OrganizationD) => {
+    r.attributes = { ...r.attributes, publicByDefault: false };
+    ops.push(tb.updateRecord(r).toOperation());
   });
-  await memory.sync(await backup.push(ops));
+  await backup.sync((t) => ops);
+  await memory.sync((t) => ops);
 };
 const MoveTranscriptionState = async (
   backup: IndexedDBSource,
-  memory: Memory
+  memory: MemorySource
 ) => {
-  var p = await backup.pull((q) => q.findRecords('passage'));
-  var m = await backup.pull((q) => q.findRecords('mediafile'));
-  var mediafiles = m[0].operations.map((o: any) => o.record as MediaFile);
+  var pRecs = (await backup.query((q) =>
+    q.findRecords('passage')
+  )) as PassageD[];
+  if (!Array.isArray(pRecs)) pRecs = [pRecs];
+  var mediafiles = (await backup.query((q) =>
+    q.findRecords('mediafile')
+  )) as MediaFileD[];
+  if (!Array.isArray(mediafiles)) mediafiles = [mediafiles];
 
-  const ops: Operation[] = [];
-  const tb = new TransformBuilder();
-  p[0].operations.forEach((r: any) => {
+  const ops: RecordOperation[] = [];
+  const tb = new RecordTransformBuilder();
+  pRecs.forEach((r: PassageD) => {
     //find the latest mediafile
-    var meds = mediafiles
-      .filter((m) => related(m, 'passage') === r.record.id)
+    const meds = mediafiles
+      .filter((m) => related(m, 'passage') === r.id)
       .sort(
         (a, b) => b.attributes?.versionNumber - a.attributes?.versionNumber
       );
     if (meds.length > 0) {
-      var mediafile = meds[0];
+      const mediafile = meds[0];
       mediafile.attributes = {
         ...mediafile.attributes,
-        transcriptionstate: r.record.attributes.state,
+        transcriptionstate: r.attributes.state,
       };
-      ops.push(tb.updateRecord(mediafile));
+      ops.push(tb.updateRecord(mediafile).toOperation());
     }
   });
-  await memory.sync(await backup.push(ops));
+  await backup.sync((tb) => ops);
+  await memory.sync((tb) => ops);
   console.log('done with upgrade to v4');
 };
 export const backup = window.indexedDB
@@ -1063,6 +1079,9 @@ export const backup = window.indexedDB
       keyMap,
       name: 'backup',
       namespace: 'transcriber',
+      defaultTransformOptions: {
+        useBuffer: true,
+      },
     })
   : ({} as IndexedDBSource);
 

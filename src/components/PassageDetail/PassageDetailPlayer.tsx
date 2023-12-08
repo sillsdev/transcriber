@@ -9,11 +9,10 @@ import {
 } from '../../crud/useWavesurferRegions';
 import WSAudioPlayer from '../WSAudioPlayer';
 import { useSelector, shallowEqual } from 'react-redux';
-import { IWsAudioPlayerStrings, MediaFile } from '../../model';
+import { IWsAudioPlayerStrings, MediaFile, MediaFileD } from '../../model';
 import { UpdateRecord } from '../../model/baseModel';
 import { playerSelector } from '../../selector';
 import { NamedRegions, getSegments, updateSegments } from '../../utils';
-import { TransformBuilder } from '@orbit/data';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 export enum SaveSegments {
   showSaveButton = 0,
@@ -150,7 +149,7 @@ export function PassageDetailPlayer(props: IProps) {
                     segmentsRef.current
                   ),
                 },
-              } as any as MediaFile,
+              } as unknown as MediaFileD,
               user
             ),
           ])
@@ -190,9 +189,9 @@ export function PassageDetailPlayer(props: IProps) {
         ${Math.floor(mediafileRef.current.attributes.duration)}`
       );
       memory
-        .update((t: TransformBuilder) =>
+        .update((t) =>
           t.replaceAttribute(
-            mediafileRef.current as MediaFile, //I already checked for undefined
+            mediafileRef.current as MediaFileD, //I already checked for undefined
             'duration',
             Math.floor(duration)
           )

@@ -45,9 +45,11 @@ export const SelectArtifactType = (props: IProps) => {
   }, [limit]);
 
   useEffect(() => {
-    setArtifactType(
-      initialValue ? initialValue : (ArtifactTypeSlug.Vernacular as string)
-    );
+    const curType = initialValue
+      ? initialValue
+      : (ArtifactTypeSlug.Vernacular as string);
+    if (curType !== artifactType) setArtifactType(curType);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialValue]);
 
   return (
@@ -57,7 +59,11 @@ export const SelectArtifactType = (props: IProps) => {
         select
         label={t.artifactType}
         sx={{ mx: 1, width: '400px' }}
-        value={artifactType}
+        value={
+          artifactTypes.map((t) => t.id).includes(artifactType)
+            ? artifactType
+            : ''
+        }
         onChange={handleArtifactTypeChange}
         SelectProps={{
           MenuProps: {

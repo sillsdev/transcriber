@@ -21,9 +21,9 @@ import { NextUploadProps } from '../store';
 import { useDispatch } from 'react-redux';
 import { mediaTabSelector, sharedSelector } from '../selector';
 import { passageDefaultSuffix } from '../utils/passageDefaultFilename';
-import IndexedDBSource from '@orbit/indexeddb/dist/types/source';
+import { IndexedDBSource } from '@orbit/indexeddb';
 import path from 'path-browserify';
-import { QueryBuilder } from '@orbit/data';
+import { RecordKeyMap } from '@orbit/records';
 
 const ErrorMessage = styled('span')(({ theme }) => ({
   color: theme.palette.secondary.light,
@@ -131,16 +131,23 @@ export const Uploader = (props: IProps) => {
 
   const getArtifactTypeId = () =>
     artifactTypeId
-      ? remoteIdNum('artifacttype', artifactTypeId, memory.keyMap) ||
-        artifactTypeId
+      ? remoteIdNum(
+          'artifacttype',
+          artifactTypeId,
+          memory.keyMap as RecordKeyMap
+        ) || artifactTypeId
       : artifactTypeId;
   const getPassageId = () =>
-    remoteIdNum('passage', passageId || '', memory.keyMap) || passageId;
+    remoteIdNum('passage', passageId || '', memory.keyMap as RecordKeyMap) ||
+    passageId;
   const getSourceMediaId = () =>
-    remoteIdNum('mediafile', sourceMediaId || '', memory.keyMap) ||
-    sourceMediaId;
+    remoteIdNum(
+      'mediafile',
+      sourceMediaId || '',
+      memory.keyMap as RecordKeyMap
+    ) || sourceMediaId;
   const getUserId = () =>
-    remoteIdNum('user', user || '', memory.keyMap) || user;
+    remoteIdNum('user', user || '', memory.keyMap as RecordKeyMap) || user;
 
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     if (success) successCount.current += 1;
@@ -153,9 +160,7 @@ export const Uploader = (props: IProps) => {
       var num = 1;
       if (psgId && !artifactTypeId) {
         const mediaFiles = (
-          memory.cache.query((q: QueryBuilder) =>
-            q.findRecords('mediafile')
-          ) as MediaFile[]
+          memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
         )
           .filter(
             (m) =>
@@ -203,7 +208,8 @@ export const Uploader = (props: IProps) => {
   };
 
   const getPlanId = () =>
-    remoteIdNum('plan', planIdRef.current, memory.keyMap) || planIdRef.current;
+    remoteIdNum('plan', planIdRef.current, memory.keyMap as RecordKeyMap) ||
+    planIdRef.current;
 
   const doUpload = (currentlyLoading: number) => {
     const uploadList = fileList.current;

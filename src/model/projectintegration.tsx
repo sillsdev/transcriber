@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 
 export interface ProjectIntegration extends BaseModel {
@@ -14,4 +14,7 @@ export interface ProjectIntegration extends BaseModel {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type ProjectIntegrationD = ProjectIntegration & InitializedRecord;
+
 export default ProjectIntegration;

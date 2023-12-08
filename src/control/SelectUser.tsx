@@ -1,28 +1,26 @@
 import { MenuItem, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { ISharedStrings, IState, OrganizationMembership, User } from '../model';
-import { QueryBuilder } from '@orbit/data';
+import { ISharedStrings, OrganizationMembership, User } from '../model';
 import { useGlobal } from 'reactn';
-import { withData } from 'react-orbitjs';
-import localStrings from '../selector/localize';
-import { connect } from 'react-redux';
 import { related } from '../crud';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { sharedSelector } from '../selector';
+import { shallowEqual, useSelector } from 'react-redux';
 
-interface IStateProps {
-  ts: ISharedStrings;
-}
-interface IRecordProps {
-  users: Array<User>;
-  orgmems: Array<OrganizationMembership>;
-}
-interface IProps extends IStateProps, IRecordProps {
+interface IProps {
+  id?: string;
   initUser?: string;
   label?: string;
   onChange: (role: string) => void;
   required?: boolean;
 }
 export const SelectUser = (props: IProps) => {
-  const { ts, users, orgmems, onChange, initUser, required, label } = props;
+  const { id: idIn, onChange, initUser, required, label } = props;
+  const users = useOrbitData<User[]>('user');
+  const orgmems = useOrbitData<OrganizationMembership[]>(
+    'organizationmembership'
+  );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [offlineOnly] = useGlobal('offlineOnly');
   const [organization] = useGlobal('organization');
   const [orgUsers, setOrgUsers] = useState<User[]>([]);
@@ -64,7 +62,7 @@ export const SelectUser = (props: IProps) => {
 
   return (
     <TextField
-      id="select-user"
+      id={idIn || 'select-user'}
       sx={{
         mx: 1,
         display: 'flex',
@@ -89,15 +87,4 @@ export const SelectUser = (props: IProps) => {
     </TextField>
   );
 };
-const mapStateToProps = (state: IState): IStateProps => ({
-  ts: localStrings(state, { layout: 'shared' }),
-});
-
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  orgmems: (q: QueryBuilder) => q.findRecords('organizationmembership'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(SelectUser) as any
-) as any;
+export default SelectUser;

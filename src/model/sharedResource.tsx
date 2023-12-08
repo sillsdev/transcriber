@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 
 export interface SharedResource extends BaseModel {
@@ -22,3 +22,7 @@ export interface SharedResource extends BaseModel {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type SharedResourceD = SharedResource & InitializedRecord;
+
+export default SharedResource;

@@ -52,8 +52,8 @@ import { NamedRegions } from '../utils';
 import { memory } from '../schema';
 import { useSelector, shallowEqual } from 'react-redux';
 import { toolSelector } from '../selector';
-import { QueryBuilder } from '@orbit/data';
 import Busy from '../components/Busy';
+import { RecordKeyMap } from '@orbit/records';
 
 const KeyTerms = React.lazy(
   () => import('../components/PassageDetail/Keyterms/KeyTerms')
@@ -171,7 +171,10 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   const artifactId = useMemo(() => {
     if (settings) {
       var id = JSON.parse(settings).artifactTypeId;
-      if (id) return remoteIdGuid('artifacttype', id, memory.keyMap) ?? id;
+      if (id)
+        return (
+          remoteIdGuid('artifacttype', id, memory.keyMap as RecordKeyMap) ?? id
+        );
     }
     return null;
   }, [settings]);
@@ -272,9 +275,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   }, [minWidth]);
 
   const plans = useMemo(() => {
-    const plans = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('plan')
-    ) as Plan[];
+    const plans = memory.cache.query((q) => q.findRecords('plan')) as Plan[];
     return plans.filter((p) => p.id === plan);
   }, [plan]);
 

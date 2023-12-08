@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 
 export interface ArtifactCategory extends BaseModel {
@@ -17,5 +17,7 @@ export interface ArtifactCategory extends BaseModel {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type ArtifactCategoryD = ArtifactCategory & InitializedRecord;
 
 export default ArtifactCategory;

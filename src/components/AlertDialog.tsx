@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { connect } from 'react-redux';
-import { IState, IAlertStrings } from '../model';
-import localStrings from '../selector/localize';
+import { IAlertStrings } from '../model';
 import {
   Button,
   Dialog,
@@ -11,6 +9,8 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DialogActions, { DialogActionsProps } from '@mui/material/DialogActions';
+import { shallowEqual, useSelector } from 'react-redux';
+import { alertSelector } from '../selector';
 
 // see: https://mui.com/material-ui/customization/how-to-customize/
 interface StyledActionsProps extends DialogActionsProps {
@@ -25,17 +25,14 @@ const StyledDialogActions = styled(DialogActions, {
   }),
 }));
 
-interface IStateProps {
-  t: IAlertStrings;
-}
-interface IProps extends IStateProps {
-  title: string;
+interface IProps {
+  title?: string;
   text: string;
-  jsx: JSX.Element;
-  no: string;
-  yes: string;
-  noResponse: () => {};
-  yesResponse: () => {};
+  jsx?: JSX.Element;
+  no?: string;
+  yes?: string;
+  noResponse: () => void;
+  yesResponse: () => void;
   noOnLeft?: boolean;
   isDelete?: boolean;
 }
@@ -51,8 +48,8 @@ function AlertDialog(props: IProps) {
     noResponse,
     noOnLeft,
     isDelete,
-    t,
   } = props;
+  const t: IAlertStrings = useSelector(alertSelector, shallowEqual);
   const [open, setOpen] = useState(true);
 
   const handleClose = () => {
@@ -111,8 +108,4 @@ function AlertDialog(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'alert' }),
-});
-
-export default connect(mapStateToProps)(AlertDialog) as any;
+export default AlertDialog;

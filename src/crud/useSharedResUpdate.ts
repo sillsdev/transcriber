@@ -1,6 +1,6 @@
 import { useGlobal } from 'reactn';
-import { ArtifactCategory, SharedResource } from '../model';
-import { RecordIdentity, TransformBuilder } from '@orbit/data';
+import { ArtifactCategory, SharedResourceD } from '../model';
+import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
 import { ReplaceRelatedRecord, UpdateRecord } from '../model/baseModel';
 import { findRecord } from '.';
 
@@ -8,8 +8,8 @@ export const useSharedResUpdate = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
-  return async (sharedResource: SharedResource, category: string) => {
-    const t = new TransformBuilder();
+  return async (sharedResource: SharedResourceD, category: string) => {
+    const t = new RecordTransformBuilder();
     const ops = [
       ...UpdateRecord(t, sharedResource, user),
       ...ReplaceRelatedRecord(
@@ -26,11 +26,13 @@ export const useSharedResUpdate = () => {
         | undefined;
       if (catRec) {
         ops.push(
-          t.replaceAttribute(
-            sharedResource.relationships.passage.data as RecordIdentity,
-            'reference',
-            `NOTE ${catRec.attributes.categoryname}`
-          )
+          t
+            .replaceAttribute(
+              sharedResource.relationships.passage.data as RecordIdentity,
+              'reference',
+              `NOTE ${catRec.attributes.categoryname}`
+            )
+            .toOperation()
         );
       }
     }

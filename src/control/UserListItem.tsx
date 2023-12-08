@@ -1,4 +1,4 @@
-import { User } from '../model';
+import { UserD } from '../model';
 import {
   Button,
   ListItem,
@@ -17,13 +17,12 @@ const StyledButton = styled(Button)<ButtonProps>(() => ({
 }));
 
 interface IProps {
-  u: User;
-  users: User[];
+  u: UserD;
   onSelect?: (user: string) => void;
   showTeams: boolean;
 }
 export const UserListItem = (props: IProps) => {
-  const { u, users, onSelect, showTeams } = props;
+  const { u, onSelect, showTeams } = props;
   const teams = useOfflineTeamList();
 
   const handleSelect = (user: string) => () => {
@@ -33,7 +32,7 @@ export const UserListItem = (props: IProps) => {
   const ItemContent = () => (
     <StyledButton variant="outlined">
       <ListItemIcon>
-        <UserAvatar {...props} users={users} userRec={u} />
+        <UserAvatar {...props} userRec={u} />
       </ListItemIcon>
       <ListItemText
         primary={u?.attributes?.name || ''}

@@ -1,4 +1,4 @@
-import { MediaFile, Passage, Section, BookName } from '../../model';
+import { MediaFile, BookName, PassageD, SectionD } from '../../model';
 import { related } from '../../crud';
 import { refMatch } from '../../utils';
 import { IPRow, isAttached, pad } from '.';
@@ -17,8 +17,8 @@ export interface IPassageData {
 }
 
 export const passageRow = (
-  passage: Passage,
-  section: Section,
+  passage: PassageD,
+  section: SectionD,
   data: IPassageData
 ) => {
   const { media, allBookData } = data;
@@ -47,8 +47,8 @@ export const passageRow = (
 
 export const getPassages = (
   planId: string,
-  passages: Passage[],
-  sections: Section[],
+  passages: PassageD[],
+  sections: SectionD[],
   data: IPassageData
 ) => {
   const prowData: IPRow[] = [];

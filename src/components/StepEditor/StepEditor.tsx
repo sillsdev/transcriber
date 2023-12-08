@@ -4,12 +4,12 @@ import {
   IState,
   OrgWorkflowStep,
   IWorkflowStepsStrings,
+  OrgWorkflowStepD,
 } from '../../model';
 import { Button, Box } from '@mui/material';
 import localStrings from '../../selector/localize';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { useGlobal } from 'reactn';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { StepItem, StepList } from '.';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { CheckedChoice as ShowAll } from '../../control';
@@ -32,6 +32,7 @@ import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
 import { TranscribeStepSettings } from './TranscribeStepSettings';
 import { ParatextStepSettings } from './ParatextStepSettings';
 import { workflowStepsSelector } from '../../selector';
+import { RecordKeyMap } from '@orbit/records';
 
 export interface IStepRow {
   id: string;
@@ -158,8 +159,11 @@ export const StepEditor = ({ process, org }: IProps) => {
         ? JSON.parse(rows[toolRef.current].settings)
         : {};
       const artId =
-        remoteIdGuid('artifacttype', settings?.artifactTypeId, memory.keyMap) ??
-        settings?.artifactTypeId;
+        remoteIdGuid(
+          'artifacttype',
+          settings?.artifactTypeId,
+          memory.keyMap as RecordKeyMap
+        ) ?? settings?.artifactTypeId;
       const artSlug = slugFromId(artId);
       const artShortName = artId
         ? ` ${
@@ -280,9 +284,9 @@ export const StepEditor = ({ process, org }: IProps) => {
       });
       if (id) {
         const recId = { type: 'orgworkflowstep', id };
-        const rec = memory.cache.query((q: QueryBuilder) =>
-          q.findRecord(recId)
-        ) as OrgWorkflowStep | undefined;
+        const rec = memory.cache.query((q) => q.findRecord(recId)) as
+          | OrgWorkflowStep
+          | undefined;
 
         if (rec) {
           let name = rec.attributes?.name;
@@ -300,7 +304,7 @@ export const StepEditor = ({ process, org }: IProps) => {
             row.seq !== rec.attributes?.sequencenum ||
             tool !== rec.attributes?.tool
           ) {
-            await memory.update((t: TransformBuilder) =>
+            await memory.update((t) =>
               t.updateRecord({
                 ...rec,
                 attributes: {
@@ -332,11 +336,11 @@ export const StepEditor = ({ process, org }: IProps) => {
           },
         } as OrgWorkflowStep;
         if (org) {
-          await memory.update((t: TransformBuilder) => [
+          await memory.update((t) => [
             ...AddRecord(t, rec, user, memory),
             ...ReplaceRelatedRecord(
               t,
-              rec,
+              rec as OrgWorkflowStepD,
               'organization',
               'organization',
               org
@@ -386,8 +390,11 @@ export const StepEditor = ({ process, org }: IProps) => {
       case ToolSlug.Paratext:
         if (json)
           return localizedArtifactTypeFromId(
-            remoteIdGuid('artifacttype', json.artifactTypeId, memory.keyMap) ??
-              json.artifactTypeId
+            remoteIdGuid(
+              'artifacttype',
+              json.artifactTypeId,
+              memory.keyMap as RecordKeyMap
+            ) ?? json.artifactTypeId
           );
         return localizedArtifactTypeFromId(VernacularTag);
       default:

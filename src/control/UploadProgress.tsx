@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
-import { IState, IUploadProgressStrings } from '../model';
-import localStrings from '../selector/localize';
+import { IUploadProgressStrings } from '../model';
+import { uploadProgressSelector } from '../selector';
+import { useSelector } from 'react-redux';
 import {
   Button,
   Dialog,
@@ -19,11 +19,7 @@ import {
 } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 
-interface IStateProps {
-  t: IUploadProgressStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   open: boolean;
   title?: string;
   progress: number;
@@ -34,7 +30,8 @@ interface IProps extends IStateProps {
 }
 
 export function UploadProgress(props: IProps) {
-  const { open, title, progress, action, allowCancel, t } = props;
+  const { open, title, progress, action, allowCancel } = props;
+  const t: IUploadProgressStrings = useSelector(uploadProgressSelector);
   const { steps, currentStep } = props;
   const cancelRef = useRef(false);
 
@@ -93,8 +90,4 @@ export function UploadProgress(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'uploadProgress' }),
-});
-
-export default connect(mapStateToProps)(UploadProgress) as any;
+export default UploadProgress;

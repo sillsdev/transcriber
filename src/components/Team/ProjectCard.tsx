@@ -17,7 +17,7 @@ import * as actions from '../../store';
 import ScriptureIcon from '@mui/icons-material/MenuBook';
 import { BsPencilSquare } from 'react-icons/bs';
 import moment from 'moment';
-import { VProject, DialogMode, IState } from '../../model';
+import { DialogMode, IState, VProjectD } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import ProjectMenu from './ProjectMenu';
 import BigDialog from '../../hoc/BigDialog';
@@ -43,6 +43,7 @@ import { copyComplete, CopyProjectProps } from '../../store';
 import { TokenContext } from '../../context/TokenProvider';
 import { useSnackBar } from '../../hoc/SnackBar';
 import CategoryTabs from './CategoryTabs';
+import { RecordKeyMap } from '@orbit/records';
 
 const ProjectCardRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -82,7 +83,7 @@ const StyledChip = styled(Chip)<ChipProps>(({ theme }) => ({
 }));
 
 interface IProps {
-  project: VProject;
+  project: VProjectD;
 }
 
 export const ProjectCard = (props: IProps) => {
@@ -129,7 +130,7 @@ export const ProjectCard = (props: IProps) => {
   const [openExport, setOpenExport] = useState(false);
   const [openReports, setOpenReports] = useState(false);
   const [openCategory, setOpenCategory] = useState(false);
-  const [deleteItem, setDeleteItem] = useState<VProject>();
+  const [deleteItem, setDeleteItem] = useState<VProjectD>();
   const [open, setOpen] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
   const t = cardStrings;
@@ -137,7 +138,7 @@ export const ProjectCard = (props: IProps) => {
   const { userIsOrgAdmin } = useRole();
   const { leaveHome } = useHome();
 
-  const handleSelect = (project: VProject) => () => {
+  const handleSelect = (project: VProjectD) => () => {
     loadProject(project);
     leaveHome();
   };
@@ -206,7 +207,11 @@ export const ProjectCard = (props: IProps) => {
       case 'copynew':
         setCopying(true);
         copyProject({
-          projectid: remoteIdNum('project', projectId, memory.keyMap),
+          projectid: remoteIdNum(
+            'project',
+            projectId,
+            memory.keyMap as RecordKeyMap
+          ),
           sameorg: what === 'copysame',
           token: accessToken,
           errorReporter: errorReporter,
@@ -281,7 +286,7 @@ export const ProjectCard = (props: IProps) => {
     setDeleteItem(undefined);
   };
 
-  const projectValues = (project: VProject) => {
+  const projectValues = (project: VProjectD) => {
     const attr = project.attributes;
     const value: IProjectDialog = {
       name: attr.name,
@@ -421,6 +426,7 @@ export const ProjectCard = (props: IProps) => {
       </BigDialog>
       {deleteItem && (
         <Confirm
+          text={''}
           yesResponse={handleDeleteConfirmed}
           noResponse={handleDeleteRefused}
         />

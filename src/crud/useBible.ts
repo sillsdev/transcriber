@@ -1,6 +1,6 @@
 import { useGlobal } from 'reactn';
-import { Bible, OrganizationBible } from '../model';
-import { TransformBuilder } from '@orbit/data';
+import { Bible, BibleD, OrganizationBibleD } from '../model';
+import { RecordTransformBuilder } from '@orbit/records';
 import {
   AddRecord,
   ReplaceRelatedRecord,
@@ -15,7 +15,7 @@ export const useBible = () => {
 
   const getBible = (bibleId: string) => {
     let bibles = (
-      memory.cache.query((q: any) => q.findRecords('bible')) as Bible[]
+      memory.cache.query((q: any) => q.findRecords('bible')) as BibleD[]
     ).filter((b) => b.attributes.bibleId === bibleId);
     if (bibles.length > 0) return bibles[0];
     return undefined;
@@ -24,7 +24,7 @@ export const useBible = () => {
     let bibles = (
       memory.cache.query((q: any) =>
         q.findRecords('organizationbible')
-      ) as OrganizationBible[]
+      ) as OrganizationBibleD[]
     ).filter((b) => related(b, 'bible') === bibleid && b.attributes.ownerorg);
 
     if (bibles.length > 0) return related(bibles[0], 'organization');
@@ -33,14 +33,14 @@ export const useBible = () => {
   const getOrgBible = (orgId: string) => {
     let orgbible = getOrgBibleRec(orgId);
     if (orgbible)
-      return findRecord(memory, 'bible', related(orgbible, 'bible')) as Bible;
+      return findRecord(memory, 'bible', related(orgbible, 'bible')) as BibleD;
     return undefined;
   };
   const getOrgBibleRec = (orgId: string) => {
     let bibles = (
       memory.cache.query((q: any) =>
         q.findRecords('organizationbible')
-      ) as OrganizationBible[]
+      ) as OrganizationBibleD[]
     ).filter((b) => related(b, 'organization') === orgId);
     if (bibles.length > 0) return bibles[0];
     return undefined;
@@ -48,8 +48,8 @@ export const useBible = () => {
 
   const updaterelationships = (
     ops: any[],
-    t: TransformBuilder,
-    bible: Bible,
+    t: RecordTransformBuilder,
+    bible: BibleD,
     bibleMediafile: string,
     isoMediafile: string,
     ownerOrg: string
@@ -74,14 +74,14 @@ export const useBible = () => {
     );
 
     //we're only allowing one at the moment
-    var orgbible = getOrgBibleRec(ownerOrg) as OrganizationBible;
+    var orgbible = getOrgBibleRec(ownerOrg) as OrganizationBibleD;
     if (!orgbible) {
       orgbible = {
         attributes: {
           ownerorg: true,
         },
         type: 'organizationbible',
-      } as OrganizationBible;
+      } as OrganizationBibleD;
       ops.push(...AddRecord(t, orgbible, user, memory));
       ops.push(
         ...ReplaceRelatedRecord(
@@ -96,12 +96,12 @@ export const useBible = () => {
     ops.push(...ReplaceRelatedRecord(t, orgbible, 'bible', 'bible', bible.id));
   };
   const createBible = async (
-    bible: Bible,
+    bible: BibleD,
     bibleMediafile: string,
     isoMediafile: string,
     ownerOrganization: string
   ) => {
-    var t = new TransformBuilder();
+    var t = new RecordTransformBuilder();
     const ops = [];
     ops.push(...AddRecord(t, bible, user, memory));
     updaterelationships(
@@ -117,12 +117,12 @@ export const useBible = () => {
   };
 
   const updateBible = (
-    bible: Bible,
+    bible: BibleD,
     bibleMediafile: string,
     isoMediafile: string,
     ownerOrganization: string
   ) => {
-    const t = new TransformBuilder();
+    const t = new RecordTransformBuilder();
     const ops = [...UpdateRecord(t, bible, user)];
     updaterelationships(
       ops,

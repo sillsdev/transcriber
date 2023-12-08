@@ -1,4 +1,8 @@
-import { RecordRelationship, RecordHasManyRelationship } from '@orbit/data';
+import {
+  RecordRelationship,
+  RecordHasManyRelationship,
+  InitializedRecord,
+} from '@orbit/records';
 import { BaseModel } from './baseModel';
 
 export interface Passage extends BaseModel {
@@ -28,4 +32,7 @@ export interface Passage extends BaseModel {
     passagetype: RecordRelationship;
   };
 }
+
+export type PassageD = Passage & InitializedRecord;
+
 export default Passage;

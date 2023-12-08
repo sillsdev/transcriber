@@ -1,14 +1,17 @@
 import {
   User,
   MediaFile,
+  MediaFileD,
   Plan,
+  PlanD,
   Project,
+  ProjectD,
   Passage,
   Section,
   IMediaShare,
-  OrgWorkflowStep,
+  OrgWorkflowStepD,
+  PassageD,
 } from '../model';
-import { QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
 import {
   related,
@@ -43,12 +46,12 @@ export const getAllMediaRecs = (
   version?: number
 ) => {
   const mediaRecs = (
-    memory.cache.query((q: QueryBuilder) =>
+    memory.cache.query((q) =>
       q.findRecords('mediafile').filter({
         relation: 'passage',
         record: { type: 'passage', id: passageId },
       })
-    ) as MediaFile[]
+    ) as MediaFileD[]
   )
     .sort((a, b) => vernSort(a) - vernSort(b))
     .sort((a, b) => b.attributes.versionNumber - a.attributes.versionNumber);
@@ -101,7 +104,7 @@ const getMediaPlanRec = (rec: MediaFile | null, memory: Memory) => {
   if (rec) {
     const planId = related(rec, 'plan') as string;
     if (planId)
-      planRec = memory.cache.query((q: QueryBuilder) =>
+      planRec = memory.cache.query((q) =>
         q.findRecord({ type: 'plan', id: planId })
       ) as Plan;
   }
@@ -119,7 +122,7 @@ export const getMediaProjRec = (
     if (planRec) {
       const projId = related(planRec, 'project');
       if (projId)
-        projRec = memory.cache.query((q: QueryBuilder) =>
+        projRec = memory.cache.query((q) =>
           q.findRecord({ type: 'project', id: projId })
         ) as Project;
     }
@@ -140,11 +143,11 @@ export const getMediaName = (
   let passageRec: Passage | undefined = undefined;
   const passageId = related(rec, 'passage');
   if (passageId)
-    passageRec = memory.cache.query((q: QueryBuilder) =>
+    passageRec = memory.cache.query((q) =>
       q.findRecord({ type: 'passage', id: passageId })
     ) as Passage;
   const secId = related(passageRec, 'section');
-  const secRec = memory.cache.query((q: QueryBuilder) =>
+  const secRec = memory.cache.query((q) =>
     q.findRecord({ type: 'section', id: secId })
   ) as Section;
   const secAttr = secRec && secRec.attributes;
@@ -231,7 +234,7 @@ const pad3 = (n: number) => ('00' + n).slice(-3);
 
 interface IExportCommon {
   memory: Memory;
-  projRec: Project;
+  projRec: ProjectD;
 }
 
 interface IExportScripture {
@@ -241,7 +244,7 @@ interface IExportScripture {
 interface IExportFilter {
   artifactType: string | null | undefined;
   target: string;
-  orgWorkflowSteps: OrgWorkflowStep[];
+  orgWorkflowSteps: OrgWorkflowStepD[];
 }
 
 export interface IExportScripturePath extends IExportCommon, IExportScripture {}
@@ -298,7 +301,7 @@ export const nameFromTemplate = (
     memory,
     'passage',
     related(mf, 'passage')
-  ) as Passage;
+  ) as PassageD;
   if (!passRec) return mediaFileName(mf);
   if (template === '') {
     var tmp = passageDefaultFilename(
@@ -326,11 +329,11 @@ export const mediaArtifacts = ({
   target,
   orgWorkflowSteps,
 }: IExportArtifacts) => {
-  const plans = (related(projRec, 'plans') as Plan[])?.map((p) => p.id);
-  const media = memory.cache.query((q: QueryBuilder) =>
+  const plans = (related(projRec, 'plans') as PlanD[])?.map((p) => p.id);
+  const media = memory.cache.query((q) =>
     q.findRecords('mediafile')
-  ) as MediaFile[];
-  let planMedia: MediaFile[] | undefined = undefined;
+  ) as MediaFileD[];
+  let planMedia: MediaFileD[] | undefined = undefined;
   if (plans && plans.length > 0) {
     planMedia = getMediaInPlans(
       plans,

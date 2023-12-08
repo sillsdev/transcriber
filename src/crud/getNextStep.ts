@@ -1,8 +1,8 @@
-import { OrgWorkflowStep, StepComplete } from '../model';
+import { OrgWorkflowStepD, StepComplete } from '../model';
 
 interface IGetNextStepProps {
   psgCompleted: StepComplete[];
-  orgWorkflowSteps: OrgWorkflowStep[];
+  orgWorkflowSteps: OrgWorkflowStepD[];
   target?: string;
 }
 

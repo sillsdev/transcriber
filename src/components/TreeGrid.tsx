@@ -1,45 +1,52 @@
 import * as React from 'react';
-import { Paper } from '@mui/material';
+import {
+  Checkbox,
+  IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 import {
   Column,
-  TreeDataState,
   Sorting,
-  SortingState,
-  SelectionState,
-  FilteringState,
   GroupingState,
-  PagingState,
-  CustomTreeData,
   TableColumnWidthInfo,
-  IntegratedFiltering,
-  IntegratedPaging,
+  GridColumnExtension,
   IntegratedSorting,
-  IntegratedSelection,
-  IntegratedGrouping,
-  TableColumnVisibility,
 } from '@devexpress/dx-react-grid';
-import {
-  Grid as GridBar,
-  Table,
-  TableHeaderRow,
-  TableFilterRow,
-  TableTreeColumn,
-  PagingPanel,
-  TableColumnResizing,
-  Toolbar,
-  GroupingPanel,
-  TableGroupRow,
-  DragDropProvider,
-  GridProps,
-} from '@devexpress/dx-react-grid-material-ui';
-import { localizeGrid } from '../utils';
-import { IGridStrings } from '../model';
-import { shallowEqual, useSelector } from 'react-redux';
-import { gridSelector } from '../selector';
+import { CSSProperties } from 'react';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
-const Grid = (props: GridProps & React.PropsWithChildren) => {
-  return <GridBar {...props} />;
-};
+// interface ICell {
+//   value: string;
+//   style?: React.CSSProperties;
+//   row: object[];
+//   column: IColSpec;
+// }
+
+interface IColSpec {
+  name: string;
+  title: string;
+  width: number;
+  align: string;
+  wordWrapEnabled: boolean;
+  hidden: boolean;
+  sort?: (a: any, b: any) => number;
+  isFiltered: boolean;
+  filterValue?: string;
+  filterOperation?: string;
+}
+
+const style = (c: IColSpec) =>
+  ({
+    whiteSpace: c.wordWrapEnabled ? 'break-spaces' : 'nowrap',
+    // minWidth: c.width,
+  } as CSSProperties);
 
 interface IProps {
   rows: Array<any>;
@@ -49,7 +56,7 @@ interface IProps {
   cellComponent?: any;
   sorting?: Array<Sorting>;
   pageSizes: Array<number>;
-  tableColumnExtensions: Table.ColumnExtension[];
+  tableColumnExtensions: Array<GridColumnExtension>;
   defaultHiddenColumnNames?: Array<string>;
   groupingStateColumnExtensions: GroupingState.ColumnExtension[];
   dataCell?: any;
@@ -63,166 +70,262 @@ interface IProps {
   getChildRows: (row: any, rootRows: any[]) => any[] | null;
 }
 
+interface IRowProps {
+  selected: number[];
+  setSelected: (selected: number[]) => void;
+  colSpec: IColSpec[];
+  r: any;
+  i: number;
+}
+
+function MyRow(props: IProps & IRowProps) {
+  const {
+    r,
+    i,
+    treeColumn,
+    cellComponent,
+    select,
+    dataCell,
+    noDataCell,
+    selected,
+    setSelected,
+    colSpec,
+    getChildRows,
+  } = props;
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected: number[] = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+    setSelected(newSelected);
+    select && select(newSelected);
+  };
+
+  const rowIdx = (r: any) => props.rows.findIndex((pr) => pr === r);
+
+  const isSelected = (r: any) => selected.indexOf(rowIdx(r)) !== -1;
+
+  const isItemSelected = isSelected(r);
+
+  const labelId = `row-checkbox-${i}`;
+  const treeSpec = colSpec.find((c) => c.name === treeColumn);
+  const subRows = getChildRows(r, props.rows);
+
+  return (
+    <>
+      <TableRow
+        key={`row-${i}`}
+        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+      >
+        <>
+          {select ? (
+            <TableCell>
+              <Checkbox
+                color="primary"
+                checked={isItemSelected}
+                onClick={(event) => handleClick(event, rowIdx(r))}
+                inputProps={{
+                  'aria-labelledby': labelId,
+                }}
+              />
+            </TableCell>
+          ) : (
+            <></>
+          )}
+          {treeColumn && (subRows?.length || 0) > 0 ? (
+            <TableCell>
+              <IconButton
+                aria-label="expand row"
+                size="small"
+                onClick={() => setOpen(!open)}
+              >
+                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+            </TableCell>
+          ) : (
+            <TableCell />
+          )}
+          {treeColumn && cellComponent ? (
+            cellComponent({
+              value: r[treeColumn],
+              row: r,
+              column: treeSpec,
+              style: treeSpec ? style(treeSpec) : undefined,
+              align: treeSpec?.align,
+              children: [
+                <TableCell align={(treeSpec?.align ?? 'left') as any}>
+                  {r[treeColumn]}
+                </TableCell>,
+              ],
+            })
+          ) : treeColumn ? (
+            <TableCell align={(treeSpec?.align ?? 'left') as any}>
+              {r[treeColumn]}
+            </TableCell>
+          ) : (
+            <></>
+          )}
+          {colSpec.map((c, n) => {
+            const value = r[c.name];
+
+            const props = {
+              value,
+              row: r,
+              column: c,
+              style: style(c),
+              align: c.align as any,
+              key: `cell-${n}`,
+            };
+            return c.hidden || c.name === treeColumn ? (
+              <></>
+            ) : dataCell ? (
+              dataCell(props)
+            ) : !r[c.name] && noDataCell ? (
+              noDataCell(props)
+            ) : (
+              <TableCell {...props}>{value}</TableCell>
+            );
+          })}
+        </>
+      </TableRow>
+      {open &&
+        subRows?.map((r, i) => {
+          const subProps = { ...props, r: r, i: i, key: `sub-${r.id}` };
+          return <MyRow {...subProps} />;
+        })}
+    </>
+  );
+}
+
 function TreeGrid(props: IProps) {
   const {
     columns,
     columnWidths,
+    tableColumnExtensions: columnFormatting,
+    defaultHiddenColumnNames: hiddenColumnNames,
     rows,
-    getChildRows,
-    pageSizes,
-    tableColumnExtensions,
-    defaultHiddenColumnNames,
-    groupingStateColumnExtensions,
-    cellComponent,
-    sorting,
     treeColumn,
-    showfilters,
-    showgroups,
-    showSelection,
+    sorting,
     select,
     checks,
-    dataCell,
-    noDataCell,
   } = props;
-  const tg: IGridStrings = useSelector(gridSelector, shallowEqual);
-  const {
-    localizeFilter,
-    localizeGroupingPanel,
-    localizePaging,
-    localizeTableMessages,
-  } = localizeGrid(tg);
+  const [selected, setSelected] = React.useState<number[]>([]);
 
-  const handleSelect = (checks: Array<string | number>) => {
-    if (select) {
-      select(checks.map((c) => (typeof c === 'string' ? parseInt(c) : c)));
+  React.useEffect(() => {
+    if (checks)
+      setSelected(checks.map((c) => (typeof c === 'string' ? parseInt(c) : c)));
+  }, [checks]);
+
+  const colSpec = React.useMemo(() => {
+    const colSpec: IColSpec[] = columns.map((c) => {
+      const col = {
+        name: c.name,
+        title: c.title ?? c.name,
+      } as IColSpec;
+      if (columnWidths) {
+        const cw = columnWidths.find((w) => w.columnName === c.name);
+        if (cw) {
+          col.width =
+            typeof cw.width === 'number' ? cw.width : parseInt(cw.width);
+        }
+      }
+      if (hiddenColumnNames) {
+        const hc = hiddenColumnNames.find((h) => h === c.name);
+        if (hc) {
+          col.hidden = true;
+        }
+      }
+      if (columnFormatting) {
+        const cf = columnFormatting.find((f) => f.columnName === c.name);
+        if (cf) {
+          col.align = cf.align ?? 'left';
+          col.wordWrapEnabled = cf.wordWrapEnabled ?? false;
+          if (!col.width)
+            col.width =
+              typeof cf.width === 'string'
+                ? parseInt(cf.width)
+                : cf?.width ?? 100;
+        }
+      }
+      if (sorting) {
+        const ss = sorting.find((s) => s.columnName === c.name);
+        if (ss?.direction === 'asc') {
+          col.sort = (a: any, b: any) => (a === b ? 0 : a > b ? 1 : -1);
+        } else if (ss?.direction === 'desc') {
+          col.sort = (a: any, b: any) => (a === b ? 0 : a > b ? -1 : 1);
+        }
+      }
+      return col;
+    });
+    return colSpec;
+  }, [columns, columnWidths, hiddenColumnNames, columnFormatting, sorting]);
+
+  const rowSort = (a: any, b: any) => {
+    for (let s of sorting || []) {
+      const c = colSpec.find((c) => c.name === s.columnName);
+      if (c?.sort) {
+        const res = c.sort(a[s.columnName], b[s.columnName]);
+        if (res !== 0) return res;
+      }
     }
+    return 0;
   };
-  const noRow = () => <></>;
-  const noCols = () => <></>;
-  //const totalSummaryItems = [{ columnName: 'passages', type: 'count' }];
-  //const groupSummaryItems = [{ columnName: 'passages', type: 'count' }];
 
   return (
-    <Paper>
-      <Grid rows={rows} columns={columns}>
-        <TreeDataState />
-        <CustomTreeData getChildRows={getChildRows} />
-        <FilteringState />
-        <SortingState defaultSorting={sorting ? sorting : Array<Sorting>()} />
-        {pageSizes.length > 0 && (
-          <>
-            <PagingState
-              defaultCurrentPage={0}
-              defaultPageSize={pageSizes[0]}
-            />
-          </>
-        )}
-        <SelectionState selection={checks} onSelectionChange={handleSelect} />
-        <GroupingState columnExtensions={groupingStateColumnExtensions} />
-
-        <IntegratedFiltering />
-        <IntegratedSorting />
-        {pageSizes.length > 0 && (
-          <>
-            <IntegratedPaging />
-          </>
-        )}
-        <IntegratedSelection />
-        <DragDropProvider />
-        <IntegratedGrouping />
-
-        {dataCell && noDataCell && !tableColumnExtensions ? (
-          <Table
-            messages={localizeTableMessages}
-            cellComponent={dataCell}
-            noDataCellComponent={noDataCell}
-          />
-        ) : dataCell && !noDataCell && !tableColumnExtensions ? (
-          <Table messages={localizeTableMessages} cellComponent={dataCell} />
-        ) : !dataCell && noDataCell && !tableColumnExtensions ? (
-          <Table
-            messages={localizeTableMessages}
-            noDataCellComponent={noDataCell}
-          />
-        ) : dataCell && noDataCell && tableColumnExtensions ? (
-          <Table
-            messages={localizeTableMessages}
-            cellComponent={dataCell}
-            noDataCellComponent={noDataCell}
-            columnExtensions={tableColumnExtensions}
-          />
-        ) : dataCell && !noDataCell && tableColumnExtensions ? (
-          <Table
-            messages={localizeTableMessages}
-            cellComponent={dataCell}
-            columnExtensions={tableColumnExtensions}
-          />
-        ) : !dataCell && noDataCell && tableColumnExtensions ? (
-          <Table
-            messages={localizeTableMessages}
-            noDataCellComponent={noDataCell}
-            columnExtensions={tableColumnExtensions}
-          />
-        ) : !dataCell && !noDataCell && tableColumnExtensions ? (
-          <Table
-            messages={localizeTableMessages}
-            columnExtensions={tableColumnExtensions}
-          />
-        ) : (
-          <Table />
-        )}
-        <TableColumnVisibility
-          hiddenColumnNames={
-            defaultHiddenColumnNames ? defaultHiddenColumnNames : []
-          }
-          emptyMessageComponent={noCols}
-        />
-        <TableColumnResizing defaultColumnWidths={columnWidths} />
-        <TableHeaderRow showSortingControls />
-        {showfilters !== null && !showfilters ? (
-          <TableFilterRow
-            messages={localizeFilter}
-            showFilterSelector={true}
-            rowComponent={noRow}
-          />
-        ) : (
-          <TableFilterRow messages={localizeFilter} showFilterSelector={true} />
-        )}
-        {showSelection !== false && cellComponent ? (
-          <TableTreeColumn
-            for={treeColumn}
-            showSelectionControls
-            showSelectAll
-            cellComponent={cellComponent}
-          />
-        ) : showSelection !== false && !cellComponent ? (
-          <TableTreeColumn
-            for={treeColumn}
-            showSelectionControls
-            showSelectAll
-          />
-        ) : showSelection === false && cellComponent ? (
-          <TableTreeColumn for={treeColumn} cellComponent={cellComponent} />
-        ) : (
-          <TableTreeColumn for={treeColumn} />
-        )}
-        {pageSizes.length > 0 && (
-          <>
-            <PagingPanel messages={localizePaging} pageSizes={pageSizes} />
-          </>
-        )}
-        {showgroups !== null && showgroups ? <Toolbar /> : <></>}
-        {showgroups !== null && showgroups ? <TableGroupRow /> : <></>}
-        {showgroups !== null && showgroups ? (
-          <GroupingPanel
-            messages={localizeGroupingPanel}
-            showGroupingControls
-          />
-        ) : (
-          <></>
-        )}
-      </Grid>
-    </Paper>
+    <TableContainer component={Paper}>
+      <Table size="small" aria-label={'dense table'}>
+        <TableHead>
+          <TableRow>
+            <>
+              {select ? <TableCell /> : <></>}
+              {treeColumn ? <TableCell /> : <></>}
+              {colSpec.map((c) =>
+                !c.hidden ? (
+                  <TableCell
+                    key={c.name}
+                    sx={{ minWidth: c.width }}
+                    align={c.align as any}
+                  >
+                    {c.title}
+                  </TableCell>
+                ) : (
+                  <></>
+                )
+              )}
+            </>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows
+            .filter((r) => !r.parentId)
+            .sort(rowSort)
+            .map((r, i) => (
+              <MyRow
+                key={`row-${r.id}`}
+                r={r}
+                i={i}
+                selected={selected}
+                setSelected={setSelected}
+                colSpec={colSpec}
+                {...props}
+              />
+            ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
 export default TreeGrid;

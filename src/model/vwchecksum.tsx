@@ -1,6 +1,6 @@
-import { Record } from '@orbit/data';
+import { UninitializedRecord } from '@orbit/records';
 
-export interface VwChecksum extends Record {
+export interface VwChecksum extends UninitializedRecord {
   attributes: {
     name: string;
     projectId: number;

@@ -520,7 +520,7 @@ export function useWaveSurferRegions(
   };
 
   function wsAutoSegment(loop: boolean = false, params: IRegionParams) {
-    if (!wavesurferRef.current) return;
+    if (!wavesurferRef.current) return 0;
     var regions = extractRegions(params);
     paramsRef.current = params;
     loadRegions({ params: params, regions: regions }, loop, true);

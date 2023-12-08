@@ -1,15 +1,12 @@
-import React, { PropsWithChildren, useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useEffect } from 'react';
+import ReactDOM from 'react-dom/client';
+import reportWebVitals from './reportWebVitals';
 import { Auth0Provider } from '@auth0/auth0-react';
 import envVariables from './auth/auth0-variables.json';
 import './index.css';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
+// import * as serviceWorker from './serviceWorker';
 import ErrorBoundary from './hoc/ErrorBoundary';
-import {
-  DataProvider as DataProviderBar,
-  DataProviderProps,
-} from 'react-orbitjs';
 import { Provider } from 'react-redux';
 import { coordinator, memory, backup, schema } from './schema';
 import configureStore from './store';
@@ -32,11 +29,16 @@ import {
   API_CONFIG,
   OrbitNetworkErrorRetries,
 } from './api-variable';
-import { QueryBuilder } from '@orbit/data';
+import { RecordQueryBuilder } from '@orbit/records';
 import { related } from './crud';
 import { Section, Plan } from './model';
 import { TokenProvider } from './context/TokenProvider';
 import { ErrorFallback } from './components/ErrorFallback';
+import DataProvider from './hoc/DataProvider';
+import { backupToMemory } from './crud/syncToMemory';
+import Coordinator from '@orbit/coordinator';
+import MemorySource from '@orbit/memory';
+import IndexedDBSource from '@orbit/indexeddb';
 const appVersion = require('../package.json').version;
 const { auth0Domain, webClientId, apiIdentifier } = envVariables;
 const ipc = (window as any)?.electron;
@@ -72,13 +74,17 @@ const SnagBoundary = prodOrQa
 // Redux store
 const store = configureStore();
 
-export async function restoreBackup() {
+export async function restoreBackup(coordinator?: Coordinator) {
+  const myMemory = memory ?? (coordinator?.getSource('memory') as MemorySource);
+  const myBackup =
+    backup ?? (coordinator?.getSource('backup') as IndexedDBSource);
+
   try {
     await waitForIt(
       'migration',
       () => {
         // console.log(schema.version, backup.schema.version);
-        return schema.version === backup.schema.version;
+        return schema.version === myBackup.schema.version;
       },
       () => false,
       300
@@ -89,19 +95,25 @@ export async function restoreBackup() {
       .concat(localFiles)
       .sort((i, j) => (i.sort <= j.sort ? -1 : 1));
     for (let file of sortedFiles) {
-      await memory.sync(await backup.pull((q) => q.findRecords(file.table)));
+      await backupToMemory({
+        table: file.table,
+        backup: myBackup,
+        memory: myMemory,
+      });
     }
 
     const loadedplans = new Set(
       (
-        memory.cache.query((q: QueryBuilder) =>
+        myMemory.cache.query((q: RecordQueryBuilder) =>
           q.findRecords('section')
         ) as Section[]
       ).map((s) => related(s, 'plan') as string)
     );
     const plans = (
-      memory.cache.query((q: QueryBuilder) => q.findRecords('plan')) as Plan[]
-    ).filter((p) => loadedplans.has(p.id));
+      myMemory.cache.query((q: RecordQueryBuilder) =>
+        q.findRecords('plan')
+      ) as Plan[]
+    ).filter((p) => loadedplans.has(p.id ?? ''));
     const projs = new Set(plans.map((p) => related(p, 'project') as string));
     var ret = Array.from(projs);
     return ret;
@@ -176,10 +188,6 @@ const AuthApp = () => {
   );
 };
 
-const DataProvider = (props: DataProviderProps & PropsWithChildren) => {
-  return <DataProviderBar {...props} />;
-};
-
 const Root = () => (
   <DataProvider dataStore={memory}>
     <Provider store={store as any}>
@@ -237,12 +245,19 @@ Promise.all(promises)
       releaseDate: '',
       progress: 0,
     });
-    ReactDOM.render(<Root />, document.getElementById('root'));
+    const root = ReactDOM.createRoot(
+      document.getElementById('root') as HTMLElement
+    );
+    root.render(
+      <React.StrictMode>
+        <Root />
+      </React.StrictMode>
+    );
   })
   .catch((err) => {
     logError(Severity.error, bugsnagClient, infoMsg(err, 'Fingerprint failed'));
   });
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();

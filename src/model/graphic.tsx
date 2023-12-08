@@ -1,6 +1,10 @@
-import { Record, RecordRelationship } from '@orbit/data';
+import {
+  UninitializedRecord,
+  RecordRelationship,
+  InitializedRecord,
+} from '@orbit/records';
 
-export interface Graphic extends Record {
+export interface Graphic extends UninitializedRecord {
   attributes: {
     resourceType: string;
     resourceId: number;
@@ -15,4 +19,7 @@ export interface Graphic extends Record {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type GraphicD = Graphic & InitializedRecord;
+
 export default Graphic;

@@ -3,24 +3,29 @@ import path from 'path-browserify';
 import moment, { Moment } from 'moment';
 import {
   Project,
-  User,
   MediaFile,
   Organization,
-  GroupMembership,
   Plan,
-  Section,
-  Passage,
-  Group,
   OfflineProject,
   VProject,
-  Discussion,
   OrgWorkflowStep,
-  OrgKeytermTarget,
-  OrgKeyterm,
+  ProjectD,
+  UserD,
+  DiscussionD,
+  OrgKeytermD,
+  OrgKeytermTargetD,
+  IntellectualPropertyD,
+  MediaFileD,
+  OrganizationD,
+  GroupD,
+  GroupMembershipD,
+  PlanD,
+  SectionD,
+  PassageD,
 } from '../../model';
 import Memory from '@orbit/memory';
-import { getSerializer } from '../../serializers/JSONAPISerializerCustom';
-import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
+import { getSerializer } from '../../serializers/getSerializer';
+import { InitializedRecord, RecordKeyMap } from '@orbit/records';
 import {
   related,
   remoteId,
@@ -47,7 +52,8 @@ import {
   createPathFolder,
 } from '../../utils';
 import IndexedDBSource from '@orbit/indexeddb';
-import IntellectualProperty from '../../model/intellectualProperty';
+import { BaseModel, BaseModelD } from '../../model/baseModel';
+import { backupToMemory } from '../../crud/syncToMemory';
 const ipc = (window as any)?.electron;
 
 export async function electronExport(
@@ -66,8 +72,7 @@ export async function electronExport(
   sendProgress?: (progress: number | string) => void,
   writingmsg?: string
 ): Promise<FileResponse | null> {
-  const onlineSerlzr = getSerializer(memory, false);
-  const offlineSrlzr = getSerializer(memory, true);
+  const ser = getSerializer(memory);
   const scripturePackage = [ExportType.DBL, ExportType.BURRITO].includes(
     exportType
   );
@@ -92,10 +97,10 @@ export async function electronExport(
   const idStr = (kind: string, id: number | string) =>
     typeof id === 'number'
       ? id.toString()
-      : remoteId(kind, id, memory.keyMap) || id.split('-')[0];
+      : remoteId(kind, id, memory.keyMap as RecordKeyMap) || id.split('-')[0];
 
   const fileName = (
-    projRec: Project,
+    projRec: ProjectD,
     localizedArtifactType: string,
     ext: string
   ) =>
@@ -108,7 +113,7 @@ export async function electronExport(
     '.' +
     ext;
 
-  const itfb_fileName = (projRec: Project) =>
+  const itfb_fileName = (projRec: ProjectD) =>
     new Date().getDate().toString() +
     new Date().getHours().toString() +
     '_' +
@@ -122,20 +127,24 @@ export async function electronExport(
     '_backup.' +
     exportType;
 
-  const getProjRec = (projectid: number | string): Project => {
-    return memory.cache.query((q: QueryBuilder) =>
+  const getProjRec = (projectid: number | string): ProjectD => {
+    return memory.cache.query((q) =>
       q.findRecord({
         type: 'project',
         id:
           typeof projectid === 'number'
-            ? remoteIdGuid('project', projectid.toString(), memory.keyMap)
+            ? remoteIdGuid(
+                'project',
+                projectid.toString(),
+                memory.keyMap as RecordKeyMap
+              ) ?? projectid.toString()
             : projectid,
       })
-    ) as Project;
+    ) as ProjectD;
   };
   const createZip = async (
     zip: string,
-    projRec: Project,
+    projRec: ProjectD,
     expType: ExportType
   ) => {
     const AddCheckEntry = async (): Promise<string> => {
@@ -162,14 +171,15 @@ export async function electronExport(
     };
     const AddJsonEntry = async (
       table: string,
-      recs: Record[],
+      recs: InitializedRecord[],
       sort: string
     ) => {
       //put in the remoteIds for everything, then stringify
-      const ser = projRec?.keys?.remoteId ? onlineSerlzr : offlineSrlzr;
+      // const ser = projRec?.keys?.remoteId ? onlineSerlzr : offlineSrlzr;
+      const resources = recs.map((r) => ser.serialize(r));
       let json = ![ExportType.AUDIO, ExportType.ELAN].includes(expType)
-        ? '{"data":' + JSON.stringify(ser.serializeRecords(recs)) + '}'
-        : JSON.stringify(ser.serializeRecords(recs), null, 2);
+        ? '{"data":' + JSON.stringify(resources) + '}'
+        : JSON.stringify(resources, null, 2);
       await ipc?.zipAddJson(
         zip,
         'data/' + sort + '_' + table + '.json',
@@ -191,10 +201,10 @@ export async function electronExport(
         return true;
       } else return false;
     };
-    const AddUserAvatars = async (recs: Record[]) => {
+    const AddUserAvatars = async (recs: InitializedRecord[]) => {
       const avatarpath = PathType.AVATARS + '/';
       for (const u of recs) {
-        var user = u as User;
+        var user = u as UserD;
         if (
           user?.attributes?.avatarUrl &&
           user.attributes.avatarUrl !== null &&
@@ -202,7 +212,7 @@ export async function electronExport(
         ) {
           var dp = dataPath(user.attributes.avatarUrl, PathType.AVATARS, {
             localname:
-              remoteId('user', user.id, memory.keyMap) +
+              remoteId('user', user.id, memory.keyMap as RecordKeyMap) +
               (user.attributes?.familyName || '') +
               '.png',
           });
@@ -210,7 +220,7 @@ export async function electronExport(
         }
       }
     };
-    const AddOrgLogos = async (recs: Record[]) => {
+    const AddOrgLogos = async (recs: InitializedRecord[]) => {
       const logopath = PathType.LOGOS + '/';
       for (const o of recs) {
         var org = o as Organization;
@@ -227,7 +237,10 @@ export async function electronExport(
       }
     };
 
-    const AddMediaFiles = async (recs: Record[], rename: boolean) => {
+    const AddMediaFiles = async (
+      recs: InitializedRecord[],
+      rename: boolean
+    ) => {
       const mediapath = PathType.MEDIA + '/';
       var newname = '';
       for (var mx = 0; mx < recs.length; mx++) {
@@ -264,65 +277,71 @@ export async function electronExport(
     };
     const GroupMemberships = (project: Project) => {
       var groupid = related(project, 'group');
-      return memory.cache.query((q: QueryBuilder) =>
+      return memory.cache.query((q) =>
         q.findRecords('groupmembership').filter({
           relation: 'group',
           record: { type: 'group', id: groupid },
         })
-      ) as GroupMembership[];
+      ) as GroupMembershipD[];
     };
 
-    const Plans = (project: Project) =>
-      memory.cache.query((q: QueryBuilder) =>
+    const Plans = (project: ProjectD) =>
+      memory.cache.query((q) =>
         q.findRecords('plan').filter({
           relation: 'project',
           record: { type: 'project', id: project.id },
         })
-      ) as Plan[];
+      ) as PlanD[];
 
-    const Sections = (project: Project) => {
+    const Sections = (project: ProjectD) => {
       //can't get this to work...
       //var plans = Plans(project).map((pl) => {
       //  return { type: 'plan', id: pl.id };
       //});
-      //var sections = memory.cache.query((q: QueryBuilder) =>
+      //var sections = memory.cache.query((q) =>
       //  q.findRecords('section').filter({ relation: 'plan', records: plans })
       //) as Section[];
       var plans = Plans(project).map((pl) => pl.id);
-      var allsections = memory.cache.query((q: QueryBuilder) =>
+      var allsections = memory.cache.query((q) =>
         q.findRecords('section')
-      ) as Section[];
+      ) as SectionD[];
       return allsections.filter((s) => plans.includes(related(s, 'plan')));
     };
 
-    const Passages = (project: Project) => {
+    const Passages = (project: ProjectD) => {
       var sections = Sections(project).map((s) => s.id);
-      var passages = memory.cache.query((q: QueryBuilder) =>
+      var passages = memory.cache.query((q) =>
         q.findRecords('passage')
-      ) as Passage[];
+      ) as PassageD[];
       return passages.filter((p) => sections.includes(related(p, 'section')));
     };
 
     const FromPassages = (
       table: string,
-      project: Project | undefined,
+      project: ProjectD | undefined,
       remoteIds: boolean
     ) => {
       //passagestatechange or mediafile
-      var recs = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords(table)
-      ) as Record[];
+      var recs = memory.cache.query((q) => q.findRecords(table)) as (BaseModel &
+        InitializedRecord)[];
       if (project) {
         var passages = Passages(project).map((p) => p.id);
         recs = recs.filter((rec) => passages.includes(related(rec, 'passage')));
       }
       if (remoteIds) {
         recs.forEach((r) => {
-          if (!remoteId(table, r.id, memory.keyMap) && r.attributes)
+          if (
+            !remoteId(table, r.id, memory.keyMap as RecordKeyMap) &&
+            r.attributes
+          )
             r.attributes.offlineId = r.id;
           if (
             table === 'mediafile' &&
-            !remoteId('mediafile', related(r, 'sourceMedia'), memory.keyMap)
+            !remoteId(
+              'mediafile',
+              related(r, 'sourceMedia'),
+              memory.keyMap as RecordKeyMap
+            )
           ) {
             (r as MediaFile).attributes.sourceMediaOfflineId = related(
               r,
@@ -333,10 +352,10 @@ export async function electronExport(
       }
       return recs;
     };
-    const Discussions = (project: Project | undefined, remoteIds: boolean) => {
-      var ds = memory.cache.query((q: QueryBuilder) =>
+    const Discussions = (project: ProjectD | undefined, remoteIds: boolean) => {
+      var ds = memory.cache.query((q) =>
         q.findRecords('discussion')
-      ) as Discussion[];
+      ) as DiscussionD[];
       if (project) {
         var mediafiles = FromPassages('mediafile', project, remoteIds).map(
           (m) => m.id
@@ -345,9 +364,18 @@ export async function electronExport(
       }
       if (remoteIds) {
         ds.forEach((d) => {
-          if (!remoteId('discussion', d.id, memory.keyMap) && d.attributes)
+          if (
+            !remoteId('discussion', d.id, memory.keyMap as RecordKeyMap) &&
+            d.attributes
+          )
             d.attributes.offlineId = d.id;
-          if (!remoteId('mediafile', related(d, 'mediafile'), memory.keyMap))
+          if (
+            !remoteId(
+              'mediafile',
+              related(d, 'mediafile'),
+              memory.keyMap as RecordKeyMap
+            )
+          )
             d.attributes.offlineMediafileId = related(d, 'mediafile');
         });
       }
@@ -355,19 +383,24 @@ export async function electronExport(
     };
     const OrgKeyTerms = (remoteIds: boolean) => {
       var kts = (
-        memory.cache.query((q: QueryBuilder) =>
-          q.findRecords('orgkeyterm')
-        ) as OrgKeyterm[]
+        memory.cache.query((q) => q.findRecords('orgkeyterm')) as OrgKeytermD[]
       ).filter(
         (r) =>
           Boolean(
-            remoteId('organization', related(r, 'organization'), memory.keyMap)
+            remoteId(
+              'organization',
+              related(r, 'organization'),
+              memory.keyMap as RecordKeyMap
+            )
           ) === needsRemoteIds
       );
 
       if (remoteIds) {
         kts.forEach((kt) => {
-          if (!remoteId('orgkeyterm', kt.id, memory.keyMap) && kt.attributes)
+          if (
+            !remoteId('orgkeyterm', kt.id, memory.keyMap as RecordKeyMap) &&
+            kt.attributes
+          )
             kt.attributes.offlineid = kt.id;
         });
       }
@@ -376,26 +409,38 @@ export async function electronExport(
 
     const OrgKeyTermTargets = (remoteIds: boolean) => {
       var ktts = (
-        memory.cache.query((q: QueryBuilder) =>
+        memory.cache.query((q) =>
           q.findRecords('orgkeytermtarget')
-        ) as OrgKeytermTarget[]
+        ) as OrgKeytermTargetD[]
       ).filter(
         (r) =>
           Boolean(
-            remoteId('organization', related(r, 'organization'), memory.keyMap)
+            remoteId(
+              'organization',
+              related(r, 'organization'),
+              memory.keyMap as RecordKeyMap
+            )
           ) === needsRemoteIds
       );
 
       if (remoteIds) {
         ktts.forEach((ktt) => {
           if (
-            !remoteId('orgkeytermtarget', ktt.id, memory.keyMap) &&
+            !remoteId(
+              'orgkeytermtarget',
+              ktt.id,
+              memory.keyMap as RecordKeyMap
+            ) &&
             ktt.attributes
           )
             ktt.attributes.offlineId = ktt.id;
           if (
             related(ktt, 'mediafile') &&
-            !remoteId('mediafile', related(ktt, 'mediafile'), memory.keyMap)
+            !remoteId(
+              'mediafile',
+              related(ktt, 'mediafile'),
+              memory.keyMap as RecordKeyMap
+            )
           )
             ktt.attributes.offlineMediafileId = related(ktt, 'mediafile');
         });
@@ -406,9 +451,9 @@ export async function electronExport(
       project: Project | undefined,
       remoteIds: boolean
     ) => {
-      var ips = memory.cache.query((q: QueryBuilder) =>
+      var ips = memory.cache.query((q) =>
         q.findRecords('intellectualproperty')
-      ) as IntellectualProperty[];
+      ) as IntellectualPropertyD[];
       if (project) {
         ips = ips.filter(
           (rec) =>
@@ -417,13 +462,19 @@ export async function electronExport(
       }
       if (remoteIds) {
         ips.forEach((ip) => {
-          if (!remoteId('intellectualproperty', ip.id, memory.keyMap))
+          if (
+            !remoteId(
+              'intellectualproperty',
+              ip.id,
+              memory.keyMap as RecordKeyMap
+            )
+          )
             ip.attributes.offlineId = ip.id;
           if (
             !remoteId(
               'mediafile',
               related(ip, 'releaseMediafile'),
-              memory.keyMap
+              memory.keyMap as RecordKeyMap
             )
           )
             ip.attributes.offlineMediafileId = related(ip, 'releaseMediafile');
@@ -432,16 +483,19 @@ export async function electronExport(
       return ips;
     };
 
-    const FromMedia = (media: MediaFile[], remoteIds: boolean) => {
+    const FromMedia = (media: MediaFileD[], remoteIds: boolean) => {
       if (remoteIds) {
         media.forEach((m) => {
-          if (!remoteId('mediafile', m.id, memory.keyMap) && m.attributes) {
+          if (
+            !remoteId('mediafile', m.id, memory.keyMap as RecordKeyMap) &&
+            m.attributes
+          ) {
             m.attributes.offlineId = m.id;
           }
           var src = related(m, 'sourceMedia');
           if (
             src &&
-            !remoteId('mediafile', src, memory.keyMap) &&
+            !remoteId('mediafile', src, memory.keyMap as RecordKeyMap) &&
             m.attributes
           ) {
             m.attributes.sourceMediaOfflineId = src;
@@ -450,10 +504,10 @@ export async function electronExport(
       }
       return media;
     };
-    const Comments = (project: Project | undefined, remoteIds: boolean) => {
-      var comments = memory.cache.query((q: QueryBuilder) =>
+    const Comments = (project: ProjectD | undefined, remoteIds: boolean) => {
+      var comments = memory.cache.query((q) =>
         q.findRecords('comment')
-      ) as Record[];
+      ) as BaseModelD[];
       if (project) {
         var discussions = Discussions(project, remoteIds);
         var discussionIds = discussions.map((d) => d.id);
@@ -463,12 +517,19 @@ export async function electronExport(
       }
       if (remoteIds) {
         comments.forEach((c) => {
-          if (!remoteId('comment', c.id, memory.keyMap) && c.attributes) {
+          if (
+            !remoteId('comment', c.id, memory.keyMap as RecordKeyMap) &&
+            c.attributes
+          ) {
             c.attributes.offlineId = c.id;
             c.attributes.offlineDiscussionId = related(c, 'discussion');
           }
           if (
-            !remoteId('mediafile', related(c, 'mediafile'), memory.keyMap) &&
+            !remoteId(
+              'mediafile',
+              related(c, 'mediafile'),
+              memory.keyMap as RecordKeyMap
+            ) &&
             c.attributes
           ) {
             c.attributes.offlineMediafileId = related(c, 'mediafile');
@@ -480,26 +541,25 @@ export async function electronExport(
 
     const GetTableRecs = (
       info: fileInfo,
-      project: Project | undefined,
+      project: ProjectD | undefined,
       needsRemoteIds: boolean
-    ): Record[] => {
+    ): BaseModelD[] => {
       const defaultQuery = (table: string) => {
         return (
-          memory.cache.query((q: QueryBuilder) =>
-            q.findRecords(table)
-          ) as Record[]
+          memory.cache.query((q) => q.findRecords(table)) as (BaseModel &
+            InitializedRecord)[]
         ).filter((r) => Boolean(r?.keys?.remoteId) === needsRemoteIds);
       };
       switch (info.table) {
         case 'organization':
           if (project)
             return [
-              memory.cache.query((q: QueryBuilder) =>
+              memory.cache.query((q) =>
                 q.findRecord({
                   type: 'organization',
                   id: related(project, 'organization'),
                 })
-              ) as Organization,
+              ) as OrganizationD,
             ];
           return defaultQuery(info.table);
 
@@ -510,9 +570,9 @@ export async function electronExport(
         case 'group':
           if (project)
             return [
-              memory.cache.query((q: QueryBuilder) =>
+              memory.cache.query((q) =>
                 q.findRecord({ type: 'group', id: related(project, 'group') })
-              ) as Group,
+              ) as GroupD,
             ];
           return defaultQuery(info.table);
 
@@ -525,9 +585,9 @@ export async function electronExport(
             var projusers = GroupMemberships(project).map((gm) =>
               related(gm, 'user')
             );
-            var users = memory.cache.query((q: QueryBuilder) =>
+            var users = memory.cache.query((q) =>
               q.findRecords(info.table)
-            ) as User[];
+            ) as UserD[];
 
             return users.filter(
               (u) => projusers.find((p) => p === u.id) !== undefined
@@ -565,9 +625,9 @@ export async function electronExport(
             var ip = IntellectualProperties(project, needsRemoteIds).map((i) =>
               related(i, 'releaseMediafile')
             );
-            var media = memory.cache.query((q: QueryBuilder) =>
+            var media = memory.cache.query((q) =>
               q.findRecords(info.table)
-            ) as MediaFile[];
+            ) as MediaFileD[];
             var ipmedia = media.filter((m) => ip.includes(m.id));
             return tmp.concat(FromMedia(ipmedia, needsRemoteIds));
           }
@@ -581,12 +641,12 @@ export async function electronExport(
 
         case 'projectintegration':
           if (project)
-            return memory.cache.query((q: QueryBuilder) =>
+            return memory.cache.query((q) =>
               q.findRecords(info.table).filter({
                 relation: 'project',
                 record: { type: 'project', id: project.id },
               })
-            ) as Record[];
+            ) as BaseModelD[];
           return defaultQuery(info.table);
 
         case 'intellectualproperty':
@@ -604,7 +664,7 @@ export async function electronExport(
     };
     const AddChanged = async (
       info: fileInfo,
-      project: Project | undefined,
+      project: ProjectD | undefined,
       needsRemoteIds: boolean
     ) => {
       var recs = GetTableRecs(info, project, needsRemoteIds);
@@ -637,7 +697,7 @@ export async function electronExport(
 
     const AddAll = async (
       info: fileInfo,
-      project: Project | undefined,
+      project: ProjectD | undefined,
       needsRemoteIds: boolean,
       excludeNew: boolean = false,
       checkRename: boolean = false
@@ -674,7 +734,7 @@ export async function electronExport(
     };
 
     const onlyOneProject = (): boolean => {
-      var p = memory.cache.query((q: QueryBuilder) => q.findRecords('project'));
+      var p = memory.cache.query((q) => q.findRecords('project'));
       if (p && Array.isArray(p)) return p.length === 1;
       return true; //should never get here
     };
@@ -692,8 +752,11 @@ export async function electronExport(
       await AddVersionEntry((backup?.schema.version || 1).toString());
     } else if (expType === ExportType.BURRITO) {
       const userId =
-        remoteIdGuid('user', userid.toString(), memory.keyMap) ||
-        userid.toString();
+        remoteIdGuid(
+          'user',
+          userid.toString(),
+          memory.keyMap as RecordKeyMap
+        ) || userid.toString();
       const burritoMetaStr = getBurritoMeta({
         memory,
         userId,
@@ -722,9 +785,7 @@ export async function electronExport(
           if (!op) op = getOfflineProject(projRec.id);
           if (op && op.attributes) {
             op.attributes.exportedDate = exported;
-            await backup.push((t: TransformBuilder) =>
-              t.updateRecord(op as OfflineProject)
-            );
+            await backup.sync((t) => t.updateRecord(op as OfflineProject));
           }
         }
         break;
@@ -756,7 +817,7 @@ export async function electronExport(
     return { zip, numRecs, numFiltered };
   };
 
-  var projects: Project[];
+  var projects: ProjectD[];
   var backupZip: string | undefined;
   if (
     exportType === ExportType.FULLBACKUP ||
@@ -764,15 +825,15 @@ export async function electronExport(
   ) {
     //avoid intermittent errors where projecttype or plan is null
     if (backup) {
-      await memory.sync(await backup.pull((q) => q.findRecords('project')));
-      await memory.sync(await backup.pull((q) => q.findRecords('mediafile')));
+      await backupToMemory({ table: 'project', backup, memory });
+      await backupToMemory({ table: 'mediafile', backup, memory });
     }
 
-    projects = memory.cache.query((q: QueryBuilder) =>
+    projects = memory.cache.query((q) =>
       q.findRecords('project')
-    ) as Project[];
+    ) as ProjectD[];
 
-    var offlineprojects = memory.cache.query((q: QueryBuilder) =>
+    var offlineprojects = memory.cache.query((q) =>
       q.findRecords('offlineproject')
     ) as OfflineProject[];
     var ids = offlineprojects
@@ -784,7 +845,8 @@ export async function electronExport(
       exportType = ExportType.PTF;
     } else {
       projects = projects.filter(
-        (p) => remoteId('project', p.id, memory.keyMap) !== undefined
+        (p) =>
+          remoteId('project', p.id, memory.keyMap as RecordKeyMap) !== undefined
       );
       exportType = ExportType.ITF;
     }

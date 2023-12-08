@@ -78,7 +78,7 @@ export function WorkflowSteps() {
     });
     setShownWorkflow(wf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentstep, firstStepIndex, workflow, width, setFirstStepIndex]);
+  }, [currentstep, firstStepIndex, workflow, width]);
 
   const curColor = (id: string) => {
     return id === currentstep

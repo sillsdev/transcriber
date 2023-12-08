@@ -4,9 +4,9 @@ import { findRecord, related, staticFiles, updateableFiles } from '.';
 import Memory from '@orbit/memory';
 import moment from 'moment';
 import { BaseModel } from '../model/baseModel';
-import JSONAPISource from '@orbit/jsonapi/dist/types/jsonapi-source';
+import { JSONAPISource } from '@orbit/jsonapi';
 import { logError, Severity } from '../utils';
-import { Project, Plan, VwChecksum } from '../model';
+import { VwChecksum, PlanD, ProjectD } from '../model';
 import * as actions from '../store';
 import { TokenContext } from '../context/TokenProvider';
 import { API_CONFIG } from '../api-variable';
@@ -363,7 +363,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
       }
     };
 
-    var project = findRecord(memory, 'project', projectId) as Project;
+    var project = findRecord(memory, 'project', projectId) as ProjectD;
     var remoteProjectId = project?.keys?.remoteId ?? '';
     if (!isOffline && project?.keys?.remoteId) {
       var tables = staticFiles
@@ -375,7 +375,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           relation: 'project',
           record: { type: 'project', id: projectId },
         })
-      ) as Plan[];
+      ) as PlanD[];
       var plan = plans[0];
 
       var checksums = (await remote.query((q) =>

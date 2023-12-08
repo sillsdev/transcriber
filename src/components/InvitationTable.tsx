@@ -2,19 +2,14 @@ import { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { shallowEqual } from 'react-redux';
 import {
-  Role,
+  RoleD,
   Invitation,
   IInvitationTableStrings,
-  Group,
   ISharedStrings,
 } from '../model';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { Menu, MenuItem, Typography, Box } from '@mui/material';
 import DropDownIcon from '@mui/icons-material/ArrowDropDown';
 import AddIcon from '@mui/icons-material/Add';
-import FilterIcon from '@mui/icons-material/FilterList';
-import SelectAllIcon from '@mui/icons-material/SelectAll';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import Invite, { IInviteData } from './Invite';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -26,12 +21,15 @@ import { localizeRole } from '../utils';
 import {
   ActionRow,
   AltButton,
+  FilterButton,
   GrowingSpacer,
   PriButton,
   iconMargin,
 } from '../control';
 import { useSelector } from 'react-redux';
 import { invitationTableSelector, sharedSelector } from '../selector';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { RecordIdentity } from '@orbit/records';
 
 interface IRow {
   email: string;
@@ -57,7 +55,7 @@ const NoDataCell = ({ value, style, ...restProps }: any) => {
 
 const getInvites = (
   organization: string,
-  roles: Array<Role>,
+  roles: RoleD[],
   invitations: Array<Invitation>,
   ts: ISharedStrings
 ) => {
@@ -78,16 +76,11 @@ const getInvites = (
   });
 };
 
-interface IRecordProps {
-  roles: Array<Role>;
-  groups: Array<Group>;
-  invitations: Array<Invitation>;
-}
-
 interface IProps {}
 
-export function InvitationTable(props: IProps & IRecordProps) {
-  const { roles, invitations } = props;
+export function InvitationTable(props: IProps) {
+  const roles = useOrbitData<RoleD[]>('role');
+  const invitations = useOrbitData<Invitation[]>('invitation');
   const t: IInvitationTableStrings = useSelector(
     invitationTableSelector,
     shallowEqual
@@ -112,7 +105,7 @@ export function InvitationTable(props: IProps & IRecordProps) {
   ];
   const [filter, setFilter] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [dialogData, setDialogData] = useState(null as Invitation | null);
+  const [dialogData, setDialogData] = useState<Invitation | null>(null);
   const [offline] = useGlobal('offline');
   const { userIsAdmin } = useRole();
 
@@ -147,7 +140,7 @@ export function InvitationTable(props: IProps & IRecordProps) {
     if (confirmAction === 'Delete') {
       setCheck(Array<number>());
       check.forEach((i) => {
-        memory.update((t: TransformBuilder) => t.removeRecord(data[i].id));
+        memory.update((t) => t.removeRecord(data[i].id));
       });
     }
     setConfirmAction('');
@@ -158,10 +151,13 @@ export function InvitationTable(props: IProps & IRecordProps) {
 
   useEffect(() => {
     setData(getInvites(organization, roles, invitations, ts));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organization, roles, invitations, confirmAction, ts]);
+
   const canEdit = () => {
     return userIsAdmin && !offline;
   };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <div>
@@ -203,20 +199,7 @@ export function InvitationTable(props: IProps & IRecordProps) {
             </>
           )}
           <GrowingSpacer />
-          <AltButton
-            id="inviteFilt"
-            key="filter"
-            aria-label={t.filter}
-            onClick={handleFilter}
-            title={t.showHideFilter}
-          >
-            {t.filter}
-            {filter ? (
-              <SelectAllIcon sx={iconMargin} />
-            ) : (
-              <FilterIcon sx={iconMargin} />
-            )}
-          </AltButton>
+          <FilterButton filter={filter} onFilter={handleFilter} />
         </ActionRow>
         <ShapingTable
           columns={columnDefs}
@@ -229,7 +212,14 @@ export function InvitationTable(props: IProps & IRecordProps) {
       </div>
       <Invite
         visible={dialogVisible}
-        inviteIn={dialogData}
+        inviteIn={
+          dialogData
+            ? {
+                email: dialogData.attributes.email,
+                role: related(dialogData, 'role'),
+              }
+            : null
+        }
         addCompleteMethod={handleAddComplete}
         cancelMethod={handleAddCancel}
       />
@@ -246,12 +236,4 @@ export function InvitationTable(props: IProps & IRecordProps) {
   );
 }
 
-const mapRecordsToProps = {
-  roles: (q: QueryBuilder) => q.findRecords('role'),
-  groups: (q: QueryBuilder) => q.findRecords('group'),
-  invitations: (q: QueryBuilder) => q.findRecords('invitation'),
-};
-
-export default withData(mapRecordsToProps)(InvitationTable) as any as (
-  props: IProps
-) => JSX.Element;
+export default InvitationTable;

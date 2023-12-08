@@ -7,14 +7,32 @@ export const accessSelector = (state: IState) =>
 export const activitySelector = (state: IState) =>
   localStrings(state as IState, { layout: 'activityState' });
 
+export const alertSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'alert' });
+
 export const artifactCategorySelector = (state: IState) =>
   localStrings(state as IState, { layout: 'selectArtifactCategory' });
 
 export const artifactTypeSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'selectArtifactType' });
 
+export const assignmentSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'assignmentTable' });
+
+export const assignSectionSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'assignSection' });
+
 export const audacityManagerSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'audacityManager' });
+
+export const audioDownloadSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'audioDownload' });
+
+export const audioPlayerSegmentSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'wsAudioPlayerSegment' });
+
+export const audioPlayerZoomSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'wsAudioPlayerZoom' });
 
 export const cardsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'cards' });
@@ -33,6 +51,9 @@ export const consultantSelector = (state: IState) =>
 
 export const controlSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'control' });
+
+export const deleteExpandSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'deleteExpansion' });
 
 export const discussionCardSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'discussionCard' });
@@ -54,6 +75,9 @@ export const gridSelector = (state: IState) =>
 
 export const groupTabsSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'groupTabs' });
+
+export const hotKeySelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'hotKey' });
 
 export const importSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'import' });
@@ -114,6 +138,9 @@ export const pickerSelector = (state: IState) =>
 export const passageTypeSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'passageType' });
 
+export const planTabsSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'planTabs' });
+
 export const planSheetSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'planSheet' });
 
@@ -123,8 +150,17 @@ export const planActionsSelector = (state: IState) =>
 export const playerSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'wsAudioPlayer' });
 
+export const profileSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'profile' });
+
+export const projectDownloadSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'projectDownload' });
+
 export const resourceSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'passageDetailArtifacts' });
+
+export const scriptureTableSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'scriptureTable' });
 
 export const selectRecordingSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'selectRecording' });
@@ -177,14 +213,23 @@ export const transcriberSelector = (state: IState) =>
 export const transcribeRejectSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'transcribeReject' });
 
+export const transcriptionShowSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'transcriptionShow' });
+
 export const transcriptionTabSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'transcriptionTab' });
+
+export const userTableSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'usertable' });
 
 export const treeChartSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'treeChart' });
 
 export const viewModeSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'viewMode' });
+
+export const uploadProgressSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'uploadProgress' });
 
 export const userListModeSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'userListMode' });

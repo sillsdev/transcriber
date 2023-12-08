@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
+import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
 import { SectionResource, OrgWorkflowStep } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { getTool, related, ToolSlug } from '.';
@@ -11,7 +11,7 @@ export const useSecResCreate = (section: RecordIdentity) => {
   const [organization] = useGlobal('organization');
   const [offlineOnly] = useGlobal('offlineOnly');
   const internalization = useMemo(() => {
-    const workflowsteps = memory.cache.query((q: QueryBuilder) =>
+    const workflowsteps = memory.cache.query((q) =>
       q.findRecords('orgworkflowstep')
     ) as OrgWorkflowStep[];
     const internalizationStep = workflowsteps
@@ -38,27 +38,26 @@ export const useSecResCreate = (section: RecordIdentity) => {
         description: desc,
       },
     } as SectionResource;
-    memory.schema.initializeRecord(secRes);
-    const t = new TransformBuilder();
+    const t = new RecordTransformBuilder();
     const ops = [
       ...AddRecord(t, secRes, user, memory),
       ...ReplaceRelatedRecord(
         t,
-        secRes,
+        secRes as RecordIdentity,
         'section',
         'section',
         secId || section.id
       ),
       ...ReplaceRelatedRecord(
         t,
-        secRes,
+        secRes as RecordIdentity,
         'mediafile',
         'mediafile',
         mediafile.id
       ),
       ...ReplaceRelatedRecord(
         t,
-        secRes,
+        secRes as RecordIdentity,
         'orgWorkflowStep',
         'orgworkflowstep',
         internalization?.id
@@ -66,7 +65,13 @@ export const useSecResCreate = (section: RecordIdentity) => {
     ];
     if (passId) {
       ops.push(
-        ...ReplaceRelatedRecord(t, secRes, 'passage', 'passage', passId)
+        ...ReplaceRelatedRecord(
+          t,
+          secRes as RecordIdentity,
+          'passage',
+          'passage',
+          passId
+        )
       );
     }
     await memory.update(ops);

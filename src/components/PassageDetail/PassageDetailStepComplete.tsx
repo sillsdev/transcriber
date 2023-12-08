@@ -24,7 +24,7 @@ export const PassageDetailStepComplete = () => {
     passage,
   } = usePassageDetailContext();
   const [memory] = useGlobal('memory');
-  const [, setCurrentIndex] = useState(-1);
+  const [currentIndex, setCurrentIndex] = useState(-1);
   const [complete, setComplete] = useState(false);
   const [view, setView] = useState('');
   const t: IPassageDetailStepCompleteStrings = useSelector(
@@ -37,9 +37,10 @@ export const PassageDetailStepComplete = () => {
   });
 
   useEffect(() => {
-    var curIndex = orgWorkflowSteps.findIndex((s) => s.id === currentstep);
-    setCurrentIndex(curIndex);
-    setComplete(stepComplete(currentstep));
+    const curIndex = orgWorkflowSteps.findIndex((s) => s.id === currentstep);
+    if (currentIndex !== curIndex) setCurrentIndex(curIndex);
+    const newComplete = stepComplete(currentstep);
+    if (newComplete !== complete) setComplete(newComplete);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentstep, orgWorkflowSteps, psgCompleted]);
 

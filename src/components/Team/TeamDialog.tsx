@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useGlobal } from 'reactn';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import Confirm from '../AlertDialog';
 import {
   Button,
@@ -14,14 +12,12 @@ import {
   LinearProgress,
 } from '@mui/material';
 import {
-  Organization,
+  OrganizationD,
   IDialog,
   DialogMode,
   OptionType,
   WorkflowStep,
-  Project,
-  Plan,
-  Bible,
+  BibleD,
 } from '../../model';
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
@@ -29,37 +25,27 @@ import { defaultWorkflow, related, useBible } from '../../crud';
 import PublishExpansion from '../PublishExpansion';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { waitForIt } from '../../utils';
+import { useOrbitData } from '../../hoc/useOrbitData';
+import { RecordIdentity } from '@orbit/records';
 
-interface IRecordProps {
-  bibles: Array<Bible>;
-  organizations: Array<Organization>;
-  projects: Array<Project>;
-  plans: Array<Plan>;
-}
 export interface ITeamDialog {
-  team: Organization;
-  bible?: Bible;
+  team: OrganizationD;
+  bible?: BibleD;
   process?: string;
   bibleMediafile: string;
   isoMediafile: string;
 }
-interface IProps extends IRecordProps, IDialog<ITeamDialog> {
-  onDelete?: (team: Organization) => void;
+interface IProps extends IDialog<ITeamDialog> {
+  onDelete?: (team: RecordIdentity) => void;
+  disabled?: boolean;
 }
 export function TeamDialog(props: IProps) {
-  const {
-    mode,
-    values,
-    isOpen,
-    bibles,
-    organizations,
-    onOpen,
-    onCommit,
-    onDelete,
-  } = props;
+  const { mode, values, isOpen, disabled, onOpen, onCommit, onDelete } = props;
+  const bibles = useOrbitData<BibleD[]>('bible');
+  const organizations = useOrbitData<OrganizationD[]>('organization');
   const [name, setName] = React.useState('');
   const [iso, setIso] = React.useState('');
-  const [bible, setBible] = React.useState<Bible | undefined>(values?.bible);
+  const [bible, setBible] = React.useState<BibleD | undefined>(values?.bible);
   const [bibleId, setBibleId] = React.useState('');
   const [readonly, setReadonly] = useState(false);
   const [owner, setOwner] = useState('');
@@ -134,7 +120,7 @@ export function TeamDialog(props: IProps) {
         const current =
           mode === DialogMode.edit && values
             ? values.team
-            : ({ attributes: {} } as Organization);
+            : ({ attributes: {} } as OrganizationD);
 
         const team = {
           ...current,
@@ -143,22 +129,22 @@ export function TeamDialog(props: IProps) {
             name,
             defaultParams,
           },
-        } as Organization;
-        let newbible = undefined;
+        } as OrganizationD;
+        let newbible: BibleD | undefined = undefined;
         if (bibleId.length > 0 && bibleIdError === '') {
           newbible =
-            getOrgBible(team.id) ?? ({ ...bible, type: 'bible' } as Bible);
+            getOrgBible(team.id) ?? ({ ...bible, type: 'bible' } as BibleD);
           if (bibleId)
             newbible = {
               ...newbible,
               attributes: {
-                ...newbible.attributes,
+                ...newbible?.attributes,
                 bibleId,
                 bibleName,
                 iso,
                 publishingData,
               },
-            } as Bible;
+            } as BibleD;
         }
         onCommit(
           {
@@ -216,7 +202,7 @@ export function TeamDialog(props: IProps) {
   const handleDelete = () => {
     if (savingRef.current) return;
     setSaving(true);
-    const team = { ...values?.team, attributes: { name } } as Organization;
+    const team = { ...values?.team } as RecordIdentity;
     onDelete && onDelete(team);
     setSaving(false);
   };
@@ -245,7 +231,7 @@ export function TeamDialog(props: IProps) {
     } else reset();
 
     if (isOpen && mode === DialogMode.add && processOptions.length === 0) {
-      const opts = memory.cache.query((q: QueryBuilder) =>
+      const opts = memory.cache.query((q) =>
         q.findRecords('workflowstep')
       ) as WorkflowStep[];
       const newProcess = opts.reduce((prev, cur) => {
@@ -374,6 +360,7 @@ export function TeamDialog(props: IProps) {
             onClick={handleCommit(process)}
             color="primary"
             disabled={
+              disabled ||
               recording ||
               saving ||
               name === '' ||
@@ -399,11 +386,4 @@ export function TeamDialog(props: IProps) {
   );
 }
 
-const mapRecordsToProps = {
-  bibles: (q: QueryBuilder) => q.findRecords('bible'),
-  organizations: (q: QueryBuilder) => q.findRecords('organization'),
-  projects: (q: QueryBuilder) => q.findRecords('project'),
-  plans: (q: QueryBuilder) => q.findRecords('plan'),
-};
-
-export default withData(mapRecordsToProps)(TeamDialog) as any;
+export default TeamDialog;

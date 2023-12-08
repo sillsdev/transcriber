@@ -3,8 +3,6 @@ import { useGlobal } from 'reactn';
 import { ICommunityStrings } from '../model';
 import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
 import IntellectualProperty from '../model/intellectualProperty';
 import BigDialog from '../hoc/BigDialog';
 import ProvideRights from './ProvideRights';
@@ -12,6 +10,7 @@ import { communitySelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { ArtifactTypeSlug, related } from '../crud';
 import { Typography } from '@mui/material';
+import { useOrbitData } from '../hoc/useOrbitData';
 
 interface NameOptionType {
   inputValue?: string;
@@ -19,10 +18,6 @@ interface NameOptionType {
 }
 
 const filter = createFilterOptions<NameOptionType>();
-
-interface IRecordProps {
-  ipRecs: IntellectualProperty[];
-}
 
 interface IProps {
   name: string;
@@ -38,8 +33,8 @@ export function SpeakerName({
   onRights,
   createProject,
   team,
-  ipRecs,
-}: IProps & IRecordProps) {
+}: IProps) {
+  const ipRecs = useOrbitData<IntellectualProperty[]>('intellectualproperty');
   const [value, setValue] = React.useState<NameOptionType | null>({ name });
   const valueRef = React.useRef<string>('');
   const [speakers, setSpeakers] = React.useState<NameOptionType[]>([]);
@@ -206,9 +201,4 @@ export function SpeakerName({
   );
 }
 
-const mapRecordsToProps = {
-  ipRecs: (q: QueryBuilder) => q.findRecords('intellectualproperty'),
-};
-export default withData(mapRecordsToProps)(SpeakerName) as any as (
-  props: IProps
-) => JSX.Element;
+export default SpeakerName;

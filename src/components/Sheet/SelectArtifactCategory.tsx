@@ -9,22 +9,19 @@ import { ArtifactCategory, ISelectArtifactCategoryStrings } from '../../model';
 import AddIcon from '@mui/icons-material/Add';
 import InfoIcon from '@mui/icons-material/Info';
 import { shallowEqual, useSelector } from 'react-redux';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
 import { LightTooltip, StyledMenuItem } from '../../control';
 import { artifactCategorySelector } from '../../selector';
 import { NewArtifactCategory } from './NewArtifactCategory';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
-interface IRecordProps {
-  artifactCategories: Array<ArtifactCategory>;
-}
 export enum ScriptureEnum {
   hide,
   highlight,
 }
-interface IProps extends IRecordProps {
-  initCategory: string; //id
-  onCategoryChange: (artifactCategoryId: string) => void;
+interface IProps {
+  id?: string;
+  initCategory: string;
+  onCategoryChange?: (artifactCategoryId: string) => void;
   required: boolean;
   allowNew?: boolean;
   scripture?: ScriptureEnum;
@@ -51,15 +48,17 @@ const smallTextProps = { fontSize: 'small' } as SxProps;
 
 export const SelectArtifactCategory = (props: IProps) => {
   const {
+    id: idIn,
     onCategoryChange,
     allowNew,
     required,
-    artifactCategories,
     initCategory,
     scripture,
     type,
     disabled,
   } = props;
+  const artifactCategories =
+    useOrbitData<ArtifactCategory[]>('artifactCategory');
   const [categoryId, setCategoryId] = useState(initCategory);
   const [showNew, setShowNew] = useState(false);
   const t: ISelectArtifactCategoryStrings = useSelector(
@@ -92,7 +91,7 @@ export const SelectArtifactCategory = (props: IProps) => {
     getCategorys().then((cats) => {
       setArtifactCategorys(cats);
       setCategoryId(newId);
-      onCategoryChange(newId);
+      onCategoryChange && onCategoryChange(newId);
     });
     cancelNewCategory();
   };
@@ -104,14 +103,14 @@ export const SelectArtifactCategory = (props: IProps) => {
     if (e.target.value === t.addNewCategory) setShowNew(true);
     else {
       setCategoryId(e.target.value);
-      onCategoryChange(e.target.value);
+      onCategoryChange && onCategoryChange(e.target.value);
     }
   };
 
   return (
     <StyledBox>
       <TextField
-        id="artifact-category"
+        id={idIn || 'artifact-category'}
         select
         label={t.artifactCategory}
         sx={textFieldProps}
@@ -181,8 +180,4 @@ export const SelectArtifactCategory = (props: IProps) => {
   );
 };
 
-const mapRecordsToProps = {
-  artifactCategories: (q: QueryBuilder) => q.findRecords('artifactcategory'),
-};
-
-export default withData(mapRecordsToProps)(SelectArtifactCategory) as any;
+export default SelectArtifactCategory;

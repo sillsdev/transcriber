@@ -1,5 +1,4 @@
 import { useGlobal } from 'reactn';
-import { TransformBuilder } from '@orbit/data';
 import { useAudacityProjRead, useAudacityProjCreate } from '.';
 import IndexedDBSource from '@orbit/indexeddb';
 
@@ -17,9 +16,8 @@ export const useAudacityProjUpdate = () => {
     } else if (op.attributes) {
       if (op?.attributes?.audacityName !== audacityName) {
         op.attributes = { ...op.attributes, audacityName };
-        await memory.sync(
-          await backup.push((t: TransformBuilder) => [t.updateRecord(op)])
-        );
+        await backup.sync((t) => [t.updateRecord(op)]);
+        await memory.sync((t) => [t.updateRecord(op)]);
       }
     }
   };

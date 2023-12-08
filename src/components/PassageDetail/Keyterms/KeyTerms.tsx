@@ -8,24 +8,20 @@ import { cleanFileName } from '../../../utils';
 import KeyTermDetail from './KeyTermDetail';
 import KeyTermExclude, { ExcludeArray, KtExcludeTag } from './KeyTermExclude';
 import KeyTermsSort from './KeyTermSort';
-import KeyTermTable from './KeyTermTable';
+import KeyTermTable, { IKeyTermRow } from './KeyTermTable';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings } from '../../../model';
 import { keyTermsSelector } from '../../../selector';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
 import { useGlobal } from 'reactn';
 import KeyTermSetting from './KeyTermSetting';
 import { Box } from '@mui/material';
+import { useOrbitData } from '../../../hoc/useOrbitData';
 
 export const SortTag = 'ktSort';
 export const KtLang = 'ktLang';
 
-interface IRecordProps {
-  keyTermTargets: OrgKeytermTarget[];
-}
-
-const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
+const KeyTerms = () => {
+  const keyTermTargets = useOrbitData<OrgKeytermTarget[]>('orgkeytermtarget');
   const [org] = useGlobal('organization');
   const [memory] = useGlobal('memory');
   const { passage } = usePassageDetailContext();
@@ -83,9 +79,7 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
   };
 
   const handleTargetDelete = (id: string) => {
-    memory.update((t: TransformBuilder) =>
-      t.removeRecord({ type: 'orgkeytermtarget', id })
-    );
+    memory.update((t) => t.removeRecord({ type: 'orgkeytermtarget', id }));
   };
 
   const handleVisibleToggle = (id: number) => () => {
@@ -138,23 +132,26 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
           startVerse ?? 1,
           endVerse,
           sortBy
-        ).map((to) => ({
-          term: to.W,
-          source: ktDisplay(to.I),
-          target: keyTermTargets
-            .filter(
-              (t) =>
-                t.attributes.termIndex === to.I &&
-                related(t, 'organization') === org
-            )
-            .map((t) => ({
-              id: t.id,
-              label: t.attributes.target,
-              mediaId: related(t, 'mediafile'),
-            })),
-          index: to.I,
-          fileName: cleanFileName(to.W),
-        }))}
+        ).map(
+          (to) =>
+            ({
+              term: to.W,
+              source: ktDisplay(to.I),
+              target: keyTermTargets
+                .filter(
+                  (t) =>
+                    t.attributes.termIndex === to.I &&
+                    related(t, 'organization') === org
+                )
+                .map((t) => ({
+                  id: t.id,
+                  label: t.attributes.target,
+                  mediaId: related(t, 'mediafile'),
+                })),
+              index: to.I,
+              fileName: cleanFileName(to.W),
+            } as IKeyTermRow)
+        )}
         termClick={handleTermClick}
         targetDelete={handleTargetDelete}
       />
@@ -173,9 +170,5 @@ const KeyTerms = ({ keyTermTargets }: IRecordProps) => {
     </>
   );
 };
-const mapRecordsToProps = {
-  keyTermTargets: (q: QueryBuilder) => q.findRecords('orgkeytermtarget'),
-};
-export default withData(mapRecordsToProps)(
-  KeyTerms
-) as any as () => JSX.Element;
+
+export default KeyTerms;

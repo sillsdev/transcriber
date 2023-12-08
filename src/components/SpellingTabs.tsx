@@ -48,7 +48,7 @@ interface IProps {
 }
 
 export function SpellingTabs(props: IProps) {
-  const { codes, setCodes, setChanged } = props;
+  const { setCodes, setChanged } = props;
   const [value, setValue] = React.useState(0);
   const t: ISpellingStrings = useSelector(spellingSelector, shallowEqual);
 
@@ -79,7 +79,7 @@ export function SpellingTabs(props: IProps) {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <SpellLanguagePicker codes={codes} onSetCodes={handleCodes} />
+        <SpellLanguagePicker onSetCodes={handleCodes} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <CustomList />

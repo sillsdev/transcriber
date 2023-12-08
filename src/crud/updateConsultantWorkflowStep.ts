@@ -1,6 +1,10 @@
-import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
+import {
+  RecordKeyMap,
+  RecordOperation,
+  RecordTransformBuilder,
+} from '@orbit/records';
 import MemorySource from '@orbit/memory';
-import { OrgWorkflowStep, WorkflowStep } from '../model';
+import { OrgWorkflowStepD, WorkflowStepD } from '../model';
 import { UpdateLastModifiedBy } from '../model/baseModel';
 import { remoteId } from './remoteId';
 
@@ -9,12 +13,13 @@ async function getSteps(
   table: string,
   memory: MemorySource
 ) {
-  const steps = (await memory.query((q: QueryBuilder) =>
-    q.findRecords(table)
-  )) as OrgWorkflowStep[] | WorkflowStep[];
+  const steps = (await memory.query((q) => q.findRecords(table))) as
+    | OrgWorkflowStepD[]
+    | WorkflowStepD[];
   return steps.filter(
     (s) =>
-      Boolean(remoteId(table, s.id, memory.keyMap)) === Boolean(token) &&
+      Boolean(remoteId(table, s.id, memory.keyMap as RecordKeyMap)) ===
+        Boolean(token) &&
       /Consultant/i.test(s.attributes.name) &&
       /discuss/i.test(s.attributes.tool) &&
       s.attributes.dateUpdated < '2023-08-25'
@@ -26,13 +31,15 @@ async function migrate(
   table: string,
   memory: MemorySource,
   user: string,
-  ops: Operation[],
-  tb: TransformBuilder
+  ops: RecordOperation[],
+  tb: RecordTransformBuilder
 ) {
   for (const s of await getSteps(token, table, memory)) {
     if (s.id)
       ops.push(
-        tb.replaceAttribute(s, 'tool', '{"tool": "consultantCheck"}'),
+        tb
+          .replaceAttribute(s, 'tool', '{"tool": "consultantCheck"}')
+          .toOperation(),
         ...UpdateLastModifiedBy(tb, s, user)
       );
   }
@@ -43,8 +50,8 @@ export const updateConsultantWorkflowStep = async (
   memory: MemorySource,
   user: string
 ) => {
-  const ops: Operation[] = [];
-  const tb = new TransformBuilder();
-  migrate(token, 'orgworkflowstep', memory, user, ops, tb);
+  const ops: RecordOperation[] = [];
+  const tb = new RecordTransformBuilder();
+  await migrate(token, 'orgworkflowstep', memory, user, ops, tb);
   await memory.update(ops);
 };

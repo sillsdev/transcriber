@@ -6,21 +6,18 @@ import { LightTooltip } from '../../../control';
 import { related, useOrganizedBy, usePlanType } from '../../../crud';
 import { resourceSelector } from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { PriButton, StyledMenu, StyledMenuItem } from '../../../control';
+import { useOrbitData } from '../../../hoc/useOrbitData';
 
-interface IRecordProps {
-  mediafiles: MediaFile[];
-}
-interface IProps extends IRecordProps {
+interface IProps {
   action?: (what: string) => void;
   stopPlayer?: () => void;
 }
 
 export const AddResource = (props: IProps) => {
-  const { action, stopPlayer, mediafiles } = props;
+  const { action, stopPlayer } = props;
+  const mediafiles = useOrbitData<MediaFile[]>('mediafile');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { getOrganizedBy } = useOrganizedBy();
   const planType = usePlanType();
@@ -133,8 +130,4 @@ export const AddResource = (props: IProps) => {
   );
 };
 
-const mapRecordsToProps = {
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-};
-
-export default withData(mapRecordsToProps)(AddResource) as any;
+export default AddResource;

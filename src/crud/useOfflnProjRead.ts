@@ -1,6 +1,5 @@
 import { useGlobal } from 'reactn';
-import { Plan, VProject, OfflineProject } from '../model';
-import { QueryBuilder } from '@orbit/data';
+import { Plan, VProject, OfflineProjectD } from '../model';
 import { related } from '.';
 
 export const useOfflnProjRead = () => {
@@ -9,12 +8,12 @@ export const useOfflnProjRead = () => {
   return (plan: Plan | VProject | string) => {
     const projectId =
       typeof plan === 'string' ? plan : related(plan, 'project');
-    const offlineProjectRecs = memory.cache.query((q: QueryBuilder) =>
+    const offlineProjectRecs = memory.cache.query((q) =>
       q.findRecords('offlineproject')
-    ) as OfflineProject[];
+    ) as OfflineProjectD[];
     const selected = offlineProjectRecs.filter(
       (o) => related(o, 'project') === projectId
     );
-    return selected.length > 0 ? selected[0] : ({} as OfflineProject);
+    return selected.length > 0 ? selected[0] : ({} as OfflineProjectD);
   };
 };

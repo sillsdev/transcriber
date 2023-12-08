@@ -1,6 +1,6 @@
-import { Record } from '@orbit/data';
+import { InitializedRecord } from '@orbit/records';
 
-export interface OrgData extends Record {
+export interface OrgData extends InitializedRecord {
   attributes: {
     json: string;
     startnext: number;

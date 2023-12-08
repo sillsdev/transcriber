@@ -1,6 +1,6 @@
 import { useGlobal } from 'reactn';
 import Graphic from '../model/graphic';
-import { TransformBuilder } from '@orbit/data';
+import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 
 interface GraphicAttributes {
@@ -21,13 +21,12 @@ export const useGraphicCreate = () => {
         ...attributes,
       },
     } as Graphic;
-    memory.schema.initializeRecord(graphicRec);
-    const t = new TransformBuilder();
+    const t = new RecordTransformBuilder();
     const ops = [
       ...AddRecord(t, graphicRec, user, memory),
       ...ReplaceRelatedRecord(
         t,
-        graphicRec,
+        graphicRec as RecordIdentity,
         'organization',
         'organization',
         organization
@@ -37,7 +36,7 @@ export const useGraphicCreate = () => {
       ops.push(
         ...ReplaceRelatedRecord(
           t,
-          graphicRec,
+          graphicRec as RecordIdentity,
           'mediafile',
           'mediafile',
           mediafileId

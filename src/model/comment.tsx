@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 
 export interface Comment extends BaseModel {
@@ -18,4 +18,7 @@ export interface Comment extends BaseModel {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type CommentD = Comment & InitializedRecord;
+
 export default Comment;

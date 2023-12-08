@@ -1,14 +1,13 @@
 import { useGlobal } from 'reactn';
 import { Plan } from '../model';
-import { QueryBuilder } from '@orbit/data';
+import { InitializedRecord } from '@orbit/records';
 
 export const usePlan = () => {
   const [memory] = useGlobal('memory');
 
   const getPlan = (planId: string) => {
-    const plans = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('plan')
-    ) as Plan[];
+    const plans = memory.cache.query((q) => q.findRecords('plan')) as (Plan &
+      InitializedRecord)[];
     const selected = plans.filter((p) => p.id === planId);
     return selected.length > 0 ? selected[0] : null;
   };

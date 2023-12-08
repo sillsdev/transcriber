@@ -1,20 +1,16 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { TokenContext } from '../context/TokenProvider';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import {
   IState,
   User,
+  UserD,
   IProfileStrings,
   DigestPreference,
   OrganizationMembership,
+  OrganizationMembershipD,
 } from '../model';
-import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
-import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   Paper,
   Grid,
@@ -69,6 +65,10 @@ import { useSnackBar } from '../hoc/SnackBar';
 import SelectRole from '../control/SelectRole';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { ActionRow, AltButton, PriButton } from '../control';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { shallowEqual, useSelector } from 'react-redux';
+import { profileSelector } from '../selector';
+import { useDispatch } from 'react-redux';
 
 // see: https://mui.com/material-ui/customization/how-to-customize/
 interface ContainerProps extends PaperProps {
@@ -120,29 +120,25 @@ const StyledGrid = styled(Grid)<GridProps>(() => ({
   padding: '0 30px',
 }));
 
-interface IStateProps {
-  t: IProfileStrings;
-  paratext_username: string; // state.paratext.username
-  paratext_usernameStatus?: IAxiosStatus;
-}
-
-interface IDispatchProps {
-  setLanguage: typeof action.setLanguage;
-  getUserName: typeof action.getUserName;
-}
-
-interface IRecordProps {
-  users: Array<User>;
-}
-
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+interface IProps {
   noMargin?: boolean;
   finishAdd?: () => void;
 }
 
 export function Profile(props: IProps) {
-  const { users, t, noMargin, finishAdd, setLanguage } = props;
-  const { paratext_username, paratext_usernameStatus, getUserName } = props;
+  const { noMargin, finishAdd } = props;
+  const users = useOrbitData<UserD[]>('user');
+  const t: IProfileStrings = useSelector(profileSelector, shallowEqual);
+  const paratext_username = useSelector(
+    (state: IState) => state.paratext.username
+  );
+  const paratext_usernameStatus = useSelector(
+    (state: IState) => state.paratext.usernameStatus
+  );
+  const dispatch = useDispatch();
+  const setLanguage = (lang: string) => dispatch(action.setLanguage(lang));
+  const getUserName = (token: string, errorReporter: any, message: string) =>
+    dispatch(action.getUserName(token, errorReporter, message));
   const [isOffline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
@@ -159,7 +155,7 @@ export function Profile(props: IProps) {
   const { getUserRec } = useUser();
   const { getMbrRoleRec, userIsAdmin, userIsSharedContentAdmin } = useRole();
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
-  const [currentUser, setCurrentUser] = useState<User | undefined>();
+  const [currentUser, setCurrentUser] = useState<UserD | undefined>();
   const [name, setName] = useState('');
   const [given, setGiven] = useState<string | null>(null);
   const [family, setFamily] = useState<string | null>(null);
@@ -298,7 +294,7 @@ export function Profile(props: IProps) {
       saving.current = true;
       const currentUserId = currentUser === undefined ? user : currentUser.id; //currentuser will not be undefined here
       memory.update(
-        (t: TransformBuilder) =>
+        (t) =>
           UpdateRecord(
             t,
             {
@@ -322,7 +318,7 @@ export function Profile(props: IProps) {
                 sharedContentCreator: sharedContent,
                 avatarUrl,
               },
-            } as User,
+            } as UserD,
             currentUser !== undefined ? currentUser.id : ''
           )
         // we aren't allowing them to change owner oraganization currently
@@ -332,11 +328,11 @@ export function Profile(props: IProps) {
         'organization',
         organization,
         currentUserId
-      ) as OrganizationMembership[];
+      ) as OrganizationMembershipD[];
       if (mbrRec.length > 0) {
         const curRoleId = related(mbrRec[0], 'role');
         if (curRoleId !== role) {
-          memory.update((t: TransformBuilder) =>
+          memory.update((t) =>
             UpdateRelatedRecord(t, mbrRec[0], 'role', 'role', role, user)
           );
         }
@@ -353,7 +349,7 @@ export function Profile(props: IProps) {
 
   const handleAdd = async () => {
     if (isChanged(toolId)) {
-      let userRec: User = {
+      let userRec = {
         type: 'user',
         attributes: {
           name,
@@ -374,12 +370,10 @@ export function Profile(props: IProps) {
           hotKeys,
           avatarUrl,
         },
-      } as any;
+      } as User;
       if (!editId || !organization) {
-        await memory.update((t: TransformBuilder) =>
-          AddRecord(t, userRec, user, memory)
-        );
-        if (offlineOnly) setUser(userRec.id);
+        await memory.update((t) => AddRecord(t, userRec, user, memory));
+        if (offlineOnly) setUser(userRec.id as string);
       } else {
         addToOrgAndGroup(userRec, true);
       }
@@ -390,7 +384,7 @@ export function Profile(props: IProps) {
           () => false,
           100
         );
-        if (offlineOnly) localStorage.setItem('user-id', userRec.id);
+        if (offlineOnly) localStorage.setItem('user-id', userRec.id as string);
       }
       saveCompleted(toolId);
     }
@@ -479,7 +473,7 @@ export function Profile(props: IProps) {
   }, []);
 
   useEffect(() => {
-    let userRec: User = {
+    let userRec = {
       type: 'user',
       id: '',
       attributes: {
@@ -509,8 +503,8 @@ export function Profile(props: IProps) {
       const current = users.filter((u) => u.id === (editId ? editId : user));
       if (current.length === 1) {
         userRec = current[0];
-        setCurrentUser(userRec);
-        const orgMbrRecs = memory.cache.query((q: QueryBuilder) =>
+        setCurrentUser(userRec as UserD);
+        const orgMbrRecs = memory.cache.query((q) =>
           q.findRecords('organizationmembership')
         ) as OrganizationMembership[];
         const mbrRec = orgMbrRecs.filter(
@@ -841,6 +835,7 @@ export function Profile(props: IProps) {
         </Box>
         {deleteItem !== '' && (
           <Confirm
+            text={''}
             yesResponse={handleDeleteConfirmed}
             noResponse={handleDeleteRefused}
           />
@@ -857,26 +852,4 @@ export function Profile(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'profile' }),
-  paratext_username: state.paratext.username,
-  paratext_usernameStatus: state.paratext.usernameStatus,
-});
-
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-};
-
-const mapDispatchToProps = (dispatch: any) => ({
-  ...bindActionCreators(
-    {
-      setLanguage: action.setLanguage,
-      getUserName: action.getUserName,
-    },
-    dispatch
-  ),
-});
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(Profile as any) as any
-) as any;
+export default Profile;

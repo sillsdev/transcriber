@@ -1,15 +1,15 @@
 import Memory from '@orbit/memory';
-import { QueryBuilder } from '@orbit/data';
 import { Project } from '../model';
 import { related } from './related';
 import { remoteIdGuid } from '.';
+import { RecordKeyMap } from '@orbit/records';
 
 export const setDefaultProj = async (
   orgId: string,
   memory: Memory,
   cb: (pId: string) => void
 ) => {
-  let projs: Project[] | null = memory.cache.query((q: QueryBuilder) =>
+  let projs: Project[] | null = memory.cache.query((q) =>
     q.findRecords('project')
   ) as any;
   projs =
@@ -22,9 +22,9 @@ export const setDefaultProj = async (
       remoteIdGuid(
         'project',
         localStorage.getItem('lastProj') || '',
-        memory.keyMap
+        memory.keyMap as RecordKeyMap
       ) || '';
     var p = projs.find((p) => p.id === projKey) || projs[0];
-    cb(p.id);
+    cb(p.id as string);
   }
 };

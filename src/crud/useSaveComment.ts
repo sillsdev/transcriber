@@ -1,15 +1,8 @@
-import { Operation, TransformBuilder } from '@orbit/data';
+import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 import { useDispatch } from 'react-redux';
 import { useGlobal } from 'reactn';
 import { findRecord, PermissionName, remoteIdGuid, usePermissions } from '.';
-import {
-  MediaFile,
-  Comment,
-  GroupMembership,
-  Group,
-  User,
-  IApiError,
-} from '../model';
+import { MediaFile, IApiError, CommentD } from '../model';
 import {
   AddRecord,
   UpdateRecord,
@@ -19,26 +12,19 @@ import {
 } from '../model/baseModel';
 import { orbitErr } from '../utils';
 import * as actions from '../store';
+import { RecordKeyMap } from '@orbit/records';
 
 interface IProps {
   cb: () => void;
-  users: User[];
-  groups: Group[];
-  memberships: GroupMembership[];
 }
 
 export const useSaveComment = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const { users, groups, memberships } = props;
   const dispatch = useDispatch();
   const doOrbitError = (ex: IApiError) => dispatch(actions.doOrbitError(ex));
   const { hasPermission, addAccess, addNeedsApproval, approve } =
-    usePermissions({
-      users,
-      groups,
-      memberships,
-    });
+    usePermissions();
   const { cb } = props;
   return (
     discussionId: string,
@@ -51,7 +37,8 @@ export const useSaveComment = (props: IProps) => {
     var mediafile = undefined;
     if (mediaRemId) {
       const id =
-        remoteIdGuid('mediafile', mediaRemId, memory.keyMap) || mediaRemId;
+        remoteIdGuid('mediafile', mediaRemId, memory.keyMap as RecordKeyMap) ||
+        mediaRemId;
       mediafile = findRecord(memory, 'mediafile', id) as MediaFile;
     }
     interface IIndexable {
@@ -72,11 +59,11 @@ export const useSaveComment = (props: IProps) => {
         visible = addNeedsApproval(visible);
     }
 
-    const t = new TransformBuilder();
-    const ops: Operation[] = [];
-    var commentRec: Comment;
+    const t = new RecordTransformBuilder();
+    const ops: RecordOperation[] = [];
+    var commentRec: CommentD;
     if (commentId) {
-      commentRec = findRecord(memory, 'comment', commentId) as Comment;
+      commentRec = findRecord(memory, 'comment', commentId) as CommentD;
       commentRec.attributes.commentText = commentText;
       commentRec.attributes.visible = JSON.stringify(visible);
       ops.push(...UpdateRecord(t, commentRec, user));
@@ -87,7 +74,7 @@ export const useSaveComment = (props: IProps) => {
           commentText: commentText,
           visible: JSON.stringify(visible),
         },
-      } as Comment;
+      } as CommentD;
       ops.push(
         ...AddRecord(t, commentRec, user, memory),
         ...ReplaceRelatedRecord(

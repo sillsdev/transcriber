@@ -8,21 +8,17 @@ import {
   ListItemText,
   Checkbox,
 } from '@mui/material';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
 import { langName } from '../utils';
+import { useOrbitData } from '../hoc/useOrbitData';
 const ipc = (window as any)?.electron;
 
-interface IRecordProps {
-  users: Array<User>;
-}
-
-interface IProps extends IRecordProps {
+interface IProps {
   onSetCodes?: (codes: string[]) => void;
 }
 
 export const SpellLanguagePicker = (props: IProps) => {
-  const { users, onSetCodes } = props;
+  const { onSetCodes } = props;
+  const users = useOrbitData<User[]>('user');
   const [user] = useGlobal('user');
   const [checked, setChecked] = React.useState<string[]>([]);
   const [codes, setCodes] = React.useState<string[]>([]);
@@ -105,8 +101,4 @@ export const SpellLanguagePicker = (props: IProps) => {
   );
 };
 
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-};
-
-export default withData(mapRecordsToProps)(SpellLanguagePicker) as any;
+export default SpellLanguagePicker;

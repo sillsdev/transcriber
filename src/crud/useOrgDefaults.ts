@@ -1,7 +1,6 @@
-import { TransformBuilder } from '@orbit/data';
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { Organization, RoleNames } from '../model';
+import { Organization, OrganizationD, RoleNames } from '../model';
 import { UpdateRecord } from '../model/baseModel';
 import { findRecord } from './tryFindRecord';
 
@@ -38,10 +37,10 @@ export const useOrgDefaults = () => {
       memory,
       'organization',
       orgIn ?? organization
-    ) as Organization;
+    ) as OrganizationD;
     if (!org) return; // no defaults on Personal Team
     setDefault(label, value, org);
-    memory.update((t: TransformBuilder) => UpdateRecord(t, org, user));
+    memory.update((t) => UpdateRecord(t, org, user));
   };
   const canSetOrgDefault = useMemo(
     () => orgRole === RoleNames.Admin && (offlineOnly || !offline),

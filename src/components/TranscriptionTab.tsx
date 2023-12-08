@@ -1,30 +1,28 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import Memory from '@orbit/memory';
 import * as actions from '../store';
 import {
   IState,
   Passage,
+  PassageD,
   Section,
   User,
   ITranscriptionTabStrings,
   IActivityStateStrings,
   Role,
   Plan,
-  MediaFile,
+  MediaFileD,
   ActivityStates,
-  FileResponse,
   BookName,
   Project,
   ISharedStrings,
   ExportType,
   OrgWorkflowStep,
+  VProject,
+  OfflineProject,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
-import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import {
   Button,
   IconButton,
@@ -38,8 +36,6 @@ import {
   TextField, //mui 6 has a datepicker...upgrade this when...
 } from '@mui/material';
 // import CopyIcon from '@mui/icons-material/FileCopy';
-import FilterIcon from '@mui/icons-material/FilterList';
-import SelectAllIcon from '@mui/icons-material/SelectAll';
 import ViewIcon from '@mui/icons-material/RemoveRedEye';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import {
@@ -49,6 +45,7 @@ import {
   TabAppBar,
   PriButton,
   AltButton,
+  FilterButton,
 } from '../control';
 import { useSnackBar } from '../hoc/SnackBar';
 import TreeGrid from './TreeGrid';
@@ -80,10 +77,18 @@ import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
 import { dateOrTime } from '../utils';
 import AudioDownload from './AudioDownload';
-import { SelectExportType, iconMargin } from '../control';
+import { SelectExportType } from '../control';
 import AudioExportMenu from './AudioExportMenu';
 import moment, { Moment } from 'moment';
 import { isPublishingTitle } from '../control/RefRender';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { useSelector } from 'react-redux';
+import {
+  activitySelector,
+  sharedSelector,
+  transcriptionTabSelector,
+} from '../selector';
+import { useDispatch } from 'react-redux';
 
 interface IRow {
   id: string;
@@ -112,28 +117,6 @@ const getSection = (section: Section) => {
   return sectionNumber(section) + ' ' + name;
 };
 
-interface IStateProps {
-  t: ITranscriptionTabStrings;
-  ts: ISharedStrings;
-  activityState: IActivityStateStrings;
-  exportFile: FileResponse;
-  exportStatus: IAxiosStatus | undefined;
-  allBookData: BookName[];
-}
-
-interface IDispatchProps {
-  exportProject: typeof actions.exportProject;
-  exportComplete: typeof actions.exportComplete;
-}
-
-interface IRecordProps {
-  projects: Array<Project>;
-  passages: Array<Passage>;
-  sections: Array<Section>;
-  users: Array<User>;
-  roles: Array<Role>;
-}
-
 interface IProps {
   projectPlans: Plan[];
   planColumn?: boolean;
@@ -142,29 +125,65 @@ interface IProps {
   orgSteps?: OrgWorkflowStep[];
 }
 
-export function TranscriptionTab(
-  props: IProps & IStateProps & IDispatchProps & IRecordProps
-) {
-  const {
-    activityState,
-    t,
-    ts,
-    projects,
-    passages,
-    sections,
-    users,
-    roles,
-    projectPlans,
-    planColumn,
-    exportProject,
-    exportComplete,
-    exportStatus,
-    exportFile,
-    allBookData,
-    floatTop,
-    step,
-    orgSteps,
-  } = props;
+export function TranscriptionTab(props: IProps) {
+  const { projectPlans, planColumn, floatTop, step, orgSteps } = props;
+  const t: ITranscriptionTabStrings = useSelector(transcriptionTabSelector);
+  const ts: ISharedStrings = useSelector(sharedSelector);
+  const activityState = useSelector(activitySelector);
+  const exportFile = useSelector(
+    (state: IState) => state.importexport.exportFile
+  );
+  const exportStatus = useSelector(
+    (state: IState) => state.importexport.importexportStatus
+  );
+  const allBookData = useSelector((state: IState) => state.books.bookData);
+  const dispatch = useDispatch();
+  const exportProject = (
+    exportType: ExportType,
+    artifactType: string | null | undefined,
+    memory: Memory,
+    backup: IndexedDBSource,
+    projectid: number | string,
+    userid: number | string,
+    numberOfMedia: number,
+    token: string | null,
+    errorReporter: any, //global errorReporter
+    pendingmsg: string,
+    nodatamsg: string,
+    writingmsg: string,
+    localizedArtifact: string,
+    getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
+    importedDate?: Moment,
+    target?: string,
+    orgWorkflowSteps?: OrgWorkflowStep[]
+  ) =>
+    dispatch(
+      actions.exportProject(
+        exportType,
+        artifactType,
+        memory,
+        backup,
+        projectid,
+        userid,
+        numberOfMedia,
+        token,
+        errorReporter,
+        pendingmsg,
+        nodatamsg,
+        writingmsg,
+        localizedArtifact,
+        getOfflineProject,
+        importedDate,
+        target,
+        orgWorkflowSteps
+      )
+    );
+  const exportComplete = () => dispatch(actions.exportComplete());
+  const projects = useOrbitData<Project[]>('project');
+  const passages = useOrbitData<Passage[]>('passage');
+  const sections = useOrbitData<Section[]>('section');
+  const users = useOrbitData<User[]>('user');
+  const roles = useOrbitData<Role[]>('role');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [busy, setBusy] = useGlobal('importexportBusy');
   const [plan, setPlan] = useGlobal('plan');
@@ -263,12 +282,10 @@ export function TranscriptionTab(
   const doProjectExport = (exportType: ExportType, importedDate?: Moment) => {
     setBusy(true);
 
-    const mediaFiles = memory.cache.query((q: QueryBuilder) =>
+    const mediaFiles = memory.cache.query((q) =>
       q.findRecords('mediafile')
-    ) as MediaFile[];
-    const plans = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('plan')
-    ) as Plan[];
+    ) as MediaFileD[];
+    const plans = memory.cache.query((q) => q.findRecords('plan')) as Plan[];
 
     var projectplans = plans.filter((pl) => related(pl, 'project') === project);
     /* get correct count */
@@ -279,7 +296,7 @@ export function TranscriptionTab(
       : undefined;
     const onlyLatest = onlyTypeId !== undefined;
     let media = getMediaInPlans(
-      projectplans.map((p) => p.id),
+      projectplans.map((p) => p.id) as string[],
       mediaFiles,
       onlyTypeId,
       onlyLatest
@@ -336,9 +353,9 @@ export function TranscriptionTab(
         .forEach((section) => {
           const sectionpassages = passages
             .filter((ps) => related(ps, 'section') === section.id)
-            .sort(passageCompare);
+            .sort(passageCompare) as PassageD[];
           let sectionHead = '-----\n' + getSection(section) + '\n';
-          sectionpassages.forEach((passage: Passage) => {
+          sectionpassages.forEach((passage) => {
             // const state = passage?.attributes?.state ||'';
             const ref = passageRefText(passage, bookData);
             const transcription = getTranscription(passage.id, exportId);
@@ -488,8 +505,8 @@ export function TranscriptionTab(
   useEffect(() => {
     if (projectPlans.length === 1) {
       if (plan === '') {
-        setPlan(projectPlans[0].id); //set the global plan
-        setScripture(getPlanType(projectPlans[0].id).scripture);
+        setPlan(projectPlans[0].id as string); //set the global plan
+        setScripture(getPlanType(projectPlans[0].id as string).scripture);
       } else {
         setScripture(getPlanType(plan).scripture);
       }
@@ -515,7 +532,7 @@ export function TranscriptionTab(
             .filter((ps) => related(ps, 'section') === section.id)
             .sort(passageCompare);
           rowData.push({
-            id: section.id,
+            id: section.id as string,
             name: getSection(section),
             state: '',
             planName: planRec.attributes.name,
@@ -591,7 +608,7 @@ export function TranscriptionTab(
 
   const LinkCell = ({ value, style, ...restProps }: any) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
-      {restProps.children.slice(0, 2)}
+      {/* {restProps?.children?.slice(0, 2)} */}
       <Button
         key={value}
         aria-label={value}
@@ -641,18 +658,18 @@ export function TranscriptionTab(
     const { column, row } = props;
     if (column.name === 'action') {
       if (row.parentId && row.parentId !== '') {
-        const passRec = memory.cache.query((q: QueryBuilder) =>
+        const passRec = memory.cache.query((q) =>
           q.findRecord({ type: 'passage', id: row.id })
-        ) as Passage;
+        ) as PassageD;
         const state = getPassageState(passRec);
-        const media = memory.cache.query((q: QueryBuilder) =>
+        const media = memory.cache.query((q) =>
           q
             .findRecords('mediafile')
             .filter({ relation: 'passage', record: passRec })
-        ) as MediaFile[];
+        ) as MediaFileD[];
         const latest = plan ? getMediaInPlans([plan], media, null, true) : [];
         if (state !== ActivityStates.NoMedia && latest.length > 0)
-          return <ActionCell {...props} mediaId={latest[0].id} />;
+          return <ActionCell {...props} mediaId={latest[0].id as string} />;
         else return <td className="MuiTableCell-root" />;
       }
     }
@@ -811,20 +828,7 @@ export function TranscriptionTab(
               exportTypes={artifactTypes}
               setExportType={setArtifactType}
             />
-            <AltButton
-              id="transFilt"
-              key="filter"
-              aria-label={t.filter}
-              onClick={handleFilter}
-              title={t.showHideFilter}
-            >
-              {t.filter}
-              {filter ? (
-                <SelectAllIcon sx={iconMargin} />
-              ) : (
-                <FilterIcon sx={iconMargin} />
-              )}
-            </AltButton>
+            <FilterButton filter={filter} onFilter={handleFilter} />
           </TabActions>
         </TabAppBar>
         {alertOpen && (
@@ -886,33 +890,4 @@ export function TranscriptionTab(
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'transcriptionTab' }),
-  ts: localStrings(state, { layout: 'shared' }),
-  activityState: localStrings(state, { layout: 'activityState' }),
-  exportFile: state.importexport.exportFile,
-  exportStatus: state.importexport.importexportStatus,
-  allBookData: state.books.bookData,
-});
-
-const mapDispatchToProps = (dispatch: any) => ({
-  ...bindActionCreators(
-    {
-      exportProject: actions.exportProject,
-      exportComplete: actions.exportComplete,
-    },
-    dispatch
-  ),
-});
-
-const mapRecordsToProps = {
-  projects: (q: QueryBuilder) => q.findRecords('project'),
-  passages: (q: QueryBuilder) => q.findRecords('passage'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  roles: (q: QueryBuilder) => q.findRecords('role'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(TranscriptionTab as any) as any
-) as any as (props: IProps) => JSX.Element;
+export default TranscriptionTab;

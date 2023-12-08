@@ -4,7 +4,7 @@ import {
   Passage,
   ActivityStates,
   IIntegrationStrings,
-  MediaFile,
+  MediaFileD,
 } from '../../model';
 import {
   USERNAME_PENDING,
@@ -319,7 +319,7 @@ export const getCount =
 
 export const getLocalCount =
   (
-    mediafiles: MediaFile[],
+    mediafiles: MediaFileD[],
     plan: string,
     memory: MemorySource,
     errorReporter: any,

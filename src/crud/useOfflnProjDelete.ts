@@ -1,6 +1,5 @@
 import { useGlobal } from 'reactn';
-import {  TransformBuilder } from '@orbit/data';
-import {  useOfflnProjRead } from '.';
+import { useOfflnProjRead } from '.';
 import IndexedDBSource from '@orbit/indexeddb';
 
 export const useOfflnProjDelete = () => {
@@ -11,9 +10,9 @@ export const useOfflnProjDelete = () => {
   return async (projectId: string) => {
     const backup = coordinator.getSource('backup') as IndexedDBSource;
     const op = getOfflineProject(projectId);
-    if (op.attributes)
-    await memory.sync(
-      await backup.push((t: TransformBuilder) => [
-        t.removeRecord(op)]))}
-
+    if (op.attributes) {
+      await backup.sync((t) => [t.removeRecord(op)]);
+      await memory.sync((t) => [t.removeRecord(op)]);
+    }
+  };
 };

@@ -1,4 +1,5 @@
-import { Record, RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
+import { BaseModel } from './baseModel';
 
 export interface ITag {
   [tag: string]: boolean;
@@ -6,7 +7,7 @@ export interface ITag {
 export interface ITagLocal {
   [tag: string]: string;
 }
-export interface VProject extends Record {
+export interface VProject extends BaseModel {
   attributes: {
     name: string;
     slug: string;
@@ -42,4 +43,7 @@ export interface VProject extends Record {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type VProjectD = VProject & InitializedRecord;
+
 export default VProject;

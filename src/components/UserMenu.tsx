@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
-import { IState, IMainStrings, ISharedStrings, User } from '../model';
-import localStrings from '../selector/localize';
+import { IMainStrings, ISharedStrings, User, UserD } from '../model';
 import {
   Button,
   ListItemIcon,
@@ -19,9 +17,10 @@ import { StyledMenu, StyledMenuItem } from '../control';
 import UserAvatar from './UserAvatar';
 import { isElectron } from '../api-variable';
 import { useLocation } from 'react-router-dom';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
 import { localizeRole } from '../utils';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { shallowEqual, useSelector } from 'react-redux';
+import { mainSelector, sharedSelector } from '../selector';
 
 const TermsItem = styled(StyledMenuItem)<MenuItemProps>(() => ({
   textAlign: 'center',
@@ -37,26 +36,22 @@ const roleStyle = {
   flexDirection: 'column',
 } as React.CSSProperties;
 
-interface IStateProps {
-  t: IMainStrings;
-  ts: ISharedStrings;
-}
-interface IRecordProps {
-  users: Array<User>;
-}
-interface IProps extends IStateProps, IRecordProps {
+interface IProps {
   action: (what: string) => void;
 }
 
 export function UserMenu(props: IProps) {
-  const { action, t, ts, users } = props;
+  const { action } = props;
+  const users = useOrbitData<User[]>('user');
   const [orgRole] = useGlobal('orgRole');
   const [developer] = useGlobal('developer');
   const [user] = useGlobal('user');
   const { pathname } = useLocation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
-  const [userRec, setUserRec] = React.useState<User | undefined>(undefined);
+  const [userRec, setUserRec] = React.useState<UserD | undefined>(undefined);
+  const t: IMainStrings = useSelector(mainSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setShift(event.shiftKey);
@@ -64,7 +59,7 @@ export function UserMenu(props: IProps) {
   };
 
   useEffect(() => {
-    const userRecs = users.filter((u) => u.id === user) as User[];
+    const userRecs = users.filter((u) => u.id === user) as UserD[];
     const newRec = userRecs.length > 0 ? userRecs[0] : undefined;
     if (userRec !== newRec) {
       setUserRec(newRec);
@@ -159,15 +154,4 @@ export function UserMenu(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'main' }),
-  ts: localStrings(state, { layout: 'shared' }),
-});
-
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(UserMenu) as any
-) as any;
+export default UserMenu;

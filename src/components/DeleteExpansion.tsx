@@ -1,7 +1,5 @@
 import React from 'react';
-import { IState, IDeleteExpansionStrings } from '../model';
-import { connect } from 'react-redux';
-import localStrings from '../selector/localize';
+import { IDeleteExpansionStrings } from '../model';
 import {
   Accordion,
   AccordionSummary,
@@ -16,17 +14,15 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { GrowingSpacer } from '../control';
+import { useSelector } from 'react-redux';
+import { deleteExpandSelector } from '../selector';
 
 const Heading = styled(Typography)<TypographyProps>(({ theme }) => ({
   fontSize: theme.typography.pxToRem(15),
   fontWeight: theme.typography.fontWeightRegular,
 }));
 
-interface IStateProps {
-  t: IDeleteExpansionStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   title: string;
   explain: string;
   handleDelete: () => void;
@@ -34,7 +30,8 @@ interface IProps extends IStateProps {
 }
 
 export function DeleteExpansion(props: IProps) {
-  const { t, handleDelete, title, explain, inProgress } = props;
+  const { handleDelete, title, explain, inProgress } = props;
+  const t: IDeleteExpansionStrings = useSelector(deleteExpandSelector);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -92,8 +89,4 @@ export function DeleteExpansion(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'deleteExpansion' }),
-});
-
-export default connect(mapStateToProps)(DeleteExpansion) as any;
+export default DeleteExpansion;

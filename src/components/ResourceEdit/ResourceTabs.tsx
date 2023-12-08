@@ -8,11 +8,10 @@ import {
   IResourceStrings,
   Passage,
   SharedResource,
+  SharedResourceD,
 } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { sharedResourceSelector } from '../../selector';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import {
   related,
   useSharedResCreate,
@@ -27,10 +26,8 @@ import { useGlobal } from 'reactn';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { passageTypeFromRef } from '../../control/RefRender';
 import { PassageTypeEnum } from '../../model/passageType';
-
-interface IRecordProps {
-  sharedResources: SharedResource[];
-}
+import { useOrbitData } from '../../hoc/useOrbitData';
+import { RecordIdentity } from '@orbit/records';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -70,11 +67,8 @@ interface IProps {
   onOpen: () => void;
 }
 
-export function ResourceTabs({
-  passId,
-  onOpen,
-  sharedResources,
-}: IProps & IRecordProps) {
+export function ResourceTabs({ passId, onOpen }: IProps) {
+  const sharedResources = useOrbitData<SharedResource[]>('sharedresource');
   const [value, setValue] = React.useState(0);
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
   const readSharedResource = useSharedResRead();
@@ -173,7 +167,7 @@ export function ResourceTabs({
             linkurl,
             note: isNote,
           },
-        } as SharedResource,
+        } as SharedResourceD,
         category
       );
     } else {
@@ -196,7 +190,7 @@ export function ResourceTabs({
       deleteSharedResource({
         type: 'sharedresource',
         id: sharedResRec.id,
-      } as SharedResource);
+      } as RecordIdentity);
     }
   };
 
@@ -258,10 +252,4 @@ export function ResourceTabs({
   );
 }
 
-const mapRecordsToProps = {
-  sharedResources: (q: QueryBuilder) => q.findRecords('sharedresource'),
-};
-
-export default withData(mapRecordsToProps)(ResourceTabs as any) as any as (
-  props: IProps
-) => JSX.Element;
+export default ResourceTabs;
