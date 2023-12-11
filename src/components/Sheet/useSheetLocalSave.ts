@@ -68,7 +68,7 @@ export const useWfLocalSave = (props: IProps) => {
                 name: item.title || '',
                 level: item.level,
                 published: item.published,
-                state: item.level < 3 ? item.reference : '',
+                state: item.level < 3 ? item.reference ?? '' : '',
               },
             };
             const t = new RecordTransformBuilder();

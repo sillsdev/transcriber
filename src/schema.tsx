@@ -290,8 +290,8 @@ const schemaDefinition: RecordSchemaSettings = {
         published: { type: 'boolean' },
         level: { type: 'number' },
         state: { type: 'string' }, //publishing info
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
+        dateCreated: { type: 'string' }, // datetime
+        dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
