@@ -1,6 +1,7 @@
 import { ISheet, Section, Plan, IwsKind } from '../../model';
 import { findRecord, related } from '../../crud';
 import Memory from '@orbit/memory';
+import { cleanFileName } from '../../utils';
 
 export const getDefaultName = (
   ws: ISheet | undefined,
@@ -25,5 +26,5 @@ export const getDefaultName = (
         }_${planRec?.keys?.remoteId || planRec?.id}_${
           secRec?.keys?.remoteId || secRec?.id
         }_${ws?.passage?.keys?.remoteId || ws?.passage?.id}_${tag}`;
-  return defaultName;
+  return cleanFileName(defaultName);
 };
