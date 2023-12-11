@@ -134,7 +134,12 @@ export const usePlanSheetFill = ({
   const { userIsAdmin } = useRole();
   const refErrTest = useRefErrTest();
   const { getOrganizedBy } = useOrganizedBy();
-  const showIcon = useShowIcon({ readonly, rowInfo, inlinePassages });
+  const showIcon = useShowIcon({
+    readonly,
+    rowInfo,
+    inlinePassages,
+    hidePublishing,
+  });
   const { isPassage, isSection, isMovement, isBook } = rowTypes(rowInfo);
   const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
   const tv: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);

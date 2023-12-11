@@ -12,12 +12,15 @@ export const nextNum = (
   else return lastNum + 0.01;
 };
 export const shtResequence = (ws: ISheet[], sec = 1) => {
-  //TODO CHECK THIS WITH MOVEMENTS ETC NEXT RELEASE!
   const minSection = () => {
     let ms = ws.reduce((min, cur) =>
-      isSectionRow(cur) && cur.sectionSeq < min.sectionSeq ? cur : min
+      isSectionRow(cur) &&
+      cur.level >= 3 &&
+      (min.level < 3 || cur.sectionSeq < min.sectionSeq)
+        ? cur
+        : min
     );
-    return ms ? ms.sectionSeq : 1;
+    return ms ? Math.max(1, ms.sectionSeq) : 1;
   };
   const updatedAt = currentDateTime();
   let change = false;

@@ -85,6 +85,7 @@ export const useWfOnlineSave = (props: IProps) => {
           id: isSectionAdding(w)
             ? ''
             : await getRemoteId('section', w.sectionId?.id as string),
+          reference: w.level < 3 ? w.reference : '',
         } as SaveRec;
         if (rec.changed) {
           rec = {

@@ -25,6 +25,7 @@ import {
   SectionD,
   PassageD,
   OrgWorkflowStepD,
+  ProjectD,
 } from '../../model';
 import * as actions from '../../store';
 import Memory from '@orbit/memory';
@@ -127,6 +128,8 @@ export function ScriptureTable(props: IProps) {
   const { colNames } = props;
   const passages = useOrbitData<PassageD[]>('passage');
   const sections = useOrbitData<SectionD[]>('section');
+  const plans = useOrbitData<PlanD[]>('plan');
+  const projects = useOrbitData<ProjectD[]>('project');
   const mediafiles = useOrbitData<MediaFile[]>('mediafile');
   const discussions = useOrbitData<Discussion[]>('discussion');
   const groupmemberships = useOrbitData<GroupMembership[]>('groupmembership');
@@ -153,6 +156,7 @@ export function ScriptureTable(props: IProps) {
   const fetchBooks = (lang: string) => dispatch(actions.fetchBooks(lang));
   const { prjId } = useParams();
   const [width, setWidth] = React.useState(window.innerWidth);
+  const [organization] = useGlobal('organization');
   const [project] = useGlobal('project');
   const [plan] = useGlobal('plan');
   const [coordinator] = useGlobal('coordinator');
@@ -485,7 +489,7 @@ export function ScriptureTable(props: IProps) {
       ...myWorkflow[index],
       level: flat && level ? level : SheetLevel.Passage,
       kind: flat ? IwsKind.SectionPassage : IwsKind.Passage,
-      book: firstBook(),
+      book: firstBook,
       reference: reference ?? ptype ?? '',
       mediaId: undefined,
       comment: title ?? '',
@@ -570,7 +574,7 @@ export function ScriptureTable(props: IProps) {
     const i = getUndelIndex(sheet, ix);
     let newRow = newSection(level, sheet, i);
     if (ptype === PassageTypeEnum.MOVEMENT) {
-      newRow = { ...newRow, reference: ptype };
+      newRow = { ...newRow, reference: publishingTitle(ptype) };
     }
     let newData = insertAt(sheet, newRow, i);
     //if added in the middle...resequence
@@ -1315,10 +1319,10 @@ export function ScriptureTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgSteps, filterState, doneStepId, hidePublishing]);
 
-  const firstBook = () => {
-    const firstbook = sheet.findIndex((b) => b.book !== undefined);
-    return sheet[firstbook]?.book ?? '';
-  };
+  const firstBook = useMemo(
+    () => sheet.find((b) => (b.book ?? '') !== '')?.book ?? '',
+    [sheet]
+  );
 
   const toggleSectionPublish = (index: number) => {
     const { ws } = getByIndex(sheet, index);
@@ -1335,42 +1339,65 @@ export function ScriptureTable(props: IProps) {
   };
 
   const onPublishing = () => {
-    setConfirmPublishingVisible(true);
+    if (canHidePublishing) {
+      //we already have some so don't warn them again
+      onPublishingConfirm();
+    } else setConfirmPublishingVisible(true);
   };
   const onPublishingReject = () => {
     setConfirmPublishingVisible(false);
   };
+  const publishingTitle = (passageType: PassageTypeEnum) =>
+    passageType + ' ' + firstBook;
+
   const onPublishingConfirm = () => {
     setConfirmPublishingVisible(false);
-    const bookTitleIndex = sheet.findIndex(
-      (w) => w.passageType === PassageTypeEnum.BOOK
-    );
-    const altBookTitleIndex = sheet.findIndex(
-      (w) => w.passageType === PassageTypeEnum.ALTBOOK
-    );
+    const hasBookTitle = (bookType: PassageTypeEnum) => {
+      if (sheet.findIndex((w) => w.passageType === bookType) < 0) {
+        //see if we have this book anywhere in the team
+        var teamprojects = projects
+          .filter((p) => related(p, 'organization') === organization)
+          .map((p) => p.id);
+        var teamplans = plans
+          .filter((p) => teamprojects.includes(related(p, 'project')))
+          .map((p) => p.id);
+        return Boolean(
+          sections.find(
+            (s) =>
+              s.attributes.state === publishingTitle(bookType) &&
+              teamplans.includes(related(s, 'plan'))
+          )
+        );
+      }
+    };
 
     const alternateName = (name: string) =>
       t.alternateName.replace('{0}', name);
 
+    const chapterNumberTitle = (chapter: number) =>
+      t.chapter.replace('{0}', chapter.toString());
+
     const AddBook = (newwf: ISheet[], passageType: PassageTypeEnum) => {
       const sequencenum = passageType === PassageTypeEnum.BOOK ? -4 : -3;
-      var book = firstBook();
-      const baseName = book ? bookMap[book] : '';
-      const title =
-        passageType === PassageTypeEnum.BOOK
-          ? baseName
-          : alternateName(baseName);
+      if (firstBook) {
+        const baseName = firstBook ? bookMap[firstBook] : '';
+        const title =
+          passageType === PassageTypeEnum.BOOK
+            ? baseName
+            : alternateName(baseName);
 
-      let newRow = {
-        level: SheetLevel.Book,
-        kind: IwsKind.Section,
-        sectionSeq: sequencenum,
-        passageSeq: 0,
-        reference: passageType,
-        title,
-        passageType: passageType,
-      } as ISheet;
-      return newwf.concat([newRow]);
+        let newRow = {
+          level: SheetLevel.Book,
+          kind: IwsKind.Section,
+          sectionSeq: sequencenum,
+          passageSeq: 0,
+          reference: publishingTitle(passageType),
+          title,
+          passageType: passageType,
+        } as ISheet;
+        return newwf.concat([newRow]);
+      }
+      return newwf;
     };
 
     const isKind = (
@@ -1382,8 +1409,6 @@ export function ScriptureTable(props: IProps) {
         ? ws[row].passageType === kind && ws[row].deleted === false
         : false;
     };
-    const chapterNumberTitle = (chapter: number) =>
-      t.chapter.replace('{0}', chapter.toString());
 
     const addChapterNumber = (newwf: ISheet[], chapter: number) => {
       const title = chapterNumberTitle(chapter);
@@ -1407,9 +1432,10 @@ export function ScriptureTable(props: IProps) {
 
     var currentChapter = 0;
     var newworkflow: ISheet[] = [];
-    if (bookTitleIndex < 0)
+    if (!hasBookTitle(PassageTypeEnum.BOOK))
       newworkflow = AddBook(newworkflow, PassageTypeEnum.BOOK);
-    if (altBookTitleIndex < 0)
+
+    if (!hasBookTitle(PassageTypeEnum.ALTBOOK))
       newworkflow = AddBook(newworkflow, PassageTypeEnum.ALTBOOK);
     var nextpsg = 0;
     sheet.forEach((w, index) => {

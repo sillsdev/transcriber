@@ -10,9 +10,15 @@ interface IProps {
   readonly: boolean;
   rowInfo: ISheet[];
   inlinePassages: boolean;
+  hidePublishing: boolean;
 }
 
-export const useShowIcon = ({ readonly, rowInfo, inlinePassages }: IProps) => {
+export const useShowIcon = ({
+  readonly,
+  rowInfo,
+  inlinePassages,
+  hidePublishing,
+}: IProps) => {
   const {
     isPassage,
     isSection,
@@ -85,7 +91,8 @@ export const useShowIcon = ({ readonly, rowInfo, inlinePassages }: IProps) => {
       [ExtraIcon.PassageEnd]: !filtered && rowIndex !== rowInfo.length - 1,
       [ExtraIcon.PassageLast]: !filtered && isSection(rowIndex),
       [ExtraIcon.SectionEnd]: !filtered,
-      [ExtraIcon.Publishing]: !readonly && !filtered && !inlinePassages,
+      [ExtraIcon.Publishing]:
+        !hidePublishing && !readonly && !filtered && !inlinePassages,
     };
     return extraMap[icon];
   };

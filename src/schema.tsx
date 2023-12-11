@@ -289,6 +289,7 @@ const schemaDefinition: RecordSchemaSettings = {
         name: { type: 'string' },
         published: { type: 'boolean' },
         level: { type: 'number' },
+        state: { type: 'string' }, //publishing info
         dateCreated: { type: 'string' }, // datetime
         dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
