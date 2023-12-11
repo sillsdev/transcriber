@@ -324,7 +324,11 @@ export const usePlanSheetFill = ({
     return (
       <TitleEdit
         title={e as string}
-        mediaId={rowInfo[rowIndex].titleMediaId?.id || ''}
+        mediaId={
+          rowInfo[rowIndex]?.titleMediaId?.id ||
+          rowInfo[rowIndex]?.mediaId?.id ||
+          ''
+        }
         ws={rowInfo[rowIndex]}
         onStartRecording={handleRecording}
         onTextChange={handleTextChange}
