@@ -260,11 +260,17 @@ export function PlanSheet(props: IProps) {
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
   const { isPassage, isSection } = rowTypes(rowInfo);
-  const showIcon = useShowIcon({ readonly, rowInfo, inlinePassages });
+  const showIcon = useShowIcon({
+    readonly,
+    rowInfo,
+    inlinePassages,
+    hidePublishing,
+  });
   const [changed, setChanged] = useState(false); //for button enabling
   const changedRef = useRef(false); //for autosave
   const [saving, setSaving] = useState(false);
   const { userIsAdmin } = useRole();
+  const addPublishRef = useRef<boolean | undefined>(undefined);
   const refErrTest = useRefErrTest();
   const moveUp = true;
   const moveDown = false;
@@ -546,6 +552,14 @@ export function PlanSheet(props: IProps) {
   }, []);
 
   useEffect(() => {
+    //if we're changing from not showing to showing, add any missing
+    if (userIsAdmin && addPublishRef.current === false && !hidePublishing) {
+      onPublishing();
+    }
+    addPublishRef.current = !hidePublishing;
+  }, [hidePublishing, userIsAdmin, onPublishing]);
+
+  useEffect(() => {
     let timeoutRef: NodeJS.Timeout | undefined = undefined;
     if (rowInfo) {
       const lastPasId = localStorage.getItem(localUserKey(LocalKey.passage));
@@ -717,7 +731,7 @@ export function PlanSheet(props: IProps) {
                   handleNoContextMenu={handleNoContextMenu}
                   sectionSequenceNumber={currentRowSectionNum}
                   passageSequenceNumber={currentRowPassageNum}
-                  onDisableFilter={disableFilter}
+                  onDisableFilter={filtered ? disableFilter : undefined}
                   showIcon={showIcon(filtered, currentRow - 1)}
                   onAction={onAction}
                 />

@@ -8,6 +8,7 @@ export interface Section extends BaseModel {
     graphics: string;
     published: boolean;
     level: number;
+    state: string;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;

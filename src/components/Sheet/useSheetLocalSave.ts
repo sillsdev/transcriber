@@ -68,6 +68,7 @@ export const useWfLocalSave = (props: IProps) => {
                 name: item.title || '',
                 level: item.level,
                 published: item.published,
+                state: item.level < 3 ? item.reference : '',
               },
             };
             const t = new RecordTransformBuilder();
@@ -98,6 +99,7 @@ export const useWfLocalSave = (props: IProps) => {
               attributes: {
                 sequencenum: item.sectionSeq,
                 name: item.title || '',
+                state: item.level < 3 ? item.reference : '',
                 level: item.level,
                 published: item.published, //or false?
               },
