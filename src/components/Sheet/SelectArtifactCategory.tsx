@@ -58,7 +58,7 @@ export const SelectArtifactCategory = (props: IProps) => {
     disabled,
   } = props;
   const artifactCategories =
-    useOrbitData<ArtifactCategory[]>('artifactCategory');
+    useOrbitData<ArtifactCategory[]>('artifactcategory');
   const [categoryId, setCategoryId] = useState(initCategory);
   const [showNew, setShowNew] = useState(false);
   const t: ISelectArtifactCategoryStrings = useSelector(
