@@ -47,7 +47,6 @@ export const useFlatAdd = (ts: ISharedStrings) => {
             book: book,
             reference: ts.part.replace('{0}', (seq + 1).toString()),
             title: '',
-            position: 0,
             hold: false,
             state: ActivityStates.TranscribeReady,
           },
