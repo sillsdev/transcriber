@@ -1369,6 +1369,7 @@ export function ScriptureTable(props: IProps) {
           )
         );
       }
+      return true;
     };
 
     const alternateName = (name: string) =>

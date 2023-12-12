@@ -956,7 +956,7 @@ if (
     keys: { remoteId: {} },
     attributes: {
       resourceType: { type: 'string' },
-      resourceId: { type: 'string' },
+      resourceId: { type: 'number' },
       info: { type: 'string' },
       dateCreated: { type: 'string' }, // datetime
       dateUpdated: { type: 'string' }, // datetime
