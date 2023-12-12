@@ -26,5 +26,5 @@ export const getDefaultName = (
         }_${planRec?.keys?.remoteId || planRec?.id}_${
           secRec?.keys?.remoteId || secRec?.id
         }_${ws?.passage?.keys?.remoteId || ws?.passage?.id}_${tag}`;
-  return cleanFileName(defaultName);
+  return cleanFileName(defaultName.replace(/\s/g, '_'));
 };

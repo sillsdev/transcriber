@@ -1364,7 +1364,7 @@ export function ScriptureTable(props: IProps) {
         return Boolean(
           sections.find(
             (s) =>
-              s.attributes.state === publishingTitle(bookType) &&
+              s.attributes?.state === publishingTitle(bookType) &&
               teamplans.includes(related(s, 'plan'))
           )
         );
