@@ -12,7 +12,6 @@ import { logError, Severity, toCamel, waitForIt } from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { shallowEqual, useSelector } from 'react-redux';
 import { workflowStepsSelector } from '../selector';
-import { useSnackBar } from '../hoc/SnackBar';
 import {
   InitializedRecord,
   RecordOperation,
@@ -39,7 +38,6 @@ export const useOrgWorkflowSteps = () => {
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const creatingRef = useRef(false);
-  const { showMessage } = useSnackBar();
 
   const localizedWorkStep = (val: string) => {
     return (t as ISwitches)[toCamel(val)] || val;
@@ -85,7 +83,6 @@ export const useOrgWorkflowSteps = () => {
       )
     );
     try {
-      showMessage(t.addingStep + localizedWorkStep(wfs.attributes.name));
       await memory.update(ops);
     } catch (ex) {
       logError(Severity.error, errorReporter, ex as Error);
