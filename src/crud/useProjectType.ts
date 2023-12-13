@@ -42,15 +42,15 @@ export const useProjectType = () => {
       logError(
         Severity.error,
         errorReporter,
-        `missing project type=project${proj.attributes.name}${proj.keys?.remoteId}`
+        `missing project type=project${proj?.attributes?.name}${proj?.keys?.remoteId}`
       );
       var pts = memory.cache.query((q) =>
         q.findRecords('projecttype')
       ) as ProjectType[];
-      var online = Boolean(proj.keys?.remoteId);
+      var online = Boolean(proj?.keys?.remoteId);
       pts = pts.filter(
         (p) =>
-          Boolean(p.keys?.remoteId) === online &&
+          Boolean(p?.keys?.remoteId) === online &&
           p.attributes.name === 'Scripture'
       );
       if (pts.length > 0) {
