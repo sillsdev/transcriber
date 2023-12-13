@@ -41,7 +41,6 @@ export const GroupDialog = ({ cur, save, remove, isAdmin, inUse }: IProps) => {
     permissionTip,
     getPermissionFromJson,
   } = usePermissions();
-  const [permissionTitles, setPermissionTitles] = useState<string[]>([]);
   const [permissions, setPermissions] = React.useState('');
   const t = useSelector(peerSelector, shallowEqual) as IPeerStrings;
   const ts = useSelector(sharedSelector, shallowEqual) as ISharedStrings;
@@ -85,6 +84,12 @@ export const GroupDialog = ({ cur, save, remove, isAdmin, inUse }: IProps) => {
     setOpen(false);
   };
 
+  const permissionTitles = React.useMemo(
+    () => localizedPermissions(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [permissions]
+  );
+
   React.useEffect(() => {
     const newName = cur?.attributes?.name ?? '';
     if (name !== newName) setName(newName);
@@ -93,7 +98,6 @@ export const GroupDialog = ({ cur, save, remove, isAdmin, inUse }: IProps) => {
     );
     if (permissions !== newPermissions) {
       setPermissions(newPermissions);
-      setPermissionTitles(localizedPermissions());
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
