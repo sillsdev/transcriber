@@ -84,8 +84,11 @@ export const GroupDialog = ({ cur, save, remove, isAdmin, inUse }: IProps) => {
     setOpen(false);
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const permissionTitles = React.useMemo(() => localizedPermissions(), []);
+  const permissionTitles = React.useMemo(
+    () => localizedPermissions(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [permissions]
+  );
 
   React.useEffect(() => {
     const newName = cur?.attributes?.name ?? '';
