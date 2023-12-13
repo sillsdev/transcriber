@@ -700,7 +700,6 @@ const initialState = {
 	"mediaTitle": new LocalizedStrings({
 		"en": {
 			"cancel": "Cancel Recording",
-			"noplan": "Unable to record until you have created a project.",
 			"record": "Record",
 			"recording": "Recording...",
 			"save": "Save Recording",
@@ -898,7 +897,7 @@ const initialState = {
 			"addNote": "Add Note",
 			"assign": "Assign",
 			"delete": "Delete",
-			"noteSettings": "Settings for Notes",
+			"noteDetails": "Detailed Settings for Notes",
 			"passageDetail": "Passage Detail",
 			"playpause": "Play/Pause",
 			"recordAudio": "Record/Edit Audio",
@@ -1030,7 +1029,7 @@ const initialState = {
 			"errorData": "Do you want to save and discard data with errors?",
 			"keywords": "Keywords",
 			"link": "Link",
-			"noteSettings": "Note Settings",
+			"noteDetails": "Note Details",
 			"overview": "Overview",
 			"references": "References",
 			"resourceEdit": "Resource Edit",

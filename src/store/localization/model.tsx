@@ -659,7 +659,6 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
 
 export interface IMediaTitleStrings extends Localize.LocalizedStringsMethods {
     "cancel": string;
-    "noplan": string;
     "record": string;
     "recording": string;
     "save": string;
@@ -844,7 +843,7 @@ export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
     "addNote": string;
     "assign": string;
     "delete": string;
-    "noteSettings": string;
+    "noteDetails": string;
     "passageDetail": string;
     "playpause": string;
     "recordAudio": string;
@@ -970,7 +969,7 @@ export interface IResourceStrings extends Localize.LocalizedStringsMethods {
     "errorData": string;
     "keywords": string;
     "link": string;
-    "noteSettings": string;
+    "noteDetails": string;
     "overview": string;
     "references": string;
     "resourceEdit": string;

@@ -1653,7 +1653,7 @@ export function ScriptureTable(props: IProps) {
           shared
             ? resStr.resourceEdit
             : isNote
-            ? resStr.noteSettings
+            ? resStr.noteDetails
             : ts.versionHistory
         }
         isOpen={versionRow !== undefined}
