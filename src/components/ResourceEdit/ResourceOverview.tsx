@@ -1,5 +1,5 @@
 import { Box, Divider, Stack } from '@mui/material';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import {
   ActionRow,
   AltButton,
@@ -8,7 +8,7 @@ import {
   Language,
   PriButton,
 } from '../../control';
-import { IDialog, IResourceStrings, ISharedStrings } from '../../model';
+import { IDialog, IResourceStrings, ISharedStrings, ISheet } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { sharedResourceSelector, sharedSelector } from '../../selector';
 import Mode from '../../model/dialogMode';
@@ -23,9 +23,11 @@ import {
 import { useGlobal } from 'reactn';
 import { useOrgDefaults } from '../../crud';
 import { ResKw } from './ResourceKeywords';
+import { NoteTitle } from './NoteTitle';
 
 export interface IResourceDialog {
   title: string;
+  mediaId: string;
   description: string;
   bcp47: string;
   languageName: string;
@@ -38,23 +40,9 @@ export interface IResourceDialog {
   note: boolean;
   category: string;
   changed: boolean;
+  ws: ISheet | undefined;
+  onRecording: (isRecording: boolean) => void;
 }
-
-const initState: IResourceDialog = {
-  title: '',
-  description: '',
-  bcp47: 'und',
-  languageName: '',
-  font: '',
-  rtl: false,
-  spellCheck: false,
-  terms: '',
-  keywords: '',
-  linkurl: '',
-  note: false,
-  category: '',
-  changed: false,
-};
 
 export interface IResourceState {
   state: IResourceDialog;
@@ -63,20 +51,58 @@ export interface IResourceState {
 
 interface IProps extends IDialog<IResourceDialog> {
   isNote: boolean;
+  ws: ISheet | undefined;
   nameInUse?: (newName: string) => boolean;
   onDelete?: () => void;
 }
 
 export default function ResourceOverview(props: IProps) {
-  const { mode, values, isOpen, isNote, onOpen, onCommit, onCancel, onDelete } =
-    props;
+  const {
+    mode,
+    values,
+    isOpen,
+    isNote,
+    ws,
+    onOpen,
+    onCommit,
+    onCancel,
+    onDelete,
+  } = props;
 
   const [isDeveloper] = useGlobal('developer');
-  const [state, setState] = React.useState({ ...initState });
-  const { title, bcp47, keywords } = state;
+  const recording = useRef(false);
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
+
+  const onRecording = (isRecording: boolean) => {
+    recording.current = isRecording;
+  };
+
+  const initState: IResourceDialog = React.useMemo(
+    () => ({
+      title: '',
+      mediaId: '',
+      description: '',
+      bcp47: 'und',
+      languageName: '',
+      font: '',
+      rtl: false,
+      spellCheck: false,
+      terms: '',
+      keywords: '',
+      linkurl: '',
+      note: false,
+      category: '',
+      changed: false,
+      ws: ws,
+      onRecording,
+    }),
+    [ws]
+  );
+
+  const [state, setState] = React.useState({ ...initState });
+  const { title, bcp47, keywords } = state;
 
   const updateState = useMemo(
     () => (mode === Mode.view ? undefined : setState),
@@ -84,13 +110,21 @@ export default function ResourceOverview(props: IProps) {
   );
 
   useEffect(() => {
-    setState(!values ? { ...initState } : { ...values, changed: false });
+    setState(
+      !values
+        ? { ...initState }
+        : { ...values, ws, onRecording, changed: false }
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values, isOpen]);
 
   useEffect(() => {
     setState(
-      !values ? { ...initState, note: isNote } : { ...values, note: isNote }
+      !values
+        ? { ...initState, note: isNote }
+        : { ...values, ws, onRecording, note: isNote }
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values, isNote]);
 
   const handleClose = () => {
@@ -128,7 +162,11 @@ export default function ResourceOverview(props: IProps) {
   return (
     <Box>
       <Stack spacing={2}>
-        <ResourceTitle state={state} setState={updateState} />
+        {isNote ? (
+          <NoteTitle state={state} setState={updateState} />
+        ) : (
+          <ResourceTitle state={state} setState={updateState} />
+        )}
         <ResourceDescription state={state} setState={updateState} />
         <ResourceCategory state={state} setState={updateState} />
         <ResourceKeywords state={state} setState={updateState} />
@@ -165,7 +203,10 @@ export default function ResourceOverview(props: IProps) {
             id="resSave"
             onClick={handleAdd}
             disabled={
-              title === '' || (bcp47 === 'und' && !isNote) || !state.changed
+              title === '' ||
+              (bcp47 === 'und' && !isNote) ||
+              !state.changed ||
+              recording.current
             }
           >
             {mode === Mode.add ? t.add : ts.save}

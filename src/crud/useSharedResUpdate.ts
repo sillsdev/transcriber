@@ -8,7 +8,11 @@ export const useSharedResUpdate = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
-  return async (sharedResource: SharedResourceD, category: string) => {
+  return async (
+    sharedResource: SharedResourceD,
+    category: string,
+    mediaId?: string
+  ) => {
     const t = new RecordTransformBuilder();
     const ops = [
       ...UpdateRecord(t, sharedResource, user),
@@ -18,6 +22,13 @@ export const useSharedResUpdate = () => {
         'artifactCategory',
         'artifactcategory',
         category
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        sharedResource,
+        'titleMediafile',
+        'mediafile',
+        mediaId
       ),
     ];
     if (sharedResource.attributes.note) {

@@ -217,7 +217,7 @@ export function ScriptureTable(props: IProps) {
   const [importList, setImportList] = useState<File[]>();
   const cancelled = useRef(false);
   const uploadItem = useRef<ISheet>();
-  const [versionItem, setVersionItem] = useState('');
+  const [versionRow, setVersionRow] = useState<ISheet>();
   const [isNote, setIsNote] = useState(false);
   const [defaultFilename, setDefaultFilename] = useState('');
   const [uploadType, setUploadType] = useState<UploadType>();
@@ -921,7 +921,7 @@ export function ScriptureTable(props: IProps) {
     saveIfChanged(() => {
       waitForPassageId(i, () => {
         const { ws } = getByIndex(workflowRef.current, i);
-        setVersionItem(ws?.passage?.id || '');
+        setVersionRow(ws);
         setIsNote(ws?.passageType === PassageTypeEnum.NOTE);
       });
     });
@@ -994,7 +994,7 @@ export function ScriptureTable(props: IProps) {
   };
 
   const handleVerHistClose = () => {
-    setVersionItem('');
+    setVersionRow(undefined);
   };
 
   const handleNameChange = (name: string) => {
@@ -1656,13 +1656,17 @@ export function ScriptureTable(props: IProps) {
             ? resStr.noteSettings
             : ts.versionHistory
         }
-        isOpen={versionItem !== ''}
+        isOpen={versionRow !== undefined}
         onOpen={handleVerHistClose}
       >
         {shared || isNote ? (
-          <ResourceTabs passId={versionItem} onOpen={handleVerHistClose} />
+          <ResourceTabs
+            passId={versionRow?.passage?.id || ''}
+            ws={versionRow}
+            onOpen={handleVerHistClose}
+          />
         ) : (
-          <VersionDlg passId={versionItem} />
+          <VersionDlg passId={versionRow?.passage?.id || ''} />
         )}
       </BigDialog>
       {confirmPublishingVisible && (

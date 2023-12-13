@@ -6,6 +6,7 @@ import { findRecord } from './tryFindRecord';
 
 interface IProps {
   title: string;
+  mediaId?: string;
   description: string;
   languagebcp47: string;
   termsOfUse: string;
@@ -26,6 +27,7 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
 
   return async ({
     title,
+    mediaId,
     description,
     languagebcp47,
     termsOfUse,
@@ -76,6 +78,17 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
           'artifactCategory',
           'artifactcategory',
           category
+        )
+      );
+    }
+    if (mediaId) {
+      ops.push(
+        ...ReplaceRelatedRecord(
+          t,
+          sharedRes as RecordIdentity,
+          'titleMediafile',
+          'mediafile',
+          mediaId
         )
       );
     }

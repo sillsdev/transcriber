@@ -6,6 +6,7 @@ import ResourceRefs from './ResourceRefs';
 import {
   DialogMode,
   IResourceStrings,
+  ISheet,
   Passage,
   SharedResource,
   SharedResourceD,
@@ -64,10 +65,11 @@ function a11yProps(index: number) {
 
 interface IProps {
   passId: string;
+  ws: ISheet | undefined;
   onOpen: () => void;
 }
 
-export function ResourceTabs({ passId, onOpen }: IProps) {
+export function ResourceTabs({ passId, ws, onOpen }: IProps) {
   const sharedResources = useOrbitData<SharedResource[]>('sharedresource');
   const [value, setValue] = React.useState(0);
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
@@ -131,6 +133,7 @@ export function ResourceTabs({ passId, onOpen }: IProps) {
         linkurl,
         note: isNote,
         category: related(sharedResRec, 'artifactCategory'),
+        mediaId: related(sharedResRec, 'titleMediafile'),
       } as IResourceDialog;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -151,6 +154,7 @@ export function ResourceTabs({ passId, onOpen }: IProps) {
       keywords,
       linkurl,
       category,
+      mediaId,
     } = values;
     if (sharedResRec) {
       const rec = sharedResRec;
@@ -168,7 +172,8 @@ export function ResourceTabs({ passId, onOpen }: IProps) {
             note: isNote,
           },
         } as SharedResourceD,
-        category
+        category,
+        mediaId
       );
     } else {
       await createSharedResource({
@@ -180,6 +185,7 @@ export function ResourceTabs({ passId, onOpen }: IProps) {
         linkurl,
         note: isNote,
         category,
+        mediaId,
       });
     }
     setValue(1);
@@ -227,6 +233,7 @@ export function ResourceTabs({ passId, onOpen }: IProps) {
           values={values}
           isOpen={true}
           isNote={isNote}
+          ws={ws}
           onOpen={handleOverOpen}
           onCommit={handleCommit}
           onDelete={handleDelete}
