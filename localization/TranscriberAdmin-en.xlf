@@ -4186,9 +4186,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planActions.noteSettings">
+      <unit id="planActions.noteDetails">
          <segment>
-            <source>Settings for Notes</source>
+            <source>Detailed Settings for Notes</source>
             <target/>
          </segment>
       </unit>
@@ -4834,9 +4834,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="resource.noteSettings">
+      <unit id="resource.noteDetails">
          <segment>
-            <source>Note Settings</source>
+            <source>Note Details</source>
             <target/>
          </segment>
       </unit>

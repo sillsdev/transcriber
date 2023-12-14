@@ -4883,8 +4883,8 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="planActions.noteSettings">
-      		<source>Settings for Notes</source>
+      	<trans-unit id="planActions.noteDetails">
+      		<source>Detailed Settings for Notes</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PlanActions.tsx</context>
@@ -5640,8 +5640,8 @@
       			<context context-type="sourcefile">ResourceOverview.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="resource.noteSettings">
-      		<source>Note Settings</source>
+      	<trans-unit id="resource.noteDetails">
+      		<source>Note Details</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ResourceOverview.tsx</context>

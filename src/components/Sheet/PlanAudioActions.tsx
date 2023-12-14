@@ -68,7 +68,7 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
           shared={mediaShared === IMediaShare.OldVersionOnly}
           title={
             isNote
-              ? t.noteSettings
+              ? t.noteDetails
               : mediaShared !== IMediaShare.NotPublic
               ? t.resourceEdit
               : t.versions
