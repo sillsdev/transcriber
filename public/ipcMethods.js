@@ -20,9 +20,8 @@ const {
 const generateUUID = require('./generateUUID');
 const convert = require('xml-js');
 const ChildProcess = require('child_process');
-// Importing a ESM module https://stackoverflow.com/questions/69041454/error-require-of-es-modules-is-not-supported-when-importing-node-fetch
-const execa = (...args) =>
-  import('execa').then(({ default: execa }) => execa(...args));
+// execa is an ESM module so we included source to make it work
+const execa = require('./execa');
 
 const ipcMethods = () => {
   ipcMain.handle('availSpellLangs', async () => {
