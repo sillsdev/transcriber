@@ -1025,7 +1025,21 @@
       			<context context-type="sourcefile">CategoryTabs.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="category.discussions">
+      	<trans-unit id="category.close">
+      		<source>Close</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="category.duplicate">
+      		<source>Duplicate Category</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="category.discussions">
       		<source>discussion(s)</source>
       		<target/>
       		<context-group>
@@ -6055,6 +6069,13 @@
          </trans-unit>
          <trans-unit id="shared.cancel">
             <source>Cancel</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Access.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.close">
+            <source>Close</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>

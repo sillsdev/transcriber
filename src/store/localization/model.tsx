@@ -178,6 +178,8 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
 export interface ICategoryStrings extends Localize.LocalizedStringsMethods {
     "builtIn": string;
     "discussion": string;
+    "close": string;
+    "duplicate": string;
     "discussions": string;
     "ignoreInvalid": string;
     "inUseBy": string;
@@ -1050,6 +1052,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "bookNotInParatext": string;
     "BookNotSet": string;
     "cancel": string;
+    "close": string;
     "consultant": string;
     "delete": string;
     "description": string;

@@ -194,6 +194,8 @@ const initialState = {
 		"en": {
 			"builtIn": "System Categories",
 			"discussion": "Discussion",
+			"close": "Close",
+			"duplicate": "Duplicate Category",
 			"discussions": "discussion(s)",
 			"ignoreInvalid": "Ignoring invalid category change '{0}'.",
 			"inUseBy": "In use by {0} {1}",
@@ -1117,6 +1119,7 @@ const initialState = {
 			"bookNotInParatext": "Passage {0}.{1}: Paratext project does not contain book {2}.",
 			"BookNotSet": "Book was not set for Section {0} Passage {1}",
 			"cancel": "Cancel",
+			"close": "Close",
 			"consultant": "Consultant",
 			"delete": "Delete {0}. Are you sure?",
 			"description": "Description",

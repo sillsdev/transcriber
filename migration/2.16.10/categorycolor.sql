@@ -1,0 +1,1 @@
+ALTER TABLE artifactcategorys ADD color text;
