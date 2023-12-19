@@ -19,11 +19,7 @@ import { toCamel } from '../../utils';
 import { ISTFilterState } from './filterMenu';
 import { PassageTypeEnum } from '../../model/passageType';
 import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
-import { CompressedImages, IGraphicInfo } from '../GraphicUploader';
-
-export const ApmDim = 40;
-const apmDimStr = `${ApmDim}`;
-export const Rights = 'rights';
+import { apmGraphic } from '../GraphicUploader';
 
 const shtSectionUpdate = (item: ISheet, rec: ISheet) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -190,11 +186,9 @@ export const getSheet = (
           g.attributes.resourceId === parseInt(section?.keys?.remoteId ?? '0')
       );
       if (graphicRec) {
-        const info: IGraphicInfo = JSON.parse(graphicRec.attributes.info);
-        if (info.hasOwnProperty(apmDimStr)) {
-          item.graphicUri = (info[apmDimStr] as CompressedImages).content;
-          item.graphicRights = info[Rights] as string | undefined;
-        }
+        var gr = apmGraphic(graphicRec);
+        item.graphicUri = gr?.graphicUri;
+        item.graphicRights = gr?.graphicRights;
       }
       const titleMediaId = related(section, 'titleMediafile');
       item.titleMediaId = titleMediaId
@@ -272,11 +266,9 @@ export const getSheet = (
                 parseInt(passage?.keys?.remoteId ?? '0')
           );
           if (graphicRec) {
-            const info: IGraphicInfo = JSON.parse(graphicRec.attributes.info);
-            if (info.hasOwnProperty(apmDimStr)) {
-              item.graphicUri = (info[apmDimStr] as CompressedImages).content;
-              item.graphicRights = info[Rights] as string | undefined;
-            }
+            var gr = apmGraphic(graphicRec);
+            item.graphicUri = gr?.graphicUri;
+            item.graphicRights = gr?.graphicRights;
           }
         }
       }

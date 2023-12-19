@@ -71,8 +71,6 @@ import {
   isSectionFiltered,
   isPassageFiltered,
   nextNum,
-  ApmDim,
-  Rights,
 } from '.';
 import { debounce } from 'lodash';
 import AudacityManager from './AudacityManager';
@@ -102,9 +100,11 @@ import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
 import { UploadType } from '../MediaUpload';
 import { useGraphicCreate } from '../../crud/useGraphicCreate';
 import {
+  ApmDim,
   CompressedImages,
   GraphicUploader,
   IGraphicInfo,
+  Rights,
 } from '../GraphicUploader';
 import Confirm from '../AlertDialog';
 import { getDefaultName } from './getDefaultName';

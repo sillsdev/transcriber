@@ -2,10 +2,10 @@ import React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import { Graphic, IMediaTabStrings } from '../model';
-import { Rights } from './Sheet';
 import { shallowEqual, useSelector } from 'react-redux';
 import { mediaTabSelector } from '../selector';
 import { useOrbitData } from '../hoc/useOrbitData';
+import { Rights } from './GraphicUploader';
 
 interface RightsHolderOption {
   inputValue?: string;

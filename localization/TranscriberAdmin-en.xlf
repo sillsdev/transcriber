@@ -880,6 +880,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="category.close">
+         <segment>
+            <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.duplicate">
+         <segment>
+            <source>Duplicate Category</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="category.discussions">
          <segment>
             <source>discussion(s)</source>
@@ -5191,6 +5203,12 @@
       <unit id="shared.cancel">
          <segment>
             <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.close">
+         <segment>
+            <source>Close</source>
             <target/>
          </segment>
       </unit>

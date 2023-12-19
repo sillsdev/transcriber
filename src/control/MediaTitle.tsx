@@ -72,6 +72,7 @@ interface IProps {
   onTextChange?: (txt: string) => string;
   onLangChange?: (lang: ILanguage) => void;
   useplan?: string;
+  helper?: string;
   /*
   canRecord: () => boolean;
   onOk: (row: ITitle) => void;
@@ -79,7 +80,7 @@ interface IProps {
   setCanSaveRecording: (canSave: boolean) => void;
   onSetRecordRow: (row: ITitle | undefined) => void;
   */
-  onRecording: (recording: boolean) => void;
+  onRecording?: (recording: boolean) => void;
   onMediaIdChange: (mediaId: string) => void;
   disabled?: boolean;
 }
@@ -92,6 +93,7 @@ export default function MediaTitle(props: IProps) {
     title,
     defaultFilename,
     language,
+    helper,
     onTextChange,
     onLangChange,
     onRecording,
@@ -148,6 +150,7 @@ export default function MediaTitle(props: IProps) {
   const mediaIdRef = useRef<string>();
   const { createMedia } = useOfflnMediafileCreate();
 
+  useEffect(() => setHelperText(helper ?? ''), [helper]);
   useEffect(() => {
     if (saveRequested(toolId) && !saving.current)
       if (canSaveRecording) handleOk();
@@ -218,7 +221,7 @@ export default function MediaTitle(props: IProps) {
       toolChanged(recToolId, true);
     }
     setRecording(r);
-    onRecording(r);
+    onRecording && onRecording(r);
   };
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -227,6 +230,10 @@ export default function MediaTitle(props: IProps) {
       return;
     }
     setCurText(e.target.value);
+    if (onTextChange && e.target.value !== title) {
+      var err = onTextChange(e.target.value);
+      setHelperText(err);
+    }
   };
   const onBlur = () => {
     if (language) return;
@@ -275,7 +282,7 @@ export default function MediaTitle(props: IProps) {
       return;
     }
     saving.current = true;
-    if (!saveRequested(recToolId)) {
+    if (onRecording && !saveRequested(recToolId)) {
       startSave(recToolId);
     }
     setStatusText(t.saving);
@@ -409,7 +416,7 @@ export default function MediaTitle(props: IProps) {
                     <PlayIcon fontSize="small" />
                   </IconButton>
                 )}
-                {disabled || (
+                {onRecording && !disabled && (
                   <Tooltip title={t.record}>
                     <IconButton
                       id={`${titlekey}record`}
@@ -468,7 +475,7 @@ export default function MediaTitle(props: IProps) {
       />
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [curText, recording, mediaId, canSaveRecording, disabled]
+    [curText, recording, mediaId, canSaveRecording, disabled, helperText]
   );
 
   return (

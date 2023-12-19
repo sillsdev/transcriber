@@ -44,5 +44,6 @@ export const useGraphicCreate = () => {
       );
     }
     await memory.update(ops);
+    return graphicRec.id ?? '';
   };
 };

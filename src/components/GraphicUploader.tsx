@@ -2,13 +2,16 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { restoreScroll } from '../utils';
 import MediaUpload, { SIZELIMIT, UploadType } from './MediaUpload';
 import { mediaTabSelector } from '../selector';
-import { IMediaTabStrings } from '../model';
+import { GraphicD, IMediaTabStrings } from '../model';
 import imageCompression from 'browser-image-compression';
 import { useGlobal } from 'reactn';
 import { logError, Severity } from '../utils';
 
 // Converting to/from Blob: https://stackoverflow.com/questions/68276368/javascript-convert-a-blob-object-to-a-string-and-back
 // https://stackoverflow.com/questions/18650168/convert-blob-to-base64
+
+export const ApmDim = 40;
+export const Rights = 'rights';
 
 export interface CompressedImages {
   name: string;
@@ -32,6 +35,17 @@ interface IProps {
   uploadType?: UploadType;
   metadata?: JSX.Element;
 }
+export const apmGraphic = (graphicRec: GraphicD) => {
+  const apmDimStr = `${ApmDim}`;
+  const info: IGraphicInfo = JSON.parse(graphicRec.attributes.info);
+  if (info.hasOwnProperty(apmDimStr)) {
+    return {
+      graphicUri: (info[apmDimStr] as CompressedImages).content,
+      graphicRights: info[Rights] as string | undefined,
+    };
+  }
+  return undefined;
+};
 export function GraphicUploader(props: IProps) {
   const {
     defaultFilename,
