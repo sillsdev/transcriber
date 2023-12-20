@@ -378,6 +378,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
       ) as PlanD[];
       var plan = plans[0];
 
+      await remote.activated;
       var checksums = (await remote.query((q) =>
         q
           .findRecords('vwchecksum')
