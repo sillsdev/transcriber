@@ -236,6 +236,7 @@ export function PlanSheet(props: IProps) {
   const [confirmAction, setConfirmAction] = useState('');
   const suggestionRef = useRef<Array<OptionType>>();
   const saveTimer = useRef<NodeJS.Timeout>();
+  const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [pasting, setPasting] = useState(false);
   const preventSave = useRef<boolean>(false);
@@ -732,7 +733,7 @@ export function PlanSheet(props: IProps) {
                   sectionSequenceNumber={currentRowSectionNum}
                   passageSequenceNumber={currentRowPassageNum}
                   onDisableFilter={filtered ? disableFilter : undefined}
-                  showIcon={showIcon(filtered, currentRow - 1)}
+                  showIcon={showIcon(filtered, offline, currentRow - 1)}
                   onAction={onAction}
                 />
                 <AltButton
@@ -763,18 +764,20 @@ export function PlanSheet(props: IProps) {
             )}
 
             <GrowingSpacer />
-            <LightTooltip
-              sx={{ backgroundColor: 'transparent' }}
-              title={hidePublishing ? t.showPublishing : t.hidePublishing}
-            >
-              <IconButton onClick={handlePublishToggle}>
-                {hidePublishing ? (
-                  <PublishOnIcon sx={{ color: 'primary.light' }} />
-                ) : (
-                  <PublishOffIcon sx={{ color: 'primary.light' }} />
-                )}
-              </IconButton>
-            </LightTooltip>
+            {!offline && !inlinePassages && !readonly && (
+              <LightTooltip
+                sx={{ backgroundColor: 'transparent' }}
+                title={hidePublishing ? t.showPublishing : t.hidePublishing}
+              >
+                <IconButton onClick={handlePublishToggle}>
+                  {hidePublishing ? (
+                    <PublishOnIcon sx={{ color: 'primary.light' }} />
+                  ) : (
+                    <PublishOffIcon sx={{ color: 'primary.light' }} />
+                  )}
+                </IconButton>
+              </LightTooltip>
+            )}
             <FilterMenu
               canSetDefault={canSetDefault}
               state={filterState}
