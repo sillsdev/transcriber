@@ -304,9 +304,10 @@ export function ScriptureTable(props: IProps) {
   const setSheet = (ws: ISheet[]) => {
     workflowRef.current = ws;
     setSheetx(ws);
-    var anyPublishing = !shared
-      ? Boolean(ws.find((w) => isPublishingTitle(w.reference ?? '', flat)))
-      : false;
+    var anyPublishing =
+      !shared && !offline
+        ? Boolean(ws.find((w) => isPublishingTitle(w.reference ?? '', flat)))
+        : false;
     if (canHidePublishing !== anyPublishing) setCanPublish(anyPublishing);
   };
   const passNumCol = React.useMemo(() => {
