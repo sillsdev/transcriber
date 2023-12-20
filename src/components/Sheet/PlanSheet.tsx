@@ -40,6 +40,7 @@ import {
   localUserKey,
   LocalKey,
   rememberCurrentPassage,
+  positiveWholeOnly,
 } from '../../utils';
 import { remoteIdGuid, useRole } from '../../crud';
 import MediaPlayer from '../MediaPlayer';
@@ -693,22 +694,32 @@ export function PlanSheet(props: IProps) {
   const playEnded = () => {
     setMediaPlaying(false);
   };
-  const currentRowSectionNum = useMemo(() => {
-    if (currentRowRef.current < 1) return '';
+  const currentRowSectionSeqNum = useMemo(() => {
+    if (currentRowRef.current < 1) return undefined;
     var row = currentRowRef.current - 1;
     while (row >= 0 && !isSection(row)) row--;
-    return row >= 0 ? rowData[row][SectionSeqCol].toString() : '';
+    return row >= 0 ? (rowData[row][SectionSeqCol] as number) : undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRow, rowData, rowInfo]);
 
-  const currentRowPassageNum = useMemo(() => {
-    return currentRowRef.current < 0 || !isPassage(currentRowRef.current - 1)
-      ? ''
-      : rowInfo[
-          currentRowRef.current - 1
-        ].passage?.attributes.sequencenum?.toString() ?? '';
+  const currentWholeRowSectionNum = useMemo(
+    () => positiveWholeOnly(currentRowSectionSeqNum),
+    [currentRowSectionSeqNum]
+  );
+
+  const currentRowPassageSeqNum = useMemo(
+    () =>
+      currentRowRef.current < 0 || !isPassage(currentRowRef.current - 1)
+        ? undefined
+        : rowInfo[currentRowRef.current - 1].passage?.attributes?.sequencenum,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentRow, rowData, rowInfo, inlinePassages]);
+    [currentRow, rowData, rowInfo, inlinePassages]
+  );
+
+  const currentWholeRowPassageNum = useMemo(
+    () => positiveWholeOnly(currentRowPassageSeqNum),
+    [currentRowPassageSeqNum]
+  );
 
   const dataRowisSection = useMemo(() => {
     return isSection(currentRow - 1);
@@ -730,8 +741,8 @@ export function PlanSheet(props: IProps) {
                   isPassage={isPassage(currentRow - 1)}
                   mouseposition={position}
                   handleNoContextMenu={handleNoContextMenu}
-                  sectionSequenceNumber={currentRowSectionNum}
-                  passageSequenceNumber={currentRowPassageNum}
+                  sectionSequenceNumber={currentWholeRowSectionNum}
+                  passageSequenceNumber={currentWholeRowPassageNum}
                   onDisableFilter={filtered ? disableFilter : undefined}
                   showIcon={showIcon(filtered, offline, currentRow - 1)}
                   onAction={onAction}
