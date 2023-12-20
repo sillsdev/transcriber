@@ -53,16 +53,22 @@ function DataTable(props: IProps) {
     select,
     sorting,
   } = props;
-  const [selected, setSelected] = React.useState<number[]>([]);
+  const [selected, setSelected] = React.useState<(string | number)[]>([]);
 
   React.useEffect(() => {
     if (checks)
       setSelected(checks.map((c) => (typeof c === 'string' ? parseInt(c) : c)));
   }, [checks]);
 
-  const handleSelection = (selection: number[]) => {
+  const handleSelection = (selection: (number | string)[]) => {
     setSelected(selection);
-    select && select(selection);
+    const numSelection =
+      selection.length === 0
+        ? []
+        : selection.map((s) =>
+            typeof s === 'string' ? rows.findIndex((r) => r.id === s) : s
+          );
+    select && select(numSelection);
   };
 
   // const isSelected = (id: number) => selected.indexOf(id) !== -1;
