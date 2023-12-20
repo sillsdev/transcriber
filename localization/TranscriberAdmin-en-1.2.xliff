@@ -4407,6 +4407,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.selectOne">
+      		<source>Only the first selected note is used</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.sharedResource">
       		<source>Link Shared {0} Resource</source>
       		<target/>
@@ -5638,6 +5645,13 @@
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.findNote">
+      		<source>Find existing note</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="resource.keywords">

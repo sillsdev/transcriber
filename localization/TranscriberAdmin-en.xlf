@@ -3778,6 +3778,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.selectOne">
+         <segment>
+            <source>Only the first selected note is used</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
             <source>Link Shared {0} Resource</source>
@@ -4831,6 +4837,12 @@
       <unit id="resource.errorData">
          <segment>
             <source>Do you want to save and discard data with errors?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.findNote">
+         <segment>
+            <source>Find existing note</source>
             <target/>
          </segment>
       </unit>

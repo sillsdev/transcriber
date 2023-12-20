@@ -1,8 +1,13 @@
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { Grid, GridProps, styled, Typography } from '@mui/material';
-import { passageRefText, PassageReference, sectionDescription } from '../crud';
-import { BookName, Passage, Section, Plan } from '../model';
+import {
+  passageRefText,
+  PassageReference,
+  sectionDescription,
+  usePlanType,
+} from '../crud';
+import { BookName, Passage, Section } from '../model';
 
 const GridRoot = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
@@ -17,15 +22,13 @@ interface IProps {
 export const SectionPassageTitle = (props: IProps) => {
   const { section, passage, allBookData } = props;
   const [plan] = useGlobal('plan');
-  const [memory] = useGlobal('memory');
+  const planType = usePlanType();
 
-  const isFlat = useMemo(() => {
-    const plans = (
-      memory.cache.query((q) => q.findRecords('plan')) as Plan[]
-    ).filter((p) => p.id === plan);
-    return plans.length === 0 || plans[0].attributes?.flat;
+  const isFlat = useMemo(
+    () => planType(plan)?.flat,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plan]);
+    [plan]
+  );
 
   const passNum = !isFlat ? passage : undefined;
   const ref = passageRefText(passage, allBookData);

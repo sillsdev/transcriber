@@ -1,4 +1,4 @@
-import { Box, Divider, Stack } from '@mui/material';
+import { Box, Divider, IconButton, Stack } from '@mui/material';
 import React, { useEffect, useMemo, useRef } from 'react';
 import {
   ActionRow,
@@ -6,9 +6,16 @@ import {
   GrowingDiv,
   ILanguage,
   Language,
+  LightTooltip,
   PriButton,
 } from '../../control';
-import { IDialog, IResourceStrings, ISharedStrings, ISheet } from '../../model';
+import {
+  IDialog,
+  IResourceStrings,
+  ISharedStrings,
+  ISheet,
+  SharedResourceD,
+} from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { sharedResourceSelector, sharedSelector } from '../../selector';
 import Mode from '../../model/dialogMode';
@@ -24,6 +31,8 @@ import { useGlobal } from 'reactn';
 import { useOrgDefaults } from '../../crud';
 import { ResKw } from './ResourceKeywords';
 import { NoteTitle } from './NoteTitle';
+import SearchIcon from '@mui/icons-material/Search';
+import SelectNote from './SelectNote';
 
 export interface IResourceDialog {
   title: string;
@@ -54,6 +63,7 @@ interface IProps extends IDialog<IResourceDialog> {
   ws: ISheet | undefined;
   nameInUse?: (newName: string) => boolean;
   onDelete?: () => void;
+  onLink?: (link: SharedResourceD) => Promise<void>;
 }
 
 export default function ResourceOverview(props: IProps) {
@@ -67,11 +77,13 @@ export default function ResourceOverview(props: IProps) {
     onCommit,
     onCancel,
     onDelete,
+    onLink,
   } = props;
 
   const [isDeveloper] = useGlobal('developer');
   const recording = useRef(false);
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
+  const [findNote, setFindNote] = React.useState(false);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
 
@@ -98,6 +110,7 @@ export default function ResourceOverview(props: IProps) {
       ws: ws,
       onRecording,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [ws]
   );
 
@@ -159,7 +172,21 @@ export default function ResourceOverview(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keywords, canSetOrgDefault]);
 
-  return (
+  const handleFind = (event: React.MouseEvent): void => {
+    setFindNote(true);
+  };
+
+  const findClose = () => {
+    setFindNote(false);
+  };
+
+  const handleSelect = async (sr: SharedResourceD[]) => {
+    if (sr.length > 0 && onLink) {
+      await onLink(sr[0]);
+    }
+  };
+
+  return !findNote ? (
     <Box>
       <Stack spacing={2}>
         {isNote ? (
@@ -187,6 +214,16 @@ export default function ResourceOverview(props: IProps) {
       </Stack>
       <Divider sx={{ mt: 2 }} />
       <ActionRow>
+        {isNote && (
+          <>
+            <LightTooltip title={t.findNote}>
+              <IconButton onClick={handleFind}>
+                <SearchIcon color="primary" />
+              </IconButton>
+            </LightTooltip>
+            <GrowingDiv />
+          </>
+        )}
         {isDeveloper && (
           <>
             <AltButton id="delete" onClick={handleDelete}>
@@ -214,5 +251,11 @@ export default function ResourceOverview(props: IProps) {
         )}
       </ActionRow>
     </Box>
+  ) : (
+    <SelectNote
+      passage={ws?.passage}
+      onOpen={findClose}
+      onSelect={handleSelect}
+    />
   );
 }

@@ -31,7 +31,8 @@ export const AddResource = (props: IProps) => {
 
   const isFlat = useMemo(() => {
     return planType(related(section, 'plan'))?.flat;
-  }, [planType, section]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [section]);
 
   useEffect(() => {
     getProjectResources().then((res) => setHasProjRes(res.length > 0));

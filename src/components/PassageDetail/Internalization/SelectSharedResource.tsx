@@ -1,87 +1,30 @@
-import React, {
-  ChangeEvent,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   IPassageDetailArtifactsStrings,
-  ISharedStrings,
   IState,
   Passage,
   PassageD,
   Resource,
   SharedResourceReference,
 } from '../../../model';
-import DataTable from '../../DataTable';
 import {
   findRecord,
   related,
   remoteIdNum,
+  useAllSharedResourceRead,
   useArtifactCategory,
   usePlanType,
 } from '../../../crud';
-import { Sorting } from '@devexpress/dx-react-grid';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
-import {
-  ActionRow,
-  AltButton,
-  GrowingSpacer,
-  PriButton,
-} from '../../../control';
 import { shallowEqual, useSelector } from 'react-redux';
-import {
-  passageDetailArtifactsSelector,
-  sharedSelector,
-} from '../../../selector';
+import { passageDetailArtifactsSelector } from '../../../selector';
 import { useGlobal } from 'reactn';
-import BigDialog from '../../../hoc/BigDialog';
-import {
-  Box,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  SelectProps,
-  Stack,
-  TextField,
-  Typography,
-  styled,
-} from '@mui/material';
 import { ResourceTypeEnum } from './PassageDetailArtifacts';
-import BookSelect, { OptionType } from '../../BookSelect';
+import { OptionType } from '../../BookSelect';
 import { RecordKeyMap } from '@orbit/records';
-
-export enum RefLevel {
-  All,
-  Book,
-  Chapter,
-  Verse,
-}
-
-interface RefOption {
-  value: RefLevel;
-  label: string;
-}
-
-const ReferenceLevel = styled(Select)<SelectProps>(({ theme }) => ({
-  '#ref-level': {
-    paddingTop: `8px`,
-    paddingBottom: `8px`,
-  },
-}));
-
-interface IRRow {
-  language: string;
-  category: string;
-  title: string;
-  description: string;
-  version: number;
-  keywords: string;
-  terms: string;
-  source: string;
-}
+import PassageDataTable, { IRRow, RefLevel } from '../../PassageDataTable';
+import { passageTypeFromRef } from '../../../control/RefRender';
+import { PassageTypeEnum } from '../../../model/passageType';
 
 interface IProps {
   sourcePassages: number[];
@@ -94,13 +37,12 @@ export const SelectSharedResource = (props: IProps) => {
   const { sourcePassages, scope, onOpen, onSelect } = props;
   const [refLevel, setRefLevel] = useState<RefLevel>(RefLevel.Verse);
   const [memory] = useGlobal('memory');
+  const [plan] = useGlobal('plan');
   const ctx = useContext(PassageDetailContext);
-  const { passage, section, getSharedResources } = ctx.state;
+  const { passage, section } = ctx.state;
+  const getAllSharedResources = useAllSharedResourceRead();
   const [resources, setResources] = useState<Resource[]>([]);
   const [data, setData] = useState<IRRow[]>([]);
-  const [checks, setChecks] = useState<number[]>([]);
-  const [termsCheck, setTermsCheck] = useState<number[]>([]);
-  const [curTermsCheck, setCurTermsCheck] = useState<number>();
   const planType = usePlanType();
   const [bookCd, setBookCd] = useState<string>();
   const [bookOpt, setBookOpt] = useState<OptionType>();
@@ -114,50 +56,13 @@ export const SelectSharedResource = (props: IProps) => {
     passageDetailArtifactsSelector,
     shallowEqual
   );
-  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const columnDefs = [
-    { name: 'language', title: t.language },
-    { name: 'category', title: t.category },
-    { name: 'title', title: t.title },
-    { name: 'description', title: t.description },
-    { name: 'version', title: t.version },
-    { name: 'keywords', title: t.keywords },
-    { name: 'terms', title: t.termsOfUse },
-    { name: 'source', title: t.source },
-  ];
-  const columnWidths = [
-    { columnName: 'language', width: 150 },
-    { columnName: 'category', width: 150 },
-    { columnName: 'title', width: 200 },
-    { columnName: 'description', width: 200 },
-    { columnName: 'version', width: 100 },
-    { columnName: 'keywords', width: 200 },
-    { columnName: 'terms', width: 100 },
-    { columnName: 'source', width: 200 },
-  ];
-  const columnFormatting = [
-    { columnName: 'title', wordWrapEnabled: true },
-    { columnName: 'description', wordWrapEnabled: true },
-    { columnName: 'keywords', wordWrapEnabled: true },
-    { columnName: 'source', wordWrapEnabled: true },
-  ];
-  const sorting: Sorting[] = [
-    { columnName: 'language', direction: 'asc' },
-    { columnName: 'category', direction: 'asc' },
-    { columnName: 'title', direction: 'asc' },
-  ];
-  const referenceLevel: RefOption[] = [
-    { label: t.verseLevel, value: RefLevel.Verse },
-    { label: t.chapterLevel, value: RefLevel.Chapter },
-    { label: t.bookLevel, value: RefLevel.Book },
-    { label: t.allLevel, value: RefLevel.All },
-  ];
 
-  const handleCancel = () => {
-    onOpen && onOpen(false);
-  };
+  const isFlat = useMemo(() => {
+    return planType(plan)?.flat;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plan]);
 
-  const handleSelect = async () => {
+  const handleSelect = async (checks: number[]) => {
     if (!selecting.current) {
       selecting.current = true;
       onSelect &&
@@ -187,7 +92,12 @@ export const SelectSharedResource = (props: IProps) => {
       const passages = related(section, 'passages') as PassageD[];
       passages.forEach((recId) => {
         const passRec = findRecord(memory, 'passage', recId.id) as Passage;
-        secRefs.push(passRec.attributes.reference);
+        const passType = passageTypeFromRef(
+          passRec.attributes.reference,
+          isFlat
+        );
+        if (passType === PassageTypeEnum.PASSAGE)
+          secRefs.push(passRec.attributes.reference);
       });
       setFindRef(secRefs.join('; '));
     }
@@ -215,7 +125,7 @@ export const SelectSharedResource = (props: IProps) => {
       bookRefs.forEach((b) => addRes(bookSet, b));
       const rangeList = findRef.split(';');
       rangeList.forEach((r) => {
-        const m = /(\d+)(?::(\d+)(?:-(\d+)))/.exec(r);
+        const m = /(\d+):?(\d*)-?(\d*)/.exec(r);
         if (m) {
           const chapRefs = bookRefs.filter(
             (r) => r.attributes.chapter === parseInt(m[1])
@@ -251,7 +161,7 @@ export const SelectSharedResource = (props: IProps) => {
   );
 
   useEffect(() => {
-    getSharedResources().then((res) => {
+    getAllSharedResources().then((res) => {
       const latest = res.filter(
         (r) =>
           r.attributes?.latest &&
@@ -268,55 +178,6 @@ export const SelectSharedResource = (props: IProps) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sourcePassages, refLevel, refRes]);
-
-  const numSort = (i: number, j: number) => i - j;
-
-  const handleCheck = (chks: Array<number>) => {
-    const curLen = checks.length;
-    const newLen = chks.length;
-    if (curLen < newLen) {
-      const termsList: number[] = [];
-      const noTermsList: number[] = [];
-      for (const c of chks.sort(numSort)) {
-        if (!checks.includes(c)) {
-          if (resources[c].attributes.termsOfUse) {
-            termsList.push(c);
-          } else {
-            noTermsList.push(c);
-          }
-        }
-      }
-      if (noTermsList.length > 0) {
-        setChecks(checks.concat(noTermsList).sort(numSort));
-      }
-      if (termsList.length > 0) {
-        setTermsCheck(termsList);
-        setCurTermsCheck(termsList[0]);
-      }
-    } else if (curLen > newLen) {
-      setChecks(chks);
-    }
-  };
-
-  const handleTermsCancel = () => {
-    setTermsCheck([]);
-    setCurTermsCheck(undefined);
-  };
-
-  const handleTermsReject = () => {
-    const updatedTermsCheck = termsCheck.filter((t) => t !== curTermsCheck);
-    setTermsCheck(updatedTermsCheck);
-    if (updatedTermsCheck.length === 0) {
-      handleTermsCancel();
-    } else {
-      setCurTermsCheck(updatedTermsCheck[0]);
-    }
-  };
-
-  const handleTermsAccept = () => {
-    if (curTermsCheck !== undefined) setChecks(checks.concat([curTermsCheck]));
-    handleTermsReject();
-  };
 
   useEffect(() => {
     setData(
@@ -344,119 +205,23 @@ export const SelectSharedResource = (props: IProps) => {
       })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resources, checks]);
+  }, [resources]);
 
-  const handleLevelChange = (event: SelectChangeEvent<RefLevel>) => {
-    setRefLevel(event.target.value as RefLevel);
-  };
-
-  const handleBookCommit = (newValue: string) => {
-    setBookCd(newValue);
-    const newOpt = bookSuggestions.find((v) => v.value === newValue);
-    setBookOpt(newOpt);
-  };
-  const handleBookRevert = () => {
-    setBookCd(undefined);
-  };
-  const handlePreventSave = () => {};
-
-  const handleFindRefChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setFindRef(event.target.value);
+  const termsOfUse = (i: number): string | undefined => {
+    return resources[i].attributes.termsOfUse;
   };
 
   return (
-    <div id="select-shared-resources">
-      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', my: 1 }}>
-        <GrowingSpacer />
-        <Box sx={{ width: '200px' }}>
-          <BookSelect
-            placeHolder={t.selectBook}
-            suggestions={bookSuggestions}
-            value={bookOpt}
-            onCommit={handleBookCommit}
-            onRevert={handleBookRevert}
-            setPreventSave={handlePreventSave}
-          />
-        </Box>
-        <TextField
-          id="find-refs"
-          variant="outlined"
-          value={findRef}
-          onChange={handleFindRefChange}
-          inputProps={{
-            sx: { py: 1 },
-            placeholder: t.reference,
-          }}
-          sx={{ width: '400px' }}
-        />
-        <ReferenceLevel
-          id="ref-level"
-          value={refLevel ?? RefLevel.All}
-          onChange={handleLevelChange as any}
-          sx={{ width: '325px' }}
-        >
-          {referenceLevel.map((rl) => (
-            <MenuItem key={rl.value} value={rl.value}>
-              {rl.label}
-            </MenuItem>
-          ))}
-        </ReferenceLevel>
-      </Stack>
-      <DataTable
-        columns={columnDefs}
-        columnWidths={columnWidths}
-        columnFormatting={columnFormatting}
-        sorting={sorting}
-        rows={data}
-        select={handleCheck}
-        checks={checks}
-        shaping={true}
-        expandedGroups={[]} // shuts off toolbar row
-      />
-      <ActionRow>
-        <AltButton id="res-select-cancel" onClick={handleCancel}>
-          {ts.cancel}
-        </AltButton>
-        <PriButton
-          id="res-selected"
-          onClick={handleSelect}
-          disabled={
-            checks.length === 0 || selecting.current || termsCheck.length > 0
-          }
-        >
-          {t.link}
-        </PriButton>
-      </ActionRow>
-      {curTermsCheck !== undefined && (
-        <BigDialog
-          title={t.termsReview}
-          description={
-            <Typography sx={{ pb: 2 }}>
-              {'for {0}'.replace(
-                '{0}',
-                resources[curTermsCheck].attributes.title
-              )}
-            </Typography>
-          }
-          isOpen={termsCheck !== undefined}
-          onOpen={handleTermsCancel}
-        >
-          <>
-            <Typography>
-              {resources[curTermsCheck].attributes.termsOfUse}
-            </Typography>
-            <ActionRow>
-              <AltButton id="terms-cancel" onClick={handleTermsReject}>
-                {ts.cancel}
-              </AltButton>
-              <PriButton id="terms-accept" onClick={handleTermsAccept}>
-                {t.accept}
-              </PriButton>
-            </ActionRow>
-          </>
-        </BigDialog>
-      )}
-    </div>
+    <PassageDataTable
+      data={data}
+      bookOpt={bookOpt}
+      onSelect={handleSelect}
+      termsOfUse={termsOfUse}
+      onOpen={onOpen}
+      onBookCd={setBookCd}
+      onFindRef={setFindRef}
+      onRefLevel={setRefLevel}
+    />
   );
 };
 
