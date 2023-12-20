@@ -206,7 +206,7 @@ function DataTable(props: IProps) {
       rows={myRows}
       columns={colSpec}
       checkboxSelection
-      initialSelection={selected}
+      rowSelectionModel={selected}
       onRowSelectionModelChange={handleSelection}
     />
   );
