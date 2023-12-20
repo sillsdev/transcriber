@@ -41,7 +41,6 @@ interface IProps {
   mediaId?: string;
   metaData?: JSX.Element;
   defaultFilename?: string;
-  startSave?: boolean;
   setCanSave: (canSave: boolean) => void;
   setCanCancel?: (canCancel: boolean) => void;
   setStatusText: (status: string) => void;
@@ -274,6 +273,9 @@ function MediaRecord(props: IProps) {
           });
         }
         return;
+      } else {
+        saveCompleted(toolId);
+        onReady && onReady();
       }
     } else if (clearRequested(toolId)) {
       reset();
