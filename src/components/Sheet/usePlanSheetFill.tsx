@@ -28,7 +28,7 @@ import { SectionSeqCol } from './PlanSheet';
 import { useGlobal } from 'reactn';
 import { useShowIcon } from './useShowIcon';
 import { ExtraIcon } from '.';
-import { stringAvatar } from '../../utils';
+import { positiveWholeOnly, stringAvatar } from '../../utils';
 import { TitleEdit } from './TitleEdit';
 
 type ICellEditor = (props: any) => JSX.Element;
@@ -519,10 +519,12 @@ export const usePlanSheetFill = ({
           psgType={rowInfo[rowIndex].passageType}
           published={rowInfo[rowIndex].published}
           organizedBy={organizedBy}
-          sectionSequenceNumber={row[SectionSeqCol].toString()}
-          passageSequenceNumber={row[
-            passageSeqCol >= 0 ? passageSeqCol : 0
-          ].toString()}
+          sectionSequenceNumber={positiveWholeOnly(
+            row[SectionSeqCol] as number
+          )}
+          passageSequenceNumber={positiveWholeOnly(
+            row[passageSeqCol >= 0 ? passageSeqCol : 0] as number
+          )}
           readonly={readonly || check.length > 0}
           onDelete={onDelete}
           onPlayStatus={onPlayStatus}
