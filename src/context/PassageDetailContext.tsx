@@ -8,7 +8,6 @@ import {
   Plan,
   MediaFile,
   MediaFileD,
-  Resource,
   ISharedStrings,
   Passage,
   PassageD,
@@ -53,7 +52,6 @@ import {
 } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
 import * as actions from '../store';
-import JSONAPISource from '@orbit/jsonapi';
 import MediaPlayer from '../components/MediaPlayer';
 import {
   getResources,
@@ -157,7 +155,6 @@ const initState = {
   pdBusy: false,
   setPDBusy: (pdBusy: boolean) => {},
   allBookData: Array<BookName>(),
-  getSharedResources: async () => [] as Resource[],
   getProjectResources: async () => [] as MediaFileD[],
   workflow: Array<SimpleWf>(),
   psgCompleted: [] as StepComplete[],
@@ -237,8 +234,6 @@ const PassageDetailProvider = (props: IProps) => {
   const { pasId, prjId } = useParams();
   const [globals] = useGlobal();
   const [memory] = useGlobal('memory');
-  const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
   const [org] = useGlobal('organization');
   const [errorReporter] = useGlobal('errorReporter');
@@ -573,14 +568,6 @@ const PassageDetailProvider = (props: IProps) => {
       memory
     );
     await memory.update(ops);
-  };
-
-  const getSharedResources = async () => {
-    if (remote)
-      return (await remote.query((q) =>
-        q.findRecords('resource')
-      )) as Resource[];
-    else return [] as Resource[];
   };
 
   const getProjectResources = async () => {
@@ -1054,7 +1041,6 @@ const PassageDetailProvider = (props: IProps) => {
           setCommentPlaying,
           setCommentPlayId,
           setPDBusy,
-          getSharedResources,
           getProjectResources,
           setCurrentSegment,
           getCurrentSegment,

@@ -748,6 +748,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "resource": string;
     "resourcesDeleted": string;
     "selectBook": string;
+    "selectOne": string;
     "sharedResource": string;
     "source": string;
     "startStop": string;
@@ -969,6 +970,7 @@ export interface IResourceStrings extends Localize.LocalizedStringsMethods {
     "deleteConfirm": string;
     "description": string;
     "errorData": string;
+    "findNote": string;
     "keywords": string;
     "link": string;
     "noteDetails": string;

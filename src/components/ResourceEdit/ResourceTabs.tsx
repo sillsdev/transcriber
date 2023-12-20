@@ -4,10 +4,13 @@ import VersionDlg from '../AudioTab/VersionDlg';
 import ResourceOverview, { IResourceDialog } from './ResourceOverview';
 import ResourceRefs from './ResourceRefs';
 import {
+  ArtifactCategoryD,
   DialogMode,
+  GraphicD,
   IResourceStrings,
   ISheet,
   Passage,
+  PassageD,
   SharedResource,
   SharedResourceD,
 } from '../../model';
@@ -21,6 +24,10 @@ import {
   useSharedResDelete,
   useRole,
   findRecord,
+  useArtifactCategory,
+  remoteIdNum,
+  useGraphicUpdate,
+  useGraphicCreate,
 } from '../../crud';
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
@@ -28,7 +35,8 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import { passageTypeFromRef } from '../../control/RefRender';
 import { PassageTypeEnum } from '../../model/passageType';
 import { useOrbitData } from '../../hoc/useOrbitData';
-import { RecordIdentity } from '@orbit/records';
+import { RecordIdentity, RecordKeyMap } from '@orbit/records';
+import { usePassageUpdate } from '../../crud/usePassageUpdate';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -71,6 +79,7 @@ interface IProps {
 
 export function ResourceTabs({ passId, ws, onOpen }: IProps) {
   const sharedResources = useOrbitData<SharedResource[]>('sharedresource');
+  const graphics = useOrbitData<GraphicD[]>('graphic');
   const [value, setValue] = React.useState(0);
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
   const readSharedResource = useSharedResRead();
@@ -79,11 +88,15 @@ export function ResourceTabs({ passId, ws, onOpen }: IProps) {
     passage: { type: 'passage', id: passId },
   });
   const deleteSharedResource = useSharedResDelete();
+  const updatePassage = usePassageUpdate();
+  const graphicUpdate = useGraphicUpdate();
+  const graphicCreate = useGraphicCreate();
   const { userIsAdmin } = useRole();
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { showMessage } = useSnackBar();
+  const { localizedArtifactCategory } = useArtifactCategory();
 
   const readOnly = useMemo(
     () => !userIsAdmin || (offline && !offlineOnly),
@@ -91,7 +104,18 @@ export function ResourceTabs({ passId, ws, onOpen }: IProps) {
   );
 
   const sharedResRec = React.useMemo(
-    () => readSharedResource(passId),
+    () => {
+      let res = readSharedResource(passId);
+      const linkedRes = related(ws?.passage, 'sharedResource');
+      if (!res && linkedRes) {
+        res = findRecord(
+          memory,
+          'sharedresource',
+          linkedRes
+        ) as SharedResourceD;
+      }
+      return res;
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [passId, value]
   );
@@ -204,6 +228,68 @@ export function ResourceTabs({ passId, ws, onOpen }: IProps) {
     onOpen && onOpen();
   };
 
+  const updateLinkedPassage = async (
+    sr: SharedResourceD,
+    passage: PassageD
+  ) => {
+    const catRec = findRecord(
+      memory,
+      'artifactcategory',
+      related(sr, 'artifactCategory')
+    ) as ArtifactCategoryD;
+    if (catRec?.attributes) {
+      const catSlug = catRec.attributes.categoryname;
+      const category = catSlug
+        ? (localizedArtifactCategory(catSlug) as string) || catSlug
+        : catSlug || '';
+      passage.attributes.reference = `NOTE ${category}`;
+    }
+    await updatePassage(passage, undefined, undefined, sr.id);
+  };
+
+  const copyGraphic = async (sr: SharedResourceD, passage: PassageD) => {
+    const resourceType = 'passage';
+    const sourceId = remoteIdNum(
+      'passage',
+      related(sr, 'passage'),
+      memory.keyMap as RecordKeyMap
+    );
+    const resourceId = remoteIdNum(
+      'passage',
+      passage.id,
+      memory.keyMap as RecordKeyMap
+    );
+    const sourceGraphicRec = graphics.find(
+      (g) =>
+        g.attributes.resourceType === resourceType &&
+        g.attributes.resourceId === sourceId
+    );
+    const graphicRec = graphics.find(
+      (g) =>
+        g.attributes.resourceType === resourceType &&
+        g.attributes.resourceId === resourceId
+    );
+    const info =
+      sourceGraphicRec?.attributes?.info || graphicRec?.attributes.info || '{}';
+    if (graphicRec) {
+      await graphicUpdate({
+        ...graphicRec,
+        attributes: { ...graphicRec.attributes, info },
+      });
+    } else {
+      await graphicCreate({ resourceType, resourceId, info });
+    }
+  };
+
+  const handleLink = async (sr: SharedResourceD) => {
+    const passage = ws?.passage;
+    if (passage) {
+      updateLinkedPassage(sr, passage);
+      copyGraphic(sr, passage);
+      onOpen && onOpen();
+    }
+  };
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -237,6 +323,7 @@ export function ResourceTabs({ passId, ws, onOpen }: IProps) {
           onOpen={handleOverOpen}
           onCommit={handleCommit}
           onDelete={handleDelete}
+          onLink={handleLink}
         />
       </TabPanel>
       <TabPanel value={value} index={1}>

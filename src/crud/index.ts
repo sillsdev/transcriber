@@ -102,3 +102,6 @@ export * from './nextPasId';
 export * from './useGraphicCreate';
 export * from './useGraphicUpdate';
 export * from './useBible';
+export * from './useAllSharedResourceRead';
+export * from './useNotes';
+export * from './usePassageUpdate';

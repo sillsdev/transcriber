@@ -12,7 +12,7 @@ import {
   GridColumnExtension,
 } from '@devexpress/dx-react-grid';
 import { TableBandHeader } from '@devexpress/dx-react-grid-material-ui';
-import { DataGrid, GridCellParams, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 interface IProps {
   columns: Array<Column>;
@@ -60,27 +60,9 @@ function DataTable(props: IProps) {
       setSelected(checks.map((c) => (typeof c === 'string' ? parseInt(c) : c)));
   }, [checks]);
 
-  const handleClick = (
-    { id }: GridCellParams,
-    event: React.MouseEvent<unknown>
-  ) => {
-    const selectedIndex = selected.indexOf(id as number);
-    let newSelected: number[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id as number);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-    select && select(newSelected);
+  const handleSelection = (selection: number[]) => {
+    setSelected(selection);
+    select && select(selection);
   };
 
   // const isSelected = (id: number) => selected.indexOf(id) !== -1;
@@ -218,7 +200,8 @@ function DataTable(props: IProps) {
       rows={myRows}
       columns={colSpec}
       checkboxSelection
-      onCellClick={handleClick}
+      initialSelection={selected}
+      onRowSelectionModelChange={handleSelection}
     />
   );
 }
