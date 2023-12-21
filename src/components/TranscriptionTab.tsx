@@ -80,7 +80,7 @@ import AudioDownload from './AudioDownload';
 import { SelectExportType } from '../control';
 import AudioExportMenu from './AudioExportMenu';
 import moment, { Moment } from 'moment';
-import { isPublishingTitle } from '../control/RefRender';
+import { isPublishingTitle, passageTypeFromRef } from '../control/RefRender';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import {
@@ -89,6 +89,7 @@ import {
   transcriptionTabSelector,
 } from '../selector';
 import { useDispatch } from 'react-redux';
+import { PassageTypeEnum } from '../model/passageType';
 
 interface IRow {
   id: string;
@@ -530,43 +531,50 @@ export function TranscriptionTab(props: IProps) {
         .forEach((section) => {
           const sectionpassages = passages
             .filter((ps) => related(ps, 'section') === section.id)
+            .filter(
+              (ps) =>
+                passageTypeFromRef(ps.attributes.reference) ===
+                PassageTypeEnum.PASSAGE
+            )
             .sort(passageCompare);
-          rowData.push({
-            id: section.id as string,
-            name: getSection(section),
-            state: '',
-            planName: planRec.attributes.name,
-            editor: sectionEditorName(section, users),
-            transcriber: sectionTranscriberName(section, users),
-            passages: sectionpassages.length.toString(),
-            updated: dateOrTime(section?.attributes?.dateUpdated, lang),
-            action: '',
-            parentId: '',
-            sort: (section.attributes.sequencenum || 0).toFixed(2).toString(),
-          });
-          sectionpassages.forEach((passage: Passage) => {
-            const state = activityState.getString(getPassageState(passage));
-            if (!isPublishingTitle(passage?.attributes?.reference, flat)) {
-              rowData.push({
-                id: passage.id,
-                name: (
-                  <PassageReference
-                    passage={passage}
-                    bookData={bookData}
-                    flat={flat}
-                  />
-                ),
-                state: state,
-                planName: planRec.attributes.name,
-                editor: '',
-                transcriber: '',
-                passages: '',
-                updated: dateOrTime(passage.attributes.dateUpdated, lang),
-                action: passage.id,
-                parentId: section.id,
-              } as IRow);
-            }
-          });
+          if (sectionpassages.length > 0) {
+            rowData.push({
+              id: section.id as string,
+              name: getSection(section),
+              state: '',
+              planName: planRec.attributes.name,
+              editor: sectionEditorName(section, users),
+              transcriber: sectionTranscriberName(section, users),
+              passages: sectionpassages.length.toString(),
+              updated: dateOrTime(section?.attributes?.dateUpdated, lang),
+              action: '',
+              parentId: '',
+              sort: (section.attributes.sequencenum || 0).toFixed(2).toString(),
+            });
+            sectionpassages.forEach((passage: Passage) => {
+              const state = activityState.getString(getPassageState(passage));
+              if (!isPublishingTitle(passage?.attributes?.reference, flat)) {
+                rowData.push({
+                  id: passage.id,
+                  name: (
+                    <PassageReference
+                      passage={passage}
+                      bookData={bookData}
+                      flat={flat}
+                    />
+                  ),
+                  state: state,
+                  planName: planRec.attributes.name,
+                  editor: '',
+                  transcriber: '',
+                  passages: '',
+                  updated: dateOrTime(passage.attributes.dateUpdated, lang),
+                  action: passage.id,
+                  parentId: section.id,
+                } as IRow);
+              }
+            });
+          }
         });
     });
 
@@ -648,9 +656,9 @@ export function TranscriptionTab(props: IProps) {
       return <LinkCell {...props} />;
     }
     return (
-      <td className="MuiTableCell-root">
-        <Box sx={{ display: 'flex' }}>{props.children}</Box>
-      </td>
+      <Table.Cell {...props}>
+        <Box sx={{ display: 'flex' }}>{props.value}</Box>
+      </Table.Cell>
     );
   };
 

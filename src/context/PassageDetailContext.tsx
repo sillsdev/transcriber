@@ -783,6 +783,9 @@ const PassageDetailProvider = (props: IProps) => {
     return currentSegmentRef.current;
   };
 
+  const stepCmp = (a: StepComplete, b: StepComplete) =>
+    a.stepid > b.stepid ? 1 : -1;
+
   useEffect(() => {
     const passageId =
       remoteIdGuid('passage', pasId ?? '', memory.keyMap as RecordKeyMap) ||
@@ -790,7 +793,7 @@ const PassageDetailProvider = (props: IProps) => {
       '';
     var p = passages.find((p) => p.id === passageId);
     if (p) {
-      const complete = getStepComplete(p);
+      const complete = getStepComplete(p).sort(stepCmp);
       var s = sections.find((s) => s.id === related(p, 'section'));
       if (s) {
         if (p.id !== state.passage.id || s.id !== state.section.id) {
@@ -802,7 +805,12 @@ const PassageDetailProvider = (props: IProps) => {
               psgCompleted: [...complete],
             };
           });
-        } else if (!shallowEqual(state.psgCompleted, complete)) {
+        } else if (
+          state.psgCompleted.length !== complete.length ||
+          !state.psgCompleted
+            .sort(stepCmp)
+            .every((c, i) => shallowEqual(c, complete[i]))
+        ) {
           setState((state: ICtxState) => ({
             ...state,
             psgCompleted: [...complete],
