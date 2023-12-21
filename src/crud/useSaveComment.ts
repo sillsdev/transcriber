@@ -86,9 +86,6 @@ export const useSaveComment = (props: IProps) => {
         )
       );
     }
-    ops.push(
-      ...UpdateLastModifiedBy(t, { type: 'discussion', id: discussionId }, user)
-    );
     if (mediafile) {
       ops.push(
         ...UpdateRelatedRecord(
@@ -101,6 +98,9 @@ export const useSaveComment = (props: IProps) => {
         )
       );
     }
+    ops.push(
+      ...UpdateLastModifiedBy(t, { type: 'discussion', id: discussionId }, user)
+    );
     memory
       .update(ops)
       .then(() => {
