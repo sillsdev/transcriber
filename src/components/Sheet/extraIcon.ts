@@ -12,4 +12,6 @@ export enum ExtraIcon {
   PassageLast,
   PassageEnd,
   SectionEnd,
+  SectionUp,
+  SectionDown,
 }

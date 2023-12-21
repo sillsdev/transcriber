@@ -412,7 +412,62 @@ export function ScriptureTable(props: IProps) {
     myWorkflow = swapRows(myWorkflow, i, before ? i - 1 : i + 1);
     return wfResequencePassages(myWorkflow, mySectionIndex, flat);
   };
+  const moveSectionTo = (myWorkflow: ISheet[], i: number, before: boolean) => {
+    let swapSectionIndex = findSection(
+      myWorkflow,
+      before ? i - 1 : i + 1,
+      before,
+      NoSkip
+    );
 
+    var firstIndex = before ? swapSectionIndex : i;
+    var secondIndex = before ? i : swapSectionIndex;
+    var firstNum = myWorkflow[firstIndex].sectionSeq;
+    var secondNum = myWorkflow[secondIndex].sectionSeq;
+
+    var firstIsMovement =
+      myWorkflow[firstIndex].passageType === PassageTypeEnum.MOVEMENT;
+    var secondIsMovement =
+      myWorkflow[secondIndex].passageType === PassageTypeEnum.MOVEMENT;
+    if (firstIsMovement !== secondIsMovement) {
+      if (firstIsMovement) {
+        secondNum = nextNum(
+          myWorkflow[secondIndex].sectionSeq,
+          PassageTypeEnum.MOVEMENT
+        );
+        firstNum = myWorkflow[secondIndex].sectionSeq;
+      } else {
+        firstNum = nextNum(
+          firstIndex > 0 ? myWorkflow[firstIndex - 1].sectionSeq : 0,
+          PassageTypeEnum.MOVEMENT
+        );
+        secondNum = myWorkflow[firstIndex].sectionSeq;
+      }
+    }
+    myWorkflow[firstIndex].sectionSeq = secondNum;
+    myWorkflow[firstIndex].sectionUpdated = currentDateTime();
+    for (
+      var ix = firstIndex + 1;
+      ix < myWorkflow.length && myWorkflow[ix].sectionSeq === firstNum;
+      ix++
+    ) {
+      myWorkflow[ix].sectionSeq = secondNum;
+      myWorkflow[ix].passageUpdated = currentDateTime();
+    }
+    myWorkflow[secondIndex].sectionSeq = firstNum;
+    myWorkflow[secondIndex].sectionUpdated = currentDateTime();
+    for (
+      ix = secondIndex + 1;
+      ix < myWorkflow.length && myWorkflow[ix].sectionSeq === secondNum;
+      ix++
+    ) {
+      myWorkflow[ix].sectionSeq = firstNum;
+      myWorkflow[ix].passageUpdated = currentDateTime();
+    }
+
+    var sorted = [...myWorkflow].sort((a, b) => a.sectionSeq - b.sectionSeq);
+    return sorted;
+  };
   const movePassageToNextSection = (
     myWorkflow: ISheet[],
     i: number,
@@ -611,6 +666,17 @@ export function ScriptureTable(props: IProps) {
     if (i !== undefined) {
       if (nextSection) movePassageToNextSection(sheet, i, before);
       else setSheet(movePassageTo(sheet, i, before));
+      setChanged(true);
+    }
+  };
+  const moveSection = (ix: number, before: boolean) => {
+    if (savingRef.current) {
+      showMessage(t.saving);
+      return;
+    }
+    const i = getUndelIndex(sheet, ix);
+    if (i !== undefined) {
+      setSheet(moveSectionTo(sheet, i, before));
       setChanged(true);
     }
   };
@@ -1574,6 +1640,7 @@ export function ScriptureTable(props: IProps) {
         addSection={addSection}
         addPassage={addPassage}
         movePassage={movePassage}
+        moveSection={moveSection}
         updateData={updateData}
         updateTitleMedia={updateTitleMedia}
         paste={handleTablePaste}

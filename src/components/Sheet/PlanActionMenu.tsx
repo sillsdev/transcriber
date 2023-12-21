@@ -47,7 +47,7 @@ interface IProps {
   onDelete: (i: number) => () => void;
   onDisableFilter?: () => void;
   showIcon: (icon: ExtraIcon) => boolean;
-  onAction: (what: ExtraIcon) => void;
+  onAction: (i: number, what: ExtraIcon) => void;
 }
 export function PlanActionMenu(props: IProps) {
   const { active } = props;

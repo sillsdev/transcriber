@@ -112,12 +112,12 @@ export const PassageEndIcon = () => (
     </span>
   </StyledIcon>
 );
-export const PassageUpIcon = () => (
+export const MoveUpIcon = () => (
   <StyledIcon size="small">
     <FontAwesomeIcon icon={faArrowUp} transform="shrink-2" />
   </StyledIcon>
 );
-export const PassageDownIcon = () => (
+export const MoveDownIcon = () => (
   <StyledIcon size="small">
     <FontAwesomeIcon icon={faArrowDown} transform="shrink-2" />
   </StyledIcon>
