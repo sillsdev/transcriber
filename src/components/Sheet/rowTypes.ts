@@ -14,6 +14,14 @@ export const rowTypes = (rowInfo: ISheet[]) => {
     }
     return true;
   };
+  const firstSection = (i: number) => {
+    while (--i >= 0 && (!isSection(i) || isBook(i))) {}
+    return i === -1;
+  };
+  const lastSection = (i: number) => {
+    while (++i < rowInfo.length && !isSection(i)) {}
+    return i === rowInfo.length;
+  };
   const isBook = (i: number) => rowInfo[i]?.level === SheetLevel.Book;
 
   const isMovement = (i: number) =>
@@ -38,5 +46,7 @@ export const rowTypes = (rowInfo: ISheet[]) => {
     isBook,
     isMovement,
     isInMovement,
+    firstSection,
+    lastSection,
   };
 };

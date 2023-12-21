@@ -167,6 +167,7 @@ interface IProps {
   addPassage: (ptype?: PassageTypeEnum, i?: number, before?: boolean) => void;
   movePassage: (i: number, before: boolean, section: boolean) => void;
   addSection: (level: SheetLevel, i?: number, ptype?: PassageTypeEnum) => void;
+  moveSection: (i: number, before: boolean) => void;
   toggleSectionPublish: (i: number) => void;
   onPublishing: () => void;
   lookupBook: (book: string) => string;
@@ -204,6 +205,7 @@ export function PlanSheet(props: IProps) {
     addPassage,
     movePassage,
     addSection,
+    moveSection,
     paste,
     resequence,
     inlinePassages,
@@ -276,62 +278,71 @@ export function PlanSheet(props: IProps) {
   const refErrTest = useRefErrTest();
   const moveUp = true;
   const moveDown = false;
-  const moveSection = true;
+  const moveToNewSection = true;
 
   const handleSave = () => {
     startSave();
   };
 
   const onPublish = () => {
-    toggleSectionPublish(currentRow - 1);
+    toggleSectionPublish(currentRowRef.current - 1);
   };
 
   const onMovementAbove = () => {
     //we'll find a section before we get past 0
-    var row = currentRow - 1;
+    var row = currentRowRef.current - 1;
     while (!isSection(row)) row -= 1;
     addSection(SheetLevel.Movement, row, PassageTypeEnum.MOVEMENT);
   };
   const onSectionAbove = () => {
     //we'll find a section before we get past 0
-    var row = currentRow - 1;
+    var row = currentRowRef.current - 1;
     while (!isSection(row)) row -= 1;
     addSection(SheetLevel.Section, row);
   };
 
   const onNote = () => {
     if (inlinePassages)
-      addSection(SheetLevel.Section, currentRow, PassageTypeEnum.NOTE);
-    else addPassage(PassageTypeEnum.NOTE, currentRow - 1, true);
+      addSection(
+        SheetLevel.Section,
+        currentRowRef.current,
+        PassageTypeEnum.NOTE
+      );
+    else addPassage(PassageTypeEnum.NOTE, currentRowRef.current - 1, true);
   };
   const onPassageBelow = () => {
-    addPassage(undefined, currentRow - 1, false);
+    addPassage(undefined, currentRowRef.current - 1, false);
   };
   const onPassageLast = () => {
     //we're on a section so find our last row and add it below it
-    var row = currentRow;
+    var row = currentRowRef.current;
     while (isPassage(row + 1)) row++;
     addPassage(undefined, row, false);
   };
 
   const onPassageToPrev = () => {
     //convert from currentRow with includes header
-    movePassage(currentRow - 1, moveUp, moveSection);
+    movePassage(currentRowRef.current - 1, moveUp, moveToNewSection);
   };
 
   const onPassageToNext = () => {
     //convert from currentRow with includes header
-    movePassage(currentRow - 1, moveDown, moveSection);
+    movePassage(currentRowRef.current - 1, moveDown, moveToNewSection);
   };
   const onPassageUp = () => {
     //convert from currentRow with includes header
-    movePassage(currentRow - 1, moveUp, !moveSection);
+    movePassage(currentRowRef.current - 1, moveUp, !moveToNewSection);
   };
   const onPassageDown = () => {
     //convert from currentRow with includes header
-    movePassage(currentRow - 1, moveDown, !moveSection);
+    movePassage(currentRowRef.current - 1, moveDown, !moveToNewSection);
   };
-
+  const onSectionUp = () => {
+    moveSection(currentRowRef.current - 1, moveUp);
+  };
+  const onSectionDown = () => {
+    moveSection(currentRowRef.current - 1, moveDown);
+  };
   const onSectionEnd = () => {
     addSection(SheetLevel.Section);
   };
@@ -355,10 +366,13 @@ export function PlanSheet(props: IProps) {
     [ExtraIcon.PassageUp]: onPassageUp,
     [ExtraIcon.PassageToPrev]: onPassageToPrev,
     [ExtraIcon.PassageLast]: onPassageLast,
+    [ExtraIcon.SectionUp]: onSectionUp,
+    [ExtraIcon.SectionDown]: onSectionDown,
     [ExtraIcon.SectionEnd]: onSectionEnd,
     [ExtraIcon.PassageEnd]: onPassageEnd,
   };
-  const onAction = (what: ExtraIcon) => {
+  const onAction = (row: number, what: ExtraIcon) => {
+    if (row + 1 !== currentRow) setCurrentRow(row + 1);
     actionMap[what]();
   };
 
@@ -745,7 +759,7 @@ export function PlanSheet(props: IProps) {
                   passageSequenceNumber={currentWholeRowPassageNum}
                   onDisableFilter={filtered ? disableFilter : undefined}
                   showIcon={showIcon(filtered, offline, currentRow - 1)}
-                  onAction={onAction}
+                  onAction={(what: ExtraIcon) => onAction(currentRow - 1, what)}
                 />
                 <AltButton
                   id="planSheetImp"

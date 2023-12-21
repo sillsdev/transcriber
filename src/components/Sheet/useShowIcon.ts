@@ -26,6 +26,8 @@ export const useShowIcon = ({
     isInMovement,
     isBook,
     firstVernacularInSection,
+    firstSection,
+    lastSection,
   } = rowTypes(rowInfo);
 
   return (filtered: boolean, offline: boolean, rowIndex: number) =>
@@ -60,6 +62,19 @@ export const useShowIcon = ({
           rowInfo.length > 0 &&
           isSection(rowIndex) &&
           !isBook(rowIndex),
+        [ExtraIcon.SectionDown]:
+          !readonly &&
+          !filtered &&
+          isSection(rowIndex) &&
+          !isBook(rowIndex) &&
+          !lastSection(rowIndex),
+        [ExtraIcon.SectionUp]:
+          !readonly &&
+          !filtered &&
+          rowIndex > 1 &&
+          isSection(rowIndex) &&
+          !isBook(rowIndex) &&
+          !firstSection(rowIndex),
         [ExtraIcon.PassageDown]:
           !readonly &&
           !filtered &&

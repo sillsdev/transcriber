@@ -17,10 +17,10 @@ import {
   InsertMovementIcon,
   InsertSectionIcon,
   PassageBelowIcon,
-  PassageDownIcon,
+  MoveDownIcon,
   PassageToNextIcon,
   PassageToPrevIcon,
-  PassageUpIcon,
+  MoveUpIcon,
   PublishIcon,
   UnPublishIcon,
 } from '../../control/PlanIcons';
@@ -49,7 +49,7 @@ interface IProps {
   onDelete: (i: number) => () => void;
   onDisableFilter?: () => void;
   showIcon: (icon: ExtraIcon) => boolean;
-  onAction: (what: ExtraIcon) => void;
+  onAction: (i: number, what: ExtraIcon) => void;
   t: IPlanActionsStrings;
   p: IPlanSheetStrings;
   ts: ISharedStrings;
@@ -109,7 +109,7 @@ export const PlanMoreMenuItems: FC<
           (published ? (
             <MenuItem
               id="unpublish"
-              onClick={() => onAction(ExtraIcon.Publish)}
+              onClick={() => onAction(rowIndex, ExtraIcon.Publish)}
               title={p.unpublish
                 .replace('{0}', organizedBy)
                 .replace('{1}', sectionSequenceNumber)}
@@ -119,7 +119,7 @@ export const PlanMoreMenuItems: FC<
           ) : (
             <MenuItem
               id="publish"
-              onClick={() => onAction(ExtraIcon.Publish)}
+              onClick={() => onAction(rowIndex, ExtraIcon.Publish)}
               title={p.publish
                 .replace('{0}', organizedBy)
                 .replace('{1}', sectionSequenceNumber)}
@@ -144,7 +144,7 @@ export const PlanMoreMenuItems: FC<
         {showIcon(ExtraIcon.MovementAbove) && (
           <MenuItem
             id="movementAbove"
-            onClick={() => onAction(ExtraIcon.MovementAbove)}
+            onClick={() => onAction(rowIndex, ExtraIcon.MovementAbove)}
             title={p.movementAbove
               .replace('{0}', organizedBy)
               .replace('{1}', sectionSequenceNumber)}
@@ -155,7 +155,7 @@ export const PlanMoreMenuItems: FC<
         {showIcon(ExtraIcon.SectionAbove) && (
           <MenuItem
             id="secAbove"
-            onClick={() => onAction(ExtraIcon.SectionAbove)}
+            onClick={() => onAction(rowIndex, ExtraIcon.SectionAbove)}
             title={p.sectionAbove
               .replace('{0}', organizedBy)
               .replace('{1}', organizedBy)
@@ -164,10 +164,32 @@ export const PlanMoreMenuItems: FC<
             <InsertSectionIcon />
           </MenuItem>
         )}
+        {showIcon(ExtraIcon.SectionUp) && (
+          <MenuItem
+            id="sectionUp"
+            onClick={() => onAction(rowIndex, ExtraIcon.SectionUp)}
+            title={p.moveUp
+              .replace('{pt}', organizedBy)
+              .replace('{0}', sectionSequenceNumber)}
+          >
+            <MoveUpIcon />
+          </MenuItem>
+        )}
+        {showIcon(ExtraIcon.SectionDown) && (
+          <MenuItem
+            id="sectionDown"
+            onClick={() => onAction(rowIndex, ExtraIcon.SectionDown)}
+            title={p.moveDown
+              .replace('{pt}', organizedBy)
+              .replace('{0}', sectionSequenceNumber)}
+          >
+            <MoveDownIcon />
+          </MenuItem>
+        )}
         {showIcon(ExtraIcon.PassageBelow) && isSection && (
           <MenuItem
             id="psgAsFirst"
-            onClick={() => onAction(ExtraIcon.PassageBelow)}
+            onClick={() => onAction(rowIndex, ExtraIcon.PassageBelow)}
             title={p.insertFirstPassage
               .replace('{0}', organizedBy)
               .replace('{1}', sectionSequenceNumber)}
@@ -178,7 +200,7 @@ export const PlanMoreMenuItems: FC<
         {showIcon(ExtraIcon.PassageBelow) && isPassage && (
           <MenuItem
             id="passBelow"
-            onClick={() => onAction(ExtraIcon.PassageBelow)}
+            onClick={() => onAction(rowIndex, ExtraIcon.PassageBelow)}
             title={p.passageBelow.replace('{0}', passageSequenceNumber)}
           >
             <PassageBelowIcon />
@@ -187,18 +209,18 @@ export const PlanMoreMenuItems: FC<
         {showIcon(ExtraIcon.PassageUp) && (
           <MenuItem
             id="passUp"
-            onClick={() => onAction(ExtraIcon.PassageUp)}
+            onClick={() => onAction(rowIndex, ExtraIcon.PassageUp)}
             title={p.moveUp
               .replace('{pt}', ty.getString(psgType))
               .replace('{0}', passageSequenceNumber)}
           >
-            <PassageUpIcon />
+            <MoveUpIcon />
           </MenuItem>
         )}
         {showIcon(ExtraIcon.PassageToPrev) && (
           <MenuItem
             id="passToPrev"
-            onClick={() => onAction(ExtraIcon.PassageToPrev)}
+            onClick={() => onAction(rowIndex, ExtraIcon.PassageToPrev)}
             title={p.passageToPrevSection.replace('{0}', passageSequenceNumber)}
           >
             <PassageToPrevIcon />
@@ -208,18 +230,18 @@ export const PlanMoreMenuItems: FC<
         {showIcon(ExtraIcon.PassageDown) && (
           <MenuItem
             id="passDown"
-            onClick={() => onAction(ExtraIcon.PassageDown)}
+            onClick={() => onAction(rowIndex, ExtraIcon.PassageDown)}
             title={p.moveDown
               .replace('{pt}', ty.getString(psgType))
               .replace('{0}', passageSequenceNumber)}
           >
-            <PassageDownIcon />
+            <MoveDownIcon />
           </MenuItem>
         )}
         {showIcon(ExtraIcon.PassageToNext) && (
           <MenuItem
             id="passToNext"
-            onClick={() => onAction(ExtraIcon.PassageToNext)}
+            onClick={() => onAction(rowIndex, ExtraIcon.PassageToNext)}
             title={p.passageToNextSection.replace('{0}', passageSequenceNumber)}
           >
             <PassageToNextIcon />
@@ -228,7 +250,7 @@ export const PlanMoreMenuItems: FC<
         {isPassage && showIcon(ExtraIcon.Note) && (
           <MenuItem
             id="addnote"
-            onClick={() => onAction(ExtraIcon.Note)}
+            onClick={() => onAction(rowIndex, ExtraIcon.Note)}
             title={t.addNote}
           >
             <AddNoteIcon />

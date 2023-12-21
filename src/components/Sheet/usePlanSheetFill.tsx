@@ -65,7 +65,7 @@ interface IProps {
   onGraphic: (rowIndex: number) => void;
   onAssign: (where: number[]) => () => void;
   disableFilter: () => void;
-  onAction: (what: ExtraIcon) => void;
+  onAction: (rowIndex: number, what: ExtraIcon) => void;
   doSetActive: () => void;
   cellsChanged: (changes: ICellChange[]) => void;
   titleMediaChanged: (index: number, mediaId: string) => void;
