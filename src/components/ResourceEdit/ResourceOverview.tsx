@@ -81,6 +81,7 @@ export default function ResourceOverview(props: IProps) {
   } = props;
 
   const [isDeveloper] = useGlobal('developer');
+  const [offline] = useGlobal('offline');
   const recording = useRef(false);
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
   const [findNote, setFindNote] = React.useState(false);
@@ -189,7 +190,7 @@ export default function ResourceOverview(props: IProps) {
   return !findNote ? (
     <Box>
       <Stack spacing={2}>
-        {isNote ? (
+        {isNote && !offline ? (
           <NoteTitle state={state} setState={updateState} />
         ) : (
           <ResourceTitle state={state} setState={updateState} />
