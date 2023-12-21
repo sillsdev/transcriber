@@ -203,8 +203,8 @@ function MyRow(props: IProps & IRowProps) {
       </TableRow>
       {open &&
         subRows?.map((r, i) => {
-          const subProps = { ...props, r: r, i: i, key: `sub-${r.id}` };
-          return <MyRow {...subProps} />;
+          const subProps = { ...props, r: r, i: i };
+          return <MyRow key={`sub-${r.id}`} {...subProps} />;
         })}
     </>
   );

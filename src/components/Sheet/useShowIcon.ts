@@ -30,7 +30,6 @@ export const useShowIcon = ({
 
   return (filtered: boolean, offline: boolean, rowIndex: number) =>
     (icon: ExtraIcon) => {
-      console.log('useShowIcon readonly', readonly, icon, filtered, rowIndex);
       const extraMap: IExtraMap = {
         [ExtraIcon.Publish]:
           !readonly &&
