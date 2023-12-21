@@ -80,7 +80,7 @@ import AudioDownload from './AudioDownload';
 import { SelectExportType } from '../control';
 import AudioExportMenu from './AudioExportMenu';
 import moment, { Moment } from 'moment';
-import { isPublishingTitle, passageTypeFromRef } from '../control/RefRender';
+import { isPublishingTitle } from '../control/RefRender';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import {
@@ -89,7 +89,6 @@ import {
   transcriptionTabSelector,
 } from '../selector';
 import { useDispatch } from 'react-redux';
-import { PassageTypeEnum } from '../model/passageType';
 
 interface IRow {
   id: string;
@@ -531,11 +530,6 @@ export function TranscriptionTab(props: IProps) {
         .forEach((section) => {
           const sectionpassages = passages
             .filter((ps) => related(ps, 'section') === section.id)
-            .filter(
-              (ps) =>
-                passageTypeFromRef(ps.attributes.reference) ===
-                PassageTypeEnum.PASSAGE
-            )
             .sort(passageCompare);
           if (sectionpassages.length > 0) {
             rowData.push({
@@ -653,7 +647,7 @@ export function TranscriptionTab(props: IProps) {
   const TreeCell = (props: any) => {
     const { column, row } = props;
     if (column.name === 'name' && row.parentId !== '') {
-      return <LinkCell {...props} />;
+      return <LinkCell {...props} key={`link-${row?.id}`} />;
     }
     return (
       <Table.Cell {...props}>
@@ -678,7 +672,7 @@ export function TranscriptionTab(props: IProps) {
         const latest = plan ? getMediaInPlans([plan], media, null, true) : [];
         if (state !== ActivityStates.NoMedia && latest.length > 0)
           return <ActionCell {...props} mediaId={latest[0].id as string} />;
-        else return <td className="MuiTableCell-root" />;
+        else return <Table.Cell {...props} />;
       }
     }
     return <Table.Cell {...props} />;

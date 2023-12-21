@@ -127,7 +127,7 @@ function MyRow(props: IProps & IRowProps) {
   return (
     <>
       <TableRow
-        key={`row-${i}`}
+        key={`row-${r?.id ?? i}`}
         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
       >
         <>
@@ -187,10 +187,10 @@ function MyRow(props: IProps & IRowProps) {
               column: c,
               style: style(c),
               align: c.align as any,
-              key: `cell-${n}`,
+              key: `cell-${i}.${n}`,
             };
             return c.hidden || c.name === treeColumn ? (
-              <></>
+              <TableCell key={props.key} />
             ) : dataCell ? (
               dataCell(props)
             ) : !r[c.name] && noDataCell ? (
@@ -202,9 +202,14 @@ function MyRow(props: IProps & IRowProps) {
         </>
       </TableRow>
       {open &&
-        subRows?.map((r, i) => {
-          const subProps = { ...props, r: r, i: i };
-          return <MyRow key={`sub-${r.id}`} {...subProps} />;
+        subRows?.map((r, i2) => {
+          const subProps = {
+            ...props,
+            r: r,
+            i: i2,
+            key: `sub-${r?.id ?? `${i}.${i2}`}`,
+          };
+          return <MyRow {...subProps} />;
         })}
     </>
   );

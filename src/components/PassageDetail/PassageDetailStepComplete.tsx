@@ -25,6 +25,8 @@ export const PassageDetailStepComplete = () => {
   } = usePassageDetailContext();
   const { pathname } = useLocation();
   const [memory] = useGlobal('memory');
+  const [busy] = useGlobal('remoteBusy');
+  const [importexportBusy] = useGlobal('importexportBusy');
   const [view, setView] = useState('');
   const t: IPassageDetailStepCompleteStrings = useSelector(
     passageDetailStepCompleteSelector,
@@ -50,15 +52,21 @@ export const PassageDetailStepComplete = () => {
       setView(`/detail/${prjId}/${pasId}`);
     } else setCurrentStep(''); // setting to empty jumps to first uncompleted step
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [complete, currentstep, passage.id, section]);
+  }, [complete, currentstep, passage, section]);
 
   useEffect(() => {
-    if (view) {
-      if (pathname !== view) passageNavigate(view);
-      else setView('');
+    if (!busy && !importexportBusy && view) {
+      if (pathname !== view) {
+        passageNavigate(view);
+      } else setView('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view]);
+  }, [view, busy, importexportBusy]);
+
+  useEffect(() => {
+    if (view) setView('');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   return (
     <div>
