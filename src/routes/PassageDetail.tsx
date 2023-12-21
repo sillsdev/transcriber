@@ -204,8 +204,8 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
     });
   }, 50);
 
-  const handleSyncComplete = (step: string, complete: boolean) => {
-    setStepComplete(step, complete);
+  const handleSyncComplete = async (step: string, complete: boolean) => {
+    await setStepComplete(step, complete);
     setCurrentStep('');
   };
 

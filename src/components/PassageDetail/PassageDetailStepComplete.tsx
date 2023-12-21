@@ -9,8 +9,10 @@ import { nextPasId } from '../../crud';
 import { usePassageNavigate } from './usePassageNavigate';
 import { passageDetailStepCompleteSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
-import { rememberCurrentPassage } from '../../utils';
+import { rememberCurrentPassage, waitForIt } from '../../utils';
 import { useLocation } from 'react-router-dom';
+import JSONAPISource from '@orbit/jsonapi';
+import { State } from 'reactn/default';
 
 export const PassageDetailStepComplete = () => {
   const {
@@ -25,6 +27,14 @@ export const PassageDetailStepComplete = () => {
   } = usePassageDetailContext();
   const { pathname } = useLocation();
   const [memory] = useGlobal('memory');
+  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
+  const [busy] = useGlobal('remoteBusy');
+  const [importexportBusy] = useGlobal('importexportBusy');
+  const [refresh, setRefresh] = useState(0);
+  const [global] = useGlobal<State>();
+  const [coordinator] = useGlobal('coordinator');
+  const remote = coordinator.getSource('remote') as JSONAPISource;
   const [view, setView] = useState('');
   const t: IPassageDetailStepCompleteStrings = useSelector(
     passageDetailStepCompleteSelector,
@@ -50,15 +60,33 @@ export const PassageDetailStepComplete = () => {
       setView(`/detail/${prjId}/${pasId}`);
     } else setCurrentStep(''); // setting to empty jumps to first uncompleted step
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [complete, currentstep, passage.id, section]);
+  }, [complete, currentstep, passage, section]);
 
   useEffect(() => {
     if (view) {
-      if (pathname !== view) passageNavigate(view);
-      else setView('');
+      if (pathname !== view) {
+        waitForIt(
+          'step complete navigate',
+          () =>
+            (!remote || remote.requestQueue.length === 0) &&
+            !global.remoteBusy &&
+            !global.importexportBusy,
+          () => offline && !offlineOnly,
+          20
+        ).then(() => {
+          if (busy || importexportBusy) {
+            setRefresh(refresh + 1);
+          } else passageNavigate(view);
+        });
+      } else setView('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view]);
+  }, [view, refresh]);
+
+  useEffect(() => {
+    if (view) setView('');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   return (
     <div>

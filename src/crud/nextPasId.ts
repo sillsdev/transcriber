@@ -2,6 +2,7 @@ import { Section, PassageD } from '../model';
 import Memory from '@orbit/memory';
 import { related, findRecord } from '.';
 import { isPublishingTitle } from '../control/RefRender';
+import { RecordIdentity } from '@orbit/records';
 
 export const nextPasId = (
   section: Section,
@@ -9,16 +10,15 @@ export const nextPasId = (
   memory: Memory
 ) => {
   let pasId = '';
-  const passages = related(section, 'passages');
-  if (Array.isArray(passages)) {
+  const passRecIds: RecordIdentity[] = related(section, 'passages');
+  if (Array.isArray(passRecIds)) {
+    const passages: PassageD[] = passRecIds
+      .map((p) => findRecord(memory, 'passage', p.id) as PassageD)
+      .sort((a, b) => a.attributes.sequencenum - b.attributes.sequencenum);
     let curIndex = passages.findIndex((p) => p.id === curPass);
     if (curIndex !== -1) {
       for (curIndex += 1; curIndex < passages.length; curIndex++) {
-        const passRec = findRecord(
-          memory,
-          'passage',
-          passages[curIndex].id
-        ) as PassageD;
+        const passRec = passages[curIndex];
         if (!isPublishingTitle(passRec?.attributes?.reference, false)) {
           pasId = passRec?.keys?.remoteId || passRec?.id;
           break;
@@ -26,11 +26,7 @@ export const nextPasId = (
       }
       if (!pasId) {
         for (curIndex = 0; curIndex < passages.length; curIndex++) {
-          const passRec = findRecord(
-            memory,
-            'passage',
-            passages[curIndex].id
-          ) as PassageD;
+          const passRec = passages[curIndex];
           if (!isPublishingTitle(passRec?.attributes?.reference, false)) {
             pasId = passRec?.keys?.remoteId || passRec?.id;
             break;

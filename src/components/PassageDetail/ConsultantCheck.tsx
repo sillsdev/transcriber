@@ -157,7 +157,7 @@ export function ConsultantCheck({ width }: IProps) {
       }
     } catch (err) {}
     if (newApproved.length >= checkItems.length && !stepComplete(currentstep)) {
-      setStepComplete(currentstep, true);
+      await setStepComplete(currentstep, true);
     }
     setBusy(false);
     commitBusy.current = false;

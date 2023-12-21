@@ -525,12 +525,6 @@ const PassageDetailProvider = (props: IProps) => {
     } else {
       completed.push({ stepid: remId, complete, name: rec.attributes.name });
     }
-    setState((state: ICtxState) => {
-      return {
-        ...state,
-        psgCompleted: completed,
-      };
-    });
     const recId = {
       type: 'passage',
       id:
@@ -568,6 +562,7 @@ const PassageDetailProvider = (props: IProps) => {
       memory
     );
     await memory.update(ops);
+    setState((state: ICtxState) => ({ ...state, psgCompleted: completed }));
   };
 
   const getProjectResources = async () => {

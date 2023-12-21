@@ -89,7 +89,7 @@ interface IProps {
   artifactType?: ArtifactTypeSlug;
   passage?: Passage;
   currentstep?: string;
-  setStepComplete?: (stepId: string, complete: boolean) => void;
+  setStepComplete?: (stepId: string, complete: boolean) => Promise<void>;
   setCurrentStep?: (stepId: string) => void;
 }
 
@@ -413,7 +413,7 @@ export function IntegrationPanel(props: IProps) {
     showMessage(translateParatextErr(err, ts) || t.syncComplete);
     resetCount();
     if (setStepComplete && currentstep && !err) {
-      setStepComplete(currentstep, true);
+      await setStepComplete(currentstep, true);
       if (setCurrentStep) setCurrentStep('');
     }
     setSyncing(false);
@@ -666,8 +666,9 @@ export function IntegrationPanel(props: IProps) {
           setDataChangeCount
         );
         if (setStepComplete && currentstep && !paratext_syncStatus.errStatus) {
-          setStepComplete(currentstep, true);
-          if (setCurrentStep) setCurrentStep('');
+          setStepComplete(currentstep, true).then(() => {
+            if (setCurrentStep) setCurrentStep('');
+          });
         }
       }
     }
@@ -752,7 +753,11 @@ export function IntegrationPanel(props: IProps) {
                     select
                     label={getProjectLabel()}
                     sx={textFieldProps}
-                    value={ptProjId}
+                    value={
+                      paratext_projects.find((p) => p.ParatextId === ptProjId)
+                        ? ptProjId
+                        : ''
+                    }
                     onChange={handleParatextProjectChange}
                     SelectProps={{
                       MenuProps: {
@@ -920,7 +925,11 @@ export function IntegrationPanel(props: IProps) {
                     select
                     label={getProjectLabel()}
                     sx={textFieldProps}
-                    value={ptProjId}
+                    value={
+                      paratext_projects.find((p) => p.ParatextId === ptProjId)
+                        ? ptProjId
+                        : ''
+                    }
                     onChange={handleParatextProjectChange}
                     SelectProps={{
                       MenuProps: {

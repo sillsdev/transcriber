@@ -767,7 +767,7 @@ export const DiscussionCard = (props: IProps) => {
       savingRef.current = true;
       handleSave().then(() => {
         waitForIt(
-          'category update',
+          'discussion save',
           () => !remote || remote.requestQueue.length === 0,
           () => offline && !offlineOnly,
           200

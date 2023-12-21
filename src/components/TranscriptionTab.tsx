@@ -653,7 +653,7 @@ export function TranscriptionTab(props: IProps) {
   const TreeCell = (props: any) => {
     const { column, row } = props;
     if (column.name === 'name' && row.parentId !== '') {
-      return <LinkCell {...props} />;
+      return <LinkCell {...props} key={`link-${row?.id}`} />;
     }
     return (
       <Table.Cell {...props}>
