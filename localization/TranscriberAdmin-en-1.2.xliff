@@ -4982,7 +4982,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.addPublishing">
-            <source>Add Publishing Rows</source>
+            <source>Update Publishing Rows</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>

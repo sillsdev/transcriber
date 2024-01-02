@@ -915,7 +915,7 @@ const initialState = {
 			"action": "Action",
 			"addNote": "Add Note",
 			"addPassage": "Add Passage",
-			"addPublishing": "Add Publishing Rows",
+			"addPublishing": "Update Publishing Rows",
 			"addSection": "Add {0}",
 			"assigned": "Assigned",
 			"audio": "Audio",
