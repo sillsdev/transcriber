@@ -4272,7 +4272,7 @@
       </unit>
       <unit id="planSheet.addPublishing">
          <segment>
-            <source>Add Publishing Rows</source>
+            <source>Update Publishing Rows</source>
             <target/>
          </segment>
       </unit>
