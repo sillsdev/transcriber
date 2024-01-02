@@ -210,9 +210,11 @@ export const ProjectDownload = (props: IProps) => {
 
   React.useEffect(() => {
     return () => {
-      exportComplete();
-      setBusy(false);
-      finish();
+      if (projectIds.length > 0) {
+        exportComplete();
+        setBusy(false);
+        finish();
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
