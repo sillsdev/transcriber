@@ -654,6 +654,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "toobig": string;
     "unsupported": string;
     "uploadComplete": string;
+    "user": string;
     "version": string;
     "versionHistory": string;
     "viewAssociations": string;

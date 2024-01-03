@@ -20,6 +20,7 @@ import { Sorting } from '@devexpress/dx-react-grid';
 import { UpdateRecord } from '../../model/baseModel';
 import { mediaTabSelector } from '../../selector';
 import { RecordKeyMap } from '@orbit/records';
+import UserAvatar from '../UserAvatar';
 
 interface IProps {
   data: IRow[];
@@ -53,6 +54,7 @@ export const AudioTable = (props: IProps) => {
         { name: 'fileName', title: t.fileName },
         { name: 'sectionDesc', title: organizedBy },
         { name: 'reference', title: t.reference },
+        { name: 'user', title: t.user },
         { name: 'duration', title: t.duration },
         { name: 'size', title: t.size },
         { name: 'version', title: t.version },
@@ -65,6 +67,7 @@ export const AudioTable = (props: IProps) => {
         { name: 'fileName', title: t.fileName },
         { name: 'sectionDesc', title: organizedBy },
         { name: 'reference', title: t.reference },
+        { name: 'user', title: t.user },
         { name: 'duration', title: t.duration },
         { name: 'size', title: t.size },
         { name: 'version', title: t.version },
@@ -79,6 +82,7 @@ export const AudioTable = (props: IProps) => {
         { columnName: 'fileName', width: 220 },
         { columnName: 'sectionDesc', width: 150 },
         { columnName: 'reference', width: 150 },
+        { columnName: 'user', width: 30 },
         { columnName: 'duration', width: 100 },
         { columnName: 'size', width: 100 },
         { columnName: 'version', width: 100 },
@@ -91,6 +95,7 @@ export const AudioTable = (props: IProps) => {
         { columnName: 'fileName', width: 220 },
         { columnName: 'sectionDesc', width: 150 },
         { columnName: 'reference', width: 150 },
+        { columnName: 'user', width: 30 },
         { columnName: 'duration', width: 100 },
         { columnName: 'size', width: 100 },
         { columnName: 'version', width: 100 },
@@ -280,6 +285,17 @@ export const AudioTable = (props: IProps) => {
       />
     </Table.Cell>
   );
+  const getUser = (id: string) => {
+    const userRec = memory.cache.query((q) =>
+      q.findRecord({ type: 'user', id: id })
+    ) as any;
+    return userRec;
+  };
+  const UserCell = ({ row, value, ...props }: ICell) => (
+    <Table.Cell row {...props} value>
+      <UserAvatar userRec={getUser(value)} />
+    </Table.Cell>
+  );
   const Cell = (props: ICell) => {
     const { column, row } = props;
     if (column.name === 'actions') {
@@ -303,6 +319,9 @@ export const AudioTable = (props: IProps) => {
     }
     if (column.name === 'readyToShare') {
       return <ReadyToShareCell {...props} />;
+    }
+    if (column.name === 'user') {
+      return <UserCell {...props} />;
     }
     return <Table.Cell {...props} />;
   };
