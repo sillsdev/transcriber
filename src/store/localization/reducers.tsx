@@ -694,6 +694,7 @@ const initialState = {
 			"toobig": "File {0} is too large {1}. File Limit is {2}MB",
 			"unsupported": "File {0} is an unsupported file type.",
 			"uploadComplete": "{0} of {1} files uploaded successfully.",
+			"user": "User",
 			"version": "Version",
 			"versionHistory": "Version History",
 			"viewAssociations": "View Associations",

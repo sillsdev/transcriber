@@ -44,6 +44,7 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
       : '',
     date: updateddt,
     readyToShare: f.attributes.readyToShare,
+    user: related(f, 'recordedbyUser'),
   } as IRow;
 };
 

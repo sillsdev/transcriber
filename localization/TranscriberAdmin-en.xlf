@@ -3304,6 +3304,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.user">
+         <segment>
+            <source>User</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.version">
          <segment>
             <source>Version</source>
