@@ -13,7 +13,7 @@ import {
 } from '@devexpress/dx-react-grid';
 import { TableBandHeader } from '@devexpress/dx-react-grid-material-ui';
 import {
-  Checkbox,
+  Radio,
   Paper,
   Table,
   TableBody,
@@ -85,16 +85,17 @@ function ShapingTable(props: IProps) {
     selectCell,
     filters,
   } = props;
-  const [selected, setSelected] = React.useState<number[]>([]);
+  type ColRef = number | string;
+  const [selected, setSelected] = React.useState<ColRef[]>([]);
 
   React.useEffect(() => {
     if (checks)
       setSelected(checks.map((c) => (typeof c === 'string' ? parseInt(c) : c)));
   }, [checks]);
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+  const handleClick = (event: React.MouseEvent<unknown>, id: ColRef) => {
     const selectedIndex = selected.indexOf(id);
-    let newSelected: number[] = [];
+    let newSelected: ColRef[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
@@ -109,7 +110,10 @@ function ShapingTable(props: IProps) {
       );
     }
     setSelected(newSelected);
-    select && select(newSelected);
+    const selectRows = newSelected.map((s) =>
+      rows.findIndex((r) => r.id === s)
+    );
+    select && select(selectRows);
   };
 
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
@@ -127,27 +131,27 @@ function ShapingTable(props: IProps) {
 
   const rowFilter = (r: any) => {
     for (let f of filters || []) {
-      const c = colSpec.find((c) => c.name === f.columnName);
-      if (c?.filterValue) {
-        if (f.operation === 'contains') {
-          if (!r[f.columnName].includes(c.filterValue)) return false;
-        } else if (f.operation === 'startsWith') {
-          if (!r[f.columnName].startsWith(c.filterValue)) return false;
-        } else if (f.operation === 'endsWith') {
-          if (!r[f.columnName].endsWith(c.filterValue)) return false;
-        } else if (f.operation === 'equal') {
-          if (r[f.columnName] !== c.filterValue) return false;
-        } else if (f.operation === 'notEqual') {
-          if (r[f.columnName] === c.filterValue) return false;
-        } else if (f.operation === 'greaterThan') {
-          if (r[f.columnName] <= c.filterValue) return false;
-        } else if (f.operation === 'greaterThanOrEqual') {
-          if (r[f.columnName] < c.filterValue) return false;
-        } else if (f.operation === 'lessThan') {
-          if (r[f.columnName] >= c.filterValue) return false;
-        } else if (f.operation === 'lessThanOrEqual') {
-          if (r[f.columnName] > c.filterValue) return false;
-        }
+      const curValue = r[f.columnName];
+      const filterValue = f.value;
+      const filterOp = f.operation;
+      if (filterOp === 'contains') {
+        if (!curValue.includes(filterValue)) return false;
+      } else if (filterOp === 'startsWith') {
+        if (!curValue.startsWith(filterValue)) return false;
+      } else if (filterOp === 'endsWith') {
+        if (!curValue.endsWith(filterValue)) return false;
+      } else if (filterOp === 'equal') {
+        if (curValue !== filterValue) return false;
+      } else if (filterOp === 'notEqual') {
+        if (curValue === filterValue) return false;
+      } else if (filterOp === 'greaterThan') {
+        if (curValue <= filterValue) return false;
+      } else if (filterOp === 'greaterThanOrEqual') {
+        if (curValue < filterValue) return false;
+      } else if (filterOp === 'lessThan') {
+        if (curValue >= filterValue) return false;
+      } else if (filterOp === 'lessThanOrEqual') {
+        if (curValue > filterValue) return false;
       }
     }
     return true;
@@ -252,6 +256,7 @@ function ShapingTable(props: IProps) {
                 !c.hidden ? (
                   <TableCell
                     key={c.name}
+                    id={c.name}
                     sx={{ minWidth: c.width }}
                     align={c.align as any}
                   >
@@ -269,8 +274,7 @@ function ShapingTable(props: IProps) {
             .filter(rowFilter)
             .sort(rowSort)
             .map((r, i) => {
-              const isItemSelected = isSelected(i);
-              const labelId = `row-checkbox-${i}`;
+              const isItemSelected = isSelected(r?.id ?? i);
 
               return (
                 <TableRow
@@ -282,13 +286,10 @@ function ShapingTable(props: IProps) {
                       selectCell({ row: r } as ICell)
                     ) : select ? (
                       <TableCell>
-                        <Checkbox
+                        <Radio
                           color="primary"
                           checked={isItemSelected}
-                          onClick={(event) => handleClick(event, i)}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
+                          onClick={(event) => handleClick(event, r?.id ?? i)}
                         />
                       </TableCell>
                     ) : (
@@ -296,14 +297,15 @@ function ShapingTable(props: IProps) {
                     )}
                     {colSpec.map((c, n) => {
                       const value = r[c.name];
-
+                      const key = `cell-${r?.id ?? i}.${c?.name ?? n}`;
                       const props = {
                         value,
                         row: r,
                         column: c,
                         style: style(c),
                         align: c.align as any,
-                        key: `cell-${c.name}`,
+                        key,
+                        id: key,
                       };
                       return c.hidden ? (
                         <></>
