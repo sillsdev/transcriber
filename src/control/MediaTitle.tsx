@@ -119,6 +119,7 @@ export default function MediaTitle(props: IProps) {
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [canSaveRecording, setCanSaveRecording] = useState(false);
+  const canSaveRef = useRef(false);
   const [curText, setCurText] = useState(title ?? '');
   const [startRecord, setStartRecord] = useState(false);
   const [statusText, setStatusText] = useState('');
@@ -190,7 +191,8 @@ export default function MediaTitle(props: IProps) {
   }, [language]);
 
   const handleSetCanSave = (valid: boolean) => {
-    if (valid !== canSaveRecording) {
+    if (valid !== canSaveRef.current) {
+      canSaveRef.current = valid;
       setCanSaveRecording(valid);
       //if (valid) onChanged(true);
     }
