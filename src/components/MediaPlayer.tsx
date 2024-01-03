@@ -100,7 +100,7 @@ export function MediaPlayer(props: IProps) {
         if (playSuccess.current) audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
-      setPlaying(false);
+      stopplay();
     }
     if (srcMediaId !== playItem) {
       setReady(false);
@@ -127,12 +127,11 @@ export function MediaPlayer(props: IProps) {
 
   useEffect(() => {
     if (ready && audioRef.current && playItem !== '' && requestPlay) {
-      setPlaying(true);
       startplay();
     } else if (!requestPlay) {
       if (playing) {
         if (audioRef.current && playSuccess.current) audioRef.current.pause();
-        setPlaying(false);
+        stopplay();
       }
     }
   }, [ready, requestPlay, playing, playItem]);
@@ -148,7 +147,7 @@ export function MediaPlayer(props: IProps) {
 
   const ended = () => {
     if (audioRef.current) audioRef.current.currentTime = limits?.start ?? 0;
-    setPlaying(false);
+    stopplay();
     if (onEnded) onEnded();
   };
 
@@ -214,6 +213,7 @@ export function MediaPlayer(props: IProps) {
   };
 
   const startplay = () => {
+    setPlaying(true);
     playSuccess.current = false;
     if (audioRef.current) {
       audioRef.current
@@ -222,14 +222,20 @@ export function MediaPlayer(props: IProps) {
           playSuccess.current = true;
         })
         .catch(() => {
+          console.log('play error');
           playSuccess.current = false;
         });
     }
   };
+  const stopplay = () => {
+    setPlaying(false);
+    playSuccess.current = false;
+  };
   const handlePlayPause = async () => {
     if (audioRef.current) {
-      if (playing && playSuccess.current) audioRef.current.pause();
-      else startplay();
+      if (playing) {
+        if (playSuccess.current) audioRef.current.pause();
+      } else startplay();
     }
   };
 
