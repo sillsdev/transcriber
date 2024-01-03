@@ -5095,14 +5095,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.passageToPrevSection">
-            <source>Move Passage to Previous Section</source>
+            <source>Move {pt} {0} to Previous Section</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.passageToNextSection">
-            <source>Move Passage to Next Section</source>
+            <source>Move {pt} {0} to Next Section</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>

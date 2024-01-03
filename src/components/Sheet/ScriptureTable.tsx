@@ -380,7 +380,6 @@ export function ScriptureTable(props: IProps) {
   };
 */
 
-  const SkipPublishing = true;
   const NoSkip = false;
   const findSection = (
     myWorkflow: ISheet[],
@@ -468,36 +467,41 @@ export function ScriptureTable(props: IProps) {
     var sorted = [...myWorkflow].sort((a, b) => a.sectionSeq - b.sectionSeq);
     return sorted;
   };
+  const isPassageOrNote = (ws: ISheet[], i: number) =>
+    [PassageTypeEnum.PASSAGE, PassageTypeEnum.NOTE].includes(ws[i].passageType);
+
   const movePassageToNextSection = (
     myWorkflow: ISheet[],
     i: number,
     before: boolean
   ) => {
     let passageRow = { ...myWorkflow[i] };
+    const skipPublishing =
+      myWorkflow[i].passageType === PassageTypeEnum.PASSAGE;
     let originalSectionIndex = findSection(
       myWorkflow,
       i,
       before,
-      SkipPublishing
+      skipPublishing
     );
     let newSectionIndex = findSection(
       myWorkflow,
       before ? originalSectionIndex - 1 : i,
       before,
-      SkipPublishing
+      skipPublishing
     );
     if (newSectionIndex < 0) return;
-    let endRowIndex = before ? originalSectionIndex : newSectionIndex;
+    let endRowIndex = newSectionIndex;
     passageRow.sectionSeq = myWorkflow[newSectionIndex].sectionSeq;
     passageRow.passageUpdated = currentDateTime();
+    myWorkflow = updateRowAt(myWorkflow, passageRow, i);
 
     if (before) {
-      //skip movements
+      // find row following last row in target section
       while (
-        findSection(myWorkflow, endRowIndex - 1, true, NoSkip) < endRowIndex
-      )
-        endRowIndex = findSection(myWorkflow, endRowIndex - 1, true, false);
-
+        ++endRowIndex < myWorkflow.length &&
+        !isSectionRow(myWorkflow[endRowIndex])
+      ) {}
       while (i > endRowIndex) {
         myWorkflow = swapRows(myWorkflow, i, i - 1);
         i--;
@@ -511,7 +515,7 @@ export function ScriptureTable(props: IProps) {
       while (
         endRowIndex < myWorkflow.length - 2 &&
         (myWorkflow[endRowIndex].deleted ||
-          myWorkflow[endRowIndex + 1].passageType !== PassageTypeEnum.PASSAGE)
+          !isPassageOrNote(myWorkflow, endRowIndex + 1))
       )
         endRowIndex++;
       while (i < endRowIndex) {
@@ -1071,13 +1075,6 @@ export function ScriptureTable(props: IProps) {
   const updateLastModified = async () => {
     var planRec = getPlan(plan) as PlanD;
     if (planRec !== null) {
-      //don't use sections here, it hasn't been updated yet
-      var plansections = memory.cache.query((qb) =>
-        qb.findRecords('section')
-      ) as Section[];
-      planRec.attributes.sectionCount = plansections.filter(
-        (s) => related(s, 'plan') === plan
-      ).length;
       try {
         if (remote)
           await waitForIt(
@@ -1088,6 +1085,13 @@ export function ScriptureTable(props: IProps) {
           );
       } finally {
         //do this even if the wait above failed
+        //don't use sections here, it hasn't been updated yet
+        const plansections = memory.cache.query((qb) =>
+          qb.findRecords('section')
+        ) as Section[];
+        planRec.attributes.sectionCount = plansections.filter(
+          (s) => related(s, 'plan') === plan
+        ).length;
         await memory.update((t) => UpdateRecord(t, planRec, user));
       }
     }

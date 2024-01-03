@@ -25,6 +25,7 @@ import {
   UnPublishIcon,
 } from '../../control/PlanIcons';
 import { ExtraIcon } from '.';
+import { PassageTypeEnum } from '../../model/passageType';
 
 interface IProps {
   open: boolean;
@@ -164,6 +165,35 @@ export const PlanMoreMenuItems: FC<
             <InsertSectionIcon />
           </MenuItem>
         )}
+        {showIcon(ExtraIcon.PassageBelow) && isSection && (
+          <MenuItem
+            id="psgAsFirst"
+            onClick={() => onAction(rowIndex, ExtraIcon.PassageBelow)}
+            title={p.insertFirstPassage
+              .replace('{0}', organizedBy)
+              .replace('{1}', sectionSequenceNumber)}
+          >
+            <PassageBelowIcon />
+          </MenuItem>
+        )}
+        {showIcon(ExtraIcon.PassageBelow) && isPassage && (
+          <MenuItem
+            id="passBelow"
+            onClick={() => onAction(rowIndex, ExtraIcon.PassageBelow)}
+            title={p.passageBelow.replace('{0}', passageSequenceNumber)}
+          >
+            <PassageBelowIcon />
+          </MenuItem>
+        )}
+        {showIcon(ExtraIcon.Note) && (
+          <MenuItem
+            id="addnote"
+            onClick={() => onAction(rowIndex, ExtraIcon.Note)}
+            title={t.addNote}
+          >
+            <AddNoteIcon />
+          </MenuItem>
+        )}
         {showIcon(ExtraIcon.SectionUp) && (
           <MenuItem
             id="sectionUp"
@@ -186,24 +216,15 @@ export const PlanMoreMenuItems: FC<
             <MoveDownIcon />
           </MenuItem>
         )}
-        {showIcon(ExtraIcon.PassageBelow) && isSection && (
+        {showIcon(ExtraIcon.PassageToPrev) && (
           <MenuItem
-            id="psgAsFirst"
-            onClick={() => onAction(rowIndex, ExtraIcon.PassageBelow)}
-            title={p.insertFirstPassage
-              .replace('{0}', organizedBy)
-              .replace('{1}', sectionSequenceNumber)}
+            id="passToPrev"
+            onClick={() => onAction(rowIndex, ExtraIcon.PassageToPrev)}
+            title={p.passageToPrevSection
+              .replace('{pt}', ty.getString(psgType))
+              .replace('{0}', passageSequenceNumber)}
           >
-            <PassageBelowIcon />
-          </MenuItem>
-        )}
-        {showIcon(ExtraIcon.PassageBelow) && isPassage && (
-          <MenuItem
-            id="passBelow"
-            onClick={() => onAction(rowIndex, ExtraIcon.PassageBelow)}
-            title={p.passageBelow.replace('{0}', passageSequenceNumber)}
-          >
-            <PassageBelowIcon />
+            <PassageToPrevIcon />
           </MenuItem>
         )}
         {showIcon(ExtraIcon.PassageUp) && (
@@ -217,16 +238,6 @@ export const PlanMoreMenuItems: FC<
             <MoveUpIcon />
           </MenuItem>
         )}
-        {showIcon(ExtraIcon.PassageToPrev) && (
-          <MenuItem
-            id="passToPrev"
-            onClick={() => onAction(rowIndex, ExtraIcon.PassageToPrev)}
-            title={p.passageToPrevSection.replace('{0}', passageSequenceNumber)}
-          >
-            <PassageToPrevIcon />
-          </MenuItem>
-        )}
-
         {showIcon(ExtraIcon.PassageDown) && (
           <MenuItem
             id="passDown"
@@ -242,18 +253,11 @@ export const PlanMoreMenuItems: FC<
           <MenuItem
             id="passToNext"
             onClick={() => onAction(rowIndex, ExtraIcon.PassageToNext)}
-            title={p.passageToNextSection.replace('{0}', passageSequenceNumber)}
+            title={p.passageToNextSection
+              .replace('{pt}', ty.getString(psgType))
+              .replace('{0}', passageSequenceNumber)}
           >
             <PassageToNextIcon />
-          </MenuItem>
-        )}
-        {isPassage && showIcon(ExtraIcon.Note) && (
-          <MenuItem
-            id="addnote"
-            onClick={() => onAction(rowIndex, ExtraIcon.Note)}
-            title={t.addNote}
-          >
-            <AddNoteIcon />
           </MenuItem>
         )}
         {isPassage && (
@@ -265,7 +269,7 @@ export const PlanMoreMenuItems: FC<
             <AddIcon sx={{ color: 'primary.light' }} />
           </MenuItem>
         )}
-        {isPassage && (
+        {isPassage && psgType !== PassageTypeEnum.CHAPTERNUMBER && (
           <MenuItem
             id="planActRec"
             onClick={handleRecord(rowIndex)}

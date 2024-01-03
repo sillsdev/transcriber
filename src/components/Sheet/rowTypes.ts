@@ -3,49 +3,71 @@ import { PassageTypeEnum } from '../../model/passageType';
 import { isPassageRow, isSectionRow } from './isSectionPassage';
 
 export const rowTypes = (rowInfo: ISheet[]) => {
-  const isSection = (i: number) =>
+  const isSectionType = (i: number) =>
     i >= 0 && i < rowInfo.length ? isSectionRow(rowInfo[i]) : false;
-  const isPassage = (i: number) =>
+  const isSectionHead = (i: number) =>
+    isSectionType(i) ? rowInfo[i].level === SheetLevel.Section : false;
+  const isPassageType = (i: number) =>
     i >= 0 && i < rowInfo.length ? isPassageRow(rowInfo[i]) : false;
-  const firstVernacularInSection = (i: number) => {
-    if (rowInfo[i].passageType !== PassageTypeEnum.PASSAGE) return false;
-    while (--i >= 0 && !isSection(i)) {
-      if (rowInfo[i].passageType === PassageTypeEnum.PASSAGE) return false;
+  const isVerseRange = (i: number) =>
+    isPassageType(i)
+      ? rowInfo[i].passageType === PassageTypeEnum.PASSAGE
+      : false;
+  const isPassageOrNote = (i: number) =>
+    [PassageTypeEnum.PASSAGE, PassageTypeEnum.NOTE].includes(
+      rowInfo[i]?.passageType
+    );
+  const firstInSection = (i: number) => {
+    if (!isPassageOrNote(i)) return false;
+    while (--i >= 0 && !isSectionType(i)) {
+      if (isPassageOrNote(i)) return false;
     }
     return true;
   };
-  const firstSection = (i: number) => {
-    while (--i >= 0 && (!isSection(i) || isBook(i))) {}
-    return i === -1;
-  };
-  const lastSection = (i: number) => {
-    while (++i < rowInfo.length && !isSection(i)) {}
-    return i === rowInfo.length;
-  };
-  const isBook = (i: number) => rowInfo[i]?.level === SheetLevel.Book;
+  const isBook = (i: number) =>
+    i >= 0 && rowInfo[i]?.passageType === PassageTypeEnum.BOOK;
+
+  const isAltBook = (i: number) =>
+    i >= 0 && rowInfo[i]?.passageType === PassageTypeEnum.ALTBOOK;
 
   const isMovement = (i: number) =>
     i >= 0 && i < rowInfo.length && rowInfo[i].level === SheetLevel.Movement;
-
-  const isInMovement = (i: number) => {
-    if (
-      i >= 0 &&
-      i < rowInfo.length &&
-      rowInfo[i].passageType === PassageTypeEnum.NOTE
-    ) {
-      var sec = i - 1;
-      while (sec > 0 && !isSection(sec)) sec--;
-      return isMovement(sec);
-    }
-    return false;
+  const firstSection = (i: number) => {
+    while (i >= 0 && !isSectionType(i)) i--;
+    while (
+      --i >= 0 &&
+      (!isSectionType(i) || isBook(i) || isAltBook(i) || isMovement(i))
+    ) {}
+    return i === -1;
   };
+  const inSection = (i: number) => {
+    while (--i >= 0 && !isSectionType(i)) {}
+    return isSectionHead(i);
+  };
+  const lastSection = (i: number) => {
+    while (++i < rowInfo.length && !isSectionType(i)) {}
+    return i === rowInfo.length;
+  };
+  const isNote = (i: number) =>
+    i >= 0 && rowInfo[i]?.passageType === PassageTypeEnum.NOTE;
+
+  const isChapter = (i: number) =>
+    i >= 0 &&
+    i < rowInfo.length &&
+    rowInfo[i]?.passageType === PassageTypeEnum.CHAPTERNUMBER;
+
   return {
-    isSection,
-    isPassage,
-    firstVernacularInSection,
+    isSectionType,
+    isSectionHead,
+    inSection,
+    isPassageType,
+    isVerseRange,
+    firstInSection,
     isBook,
+    isAltBook,
     isMovement,
-    isInMovement,
+    isNote,
+    isChapter,
     firstSection,
     lastSection,
   };

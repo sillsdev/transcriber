@@ -265,7 +265,7 @@ export function PlanSheet(props: IProps) {
   const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
-  const { isPassage, isSection } = rowTypes(rowInfo);
+  const { isPassageType, isSectionType } = rowTypes(rowInfo);
   const showIcon = useShowIcon({
     readonly,
     rowInfo,
@@ -293,13 +293,13 @@ export function PlanSheet(props: IProps) {
   const onMovementAbove = () => {
     //we'll find a section before we get past 0
     var row = currentRowRef.current - 1;
-    while (!isSection(row)) row -= 1;
+    while (!isSectionType(row)) row -= 1;
     addSection(SheetLevel.Movement, row, PassageTypeEnum.MOVEMENT);
   };
   const onSectionAbove = () => {
     //we'll find a section before we get past 0
     var row = currentRowRef.current - 1;
-    while (!isSection(row)) row -= 1;
+    while (!isSectionType(row)) row -= 1;
     addSection(SheetLevel.Section, row);
   };
 
@@ -318,7 +318,7 @@ export function PlanSheet(props: IProps) {
   const onPassageLast = () => {
     //we're on a section so find our last row and add it below it
     var row = currentRowRef.current;
-    while (isPassage(row + 1)) row++;
+    while (isPassageType(row + 1)) row++;
     addPassage(undefined, row, false);
   };
 
@@ -406,7 +406,7 @@ export function PlanSheet(props: IProps) {
   const setCurrentRow = (row: number) => {
     currentRowRef.current = row;
     setCurrentRowx(row);
-    if (isPassage(row - 1)) {
+    if (isPassageType(row - 1)) {
       rememberCurrentPassage(memory, rowInfo[row - 1].passage?.id ?? '');
     }
   };
@@ -429,9 +429,9 @@ export function PlanSheet(props: IProps) {
 
   const handleConfirmDelete = (rowIndex: number) => () => {
     const toDelete = [rowIndex];
-    if (isSection(rowIndex)) {
+    if (isSectionType(rowIndex)) {
       var psg = rowIndex + 1;
-      while (psg < rowData.length && !isSection(psg)) {
+      while (psg < rowData.length && !isSectionType(psg)) {
         toDelete.push(psg);
         psg++;
       }
@@ -657,7 +657,7 @@ export function PlanSheet(props: IProps) {
     let refErr = false;
     if (refCol > 0) {
       rowData.forEach((row, rowIndex) => {
-        if (isPassage(rowIndex)) {
+        if (isPassageType(rowIndex)) {
           if (refErrTest(row[refCol])) refErr = true;
         }
       });
@@ -730,7 +730,7 @@ export function PlanSheet(props: IProps) {
   const currentRowSectionSeqNum = useMemo(() => {
     if (currentRowRef.current < 1) return undefined;
     var row = currentRowRef.current - 1;
-    while (row >= 0 && !isSection(row)) row--;
+    while (row >= 0 && !isSectionType(row)) row--;
     return row >= 0 ? (rowData[row][SectionSeqCol] as number) : undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRow, rowData, rowInfo]);
@@ -742,7 +742,7 @@ export function PlanSheet(props: IProps) {
 
   const currentRowPassageSeqNum = useMemo(
     () =>
-      currentRowRef.current < 0 || !isPassage(currentRowRef.current - 1)
+      currentRowRef.current < 0 || !isPassageType(currentRowRef.current - 1)
         ? undefined
         : rowInfo[currentRowRef.current - 1].passage?.attributes?.sequencenum,
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -755,7 +755,7 @@ export function PlanSheet(props: IProps) {
   );
 
   const dataRowisSection = useMemo(() => {
-    return isSection(currentRow - 1);
+    return isSectionType(currentRow - 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRow]);
 
@@ -771,7 +771,7 @@ export function PlanSheet(props: IProps) {
                   numRows={rowInfo.length}
                   readonly={anyRecording || readonly}
                   isSection={dataRowisSection}
-                  isPassage={isPassage(currentRow - 1)}
+                  isPassage={isPassageType(currentRow - 1)}
                   mouseposition={position}
                   handleNoContextMenu={handleNoContextMenu}
                   sectionSequenceNumber={currentWholeRowSectionNum}

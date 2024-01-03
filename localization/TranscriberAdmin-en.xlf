@@ -4368,13 +4368,13 @@
       </unit>
       <unit id="planSheet.passageToPrevSection">
          <segment>
-            <source>Move Passage to Previous Section</source>
+            <source>Move {pt} {0} to Previous Section</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.passageToNextSection">
          <segment>
-            <source>Move Passage to Next Section</source>
+            <source>Move {pt} {0} to Next Section</source>
             <target/>
          </segment>
       </unit>
