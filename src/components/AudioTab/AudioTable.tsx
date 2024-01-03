@@ -49,6 +49,7 @@ export const AudioTable = (props: IProps) => {
     ? [
         { name: 'planName', title: t.planName },
         { name: 'actions', title: '\u00A0' },
+        { name: 'readyToShare', title: t.readyToShare },
         { name: 'fileName', title: t.fileName },
         { name: 'sectionDesc', title: organizedBy },
         { name: 'reference', title: t.reference },
@@ -56,7 +57,6 @@ export const AudioTable = (props: IProps) => {
         { name: 'size', title: t.size },
         { name: 'version', title: t.version },
         { name: 'date', title: t.date },
-        { name: 'readyToShare', title: t.readyToShare },
         { name: 'detach', title: '\u00A0' },
       ]
     : [
@@ -75,6 +75,7 @@ export const AudioTable = (props: IProps) => {
     ? [
         { columnName: 'planName', width: 150 },
         { columnName: 'actions', width: onAttach ? 120 : 70 },
+        { columnName: 'readyToShare', width: 100 },
         { columnName: 'fileName', width: 220 },
         { columnName: 'sectionDesc', width: 150 },
         { columnName: 'reference', width: 150 },
@@ -82,7 +83,6 @@ export const AudioTable = (props: IProps) => {
         { columnName: 'size', width: 100 },
         { columnName: 'version', width: 100 },
         { columnName: 'date', width: 100 },
-        { columnName: 'readyToShare', width: 100 },
         { columnName: 'detach', width: 120 },
       ]
     : [

@@ -13,6 +13,7 @@ import {
   faArchway,
   faGlobe,
   faXmark,
+  faCheck,
 } from '@fortawesome/free-solid-svg-icons';
 //things I've tried! faFileAudio, faVolumeHigh,
 import { faMessage } from '@fortawesome/free-regular-svg-icons';
@@ -38,7 +39,7 @@ export const UnPublishIcon = () => (
     <span className="fa-layers fa-fw fa-sm">
       <FontAwesomeIcon icon={faGlobe} />
       <FontAwesomeIcon
-        icon={faXmark}
+        icon={faCheck}
         transform="grow-3"
         style={{ color: 'Tomato' }}
       />
