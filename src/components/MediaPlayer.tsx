@@ -81,6 +81,7 @@ export function MediaPlayer(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const playSuccess = useRef(false);
   const [value, setValue] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
@@ -96,10 +97,10 @@ export function MediaPlayer(props: IProps) {
   useEffect(() => {
     if (playing) {
       if (audioRef.current) {
-        audioRef.current.pause();
+        if (playSuccess.current) audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
-      setPlaying(false);
+      stopPlay();
     }
     if (srcMediaId !== playItem) {
       setReady(false);
@@ -126,12 +127,11 @@ export function MediaPlayer(props: IProps) {
 
   useEffect(() => {
     if (ready && audioRef.current && playItem !== '' && requestPlay) {
-      setPlaying(true);
-      audioRef.current.play();
+      startPlay();
     } else if (!requestPlay) {
       if (playing) {
-        if (audioRef.current) audioRef.current.pause();
-        setPlaying(false);
+        if (audioRef.current && playSuccess.current) audioRef.current.pause();
+        stopPlay();
       }
     }
   }, [ready, requestPlay, playing, playItem]);
@@ -147,7 +147,7 @@ export function MediaPlayer(props: IProps) {
 
   const ended = () => {
     if (audioRef.current) audioRef.current.currentTime = limits?.start ?? 0;
-    setPlaying(false);
+    stopPlay();
     if (onEnded) onEnded();
   };
 
@@ -212,10 +212,30 @@ export function MediaPlayer(props: IProps) {
     stop.current = 0;
   };
 
-  const handlePlayPause = () => {
+  const startPlay = () => {
+    setPlaying(true);
+    playSuccess.current = false;
     if (audioRef.current) {
-      if (playing) audioRef.current.pause();
-      else audioRef.current.play();
+      audioRef.current
+        .play()
+        .then(() => {
+          playSuccess.current = true;
+        })
+        .catch(() => {
+          console.log('play error');
+          playSuccess.current = false;
+        });
+    }
+  };
+  const stopPlay = () => {
+    setPlaying(false);
+    playSuccess.current = false;
+  };
+  const handlePlayPause = async () => {
+    if (audioRef.current) {
+      if (playing) {
+        if (playSuccess.current) audioRef.current.pause();
+      } else startPlay();
     }
   };
 

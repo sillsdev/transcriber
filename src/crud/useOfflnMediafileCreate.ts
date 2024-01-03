@@ -2,7 +2,6 @@ import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 import { useGlobal } from 'reactn';
 import { MediaFile, MediaFileD } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
-import { currentDateTime } from '../utils';
 import path from 'path-browserify';
 
 export const useOfflnMediafileCreate = () => {
@@ -29,8 +28,8 @@ export const useOfflnMediafileCreate = () => {
         contentType: data.contentType || '',
         audioQuality: data.audioQuality || '',
         textQuality: data.textQuality || '',
-        originalFile: data.originalFile || '',
         transcription: '',
+        originalFile: data.originalFile || '',
         filesize: size,
         position: 0,
         segments: data.segments || null,
@@ -38,13 +37,12 @@ export const useOfflnMediafileCreate = () => {
         link: data.link || false,
         readyToShare: false,
         performedBy: data.performedBy || '',
-        sourceSegments: data.sourceSegments || '',
+        sourceSegments: data.sourceSegments || null,
+        sourceMediaOfflineId: data.sourceMediaId || '',
         transcriptionstate: data.transcriptionstate || '',
         topic: data.topic || '',
-        dateCreated: currentDateTime(),
-        dateUpdated: currentDateTime(),
       },
-    } as any;
+    } as MediaFile;
     //check new comment version
     if (path.basename(data.audioUrl) !== data.originalFile) {
       newMediaRec.attributes.originalFile = path.basename(data.audioUrl);

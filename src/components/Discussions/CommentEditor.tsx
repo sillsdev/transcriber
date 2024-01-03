@@ -78,6 +78,7 @@ export const CommentEditor = (props: IProps) => {
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const [canSave, setCanSave] = useState(false);
+  const canSaveRef = useRef(false);
   const [curText, setCurText] = useState(comment);
   const [startRecord, setStartRecord] = useState(false);
   const [statusText, setStatusText] = useState('');
@@ -131,7 +132,8 @@ export const CommentEditor = (props: IProps) => {
   }, [startRecord, playing, itemPlaying, commentPlaying]);
 
   const handleSetCanSave = (valid: boolean) => {
-    if (valid !== canSave) {
+    if (valid !== canSaveRef.current) {
+      canSaveRef.current = valid;
       setCanSave(valid);
       setCanSaveRecording(valid);
       if (valid) toolChanged(toolId, true);
