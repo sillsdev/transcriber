@@ -100,7 +100,7 @@ export function MediaPlayer(props: IProps) {
         if (playSuccess.current) audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
-      stopplay();
+      stopPlay();
     }
     if (srcMediaId !== playItem) {
       setReady(false);
@@ -127,11 +127,11 @@ export function MediaPlayer(props: IProps) {
 
   useEffect(() => {
     if (ready && audioRef.current && playItem !== '' && requestPlay) {
-      startplay();
+      startPlay();
     } else if (!requestPlay) {
       if (playing) {
         if (audioRef.current && playSuccess.current) audioRef.current.pause();
-        stopplay();
+        stopPlay();
       }
     }
   }, [ready, requestPlay, playing, playItem]);
@@ -147,7 +147,7 @@ export function MediaPlayer(props: IProps) {
 
   const ended = () => {
     if (audioRef.current) audioRef.current.currentTime = limits?.start ?? 0;
-    stopplay();
+    stopPlay();
     if (onEnded) onEnded();
   };
 
@@ -212,7 +212,7 @@ export function MediaPlayer(props: IProps) {
     stop.current = 0;
   };
 
-  const startplay = () => {
+  const startPlay = () => {
     setPlaying(true);
     playSuccess.current = false;
     if (audioRef.current) {
@@ -227,7 +227,7 @@ export function MediaPlayer(props: IProps) {
         });
     }
   };
-  const stopplay = () => {
+  const stopPlay = () => {
     setPlaying(false);
     playSuccess.current = false;
   };
@@ -235,7 +235,7 @@ export function MediaPlayer(props: IProps) {
     if (audioRef.current) {
       if (playing) {
         if (playSuccess.current) audioRef.current.pause();
-      } else startplay();
+      } else startPlay();
     }
   };
 
