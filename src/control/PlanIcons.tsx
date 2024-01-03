@@ -12,7 +12,6 @@ import {
   faBook,
   faArchway,
   faGlobe,
-  faXmark,
   faCheck,
 } from '@fortawesome/free-solid-svg-icons';
 //things I've tried! faFileAudio, faVolumeHigh,
