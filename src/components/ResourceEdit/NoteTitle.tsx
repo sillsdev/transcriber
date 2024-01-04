@@ -43,7 +43,7 @@ export const NoteTitle = (props: IResourceState) => {
       label={'\u200B'} // zero-width space
       mediaId={titleMediafile}
       title={titlex}
-      defaultFilename={getDefaultName(ws, 'note', memory)}
+      defaultFilename={getDefaultName(ws, 'note', memory, planId)}
       onTextChange={handleChangeTitle}
       onRecording={onRecording}
       useplan={planId}

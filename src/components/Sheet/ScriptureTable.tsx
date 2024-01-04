@@ -1003,7 +1003,7 @@ export function ScriptureTable(props: IProps) {
     saveIfChanged(() => {
       setUploadType(UploadType.Graphic);
       const { ws } = getByIndex(workflowRef.current, i);
-      const defaultName = getDefaultName(ws, 'graphic', memory);
+      const defaultName = getDefaultName(ws, 'graphic', memory, plan);
       console.log(`defaultName: ${defaultName}`);
       setDefaultFilename(defaultName);
       uploadItem.current = ws;
@@ -1231,26 +1231,29 @@ export function ScriptureTable(props: IProps) {
     };
     myChangedRef.current = isChanged(toolId);
     if (saveRequested(toolId)) {
-      waitForIt(
-        'saving sheet recordings',
-        () => !anySaving(toolId),
-        () => false,
-        10000
-      ).finally(() => {
-        if (offlineOnly) {
-          save();
-        } else {
-          checkOnline((online) => {
-            if (!online) {
-              saveCompleted(toolId, ts.NoSaveOffline);
-              showMessage(ts.NoSaveOffline);
-              setSaving(false);
-            } else {
-              save();
-            }
-          });
-        }
-      });
+      //wait a beat for the save to register
+      setTimeout(() => {
+        waitForIt(
+          'saving sheet recordings',
+          () => !anySaving(toolId),
+          () => false,
+          10000
+        ).finally(() => {
+          if (offlineOnly) {
+            save();
+          } else {
+            checkOnline((online) => {
+              if (!online) {
+                saveCompleted(toolId, ts.NoSaveOffline);
+                showMessage(ts.NoSaveOffline);
+                setSaving(false);
+              } else {
+                save();
+              }
+            });
+          }
+        });
+      }, 100);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);

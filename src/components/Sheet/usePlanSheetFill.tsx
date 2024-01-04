@@ -43,6 +43,7 @@ export interface IFillProps {
   check: number[];
   active: number;
   filtered: boolean;
+  anyRecording: boolean;
 }
 
 interface IProps {
@@ -69,7 +70,7 @@ interface IProps {
   doSetActive: () => void;
   cellsChanged: (changes: ICellChange[]) => void;
   titleMediaChanged: (index: number, mediaId: string) => void;
-  onStartRecording?: () => void;
+  onRecording: (recording: boolean) => void;
 }
 
 /**
@@ -99,7 +100,7 @@ interface IProps {
  * @param {Function} props.doSetActive - A callback function for setting the active row.
  * @param {Function} props.cellsChanged - A callback function for handling cell edits.
  * @param {Function} props.titleMediaChanged - A callback function for title media recorded.
- * @param {Function} props.onStartRecording - A callback function for recorder buffer contains recording.
+ * @param {Function} props.onRecording - A callback function for recorder buffer contains recording.
  * @returns {Function} - A function that generates the data for filling a plan sheet based on the provided props.
  */
 export const usePlanSheetFill = ({
@@ -126,7 +127,7 @@ export const usePlanSheetFill = ({
   doSetActive,
   cellsChanged,
   titleMediaChanged,
-  onStartRecording,
+  onRecording,
 }: IProps) => {
   const ctx = useContext(PlanContext);
   const { readonly } = ctx.state;
@@ -305,7 +306,8 @@ export const usePlanSheetFill = ({
   const TitleValue = (
     e: string | number,
     rowIndex: number,
-    cellIndex: number
+    cellIndex: number,
+    anyRecording: boolean
   ) => {
     const handleTextChange = (value: string) => {
       const change: ICellChange = {
@@ -321,12 +323,6 @@ export const usePlanSheetFill = ({
       titleMediaChanged(rowIndex, mediaId);
     };
 
-    const handleRecording = (inProgress: boolean) => {
-      if (inProgress) {
-        onStartRecording && onStartRecording();
-      }
-    };
-
     return (
       <TitleEdit
         title={e as string}
@@ -336,7 +332,8 @@ export const usePlanSheetFill = ({
           ''
         }
         ws={rowInfo[rowIndex]}
-        onStartRecording={handleRecording}
+        anyRecording={anyRecording}
+        onRecording={onRecording}
         onTextChange={handleTextChange}
         onMediaIdChange={handleMediaIdChange}
       />
@@ -401,10 +398,18 @@ export const usePlanSheetFill = ({
     refCol: number;
     calcClassName: string;
     rowIndex: number;
+    anyRecording: boolean;
   }
 
   const rowCells =
-    ({ section, passage, refCol, calcClassName, rowIndex }: RowCellsProps) =>
+    ({
+      section,
+      passage,
+      refCol,
+      calcClassName,
+      rowIndex,
+      anyRecording,
+    }: RowCellsProps) =>
     (e: string | number, cellIndex: number) => {
       const bookCol = colSlugs.indexOf('book');
       const titleCol = colSlugs.indexOf('title');
@@ -423,7 +428,7 @@ export const usePlanSheetFill = ({
         canHidePublishing
       ) {
         return {
-          value: TitleValue(e, rowIndex, cellIndex),
+          value: TitleValue(e, rowIndex, cellIndex, anyRecording),
           readOnly: true,
           className: calcClassName,
         };
@@ -438,7 +443,8 @@ export const usePlanSheetFill = ({
             value: TitleValue(
               rowData[rowIndex][descCol] as string,
               rowIndex,
-              descCol
+              descCol,
+              anyRecording
             ),
             readOnly: true,
             className: calcClassName,
@@ -553,6 +559,7 @@ export const usePlanSheetFill = ({
       check,
       active,
       filtered,
+      anyRecording,
     }: IFillProps) =>
     (row: IRow, rowIndex: number) => {
       const refCol = colSlugs.indexOf('reference');
@@ -585,7 +592,16 @@ export const usePlanSheetFill = ({
         sheetRow.push(graphicCell(rowIndex, calcClassName));
       row
         .slice(0, 6) // quits when it runs out of columns
-        .map(rowCells({ section, passage, refCol, calcClassName, rowIndex }))
+        .map(
+          rowCells({
+            section,
+            passage,
+            refCol,
+            calcClassName,
+            rowIndex,
+            anyRecording,
+          })
+        )
         .forEach((c) => {
           sheetRow.push(c);
         });

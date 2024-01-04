@@ -8,7 +8,8 @@ interface IProps {
   title: string;
   mediaId: string;
   ws: ISheet;
-  onStartRecording: (changed: boolean) => void;
+  anyRecording: boolean;
+  onRecording: (recording: boolean) => void;
   onTextChange: (value: string) => void;
   onMediaIdChange: (mediaId: string) => void;
 }
@@ -17,7 +18,8 @@ export function TitleEdit({
   title,
   mediaId,
   ws,
-  onStartRecording,
+  anyRecording,
+  onRecording,
   onTextChange,
   onMediaIdChange,
 }: IProps) {
@@ -39,11 +41,6 @@ export function TitleEdit({
     setTitle(value);
     return '';
   };
-  const onRecording = (recording: boolean) => {
-    if (recording) {
-      onStartRecording(true);
-    }
-  };
 
   const handleChangeTitleMedia = (mediaId: string) => {
     setTitleMediafile(mediaId);
@@ -52,15 +49,16 @@ export function TitleEdit({
 
   return (
     <MediaTitle
-      titlekey={`title-${ws.sectionSeq}`}
+      titlekey={`title-${ws.sectionSeq}_${ws.passageSeq}`}
       label={'\u200B'} // zero-width space
       mediaId={titleMediafile}
       title={titlex}
-      defaultFilename={getDefaultName(ws, 'title', memory)}
+      defaultFilename={getDefaultName(ws, 'title', memory, planId)}
       onTextChange={handleChangeTitle}
       onRecording={onRecording}
       useplan={planId}
       onMediaIdChange={handleChangeTitleMedia}
+      disabled={anyRecording}
     />
   );
 }
