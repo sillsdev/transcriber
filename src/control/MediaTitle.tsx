@@ -414,7 +414,7 @@ export default function MediaTitle(props: IProps) {
                     aria-label="play"
                     onClick={handlePlay}
                     onMouseDown={handleMouseDownSave}
-                    disabled={recording}
+                    disabled={recording || disabled}
                     edge="start"
                   >
                     <PlayIcon fontSize="small" />

@@ -8,6 +8,7 @@ interface IProps {
   title: string;
   mediaId: string;
   ws: ISheet;
+  anyRecording: boolean;
   onRecording: (recording: boolean) => void;
   onTextChange: (value: string) => void;
   onMediaIdChange: (mediaId: string) => void;
@@ -17,6 +18,7 @@ export function TitleEdit({
   title,
   mediaId,
   ws,
+  anyRecording,
   onRecording,
   onTextChange,
   onMediaIdChange,
@@ -56,6 +58,7 @@ export function TitleEdit({
       onRecording={onRecording}
       useplan={planId}
       onMediaIdChange={handleChangeTitleMedia}
+      disabled={anyRecording}
     />
   );
 }

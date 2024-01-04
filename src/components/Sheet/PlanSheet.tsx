@@ -242,7 +242,9 @@ export function PlanSheet(props: IProps) {
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [pasting, setPasting] = useState(false);
-  const preventSave = useRef<boolean>(false);
+  const preventSaveRef = useRef<boolean>(false);
+  const [preventSave, setPreventSavex] = useState(false);
+  const [anyRecording, setAnyRecording] = useState(false);
   const currentRowRef = useRef<number>(-1);
   const [currentRow, setCurrentRowx] = useState(-1);
   const [active, setActive] = useState(-1); // used for action menu to display
@@ -466,6 +468,7 @@ export function PlanSheet(props: IProps) {
 
   const onRecording = (recording: boolean) => {
     onSetPreventSave(recording);
+    setAnyRecording(recording);
     if (recording) toolChanged(toolId);
   };
 
@@ -521,7 +524,8 @@ export function PlanSheet(props: IProps) {
   };
 
   const onSetPreventSave = (val: boolean) => {
-    preventSave.current = val;
+    preventSaveRef.current = val;
+    setPreventSavex(val);
   };
 
   const doSetActive = () => setActive(currentRowRef.current);
@@ -548,13 +552,7 @@ export function PlanSheet(props: IProps) {
   });
 
   const handleAutoSave = () => {
-    console.log(
-      'handleAutoSave',
-      changedRef.current,
-      !preventSave.current,
-      !global.alertOpen
-    );
-    if (changedRef.current && !preventSave.current && !global.alertOpen) {
+    if (changedRef.current && !preventSaveRef.current && !global.alertOpen) {
       handleSave();
     } else {
       startSaveTimer();
@@ -697,6 +695,7 @@ export function PlanSheet(props: IProps) {
         check,
         active,
         filtered,
+        anyRecording,
       });
       if (colSlugs.indexOf('book') > -1) {
         warningTest(colSlugs.indexOf('reference'));
@@ -705,7 +704,16 @@ export function PlanSheet(props: IProps) {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, rowInfo, columns, srcMediaId, mediaPlaying, currentRow, check]);
+  }, [
+    rowData,
+    rowInfo,
+    columns,
+    srcMediaId,
+    mediaPlaying,
+    currentRow,
+    check,
+    anyRecording,
+  ]);
 
   useEffect(() => {
     //if I set playing when I set the mediaId, it plays a bit of the old
@@ -761,7 +769,7 @@ export function PlanSheet(props: IProps) {
                 <AddSectionPassageButtons
                   inlinePassages={inlinePassages}
                   numRows={rowInfo.length}
-                  readonly={readonly}
+                  readonly={anyRecording || readonly}
                   isSection={dataRowisSection}
                   isPassage={isPassage(currentRow - 1)}
                   mouseposition={position}
@@ -776,7 +784,7 @@ export function PlanSheet(props: IProps) {
                   id="planSheetImp"
                   key="importExcel"
                   aria-label={t.tablePaste}
-                  disabled={pasting || readonly || filtered}
+                  disabled={pasting || anyRecording || readonly || filtered}
                   onClick={handleTablePaste}
                 >
                   {t.tablePaste}
@@ -785,22 +793,28 @@ export function PlanSheet(props: IProps) {
                   id="planSheetReseq"
                   key="resequence"
                   aria-label={t.resequence}
-                  disabled={pasting || data.length < 2 || readonly || filtered}
+                  disabled={
+                    pasting ||
+                    data.length < 2 ||
+                    anyRecording ||
+                    readonly ||
+                    filtered
+                  }
                   onClick={handleResequence}
                 >
                   {t.resequence}
                 </AltButton>
                 <ProjButtons
                   {...props}
-                  noImExport={pasting}
-                  noIntegrate={pasting || data.length < 2}
+                  noImExport={anyRecording || pasting}
+                  noIntegrate={anyRecording || pasting || data.length < 2}
                   t={projButtonStr}
                 />
               </>
             )}
 
             <GrowingSpacer />
-            {!offline && !inlinePassages && !readonly && (
+            {!offline && !inlinePassages && !readonly && !anyRecording && (
               <LightTooltip
                 sx={{ backgroundColor: 'transparent' }}
                 title={hidePublishing ? t.showPublishing : t.hidePublishing}
@@ -830,7 +844,7 @@ export function PlanSheet(props: IProps) {
                   aria-label={t.save}
                   color={connected ? 'primary' : 'secondary'}
                   onClick={handleSave}
-                  disabled={saving || !changed}
+                  disabled={saving || !changed || preventSave}
                 >
                   {t.save}
                   <SaveIcon sx={iconMargin} className="small-icon" />
