@@ -3,6 +3,9 @@ import { IResourceState } from '.';
 import MediaTitle from '../../control/MediaTitle';
 import { useGlobal } from 'reactn';
 import { getDefaultName } from '../Sheet/getDefaultName';
+import { IResourceStrings } from '../../model';
+import { shallowEqual, useSelector } from 'react-redux';
+import { sharedResourceSelector } from '../../selector';
 
 export const NoteTitle = (props: IResourceState) => {
   const { state, setState } = props;
@@ -11,6 +14,7 @@ export const NoteTitle = (props: IResourceState) => {
   const [memory] = useGlobal('memory');
   const [titlex, setTitle] = useState(title || '');
   const [titleMediafile, setTitleMediafile] = useState(state.mediaId);
+  const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
 
   useEffect(() => {
     setTitle(title);
@@ -40,7 +44,7 @@ export const NoteTitle = (props: IResourceState) => {
   return (
     <MediaTitle
       titlekey={`note-${ws?.passage?.id}`}
-      label={'\u200B'} // zero-width space
+      label={t.title} // zero-width space
       mediaId={titleMediafile}
       title={titlex}
       defaultFilename={getDefaultName(ws, 'note', memory, planId)}
