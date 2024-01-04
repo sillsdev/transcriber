@@ -1019,7 +1019,7 @@ export function ScriptureTable(props: IProps) {
   const afterConvert = async (images: CompressedImages[]) => {
     const ws = uploadItem.current;
     const resourceType = ws?.kind === IwsKind.Section ? 'section' : 'passage';
-    const secRec =
+    const secRec: Section | undefined =
       ws?.kind === IwsKind.Section
         ? (findRecord(memory, 'section', ws?.sectionId?.id ?? '') as Section)
         : undefined;

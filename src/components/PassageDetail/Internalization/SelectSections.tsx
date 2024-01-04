@@ -179,7 +179,12 @@ export function SelectSections(props: IProps) {
       .sort(sectionCompare)
       .forEach((section) => {
         const sectionpassages = passages
-          .filter((ps) => related(ps, 'section') === section.id)
+          .filter(
+            (ps) =>
+              related(ps, 'section') === section.id &&
+              passageTypeFromRef(ps.attributes?.reference, isFlat) ===
+                PassageTypeEnum.PASSAGE
+          )
           .sort(passageCompare);
         const passageCount = sectionpassages.length;
         if (!isFlat && passageCount > 1)
@@ -190,21 +195,15 @@ export function SelectSections(props: IProps) {
             parentId: '',
           });
         sectionpassages.forEach((passage: Passage) => {
-          const passType = passageTypeFromRef(
-            passage.attributes?.reference,
-            isFlat
-          );
-          if (passType === PassageTypeEnum.PASSAGE) {
-            rowData.push({
-              id: passage.id,
-              name: `${sectionNumber(section)}.${getReference(
-                passage,
-                bookData
-              )}`,
-              passages: '',
-              parentId: isFlat || passageCount === 1 ? '' : section.id,
-            } as IRow);
-          }
+          rowData.push({
+            id: passage.id,
+            name: `${sectionNumber(section)}.${getReference(
+              passage,
+              bookData
+            )}`,
+            passages: '',
+            parentId: isFlat || passageCount === 1 ? '' : section.id,
+          } as IRow);
         });
       });
 
