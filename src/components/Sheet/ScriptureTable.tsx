@@ -1479,16 +1479,19 @@ export function ScriptureTable(props: IProps) {
     };
 
     const addChapterNumber = (newwf: ISheet[], chapter: number) => {
-      const title = chapterNumberTitle(chapter);
-      return addPassageTo(
-        SheetLevel.Section,
-        newwf,
-        PassageTypeEnum.CHAPTERNUMBER,
-        undefined,
-        undefined,
-        title,
-        PassageTypeEnum.CHAPTERNUMBER + ' ' + chapter.toString()
-      );
+      if (chapter > 0) {
+        const title = chapterNumberTitle(chapter);
+        return addPassageTo(
+          SheetLevel.Section,
+          newwf,
+          PassageTypeEnum.CHAPTERNUMBER,
+          undefined,
+          undefined,
+          title,
+          PassageTypeEnum.CHAPTERNUMBER + ' ' + chapter.toString()
+        );
+      }
+      return newwf;
     };
     const startChapter = (w: ISheet) =>
       (w.passage && w.passage.attributes.startChapter) ??
@@ -1496,6 +1499,8 @@ export function ScriptureTable(props: IProps) {
 
     const chapterChanged = (w: ISheet) =>
       w.passageType === PassageTypeEnum.PASSAGE &&
+      w.book === firstBook &&
+      startChapter(w) > 0 &&
       startChapter(w) !== currentChapter;
 
     var currentChapter = 0;
