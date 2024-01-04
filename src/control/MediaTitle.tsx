@@ -153,10 +153,12 @@ export default function MediaTitle(props: IProps) {
 
   useEffect(() => setHelperText(helper ?? ''), [helper]);
   useEffect(() => {
-    if (saveRequested(toolId) && !saving.current)
-      if (canSaveRecording) handleOk();
-      else saveCompleted(toolId);
-    else if (clearRequested(toolId)) {
+    if (saveRequested(toolId) && !saving.current) {
+      if (canSaveRef.current) handleOk();
+      else {
+        saveCompleted(toolId);
+      }
+    } else if (clearRequested(toolId)) {
       reset();
       clearCompleted(toolId);
     }
@@ -215,7 +217,7 @@ export default function MediaTitle(props: IProps) {
         );
         reset();
       });
-    }
+    } else reset();
   };
   const onMyRecording = (r: boolean) => {
     if (r) {

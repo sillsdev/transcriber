@@ -464,6 +464,11 @@ export function PlanSheet(props: IProps) {
     onAudacity && onAudacity(i);
   };
 
+  const onRecording = (recording: boolean) => {
+    onSetPreventSave(recording);
+    if (recording) toolChanged(toolId);
+  };
+
   const handleCellsChanged = (changes: Array<ICellChange>) => {
     if (readonly) return; //readonly
     const colChanges = changes.map((c) => ({
@@ -539,10 +544,16 @@ export function PlanSheet(props: IProps) {
     onDelete: handleConfirmDelete,
     cellsChanged: updateData,
     titleMediaChanged: updateTitleMedia,
-    onStartRecording: () => toolChanged(toolId),
+    onRecording: onRecording,
   });
 
   const handleAutoSave = () => {
+    console.log(
+      'handleAutoSave',
+      changedRef.current,
+      !preventSave.current,
+      !global.alertOpen
+    );
     if (changedRef.current && !preventSave.current && !global.alertOpen) {
       handleSave();
     } else {

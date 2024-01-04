@@ -69,7 +69,7 @@ interface IProps {
   doSetActive: () => void;
   cellsChanged: (changes: ICellChange[]) => void;
   titleMediaChanged: (index: number, mediaId: string) => void;
-  onStartRecording?: () => void;
+  onRecording: (recording: boolean) => void;
 }
 
 /**
@@ -99,7 +99,7 @@ interface IProps {
  * @param {Function} props.doSetActive - A callback function for setting the active row.
  * @param {Function} props.cellsChanged - A callback function for handling cell edits.
  * @param {Function} props.titleMediaChanged - A callback function for title media recorded.
- * @param {Function} props.onStartRecording - A callback function for recorder buffer contains recording.
+ * @param {Function} props.onRecording - A callback function for recorder buffer contains recording.
  * @returns {Function} - A function that generates the data for filling a plan sheet based on the provided props.
  */
 export const usePlanSheetFill = ({
@@ -126,7 +126,7 @@ export const usePlanSheetFill = ({
   doSetActive,
   cellsChanged,
   titleMediaChanged,
-  onStartRecording,
+  onRecording,
 }: IProps) => {
   const ctx = useContext(PlanContext);
   const { readonly } = ctx.state;
@@ -321,12 +321,6 @@ export const usePlanSheetFill = ({
       titleMediaChanged(rowIndex, mediaId);
     };
 
-    const handleRecording = (inProgress: boolean) => {
-      if (inProgress) {
-        onStartRecording && onStartRecording();
-      }
-    };
-
     return (
       <TitleEdit
         title={e as string}
@@ -336,7 +330,7 @@ export const usePlanSheetFill = ({
           ''
         }
         ws={rowInfo[rowIndex]}
-        onStartRecording={handleRecording}
+        onRecording={onRecording}
         onTextChange={handleTextChange}
         onMediaIdChange={handleMediaIdChange}
       />
