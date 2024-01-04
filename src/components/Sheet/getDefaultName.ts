@@ -6,21 +6,19 @@ import { cleanFileName } from '../../utils';
 export const getDefaultName = (
   ws: ISheet | undefined,
   tag: string,
-  memory: Memory
+  memory: Memory,
+  planId: string
 ) => {
   const secId = ws?.sectionId?.id ?? related(ws?.passage, 'section');
   const secRec = secId
     ? (findRecord(memory, 'section', secId) as Section)
     : undefined;
-  const planId = related(secRec, 'plan') as string | undefined;
-  const planRec = planId
-    ? (findRecord(memory, 'plan', planId) as Plan)
-    : undefined;
+  const planRec = findRecord(memory, 'plan', planId) as Plan;
   const defaultName =
     ws?.kind === IwsKind.Section
       ? `${planRec?.attributes.name ?? ''}_${ws?.sectionSeq}_${
           planRec?.keys?.remoteId || planRec?.id
-        }_${secRec?.keys?.remoteId || secRec?.id}_${tag}`
+        }_${secRec?.keys?.remoteId || secRec?.id || ''}_${tag}`
       : `${ws?.book ?? ''}_${ws?.reference ?? ''}_${ws?.sectionSeq ?? ''}_${
           ws?.passageSeq ?? ''
         }_${planRec?.keys?.remoteId || planRec?.id}_${

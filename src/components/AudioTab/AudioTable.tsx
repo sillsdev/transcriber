@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { shallowEqual, useSelector } from 'react-redux';
 import { PlanContext } from '../../context/PlanContext';
-import { IState, IMediaTabStrings, MediaFileD } from '../../model';
+import { IState, IMediaTabStrings, MediaFileD, UserD } from '../../model';
 import { Button, Checkbox, FormControlLabel } from '@mui/material';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import BigDialog from '../../hoc/BigDialog';
@@ -13,7 +13,7 @@ import MediaPlayer from '../MediaPlayer';
 import MediaActions from './MediaActions';
 import MediaActions2 from './MediaActions2';
 import Confirm from '../AlertDialog';
-import { remoteId, useOrganizedBy } from '../../crud';
+import { findRecord, remoteId, useOrganizedBy } from '../../crud';
 import { numCompare, dateCompare, dateOrTime } from '../../utils';
 import { IRow } from '.';
 import { Sorting } from '@devexpress/dx-react-grid';
@@ -286,10 +286,7 @@ export const AudioTable = (props: IProps) => {
     </Table.Cell>
   );
   const getUser = (id: string) => {
-    const userRec = memory.cache.query((q) =>
-      q.findRecord({ type: 'user', id: id })
-    ) as any;
-    return userRec;
+    return findRecord(memory, 'user', id) as UserD;
   };
   const UserCell = ({ row, value, ...props }: ICell) => (
     <Table.Cell row {...props} value>
