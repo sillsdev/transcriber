@@ -4,7 +4,11 @@ import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
 import { ReplaceRelatedRecord, UpdateRecord } from '../model/baseModel';
 import { findRecord } from '.';
 
-export const useSharedResUpdate = () => {
+interface ShResUpdProps {
+  onUpdRef?: (id: string, val: string) => void;
+}
+
+export const useSharedResUpdate = ({ onUpdRef }: ShResUpdProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
@@ -35,16 +39,10 @@ export const useSharedResUpdate = () => {
       const catRec = findRecord(memory, 'artifactcategory', category) as
         | ArtifactCategory
         | undefined;
-      if (catRec) {
-        ops.push(
-          t
-            .replaceAttribute(
-              sharedResource.relationships.passage.data as RecordIdentity,
-              'reference',
-              `NOTE ${catRec.attributes.categoryname}`
-            )
-            .toOperation()
-        );
+      if (catRec && onUpdRef) {
+        const passage = sharedResource.relationships.passage
+          .data as RecordIdentity;
+        onUpdRef(passage.id, `NOTE ${catRec.attributes.categoryname}`);
       }
     }
     await memory.update(ops);

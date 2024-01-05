@@ -19,7 +19,7 @@ import { toCamel } from '../../utils';
 import { ISTFilterState } from './filterMenu';
 import { PassageTypeEnum } from '../../model/passageType';
 import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
-import { apmGraphic } from '../GraphicUploader';
+import { InitializedRecord } from '@orbit/records';
 
 const shtSectionUpdate = (item: ISheet, rec: ISheet) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -140,6 +140,10 @@ export const getSheet = (
   hidePublishing: boolean,
   doneStepId: string,
   getDiscussionCount: (passageId: string, stepId: string) => number,
+  graphicFind: (
+    rec: InitializedRecord,
+    ref?: string
+  ) => { uri?: string; rights?: string; color?: string },
   current?: ISheet[]
 ) => {
   const myWork = current || Array<ISheet>();
@@ -180,16 +184,9 @@ export const getSheet = (
       item.deleted = false;
       item.filtered = isSectionFiltered(filterState, item.sectionSeq);
       item.published = section.attributes.published;
-      const graphicRec = graphics.find(
-        (g) =>
-          g.attributes.resourceType === 'section' &&
-          g.attributes.resourceId === parseInt(section?.keys?.remoteId ?? '0')
-      );
-      if (graphicRec) {
-        var gr = apmGraphic(graphicRec);
-        item.graphicUri = gr?.graphicUri;
-        item.graphicRights = gr?.graphicRights;
-      }
+      const gr = graphicFind(section);
+      item.graphicUri = gr?.uri;
+      item.graphicRights = gr?.rights;
       const titleMediaId = related(section, 'titleMediafile');
       item.titleMediaId = titleMediaId
         ? { type: 'mediafile', id: titleMediaId }
@@ -259,17 +256,10 @@ export const getSheet = (
             item.passageType
           )
         ) {
-          const graphicRec = graphics.find(
-            (g) =>
-              g.attributes.resourceType === 'passage' &&
-              g.attributes.resourceId ===
-                parseInt(passage?.keys?.remoteId ?? '0')
-          );
-          if (graphicRec) {
-            var gr = apmGraphic(graphicRec);
-            item.graphicUri = gr?.graphicUri;
-            item.graphicRights = gr?.graphicRights;
-          }
+          const gr = graphicFind(passage, item.reference);
+          item.graphicUri = gr?.uri;
+          item.graphicRights = gr?.rights;
+          item.color = gr?.color;
         }
       }
       //console.log(`item ${JSON.stringify(item, null, 2)}`);

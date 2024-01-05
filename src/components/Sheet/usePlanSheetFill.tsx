@@ -354,15 +354,21 @@ export const usePlanSheetFill = ({
     if (
       !isSectionType(rowIndex) &&
       ![PassageTypeEnum.NOTE, PassageTypeEnum.CHAPTERNUMBER].includes(
-        passageTypeFromRef(rowInfo[rowIndex].reference, inlinePassages)
+        passageTypeFromRef(
+          rowInfo[rowIndex].reference?.split(' ')[0],
+          inlinePassages
+        )
       )
     ) {
       return <></>;
     }
+    const borderColor = rowInfo[rowIndex].color;
+    const border = borderColor ? { border: '2px solid', borderColor } : {};
+
     if (rowInfo[rowIndex].graphicUri) {
       return (
         <Avatar
-          sx={pointer}
+          sx={{ ...pointer, ...border }}
           src={rowInfo[rowIndex].graphicUri}
           variant="rounded"
           onClick={handleGraphic(rowIndex)}
@@ -374,7 +380,7 @@ export const usePlanSheetFill = ({
         {...stringAvatar(
           rowInfo[rowIndex].reference ||
             `${organizedBy} ${rowInfo[rowIndex].sectionSeq}`,
-          pointer
+          { ...pointer, ...border }
         )}
         variant="rounded"
         onClick={handleGraphic(rowIndex)}

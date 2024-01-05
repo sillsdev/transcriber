@@ -19,9 +19,14 @@ interface IProps {
 interface RefProps {
   passage: RecordIdentity;
   cluster?: RecordIdentity;
+  onUpdRef?: (id: string, val: string) => void;
 }
 
-export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
+export const useSharedResCreate = ({
+  passage,
+  cluster,
+  onUpdRef,
+}: RefProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
@@ -92,21 +97,12 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
         )
       );
     }
-    if (note) {
+    if (note && onUpdRef) {
       const catRec = findRecord(memory, 'artifactcategory', category) as
         | ArtifactCategory
         | undefined;
       if (catRec) {
-        const passRecId = { type: 'passage', id: passage.id };
-        ops.push(
-          t
-            .replaceAttribute(
-              passRecId,
-              'reference',
-              `NOTE ${catRec.attributes.categoryname}`
-            )
-            .toOperation()
-        );
+        onUpdRef(passage.id, `NOTE ${catRec.attributes.categoryname}`);
       }
     }
     await memory.update(ops);
