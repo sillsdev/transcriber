@@ -137,5 +137,7 @@ export const RefRender: FC<IProps> = memo(({ value, flat }: IProps) => {
   const pt = passageTypeFromRef(value, flat);
   if (pt === PassageTypeEnum.NOTE) {
     return <ArgType value={value} type={pt} Icon={NoteIcon} />;
-  } else return passageTypeMap[pt] ?? <>{value}</>;
+  } else if (pt === PassageTypeEnum.CHAPTERNUMBER)
+    return <ArgType value={value} type={pt} Icon={ChapterNumberIcon} />;
+  else return passageTypeMap[pt] ?? <>{value}</>;
 });
