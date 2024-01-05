@@ -142,7 +142,8 @@ export const usePlanSheetFill = ({
     inlinePassages,
     hidePublishing,
   });
-  const { isPassage, isSection, isMovement, isBook } = rowTypes(rowInfo);
+  const { isPassageType, isSectionType, isMovement, isBook, isAltBook } =
+    rowTypes(rowInfo);
   const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
   const tv: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
 
@@ -351,7 +352,7 @@ export const usePlanSheetFill = ({
 
   const graphicValue = (rowIndex: number) => {
     if (
-      !isSection(rowIndex) &&
+      !isSectionType(rowIndex) &&
       ![PassageTypeEnum.NOTE, PassageTypeEnum.CHAPTERNUMBER].includes(
         passageTypeFromRef(rowInfo[rowIndex].reference, inlinePassages)
       )
@@ -563,10 +564,10 @@ export const usePlanSheetFill = ({
     }: IFillProps) =>
     (row: IRow, rowIndex: number) => {
       const refCol = colSlugs.indexOf('reference');
-      const section = isSection(rowIndex);
-      const passage = isPassage(rowIndex);
+      const section = isSectionType(rowIndex);
+      const passage = isPassageType(rowIndex);
       const movement = isMovement(rowIndex);
-      const book = isBook(rowIndex);
+      const book = isBook(rowIndex) || isAltBook(rowIndex);
       const iscurrent: string =
         currentRow === rowIndex + 1 ? ' currentrow ' : '';
 

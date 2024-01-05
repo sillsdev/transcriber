@@ -20,12 +20,16 @@ export const useShowIcon = ({
   hidePublishing,
 }: IProps) => {
   const {
-    isPassage,
-    isSection,
+    isPassageType,
+    isVerseRange,
+    isSectionType,
+    isSectionHead,
+    inSection,
     isMovement,
-    isInMovement,
+    isNote,
+    isChapter,
     isBook,
-    firstVernacularInSection,
+    firstInSection,
     firstSection,
     lastSection,
   } = rowTypes(rowInfo);
@@ -34,88 +38,58 @@ export const useShowIcon = ({
     (icon: ExtraIcon) => {
       const extraMap: IExtraMap = {
         [ExtraIcon.Publish]:
-          !readonly &&
-          !offline &&
-          !inlinePassages &&
-          rowInfo.length > 0 &&
-          isSection(rowIndex) &&
-          !isBook(rowIndex) &&
-          !isMovement(rowIndex),
-        [ExtraIcon.Note]: !readonly && !offline && !filtered && !inlinePassages,
-        [ExtraIcon.PassageBelow]:
-          !readonly &&
-          !filtered &&
-          !inlinePassages &&
-          !isInMovement(rowIndex) &&
-          !isBook(rowIndex),
+          !inlinePassages && isSectionHead(rowIndex) && !hidePublishing,
+        [ExtraIcon.Publishing]: !inlinePassages && !hidePublishing,
         [ExtraIcon.MovementAbove]:
-          !readonly &&
-          !offline &&
-          !filtered &&
           !inlinePassages &&
-          rowInfo.length > 0 &&
-          isSection(rowIndex) &&
-          !isBook(rowIndex),
+          (isSectionHead(rowIndex) || isMovement(rowIndex)) &&
+          !hidePublishing,
         [ExtraIcon.SectionAbove]:
-          !readonly &&
-          !filtered &&
-          rowInfo.length > 0 &&
-          isSection(rowIndex) &&
-          !isBook(rowIndex),
-        [ExtraIcon.SectionDown]:
-          !readonly &&
-          !filtered &&
-          isSection(rowIndex) &&
-          !isBook(rowIndex) &&
-          !lastSection(rowIndex),
-        [ExtraIcon.SectionUp]:
-          !readonly &&
-          !filtered &&
-          rowIndex > 1 &&
-          isSection(rowIndex) &&
-          !isBook(rowIndex) &&
-          !firstSection(rowIndex),
-        [ExtraIcon.PassageDown]:
-          !readonly &&
-          !filtered &&
+          !inlinePassages && (isSectionHead(rowIndex) || isMovement(rowIndex)),
+        [ExtraIcon.SectionEnd]: true,
+        [ExtraIcon.PassageBelow]:
           !inlinePassages &&
-          isPassage(rowIndex) &&
-          !isBook(rowIndex) &&
-          !isSection(rowIndex + 1) &&
+          (isSectionHead(rowIndex) || isPassageType(rowIndex)) &&
+          inSection(rowIndex) &&
+          !isChapter(rowIndex + 1),
+        [ExtraIcon.PassageLast]: !inlinePassages && isSectionHead(rowIndex),
+        [ExtraIcon.PassageEnd]:
+          !inlinePassages &&
+          (isSectionHead(rowInfo.length - 1) ||
+            isPassageType(rowInfo.length - 1)),
+        [ExtraIcon.Note]:
+          !inlinePassages &&
+          !hidePublishing &&
+          (isBook(rowIndex) ||
+            isChapter(rowIndex) ||
+            isMovement(rowIndex) ||
+            isSectionHead(rowIndex) ||
+            isVerseRange(rowIndex) ||
+            isNote(rowIndex)),
+        [ExtraIcon.SectionUp]:
+          (isSectionHead(rowIndex) || isMovement(rowIndex)) &&
+          !firstSection(rowIndex),
+        [ExtraIcon.SectionDown]:
+          (isSectionHead(rowIndex) || isMovement(rowIndex)) &&
+          !lastSection(rowIndex),
+        [ExtraIcon.PassageToPrev]:
+          !inlinePassages &&
+          firstInSection(rowIndex) &&
+          !firstSection(rowIndex),
+        [ExtraIcon.PassageUp]:
+          !inlinePassages &&
+          !firstInSection(rowIndex) &&
+          (isVerseRange(rowIndex) || isNote(rowIndex)),
+        [ExtraIcon.PassageDown]:
+          !inlinePassages &&
+          (isVerseRange(rowIndex) || isNote(rowIndex)) &&
+          !isSectionType(rowIndex + 1) &&
           rowIndex < rowInfo.length - 1,
         [ExtraIcon.PassageToNext]:
-          !readonly &&
-          !filtered &&
           !inlinePassages &&
-          isPassage(rowIndex) &&
-          !isBook(rowIndex) &&
-          isSection(rowIndex + 1),
-        [ExtraIcon.PassageUp]:
-          !readonly &&
-          !filtered &&
-          !inlinePassages &&
-          rowIndex > 1 &&
-          isPassage(rowIndex) &&
-          !isBook(rowIndex) &&
-          !isSection(rowIndex - 1),
-        [ExtraIcon.PassageToPrev]:
-          !readonly &&
-          !filtered &&
-          !inlinePassages &&
-          rowIndex > 1 &&
-          isPassage(rowIndex) &&
-          !isBook(rowIndex) &&
-          firstVernacularInSection(rowIndex),
-        [ExtraIcon.PassageEnd]: !filtered && rowIndex !== rowInfo.length - 1,
-        [ExtraIcon.PassageLast]: !filtered && isSection(rowIndex),
-        [ExtraIcon.SectionEnd]: !filtered,
-        [ExtraIcon.Publishing]:
-          !hidePublishing &&
-          !readonly &&
-          !offline &&
-          !filtered &&
-          !inlinePassages,
+          (isVerseRange(rowIndex) || isNote(rowIndex)) &&
+          (isSectionHead(rowIndex + 1) || isMovement(rowIndex + 1)),
       };
-      return extraMap[icon];
+      return !readonly && !offline && !filtered && extraMap[icon];
     };
 };
