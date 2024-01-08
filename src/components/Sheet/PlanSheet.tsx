@@ -222,6 +222,7 @@ export function PlanSheet(props: IProps) {
     projButtonStr,
     connected,
     readonly,
+    shared,
     togglePublishing,
   } = ctx.state;
 
@@ -814,20 +815,24 @@ export function PlanSheet(props: IProps) {
             )}
 
             <GrowingSpacer />
-            {!offline && !inlinePassages && !readonly && !anyRecording && (
-              <LightTooltip
-                sx={{ backgroundColor: 'transparent' }}
-                title={hidePublishing ? t.showPublishing : t.hidePublishing}
-              >
-                <IconButton onClick={handlePublishToggle}>
-                  {hidePublishing ? (
-                    <PublishOnIcon sx={{ color: 'primary.light' }} />
-                  ) : (
-                    <PublishOffIcon sx={{ color: 'primary.light' }} />
-                  )}
-                </IconButton>
-              </LightTooltip>
-            )}
+            {!shared &&
+              !offline &&
+              !inlinePassages &&
+              !readonly &&
+              !anyRecording && (
+                <LightTooltip
+                  sx={{ backgroundColor: 'transparent' }}
+                  title={hidePublishing ? t.showPublishing : t.hidePublishing}
+                >
+                  <IconButton onClick={handlePublishToggle}>
+                    {hidePublishing ? (
+                      <PublishOnIcon sx={{ color: 'primary.light' }} />
+                    ) : (
+                      <PublishOffIcon sx={{ color: 'primary.light' }} />
+                    )}
+                  </IconButton>
+                </LightTooltip>
+              )}
             <FilterMenu
               canSetDefault={canSetDefault}
               state={filterState}
