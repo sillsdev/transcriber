@@ -3,6 +3,7 @@ import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
 import { ArtifactCategory, SharedResource } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { findRecord } from './tryFindRecord';
+import { useArtifactCategory } from '.';
 
 interface IProps {
   title: string;
@@ -19,11 +20,17 @@ interface IProps {
 interface RefProps {
   passage: RecordIdentity;
   cluster?: RecordIdentity;
+  onUpdRef?: (id: string, val: string) => void;
 }
 
-export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
+export const useSharedResCreate = ({
+  passage,
+  cluster,
+  onUpdRef,
+}: RefProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const { localizedArtifactCategory } = useArtifactCategory();
 
   return async ({
     title,
@@ -92,21 +99,15 @@ export const useSharedResCreate = ({ passage, cluster }: RefProps) => {
         )
       );
     }
-    if (note) {
+    if (note && onUpdRef) {
       const catRec = findRecord(memory, 'artifactcategory', category) as
         | ArtifactCategory
         | undefined;
       if (catRec) {
-        const passRecId = { type: 'passage', id: passage.id };
-        ops.push(
-          t
-            .replaceAttribute(
-              passRecId,
-              'reference',
-              `NOTE ${catRec.attributes.categoryname}`
-            )
-            .toOperation()
+        const catText = localizedArtifactCategory(
+          catRec.attributes.categoryname
         );
+        onUpdRef(passage.id, `NOTE ${catText}`);
       }
     }
     await memory.update(ops);

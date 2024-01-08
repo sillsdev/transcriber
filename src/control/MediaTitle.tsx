@@ -83,6 +83,7 @@ interface IProps {
   onRecording?: (recording: boolean) => void;
   onMediaIdChange: (mediaId: string) => void;
   disabled?: boolean;
+  required?: boolean;
 }
 
 export default function MediaTitle(props: IProps) {
@@ -100,6 +101,7 @@ export default function MediaTitle(props: IProps) {
     onMediaIdChange,
     useplan,
     disabled,
+    required,
   } = props;
   const dispatch = useDispatch();
   const uploadFiles = (files: File[]) => dispatch(actions.uploadFiles(files));
@@ -404,6 +406,7 @@ export default function MediaTitle(props: IProps) {
         size="small"
         multiline
         disabled={disabled}
+        required={required}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

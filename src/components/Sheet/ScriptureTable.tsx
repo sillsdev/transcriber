@@ -48,6 +48,7 @@ import {
   getStartChapter,
   findRecord,
   useGraphicUpdate,
+  useGraphicFind,
 } from '../../crud';
 import {
   lookupBook,
@@ -223,6 +224,7 @@ export function ScriptureTable(props: IProps) {
   const [uploadType, setUploadType] = useState<UploadType>();
   const graphicCreate = useGraphicCreate();
   const graphicUpdate = useGraphicUpdate();
+  const graphicFind = useGraphicFind();
   const { getPlan } = usePlan();
   const localSave = useWfLocalSave({ setComplete });
   const onlineSave = useWfOnlineSave({ setComplete });
@@ -470,12 +472,29 @@ export function ScriptureTable(props: IProps) {
   const isPassageOrNote = (ws: ISheet[], i: number) =>
     [PassageTypeEnum.PASSAGE, PassageTypeEnum.NOTE].includes(ws[i].passageType);
 
+  const updatePassageRef = (id: string, val: string) => {
+    const index = sheet.findIndex((w) => w?.passage?.id === id);
+    if (index < 0) return;
+    const passageRow = { ...sheet[index] };
+    if (passageRow.reference === val) return;
+    passageRow.reference = val;
+    passageRow.passageUpdated = currentDateTime();
+    setSheet(updateRowAt(sheet, passageRow, index));
+    setChanged(true);
+  };
+
+  const updatePassageSeq = (ws: ISheet[], i: number, val: number) => {
+    const passageRow = { ...ws[i] };
+    passageRow.sectionSeq = val;
+    passageRow.passageUpdated = currentDateTime();
+    return updateRowAt(ws, passageRow, i);
+  };
+
   const movePassageToNextSection = (
     myWorkflow: ISheet[],
     i: number,
     before: boolean
   ) => {
-    let passageRow = { ...myWorkflow[i] };
     const skipPublishing =
       myWorkflow[i].passageType === PassageTypeEnum.PASSAGE;
     let originalSectionIndex = findSection(
@@ -491,10 +510,9 @@ export function ScriptureTable(props: IProps) {
       skipPublishing
     );
     if (newSectionIndex < 0) return;
+    const newSeqVal = myWorkflow[newSectionIndex].sectionSeq;
+    myWorkflow = updatePassageSeq(myWorkflow, i, newSeqVal);
     let endRowIndex = newSectionIndex;
-    passageRow.sectionSeq = myWorkflow[newSectionIndex].sectionSeq;
-    passageRow.passageUpdated = currentDateTime();
-    myWorkflow = updateRowAt(myWorkflow, passageRow, i);
 
     if (before) {
       // find row following last row in target section
@@ -1292,7 +1310,8 @@ export function ScriptureTable(props: IProps) {
         filterState,
         hidePublishing,
         doneStepId,
-        getDiscussionCount
+        getDiscussionCount,
+        graphicFind
       );
       setSheet(newWorkflow);
 
@@ -1400,7 +1419,7 @@ export function ScriptureTable(props: IProps) {
   }, [orgSteps, filterState, doneStepId, hidePublishing]);
 
   const firstBook = useMemo(
-    () => sheet.find((b) => (b.book ?? '') !== '')?.book ?? '',
+    () => sheet.find((b) => !b.deleted && (b.book ?? '') !== '')?.book ?? '',
     [sheet]
   );
 
@@ -1433,7 +1452,9 @@ export function ScriptureTable(props: IProps) {
   const onPublishingConfirm = () => {
     setConfirmPublishingVisible(false);
     const hasBookTitle = (bookType: PassageTypeEnum) => {
-      if (sheetRef.current.findIndex((w) => w.passageType === bookType) < 0) {
+      if (
+        sheetRef.current.findIndex((w) => !w.deleted && w.passageType === bookType) < 0
+      ) {
         //see if we have this book anywhere in the team
         var teamprojects = projects
           .filter((p) => related(p, 'organization') === organization)
@@ -1751,6 +1772,7 @@ export function ScriptureTable(props: IProps) {
             passId={versionRow?.passage?.id || ''}
             ws={versionRow}
             onOpen={handleVerHistClose}
+            onUpdRef={updatePassageRef}
           />
         ) : (
           <VersionDlg passId={versionRow?.passage?.id || ''} />

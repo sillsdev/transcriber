@@ -1034,6 +1034,7 @@ const initialState = {
 			"findNote": "Find existing note",
 			"keywords": "Keywords",
 			"link": "Link",
+			"linkError": "Link is not a correctly formatted URL",
 			"noteDetails": "Note Details",
 			"overview": "Overview",
 			"references": "References",

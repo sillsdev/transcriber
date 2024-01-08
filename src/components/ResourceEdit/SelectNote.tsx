@@ -261,7 +261,7 @@ export const SelectNotes = (props: IProps) => {
           category,
           title: r.attributes.title || '',
           description: r.attributes.description || '',
-          keywords: r.attributes.keywords?.replace('|', ', '),
+          keywords: r.attributes.keywords?.replace(/\|/g, ', '),
           terms: r.attributes.termsOfUse ? t.yes : t.no,
           source: noteSource(r),
         } as IRRow;

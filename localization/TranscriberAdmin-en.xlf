@@ -4864,6 +4864,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="resource.linkError">
+         <segment>
+            <source>Link is not a correctly formatted URL</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="resource.noteDetails">
          <segment>
             <source>Note Details</source>

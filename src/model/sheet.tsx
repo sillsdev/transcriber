@@ -49,6 +49,7 @@ export interface ISheet {
   published: boolean;
   graphicUri?: string;
   graphicRights?: string;
+  color?: string;
   titleMediaId?: RecordIdentity;
 }
 

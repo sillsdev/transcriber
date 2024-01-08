@@ -50,8 +50,7 @@ export const useShowIcon = ({
         [ExtraIcon.PassageBelow]:
           !inlinePassages &&
           (isSectionHead(rowIndex) || isPassageType(rowIndex)) &&
-          inSection(rowIndex) &&
-          !isChapter(rowIndex + 1),
+          inSection(rowIndex),
         [ExtraIcon.PassageLast]: !inlinePassages && isSectionHead(rowIndex),
         [ExtraIcon.PassageEnd]:
           !inlinePassages &&

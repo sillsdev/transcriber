@@ -974,6 +974,7 @@ export interface IResourceStrings extends Localize.LocalizedStringsMethods {
     "findNote": string;
     "keywords": string;
     "link": string;
+    "linkError": string;
     "noteDetails": string;
     "overview": string;
     "references": string;
