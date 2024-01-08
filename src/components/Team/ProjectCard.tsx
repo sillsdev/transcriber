@@ -158,6 +158,7 @@ export const ProjectCard = (props: IProps) => {
     setIsAdmin(userIsOrgAdmin(related(project, 'organization')));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
+
   useEffect(() => {
     if (copying && copyStatus) {
       if (copyStatus.errStatus || copyStatus.complete) {
@@ -421,6 +422,7 @@ export const ProjectCard = (props: IProps) => {
       >
         <CategoryTabs
           teamId={related(project, 'organization') as string}
+          flat={project.attributes.flat ?? false}
           onClose={handleCloseCategory}
         />
       </BigDialog>
