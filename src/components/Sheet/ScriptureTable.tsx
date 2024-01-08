@@ -191,7 +191,7 @@ export function ScriptureTable(props: IProps) {
     { value: t.description, readOnly: true, width: 280 },
   ]);
   const [sheet, setSheetx] = useState<ISheet[]>([]);
-  const workflowRef = useRef<ISheet[]>([]);
+  const sheetRef = useRef<ISheet[]>([]);
   const [, setComplete] = useGlobal('progress');
   const [confirmPublishingVisible, setConfirmPublishingVisible] =
     useState(false);
@@ -302,7 +302,7 @@ export function ScriptureTable(props: IProps) {
     else setFilterState(getFilter(defaultFilterState));
   };
   const setSheet = (ws: ISheet[]) => {
-    workflowRef.current = ws;
+    sheetRef.current = ws;
     setSheetx(ws);
     var anyPublishing =
       !shared && !offline
@@ -338,7 +338,7 @@ export function ScriptureTable(props: IProps) {
       showMessage(t.saving);
       return;
     }
-    const ws = shtResequence(workflowRef.current);
+    const ws = shtResequence(sheetRef.current);
     if (ws !== sheet) {
       setSheet(ws);
       setChanged(true);
@@ -631,12 +631,12 @@ export function ScriptureTable(props: IProps) {
       showMessage(t.saving);
       return;
     }
-    const i = getUndelIndex(workflowRef.current, ix);
-    let newRow = newSection(level, workflowRef.current, i);
+    const i = getUndelIndex(sheetRef.current, ix);
+    let newRow = newSection(level, sheetRef.current, i);
     if (ptype === PassageTypeEnum.MOVEMENT) {
       newRow = { ...newRow, reference: publishingTitle(ptype) };
     }
-    let newData = insertAt(workflowRef.current, newRow, i);
+    let newData = insertAt(sheetRef.current, newRow, i);
     //if added in the middle...resequence
     if (i !== undefined) newData = shtResequence(newData);
     if (ptype === PassageTypeEnum.MOVEMENT) {
@@ -656,9 +656,9 @@ export function ScriptureTable(props: IProps) {
       showMessage(t.saving);
       return;
     }
-    const i = getUndelIndex(workflowRef.current, ix);
+    const i = getUndelIndex(sheetRef.current, ix);
     setSheet(
-      addPassageTo(SheetLevel.Passage, workflowRef.current, ptype, i, before)
+      addPassageTo(SheetLevel.Passage, sheetRef.current, ptype, i, before)
     );
     setChanged(true);
   };
@@ -668,10 +668,10 @@ export function ScriptureTable(props: IProps) {
       return;
     }
     if (flat) return;
-    const i = getUndelIndex(workflowRef.current, ix);
+    const i = getUndelIndex(sheetRef.current, ix);
     if (i !== undefined) {
-      if (nextSection) movePassageToNextSection(workflowRef.current, i, before);
-      else setSheet(movePassageTo(workflowRef.current, i, before));
+      if (nextSection) movePassageToNextSection(sheetRef.current, i, before);
+      else setSheet(movePassageTo(sheetRef.current, i, before));
       setChanged(true);
     }
   };
@@ -680,9 +680,9 @@ export function ScriptureTable(props: IProps) {
       showMessage(t.saving);
       return;
     }
-    const i = getUndelIndex(workflowRef.current, ix);
+    const i = getUndelIndex(sheetRef.current, ix);
     if (i !== undefined) {
-      setSheet(moveSectionTo(workflowRef.current, i, before));
+      setSheet(moveSectionTo(sheetRef.current, i, before));
       setChanged(true);
     }
   };
@@ -718,7 +718,7 @@ export function ScriptureTable(props: IProps) {
   };
 
   const markDelete = async (index: number) => {
-    const { ws, i } = getByIndex(workflowRef.current, index);
+    const { ws, i } = getByIndex(sheetRef.current, index);
     const removeItem: number[] = [];
 
     const doDelete = (wf: ISheet[], j: number, isSec?: boolean) => {
@@ -730,20 +730,20 @@ export function ScriptureTable(props: IProps) {
     };
 
     if (ws) {
-      var newwf = [...workflowRef.current];
+      var newsht = [...sheetRef.current];
       if (isSectionRow(ws)) {
         let j = i;
         let isSec = true;
-        while (j < newwf.length) {
-          doDelete(newwf, j, isSec);
+        while (j < newsht.length) {
+          doDelete(newsht, j, isSec);
           j += 1;
           isSec = false;
-          if (j === newwf.length) break;
-          if (isSectionRow(newwf[j])) break;
+          if (j === newsht.length) break;
+          if (isSectionRow(newsht[j])) break;
         }
-      } else doDelete(newwf, i);
+      } else doDelete(newsht, i);
       const myWork: ISheet[] = [];
-      newwf.forEach((ws, i) => {
+      newsht.forEach((ws, i) => {
         if (!removeItem.includes(i)) myWork.push(ws);
       });
       setSheet([...shtResequence(myWork)]);
@@ -771,7 +771,7 @@ export function ScriptureTable(props: IProps) {
   const getSectionsWhere = (where: number[]) => {
     let selected = Array<Section>();
     where.forEach((c) => {
-      const { ws } = getByIndex(workflowRef.current, c);
+      const { ws } = getByIndex(sheetRef.current, c);
       let one = sections.find((s) => s.id === ws?.sectionId?.id);
       if (one) selected.push(one);
     });
@@ -785,7 +785,7 @@ export function ScriptureTable(props: IProps) {
     }
     const { valid, addedWorkflow } = paste(rows);
     if (valid) {
-      setSheet(workflowRef.current.concat(addedWorkflow));
+      setSheet(sheetRef.current.concat(addedWorkflow));
       setChanged(true);
       return Array<Array<string>>();
     }
@@ -800,9 +800,9 @@ export function ScriptureTable(props: IProps) {
     [key: string]: any;
   }
   const updateData = (changes: ICellChange[]) => {
-    var newwf = [...workflowRef.current];
+    var newsht = [...sheetRef.current];
     changes.forEach((c) => {
-      const { ws, i } = getByIndex(newwf, c.row);
+      const { ws, i } = getByIndex(newsht, c.row);
       const myWf = ws as MyWorkflow | undefined;
       const name = colNames[c.col];
       const isNumberCol = c.col === secNumCol || c.col === passNumCol;
@@ -823,7 +823,7 @@ export function ScriptureTable(props: IProps) {
             ? passageTypeFromRef(c.value as string, flat)
             : ws?.passageType;
 
-        newwf[i] = {
+        newsht[i] = {
           ...ws,
           [name]: isNumberCol ? parseInt(value ?? '') : value,
           sectionUpdated,
@@ -833,36 +833,36 @@ export function ScriptureTable(props: IProps) {
       }
     });
     if (changes.length > 0) {
-      setSheet(newwf);
+      setSheet(newsht);
       setChanged(true);
     }
   };
 
   const updateTitleMedia = async (index: number, mediaId: string) => {
-    var newwf = [...workflowRef.current];
-    const { ws, i } = getByIndex(newwf, index);
+    var newsht = [...sheetRef.current];
+    const { ws, i } = getByIndex(newsht, index);
     if (ws) {
       if (isSectionRow(ws)) {
         const sectionUpdated = currentDateTime();
-        newwf[i] = {
+        newsht[i] = {
           ...ws,
           titleMediaId: mediaId
             ? { type: 'mediafile', id: mediaId }
             : undefined,
           sectionUpdated,
         } as ISheet;
-        setSheet(newwf);
+        setSheet(newsht);
         setChanged(true);
       }
       // Used for recording chapter numbers (CHNUM)
       if (isPassageRow(ws)) {
         const passageUpdated = currentDateTime();
-        newwf[i] = {
+        newsht[i] = {
           ...ws,
           mediaId: mediaId ? { type: 'mediafile', id: mediaId } : undefined,
           passageUpdated,
         } as ISheet;
-        setSheet(newwf);
+        setSheet(newsht);
         setChanged(true);
         if (ws?.passage?.id) {
           const mediaRec = findRecord(memory, 'mediafile', mediaId) as
@@ -902,7 +902,7 @@ export function ScriptureTable(props: IProps) {
     waitForIt(
       'passageId to be set',
       () => {
-        return getByIndex(workflowRef.current, i).ws?.passage !== undefined;
+        return getByIndex(sheetRef.current, i).ws?.passage !== undefined;
       },
       () => false,
       SaveWait
@@ -912,7 +912,7 @@ export function ScriptureTable(props: IProps) {
   const handlePassageDetail = (i: number) => {
     saveIfChanged(async () => {
       waitForPassageId(i, () => {
-        const { ws } = getByIndex(workflowRef.current, i);
+        const { ws } = getByIndex(sheetRef.current, i);
         const id = ws?.passage?.id || '';
         const passageRemoteId =
           remoteIdNum('passage', id, memory.keyMap as RecordKeyMap) || id;
@@ -940,7 +940,7 @@ export function ScriptureTable(props: IProps) {
     }
     saveIfChanged(() => {
       waitForPassageId(index, () => {
-        const { ws } = getByIndex(workflowRef.current, index);
+        const { ws } = getByIndex(sheetRef.current, index);
         setAudacityItem({ ws: ws as ISheet, index });
       });
     });
@@ -964,7 +964,7 @@ export function ScriptureTable(props: IProps) {
 
   const showUpload = (i: number, record: boolean, list?: File[]) => {
     waitForPassageId(i, () => {
-      const { ws } = getByIndex(workflowRef.current, i);
+      const { ws } = getByIndex(sheetRef.current, i);
       uploadItem.current = ws;
       if (ws?.passage) {
         setDefaultFilename(
@@ -996,7 +996,7 @@ export function ScriptureTable(props: IProps) {
   const handleVersions = (i: number) => () => {
     saveIfChanged(() => {
       waitForPassageId(i, () => {
-        const { ws } = getByIndex(workflowRef.current, i);
+        const { ws } = getByIndex(sheetRef.current, i);
         setVersionRow(ws);
         setIsNote(ws?.passageType === PassageTypeEnum.NOTE);
       });
@@ -1011,7 +1011,7 @@ export function ScriptureTable(props: IProps) {
   const handleGraphic = (i: number) => {
     saveIfChanged(() => {
       setUploadType(UploadType.Graphic);
-      const { ws } = getByIndex(workflowRef.current, i);
+      const { ws } = getByIndex(sheetRef.current, i);
       const defaultName = getDefaultName(ws, 'graphic', memory, plan);
       console.log(`defaultName: ${defaultName}`);
       setDefaultFilename(defaultName);
@@ -1183,10 +1183,10 @@ export function ScriptureTable(props: IProps) {
   useEffect(() => {
     let prevSave = '';
     const handleSave = async () => {
-      const numChanges = shtNumChanges(workflowRef.current, prevSave);
+      const numChanges = shtNumChanges(sheetRef.current, prevSave);
 
       if (numChanges === 0) return;
-      for (const ws of workflowRef.current) {
+      for (const ws of sheetRef.current) {
         if (ws.deleted) await doDetachMedia(ws);
       }
       setComplete(10);
@@ -1201,27 +1201,27 @@ export function ScriptureTable(props: IProps) {
       if (numChanges > 50) setBusy(true);
       let change = false;
       let start = 0;
-      var newwf = [...workflowRef.current];
+      var newsht = [...sheetRef.current];
       if (!offlineOnly) {
         let end = 200;
-        for (; start + 200 < newwf.length; start += end) {
+        for (; start + 200 < newsht.length; start += end) {
           setComplete(Math.floor((90 * start) / numChanges) + 10);
           end = 200;
-          while (!isSectionRow(newwf[start + end]) && end > 0) end -= 1;
+          while (!isSectionRow(newsht[start + end]) && end > 0) end -= 1;
           if (end === 0) {
             //find the end
             end = 200;
-            while (end < newwf.length && !isSectionRow(newwf[start + end]))
+            while (end < newsht.length && !isSectionRow(newsht[start + end]))
               end++;
           }
-          change = (await saveFn(newwf.slice(start, start + end))) || change;
+          change = (await saveFn(newsht.slice(start, start + end))) || change;
         }
       }
-      change = (await saveFn(newwf.slice(start))) || change;
+      change = (await saveFn(newsht.slice(start))) || change;
       //update plan section count and lastmodified
       await updateLastModified();
       //not sure we need to do this because its going to be requeried next
-      if (change) setSheet(newwf);
+      if (change) setSheet(newsht);
       setBusy(false);
     };
     const setSaving = (value: boolean) => (savingRef.current = value);
@@ -1356,7 +1356,7 @@ export function ScriptureTable(props: IProps) {
   useEffect(() => {
     const newWork: ISheet[] = [];
     var changed = false;
-    workflowRef.current.forEach((w, index) => {
+    sheetRef.current.forEach((w, index) => {
       var filtered = false;
       if (isSectionRow(w)) {
         filtered = isSectionFiltered(filterState, w.sectionSeq);
@@ -1364,12 +1364,12 @@ export function ScriptureTable(props: IProps) {
           var allMyPassagesArePublishing = true;
           for (
             var ix = index + 1;
-            ix < workflowRef.current.length &&
-            isPassageRow(workflowRef.current[ix]) &&
+            ix < sheetRef.current.length &&
+            isPassageRow(sheetRef.current[ix]) &&
             allMyPassagesArePublishing;
             ix++
           ) {
-            if (!isPublishingTitle(workflowRef.current[ix].reference, flat)) {
+            if (!isPublishingTitle(sheetRef.current[ix].reference, flat)) {
               allMyPassagesArePublishing = false;
             }
           }
@@ -1405,15 +1405,15 @@ export function ScriptureTable(props: IProps) {
   );
 
   const toggleSectionPublish = (index: number) => {
-    const { ws } = getByIndex(workflowRef.current, index);
+    const { ws } = getByIndex(sheetRef.current, index);
     if (ws) {
-      const newwf = [...workflowRef.current];
-      newwf[index] = {
+      const newsht = [...sheetRef.current];
+      newsht[index] = {
         ...ws,
         published: !ws.published,
         sectionUpdated: currentDateTime(),
       };
-      setSheet(newwf);
+      setSheet(newsht);
       setChanged(true);
     }
   };
@@ -1433,9 +1433,7 @@ export function ScriptureTable(props: IProps) {
   const onPublishingConfirm = () => {
     setConfirmPublishingVisible(false);
     const hasBookTitle = (bookType: PassageTypeEnum) => {
-      if (
-        workflowRef.current.findIndex((w) => w.passageType === bookType) < 0
-      ) {
+      if (sheetRef.current.findIndex((w) => w.passageType === bookType) < 0) {
         //see if we have this book anywhere in the team
         var teamprojects = projects
           .filter((p) => related(p, 'organization') === organization)
@@ -1460,7 +1458,7 @@ export function ScriptureTable(props: IProps) {
     const chapterNumberTitle = (chapter: number) =>
       t.chapter.replace('{0}', chapter.toString());
 
-    const AddBook = (newwf: ISheet[], passageType: PassageTypeEnum) => {
+    const AddBook = (newsht: ISheet[], passageType: PassageTypeEnum) => {
       const sequencenum = passageType === PassageTypeEnum.BOOK ? -4 : -3;
       if (firstBook) {
         const baseName = firstBook ? bookMap[firstBook] : '';
@@ -1478,27 +1476,27 @@ export function ScriptureTable(props: IProps) {
           title,
           passageType: passageType,
         } as ISheet;
-        return newwf.concat([newRow]);
+        return newsht.concat([newRow]);
       }
-      return newwf;
+      return newsht;
     };
 
     const isKind = (
       row: number,
       kind: PassageTypeEnum,
-      ws: ISheet[] = workflowRef.current
+      ws: ISheet[] = sheetRef.current
     ) => {
       return row >= 0 && row < ws.length
         ? ws[row].passageType === kind && ws[row].deleted === false
         : false;
     };
 
-    const addChapterNumber = (newwf: ISheet[], chapter: number) => {
+    const addChapterNumber = (newsht: ISheet[], chapter: number) => {
       if (chapter > 0) {
         const title = chapterNumberTitle(chapter);
         return addPassageTo(
           SheetLevel.Section,
-          newwf,
+          newsht,
           PassageTypeEnum.CHAPTERNUMBER,
           undefined,
           undefined,
@@ -1506,7 +1504,7 @@ export function ScriptureTable(props: IProps) {
           PassageTypeEnum.CHAPTERNUMBER + ' ' + chapter.toString()
         );
       }
-      return newwf;
+      return newsht;
     };
     const startChapter = (w: ISheet) =>
       (w.passage && w.passage.attributes.startChapter) ??
@@ -1526,7 +1524,7 @@ export function ScriptureTable(props: IProps) {
     if (!hasBookTitle(PassageTypeEnum.ALTBOOK))
       newworkflow = AddBook(newworkflow, PassageTypeEnum.ALTBOOK);
     var nextpsg = 0;
-    var wf = workflowRef.current;
+    var wf = sheetRef.current;
     wf.forEach((w, index) => {
       //if flat the title has to come before the section
       //otherwise we want it as the first passage in the section
