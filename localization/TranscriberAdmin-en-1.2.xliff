@@ -5675,6 +5675,13 @@
       			<context context-type="sourcefile">ResourceOverview.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="resource.linkError">
+      		<source>Link is not a correctly formatted URL</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="resource.noteDetails">
       		<source>Note Details</source>
       		<target/>
