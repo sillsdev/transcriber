@@ -1413,7 +1413,7 @@ export function ScriptureTable(props: IProps) {
   }, [orgSteps, filterState, doneStepId, hidePublishing]);
 
   const firstBook = useMemo(
-    () => sheet.find((b) => (b.book ?? '') !== '')?.book ?? '',
+    () => sheet.find((b) => !b.deleted && (b.book ?? '') !== '')?.book ?? '',
     [sheet]
   );
 
@@ -1446,7 +1446,9 @@ export function ScriptureTable(props: IProps) {
   const onPublishingConfirm = () => {
     setConfirmPublishingVisible(false);
     const hasBookTitle = (bookType: PassageTypeEnum) => {
-      if (sheet.findIndex((w) => w.passageType === bookType) < 0) {
+      if (
+        sheet.findIndex((w) => !w.deleted && w.passageType === bookType) < 0
+      ) {
         //see if we have this book anywhere in the team
         var teamprojects = projects
           .filter((p) => related(p, 'organization') === organization)
