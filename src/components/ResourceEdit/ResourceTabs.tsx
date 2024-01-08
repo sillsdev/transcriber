@@ -75,17 +75,19 @@ interface IProps {
   passId: string;
   ws: ISheet | undefined;
   onOpen: () => void;
+  onUpdRef?: (id: string, val: string) => void;
 }
 
-export function ResourceTabs({ passId, ws, onOpen }: IProps) {
+export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
   const sharedResources = useOrbitData<SharedResource[]>('sharedresource');
   const graphics = useOrbitData<GraphicD[]>('graphic');
   const [value, setValue] = React.useState(0);
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
   const readSharedResource = useSharedResRead();
-  const updateSharedResource = useSharedResUpdate();
+  const updateSharedResource = useSharedResUpdate({ onUpdRef });
   const createSharedResource = useSharedResCreate({
     passage: { type: 'passage', id: passId },
+    onUpdRef,
   });
   const deleteSharedResource = useSharedResDelete();
   const updatePassage = usePassageUpdate();
