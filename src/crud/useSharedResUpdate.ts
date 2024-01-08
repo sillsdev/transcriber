@@ -3,6 +3,7 @@ import { ArtifactCategory, SharedResourceD } from '../model';
 import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
 import { ReplaceRelatedRecord, UpdateRecord } from '../model/baseModel';
 import { findRecord } from '.';
+import { useArtifactCategory } from '.';
 
 interface ShResUpdProps {
   onUpdRef?: (id: string, val: string) => void;
@@ -11,6 +12,7 @@ interface ShResUpdProps {
 export const useSharedResUpdate = ({ onUpdRef }: ShResUpdProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const { localizedArtifactCategory } = useArtifactCategory();
 
   return async (
     sharedResource: SharedResourceD,
@@ -40,9 +42,12 @@ export const useSharedResUpdate = ({ onUpdRef }: ShResUpdProps) => {
         | ArtifactCategory
         | undefined;
       if (catRec && onUpdRef) {
+        const catText = localizedArtifactCategory(
+          catRec.attributes.categoryname
+        );
         const passage = sharedResource.relationships.passage
           .data as RecordIdentity;
-        onUpdRef(passage.id, `NOTE ${catRec.attributes.categoryname}`);
+        onUpdRef(passage.id, `NOTE ${catText}`);
       }
     }
     await memory.update(ops);

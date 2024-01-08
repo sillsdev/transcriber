@@ -2,12 +2,14 @@ import { InitializedRecord } from '@orbit/records';
 import { apmGraphic } from '../components/GraphicUploader';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { ArtifactCategoryD, GraphicD } from '../model';
+import { useArtifactCategory } from './useArtifactCategory';
 
 export const useGraphicFind = () => {
   const graphics = useOrbitData('graphic') as GraphicD[];
   const artifactCategory = useOrbitData(
     'artifactcategory'
   ) as ArtifactCategoryD[];
+  const { fromLocalizedArtifactCategory } = useArtifactCategory();
 
   return (recId: InitializedRecord, ref?: string) => {
     let graphicRec = graphics.find(
@@ -17,7 +19,8 @@ export const useGraphicFind = () => {
     );
     let color = undefined;
     if (ref) {
-      const catText = ref.split(' ')[1];
+      let catText = ref.split(' ')[1];
+      catText = catText ? fromLocalizedArtifactCategory(catText) : undefined;
       const catRec = artifactCategory.find(
         (c) => c.attributes.categoryname === catText
       );

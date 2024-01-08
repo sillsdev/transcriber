@@ -3,6 +3,7 @@ import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
 import { ArtifactCategory, SharedResource } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { findRecord } from './tryFindRecord';
+import { useArtifactCategory } from '.';
 
 interface IProps {
   title: string;
@@ -29,6 +30,7 @@ export const useSharedResCreate = ({
 }: RefProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const { localizedArtifactCategory } = useArtifactCategory();
 
   return async ({
     title,
@@ -102,7 +104,10 @@ export const useSharedResCreate = ({
         | ArtifactCategory
         | undefined;
       if (catRec) {
-        onUpdRef(passage.id, `NOTE ${catRec.attributes.categoryname}`);
+        const catText = localizedArtifactCategory(
+          catRec.attributes.categoryname
+        );
+        onUpdRef(passage.id, `NOTE ${catText}`);
       }
     }
     await memory.update(ops);
