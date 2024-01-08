@@ -191,7 +191,7 @@ export const ProjectDownload = (props: IProps) => {
     if (progress === Steps.Import) {
       (async () => {
         const localPath = dataPath(exportName, PathType.ZIP);
-        await ipc?.zipExtractOpen(localPath, dataPath());
+        await ipc?.zipStreamExtract(localPath, dataPath());
         offlineProjectUpdateFilesDownloaded(
           projectIds[currentStep],
           offlineUpdates,
