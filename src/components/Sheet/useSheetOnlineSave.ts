@@ -121,7 +121,7 @@ export const useWfOnlineSave = (props: IProps) => {
               : undefined,
 
             sharedResourceId: w.sharedResourceId
-              ? await getRemoteId('sharedresource', w.sharedResourceId.id)
+              ? await getRemoteId('sharedresource', w.sharedResourceId)
               : undefined,
           };
         }

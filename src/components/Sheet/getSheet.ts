@@ -14,7 +14,7 @@ import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
 import { getVernacularMediaRec, getMediaShared } from '../../crud/media';
 import { getNextStep } from '../../crud/getNextStep';
-import { getStepComplete } from '../../crud';
+import { findRecord, getStepComplete } from '../../crud';
 import { toCamel } from '../../utils';
 import { ISTFilterState } from './filterMenu';
 import { PassageTypeEnum } from '../../model/passageType';
@@ -218,7 +218,18 @@ export const getSheet = (
         item.passage = passage;
         item.passageType = passageTypeFromRef(passAttr.reference, flat);
         item.sharedResourceId = related(passage, 'sharedResource');
-        const mediaRec = getVernacularMediaRec(passage.id, memory);
+        let mediaRec = getVernacularMediaRec(passage.id, memory);
+        if (item.sharedResourceId) {
+          const sh = findRecord(
+            memory,
+            'sharedresource',
+            item.sharedResourceId
+          );
+          if (sh) {
+            mediaRec = getVernacularMediaRec(related(sh, 'passage'), memory);
+          }
+        }
+
         item.mediaId = mediaRec
           ? { type: 'mediafile', id: mediaRec.id }
           : undefined;

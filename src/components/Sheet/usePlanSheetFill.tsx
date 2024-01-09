@@ -403,6 +403,7 @@ export const usePlanSheetFill = ({
     calcClassName: string;
     rowIndex: number;
     anyRecording: boolean;
+    sharedRes: boolean;
   }
 
   const rowCells =
@@ -413,6 +414,7 @@ export const usePlanSheetFill = ({
       calcClassName,
       rowIndex,
       anyRecording,
+      sharedRes,
     }: RowCellsProps) =>
     (e: string | number, cellIndex: number) => {
       const bookCol = colSlugs.indexOf('book');
@@ -462,7 +464,20 @@ export const usePlanSheetFill = ({
         }
       }
 
-      if (cellIndex === refCol)
+      if (cellIndex === refCol) {
+        console.log(
+          e,
+          'passage?',
+          passage,
+          'shared?',
+          sharedRes,
+          calcClassName +
+            (passage
+              ? ' ref' +
+                (bookCol > 0 && refErrTest(e) ? 'Err' : '') +
+                (sharedRes ? ' shared' : '')
+              : '')
+        );
         return {
           value: refValue(e),
           readOnly:
@@ -474,9 +489,12 @@ export const usePlanSheetFill = ({
           className:
             calcClassName +
             (passage
-              ? ' ref' + (bookCol > 0 && refErrTest(e) ? 'Err' : '')
+              ? ' ref' +
+                (bookCol > 0 && refErrTest(e) ? 'Err' : '') +
+                (sharedRes ? ' shared' : '')
               : ''),
         };
+      }
       return {
         value: e,
         readOnly:
@@ -573,6 +591,7 @@ export const usePlanSheetFill = ({
       const book = isBook(rowIndex) || isAltBook(rowIndex);
       const iscurrent: string =
         currentRow === rowIndex + 1 ? ' currentrow ' : '';
+      const sharedRes = Boolean(rowInfo[rowIndex].sharedResourceId);
 
       const calcClassName =
         iscurrent + section
@@ -604,6 +623,7 @@ export const usePlanSheetFill = ({
             calcClassName,
             rowIndex,
             anyRecording,
+            sharedRes,
           })
         )
         .forEach((c) => {

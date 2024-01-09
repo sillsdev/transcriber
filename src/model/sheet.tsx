@@ -36,7 +36,7 @@ export interface ISheet {
   reference?: string;
   comment?: string;
   passage?: PassageD;
-  sharedResourceId?: RecordIdentity;
+  sharedResourceId?: string;
   passageType: PassageTypeEnum;
   passageUpdated?: string;
   mediaId?: RecordIdentity;
