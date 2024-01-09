@@ -25,7 +25,7 @@ import {
 import {
   related,
   sectionNumber,
-  passageNumber,
+  taskPassageNumber,
   remoteIdGuid,
   usePlan,
   useArtifactType,
@@ -316,7 +316,7 @@ const TranscriberProvider = (props: IProps) => {
               section: { ...secRec } as SectionD,
               passage: { ...p } as PassageD,
               state: curState,
-              sectPass: secNum + '.' + passageNumber(p).trim(),
+              sectPass: secNum + '.' + taskPassageNumber(p).trim(),
               mediafile: mediaRec as MediaFileD,
               playItem,
               duration: mediaRec.attributes.duration,
