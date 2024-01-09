@@ -2,7 +2,7 @@ import * as React from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import CategoryList from './CategoryListEdit';
+import CategoryListEdit from './CategoryListEdit';
 import { shallowEqual, useSelector } from 'react-redux';
 import { categorySelector } from '../../selector';
 import { ICategoryStrings } from '../../model';
@@ -61,21 +61,21 @@ export default function CategoryTabs({ teamId, flat, onClose }: IProps) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <CategoryList
+        <CategoryListEdit
           type={ArtifactCategoryType.Resource}
           teamId={teamId}
           onClose={onClose}
         />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <CategoryList
+        <CategoryListEdit
           type={ArtifactCategoryType.Discussion}
           teamId={teamId}
           onClose={onClose}
         />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <CategoryList
+        <CategoryListEdit
           type={ArtifactCategoryType.Note}
           teamId={teamId}
           onClose={onClose}

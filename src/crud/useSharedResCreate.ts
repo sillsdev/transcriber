@@ -107,7 +107,7 @@ export const useSharedResCreate = ({
         const catText = localizedArtifactCategory(
           catRec.attributes.categoryname
         );
-        onUpdRef(passage.id, `NOTE ${catText}`);
+        onUpdRef(passage.id, `NOTE|${catText}`);
       }
     }
     await memory.update(ops);

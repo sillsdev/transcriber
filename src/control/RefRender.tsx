@@ -106,7 +106,7 @@ const ArgType: FC<AtProps> = memo(({ value, type, Icon }: AtProps) => {
     <>
       {Icon}
       {'\u00A0'}
-      {val.substring(len)}
+      {val.substring(len + 1)}
     </>
   );
 });

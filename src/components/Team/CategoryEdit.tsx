@@ -81,6 +81,7 @@ export default function CategoryEdit({
   const t: ICategoryStrings = useSelector(categorySelector, shallowEqual);
 
   const handleTitleChange = (value: string) => {
+    value = value.replace(/\|/g, '').trim(); // remove pipe character
     setTitleValue(value);
     category.category = value;
     onChanged(category);

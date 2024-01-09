@@ -47,7 +47,7 @@ export const useSharedResUpdate = ({ onUpdRef }: ShResUpdProps) => {
         );
         const passage = sharedResource.relationships.passage
           .data as RecordIdentity;
-        onUpdRef(passage.id, `NOTE ${catText}`);
+        onUpdRef(passage.id, `NOTE|${catText}`);
       }
     }
     await memory.update(ops);

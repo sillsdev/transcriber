@@ -244,7 +244,7 @@ export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
       const category = catSlug
         ? (localizedArtifactCategory(catSlug) as string) || catSlug
         : catSlug || '';
-      passage.attributes.reference = `NOTE ${category}`;
+      passage.attributes.reference = `NOTE|${category}`;
     }
     await updatePassage(passage, undefined, undefined, sr.id);
   };

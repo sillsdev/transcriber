@@ -428,14 +428,6 @@ const postPass = (doc: Document, currentPI: PassageInfo, memory: Memory) => {
   });
 };
 
-/*
-  const passageChapter = (p: Passage) => {
-  var nums = /[0-9]+/.exec(p.attributes.reference);
-  if (nums && nums.length > 0) return nums[0];
-  return null;
-};
-*/
-
 const removeSection = (v: Element) => v.parentNode?.removeChild(v);
 
 const removeVerse = (v: Element) => {

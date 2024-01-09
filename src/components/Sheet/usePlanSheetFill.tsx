@@ -354,10 +354,7 @@ export const usePlanSheetFill = ({
     if (
       !isSectionType(rowIndex) &&
       ![PassageTypeEnum.NOTE, PassageTypeEnum.CHAPTERNUMBER].includes(
-        passageTypeFromRef(
-          rowInfo[rowIndex].reference?.split(' ')[0],
-          inlinePassages
-        )
+        passageTypeFromRef(rowInfo[rowIndex].reference, inlinePassages)
       )
     ) {
       return <></>;
