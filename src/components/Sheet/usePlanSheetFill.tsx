@@ -30,6 +30,7 @@ import { useShowIcon } from './useShowIcon';
 import { ExtraIcon } from '.';
 import { positiveWholeOnly, stringAvatar } from '../../utils';
 import { TitleEdit } from './TitleEdit';
+import { getPubRefs } from './getPubRefs';
 
 type ICellEditor = (props: any) => JSX.Element;
 type IRow = (string | number)[];
@@ -130,7 +131,7 @@ export const usePlanSheetFill = ({
   onRecording,
 }: IProps) => {
   const ctx = useContext(PlanContext);
-  const { readonly } = ctx.state;
+  const { readonly, sectionMap } = ctx.state;
   const [planId] = useGlobal('plan');
   const [offline] = useGlobal('offline');
   const { userIsAdmin } = useRole();
@@ -418,6 +419,13 @@ export const usePlanSheetFill = ({
       const bookCol = colSlugs.indexOf('book');
       const titleCol = colSlugs.indexOf('title');
       const descCol = colSlugs.indexOf('comment');
+      if (cellIndex === SectionSeqCol && section && !hidePublishing) {
+        return {
+          value: sectionMap?.get(e as number) || '',
+          readOnly: true,
+          className: calcClassName,
+        };
+      }
       if (cellIndex === bookCol && passage)
         return {
           value: e,
@@ -625,6 +633,8 @@ export const usePlanSheetFill = ({
       );
       return sheetRow;
     };
+
+  getPubRefs({ rowInfo, rowData, sectionMap, passageSeqCol });
 
   return (props: IFillProps) => {
     const data = titleRow(columns);
