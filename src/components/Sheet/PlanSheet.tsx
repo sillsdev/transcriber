@@ -815,7 +815,8 @@ export function PlanSheet(props: IProps) {
             )}
 
             <GrowingSpacer />
-            {!shared &&
+            {data.length > 1 &&
+              !shared &&
               !offline &&
               !inlinePassages &&
               !readonly &&
