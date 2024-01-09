@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { shallowEqual, useSelector } from 'react-redux';
 import { PlanContext } from '../../context/PlanContext';
@@ -288,9 +288,12 @@ export const AudioTable = (props: IProps) => {
   const getUser = (id: string) => {
     return findRecord(memory, 'user', id) as UserD;
   };
+  const MemoAvatar = memo(({ value }: { value: string }) => (
+    <UserAvatar userRec={getUser(value)} />
+  ));
   const UserCell = ({ row, value, ...props }: ICell) => (
     <Table.Cell row {...props} value>
-      <UserAvatar userRec={getUser(value)} />
+      <MemoAvatar value={value} />
     </Table.Cell>
   );
   const Cell = (props: ICell) => {

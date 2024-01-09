@@ -36,7 +36,7 @@ interface IProps {
   onClose?: () => void;
 }
 
-export default function CategoryList({ type, teamId, onClose }: IProps) {
+export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   const [refresh, setRefresh] = React.useState(0);
   const [categories, setCategories] = useState<IArtifactCategory[]>([]);
   const [edited, setEdited] = useState<[string, IArtifactCategory][]>([]);

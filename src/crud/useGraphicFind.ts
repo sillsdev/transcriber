@@ -19,7 +19,7 @@ export const useGraphicFind = () => {
     );
     let color = undefined;
     if (ref) {
-      let catText = ref.split(' ')[1];
+      let catText = ref.split('|')[1];
       catText = catText ? fromLocalizedArtifactCategory(catText) : undefined;
       const catRec = artifactCategory.find(
         (c) => c.attributes.categoryname === catText

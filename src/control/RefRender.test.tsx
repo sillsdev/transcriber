@@ -17,13 +17,13 @@ describe('passageTypeFromRef', () => {
     expect(passageTypeFromRef('BOOK')).toBe(PassageTypeEnum.BOOK);
 
     // Test case 2: ref starts with 'CHNUM'
-    expect(passageTypeFromRef('CHNUM 12')).toBe(PassageTypeEnum.CHAPTERNUMBER);
+    expect(passageTypeFromRef('CHNUM|12')).toBe(PassageTypeEnum.CHAPTERNUMBER);
 
     // Test case 4: ref starts with 'ALTBK'
     expect(passageTypeFromRef('ALTBK')).toBe(PassageTypeEnum.ALTBOOK);
 
     // Test case 5: ref starts with 'NOTE'
-    expect(passageTypeFromRef('NOTE Devotional')).toBe(PassageTypeEnum.NOTE);
+    expect(passageTypeFromRef('NOTE|Devotional')).toBe(PassageTypeEnum.NOTE);
 
     // Test case 6: ref starts with 'MOVE'
     expect(passageTypeFromRef('MOVE')).toBe(PassageTypeEnum.MOVEMENT);
@@ -63,7 +63,7 @@ describe('isPublishingTitle', () => {
 
   // Returns false for a valid note reference.
   it('should return false when given a valid note reference', () => {
-    expect(isPublishingTitle('NOTE Devotional')).toBe(false);
+    expect(isPublishingTitle('NOTE|Devotional')).toBe(false);
   });
 
   // Returns false for a valid passage reference.

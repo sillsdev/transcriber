@@ -365,23 +365,6 @@ export function ScriptureTable(props: IProps) {
     return newArr;
   };
 
-  /*
-  const xmovePassageDown = (data: ISheet[], index: number) => {
-    var origrowid = { ...data[index] };
-    var newrowid = { ...data[index + 1] };
-
-    if (scripture) {
-      newrowid.book = origrowid.book;
-    }
-    newrowid.reference = origrowid.reference;
-    origrowid.reference = '';
-    newrowid.title = origrowid.title;
-    origrowid.title = '';
-    data[index] = origrowid;
-    data[index + 1] = newrowid;
-  };
-*/
-
   const NoSkip = false;
   const findSection = (
     myWorkflow: ISheet[],
@@ -1453,7 +1436,9 @@ export function ScriptureTable(props: IProps) {
     setConfirmPublishingVisible(false);
     const hasBookTitle = (bookType: PassageTypeEnum) => {
       if (
-        sheetRef.current.findIndex((w) => !w.deleted && w.passageType === bookType) < 0
+        sheetRef.current.findIndex(
+          (w) => !w.deleted && w.passageType === bookType
+        ) < 0
       ) {
         //see if we have this book anywhere in the team
         var teamprojects = projects
