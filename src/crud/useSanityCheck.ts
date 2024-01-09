@@ -215,9 +215,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
         case 'discussion':
           return discussionRows();
         case 'graphic':
-          return (
-            memory.cache.query((q) => q.findRecords('graphic')) as BaseModel[]
-          ).filter((g) => related(g, 'project') === project.id);
+          return filterByOrg('graphic');
         case 'groupmembership':
           var groups = groupRows().map((g) => g.id);
           return (
@@ -296,7 +294,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           ).filter(
             (srr) =>
               sharedresources.find(
-                (id) => id === related(srr, 'sharedresource')
+                (id) => id === related(srr, 'sharedResource')
               ) !== undefined
           );
         case 'user':
