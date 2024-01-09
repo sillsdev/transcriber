@@ -14,7 +14,7 @@ import { Duration, GrowingSpacer, ItemDescription } from '../control';
 import {
   related,
   sectionNumber,
-  passageNumber,
+  taskPassageNumber,
   PassageReference,
 } from '../crud';
 import { NextAction } from './TaskFlag';
@@ -102,7 +102,7 @@ export function TaskItem(props: IProps) {
                     <GrowingSpacer />
                     {'{1}.{2}'
                       .replace('{1}', sectionNumber(section))
-                      .replace('{2}', passageNumber(passage).trim())}
+                      .replace('{2}', taskPassageNumber(passage).trim())}
                   </>
                 )}
               </Box>

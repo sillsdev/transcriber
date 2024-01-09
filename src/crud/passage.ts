@@ -6,7 +6,9 @@ export function passageNumber(passage: Passage) {
   const seq = positiveWholeOnly(passage?.attributes?.sequencenum);
   return seq ? seq.padStart(3, ' ') : '';
 }
-
+export function taskPassageNumber(passage: Passage) {
+  return `${passage?.attributes?.sequencenum}`.padStart(3, ' ');
+}
 export function passageCompare(a: Passage, b: Passage) {
   return numCompare(
     a.attributes ? a.attributes.sequencenum : 0,

@@ -25,7 +25,7 @@ import { ChipText } from './TaskFlag';
 import {
   sectionNumber,
   sectionDescription,
-  passageNumber,
+  taskPassageNumber,
   useOrganizedBy,
   usePlan,
   useOfflineAvailToggle,
@@ -408,7 +408,7 @@ export function TaskTable(props: IProps) {
       mediaId: r.mediafile.id,
       rowKey:
         sectionNumber(r.section) +
-        (r.mediafile.id ? passageNumber(r.passage) : '   '),
+        (r.mediafile.id ? taskPassageNumber(r.passage) : '   '),
     }));
     setRows(newRows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
