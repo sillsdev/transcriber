@@ -424,9 +424,7 @@ const TeamProvider = (props: IProps) => {
       });
     }
     const teams = getTeams();
-    const teamIds = teams.map((t) => t.id).sort();
-    const currentIds = state.teams.map((t) => t.id).sort();
-    if (teamIds.join(',') !== currentIds.join(',')) {
+    if (JSON.stringify(teams) !== JSON.stringify(state.teams)) {
       setState((state) => ({ ...state, teams }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
