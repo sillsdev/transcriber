@@ -179,6 +179,7 @@ export function ScriptureTable(props: IProps) {
     shared,
     hidePublishing,
     canHidePublishing,
+    sectionMap,
     setCanPublish,
   } = ctx.state;
   const { getOrganizedBy } = useOrganizedBy();
@@ -681,6 +682,7 @@ export function ScriptureTable(props: IProps) {
       showMessage(t.saving);
       return;
     }
+    sectionMap.clear();
     const i = getUndelIndex(sheetRef.current, ix);
     if (i !== undefined) {
       setSheet(moveSectionTo(sheetRef.current, i, before));
