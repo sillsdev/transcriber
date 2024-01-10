@@ -29,7 +29,7 @@ export const useVProjectCreate = () => {
       q.findRecords('group')
     ) as Group[];
     const selected = grpRecs.filter(
-      (g) => g.attributes.allUsers && related(g, 'owner') === teamId
+      (g) => g?.attributes?.allUsers && related(g, 'owner') === teamId
     );
     return selected.length > 0 ? selected[0].id : '';
   };
