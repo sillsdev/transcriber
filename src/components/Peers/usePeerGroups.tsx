@@ -64,7 +64,8 @@ export const usePeerGroups = () => {
     setMyGroups(
       groups.filter(
         (g) =>
-          !g.attributes.allUsers &&
+          g?.attributes &&
+          !g.attributes?.allUsers &&
           groupIds.includes(g.id) &&
           related(g, 'owner') === organization
       )
@@ -76,7 +77,10 @@ export const usePeerGroups = () => {
   useEffect(() => {
     setPeerGroups(
       groups.filter(
-        (g) => !g.attributes.allUsers && related(g, 'owner') === organization
+        (g) =>
+          g?.attributes &&
+          !g.attributes?.allUsers &&
+          related(g, 'owner') === organization
       )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
