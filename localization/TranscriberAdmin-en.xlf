@@ -4330,15 +4330,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.moveUp">
+      <unit id="planSheet.moveDown">
          <segment>
-            <source>Move {pt} {0} up</source>
+            <source>Move down</source>
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.moveDown">
+      <unit id="planSheet.moveUp">
          <segment>
-            <source>Move {pt} {0} down</source>
+            <source>Move up</source>
             <target/>
          </segment>
       </unit>
@@ -4368,13 +4368,13 @@
       </unit>
       <unit id="planSheet.passageToPrevSection">
          <segment>
-            <source>Move {pt} {0} to Previous Section</source>
+            <source>Move {pt} {0} Up</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.passageToNextSection">
          <segment>
-            <source>Move {pt} {0} to Next Section</source>
+            <source>Move {pt} {0} Down</source>
             <target/>
          </segment>
       </unit>

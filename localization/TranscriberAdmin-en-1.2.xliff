@@ -5051,15 +5051,15 @@
       			<context context-type="sourcefile">PlanSheet.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="planSheet.moveUp">
-      		<source>Move {pt} {0} up</source>
+      	<trans-unit id="planSheet.moveDown">
+      		<source>Move down</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PlanSheet.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="planSheet.moveDown">
-      		<source>Move {pt} {0} down</source>
+      	<trans-unit id="planSheet.moveUp">
+      		<source>Move up</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PlanSheet.tsx</context>
@@ -5095,14 +5095,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.passageToPrevSection">
-            <source>Move {pt} {0} to Previous Section</source>
+            <source>Move {pt} {0} Up</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.passageToNextSection">
-            <source>Move {pt} {0} to Next Section</source>
+            <source>Move {pt} {0} Down</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
