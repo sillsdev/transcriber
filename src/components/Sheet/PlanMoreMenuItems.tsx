@@ -18,8 +18,6 @@ import {
   InsertSectionIcon,
   PassageBelowIcon,
   MoveDownIcon,
-  PassageToNextIcon,
-  PassageToPrevIcon,
   MoveUpIcon,
   PublishIcon,
   UnPublishIcon,
@@ -198,9 +196,7 @@ export const PlanMoreMenuItems: FC<
           <MenuItem
             id="sectionUp"
             onClick={() => onAction(rowIndex, ExtraIcon.SectionUp)}
-            title={p.moveUp
-              .replace('{pt}', organizedBy)
-              .replace('{0}', sectionSequenceNumber)}
+            title={p.moveUp}
           >
             <MoveUpIcon />
           </MenuItem>
@@ -209,9 +205,7 @@ export const PlanMoreMenuItems: FC<
           <MenuItem
             id="sectionDown"
             onClick={() => onAction(rowIndex, ExtraIcon.SectionDown)}
-            title={p.moveDown
-              .replace('{pt}', organizedBy)
-              .replace('{0}', sectionSequenceNumber)}
+            title={p.moveDown}
           >
             <MoveDownIcon />
           </MenuItem>
@@ -224,16 +218,14 @@ export const PlanMoreMenuItems: FC<
               .replace('{pt}', ty.getString(psgType))
               .replace('{0}', passageSequenceNumber)}
           >
-            <PassageToPrevIcon />
+            <MoveUpIcon />
           </MenuItem>
         )}
         {showIcon(ExtraIcon.PassageUp) && (
           <MenuItem
             id="passUp"
             onClick={() => onAction(rowIndex, ExtraIcon.PassageUp)}
-            title={p.moveUp
-              .replace('{pt}', ty.getString(psgType))
-              .replace('{0}', passageSequenceNumber)}
+            title={p.moveUp}
           >
             <MoveUpIcon />
           </MenuItem>
@@ -242,9 +234,7 @@ export const PlanMoreMenuItems: FC<
           <MenuItem
             id="passDown"
             onClick={() => onAction(rowIndex, ExtraIcon.PassageDown)}
-            title={p.moveDown
-              .replace('{pt}', ty.getString(psgType))
-              .replace('{0}', passageSequenceNumber)}
+            title={p.moveDown}
           >
             <MoveDownIcon />
           </MenuItem>
@@ -257,7 +247,7 @@ export const PlanMoreMenuItems: FC<
               .replace('{pt}', ty.getString(psgType))
               .replace('{0}', passageSequenceNumber)}
           >
-            <PassageToNextIcon />
+            <MoveDownIcon />
           </MenuItem>
         )}
         {isPassage && (

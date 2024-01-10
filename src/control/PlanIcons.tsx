@@ -4,8 +4,6 @@ import {
   faSection,
   faParagraph,
   faPlus,
-  faArrowTurnUp,
-  faArrowTurnDown,
   faAnglesDown,
   faHashtag,
   faBookOpen,
@@ -122,19 +120,19 @@ export const MoveDownIcon = () => (
     <FontAwesomeIcon icon={faArrowDown} transform="shrink-2" />
   </StyledIcon>
 );
-export const PassageToPrevIcon = () => (
-  <StyledIcon size="small">
-    <span className="fa-layers fa-fw fa-sm">
-      <FontAwesomeIcon icon={faArrowTurnUp} transform="shrink-2" />
-      <FontAwesomeIcon icon={faParagraph} transform="right-8 shrink-2" />
-    </span>
-  </StyledIcon>
-);
-export const PassageToNextIcon = () => (
-  <StyledIcon size="small">
-    <span className="fa-layers fa-fw fa-sm">
-      <FontAwesomeIcon icon={faArrowTurnDown} transform="shrink-2" />
-      <FontAwesomeIcon icon={faParagraph} transform="right-8 shrink-2" />
-    </span>
-  </StyledIcon>
-);
+// export const PassageToPrevIcon = () => (
+//   <StyledIcon size="small">
+//     <span className="fa-layers fa-fw fa-sm">
+//       <FontAwesomeIcon icon={faArrowTurnUp} transform="shrink-2" />
+//       <FontAwesomeIcon icon={faParagraph} transform="right-8 shrink-2" />
+//     </span>
+//   </StyledIcon>
+// );
+// export const PassageToNextIcon = () => (
+//   <StyledIcon size="small">
+//     <span className="fa-layers fa-fw fa-sm">
+//       <FontAwesomeIcon icon={faArrowTurnDown} transform="shrink-2" />
+//       <FontAwesomeIcon icon={faParagraph} transform="right-8 shrink-2" />
+//     </span>
+//   </StyledIcon>
+// );
