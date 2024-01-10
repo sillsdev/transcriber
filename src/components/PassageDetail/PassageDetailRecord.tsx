@@ -1,11 +1,12 @@
 import { shallowEqual, useSelector } from 'react-redux';
 import { ISharedStrings, MediaFile } from '../../model';
 import { Typography, Box, Stack } from '@mui/material';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   findRecord,
   IMediaState,
   MediaSt,
+  related,
   useFetchMediaUrl,
   VernacularTag,
 } from '../../crud';
@@ -59,7 +60,7 @@ export function PassageDetailRecord(props: IProps) {
   const [coordinator] = useGlobal('coordinator');
   const [offline] = useGlobal('offline');
   const memory = coordinator.getSource('memory') as Memory;
-  const { passage, mediafileId, chooserSize, setRecording } =
+  const { passage, sharedResource, mediafileId, chooserSize, setRecording } =
     usePassageDetailContext();
   const { showMessage } = useSnackBar();
   const toolId = 'RecordTool';
@@ -130,6 +131,10 @@ export function PassageDetailRecord(props: IProps) {
     );
   }, [mediafileId, recorderState]);
 
+  const passageId = useMemo(
+    () => related(sharedResource, 'passage') ?? passage.id,
+    [sharedResource, passage]
+  );
   const handleSave = () => {
     startSave(toolId);
   };
@@ -257,7 +262,7 @@ export function PassageDetailRecord(props: IProps) {
           multiple={false}
           finish={afterUpload}
           cancelled={cancelled}
-          passageId={passage.id}
+          passageId={passageId}
           performedBy={speaker}
           onSpeakerChange={handleNameChange}
         />
@@ -265,7 +270,12 @@ export function PassageDetailRecord(props: IProps) {
           item={1}
           open={audacityVisible}
           onClose={handleAudacityClose}
-          passageId={{ type: 'passage', id: passage.id } as RecordIdentity}
+          passageId={
+            {
+              type: 'passage',
+              id: passageId,
+            } as RecordIdentity
+          }
           mediaId={mediafileId}
           onImport={handleAudacityImport}
           speaker={speaker}
@@ -276,7 +286,7 @@ export function PassageDetailRecord(props: IProps) {
           isOpen={versionVisible}
           onOpen={handleVerHistClose}
         >
-          <VersionDlg passId={passage.id} />
+          <VersionDlg passId={passageId} />
         </BigDialog>
       </Stack>
     </PlanProvider>

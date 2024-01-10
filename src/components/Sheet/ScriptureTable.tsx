@@ -1707,7 +1707,10 @@ export function ScriptureTable(props: IProps) {
         multiple={false}
         finish={afterUpload}
         cancelled={cancelled}
-        passageId={uploadItem.current?.passage?.id}
+        passageId={
+          related(uploadItem.current?.sharedResource, 'passage') ??
+          uploadItem.current?.passage?.id
+        }
         uploadType={uploadType}
         performedBy={speaker}
         onSpeakerChange={handleNameChange}
@@ -1732,7 +1735,9 @@ export function ScriptureTable(props: IProps) {
           passageId={
             {
               type: 'passage',
-              id: audacityItem?.ws?.passage?.id,
+              id:
+                related(audacityItem?.ws?.sharedResource, 'passage') ??
+                audacityItem?.ws?.passage?.id,
             } as RecordIdentity
           }
           mediaId={audacityItem?.ws?.mediaId?.id || ''}

@@ -177,6 +177,7 @@ export function PassageDetailItem(props: IProps) {
   const { userIsAdmin } = useRole();
   const {
     passage,
+    sharedResource,
     playerMediafile,
     discussionSize,
     setDiscussionSize,
@@ -585,7 +586,7 @@ export function PassageDetailItem(props: IProps) {
         multiple={false}
         finish={afterUpload}
         cancelled={cancelled}
-        passageId={passage.id}
+        passageId={related(sharedResource, 'passage') ?? passage.id}
         sourceSegments={JSON.stringify(getCurrentSegment())}
         sourceMediaId={mediafileId}
         artifactTypeId={recordTypeId}

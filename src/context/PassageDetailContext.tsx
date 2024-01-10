@@ -24,6 +24,7 @@ import {
   IPassageDetailStepCompleteStrings,
   StepComplete,
   SectionResourceD,
+  SharedResourceD,
 } from '../model';
 import {
   useFetchMediaUrl,
@@ -116,6 +117,7 @@ export interface SimpleWf {
 const initState = {
   passage: {} as PassageD,
   section: {} as SectionD,
+  sharedResource: {} as SharedResourceD,
   currentstep: '',
   tool: ToolSlug.Discuss,
   orgWorkflowSteps: [] as OrgWorkflowStepD[],
@@ -797,6 +799,11 @@ const PassageDetailProvider = (props: IProps) => {
               ...state,
               passage: p as PassageD,
               section: s as SectionD,
+              sharedResource: findRecord(
+                memory,
+                'sharedresource',
+                related(p, 'sharedResource')
+              ) as SharedResourceD,
               psgCompleted: [...complete],
             };
           });
@@ -814,7 +821,7 @@ const PassageDetailProvider = (props: IProps) => {
       }
     }
   }, [
-    memory.keyMap,
+    memory,
     pasId,
     passages,
     sections,
@@ -920,7 +927,17 @@ const PassageDetailProvider = (props: IProps) => {
       remoteIdGuid('passage', pasId ?? '', memory.keyMap as RecordKeyMap) ||
       pasId ||
       '';
-    const allMedia = getAllMediaRecs(passageId, memory);
+    const passRec = passages.find((p) => p.id === passageId);
+    let psgId = undefined;
+    if (related(passRec, 'sharedResource')) {
+      const sr = findRecord(
+        memory,
+        'sharedresource',
+        related(passRec, 'sharedResource')
+      ) as SharedResourceD;
+      psgId = related(sr, 'passage');
+    }
+    const allMedia = getAllMediaRecs(psgId ?? passageId, memory);
     const localize = {
       localizedCategory: localizedArtifactCategory,
       localizedType: localizedArtifactType,
@@ -934,7 +951,7 @@ const PassageDetailProvider = (props: IProps) => {
         user,
         ...localize,
       });
-      const passRec = passages.find((p) => p.id === passageId);
+
       const sectId = related(passRec, 'section');
       let res = getResources(sectionResources, mediafiles, sectId);
       newData = newData.concat(

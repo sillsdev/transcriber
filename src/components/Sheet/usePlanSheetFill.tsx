@@ -7,7 +7,7 @@ import {
 } from '../../model';
 import { ICell, ICellChange } from './PlanSheet';
 import { planSheetSelector, viewModeSelector } from '../../selector';
-import { useOrganizedBy, useRole } from '../../crud';
+import { related, useOrganizedBy, useRole } from '../../crud';
 import { rowTypes } from './rowTypes';
 import { StageReport } from '../../control';
 import { Avatar, Badge } from '@mui/material';
@@ -591,7 +591,11 @@ export const usePlanSheetFill = ({
       const book = isBook(rowIndex) || isAltBook(rowIndex);
       const iscurrent: string =
         currentRow === rowIndex + 1 ? ' currentrow ' : '';
-      const sharedRes = Boolean(rowInfo[rowIndex].sharedResourceId);
+      const sharedRes =
+        passage &&
+        Boolean(rowInfo[rowIndex].sharedResource) &&
+        related(rowInfo[rowIndex].sharedResource, 'passage') !==
+          rowInfo[rowIndex].passage?.id;
 
       const calcClassName =
         iscurrent + section

@@ -9,6 +9,7 @@ import {
   PassageD,
   GraphicD,
   OrgWorkflowStepD,
+  SharedResourceD,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
@@ -217,16 +218,18 @@ export const getSheet = (
         item.passageUpdated = passage.attributes.dateUpdated;
         item.passage = passage;
         item.passageType = passageTypeFromRef(passAttr.reference, flat);
-        item.sharedResourceId = related(passage, 'sharedResource');
         let mediaRec = getVernacularMediaRec(passage.id, memory);
-        if (item.sharedResourceId) {
-          const sh = findRecord(
+        if (related(passage, 'sharedResource')) {
+          item.sharedResource = findRecord(
             memory,
             'sharedresource',
-            item.sharedResourceId
-          );
-          if (sh) {
-            mediaRec = getVernacularMediaRec(related(sh, 'passage'), memory);
+            related(passage, 'sharedResource')
+          ) as SharedResourceD;
+          if (item.sharedResource) {
+            mediaRec = getVernacularMediaRec(
+              related(item.sharedResource, 'passage'),
+              memory
+            );
           }
         }
 
