@@ -75,9 +75,21 @@ contextBridge.exposeInMainWorld('electron', {
     await ipcRenderer.invoke('zipWrite', zip, where),
   zipExtract: async (zip, folder, replace) =>
     await ipcRenderer.invoke('zipExtract', zip, folder, replace),
+  zipClose: async (zip) => await ipcRenderer.invoke('zipClose', zip),
   zipStreamExtract: async (zip, folder) =>
     await ipcRenderer.invoke('zipStreamExtract', zip, folder),
-  zipClose: async (zip) => await ipcRenderer.invoke('zipClose', zip),
+  zipStreamOpen: async (zip, fullPath) =>
+    await ipcRenderer.invoke('zipStreamOpen', zip, fullPath),
+  zipStreamEntries: async (zip) =>
+    await ipcRenderer.invoke('zipStreamEntries', zip),
+  zipStreamEntry: async (zip, name) =>
+    await ipcRenderer.invoke('zipStreamEntry', zip, name),
+  zipStreamEntryData: async (zip, name) =>
+    await ipcRenderer.invoke('zipStreamEntryData', zip, name),
+  zipStreamEntryText: async (zip, name) =>
+    await ipcRenderer.invoke('zipStreamEntryText', zip, name),
+  zipStreamClose: async (zip) =>
+    await ipcRenderer.invoke('zipStreamClose', zip),
   downloadFile: async (url, localFile) =>
     await ipcRenderer.invoke('downloadFile', url, localFile),
   downloadLaunch: async (url, localFile) =>

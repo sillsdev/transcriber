@@ -255,6 +255,11 @@ const ipcMethods = () => {
   ipcMain.handle('zipExtract', async (event, zip, folder, replace) => {
     return admZip.get(zip).extractAllTo(folder, replace);
   });
+
+  ipcMain.handle('zipClose', async (event, zip) => {
+    admZip.delete(zip);
+  });
+
   ipcMain.handle('zipStreamExtract', async (event, zip, folder) => {
     const zipStrm = new StreamZip.async({ file: zip });
     const count = await zipStrm.extract(null, folder);
@@ -263,8 +268,38 @@ const ipcMethods = () => {
     return;
   });
 
-  ipcMain.handle('zipClose', async (event, zip) => {
-    admZip.delete(zip);
+  let zipStr = new Map();
+  ipcMain.handle('zipStreamOpen', async (event, fullPath) => {
+    const index = generateUUID();
+    zipStr.set(
+      index,
+      new StreamZip.async({ file: fullPath, nameEncoding: 'utf8' })
+    );
+    return index;
+  });
+
+  ipcMain.handle('zipStreamEntries', async (event, zip) => {
+    return JSON.stringify(await zipStr.get(zip).entries());
+  });
+
+  ipcMain.handle('zipStreamEntry', async (event, zip, name) => {
+    return JSON.stringify(await zipStr.get(zip).entry(name));
+  });
+
+  ipcMain.handle('zipStreamEntryData', async (event, zip, name) => {
+    return await zipStr.get(zip).entryData(name);
+  });
+
+  ipcMain.handle('zipStreamEntryText', async (event, zip, name) => {
+    const data = await zipStr.get(zip).entryData(name);
+    return String.fromCharCode(...Array.from(data));
+  });
+
+  ipcMain.handle('zipStreamClose', async (event, zip) => {
+    if (zipStr.has(zip)) {
+      await zipStr.get(zip).close();
+      zipStr.delete(zip);
+    }
   });
 
   let isLogingIn = false;

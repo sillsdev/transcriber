@@ -67,11 +67,32 @@ export const useElectronImport = () => {
   };
   //var importStatus = useSelector(importStatusSelector, shallowEqual);
 
-  const getData = async (zip: string, name: string) =>
-    ((await ipc?.zipReadText(zip, name)) as string).replace(
-      /(\r\n|\n|\r)/gm,
-      ''
-    );
+  const getData = async (zip: string, name: string) => {
+    const text = (await ipc?.zipStreamEntryText(zip, name)) as string;
+    return text.replace(/(\r\n|\n|\r)/gm, '');
+  };
+
+  interface IEntry {
+    attr: number;
+    comLen: number; // comment length
+    comment: string | null;
+    compressedSize: number;
+    crc: number;
+    diskStart: number;
+    extraLen: number;
+    flags: number;
+    fnameLen: number;
+    headerOffset: number;
+    inattr: number;
+    isDirectory: boolean;
+    method: number;
+    name: string;
+    offset: number;
+    size: number;
+    time: number;
+    verMade: number;
+    version: number;
+  }
 
   const getElectronImportData = async (
     project: string
@@ -83,22 +104,22 @@ export const useElectronImport = () => {
       //they didn't pick a file
       return invalidReturn;
     }
-    var zip = await ipc?.zipOpen(filePaths[0]);
+    var zip = await ipc?.zipStreamOpen(filePaths[0]);
     let valid = false;
     var exportTime: Moment = moment.utc();
     var exportDate = '';
     var version = '3';
-    var zipEntries = JSON.parse(await ipc?.zipGetEntries(zip));
-    for (let entry of zipEntries) {
-      if (entry.entryName === 'SILTranscriber') {
+    var zipEntries = JSON.parse(await ipc?.zipStreamEntries(zip));
+    for (let entry of Object.values(zipEntries) as IEntry[]) {
+      if (entry.name === 'SILTranscriber') {
         exportDate = await getData(zip, 'SILTranscriber');
         exportTime = moment.utc(exportDate, 'YYYY-MM-DDTHH:mm:ss.SSSSSSSZ');
         valid = true;
         if (isOfflinePtf.current) break;
-      } else if (entry.entryName === 'Offline') {
+      } else if (entry.name === 'Offline') {
         isOfflinePtf.current = true;
         if (valid) break;
-      } else if (entry.entryName === 'Version') {
+      } else if (entry.name === 'Version') {
         version = await getData(zip, 'Version');
       }
     }
@@ -110,7 +131,7 @@ export const useElectronImport = () => {
     }
 
     //we have a valid file
-    zipRef.current = zip;
+    zipRef.current = filePaths[0];
     var ret: IImportData = {
       fileName: filePaths[0],
       projectName: '',
@@ -126,7 +147,7 @@ export const useElectronImport = () => {
     var userInProject = false;
     var users: Array<string> = [];
     var importUsers = JSON.parse(
-      await ipc?.zipReadText(zip, 'data/A_users.json')
+      await ipc?.zipStreamEntryText(zip, 'data/A_users.json')
     );
     if (importUsers && Array.isArray(importUsers.data)) {
       importUsers.data.forEach((u: any) => {
@@ -140,7 +161,7 @@ export const useElectronImport = () => {
       });
     }
     var importProjs = JSON.parse(
-      await ipc?.zipReadText(zip, 'data/D_projects.json')
+      await ipc?.zipStreamEntryText(zip, 'data/D_projects.json')
     );
     var importProj: any;
     if (
@@ -287,7 +308,7 @@ export const useElectronImport = () => {
         if (err.errno !== -4058)
           reportError(orbitInfo(err, `Delete failed for ${where}`));
       }
-      await ipc?.zipExtract(zipRef.current, where, true);
+      await ipc?.zipStreamExtract(zipRef.current, where);
       //get the exported date from SILTranscriber file
       var dataDate = await getFileText(where, 'SILTranscriber');
       var versionstr = '3';
