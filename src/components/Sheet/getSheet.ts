@@ -156,7 +156,7 @@ export const getSheet = (
     let curSection = 1;
     let sectionIndex: number | undefined;
     if (section.attributes) {
-      item.level = section.attributes.level ?? SheetLevel.Section;
+      item.level = section.attributes.level || SheetLevel.Section;
       item.kind = flat ? IwsKind.SectionPassage : IwsKind.Section;
       item.sectionId = { type: 'section', id: section.id };
       item.sectionSeq = section.attributes.sequencenum;
