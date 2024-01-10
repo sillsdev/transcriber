@@ -190,10 +190,7 @@ function Invite(props: IProps) {
 
   useEffect(() => {
     const allusersgroup = groups.filter(
-      (g) =>
-        g.attributes &&
-        g.attributes.allUsers &&
-        related(g, 'owner') === organization
+      (g) => g?.attributes?.allUsers && related(g, 'owner') === organization
     );
     if (allusersgroup.length > 0) {
       var assocProjects = projects
