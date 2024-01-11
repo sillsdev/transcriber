@@ -59,11 +59,13 @@ export interface IRRow {
   keywords: string;
   terms: string;
   source: string;
+  srid: string;
 }
 
 interface IProps {
   isNote?: boolean;
   data: IRRow[];
+  value?: number;
   bookOpt: OptionType | undefined;
   termsOfUse: (i: number) => string | undefined;
   onOpen: (val: boolean) => void;
@@ -78,6 +80,7 @@ export const SelectSharedResource = (props: IProps) => {
   const {
     isNote,
     data,
+    value,
     onOpen,
     onSelect,
     onBookCd,
@@ -154,6 +157,18 @@ export const SelectSharedResource = (props: IProps) => {
   );
 
   useEffect(() => {
+    var val = value ?? -1;
+    if (val >= 0) {
+      if (val < data.length) {
+        if (checks.findIndex((r) => r === val) < 0) setChecks([val]);
+      } else {
+        console.log('not in my list');
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value, data]); //don't add checks
+
+  useEffect(() => {
     setBookOpt(props.bookOpt);
   }, [props.bookOpt]);
 
@@ -165,32 +180,28 @@ export const SelectSharedResource = (props: IProps) => {
     onOpen && onOpen(false);
   };
 
-  const numSort = (i: number, j: number) => i - j;
-
   const handleCheck = (chks: Array<number>) => {
-    const curLen = checks.length;
-    const newLen = chks.length;
-    if (curLen < newLen) {
-      const termsList: number[] = [];
-      const noTermsList: number[] = [];
-      for (const c of chks.sort(numSort)) {
-        if (!checks.includes(c)) {
-          if (termsOfUse(c)) {
-            termsList.push(c);
-          } else {
-            noTermsList.push(c);
-          }
+    //we want single select so if there are more than one, we take the last one
+    if (chks.length > 1) chks = [chks[chks.length - 1]];
+    const termsList: number[] = [];
+    const noTermsList: number[] = [];
+    for (const c of chks) {
+      //.sort(numSort)) {
+      if (!checks.includes(c)) {
+        if (termsOfUse(c)) {
+          termsList.push(c);
+        } else {
+          noTermsList.push(c);
         }
       }
-      if (noTermsList.length > 0) {
-        setChecks(checks.concat(noTermsList).sort(numSort));
-      }
-      if (termsList.length > 0) {
-        setTermsCheck(termsList);
-        setCurTermsCheck(termsList[0]);
-      }
-    } else if (curLen > newLen) {
-      setChecks(chks);
+    }
+    //
+    if (noTermsList.length > 0) {
+      setChecks(noTermsList);
+    }
+    if (termsList.length > 0) {
+      setTermsCheck(termsList);
+      setCurTermsCheck(termsList[0]);
     }
   };
 

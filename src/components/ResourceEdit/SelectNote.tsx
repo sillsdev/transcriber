@@ -45,7 +45,8 @@ interface IProps {
 
 export const SelectNotes = (props: IProps) => {
   const { passage, onOpen, onSelect } = props;
-  const [refLevel, setRefLevel] = useState<RefLevel>(RefLevel.All);
+  const [refLevel, setRefLevelx] = useState<RefLevel>(RefLevel.All);
+  const [refOverride, setRefOverride] = useState(false);
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const ctx = useContext(PlanContext);
@@ -67,6 +68,7 @@ export const SelectNotes = (props: IProps) => {
     shallowEqual
   );
   const allBookData = useSelector((state: IState) => state.books.bookData);
+  const [value, setValue] = useState(-1);
   const { showMessage } = useSnackBar();
 
   const handleSelect = (checks: number[]) => {
@@ -101,9 +103,11 @@ export const SelectNotes = (props: IProps) => {
     });
     return secRefs;
   };
-
+  const setRefLevel = (level: RefLevel) => {
+    setRefLevelx(level);
+    setRefOverride(true);
+  };
   useEffect(() => {
-    setRefLevel(planType(plan)?.scripture ? RefLevel.Verse : RefLevel.All);
     if (passage) {
       setBookCd(passage.attributes.book);
       setBookOpt(
@@ -112,9 +116,14 @@ export const SelectNotes = (props: IProps) => {
     }
     if (passage) {
       setFindRef(noteRefs(passage).join('; '));
+      var srid = related(passage, 'sharedResource');
+      if (srid && data.findIndex((r) => r.srid === srid) < 0) {
+        setRefLevel(RefLevel.All);
+      }
+      setValue(data.findIndex((r) => r.srid === srid));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passage]);
+  }, [passage, data]);
 
   const refRes = useMemo(
     () => {
@@ -174,6 +183,10 @@ export const SelectNotes = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [bookCd, findRef]
   );
+  useEffect(() => {
+    if (!refOverride)
+      setRefLevel(planType(plan)?.scripture ? RefLevel.Verse : RefLevel.All);
+  }, [refOverride, plan, planType]);
 
   useEffect(() => {
     const res = getNotes();
@@ -264,6 +277,7 @@ export const SelectNotes = (props: IProps) => {
           keywords: r.attributes.keywords?.replace(/\|/g, ', '),
           terms: r.attributes.termsOfUse ? t.yes : t.no,
           source: noteSource(r),
+          srid: r.id,
         } as IRRow;
       })
     );
@@ -286,6 +300,7 @@ export const SelectNotes = (props: IProps) => {
       onFindRef={setFindRef}
       onRefLevel={setRefLevel}
       levelIn={refLevel}
+      value={value}
     />
   );
 };

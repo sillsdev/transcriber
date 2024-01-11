@@ -465,19 +465,6 @@ export const usePlanSheetFill = ({
       }
 
       if (cellIndex === refCol) {
-        console.log(
-          e,
-          'passage?',
-          passage,
-          'shared?',
-          sharedRes,
-          calcClassName +
-            (passage
-              ? ' ref' +
-                (bookCol > 0 && refErrTest(e) ? 'Err' : '') +
-                (sharedRes ? ' shared' : '')
-              : '')
-        );
         return {
           value: refValue(e),
           readOnly:
