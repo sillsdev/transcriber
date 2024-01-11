@@ -537,9 +537,10 @@ export const usePlanSheetFill = ({
           psgType={rowInfo[rowIndex].passageType}
           published={rowInfo[rowIndex].published}
           organizedBy={organizedBy}
-          sectionSequenceNumber={positiveWholeOnly(
-            row[SectionSeqCol] as number
-          )}
+          sectionSequenceNumber={
+            sectionMap.get(row[SectionSeqCol] as number) ??
+            row[SectionSeqCol].toString()
+          }
           passageSequenceNumber={positiveWholeOnly(
             row[passageSeqCol >= 0 ? passageSeqCol : 0] as number
           )}

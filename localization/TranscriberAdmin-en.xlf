@@ -4422,7 +4422,7 @@
       </unit>
       <unit id="planSheet.movementAbove">
          <segment>
-            <source>Add movement above {0} {1}</source>
+            <source>Add Movement above {0} {1}</source>
             <target/>
          </segment>
       </unit>
