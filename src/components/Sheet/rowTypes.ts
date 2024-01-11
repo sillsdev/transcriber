@@ -14,6 +14,7 @@ export const rowTypes = (rowInfo: ISheet[]) => {
       ? rowInfo[i].passageType === PassageTypeEnum.PASSAGE
       : false;
   const isPassageOrNote = (i: number) =>
+    isPassageType(i) &&
     [PassageTypeEnum.PASSAGE, PassageTypeEnum.NOTE].includes(
       rowInfo[i]?.passageType
     );
