@@ -940,7 +940,7 @@ const initialState = {
 			"save": "Save",
 			"saving": "Saving...",
 			"showPublishing": "Show publishing information",
-			"movementAbove": "Add movement above {0} {1}",
+			"movementAbove": "Add Movement above {0} {1}",
 			"sectionAbove": "Add {0} above {1} {2}",
 			"sectionEnd": "Add {0} to End",
 			"step": "Step",

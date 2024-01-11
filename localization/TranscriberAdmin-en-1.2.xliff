@@ -5158,7 +5158,7 @@
       		</context-group>
       	</trans-unit>
          <trans-unit id="planSheet.movementAbove">
-            <source>Add movement above {0} {1}</source>
+            <source>Add Movement above {0} {1}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
