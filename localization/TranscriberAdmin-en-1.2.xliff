@@ -5045,7 +5045,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="planSheet.hidePublishing">
-      		<source>Hide publishing information</source>
+      		<source>Hide Publishing Information</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PlanSheet.tsx</context>
@@ -5151,7 +5151,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="planSheet.showPublishing">
-      		<source>Show publishing information</source>
+      		<source>Show Publishing Information</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PlanSheet.tsx</context>

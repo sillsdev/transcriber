@@ -4326,7 +4326,7 @@
       </unit>
       <unit id="planSheet.hidePublishing">
          <segment>
-            <source>Hide publishing information</source>
+            <source>Hide Publishing Information</source>
             <target/>
          </segment>
       </unit>
@@ -4416,7 +4416,7 @@
       </unit>
       <unit id="planSheet.showPublishing">
          <segment>
-            <source>Show publishing information</source>
+            <source>Show Publishing Information</source>
             <target/>
          </segment>
       </unit>
