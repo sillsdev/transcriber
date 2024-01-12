@@ -54,7 +54,7 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
         )
       ).id;
     }
-    if (!offline) {
+    if (!offline && mediaIdRef.current) {
       pullTableList(
         'mediafile',
         Array(mediaIdRef.current),
