@@ -176,6 +176,8 @@ export const SelectSharedResource = (props: IProps) => {
     onOpen && onOpen(false);
   };
 
+  const numSort = (i: number, j: number) => i - j;
+
   const handleCheck = (chks: Array<number>) => {
     //if we're a note, we want single select so if there are more than one, we take the last one
     if (isNote && chks.length > 1) chks = [chks[chks.length - 1]];
@@ -185,7 +187,6 @@ export const SelectSharedResource = (props: IProps) => {
       const termsList: number[] = [];
       const noTermsList: number[] = [];
       for (const c of chks) {
-        //.sort(numSort)) {
         if (!checks.includes(c)) {
           if (termsOfUse(c)) {
             termsList.push(c);
@@ -196,7 +197,7 @@ export const SelectSharedResource = (props: IProps) => {
       }
 
       if (noTermsList.length > 0) {
-        setChecks(noTermsList);
+        setChecks((isNote ? [] : checks).concat(noTermsList).sort(numSort));
       }
       if (termsList.length > 0) {
         setTermsCheck(termsList);
@@ -223,7 +224,9 @@ export const SelectSharedResource = (props: IProps) => {
   };
 
   const handleTermsAccept = () => {
-    if (curTermsCheck !== undefined) setChecks(checks.concat([curTermsCheck]));
+    //note is single select so we can just replace the check
+    if (curTermsCheck !== undefined)
+      setChecks((isNote ? [] : checks).concat([curTermsCheck]));
     handleTermsReject();
   };
 
