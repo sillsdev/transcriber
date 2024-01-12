@@ -181,27 +181,33 @@ export const SelectSharedResource = (props: IProps) => {
   };
 
   const handleCheck = (chks: Array<number>) => {
-    //we want single select so if there are more than one, we take the last one
-    if (chks.length > 1) chks = [chks[chks.length - 1]];
-    const termsList: number[] = [];
-    const noTermsList: number[] = [];
-    for (const c of chks) {
-      //.sort(numSort)) {
-      if (!checks.includes(c)) {
-        if (termsOfUse(c)) {
-          termsList.push(c);
-        } else {
-          noTermsList.push(c);
+    //if we're a note, we want single select so if there are more than one, we take the last one
+    if (isNote && chks.length > 1) chks = [chks[chks.length - 1]];
+    const curLen = checks.length;
+    const newLen = chks.length;
+    if (isNote || curLen < newLen) {
+      const termsList: number[] = [];
+      const noTermsList: number[] = [];
+      for (const c of chks) {
+        //.sort(numSort)) {
+        if (!checks.includes(c)) {
+          if (termsOfUse(c)) {
+            termsList.push(c);
+          } else {
+            noTermsList.push(c);
+          }
         }
       }
-    }
-    //
-    if (noTermsList.length > 0) {
-      setChecks(noTermsList);
-    }
-    if (termsList.length > 0) {
-      setTermsCheck(termsList);
-      setCurTermsCheck(termsList[0]);
+
+      if (noTermsList.length > 0) {
+        setChecks(noTermsList);
+      }
+      if (termsList.length > 0) {
+        setTermsCheck(termsList);
+        setCurTermsCheck(termsList[0]);
+      }
+    } else if (curLen > newLen) {
+      setChecks(chks);
     }
   };
 

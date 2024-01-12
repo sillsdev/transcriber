@@ -241,13 +241,6 @@ export default function MediaTitle(props: IProps) {
       setHelperText(err);
     }
   };
-  const onBlur = () => {
-    if (language) return;
-    if (onTextChange && curText !== title) {
-      var err = onTextChange(curText);
-      setHelperText(err);
-    }
-  };
 
   const handlePlay = (e: any) => {
     e.stopPropagation();
@@ -401,7 +394,6 @@ export default function MediaTitle(props: IProps) {
         value={curText}
         onClick={language ? handleLangPick : undefined}
         onChange={handleTextChange}
-        onBlur={onBlur}
         helperText={helperText}
         size="small"
         multiline

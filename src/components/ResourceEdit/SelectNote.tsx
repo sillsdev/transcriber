@@ -45,8 +45,7 @@ interface IProps {
 
 export const SelectNotes = (props: IProps) => {
   const { passage, onOpen, onSelect } = props;
-  const [refLevel, setRefLevelx] = useState<RefLevel>(RefLevel.All);
-  const [refOverride, setRefOverride] = useState(false);
+  const [refLevel, setRefLevel] = useState<RefLevel>(RefLevel.All);
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const ctx = useContext(PlanContext);
@@ -103,10 +102,7 @@ export const SelectNotes = (props: IProps) => {
     });
     return secRefs;
   };
-  const setRefLevel = (level: RefLevel) => {
-    setRefLevelx(level);
-    setRefOverride(true);
-  };
+
   useEffect(() => {
     if (passage) {
       setBookCd(passage.attributes.book);
@@ -184,9 +180,9 @@ export const SelectNotes = (props: IProps) => {
     [bookCd, findRef]
   );
   useEffect(() => {
-    if (!refOverride)
-      setRefLevel(planType(plan)?.scripture ? RefLevel.Verse : RefLevel.All);
-  }, [refOverride, plan, planType]);
+    setRefLevel(planType(plan)?.scripture ? RefLevel.Verse : RefLevel.All);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plan]);
 
   useEffect(() => {
     const res = getNotes();
