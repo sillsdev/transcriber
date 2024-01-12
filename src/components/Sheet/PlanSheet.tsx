@@ -172,7 +172,7 @@ interface IProps {
   addSection: (level: SheetLevel, i?: number, ptype?: PassageTypeEnum) => void;
   moveSection: (i: number, before: boolean) => void;
   toggleSectionPublish: (i: number) => void;
-  onPublishing: () => void;
+  onPublishing: (doUpdate: boolean) => void;
   lookupBook: (book: string) => string;
   resequence: () => void;
   inlinePassages: boolean;
@@ -226,7 +226,6 @@ export function PlanSheet(props: IProps) {
     connected,
     readonly,
     shared,
-    togglePublishing,
   } = ctx.state;
 
   const [memory] = useGlobal('memory');
@@ -280,7 +279,6 @@ export function PlanSheet(props: IProps) {
   const changedRef = useRef(false); //for autosave
   const [saving, setSaving] = useState(false);
   const { userIsAdmin } = useRole();
-  const addPublishRef = useRef<boolean | undefined>(undefined);
   const refErrTest = useRefErrTest();
   const moveUp = true;
   const moveDown = false;
@@ -356,13 +354,15 @@ export function PlanSheet(props: IProps) {
   const onPassageEnd = () => {
     addPassage();
   };
-
+  const updatePublishing = () => {
+    onPublishing(true);
+  };
   interface IActionMap {
     [key: number]: () => void;
   }
   const actionMap: IActionMap = {
     [ExtraIcon.Publish]: onPublish,
-    [ExtraIcon.Publishing]: onPublishing,
+    [ExtraIcon.Publishing]: updatePublishing,
     [ExtraIcon.Note]: onNote,
     [ExtraIcon.PassageBelow]: onPassageBelow,
     [ExtraIcon.MovementAbove]: onMovementAbove,
@@ -581,14 +581,6 @@ export function PlanSheet(props: IProps) {
   }, []);
 
   useEffect(() => {
-    //if we're changing from not showing to showing, add any missing
-    if (userIsAdmin && addPublishRef.current === false && !hidePublishing) {
-      onPublishing();
-    }
-    addPublishRef.current = !hidePublishing;
-  }, [hidePublishing, userIsAdmin, onPublishing]);
-
-  useEffect(() => {
     let timeoutRef: NodeJS.Timeout | undefined = undefined;
     if (rowInfo) {
       const lastPasId = localStorage.getItem(localUserKey(LocalKey.passage));
@@ -671,11 +663,10 @@ export function PlanSheet(props: IProps) {
   };
 
   const handlePublishToggle: MouseEventHandler<HTMLButtonElement> = () => {
-    togglePublishing();
+    onPublishing(false);
   };
 
   const filtered = useMemo(() => {
-    // console.log('filtered useMemo', filterState);
     return (
       !filterState.disabled &&
       (filterState.minStep !== '' ||

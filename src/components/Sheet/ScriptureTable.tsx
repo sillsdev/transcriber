@@ -181,6 +181,7 @@ export function ScriptureTable(props: IProps) {
     canHidePublishing,
     sectionMap,
     setCanPublish,
+    togglePublishing,
   } = ctx.state;
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState<string>(getOrganizedBy(true));
@@ -1422,11 +1423,12 @@ export function ScriptureTable(props: IProps) {
     }
   };
 
-  const onPublishing = () => {
-    if (canHidePublishing) {
-      //we already have some so don't warn them again
-      onPublishingConfirm();
-    } else setConfirmPublishingVisible(true);
+  const onPublishing = (update: boolean) => {
+    if (update) doPublish();
+    else if (!hidePublishing) togglePublishing(); //turn it off
+    //if we're going to show now and we don't already have some rows...ask
+    else if (!canHidePublishing) setConfirmPublishingVisible(true);
+    else togglePublishing(); //turn it on - no update
   };
   const onPublishingReject = () => {
     setConfirmPublishingVisible(false);
@@ -1436,6 +1438,10 @@ export function ScriptureTable(props: IProps) {
 
   const onPublishingConfirm = () => {
     setConfirmPublishingVisible(false);
+    doPublish();
+    togglePublishing();
+  };
+  const doPublish = () => {
     const hasBookTitle = (bookType: PassageTypeEnum) => {
       if (
         sheetRef.current.findIndex(
