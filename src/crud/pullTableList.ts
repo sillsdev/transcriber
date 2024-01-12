@@ -15,6 +15,7 @@ export const pullTableList = async (
   errorReporter: any
 ) => {
   try {
+    if (ids.length === 0) return;
     const filter = [{ attribute: 'id-list', value: ids.join('|') }];
     await remotePullAll({ table, memory, remote, backup, filter });
     for (const id of ids) {
