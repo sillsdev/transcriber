@@ -158,13 +158,9 @@ export const SelectSharedResource = (props: IProps) => {
 
   useEffect(() => {
     var val = value ?? -1;
-    if (val >= 0) {
-      if (val < data.length) {
-        if (checks.findIndex((r) => r === val) < 0) setChecks([val]);
-      } else {
-        console.log('not in my list');
-      }
-    }
+    if (val >= 0 && val < data.length && checks.findIndex((r) => r === val) < 0)
+      setChecks([val]);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, data]); //don't add checks
 
