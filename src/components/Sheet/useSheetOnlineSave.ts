@@ -120,8 +120,8 @@ export const useWfOnlineSave = (props: IProps) => {
               ? await getRemoteId('passagetype', psgType.id as string)
               : undefined,
 
-            sharedResourceId: w.sharedResourceId
-              ? await getRemoteId('sharedresource', w.sharedResourceId.id)
+            sharedResourceId: w.sharedResource
+              ? await getRemoteId('sharedresource', w.sharedResource.id)
               : undefined,
           };
         }

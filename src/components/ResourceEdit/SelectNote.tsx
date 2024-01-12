@@ -67,6 +67,7 @@ export const SelectNotes = (props: IProps) => {
     shallowEqual
   );
   const allBookData = useSelector((state: IState) => state.books.bookData);
+  const [value, setValue] = useState(-1);
   const { showMessage } = useSnackBar();
 
   const handleSelect = (checks: number[]) => {
@@ -103,7 +104,6 @@ export const SelectNotes = (props: IProps) => {
   };
 
   useEffect(() => {
-    setRefLevel(planType(plan)?.scripture ? RefLevel.Verse : RefLevel.All);
     if (passage) {
       setBookCd(passage.attributes.book);
       setBookOpt(
@@ -112,9 +112,14 @@ export const SelectNotes = (props: IProps) => {
     }
     if (passage) {
       setFindRef(noteRefs(passage).join('; '));
+      var srid = related(passage, 'sharedResource');
+      if (srid && data.findIndex((r) => r.srid === srid) < 0) {
+        setRefLevel(RefLevel.All);
+      }
+      setValue(data.findIndex((r) => r.srid === srid));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passage]);
+  }, [passage, data]);
 
   const refRes = useMemo(
     () => {
@@ -174,6 +179,10 @@ export const SelectNotes = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [bookCd, findRef]
   );
+  useEffect(() => {
+    setRefLevel(planType(plan)?.scripture ? RefLevel.Verse : RefLevel.All);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plan]);
 
   useEffect(() => {
     const res = getNotes();
@@ -264,6 +273,7 @@ export const SelectNotes = (props: IProps) => {
           keywords: r.attributes.keywords?.replace(/\|/g, ', '),
           terms: r.attributes.termsOfUse ? t.yes : t.no,
           source: noteSource(r),
+          srid: r.id,
         } as IRRow;
       })
     );
@@ -286,6 +296,7 @@ export const SelectNotes = (props: IProps) => {
       onFindRef={setFindRef}
       onRefLevel={setRefLevel}
       levelIn={refLevel}
+      value={value}
     />
   );
 };

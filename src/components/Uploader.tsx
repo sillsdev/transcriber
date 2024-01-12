@@ -4,6 +4,7 @@ import * as actions from '../store';
 import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
 import MediaUpload, { SIZELIMIT, UploadType } from './MediaUpload';
 import {
+  findRecord,
   pullTableList,
   related,
   remoteIdNum,
@@ -335,8 +336,12 @@ export const Uploader = (props: IProps) => {
   }, [importList]);
 
   useEffect(() => {
-    if (plan !== '') planIdRef.current = plan;
-  }, [plan]);
+    if (passageId) {
+      var psg = findRecord(memory, 'passage', passageId);
+      var section = findRecord(memory, 'section', related(psg, 'section'));
+      planIdRef.current = related(section, 'plan');
+    } else if (plan !== '') planIdRef.current = plan;
+  }, [plan, passageId, memory]);
 
   return (
     <div>

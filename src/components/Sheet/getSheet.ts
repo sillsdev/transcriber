@@ -9,12 +9,13 @@ import {
   PassageD,
   GraphicD,
   OrgWorkflowStepD,
+  SharedResourceD,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
 import { getVernacularMediaRec, getMediaShared } from '../../crud/media';
 import { getNextStep } from '../../crud/getNextStep';
-import { getStepComplete } from '../../crud';
+import { findRecord, getStepComplete } from '../../crud';
 import { toCamel } from '../../utils';
 import { ISTFilterState } from './filterMenu';
 import { PassageTypeEnum } from '../../model/passageType';
@@ -217,8 +218,21 @@ export const getSheet = (
         item.passageUpdated = passage.attributes.dateUpdated;
         item.passage = passage;
         item.passageType = passageTypeFromRef(passAttr.reference, flat);
-        item.sharedResourceId = related(passage, 'sharedResource');
-        const mediaRec = getVernacularMediaRec(passage.id, memory);
+        let mediaRec = getVernacularMediaRec(passage.id, memory);
+        if (related(passage, 'sharedResource')) {
+          item.sharedResource = findRecord(
+            memory,
+            'sharedresource',
+            related(passage, 'sharedResource')
+          ) as SharedResourceD;
+          if (item.sharedResource) {
+            mediaRec = getVernacularMediaRec(
+              related(item.sharedResource, 'passage'),
+              memory
+            );
+          }
+        }
+
         item.mediaId = mediaRec
           ? { type: 'mediafile', id: mediaRec.id }
           : undefined;

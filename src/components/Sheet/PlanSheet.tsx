@@ -109,6 +109,9 @@ const ContentDiv = styled('div')(({ theme }) => ({
   '& .data-grid-container .data-grid .cell.movement': {
     backgroundColor: '#cdeaf1',
   },
+  '& .data-grid-container .data-grid .cell.shared': {
+    backgroundColor: '#f2d6af',
+  },
   '& tr td:first-of-type > span': {
     display: 'flex!important',
     justifyContent: 'center',

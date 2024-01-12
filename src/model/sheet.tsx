@@ -1,6 +1,6 @@
 import { RecordIdentity } from '@orbit/records';
 import { PassageTypeEnum } from './passageType';
-import { PassageD } from '.';
+import { PassageD, SharedResourceD } from '.';
 
 export enum IwsKind {
   Section,
@@ -36,7 +36,7 @@ export interface ISheet {
   reference?: string;
   comment?: string;
   passage?: PassageD;
-  sharedResourceId?: RecordIdentity;
+  sharedResource?: SharedResourceD;
   passageType: PassageTypeEnum;
   passageUpdated?: string;
   mediaId?: RecordIdentity;

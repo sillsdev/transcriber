@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import { IconButton } from '@mui/material';
-import AddIcon from '@mui/icons-material/LibraryAddOutlined';
 import MicIcon from '@mui/icons-material/Mic';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import Uploader from '../components/Uploader';
@@ -28,11 +27,7 @@ export default function MediaTitleActions(props: IProps) {
   const playEnded = () => {
     setPlaying(false);
   };
-  const handleUpload = () => {
-    showUpload(false);
-    var m = 'newmedia';
-    setMediaId(m);
-  };
+
   const handleUploadVisible = (v: boolean) => {
     setUploadVisible(v);
   };
