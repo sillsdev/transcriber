@@ -17,7 +17,7 @@ import {
   isPublishingTitle,
   passageTypeFromRef,
 } from '../../control/RefRender';
-import { memo, useContext, useCallback, useMemo } from 'react';
+import { memo, useContext, useCallback, useMemo, ReactElement } from 'react';
 import TaskAvatar from '../TaskAvatar';
 import { PassageTypeEnum } from '../../model/passageType';
 import PlanActionMenu from './PlanActionMenu';
@@ -423,7 +423,11 @@ export const usePlanSheetFill = ({
       const descCol = colSlugs.indexOf('comment');
       if (cellIndex === SectionSeqCol && section && !hidePublishing) {
         return {
-          value: sectionMap?.get(e as number) || '',
+          value: e,
+          component: (
+            <>{sectionMap?.get(e as number) || ''}</>
+          ) as ReactElement,
+          forceComponent: true,
           readOnly: true,
           className: calcClassName,
         };
@@ -442,7 +446,9 @@ export const usePlanSheetFill = ({
         canHidePublishing
       ) {
         return {
-          value: TitleValue(e, rowIndex, cellIndex, anyRecording),
+          value: e,
+          component: TitleValue(e, rowIndex, cellIndex, anyRecording),
+          forceComponent: true,
           readOnly: true,
           className: calcClassName,
         };
@@ -454,12 +460,14 @@ export const usePlanSheetFill = ({
       ) {
         if (cellIndex === titleCol) {
           return {
-            value: TitleValue(
+            value: '',
+            component: TitleValue(
               rowData[rowIndex][descCol] as string,
               rowIndex,
               descCol,
               anyRecording
             ),
+            forceComponent: true,
             readOnly: true,
             className: calcClassName,
           };
@@ -473,22 +481,38 @@ export const usePlanSheetFill = ({
       }
 
       if (cellIndex === refCol) {
-        return {
-          value: refValue(e),
-          readOnly:
-            readonly ||
-            !passage ||
-            (!inlinePassages &&
-              passageTypeFromRef(e as string, inlinePassages) !==
-                PassageTypeEnum.PASSAGE),
-          className:
-            calcClassName +
-            (passage
-              ? ' ref' +
-                (bookCol > 0 && refErrTest(e) ? 'Err' : '') +
-                (sharedRes ? ' shared' : '')
-              : ''),
-        };
+        if (
+          readonly ||
+          !passage ||
+          (!inlinePassages &&
+            passageTypeFromRef(e as string, inlinePassages) !==
+              PassageTypeEnum.PASSAGE)
+        ) {
+          return {
+            value: e,
+            component: refValue(e) as ReactElement,
+            forceComponent: true,
+            readOnly: true,
+            className:
+              calcClassName +
+              (passage
+                ? ' ref' +
+                  (bookCol > 0 && refErrTest(e) ? 'Err' : '') +
+                  (sharedRes ? ' shared' : '')
+                : ''),
+          };
+        } else {
+          return {
+            value: e,
+            className:
+              calcClassName +
+              (passage
+                ? ' ref' +
+                  (bookCol > 0 && refErrTest(e) ? 'Err' : '') +
+                  (sharedRes ? ' shared' : '')
+                : ''),
+          };
+        }
       }
       return {
         value: e,

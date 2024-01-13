@@ -5,6 +5,7 @@ import {
   useContext,
   useMemo,
   MouseEventHandler,
+  ReactElement,
 } from 'react';
 import { useGlobal } from 'reactn';
 import {
@@ -139,6 +140,8 @@ const initialPosition = {
 
 export interface ICell {
   value: any;
+  component?: ReactElement;
+  forceComponent?: boolean;
   readOnly?: boolean;
   width?: number;
   className?: string;
