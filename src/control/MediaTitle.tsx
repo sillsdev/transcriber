@@ -383,6 +383,10 @@ export default function MediaTitle(props: IProps) {
     event.preventDefault();
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key !== 'Enter' && e.key !== 'TAB') e.stopPropagation();
+  };
+
   const playEnded = () => {
     setPlaying(false);
   };
@@ -394,6 +398,7 @@ export default function MediaTitle(props: IProps) {
         value={curText}
         onClick={language ? handleLangPick : undefined}
         onChange={handleTextChange}
+        onKeyDown={handleKeyDown}
         helperText={helperText}
         size="small"
         multiline
