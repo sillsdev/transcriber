@@ -272,22 +272,24 @@ export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
         g.attributes.resourceId === resourceId
     );
     const info =
-      sourceGraphicRec?.attributes?.info || graphicRec?.attributes.info || '{}';
-    if (graphicRec) {
-      await graphicUpdate({
-        ...graphicRec,
-        attributes: { ...graphicRec.attributes, info },
-      });
-    } else {
-      await graphicCreate({ resourceType, resourceId, info });
+      sourceGraphicRec?.attributes?.info || graphicRec?.attributes.info;
+    if (info) {
+      if (graphicRec) {
+        await graphicUpdate({
+          ...graphicRec,
+          attributes: { ...graphicRec.attributes, info },
+        });
+      } else {
+        await graphicCreate({ resourceType, resourceId, info });
+      }
     }
   };
 
   const handleLink = async (sr: SharedResourceD) => {
     const passage = ws?.passage;
     if (passage) {
-      updateLinkedPassage(sr, passage);
-      copyGraphic(sr, passage);
+      await updateLinkedPassage(sr, passage);
+      await copyGraphic(sr, passage);
       onOpen && onOpen();
     }
   };

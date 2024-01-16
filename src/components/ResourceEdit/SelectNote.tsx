@@ -43,7 +43,7 @@ interface IProps {
   onSelect?: (notes: SharedResourceD[]) => void;
 }
 
-export const SelectNotes = (props: IProps) => {
+export const SelectNote = (props: IProps) => {
   const { passage, onOpen, onSelect } = props;
   const [refLevel, setRefLevel] = useState<RefLevel>(RefLevel.All);
   const [memory] = useGlobal('memory');
@@ -301,4 +301,4 @@ export const SelectNotes = (props: IProps) => {
   );
 };
 
-export default SelectNotes;
+export default SelectNote;
