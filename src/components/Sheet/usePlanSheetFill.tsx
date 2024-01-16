@@ -568,7 +568,7 @@ export const usePlanSheetFill = ({
           organizedBy={organizedBy}
           sectionSequenceNumber={
             sectionMap.get(row[SectionSeqCol] as number) ??
-            row[SectionSeqCol].toString()
+            positiveWholeOnly(row[SectionSeqCol] as number)
           }
           passageSequenceNumber={positiveWholeOnly(
             row[passageSeqCol >= 0 ? passageSeqCol : 0] as number

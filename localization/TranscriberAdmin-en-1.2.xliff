@@ -4912,7 +4912,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="planActions.noteDetails">
-      		<source>Detailed Settings for Notes</source>
+      		<source>Note Details</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PlanActions.tsx</context>

@@ -4212,7 +4212,7 @@
       </unit>
       <unit id="planActions.noteDetails">
          <segment>
-            <source>Detailed Settings for Notes</source>
+            <source>Note Details</source>
             <target/>
          </segment>
       </unit>
