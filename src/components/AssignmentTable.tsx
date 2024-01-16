@@ -249,7 +249,7 @@ export function AssignmentTable(props: IProps) {
     setSelectedSections(selected);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [check]);
+  }, [check, sections]);
 
   return (
     <AssignmentDiv id="AssignmentTable">
