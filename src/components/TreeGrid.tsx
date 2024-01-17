@@ -178,27 +178,29 @@ function MyRow(props: IProps & IRowProps) {
           ) : (
             <></>
           )}
-          {colSpec.map((c, n) => {
-            const value = r[c.name];
+          {colSpec
+            .filter((c) => c.name !== treeColumn)
+            .map((c, n) => {
+              const value = r[c.name];
 
-            const props = {
-              value,
-              row: r,
-              column: c,
-              style: style(c),
-              align: c.align as any,
-              key: `cell-${i}.${n}`,
-            };
-            return c.hidden || c.name === treeColumn ? (
-              <TableCell key={props.key} />
-            ) : dataCell ? (
-              dataCell(props)
-            ) : !r[c.name] && noDataCell ? (
-              noDataCell(props)
-            ) : (
-              <TableCell {...props}>{value}</TableCell>
-            );
-          })}
+              const props = {
+                value,
+                row: r,
+                column: c,
+                style: style(c),
+                align: c.align as any,
+                key: `cell-${i}.${n}`,
+              };
+              return c.hidden || c.name === treeColumn ? (
+                <TableCell key={props.key} />
+              ) : dataCell ? (
+                dataCell(props)
+              ) : !r[c.name] && noDataCell ? (
+                noDataCell(props)
+              ) : (
+                <TableCell {...props}>{value}</TableCell>
+              );
+            })}
         </>
       </TableRow>
       {open &&
