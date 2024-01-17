@@ -1,14 +1,11 @@
-import { useGlobal } from 'reactn';
 import { related } from '.';
 import { ActivityStates, MediaFile, Passage } from '../model';
+import { useOrbitData } from '../hoc/useOrbitData';
 
 export const usePassageState = () => {
-  const [memory] = useGlobal('memory');
+  const media = useOrbitData<MediaFile[]>('mediafile');
 
   return (passage: Passage) => {
-    const media = memory.cache.query((q) =>
-      q.findRecords('mediafile')
-    ) as MediaFile[];
     var vernmedia = media
       .filter(
         (m) =>

@@ -65,10 +65,10 @@ function SectionList({ sections, users }: SectionListProps) {
             <TableCell component="th" scope="row">
               {sectionNumber(p) + ' ' + p.attributes.name}
             </TableCell>
-            <TableCell align="right">{sectionEditorName(p, users)} </TableCell>
             <TableCell align="right">
               {sectionTranscriberName(p, users)}
             </TableCell>
+            <TableCell align="right">{sectionEditorName(p, users)} </TableCell>
           </TableRow>
         );
       })}
@@ -254,14 +254,14 @@ function AssignSection(props: IProps) {
                     <TableCell>{organizedBy}</TableCell>
                     <TableCell align="right">
                       <Box sx={headProps}>
-                        <EditorIcon />
-                        {ts.editor}
+                        <TranscriberIcon />
+                        {ts.transcriber}
                       </Box>
                     </TableCell>
                     <TableCell align="right">
                       <Box sx={headProps}>
-                        <TranscriberIcon />
-                        {ts.transcriber}
+                        <EditorIcon />
+                        {ts.editor}
                       </Box>
                     </TableCell>
                   </TableRow>
@@ -283,6 +283,23 @@ function AssignSection(props: IProps) {
               <Paper>
                 <List dense component="div">
                   <ListItem key="head">
+                    <TranscriberIcon />
+                    {ts.transcriber}
+                  </ListItem>
+                  <UserList
+                    id={'assignTranscriber'}
+                    users={users}
+                    memberIds={memberIds}
+                    selected={selectedTranscriber}
+                    select={handleSelectTranscriber}
+                  />
+                </List>
+              </Paper>
+            </Grid>
+            <Grid item>
+              <Paper>
+                <List dense component="div">
+                  <ListItem key="head">
                     <IconButton>
                       <EditorIcon />
                     </IconButton>
@@ -294,23 +311,6 @@ function AssignSection(props: IProps) {
                     memberIds={memberIds}
                     selected={selectedReviewer}
                     select={handleSelectReviewer}
-                  />
-                </List>
-              </Paper>
-            </Grid>
-            <Grid item>
-              <Paper>
-                <List dense component="div">
-                  <ListItem key="head">
-                    <TranscriberIcon />
-                    {ts.transcriber}
-                  </ListItem>
-                  <UserList
-                    id={'assignTranscriber'}
-                    users={users}
-                    memberIds={memberIds}
-                    selected={selectedTranscriber}
-                    select={handleSelectTranscriber}
                   />
                 </List>
               </Paper>
