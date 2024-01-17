@@ -267,6 +267,7 @@ export const SelectSharedResource = (props: IProps) => {
               placeHolder={t.selectBook}
               suggestions={bookSuggestions}
               value={bookOpt}
+              autoFocus={false}
               onCommit={handleBookCommit}
               onRevert={handleBookRevert}
               setPreventSave={handlePreventSave}
@@ -289,6 +290,7 @@ export const SelectSharedResource = (props: IProps) => {
               value={refLevel ?? RefLevel.All}
               onChange={handleLevelChange as any}
               sx={{ width: '325px' }}
+              inputProps={{ autoFocus: true }}
             >
               {referenceLevel.map((rl) => (
                 <MenuItem key={rl.value} value={rl.value}>
