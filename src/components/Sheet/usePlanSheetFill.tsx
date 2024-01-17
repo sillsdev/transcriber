@@ -490,7 +490,7 @@ export const usePlanSheetFill = ({
         ) {
           return {
             value: e,
-            component: refValue(e) as ReactElement,
+            component: (<>{refValue(e)}</>) as ReactElement,
             forceComponent: true,
             readOnly: true,
             className:
