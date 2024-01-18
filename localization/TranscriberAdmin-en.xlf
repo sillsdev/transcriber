@@ -4318,6 +4318,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.firstMovement">
+         <segment>
+            <source>Start At</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.graphic">
          <segment>
             <source>Graphic</source>

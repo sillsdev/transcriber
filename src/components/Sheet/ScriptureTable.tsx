@@ -80,7 +80,7 @@ import StickyRedirect from '../StickyRedirect';
 import Uploader from '../Uploader';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import { UpdateRecord, UpdateRelatedRecord } from '../../model/baseModel';
-import { PlanContext } from '../../context/PlanContext';
+import { PlanContext, ProjectFirstMovement } from '../../context/PlanContext';
 import stringReplace from 'react-string-replace';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
@@ -262,7 +262,8 @@ export function ScriptureTable(props: IProps) {
     sharedResourceSelector,
     shallowEqual
   );
-
+  const [firstMovement, setFirstMovement] = useState(1);
+  const [projFirstMovement, setProjFirstMovement] = useState(1);
   const [filterState, setFilterState] =
     useState<ISTFilterState>(defaultFilterState);
   const secNumCol = React.useMemo(() => {
@@ -1154,6 +1155,12 @@ export function ScriptureTable(props: IProps) {
     setFilterState(getFilter(defaultFilterState));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project, defaultFilterState]);
+  useEffect(() => {
+    var fm = getProjectDefault(ProjectFirstMovement);
+    setFirstMovement(fm);
+    setProjFirstMovement(fm);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project]);
 
   useEffect(() => {
     if (!getStepsBusy.current) {
@@ -1188,7 +1195,8 @@ export function ScriptureTable(props: IProps) {
     let prevSave = '';
     const handleSave = async () => {
       const numChanges = shtNumChanges(sheetRef.current, prevSave);
-
+      if (firstMovement !== projFirstMovement)
+        setProjectDefault(ProjectFirstMovement, firstMovement);
       if (numChanges === 0) return;
       for (const ws of sheetRef.current) {
         if (ws.deleted) await doDetachMedia(ws);
@@ -1659,6 +1667,13 @@ export function ScriptureTable(props: IProps) {
   const handleLookupBook = (book: string) =>
     lookupBook({ book, allBookData, bookMap });
 
+  const onFirstMovement = (newFM: number) => {
+    if (newFM !== firstMovement) {
+      setFirstMovement(newFM);
+      sectionMap.clear();
+      setChanged(true);
+    }
+  };
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <PlanSheet
@@ -1669,6 +1684,7 @@ export function ScriptureTable(props: IProps) {
         rowInfo={rowinfo}
         bookMap={bookMap}
         bookSuggestions={bookSuggestions}
+        firstMovement={firstMovement}
         action={handleDelete}
         addSection={addSection}
         addPassage={addPassage}
@@ -1688,6 +1704,7 @@ export function ScriptureTable(props: IProps) {
         onHistory={handleVersions}
         onGraphic={handleGraphic}
         onFilterChange={onFilterChange}
+        onFirstMovement={onFirstMovement}
         filterState={filterState}
         maximumSection={sheet[sheet.length - 1]?.sectionSeq ?? 0}
         orgSteps={orgSteps}

@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { projButtonsSelector } from '../selector';
 
 export const ProjectHidePublishing = 'hidePublishing';
+export const ProjectFirstMovement = 'firstMovement';
 
 export interface IRowData {}
 
@@ -100,6 +101,7 @@ const PlanProvider = (props: IProps) => {
         (getProjectDefault(ProjectHidePublishing) ?? true) ||
         isOffline ||
         shared;
+
       if (
         shared !== state.shared ||
         hidePublishing !== state[ProjectHidePublishing]

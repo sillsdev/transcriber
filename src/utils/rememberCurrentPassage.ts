@@ -7,8 +7,12 @@ export async function rememberCurrentPassage(
   memory: MemorySource,
   passageId: string
 ) {
-  const passageRemoteId =
-    remoteIdNum('passage', passageId, memory.keyMap as RecordKeyMap) ||
-    passageId;
-  localStorage.setItem(localUserKey(LocalKey.passage), `${passageRemoteId}`);
+  if (passageId) {
+    const passageRemoteId =
+      remoteIdNum('passage', passageId, memory.keyMap as RecordKeyMap) ||
+      passageId;
+    localStorage.setItem(localUserKey(LocalKey.passage), `${passageRemoteId}`);
+  } else {
+    localStorage.removeItem(localUserKey(LocalKey.passage));
+  }
 }

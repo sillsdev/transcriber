@@ -166,6 +166,7 @@ interface IProps {
   maximumSection: number;
   orgSteps: OrgWorkflowStep[];
   canSetDefault: boolean;
+  firstMovement: number;
   updateData: (changes: ICellChange[]) => void;
   updateTitleMedia: (index: number, mediaId: string) => void;
   paste: (rows: string[][]) => string[][];
@@ -190,6 +191,7 @@ interface IProps {
     newstate: ISTFilterState | undefined,
     isDefault: boolean
   ) => void;
+  onFirstMovement: (newFM: number) => void;
 }
 
 export function PlanSheet(props: IProps) {
@@ -205,6 +207,7 @@ export function PlanSheet(props: IProps) {
     maximumSection,
     orgSteps,
     canSetDefault,
+    firstMovement,
     updateData,
     updateTitleMedia,
     action,
@@ -220,6 +223,7 @@ export function PlanSheet(props: IProps) {
     onFilterChange,
     onPublishing,
     toggleSectionPublish,
+    onFirstMovement,
   } = props;
   const ctx = useContext(PlanContext);
   const {
@@ -384,7 +388,10 @@ export function PlanSheet(props: IProps) {
     if (row + 1 !== currentRow) setCurrentRow(row + 1);
     actionMap[what]();
   };
-
+  const myOnFirstMovement = (row: number, newFM: number) => {
+    if (row + 1 !== currentRow) setCurrentRow(row + 1);
+    onFirstMovement(newFM);
+  };
   const sheetScroll = () => {
     if (sheetRef.current && currentRowRef.current) {
       const gridRef = (
@@ -413,9 +420,7 @@ export function PlanSheet(props: IProps) {
   const setCurrentRow = (row: number) => {
     currentRowRef.current = row;
     setCurrentRowx(row);
-    if (isPassageType(row - 1)) {
-      rememberCurrentPassage(memory, rowInfo[row - 1].passage?.id ?? '');
-    }
+    rememberCurrentPassage(memory, rowInfo[row - 1].passage?.id ?? '');
   };
 
   const handleSelect = (loc: DataSheet.Selection) => {
@@ -551,11 +556,13 @@ export function PlanSheet(props: IProps) {
     onAction,
     hidePublishing,
     canHidePublishing,
+    firstMovement,
     onAudacity: handleAudacity,
     onDelete: handleConfirmDelete,
     cellsChanged: updateData,
     titleMediaChanged: updateTitleMedia,
     onRecording: onRecording,
+    onFirstMovement: myOnFirstMovement,
   });
 
   const handleAutoSave = () => {
@@ -711,6 +718,7 @@ export function PlanSheet(props: IProps) {
     currentRow,
     check,
     anyRecording,
+    firstMovement,
   ]);
 
   useEffect(() => {

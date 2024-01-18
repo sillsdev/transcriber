@@ -6,6 +6,7 @@ interface IPubRefs {
   rowData: (string | number)[][];
   sectionMap: Map<number, string>;
   passageSeqCol: number;
+  firstMovement: number;
 }
 
 export const getPubRefs = ({
@@ -13,8 +14,9 @@ export const getPubRefs = ({
   rowData,
   sectionMap,
   passageSeqCol,
+  firstMovement,
 }: IPubRefs) => {
-  let curMove = 0;
+  let curMove = firstMovement - 1;
   let curSection = 0;
 
   const dataSecs = rowInfo.reduce(

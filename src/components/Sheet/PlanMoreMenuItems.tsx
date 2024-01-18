@@ -5,7 +5,7 @@ import {
   IPlanSheetStrings,
   IPassageTypeStrings,
 } from '../../model';
-import { MenuItem, MenuList } from '@mui/material';
+import { MenuItem, MenuList, TextField } from '@mui/material';
 import AssignIcon from '@mui/icons-material/PeopleAltOutlined';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import AddIcon from '@mui/icons-material/LibraryAddOutlined';
@@ -31,6 +31,7 @@ interface IProps {
   rowIndex: number;
   isSection: boolean;
   isPassage: boolean;
+  firstMovement: number;
   published: boolean;
   psgType: string;
   readonly: boolean;
@@ -46,6 +47,7 @@ interface IProps {
   onAudacity: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
+  onFirstMovement: (rowIndex: number, fm: number) => void;
   onDisableFilter?: () => void;
   showIcon: (icon: ExtraIcon) => boolean;
   onAction: (i: number, what: ExtraIcon) => void;
@@ -64,6 +66,7 @@ export const PlanMoreMenuItems: FC<
       rowIndex,
       isSection,
       isPassage,
+      firstMovement,
       psgType,
       readonly,
       published,
@@ -71,6 +74,7 @@ export const PlanMoreMenuItems: FC<
       onAudacity,
       onAssign,
       onDelete,
+      onFirstMovement,
       canAssign,
       canDelete,
       organizedBy,
@@ -86,6 +90,10 @@ export const PlanMoreMenuItems: FC<
       ts,
       ty,
     } = props;
+    const [fm, setFM] = React.useState(firstMovement);
+    React.useEffect(() => {
+      setFM(firstMovement);
+    }, [firstMovement]);
 
     const handleRecord = (index: number) => () => {
       onPlayStatus('');
@@ -96,6 +104,11 @@ export const PlanMoreMenuItems: FC<
       onKey(event);
     }
 
+    const handleChangeFirstMovement = (rowIndex: number, e: any) => {
+      e.persist();
+      setFM(e.target.value);
+      onFirstMovement(rowIndex, e.target.value);
+    };
     return (
       <MenuList
         ref={ref}
@@ -250,6 +263,20 @@ export const PlanMoreMenuItems: FC<
             <MoveDownIcon />
           </MenuItem>
         )}
+        {showIcon(ExtraIcon.FirstMovement) && (
+          <TextField
+            sx={{ m: 1, maxWidth: 80 }}
+            id="firstmovement"
+            label={p.firstMovement}
+            type="number"
+            value={fm}
+            size="small"
+            InputProps={{ inputProps: { min: 0 } }}
+            onChange={(e: any) => handleChangeFirstMovement(rowIndex, e)}
+            onKeyDown={(e) => e.stopPropagation()}
+          />
+        )}
+
         {isPassage && (
           <MenuItem
             id="planActUpload"

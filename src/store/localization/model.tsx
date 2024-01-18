@@ -868,6 +868,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "bookSelect": string;
     "confirm": string;
     "filtered": string;
+    "firstMovement": string;
     "graphic": string;
     "hidePublishing": string;
     "moveDown": string;

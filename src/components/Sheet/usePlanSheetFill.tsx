@@ -56,6 +56,7 @@ interface IProps {
   bookSuggestions?: OptionType[];
   hidePublishing: boolean;
   canHidePublishing: boolean;
+  firstMovement: number;
   onPassageDetail: (rowIndex: number) => void;
   onPlayStatus: (mediaId: string) => void;
   onHistory: (rowIndex: number) => () => void;
@@ -66,6 +67,7 @@ interface IProps {
   onUpload: (rowIndex: number) => () => void;
   onGraphic: (rowIndex: number) => void;
   onAssign: (where: number[]) => () => void;
+  onFirstMovement: (rowIndex: number, firstMovement: number) => void;
   disableFilter: () => void;
   onAction: (rowIndex: number, what: ExtraIcon) => void;
   doSetActive: () => void;
@@ -113,6 +115,7 @@ export const usePlanSheetFill = ({
   bookSuggestions,
   hidePublishing,
   canHidePublishing,
+  firstMovement,
   onPassageDetail,
   onPlayStatus,
   onHistory,
@@ -123,6 +126,7 @@ export const usePlanSheetFill = ({
   onUpload,
   onGraphic,
   onAssign,
+  onFirstMovement,
   disableFilter,
   onAction,
   doSetActive,
@@ -563,6 +567,7 @@ export const usePlanSheetFill = ({
           rowIndex={rowIndex}
           isSection={section}
           isPassage={passage}
+          firstMovement={firstMovement}
           psgType={rowInfo[rowIndex].passageType}
           published={rowInfo[rowIndex].published}
           organizedBy={organizedBy}
@@ -580,6 +585,7 @@ export const usePlanSheetFill = ({
           onRecord={onRecord}
           onUpload={onUpload}
           onAssign={onAssign}
+          onFirstMovement={onFirstMovement}
           canAssign={userIsAdmin && !movement && !book}
           canDelete={userIsAdmin}
           active={active - 1 === rowIndex}
@@ -618,11 +624,12 @@ export const usePlanSheetFill = ({
           rowInfo[rowIndex].passage?.id;
 
       const calcClassName =
-        iscurrent + section
+        iscurrent +
+        (section
           ? 'set' +
             (passage ? 'p' : '') +
             (movement ? ' movement' : book ? ' bk' : '')
-          : 'pass';
+          : 'pass');
 
       const sheetRow = [
         stepCell({ passage, row, refCol, rowIndex, calcClassName }),
@@ -669,8 +676,7 @@ export const usePlanSheetFill = ({
       );
       return sheetRow;
     };
-
-  getPubRefs({ rowInfo, rowData, sectionMap, passageSeqCol });
+  getPubRefs({ rowInfo, rowData, sectionMap, passageSeqCol, firstMovement });
 
   return (props: IFillProps) => {
     const data = titleRow(columns);

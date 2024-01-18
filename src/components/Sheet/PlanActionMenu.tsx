@@ -39,12 +39,14 @@ interface IProps {
   organizedBy: string;
   sectionSequenceNumber: string;
   passageSequenceNumber: string;
+  firstMovement: number;
   onPlayStatus: (mediaId: string) => void;
   onRecord: (i: number) => void;
   onUpload: (i: number) => () => void;
   onAudacity: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
+  onFirstMovement: (i: number, fm: number) => void;
   onDisableFilter?: () => void;
   showIcon: (icon: ExtraIcon) => boolean;
   onAction: (i: number, what: ExtraIcon) => void;

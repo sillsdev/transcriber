@@ -33,6 +33,13 @@ export const rowTypes = (rowInfo: ISheet[]) => {
 
   const isMovement = (i: number) =>
     i >= 0 && i < rowInfo.length && rowInfo[i].level === SheetLevel.Movement;
+  const isFirstMovement = (i: number) => {
+    if (!isMovement(i)) return false;
+    while (--i >= 0) {
+      if (isMovement(i)) return false;
+    }
+    return true;
+  };
   const firstSection = (i: number) => {
     while (i >= 0 && !isSectionType(i)) i--;
     while (
@@ -71,5 +78,6 @@ export const rowTypes = (rowInfo: ISheet[]) => {
     isChapter,
     firstSection,
     lastSection,
+    isFirstMovement,
   };
 };
