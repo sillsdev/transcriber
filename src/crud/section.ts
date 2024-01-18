@@ -54,7 +54,14 @@ export function sectionRef(
 export function sectionDescription(section: Section, passage?: Passage) {
   const name = section?.attributes?.name || '';
   const passNum = passage
-    ? `.${positiveWholeOnly(passage.attributes?.sequencenum)}`
+    ? `${positiveWholeOnly(passage.attributes?.sequencenum)}`
     : '';
-  return sectionNumber(section) + passNum + '\u00A0\u00A0 ' + name;
+  let passIdent = sectionNumber(section);
+  if (passNum) {
+    passIdent += passIdent ? '.' + passNum : passNum;
+  }
+  if (passIdent) {
+    passIdent += '\u00A0\u00A0';
+  }
+  return passIdent + name;
 }
