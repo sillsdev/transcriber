@@ -2,17 +2,14 @@ import React from 'react';
 import { Section } from '../model';
 import { Box, Typography } from '@mui/material';
 import { sectionNumber } from '../crud';
-import useLocalStorageState from '../utils/useLocalStorageState';
+import useSectionMap from '../utils/useSectionMap';
 
 interface IProps {
   section: Section;
 }
 
 export const SectionDescription = ({ section }: IProps) => {
-  const [sectionMap] = useLocalStorageState(
-    'sectionMap',
-    new Map<number, string>()
-  );
+  const [sectionMap] = useSectionMap();
   const name =
     section && section.attributes && section.attributes.name
       ? section.attributes.name

@@ -89,7 +89,7 @@ import {
 } from '../selector';
 import { useDispatch } from 'react-redux';
 import { getSection } from './AudioTab/getSection';
-import useLocalStorageState from '../utils/useLocalStorageState';
+import useSectionMap from '../utils/useSectionMap';
 
 interface IRow {
   id: string;
@@ -202,10 +202,7 @@ export function TranscriptionTab(props: IProps) {
   const exportAnchor = React.useRef<HTMLAnchorElement>(null);
   const [exportUrl, setExportUrl] = useState<string | undefined>();
   const [exportName, setExportName] = useState('');
-  const [sectionMap] = useLocalStorageState(
-    'sectionMap',
-    new Map<number, string>()
-  );
+  const [sectionMap] = useSectionMap();
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');

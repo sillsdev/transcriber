@@ -79,7 +79,7 @@ import {
   RecordTransformBuilder,
 } from '@orbit/records';
 import { useOrbitData } from '../hoc/useOrbitData';
-import useLocalStorageState from '../utils/useLocalStorageState';
+import useSectionMap from '../utils/useSectionMap';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -246,10 +246,7 @@ const PassageDetailProvider = (props: IProps) => {
   const view = React.useRef('');
   const mediaUrlRef = useRef('');
   const { showMessage } = useSnackBar();
-  const [sectionMap] = useLocalStorageState(
-    'sectionMap',
-    new Map<number, string>()
-  );
+  const [sectionMap] = useSectionMap();
   const [state, setState] = useState({
     ...initState,
     allBookData,

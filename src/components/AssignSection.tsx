@@ -47,7 +47,7 @@ import { PriButton } from '../control';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import { assignSectionSelector, sharedSelector } from '../selector';
-import useLocalStorageState from '../utils/useLocalStorageState';
+import useSectionMap from '../utils/useSectionMap';
 
 const headProps = { display: 'flex', alignItems: 'center' } as SxProps;
 const gridProps = { m: 'auto', p: 1 } as SxProps;
@@ -58,10 +58,7 @@ interface SectionListProps {
 }
 
 function SectionList({ sections, users }: SectionListProps) {
-  const [sectionMap] = useLocalStorageState(
-    'sectionMap',
-    new Map<number, string>()
-  );
+  const [sectionMap] = useSectionMap();
   return (
     <>
       {sections.map((p) => {

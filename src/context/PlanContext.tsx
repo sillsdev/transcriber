@@ -16,7 +16,7 @@ import { useProjectDefaults } from '../crud/useProjectDefaults';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import { projButtonsSelector } from '../selector';
-import useLocalStorageState from '../utils/useLocalStorageState';
+import useSectionMap from '../utils/useSectionMap';
 
 export const ProjectHidePublishing = 'hidePublishing';
 export const ProjectFirstMovement = 'firstMovement';
@@ -74,10 +74,7 @@ const PlanProvider = (props: IProps) => {
   const [readonly, setReadOnly] = useState(
     (isOffline && !offlineOnly) || !userIsAdmin
   );
-  const [sectionMap] = useLocalStorageState(
-    'sectionMap',
-    new Map<number, string>()
-  );
+  const [sectionMap] = useSectionMap();
   const [state, setState] = useState({
     ...initState,
     projButtonStr,
