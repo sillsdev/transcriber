@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Column,
   FilteringState,
@@ -13,6 +13,8 @@ import {
 } from '@devexpress/dx-react-grid';
 import { TableBandHeader } from '@devexpress/dx-react-grid-material-ui';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { esES, frFR, ptBR, ruRU, zhCN } from '@mui/x-data-grid';
+import { useGlobal } from 'reactn';
 
 interface IProps {
   columns: Array<Column>;
@@ -55,6 +57,18 @@ function DataTable(props: IProps) {
   } = props;
   const [selected, setSelected] = React.useState<(string | number)[]>([]);
 
+  const [lang] = useGlobal('lang');
+  const localeText = useMemo(() => {
+    const locale = new Map([
+      ['es', esES],
+      ['fr', frFR],
+      ['pt', ptBR],
+      ['ru', ruRU],
+      ['zh', zhCN],
+    ]);
+    return locale.get(lang)?.components.MuiDataGrid.defaultProps.localeText;
+  }, [lang]);
+
   React.useEffect(() => {
     if (checks)
       setSelected(checks.map((c) => (typeof c === 'string' ? parseInt(c) : c)));
@@ -71,47 +85,6 @@ function DataTable(props: IProps) {
     select && select(numSelection);
   };
 
-  // const isSelected = (id: number) => selected.indexOf(id) !== -1;
-
-  // const rowSort = (a: any, b: any) => {
-  //   for (let s of sorting || []) {
-  //     const c = colSpec.find((c) => c.name === s.columnName);
-  //     if (c?.sortComparator) {
-  //       const res = c.sortComparator(a[s.columnName], b[s.columnName]);
-  //       if (res !== 0) return res;
-  //     }
-  //   }
-  //   return 0;
-  // };
-
-  // const rowFilter = (r: any) => {
-  //   for (let f of filters || []) {
-  //     const c = colSpec.find((c) => c.name === f.columnName);
-  //     if (c?.filterValue) {
-  //       if (f.operation === 'contains') {
-  //         if (!r[f.columnName].includes(c.filterValue)) return false;
-  //       } else if (f.operation === 'startsWith') {
-  //         if (!r[f.columnName].startsWith(c.filterValue)) return false;
-  //       } else if (f.operation === 'endsWith') {
-  //         if (!r[f.columnName].endsWith(c.filterValue)) return false;
-  //       } else if (f.operation === 'equal') {
-  //         if (r[f.columnName] !== c.filterValue) return false;
-  //       } else if (f.operation === 'notEqual') {
-  //         if (r[f.columnName] === c.filterValue) return false;
-  //       } else if (f.operation === 'greaterThan') {
-  //         if (r[f.columnName] <= c.filterValue) return false;
-  //       } else if (f.operation === 'greaterThanOrEqual') {
-  //         if (r[f.columnName] < c.filterValue) return false;
-  //       } else if (f.operation === 'lessThan') {
-  //         if (r[f.columnName] >= c.filterValue) return false;
-  //       } else if (f.operation === 'lessThanOrEqual') {
-  //         if (r[f.columnName] > c.filterValue) return false;
-  //       }
-  //     }
-  //   }
-  //   return true;
-  // };
-
   const colSpec = React.useMemo(() => {
     const colSpec: GridColDef[] = columns.map((c) => {
       const col = {
@@ -125,12 +98,6 @@ function DataTable(props: IProps) {
             typeof cw.width === 'number' ? cw.width : parseInt(cw.width);
         }
       }
-      // if (hiddenColumnNames) {
-      //   const hc = hiddenColumnNames.find((h) => h === c.name);
-      //   if (hc) {
-      //     col.hidden = true;
-      //   }
-      // }
       if (numCols) {
         const nc = numCols.find((n) => n === c.name);
         if (nc) {
@@ -208,6 +175,7 @@ function DataTable(props: IProps) {
       checkboxSelection
       rowSelectionModel={selected}
       onRowSelectionModelChange={handleSelection}
+      localeText={localeText}
     />
   );
 }
