@@ -53,7 +53,6 @@ import TranscriptionShow from './TranscriptionShow';
 import { TokenContext } from '../context/TokenProvider';
 import {
   related,
-  sectionNumber,
   sectionEditorName,
   sectionTranscriberName,
   sectionCompare,
@@ -89,6 +88,8 @@ import {
   transcriptionTabSelector,
 } from '../selector';
 import { useDispatch } from 'react-redux';
+import { getSection } from './AudioTab/getSection';
+import useLocalStorageState from '../utils/useLocalStorageState';
 
 interface IRow {
   id: string;
@@ -106,15 +107,6 @@ interface IRow {
 const getChildRows = (row: any, rootRows: any[]) => {
   const childRows = rootRows.filter((r) => r.parentId === (row ? row.id : ''));
   return childRows.length ? childRows : null;
-};
-
-/* build the section name = sequence + name */
-const getSection = (section: Section) => {
-  const name =
-    section && section.attributes && section.attributes.name
-      ? section.attributes.name
-      : '';
-  return sectionNumber(section) + ' ' + name;
 };
 
 interface IProps {
@@ -210,6 +202,10 @@ export function TranscriptionTab(props: IProps) {
   const exportAnchor = React.useRef<HTMLAnchorElement>(null);
   const [exportUrl, setExportUrl] = useState<string | undefined>();
   const [exportName, setExportName] = useState('');
+  const [sectionMap] = useLocalStorageState(
+    'sectionMap',
+    new Map<number, string>()
+  );
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
@@ -354,7 +350,8 @@ export function TranscriptionTab(props: IProps) {
           const sectionpassages = passages
             .filter((ps) => related(ps, 'section') === section.id)
             .sort(passageCompare) as PassageD[];
-          let sectionHead = '-----\n' + getSection(section) + '\n';
+          let sectionHead =
+            '-----\n' + getSection([section], sectionMap) + '\n';
           sectionpassages.forEach((passage) => {
             // const state = passage?.attributes?.state ||'';
             const ref = passageRefText(passage, bookData);
@@ -534,7 +531,7 @@ export function TranscriptionTab(props: IProps) {
           if (sectionpassages.length > 0) {
             rowData.push({
               id: section.id as string,
-              name: getSection(section),
+              name: getSection([section], sectionMap),
               state: '',
               planName: planRec.attributes.name,
               editor: sectionEditorName(section, users),

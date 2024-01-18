@@ -16,6 +16,7 @@ import { useProjectDefaults } from '../crud/useProjectDefaults';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import { projButtonsSelector } from '../selector';
+import useLocalStorageState from '../utils/useLocalStorageState';
 
 export const ProjectHidePublishing = 'hidePublishing';
 export const ProjectFirstMovement = 'firstMovement';
@@ -73,12 +74,17 @@ const PlanProvider = (props: IProps) => {
   const [readonly, setReadOnly] = useState(
     (isOffline && !offlineOnly) || !userIsAdmin
   );
+  const [sectionMap] = useLocalStorageState(
+    'sectionMap',
+    new Map<number, string>()
+  );
   const [state, setState] = useState({
     ...initState,
     projButtonStr,
     mediafiles,
     discussions,
     groupmemberships,
+    sectionMap,
   });
   const checkOnline = useCheckOnline();
 
@@ -86,6 +92,7 @@ const PlanProvider = (props: IProps) => {
     const { scripture, flat } = getPlanType(plan);
     if (flat !== state.flat || scripture !== state.scripture)
       setState((state) => ({ ...state, flat, scripture }));
+    sectionMap.clear();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plan]);
 

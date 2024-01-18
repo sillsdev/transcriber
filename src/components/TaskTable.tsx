@@ -149,6 +149,7 @@ export function TaskTable(props: IProps) {
     loading,
     pdBusy,
     discussionSize,
+    sectionMap,
   } = usePassageDetailContext();
   const filterRef = useRef(filter);
   const t = todoStr;
@@ -407,7 +408,7 @@ export function TaskTable(props: IProps) {
       assigned: r.assigned === user ? t.yes : t.no,
       mediaId: r.mediafile.id,
       rowKey:
-        sectionNumber(r.section) +
+        sectionNumber(r.section, sectionMap) +
         (r.mediafile.id ? taskPassageNumber(r.passage) : '   '),
     }));
     setRows(newRows);

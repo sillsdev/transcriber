@@ -46,6 +46,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { InitializedRecord, RecordKeyMap } from '@orbit/records';
 import { useOrbitData } from '../hoc/useOrbitData';
+import useLocalStorageState from '../utils/useLocalStorageState';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -146,6 +147,10 @@ const TranscriberProvider = (props: IProps) => {
   const planMediaRef = useRef<MediaFile[]>([]);
   const passageMediaRef = useRef<MediaFile[]>([]);
   const [planRec, setPlanRec] = useState<Plan>({} as Plan);
+  const [sectionMap] = useLocalStorageState(
+    'sectionMap',
+    new Map<number, string>()
+  );
   const [state, setState] = useState({
     ...initState,
     allBookData,
@@ -273,7 +278,7 @@ const TranscriberProvider = (props: IProps) => {
           related(p, 'section')
         ) as Section;
         if (secRec) {
-          secNum = sectionNumber(secRec);
+          secNum = sectionNumber(secRec, sectionMap);
           assigned = related(secRec, role);
           transcriber = related(secRec, 'transcriber');
           editor = related(secRec, 'editor');

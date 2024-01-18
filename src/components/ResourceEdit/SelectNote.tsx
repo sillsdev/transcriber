@@ -49,7 +49,7 @@ export const SelectNote = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const ctx = useContext(PlanContext);
-  const { flat } = ctx.state;
+  const { flat, sectionMap } = ctx.state;
   const getNotes = useNotes();
   const [notes, setNotes] = useState<SharedResourceD[]>([]);
   const [data, setData] = useState<IRRow[]>([]);
@@ -219,7 +219,7 @@ export const SelectNote = (props: IProps) => {
             source += planRec.attributes.name;
           }
           if (source.length > 0) source += ' - ';
-          source += sectionDescription(secRec);
+          source += sectionDescription(secRec, sectionMap);
         }
       } else {
         // make a copy so we don't impact the passage on the sheet

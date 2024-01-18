@@ -19,7 +19,14 @@ export function sectionTranscriberName(s: Section, users: Array<User>) {
   let user = sectionTranscriber(s, users);
   return user?.attributes?.name || '';
 }
-export function sectionNumber(section: Section) {
+export function sectionNumber(
+  section: Section,
+  sectionMap?: Map<number, string>
+) {
+  let sectionIdent = sectionMap?.get(section?.attributes?.sequencenum);
+  if (sectionIdent) {
+    return `${sectionIdent} `;
+  }
   const num = positiveWholeOnly(section?.attributes?.sequencenum);
   return num ? num.padStart(3, ' ') : '';
 }
@@ -51,12 +58,16 @@ export function sectionRef(
 }
 
 /* build the section name = sequence + name */
-export function sectionDescription(section: Section, passage?: Passage) {
+export function sectionDescription(
+  section: Section,
+  sectionMap?: Map<number, string>,
+  passage?: Passage
+) {
   const name = section?.attributes?.name || '';
   const passNum = passage
     ? `${positiveWholeOnly(passage.attributes?.sequencenum)}`
     : '';
-  let passIdent = sectionNumber(section);
+  let passIdent = sectionNumber(section, sectionMap);
   if (passNum) {
     passIdent += passIdent ? '.' + passNum : passNum;
   }

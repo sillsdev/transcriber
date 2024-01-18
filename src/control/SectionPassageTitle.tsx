@@ -8,6 +8,7 @@ import {
   usePlanType,
 } from '../crud';
 import { BookName, Passage, Section } from '../model';
+import useLocalStorageState from '../utils/useLocalStorageState';
 
 const GridRoot = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
@@ -22,6 +23,10 @@ interface IProps {
 export const SectionPassageTitle = (props: IProps) => {
   const { section, passage, allBookData } = props;
   const [plan] = useGlobal('plan');
+  const [sectionMap] = useLocalStorageState(
+    'sectionMap',
+    new Map<number, string>()
+  );
   const planType = usePlanType();
 
   const isFlat = useMemo(
@@ -42,7 +47,7 @@ export const SectionPassageTitle = (props: IProps) => {
           id="sectionpassagetitle"
           sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
         >
-          {sectionDescription(section, passNum)}
+          {sectionDescription(section, sectionMap, passNum)}
           {refDelim}
           <PassageReference
             passage={passage}
