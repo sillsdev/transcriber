@@ -46,7 +46,7 @@ interface IProps {
   onAudacity: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
-  onFirstMovement: (fm: number) => void;
+  onFirstMovement: (i: number, fm: number) => void;
   onDisableFilter?: () => void;
   showIcon: (icon: ExtraIcon) => boolean;
   onAction: (i: number, what: ExtraIcon) => void;

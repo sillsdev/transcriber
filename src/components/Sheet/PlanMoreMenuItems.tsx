@@ -47,7 +47,7 @@ interface IProps {
   onAudacity: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onDelete: (i: number) => () => void;
-  onFirstMovement: (i: number) => void;
+  onFirstMovement: (rowIndex: number, fm: number) => void;
   onDisableFilter?: () => void;
   showIcon: (icon: ExtraIcon) => boolean;
   onAction: (i: number, what: ExtraIcon) => void;
@@ -104,10 +104,10 @@ export const PlanMoreMenuItems: FC<
       onKey(event);
     }
 
-    const handleChangeFirstMovement = (e: any) => {
+    const handleChangeFirstMovement = (rowIndex: number, e: any) => {
       e.persist();
       setFM(e.target.value);
-      onFirstMovement(e.target.value);
+      onFirstMovement(rowIndex, e.target.value);
     };
     return (
       <MenuList
@@ -272,7 +272,7 @@ export const PlanMoreMenuItems: FC<
             value={fm}
             size="small"
             InputProps={{ inputProps: { min: 0 } }}
-            onChange={handleChangeFirstMovement}
+            onChange={(e: any) => handleChangeFirstMovement(rowIndex, e)}
             onKeyDown={(e) => e.stopPropagation()}
           />
         )}

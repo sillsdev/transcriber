@@ -67,7 +67,7 @@ interface IProps {
   onUpload: (rowIndex: number) => () => void;
   onGraphic: (rowIndex: number) => void;
   onAssign: (where: number[]) => () => void;
-  onFirstMovement: (firstMovement: number) => void;
+  onFirstMovement: (rowIndex: number, firstMovement: number) => void;
   disableFilter: () => void;
   onAction: (rowIndex: number, what: ExtraIcon) => void;
   doSetActive: () => void;
@@ -624,11 +624,12 @@ export const usePlanSheetFill = ({
           rowInfo[rowIndex].passage?.id;
 
       const calcClassName =
-        iscurrent + section
+        iscurrent +
+        (section
           ? 'set' +
             (passage ? 'p' : '') +
             (movement ? ' movement' : book ? ' bk' : '')
-          : 'pass';
+          : 'pass');
 
       const sheetRow = [
         stepCell({ passage, row, refCol, rowIndex, calcClassName }),

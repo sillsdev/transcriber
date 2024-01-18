@@ -388,7 +388,10 @@ export function PlanSheet(props: IProps) {
     if (row + 1 !== currentRow) setCurrentRow(row + 1);
     actionMap[what]();
   };
-
+  const myOnFirstMovement = (row: number, newFM: number) => {
+    if (row + 1 !== currentRow) setCurrentRow(row + 1);
+    onFirstMovement(newFM);
+  };
   const sheetScroll = () => {
     if (sheetRef.current && currentRowRef.current) {
       const gridRef = (
@@ -417,9 +420,7 @@ export function PlanSheet(props: IProps) {
   const setCurrentRow = (row: number) => {
     currentRowRef.current = row;
     setCurrentRowx(row);
-    if (isPassageType(row - 1)) {
-      rememberCurrentPassage(memory, rowInfo[row - 1].passage?.id ?? '');
-    }
+    rememberCurrentPassage(memory, rowInfo[row - 1].passage?.id ?? '');
   };
 
   const handleSelect = (loc: DataSheet.Selection) => {
@@ -561,7 +562,7 @@ export function PlanSheet(props: IProps) {
     cellsChanged: updateData,
     titleMediaChanged: updateTitleMedia,
     onRecording: onRecording,
-    onFirstMovement: onFirstMovement,
+    onFirstMovement: myOnFirstMovement,
   });
 
   const handleAutoSave = () => {
