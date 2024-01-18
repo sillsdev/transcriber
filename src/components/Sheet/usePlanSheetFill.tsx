@@ -66,6 +66,7 @@ interface IProps {
   onUpload: (rowIndex: number) => () => void;
   onGraphic: (rowIndex: number) => void;
   onAssign: (where: number[]) => () => void;
+  onFirstMovement: (firstMovement: number) => void;
   disableFilter: () => void;
   onAction: (rowIndex: number, what: ExtraIcon) => void;
   doSetActive: () => void;
@@ -123,6 +124,7 @@ export const usePlanSheetFill = ({
   onUpload,
   onGraphic,
   onAssign,
+  onFirstMovement,
   disableFilter,
   onAction,
   doSetActive,
@@ -131,7 +133,7 @@ export const usePlanSheetFill = ({
   onRecording,
 }: IProps) => {
   const ctx = useContext(PlanContext);
-  const { readonly, sectionMap } = ctx.state;
+  const { readonly, sectionMap, firstMovement } = ctx.state;
   const [planId] = useGlobal('plan');
   const [offline] = useGlobal('offline');
   const { userIsAdmin } = useRole();
@@ -563,6 +565,7 @@ export const usePlanSheetFill = ({
           rowIndex={rowIndex}
           isSection={section}
           isPassage={passage}
+          firstMovement={firstMovement}
           psgType={rowInfo[rowIndex].passageType}
           published={rowInfo[rowIndex].published}
           organizedBy={organizedBy}
@@ -580,6 +583,7 @@ export const usePlanSheetFill = ({
           onRecord={onRecord}
           onUpload={onUpload}
           onAssign={onAssign}
+          onFirstMovement={onFirstMovement}
           canAssign={userIsAdmin && !movement && !book}
           canDelete={userIsAdmin}
           active={active - 1 === rowIndex}
@@ -669,8 +673,7 @@ export const usePlanSheetFill = ({
       );
       return sheetRow;
     };
-
-  getPubRefs({ rowInfo, rowData, sectionMap, passageSeqCol });
+  getPubRefs({ rowInfo, rowData, sectionMap, passageSeqCol, firstMovement });
 
   return (props: IFillProps) => {
     const data = titleRow(columns);

@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { projButtonsSelector } from '../selector';
 
 export const ProjectHidePublishing = 'hidePublishing';
+export const ProjectFirstMovement = 'firstMovement';
 
 export interface IRowData {}
 
@@ -35,8 +36,10 @@ const initState = {
   canHidePublishing: true,
   hidePublishing: true,
   sectionMap: new Map<number, string>(),
+  firstMovement: 1,
   togglePublishing: () => {},
   setCanPublish: (canPublish: boolean) => {},
+  setFirstMovement: (firstMovement: number) => {},
 };
 
 export type ICtxState = typeof initState;
@@ -100,14 +103,17 @@ const PlanProvider = (props: IProps) => {
         (getProjectDefault(ProjectHidePublishing) ?? true) ||
         isOffline ||
         shared;
+      const firstMovement = getProjectDefault(ProjectFirstMovement) ?? 1;
       if (
         shared !== state.shared ||
-        hidePublishing !== state[ProjectHidePublishing]
+        hidePublishing !== state[ProjectHidePublishing] ||
+        firstMovement !== state[ProjectFirstMovement]
       ) {
         setState((state) => ({
           ...state,
           shared,
           hidePublishing,
+          firstMovement,
         }));
       }
     }
@@ -123,7 +129,10 @@ const PlanProvider = (props: IProps) => {
     setProjectDefault(ProjectHidePublishing, !hidePublishing);
     setState((state) => ({ ...state, hidePublishing: !hidePublishing }));
   };
-
+  const setFirstMovement = (firstMovement: number) => {
+    setProjectDefault(ProjectFirstMovement, firstMovement);
+    setState((state) => ({ ...state, firstMovement, sectionMap: new Map() }));
+  };
   React.useEffect(() => {
     const newValue = (isOffline && !offlineOnly) || !userIsAdmin;
     if (readonly !== newValue) setReadOnly(newValue);
@@ -144,6 +153,7 @@ const PlanProvider = (props: IProps) => {
           readonly,
           togglePublishing,
           setCanPublish,
+          setFirstMovement,
         },
         setState,
       }}

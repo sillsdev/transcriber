@@ -229,6 +229,8 @@ export function PlanSheet(props: IProps) {
     connected,
     readonly,
     shared,
+    firstMovement,
+    setFirstMovement,
   } = ctx.state;
 
   const [memory] = useGlobal('memory');
@@ -556,6 +558,7 @@ export function PlanSheet(props: IProps) {
     cellsChanged: updateData,
     titleMediaChanged: updateTitleMedia,
     onRecording: onRecording,
+    onFirstMovement: setFirstMovement,
   });
 
   const handleAutoSave = () => {
@@ -711,6 +714,7 @@ export function PlanSheet(props: IProps) {
     currentRow,
     check,
     anyRecording,
+    firstMovement,
   ]);
 
   useEffect(() => {

@@ -923,6 +923,7 @@ const initialState = {
 			"bookSelect": "Select Book...",
 			"confirm": "{0} {1} Item(s). Are you sure?",
 			"filtered": "Disable filter to add rows.",
+			"firstMovement": "Start At",
 			"graphic": "Graphic",
 			"hidePublishing": "Hide Publishing Information",
 			"moveDown": "Move down",

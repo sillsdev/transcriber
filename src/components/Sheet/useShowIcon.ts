@@ -32,6 +32,7 @@ export const useShowIcon = ({
     firstInSection,
     firstSection,
     lastSection,
+    isFirstMovement,
   } = rowTypes(rowInfo);
 
   return (filtered: boolean, offline: boolean, rowIndex: number) =>
@@ -88,6 +89,7 @@ export const useShowIcon = ({
           !inlinePassages &&
           (isVerseRange(rowIndex) || isNote(rowIndex)) &&
           (isSectionHead(rowIndex + 1) || isMovement(rowIndex + 1)),
+        [ExtraIcon.FirstMovement]: isFirstMovement(rowIndex),
       };
       return !readonly && !offline && !filtered && extraMap[icon];
     };
