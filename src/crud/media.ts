@@ -289,7 +289,7 @@ export const scriptureFullPath = (
   return { fullPath, book, ref };
 };
 export const mediaFileName = (mf: MediaFile | undefined) =>
-  mf?.attributes?.s3file ?? mf?.attributes?.originalFile ?? '';
+  mf?.attributes?.s3file || mf?.attributes?.originalFile || '';
 
 export const nameFromTemplate = (
   mf: MediaFile,
