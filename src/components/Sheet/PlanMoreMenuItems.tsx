@@ -266,13 +266,17 @@ export const PlanMoreMenuItems: FC<
         {showIcon(ExtraIcon.FirstMovement) && (
           <TextField
             sx={{ m: 1, maxWidth: 80 }}
-            id="outlined-number"
+            id="firstmovement"
             label={p.firstMovement}
             type="number"
             value={fm}
+            size="small"
+            InputProps={{ inputProps: { min: 0 } }}
             onChange={handleChangeFirstMovement}
+            onKeyDown={(e) => e.stopPropagation()}
           />
         )}
+
         {isPassage && (
           <MenuItem
             id="planActUpload"

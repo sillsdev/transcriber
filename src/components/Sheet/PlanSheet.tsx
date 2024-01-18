@@ -166,6 +166,7 @@ interface IProps {
   maximumSection: number;
   orgSteps: OrgWorkflowStep[];
   canSetDefault: boolean;
+  firstMovement: number;
   updateData: (changes: ICellChange[]) => void;
   updateTitleMedia: (index: number, mediaId: string) => void;
   paste: (rows: string[][]) => string[][];
@@ -190,6 +191,7 @@ interface IProps {
     newstate: ISTFilterState | undefined,
     isDefault: boolean
   ) => void;
+  onFirstMovement: (newFM: number) => void;
 }
 
 export function PlanSheet(props: IProps) {
@@ -205,6 +207,7 @@ export function PlanSheet(props: IProps) {
     maximumSection,
     orgSteps,
     canSetDefault,
+    firstMovement,
     updateData,
     updateTitleMedia,
     action,
@@ -220,6 +223,7 @@ export function PlanSheet(props: IProps) {
     onFilterChange,
     onPublishing,
     toggleSectionPublish,
+    onFirstMovement,
   } = props;
   const ctx = useContext(PlanContext);
   const {
@@ -229,8 +233,6 @@ export function PlanSheet(props: IProps) {
     connected,
     readonly,
     shared,
-    firstMovement,
-    setFirstMovement,
   } = ctx.state;
 
   const [memory] = useGlobal('memory');
@@ -553,12 +555,13 @@ export function PlanSheet(props: IProps) {
     onAction,
     hidePublishing,
     canHidePublishing,
+    firstMovement,
     onAudacity: handleAudacity,
     onDelete: handleConfirmDelete,
     cellsChanged: updateData,
     titleMediaChanged: updateTitleMedia,
     onRecording: onRecording,
-    onFirstMovement: setFirstMovement,
+    onFirstMovement: onFirstMovement,
   });
 
   const handleAutoSave = () => {

@@ -56,6 +56,7 @@ interface IProps {
   bookSuggestions?: OptionType[];
   hidePublishing: boolean;
   canHidePublishing: boolean;
+  firstMovement: number;
   onPassageDetail: (rowIndex: number) => void;
   onPlayStatus: (mediaId: string) => void;
   onHistory: (rowIndex: number) => () => void;
@@ -114,6 +115,7 @@ export const usePlanSheetFill = ({
   bookSuggestions,
   hidePublishing,
   canHidePublishing,
+  firstMovement,
   onPassageDetail,
   onPlayStatus,
   onHistory,
@@ -133,7 +135,7 @@ export const usePlanSheetFill = ({
   onRecording,
 }: IProps) => {
   const ctx = useContext(PlanContext);
-  const { readonly, sectionMap, firstMovement } = ctx.state;
+  const { readonly, sectionMap } = ctx.state;
   const [planId] = useGlobal('plan');
   const [offline] = useGlobal('offline');
   const { userIsAdmin } = useRole();
