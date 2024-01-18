@@ -783,7 +783,11 @@ export function PlanSheet(props: IProps) {
                   sectionSequenceNumber={currentWholeRowSectionNum}
                   passageSequenceNumber={currentWholeRowPassageNum}
                   onDisableFilter={filtered ? disableFilter : undefined}
-                  showIcon={showIcon(filtered, offline, currentRow - 1)}
+                  showIcon={showIcon(
+                    filtered,
+                    offline && !offlineOnly,
+                    currentRow - 1
+                  )}
                   onAction={(what: ExtraIcon) => onAction(currentRow - 1, what)}
                 />
                 <AltButton

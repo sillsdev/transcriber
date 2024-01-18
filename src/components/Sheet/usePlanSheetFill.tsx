@@ -138,6 +138,7 @@ export const usePlanSheetFill = ({
   const { readonly, sectionMap } = ctx.state;
   const [planId] = useGlobal('plan');
   const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const { userIsAdmin } = useRole();
   const refErrTest = useRefErrTest();
   const { getOrganizedBy } = useOrganizedBy();
@@ -590,7 +591,7 @@ export const usePlanSheetFill = ({
           canDelete={userIsAdmin}
           active={active - 1 === rowIndex}
           onDisableFilter={!readonly && filtered ? disableFilter : undefined}
-          showIcon={showIcon(filtered, offline, rowIndex)}
+          showIcon={showIcon(filtered, offline && !offlineOnly, rowIndex)}
           onAction={onAction}
         />
       ),
