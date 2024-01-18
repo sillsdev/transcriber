@@ -83,6 +83,7 @@ function MyRow(props: IProps & IRowProps) {
     r,
     i,
     treeColumn,
+    defaultHiddenColumnNames: hiddenColumnNames,
     cellComponent,
     select,
     dataCell,
@@ -179,7 +180,10 @@ function MyRow(props: IProps & IRowProps) {
             <></>
           )}
           {colSpec
-            .filter((c) => c.name !== treeColumn)
+            .filter(
+              (c) =>
+                c.name !== treeColumn && !hiddenColumnNames?.includes(c.name)
+            )
             .map((c, n) => {
               const value = r[c.name];
 
