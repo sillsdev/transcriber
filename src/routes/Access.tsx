@@ -171,7 +171,7 @@ export function Access() {
     if (isElectron) {
       if (!goOnlineConfirmation?.shiftKey) {
         const email = curUser?.attributes?.auth0Id.startsWith('auth0|')
-          ? curUser?.attributes?.email
+          ? curUser?.attributes?.email?.toLowerCase()
           : undefined;
         goOnline(email);
       } else ipc?.logout();

@@ -20,9 +20,9 @@ async function getSteps(
     (s) =>
       Boolean(remoteId(table, s.id, memory.keyMap as RecordKeyMap)) ===
         Boolean(token) &&
-      /Consultant/i.test(s.attributes.name) &&
-      /discuss/i.test(s.attributes.tool) &&
-      s.attributes.dateUpdated < '2023-08-25'
+      /Consultant/i.test(s?.attributes?.name) &&
+      /discuss/i.test(s?.attributes?.tool) &&
+      s?.attributes?.dateUpdated < '2023-08-25'
   );
 }
 

@@ -159,7 +159,8 @@ function Invite(props: IProps) {
     setOpen(false);
   };
   const handleEmailChange = (e: any) => {
-    setEmail(e.target.value);
+    const email = e.target.value as string;
+    setEmail(email.toLowerCase());
   };
   const handleRoleChange = (e: string, rowid?: string) => {
     setRole(e);
@@ -204,7 +205,7 @@ function Invite(props: IProps) {
     }
 
     if (inviteIn) {
-      if (inviteIn.email !== email) setEmail(inviteIn.email);
+      if (inviteIn.email !== email) setEmail(inviteIn.email.toLowerCase());
       if (inviteIn.role !== role) setRole(inviteIn.role);
     } else {
       if (email !== '') resetFields();

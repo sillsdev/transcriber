@@ -538,7 +538,7 @@ export function ImportTab(props: IProps) {
               c.online.data.attributes['given-name'];
             olduser.attributes.familyName =
               c.online.data.attributes['family-name'];
-            other = usr.attributes.email;
+            other = usr.attributes.email?.toLowerCase();
             imported = '';
             old = '';
             if (usr.attributes.name !== olduser.attributes.name) {

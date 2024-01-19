@@ -215,7 +215,7 @@ export function InvitationTable(props: IProps) {
         inviteIn={
           dialogData
             ? {
-                email: dialogData.attributes.email,
+                email: dialogData.attributes.email.toLowerCase(),
                 role: related(dialogData, 'role'),
               }
             : null

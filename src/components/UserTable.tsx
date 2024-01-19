@@ -179,7 +179,9 @@ export function UserTable() {
           if (u.attributes) {
             rowData.push({
               name: u.attributes.name,
-              email: u.attributes.email ? u.attributes.email : t.addMember,
+              email: u.attributes.email
+                ? u.attributes.email.toLowerCase()
+                : t.addMember,
               locale: u.attributes.locale ? u.attributes.locale : '',
               // phone: u.attributes.phone ? u.attributes.phone : '',
               timezone: u.attributes.timezone ? u.attributes.timezone : '',
