@@ -522,7 +522,7 @@ export function Profile(props: IProps) {
     setName(attr.name !== attr.email ? attr.name : '');
     setGiven(attr.givenName ? attr.givenName : '');
     setFamily(attr.familyName ? attr.familyName : '');
-    setEmail(attr.email);
+    setEmail(attr.email.toLowerCase());
     setPhone(attr.phone);
     setTimezone(attr.timezone || '');
     setLocale(attr.locale ? attr.locale : localeDefault(isDeveloper));
@@ -560,7 +560,8 @@ export function Profile(props: IProps) {
 
   const userNotComplete = () =>
     currentUser === undefined ||
-    currentUser.attributes?.name === currentUser.attributes?.email;
+    currentUser.attributes?.name.toLowerCase() ===
+      currentUser.attributes?.email.toLowerCase();
 
   const requiredComplete = () =>
     (name || '') !== '' &&
@@ -583,7 +584,6 @@ export function Profile(props: IProps) {
           <Grid container>
             <StyledGrid item xs={12} md={5}>
               <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-              {name !== email && <Caption variant="h6">{name || ''}</Caption>}
               <Caption>{email || ''}</Caption>
               <ParatextLinked
                 hasParatext={hasParatext}

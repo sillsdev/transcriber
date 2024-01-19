@@ -81,7 +81,7 @@ export const SelectUser = (props: IProps) => {
     >
       {orgUsers.map((option: User) => (
         <MenuItem key={option.id} value={option.id}>
-          {`${option.attributes.name} ${option.attributes.email}`}
+          {`${option.attributes.name} ${option.attributes.email.toLowerCase()}`}
         </MenuItem>
       ))}
     </TextField>

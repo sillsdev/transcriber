@@ -101,8 +101,9 @@ const TeamActions = () => {
       });
   };
   const handleEmailChange = (e: any) => {
-    setEmail(e.target.value);
-    setValidEmail(ValidateEmail(e.target.value));
+    const value = e.target.value as string;
+    setEmail(value.toLowerCase());
+    setValidEmail(ValidateEmail(value.toLowerCase()));
   };
   const ValidateEmail = (email: string) => {
     return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);

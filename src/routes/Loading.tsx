@@ -115,7 +115,7 @@ export function Loading() {
     //filter will be passed to api which will lowercase the email before comparison
     var allinvites: InvitationD[] = (await newremote.query((q) =>
       q.findRecords('invitation').filter(
-        { attribute: 'email', value: userEmail }
+        { attribute: 'email', value: userEmail.toLowerCase() }
         // { attribute: 'accepted', value: false }  //went from AND to OR between attributes :/
       )
     )) as any;
@@ -310,14 +310,15 @@ export function Loading() {
           let users: UserD[] = result as any;
           if (!Array.isArray(users)) users = [users];
           const user = users[0];
-          InviteUser(remote, user?.attributes?.email || 'neverhere').then(
-            () => {
-              setCompleted(10);
-              LoadData(coordinator, setCompleted, doOrbitError).then(() => {
-                LoadComplete();
-              });
-            }
-          );
+          InviteUser(
+            remote,
+            user?.attributes?.email?.toLowerCase() || 'neverhere'
+          ).then(() => {
+            setCompleted(10);
+            LoadData(coordinator, setCompleted, doOrbitError).then(() => {
+              LoadComplete();
+            });
+          });
         });
     };
     const processBackup = async () => {

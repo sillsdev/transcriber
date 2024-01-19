@@ -87,7 +87,8 @@ export async function RemoveUserFromOrg(
 
   const inviteRec = invites.filter(
     (i) =>
-      i.attributes.email === deletedUser.attributes?.email &&
+      i.attributes.email?.toLowerCase() ===
+        deletedUser.attributes?.email?.toLowerCase() &&
       organizationIds.includes(related(i, 'organization'))
   );
   inviteRec.forEach((i) => {
