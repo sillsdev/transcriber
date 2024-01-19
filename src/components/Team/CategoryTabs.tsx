@@ -7,6 +7,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { categorySelector } from '../../selector';
 import { ICategoryStrings } from '../../model';
 import { ArtifactCategoryType } from '../../crud';
+import { useGlobal } from 'reactn';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -45,6 +46,7 @@ interface IProps {
 
 export default function CategoryTabs({ teamId, flat, onClose }: IProps) {
   const [value, setValue] = React.useState(0);
+  const offline = useGlobal('offline');
   const t: ICategoryStrings = useSelector(categorySelector, shallowEqual);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -57,7 +59,7 @@ export default function CategoryTabs({ teamId, flat, onClose }: IProps) {
         <Tabs value={value} onChange={handleChange} aria-label="category tabs">
           <Tab label={t.resource} {...a11yProps(0)} />
           <Tab label={t.discussion} {...a11yProps(1)} />
-          {!flat && <Tab label={t.note} {...a11yProps(2)} />}
+          {!flat && !offline && <Tab label={t.note} {...a11yProps(2)} />}
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
