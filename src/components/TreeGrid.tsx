@@ -195,7 +195,7 @@ function MyRow(props: IProps & IRowProps) {
                 align: c.align as any,
                 key: `cell-${i}.${n}`,
               };
-              return c.hidden || c.name === treeColumn ? (
+              return c.name === treeColumn ? (
                 <TableCell key={props.key} />
               ) : dataCell ? (
                 dataCell(props)

@@ -653,7 +653,7 @@ export function TranscriptionTab(props: IProps) {
   const DataCell = (props: ICell) => {
     const { column, row } = props;
     if (column.name === 'action') {
-      if (row.parentId && row.parentId !== '') {
+      if (row.parentId) {
         const passRec = memory.cache.query((q) =>
           q.findRecord({ type: 'passage', id: row.id })
         ) as PassageD;
@@ -666,7 +666,7 @@ export function TranscriptionTab(props: IProps) {
         const latest = plan ? getMediaInPlans([plan], media, null, true) : [];
         if (state !== ActivityStates.NoMedia && latest.length > 0)
           return <ActionCell {...props} mediaId={latest[0].id as string} />;
-        else return <Table.Cell {...props} />;
+        else return <Table.Cell {...props} value=""></Table.Cell>;
       }
     }
     return <Table.Cell {...props} />;
