@@ -4,3 +4,6 @@ export * from './IPRow';
 export * from './isAttached';
 export * from './pad';
 export * from './IAttachMap';
+export * from './getSection';
+export * from './getPassages';
+export * from './GetReference';

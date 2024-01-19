@@ -420,7 +420,8 @@ export function PlanSheet(props: IProps) {
   const setCurrentRow = (row: number) => {
     currentRowRef.current = row;
     setCurrentRowx(row);
-    rememberCurrentPassage(memory, rowInfo[row - 1].passage?.id ?? '');
+    if (row > 0)
+      rememberCurrentPassage(memory, rowInfo[row - 1].passage?.id ?? '');
   };
 
   const handleSelect = (loc: DataSheet.Selection) => {
