@@ -6,6 +6,8 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { mediaTabSelector } from '../selector';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { Rights } from './GraphicUploader';
+import { useGlobal } from 'reactn';
+import { related } from '../crud';
 
 interface RightsHolderOption {
   inputValue?: string;
@@ -21,6 +23,7 @@ interface IProps {
 
 export function GraphicRights(props: IProps) {
   const { onChange } = props;
+  const [org] = useGlobal('organization');
   const graphics = useOrbitData<Graphic[]>('graphic');
   const [value, setValuex] = React.useState<RightsHolderOption | null>(null);
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
@@ -34,20 +37,22 @@ export function GraphicRights(props: IProps) {
 
   const rightsHolderOptions = React.useMemo(() => {
     const options = new Set<string>();
-    graphics.forEach((graphic) => {
-      const json = JSON.parse(graphic.attributes.info ?? '{}');
-      const rightsHolder = json[Rights] ?? null;
-      if (rightsHolder) {
-        options.add(rightsHolder);
-      }
-    });
+    graphics
+      .filter((g) => related(g, 'organization') === org)
+      .forEach((graphic) => {
+        const json = JSON.parse(graphic.attributes.info ?? '{}');
+        const rightsHolder = json[Rights] ?? null;
+        if (rightsHolder) {
+          options.add(rightsHolder);
+        }
+      });
     return Array.from(options).map(
       (option) =>
         ({
           title: option,
         } as RightsHolderOption)
     );
-  }, [graphics]);
+  }, [graphics, org]);
 
   React.useEffect(() => {
     if (value?.title !== props.value && value?.inputValue !== props.value)
