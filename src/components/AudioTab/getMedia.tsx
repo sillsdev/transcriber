@@ -10,11 +10,13 @@ export interface IGetMedia {
   sections: Section[];
   playItem: string;
   allBookData: BookName[];
+  sectionMap: Map<number, string>;
   isPassageDate: boolean;
 }
 
 export const mediaRow = (f: MediaFile, data: IGetMedia) => {
-  const { planName, passages, sections, playItem, allBookData } = data;
+  const { planName, passages, sections, playItem, allBookData, sectionMap } =
+    data;
 
   const showId = related(f, 'passage');
   const passage = showId ? passages.filter((p) => p.id === showId) : [];
@@ -33,7 +35,7 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
     playIcon: playItem,
     fileName: mediaFileName(f),
     sectionId: sectionId,
-    sectionDesc: getSection(section),
+    sectionDesc: getSection(section, sectionMap),
     reference: (
       <GetReference passage={passage} bookData={allBookData} flat={false} />
     ),

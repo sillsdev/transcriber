@@ -677,7 +677,12 @@ export const usePlanSheetFill = ({
       );
       return sheetRow;
     };
-  getPubRefs({ rowInfo, rowData, sectionMap, passageSeqCol, firstMovement });
+
+  if (!hidePublishing) {
+    getPubRefs({ rowInfo, rowData, sectionMap, passageSeqCol, firstMovement });
+  } else {
+    localStorage.removeItem('sectionMap');
+  }
 
   return (props: IFillProps) => {
     const data = titleRow(columns);

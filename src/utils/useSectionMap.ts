@@ -2,6 +2,7 @@ import useLocalStorageState from './useLocalStorageState';
 
 export const useSectionMap = () => {
   function serialize(sectionMap: Map<number, string>) {
+    if (sectionMap.size === 0) return '';
     return JSON.stringify([Array.from(sectionMap.entries())]);
   }
   function deserialize(serializedMap: string) {
@@ -10,7 +11,7 @@ export const useSectionMap = () => {
   }
   const [sectionMap, setSectionMap] = useLocalStorageState(
     'sectionMap',
-    new Map<number, string>(),
+    () => new Map<number, string>(),
     { deserialize, serialize }
   );
   return [sectionMap, setSectionMap];

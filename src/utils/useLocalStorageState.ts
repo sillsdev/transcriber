@@ -37,7 +37,10 @@ function useLocalStorageState(
       window.localStorage.removeItem(prevKey);
     }
     prevKeyRef.current = key;
-    window.localStorage.setItem(key, serialize(state));
+    const serializedState = serialize(state);
+    if (serializedState) {
+      window.localStorage.setItem(key, serialize(state));
+    }
   }, [key, state, serialize]);
 
   return [state, setState];

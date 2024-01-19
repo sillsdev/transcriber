@@ -40,6 +40,7 @@ import { mediaActionsSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { GridColumnExtension } from '@devexpress/dx-react-grid';
 import usePassageDetailContext from '../context/usePassageDetailContext';
+import useSectionMap from '../utils/useSectionMap';
 
 export const TaskItemWidth = 240;
 export const TaskTableWidth = 265;
@@ -149,8 +150,8 @@ export function TaskTable(props: IProps) {
     loading,
     pdBusy,
     discussionSize,
-    sectionMap,
   } = usePassageDetailContext();
+  const [sectionMap] = useSectionMap();
   const filterRef = useRef(filter);
   const t = todoStr;
   const tpb = projButtonStr;

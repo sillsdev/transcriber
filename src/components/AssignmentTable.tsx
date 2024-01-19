@@ -47,6 +47,7 @@ import {
   assignmentSelector,
   sharedSelector,
 } from '../selector';
+import useSectionMap from '../utils/useSectionMap';
 
 const AssignmentDiv = styled('div')(() => ({
   display: 'flex',
@@ -98,6 +99,7 @@ export function AssignmentTable(props: IProps) {
   const { flat } = ctx.state;
   const [data, setData] = useState(Array<IRow>());
   const [check, setCheck] = useState(Array<number>());
+  const [sectionMap] = useSectionMap();
   const [selectedSections, setSelectedSections] = useState<Section[]>([]);
   const [confirmAction, setConfirmAction] = useState('');
   const { getOrganizedBy } = useOrganizedBy();
@@ -135,7 +137,7 @@ export function AssignmentTable(props: IProps) {
     plansections.forEach(function (section) {
       sectionRow = {
         id: section.id as string,
-        name: sectionDescription(section),
+        name: sectionDescription(section, sectionMap),
         state: '',
         editor: sectionEditorName(section, users),
         transcriber: sectionTranscriberName(section, users),

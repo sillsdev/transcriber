@@ -36,7 +36,7 @@ const initState = {
   shared: false,
   canHidePublishing: true,
   hidePublishing: true,
-  sectionMap: new Map<number, string>(),
+  sectionMap: {} as Map<number, string>,
   togglePublishing: () => {},
   setCanPublish: (canPublish: boolean) => {},
 };

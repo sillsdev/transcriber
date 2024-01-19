@@ -195,7 +195,7 @@ const initState = {
   refresh: 0,
   prjId: '',
   forceRefresh: () => {},
-  sectionMap: new Map<number, string>(),
+  sectionMap: {} as Map<number, string>,
 };
 
 export type ICtxState = typeof initState;
