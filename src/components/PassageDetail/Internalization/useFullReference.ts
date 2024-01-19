@@ -1,19 +1,13 @@
 import { Section, Passage, IState, BookName } from '../../../model';
-import { passageDescText, sectionNumber } from '../../../crud';
+import { passageDescText } from '../../../crud';
 import { useSelector } from 'react-redux';
+import { getSection } from '../../AudioTab/getSection';
+import useSectionMap from '../../../utils/useSectionMap';
 
 export interface IInfo {
   rec: Section | Passage;
   secNum: number;
 }
-
-const getSection = (section: Section) => {
-  const name =
-    section && section.attributes && section.attributes.name
-      ? section.attributes.name
-      : '';
-  return sectionNumber(section) + ' ' + name;
-};
 
 const getPassage = (info: IInfo, bookData: BookName[]) => {
   return `${info.secNum}.${passageDescText(
@@ -24,9 +18,10 @@ const getPassage = (info: IInfo, bookData: BookName[]) => {
 
 export const useFullReference = () => {
   const bookData = useSelector((state: IState) => state.books.bookData);
+  const [sectionMap] = useSectionMap();
 
   return (info: IInfo) =>
     info.rec.type === 'passage'
       ? getPassage(info, bookData)
-      : getSection(info.rec as Section);
+      : getSection([info.rec as Section], sectionMap);
 };

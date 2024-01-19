@@ -1,7 +1,10 @@
 import { Section } from '../../model';
 import { sectionDescription } from '../../crud';
 
-export const getSection = (section: Section[]) => {
+export const getSection = (
+  section: Section[],
+  sectionMap?: Map<number, string>
+) => {
   if (section.length === 0) return '';
-  return sectionDescription(section[0]);
+  return sectionDescription(section[0], sectionMap);
 };

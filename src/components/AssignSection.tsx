@@ -47,6 +47,7 @@ import { PriButton } from '../control';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import { assignSectionSelector, sharedSelector } from '../selector';
+import useSectionMap from '../utils/useSectionMap';
 
 const headProps = { display: 'flex', alignItems: 'center' } as SxProps;
 const gridProps = { m: 'auto', p: 1 } as SxProps;
@@ -57,13 +58,14 @@ interface SectionListProps {
 }
 
 function SectionList({ sections, users }: SectionListProps) {
+  const [sectionMap] = useSectionMap();
   return (
     <>
       {sections.map((p) => {
         return (
           <TableRow key={p.id}>
             <TableCell component="th" scope="row">
-              {sectionNumber(p) + ' ' + p.attributes.name}
+              {sectionNumber(p, sectionMap) + ' ' + p.attributes.name}
             </TableCell>
             <TableCell align="right">
               {sectionTranscriberName(p, users)}

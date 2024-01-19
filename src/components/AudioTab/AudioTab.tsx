@@ -50,6 +50,7 @@ import { mediaTabSelector, sharedSelector } from '../../selector';
 import { IPassageData, getPassages } from './getPassages';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordKeyMap } from '@orbit/records';
+import useSectionMap from '../../utils/useSectionMap';
 
 export function AudioTab() {
   const passages = useOrbitData<PassageD[]>('passage');
@@ -72,6 +73,7 @@ export function AudioTab() {
   const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
+  const [sectionMap] = useSectionMap();
   const [attachVisible, setAttachVisible] = useState(false);
   const [mcheck, setMCheck] = useState(-1);
   const [pcheck, setPCheck] = useState(-1);
@@ -246,6 +248,7 @@ export function AudioTab() {
         sections,
         playItem,
         allBookData,
+        sectionMap,
         isPassageDate: true,
       };
       setData(getMedia(planMedia, mediaData));
@@ -260,6 +263,7 @@ export function AudioTab() {
       sections,
       playItem,
       allBookData,
+      sectionMap,
       isPassageDate: true,
     };
     setData(getMedia(planMedia, mediaData));

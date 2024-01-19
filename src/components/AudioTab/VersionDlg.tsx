@@ -17,6 +17,7 @@ import SelectLatest from './SelectLatest';
 import { UpdateRecord } from '../../model/baseModel';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
+import useSectionMap from '../../utils/useSectionMap';
 
 interface IProps {
   passId: string;
@@ -34,6 +35,7 @@ export const VersionDlg = (props: IProps) => {
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [playItem, setPlayItem] = useState('');
   const [data, setData] = useState<IRow[]>([]);
+  const [sectionMap] = useSectionMap();
   const [versions, setVersions] = useState<number[]>([]);
   const [refresh, setRefresh] = useState(0);
   const { IsVernacularMedia } = useArtifactType();
@@ -68,6 +70,7 @@ export const VersionDlg = (props: IProps) => {
       sections,
       playItem,
       allBookData,
+      sectionMap,
       isPassageDate: false,
     };
     const newData = getMedia(media, mediaData);

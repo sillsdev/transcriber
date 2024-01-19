@@ -40,6 +40,7 @@ import { mediaActionsSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { GridColumnExtension } from '@devexpress/dx-react-grid';
 import usePassageDetailContext from '../context/usePassageDetailContext';
+import useSectionMap from '../utils/useSectionMap';
 
 export const TaskItemWidth = 240;
 export const TaskTableWidth = 265;
@@ -150,6 +151,7 @@ export function TaskTable(props: IProps) {
     pdBusy,
     discussionSize,
   } = usePassageDetailContext();
+  const [sectionMap] = useSectionMap();
   const filterRef = useRef(filter);
   const t = todoStr;
   const tpb = projButtonStr;
@@ -407,7 +409,7 @@ export function TaskTable(props: IProps) {
       assigned: r.assigned === user ? t.yes : t.no,
       mediaId: r.mediafile.id,
       rowKey:
-        sectionNumber(r.section) +
+        sectionNumber(r.section, sectionMap) +
         (r.mediafile.id ? taskPassageNumber(r.passage) : '   '),
     }));
     setRows(newRows);

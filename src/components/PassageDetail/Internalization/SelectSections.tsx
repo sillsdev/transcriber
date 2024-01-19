@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { Column, TableColumnWidthInfo } from '@devexpress/dx-react-grid';
 import { useSelector, shallowEqual } from 'react-redux';
@@ -41,6 +41,7 @@ import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
 import { RecordIdentity } from '@orbit/records';
 import { useOrbitData } from '../../../hoc/useOrbitData';
+import { PassageDetailContext } from '../../../context/PassageDetailContext';
 
 const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -68,11 +69,12 @@ const getChildRows = (row: any, rootRows: any[]) => {
 const getSection = (
   section: Section,
   passages: Passage[],
+  sectionMap: Map<number, string>,
   bookData: BookName[]
 ) => {
   const name =
     sectionRef(section, passages, bookData) ?? section?.attributes?.name ?? '';
-  return sectionNumber(section) + '.\u00A0\u00A0' + name;
+  return sectionNumber(section, sectionMap) + '.\u00A0\u00A0' + name;
 };
 
 /* build the passage name = sequence + book + reference */
@@ -110,6 +112,8 @@ export function SelectSections(props: IProps) {
   const [columnDefs, setColumnDefs] = useState<Column[]>([]);
   const [columnWidths, setColumnWidths] = useState<TableColumnWidthInfo[]>([]);
   const [checks, setChecks] = useState<Array<string | number>>([]);
+  const ctx = useContext(PassageDetailContext);
+  const { sectionMap } = ctx.state;
   const setDimensions = () => {
     setHeightStyle({
       maxHeight: `${window.innerHeight - 250}px`,
@@ -190,14 +194,14 @@ export function SelectSections(props: IProps) {
         if (!isFlat && passageCount > 1)
           rowData.push({
             id: section.id,
-            name: getSection(section, sectionpassages, bookData),
+            name: getSection(section, sectionpassages, sectionMap, bookData),
             passages: passageCount.toString(),
             parentId: '',
           });
         sectionpassages.forEach((passage: Passage) => {
           rowData.push({
             id: passage.id,
-            name: `${sectionNumber(section)}.${getReference(
+            name: `${sectionNumber(section, sectionMap)}.${getReference(
               passage,
               bookData
             )}`,

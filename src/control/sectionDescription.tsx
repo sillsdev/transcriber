@@ -2,12 +2,14 @@ import React from 'react';
 import { Section } from '../model';
 import { Box, Typography } from '@mui/material';
 import { sectionNumber } from '../crud';
+import useSectionMap from '../utils/useSectionMap';
 
 interface IProps {
   section: Section;
 }
 
 export const SectionDescription = ({ section }: IProps) => {
+  const [sectionMap] = useSectionMap();
   const name =
     section && section.attributes && section.attributes.name
       ? section.attributes.name
@@ -16,7 +18,7 @@ export const SectionDescription = ({ section }: IProps) => {
   return (
     <Box id="SectionDescription" sx={{ display: 'flex', flexDirection: 'row' }}>
       <Typography sx={{ width: '2em' }}>
-        {sectionNumber(section) + '\u00A0\u00A0'}
+        {sectionNumber(section, sectionMap) + '\u00A0\u00A0'}
       </Typography>
       <Typography sx={{ whiteSpace: 'normal' }}>{name}</Typography>
     </Box>

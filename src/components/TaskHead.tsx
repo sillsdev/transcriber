@@ -22,6 +22,7 @@ import { TaskAvatar } from './TaskAvatar';
 import { UpdateRelatedRecord } from '../model/baseModel';
 import { TaskItemWidth } from './TaskTable';
 import { Section } from '../model';
+import useSectionMap from '../utils/useSectionMap';
 
 const menuItemProps = { display: 'flex', flexDirection: 'row' } as SxProps;
 
@@ -40,6 +41,7 @@ export function TaskHead(props: IProps) {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [menuItem, setMenuItem] = React.useState(null);
+  const [sectionMap] = useSectionMap();
   const { getOrganizedBy } = useOrganizedBy();
 
   const t = taskItemStr;
@@ -47,7 +49,7 @@ export function TaskHead(props: IProps) {
 
   const planHead = t.section
     .replace('{0}', getOrganizedBy(true))
-    .replace('{1}', sectionNumber(section))
+    .replace('{1}', sectionNumber(section, sectionMap))
     .replace('{2}', '');
 
   const assignAction = t.assign;

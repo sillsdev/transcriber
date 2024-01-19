@@ -44,7 +44,8 @@ export function TaskItem(props: IProps) {
     allBookData,
   } = useTodo();
   const uctx = React.useContext(UnsavedContext);
-  const { playerMediafile, setSelected } = usePassageDetailContext();
+  const { playerMediafile, sectionMap, setSelected } =
+    usePassageDetailContext();
   const { checkSavedFn } = uctx.state;
 
   // TT-1749 during refresh the index went out of range.
@@ -101,7 +102,7 @@ export function TaskItem(props: IProps) {
                   <>
                     <GrowingSpacer />
                     {'{1}.{2}'
-                      .replace('{1}', sectionNumber(section))
+                      .replace('{1}', sectionNumber(section, sectionMap))
                       .replace('{2}', taskPassageNumber(passage).trim())}
                   </>
                 )}

@@ -79,6 +79,7 @@ import {
   RecordTransformBuilder,
 } from '@orbit/records';
 import { useOrbitData } from '../hoc/useOrbitData';
+import useSectionMap from '../utils/useSectionMap';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -194,6 +195,7 @@ const initState = {
   refresh: 0,
   prjId: '',
   forceRefresh: () => {},
+  sectionMap: {} as Map<number, string>,
 };
 
 export type ICtxState = typeof initState;
@@ -244,11 +246,13 @@ const PassageDetailProvider = (props: IProps) => {
   const view = React.useRef('');
   const mediaUrlRef = useRef('');
   const { showMessage } = useSnackBar();
+  const [sectionMap] = useSectionMap();
   const [state, setState] = useState({
     ...initState,
     allBookData,
     wfStr,
     prjId: prjId ?? '',
+    sectionMap,
   });
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const fetching = useRef('');
