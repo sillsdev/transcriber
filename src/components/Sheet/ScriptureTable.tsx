@@ -1157,8 +1157,8 @@ export function ScriptureTable(props: IProps) {
   }, [project, defaultFilterState]);
   useEffect(() => {
     var fm = getProjectDefault(ProjectFirstMovement);
-    setFirstMovement(fm);
-    setProjFirstMovement(fm);
+    setFirstMovement(fm ?? 1);
+    setProjFirstMovement(fm ?? 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
 
