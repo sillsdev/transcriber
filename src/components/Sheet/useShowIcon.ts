@@ -75,7 +75,8 @@ export const useShowIcon = ({
         [ExtraIcon.PassageToPrev]:
           !inlinePassages &&
           firstInSection(rowIndex) &&
-          !firstSection(rowIndex),
+          //I can move a note into whatever is before the first section
+          (!firstSection(rowIndex) || (isNote(rowIndex) && rowIndex > 1)),
         [ExtraIcon.PassageUp]:
           !inlinePassages &&
           !firstInSection(rowIndex) &&
