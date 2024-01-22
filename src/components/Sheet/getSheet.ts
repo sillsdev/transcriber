@@ -97,11 +97,14 @@ const shtPassageAdd = (
 const initItem = {} as ISheet;
 export const isSectionFiltered = (
   filterState: ISTFilterState,
-  sectionSeq: number
+  sectionSeq: number,
+  hidePublishing: boolean,
+  ref: string
 ) =>
-  !filterState.disabled &&
-  ((filterState.minSection > 1 && sectionSeq < filterState.minSection) ||
-    (filterState.maxSection > -1 && sectionSeq > filterState.maxSection));
+  (hidePublishing && isPublishingTitle(ref)) ||
+  (!filterState.disabled &&
+    ((filterState.minSection > 1 && sectionSeq < filterState.minSection) ||
+      (filterState.maxSection > -1 && sectionSeq > filterState.maxSection)));
 
 export const isPassageFiltered = (
   w: ISheet,
@@ -152,6 +155,7 @@ export const getSheet = (
     .filter((s) => related(s, 'plan') === plan)
     .sort((i, j) => i.attributes?.sequencenum - j.attributes?.sequencenum);
   const userid = { type: 'user' };
+  var sectionfiltered = false;
   plansections.forEach((section) => {
     let item = { ...initItem };
     let curSection = 1;
@@ -183,7 +187,13 @@ export const getSheet = (
       item.sectionUpdated = section.attributes.dateUpdated;
       item.passageSeq = 0;
       item.deleted = false;
-      item.filtered = isSectionFiltered(filterState, item.sectionSeq);
+      sectionfiltered = isSectionFiltered(
+        filterState,
+        item.sectionSeq,
+        hidePublishing,
+        item.reference
+      );
+      item.filtered = sectionfiltered;
       item.published = section.attributes.published;
       const gr = graphicFind(section);
       item.graphicUri = gr?.uri;
@@ -257,7 +267,7 @@ export const getSheet = (
         }
         item.deleted = false;
         item.filtered =
-          item.filtered ||
+          sectionfiltered ||
           isPassageFiltered(
             item,
             filterState,
