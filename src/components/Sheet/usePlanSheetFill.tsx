@@ -226,6 +226,7 @@ export const usePlanSheetFill = ({
     refCol: number;
     rowIndex: number;
     calcClassName: string;
+    anyRecording: boolean;
   }
 
   const stepCell = ({
@@ -234,6 +235,7 @@ export const usePlanSheetFill = ({
     refCol,
     rowIndex,
     calcClassName,
+    anyRecording,
   }: StepCellProps) =>
     ({
       value: passage &&
@@ -244,7 +246,7 @@ export const usePlanSheetFill = ({
             color="secondary"
           >
             <StageReport
-              onClick={handlePassageDetail(rowIndex)}
+              onClick={anyRecording ? undefined : handlePassageDetail(rowIndex)}
               step={rowInfo[rowIndex].step || ''}
               tip={tv.gotowork}
             />
@@ -270,6 +272,7 @@ export const usePlanSheetFill = ({
     rowIndex: number;
     srcMediaId: string;
     mediaPlaying: boolean;
+    anyRecording: boolean;
   }
 
   const actionValue = ({
@@ -277,6 +280,7 @@ export const usePlanSheetFill = ({
     rowIndex,
     srcMediaId,
     mediaPlaying,
+    anyRecording,
   }: ActionValueProps) => {
     if (!passage) return <></>;
     return (
@@ -286,6 +290,7 @@ export const usePlanSheetFill = ({
         isNote={rowInfo[rowIndex].passageType === PassageTypeEnum.NOTE}
         mediaId={rowInfo[rowIndex].mediaId?.id || ''}
         mediaShared={rowInfo[rowIndex].mediaShared}
+        anyRecording={anyRecording}
         onPlayStatus={onPlayStatus}
         onHistory={onHistory}
         isPlaying={srcMediaId === rowInfo[rowIndex].mediaId?.id && mediaPlaying}
@@ -303,9 +308,16 @@ export const usePlanSheetFill = ({
     calcClassName,
     srcMediaId,
     mediaPlaying,
+    anyRecording,
   }: ActionCellProps) =>
     ({
-      value: actionValue({ passage, rowIndex, srcMediaId, mediaPlaying }),
+      value: actionValue({
+        passage,
+        rowIndex,
+        srcMediaId,
+        mediaPlaying,
+        anyRecording,
+      }),
       readOnly: true,
       className: calcClassName,
     } as ICell);
@@ -356,7 +368,7 @@ export const usePlanSheetFill = ({
     return e;
   };
 
-  const graphicValue = (rowIndex: number) => {
+  const graphicValue = (rowIndex: number, anyRecording: boolean) => {
     if (
       !isSectionType(rowIndex) &&
       ![PassageTypeEnum.NOTE, PassageTypeEnum.CHAPTERNUMBER].includes(
@@ -374,7 +386,7 @@ export const usePlanSheetFill = ({
           sx={{ ...pointer, ...border }}
           src={rowInfo[rowIndex].graphicUri}
           variant="rounded"
-          onClick={handleGraphic(rowIndex)}
+          onClick={anyRecording ? undefined : handleGraphic(rowIndex)}
         />
       );
     }
@@ -391,8 +403,12 @@ export const usePlanSheetFill = ({
     );
   };
 
-  const graphicCell = (rowIndex: number, calcClassName: string) => ({
-    value: graphicValue(rowIndex),
+  const graphicCell = (
+    rowIndex: number,
+    calcClassName: string,
+    anyRecording: boolean
+  ) => ({
+    value: graphicValue(rowIndex, anyRecording),
     readOnly: true,
     className: calcClassName,
   });
@@ -548,6 +564,7 @@ export const usePlanSheetFill = ({
     book: boolean;
     active: number;
     filtered: boolean;
+    anyRecording: boolean;
   }
 
   const extrasCell = ({
@@ -561,44 +578,50 @@ export const usePlanSheetFill = ({
     book,
     active,
     filtered,
+    anyRecording,
   }: ExtrasCellProps) =>
-    ({
-      value: (
-        <PlanActionMenu
-          rowIndex={rowIndex}
-          isSection={section}
-          isPassage={passage}
-          firstMovement={firstMovement}
-          psgType={rowInfo[rowIndex].passageType}
-          published={rowInfo[rowIndex].published}
-          organizedBy={organizedBy}
-          sectionSequenceNumber={
-            sectionMap.get(row[SectionSeqCol] as number) ??
-            positiveWholeOnly(row[SectionSeqCol] as number)
-          }
-          passageSequenceNumber={positiveWholeOnly(
-            row[passageSeqCol >= 0 ? passageSeqCol : 0] as number
-          )}
-          readonly={readonly || check.length > 0}
-          onDelete={onDelete}
-          onPlayStatus={onPlayStatus}
-          onAudacity={onAudacity}
-          onRecord={onRecord}
-          onUpload={onUpload}
-          onAssign={onAssign}
-          onFirstMovement={onFirstMovement}
-          canAssign={userIsAdmin && !movement && !book}
+    anyRecording
+      ? ({
+          value: '',
+          readOnly: true,
+        } as ICell)
+      : ({
+          value: (
+            <PlanActionMenu
+              rowIndex={rowIndex}
+              isSection={section}
+              isPassage={passage}
+              firstMovement={firstMovement}
+              psgType={rowInfo[rowIndex].passageType}
+              published={rowInfo[rowIndex].published}
+              organizedBy={organizedBy}
+              sectionSequenceNumber={
+                sectionMap.get(row[SectionSeqCol] as number) ??
+                positiveWholeOnly(row[SectionSeqCol] as number)
+              }
+              passageSequenceNumber={positiveWholeOnly(
+                row[passageSeqCol >= 0 ? passageSeqCol : 0] as number
+              )}
+              readonly={readonly || check.length > 0}
+              onDelete={onDelete}
+              onPlayStatus={onPlayStatus}
+              onAudacity={onAudacity}
+              onRecord={onRecord}
+              onUpload={onUpload}
+              onAssign={onAssign}
+              onFirstMovement={onFirstMovement}
+              canAssign={userIsAdmin && !movement && !book}
           canDelete={userIsAdmin}
-          active={active - 1 === rowIndex}
+              active={active - 1 === rowIndex}
           onDisableFilter={!readonly && filtered ? disableFilter : undefined}
-          showIcon={showIcon(filtered, offline && !offlineOnly, rowIndex)}
-          onAction={onAction}
-        />
-      ),
-      // readOnly: true,
-      className: calcClassName,
-      dataEditor: ActivateCell,
-    } as ICell);
+              showIcon={showIcon(filtered, offline && !offlineOnly, rowIndex)}
+              onAction={onAction}
+            />
+          ),
+          // readOnly: true,
+          className: calcClassName,
+          dataEditor: ActivateCell,
+        } as ICell);
 
   const eachRow =
     ({
@@ -633,7 +656,14 @@ export const usePlanSheetFill = ({
           : 'pass');
 
       const sheetRow = [
-        stepCell({ passage, row, refCol, rowIndex, calcClassName }),
+        stepCell({
+          passage,
+          row,
+          refCol,
+          rowIndex,
+          calcClassName,
+          anyRecording,
+        }),
         assignmentCell(rowIndex, calcClassName),
         actionCell({
           passage,
@@ -641,10 +671,11 @@ export const usePlanSheetFill = ({
           calcClassName,
           srcMediaId,
           mediaPlaying,
+          anyRecording,
         }),
       ];
       if (!hidePublishing && canHidePublishing)
-        sheetRow.push(graphicCell(rowIndex, calcClassName));
+        sheetRow.push(graphicCell(rowIndex, calcClassName, anyRecording));
       row
         .slice(0, 6) // quits when it runs out of columns
         .map(
@@ -673,6 +704,7 @@ export const usePlanSheetFill = ({
           book,
           active,
           filtered,
+          anyRecording,
         })
       );
       return sheetRow;
