@@ -43,7 +43,7 @@ export const getPubRefs = ({
       })
       .forEach((index) => {
         const value = rowData[index][SectionSeqCol] as number;
-        if (!sectionMap || !value || value < 0) return;
+        if (!sectionMap || !value || value <= -3) return;
         if (sectionMap.has(value)) return;
         if (rowInfo[index].level === SheetLevel.Movement) {
           const newValue = `M${++curMove}`;
