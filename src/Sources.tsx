@@ -301,6 +301,13 @@ export const Sources = async (
       '',
       getOfflineProject
     ).catch((err: Error) => {
+      console.log(
+        'ITFSYNC export failed: ',
+        err.message,
+        err.name,
+        err.cause,
+        err.stack
+      );
       logError(
         Severity.error,
         globalStore.errorReporter,
