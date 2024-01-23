@@ -33,6 +33,7 @@ interface IProps {
   mediaId: string;
   mediaShared: IMediaShare;
   isPlaying: boolean;
+  anyRecording: boolean;
   onPlayStatus: (mediaId: string) => void;
   onHistory: (i: number) => () => void;
 }
@@ -73,7 +74,7 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
               ? t.resourceEdit
               : t.versions
           }
-          disabled={disabled && !isNote}
+          disabled={disabled}
           onClick={onHistory(rowIndex)}
         >
           {isNote ? (
@@ -102,12 +103,12 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
 });
 
 export function PlanAudioActions(props: IProps) {
-  const { mediaId } = props;
+  const { mediaId, anyRecording, isNote } = props;
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
 
   const disabled = useMemo(() => {
-    return (mediaId || '') === '';
-  }, [mediaId]);
+    return ((mediaId || '') === '' && !isNote) || anyRecording;
+  }, [mediaId, anyRecording, isNote]);
 
   return <Actions {...props} disabled={disabled} t={t} />;
 }
