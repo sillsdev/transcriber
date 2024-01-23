@@ -105,7 +105,7 @@ export const useSharedResCreate = ({
         | undefined;
       if (catRec) {
         const catText = localizedArtifactCategory(
-          catRec.attributes.categoryname
+          catRec.attributes?.categoryname
         );
         onUpdRef(passage.id, `NOTE|${catText}`);
       }

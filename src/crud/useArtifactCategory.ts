@@ -106,11 +106,11 @@ export const useArtifactCategory = (teamId?: string) => {
     orgrecs.forEach((r) =>
       categorys.push({
         slug: r.attributes.categoryname,
-        category: localizedArtifactCategory(r.attributes.categoryname),
+        category: localizedArtifactCategory(r.attributes?.categoryname),
         org: related(r, 'organization') ?? '',
         id: r.id,
         titleMediaId: related(r, 'titleMediafile') ?? '',
-        color: r.attributes.color ?? '',
+        color: r.attributes?.color ?? '',
       })
     );
     return categorys;
@@ -204,7 +204,7 @@ export const useArtifactCategory = (teamId?: string) => {
             attributes: {
               ...rec.attributes,
               categoryname: category.category,
-              color: category.color,
+              color: category?.color,
             },
           } as ArtifactCategoryD,
           user
