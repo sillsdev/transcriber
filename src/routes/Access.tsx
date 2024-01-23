@@ -225,11 +225,13 @@ export function Access() {
 
   const isOnlineUserWithOfflineProjects = (userId: string) => {
     const userRec = users.filter((u) => u.id === userId);
+    console.log('userRec', userRec);
     if (userRec.length === 0 || userRec[0]?.keys?.remoteId === undefined)
       return false;
     const grpIds = groupMemberships
       .filter((gm) => related(gm, 'user') === userId)
       .map((gm) => related(gm, 'group'));
+    console.log('grpIds', grpIds, groupMemberships);
     const projIds = projects
       .filter(
         (p) =>
@@ -237,12 +239,15 @@ export function Access() {
           offlineProjRead(p.id)?.attributes?.offlineAvailable
       )
       .map((p) => p.id);
+    console.log('projIds', projIds, projects);
     const planIds = plans
       .filter((p) => projIds.includes(related(p, 'project')))
       .map((p) => p.id);
+    console.log('planIds', planIds, plans);
     const userSections = sections.filter((s) =>
       planIds.includes(related(s, 'plan'))
     );
+    console.log('userSections', userSections, sections);
     return userSections.length > 0;
   };
 
