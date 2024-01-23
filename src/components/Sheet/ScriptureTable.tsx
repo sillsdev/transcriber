@@ -1653,7 +1653,7 @@ export function ScriptureTable(props: IProps) {
     }
     return filtered;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sheet]);
+  }, [sheet, width, colNames, flat]);
 
   const rowdata = useMemo(
     () => workSheet(rowinfo, colNames, sheet),
