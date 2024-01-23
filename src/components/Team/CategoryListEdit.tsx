@@ -99,7 +99,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
     for (const r of recs) {
       if (!/^\s*$/.test(r.category)) {
         if (r.id === 'newcat') {
-          addNewArtifactCategory(r.category, type, r.titleMediaId, r.color);
+          addNewArtifactCategory(r.category, type, r.titleMediaId, r?.color);
         } else {
           updateArtifactCategory(r);
         }
@@ -190,6 +190,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
                 onDeleted={handleDelete}
                 onRecording={onRecording(c)}
                 mediaplan={mediaplan}
+                teamId={teamId}
                 disabled={recording !== '' && c.id !== recording}
                 type={type}
                 category={c}

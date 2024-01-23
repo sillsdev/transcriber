@@ -22,10 +22,10 @@ export const useGraphicFind = () => {
       let catText = ref.split('|')[1];
       catText = catText ? fromLocalizedArtifactCategory(catText) : undefined;
       const catRec = artifactCategory.find(
-        (c) => c.attributes.categoryname === catText
+        (c) => c.attributes?.categoryname === catText
       );
       if (catRec) {
-        color = catRec.attributes.color;
+        color = catRec.attributes?.color;
         if (!graphicRec) {
           graphicRec = graphics.find(
             (g) =>

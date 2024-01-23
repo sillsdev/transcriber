@@ -18,12 +18,14 @@ const filter = createFilterOptions<RightsHolderOption>();
 
 interface IProps {
   value: string;
+  teamId?: string;
   onChange: (value: string) => void;
 }
 
 export function GraphicRights(props: IProps) {
   const { onChange } = props;
-  const [org] = useGlobal('organization');
+  const [organization] = useGlobal('organization');
+  const org = props.teamId ?? organization;
   const graphics = useOrbitData<Graphic[]>('graphic');
   const [value, setValuex] = React.useState<RightsHolderOption | null>(null);
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);

@@ -43,7 +43,7 @@ export const useSharedResUpdate = ({ onUpdRef }: ShResUpdProps) => {
         | undefined;
       if (catRec && onUpdRef) {
         const catText = localizedArtifactCategory(
-          catRec.attributes.categoryname
+          catRec.attributes?.categoryname
         );
         const passage = sharedResource.relationships.passage
           .data as RecordIdentity;

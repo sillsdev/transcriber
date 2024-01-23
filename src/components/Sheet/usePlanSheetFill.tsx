@@ -377,7 +377,7 @@ export const usePlanSheetFill = ({
     ) {
       return <></>;
     }
-    const borderColor = rowInfo[rowIndex].color;
+    const borderColor = rowInfo[rowIndex]?.color;
     const border = borderColor ? { border: '2px solid', borderColor } : {};
 
     if (rowInfo[rowIndex].graphicUri) {

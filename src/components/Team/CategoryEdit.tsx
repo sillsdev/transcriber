@@ -36,6 +36,7 @@ interface IProps {
   label?: string;
   helper?: string;
   mediaplan: string;
+  teamId?: string;
   onChanged(category: IArtifactCategory): void;
   onDeleted(category: IArtifactCategory): void;
   onRecording(recording: boolean): void;
@@ -52,6 +53,7 @@ export default function CategoryEdit({
   type,
   label,
   mediaplan,
+  teamId,
   helper,
   onChanged,
   onRecording,
@@ -101,7 +103,7 @@ export default function CategoryEdit({
   };
 
   const handleRightsChange = (value: string) => {
-    setGraphicRights(graphicRights);
+    setGraphicRights(value);
   };
 
   useEffect(() => {
@@ -110,7 +112,7 @@ export default function CategoryEdit({
       category.id,
       memory.keyMap as RecordKeyMap
     );
-    setColor(category.color === '' ? defaultColor : category.color);
+    setColor(category.color === '' ? defaultColor : category?.color);
     setMediafile(category.titleMediaId ?? '');
     if (!isNaN(remoteId)) {
       setResourceId(remoteId);
@@ -230,7 +232,7 @@ export default function CategoryEdit({
             cancelled={cancelled}
             uploadType={UploadType.Graphic}
             metadata={
-              <GraphicRights value={''} onChange={handleRightsChange} />
+              <GraphicRights value={''} teamId={teamId} onChange={handleRightsChange} />
             }
           />
         </>
