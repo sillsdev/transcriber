@@ -53,7 +53,7 @@ export const getPubRefs = ({
         }
         if (rowInfo[index].level === SheetLevel.Section) {
           let newValue = '';
-          if (curMove > 0) {
+          if (curMove >= firstMovement) {
             newValue = `M${curMove} `;
           }
           newValue += `S${++curSection}`;
