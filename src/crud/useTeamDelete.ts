@@ -52,6 +52,20 @@ export const useTeamDelete = () => {
     for (let ix = 0; ix < projIds.length; ix++)
       await projectDelete(projIds[ix]);
     ops = [];
+    const artifactcats = (
+      memory.cache.query((q) =>
+        q.findRecords('artifactcategory').filter({
+          relation: 'organization',
+          record: { type: 'organization', id: teamid },
+        })
+      ) as ArtifactCategoryD[]
+    ).map((c) => c.id);
+    artifactcats.forEach((id) =>
+      ops.push(t.removeRecord({ type: 'artifactcategory', id }).toOperation())
+    );
+    await memory.update(ops);
+    ops = [];
+
     teamgrpIds.forEach((tg) =>
       ops.push(t.removeRecord({ type: 'group', id: tg }).toOperation())
     );
@@ -65,14 +79,6 @@ export const useTeamDelete = () => {
         ) as OrgWorkflowStepD[]
       ).map((s) => s.id);
 
-      const artifactcats = (
-        memory.cache.query((q) =>
-          q.findRecords('artifactcategory').filter({
-            relation: 'organization',
-            record: { type: 'organization', id: teamid },
-          })
-        ) as ArtifactCategoryD[]
-      ).map((c) => c.id);
       const artifacttypes = (
         memory.cache.query((q) =>
           q.findRecords('artifacttype').filter({
@@ -102,9 +108,6 @@ export const useTeamDelete = () => {
       );
       artifacttypes.forEach((id) =>
         ops.push(t.removeRecord({ type: 'artifacttype', id }).toOperation())
-      );
-      artifactcats.forEach((id) =>
-        ops.push(t.removeRecord({ type: 'artifactcategory', id }).toOperation())
       );
     }
     ops.push(
