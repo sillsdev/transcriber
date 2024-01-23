@@ -11,6 +11,7 @@ export const useOfflnProjRead = () => {
     const selected = offlineProjectRecs.filter(
       (o) => related(o, 'project') === projectId
     );
+    console.log('useOfflnProjRead', plan, selected, offlineProjectRecs);
     return selected.length > 0 ? selected[0] : ({} as OfflineProjectD);
   };
 };
