@@ -87,7 +87,7 @@ export function DiscussionList() {
     setDiscussionMarkers,
   } = ctx.state;
   const discussionSizeRef = useRef(discussionSize);
-  const { toolsChanged, isChanged, startSave, startClear } =
+  const { toolsChanged, isChanged, startSave, startClear, clearCompleted } =
     useContext(UnsavedContext).state;
   const t: IDiscussionListStrings = useSelector(
     discussionListSelector,
@@ -423,6 +423,10 @@ export function DiscussionList() {
   const handleAddComplete = (id: string) => {
     setAdding(false);
     setHighlightNew(id);
+    if (!id) {
+      clearCompleted(NewDiscussionToolId);
+      clearCompleted(NewCommentToolId);
+    }
   };
 
   const handleAddDiscussion = async () => {
