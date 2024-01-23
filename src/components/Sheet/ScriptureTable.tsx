@@ -1369,10 +1369,16 @@ export function ScriptureTable(props: IProps) {
   useEffect(() => {
     const newWork: ISheet[] = [];
     var changed = false;
+    var filtered = false;
+
     sheetRef.current.forEach((w, index) => {
-      var filtered = false;
       if (isSectionRow(w)) {
-        filtered = isSectionFiltered(filterState, w.sectionSeq);
+        filtered = isSectionFiltered(
+          filterState,
+          w.sectionSeq,
+          hidePublishing,
+          w.reference || ''
+        );
         if (!filtered && hidePublishing && w.kind === IwsKind.Section) {
           var allMyPassagesArePublishing = true;
           for (
@@ -1620,7 +1626,7 @@ export function ScriptureTable(props: IProps) {
           (w) =>
             !w.deleted &&
             w.sectionSeq > 0 &&
-            Math.floor(w.sectionSeq) === w.sectionSeq
+            Math.trunc(w.sectionSeq) === w.sectionSeq
         )
         .map((w) => w.sectionSeq)
     ).size;
