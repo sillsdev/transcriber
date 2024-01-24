@@ -50,7 +50,7 @@ export const Stage = ({
   const handleMove = (forward: boolean) => () => {
     moveStep && moveStep(forward);
   };
-  const shortLabel = label.length > 22 ? `${label.slice(0, 22)}...` : label;
+  const shortLabel = label?.length > 22 ? `${label?.slice(0, 22)}...` : label;
   return id === 'prev' || id === 'next' ? (
     <IconButton
       id={id}
