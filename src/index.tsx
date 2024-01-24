@@ -100,7 +100,6 @@ export async function restoreBackup(coordinator?: Coordinator) {
         backup: myBackup,
         memory: myMemory,
       });
-      console.log('restoreBackup', file.table, 'done');
     }
 
     const loadedplans = new Set(
