@@ -92,7 +92,7 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
         <StyledIconButton
           id="planAudPlayStop"
           title={t.playpause}
-          disabled={disabled}
+          disabled={disabled || mediaId === ''}
           onClick={handlePlayStatus()}
         >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
