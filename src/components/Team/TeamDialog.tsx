@@ -302,6 +302,7 @@ export function TeamDialog(props: IProps) {
             label={t.teamName}
             value={name}
             helperText={!saving && name && nameInUse(name) && t.nameInUse}
+            required
             onChange={handleChange}
             fullWidth
           />
