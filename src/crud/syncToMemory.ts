@@ -21,6 +21,14 @@ export const backupToMemory = async ({
     q.findRecords(table)
   )) as InitializedRecord[];
   if (!Array.isArray(tblRecs)) tblRecs = [tblRecs];
+  if (table === 'mediafile') {
+    tblRecs.forEach((r) => {
+      delete r.attributes?.planId;
+      delete r.attributes?.passageId;
+      delete r.attributes?.userId;
+      delete r.attributes?.recordedbyUserId;
+    });
+  }
   await memory.sync((t) => tblRecs.map((r) => t.addRecord(r)));
 };
 

@@ -313,6 +313,7 @@ export const Sources = async (
         globalStore.errorReporter,
         infoMsg(err, 'ITFSYNC export failed: ')
       );
+      throw err;
     });
     if (fr && fr.changes > 0) {
       syncBuffer = fr.buffer;
