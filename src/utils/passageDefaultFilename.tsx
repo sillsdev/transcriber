@@ -30,11 +30,11 @@ const noPassageRef = (passage: Passage, memory: Memory) => {
   var plan = findRecord(memory, 'plan', related(sect, 'plan')) as Plan;
   if (plan.attributes.flat && sect.attributes.name.length > 0)
     return sect.attributes.name;
-  return (
-    'S' +
-    pad3(sect.attributes.sequencenum) +
-    (plan.attributes.flat ? '' : '_P' + pad3(passage.attributes.sequencenum))
-  );
+  return `S${sect.attributes.sequencenum.toString().padStart(3, '0')}${
+    plan.attributes.flat
+      ? ''
+      : `_P${passage.attributes.sequencenum.toString().padStart(3, '0')}`
+  }`;
 };
 export const passageDefaultFilename = (
   passage: PassageD,
