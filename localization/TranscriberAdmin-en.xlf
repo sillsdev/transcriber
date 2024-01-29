@@ -5068,6 +5068,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTableFilter.invalidSection">
+         <segment>
+            <source>Invalid Section</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTableFilter.step">
          <segment>
             <source>Workflow Step</source>

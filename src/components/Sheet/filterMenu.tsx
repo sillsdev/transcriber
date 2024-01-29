@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import { IScriptureTableFilterStrings, OrgWorkflowStep } from '../../model';
 import {
   IconButton,
@@ -18,6 +18,7 @@ import { scriptureTableFilterMenuSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { OrgWorkflowStepList } from './OrgWorkflowStepList';
 import { useOrganizedBy } from '../../crud';
+import { PlanContext } from '../../context/PlanContext';
 
 export interface ISTFilterState {
   minStep: string; //orgworkflow step to show this step or after
@@ -35,6 +36,7 @@ interface IProps {
   canSetDefault: boolean;
   orgSteps: OrgWorkflowStep[];
   maximumSection: number;
+  hidePublishing: boolean;
   onFilterChange: (
     newstate: ISTFilterState | undefined,
     isDefault: boolean
@@ -50,12 +52,27 @@ export function FilterMenu(props: IProps) {
     maximumSection,
     onFilterChange,
     filtered,
+    hidePublishing,
     setBusy,
   } = props;
   const [localState, setLocalState] = useState(props.state);
   const [isDefault, setIsDefault] = useState(false);
   const defaultRef = useRef(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { sectionArr } = useContext(PlanContext).state;
+  const sectionMap = new Map<number, string>(sectionArr);
+  const [mapMin, setMapMin] = useState(
+    !hidePublishing ? sectionMap.get(localState.minSection) : ''
+  );
+  const [mapMax, setMapMax] = useState(
+    !hidePublishing
+      ? sectionMap.get(
+          localState.maxSection > 0 ? localState.maxSection : maximumSection
+        )
+      : ''
+  );
+  const [minHelp, setMinHelp] = useState('');
+  const [maxHelp, setMaxHelp] = useState('');
   const t: IScriptureTableFilterStrings = useSelector(
     scriptureTableFilterMenuSelector,
     shallowEqual
@@ -91,6 +108,16 @@ export function FilterMenu(props: IProps) {
   const handleClear = () => {
     apply(undefined, defaultRef.current);
     setAnchorEl(null);
+    setMapMin(!hidePublishing ? sectionMap.get(localState.minSection) : '');
+    setMapMax(
+      !hidePublishing
+        ? sectionMap.get(
+            localState.maxSection > 0 ? localState.maxSection : maximumSection
+          )
+        : ''
+    );
+    setMinHelp('');
+    setMaxHelp('');
   };
   const handleDisabled = (event: React.ChangeEvent<HTMLInputElement>) => {
     apply({ ...localState, disabled: event.target.checked }, false);
@@ -118,6 +145,30 @@ export function FilterMenu(props: IProps) {
   const handleNumberChange = (what: string) => (e: any) => {
     e.stopPropagation();
     filterChange(what, parseInt(e.target.value));
+  };
+  const getKeyValue = (value: string) => {
+    let key = undefined;
+    for (const [k, v] of Array.from(sectionMap.entries())) {
+      if (v === value) {
+        key = k;
+        break;
+      }
+    }
+    return key;
+  };
+  const handleMapChange = (what: string) => (e: any) => {
+    e.stopPropagation();
+    const value = getKeyValue(e.target.value);
+    if (what === 'minSection') {
+      setMapMin(e.target.value);
+      setMinHelp(value ? '' : t.invalidSection);
+    } else {
+      setMapMax(e.target.value);
+      setMaxHelp(value ? '' : t.invalidSection);
+    }
+    if (value) {
+      filterChange(what, value);
+    }
   };
 
   const handleDefaultCheck = (value: boolean) => {
@@ -192,7 +243,7 @@ export function FilterMenu(props: IProps) {
             onStepFilter={(chosen: string) => handle('maxStep', chosen)}
           />
         </Box>
-        {maximumSection > 0 && (
+        {maximumSection > 0 && hidePublishing && (
           <Box sx={{ mx: 1, my: 1 }}>
             <Typography gutterBottom>{organizedBy}</Typography>
             <TextField
@@ -218,6 +269,35 @@ export function FilterMenu(props: IProps) {
                 inputProps: { min: localState.minSection, max: maximumSection },
               }}
               onChange={handleNumberChange('maxSection')}
+            />
+          </Box>
+        )}
+        {maximumSection > 0 && !hidePublishing && (
+          <Box sx={{ mx: 1, my: 1 }}>
+            <Typography gutterBottom>{organizedBy}</Typography>
+            <TextField
+              sx={{ minWidth: '80px', mx: 1 }}
+              name="minSection"
+              label={t.minimum}
+              value={mapMin || sectionMap.get(localState.minSection) || ''}
+              helperText={minHelp}
+              onChange={handleMapChange('minSection')}
+            />
+            <TextField
+              sx={{ minWidth: '80px', mx: 1 }}
+              name="maxSection"
+              label={t.maximum}
+              value={
+                mapMax ||
+                sectionMap.get(
+                  localState.maxSection > 0
+                    ? localState.maxSection
+                    : maximumSection
+                ) ||
+                ''
+              }
+              helperText={maxHelp}
+              onChange={handleMapChange('maxSection')}
             />
           </Box>
         )}
@@ -261,7 +341,12 @@ export function FilterMenu(props: IProps) {
           autoFocus
           sx={btnProp}
           onClick={handleApply}
-          disabled={applyingRef.current || !changed}
+          disabled={
+            applyingRef.current ||
+            !changed ||
+            Boolean(minHelp) ||
+            Boolean(maxHelp)
+          }
         >
           {t.apply}
         </PriButton>

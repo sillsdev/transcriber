@@ -179,7 +179,7 @@ export function ScriptureTable(props: IProps) {
     shared,
     hidePublishing,
     canHidePublishing,
-    sectionMap,
+    setSectionArr,
     setCanPublish,
     togglePublishing,
   } = ctx.state;
@@ -684,7 +684,7 @@ export function ScriptureTable(props: IProps) {
       showMessage(t.saving);
       return;
     }
-    sectionMap.clear();
+    setSectionArr([]);
     const i = getUndelIndex(sheetRef.current, ix);
     if (i !== undefined) {
       setSheet(moveSectionTo(sheetRef.current, i, before));
@@ -1677,7 +1677,7 @@ export function ScriptureTable(props: IProps) {
   const onFirstMovement = (newFM: number) => {
     if (newFM !== firstMovement) {
       setFirstMovement(newFM);
-      sectionMap.clear();
+      setSectionArr([])
       setChanged(true);
     }
   };

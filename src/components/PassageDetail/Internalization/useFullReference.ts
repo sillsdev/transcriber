@@ -2,7 +2,8 @@ import { Section, Passage, IState, BookName } from '../../../model';
 import { passageDescText } from '../../../crud';
 import { useSelector } from 'react-redux';
 import { getSection } from '../../AudioTab/getSection';
-import useSectionMap from '../../../utils/useSectionMap';
+import { useContext } from 'react';
+import { PassageDetailContext } from '../../../context/PassageDetailContext';
 
 export interface IInfo {
   rec: Section | Passage;
@@ -18,7 +19,8 @@ const getPassage = (info: IInfo, bookData: BookName[]) => {
 
 export const useFullReference = () => {
   const bookData = useSelector((state: IState) => state.books.bookData);
-  const [sectionMap] = useSectionMap();
+  const { sectionArr } = useContext(PassageDetailContext).state;
+  const sectionMap = new Map<number, string>(sectionArr);
 
   return (info: IInfo) =>
     info.rec.type === 'passage'

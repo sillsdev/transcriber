@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo, CSSProperties } from 'react';
+import { useState, useEffect, useRef, useMemo, CSSProperties, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import {
   IconButton,
@@ -40,7 +40,7 @@ import { mediaActionsSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { GridColumnExtension } from '@devexpress/dx-react-grid';
 import usePassageDetailContext from '../context/usePassageDetailContext';
-import useSectionMap from '../utils/useSectionMap';
+import { PassageDetailContext } from '../context/PassageDetailContext';
 
 export const TaskItemWidth = 240;
 export const TaskTableWidth = 265;
@@ -151,7 +151,8 @@ export function TaskTable(props: IProps) {
     pdBusy,
     discussionSize,
   } = usePassageDetailContext();
-  const [sectionMap] = useSectionMap();
+  const { sectionArr } = useContext(PassageDetailContext).state;
+  const sectionMap = new Map<number, string>(sectionArr);
   const filterRef = useRef(filter);
   const t = todoStr;
   const tpb = projButtonStr;
@@ -559,6 +560,7 @@ export function TaskTable(props: IProps) {
           {...props}
           projectPlans={projectPlans(projectId)}
           planColumn={true}
+          sectionArr={sectionArr}
         />
       </BigDialog>
       <BigDialog

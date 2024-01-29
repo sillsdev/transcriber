@@ -47,7 +47,6 @@ import {
   assignmentSelector,
   sharedSelector,
 } from '../selector';
-import useSectionMap from '../utils/useSectionMap';
 
 const AssignmentDiv = styled('div')(() => ({
   display: 'flex',
@@ -96,10 +95,10 @@ export function AssignmentTable(props: IProps) {
   const [plan] = useGlobal('plan');
   const { showMessage } = useSnackBar();
   const ctx = useContext(PlanContext);
-  const { flat } = ctx.state;
+  const { flat, sectionArr } = ctx.state;
   const [data, setData] = useState(Array<IRow>());
   const [check, setCheck] = useState(Array<number>());
-  const [sectionMap] = useSectionMap();
+  const sectionMap = new Map<number, string>(sectionArr);
   const [selectedSections, setSelectedSections] = useState<Section[]>([]);
   const [confirmAction, setConfirmAction] = useState('');
   const { getOrganizedBy } = useOrganizedBy();

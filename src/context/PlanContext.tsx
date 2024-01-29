@@ -16,7 +16,7 @@ import { useProjectDefaults } from '../crud/useProjectDefaults';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import { projButtonsSelector } from '../selector';
-import useSectionMap from '../utils/useSectionMap';
+import useLocalStorageState from '../utils/useLocalStorageState';
 
 export const ProjectHidePublishing = 'hidePublishing';
 export const ProjectFirstMovement = 'firstMovement';
@@ -36,7 +36,8 @@ const initState = {
   shared: false,
   canHidePublishing: true,
   hidePublishing: true,
-  sectionMap: {} as Map<number, string>,
+  sectionArr: [] as [number, string][],
+  setSectionArr: (sectionArr: [number, string][]) => {},
   togglePublishing: () => {},
   setCanPublish: (canPublish: boolean) => {},
 };
@@ -71,25 +72,34 @@ const PlanProvider = (props: IProps) => {
   const getPlanType = usePlanType();
   const { userIsAdmin } = useRole();
   const { setProjectDefault, getProjectDefault } = useProjectDefaults();
+  const [sectionArr, setSectionArrx] = useLocalStorageState(
+    'sectionMap' + plan,
+    []
+  );
   const [readonly, setReadOnly] = useState(
     (isOffline && !offlineOnly) || !userIsAdmin
   );
-  const [sectionMap] = useSectionMap();
   const [state, setState] = useState({
     ...initState,
     projButtonStr,
     mediafiles,
     discussions,
     groupmemberships,
-    sectionMap,
   });
   const checkOnline = useCheckOnline();
+
+  const setSectionArr = (newArr: [number, string][]) => {
+    setTimeout(() => {
+      setSectionArrx(newArr);
+    }, 100);
+  };
 
   useEffect(() => {
     const { scripture, flat } = getPlanType(plan);
     if (flat !== state.flat || scripture !== state.scripture)
       setState((state) => ({ ...state, flat, scripture }));
-    sectionMap.clear();
+    // setSectionArr([]);
+    // console.log('PlanContext: plan changed')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plan]);
 
@@ -146,6 +156,8 @@ const PlanProvider = (props: IProps) => {
       value={{
         state: {
           ...state,
+          sectionArr,
+          setSectionArr,
           connected,
           readonly,
           togglePublishing,

@@ -22,7 +22,7 @@ import { TaskAvatar } from './TaskAvatar';
 import { UpdateRelatedRecord } from '../model/baseModel';
 import { TaskItemWidth } from './TaskTable';
 import { Section } from '../model';
-import useSectionMap from '../utils/useSectionMap';
+import { PassageDetailContext } from '../context/PassageDetailContext';
 
 const menuItemProps = { display: 'flex', flexDirection: 'row' } as SxProps;
 
@@ -41,7 +41,8 @@ export function TaskHead(props: IProps) {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [menuItem, setMenuItem] = React.useState(null);
-  const [sectionMap] = useSectionMap();
+  const { sectionArr } = React.useContext(PassageDetailContext).state;
+  const sectionMap = new Map<number, string>(sectionArr);
   const { getOrganizedBy } = useOrganizedBy();
 
   const t = taskItemStr;

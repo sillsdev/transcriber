@@ -14,34 +14,32 @@ function useLocalStorageState(
   // Check https://jacobparis.com/blog/destructure-arguments for a detailed explanation
   { serialize = JSON.stringify, deserialize = JSON.parse } = {}
 ) {
-  const [state, setState] = React.useState(() => {
-    const valueInLocalStorage = window.localStorage.getItem(key);
-    if (valueInLocalStorage) {
+  const valueInLocalStorage = React.useRef(window.localStorage.getItem(key));
+  const [state, setStatex] = React.useState(() => {
+    if (valueInLocalStorage.current) {
       // the try/catch is here in case the localStorage value was set before
       // we had the serialization in place (like we do in previous extra credits)
       try {
-        return deserialize(valueInLocalStorage);
+        return deserialize(valueInLocalStorage.current);
       } catch (error) {
         window.localStorage.removeItem(key);
+        valueInLocalStorage.current = null;
       }
     }
     return typeof defaultValue === 'function' ? defaultValue() : defaultValue;
   });
 
-  const prevKeyRef = React.useRef(key);
-
   // Check the example at src/examples/local-state-key-change.js to visualize a key change
   React.useEffect(() => {
-    const prevKey = prevKeyRef.current;
-    if (prevKey !== key) {
-      window.localStorage.removeItem(prevKey);
-    }
-    prevKeyRef.current = key;
     const serializedState = serialize(state);
-    if (serializedState) {
+    if (serializedState !== valueInLocalStorage.current) {
       window.localStorage.setItem(key, serialize(state));
     }
   }, [key, state, serialize]);
+
+  const setState = (value: any) => {
+    if (serialize(state) !== serialize(value)) setStatex(value);
+  };
 
   return [state, setState];
 }

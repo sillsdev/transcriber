@@ -233,6 +233,7 @@ export function PlanSheet(props: IProps) {
     connected,
     readonly,
     shared,
+    sectionArr,
   } = ctx.state;
 
   const [memory] = useGlobal('memory');
@@ -547,6 +548,19 @@ export function PlanSheet(props: IProps) {
     onFilterChange({ ...filterState, disabled: true }, false);
   };
 
+  const filtered = useMemo(() => {
+    return (
+      !filterState.disabled &&
+      (filterState.minStep !== '' ||
+        filterState.maxStep !== '' ||
+        filterState.hideDone ||
+        filterState.minSection > 1 ||
+        (filterState.maxSection > -1 &&
+          filterState.maxSection < maximumSection) ||
+        filterState.assignedToMe)
+    );
+  }, [filterState, maximumSection]);
+
   const planSheetFill = usePlanSheetFill({
     ...props,
     onSetPreventSave,
@@ -558,6 +572,7 @@ export function PlanSheet(props: IProps) {
     hidePublishing,
     canHidePublishing,
     firstMovement,
+    filtered,
     onAudacity: handleAudacity,
     onDelete: handleConfirmDelete,
     cellsChanged: updateData,
@@ -677,19 +692,6 @@ export function PlanSheet(props: IProps) {
     onPublishing(false);
   };
 
-  const filtered = useMemo(() => {
-    return (
-      !filterState.disabled &&
-      (filterState.minStep !== '' ||
-        filterState.maxStep !== '' ||
-        filterState.hideDone ||
-        filterState.minSection > 1 ||
-        (filterState.maxSection > -1 &&
-          filterState.maxSection < maximumSection) ||
-        filterState.assignedToMe)
-    );
-  }, [filterState, maximumSection]);
-
   useEffect(() => {
     if (rowData.length !== rowInfo.length) {
       setData([]);
@@ -720,6 +722,7 @@ export function PlanSheet(props: IProps) {
     check,
     anyRecording,
     firstMovement,
+    sectionArr,
   ]);
 
   useEffect(() => {
@@ -851,6 +854,7 @@ export function PlanSheet(props: IProps) {
               orgSteps={orgSteps}
               maximumSection={maximumSection}
               filtered={filtered}
+              hidePublishing={hidePublishing}
             />
             {userIsAdmin && (
               <>
