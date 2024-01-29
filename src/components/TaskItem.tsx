@@ -23,7 +23,7 @@ import { UnsavedContext } from '../context/UnsavedContext';
 import { TaskItemWidth } from './TaskTable';
 import { ActivityStates } from '../model';
 import usePassageDetailContext from '../context/usePassageDetailContext';
-import { PlayInPlayer } from '../context/PassageDetailContext';
+import { PassageDetailContext, PlayInPlayer } from '../context/PassageDetailContext';
 
 const rowProp = { display: 'flex', flexDirection: 'row' } as SxProps;
 
@@ -44,9 +44,11 @@ export function TaskItem(props: IProps) {
     allBookData,
   } = useTodo();
   const uctx = React.useContext(UnsavedContext);
-  const { playerMediafile, sectionMap, setSelected } =
+  const { playerMediafile, setSelected } =
     usePassageDetailContext();
   const { checkSavedFn } = uctx.state;
+  const { sectionArr } = React.useContext(PassageDetailContext).state;
+  const sectionMap = new Map<number, string>(sectionArr);
 
   // TT-1749 during refresh the index went out of range.
   if (props.item >= rowData.length) return <></>;

@@ -9,6 +9,7 @@ import ExportTab from '../components/TranscriptionTab';
 import ImportTab from '../components/ImportTab';
 import { useProjectPlans, usePlan } from '../crud';
 import { AltButton } from '.';
+import { PlanContext } from '../context/PlanContext';
 
 interface IStateProps {
   t: IProjButtonsStrings;
@@ -26,12 +27,14 @@ export const ProjButtons = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [project] = useGlobal('project');
   const [projType] = useGlobal('projType');
+  const {sectionArr} = React.useContext(PlanContext).state;
   const projectPlans = useProjectPlans();
   const [actionMenuItem, setActionMenuItem] = React.useState(null);
   const [openIntegration, setOpenIntegration] = React.useState(false);
   const [openExport, setOpenExport] = React.useState(false);
   const [openImport, setOpenImport] = React.useState(false);
   const [planName, setPlanName] = useState('');
+
   const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
 
   const handleClose = () => setActionMenuItem(null);
@@ -105,6 +108,7 @@ export const ProjButtons = (props: IProps) => {
           {...props}
           projectPlans={projectPlans(project)}
           planColumn={true}
+          sectionArr={sectionArr}
         />
       </BigDialog>
       {openImport && (

@@ -1014,6 +1014,7 @@ export interface IScriptureTableFilterStrings extends Localize.LocalizedStringsM
     "disable": string;
     "hideDone": string;
     "hidePublishing": string;
+    "invalidSection": string;
     "step": string;
     "minimum": string;
     "maximum": string;

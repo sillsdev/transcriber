@@ -41,7 +41,7 @@ import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
 import { RecordIdentity } from '@orbit/records';
 import { useOrbitData } from '../../../hoc/useOrbitData';
-import { PassageDetailContext } from '../../../context/PassageDetailContext';
+import { PlanContext } from '../../../context/PlanContext';
 
 const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -112,8 +112,8 @@ export function SelectSections(props: IProps) {
   const [columnDefs, setColumnDefs] = useState<Column[]>([]);
   const [columnWidths, setColumnWidths] = useState<TableColumnWidthInfo[]>([]);
   const [checks, setChecks] = useState<Array<string | number>>([]);
-  const ctx = useContext(PassageDetailContext);
-  const { sectionMap } = ctx.state;
+  const { sectionArr } = useContext(PlanContext).state;
+  const sectionMap = new Map<number, string>(sectionArr);
   const setDimensions = () => {
     setHeightStyle({
       maxHeight: `${window.innerHeight - 250}px`,

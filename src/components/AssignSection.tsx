@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { shallowEqual } from 'react-redux';
 import {
@@ -47,7 +47,7 @@ import { PriButton } from '../control';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import { assignSectionSelector, sharedSelector } from '../selector';
-import useSectionMap from '../utils/useSectionMap';
+import { PlanContext } from '../context/PlanContext';
 
 const headProps = { display: 'flex', alignItems: 'center' } as SxProps;
 const gridProps = { m: 'auto', p: 1 } as SxProps;
@@ -58,7 +58,8 @@ interface SectionListProps {
 }
 
 function SectionList({ sections, users }: SectionListProps) {
-  const [sectionMap] = useSectionMap();
+  const { sectionArr } = useContext(PlanContext).state;
+  const sectionMap = new Map<number, string>(sectionArr);
   return (
     <>
       {sections.map((p) => {

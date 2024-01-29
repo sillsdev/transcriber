@@ -156,7 +156,6 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
     i.category <= j.category ? -1 : 1;
 
   const onRecording = (c: IArtifactCategory) => (recording: boolean) => {
-    console.log('onRecording', c.category, recording);
     //disable all the others
     if (recording) {
       setRecording(c.id);

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { Grid, GridProps, styled, Typography } from '@mui/material';
 import {
@@ -8,7 +8,7 @@ import {
   usePlanType,
 } from '../crud';
 import { BookName, Passage, Section } from '../model';
-import useSectionMap from '../utils/useSectionMap';
+import { PassageDetailContext } from '../context/PassageDetailContext';
 
 const GridRoot = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
@@ -23,7 +23,8 @@ interface IProps {
 export const SectionPassageTitle = (props: IProps) => {
   const { section, passage, allBookData } = props;
   const [plan] = useGlobal('plan');
-  const [sectionMap] = useSectionMap();
+  const { sectionArr } = useContext(PassageDetailContext).state;
+  const sectionMap = new Map<number, string>(sectionArr);
   const planType = usePlanType();
 
   const isFlat = useMemo(

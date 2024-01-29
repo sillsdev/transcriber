@@ -31,6 +31,7 @@ import { ExtraIcon } from '.';
 import { positiveWholeOnly, stringAvatar } from '../../utils';
 import { TitleEdit } from './TitleEdit';
 import { getPubRefs } from './getPubRefs';
+import { getFromArrMap } from '../../utils/getFromMap';
 
 type ICellEditor = (props: any) => JSX.Element;
 type IRow = (string | number)[];
@@ -57,6 +58,7 @@ interface IProps {
   hidePublishing: boolean;
   canHidePublishing: boolean;
   firstMovement: number;
+  filtered: boolean;
   onPassageDetail: (rowIndex: number) => void;
   onPlayStatus: (mediaId: string) => void;
   onHistory: (rowIndex: number) => () => void;
@@ -116,6 +118,7 @@ export const usePlanSheetFill = ({
   hidePublishing,
   canHidePublishing,
   firstMovement,
+  filtered,
   onPassageDetail,
   onPlayStatus,
   onHistory,
@@ -135,7 +138,7 @@ export const usePlanSheetFill = ({
   onRecording,
 }: IProps) => {
   const ctx = useContext(PlanContext);
-  const { readonly, sectionMap } = ctx.state;
+  const { readonly, sectionArr, setSectionArr } = ctx.state;
   const [planId] = useGlobal('plan');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -446,7 +449,7 @@ export const usePlanSheetFill = ({
         return {
           value: e,
           component: (
-            <>{sectionMap?.get(e as number) || ''}</>
+            <>{getFromArrMap(e as number, sectionArr) || ''}</>
           ) as ReactElement,
           forceComponent: true,
           readOnly: true,
@@ -596,7 +599,7 @@ export const usePlanSheetFill = ({
               published={rowInfo[rowIndex].published}
               organizedBy={organizedBy}
               sectionSequenceNumber={
-                sectionMap.get(row[SectionSeqCol] as number) ??
+                getFromArrMap(row[SectionSeqCol] as number, sectionArr) ??
                 positiveWholeOnly(row[SectionSeqCol] as number)
               }
               passageSequenceNumber={positiveWholeOnly(
@@ -611,9 +614,11 @@ export const usePlanSheetFill = ({
               onAssign={onAssign}
               onFirstMovement={onFirstMovement}
               canAssign={userIsAdmin && !movement && !book}
-          canDelete={userIsAdmin}
+              canDelete={userIsAdmin}
               active={active - 1 === rowIndex}
-          onDisableFilter={!readonly && filtered ? disableFilter : undefined}
+              onDisableFilter={
+                !readonly && filtered ? disableFilter : undefined
+              }
               showIcon={showIcon(filtered, offline && !offlineOnly, rowIndex)}
               onAction={onAction}
             />
@@ -710,10 +715,21 @@ export const usePlanSheetFill = ({
       return sheetRow;
     };
 
-  if (!hidePublishing) {
-    getPubRefs({ rowInfo, rowData, sectionMap, passageSeqCol, firstMovement });
-  } else {
-    localStorage.removeItem('sectionMap');
+  if (rowData.length > 0 && rowInfo.length > 0) {
+    if (!filtered) {
+      if (!hidePublishing) {
+        const sectArr = getPubRefs({
+          rowInfo,
+          rowData,
+          passageSeqCol,
+          firstMovement,
+        });
+        console.log(sectArr, rowInfo, rowData);
+        setSectionArr(sectArr);
+      } else {
+        setSectionArr([]);
+      }
+    }
   }
 
   return (props: IFillProps) => {

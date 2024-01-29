@@ -89,7 +89,6 @@ import {
 } from '../selector';
 import { useDispatch } from 'react-redux';
 import { getSection } from './AudioTab/getSection';
-import useSectionMap from '../utils/useSectionMap';
 
 interface IRow {
   id: string;
@@ -115,10 +114,12 @@ interface IProps {
   floatTop?: boolean;
   step?: string;
   orgSteps?: OrgWorkflowStep[];
+  sectionArr: [number, string][];
 }
 
 export function TranscriptionTab(props: IProps) {
-  const { projectPlans, planColumn, floatTop, step, orgSteps } = props;
+  const { projectPlans, planColumn, floatTop, step, orgSteps, sectionArr } =
+    props;
   const t: ITranscriptionTabStrings = useSelector(transcriptionTabSelector);
   const ts: ISharedStrings = useSelector(sharedSelector);
   const activityState = useSelector(activitySelector);
@@ -202,7 +203,7 @@ export function TranscriptionTab(props: IProps) {
   const exportAnchor = React.useRef<HTMLAnchorElement>(null);
   const [exportUrl, setExportUrl] = useState<string | undefined>();
   const [exportName, setExportName] = useState('');
-  const [sectionMap] = useSectionMap();
+  const sectionMap = new Map<number, string>(sectionArr);
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');

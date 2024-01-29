@@ -79,7 +79,7 @@ import {
   RecordTransformBuilder,
 } from '@orbit/records';
 import { useOrbitData } from '../hoc/useOrbitData';
-import useSectionMap from '../utils/useSectionMap';
+import useLocalStorageState from '../utils/useLocalStorageState';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -195,7 +195,7 @@ const initState = {
   refresh: 0,
   prjId: '',
   forceRefresh: () => {},
-  sectionMap: {} as Map<number, string>,
+  sectionArr: [] as [number, string][],
 };
 
 export type ICtxState = typeof initState;
@@ -246,13 +246,14 @@ const PassageDetailProvider = (props: IProps) => {
   const view = React.useRef('');
   const mediaUrlRef = useRef('');
   const { showMessage } = useSnackBar();
-  const [sectionMap] = useSectionMap();
+  const [plan] = useGlobal('plan');
+  const [sectionArr] = useLocalStorageState('sectionMap' + plan, []);
   const [state, setState] = useState({
     ...initState,
     allBookData,
     wfStr,
+    sectionArr,
     prjId: prjId ?? '',
-    sectionMap,
   });
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const fetching = useRef('');
@@ -268,7 +269,6 @@ const PassageDetailProvider = (props: IProps) => {
   const currentSegmentRef = useRef<IRegion | undefined>();
   const { startSave, startClear, waitForSave } =
     useContext(UnsavedContext).state;
-  const [plan] = useGlobal('plan');
   const highlightRef = useRef<number>();
   const refreshRef = useRef<number>(0);
   const settingSegmentRef = useRef(false);

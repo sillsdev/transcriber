@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import {
   MediaFile,
@@ -17,7 +17,7 @@ import SelectLatest from './SelectLatest';
 import { UpdateRecord } from '../../model/baseModel';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
-import useSectionMap from '../../utils/useSectionMap';
+import { PlanContext } from '../../context/PlanContext';
 
 interface IProps {
   passId: string;
@@ -35,7 +35,8 @@ export const VersionDlg = (props: IProps) => {
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [playItem, setPlayItem] = useState('');
   const [data, setData] = useState<IRow[]>([]);
-  const [sectionMap] = useSectionMap();
+  const { sectionArr } = useContext(PlanContext).state;
+  const sectionMap = new Map<number, string>(sectionArr);
   const [versions, setVersions] = useState<number[]>([]);
   const [refresh, setRefresh] = useState(0);
   const { IsVernacularMedia } = useArtifactType();

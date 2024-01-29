@@ -45,7 +45,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const passages = useOrbitData<Passage[]>('passage');
   const mediafiles = useOrbitData<MediaFileD[]>('mediafile');
   const ctx = React.useContext(PlanContext);
-  const { flat, scripture } = ctx.state;
+  const { flat, scripture, sectionArr } = ctx.state;
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [plan] = useGlobal('plan');
@@ -185,6 +185,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
           <TranscriptionTab
             {...props}
             projectPlans={plans.filter((p) => p.id === plan)}
+            sectionArr={sectionArr}
           />
         )}
       </Box>

@@ -49,7 +49,8 @@ export const SelectNote = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const ctx = useContext(PlanContext);
-  const { flat, sectionMap } = ctx.state;
+  const { flat, sectionArr } = ctx.state;
+  const sectionMap = new Map<number, string>(sectionArr);
   const getNotes = useNotes();
   const [notes, setNotes] = useState<SharedResourceD[]>([]);
   const [data, setData] = useState<IRRow[]>([]);

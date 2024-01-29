@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useContext } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
@@ -46,7 +46,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { InitializedRecord, RecordKeyMap } from '@orbit/records';
 import { useOrbitData } from '../hoc/useOrbitData';
-import useSectionMap from '../utils/useSectionMap';
+import { PassageDetailContext } from './PassageDetailContext';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -147,7 +147,8 @@ const TranscriberProvider = (props: IProps) => {
   const planMediaRef = useRef<MediaFile[]>([]);
   const passageMediaRef = useRef<MediaFile[]>([]);
   const [planRec, setPlanRec] = useState<Plan>({} as Plan);
-  const [sectionMap] = useSectionMap();
+  const { sectionArr } = useContext(PassageDetailContext).state;
+  const sectionMap = new Map<number, string>(sectionArr);
   const [state, setState] = useState({
     ...initState,
     allBookData,

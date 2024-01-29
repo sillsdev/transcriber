@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Section } from '../model';
 import { Box, Typography } from '@mui/material';
 import { sectionNumber } from '../crud';
-import useSectionMap from '../utils/useSectionMap';
+import { PlanContext } from '../context/PlanContext';
 
 interface IProps {
   section: Section;
 }
 
 export const SectionDescription = ({ section }: IProps) => {
-  const [sectionMap] = useSectionMap();
+  const { sectionArr } = useContext(PlanContext).state;
+  const sectionMap = new Map<number, string>(sectionArr);
   const name =
     section && section.attributes && section.attributes.name
       ? section.attributes.name

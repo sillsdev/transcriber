@@ -152,6 +152,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
     mediafileId,
     setStepComplete,
     setCurrentStep,
+    sectionArr,
   } = ctx.state;
   const minWidthRef = React.useRef(800);
   const { tool, settings } = useStepTool(currentstep);
@@ -448,6 +449,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                   floatTop
                   step={currentstep}
                   orgSteps={orgWorkflowSteps}
+                  sectionArr={sectionArr}
                 />
               )}
             </Grid>
