@@ -655,13 +655,7 @@ export const usePlanSheetFill = ({
         Boolean(rowInfo[rowIndex].sharedResource) &&
         related(rowInfo[rowIndex].sharedResource, 'passage') !==
           rowInfo[rowIndex].passage?.id;
-      console.log(
-        rowIndex,
-        sharedRes,
-        passage,
-        rowInfo[rowIndex].sharedResource,
-        srcMediaId
-      );
+
       const calcClassName =
         iscurrent +
         (section
