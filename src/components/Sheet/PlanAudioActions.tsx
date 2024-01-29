@@ -33,13 +33,15 @@ interface IProps {
   mediaId: string;
   mediaShared: IMediaShare;
   isPlaying: boolean;
-  anyRecording: boolean;
+  canPlay: boolean;
+  canEdit: boolean;
   onPlayStatus: (mediaId: string) => void;
   onHistory: (i: number) => () => void;
 }
 
 interface FcProps extends IProps {
-  disabled: boolean;
+  canPlay: boolean;
+  canEdit: boolean;
   t: IPlanActionsStrings;
 }
 
@@ -53,7 +55,8 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
     onPlayStatus,
     mediaId,
     isPlaying,
-    disabled,
+    canEdit,
+    canPlay,
     t,
   } = props;
 
@@ -74,7 +77,7 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
               ? t.resourceEdit
               : t.versions
           }
-          disabled={disabled}
+          disabled={!canEdit}
           onClick={onHistory(rowIndex)}
         >
           {isNote ? (
@@ -92,7 +95,7 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
         <StyledIconButton
           id="planAudPlayStop"
           title={t.playpause}
-          disabled={disabled || mediaId === ''}
+          disabled={!canPlay}
           onClick={handlePlayStatus()}
         >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
@@ -103,13 +106,8 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
 });
 
 export function PlanAudioActions(props: IProps) {
-  const { mediaId, anyRecording, isNote } = props;
+  const { mediaId, canPlay, canEdit, isNote } = props;
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
-
-  const disabled = useMemo(() => {
-    return ((mediaId || '') === '' && !isNote) || anyRecording;
-  }, [mediaId, anyRecording, isNote]);
-
-  return <Actions {...props} disabled={disabled} t={t} />;
+  return <Actions {...props} t={t} />;
 }
 export default PlanAudioActions;
