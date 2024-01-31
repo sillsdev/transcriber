@@ -10,10 +10,11 @@ import {
 import Alert from './AlertDialog';
 import ProjectDownload from './ProjectDownload';
 import { dataPath, PathType } from '../utils';
-import { related, useProjectPlans, getMediaInPlans } from '../crud';
+import { related, useProjectPlans, getDownloadableMediaInPlans } from '../crud';
 import { isElectron } from '../api-variable';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { projectDownloadSelector } from '../selector';
+import { useGlobal } from 'reactn';
 
 const ipc = (window as any)?.electron;
 
@@ -36,6 +37,8 @@ export const ProjectDownloadAlert = (props: IProps) => {
   const [downloadSize, setDownloadSize] = React.useState(0);
   const [needyIds, setNeedyIds] = React.useState<string[]>([]);
   const [downloadOpen, setDownloadOpen] = React.useState(false);
+  const [memory] = useGlobal('memory');
+
   const projectPlans = useProjectPlans();
 
   const getNeedyRemoteIds = async () => {
@@ -54,17 +57,17 @@ export const ProjectDownloadAlert = (props: IProps) => {
         });
       }
     });
-    const mediaRecs = getMediaInPlans(planIds, mediafiles, undefined, false);
+    const mediaInfo = getDownloadableMediaInPlans(planIds, memory);
     const needyProject = new Set<string>();
     let totalSize = 0;
-    for (const m of mediaRecs) {
-      if (related(m, 'artifactType') || related(m, 'passage')) {
+    for (const m of mediaInfo) {
+      if (related(m.media, 'artifactType') || related(m.media, 'passage')) {
         var local = { localname: '' };
-        dataPath(m.attributes.audioUrl, PathType.MEDIA, local);
+        dataPath(m.media.attributes.audioUrl, PathType.MEDIA, local);
         const found = await ipc?.exists(local.localname);
         if (!found) {
-          needyProject.add(planProject[related(m, 'plan')]);
-          totalSize += m?.attributes?.filesize || 0;
+          needyProject.add(planProject[m.plan]);
+          totalSize += m.media.attributes?.filesize || 0;
         }
       }
     }

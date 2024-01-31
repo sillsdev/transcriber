@@ -12,7 +12,11 @@ import {
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { useSnackBar } from '../hoc/SnackBar';
 import Progress from '../control/UploadProgress';
-import { offlineProjectUpdateFilesDownloaded, useProjectExport } from '../crud';
+import {
+  findRecord,
+  offlineProjectUpdateFilesDownloaded,
+  useProjectExport,
+} from '../crud';
 import {
   currentDateTime,
   dataPath,
@@ -85,9 +89,7 @@ export const ProjectDownload = (props: IProps) => {
       if (currentStep < projectIds.length) {
         let newSteps = new Array<string>();
         projectIds.forEach((pId) => {
-          const projRec = memory.cache.query((q) =>
-            q.findRecord({ type: 'project', id: pId })
-          ) as Project;
+          const projRec = findRecord(memory, 'project', pId) as Project;
           if (projRec) newSteps = newSteps.concat(projRec.attributes.name);
         });
         setSteps(newSteps);
