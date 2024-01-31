@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useContext } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { Column, TableColumnWidthInfo } from '@devexpress/dx-react-grid';
 import { useSelector, shallowEqual } from 'react-redux';
@@ -41,7 +41,8 @@ import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
 import { RecordIdentity } from '@orbit/records';
 import { useOrbitData } from '../../../hoc/useOrbitData';
-import { PlanContext } from '../../../context/PlanContext';
+import { useProjectDefaults } from '../../../crud/useProjectDefaults';
+import { SectionMap } from '../../../context/PlanContext';
 
 const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -112,8 +113,10 @@ export function SelectSections(props: IProps) {
   const [columnDefs, setColumnDefs] = useState<Column[]>([]);
   const [columnWidths, setColumnWidths] = useState<TableColumnWidthInfo[]>([]);
   const [checks, setChecks] = useState<Array<string | number>>([]);
-  const { sectionArr } = useContext(PlanContext).state;
-  const sectionMap = new Map<number, string>(sectionArr);
+  const { getProjectDefault } = useProjectDefaults();
+  const sectionMap = new Map<number, string>(
+    getProjectDefault(SectionMap) ?? []
+  );
   const setDimensions = () => {
     setHeightStyle({
       maxHeight: `${window.innerHeight - 250}px`,

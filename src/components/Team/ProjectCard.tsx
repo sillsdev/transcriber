@@ -44,7 +44,8 @@ import { TokenContext } from '../../context/TokenProvider';
 import { useSnackBar } from '../../hoc/SnackBar';
 import CategoryTabs from './CategoryTabs';
 import { RecordKeyMap } from '@orbit/records';
-import useLocalStorageState from '../../utils/useLocalStorageState';
+import { useProjectDefaults } from '../../crud/useProjectDefaults';
+import { SectionMap } from '../../context/PlanContext';
 
 const ProjectCardRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -134,7 +135,7 @@ export const ProjectCard = (props: IProps) => {
   const [deleteItem, setDeleteItem] = useState<VProjectD>();
   const [open, setOpen] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
-  const [sectionArr] = useLocalStorageState('sectionMap' + project.id, [])
+  const {getProjectDefault} = useProjectDefaults();
   const t = cardStrings;
   const tpb = projButtonStrings;
   const { userIsOrgAdmin } = useRole();
@@ -408,7 +409,7 @@ export const ProjectCard = (props: IProps) => {
           {...props}
           projectPlans={projectPlans(projectId)}
           planColumn={true}
-          sectionArr={sectionArr}
+          sectionArr={getProjectDefault(SectionMap) ?? []}
         />
       </BigDialog>
       <BigDialog

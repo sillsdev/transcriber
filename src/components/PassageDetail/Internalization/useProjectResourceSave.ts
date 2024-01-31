@@ -59,10 +59,10 @@ export const useProjectResourceSave = () => {
     let topic = topicIn;
     const ops: RecordOperation[] = [];
     var medResRec: MediaFile | undefined = undefined;
-    if (i.rec.type === 'passage')
+    if (i.passage)
       medResRec = mediafiles.find(
         (m) =>
-          related(m, 'passage') === i.rec.id &&
+          related(m, 'passage') === i.passage?.id &&
           related(m, 'sourceMedia') === media.id
       );
     else {
@@ -76,7 +76,7 @@ export const useProjectResourceSave = () => {
       //use those to find the section resource for this section
       var sr = sectionResources.find(
         (sr) =>
-          related(sr, 'section') === i.rec.id &&
+          related(sr, 'section') === i.section.id &&
           mfs.includes(related(sr, 'mediafile'))
       );
       //and then go back and pick the mediafile attached to our segment
@@ -127,15 +127,15 @@ export const useProjectResourceSave = () => {
           )
         );
         const secResRec =
-          i.rec.type === 'passage'
+          i.passage
             ? sectionResources.find(
                 (r) =>
-                  related(r, 'passage') === i.rec.id &&
+                  related(r, 'passage') === i.passage?.id &&
                   related(r, 'mediafile') === medResRec?.id
               )
             : sectionResources.find(
                 (r) =>
-                  related(r, 'section') === i.rec.id &&
+                  related(r, 'section') === i.section.id &&
                   !related(r, 'passage') &&
                   related(r, 'mediafile') === medResRec?.id
               );
@@ -194,14 +194,14 @@ export const useProjectResourceSave = () => {
           user
         )
       );
-      if (i.rec.type === 'passage') {
+      if (i.passage) {
         ops.push(
           ...UpdateRelatedRecord(
             t,
             newMedia as MediaFileD,
             'passage',
             'passage',
-            i.rec.id,
+            i.passage?.id,
             user
           )
         );
@@ -218,7 +218,7 @@ export const useProjectResourceSave = () => {
       );
       await memory.update(ops);
       const secId =
-        i.rec.type === 'passage' ? related(i.rec, 'section') : i.rec.id;
+        i.passage ? related(i.passage, 'section') : i.section.id;
       const cnt =
         sectionResources.filter((r) => related(r, 'section') === secId).length +
         1;
@@ -226,7 +226,7 @@ export const useProjectResourceSave = () => {
         cnt,
         topic,
         newMedia as RecordIdentity,
-        i.rec.type === 'passage' ? i.rec.id : undefined,
+        i.passage?.id,
         secId
       );
     }

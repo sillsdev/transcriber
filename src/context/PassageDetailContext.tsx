@@ -79,7 +79,8 @@ import {
   RecordTransformBuilder,
 } from '@orbit/records';
 import { useOrbitData } from '../hoc/useOrbitData';
-import useLocalStorageState from '../utils/useLocalStorageState';
+import { useProjectDefaults } from '../crud/useProjectDefaults';
+import { SectionMap } from './PlanContext';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -247,12 +248,11 @@ const PassageDetailProvider = (props: IProps) => {
   const mediaUrlRef = useRef('');
   const { showMessage } = useSnackBar();
   const [plan] = useGlobal('plan');
-  const [sectionArr] = useLocalStorageState('sectionMap' + plan, []);
+  const {getProjectDefault} = useProjectDefaults();
   const [state, setState] = useState({
     ...initState,
     allBookData,
     wfStr,
-    sectionArr,
     prjId: prjId ?? '',
   });
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
@@ -1083,6 +1083,7 @@ const PassageDetailProvider = (props: IProps) => {
           setDiscussionMarkers,
           handleHighlightDiscussion,
           forceRefresh,
+          sectionArr: getProjectDefault(SectionMap) ?? [],
         },
         setState,
       }}
