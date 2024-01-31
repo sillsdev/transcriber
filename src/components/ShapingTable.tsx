@@ -120,17 +120,34 @@ function ShapingTable(props: IProps) {
 
   const rowSort = (a: any, b: any) => {
     for (let s of sorting || []) {
-      const c = colSpec.find((c) => c.name === s.columnName);
-      if (c?.sort) {
-        const res = c.sort(a[s.columnName], b[s.columnName]);
-        if (res !== 0) return res;
-      }
+      if (
+        !(
+          sortingEnabled?.find((se) => se.columnName === s.columnName)
+            ?.sortingEnabled ?? true
+        )
+      )
+        continue;
+      let sort = columnSorting?.find(
+        (cs) => cs.columnName === s.columnName
+      )?.compare;
+      if (!sort) sort = (a: any, b: any) => (a === b ? 0 : a > b ? 1 : -1);
+      const aValue = a[s.columnName];
+      const bValue = b[s.columnName];
+      const res = sort(aValue, bValue);
+      if (res !== 0) return s.direction === 'desc' ? -1 * res : res;
     }
     return 0;
   };
 
   const rowFilter = (r: any) => {
     for (let f of filters || []) {
+      if (
+        !(
+          filteringEnabled?.find((fe) => fe.columnName === f.columnName)
+            ?.filteringEnabled ?? true
+        )
+      )
+        continue;
       const curValue = r[f.columnName];
       const filterValue = f.value;
       const filterOp = f.operation;
@@ -194,49 +211,10 @@ function ShapingTable(props: IProps) {
                 : cf?.width ?? 100;
         }
       }
-      if (columnSorting) {
-        const cs = columnSorting.find((s) => s.columnName === c.name);
-        if (cs?.compare) {
-          col.sort = cs.compare;
-        }
-      }
-      if (sortingEnabled) {
-        const se = sortingEnabled.find((s) => s.columnName === c.name);
-        if (se?.sortingEnabled) {
-          if (!col?.sort)
-            col.sort = (a: any, b: any) => (a === b ? 0 : a > b ? 1 : -1);
-        } else {
-          col.sort = undefined;
-        }
-      }
-      if (sorting) {
-        const ss = sorting.find((s) => s.columnName === c.name);
-        if (ss?.direction === 'asc') {
-          col.sort = (a: any, b: any) => (a === b ? 0 : a > b ? 1 : -1);
-        } else if (ss?.direction === 'desc') {
-          col.sort = (a: any, b: any) => (a === b ? 0 : a > b ? -1 : 1);
-        }
-      }
-      if (filteringEnabled) {
-        const fe = filteringEnabled.find((f) => f.columnName === c.name);
-        if (fe) {
-          col.isFiltered = fe.filteringEnabled;
-        }
-      }
       return col;
     });
     return colSpec;
-  }, [
-    columns,
-    columnWidths,
-    hiddenColumnNames,
-    numCols,
-    columnFormatting,
-    columnSorting,
-    sortingEnabled,
-    sorting,
-    filteringEnabled,
-  ]);
+  }, [columns, columnWidths, hiddenColumnNames, numCols, columnFormatting]);
 
   interface ICell {
     value: string;

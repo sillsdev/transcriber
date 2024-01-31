@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef, useMemo, CSSProperties, useContext } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  CSSProperties,
+  useContext,
+} from 'react';
 import { useGlobal } from 'reactn';
 import {
   IconButton,
@@ -30,8 +37,9 @@ import {
   usePlan,
   useOfflineAvailToggle,
   useRole,
+  paddedSectionNumber,
 } from '../crud';
-import { numCompare } from '../utils';
+import { numCompare, prettySegmentStart } from '../utils';
 import { useProjectPlans } from '../crud';
 import { debounce } from 'lodash';
 import MediaPlayer from './MediaPlayer';
@@ -152,7 +160,6 @@ export function TaskTable(props: IProps) {
     discussionSize,
   } = usePassageDetailContext();
   const { sectionArr } = useContext(PassageDetailContext).state;
-  const sectionMap = new Map<number, string>(sectionArr);
   const filterRef = useRef(filter);
   const t = todoStr;
   const tpb = projButtonStr;
@@ -410,8 +417,9 @@ export function TaskTable(props: IProps) {
       assigned: r.assigned === user ? t.yes : t.no,
       mediaId: r.mediafile.id,
       rowKey:
-        sectionNumber(r.section, sectionMap) +
-        (r.mediafile.id ? taskPassageNumber(r.passage) : '   '),
+        paddedSectionNumber(r.section) +
+        (r.mediafile.id ? taskPassageNumber(r.passage) : '   ') +
+        prettySegmentStart(r.mediafile?.attributes?.sourceSegments),
     }));
     setRows(newRows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
