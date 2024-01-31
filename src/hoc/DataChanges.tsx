@@ -286,12 +286,15 @@ export const processDataChanges = async (pdc: {
     for (const table of changes) {
       if (table.ids.length > 0) {
         if (!remote) return started;
-        var transforms = await remote.pull((q) =>
-          q
-            .findRecords(table.type)
-            .filter({ attribute: 'id-list', value: table.ids.join('|') })
+        var results = await remote.query(
+          (q) =>
+            q
+              .findRecords(table.type)
+              .filter({ attribute: 'id-list', value: table.ids.join('|') }),
+          { fullResponse: true }
         );
-        await processTableChanges(transforms, cb);
+        if (results?.transforms)
+          await processTableChanges(results.transforms, cb);
       }
     }
     setDataChangeCount(deletes.length);
