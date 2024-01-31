@@ -16,10 +16,10 @@ import { useProjectDefaults } from '../crud/useProjectDefaults';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import { projButtonsSelector } from '../selector';
-import useLocalStorageState from '../utils/useLocalStorageState';
 
 export const ProjectHidePublishing = 'hidePublishing';
 export const ProjectFirstMovement = 'firstMovement';
+export const SectionMap = 'sectionMap';
 
 export interface IRowData {}
 
@@ -72,10 +72,6 @@ const PlanProvider = (props: IProps) => {
   const getPlanType = usePlanType();
   const { userIsAdmin } = useRole();
   const { setProjectDefault, getProjectDefault } = useProjectDefaults();
-  const [sectionArr, setSectionArrx] = useLocalStorageState(
-    'sectionMap' + plan,
-    []
-  );
   const [readonly, setReadOnly] = useState(
     (isOffline && !offlineOnly) || !userIsAdmin
   );
@@ -88,10 +84,12 @@ const PlanProvider = (props: IProps) => {
   });
   const checkOnline = useCheckOnline();
 
+  const getSectionMap = () => {
+    return getProjectDefault(SectionMap) as [number, string][] | undefined;
+  }
+
   const setSectionArr = (newArr: [number, string][]) => {
-    setTimeout(() => {
-      setSectionArrx(newArr);
-    }, 100);
+    setProjectDefault(SectionMap, newArr);
   };
 
   useEffect(() => {
@@ -156,7 +154,7 @@ const PlanProvider = (props: IProps) => {
       value={{
         state: {
           ...state,
-          sectionArr,
+          sectionArr: getSectionMap() ?? [],
           setSectionArr,
           connected,
           readonly,

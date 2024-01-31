@@ -31,7 +31,6 @@ import { ExtraIcon } from '.';
 import { positiveWholeOnly, stringAvatar } from '../../utils';
 import { TitleEdit } from './TitleEdit';
 import { getPubRefs } from './getPubRefs';
-import { getFromArrMap } from '../../utils/getFromMap';
 
 type ICellEditor = (props: any) => JSX.Element;
 type IRow = (string | number)[];
@@ -139,6 +138,7 @@ export const usePlanSheetFill = ({
 }: IProps) => {
   const ctx = useContext(PlanContext);
   const { readonly, sectionArr, setSectionArr } = ctx.state;
+  const sectionMap = new Map<number, string>(sectionArr);
   const [planId] = useGlobal('plan');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -448,9 +448,7 @@ export const usePlanSheetFill = ({
       if (cellIndex === SectionSeqCol && section && !hidePublishing) {
         return {
           value: e,
-          component: (
-            <>{getFromArrMap(e as number, sectionArr) || ''}</>
-          ) as ReactElement,
+          component: (<>{sectionMap.get(e as number) || ''}</>) as ReactElement,
           forceComponent: true,
           readOnly: true,
           className: calcClassName,
@@ -599,7 +597,7 @@ export const usePlanSheetFill = ({
               published={rowInfo[rowIndex].published}
               organizedBy={organizedBy}
               sectionSequenceNumber={
-                getFromArrMap(row[SectionSeqCol] as number, sectionArr) ??
+                sectionMap.get(row[SectionSeqCol] as number) ??
                 positiveWholeOnly(row[SectionSeqCol] as number)
               }
               passageSequenceNumber={positiveWholeOnly(
@@ -718,14 +716,9 @@ export const usePlanSheetFill = ({
   if (rowData.length > 0 && rowInfo.length > 0) {
     if (!filtered) {
       if (!hidePublishing) {
-        const sectArr = getPubRefs({
-          rowInfo,
-          rowData,
-          passageSeqCol,
-          firstMovement,
-        });
-        console.log(sectArr, rowInfo, rowData);
-        setSectionArr(sectArr);
+        setSectionArr(
+          getPubRefs({ rowInfo, rowData, passageSeqCol, firstMovement })
+        );
       } else {
         setSectionArr([]);
       }
