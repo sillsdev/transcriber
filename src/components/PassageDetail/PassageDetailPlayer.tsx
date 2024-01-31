@@ -1,5 +1,5 @@
 import { useGlobal } from 'reactn';
-import { Button } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import {
@@ -14,6 +14,10 @@ import { UpdateRecord } from '../../model/baseModel';
 import { playerSelector } from '../../selector';
 import { NamedRegions, getSegments, updateSegments } from '../../utils';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
+import ViewIcon from '@mui/icons-material/RemoveRedEye';
+import TranscriptionShow from '../TranscriptionShow';
+import { related } from '../../crud';
+
 export enum SaveSegments {
   showSaveButton = 0,
   saveButNoButton = 1,
@@ -93,6 +97,7 @@ export function PassageDetailPlayer(props: IProps) {
   } = usePassageDetailContext();
 
   const [defaultSegments, setDefaultSegments] = useState('{}');
+  const [showTranscriptionId, setShowTranscriptionId] = useState('');
 
   const segmentsRef = useRef('');
   const playingRef = useRef(playing);
@@ -286,6 +291,14 @@ export function PassageDetailPlayer(props: IProps) {
     setInitialPosition(position);
   }, [position]);
 
+  const handleShowTranscription = () => {
+    setShowTranscriptionId(related(playerMediafile, 'passage') ?? '');
+  };
+
+  const handleCloseTranscription = () => {
+    setShowTranscriptionId('');
+  };
+
   return (
     <div id="detailplayer">
       <WSAudioPlayer
@@ -318,21 +331,40 @@ export function PassageDetailPlayer(props: IProps) {
         onSaveProgress={onSaveProgress}
         onDuration={onDuration}
         metaData={
-          saveSegments === SaveSegments.showSaveButton ? (
-            <Button
-              id="segment-save"
-              onClick={handleSave}
-              variant="contained"
-              color="primary"
-              disabled={!isChanged(toolId)}
-            >
-              {t.saveSegments}
-            </Button>
-          ) : (
-            <></>
-          )
+          <>
+            {playerMediafile?.attributes?.transcription ? (
+              <IconButton
+                id="show-transcription"
+                onClick={handleShowTranscription}
+              >
+                <ViewIcon fontSize='small' />
+              </IconButton>
+            ) : (
+              <></>
+            )}
+            {saveSegments === SaveSegments.showSaveButton ? (
+              <Button
+                id="segment-save"
+                onClick={handleSave}
+                variant="contained"
+                color="primary"
+                disabled={!isChanged(toolId)}
+              >
+                {t.saveSegments}
+              </Button>
+            ) : (
+              <></>
+            )}
+          </>
         }
       />
+      {showTranscriptionId !== '' && (
+        <TranscriptionShow
+          id={showTranscriptionId}
+          visible={showTranscriptionId !== ''}
+          closeMethod={handleCloseTranscription}
+        />
+      )}
     </div>
   );
 }
