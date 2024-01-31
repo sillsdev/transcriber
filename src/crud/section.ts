@@ -19,6 +19,12 @@ export function sectionTranscriberName(s: Section, users: Array<User>) {
   let user = sectionTranscriber(s, users);
   return user?.attributes?.name || '';
 }
+
+export function paddedSectionNumber(section: Section) {
+  const num = positiveWholeOnly(section?.attributes?.sequencenum);
+  return num ? num.padStart(3, ' ') : '';
+}
+
 export function sectionNumber(
   section: Section,
   sectionMap?: Map<number, string>
@@ -27,8 +33,7 @@ export function sectionNumber(
   if (sectionIdent) {
     return `${sectionIdent} `;
   }
-  const num = positiveWholeOnly(section?.attributes?.sequencenum);
-  return num ? num.padStart(3, ' ') : '';
+  return paddedSectionNumber(section);
 }
 export function sectionCompare(a: Section, b: Section) {
   return numCompare(a.attributes.sequencenum, b.attributes.sequencenum);
