@@ -531,10 +531,11 @@ export function PassageDetailArtifacts() {
         projMediaRef.current?.attributes?.topic ||
         removeExtension(projMediaRef.current?.attributes?.originalFile || '')
           ?.name;
+      const passage = rec.type === 'passage' ? (rec as Passage) : undefined;
       await projectResourceSave({
         t,
         media: projMediaRef.current as MediaFile,
-        i: { rec, secNum },
+        i: { secNum, section: secRec, passage },
         topicIn,
         limitValue: '',
         mediafiles,

@@ -195,12 +195,17 @@ export const ProjectResourceConfigure = (props: IProps) => {
     let newData: ICell[][] = emptyTable();
     const newInfo = items.map((v) => {
       const rec = memory.cache.query((q) => q.findRecord(v));
-      const secRec = (
-        v.type === 'passage'
-          ? findRecord(memory, 'section', related(rec, 'section'))
-          : rec
-      ) as Section | undefined;
-      return { rec, secNum: secRec?.attributes?.sequencenum || 0 } as IInfo;
+      if (!rec) return {} as IInfo;
+      if (v.type === 'passage') {
+        const section = findRecord(memory, 'section', related(rec, 'section')) as Section;
+        if (!section) return {} as IInfo;
+        const secNum = section?.attributes?.sequencenum || 0;
+        return { secNum, section, passage: rec } as IInfo;
+      } else {
+        const section = rec as Section;
+        const secNum = section?.attributes?.sequencenum || 0;
+        return { secNum, section } as IInfo;
+      }
     });
     newInfo.forEach((v) => {
       newData.push(rowCells(['', fullReference(v), '']));
@@ -457,7 +462,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     const secI = new Map<number, number>();
     regions.forEach((r, i) => {
       const v = prettySegment(r);
-      while (ix < ilen && infoRef.current[ix].rec.type === 'section') {
+      while (ix < ilen && infoRef.current[ix].passage === undefined) {
         secI.set(infoRef.current[ix].secNum, ix + 1);
         ix += 1;
         newData.push(dataRef.current[ix]);
