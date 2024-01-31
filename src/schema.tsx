@@ -1025,20 +1025,26 @@ const UpdatePublicFlags = async (
   if (!Array.isArray(pRecs)) pRecs = [pRecs];
   const ops: RecordOperation[] = [];
   const tb = new RecordTransformBuilder();
-  pRecs.forEach((r: ProjectD) => {
-    r.attributes = { ...r.attributes, isPublic: false };
-    ops.push(tb.updateRecord(r).toOperation());
-  });
+  pRecs
+    .filter((r: ProjectD) => r?.attributes?.isPublic)
+    .forEach((r: ProjectD) => {
+      r.attributes = { ...r.attributes, isPublic: false };
+      ops.push(tb.updateRecord(r).toOperation());
+    });
   let oRecs = (await backup.query((q) =>
     q.findRecords('organization')
   )) as OrganizationD[];
   if (!Array.isArray(oRecs)) oRecs = [oRecs];
-  oRecs.forEach((r: OrganizationD) => {
-    r.attributes = { ...r.attributes, publicByDefault: false };
-    ops.push(tb.updateRecord(r).toOperation());
-  });
-  await backup.sync((t) => ops);
-  await memory.sync((t) => ops);
+  oRecs
+    .filter((r: OrganizationD) => r?.attributes?.publicByDefault)
+    .forEach((r: OrganizationD) => {
+      r.attributes = { ...r.attributes, publicByDefault: false };
+      ops.push(tb.updateRecord(r).toOperation());
+    });
+  if (ops.length > 0) {
+    await backup.sync((t) => ops);
+    await memory.sync((t) => ops);
+  }
 };
 const MoveTranscriptionState = async (
   backup: IndexedDBSource,
@@ -1064,15 +1070,19 @@ const MoveTranscriptionState = async (
       );
     if (meds.length > 0) {
       const mediafile = meds[0];
-      mediafile.attributes = {
-        ...mediafile.attributes,
-        transcriptionstate: r.attributes.state,
-      };
-      ops.push(tb.updateRecord(mediafile).toOperation());
+      if (mediafile?.attributes?.transcriptionstate !== r.attributes.state) {
+        mediafile.attributes = {
+          ...mediafile.attributes,
+          transcriptionstate: r.attributes.state,
+        };
+        ops.push(tb.updateRecord(mediafile).toOperation());
+      }
     }
   });
-  await backup.sync((tb) => ops);
-  await memory.sync((tb) => ops);
+  if (ops.length > 0) {
+    await backup.sync((tb) => ops);
+    await memory.sync((tb) => ops);
+  }
   console.log('done with upgrade to v4');
 };
 export const backup = window.indexedDB

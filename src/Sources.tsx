@@ -61,7 +61,7 @@ const pullError =
     globalStore,
   }: PullStratErrProps) =>
   (transform: RecordTransform, ex: IApiError) => {
-    console.log('***** api pull fail', transform, ex);
+    console.log('***** api query fail', transform, ex);
     if (ex.response.status === 401) {
       tokenCtx?.state.logout();
     } else if (ex instanceof NetworkError) {
@@ -220,7 +220,7 @@ export const Sources = async (
           on: 'beforeQuery',
 
           target: 'remote',
-          action: 'pull',
+          action: 'query',
 
           blocking: false,
         })
@@ -239,7 +239,7 @@ export const Sources = async (
           on: 'beforeUpdate',
 
           target: 'remote',
-          action: 'push',
+          action: 'update',
 
           blocking: false,
         })
