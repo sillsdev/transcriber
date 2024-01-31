@@ -8,8 +8,9 @@ import moment from 'moment';
 import jwtDecode from 'jwt-decode';
 import { useGlobal } from 'reactn';
 import { useUpdateOrbitToken } from '../crud';
-import { logError, Severity, useInterval } from '../utils';
+import { LocalKey, logError, Severity, useInterval } from '../utils';
 import { isElectron } from '../api-variable';
+import { useProjectDefaults } from '../crud/useProjectDefaults';
 const ipc = (window as any)?.electron;
 
 const Expires = 0; // Set to 7110 to test 1:30 token
@@ -54,6 +55,8 @@ function TokenProvider(props: IProps) {
   const [errorReporter] = useGlobal('errorReporter');
   const updateOrbitToken = useUpdateOrbitToken();
   const view = React.useRef<any>('');
+  const { getLocalDefault } = useProjectDefaults();
+  const options = {returnTo: getLocalDefault(LocalKey.deeplink)}
   const [state, setState] = React.useState({
     ...initState,
   });
@@ -85,7 +88,7 @@ function TokenProvider(props: IProps) {
         })
         .catch((e: any) => {
           handleLogOut();
-          loginWithRedirect();
+          loginWithRedirect(options);
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,7 +135,7 @@ function TokenProvider(props: IProps) {
         .catch((e: any) => {
           handleLogOut();
           logError(Severity.error, errorReporter, e);
-          loginWithRedirect();
+          loginWithRedirect(options);
         });
     }
   };
@@ -205,6 +208,9 @@ function TokenProvider(props: IProps) {
   if (error && !isElectron) {
     console.log(error);
     if (errorReporter) logError(Severity.error, errorReporter, error);
+    setTimeout(() => {
+      loginWithRedirect(options);
+    }, 1000);
     return <Busy />;
   }
 
