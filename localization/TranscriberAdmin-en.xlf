@@ -3616,6 +3616,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.bookResource">
+         <segment>
+            <source>Book</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.canceling">
          <segment>
             <source>Canceling resource creation</source>
@@ -3712,9 +3718,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.movementResource">
+         <segment>
+            <source>Movement</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.no">
          <segment>
             <source>No</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.noteResource">
+         <segment>
+            <source>Note</source>
             <target/>
          </segment>
       </unit>

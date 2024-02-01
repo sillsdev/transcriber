@@ -721,6 +721,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "allLevel": string;
     "allResources": string;
     "bookLevel": string;
+    "bookResource": string;
     "canceling": string;
     "category": string;
     "chapterLevel": string;
@@ -737,7 +738,9 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "keywords": string;
     "language": string;
     "link": string;
+    "movementResource": string;
     "no": string;
+    "noteResource": string;
     "passageResource": string;
     "pasteFormat": string;
     "pasteError": string;

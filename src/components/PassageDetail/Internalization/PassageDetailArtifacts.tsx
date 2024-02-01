@@ -16,6 +16,7 @@ import {
   MediaFile,
   ArtifactType,
   Resource,
+  SheetLevel,
 } from '../../../model';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import {
@@ -75,6 +76,8 @@ import {
 } from '@orbit/records';
 import { shallowEqual, useSelector } from 'react-redux';
 import { passageDetailArtifactsSelector } from '../../../selector';
+import { passageTypeFromRef } from '../../../control/RefRender';
+import { PassageTypeEnum } from '../../../model/passageType';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -373,6 +376,35 @@ export function PassageDetailArtifacts() {
     }
   };
 
+  const passDesc = useMemo(
+    () =>
+      passageTypeFromRef(passage?.attributes?.reference) ===
+      PassageTypeEnum.NOTE
+        ? t.noteResource
+        : t.passageResource,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [passage]
+  );
+
+  const getSectionType = (passage: Passage) => {
+    const sectionId = related(passage, 'section');
+    const sectionRec = findRecord(memory, 'section', sectionId) as Section;
+    const level = sectionRec?.attributes?.level;
+    if (level === SheetLevel.Book) return 'BOOK';
+    if (level === SheetLevel.Movement) return 'MOVE';
+  };
+
+  const sectDesc = useMemo(
+    () =>
+      getSectionType(passage) === PassageTypeEnum.BOOK
+        ? t.bookResource
+        : getSectionType(passage) === PassageTypeEnum.MOVEMENT
+        ? t.movementResource
+        : getOrganizedBy(true),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [passage]
+  );
+
   const listFilter = useCallback(
     (r: IRow) =>
       r?.isResource &&
@@ -665,6 +697,8 @@ export function PassageDetailArtifacts() {
             initPassRes={isPassageResource()}
             onPassResChange={handlePassRes}
             allowProject={true}
+            sectDesc={sectDesc}
+            passDesc={passDesc}
           />
         }
       />
@@ -746,7 +780,9 @@ export function PassageDetailArtifacts() {
           initPassRes={Boolean(resourceTypeRef.current)}
           onPassResChange={handlePassRes}
           allowProject={false}
-        />
+          sectDesc={sectDesc}
+          passDesc={passDesc}
+      />
       </BigDialog>
       {confirm && (
         <Confirm
