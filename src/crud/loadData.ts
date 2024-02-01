@@ -85,6 +85,7 @@ export async function insertData(
   orbitError: (ex: IApiError) => void,
   checkExisting: boolean,
   isImport: boolean,
+  isProject: boolean,
   snapshotDate?: string
 ) {
   var rec: InitializedRecord | InitializedRecord[] | null = null;
@@ -110,13 +111,13 @@ export async function insertData(
       rec.attributes = { ...item.attributes };
       oparray.push(tb.updateRecord(rec).toOperation());
       if (rec.type === 'project') {
-        project = rec as ProjectD;
+        if (isProject) project = rec as ProjectD;
         await saveOfflineProject(
-          project,
+          rec as ProjectD,
           memory,
           backup,
-          snapshotDate,
-          isImport
+          isProject ? snapshotDate : undefined,
+          isImport && isProject
         );
       }
       for (var rel in item.relationships) {
@@ -145,13 +146,13 @@ export async function insertData(
         if (typeof item.id === 'number') item = rn.normalizeRecord(item);
         oparray.push(tb.addRecord(item).toOperation());
         if (item.type === 'project') {
-          project = item as ProjectD;
+          if (isProject) project = item as ProjectD;
           await saveOfflineProject(
-            project,
+            item as ProjectD,
             memory,
             backup,
-            snapshotDate,
-            isImport
+            isProject ? snapshotDate : undefined,
+            isImport && isProject
           );
         }
       } catch (err: any) {
@@ -203,6 +204,7 @@ async function processData(
           orbitError,
           false,
           false,
+          true, //isProject
           undefined
         );
       }

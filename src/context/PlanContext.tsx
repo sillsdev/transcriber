@@ -10,7 +10,7 @@ import {
   Discussion,
   GroupMembership,
 } from '../model';
-import { usePlanType, useRole } from '../crud';
+import { findRecord, usePlanType, useRole } from '../crud';
 import { useCheckOnline, useInterval } from '../utils';
 import { useProjectDefaults } from '../crud/useProjectDefaults';
 import { useOrbitData } from '../hoc/useOrbitData';
@@ -102,12 +102,8 @@ const PlanProvider = (props: IProps) => {
   }, [plan]);
 
   useEffect(() => {
-    let projRec: ProjectD | null = null;
-    if (project && project !== '')
-      projRec = memory.cache.query((q) =>
-        q.findRecord({ type: 'project', id: project })
-      ) as ProjectD;
-    if (projRec !== null) {
+    let projRec = findRecord(memory, 'project', project) as ProjectD;
+    if (projRec) {
       const shared = projRec?.attributes?.isPublic || false;
       const hidePublishing =
         (getProjectDefault(ProjectHidePublishing) ?? true) ||

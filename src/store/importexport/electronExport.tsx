@@ -22,6 +22,9 @@ import {
   PlanD,
   SectionD,
   PassageD,
+  SectionResourceD,
+  ArtifactCategoryD,
+  SharedResourceD,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { getSerializer } from '../../serializers/getSerializer';
@@ -42,6 +45,7 @@ import {
   staticFiles,
   nameFromTemplate,
   VernacularTag,
+  findRecord,
 } from '../../crud';
 import {
   dataPath,
@@ -128,18 +132,16 @@ export async function electronExport(
     exportType;
 
   const getProjRec = (projectid: number | string): ProjectD => {
-    return memory.cache.query((q) =>
-      q.findRecord({
-        type: 'project',
-        id:
-          typeof projectid === 'number'
-            ? remoteIdGuid(
-                'project',
-                projectid.toString(),
-                memory.keyMap as RecordKeyMap
-              ) ?? projectid.toString()
-            : projectid,
-      })
+    return findRecord(
+      memory,
+      'project',
+      typeof projectid === 'number'
+        ? remoteIdGuid(
+            'project',
+            projectid.toString(),
+            memory.keyMap as RecordKeyMap
+          ) ?? projectid.toString()
+        : projectid
     ) as ProjectD;
   };
   const createZip = async (
@@ -315,13 +317,157 @@ export async function electronExport(
       ) as PassageD[];
       return passages.filter((p) => sections.includes(related(p, 'section')));
     };
+    const SectionResources = (project: ProjectD) => {
+      var sections = Sections(project).map((s) => s.id);
+      var sectionresources = (
+        memory.cache.query((q) =>
+          q.findRecords('sectionresource')
+        ) as SectionResourceD[]
+      ).filter((r) => sections.includes(related(r, 'section')));
+      return sectionresources;
+    };
 
+    const HighestByPassage = (media: MediaFileD[]) => {
+      var highest: MediaFileD[] = [];
+      var psg = '';
+      media
+        .sort((a, b) =>
+          related(a, 'passage') === related(b, 'passage')
+            ? a.attributes.versionNumber > b.attributes.versionNumber
+              ? 1
+              : -1
+            : related(a, 'passage') > related(b, 'passage')
+            ? 1
+            : -1
+        )
+        .forEach((m) => {
+          if (related(m, 'passage') !== psg) {
+            highest.push(m);
+            psg = related(m, 'passage');
+          }
+        });
+      return highest;
+    };
+    const SourceMedia = (project: ProjectD) => {
+      var sectionresourcemedia = SectionResources(project).map(
+        (r) => related(r, 'mediafile') as string
+      );
+      var media = memory.cache.query((q) =>
+        q.findRecords('mediafile')
+      ) as MediaFileD[];
+
+      //get the mediafiles associated with section resources
+      var resourcemediafiles = media.filter((m) =>
+        sectionresourcemedia.includes(m.id)
+      );
+
+      //now get any shared resource mediafiles associated with those mediafiles
+      var sourcemediafiles = media.filter(
+        (m) =>
+          m.attributes.readyToShare &&
+          resourcemediafiles
+            .map((r) => related(r, 'resourcePassage'))
+            .includes(related(m, 'passage'))
+      );
+      return HighestByPassage(sourcemediafiles);
+    };
+    const sharedNotePassageIds = (project: ProjectD) => {
+      var psgs = Passages(project).filter(
+        (p) => related(p, 'sharedResource') !== null
+      );
+      var sharednotesids = psgs.map(
+        (p) => related(p, 'sharedResource') as string
+      );
+      var supportingNotes = (
+        memory.cache.query((q) =>
+          q.findRecords('sharedresource')
+        ) as SharedResourceD[]
+      )
+        .filter((r) => sharednotesids.includes(r.id))
+        .map((r) => related(r, 'passage') as string);
+      return supportingNotes;
+    };
+    const sharedNotePassages = (project: ProjectD) => {
+      var ids = sharedNotePassageIds(project);
+      return (
+        memory.cache.query((q) => q.findRecords('passage')) as PassageD[]
+      ).filter((p) => ids.includes(p.id));
+    };
+    const sharedNoteSections = (project: ProjectD) => {
+      var sectids = sharedNotePassages(project).map((p) =>
+        related(p, 'section')
+      );
+      return (
+        memory.cache.query((q) => q.findRecords('section')) as SectionD[]
+      ).filter((s) => sectids.includes(s.id));
+    };
+    const sharedNotePlans = (project: ProjectD) => {
+      var planids = sharedNoteSections(project).map((p) => related(p, 'plan'));
+      return (
+        memory.cache.query((q) => q.findRecords('plan')) as PlanD[]
+      ).filter((s) => planids.includes(s.id));
+    };
+    const sharedNoteProjects = (project: ProjectD) => {
+      var projids = sharedNotePlans(project).map((p) => related(p, 'project'));
+      return (
+        memory.cache.query((q) => q.findRecords('project')) as ProjectD[]
+      ).filter((s) => projids.includes(s.id));
+    };
+    const AllMediafiles = (project: ProjectD) => {
+      var media = memory.cache.query((q) =>
+        q.findRecords('mediafile')
+      ) as MediaFileD[];
+      var plans = Plans(project).map((pl) => pl.id);
+      var planmedia = media.filter((m) => plans.includes(related(m, 'plan')));
+
+      //get IP media
+      var ip = IntellectualProperties(project, needsRemoteIds).map((i) =>
+        related(i, 'releaseMediafile')
+      );
+      var ipmedia = media.filter((m) => ip.includes(m.id));
+
+      var cats = (
+        memory.cache.query((q) =>
+          q.findRecords('artifactcategory')
+        ) as ArtifactCategoryD[]
+      ).filter(
+        (a) =>
+          related(a, 'organization') === related(project, 'organization') ||
+          related(a, 'organization') === undefined
+      );
+      var categorymediafiles = media.filter((m) =>
+        cats.map((c) => related(c, 'titleMediafile') as string).includes(m.id)
+      );
+      var orgkeytermtargets = OrgKeyTermTargets(project, needsRemoteIds).map(
+        (i) => related(i, 'mediafile')
+      );
+      var okttmedia = media.filter((m) => orgkeytermtargets.includes(m.id));
+
+      var sourcemediafiles = SourceMedia(project);
+
+      var supportingNotePassages = sharedNotePassageIds(project);
+
+      var sharedmedia = HighestByPassage(
+        media.filter((m) =>
+          supportingNotePassages.includes(related(m, 'passage'))
+        )
+      );
+      var unique = new Set(
+        planmedia
+          .concat(ipmedia)
+          .concat(okttmedia)
+          .concat(categorymediafiles)
+          .concat(sourcemediafiles)
+          .concat(sharedmedia)
+      );
+      return FromMedia(Array.from(unique), needsRemoteIds);
+    };
     const FromPassages = (
       table: string,
       project: ProjectD | undefined,
       remoteIds: boolean
     ) => {
-      //passagestatechange or mediafile
+      //passagestatechange or media
       var recs = memory.cache.query((q) => q.findRecords(table)) as (BaseModel &
         InitializedRecord)[];
       if (project) {
@@ -381,7 +527,7 @@ export async function electronExport(
       }
       return ds;
     };
-    const OrgKeyTerms = (remoteIds: boolean) => {
+    const OrgKeyTerms = (project: ProjectD | undefined, remoteIds: boolean) => {
       var kts = (
         memory.cache.query((q) => q.findRecords('orgkeyterm')) as OrgKeytermD[]
       ).filter(
@@ -394,7 +540,12 @@ export async function electronExport(
             )
           ) === needsRemoteIds
       );
-
+      if (project) {
+        kts = kts.filter(
+          (rec) =>
+            related(rec, 'organization') === related(project, 'organization')
+        );
+      }
       if (remoteIds) {
         kts.forEach((kt) => {
           if (
@@ -407,7 +558,10 @@ export async function electronExport(
       return kts;
     };
 
-    const OrgKeyTermTargets = (remoteIds: boolean) => {
+    const OrgKeyTermTargets = (
+      project: ProjectD | undefined,
+      remoteIds: boolean
+    ) => {
       var ktts = (
         memory.cache.query((q) =>
           q.findRecords('orgkeytermtarget')
@@ -422,7 +576,12 @@ export async function electronExport(
             )
           ) === needsRemoteIds
       );
-
+      if (project) {
+        ktts = ktts.filter(
+          (rec) =>
+            related(rec, 'organization') === related(project, 'organization')
+        );
+      }
       if (remoteIds) {
         ktts.forEach((ktt) => {
           if (
@@ -596,19 +755,19 @@ export async function electronExport(
           return defaultQuery(info.table);
 
         case 'plan':
-          if (project) return Plans(project);
+          if (project) return Plans(project).concat(sharedNotePlans(project));
           return defaultQuery(info.table);
 
         case 'section':
-          if (project) return Sections(project);
+          if (project)
+            return Sections(project).concat(sharedNoteSections(project));
           return defaultQuery(info.table);
 
         case 'passage':
-          if (project) return Passages(project);
+          if (project) Passages(project).concat(sharedNotePassages(project));
           return defaultQuery(info.table);
 
         case 'mediafile':
-        case 'passagestatechange':
           if (artifactType !== undefined) {
             const media = mediaArtifacts({
               memory,
@@ -619,19 +778,11 @@ export async function electronExport(
             } as IExportArtifacts);
             if (media) return FromMedia(media, needsRemoteIds);
           }
-          var tmp = FromPassages(info.table, project, needsRemoteIds);
-          if (info.table === 'mediafile') {
-            //get IP media
-            var ip = IntellectualProperties(project, needsRemoteIds).map((i) =>
-              related(i, 'releaseMediafile')
-            );
-            var media = memory.cache.query((q) =>
-              q.findRecords(info.table)
-            ) as MediaFileD[];
-            var ipmedia = media.filter((m) => ip.includes(m.id));
-            return tmp.concat(FromMedia(ipmedia, needsRemoteIds));
-          }
-          return tmp;
+          if (project) return AllMediafiles(project);
+          return defaultQuery(info.table);
+
+        case 'passagestatechange':
+          return FromPassages(info.table, project, needsRemoteIds);
 
         case 'discussion':
           return Discussions(project, needsRemoteIds);
@@ -653,10 +804,10 @@ export async function electronExport(
           return IntellectualProperties(project, needsRemoteIds);
 
         case 'orgkeyterm':
-          return OrgKeyTerms(needsRemoteIds);
+          return OrgKeyTerms(project, needsRemoteIds);
 
         case 'orgkeytermtarget':
-          return OrgKeyTermTargets(needsRemoteIds);
+          return OrgKeyTermTargets(project, needsRemoteIds);
         default:
           //activitystate,integration,plantype,projecttype,role
           return defaultQuery(info.table);
@@ -694,7 +845,16 @@ export async function electronExport(
       }
       return 0;
     };
-
+    const AddSupportingProjects = async (project: ProjectD) => {
+      var recs = sharedNoteProjects(project);
+      let ret = { Added: 0, Filtered: 0 };
+      if (recs.length > 0) {
+        recs = recs.filter((r) => Boolean(r.keys?.remoteId));
+        ret.Added = recs?.length || 0;
+      }
+      AddJsonEntry('supportingprojects', recs, 'Z');
+      return ret;
+    };
     const AddAll = async (
       info: fileInfo,
       project: ProjectD | undefined,
@@ -813,6 +973,11 @@ export async function electronExport(
           await AddAll(info, limit, needsRemoteIds);
         }
         await AddFonts();
+        if (limit) {
+          result = await AddSupportingProjects(limit);
+          numRecs += result.Added;
+          numFiltered += result.Filtered;
+        }
     }
     return { zip, numRecs, numFiltered };
   };

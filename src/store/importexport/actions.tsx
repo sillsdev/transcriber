@@ -109,18 +109,16 @@ export const exportProject =
       type: EXPORT_PENDING,
     });
     const getProjRec = (projectid: number | string): Project => {
-      return memory.cache.query((q) =>
-        q.findRecord({
-          type: 'project',
-          id:
-            typeof projectid === 'number'
-              ? (remoteIdGuid(
-                  'project',
-                  projectid.toString(),
-                  memory.keyMap as RecordKeyMap
-                ) as string)
-              : projectid,
-        })
+      return findRecord(
+        memory,
+        'project',
+        typeof projectid === 'number'
+          ? (remoteIdGuid(
+              'project',
+              projectid.toString(),
+              memory.keyMap as RecordKeyMap
+            ) as string)
+          : projectid
       ) as Project;
     };
     if (!token || exportType === ExportType.ITFSYNC) {
@@ -813,6 +811,7 @@ export const importProjectToElectron =
             reportError,
             true,
             true,
+            file.includes('D_projects.json'), //not z_supportingprojects
             dataDate
           )) || project;
       }

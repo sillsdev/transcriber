@@ -5,12 +5,17 @@ import {
   ITranscriptionTabStrings,
   ExportType,
   PlanD,
-  MediaFileD,
   Plan,
   VProject,
   OfflineProject,
 } from '../model';
-import { getMediaInPlans, related, remoteIdNum, useOfflnProjRead } from '.';
+import {
+  IPlanMedia,
+  getDownloadableMediaInPlans,
+  related,
+  remoteIdNum,
+  useOfflnProjRead,
+} from '.';
 import { TokenContext } from '../context/TokenProvider';
 import IndexedDBSource from '@orbit/indexeddb';
 import { RecordKeyMap } from '@orbit/records';
@@ -72,19 +77,14 @@ export const useProjectExport = (props: IProps) => {
   return (exportType: ExportType, projectId: string) => {
     setBusy(true);
 
-    const mediaFiles = memory.cache.query((q) =>
-      q.findRecords('mediafile')
-    ) as MediaFileD[];
     const plans = memory.cache.query((q) => q.findRecords('plan')) as PlanD[];
 
     var projectplans = plans.filter(
       (pl) => related(pl, 'project') === projectId
     );
-    let media: MediaFileD[] = getMediaInPlans(
+    let media: IPlanMedia[] = getDownloadableMediaInPlans(
       projectplans.map((p) => p.id),
-      mediaFiles,
-      undefined,
-      false
+      memory
     );
     exportProject(
       exportType,

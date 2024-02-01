@@ -94,7 +94,9 @@ export const SelectNote = (props: IProps) => {
       related(passage, 'section') as string
     ) as SectionD;
     const secRefs: string[] = [];
-    const passages = related(section, 'passages') as PassageD[];
+    const passages = memory.cache.query((q) =>
+      q.findRelatedRecords(section, 'passages')
+    ) as PassageD[];
     passages.sort(bySeq).forEach((recId) => {
       const passRec = findRecord(memory, 'passage', recId.id) as Passage;
       const passType = passageTypeFromRef(passRec.attributes.reference, flat);
@@ -214,11 +216,11 @@ export const SelectNote = (props: IProps) => {
       ) as SectionD;
       const myPlan = related(secRec, 'plan');
       const planRec = findRecord(memory, 'plan', myPlan) as Plan;
+      if (planRec?.attributes) {
+        source += planRec.attributes.name + ':';
+      }
       if (!planType(myPlan)?.scripture) {
         if (secRec?.attributes) {
-          if (planRec?.attributes) {
-            source += planRec.attributes.name;
-          }
           if (source.length > 0) source += ' - ';
           source += sectionDescription(secRec, sectionMap);
         }
@@ -240,7 +242,7 @@ export const SelectNote = (props: IProps) => {
               ? `${fromRef}-${toVerse}`
               : `${fromRef}-${tochap}:${toVerse}`;
         }
-        source = passageDescText(passRec, allBookData);
+        source += passageDescText(passRec, allBookData);
       }
       return source;
     },

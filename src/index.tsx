@@ -31,7 +31,7 @@ import {
 } from './api-variable';
 import { RecordQueryBuilder } from '@orbit/records';
 import { related } from './crud';
-import { Section, Plan } from './model';
+import { OfflineProject } from './model';
 import { TokenProvider } from './context/TokenProvider';
 import { ErrorFallback } from './components/ErrorFallback';
 import DataProvider from './hoc/DataProvider';
@@ -102,19 +102,12 @@ export async function restoreBackup(coordinator?: Coordinator) {
       });
     }
 
-    const loadedplans = new Set(
-      (
-        myMemory.cache.query((q: RecordQueryBuilder) =>
-          q.findRecords('section')
-        ) as Section[]
-      ).map((s) => related(s, 'plan') as string)
-    );
-    const plans = (
-      myMemory.cache.query((q: RecordQueryBuilder) =>
-        q.findRecords('plan')
-      ) as Plan[]
-    ).filter((p) => loadedplans.has(p.id ?? ''));
-    const projs = new Set(plans.map((p) => related(p, 'project') as string));
+    const ops = myMemory.cache.query((q: RecordQueryBuilder) =>
+      q.findRecords('offlineproject')
+    ) as OfflineProject[];
+    const loaded = ops.filter((o) => o.attributes?.snapshotDate);
+
+    const projs = new Set(loaded.map((p) => related(p, 'project') as string));
     var ret = Array.from(projs);
     return ret;
   } catch (err: any) {
