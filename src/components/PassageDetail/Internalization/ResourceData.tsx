@@ -29,6 +29,8 @@ interface IProps {
   allowProject: boolean;
   catRequired: boolean;
   catAllowNew?: boolean;
+  sectDesc?: string;
+  passDesc?: string;
 }
 export function ResourceData(props: IProps) {
   const {
@@ -41,6 +43,8 @@ export function ResourceData(props: IProps) {
     catRequired,
     catAllowNew,
     allowProject,
+    sectDesc,
+    passDesc,
   } = props;
   const [description, setDescription] = useState(initDescription);
   const { getOrganizedBy } = useOrganizedBy();
@@ -101,12 +105,12 @@ export function ResourceData(props: IProps) {
               <FormControlLabel
                 value={'section'}
                 control={<Radio />}
-                label={getOrganizedBy(true)}
+                label={sectDesc ?? getOrganizedBy(true)}
               />
               <FormControlLabel
                 value={'passage'}
                 control={<Radio />}
-                label={t.passageResource}
+                label={passDesc ?? t.passageResource}
               />
               {allowProject && (
                 <FormControlLabel
