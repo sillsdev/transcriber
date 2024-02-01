@@ -1,4 +1,4 @@
-import { useMemo, memo, FC } from 'react';
+import { memo, FC } from 'react';
 import { IPlanActionsStrings, IMediaShare } from '../../model';
 import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
 import PauseIcon from '@mui/icons-material/Pause';
@@ -106,7 +106,6 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
 });
 
 export function PlanAudioActions(props: IProps) {
-  const { mediaId, canPlay, canEdit, isNote } = props;
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
   return <Actions {...props} t={t} />;
 }

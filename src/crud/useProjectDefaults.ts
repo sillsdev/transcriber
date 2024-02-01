@@ -18,13 +18,26 @@ export const useProjectDefaults = () => {
     if (json.hasOwnProperty(label)) return JSON.parse(json[label]);
     return undefined;
   };
+
   const setProjectDefault = (label: string, value: any) => {
     const proj = findRecord(memory, 'project', project) as ProjectD;
-    const json = JSON.parse(proj.attributes.defaultParams ?? '{}');
-    if (value !== undefined) json[label] = JSON.stringify(value);
-    else delete json[label];
-    proj.attributes.defaultParams = JSON.stringify(json);
-    memory.update((t) => UpdateRecord(t, proj, user));
+    if (!proj || !proj.attributes) return;
+    const json = JSON.parse(proj?.attributes?.defaultParams ?? '{}');
+    var saveIt = false;
+    if (value !== undefined) {
+      var tmp = JSON.stringify(value);
+      if (tmp !== json[label]) {
+        saveIt = true;
+        json[label] = tmp;
+      }
+    } else if ((json[label] ?? '') !== '') {
+      delete json[label];
+      saveIt = true;
+    }
+    if (saveIt) {
+      proj.attributes.defaultParams = JSON.stringify(json);
+      memory.update((t) => UpdateRecord(t, proj, user));
+    }
   };
 
   const canSetProjectDefault = useMemo(
