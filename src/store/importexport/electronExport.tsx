@@ -819,7 +819,6 @@ export async function electronExport(
       needsRemoteIds: boolean
     ) => {
       var recs = GetTableRecs(info, project, needsRemoteIds);
-      console.log(recs.length);
       var changed = recs;
       if (recs && Array.isArray(recs) && recs.length > 0) {
         changed = recs.filter(
