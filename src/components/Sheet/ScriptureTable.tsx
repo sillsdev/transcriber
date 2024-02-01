@@ -346,6 +346,7 @@ export function ScriptureTable(props: IProps) {
     const ws = shtResequence(sheetRef.current);
     if (ws !== sheet) {
       setSheet(ws);
+      setSectionArr([]);
       setChanged(true);
     }
   };
