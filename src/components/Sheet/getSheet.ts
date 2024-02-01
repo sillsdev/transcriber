@@ -109,6 +109,7 @@ export const isSectionFiltered = (
 export const isPassageFiltered = (
   w: ISheet,
   filterState: ISTFilterState,
+  minSection: number,
   hidePublishing: boolean,
   orgWorkflowSteps: OrgWorkflowStep[],
   doneStepId: string
@@ -126,7 +127,7 @@ export const isPassageFiltered = (
       (filterState.minStep &&
         w.stepId &&
         stepIndex(w.stepId) < stepIndex(filterState.minStep)) ||
-      (filterState.minSection > 1 && w.sectionSeq < filterState.minSection) ||
+      (filterState.minSection > minSection && w.sectionSeq < filterState.minSection) ||
       (filterState.maxSection > -1 && w.sectionSeq > filterState.maxSection))
   );
 };
@@ -141,6 +142,7 @@ export const getSheet = (
   orgWorkflowSteps: OrgWorkflowStepD[],
   wfStr: IWorkflowStepsStrings,
   filterState: ISTFilterState,
+  minSection: number,
   hidePublishing: boolean,
   doneStepId: string,
   getDiscussionCount: (passageId: string, stepId: string) => number,
@@ -271,6 +273,7 @@ export const getSheet = (
           isPassageFiltered(
             item,
             filterState,
+            minSection,
             hidePublishing,
             orgWorkflowSteps,
             doneStepId

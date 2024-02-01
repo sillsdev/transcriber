@@ -163,6 +163,7 @@ interface IProps {
   bookSuggestions?: OptionType[];
   bookMap?: BookNameMap;
   filterState: ISTFilterState;
+  minimumSection: number;
   maximumSection: number;
   orgSteps: OrgWorkflowStep[];
   canSetDefault: boolean;
@@ -204,6 +205,7 @@ export function PlanSheet(props: IProps) {
     bookSuggestions,
     bookMap,
     filterState,
+    minimumSection,
     maximumSection,
     orgSteps,
     canSetDefault,
@@ -548,18 +550,19 @@ export function PlanSheet(props: IProps) {
     onFilterChange({ ...filterState, disabled: true }, false);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const filtered = useMemo(() => {
     return (
       !filterState.disabled &&
       (filterState.minStep !== '' ||
         filterState.maxStep !== '' ||
         filterState.hideDone ||
-        filterState.minSection > 1 ||
+        filterState.minSection > minimumSection ||
         (filterState.maxSection > -1 &&
           filterState.maxSection < maximumSection) ||
         filterState.assignedToMe)
     );
-  }, [filterState, maximumSection]);
+  }, [filterState, minimumSection, maximumSection]);
 
   const planSheetFill = usePlanSheetFill({
     ...props,
@@ -719,6 +722,7 @@ export function PlanSheet(props: IProps) {
     srcMediaId,
     mediaPlaying,
     currentRow,
+    filtered,
     check,
     anyRecording,
     firstMovement,
@@ -853,6 +857,7 @@ export function PlanSheet(props: IProps) {
               state={filterState}
               onFilterChange={onFilterChange}
               orgSteps={orgSteps}
+              minimumSection={minimumSection}
               maximumSection={maximumSection}
               filtered={filtered}
               hidePublishing={hidePublishing}
