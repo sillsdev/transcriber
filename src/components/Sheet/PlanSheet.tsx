@@ -812,7 +812,8 @@ export function PlanSheet(props: IProps) {
                     data.length < 2 ||
                     anyRecording ||
                     readonly ||
-                    filtered
+                    filtered ||
+                    !hidePublishing
                   }
                   onClick={handleResequence}
                 >
