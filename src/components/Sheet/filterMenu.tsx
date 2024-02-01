@@ -35,6 +35,7 @@ interface IProps {
   state: ISTFilterState;
   canSetDefault: boolean;
   orgSteps: OrgWorkflowStep[];
+  minimumSection: number;
   maximumSection: number;
   hidePublishing: boolean;
   onFilterChange: (
@@ -49,6 +50,7 @@ export function FilterMenu(props: IProps) {
   const {
     orgSteps,
     canSetDefault,
+    minimumSection,
     maximumSection,
     onFilterChange,
     filtered,
@@ -108,7 +110,7 @@ export function FilterMenu(props: IProps) {
   const handleClear = () => {
     apply(undefined, defaultRef.current);
     setAnchorEl(null);
-    setMapMin(!hidePublishing ? sectionMap.get(localState.minSection) : '');
+    setMapMin(!hidePublishing ? sectionMap.get(minimumSection) : '');
     setMapMax(
       !hidePublishing
         ? sectionMap.get(

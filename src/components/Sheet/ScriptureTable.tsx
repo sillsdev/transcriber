@@ -72,6 +72,7 @@ import {
   isSectionFiltered,
   isPassageFiltered,
   nextNum,
+  getMinSection,
 } from '.';
 import { debounce } from 'lodash';
 import AudacityManager from './AudacityManager';
@@ -1177,6 +1178,13 @@ export function ScriptureTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workflowSteps, orgWorkflowSteps, org]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const minSection = useMemo(() => getMinSection(sheetRef.current), [sheet]);
+
+  useEffect(() => {
+    setDefaultFilterState((fs) => ({ ...fs, minSection }));
+  }, [minSection]);
+
   const doneStepId = useMemo(() => {
     if (getStepsBusy.current) return 'notready';
     var tmp = orgSteps.find(
@@ -1303,6 +1311,7 @@ export function ScriptureTable(props: IProps) {
         orgSteps,
         wfStr,
         filterState,
+        minSection,
         hidePublishing,
         doneStepId,
         getDiscussionCount,
@@ -1403,6 +1412,7 @@ export function ScriptureTable(props: IProps) {
           isPassageFiltered(
             w,
             filterState,
+            minSection,
             hidePublishing,
             orgSteps,
             doneStepId
@@ -1726,6 +1736,7 @@ export function ScriptureTable(props: IProps) {
         onFilterChange={onFilterChange}
         onFirstMovement={onFirstMovement}
         filterState={filterState}
+        minimumSection={minSection}
         maximumSection={sheet[sheet.length - 1]?.sectionSeq ?? 0}
         orgSteps={orgSteps}
         canSetDefault={canSetProjectDefault}

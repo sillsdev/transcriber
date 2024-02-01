@@ -11,22 +11,25 @@ export const nextNum = (
     return Math.floor(lastNum + 1);
   else return lastNum + 0.01;
 };
+
+export const getMinSection = (ws: ISheet[]) => {
+  if (!ws || ws.length === 0) return 1;
+  let ms = ws.reduce((min, cur) =>
+    isSectionRow(cur) &&
+    cur.level >= 3 &&
+    (min.level < 3 || cur.sectionSeq < min.sectionSeq)
+      ? cur
+      : min
+  );
+  return ms ? Math.max(1, ms.sectionSeq) : 1;
+};
+
 export const shtResequence = (ws: ISheet[], sec = 1) => {
-  const minSection = () => {
-    let ms = ws.reduce((min, cur) =>
-      isSectionRow(cur) &&
-      cur.level >= 3 &&
-      (min.level < 3 || cur.sectionSeq < min.sectionSeq)
-        ? cur
-        : min
-    );
-    return ms ? Math.max(1, ms.sectionSeq) : 1;
-  };
   const updatedAt = currentDateTime();
   let change = false;
   let pas = 0;
   if (sec === 1) {
-    sec = minSection() - 1;
+    sec = getMinSection(ws) - 1;
   }
 
   for (let i = 0; i < ws.length; i += 1) {
