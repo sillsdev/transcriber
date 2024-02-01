@@ -176,7 +176,7 @@ interface IProps {
   addSection: (level: SheetLevel, i?: number, ptype?: PassageTypeEnum) => void;
   moveSection: (i: number, before: boolean) => void;
   toggleSectionPublish: (i: number) => void;
-  onPublishing: (doUpdate: boolean) => void;
+  onPublishing: (doUpdate: boolean) => Promise<void>;
   lookupBook: (book: string) => string;
   resequence: () => void;
   inlinePassages: boolean;

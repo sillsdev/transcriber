@@ -1438,8 +1438,8 @@ export function ScriptureTable(props: IProps) {
     }
   };
 
-  const onPublishing = (update: boolean) => {
-    if (update) doPublish();
+  const onPublishing = async (update: boolean) => {
+    if (update) await doPublish();
     else if (!hidePublishing) togglePublishing(); //turn it off
     //if we're going to show now and we don't already have some rows...ask
     else if (!canHidePublishing) setConfirmPublishingVisible(true);
@@ -1451,32 +1451,44 @@ export function ScriptureTable(props: IProps) {
   const publishingTitle = (passageType: PassageTypeEnum) =>
     passageType + ' ' + firstBook;
 
-  const onPublishingConfirm = () => {
+  const onPublishingConfirm = async () => {
     setConfirmPublishingVisible(false);
-    doPublish();
+    await doPublish();
     togglePublishing();
   };
-  const doPublish = () => {
-    const hasBookTitle = (bookType: PassageTypeEnum) => {
+  const doPublish = async () => {
+    const hasBookTitle = async (bookType: PassageTypeEnum) => {
       if (
         sheetRef.current.findIndex(
           (w) => !w.deleted && w.passageType === bookType
         ) < 0
       ) {
         //see if we have this book anywhere in the team
+        //ask remote about this if we have a remote
         var teamprojects = projects
           .filter((p) => related(p, 'organization') === organization)
           .map((p) => p.id);
         var teamplans = plans
           .filter((p) => teamprojects.includes(related(p, 'project')))
           .map((p) => p.id);
-        return Boolean(
+        var foundIt = Boolean(
           sections.find(
             (s) =>
               s.attributes?.state === publishingTitle(bookType) &&
               teamplans.includes(related(s, 'plan'))
           )
         );
+        if (!foundIt && remote) {
+          var bts = (await remote.query((qb) =>
+            qb
+              .findRecords('section')
+              .filter({ attribute: 'state', value: publishingTitle(bookType) })
+          )) as SectionD[];
+          foundIt = Boolean(
+            bts.find((s) => teamplans.includes(related(s, 'plan')))
+          );
+        }
+        return foundIt;
       }
       return true;
     };
@@ -1547,10 +1559,10 @@ export function ScriptureTable(props: IProps) {
 
     var currentChapter = 0;
     var newworkflow: ISheet[] = [];
-    if (!hasBookTitle(PassageTypeEnum.BOOK))
+    if (!(await hasBookTitle(PassageTypeEnum.BOOK)))
       newworkflow = AddBook(newworkflow, PassageTypeEnum.BOOK);
 
-    if (!hasBookTitle(PassageTypeEnum.ALTBOOK))
+    if (!(await hasBookTitle(PassageTypeEnum.ALTBOOK)))
       newworkflow = AddBook(newworkflow, PassageTypeEnum.ALTBOOK);
     var nextpsg = 0;
     var wf = sheetRef.current;
@@ -1677,7 +1689,7 @@ export function ScriptureTable(props: IProps) {
   const onFirstMovement = (newFM: number) => {
     if (newFM !== firstMovement) {
       setFirstMovement(newFM);
-      setSectionArr([])
+      setSectionArr([]);
       setChanged(true);
     }
   };

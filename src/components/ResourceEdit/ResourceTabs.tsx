@@ -28,6 +28,7 @@ import {
   remoteIdNum,
   useGraphicUpdate,
   useGraphicCreate,
+  getVernacularMediaRec,
 } from '../../crud';
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
@@ -37,6 +38,9 @@ import { PassageTypeEnum } from '../../model/passageType';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 import { usePassageUpdate } from '../../crud/usePassageUpdate';
+import { remotePullAll } from '../../crud/syncToMemory';
+import JSONAPISource from '@orbit/jsonapi';
+import IndexedDBSource from '@orbit/indexeddb';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -94,6 +98,9 @@ export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
   const graphicUpdate = useGraphicUpdate();
   const graphicCreate = useGraphicCreate();
   const { userIsAdmin } = useRole();
+  const [coordinator] = useGlobal('coordinator');
+  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -245,6 +252,25 @@ export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
         ? (localizedArtifactCategory(catSlug) as string) || catSlug
         : catSlug || '';
       passage.attributes.reference = `NOTE|${category}`;
+    }
+    var psg = findRecord(memory, 'passage', related(sr, 'passage')) as PassageD;
+    if (psg) {
+      const mediaRec = getVernacularMediaRec(psg.id, memory);
+      if (!mediaRec) {
+        var psgId = remoteIdNum(
+          'passage',
+          related(sr, 'passage'),
+          memory.keyMap as RecordKeyMap
+        );
+        const filter = [{ attribute: 'passage-id', value: psgId }];
+        await remotePullAll({
+          remote,
+          backup,
+          table: 'mediafile',
+          memory,
+          filter,
+        });
+      }
     }
     await updatePassage(passage, undefined, undefined, sr.id);
   };
