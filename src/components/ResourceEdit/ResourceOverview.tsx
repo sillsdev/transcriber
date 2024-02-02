@@ -81,7 +81,6 @@ export default function ResourceOverview(props: IProps) {
   } = props;
 
   const [isDeveloper] = useGlobal('developer');
-  const [offline] = useGlobal('offline');
   const recording = useRef(false);
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
   const [findNote, setFindNote] = React.useState(false);
@@ -190,7 +189,7 @@ export default function ResourceOverview(props: IProps) {
   return !findNote ? (
     <Box>
       <Stack spacing={2}>
-        {isNote && !offline ? (
+        {isNote && mode !== Mode.view ? (
           <NoteTitle state={state} setState={updateState} />
         ) : (
           <ResourceTitle state={state} setState={updateState} />
@@ -218,7 +217,7 @@ export default function ResourceOverview(props: IProps) {
         {isNote && (
           <>
             <LightTooltip title={t.findNote}>
-              <IconButton onClick={handleFind}>
+              <IconButton onClick={handleFind} disabled={mode === Mode.view}>
                 <SearchIcon color="primary" />
               </IconButton>
             </LightTooltip>
