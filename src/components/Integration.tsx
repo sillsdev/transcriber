@@ -55,6 +55,7 @@ import {
   useArtifactType,
   useTranscription,
   findRecord,
+  passageRefText,
 } from '../crud';
 import {
   localSync,
@@ -104,6 +105,7 @@ export function IntegrationPanel(props: IProps) {
   } = props;
   const t: IIntegrationStrings = useSelector(integrationSelector);
   const ts: ISharedStrings = useSelector(sharedSelector);
+  const bookData = useSelector((state: IState) => state.books.bookData);
   const paratext_count = useSelector((state: IState) => state.paratext.count);
   const paratext_countStatus = useSelector(
     (state: IState) => state.paratext.countStatus
@@ -831,7 +833,13 @@ export function IntegrationPanel(props: IProps) {
               </ListItemAvatar>
               <ListItemText
                 primary={t.countReady}
-                secondary={count >= 0 ? count : t.countPending}
+                secondary={
+                  count === 1 && passage
+                    ? passageRefText(passage, bookData)
+                    : count >= 0
+                    ? count
+                    : t.countPending
+                }
               />
             </ListItem>
           </List>
@@ -964,7 +972,13 @@ export function IntegrationPanel(props: IProps) {
               </ListItemAvatar>
               <ListItemText
                 primary={t.countReady}
-                secondary={count >= 0 ? count : t.countPending}
+                secondary={
+                  count === 1 && passage
+                    ? passageRefText(passage, bookData)
+                    : count >= 0
+                    ? count
+                    : t.countPending
+                }
               />
             </ListItem>
           </List>
