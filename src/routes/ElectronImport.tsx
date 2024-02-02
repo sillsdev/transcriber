@@ -289,7 +289,7 @@ export const useElectronImport = () => {
   ): Promise<void> => {
     if (!isElectron) return;
     if (zipRef.current) {
-      const where = dataPath();
+      const where = await dataPath();
       await ipc?.createFolder(where);
       //delete any old files
       try {

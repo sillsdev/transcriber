@@ -212,7 +212,7 @@ export async function electronExport(
           user.attributes.avatarUrl !== null &&
           user.attributes.avatarUrl !== ''
         ) {
-          var dp = dataPath(user.attributes.avatarUrl, PathType.AVATARS, {
+          var dp = await dataPath(user.attributes.avatarUrl, PathType.AVATARS, {
             localname:
               remoteId('user', user.id, memory.keyMap as RecordKeyMap) +
               (user.attributes?.familyName || '') +
@@ -231,7 +231,7 @@ export async function electronExport(
           org.attributes.logoUrl !== null &&
           org.attributes.logoUrl !== ''
         ) {
-          var dp = dataPath(org.attributes.logoUrl, PathType.LOGOS, {
+          var dp = await dataPath(org.attributes.logoUrl, PathType.LOGOS, {
             localname: org.attributes.slug + '.png',
           });
           await AddStreamEntry(dp, logopath + path.basename(dp));
@@ -248,8 +248,8 @@ export async function electronExport(
       for (var mx = 0; mx < recs.length; mx++) {
         var mf = recs[mx] as MediaFile;
         if (!mf.attributes) return;
-        const mp = dataPath(mf.attributes.audioUrl, PathType.MEDIA);
-        const { fullPath } = scriptureFullPath(mf, {
+        const mp = await dataPath(mf.attributes.audioUrl, PathType.MEDIA);
+        const { fullPath } = await scriptureFullPath(mf, {
           memory,
           scripturePackage,
           projRec,
@@ -268,7 +268,7 @@ export async function electronExport(
     };
 
     const AddFonts = async () => {
-      const dir = dataPath(PathType.FONTS);
+      const dir = await dataPath(PathType.FONTS);
       await createFolder(dir);
       var items = await ipc?.readDir(dir);
       for (var i = 0; i < items.length; i++) {
@@ -917,7 +917,7 @@ export async function electronExport(
           userid.toString(),
           memory.keyMap as RecordKeyMap
         ) || userid.toString();
-      const burritoMetaStr = getBurritoMeta({
+      const burritoMetaStr = await getBurritoMeta({
         memory,
         userId,
         projRec,
@@ -1057,7 +1057,7 @@ export async function electronExport(
       }
     } else {
       if (numRecs) {
-        var where = dataPath(filename);
+        var where = await dataPath(filename);
         await createPathFolder(where);
         if (sendProgress && writingmsg) sendProgress(writingmsg);
         await ipc?.zipWrite(zip, where);
@@ -1072,7 +1072,7 @@ export async function electronExport(
       } else if (nodatamsg && projects.length === 1) throw new Error(nodatamsg);
     }
   }
-  var backupWhere = dataPath(backupName);
+  var backupWhere = await dataPath(backupName);
   await createPathFolder(backupWhere);
   if (backupZip) {
     if (sendProgress && writingmsg) sendProgress(writingmsg);

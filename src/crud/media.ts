@@ -257,7 +257,7 @@ export interface IBurritoMeta
   userId: string;
 }
 
-export const scriptureFullPath = (
+export const scriptureFullPath = async (
   mf: MediaFile,
   { memory, scripturePackage, projRec }: IExportScripturePath
 ) => {
@@ -265,7 +265,7 @@ export const scriptureFullPath = (
   let book = '';
   let ref = '';
   if (scripturePackage) {
-    const mp = dataPath(mf.attributes.audioUrl, PathType.MEDIA);
+    const mp = await dataPath(mf.attributes.audioUrl, PathType.MEDIA);
     const passRec = findRecord(
       memory,
       'passage',
@@ -375,38 +375,40 @@ export const mediaArtifacts = ({
     .sort((i, j) => ((key.get(i.id) || '') <= (key.get(j.id) || '') ? -1 : 1));
 };
 
-export const getBurritoMeta = (props: IBurritoMeta) => {
+export const getBurritoMeta = async (props: IBurritoMeta) => {
   const { memory, userId, projRec } = props;
   const userRec = findRecord(memory, 'user', userId) as User;
   const burritoMeta = burritoMetadata({ projRec, userRec });
   const ingredients = mediaArtifacts(props);
   const scopes = burritoMeta.type.flavorType.currentScope;
   const formats = {} as FormatsType;
-  ingredients?.forEach((mf) => {
-    const { fullPath, book, ref } = scriptureFullPath(mf, props);
-    if (book && book.length > 0) {
-      if (scopes.hasOwnProperty(book)) {
-        scopes[book].push(ref);
-      } else {
-        scopes[book] = [ref];
+  if (ingredients) {
+    for (const mf of ingredients) {
+      const { fullPath, book, ref } = await scriptureFullPath(mf, props);
+      if (book && book.length > 0) {
+        if (scopes.hasOwnProperty(book)) {
+          scopes[book].push(ref);
+        } else {
+          scopes[book] = [ref];
+        }
       }
-    }
-    if (fullPath) {
-      const { ext } = removeExtension(fullPath);
-      if (!formats.hasOwnProperty(ext)) {
-        formats[ext] = {
-          compression: ext,
+      if (fullPath) {
+        const { ext } = removeExtension(fullPath);
+        if (!formats.hasOwnProperty(ext)) {
+          formats[ext] = {
+            compression: ext,
+          };
+        }
+        burritoMeta.ingredients[fullPath] = {
+          mimeType: mimeMap[ext],
+          size: mf.attributes.filesize,
+          scope: {
+            [book]: [ref],
+          },
         };
       }
-      burritoMeta.ingredients[fullPath] = {
-        mimeType: mimeMap[ext],
-        size: mf.attributes.filesize,
-        scope: {
-          [book]: [ref],
-        },
-      };
     }
-  });
+  }
   let formatn = 1;
   for (let val of Object.values(formats)) {
     burritoMeta.type.flavorType.flavor.formats[`format${formatn}`] = val;

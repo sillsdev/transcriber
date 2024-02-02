@@ -112,35 +112,50 @@ export const getDownloadableMediaInPlan = (
   };
   var media = getMediaInPlans([planid], mediaFiles, undefined, false);
   var ret: IPlanMedia[] = [];
-  ret.concat(mapMedia(media));
+  ret = ret.concat(mapMedia(media));
   //IP media
   var ipmediaids = (
     memory.cache.query((q) =>
       q.findRecords('intellectualproperty')
     ) as IntellectualPropertyD[]
   )
-    .filter((ip) => related(ip, 'organization') === org.id)
-    .map((ip) => related(ip, 'mediafile') as string);
+    .filter(
+      (ip) =>
+        related(ip, 'organization') === org.id &&
+        related(ip, 'releaseMediafile')
+    )
+    .map((ip) => related(ip, 'releaseMediafile') as string);
 
-  ret.concat(mapMedia(mediaFiles.filter((m) => ipmediaids.includes(m.id))));
+  ret = ret.concat(
+    mapMedia(mediaFiles.filter((m) => ipmediaids.includes(m.id)))
+  );
   //Category titles
   var catmediaids = (
     memory.cache.query((q) =>
       q.findRecords('artifactcategory')
     ) as ArtifactCategoryD[]
   )
-    .filter((ip) => related(ip, 'organization') === org.id)
+    .filter(
+      (ip) =>
+        related(ip, 'organization') === org.id && related(ip, 'titleMediafile')
+    )
     .map((ip) => related(ip, 'titleMediafile') as string);
-  ret.concat(mapMedia(mediaFiles.filter((m) => catmediaids.includes(m.id))));
+  ret = ret.concat(
+    mapMedia(mediaFiles.filter((m) => catmediaids.includes(m.id)))
+  );
   //Keyterm media
   var okttmediaids = (
     memory.cache.query((q) =>
       q.findRecords('orgkeytermtarget')
     ) as OrgKeytermTargetD[]
   )
-    .filter((ip) => related(ip, 'organization') === org.id)
+    .filter(
+      (ip) => related(ip, 'organization') === org.id && related(ip, 'mediafile')
+    )
     .map((ip) => related(ip, 'mediafile') as string);
-  ret.concat(mapMedia(mediaFiles.filter((m) => okttmediaids.includes(m.id))));
+  ret = ret.concat(
+    mapMedia(mediaFiles.filter((m) => okttmediaids.includes(m.id)))
+  );
 
   var plansecs = sections
     .filter((s) => related(s, 'plan') === plan)
@@ -157,6 +172,6 @@ export const getDownloadableMediaInPlan = (
   var sharedMedia = mediaFiles.filter((m) =>
     sourcepsgs.includes(related(m, 'passage') as string)
   );
-  ret.concat(mapMedia(sharedMedia));
+  ret = ret.concat(mapMedia(sharedMedia));
   return ret;
 };

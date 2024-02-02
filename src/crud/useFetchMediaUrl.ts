@@ -129,7 +129,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
               mediarec.attributes.audioUrl ??
               mediarec.attributes.s3file ??
               mediarec.attributes.originalFile;
-            const path = dataPath(audioUrl, PathType.MEDIA);
+            const path = await dataPath(audioUrl, PathType.MEDIA);
             const foundLocal = await ipc?.exists(path);
             if (foundLocal || !accessToken) {
               if (!path.startsWith('http')) {

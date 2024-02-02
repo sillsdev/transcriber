@@ -152,7 +152,7 @@ function AudacityManager(props: IProps) {
     let mediaName = '';
     if ((mediaId || '') !== '') {
       const url = getMediaUrl(mediaId);
-      mediaName = dataPath(url, PathType.MEDIA);
+      mediaName = await dataPath(url, PathType.MEDIA);
       if (!(await ipc?.exists(mediaName))) {
         showMessage(t.checkDownload);
         return;

@@ -32,7 +32,7 @@ export const getFontData = async (r: Project, offline: boolean) => {
   const fileName = fontFamily + '.css';
   var url = 'https://s3.amazonaws.com/fonts.siltranscriber.org/' + fileName;
   if (isElectron) {
-    let local = dataPath('http', PathType.FONTS, {
+    let local = await dataPath('http', PathType.FONTS, {
       localname: fileName,
     });
     if (local && !local.startsWith('http')) {
