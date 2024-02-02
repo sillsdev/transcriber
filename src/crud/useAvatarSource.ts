@@ -14,7 +14,7 @@ export const useAvatarSource = (name: string, rec: RecordIdentity) => {
   useEffect(() => {
     (async () => {
       const url = (rec as User)?.attributes?.avatarUrl;
-      let src = dataPath(url || name, PathType.AVATARS, {
+      let src = await dataPath(url || name, PathType.AVATARS, {
         localname:
           remoteId(rec.type, rec.id, memory.keyMap as RecordKeyMap) +
           name +

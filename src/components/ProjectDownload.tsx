@@ -140,46 +140,47 @@ export const ProjectDownload = (props: IProps) => {
 
   React.useEffect(() => {
     if (progress === Steps.Download) {
-      const localPath = dataPath(exportName, PathType.ZIP);
-      ipc?.createFolder(path.dirname(localPath)).then(() => {
-        ipc
-          ?.downloadLaunch(exportUrl, localPath)
-          .then((token: string) => {
-            const timer = setInterval(() => {
-              ipc?.downloadStat(token).then((reply: string) => {
-                const { received, total, error } = reply
-                  ? (JSON.parse(reply) as StatReply)
-                  : {
-                      received: 0,
-                      total: 0,
-                      error: 'no downloadStat reply for ' + token,
-                    };
-                if (error) {
-                  logError(Severity.error, errorReporter, error);
-                  clearInterval(timer);
-                  ipc?.downloadClose(token);
-                } else if (received < total) {
-                  showTitledMessage(
-                    t.downloadProject,
-                    t.downloading.replace(
-                      '{0}',
-                      `${exportName} ${Math.round((received * 100) / total)}%`
-                    )
-                  );
-                } else {
-                  clearInterval(timer);
-                  ipc?.downloadClose(token);
-                  setProgress(Steps.Import);
-                }
-              });
-            }, 500);
-          })
-          .catch((ex: Error) => {
-            logError(Severity.error, errorReporter, ex);
-          })
-          .finally(() => {
-            URL.revokeObjectURL(exportUrl);
-          });
+      dataPath(exportName, PathType.ZIP).then((localPath) => {
+        ipc?.createFolder(path.dirname(localPath)).then(() => {
+          ipc
+            ?.downloadLaunch(exportUrl, localPath)
+            .then((token: string) => {
+              const timer = setInterval(() => {
+                ipc?.downloadStat(token).then((reply: string) => {
+                  const { received, total, error } = reply
+                    ? (JSON.parse(reply) as StatReply)
+                    : {
+                        received: 0,
+                        total: 0,
+                        error: 'no downloadStat reply for ' + token,
+                      };
+                  if (error) {
+                    logError(Severity.error, errorReporter, error);
+                    clearInterval(timer);
+                    ipc?.downloadClose(token);
+                  } else if (received < total) {
+                    showTitledMessage(
+                      t.downloadProject,
+                      t.downloading.replace(
+                        '{0}',
+                        `${exportName} ${Math.round((received * 100) / total)}%`
+                      )
+                    );
+                  } else {
+                    clearInterval(timer);
+                    ipc?.downloadClose(token);
+                    setProgress(Steps.Import);
+                  }
+                });
+              }, 500);
+            })
+            .catch((ex: Error) => {
+              logError(Severity.error, errorReporter, ex);
+            })
+            .finally(() => {
+              URL.revokeObjectURL(exportUrl);
+            });
+        });
       });
       showTitledMessage(
         t.downloadProject,
@@ -192,8 +193,9 @@ export const ProjectDownload = (props: IProps) => {
   React.useEffect(() => {
     if (progress === Steps.Import) {
       (async () => {
-        const localPath = dataPath(exportName, PathType.ZIP);
-        await ipc?.zipStreamExtract(localPath, dataPath());
+        const localPath = await dataPath(exportName, PathType.ZIP);
+        const dest = await dataPath();
+        await ipc?.zipStreamExtract(localPath, dest);
         offlineProjectUpdateFilesDownloaded(
           projectIds[currentStep],
           offlineUpdates,

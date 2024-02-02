@@ -16,8 +16,6 @@ import { useOrbitData } from '../hoc/useOrbitData';
 import { projectDownloadSelector } from '../selector';
 import { useGlobal } from 'reactn';
 
-const ipc = (window as any)?.electron;
-
 interface PlanProject {
   [planId: string]: string;
 }
@@ -63,9 +61,12 @@ export const ProjectDownloadAlert = (props: IProps) => {
     for (const m of mediaInfo) {
       if (related(m.media, 'artifactType') || related(m.media, 'passage')) {
         var local = { localname: '' };
-        dataPath(m.media.attributes.audioUrl, PathType.MEDIA, local);
-        const found = await ipc?.exists(local.localname);
-        if (!found) {
+        var path = await dataPath(
+          m.media.attributes.audioUrl,
+          PathType.MEDIA,
+          local
+        );
+        if (path !== local.localname) {
           needyProject.add(planProject[m.plan]);
           totalSize += m.media.attributes?.filesize || 0;
         }

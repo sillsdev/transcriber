@@ -70,7 +70,7 @@ export function HelpMenu(props: IProps) {
     const folder = await execFolder();
     const localPath = loc
       ? path.join(folder, 'help', name)
-      : dataPath(name, PathType.ZIP);
+      : await dataPath(name, PathType.ZIP);
     if (!loc) await ipc?.downloadFile(url, localPath);
     launch(localPath, false);
     setAnchorEl(null);

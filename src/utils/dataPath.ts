@@ -11,11 +11,11 @@ export enum PathType {
   ZIP = 'zip',
 }
 
-export const dataPath = (
+export const dataPath = async (
   relPath?: string,
   type?: PathType,
   local_out?: { localname: string }
-): string => {
+): Promise<string> => {
   const homeDir = localStorage.getItem('home') ?? '';
   if (isElectron && process.env.REACT_APP_OFFLINEDATA) {
     var localName = '';
@@ -51,7 +51,7 @@ export const dataPath = (
         break;
     }
     if (local_out) local_out.localname = localName;
-    if (ipc?.exists(localName)) return localName;
+    if (await ipc?.exists(localName)) return localName;
     //s3 paths look like https://sil-transcriber-userfiles-dev.s3.amazonaws.com/noorg/B14___01_2Thess______ENGESVN2DA.mp3?AWSAccessKeyId=xxx
     if (type === PathType.MEDIA && relPath?.includes('s3.amazonaws')) {
       // This logic handles names with slashes. Sholdn't nappen again
@@ -64,7 +64,7 @@ export const dataPath = (
         decodeURIComponent(fileName)
       );
       if (local_out) local_out.localname = localName;
-      if (ipc?.exists(localName)) return localName;
+      if (await ipc?.exists(localName)) return localName;
     }
   }
   return relPath?.startsWith('http')
