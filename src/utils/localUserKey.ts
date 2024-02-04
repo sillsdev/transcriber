@@ -25,6 +25,7 @@ export enum LocalKey {
   autoaddProject = 'autoaddProject',
   staticTables = 'static-tables', // last static table version
   lastProj = 'lastProj', // most recent project used
+  migration = 'migration', // last migration version
 }
 
 export const localUserKey = (id: LocalKey) => {
