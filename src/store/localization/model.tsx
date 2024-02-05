@@ -418,6 +418,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "countPending": string;
     "countReady": string;
     "emptyBook": string;
+    "exportSectionNumbers": string;
     "invalidReferences": string;
     "no": string;
     "noProject": string;

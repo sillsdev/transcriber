@@ -69,6 +69,7 @@ const PlanProvider = (props: IProps) => {
   const [connected] = useGlobal('connected');
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const [isDeveloper] = useGlobal('developer');
   const getPlanType = usePlanType();
   const { userIsAdmin } = useRole();
   const { setProjectDefault, getProjectDefault } = useProjectDefaults();
@@ -107,7 +108,7 @@ const PlanProvider = (props: IProps) => {
       const shared = projRec?.attributes?.isPublic || false;
       const hidePublishing =
         (getProjectDefault(ProjectHidePublishing) ?? true) ||
-        isOffline ||
+        (isOffline && !isDeveloper) ||
         shared;
 
       if (
