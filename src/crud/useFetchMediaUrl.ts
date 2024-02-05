@@ -77,6 +77,7 @@ interface IProps {
 export const useFetchMediaUrl = (reporter?: any) => {
   const [state, dispatch] = useReducer(stateReducer, mediaClean);
   const [memory] = useGlobal('memory');
+  const [offline] = useGlobal('offline');
   const { accessToken } = useContext(TokenContext).state;
 
   const guidId = (id: string) => {
@@ -125,13 +126,14 @@ export const useFetchMediaUrl = (reporter?: any) => {
           ) as MediaFile;
           if (mediarec && mediarec.attributes) {
             if (cancelled()) return;
+            var local = { localname: '' };
             const audioUrl =
               mediarec.attributes.audioUrl ??
               mediarec.attributes.s3file ??
               mediarec.attributes.originalFile;
-            const path = await dataPath(audioUrl, PathType.MEDIA);
-            const foundLocal = await ipc?.exists(path);
-            if (foundLocal || !accessToken) {
+            const path = await dataPath(audioUrl, PathType.MEDIA, local);
+            const foundLocal = local.localname === path;
+            if (foundLocal || offline) {
               if (!path.startsWith('http')) {
                 if (cancelled()) return;
                 dispatch({
@@ -139,7 +141,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
                   type: MediaSt.FETCHED,
                 });
                 return;
-              } else if (!accessToken) {
+              } else if (offline) {
                 dispatch({
                   payload: 'no offline file',
                   type: MediaSt.ERROR,
