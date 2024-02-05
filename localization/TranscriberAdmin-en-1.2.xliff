@@ -2349,6 +2349,13 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="integration.exportSectionNumbers">
+            <source>Sync {0} Numbers</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="integration.invalidReferences">
             <source>{0} passages have invalid book or reference.</source>
             <target/>

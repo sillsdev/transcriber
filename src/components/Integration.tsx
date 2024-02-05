@@ -39,6 +39,7 @@ import {
   MenuItem,
   Box,
   SxProps,
+  Checkbox,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SyncIcon from '@mui/icons-material/Sync';
@@ -56,6 +57,7 @@ import {
   useTranscription,
   findRecord,
   passageRefText,
+  useOrganizedBy,
 } from '../crud';
 import {
   localSync,
@@ -77,6 +79,7 @@ import { RecordKeyMap, StandardRecordNormalizer } from '@orbit/records';
 import { useSelector } from 'react-redux';
 import { integrationSelector, sharedSelector } from '../selector';
 import { useDispatch } from 'react-redux';
+import { useProjectDefaults } from '../crud/useProjectDefaults';
 
 const panelProps = { flexDirection: 'column' } as SxProps;
 const textFieldProps = { mx: 1, width: '600px' } as SxProps;
@@ -90,6 +93,7 @@ interface IProps {
   artifactType?: ArtifactTypeSlug;
   passage?: Passage;
   currentstep?: string;
+  sectionArr?: [number, string][];
   setStepComplete?: (stepId: string, complete: boolean) => Promise<void>;
   setCurrentStep?: (stepId: string) => void;
 }
@@ -100,6 +104,7 @@ export function IntegrationPanel(props: IProps) {
     artifactType,
     passage,
     currentstep,
+    sectionArr,
     setStepComplete,
     setCurrentStep,
   } = props;
@@ -259,6 +264,20 @@ export function IntegrationPanel(props: IProps) {
   const { getTypeId } = useArtifactType();
   const getTranscription = useTranscription(false, ActivityStates.Approved);
   const intSave = React.useRef('');
+  const { getOrganizedBy } = useOrganizedBy();
+  const { getProjectDefault, setProjectDefault } = useProjectDefaults();
+  const ExportNumbers = 'exportNumbers';
+  const [exportNumbers, setExportNumbers] = useState(
+    JSON.parse(getProjectDefault(ExportNumbers) ?? false) as boolean
+  );
+
+  const handleExportSectionNumbers = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const checked = event.target.checked;
+    setExportNumbers(checked);
+    setProjectDefault(ExportNumbers, JSON.stringify(checked));
+  };
 
   const TranslateSyncError = (err: IAxiosStatus): JSX.Element => {
     return <span>{translateParatextError(err, ts)}</span>;
@@ -409,6 +428,8 @@ export function IntegrationPanel(props: IProps) {
       memory,
       user,
       passage,
+      exportNumbers,
+      sectionArr,
       getTypeId(exportType),
       getTranscription
     );
@@ -695,6 +716,17 @@ export function IntegrationPanel(props: IProps) {
 
   return (
     <Box sx={{ width: '100%' }}>
+      <FormControlLabel
+        sx={{ m: 1 }}
+        control={
+          <Checkbox
+            checked={exportNumbers}
+            onChange={handleExportSectionNumbers}
+            value="exportNumbers"
+          />
+        }
+        label={t.exportSectionNumbers.replace('{0}', getOrganizedBy(true))}
+      />
       <Accordion id="int-online" defaultExpanded={!local} disabled={local}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}

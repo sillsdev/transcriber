@@ -326,6 +326,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
               passage={ctx.state.passage}
               setStepComplete={handleSyncComplete}
               currentstep={currentstep}
+              sectionArr={sectionArr}
             />
           </Stack>
         )}
