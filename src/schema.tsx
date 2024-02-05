@@ -9,7 +9,7 @@ import { MemorySource } from '@orbit/memory';
 import IndexedDBSource from '@orbit/indexeddb';
 import Coordinator from '@orbit/coordinator';
 import { isElectron } from './api-variable';
-import { getFingerprint } from './utils';
+import { LocalKey, getFingerprint, waitForIt } from './utils';
 import { offlineProjectCreate, related } from './crud';
 import { MediaFileD, OrganizationD, PassageD, ProjectD } from './model';
 
@@ -518,12 +518,13 @@ const schemaDefinition: RecordSchemaSettings = {
   },
   version: 1,
 };
+export const requestedSchema = parseInt(
+  process.env.REACT_APP_SCHEMAVERSION || '100'
+);
+
 /* you can set your REACT_APP_SCHEMAVERSION to a version if you want to go back
    for testing purposes */
-if (
-  parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 1 &&
-  schemaDefinition.models
-) {
+if (requestedSchema > 1 && schemaDefinition.models) {
   schemaDefinition.models.offlineproject = {
     keys: { remoteId: {} },
     attributes: {
@@ -549,10 +550,7 @@ if (
   delete schemaDefinition.models.project.attributes?.dateExported;
   schemaDefinition.version = 2;
 }
-if (
-  parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 2 &&
-  schemaDefinition.models
-) {
+if (requestedSchema > 2 && schemaDefinition.models) {
   schemaDefinition.models.audacityproject = {
     keys: { remoteId: {} },
     attributes: {
@@ -571,10 +569,7 @@ if (
   };
   schemaDefinition.version = 3;
 }
-if (
-  parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 3 &&
-  schemaDefinition.models
-) {
+if (requestedSchema > 3 && schemaDefinition.models) {
   schemaDefinition.models.artifactcategory = {
     keys: { remoteId: {} },
     attributes: {
@@ -781,10 +776,7 @@ if (
     },
   };
 }
-if (
-  parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4 &&
-  schemaDefinition.models
-) {
+if (requestedSchema > 4 && schemaDefinition.models) {
   schemaDefinition.models.intellectualproperty = {
     keys: { remoteId: {} },
     attributes: {
@@ -811,10 +803,7 @@ if (
 
   schemaDefinition.version = 5;
 }
-if (
-  parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 5 &&
-  schemaDefinition.models
-) {
+if (requestedSchema > 5 && schemaDefinition.models) {
   schemaDefinition.models.orgkeyterm = {
     keys: { remoteId: {} },
     attributes: {
@@ -903,10 +892,7 @@ if (
   };
   schemaDefinition.version = 6;
 }
-if (
-  parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 6 &&
-  schemaDefinition.models
-) {
+if (requestedSchema > 6 && schemaDefinition.models) {
   schemaDefinition.models.vwchecksum = {
     keys: { remoteId: {} },
     attributes: {
@@ -917,10 +903,7 @@ if (
   };
   schemaDefinition.version = 7;
 }
-if (
-  parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 7 &&
-  schemaDefinition.models
-) {
+if (requestedSchema > 7 && schemaDefinition.models) {
   schemaDefinition.models.bible = {
     keys: { remoteId: {} },
     attributes: {
@@ -1085,6 +1068,39 @@ const MoveTranscriptionState = async (
   }
   console.log('done with upgrade to v4');
 };
+const FixVersion8 = async (backup: IndexedDBSource, memory: MemorySource) => {
+  let pRecs = (await backup.query((q) => q.findRecords('mediafile'))) as any[];
+  if (!Array.isArray(pRecs)) pRecs = [pRecs];
+  const ops: RecordOperation[] = [];
+  const tb = new RecordTransformBuilder();
+  pRecs.forEach((r) => {
+    if (r.attributes) {
+      delete r.attributes.passageId;
+      delete r.attributes.userId;
+      delete r.attributes.recordedbyUserId;
+      ops.push(tb.updateRecord(r).toOperation());
+    }
+  });
+  let oRecs = (await backup.query((q) => q.findRecords('user'))) as any[];
+  if (!Array.isArray(oRecs)) oRecs = [oRecs];
+  oRecs.forEach((r: any) => {
+    if (
+      r.attributes?.digestPreference === false ||
+      r.attributes?.digestPreference === true
+    ) {
+      r.attributes = {
+        ...r.attributes,
+        digestPreference: r.attributes?.digestPreference ? 1 : 0,
+      };
+      ops.push(tb.updateRecord(r).toOperation());
+    }
+  });
+  if (ops.length > 0) {
+    await backup.sync((t) => ops);
+    await memory.sync((t) => ops);
+  }
+  console.log('done with upgrade to v8');
+};
 export const backup = window.indexedDB
   ? new IndexedDBSource({
       schema,
@@ -1094,11 +1110,16 @@ export const backup = window.indexedDB
       defaultTransformOptions: {
         useBuffer: true,
       },
+      autoUpgrade: false,
     })
   : ({} as IndexedDBSource);
+//LocalKey.migration throws an error here?!
+localStorage.setItem('migration', 'WAIT');
+var migrating = false;
 
-if (backup.cache)
+if (backup.cache) {
   backup.cache.migrateDB = function (db, event) {
+    migrating = true;
     console.log('migrateDb', event);
     // Ensure that all models are registered
     findMissingModels(this.schema, db).forEach((model) => {
@@ -1130,7 +1151,31 @@ if (backup.cache)
         MoveTranscriptionState(backup, memory);
       });
     }
+    if (event.newVersion === 8) {
+      //Feb 2024
+      FixVersion8(backup, memory).then(() => {
+        //MOVE THIS TO THE LATEST MIGRATION!!
+        migrating = false;
+      });
+    }
   };
+}
+backup
+  .upgrade()
+  .catch((e) => {
+    console.log('upgrade error', e);
+  })
+  .finally(() =>
+    waitForIt(
+      'migration',
+      () => !migrating,
+      () => false,
+      1000
+    ).then(() => {
+      console.log('upgrade complete');
+      localStorage.setItem(LocalKey.migration, schema.version.toString());
+    })
+  );
 
 export const coordinator = new Coordinator();
 coordinator.addSource(memory);

@@ -38,6 +38,7 @@ import { updateBackTranslationType } from './crud/updateBackTranslationType';
 import { updateConsultantWorkflowStep } from './crud/updateConsultantWorkflowStep';
 import { serializersSettings } from './serializers/serializersFor';
 import { State } from 'reactn/default';
+import { requestedSchema } from './schema';
 type StategyError = (...args: unknown[]) => unknown;
 
 interface PullStratErrProps {
@@ -280,7 +281,7 @@ export const Sources = async (
       }
     }
     //get v4 data
-    if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 3) {
+    if (requestedSchema > 3) {
       if (offline) {
         await offlineSetup();
       }
@@ -340,7 +341,7 @@ export const Sources = async (
   }
   var user = localStorage.getItem('user-id') as string;
   setUser(user);
-  if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
+  if (requestedSchema > 4) {
     await updateBackTranslationType(
       memory,
       tokenCtx.state.accessToken || '',
@@ -349,7 +350,7 @@ export const Sources = async (
       offlineSetup
     );
   }
-  if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 5) {
+  if (requestedSchema > 5) {
     const token = tokenCtx.state.accessToken || null;
     await updateConsultantWorkflowStep(token, memory, user);
   }

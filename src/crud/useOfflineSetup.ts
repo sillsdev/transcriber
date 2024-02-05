@@ -21,6 +21,7 @@ import {
 import IndexedDBSource from '@orbit/indexeddb';
 import { ArtifactTypeSlug, useArtifactType } from '.';
 import PassageType, { PassageTypeD } from '../model/passageType';
+import { requestedSchema } from '../schema';
 
 export const useOfflineSetup = () => {
   const [memory] = useGlobal('memory');
@@ -445,15 +446,15 @@ export const useOfflineSetup = () => {
     await makeTypeRecs('project');
     await makeTypeRecs('plan');
     await makeIntegrationRecs(); //this used to be automatic until we started trying to guess at what project they wanted.
-    if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 3) {
+    if (requestedSchema > 3) {
       await makeArtifactCategoryRecs();
       await makeArtifactTypeRecs();
       await makeWorkflowStepsRecs();
     }
-    if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
+    if (requestedSchema > 4) {
       await makeMoreArtifactTypeRecs();
     }
-    if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 5) {
+    if (requestedSchema > 5) {
       await makePassageTypeRecs();
       makeTitleArtifactTypeRec();
     }

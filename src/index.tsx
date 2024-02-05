@@ -83,13 +83,16 @@ export async function restoreBackup(coordinator?: Coordinator) {
     await waitForIt(
       'migration',
       () => {
-        // console.log(schema.version, backup.schema.version);
-        return schema.version === myBackup.schema.version;
+        return (
+          schema.version === myBackup.schema.version &&
+          (localStorage.getItem(LocalKey.migration) ?? '') !== 'WAIT'
+        );
       },
       () => false,
-      300
+      600
     );
-    // TODO: update this code when ugrading to orbit 0.17
+    console.log('restore backup', localStorage.getItem(LocalKey.migration));
+
     const sortedFiles = updateableFiles
       .concat(staticFiles)
       .concat(localFiles)

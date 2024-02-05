@@ -64,6 +64,7 @@ import {
   RecordOperation,
   RecordTransformBuilder,
 } from '@orbit/records';
+import { requestedSchema } from '../../schema';
 const ipc = (window as any)?.electron;
 
 export const exportComplete = () => (dispatch: any) => {
@@ -890,7 +891,7 @@ export const importProjectToElectron =
           await saveToMemory(oparray, 'remove extra records');
           await saveToBackup(oparray, 'remove extra records from backup');
         }
-        if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
+        if (requestedSchema > 4) {
           await updateBackTranslationType(
             memory,
             token,
@@ -899,7 +900,7 @@ export const importProjectToElectron =
             offlineSetup
           );
         }
-        if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 5) {
+        if (requestedSchema > 5) {
           await updateConsultantWorkflowStep(token, memory, user);
         }
         AddProjectLoaded(project?.id || '');

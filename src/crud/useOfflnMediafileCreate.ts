@@ -38,7 +38,7 @@ export const useOfflnMediafileCreate = () => {
         readyToShare: false,
         performedBy: data.performedBy || '',
         sourceSegments: data.sourceSegments || null,
-        sourceMediaOfflineId: data.sourceMediaId || '',
+        sourceMediaOfflineId: '',
         transcriptionstate: data.transcriptionstate || '',
         topic: data.topic || '',
       },
