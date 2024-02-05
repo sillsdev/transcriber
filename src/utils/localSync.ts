@@ -10,12 +10,16 @@ import {
 } from '../model';
 import Memory from '@orbit/memory';
 import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
-import { related, parseRef, UpdateMediaStateOps } from '../crud';
+import { related, parseRef, UpdateMediaStateOps, findRecord } from '../crud';
 import { getReadWriteProg } from './paratextPath';
+import { passageTypeFromRef } from '../control/RefRender';
+import { PassageTypeEnum } from '../model/passageType';
 
 interface PassageInfo {
   passage: PassageD;
   mediaId: string;
+  reference: string;
+  noteType: string;
   transcription: string;
 }
 const ipc = (window as any)?.electron;
@@ -405,7 +409,8 @@ const postPass = (
   if (parsed.length > 1) {
     //remove original range if it exists and we're replacing with multiple
     var existing = getExistingVerses(doc, currentPI.passage);
-    if (existing.exactVerse) removeVerse(existing.exactVerse);
+    if (existing.exactVerse && !currentPI.noteType)
+      removeVerse(existing.exactVerse);
     existing.allVerses.forEach((v) => {
       if (isSection(v)) removeSection(v);
     });
@@ -612,6 +617,60 @@ const doChapter = async (
   ipc?.delete(paths.chapterFile);
 };
 
+const getNoteType = (
+  passageId: string,
+  passage: Passage,
+  passages: PassageD[],
+  memory: Memory
+) => {
+  let b4Pass: PassageD | undefined = undefined;
+  let noteType = '';
+  if (
+    passageTypeFromRef(passage.attributes.reference) === PassageTypeEnum.NOTE
+  ) {
+    const sectionId = related(passage, 'section');
+    const sectPass = passages
+      .filter((p) => related(p, sectionId))
+      ?.sort((a, b) => a.attributes.sequencenum - b.attributes.sequencenum);
+    for (let p of sectPass) {
+      if (p.id === passageId) break;
+      if (passageTypeFromRef(p?.attributes?.reference) !== PassageTypeEnum.NOTE)
+        b4Pass = p;
+    }
+    if (!b4Pass) {
+      const sectionRec = findRecord(memory, 'section', sectionId) as SectionD;
+      const curSecNum = sectionRec?.attributes?.sequencenum;
+      const planId = related(sectionRec, 'plan');
+      const sections = memory.cache.query((q) =>
+        q.findRecords('section')
+      ) as SectionD[];
+      const planSections = sections
+        .filter((s) => related(s, 'plan') === planId)
+        .filter((s) => s?.attributes?.sequencenum > curSecNum)
+        .sort((a, b) => a.attributes.sequencenum - b.attributes.sequencenum);
+      for (let s of planSections) {
+        const sectPass = passages
+          .filter((p) => related(p, 'section') === s.id)
+          ?.sort((a, b) => a.attributes.sequencenum - b.attributes.sequencenum);
+        for (let p of sectPass) {
+          if (
+            passageTypeFromRef(p?.attributes?.reference) !==
+            PassageTypeEnum.NOTE
+          ) {
+            b4Pass = p;
+            break;
+          }
+        }
+        if (b4Pass) break;
+      }
+      if (b4Pass) noteType = 'ip';
+    } else {
+      noteType = 'f';
+    }
+  }
+  return { b4Pass, noteType };
+};
+
 export const getLocalParatextText = async (
   pass: Passage,
   ptProjName: string
@@ -666,19 +725,29 @@ export const localSync = async (
     }
     if (newer.length === 0) {
       const passage = passages.find((p) => p.id === passageId);
-      if (passage)
+      if (passage) {
+        const { b4Pass, noteType } = getNoteType(
+          passageId,
+          passage,
+          passages,
+          memory
+        );
         ready.push({
           passage: passage,
           mediaId: pr.id,
+          reference:
+            b4Pass?.attributes?.reference ?? passage.attributes.reference,
+          noteType: noteType,
           transcription: getTranscription(passage.id, artifactId).replace(
             '\n',
             ' '
           ),
         });
+      }
     }
   });
   ready.forEach((r) => {
-    parseRef(r.passage);
+    parseRef(r.passage, r.reference);
     let chap = r.passage.attributes.startChapter;
     if (chap) {
       const k = r.passage.attributes?.book + '-' + chap;

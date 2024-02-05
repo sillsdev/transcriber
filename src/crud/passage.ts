@@ -46,21 +46,22 @@ export function getStartChapter(ref: string | undefined) {
   const m = rpat.exec(ref ?? '');
   return m ? parseInt(m[1]) : 0;
 }
-export function parseRef(p: Passage) {
+export function parseRef(p: Passage, reference?: string) {
   var a = p.attributes;
   if (!a) return;
-  if (a.startChapter === undefined || a.startChapter === null) {
-    if (a.book === '' || (a.reference ?? '') === '') {
+  const ref = reference ?? a.reference ?? '';
+  if (!a.startChapter) {
+    if (a.book === '' || ref === '') {
       a.startChapter = 0;
       a.endChapter = 0;
       a.startVerse = 0;
       a.endVerse = 0;
     } else {
-      let dash = a.reference.indexOf('-');
-      let firstPart = dash > 0 ? a.reference.substring(0, dash) : a.reference;
+      let dash = ref.indexOf('-');
+      let firstPart = dash > 0 ? ref.substring(0, dash) : a.reference;
       parseReferencePart(p, true, firstPart);
       if (dash > 0) {
-        parseReferencePart(p, false, a.reference.substring(dash + 1));
+        parseReferencePart(p, false, ref.substring(dash + 1));
       } else {
         a.endChapter = a.startChapter;
         a.endVerse = a.startVerse;
