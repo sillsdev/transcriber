@@ -6,7 +6,6 @@ import {
   Section,
   PassageD,
   MediaFileD,
-  SectionD,
 } from '../model';
 import Memory from '@orbit/memory';
 import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
