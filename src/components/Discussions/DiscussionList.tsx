@@ -423,10 +423,8 @@ export function DiscussionList() {
   const handleAddComplete = (id: string) => {
     setAdding(false);
     setHighlightNew(id);
-    if (!id) {
-      clearCompleted(NewDiscussionToolId);
-      clearCompleted(NewCommentToolId);
-    }
+    clearCompleted(NewDiscussionToolId);
+    clearCompleted(NewCommentToolId);
   };
 
   const handleAddDiscussion = async () => {
