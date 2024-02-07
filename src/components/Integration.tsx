@@ -674,6 +674,7 @@ export function IntegrationPanel(props: IProps) {
         showMessage(paratext_syncStatus.statusMsg);
       }
       if (paratext_syncStatus.complete) {
+        if (!paratext_syncStatus.errStatus) setCount(0); //force this to 0 now...if wrong...will reset eventually with new count
         resetCount();
         resetSync();
         setSyncing(false);
