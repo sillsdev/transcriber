@@ -423,7 +423,7 @@ export function PlanSheet(props: IProps) {
   const setCurrentRow = (row: number) => {
     currentRowRef.current = row;
     setCurrentRowx(row);
-    if (row > 0)
+    if (row > 0 && row <= rowInfo.length)
       rememberCurrentPassage(memory, rowInfo[row - 1].passage?.id ?? '');
   };
 
