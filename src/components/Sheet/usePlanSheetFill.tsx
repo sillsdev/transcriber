@@ -9,8 +9,8 @@ import { ICell, ICellChange } from './PlanSheet';
 import { planSheetSelector, viewModeSelector } from '../../selector';
 import { related, useOrganizedBy, useRole } from '../../crud';
 import { rowTypes } from './rowTypes';
-import { StageReport } from '../../control';
-import { Avatar, Badge } from '@mui/material';
+import { LightTooltip, StageReport } from '../../control';
+import { Avatar, Badge, IconButton } from '@mui/material';
 import PlanAudioActions from './PlanAudioActions';
 import {
   RefRender,
@@ -31,6 +31,8 @@ import { ExtraIcon } from '.';
 import { positiveWholeOnly, stringAvatar } from '../../utils';
 import { TitleEdit } from './TitleEdit';
 import { getPubRefs } from './getPubRefs';
+import { PublishIcon } from '../../control/PlanIcons';
+import RadioButtonUnchecked from '@mui/icons-material/RadioButtonUnchecked';
 
 type ICellEditor = (props: any) => JSX.Element;
 type IRow = (string | number)[];
@@ -287,6 +289,39 @@ export const usePlanSheetFill = ({
     canPlay,
     canEdit,
   }: ActionValueProps) => {
+    const isShowIcon = showIcon(filtered, offline && !offlineOnly, rowIndex);
+    if (isShowIcon(ExtraIcon.Publish)) {
+      const sectionSequenceNumber =
+        sectionMap.get(rowInfo[rowIndex].sectionSeq) ||
+        positiveWholeOnly(rowInfo[rowIndex].sectionSeq);
+      return rowInfo[rowIndex].published ? (
+        <LightTooltip
+          title={t.unpublish
+            .replace('{0}', organizedBy)
+            .replace('{1}', sectionSequenceNumber)}
+        >
+          <IconButton
+            id="unpublish"
+            onClick={() => onAction(rowIndex, ExtraIcon.Publish)}
+          >
+            <PublishIcon />
+          </IconButton>
+        </LightTooltip>
+      ) : (
+        <LightTooltip
+          title={t.publish
+            .replace('{0}', organizedBy)
+            .replace('{1}', sectionSequenceNumber)}
+        >
+          <IconButton
+            id="publish"
+            onClick={() => onAction(rowIndex, ExtraIcon.Publish)}
+          >
+            <RadioButtonUnchecked color='primary'/>
+          </IconButton>
+        </LightTooltip>
+      );
+    }
     if (!passage) return <></>;
     return (
       <PlanAudioActions
@@ -600,7 +635,6 @@ export const usePlanSheetFill = ({
               isPassage={passage}
               firstMovement={firstMovement}
               psgType={rowInfo[rowIndex].passageType}
-              published={rowInfo[rowIndex].published}
               organizedBy={organizedBy}
               sectionSequenceNumber={
                 sectionMap.get(row[SectionSeqCol] as number) ??

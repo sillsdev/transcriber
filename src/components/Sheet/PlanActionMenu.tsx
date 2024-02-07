@@ -31,7 +31,6 @@ interface IProps {
   isSection: boolean;
   isPassage: boolean;
   psgType: string;
-  published: boolean;
   readonly: boolean;
   canAssign: boolean;
   canDelete: boolean;

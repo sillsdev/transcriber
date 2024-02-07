@@ -19,8 +19,6 @@ import {
   PassageBelowIcon,
   MoveDownIcon,
   MoveUpIcon,
-  PublishIcon,
-  UnPublishIcon,
 } from '../../control/PlanIcons';
 import { ExtraIcon } from '.';
 import { PassageTypeEnum } from '../../model/passageType';
@@ -32,7 +30,6 @@ interface IProps {
   isSection: boolean;
   isPassage: boolean;
   firstMovement: number;
-  published: boolean;
   psgType: string;
   readonly: boolean;
   canAssign: boolean;
@@ -69,7 +66,6 @@ export const PlanMoreMenuItems: FC<
       firstMovement,
       psgType,
       readonly,
-      published,
       onUpload,
       onAudacity,
       onAssign,
@@ -119,28 +115,6 @@ export const PlanMoreMenuItems: FC<
         onKeyDown={handleListKeyDown}
         sx={{ display: 'flex' }}
       >
-        {showIcon(ExtraIcon.Publish) &&
-          (published ? (
-            <MenuItem
-              id="unpublish"
-              onClick={() => onAction(rowIndex, ExtraIcon.Publish)}
-              title={p.unpublish
-                .replace('{0}', organizedBy)
-                .replace('{1}', sectionSequenceNumber)}
-            >
-              <UnPublishIcon />
-            </MenuItem>
-          ) : (
-            <MenuItem
-              id="publish"
-              onClick={() => onAction(rowIndex, ExtraIcon.Publish)}
-              title={p.publish
-                .replace('{0}', organizedBy)
-                .replace('{1}', sectionSequenceNumber)}
-            >
-              <PublishIcon />
-            </MenuItem>
-          ))}
         {isSection && canAssign && !readonly && (
           <MenuItem
             id="planActAssign"
