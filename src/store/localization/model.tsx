@@ -1002,6 +1002,7 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "loadingTable": string;
     "passage": string;
     "pasteInvalidColumns": string;
+    "pasteInvalidPassageBeforeSection": string;
     "pasteInvalidSections": string;
     "pasteNoRows": string;
     "publishingWarning": string;
