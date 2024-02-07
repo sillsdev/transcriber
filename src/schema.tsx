@@ -401,6 +401,15 @@ const schemaDefinition: RecordSchemaSettings = {
         sourceMediaOfflineId: { type: 'string' },
         transcriptionstate: { type: 'string' },
         topic: { type: 'string' },
+        //backward compatability
+        /*
+        planId: { type: 'string' },
+        artifactTypeId: { type: 'string' },
+        passageId: { type: 'string' },
+        userId: { type: 'string' },
+        recordedbyUserId: { type: 'string' },
+        recordedByUserId: { type: 'string' },
+        sourceMediaId: { type: 'string' }, */
       },
       relationships: {
         artifactType: { kind: 'hasOne', type: 'artifacttype' },
@@ -959,13 +968,16 @@ if (requestedSchema > 7 && schemaDefinition.models) {
 export const schema = new RecordSchema(schemaDefinition);
 
 export const keyMap = new RecordKeyMap();
-
+/*
+const validators = {
+  recordAttribute: undefined,
+};
+const validatorFor = buildValidatorFor({ validators });
+*/
 export const memory = new MemorySource({
   schema,
   keyMap,
-  // validatorFor: buildValidatorFor({
-  //   validators: {[StandardValidators.DateTime]: DateTimeValidator}},
-  // }),
+  autoValidate: false,
 });
 const findMissingModels = (schema: RecordSchema, db: IDBDatabase) => {
   return Object.keys(schema.models).filter(
@@ -1070,18 +1082,36 @@ const MoveTranscriptionState = async (
   console.log('done with upgrade to v4');
 };
 const FixVersion8 = async (backup: IndexedDBSource, memory: MemorySource) => {
-  let pRecs = (await backup.query((q) => q.findRecords('mediafile'))) as any[];
-  if (!Array.isArray(pRecs)) pRecs = [pRecs];
   const ops: RecordOperation[] = [];
   const tb = new RecordTransformBuilder();
+  let pRecs = (await backup.query((q) => q.findRecords('mediafile'))) as any[];
+  if (!Array.isArray(pRecs)) pRecs = [pRecs];
+  /*
   pRecs.forEach((r) => {
-    if (r.attributes) {
-      delete r.attributes.passageId;
-      delete r.attributes.userId;
-      delete r.attributes.recordedbyUserId;
+    if (
+      r.attributes.planId ||
+      r.attributes.artifactTypeId ||
+      r.attributes.passageId ||
+      r.attributes.userId ||
+      r.attributes.recordedByUserId ||
+      r.attributes.recordedbyUserId ||
+      r.attributes.sourceMediaId
+    ) {
+      r.attributes = {
+        ...r.attributes,
+        planId: r.attributes.planId?.toString() || '',
+        artifactTypeId: r.attributes.artifactTypeId?.toString() || '',
+        passageId: r.attributes.passageId?.toString() || '',
+        userId: r.attributes.userId?.toString() || '',
+        recordedByUserId: r.attributes.recordedByUserId?.toString() || '',
+        recordedbyUserId: r.attributes.recordedbyUserId?.toString() || '',
+        sourceMediaId: r.attributes.sourceMediaId?.toString() || '',
+      };
       ops.push(tb.updateRecord(r).toOperation());
     }
   });
+  */
+  console.log(ops);
   let oRecs = (await backup.query((q) => q.findRecords('user'))) as any[];
   if (!Array.isArray(oRecs)) oRecs = [oRecs];
   oRecs.forEach((r: any) => {
@@ -1098,7 +1128,6 @@ const FixVersion8 = async (backup: IndexedDBSource, memory: MemorySource) => {
   });
   if (ops.length > 0) {
     await backup.sync((t) => ops);
-    await memory.sync((t) => ops);
   }
   console.log('done with upgrade to v8');
 };
@@ -1112,15 +1141,16 @@ export const backup = window.indexedDB
         useBuffer: true,
       },
       autoUpgrade: false,
+      autoValidate: false,
     })
   : ({} as IndexedDBSource);
 //LocalKey.migration throws an error here?!
 localStorage.setItem('migration', 'WAIT');
-var migrating = false;
+var migrating = 0;
 
 if (backup.cache) {
   backup.cache.migrateDB = function (db, event) {
-    migrating = true;
+    migrating++; //add one right away so everyone waits
     console.log('migrateDb', event);
     // Ensure that all models are registered
     findMissingModels(this.schema, db).forEach((model) => {
@@ -1130,7 +1160,8 @@ if (backup.cache) {
       this.registerModel(db, model);
     });
     if (isElectron && event.newVersion === 2) {
-      SaveOfflineProjectInfo(backup, memory);
+      migrating++;
+      SaveOfflineProjectInfo(backup, memory).then(() => migrating--);
     }
     if (event.newVersion === 3) {
       //Summer 2021
@@ -1148,17 +1179,19 @@ if (backup.cache) {
     if (event.newVersion === 4) {
       //Mar 2022
       // update public flags to false because we're going to start using them
+      migrating++;
       UpdatePublicFlags(backup, memory).then(() => {
-        MoveTranscriptionState(backup, memory);
+        MoveTranscriptionState(backup, memory).then(() => migrating--);
       });
     }
     if (event.newVersion === 8) {
       //Feb 2024
+      migrating++;
       FixVersion8(backup, memory).then(() => {
-        //MOVE THIS TO THE LATEST MIGRATION!!
-        migrating = false;
+        migrating--;
       });
     }
+    migrating--;
   };
 }
 waitForIt(
