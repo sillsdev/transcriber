@@ -421,6 +421,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const setCurrentRow = (row: number) => {
+    if (row > rowInfo.length) return;
     currentRowRef.current = row;
     setCurrentRowx(row);
     if (row > 0)

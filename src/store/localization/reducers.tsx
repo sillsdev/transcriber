@@ -1063,6 +1063,7 @@ const initialState = {
 			"loadingTable": "Loading data",
 			"passage": "Passage",
 			"pasteInvalidColumns": "Invalid number of columns ({0}). Expecting {1} columns.",
+			"pasteInvalidPassageBeforeSection": "Invalid passage before {0}.",
 			"pasteInvalidSections": "Invalid {0} number(s):",
 			"pasteNoRows": "No Rows in clipboard.",
 			"publishingWarning": "Once publishing rows are added, there is no automated way to remove them. Publishing projects cannot be made flat projects.",

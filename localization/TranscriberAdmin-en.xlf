@@ -5014,6 +5014,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTable.pasteInvalidPassageBeforeSection">
+         <segment>
+            <source>Invalid passage before {0}.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.pasteInvalidSections">
          <segment>
             <source>Invalid {0} number(s):</source>

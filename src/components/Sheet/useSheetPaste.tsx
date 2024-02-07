@@ -84,6 +84,18 @@ export const useWfPaste = (props: IProps) => {
         );
         return false;
       }
+      const isNumPat = /^\s*-?[0-9]/;
+      let firstSection = rows.findIndex((r) => isNumPat.test(r[secNumCol]));
+      let firstPassage = rows.findIndex((r) => isNumPat.test(r[passNumCol]));
+      if (firstSection > firstPassage) {
+        showMessage(
+          t.pasteInvalidPassageBeforeSection.replace(
+            '{0}',
+            organizedBy.toLocaleLowerCase()
+          )
+        );
+        return false;
+      }
     }
     return true;
   };
@@ -105,7 +117,15 @@ export const useWfPaste = (props: IProps) => {
     const valid = validTable(rows);
     let addedWorkflow: ISheet[] = [];
     if (valid) {
-      const startRow = isBlankOrValidNumber(rows[0][secNumCol]) ? 0 : 1;
+      let startRow = 0;
+      while (startRow < rows.length) {
+        if (
+          isBlankOrValidNumber(rows[startRow][secNumCol]) &&
+          rows[startRow][secNumCol].trim() !== ''
+        )
+          break;
+        startRow++;
+      }
       if (!flat) {
         while (
           rows.find((value: string[]) => {
