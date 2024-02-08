@@ -1882,6 +1882,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="import.unknownError">
+         <segment>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="import.invalidProject">
          <segment>
             <source>Import File does not contain current audio project.</source>

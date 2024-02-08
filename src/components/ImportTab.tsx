@@ -314,7 +314,7 @@ export function ImportTab(props: IProps) {
       case 450:
         return t.invalidProject;
     }
-    return err.errMsg;
+    return t.unknownError + ' ' + err.errMsg;
   };
   const sectionFromPassage = (passage: Passage, remote: boolean) => {
     var sectionid = passage.relationships?.section?.data as RecordIdentity;

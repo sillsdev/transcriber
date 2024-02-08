@@ -425,6 +425,7 @@ const initialState = {
 			"importProject": "Import Audio Project",
 			"importSync": "Syncing offline changes",
 			"invalidITF": "Not a valid Incremental Transcriber File (ITF).",
+			"unknownError": "If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.",
 			"invalidProject": "Import File does not contain current audio project.",
 			"locale": "Preferred Language",
 			"noFile": "Please select file to be uploaded.",
