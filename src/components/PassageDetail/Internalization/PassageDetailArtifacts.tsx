@@ -626,7 +626,7 @@ export function PassageDetailArtifacts() {
   };
 
   const handleLoaded = () => {
-    setItemPlaying(true);
+    if (playItem !== '' && !itemPlaying) setItemPlaying(true);
   };
 
   return (
@@ -782,7 +782,7 @@ export function PassageDetailArtifacts() {
           allowProject={false}
           sectDesc={sectDesc}
           passDesc={passDesc}
-      />
+        />
       </BigDialog>
       {confirm && (
         <Confirm

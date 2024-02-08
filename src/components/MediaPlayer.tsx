@@ -83,7 +83,8 @@ export function MediaPlayer(props: IProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const playSuccess = useRef(false);
   const [value, setValue] = useState(0);
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlayingx] = useState(false);
+  const playingRef = useRef(false);
   const [playItem, setPlayItem] = useState('');
   const [ready, setReady] = useState(false);
   const [duration, setDuration] = useState(0);
@@ -94,8 +95,12 @@ export function MediaPlayer(props: IProps) {
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const t: IPeerCheckStrings = useSelector(peerCheckSelector, shallowEqual);
 
+  const setPlaying = (x: boolean) => {
+    setPlayingx(x);
+    playingRef.current = x;
+  };
   useEffect(() => {
-    if (playing) {
+    if (playingRef.current) {
       if (audioRef.current) {
         if (playSuccess.current) audioRef.current.pause();
         audioRef.current.currentTime = 0;
@@ -129,11 +134,12 @@ export function MediaPlayer(props: IProps) {
     if (ready && audioRef.current && playItem !== '' && requestPlay) {
       startPlay();
     } else if (!requestPlay) {
-      if (playing) {
+      if (playingRef.current) {
         if (audioRef.current && playSuccess.current) audioRef.current.pause();
         stopPlay();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, requestPlay, playing, playItem]);
 
   const setPosition = (position: number | undefined) => {
@@ -158,7 +164,7 @@ export function MediaPlayer(props: IProps) {
     toggle(true);
   };
   const toggle = (play: boolean) => {
-    if (play !== playing && onTogglePlay) onTogglePlay();
+    if (play !== playingRef.current && onTogglePlay) onTogglePlay();
   };
 
   const timeUpdate = () => {
@@ -233,7 +239,7 @@ export function MediaPlayer(props: IProps) {
   };
   const handlePlayPause = async () => {
     if (audioRef.current) {
-      if (playing) {
+      if (playingRef.current) {
         if (playSuccess.current) audioRef.current.pause();
       } else startPlay();
     }
