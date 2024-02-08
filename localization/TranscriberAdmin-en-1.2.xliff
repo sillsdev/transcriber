@@ -2195,6 +2195,13 @@
                <context context-type="sourcefile">import.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="import.unknownError">
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">import.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="import.invalidProject">
             <source>Import File does not contain current audio project.</source>
             <target/>
