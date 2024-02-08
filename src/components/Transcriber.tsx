@@ -263,7 +263,6 @@ export function Transcriber(props: IProps) {
     allDone,
     artifactId,
   } = useTodo();
-  const mediafiles = useOrbitData<MediaFile[]>('mediafile');
   const integrations = useOrbitData<Integration[]>('integration');
   const projintegrations =
     useOrbitData<ProjectIntegration[]>('projectintegration');
@@ -569,7 +568,7 @@ export function Transcriber(props: IProps) {
     }
     mediaRef.current = mediafile;
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediafiles, mediafile]);
+  }, [mediafile]);
 
   useEffect(() => {
     if (autosaveTimer.current === undefined) {
@@ -929,6 +928,7 @@ export function Transcriber(props: IProps) {
         )
       );
       //have to do this before the mediafiles useEffect kicks in
+      var prevtran = transcriptionIn.current;
       transcriptionIn.current = transcription;
       await memory
         .update(ops)
@@ -941,6 +941,7 @@ export function Transcriber(props: IProps) {
         })
         .catch((err) => {
           //so we don't come here...we go to continue/logout
+          transcriptionIn.current = prevtran;
           saveCompleted(toolId, err.message);
           saving.current = false;
         });
