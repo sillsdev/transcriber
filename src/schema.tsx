@@ -9,7 +9,8 @@ import { MemorySource } from '@orbit/memory';
 import IndexedDBSource from '@orbit/indexeddb';
 import Coordinator from '@orbit/coordinator';
 import { isElectron } from './api-variable';
-import { LocalKey, getFingerprint, waitForIt } from './utils';
+import { LocalKey, getFingerprint } from './utils';
+import { waitForIt } from './utils/waitForIt';
 import { offlineProjectCreate, related } from './crud';
 import { MediaFileD, OrganizationD, PassageD, ProjectD } from './model';
 
@@ -1160,22 +1161,29 @@ if (backup.cache) {
     }
   };
 }
-backup
-  .upgrade()
-  .catch((e) => {
-    console.log('upgrade error', e);
-  })
-  .finally(() =>
-    waitForIt(
-      'migration',
-      () => !migrating,
-      () => false,
-      1000
-    ).then(() => {
-      console.log('upgrade complete');
-      localStorage.setItem(LocalKey.migration, schema.version.toString());
+waitForIt(
+  'backup open',
+  () => backup.cache.isDBOpen,
+  () => false,
+  1000
+).then(() => {
+  backup
+    .upgrade()
+    .catch((e) => {
+      console.log('upgrade error', e);
     })
-  );
+    .finally(() =>
+      waitForIt(
+        'migration',
+        () => !migrating,
+        () => false,
+        1000
+      ).then(() => {
+        console.log('upgrade complete');
+        localStorage.setItem(LocalKey.migration, schema.version.toString());
+      })
+    );
+});
 
 export const coordinator = new Coordinator();
 coordinator.addSource(memory);
