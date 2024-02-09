@@ -236,6 +236,7 @@ export const DiscussionCard = (props: IProps) => {
   const [confirmAction, setConfirmAction] = useState('');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
+  const changeRef = useRef(false);
   const [myChanged, setMyChanged] = useState(false);
   const savingRef = useRef(false);
   const [showMove, setShowMove] = useState(false);
@@ -346,7 +347,7 @@ export const DiscussionCard = (props: IProps) => {
 
   useEffect(() => {
     //if any of my comments are changed, add the discussion to the toolChanged list so DiscussionList will pick it up
-    if (!myChanged) {
+    if (!changeRef.current) {
       var anyChanged = Object.keys(toolsChanged).some(
         (t) => myCommentIds.includes(t) && !toolsChanged[t].clearChanged
       );
@@ -354,7 +355,7 @@ export const DiscussionCard = (props: IProps) => {
         if (discussion.id) toolChanged(myToolId, anyChanged);
         //new discussion and my comment changed so set myChanged also
         else setChanged(true);
-      else if (!myChanged) saveCompleted(myToolId);
+      else if (!changeRef.current) saveCompleted(myToolId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, myComments, myChanged]);
@@ -619,9 +620,11 @@ export const DiscussionCard = (props: IProps) => {
     if (changed && !myChanged) {
       toolChanged(myToolId);
       setMyChanged(true);
+      changeRef.current = true;
     } else if (!changed && myChanged) {
       saveCompleted(myToolId);
       setMyChanged(false);
+      changeRef.current = false;
     }
   };
   const handleSubjectChange = (e: any) => {
