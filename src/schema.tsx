@@ -402,14 +402,13 @@ const schemaDefinition: RecordSchemaSettings = {
         transcriptionstate: { type: 'string' },
         topic: { type: 'string' },
         //backward compatability
-        /*
-        planId: { type: 'string' },
-        artifactTypeId: { type: 'string' },
-        passageId: { type: 'string' },
-        userId: { type: 'string' },
-        recordedbyUserId: { type: 'string' },
-        recordedByUserId: { type: 'string' },
-        sourceMediaId: { type: 'string' }, */
+        planId: { type: 'number' },
+        artifactTypeId: { type: 'number' },
+        passageId: { type: 'number' },
+        userId: { type: 'number' },
+        recordedbyUserId: { type: 'number' },
+        recordedByUserId: { type: 'number' },
+        sourceMediaId: { type: 'number' },
       },
       relationships: {
         artifactType: { kind: 'hasOne', type: 'artifacttype' },
@@ -1086,7 +1085,7 @@ const FixVersion8 = async (backup: IndexedDBSource, memory: MemorySource) => {
   const tb = new RecordTransformBuilder();
   let pRecs = (await backup.query((q) => q.findRecords('mediafile'))) as any[];
   if (!Array.isArray(pRecs)) pRecs = [pRecs];
-  /*
+
   pRecs.forEach((r) => {
     if (
       r.attributes.planId ||
@@ -1099,18 +1098,18 @@ const FixVersion8 = async (backup: IndexedDBSource, memory: MemorySource) => {
     ) {
       r.attributes = {
         ...r.attributes,
-        planId: r.attributes.planId?.toString() || '',
-        artifactTypeId: r.attributes.artifactTypeId?.toString() || '',
-        passageId: r.attributes.passageId?.toString() || '',
-        userId: r.attributes.userId?.toString() || '',
-        recordedByUserId: r.attributes.recordedByUserId?.toString() || '',
-        recordedbyUserId: r.attributes.recordedbyUserId?.toString() || '',
-        sourceMediaId: r.attributes.sourceMediaId?.toString() || '',
+        planId: undefined,
+        artifactTypeId: undefined,
+        passageId: undefined,
+        userId: undefined,
+        recordedByUserId: undefined,
+        recordedbyUserId: undefined,
+        sourceMediaId: undefined,
       };
       ops.push(tb.updateRecord(r).toOperation());
     }
   });
-  */
+
   console.log(ops);
   let oRecs = (await backup.query((q) => q.findRecords('user'))) as any[];
   if (!Array.isArray(oRecs)) oRecs = [oRecs];
