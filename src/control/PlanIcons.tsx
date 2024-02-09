@@ -26,8 +26,8 @@ export const AltBookIcon = <FontAwesomeIcon icon={faBookOpen} />;
 export const ChapterNumberIcon = <FontAwesomeIcon icon={faHashtag} />;
 export const NoteIcon = <FontAwesomeIcon icon={faMessage as IconProp} />;
 
-export const PublishIcon = () => (
-  <StyledIcon size="small">
+export const PublishIcon = (props: IconButtonProps) => (
+  <StyledIcon size="small" {...props}>
     <FontAwesomeIcon icon={faGlobe} />
   </StyledIcon>
 );
