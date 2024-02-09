@@ -16,7 +16,7 @@ import Coordinator, {
 import Bugsnag from '@bugsnag/js';
 import IndexedDBSource from '@orbit/indexeddb';
 import IndexedDBBucket from '@orbit/indexeddb-bucket';
-import JSONAPISource, { ServerError } from '@orbit/jsonapi';
+import JSONAPISource from '@orbit/jsonapi';
 import { RecordTransform } from '@orbit/records';
 import { NetworkError } from '@orbit/jsonapi';
 import { Bucket, Exception } from '@orbit/core';
@@ -83,15 +83,6 @@ const updateError =
   }: PullStratErrProps) =>
   (transform: RecordTransform, ex: any) => {
     console.log('***** api update fail', transform, ex);
-    console.log(
-      'networkerror?',
-      ex instanceof NetworkError,
-      'error?',
-      ex instanceof Error,
-      'servererror?',
-      ex instanceof ServerError
-    );
-    console.log('remote.requestQueue.length', remote?.requestQueue?.length);
     if (ex instanceof Exception && (ex as IApiError).response?.status === 401) {
       tokenCtx?.state.logout();
     } else if (
@@ -99,7 +90,6 @@ const updateError =
       (ex instanceof Error &&
         (ex.message === 'Network Error' || ex.message === 'Failed to fetch'))
     ) {
-      console.log('retry', globalStore.orbitRetries);
       if (globalStore.orbitRetries > 0) {
         setOrbitRetries(globalStore.orbitRetries - 1);
         // When network errors are encountered, try again in 3s
@@ -114,10 +104,6 @@ const updateError =
       // When non-network errors occur, notify the user and
       // reset state.
       const data = (ex as any).data;
-      console.log(
-        'in non network case...but we dont have details anymore data:',
-        data
-      );
       const detail =
         data?.errors &&
         Array.isArray(data.errors) &&

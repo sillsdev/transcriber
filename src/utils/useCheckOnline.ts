@@ -57,7 +57,6 @@ export const useCheckOnline = () => {
         if (result) {
           dispatch(resetOrbitError());
           if (orbitRetries < OrbitNetworkErrorRetries) {
-            console.log('back online do the retry');
             remote.requestQueue.retry();
             setOrbitRetries(OrbitNetworkErrorRetries);
           }
