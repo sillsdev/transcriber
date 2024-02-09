@@ -357,6 +357,7 @@ export const doDataChanges = async (
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const userLastTimeKey = localUserKey(LocalKey.time);
   const userNextStartKey = localUserKey(LocalKey.start);
+  console.log('remote', remote);
   if (!remote || !remote.activated) return;
   let startNext = 0;
   let lastTime = localStorage.getItem(userLastTimeKey) || currentDateTime(); // should not happen
@@ -512,6 +513,7 @@ export function DataChanges(props: PropsWithChildren) {
           : defaultDataDelay
         : null;
     setDataDelay(newDelay);
+    console.log('newDelay', newDelay);
     if (!remote) setBusy(false);
     // the busy delay is increased by 10 times if we aren't connected yet
     // but should be because we have authenticated.
