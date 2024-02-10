@@ -19,7 +19,7 @@ import IndexedDBBucket from '@orbit/indexeddb-bucket';
 import JSONAPISource from '@orbit/jsonapi';
 import { RecordTransform } from '@orbit/records';
 import { NetworkError } from '@orbit/jsonapi';
-import { Bucket } from '@orbit/core';
+import { Bucket, Exception } from '@orbit/core';
 import Memory from '@orbit/memory';
 import { ITokenContext } from './context/TokenProvider';
 import { API_CONFIG, isElectron } from './api-variable';
@@ -50,8 +50,28 @@ interface PullStratErrProps {
   remote: JSONAPISource;
   globalStore: State;
 }
+interface QueryStratErrProps {
+  tokenCtx: ITokenContext;
+  orbitError: (ex: IApiError) => void;
+  remote: JSONAPISource;
+}
 
-const pullError =
+const queryError =
+  ({ tokenCtx, orbitError, remote }: QueryStratErrProps) =>
+  (transform: RecordTransform, ex: any) => {
+    console.log('***** api query fail', transform, ex);
+    if (ex instanceof Exception && (ex as IApiError).response?.status === 401) {
+      tokenCtx?.state.logout();
+    } else if (
+      ex instanceof NetworkError ||
+      (ex instanceof Error &&
+        (ex.message === 'Failed to fetch' || ex.message === 'Network Error'))
+    ) {
+      orbitError(ex as IApiError);
+    }
+    return remote.requestQueue.retry;
+  };
+const updateError =
   ({
     tokenCtx,
     orbitError,
@@ -61,11 +81,15 @@ const pullError =
     remote,
     globalStore,
   }: PullStratErrProps) =>
-  (transform: RecordTransform, ex: IApiError) => {
-    console.log('***** api query fail', transform, ex);
-    if (ex.response.status === 401) {
+  (transform: RecordTransform, ex: any) => {
+    console.log('***** api update fail', transform, ex);
+    if (ex instanceof Exception && (ex as IApiError).response?.status === 401) {
       tokenCtx?.state.logout();
-    } else if (ex instanceof NetworkError) {
+    } else if (
+      ex instanceof NetworkError ||
+      (ex instanceof Error &&
+        (ex.message === 'Network Error' || ex.message === 'Failed to fetch'))
+    ) {
       if (globalStore.orbitRetries > 0) {
         setOrbitRetries(globalStore.orbitRetries - 1);
         // When network errors are encountered, try again in 3s
@@ -96,9 +120,9 @@ const pullError =
         let myOp = transform.operations;
         if (Array.isArray(myOp)) myOp = myOp[0];
         let label =
-          ((transform.options && transform.options.label) ||
+          (transform?.options?.label ||
             myOp.op + (url ? ` in ` + url.split('/').pop() + `: ` : '')) +
-            detail ?? '';
+          (detail ?? '');
         orbitError(orbitErr(ex, `Unable to complete "${label}"`));
       }
 
@@ -114,7 +138,6 @@ const pullError =
       return remote.requestQueue.skip();
     }
   };
-
 export const Sources = async (
   coordinator: Coordinator,
   tokenCtx: ITokenContext,
@@ -198,7 +221,22 @@ export const Sources = async (
 
           source: 'remote',
           on: 'queryFail',
-          action: pullError({
+          action: queryError({
+            tokenCtx,
+            orbitError,
+            remote,
+          }) as unknown as StategyError,
+          blocking: true,
+        })
+      );
+    if (!coordinator.strategyNames.includes('remote-update-fail'))
+      coordinator.addStrategy(
+        new RequestStrategy({
+          name: 'remote-update-fail',
+
+          source: 'remote',
+          on: 'updateFail',
+          action: updateError({
             tokenCtx,
             orbitError,
             setOrbitRetries,
@@ -210,7 +248,6 @@ export const Sources = async (
           blocking: true,
         })
       );
-
     // Query the remote server whenever the memory is queried
     if (!coordinator.strategyNames.includes('remote-request'))
       coordinator.addStrategy(
