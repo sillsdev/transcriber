@@ -967,16 +967,10 @@ if (requestedSchema > 7 && schemaDefinition.models) {
 export const schema = new RecordSchema(schemaDefinition);
 
 export const keyMap = new RecordKeyMap();
-/*
-const validators = {
-  recordAttribute: undefined,
-};
-const validatorFor = buildValidatorFor({ validators });
-*/
+
 export const memory = new MemorySource({
   schema,
   keyMap,
-  autoValidate: false,
 });
 const findMissingModels = (schema: RecordSchema, db: IDBDatabase) => {
   return Object.keys(schema.models).filter(
@@ -1140,7 +1134,6 @@ export const backup = window.indexedDB
         useBuffer: true,
       },
       autoUpgrade: false,
-      autoValidate: false,
     })
   : ({} as IndexedDBSource);
 //LocalKey.migration throws an error here?!
