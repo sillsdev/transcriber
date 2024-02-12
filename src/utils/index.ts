@@ -72,3 +72,4 @@ export * from './positiveWholeOnly';
 export * from './stringAvatar';
 export * from './ReactIsInDevelopmentMode';
 export * from './isUrl';
+export * from './useWaitForRemoteQueue';

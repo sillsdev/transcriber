@@ -71,11 +71,11 @@ import {
   currentDateTime,
   getParatextDataPath,
   refMatch,
-  waitForIt,
   integrationSlug,
   getSegments,
   NamedRegions,
   updateSegments,
+  useWaitForRemoteQueue,
 } from '../utils';
 import { isElectron } from '../api-variable';
 import { TokenContext } from '../context/TokenProvider';
@@ -275,6 +275,7 @@ export function Transcriber(props: IProps) {
     state: '',
     role: '',
   };
+
   const { toolChanged, saveCompleted } = useContext(UnsavedContext).state;
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
@@ -305,7 +306,7 @@ export function Transcriber(props: IProps) {
   const [textValue, setTextValue] = useState('');
   const [lastSaved, setLastSaved] = useState('');
   const [defaultPosition, setDefaultPosition] = useState(0.0);
-
+  const waitForRemoteQueue = useWaitForRemoteQueue();
   const { showMessage } = useSnackBar();
   const showHistoryRef = useRef(false);
   const [showHistory, setShowHistoryx] = useState(false);
@@ -314,9 +315,6 @@ export function Transcriber(props: IProps) {
   const [hasParatextName, setHasParatextName] = useState(false);
   const [paratextProject, setParatextProject] = React.useState('');
   const [paratextIntegration, setParatextIntegration] = React.useState('');
-  const [connected] = useGlobal('connected');
-  const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote');
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
   const {
@@ -984,12 +982,9 @@ export function Transcriber(props: IProps) {
     }
   };
   const handleReopen = async () => {
-    await waitForIt(
-      'busy before reopen',
-      () => !remote || !connected || remote.requestQueue.length === 0,
-      () => false,
-      20
-    ).then(() => doReopen().then(() => onReopen && onReopen()));
+    waitForRemoteQueue('busy before reopen').then(() =>
+      doReopen().then(() => onReopen && onReopen())
+    );
   };
 
   const getTranscription = () => {

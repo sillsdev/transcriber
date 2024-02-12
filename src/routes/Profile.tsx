@@ -52,6 +52,7 @@ import {
   useMyNavigate,
   localUserKey,
   LocalKey,
+  useWaitForRemoteQueue,
 } from '../utils';
 import moment from 'moment-timezone';
 import {
@@ -141,8 +142,6 @@ export function Profile(props: IProps) {
     dispatch(action.getUserName(token, errorReporter, message));
   const [isOffline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
-  const [coordinator] = useGlobal('coordinator');
-  const [connected] = useGlobal('connected');
   const [editId, setEditId] = useGlobal('editUserId');
   const [organization] = useGlobal('organization');
   const [user, setUser] = useGlobal('user');
@@ -197,6 +196,8 @@ export function Profile(props: IProps) {
   const toolId = 'profile';
   const saving = useRef(false);
   const [confirmCancel, setConfirmCancel] = useState<string>();
+  const waitForRemoteQueue = useWaitForRemoteQueue();
+
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
   };
@@ -437,25 +438,14 @@ export function Profile(props: IProps) {
   };
   const handleDeleteConfirmed = async () => {
     const deleteRec = getUserRec(deleteItem);
-    const remote = coordinator.getSource('remote');
-    await waitForIt(
-      'wait for any changes to finish',
-      () => !remote || !connected || remote.requestQueue.length === 0,
-      () => false,
-      200
-    );
+    await waitForRemoteQueue('wait for any changes to finish');
     await RemoveUserFromOrg(memory, deleteRec, undefined, user, teamDelete);
     await memory.update((tb) =>
       tb.removeRecord({ type: 'user', id: deleteItem })
     );
     //wait to be sure orbit remote is done also
     try {
-      await waitForIt(
-        'logout after user delete',
-        () => !remote || !connected || remote.requestQueue.length === 0,
-        () => false,
-        200
-      );
+      await waitForRemoteQueue('logout after user delete');
     } catch {
       //well we tried...
     }
