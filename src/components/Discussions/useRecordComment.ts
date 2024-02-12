@@ -119,7 +119,7 @@ export const useRecordComment = ({
       contentType: files[0].type,
       artifactTypeId: getArtifactId(),
       passageId: getPassageId(),
-      recordedByUserId: getUserId(),
+      recordedbyUserId: getUserId(),
       userId: getUserId(),
     } as any;
     nextUpload({
