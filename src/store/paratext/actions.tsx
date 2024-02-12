@@ -351,7 +351,9 @@ export const getLocalCount =
       ) as Passage;
       const ref = passage?.attributes?.reference ?? 'Err';
       return (
-        !(/^NOTE/.test(ref) || refMatch(ref)) ||
+        !(
+          // TODO: /^NOTE/.test(ref) || 
+          refMatch(ref)) ||
         !passage?.attributes?.book
       );
     });
