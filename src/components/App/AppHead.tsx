@@ -29,12 +29,12 @@ import {
   localUserKey,
   LocalKey,
   useMounted,
-  waitForIt,
   logError,
   Severity,
   infoMsg,
   exitApp,
   useMyNavigate,
+  useWaitForRemoteQueue,
 } from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
 import { usePlan } from '../../crud';
@@ -145,6 +145,7 @@ export const AppHead = (props: IProps) => {
   const [downloadAlert, setDownloadAlert] = useState(false);
   const [updateTipOpen, setUpdateTipOpen] = useState(false);
   const [showTerms, setShowTerms] = useState('');
+  const waitForRemoteQueue = useWaitForRemoteQueue();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const saving = useMemo(() => anySaving(), [toolsChanged]);
@@ -165,16 +166,13 @@ export const AppHead = (props: IProps) => {
       resetData();
       exitElectronApp();
     }
-    const remote = coordinator.getSource('remote');
+
     if (isElectron && /Logout/i.test(what)) {
       localStorage.removeItem('user-id');
       checkSavedFn(() => {
-        waitForIt(
-          'logout on electron...',
-          () => !remote || !connected || remote.requestQueue.length === 0,
-          () => false,
-          200
-        ).then(() => setDownloadAlert(true));
+        waitForRemoteQueue('logout on electron...').then(() =>
+          setDownloadAlert(true)
+        );
       });
       return;
     }
@@ -189,12 +187,7 @@ export const AppHead = (props: IProps) => {
         if (resetRequests) resetRequests().then(() => setView(what));
       } else if (/Logout/i.test(what)) {
         checkSavedFn(() => {
-          waitForIt(
-            'logout on web...',
-            () => !remote || !connected || remote.requestQueue.length === 0,
-            () => false,
-            200
-          ).then(() => setView('Logout'));
+          waitForRemoteQueue('logout on web...').then(() => setView('Logout'));
         });
       } else checkSavedFn(() => setView(what));
     }

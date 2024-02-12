@@ -16,8 +16,7 @@ import {
   ReplaceRelatedRecord,
   UpdateRecord,
 } from '../model/baseModel';
-import { cleanFileName, waitForIt } from '../utils';
-import JSONAPISource from '@orbit/jsonapi';
+import { cleanFileName, useWaitForRemoteQueue } from '../utils';
 
 interface ISwitches {
   [key: string]: any;
@@ -41,13 +40,10 @@ const stringSelector = (state: IState) =>
 export const useArtifactCategory = (teamId?: string) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [offline] = useGlobal('offline');
   const [organization] = useGlobal('organization');
   const curOrg = teamId ?? organization;
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-
+  const waitForRemoteQueue = useWaitForRemoteQueue();
   const t: IArtifactCategoryStrings = useSelector(stringSelector, shallowEqual);
   const [fromLocal] = useState<ISwitches>({});
 
@@ -79,12 +75,7 @@ export const useArtifactCategory = (teamId?: string) => {
   const getArtifactCategorys = async (type: ArtifactCategoryType) => {
     const categorys: IArtifactCategory[] = [];
     /* wait for new categories remote id to fill in */
-    await waitForIt(
-      'category update',
-      () => !remote || remote.requestQueue.length === 0,
-      () => offline && !offlineOnly,
-      200
-    );
+    await waitForRemoteQueue('category update');
     var orgrecs: ArtifactCategoryD[] = (
       memory.cache.query((q) =>
         q.findRecords('artifactcategory')

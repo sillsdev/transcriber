@@ -8,7 +8,13 @@ import {
   WorkflowStepD,
 } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
-import { logError, Severity, toCamel, waitForIt } from '../utils';
+import {
+  logError,
+  Severity,
+  toCamel,
+  useWaitForRemoteQueue,
+  waitForIt,
+} from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { shallowEqual, useSelector } from 'react-redux';
 import { workflowStepsSelector } from '../selector';
@@ -37,6 +43,7 @@ export const useOrgWorkflowSteps = () => {
   const [errorReporter] = useGlobal('errorReporter');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const waitForRemoteQueue = useWaitForRemoteQueue();
   const creatingRef = useRef(false);
 
   const localizedWorkStep = (val: string) => {
@@ -91,12 +98,7 @@ export const useOrgWorkflowSteps = () => {
 
   const QueryOrgWorkflowSteps = async (process: string, org: string) => {
     /* wait for new workflow steps remote id to fill in */
-    await waitForIt(
-      'waiting for workflow update',
-      () => !remote || remote.requestQueue.length === 0,
-      () => offline && !offlineOnly,
-      200
-    );
+    await waitForRemoteQueue('waiting for workflow update');
 
     let orgworkflowsteps = memory.cache.query((q) =>
       q.findRecords('orgworkflowstep')

@@ -56,6 +56,7 @@ import {
   useCheckOnline,
   currentDateTime,
   hasAudacity,
+  useWaitForRemoteQueue,
 } from '../../utils';
 import {
   isSectionRow,
@@ -267,6 +268,7 @@ export function ScriptureTable(props: IProps) {
   const [projFirstMovement, setProjFirstMovement] = useState(1);
   const [filterState, setFilterState] =
     useState<ISTFilterState>(defaultFilterState);
+  const waitForRemoteQueue = useWaitForRemoteQueue();
   const secNumCol = React.useMemo(() => {
     return colNames.indexOf('sectionSeq');
   }, [colNames]);
@@ -1088,13 +1090,7 @@ export function ScriptureTable(props: IProps) {
     var planRec = getPlan(plan) as PlanD;
     if (planRec !== null) {
       try {
-        if (remote)
-          await waitForIt(
-            'priorsave',
-            () => remote.requestQueue.length === 0,
-            () => false,
-            200
-          );
+        await waitForRemoteQueue('priorsave');
       } finally {
         //do this even if the wait above failed
         //don't use sections here, it hasn't been updated yet

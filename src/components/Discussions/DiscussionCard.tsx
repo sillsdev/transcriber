@@ -59,8 +59,12 @@ import SelectArtifactCategory, {
   ScriptureEnum,
 } from '../Sheet/SelectArtifactCategory';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { removeExtension, startEnd, waitForIt } from '../../utils';
-import JSONAPISource from '@orbit/jsonapi';
+import {
+  removeExtension,
+  startEnd,
+  useWaitForRemoteQueue,
+  waitForIt,
+} from '../../utils';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { NewDiscussionToolId, NewCommentToolId } from './DiscussionList';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -234,14 +238,12 @@ export const DiscussionCard = (props: IProps) => {
   const [sourceMediafile, setSourceMediafile] = useState<MediaFile>();
   const [editing, setEditing] = useState(false);
   const [confirmAction, setConfirmAction] = useState('');
-  const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
   const changeRef = useRef(false);
   const [myChanged, setMyChanged] = useState(false);
   const savingRef = useRef(false);
   const [showMove, setShowMove] = useState(false);
   const [moveTo, setMoveTo] = useState<string>();
-
+  const waitForRemoteQueue = useWaitForRemoteQueue();
   const [editSubject, setEditSubject] = useState(
     discussion.attributes?.subject
   );
@@ -769,12 +771,7 @@ export const DiscussionCard = (props: IProps) => {
       myCommentIds.forEach((id) => startSave(id));
       savingRef.current = true;
       handleSave().then(() => {
-        waitForIt(
-          'discussion save',
-          () => !remote || remote.requestQueue.length === 0,
-          () => offline && !offlineOnly,
-          200
-        ).then(() => {
+        waitForRemoteQueue('discussion save').then(() => {
           savingRef.current = false;
         });
       });
