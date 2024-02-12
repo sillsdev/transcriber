@@ -524,6 +524,7 @@ export function DiscussionList() {
                 showReference={allPassages}
                 setRef={setHighlightedRef}
                 requestHighlight={highlightNew}
+                refreshList={resetDiscussionList}
               />
             ))}
           </Grid>
