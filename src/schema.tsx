@@ -1104,7 +1104,6 @@ const FixVersion8 = async (backup: IndexedDBSource, memory: MemorySource) => {
     }
   });
 
-  console.log(ops);
   let oRecs = (await backup.query((q) => q.findRecords('user'))) as any[];
   if (!Array.isArray(oRecs)) oRecs = [oRecs];
   oRecs.forEach((r: any) => {
