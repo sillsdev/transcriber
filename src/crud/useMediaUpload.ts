@@ -93,7 +93,7 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
       contentType: files[0].type,
       artifactTypeId: getArtifactId(),
       passageId: getPassageId(),
-      recordedByUserId: getUserId(),
+      recordedbyUserId: getUserId(),
       userId: getUserId(),
     };
     nextUpload({

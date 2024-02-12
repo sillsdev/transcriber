@@ -351,7 +351,7 @@ export default function MediaTitle(props: IProps) {
       originalFile: files[0].name,
       contentType: files[0].type,
       artifactTypeId: TitleId,
-      recordedByUserId: getUserId(),
+      recordedbyUserId: getUserId(),
       userId: getUserId(),
     };
     nextUpload({
