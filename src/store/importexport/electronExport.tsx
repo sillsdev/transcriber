@@ -668,7 +668,6 @@ export async function electronExport(
           delete m.attributes.sourceMediaId;
         });
       }
-      console.log(media);
       return media;
     };
     const Comments = (project: ProjectD | undefined, remoteIds: boolean) => {

@@ -1,26 +1,8 @@
 import { JSONAPISerializers, buildJSONAPISerializerFor } from '@orbit/jsonapi';
 import MemorySource from '@orbit/memory';
-import {
-  BaseSerializer,
-  buildInflector,
-  buildSerializerSettingsFor,
-} from '@orbit/serializers';
-import { Dict } from '@orbit/utils';
+import { buildInflector, buildSerializerSettingsFor } from '@orbit/serializers';
 
-export class RemoteIDSerializer extends BaseSerializer<
-  string | number,
-  string
-> {
-  serialize(arg: string | number): string {
-    return arg.toString();
-  }
-
-  deserialize(arg: any): string {
-    return arg.toString();
-  }
-}
-
-const serializerMap: Dict<Dict<unknown>> = {
+const serializerMap = {
   [JSONAPISerializers.ResourceField]: {
     serializationOptions: { inflectors: ['dasherize'] },
   },
@@ -40,10 +22,6 @@ const serializerMap: Dict<Dict<unknown>> = {
       inflectors: ['pluralize', 'dasherize'],
     },
   },
-  [JSONAPISerializers.Resource]: {
-    serializationOptions: { inflectors: ['remoteID'] },
-  },
-  //remoteID: NumberSerializer,
 };
 
 export const serializersSettings = () =>
@@ -93,17 +71,10 @@ export const serializersSettings = () =>
               });
           }
         ),
-        remoteID: buildInflector(undefined, (word: any) => {
-          if (!word) return word;
-          if (word.isNaN()) return '"' + word + '"';
-          return word;
-        }),
       },
     },
     // Serialization settings according to the type of serializer
-    settingsByType: {
-      ...serializerMap,
-    },
+    settingsByType: serializerMap,
   });
 
 export function serializersFor(memory: MemorySource) {
