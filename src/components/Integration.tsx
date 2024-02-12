@@ -240,6 +240,8 @@ export function IntegrationPanel(props: IProps) {
   const [local, setLocal] = useState(offline || offlineOnly);
   const { accessToken } = useContext(TokenContext).state;
   const [count, setCount] = useState(-1);
+  const [countMsg, setCountMsg] = useState<string | JSX.Element>(
+  );
 
   const [paratextIntegration, setParatextIntegration] = useState('');
   const [coordinator] = useGlobal('coordinator');
@@ -584,7 +586,7 @@ export function IntegrationPanel(props: IProps) {
           t.countError,
           translateParatextError(paratext_countStatus, ts)
         );
-        resetCount();
+        setCountMsg(translateParatextError(paratext_countStatus, ts));
       } else if (paratext_countStatus.complete) {
         setCount(paratext_count);
         resetCount();
@@ -867,7 +869,9 @@ export function IntegrationPanel(props: IProps) {
               <ListItemText
                 primary={t.countReady}
                 secondary={
-                  count === 1 && passage
+                  Boolean(countMsg)
+                    ? countMsg
+                    : count === 1 && passage
                     ? passageRefText(passage, bookData)
                     : count >= 0
                     ? count
@@ -879,28 +883,28 @@ export function IntegrationPanel(props: IProps) {
 
           <FormControl component="fieldset" sx={{ m: 3 }}>
             <FormGroup>
-              <FormControlLabel
-                control={
-                  <PriButton
-                    id="IntWebSync"
-                    key="sync"
-                    aria-label={t.sync}
-                    disabled={
-                      syncing.current ||
-                      !connected ||
-                      !hasPtProj ||
-                      !hasParatext ||
-                      !hasPermission ||
-                      !paratext_count
-                    }
-                    onClick={handleSync}
-                  >
-                    {t.sync}
-                    <SyncIcon sx={{ ml: 1 }} />
-                  </PriButton>
-                }
-                label=""
-              />
+                <FormControlLabel
+                  control={
+                    <PriButton
+                      id="IntWebSync"
+                      key="sync"
+                      aria-label={t.sync}
+                      disabled={
+                        syncing.current ||
+                        !connected ||
+                        !hasPtProj ||
+                        !hasParatext ||
+                        !hasPermission ||
+                        !paratext_count
+                      }
+                      onClick={handleSync}
+                    >
+                      {t.sync}
+                      <SyncIcon sx={{ ml: 1 }} />
+                    </PriButton>
+                  }
+                  label=""
+                />
               <FormHelperText>{t.allCriteria}</FormHelperText>
             </FormGroup>
           </FormControl>
@@ -1006,7 +1010,9 @@ export function IntegrationPanel(props: IProps) {
               <ListItemText
                 primary={t.countReady}
                 secondary={
-                  count === 1 && passage
+                  Boolean(countMsg)
+                    ? countMsg
+                    : count === 1 && passage
                     ? passageRefText(passage, bookData)
                     : count >= 0
                     ? count
@@ -1017,26 +1023,26 @@ export function IntegrationPanel(props: IProps) {
           </List>
           <FormControl component="fieldset" sx={{ m: 3 }}>
             <FormGroup>
-              <FormControlLabel
-                control={
-                  <PriButton
-                    id="IntLocalSync"
-                    key="localSync"
-                    aria-label={t.sync}
-                    disabled={
-                      syncing.current ||
-                      !ptPath ||
-                      !hasPtProj ||
-                      !paratext_count
-                    }
-                    onClick={handleLocalSync}
-                  >
-                    {t.sync}
-                    <SyncIcon sx={{ ml: 1 }} />
-                  </PriButton>
-                }
-                label=""
-              />
+                <FormControlLabel
+                  control={
+                    <PriButton
+                      id="IntLocalSync"
+                      key="localSync"
+                      aria-label={t.sync}
+                      disabled={
+                        syncing.current ||
+                        !ptPath ||
+                        !hasPtProj ||
+                        !paratext_count
+                      }
+                      onClick={handleLocalSync}
+                    >
+                      {t.sync}
+                      <SyncIcon sx={{ ml: 1 }} />
+                    </PriButton>
+                  }
+                  label=""
+                />
               <FormHelperText>{t.allCriteria}</FormHelperText>
             </FormGroup>
           </FormControl>

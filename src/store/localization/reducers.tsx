@@ -453,7 +453,7 @@ const initialState = {
 			"countReady": "Passages ready to sync: ",
 			"emptyBook": "Passage {0}.{1}: Book is missing.",
 			"exportSectionNumbers": "Sync {0} Numbers",
-			"invalidReferences": "{0} passages have invalid book or reference.",
+			"invalidReferences": "{0} passage(s) have invalid book or reference.",
 			"no": "No",
 			"noProject": "You are not a member of a {lang0} Paratext Project.",
 			"offline": "Offline",
