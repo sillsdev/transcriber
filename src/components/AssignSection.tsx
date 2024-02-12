@@ -123,13 +123,14 @@ interface IProps {
   sections: Array<Section>;
   visible: boolean;
   closeMethod?: () => void;
+  refresh?: () => void;
 }
 export enum TranscriberActors {
   Transcriber = 'Transcriber',
   Editor = 'Editor',
 }
 function AssignSection(props: IProps) {
-  const { sections, visible, closeMethod } = props;
+  const { sections, visible, closeMethod, refresh } = props;
   const t: IAssignSectionStrings = useSelector(
     assignSectionSelector,
     shallowEqual
@@ -178,19 +179,21 @@ function AssignSection(props: IProps) {
     ]);
   };
 
-  const handleSelectTranscriber = (id: string) => () => {
+  const handleSelectTranscriber = (id: string) => async () => {
     const newVal = id !== selectedTranscriber ? id : '';
     setSelectedTranscriber(newVal);
-    sections.forEach(function (s) {
-      assign(s, newVal, TranscriberActors.Transcriber);
-    });
+    for (let s of sections) {
+      await assign(s, newVal, TranscriberActors.Transcriber);
+    }
+    refresh && refresh();
   };
-  const handleSelectReviewer = (id: string) => () => {
+  const handleSelectReviewer = (id: string) => async () => {
     const newVal = id !== selectedReviewer ? id : '';
     setSelectedReviewer(newVal);
-    sections.forEach(function (s) {
-      assign(s, newVal, TranscriberActors.Editor);
-    });
+    for (let s of sections) {
+      await assign(s, newVal, TranscriberActors.Editor);
+    }
+    refresh && refresh();
   };
 
   const doSetSelected = (section: Section) => {

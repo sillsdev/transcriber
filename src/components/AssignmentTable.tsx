@@ -47,6 +47,7 @@ import {
   assignmentSelector,
   sharedSelector,
 } from '../selector';
+import { positiveWholeOnly } from '../utils';
 
 const AssignmentDiv = styled('div')(() => ({
   display: 'flex',
@@ -104,13 +105,25 @@ export function AssignmentTable(props: IProps) {
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const [organizedByPlural] = useState(getOrganizedBy(false));
-  const columnDefs = [
-    { name: 'name', title: organizedBy },
-    { name: 'state', title: t.sectionstate },
-    { name: 'passages', title: t.passages },
-    { name: 'transcriber', title: ts.transcriber },
-    { name: 'editor', title: ts.editor },
-  ];
+  const [refresh, setRefresh] = useState(0);
+  const columnDefs = useMemo(
+    () =>
+      !flat
+        ? [
+            { name: 'name', title: organizedBy },
+            { name: 'state', title: t.sectionstate },
+            { name: 'passages', title: t.passages },
+            { name: 'transcriber', title: ts.transcriber },
+            { name: 'editor', title: ts.editor },
+          ]
+        : [
+            { name: 'name', title: organizedBy },
+            { name: 'state', title: t.sectionstate },
+            { name: 'transcriber', title: ts.transcriber },
+            { name: 'editor', title: ts.editor },
+          ],
+    [flat, organizedBy, t.passages, t.sectionstate, ts.editor, ts.transcriber]
+  );
   const [filter, setFilter] = useState(false);
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
   const getPassageState = usePassageState();
@@ -130,7 +143,13 @@ export function AssignmentTable(props: IProps) {
     let sectionRow: IRow;
     const rowData: IRow[] = [];
     const plansections = sections
-      .filter((s) => related(s, 'plan') === plan && s.attributes)
+      .filter(
+        (s) =>
+          related(s, 'plan') === plan &&
+          s.attributes &&
+          positiveWholeOnly(s.attributes.sequencenum) ===
+            s.attributes.sequencenum.toString()
+      )
       .sort(sectionCompare);
 
     plansections.forEach(function (section) {
@@ -215,6 +234,7 @@ export function AssignmentTable(props: IProps) {
     setConfirmAction('');
     for (let i = 0; i < selectedSections.length; i += 1)
       await RemoveOneAssignment(selectedSections[i]);
+    setRefresh(refresh + 1);
   };
   const handleRemoveAssignmentsRefused = () => setConfirmAction('');
 
@@ -236,6 +256,7 @@ export function AssignmentTable(props: IProps) {
     roles,
     activityState,
     allBookData,
+    refresh,
   ]);
 
   useEffect(() => {
@@ -304,6 +325,7 @@ export function AssignmentTable(props: IProps) {
             showgroups={filter}
             checks={check}
             select={handleCheck}
+            canSelectRow={(row) => row?.parentId === ''}
           />
         </PaddedBox>
       </div>
@@ -311,6 +333,7 @@ export function AssignmentTable(props: IProps) {
         sections={selectedSections}
         visible={assignSectionVisible}
         closeMethod={handleAssignSection(false)}
+        refresh={() => setRefresh(refresh + 1)}
       />
       {confirmAction !== '' ? (
         <Confirm
