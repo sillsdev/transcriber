@@ -3,7 +3,6 @@ import { BaseModel } from './baseModel';
 
 export interface MediaFile extends BaseModel {
   attributes: {
-    planId?: number; //allow this because we use axios to create a mediafile
     versionNumber: number;
     eafUrl: string | null;
     audioUrl: string;

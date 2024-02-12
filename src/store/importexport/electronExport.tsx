@@ -659,6 +659,13 @@ export async function electronExport(
           ) {
             m.attributes.sourceMediaOfflineId = src;
           }
+          delete m.attributes.planId;
+          delete m.attributes.artifactTypeId;
+          delete m.attributes.passageId;
+          delete m.attributes.userId;
+          delete m.attributes.recordedbyUserId;
+          delete m.attributes.recordedByUserId;
+          delete m.attributes.sourceMediaId;
         });
       }
       return media;
@@ -779,7 +786,10 @@ export async function electronExport(
             if (media) return FromMedia(media, needsRemoteIds);
           }
           if (project) return AllMediafiles(project);
-          return defaultQuery(info.table);
+          return FromMedia(
+            defaultQuery(info.table) as MediaFileD[],
+            needsRemoteIds
+          );
 
         case 'passagestatechange':
           return FromPassages(info.table, project, needsRemoteIds);
