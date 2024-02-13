@@ -23,7 +23,6 @@ import { isElectron } from '../../api-variable';
 import { PriButton } from '../../control';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
-import { PlanProvider } from '../../context/PlanContext';
 import SpeakerName from '../SpeakerName';
 import { sharedSelector } from '../../selector';
 import { RecordButtons } from './RecordButtons';
@@ -126,8 +125,8 @@ export function PassageDetailRecord(props: IProps) {
   useEffect(() => {
     setHasExistingVersion(
       Boolean(mediafileId) &&
-        recorderState?.status === MediaSt.FETCHED &&
-        recorderState?.id === mediafileId
+      recorderState?.status === MediaSt.FETCHED &&
+      recorderState?.id === mediafileId
     );
   }, [mediafileId, recorderState]);
 
@@ -190,106 +189,106 @@ export function PassageDetailRecord(props: IProps) {
   const handleVerHistClose = () => {
     setVersionVisible(false);
   };
-  const handleNameChange = (name: string) => setSpeaker(name);
+  const handleNameChange = (name: string) => {
+    setSpeaker(name);
+  };
   const handleRights = (hasRights: boolean) => setHasRight(hasRights);
   const handleReload = () => setPreload(preload + 1);
   const handleTrackRecorder = (state: IMediaState) => setRecorderState(state);
   return (
-    <PlanProvider {...props}>
-      <Stack sx={{ width: props.width }}>
-        <RecordButtons
-          onVersions={hasExistingVersion ? handleVersions : undefined}
-          onReload={hasExistingVersion ? handleReload : undefined}
-          onUpload={handleUpload}
-          onAudacity={isElectron ? handleAudacity : undefined}
+    <Stack sx={{ width: props.width }}>
+      <RecordButtons
+        onVersions={hasExistingVersion ? handleVersions : undefined}
+        onReload={hasExistingVersion ? handleReload : undefined}
+        onUpload={handleUpload}
+        onAudacity={isElectron ? handleAudacity : undefined}
+      />
+      <Box sx={{ py: 1 }}>
+        <SpeakerName
+          name={speaker}
+          onChange={handleNameChange}
+          onRights={handleRights}
         />
-        <Box sx={{ py: 1 }}>
-          <SpeakerName
-            name={speaker}
-            onChange={handleNameChange}
-            onRights={handleRights}
-          />
-        </Box>
-        <MediaRecord
-          toolId={toolId}
-          mediaId={mediafileId}
-          uploadMethod={uploadMedia}
-          onSaving={onSaving}
-          onReady={onReady}
-          onRecording={setRecording}
-          defaultFilename={defaultFilename}
-          allowRecord={hasRights}
-          allowWave={true}
-          showFilename={true}
-          showLoad={false}
-          preload={preload}
-          trackState={handleTrackRecorder}
-          setCanSave={setCanSave}
-          setStatusText={setStatusText}
-          doReset={resetMedia}
-          setDoReset={setResetMedia}
-          size={300 - chooserSize}
-          metaData={
-            <>
-              <Typography
-                variant="caption"
-                sx={{
-                  mr: 2,
-                  alignSelf: 'center',
-                  display: 'block',
-                  gutterBottom: 'true',
-                }}
-              >
-                {statusText}
-              </Typography>
-              <PriButton
-                id="rec-save"
-                onClick={handleSave}
-                disabled={(ready && !ready()) || !canSave || !hasRights}
-              >
-                {ts.save}
-              </PriButton>
-            </>
-          }
-        />
+      </Box>
+      <MediaRecord
+        toolId={toolId}
+        mediaId={mediafileId}
+        uploadMethod={uploadMedia}
+        onSaving={onSaving}
+        onReady={onReady}
+        onRecording={setRecording}
+        defaultFilename={defaultFilename}
+        allowRecord={hasRights}
+        allowWave={true}
+        showFilename={true}
+        showLoad={false}
+        preload={preload}
+        trackState={handleTrackRecorder}
+        setCanSave={setCanSave}
+        setStatusText={setStatusText}
+        doReset={resetMedia}
+        setDoReset={setResetMedia}
+        size={300 - chooserSize}
+        metaData={
+          <>
+            <Typography
+              variant="caption"
+              sx={{
+                mr: 2,
+                alignSelf: 'center',
+                display: 'block',
+                gutterBottom: 'true',
+              }}
+            >
+              {statusText}
+            </Typography>
+            <PriButton
+              id="rec-save"
+              onClick={handleSave}
+              disabled={(ready && !ready()) || !canSave || !hasRights}
+            >
+              {ts.save}
+            </PriButton>
+          </>
+        }
+      />
 
-        <Uploader
-          recordAudio={false}
-          importList={importList}
-          isOpen={uploadVisible}
-          onOpen={handleUploadVisible}
-          showMessage={showMessage}
-          multiple={false}
-          finish={afterUpload}
-          cancelled={cancelled}
-          passageId={passageId}
-          performedBy={speaker}
-          onSpeakerChange={handleNameChange}
-        />
-        <AudacityManager
-          item={1}
-          open={audacityVisible}
-          onClose={handleAudacityClose}
-          passageId={
-            {
-              type: 'passage',
-              id: passageId,
-            } as RecordIdentity
-          }
-          mediaId={mediafileId}
-          onImport={handleAudacityImport}
-          speaker={speaker}
-          onSpeaker={handleNameChange}
-        />
-        <BigDialog
-          title={ts.versionHistory}
-          isOpen={versionVisible}
-          onOpen={handleVerHistClose}
-        >
-          <VersionDlg passId={passageId} />
-        </BigDialog>
-      </Stack>
-    </PlanProvider>
+      <Uploader
+        recordAudio={false}
+        importList={importList}
+        isOpen={uploadVisible}
+        onOpen={handleUploadVisible}
+        showMessage={showMessage}
+        multiple={false}
+        finish={afterUpload}
+        cancelled={cancelled}
+        passageId={passageId}
+        performedBy={speaker}
+        onSpeakerChange={handleNameChange}
+      />
+      <AudacityManager
+        item={1}
+        open={audacityVisible}
+        onClose={handleAudacityClose}
+        passageId={
+          {
+            type: 'passage',
+            id: passageId,
+          } as RecordIdentity
+        }
+        mediaId={mediafileId}
+        onImport={handleAudacityImport}
+        speaker={speaker}
+        onSpeaker={handleNameChange}
+      />
+      <BigDialog
+        title={ts.versionHistory}
+        isOpen={versionVisible}
+        onOpen={handleVerHistClose}
+      >
+        <VersionDlg passId={passageId} />
+      </BigDialog>
+    </Stack>
   );
 }
 
