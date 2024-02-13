@@ -7903,6 +7903,20 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="vProject.movement">
+            <source>Movement</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="vProject.movements">
+            <source>Movements</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="vProject.nameInUse">
             <source>Name in use</source>
             <target/>

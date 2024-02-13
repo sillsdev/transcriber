@@ -6772,6 +6772,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.movement">
+         <segment>
+            <source>Movement</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.movements">
+         <segment>
+            <source>Movements</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.nameInUse">
          <segment>
             <source>Name in use</source>
