@@ -29,6 +29,7 @@ export const useShowIcon = ({
     isNote,
     isChapter,
     isBook,
+    isAltBook,
     firstInSection,
     firstSection,
     lastSection,
@@ -89,7 +90,9 @@ export const useShowIcon = ({
         [ExtraIcon.PassageToNext]:
           !inlinePassages &&
           (isVerseRange(rowIndex) || isNote(rowIndex)) &&
-          (isSectionHead(rowIndex + 1) || isMovement(rowIndex + 1)),
+          (isSectionHead(rowIndex + 1) ||
+            isMovement(rowIndex + 1) ||
+            isAltBook(rowIndex + 1)),
         [ExtraIcon.FirstMovement]: isFirstMovement(rowIndex),
       };
       return !readonly && !offline && !filtered && extraMap[icon];
