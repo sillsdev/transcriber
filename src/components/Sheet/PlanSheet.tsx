@@ -862,7 +862,7 @@ export function PlanSheet(props: IProps) {
               maximumSection={maximumSection}
               filtered={filtered}
               hidePublishing={hidePublishing}
-              disabled={rowInfo.length < 3 || anyRecording || readonly}
+              disabled={!filtered && (rowInfo.length < 3 || anyRecording)}
             />
             {userIsAdmin && (
               <>
