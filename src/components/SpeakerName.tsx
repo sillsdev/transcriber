@@ -126,8 +126,9 @@ export function SpeakerName({
   }, [speakers, name]);
 
   React.useEffect(() => {
-    setValue({ name });
-  }, [name]);
+    const newName = valueRef.current ? valueRef.current : name;
+    if (value?.name !== newName) setValue({ name: newName });
+  }, [name, value?.name]);
 
   return (
     <>
