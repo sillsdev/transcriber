@@ -9,6 +9,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { PriButton, StyledMenu, StyledMenuItem } from '../../../control';
 import { useOrbitData } from '../../../hoc/useOrbitData';
+import { useGlobal } from 'reactn';
 
 interface IProps {
   action?: (what: string) => void;
@@ -21,6 +22,8 @@ export const AddResource = (props: IProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { getOrganizedBy } = useOrganizedBy();
   const planType = usePlanType();
+  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const ctx = useContext(PassageDetailContext);
   const { section, getProjectResources } = ctx.state;
   const t: IPassageDetailArtifactsStrings = useSelector(
@@ -71,7 +74,7 @@ export const AddResource = (props: IProps) => {
             {'\u00A0'}
           </ListItemText>
         </StyledMenuItem>
-        {!isFlat && (
+        {!isFlat && !offline && !offlineOnly && (
           <StyledMenuItem
             id="referencePassageResource"
             onClick={handle('ref-passage')}
@@ -90,23 +93,25 @@ export const AddResource = (props: IProps) => {
             </ListItemText>
           </StyledMenuItem>
         )}
-        <StyledMenuItem
-          id="referenceSectionResource"
-          onClick={handle('ref-section')}
-        >
-          <ListItemText>
-            {t.sharedResource.replace('{0}', getOrganizedBy(true))}
-            {'\u00A0'}
-            <LightTooltip
-              title={t.tip1b.replace(
-                '{0}',
-                getOrganizedBy(true).toLocaleLowerCase()
-              )}
-            >
-              <InfoIcon />
-            </LightTooltip>
-          </ListItemText>
-        </StyledMenuItem>
+        {!offline && !offlineOnly && (
+          <StyledMenuItem
+            id="referenceSectionResource"
+            onClick={handle('ref-section')}
+          >
+            <ListItemText>
+              {t.sharedResource.replace('{0}', getOrganizedBy(true))}
+              {'\u00A0'}
+              <LightTooltip
+                title={t.tip1b.replace(
+                  '{0}',
+                  getOrganizedBy(true).toLocaleLowerCase()
+                )}
+              >
+                <InfoIcon />
+              </LightTooltip>
+            </ListItemText>
+          </StyledMenuItem>
+        )}
         <Divider />
         <StyledMenuItem
           id="proj-res-config"
