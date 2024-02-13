@@ -68,6 +68,7 @@ interface IProps {
   select?: (checks: Array<number>) => void;
   checks: Array<string | number>;
   getChildRows: (row: any, rootRows: any[]) => any[] | null;
+  canSelectRow?: (row: any) => boolean;
 }
 
 interface IRowProps {
@@ -92,6 +93,7 @@ function MyRow(props: IProps & IRowProps) {
     setSelected,
     colSpec,
     getChildRows,
+    canSelectRow,
   } = props;
   const [open, setOpen] = React.useState(false);
 
@@ -134,14 +136,18 @@ function MyRow(props: IProps & IRowProps) {
         <>
           {select ? (
             <TableCell>
-              <Checkbox
-                color="primary"
-                checked={isItemSelected}
-                onClick={(event) => handleClick(event, rowIdx(r))}
-                inputProps={{
-                  'aria-labelledby': labelId,
-                }}
-              />
+              {!canSelectRow || canSelectRow(r) ? (
+                <Checkbox
+                  color="primary"
+                  checked={isItemSelected}
+                  onClick={(event) => handleClick(event, rowIdx(r))}
+                  inputProps={{
+                    'aria-labelledby': labelId,
+                  }}
+                />
+              ) : (
+                <></>
+              )}
             </TableCell>
           ) : (
             <></>
