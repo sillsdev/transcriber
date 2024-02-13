@@ -174,6 +174,7 @@ interface IProps {
   onAddComplete?: (id: string) => void;
   setRef: (ref: any) => void;
   requestHighlight: string;
+  refreshList: () => void;
 }
 
 export const DiscussionRegion = (discussion: Discussion) => {
@@ -190,6 +191,7 @@ export const DiscussionCard = (props: IProps) => {
     onAddComplete,
     setRef,
     requestHighlight,
+    refreshList,
   } = props;
   const comments = useOrbitData<CommentD[]>('comment');
   const mediafiles = useOrbitData<MediaFile[]>('mediafile');
@@ -482,6 +484,7 @@ export const DiscussionCard = (props: IProps) => {
   const handleResolveDiscussion = (resolved: boolean) => {
     discussion.attributes.resolved = resolved;
     memory.update((t) => UpdateRecord(t, discussion, user));
+    refreshList();
   };
   const handleSetSegment = async () => {
     if (savingRef.current) return;
