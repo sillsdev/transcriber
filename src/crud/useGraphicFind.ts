@@ -5,10 +5,8 @@ import { ArtifactCategoryD, GraphicD } from '../model';
 import { useArtifactCategory } from './useArtifactCategory';
 
 export const useGraphicFind = () => {
-  const graphics = useOrbitData('graphic') as GraphicD[];
-  const artifactCategory = useOrbitData(
-    'artifactcategory'
-  ) as ArtifactCategoryD[];
+  const graphics = useOrbitData<GraphicD[]>('graphic');
+  const artifactCategory = useOrbitData<ArtifactCategoryD[]>('artifactcategory');
   const { fromLocalizedArtifactCategory } = useArtifactCategory();
 
   return (recId: InitializedRecord, ref?: string) => {

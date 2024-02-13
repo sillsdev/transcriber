@@ -263,8 +263,8 @@ export function TeamDialog(props: IProps) {
   useEffect(() => {
     setReadonly(
       (owner && owner !== values?.team.id) ||
-        bibleIdError.length > 0 ||
-        bibleId.length === 0
+      bibleIdError.length > 0 ||
+      bibleId.length === 0
     );
   }, [owner, bibleIdError, bibleId, values]);
 
@@ -323,7 +323,13 @@ export function TeamDialog(props: IProps) {
               id="process"
               select
               label={t.process}
-              value={process || defaultWorkflow}
+              value={
+                processOptions
+                  .map((o) => o.value)
+                  .includes(process || defaultWorkflow)
+                  ? process || defaultWorkflow
+                  : ''
+              }
               onChange={handleProcess}
               sx={{ my: 2, width: '300px' }}
             >

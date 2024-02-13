@@ -1,4 +1,4 @@
-import { useEffect, useContext, useState, useRef, useMemo } from 'react';
+import { useLayoutEffect, useContext, useState, useRef, useMemo } from 'react';
 import { OrbitContext } from './DataProvider';
 import { ReactIsInDevelomentMode } from '../utils/ReactIsInDevelopmentMode';
 import { UninitializedRecord } from '@orbit/records';
@@ -8,7 +8,6 @@ export function useOrbitData<S extends UninitializedRecord[]>(
 ): S {
   const { memory, getRecs, setRecs } = useContext(OrbitContext);
   const [newValue, setNewValue] = useState(0);
-  const debouncer = useRef<NodeJS.Timeout>();
   const mounted = useRef(0);
 
   const isDev = useMemo(() => ReactIsInDevelomentMode(), []);
@@ -16,18 +15,13 @@ export function useOrbitData<S extends UninitializedRecord[]>(
   const liveQuery = memory.cache.liveQuery((q) => q.findRecords(model));
 
   const unsubscribe = liveQuery.subscribe((update) => {
-    // update.query();
+    update && update.query();
     setRecs(model, undefined);
-    if (!debouncer.current) {
-      debouncer.current = setTimeout(() => {
         setNewValue(newValue + 1);
-        debouncer.current = undefined;
-      }, 400);
-    }
   });
 
   // Only allow unsubscribe if actually unmounting
-  useEffect(() => {
+  useLayoutEffect(() => {
     mounted.current += 1;
     return () => {
       if (!isDev || mounted.current > 1) {

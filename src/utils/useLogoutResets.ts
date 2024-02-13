@@ -18,6 +18,7 @@ export const useLogoutResets = () => {
         if (coordinator?.sourceNames.includes('remote')) {
           await coordinator.deactivate();
           coordinator.removeStrategy('remote-query-fail');
+          coordinator.removeStrategy('remote-update-fail');
           coordinator.removeStrategy('remote-request');
           coordinator.removeStrategy('remote-update');
           coordinator.removeStrategy('remote-sync');

@@ -107,7 +107,7 @@ const logMessage = async (
   msg: Error | string | AxiosError
 ) => {
   // Add file header
-  console.log(`creating new file ${logFullName}`);
+  // console.log(`creating new file ${logFullName}`);
   await ipc?.append(
     logFullName,
     `${new Date().toISOString()} ${levelText(level)}: ${msgText(msg)}\n`
