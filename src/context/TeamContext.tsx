@@ -25,7 +25,7 @@ import {
   BookNameMap,
   BookName,
   RoleNames,
-  Section,
+  SectionD,
   SheetLevel,
 } from '../model';
 import { OptionType } from '../model';
@@ -47,7 +47,6 @@ import {
   useLoadProjectData,
   useProjectType,
   isPersonalTeam,
-  findRecord,
   useOrganizedBy,
 } from '../crud';
 import {
@@ -116,7 +115,6 @@ const initState = {
   setImportOpen: (val: boolean) => { },
   importProject: undefined as any,
   doImport: (p: VProject | undefined = undefined) => { },
-  sections: Array<Section>(),
 };
 
 export type ICtxState = typeof initState & {};
@@ -141,7 +139,7 @@ const TeamProvider = (props: IProps) => {
     'organizationmembership'
   );
   const groupMemberships = useOrbitData<GroupMembership[]>('groupmembership');
-  const sections = useOrbitData<Section[]>('section');
+  const sections = useOrbitData<SectionD[]>('section');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const sharedStrings = ts;
   const cardStrings: ICardsStrings = useSelector(cardsSelector, shallowEqual);
@@ -189,7 +187,6 @@ const TeamProvider = (props: IProps) => {
     pickerStrings,
     projButtonStrings,
     newProjectStrings,
-    sections,
     ts,
     resetOrbitError,
   });
@@ -291,22 +288,20 @@ const TeamProvider = (props: IProps) => {
   };
 
   const projectSections = (plan: Plan) => {
-    const sectionIds: RecordIdentity[] | null = related(plan, 'sections');
-    if (!sectionIds) return '<na>';
-    const status = sectionIds?.reduce(
-      (prev, cur) => {
-        const section = findRecord(memory, 'section', cur.id) as Section;
-        return {
-          movement:
-            section.attributes?.level === SheetLevel.Movement
-              ? prev.movement + 1
-              : prev.movement,
-          section:
-            section.attributes?.level === SheetLevel.Section
-              ? prev.section + 1
-              : prev.section,
-        };
-      },
+    const planSections = sections.filter((s) => related(s, 'plan') === plan.id);
+    if (planSections.length === 0) return '<na>';
+    const status = planSections?.reduce(
+      (prev, cur) => ({
+        movement:
+          cur.attributes?.level === SheetLevel.Movement
+            ? prev.movement + 1
+            : prev.movement,
+        section:
+          cur.attributes?.level === SheetLevel.Section &&
+            cur.attributes?.sequencenum > 0
+            ? prev.section + 1
+            : prev.section,
+      }),
       { movement: 0, section: 0 }
     );
     let msg = '';
