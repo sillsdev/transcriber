@@ -44,7 +44,7 @@ import {
 import { useGlobal } from 'reactn';
 import { TokenContext } from '../context/TokenProvider';
 import { UploadType } from '../components/MediaUpload';
-import { LanguagePicker } from 'mui-language-picker';
+import { LangTag, LanguagePicker } from 'mui-language-picker';
 import { ILanguage } from './Language';
 import { UnsavedContext } from '../context/UnsavedContext';
 import JSONAPISource from '@orbit/jsonapi';
@@ -209,13 +209,13 @@ export default function MediaTitle(props: IProps) {
         () =>
           offlineOnly ||
           remoteIdGuid('mediafile', mediaId, memory.keyMap as RecordKeyMap) !==
-            undefined,
+          undefined,
         () => false,
         100
       ).then(() => {
         onMediaIdChange(
           remoteIdGuid('mediafile', mediaId, memory.keyMap as RecordKeyMap) ??
-            mediaId
+          mediaId
         );
         reset();
       });
@@ -274,6 +274,12 @@ export default function MediaTitle(props: IProps) {
       onLangChange && onLangChange(langRef.current);
     }
   };
+  const setInfo = (info: LangTag) => {
+    if (langRef.current) {
+      langRef.current = { ...langRef.current, info };
+      onLangChange && onLangChange(langRef.current);
+    }
+  }
   const handleOk = (e?: any) => {
     e?.stopPropagation();
     if (saving.current) {
@@ -504,6 +510,7 @@ export default function MediaTitle(props: IProps) {
                 setCode={setCode}
                 setName={setLangname}
                 setFont={setFont}
+                setInfo={setInfo}
                 t={lt}
               />
             }
