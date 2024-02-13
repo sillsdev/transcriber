@@ -102,7 +102,6 @@ export const ProjectCard = (props: IProps) => {
     cardStrings,
     vProjectStrings,
     projButtonStrings,
-    sections,
     personalProjects,
     doImport,
   } = ctx.state;
@@ -121,8 +120,8 @@ export const ProjectCard = (props: IProps) => {
   const [, setBusy] = useGlobal('importexportBusy');
   const { getPlanName } = usePlan();
   const { localizedOrganizedBy } = useOrganizedBy();
-  const [organizedBySing, setOrganizedBySing] = useState('');
-  const [organizedByPlural, setOrganizedByPlural] = useState('');
+  const [, setOrganizedBySing] = useState('');
+  const [, setOrganizedByPlural] = useState('');
   const [projectId] = useGlobal('project');
   const projectPlans = useProjectPlans();
   const offlineProjectRead = useOfflnProjRead();
@@ -135,7 +134,7 @@ export const ProjectCard = (props: IProps) => {
   const [deleteItem, setDeleteItem] = useState<VProjectD>();
   const [open, setOpen] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
-  const {getProjectDefault} = useProjectDefaults();
+  const { getProjectDefault } = useProjectDefaults();
   const t = cardStrings;
   const tpb = projButtonStrings;
   const { userIsOrgAdmin } = useRole();
@@ -318,7 +317,7 @@ export const ProjectCard = (props: IProps) => {
   const sectionCount = useMemo(
     () => projectSections(project),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [project, sections.length]
+    [project]
   );
 
   return (
@@ -332,7 +331,7 @@ export const ProjectCard = (props: IProps) => {
               sx={{ display: 'flex', alignItems: 'center' }}
             >
               {(project?.attributes?.type || '').toLowerCase() ===
-              'scripture' ? (
+                'scripture' ? (
                 <ScriptureIcon />
               ) : (
                 <BsPencilSquare />
@@ -352,15 +351,7 @@ export const ProjectCard = (props: IProps) => {
             {t.language.replace('{0}', projectLanguage(project))}
           </Typography>
           <Typography variant="body2" component="p">
-            {sectionCount !== '<na>' &&
-              t.sectionStatus
-                .replace('{0}', sectionCount)
-                .replace(
-                  '{1}',
-                  Number(sectionCount) === 1
-                    ? organizedBySing
-                    : organizedByPlural
-                )}
+            {sectionCount !== '<na>' && sectionCount}
           </Typography>
         </StyledCardContent>
         {project?.attributes?.tags && (

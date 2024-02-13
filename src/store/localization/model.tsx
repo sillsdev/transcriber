@@ -1373,6 +1373,8 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "howToPublic": string;
     "language": string;
     "layout": string;
+    "movement": string;
+    "movements": string;
     "nameInUse": string;
     "newProject": string;
     "organizedBy": string;

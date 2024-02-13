@@ -20,6 +20,7 @@ export const useOrganizedBy = () => {
     story: t.stories,
     scene: t.scenes,
     pericope: t.pericopes,
+    movement: t.movements,
   };
   const switchFromLocal: ISwitches = {
     [t.sections]: 'section',
@@ -27,6 +28,7 @@ export const useOrganizedBy = () => {
     [t.stories]: 'story',
     [t.scenes]: 'scene',
     [t.pericopes]: 'pericope',
+    [t.movements]: 'movement',
   };
 
   const splitLocalized = (val: string, singular?: boolean) => {

@@ -26,6 +26,7 @@ import {
   BookName,
   RoleNames,
   Section,
+  SheetLevel,
 } from '../model';
 import { OptionType } from '../model';
 import {
@@ -47,6 +48,7 @@ import {
   useProjectType,
   isPersonalTeam,
   findRecord,
+  useOrganizedBy,
 } from '../crud';
 import {
   cardsSelector,
@@ -67,7 +69,7 @@ export type TeamIdType = OrganizationD | null;
 const initState = {
   lang: 'en',
   ts: {} as ISharedStrings,
-  resetOrbitError: (() => {}) as typeof actions.resetOrbitError,
+  resetOrbitError: (() => { }) as typeof actions.resetOrbitError,
   bookSuggestions: Array<OptionType>(),
   bookMap: {} as BookNameMap,
   allBookData: Array<BookName>(),
@@ -78,7 +80,7 @@ const initState = {
   personalProjects: Array<VProjectD>(),
   teamProjects: (teamId: string) => Array<VProjectD>(),
   teamMembers: (teamId: string) => 0,
-  loadProject: (plan: PlanD, cb?: () => void) => {},
+  loadProject: (plan: PlanD, cb?: () => void) => { },
   setProjectParams: (project: PlanD) => {
     return ['', ''];
   },
@@ -87,15 +89,15 @@ const initState = {
   projectDescription: (project: Plan) => '',
   projectLanguage: (project: Plan) => '',
   projectCreate: async (project: VProject, team: TeamIdType) => '',
-  projectUpdate: (project: VProjectD) => {},
-  projectDelete: (project: VProjectD) => {},
+  projectUpdate: (project: VProjectD) => { },
+  projectDelete: (project: VProjectD) => { },
   teamCreate: (
     team: Organization,
     process: string,
     cb?: (org: string) => Promise<void>
-  ) => {},
-  teamUpdate: (team: OrganizationD) => {},
-  teamDelete: async (team: RecordIdentity) => {},
+  ) => { },
+  teamUpdate: (team: OrganizationD) => { },
+  teamDelete: async (team: RecordIdentity) => { },
   isAdmin: (team: OrganizationD) => false,
   isProjectAdmin: (team: Organization) => false,
   flatAdd: async (
@@ -103,7 +105,7 @@ const initState = {
     mediaRemoteIds: string[],
     book: string | undefined,
     setComplete?: (amt: number) => void
-  ) => {},
+  ) => { },
   cardStrings: {} as ICardsStrings,
   sharedStrings: {} as ISharedStrings,
   vProjectStrings: {} as IVProjectStrings,
@@ -111,9 +113,9 @@ const initState = {
   projButtonStrings: {} as IProjButtonsStrings,
   newProjectStrings: {} as INewProjectStrings,
   importOpen: false,
-  setImportOpen: (val: boolean) => {},
+  setImportOpen: (val: boolean) => { },
   importProject: undefined as any,
-  doImport: (p: VProject | undefined = undefined) => {},
+  doImport: (p: VProject | undefined = undefined) => { },
   sections: Array<Section>(),
 };
 
@@ -209,6 +211,7 @@ const TeamProvider = (props: IProps) => {
   const LoadData = useLoadProjectData();
   const { setMyOrgRole } = useRole();
   const { resetProject } = useHome();
+  const { getOrganizedBy, localizedOrganizedBy } = useOrganizedBy();
 
   const setProjectParams = (plan: PlanD | VProjectD) => {
     const projectId = related(plan, 'project');
@@ -290,15 +293,37 @@ const TeamProvider = (props: IProps) => {
   const projectSections = (plan: Plan) => {
     const sectionIds: RecordIdentity[] | null = related(plan, 'sections');
     if (!sectionIds) return '<na>';
-    const sections = sectionIds.map(
-      (s) => findRecord(memory, 'section', s.id) as Section
+    const status = sectionIds?.reduce(
+      (prev, cur) => {
+        const section = findRecord(memory, 'section', cur.id) as Section;
+        return {
+          movement:
+            section.attributes?.level === SheetLevel.Movement
+              ? prev.movement + 1
+              : prev.movement,
+          section:
+            section.attributes?.level === SheetLevel.Section
+              ? prev.section + 1
+              : prev.section,
+        };
+      },
+      { movement: 0, section: 0 }
     );
-    var num = sections.filter(
-      (s) =>
-        s.attributes?.sequencenum > 0 &&
-        Math.floor(s.attributes.sequencenum) === s.attributes.sequencenum
-    ).length;
-    return num > 0 ? num.toString() : '<na>';
+    let msg = '';
+    if (status.movement > 0)
+      msg += `{0} {1}, `
+        .replace('{0}', status.movement.toString())
+        .replace(
+          '{1}',
+          status.movement === 1
+            ? localizedOrganizedBy('movement', true)
+            : localizedOrganizedBy('movement', false)
+        );
+    if (status.section > 0)
+      msg += `{0} {1}`
+        .replace('{0}', status.section.toString())
+        .replace('{1}', getOrganizedBy(status.section === 1));
+    return status.movement + status.section > 0 ? msg : '<na>';
   };
 
   const getProject = (plan: Plan) => {

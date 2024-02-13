@@ -1460,6 +1460,8 @@ const initialState = {
 			"howToPublic": "Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.",
 			"language": "Language",
 			"layout": "Layout",
+			"movement": "Movement",
+			"movements": "Movements",
 			"nameInUse": "Name in use",
 			"newProject": "{0} Audio Project Settings",
 			"organizedBy": "Term for organizing layout",
