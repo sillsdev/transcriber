@@ -26,14 +26,8 @@ import { IAxiosStatus } from '../store/AxiosStatus';
 import {
   Button,
   IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
   Box,
   Alert,
-  TextField, //mui 6 has a datepicker...upgrade this when...
 } from '@mui/material';
 // import CopyIcon from '@mui/icons-material/FileCopy';
 import ViewIcon from '@mui/icons-material/RemoveRedEye';
@@ -78,7 +72,7 @@ import { dateOrTime } from '../utils';
 import AudioDownload from './AudioDownload';
 import { SelectExportType } from '../control';
 import AudioExportMenu from './AudioExportMenu';
-import moment, { Moment } from 'moment';
+import { Moment } from 'moment';
 import { isPublishingTitle } from '../control/RefRender';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
@@ -89,6 +83,7 @@ import {
 } from '../selector';
 import { useDispatch } from 'react-redux';
 import { getSection } from './AudioTab/getSection';
+import { WhichExportDlg } from './WhichExportDlg';
 
 interface IRow {
   id: string;
@@ -191,9 +186,6 @@ export function TranscriptionTab(props: IProps) {
   const token = useContext(TokenContext).state.accessToken;
   const { showMessage, showTitledMessage } = useSnackBar();
   const [openExport, setOpenExport] = useState(false);
-  const [openDatePicker, setOpenDatePicker] = useState(false);
-  const [sinceDate, setSinceDate] = useState<string>('');
-  const [snapshotDate, setSnapshotDate] = useState<Moment | undefined>();
   const [data, setData] = useState(Array<IRow>());
   const [alertOpen, setAlertOpen] = useState(false);
   const [passageId, setPassageId] = useState('');
@@ -250,7 +242,8 @@ export function TranscriptionTab(props: IProps) {
       artifactType === ArtifactTypeSlug.Vernacular
         ? ''
         : localizedArtifactType(artifactType),
-    [artifactType, localizedArtifactType]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [artifactType]
   );
   const flat = useMemo(
     () => projectPlans.length > 0 && projectPlans[0].attributes.flat,
@@ -286,8 +279,8 @@ export function TranscriptionTab(props: IProps) {
     const onlyTypeId = [ExportType.DBL, ExportType.BURRITO].includes(exportType)
       ? VernacularTag
       : [ExportType.AUDIO, ExportType.ELAN].includes(exportType)
-      ? getTypeId(artifactType)
-      : undefined;
+        ? getTypeId(artifactType)
+        : undefined;
     const onlyLatest = onlyTypeId !== undefined;
     let media = getMediaInPlans(
       projectplans.map((p) => p.id) as string[],
@@ -673,96 +666,6 @@ export function TranscriptionTab(props: IProps) {
     return <Table.Cell {...props} />;
   };
 
-  const WhichExportDlg = () => {
-    const doPTF = () => {
-      setOpenExport(false);
-      doProjectExport(ExportType.PTF);
-    };
-    const doITF = (event: React.MouseEvent<HTMLElement>) => {
-      if (event.shiftKey) {
-        const op = getOfflineProject(project);
-        var oldDate = moment(op.attributes.snapshotDate);
-        setSnapshotDate(oldDate);
-        setSinceDate(
-          op.attributes.snapshotDate.substring(
-            0,
-            op.attributes.snapshotDate.indexOf('T')
-          )
-        );
-        setOpenDatePicker(true);
-      } else {
-        setOpenExport(false);
-        doProjectExport(ExportType.ITF);
-      }
-    };
-    const doITFwDate = () => {
-      const doIt = (newDate: Moment | undefined) => {
-        setOpenDatePicker(false);
-        setOpenExport(false);
-        doProjectExport(ExportType.ITF, newDate);
-      };
-      var newDate = moment(sinceDate);
-      if (newDate.isValid()) {
-        doIt(newDate.date() !== snapshotDate?.date() ? newDate : undefined);
-      } else {
-        showMessage('invalid date');
-      }
-    };
-    const closeNoChoice = () => {
-      setOpenExport(false);
-    };
-    const handleTextChange = (e: any) => {
-      setSinceDate(e.target.value);
-    };
-    return (
-      <Dialog
-        open={openExport}
-        onClose={closeNoChoice}
-        aria-labelledby="transExpDlg"
-        aria-describedby="transExpDesc"
-        disableEnforceFocus
-      >
-        <DialogTitle id="transExpDlg">{t.exportType}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="transExpDesc">
-            {t.exportExplanation}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button id="expCancel" onClick={closeNoChoice} sx={{ color: 'grey' }}>
-            {t.cancel}
-          </Button>
-          <Button id="expPtf" onClick={doPTF} color="primary">
-            {t.exportPTFtype}
-          </Button>
-          <Button id="expItf" onClick={doITF} color="primary" autoFocus>
-            {t.exportITFtype}
-          </Button>
-          {openDatePicker && (
-            <TextField
-              id="datesince"
-              value={sinceDate}
-              onChange={handleTextChange}
-              label={t.exportSince}
-              focused
-              sx={{ width: '400px' }}
-            />
-          )}
-          {openDatePicker && (
-            <Button
-              id="expItfGo"
-              onClick={doITFwDate}
-              color="primary"
-              autoFocus
-            >
-              {t.exportSinceGo}
-            </Button>
-          )}
-        </DialogActions>
-      </Dialog>
-    );
-  };
-
   return (
     <Box id="TranscriptionTab" sx={{ display: 'flex' }}>
       <div>
@@ -877,12 +780,16 @@ export function TranscriptionTab(props: IProps) {
           exportId={exportId}
         />
       )}
+      {openExport && (
+        <WhichExportDlg
+          {...{ project, openExport, setOpenExport, doProjectExport }}
+        />
+      )}
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a ref={exportAnchor} href={exportUrl} download={exportName} />
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a ref={eafAnchor} href={dataUrl} download={dataName} />
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
-      <WhichExportDlg />
     </Box>
   );
 }
