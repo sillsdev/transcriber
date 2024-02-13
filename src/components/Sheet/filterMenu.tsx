@@ -44,6 +44,7 @@ interface IProps {
   ) => void;
   filtered: boolean;
   setBusy?: (value: boolean) => void;
+  disabled?: boolean;
 }
 
 export function FilterMenu(props: IProps) {
@@ -56,6 +57,7 @@ export function FilterMenu(props: IProps) {
     filtered,
     hidePublishing,
     setBusy,
+    disabled
   } = props;
   const [localState, setLocalState] = useState(props.state);
   const [isDefault, setIsDefault] = useState(false);
@@ -69,8 +71,8 @@ export function FilterMenu(props: IProps) {
   const [mapMax, setMapMax] = useState(
     !hidePublishing
       ? sectionMap.get(
-          localState.maxSection > 0 ? localState.maxSection : maximumSection
-        )
+        localState.maxSection > 0 ? localState.maxSection : maximumSection
+      )
       : ''
   );
   const [minHelp, setMinHelp] = useState('');
@@ -114,8 +116,8 @@ export function FilterMenu(props: IProps) {
     setMapMax(
       !hidePublishing
         ? sectionMap.get(
-            localState.maxSection > 0 ? localState.maxSection : maximumSection
-          )
+          localState.maxSection > 0 ? localState.maxSection : maximumSection
+        )
         : ''
     );
     setMinHelp('');
@@ -192,6 +194,7 @@ export function FilterMenu(props: IProps) {
         aria-haspopup="true"
         sx={{ color: 'primary.light' }}
         onClick={handleClick}
+        disabled={disabled}
       >
         <FilterIcon />
       </IconButton>

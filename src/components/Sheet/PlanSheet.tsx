@@ -409,10 +409,10 @@ export function PlanSheet(props: IProps) {
       } else if (
         tbodyRef &&
         tbodyRef.offsetTop >
-          document.documentElement.scrollTop +
-            document.documentElement.clientHeight -
-            ActionHeight -
-            200
+        document.documentElement.scrollTop +
+        document.documentElement.clientHeight -
+        ActionHeight -
+        200
       ) {
         window.scrollTo(0, tbodyRef.offsetTop + 10);
       }
@@ -437,10 +437,10 @@ export function PlanSheet(props: IProps) {
     return cell.className?.substring(0, 4) === 'book' && bookMap
       ? bookMap[cell.value]
       : cell.className?.includes('num')
-      ? cell.value < 0 || Math.floor(cell.value) !== cell.value
-        ? ''
-        : cell.value
-      : cell.value;
+        ? cell.value < 0 || Math.floor(cell.value) !== cell.value
+          ? ''
+          : cell.value
+        : cell.value;
   };
   const handleDataRender = (cell: ICell) => cell.value;
 
@@ -862,6 +862,7 @@ export function PlanSheet(props: IProps) {
               maximumSection={maximumSection}
               filtered={filtered}
               hidePublishing={hidePublishing}
+              disabled={rowInfo.length < 3 || anyRecording || readonly}
             />
             {userIsAdmin && (
               <>
