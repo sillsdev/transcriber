@@ -1,10 +1,10 @@
-import { useGlobal } from 'reactn';
-import { VProjectD, Plan, ProjectD } from '../model';
+import { VProjectD, Plan, ProjectD, Project } from '../model';
 import { related, useTableType } from '.';
+import { useOrbitData } from '../hoc/useOrbitData';
 
 export const useVProjectRead = () => {
-  const [memory] = useGlobal('memory');
   const getPlanType = useTableType('plan');
+  const projects = useOrbitData<ProjectD[]>('project')
 
   const parseTags = (val: any) => {
     if (typeof val === 'string') {
@@ -17,25 +17,22 @@ export const useVProjectRead = () => {
     return {};
   };
 
-  return (plan: Plan) => {
+  return (plan: Plan, project?: Project) => {
     const projectId = related(plan, 'project');
-    const projects = memory.cache.query((q) =>
-      q.findRecords('project')
-    ) as ProjectD[];
-    const projectRecs = projects.filter((p) => p.id === projectId);
-    if (projectRecs.length > 0) {
+    const projectRec = project ?? projects.find((p) => p.id === projectId);
+    if (projectRec) {
       return {
-        ...projectRecs[0],
+        ...projectRec,
         ...plan,
         type: 'vproject',
         attributes: {
-          ...projectRecs[0].attributes,
+          ...projectRec.attributes,
           ...plan.attributes,
           tags: parseTags(plan?.attributes?.tags),
           type: getPlanType(plan),
         },
         relationships: {
-          ...projectRecs[0].relationships,
+          ...projectRec.relationships,
           ...plan.relationships,
         },
       } as VProjectD;

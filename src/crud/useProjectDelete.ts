@@ -152,18 +152,8 @@ export const useProjectDelete = () => {
       );
     }
     ops.push(
-      t
-        .removeRecord({
-          type: 'plan',
-          id: planid,
-        })
-        .toOperation(),
-      t
-        .removeRecord({
-          type: 'project',
-          id: projectid,
-        })
-        .toOperation()
+      t.removeRecord({ type: 'plan', id: planid }).toOperation(),
+      t.removeRecord({ type: 'project', id: projectid }).toOperation()
     );
     await memory.update(ops);
 
