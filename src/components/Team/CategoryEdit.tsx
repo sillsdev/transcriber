@@ -10,7 +10,7 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import GraphicsIcon from '@mui/icons-material/Image';
 import MediaTitle from '../../control/MediaTitle';
-import Colorful from '@uiw/react-color-colorful';
+import Colorful, { ColorfulProps } from '@uiw/react-color-colorful';
 import { useSelector, shallowEqual } from 'react-redux';
 import {
   ApmDim,
@@ -30,6 +30,16 @@ import { Avatar, Button, IconButton, styled } from '@mui/material';
 import { ColorResult } from '@uiw/color-convert';
 import { RecordKeyMap } from '@orbit/records';
 import { categorySelector } from '../../selector';
+
+const StyledColorful = styled(Colorful)<ColorfulProps>(() => ({
+  '& .w-color-alpha': {
+    display: 'none',
+  },
+  '& .w-color-alpha.w-color-hue': {
+    display: 'block',
+  },
+}));
+
 interface IProps {
   category: IArtifactCategory;
   type: ArtifactCategoryType;
@@ -201,7 +211,8 @@ export default function CategoryEdit({
             {showColor ? t.close : ''}
           </Button>
           {showColor && (
-            <Colorful
+            <StyledColorful
+              id="colorful"
               color={color}
               onChange={(color) => {
                 handleColor(color);
@@ -232,7 +243,11 @@ export default function CategoryEdit({
             cancelled={cancelled}
             uploadType={UploadType.Graphic}
             metadata={
-              <GraphicRights value={''} teamId={teamId} onChange={handleRightsChange} />
+              <GraphicRights
+                value={''}
+                teamId={teamId}
+                onChange={handleRightsChange}
+              />
             }
           />
         </>
