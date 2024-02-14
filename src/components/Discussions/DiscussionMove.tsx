@@ -11,7 +11,7 @@ interface IProps {
 }
 
 export const DiscussionMove = ({ onSelect }: IProps) => {
-  const { workflow } = usePassageDetailContext();
+  const { workflow, currentstep } = usePassageDetailContext();
 
   const handle = (id: string) => () => {
     onSelect(id);
@@ -20,7 +20,7 @@ export const DiscussionMove = ({ onSelect }: IProps) => {
   return (
     <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
       <List>
-        {workflow.map((w) => (
+        {workflow.filter(w => w.id !== currentstep).map((w) => (
           <ListItem key={w.id} id={w.id} disablePadding>
             <ListItemButton onClick={handle(w.id)}>
               <ListItemText primary={w.label} />
