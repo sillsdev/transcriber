@@ -25,7 +25,6 @@ import {
   sectionEditorName,
   sectionTranscriberName,
   sectionCompare,
-  PassageDescription,
   passageCompare,
   useOrganizedBy,
   usePassageState,
@@ -48,6 +47,7 @@ import {
   sharedSelector,
 } from '../selector';
 import { positiveWholeOnly } from '../utils';
+import { GetReference } from './AudioTab';
 
 const AssignmentDiv = styled('div')(() => ({
   display: 'flex',
@@ -110,18 +110,18 @@ export function AssignmentTable(props: IProps) {
     () =>
       !flat
         ? [
-            { name: 'name', title: organizedBy },
-            { name: 'state', title: t.sectionstate },
-            { name: 'passages', title: t.passages },
-            { name: 'transcriber', title: ts.transcriber },
-            { name: 'editor', title: ts.editor },
-          ]
+          { name: 'name', title: organizedBy },
+          { name: 'state', title: t.sectionstate },
+          { name: 'passages', title: t.passages },
+          { name: 'transcriber', title: ts.transcriber },
+          { name: 'editor', title: ts.editor },
+        ]
         : [
-            { name: 'name', title: organizedBy },
-            { name: 'state', title: t.sectionstate },
-            { name: 'transcriber', title: ts.transcriber },
-            { name: 'editor', title: ts.editor },
-          ],
+          { name: 'name', title: organizedBy },
+          { name: 'state', title: t.sectionstate },
+          { name: 'transcriber', title: ts.transcriber },
+          { name: 'editor', title: ts.editor },
+        ],
     [flat, organizedBy, t.passages, t.sectionstate, ts.editor, ts.transcriber]
   );
   const [filter, setFilter] = useState(false);
@@ -148,7 +148,7 @@ export function AssignmentTable(props: IProps) {
           related(s, 'plan') === plan &&
           s.attributes &&
           positiveWholeOnly(s.attributes.sequencenum) ===
-            s.attributes.sequencenum.toString()
+          s.attributes.sequencenum.toString()
       )
       .sort(sectionCompare);
 
@@ -171,11 +171,7 @@ export function AssignmentTable(props: IProps) {
       sectionps.forEach(function (passage: Passage) {
         rowData.push({
           id: passage.id,
-          name: PassageDescription({
-            passage,
-            bookData: allBookData,
-            flat: true,
-          }),
+          name: <GetReference passage={[passage]} bookData={allBookData} flat={false} />,
           state: activityState.getString(getPassageState(passage)),
           editor: '',
           transcriber: '',
