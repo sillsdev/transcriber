@@ -509,7 +509,7 @@ export function ScriptureTable(props: IProps) {
       while (
         ++endRowIndex < myWorkflow.length &&
         !isSectionRow(myWorkflow[endRowIndex])
-      ) {}
+      ) { }
       while (i > endRowIndex) {
         myWorkflow = swapRows(myWorkflow, i, i - 1);
         i--;
@@ -1386,7 +1386,12 @@ export function ScriptureTable(props: IProps) {
           hidePublishing,
           w.reference || ''
         );
-        if (!sectionfiltered && hidePublishing && w.kind === IwsKind.Section) {
+        if (
+          !sectionfiltered &&
+          hidePublishing &&
+          w.kind === IwsKind.Section &&
+          w.level !== SheetLevel.Section
+        ) {
           var allMyPassagesArePublishing = true;
           for (
             var ix = index + 1;
@@ -1803,8 +1808,8 @@ export function ScriptureTable(props: IProps) {
           shared
             ? resStr.resourceEdit
             : isNote
-            ? resStr.noteDetails
-            : ts.versionHistory
+              ? resStr.noteDetails
+              : ts.versionHistory
         }
         isOpen={versionRow !== undefined}
         onOpen={handleVerHistClose}
