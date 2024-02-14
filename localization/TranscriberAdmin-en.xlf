@@ -574,6 +574,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.bibleidiso">
+         <segment>
+            <source>Bible Id should begin with the language code.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.bibleIdExplain">
          <segment>
             <source>Explain Bible Id</source>

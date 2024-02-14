@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Bible, ICardsStrings, Organization } from '../model';
 import {
   Accordion,
@@ -130,11 +130,11 @@ export function PublishExpansion(props: IProps) {
     setValue('isoMediafile', mediaId);
   };
   const handleChangeBibleId = (event: any) => {
-    setBibleIdError(bibleIdIsValid(event.target.value));
+    const newId = (event.target.value as string).toLocaleUpperCase();
+    setBibleIdError(bibleIdIsValid(newId));
 
-    setBibleId(event.target.value);
-    if (bible?.attributes?.bibleId !== event.target.value)
-      setValue('bibleId', event.target.value);
+    setBibleId(newId);
+    if (bible?.attributes?.bibleId !== newId) setValue('bibleId', newId);
     return '';
   };
   const handleChangeBibleName = (value: string) => {
@@ -148,10 +148,15 @@ export function PublishExpansion(props: IProps) {
     }
     onRecording && onRecording(recording);
   };
-  const handleLanguageChange = (lang: ILanguage) => {
-    setLanguage(lang);
-    onChanged(true);
-  };
+  const handleLanguageChange = useCallback(
+    (lang: ILanguage) => {
+      setLanguage(lang);
+      onChanged(true);
+      if (bibleId) setBibleIdError(bibleIdIsValid(bibleId));
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [bibleId]
+  );
 
   //TODO
   /*
@@ -164,9 +169,17 @@ export function PublishExpansion(props: IProps) {
   };
   */
   const bibleIdIsValid = (newName: string): string => {
-    if (newName === bible?.attributes?.bibleId) return '';
     //TODO: Is there a format?
-    if (newName.length < 6) return t.bibleidformat;
+    if (!/^[A-Z]{6}/.test(newName) || newName.length < 6)
+      return t.bibleidformat;
+    let iso639_3 = languageRef.current?.info?.iso639_3
+    if (!iso639_3) {
+      const bcp47lg = languageRef.current?.bcp47.split('-')[0];
+      if (bcp47lg.length === 3) iso639_3 = bcp47lg;
+    }
+    if (iso639_3 && newName.indexOf(iso639_3.toLocaleUpperCase()) !== 0)
+      return t.bibleidiso;
+    if (newName === bible?.attributes?.bibleId) return '';
     //TODO: check bible brain also
     const sameNameRec = bibles.filter(
       (o) => o?.attributes?.bibleId === newName

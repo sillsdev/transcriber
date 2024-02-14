@@ -139,6 +139,7 @@ const initialState = {
 			"bibleid": "Bible Id",
 			"bibleidexists": "Bible Id already exists. Please contact support if you need to work on this Bible.",
 			"bibleidformat": "Bible Id must be at least 6 characters.",
+			"bibleidiso": "Bible Id should begin with the language code.",
 			"bibleIdExplain": "Explain Bible Id",
 			"biblename": "Name of Bible",
 			"cancel": "Cancel",

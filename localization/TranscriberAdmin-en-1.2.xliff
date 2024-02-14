@@ -667,6 +667,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.bibleidiso">
+            <source>Bible Id should begin with the language code.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="cards.bibleIdExplain">
       		<source>Explain Bible Id</source>
       		<target/>
