@@ -57,7 +57,7 @@ export function FilterMenu(props: IProps) {
     filtered,
     hidePublishing,
     setBusy,
-    disabled
+    disabled,
   } = props;
   const [localState, setLocalState] = useState(props.state);
   const [isDefault, setIsDefault] = useState(false);
@@ -110,24 +110,18 @@ export function FilterMenu(props: IProps) {
     apply(localState, defaultRef.current);
   };
   const handleClear = () => {
-    apply(undefined, defaultRef.current);
-    setAnchorEl(null);
     setMapMin(!hidePublishing ? sectionMap.get(minimumSection) : '');
-    setMapMax(
-      !hidePublishing
-        ? sectionMap.get(
-          localState.maxSection > 0 ? localState.maxSection : maximumSection
-        )
-        : ''
-    );
+    setMapMax(!hidePublishing ? sectionMap.get(-1) : '');
     setMinHelp('');
     setMaxHelp('');
+    apply(undefined, defaultRef.current);
+    setAnchorEl(null);
   };
   const handleDisabled = (event: React.ChangeEvent<HTMLInputElement>) => {
     apply({ ...localState, disabled: event.target.checked }, false);
   };
   useEffect(() => {
-    setLocalState(props.state);
+    setLocalState({ ...props.state });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.state]);
 
