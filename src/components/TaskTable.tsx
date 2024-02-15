@@ -26,7 +26,7 @@ import BigDialog from '../hoc/BigDialog';
 import IntegrationTab from './Integration';
 import ExportTab from './TranscriptionTab';
 import Visualize from './Visualize';
-import ProjectMenu from './Team/ProjectMenu';
+// import ProjectMenu from './Team/ProjectMenu';
 import { formatTime, GrowingSpacer, LightTooltip, iconSize } from '../control';
 import { ChipText } from './TaskFlag';
 import {
@@ -35,8 +35,8 @@ import {
   taskPassageNumber,
   useOrganizedBy,
   usePlan,
-  useOfflineAvailToggle,
-  useRole,
+  // useOfflineAvailToggle,
+  // useRole,
   paddedSectionNumber,
 } from '../crud';
 import { numCompare, prettySegmentStart } from '../utils';
@@ -110,11 +110,11 @@ export const Header = styled(Box, {
   alignItems: 'center',
   ...(filter
     ? {
-        width: 'auto',
-      }
+      width: 'auto',
+    }
     : {
-        width: `${TaskItemWidth - 30}px`,
-      }),
+      width: `${TaskItemWidth - 30}px`,
+    }),
 }));
 
 interface IRow {
@@ -140,7 +140,9 @@ interface IProps {
 }
 
 export function TaskTable(props: IProps) {
-  const { onFilter, isDetail } = props;
+  const { onFilter,
+    // isDetail 
+  } = props;
   const {
     rowData,
     activityStateStr,
@@ -148,7 +150,7 @@ export function TaskTable(props: IProps) {
     projButtonStr,
     expandedGroups,
     filter,
-    setFilter,
+    // setFilter,
     flat,
   } = useTodo();
   const {
@@ -170,7 +172,7 @@ export function TaskTable(props: IProps) {
   );
   const [width, setWidth] = useState(TaskTableWidth);
   const { getPlan, getPlanName } = usePlan();
-  const offlineAvailableToggle = useOfflineAvailToggle();
+  // const offlineAvailableToggle = useOfflineAvailToggle();
   const [planId] = useGlobal('plan');
   const [planName, setPlanName] = useState('');
   const [projectId] = useGlobal('project');
@@ -240,15 +242,15 @@ export function TaskTable(props: IProps) {
   const selectedRef = useRef<any>();
   const notSelectedRef = useRef<any>();
   const busyRef = useRef(false);
-  const { userIsAdmin } = useRole();
+  // const { userIsAdmin } = useRole();
   const hiddenColumnNames = useMemo(() => (flat ? ['sectPass'] : []), [flat]);
 
-  const handleToggleFilter = () => {
-    handleStopPlayer();
-    setPlayItem('');
-    if (onFilter) onFilter(!filter);
-    setFilter(!filter);
-  };
+  // const handleToggleFilter = () => {
+  //   handleStopPlayer();
+  //   setPlayItem('');
+  //   if (onFilter) onFilter(!filter);
+  //   setFilter(!filter);
+  // };
 
   const setDimensions = () => {
     const newWidth = filterRef.current
@@ -286,19 +288,19 @@ export function TaskTable(props: IProps) {
     if (playing) setPlaying(false);
   };
 
-  const handleProjectMenu = (what: string) => {
-    if (what === 'offlineAvail') {
-      offlineAvailableToggle(projectId);
-    } else if (what === 'integration') {
-      setOpenIntegration(true);
-    } else if (what === 'export') {
-      setOpenExport(true);
-    } else if (what === 'reports') {
-      setOpenReports(true);
-    } else if (what === 'filter') {
-      handleToggleFilter();
-    }
-  };
+  // const handleProjectMenu = (what: string) => {
+  //   if (what === 'offlineAvail') {
+  //     offlineAvailableToggle(projectId);
+  //   } else if (what === 'integration') {
+  //     setOpenIntegration(true);
+  //   } else if (what === 'export') {
+  //     setOpenExport(true);
+  //   } else if (what === 'reports') {
+  //     setOpenReports(true);
+  //   } else if (what === 'filter') {
+  //     handleToggleFilter();
+  //   }
+  // };
 
   const handlePlay = (id: string) => () => {
     if (id !== playItem) {
@@ -513,14 +515,14 @@ export function TaskTable(props: IProps) {
           <Header filter={filter}>
             <Typography variant="h6">{t.tasks}</Typography>
             <GrowingSpacer />
-            <ProjectMenu
+            {/* <ProjectMenu
               action={handleProjectMenu}
               stopPlayer={handleStopPlayer}
               inProject={true}
               isAdmin={userIsAdmin}
               project={projectId}
               justFilter={isDetail}
-            />
+            /> */}
             {/** filter && (
               <IconButton id="taskFiltClose" onClick={handleToggleFilter}>
                 <CloseIcon />
