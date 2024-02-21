@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { TokenContext } from '../context/TokenProvider';
 import {
-  IState,
   User,
   UserD,
   IProfileStrings,
@@ -47,7 +45,6 @@ import {
   uiLangDev,
   langName,
   localeDefault,
-  getParatextDataPath,
   waitForIt,
   useMyNavigate,
   localUserKey,
@@ -85,11 +82,11 @@ const PaperContainer = styled(Paper, {
   justifyContent: 'center',
   ...(noMargin
     ? {
-        margin: 0,
-      }
+      margin: 0,
+    }
     : {
-        margin: theme.spacing(4),
-      }),
+      margin: theme.spacing(4),
+    }),
 }));
 
 const Caption = styled(Typography)<TypographyProps>(() => ({
@@ -130,16 +127,8 @@ export function Profile(props: IProps) {
   const { noMargin, finishAdd } = props;
   const users = useOrbitData<UserD[]>('user');
   const t: IProfileStrings = useSelector(profileSelector, shallowEqual);
-  const paratext_username = useSelector(
-    (state: IState) => state.paratext.username
-  );
-  const paratext_usernameStatus = useSelector(
-    (state: IState) => state.paratext.usernameStatus
-  );
   const dispatch = useDispatch();
   const setLanguage = (lang: string) => dispatch(action.setLanguage(lang));
-  const getUserName = (token: string, errorReporter: any, message: string) =>
-    dispatch(action.getUserName(token, errorReporter, message));
   const [isOffline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
   const [editId, setEditId] = useGlobal('editUserId');
@@ -147,10 +136,8 @@ export function Profile(props: IProps) {
   const [user, setUser] = useGlobal('user');
   const [, setLang] = useGlobal('lang');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [errorReporter] = useGlobal('errorReporter');
   const [isDeveloper] = useGlobal('developer');
   const navigate = useMyNavigate();
-  const { accessToken } = useContext(TokenContext).state;
   const { getUserRec } = useUser();
   const { getMbrRoleRec, userIsAdmin, userIsSharedContentAdmin } = useRole();
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
@@ -176,7 +163,6 @@ export function Profile(props: IProps) {
   const [locked, setLocked] = useState(false);
   const [deleteItem, setDeleteItem] = useState('');
   const [dupName, setDupName] = useState(false);
-  const [hasParatext, setHasParatext] = useState(false);
   const [view, setView] = useState('');
   const {
     startSave,
@@ -189,7 +175,6 @@ export function Profile(props: IProps) {
     isChanged,
   } = useContext(UnsavedContext).state;
   const [myChanged, setMyChanged] = useState(false);
-  const [ptPath, setPtPath] = React.useState('');
   const { showMessage } = useSnackBar();
   const addToOrgAndGroup = useAddToOrgAndGroup();
   const teamDelete = useTeamDelete();
@@ -457,7 +442,6 @@ export function Profile(props: IProps) {
   };
 
   useEffect(() => {
-    if (isOffline) getParatextDataPath().then((val) => setPtPath(val));
     setView('');
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
@@ -538,20 +522,10 @@ export function Profile(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timezone]);
 
-  useEffect(() => {
-    if (!isOffline) {
-      if (!paratext_usernameStatus) {
-        getUserName(accessToken || '', errorReporter, t.checkingParatext);
-      }
-      setHasParatext(paratext_username !== '');
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [paratext_username, paratext_usernameStatus]);
-
   const userNotComplete = () =>
     currentUser === undefined ||
     currentUser.attributes?.name.toLowerCase() ===
-      currentUser.attributes?.email.toLowerCase();
+    currentUser.attributes?.email.toLowerCase();
 
   const requiredComplete = () =>
     (name || '') !== '' &&
@@ -575,12 +549,7 @@ export function Profile(props: IProps) {
             <StyledGrid item xs={12} md={5}>
               <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
               <Caption>{email || ''}</Caption>
-              <ParatextLinked
-                hasParatext={hasParatext}
-                ptPath={ptPath}
-                setView={setView}
-                isOffline={isOffline}
-              />
+              <ParatextLinked setView={setView} />
             </StyledGrid>
             <Grid item xs={12} md={7}>
               {editId && /Add/i.test(editId) ? (
@@ -779,16 +748,16 @@ export function Profile(props: IProps) {
                 {((editId && /Add/i.test(editId)) ||
                   (currentUser &&
                     currentUser.attributes?.name !==
-                      currentUser.attributes?.email)) && (
-                  <AltButton
-                    id="profileCancel"
-                    key="cancel"
-                    aria-label={t.cancel}
-                    onClick={handleCancel}
-                  >
-                    {t.cancel}
-                  </AltButton>
-                )}
+                    currentUser.attributes?.email)) && (
+                    <AltButton
+                      id="profileCancel"
+                      key="cancel"
+                      aria-label={t.cancel}
+                      onClick={handleCancel}
+                    >
+                      {t.cancel}
+                    </AltButton>
+                  )}
                 <PriButton
                   id="profileSave"
                   key="add"
@@ -804,8 +773,8 @@ export function Profile(props: IProps) {
                   {editId && /Add/i.test(editId)
                     ? t.add
                     : userNotComplete()
-                    ? t.next
-                    : t.save}
+                      ? t.next
+                      : t.save}
                   <SaveIcon sx={{ ml: 1 }} />
                 </PriButton>
               </ActionRow>

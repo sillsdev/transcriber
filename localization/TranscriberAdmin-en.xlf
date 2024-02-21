@@ -4396,6 +4396,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.paratextRequired">
+         <segment>
+            <source>Log out and log in as a Paratext user is required to use this feature.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.passageBelow">
          <segment>
             <source>Add Passage below Passage {0}</source>
