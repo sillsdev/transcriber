@@ -570,7 +570,7 @@
       </unit>
       <unit id="cards.bibleidformat">
          <segment>
-            <source>Bible Id must be at least 6 characters.</source>
+            <source>Bible Id must begin with the language code and version (six letters).</source>
             <target/>
          </segment>
       </unit>
