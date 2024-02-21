@@ -12,6 +12,8 @@ import InfoIcon from '@mui/icons-material/Info';
 import ParatextIcon from '../control/ParatextLogo';
 import { useSelector } from 'react-redux';
 import { profileSelector } from '../selector';
+import { useHasParatext } from '../utils';
+import { useGlobal } from 'reactn';
 
 interface StyledCaptionProps extends TypographyProps {
   isCaption?: boolean;
@@ -32,14 +34,13 @@ const StyledCaption = styled(Typography, {
 }));
 
 interface IProps {
-  hasParatext: Boolean;
-  ptPath: string;
   setView: React.Dispatch<React.SetStateAction<string>>;
-  isOffline: Boolean;
 }
 
 export const ParatextLinked = (props: IProps) => {
-  const { hasParatext, ptPath, setView, isOffline } = props;
+  const { setView } = props;
+  const [isOffline] = useGlobal('offline');
+  const { hasParatext, ptPath } = useHasParatext();
   const t: IProfileStrings = useSelector(profileSelector);
   const status = useSelector((state: IState) => state.paratext.usernameStatus);
   const [howToLink, setHowToLink] = React.useState(false);

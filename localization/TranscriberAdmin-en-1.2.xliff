@@ -5128,7 +5128,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-
+         <trans-unit id="planSheet.paratextRequired">
+            <source>Log out and log in as a Paratext user is required to use this feature.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planSheet.passageBelow">
             <source>Add Passage below Passage {0}</source>
             <target/>

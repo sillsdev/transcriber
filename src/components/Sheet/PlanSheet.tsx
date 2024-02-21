@@ -42,6 +42,7 @@ import {
   LocalKey,
   rememberCurrentPassage,
   positiveWholeOnly,
+  useHasParatext,
 } from '../../utils';
 import { remoteIdGuid, useRole } from '../../crud';
 import MediaPlayer from '../MediaPlayer';
@@ -290,6 +291,7 @@ export function PlanSheet(props: IProps) {
   const [saving, setSaving] = useState(false);
   const { userIsAdmin } = useRole();
   const refErrTest = useRefErrTest();
+  const { hasParatext } = useHasParatext();
   const moveUp = true;
   const moveDown = false;
   const moveToNewSection = true;
@@ -693,6 +695,10 @@ export function PlanSheet(props: IProps) {
   };
 
   const handlePublishToggle: MouseEventHandler<HTMLButtonElement> = () => {
+    if (!hasParatext) {
+      showMessage(t.paratextRequired);
+      return;
+    }
     onPublishing(false);
   };
 
