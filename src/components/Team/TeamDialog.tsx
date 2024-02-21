@@ -263,7 +263,6 @@ export function TeamDialog(props: IProps) {
   useEffect(() => {
     setReadonly(
       (owner && owner !== values?.team.id) ||
-      bibleIdError.length > 0 ||
       bibleId.length === 0
     );
   }, [owner, bibleIdError, bibleId, values]);

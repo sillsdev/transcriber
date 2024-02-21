@@ -661,7 +661,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="cards.bibleidformat">
-            <source>Bible Id must be at least 6 characters.</source>
+            <source>Bible Id must begin with the language code and version (six letters).</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
