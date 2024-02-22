@@ -686,6 +686,7 @@ const initialState = {
 			"passageAttached": "Passage already attached",
 			"planName": "Plan",
 			"proposed": "Proposed",
+			"published": "Published",
 			"readyToShare": "Ready to Share",
 			"reference": "Reference",
 			"save": "Save",

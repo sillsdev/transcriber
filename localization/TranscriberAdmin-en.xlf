@@ -3256,6 +3256,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.published">
+         <segment>
+            <source>Published</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.readyToShare">
          <segment>
             <source>Ready to Share</source>

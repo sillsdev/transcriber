@@ -3798,6 +3798,13 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="mediaTab.published">
+            <source>Published</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="mediaTab.readyToShare">
             <source>Ready to Share</source>
             <target/>

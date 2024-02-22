@@ -50,7 +50,7 @@ export const AudioTable = (props: IProps) => {
     ? [
       { name: 'planName', title: t.planName },
       { name: 'actions', title: '\u00A0' },
-      { name: 'readyToShare', title: t.readyToShare },
+      { name: 'readyToShare', title: shared ? t.readyToShare : t.published },
       { name: 'fileName', title: t.fileName },
       { name: 'sectionDesc', title: organizedBy },
       { name: 'reference', title: t.reference },
