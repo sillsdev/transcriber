@@ -35,7 +35,7 @@ export const AudioTable = (props: IProps) => {
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
   const lang = useSelector((state: IState) => state.strings.lang);
   const ctx = React.useContext(PlanContext);
-  const { connected, readonly, shared } = ctx.state;
+  const { connected, readonly, shared, sectionArr } = ctx.state;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -46,62 +46,62 @@ export const AudioTable = (props: IProps) => {
   const [deleteItem, setDeleteItem] = useState(-1);
   const [showId, setShowId] = useState('');
   const [mediaPlaying, setMediaPlaying] = useState(false);
-  const columnDefs = shared
+  const columnDefs = shared || sectionArr.length > 0
     ? [
-        { name: 'planName', title: t.planName },
-        { name: 'actions', title: '\u00A0' },
-        { name: 'readyToShare', title: t.readyToShare },
-        { name: 'fileName', title: t.fileName },
-        { name: 'sectionDesc', title: organizedBy },
-        { name: 'reference', title: t.reference },
-        { name: 'user', title: t.user },
-        { name: 'duration', title: t.duration },
-        { name: 'size', title: t.size },
-        { name: 'version', title: t.version },
-        { name: 'date', title: t.date },
-        { name: 'detach', title: '\u00A0' },
-      ]
+      { name: 'planName', title: t.planName },
+      { name: 'actions', title: '\u00A0' },
+      { name: 'readyToShare', title: shared ? t.readyToShare : t.published },
+      { name: 'fileName', title: t.fileName },
+      { name: 'sectionDesc', title: organizedBy },
+      { name: 'reference', title: t.reference },
+      { name: 'user', title: t.user },
+      { name: 'duration', title: t.duration },
+      { name: 'size', title: t.size },
+      { name: 'version', title: t.version },
+      { name: 'date', title: t.date },
+      { name: 'detach', title: '\u00A0' },
+    ]
     : [
-        { name: 'planName', title: t.planName },
-        { name: 'actions', title: '\u00A0' },
-        { name: 'fileName', title: t.fileName },
-        { name: 'sectionDesc', title: organizedBy },
-        { name: 'reference', title: t.reference },
-        { name: 'user', title: t.user },
-        { name: 'duration', title: t.duration },
-        { name: 'size', title: t.size },
-        { name: 'version', title: t.version },
-        { name: 'date', title: t.date },
-        { name: 'detach', title: '\u00A0' },
-      ];
-  const columnWidths = shared
+      { name: 'planName', title: t.planName },
+      { name: 'actions', title: '\u00A0' },
+      { name: 'fileName', title: t.fileName },
+      { name: 'sectionDesc', title: organizedBy },
+      { name: 'reference', title: t.reference },
+      { name: 'user', title: t.user },
+      { name: 'duration', title: t.duration },
+      { name: 'size', title: t.size },
+      { name: 'version', title: t.version },
+      { name: 'date', title: t.date },
+      { name: 'detach', title: '\u00A0' },
+    ];
+  const columnWidths = shared || sectionArr.length > 0
     ? [
-        { columnName: 'planName', width: 150 },
-        { columnName: 'actions', width: onAttach ? 120 : 70 },
-        { columnName: 'readyToShare', width: 100 },
-        { columnName: 'fileName', width: 220 },
-        { columnName: 'sectionDesc', width: 150 },
-        { columnName: 'reference', width: 150 },
-        { columnName: 'user', width: 30 },
-        { columnName: 'duration', width: 100 },
-        { columnName: 'size', width: 100 },
-        { columnName: 'version', width: 100 },
-        { columnName: 'date', width: 100 },
-        { columnName: 'detach', width: 120 },
-      ]
+      { columnName: 'planName', width: 150 },
+      { columnName: 'actions', width: onAttach ? 120 : 70 },
+      { columnName: 'readyToShare', width: 100 },
+      { columnName: 'fileName', width: 220 },
+      { columnName: 'sectionDesc', width: 150 },
+      { columnName: 'reference', width: 150 },
+      { columnName: 'user', width: 30 },
+      { columnName: 'duration', width: 100 },
+      { columnName: 'size', width: 100 },
+      { columnName: 'version', width: 100 },
+      { columnName: 'date', width: 100 },
+      { columnName: 'detach', width: 120 },
+    ]
     : [
-        { columnName: 'planName', width: 150 },
-        { columnName: 'actions', width: onAttach ? 120 : 70 },
-        { columnName: 'fileName', width: 220 },
-        { columnName: 'sectionDesc', width: 150 },
-        { columnName: 'reference', width: 150 },
-        { columnName: 'user', width: 30 },
-        { columnName: 'duration', width: 100 },
-        { columnName: 'size', width: 100 },
-        { columnName: 'version', width: 100 },
-        { columnName: 'date', width: 100 },
-        { columnName: 'detach', width: 120 },
-      ];
+      { columnName: 'planName', width: 150 },
+      { columnName: 'actions', width: onAttach ? 120 : 70 },
+      { columnName: 'fileName', width: 220 },
+      { columnName: 'sectionDesc', width: 150 },
+      { columnName: 'reference', width: 150 },
+      { columnName: 'user', width: 30 },
+      { columnName: 'duration', width: 100 },
+      { columnName: 'size', width: 100 },
+      { columnName: 'version', width: 100 },
+      { columnName: 'date', width: 100 },
+      { columnName: 'detach', width: 120 },
+    ];
 
   const columnFormatting = [
     { columnName: 'actions', aligh: 'center', wordWrapEnabled: false },
