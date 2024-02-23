@@ -137,10 +137,10 @@ export async function electronExport(
       'project',
       typeof projectid === 'number'
         ? remoteIdGuid(
-            'project',
-            projectid.toString(),
-            memory.keyMap as RecordKeyMap
-          ) ?? projectid.toString()
+          'project',
+          projectid.toString(),
+          memory.keyMap as RecordKeyMap
+        ) ?? projectid.toString()
         : projectid
     ) as ProjectD;
   };
@@ -337,8 +337,8 @@ export async function electronExport(
               ? 1
               : -1
             : related(a, 'passage') > related(b, 'passage')
-            ? 1
-            : -1
+              ? 1
+              : -1
         )
         .forEach((m) => {
           if (related(m, 'passage') !== psg) {
@@ -364,7 +364,7 @@ export async function electronExport(
       //now get any shared resource mediafiles associated with those mediafiles
       var sourcemediafiles = media.filter(
         (m) =>
-          m.attributes.readyToShare &&
+          m.attributes?.readyToShare &&
           resourcemediafiles
             .map((r) => related(r, 'resourcePassage'))
             .includes(related(m, 'passage'))
@@ -895,8 +895,8 @@ export async function electronExport(
             await AddMediaFiles(
               recs,
               checkRename &&
-                recs.length > 0 &&
-                related(recs[0], 'artifactType') === VernacularTag
+              recs.length > 0 &&
+              related(recs[0], 'artifactType') === VernacularTag
             );
         }
       }
@@ -1039,10 +1039,10 @@ export async function electronExport(
       exportType === ExportType.ITFBACKUP
         ? itfb_fileName(projects[ix])
         : [ExportType.AUDIO, ExportType.BURRITO, ExportType.ELAN].includes(
-            exportType
-          )
-        ? fileName(projects[ix], `${localizedArtifact}_${exportType}`, 'zip')
-        : fileName(projects[ix], localizedArtifact, exportType);
+          exportType
+        )
+          ? fileName(projects[ix], `${localizedArtifact}_${exportType}`, 'zip')
+          : fileName(projects[ix], localizedArtifact, exportType);
     changedRecs += numRecs;
     if (backupZip) {
       if (numRecs)
