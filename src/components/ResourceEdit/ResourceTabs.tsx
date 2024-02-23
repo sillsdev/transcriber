@@ -272,7 +272,7 @@ export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
         });
       }
     }
-    await updatePassage(passage, undefined, undefined, sr.id);
+    await updatePassage(passage, undefined, PassageTypeEnum.NOTE, sr.id);
   };
 
   const copyGraphic = async (sr: SharedResourceD, passage: PassageD) => {
@@ -343,8 +343,8 @@ export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
             readOnly
               ? DialogMode.view
               : values
-              ? DialogMode.edit
-              : DialogMode.add
+                ? DialogMode.edit
+                : DialogMode.add
           }
           values={values}
           isOpen={true}
@@ -362,8 +362,8 @@ export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
             readOnly
               ? DialogMode.view
               : values
-              ? DialogMode.edit
-              : DialogMode.add
+                ? DialogMode.edit
+                : DialogMode.add
           }
           res={sharedResRec}
           onOpen={handleOverOpen}
