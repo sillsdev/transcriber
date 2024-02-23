@@ -208,8 +208,8 @@ function MediaUpload(props: IProps) {
     return files.length === 0
       ? ''
       : files.length === 1
-      ? files[0].name
-      : files.length.toString() + ' files selected';
+        ? files[0].name
+        : files.length.toString() + ' files selected';
   };
   const checkSizes = (files: File[], sizelimit: number) => {
     var smallenoughfiles = Array.from(
@@ -269,10 +269,10 @@ function MediaUpload(props: IProps) {
         '.mp3, .m4a, .wav, .ogg, .pdf',
         '.itf',
         '.ptf',
-        '.jpg, .svg, .png',
+        '.jpg, .jpeg, .svg, .png',
         '.mp3, .m4a, .wav, .ogg, .pdf',
-        '.mp3, .m4a, .wav, .ogg, .pdf, .png, .jpg',
-        '.png, .jpg, .webp',
+        '.mp3, .m4a, .wav, .ogg, .pdf, .png, .jpg, .jpeg',
+        '.png, .jpg, .jpeg, .webp',
       ].map((s) => s)[uploadType]
     );
     setAcceptMime(
@@ -281,10 +281,10 @@ function MediaUpload(props: IProps) {
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf',
         'application/itf',
         'application/ptf',
-        'image/jpeg, image/svg+xml, image/png',
+        'image/jpeg, image/jpeg, image/svg+xml, image/png',
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf',
-        'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf, image/png, image/jpeg',
-        'image/png, image/jpeg image/webp',
+        'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf, image/png, image/jpeg, image/jpeg',
+        'image/png, image/jpeg, image/jpeg, image/webp',
       ].map((s) => s)[uploadType]
     );
     var size = SIZELIMIT(uploadType);
