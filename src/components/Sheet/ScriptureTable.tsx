@@ -1439,17 +1439,19 @@ export function ScriptureTable(props: IProps) {
   );
 
   const toggleSectionPublish = (index: number) => {
-    const { ws } = getByIndex(sheetRef.current, index);
-    if (ws) {
-      const newsht = [...sheetRef.current];
-      newsht[index] = {
-        ...ws,
-        published: !ws.published,
-        sectionUpdated: currentDateTime(),
-      };
-      setSheet(newsht);
-      setChanged(true);
-    }
+    checkSavedFn(() => {
+      const { ws } = getByIndex(sheetRef.current, index);
+      if (ws) {
+        const newsht = [...sheetRef.current];
+        newsht[index] = {
+          ...ws,
+          published: !ws.published,
+          sectionUpdated: currentDateTime(),
+        };
+        setSheet(newsht);
+        setChanged(true);
+      }
+    });
   };
 
   const onPublishing = (update: boolean) => {
