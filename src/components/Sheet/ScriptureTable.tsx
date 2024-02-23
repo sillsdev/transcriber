@@ -213,6 +213,7 @@ export function ScriptureTable(props: IProps) {
     toolsChanged,
     isChanged,
     anySaving,
+    checkSavedFn
   } = useContext(UnsavedContext).state;
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
   const [assignSections, setAssignSections] = useState<number[]>([]);
@@ -1451,12 +1452,14 @@ export function ScriptureTable(props: IProps) {
     }
   };
 
-  const onPublishing = async (update: boolean) => {
-    if (update) await doPublish();
-    else if (!hidePublishing) togglePublishing(); //turn it off
-    //if we're going to show now and we don't already have some rows...ask
-    else if (!canHidePublishing) setConfirmPublishingVisible(true);
-    else togglePublishing(); //turn it on - no update
+  const onPublishing = (update: boolean) => {
+    checkSavedFn(async () => {
+      if (update) await doPublish();
+      else if (!hidePublishing) togglePublishing(); //turn it off
+      //if we're going to show now and we don't already have some rows...ask
+      else if (!canHidePublishing) setConfirmPublishingVisible(true);
+      else togglePublishing(); //turn it on - no update
+    })
   };
   const onPublishingReject = () => {
     setConfirmPublishingVisible(false);
