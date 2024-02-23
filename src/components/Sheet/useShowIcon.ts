@@ -53,8 +53,8 @@ export const useShowIcon = ({
         [ExtraIcon.SectionEnd]: true,
         [ExtraIcon.PassageBelow]:
           !inlinePassages &&
-          (isSectionHead(rowIndex) || isPassageType(rowIndex)) &&
-          inSection(rowIndex),
+          (isSectionHead(rowIndex) ||
+            (isPassageType(rowIndex) && inSection(rowIndex))),
         [ExtraIcon.PassageLast]: !inlinePassages && isSectionHead(rowIndex),
         [ExtraIcon.PassageEnd]:
           !inlinePassages &&
