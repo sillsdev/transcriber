@@ -69,7 +69,7 @@ export const TeamItem = (props: IProps) => {
 
     teamUpdate(values.team);
 
-    cb && cb(values.team.id);
+    cb && await cb(values.team.id);
     setEditOpen(false);
   };
 
