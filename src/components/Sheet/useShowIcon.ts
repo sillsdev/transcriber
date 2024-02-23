@@ -40,7 +40,9 @@ export const useShowIcon = ({
     (icon: ExtraIcon) => {
       const extraMap: IExtraMap = {
         [ExtraIcon.Publish]:
-          !inlinePassages && isSectionHead(rowIndex) && !hidePublishing,
+          !inlinePassages &&
+          (isSectionHead(rowIndex) || isMovement(rowIndex)) &&
+          !hidePublishing,
         [ExtraIcon.Publishing]: !inlinePassages && !hidePublishing,
         [ExtraIcon.MovementAbove]:
           !inlinePassages &&
