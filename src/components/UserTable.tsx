@@ -231,7 +231,7 @@ export function UserTable() {
           aria-label={'del-' + value}
           color="default"
           onClick={handleDelete(value)}
-          disabled={isCurrentUser(value) && userIsAdmin && admins.length === 1}
+          disabled={userIsAdmin ? admins.length === 1 : !isCurrentUser(value)}
         >
           <DeleteIcon />
         </IconButton>
