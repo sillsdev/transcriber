@@ -97,13 +97,14 @@ const shtPassageAdd = (
 const initItem = {} as ISheet;
 export const isSectionFiltered = (
   filterState: ISTFilterState,
+  minSection: number,
   sectionSeq: number,
   hidePublishing: boolean,
   ref: string
 ) =>
   (hidePublishing && isPublishingTitle(ref)) ||
   (!filterState.disabled &&
-    ((filterState.minSection > 1 && sectionSeq < filterState.minSection) ||
+    ((filterState.minSection > minSection && sectionSeq < filterState.minSection) ||
       (filterState.maxSection > -1 && sectionSeq > filterState.maxSection)));
 
 export const isPassageFiltered = (
@@ -191,6 +192,7 @@ export const getSheet = (
       item.deleted = false;
       sectionfiltered = isSectionFiltered(
         filterState,
+        minSection,
         item.sectionSeq,
         hidePublishing,
         item.reference

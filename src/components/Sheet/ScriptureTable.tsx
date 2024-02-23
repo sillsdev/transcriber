@@ -314,7 +314,7 @@ export function ScriptureTable(props: IProps) {
     setSheetx(ws);
     var anyPublishing =
       !shared && !offline
-        ? Boolean(ws.find((w) => isPublishingTitle(w.reference ?? '', flat)))
+        ? Boolean(ws.find((s) => isPublishingTitle(s.reference ?? '', flat)))
         : false;
     if (canHidePublishing !== anyPublishing) setCanPublish(anyPublishing);
   };
@@ -463,7 +463,7 @@ export function ScriptureTable(props: IProps) {
     [PassageTypeEnum.PASSAGE, PassageTypeEnum.NOTE].includes(ws[i].passageType);
 
   const updatePassageRef = (id: string, val: string) => {
-    const index = sheet.findIndex((w) => w?.passage?.id === id);
+    const index = sheet.findIndex((s) => s?.passage?.id === id);
     if (index < 0) return;
     const passageRow = { ...sheet[index] };
     if (passageRow.reference === val) return;
@@ -730,9 +730,9 @@ export function ScriptureTable(props: IProps) {
     const { ws, i } = getByIndex(sheetRef.current, index);
     const removeItem: number[] = [];
 
-    const doDelete = (wf: ISheet[], j: number, isSec?: boolean) => {
-      if ((isSec && wf[j].sectionId) || (!isSec && wf[j].passage)) {
-        wf[j] = { ...wf[j], deleted: true };
+    const doDelete = (sht: ISheet[], j: number, isSec?: boolean) => {
+      if ((isSec && sht[j].sectionId) || (!isSec && sht[j].passage)) {
+        sht[j] = { ...sht[j], deleted: true };
       } else {
         removeItem.push(j);
       }
@@ -1374,23 +1374,24 @@ export function ScriptureTable(props: IProps) {
 
   useEffect(() => {
     const newWork: ISheet[] = [];
-    var changed = false;
-    var sectionfiltered = false;
-    var filtered = false;
+    let changed = false;
+    let sectionfiltered = false;
+    let filtered = false;
 
-    sheetRef.current.forEach((w, index) => {
-      if (isSectionRow(w)) {
+    sheetRef.current.forEach((s, index) => {
+      if (isSectionRow(s)) {
         sectionfiltered = isSectionFiltered(
           filterState,
-          w.sectionSeq,
+          minSection,
+          s.sectionSeq,
           hidePublishing,
-          w.reference || ''
+          s.reference || ''
         );
         if (
           !sectionfiltered &&
           hidePublishing &&
-          w.kind === IwsKind.Section &&
-          w.level !== SheetLevel.Section
+          s.kind === IwsKind.Section &&
+          s.level !== SheetLevel.Section
         ) {
           var allMyPassagesArePublishing = true;
           for (
@@ -1407,11 +1408,11 @@ export function ScriptureTable(props: IProps) {
           sectionfiltered = allMyPassagesArePublishing;
         }
       }
-      if (isPassageRow(w))
+      if (isPassageRow(s))
         filtered =
           sectionfiltered ||
           isPassageFiltered(
-            w,
+            s,
             filterState,
             minSection,
             hidePublishing,
@@ -1419,9 +1420,9 @@ export function ScriptureTable(props: IProps) {
             doneStepId
           );
       else filtered = sectionfiltered;
-      if (filtered !== w.filtered) changed = true;
+      if (filtered !== s.filtered) changed = true;
       newWork.push({
-        ...w,
+        ...s,
         filtered,
       });
     });
@@ -1468,134 +1469,136 @@ export function ScriptureTable(props: IProps) {
     await doPublish();
     togglePublishing();
   };
+
+  const hasBookTitle = async (bookType: PassageTypeEnum) => {
+    if (
+      sheetRef.current.findIndex(
+        (s) => !s.deleted && s.passageType === bookType
+      ) < 0
+    ) {
+      //see if we have this book anywhere in the team
+      //ask remote about this if we have a remote
+      var teamprojects = projects
+        .filter((p) => related(p, 'organization') === organization)
+        .map((p) => p.id);
+      var teamplans = plans
+        .filter((p) => teamprojects.includes(related(p, 'project')))
+        .map((p) => p.id);
+      var foundIt = Boolean(
+        sections.find(
+          (s) =>
+            s.attributes?.state === publishingTitle(bookType) &&
+            teamplans.includes(related(s, 'plan'))
+        )
+      );
+      if (!foundIt && remote) {
+        var bts = (await remote.query((qb) =>
+          qb
+            .findRecords('section')
+            .filter({ attribute: 'state', value: publishingTitle(bookType) })
+        )) as SectionD[];
+        foundIt = Boolean(
+          bts.find((s) => teamplans.includes(related(s, 'plan')))
+        );
+      }
+      return foundIt;
+    }
+    return true;
+  };
+
+  const alternateName = (name: string) => t.alternateName.replace('{0}', name);
+
+  const chapterNumberTitle = (chapter: number) =>
+    t.chapter.replace('{0}', chapter.toString());
+
+  const AddBook = (newsht: ISheet[], passageType: PassageTypeEnum) => {
+    const sequencenum = passageType === PassageTypeEnum.BOOK ? -4 : -3;
+    if (firstBook) {
+      const baseName = firstBook ? bookMap[firstBook] : '';
+      const title =
+        passageType === PassageTypeEnum.BOOK
+          ? baseName
+          : alternateName(baseName);
+
+      let newRow = {
+        level: SheetLevel.Book,
+        kind: IwsKind.Section,
+        sectionSeq: sequencenum,
+        passageSeq: 0,
+        reference: publishingTitle(passageType),
+        title,
+        passageType: passageType,
+      } as ISheet;
+      return newsht.concat([newRow]);
+    }
+    return newsht;
+  };
+
+  const isKind = (
+    row: number,
+    kind: PassageTypeEnum,
+    ws: ISheet[] = sheetRef.current
+  ) => {
+    return row >= 0 && row < ws.length
+      ? ws[row].passageType === kind && ws[row].deleted === false
+      : false;
+  };
+
+  const addChapterNumber = (newsht: ISheet[], chapter: number) => {
+    if (chapter > 0) {
+      const title = chapterNumberTitle(chapter);
+      return addPassageTo(
+        SheetLevel.Section,
+        newsht,
+        PassageTypeEnum.CHAPTERNUMBER,
+        undefined,
+        undefined,
+        title,
+        PassageTypeEnum.CHAPTERNUMBER + ' ' + chapter.toString()
+      );
+    }
+    return newsht;
+  };
+
   const doPublish = async () => {
-    const hasBookTitle = async (bookType: PassageTypeEnum) => {
-      if (
-        sheetRef.current.findIndex(
-          (w) => !w.deleted && w.passageType === bookType
-        ) < 0
-      ) {
-        //see if we have this book anywhere in the team
-        //ask remote about this if we have a remote
-        var teamprojects = projects
-          .filter((p) => related(p, 'organization') === organization)
-          .map((p) => p.id);
-        var teamplans = plans
-          .filter((p) => teamprojects.includes(related(p, 'project')))
-          .map((p) => p.id);
-        var foundIt = Boolean(
-          sections.find(
-            (s) =>
-              s.attributes?.state === publishingTitle(bookType) &&
-              teamplans.includes(related(s, 'plan'))
-          )
-        );
-        if (!foundIt && remote) {
-          var bts = (await remote.query((qb) =>
-            qb
-              .findRecords('section')
-              .filter({ attribute: 'state', value: publishingTitle(bookType) })
-          )) as SectionD[];
-          foundIt = Boolean(
-            bts.find((s) => teamplans.includes(related(s, 'plan')))
-          );
-        }
-        return foundIt;
-      }
-      return true;
-    };
+    let currentChapter = 0;
 
-    const alternateName = (name: string) =>
-      t.alternateName.replace('{0}', name);
+    const startChapter = (s: ISheet) =>
+      (s.passage && s.passage.attributes.startChapter) ??
+      getStartChapter(s.reference);
 
-    const chapterNumberTitle = (chapter: number) =>
-      t.chapter.replace('{0}', chapter.toString());
+    const chapterChanged = (s: ISheet) =>
+      s.passageType === PassageTypeEnum.PASSAGE &&
+      s.book === firstBook &&
+      startChapter(s) > 0 &&
+      startChapter(s) !== currentChapter;
 
-    const AddBook = (newsht: ISheet[], passageType: PassageTypeEnum) => {
-      const sequencenum = passageType === PassageTypeEnum.BOOK ? -4 : -3;
-      if (firstBook) {
-        const baseName = firstBook ? bookMap[firstBook] : '';
-        const title =
-          passageType === PassageTypeEnum.BOOK
-            ? baseName
-            : alternateName(baseName);
-
-        let newRow = {
-          level: SheetLevel.Book,
-          kind: IwsKind.Section,
-          sectionSeq: sequencenum,
-          passageSeq: 0,
-          reference: publishingTitle(passageType),
-          title,
-          passageType: passageType,
-        } as ISheet;
-        return newsht.concat([newRow]);
-      }
-      return newsht;
-    };
-
-    const isKind = (
-      row: number,
-      kind: PassageTypeEnum,
-      ws: ISheet[] = sheetRef.current
-    ) => {
-      return row >= 0 && row < ws.length
-        ? ws[row].passageType === kind && ws[row].deleted === false
-        : false;
-    };
-
-    const addChapterNumber = (newsht: ISheet[], chapter: number) => {
-      if (chapter > 0) {
-        const title = chapterNumberTitle(chapter);
-        return addPassageTo(
-          SheetLevel.Section,
-          newsht,
-          PassageTypeEnum.CHAPTERNUMBER,
-          undefined,
-          undefined,
-          title,
-          PassageTypeEnum.CHAPTERNUMBER + ' ' + chapter.toString()
-        );
-      }
-      return newsht;
-    };
-    const startChapter = (w: ISheet) =>
-      (w.passage && w.passage.attributes.startChapter) ??
-      getStartChapter(w.reference);
-
-    const chapterChanged = (w: ISheet) =>
-      w.passageType === PassageTypeEnum.PASSAGE &&
-      w.book === firstBook &&
-      startChapter(w) > 0 &&
-      startChapter(w) !== currentChapter;
-
-    var currentChapter = 0;
-    var newworkflow: ISheet[] = [];
+    let newworkflow: ISheet[] = [];
     if (!(await hasBookTitle(PassageTypeEnum.BOOK)))
       newworkflow = AddBook(newworkflow, PassageTypeEnum.BOOK);
 
     if (!(await hasBookTitle(PassageTypeEnum.ALTBOOK)))
       newworkflow = AddBook(newworkflow, PassageTypeEnum.ALTBOOK);
-    var nextpsg = 0;
-    var wf = sheetRef.current;
-    wf.forEach((w, index) => {
+    let nextpsg = 0;
+    let sht = sheetRef.current;
+    sht.forEach((s, index) => {
       //if flat the title has to come before the section
       //otherwise we want it as the first passage in the section
-      if (isSectionRow(w)) {
+      if (isSectionRow(s)) {
         nextpsg = 0;
 
         //copy the section
         //we won't change sequence numbers on hierarchical
-        newworkflow = newworkflow.concat([{ ...w }]);
+        newworkflow = newworkflow.concat([{ ...s }]);
         //do I need a chapter number?
-        var vernpsg = wf.findIndex(
+        var vernpsg = sht.findIndex(
           (r) =>
             !r.deleted &&
             r.passageType === PassageTypeEnum.PASSAGE &&
-            r.sectionSeq === w.sectionSeq &&
+            r.sectionSeq === s.sectionSeq &&
             r.passageSeq > 0
         );
-        if (vernpsg > 0 && chapterChanged(wf[vernpsg])) {
+        if (vernpsg > 0 && chapterChanged(sht[vernpsg])) {
           var check = index;
           var gotit = false;
           while (check++ < vernpsg) {
@@ -1606,34 +1609,34 @@ export function ScriptureTable(props: IProps) {
           if (!gotit) {
             newworkflow = addChapterNumber(
               newworkflow,
-              startChapter(wf[vernpsg])
+              startChapter(sht[vernpsg])
             );
             nextpsg += 0.01;
           }
-          currentChapter = startChapter(wf[vernpsg]);
+          currentChapter = startChapter(sht[vernpsg]);
         }
       } //just a passage
       else {
         //do I need a chapter number?
         var prevrow = index - 1;
-        while (wf[prevrow].deleted) prevrow--;
-        if (!isSectionRow(wf[prevrow]) && !w.deleted && chapterChanged(w)) {
+        while (sht[prevrow].deleted) prevrow--;
+        if (!isSectionRow(sht[prevrow]) && !s.deleted && chapterChanged(s)) {
           if (
             !isKind(index - 1, PassageTypeEnum.CHAPTERNUMBER) &&
             !isKind(index - 2, PassageTypeEnum.CHAPTERNUMBER)
           ) {
-            newworkflow = addChapterNumber(newworkflow, startChapter(w));
+            newworkflow = addChapterNumber(newworkflow, startChapter(s));
             nextpsg += 0.01;
           }
-          currentChapter = startChapter(w);
+          currentChapter = startChapter(s);
         }
-        nextpsg = nextNum(nextpsg, w.passageType);
+        nextpsg = nextNum(nextpsg, s.passageType);
         newworkflow = newworkflow.concat([
           {
-            ...w,
+            ...s,
             passageSeq: nextpsg,
             passageUpdated:
-              w.passageSeq !== nextpsg ? currentDateTime() : w.passageUpdated,
+              s.passageSeq !== nextpsg ? currentDateTime() : s.passageUpdated,
           },
         ]);
       }
@@ -1641,22 +1644,23 @@ export function ScriptureTable(props: IProps) {
     setSheet(newworkflow);
     setChanged(true);
   };
+
   const rowinfo = useMemo(() => {
     var totalSections = new Set(
-      sheet.filter((w) => !w.deleted).map((w) => w.sectionSeq)
+      sheet.filter((s) => !s.deleted).map((s) => s.sectionSeq)
     ).size;
     var regularSections = new Set(
       sheet
         .filter(
-          (w) =>
-            !w.deleted &&
-            w.sectionSeq > 0 &&
-            Math.trunc(w.sectionSeq) === w.sectionSeq
+          (s) =>
+            !s.deleted &&
+            s.sectionSeq > 0 &&
+            Math.trunc(s.sectionSeq) === s.sectionSeq
         )
-        .map((w) => w.sectionSeq)
+        .map((s) => s.sectionSeq)
     ).size;
-    var filtered = sheet.filter((w) => !w.deleted && !w.filtered);
-    var showingSections = new Set(filtered.map((w) => w.sectionSeq)).size;
+    var filtered = sheet.filter((s) => !s.deleted && !s.filtered);
+    var showingSections = new Set(filtered.map((s) => s.sectionSeq)).size;
     if (showingSections < totalSections) {
       local.sectionSeq = (
         <Badge
