@@ -5136,7 +5136,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.paratextRequired">
-            <source>Log out and log in as a Paratext user is required to use this feature.</source>
+            <source>You must be a Paratext user with access to FOBAI resources to use this feature.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>

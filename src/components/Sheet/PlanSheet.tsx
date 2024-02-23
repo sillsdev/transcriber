@@ -42,7 +42,7 @@ import {
   LocalKey,
   rememberCurrentPassage,
   positiveWholeOnly,
-  useHasParatext,
+  useCanPublish,
 } from '../../utils';
 import { remoteIdGuid, useRole } from '../../crud';
 import MediaPlayer from '../MediaPlayer';
@@ -291,7 +291,7 @@ export function PlanSheet(props: IProps) {
   const [saving, setSaving] = useState(false);
   const { userIsAdmin } = useRole();
   const refErrTest = useRefErrTest();
-  const { hasParatext } = useHasParatext();
+  const { canPublish } = useCanPublish();
   const moveUp = true;
   const moveDown = false;
   const moveToNewSection = true;
@@ -411,10 +411,10 @@ export function PlanSheet(props: IProps) {
       } else if (
         tbodyRef &&
         tbodyRef.offsetTop >
-        document.documentElement.scrollTop +
-        document.documentElement.clientHeight -
-        ActionHeight -
-        200
+          document.documentElement.scrollTop +
+            document.documentElement.clientHeight -
+            ActionHeight -
+            200
       ) {
         window.scrollTo(0, tbodyRef.offsetTop + 10);
       }
@@ -439,10 +439,10 @@ export function PlanSheet(props: IProps) {
     return cell.className?.substring(0, 4) === 'book' && bookMap
       ? bookMap[cell.value]
       : cell.className?.includes('num')
-        ? cell.value < 0 || Math.floor(cell.value) !== cell.value
-          ? ''
-          : cell.value
-        : cell.value;
+      ? cell.value < 0 || Math.floor(cell.value) !== cell.value
+        ? ''
+        : cell.value
+      : cell.value;
   };
   const handleDataRender = (cell: ICell) => cell.value;
 
@@ -695,7 +695,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const handlePublishToggle: MouseEventHandler<HTMLButtonElement> = () => {
-    if (!hasParatext) {
+    if (!canPublish && hidePublishing) {
       showMessage(t.paratextRequired);
       return;
     }

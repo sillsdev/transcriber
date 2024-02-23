@@ -22,6 +22,7 @@ import {
   SectionEndIcon,
 } from './PlanIcons';
 import { ExtraIcon } from '../components/Sheet';
+import { useCanPublish } from '../utils';
 
 const StyledMenuIcon = styled(ListItemIcon)<ListItemIconProps>(({ theme }) => ({
   paddingRight: theme.spacing(2),
@@ -64,6 +65,7 @@ export const AddSectionPassageButtons = (props: IProps) => {
   const [actionMenuItem, setActionMenuItem] = React.useState<any>(undefined);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
+  const { canPublish } = useCanPublish();
   const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
 
   const handleMenu = (e: any) => {
@@ -152,7 +154,7 @@ export const AddSectionPassageButtons = (props: IProps) => {
             {t.sectionEnd.replace('{0}', organizedBy)}
           </MenuItem>
         )}
-        {showIcon(ExtraIcon.Publishing) && (
+        {showIcon(ExtraIcon.Publishing) && canPublish && (
           <MenuItem id="bookTitle" onClick={handleAction(ExtraIcon.Publishing)}>
             <StyledMenuIcon>
               <AddPublishingIcon />

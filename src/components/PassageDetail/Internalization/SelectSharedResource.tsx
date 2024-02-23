@@ -121,7 +121,7 @@ export const SelectSharedResource = (props: IProps) => {
       const refRecs = memory.cache.query((q) =>
         q.findRecords('sharedresourcereference')
       ) as SharedResourceReference[];
-      const bookRefs = refRecs.filter((r) => r.attributes.book === bookCd);
+      const bookRefs = refRecs.filter((r) => r.attributes?.book === bookCd);
       bookRefs.forEach((b) => addRes(bookSet, b));
       const rangeList = findRef.split(';');
       rangeList.forEach((r) => {

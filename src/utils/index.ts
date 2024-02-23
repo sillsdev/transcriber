@@ -73,4 +73,5 @@ export * from './stringAvatar';
 export * from './ReactIsInDevelopmentMode';
 export * from './isUrl';
 export * from './useWaitForRemoteQueue';
-export * from './useHasParatext'
+export * from './useHasParatext';
+export * from './useCanPublish';
