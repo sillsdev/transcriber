@@ -24,7 +24,7 @@ import { TeamContext } from '../../context/TeamContext';
 import { defaultWorkflow, related, useBible } from '../../crud';
 import PublishExpansion from '../PublishExpansion';
 import { UnsavedContext } from '../../context/UnsavedContext';
-import { useHasParatext, waitForIt } from '../../utils';
+import { useCanPublish, waitForIt } from '../../utils';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity } from '@orbit/records';
 
@@ -70,7 +70,7 @@ export function TeamDialog(props: IProps) {
   const { anySaving, toolsChanged, startSave, clearRequested } =
     useContext(UnsavedContext).state;
   const { getBible, getBibleOwner, getOrgBible } = useBible();
-  const { hasParatext } = useHasParatext();
+  const { canPublish } = useCanPublish();
 
   const reset = () => {
     setName('');
@@ -303,7 +303,7 @@ export function TeamDialog(props: IProps) {
             onChange={handleChange}
             fullWidth
           />
-          {mode !== DialogMode.add && hasParatext && (
+          {mode !== DialogMode.add && canPublish && (
             <PublishExpansion
               t={t}
               team={values?.team}

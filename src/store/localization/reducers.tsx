@@ -937,7 +937,7 @@ const initialState = {
 			"moveUp": "Move up",
 			"nonNumber": "Do not change to non-number.",
 			"insertFirstPassage": "Add Passage as first in {0} {1}",
-			"paratextRequired": "Log out and log in as a Paratext user is required to use this feature.",
+			"paratextRequired": "You must be a Paratext user with access to FOBAI resources to use this feature.",
 			"passageBelow": "Add Passage below Passage {0}",
 			"passageEnd": "Add Passage to End",
 			"passageToPrevSection": "Move {pt} {0} Up",

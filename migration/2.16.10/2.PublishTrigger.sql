@@ -12,18 +12,16 @@ declare
 		FROM public.bibles
 		where id = (select bibleid FROM organizations o 
 						INNER JOIN projects p ON p.organizationid = o.id 
-						inner join plans pl on pl.projectid = p.id where pl.id = new.planid)
+						inner join plans pl on pl.projectid = p.id where pl.id = new.planid
+						and ob.archived = false)
 		for UPDATE;
 begin
-	RAISE NOTICE 'here %', new.id;
-
     if new.published = true AND new.published != old.published then
 		open mybible;
 		loop --just so the exit works
 		 	fetch mybible into bible;
 				exit when not found;
 			if (bible.anypublished = false) then
-			RAISE NOTICE 'update %', new.id;
 				update bibles
 				set anypublished = true,
 					dateupdated=current_timestamp,
