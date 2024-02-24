@@ -6,6 +6,7 @@ import React, {
   CSSProperties,
   PropsWithChildren,
   useMemo,
+  useCallback,
 } from 'react';
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
@@ -294,7 +295,7 @@ export function Transcriber(props: IProps) {
   const stateRef = useRef<string>(state);
   const [transcribing] = useState(
     state === ActivityStates.Transcribing ||
-      state === ActivityStates.TranscribeReady
+    state === ActivityStates.TranscribeReady
   );
 
   const [showSettings, setShowSettings] = useState(false);
@@ -463,7 +464,7 @@ export function Transcriber(props: IProps) {
         (i) =>
           i.attributes &&
           i.attributes.name ===
-            integrationSlug(artifactTypeSlug, offlineOnly) &&
+          integrationSlug(artifactTypeSlug, offlineOnly) &&
           Boolean(i.keys?.remoteId) !== offlineOnly
       );
       if (intfind > -1)
@@ -499,7 +500,7 @@ export function Transcriber(props: IProps) {
         (i) =>
           i.attributes &&
           i.attributes.name ===
-            integrationSlug(artifactTypeSlug, offlineOnly) &&
+          integrationSlug(artifactTypeSlug, offlineOnly) &&
           Boolean(i.keys?.remoteId) !== offlineOnly
       );
       if (intfind > -1)
@@ -599,7 +600,7 @@ export function Transcriber(props: IProps) {
       toolChanged(toolId, true);
       save(
         mediafile.attributes.transcriptionstate ||
-          ActivityStates.TranscribeReady,
+        ActivityStates.TranscribeReady,
         0,
         segmentsRef.current,
         t.pullParatextStatus
@@ -651,6 +652,14 @@ export function Transcriber(props: IProps) {
     focusOnTranscription();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [index, rowData, state]);
+
+  const noParatext = React.useMemo(
+    () =>
+      [ArtifactTypeSlug.Retell, ArtifactTypeSlug.QandA].includes(
+        (artifactTypeSlug || '') as ArtifactTypeSlug
+      ) || projType.toLowerCase() !== 'scripture',
+    [artifactTypeSlug, projType]
+  );
 
   useEffect(() => {
     if (!offline) {
@@ -705,11 +714,11 @@ export function Transcriber(props: IProps) {
           memory.keyMap as RecordKeyMap
         ),
         artifactId &&
-          (remoteId(
-            'artifacttype',
-            artifactId,
-            memory.keyMap as RecordKeyMap
-          ) as string),
+        (remoteId(
+          'artifacttype',
+          artifactId,
+          memory.keyMap as RecordKeyMap
+        ) as string),
         errorReporter,
         t.pullParatextStart
       );
@@ -773,21 +782,25 @@ export function Transcriber(props: IProps) {
     setDefaultPosition(playedSecsRef.current || 0);
     setDefaultPosition(position);
   };
-  const handleSubmit = async () => {
-    if (next.hasOwnProperty(state)) {
-      let nextState = next[state];
-      if (nextState === ActivityStates.Transcribed && !hasChecking)
-        nextState = ActivityStates.Approved;
-      if (nextState === ActivityStates.Approved && noParatext)
-        nextState = ActivityStates.Done;
-      await save(nextState, 0, segmentsRef.current, '');
-      onReloadPlayer && onReloadPlayer(mediaRef.current);
-      forcePosition(0);
-      if (setComplete) setComplete(true);
-    } else {
-      logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
-    }
-  };
+  const handleSubmit = useCallback(
+    () => async () => {
+      if (next.hasOwnProperty(state)) {
+        let nextState = next[state];
+        if (nextState === ActivityStates.Transcribed && !hasChecking)
+          nextState = ActivityStates.Approved;
+        if (nextState === ActivityStates.Approved && noParatext)
+          nextState = ActivityStates.Done;
+        await save(nextState, 0, segmentsRef.current, '');
+        onReloadPlayer && onReloadPlayer(mediaRef.current);
+        forcePosition(0);
+        if (setComplete) setComplete(true);
+      } else {
+        logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [errorReporter, hasChecking, noParatext, state]
+  );
 
   const stateRole: { [key: string]: string } = {
     transcribing: 'transcriber',
@@ -1058,20 +1071,13 @@ export function Transcriber(props: IProps) {
     setPlayerSize(e);
   }, 50);
 
-  const noParatext = React.useMemo(
-    () =>
-      [ArtifactTypeSlug.Retell, ArtifactTypeSlug.QandA].includes(
-        (artifactTypeSlug || '') as ArtifactTypeSlug
-      ) || projType.toLowerCase() !== 'scripture',
-    [artifactTypeSlug, projType]
-  );
   useEffect(() => {
     setArtifactTypeSlug(
       slug
         ? slug
         : artifactId
-        ? slugFromId(artifactId)
-        : ArtifactTypeSlug.Vernacular
+          ? slugFromId(artifactId)
+          : ArtifactTypeSlug.Vernacular
     );
   }, [slug, artifactId, slugFromId]);
 
