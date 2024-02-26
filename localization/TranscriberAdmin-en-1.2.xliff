@@ -927,6 +927,13 @@
                <context context-type="sourcefile">AddCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.projectRequired">
+            <source>A project must be added before recordings are allowed</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TeamDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.Render">
             <source>Render to Paratext</source>
             <target/>
@@ -3912,6 +3919,13 @@
          </trans-unit>
          <trans-unit id="mediaTitle.cancel">
             <source>Cancel Recording</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.playPause">
+            <source>Play / Pause</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaTab.tsx</context>

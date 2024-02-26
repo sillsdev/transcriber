@@ -176,6 +176,7 @@ const initialState = {
 			"personalProjects": "Personal Audio Projects",
 			"process": "Default Workflow",
 			"projectCreated": "Audio Project Created",
+			"projectRequired": "A project must be added before recordings are allowed",
 			"Render": "Render to Paratext",
 			"publishing": "Publishing",
 			"save": "Save",
@@ -707,6 +708,7 @@ const initialState = {
 	"mediaTitle": new LocalizedStrings({
 		"en": {
 			"cancel": "Cancel Recording",
+			"playPause": "Play / Pause",
 			"record": "Record",
 			"recording": "Recording...",
 			"save": "Save Recording",
