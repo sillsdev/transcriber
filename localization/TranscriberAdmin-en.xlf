@@ -796,6 +796,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.projectRequired">
+         <segment>
+            <source>A project must be added before recordings are allowed</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.Render">
          <segment>
             <source>Render to Paratext</source>
@@ -3355,6 +3361,12 @@
       <unit id="mediaTitle.cancel">
          <segment>
             <source>Cancel Recording</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.playPause">
+         <segment>
+            <source>Play / Pause</source>
             <target/>
          </segment>
       </unit>

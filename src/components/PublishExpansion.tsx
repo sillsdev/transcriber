@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Bible, ICardsStrings, Organization } from '../model';
+import { Bible, ICardsStrings, Organization, ProjectD } from '../model';
 import {
   Accordion,
   AccordionSummary,
@@ -20,6 +20,8 @@ import { ILanguage, LightTooltip } from '../control';
 import { related, useOrgDefaults, useBible } from '../crud';
 import MediaTitle from '../control/MediaTitle';
 import { useBibleMedia } from '../crud/useBibleMedia';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { useSnackBar } from '../hoc/SnackBar';
 
 const GridContainerRow = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
@@ -55,6 +57,7 @@ interface IProps {
 export function PublishExpansion(props: IProps) {
   const { t, team, bible, readonly, setValue, onChanged, onRecording, bibles } =
     props;
+  const projects = useOrbitData<ProjectD[]>('project')
   const [isoMediafile, setIsoMediafilex] = useState('');
   const [bibleMediafile, setBibleMediafilex] = useState('');
   const [bibleId, setBibleId] = useState('');
@@ -66,6 +69,7 @@ export function PublishExpansion(props: IProps) {
   const { getPublishingData, setPublishingData } = useBible();
   const { getBibleMediaPlan } = useBibleMedia();
   const [mediaplan, setMediaplan] = useState('');
+  const { showMessage } = useSnackBar();
 
   const setLanguage = (language: ILanguage, init?: boolean) => {
     languageRef.current = language;
@@ -186,6 +190,13 @@ export function PublishExpansion(props: IProps) {
     return sameNameRec.length === 0 ? '' : t.bibleidexists;
   };
 
+  const handleCanRecord = useCallback(() => {
+    const canRecord = projects.some(p => related(p, 'organization') === team?.id);
+    if (!canRecord) showMessage(t.projectRequired)
+    return canRecord;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projects, team]);
+
   return (
     <Box sx={{ width: '100%', my: 1 }}>
       <Accordion>
@@ -240,6 +251,7 @@ export function PublishExpansion(props: IProps) {
                 title={''}
                 defaultFilename={(team?.attributes?.slug ?? '') + 'iso'}
                 onLangChange={handleLanguageChange}
+                canRecord={handleCanRecord}
                 onRecording={onMyRecording}
                 useplan={mediaplan}
                 onMediaIdChange={(mediaId: string) => setIsoMediafile(mediaId)}
@@ -252,6 +264,7 @@ export function PublishExpansion(props: IProps) {
                 title={bibleName}
                 defaultFilename={(team?.attributes?.slug ?? '') + 'bible'}
                 onTextChange={handleChangeBibleName}
+                canRecord={handleCanRecord}
                 onRecording={onMyRecording}
                 useplan={mediaplan}
                 onMediaIdChange={(mediaId: string) =>

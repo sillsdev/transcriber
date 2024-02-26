@@ -21,6 +21,7 @@ import {
 // import SendIcon from '@mui/icons-material/Send';
 import MicIcon from '@mui/icons-material/MicOutlined';
 import PlayIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
 import CancelIcon from '@mui/icons-material/CancelOutlined';
 import CheckIcon from '@mui/icons-material/Check';
 import { styled } from '@mui/material';
@@ -51,6 +52,130 @@ import JSONAPISource from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
 import { RecordKeyMap } from '@orbit/records';
 
+interface IStartProps {
+  titlekey: string;
+  mediaId: string;
+  handlePlay: (e: any) => void;
+  handleMouseDownSave: (event: MouseEvent<HTMLButtonElement>) => void;
+  recording: boolean;
+  disabled: boolean | undefined;
+  playing: boolean;
+  handleRecord: (e: any) => void;
+  onRecording?: (recording: boolean) => void;
+}
+const TitleStart = ({
+  titlekey,
+  mediaId,
+  handlePlay,
+  handleMouseDownSave,
+  recording,
+  disabled,
+  playing,
+  handleRecord,
+  onRecording,
+}: IStartProps) => {
+  const t: IMediaTitleStrings = useSelector(mediaTitleSelector, shallowEqual);
+
+  return (
+    <InputAdornment position="start">
+      <>
+        {mediaId && (
+          <Tooltip title={t.playPause}>
+            <IconButton
+              id={`${titlekey}play`}
+              aria-label="play"
+              onClick={handlePlay}
+              onMouseDown={handleMouseDownSave}
+              disabled={disabled}
+              edge="start"
+            >
+              {playing ? (
+                <PauseIcon fontSize="small" />
+              ) : (
+                <PlayIcon fontSize="small" />
+              )}
+            </IconButton>
+          </Tooltip>
+        )}
+        {onRecording && !disabled && (
+          <Tooltip title={t.record}>
+            <IconButton
+              id={`${titlekey}record`}
+              aria-label="record"
+              onClick={handleRecord}
+              onMouseDown={handleMouseDownSave}
+              disabled={recording}
+              edge="start"
+            >
+              <MicIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        )}
+      </>
+    </InputAdornment>
+  );
+};
+
+interface EndProps {
+  titlekey: string;
+  handleOk: (e?: any) => void;
+  handleMouseDownSave: (event: MouseEvent<HTMLButtonElement>) => void;
+  handleCancel: (e: any) => void;
+  canSaveRecording: boolean;
+  recording: boolean;
+  showRecorder: boolean;
+}
+const TitleEnd = ({
+  titlekey,
+  handleOk,
+  handleMouseDownSave,
+  handleCancel,
+  canSaveRecording,
+  recording,
+  showRecorder,
+}: EndProps) => {
+  const t: IMediaTitleStrings = useSelector(mediaTitleSelector, shallowEqual);
+
+  return (
+    <InputAdornment position="end">
+      <>
+        {canSaveRecording && (
+          <Tooltip title={t.save}>
+            <span>
+              <IconButton
+                id={`${titlekey}save`}
+                aria-label="save title"
+                onClick={handleOk}
+                onMouseDown={handleMouseDownSave}
+                disabled={recording}
+                edge="end"
+              >
+                <CheckIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
+        {showRecorder && (
+          <Tooltip title={t.cancel}>
+            <span>
+              <IconButton
+                id={`${titlekey}cancel`}
+                aria-label="cancel title"
+                onClick={handleCancel}
+                onMouseDown={handleMouseDownSave}
+                disabled={recording}
+                edge="end"
+              >
+                <CancelIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+        )}
+      </>
+    </InputAdornment>
+  );
+};
+
 const ColumnDiv = styled('div')(() => ({
   display: 'flex',
   flexDirection: 'column',
@@ -73,8 +198,8 @@ interface IProps {
   onLangChange?: (lang: ILanguage) => void;
   useplan?: string;
   helper?: string;
+  canRecord?: () => boolean;
   /*
-  canRecord: () => boolean;
   onOk: (row: ITitle) => void;
   onCancel: () => void;
   setCanSaveRecording: (canSave: boolean) => void;
@@ -95,6 +220,7 @@ export default function MediaTitle(props: IProps) {
     defaultFilename,
     language,
     helper,
+    canRecord,
     onTextChange,
     onLangChange,
     onRecording,
@@ -154,6 +280,7 @@ export default function MediaTitle(props: IProps) {
   const { createMedia } = useOfflnMediafileCreate();
 
   useEffect(() => setHelperText(helper ?? ''), [helper]);
+
   useEffect(() => {
     if (saveRequested(toolId) && !saving.current) {
       if (canSaveRef.current) handleOk();
@@ -174,6 +301,7 @@ export default function MediaTitle(props: IProps) {
       );
     return remoteIdNum('plan', plan, memory.keyMap as RecordKeyMap) || plan;
   };
+
   const TitleId = useMemo(() => {
     var id = getTypeId(ArtifactTypeSlug.Title) as string;
     return remoteId('artifacttype', id, memory.keyMap as RecordKeyMap) || id;
@@ -221,6 +349,7 @@ export default function MediaTitle(props: IProps) {
       });
     } else reset();
   };
+
   const onMyRecording = (r: boolean) => {
     if (r) {
       toolChanged(toolId, true);
@@ -244,10 +373,13 @@ export default function MediaTitle(props: IProps) {
 
   const handlePlay = (e: any) => {
     e.stopPropagation();
-    setPlaying(true);
+    setPlaying(!playing);
   };
   const handleRecord = (e: any) => {
     e.stopPropagation();
+    if (canRecord && !canRecord()) {
+      return;
+    }
     setPlaying(false);
     setStartRecord(true);
   };
@@ -261,6 +393,7 @@ export default function MediaTitle(props: IProps) {
       onLangChange && onLangChange(langRef.current);
     }
   };
+
   const setLangname = (languageName: string) => {
     if (langRef.current) {
       langRef.current = { ...langRef.current, languageName };
@@ -268,18 +401,21 @@ export default function MediaTitle(props: IProps) {
       onLangChange && onLangChange(langRef.current);
     }
   };
+
   const setFont = (font: string) => {
     if (langRef.current) {
       langRef.current = { ...langRef.current, font };
       onLangChange && onLangChange(langRef.current);
     }
   };
+
   const setInfo = (info: LangTag) => {
     if (langRef.current) {
       langRef.current = { ...langRef.current, info };
       onLangChange && onLangChange(langRef.current);
     }
-  }
+  };
+
   const handleOk = (e?: any) => {
     e?.stopPropagation();
     if (saving.current) {
@@ -371,6 +507,7 @@ export default function MediaTitle(props: IProps) {
       cb: itemComplete,
     });
   };
+
   useEffect(() => {
     if (startRecord)
       waitForIt(
@@ -396,6 +533,7 @@ export default function MediaTitle(props: IProps) {
   const playEnded = () => {
     setPlaying(false);
   };
+
   const TitleText = useMemo(
     () => (
       <TextField
@@ -412,80 +550,34 @@ export default function MediaTitle(props: IProps) {
         required={required}
         InputProps={{
           startAdornment: (
-            <InputAdornment position="start">
-              <>
-                {mediaId && (
-                  <IconButton
-                    id={`${titlekey}play`}
-                    aria-label="play"
-                    onClick={handlePlay}
-                    onMouseDown={handleMouseDownSave}
-                    disabled={recording || disabled}
-                    edge="start"
-                  >
-                    <PlayIcon fontSize="small" />
-                  </IconButton>
-                )}
-                {onRecording && !disabled && (
-                  <Tooltip title={t.record}>
-                    <IconButton
-                      id={`${titlekey}record`}
-                      aria-label="record"
-                      onClick={handleRecord}
-                      onMouseDown={handleMouseDownSave}
-                      disabled={recording}
-                      edge="start"
-                    >
-                      <MicIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                )}
-              </>
-            </InputAdornment>
+            <TitleStart
+              titlekey={titlekey}
+              mediaId={mediaId}
+              handlePlay={handlePlay}
+              handleMouseDownSave={handleMouseDownSave}
+              recording={recording}
+              disabled={disabled}
+              playing={playing}
+              handleRecord={handleRecord}
+              onRecording={onRecording}
+            />
           ),
           endAdornment: (
-            <InputAdornment position="end">
-              <>
-                {canSaveRecording && (
-                  <Tooltip title={t.save}>
-                    <span>
-                      <IconButton
-                        id={`${titlekey}save`}
-                        aria-label="save title"
-                        onClick={handleOk}
-                        onMouseDown={handleMouseDownSave}
-                        disabled={recording}
-                        edge="end"
-                      >
-                        <CheckIcon fontSize="small" />
-                      </IconButton>
-                    </span>
-                  </Tooltip>
-                )}
-                {showRecorder && (
-                  <Tooltip title={t.cancel}>
-                    <span>
-                      <IconButton
-                        id={`${titlekey}cancel`}
-                        aria-label="cancel title"
-                        onClick={handleCancel}
-                        onMouseDown={handleMouseDownSave}
-                        disabled={recording}
-                        edge="end"
-                      >
-                        <CancelIcon fontSize="small" />
-                      </IconButton>
-                    </span>
-                  </Tooltip>
-                )}
-              </>
-            </InputAdornment>
+            <TitleEnd
+              titlekey={titlekey}
+              handleOk={handleOk}
+              handleMouseDownSave={handleMouseDownSave}
+              handleCancel={handleCancel}
+              canSaveRecording={canSaveRecording}
+              recording={recording}
+              showRecorder={showRecorder}
+            />
           ),
         }}
       />
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [curText, recording, mediaId, canSaveRecording, disabled, helperText]
+    [curText, recording, mediaId, canSaveRecording, disabled, helperText, playing]
   );
 
   return (

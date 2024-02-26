@@ -161,6 +161,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "personalProjects": string;
     "process": string;
     "projectCreated": string;
+    "projectRequired": string;
     "Render": string;
     "publishing": string;
     "save": string;
@@ -666,6 +667,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
 
 export interface IMediaTitleStrings extends Localize.LocalizedStringsMethods {
     "cancel": string;
+    "playPause": string;
     "record": string;
     "recording": string;
     "save": string;
