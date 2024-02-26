@@ -5,12 +5,14 @@ import { IProfileStrings, IState } from '../model';
 import * as action from '../store';
 import { TokenContext } from '../context/TokenProvider';
 import { profileSelector } from '../selector';
+import { API_CONFIG } from '../api-variable';
+const version = require('../../package.json').version;
 
 export const useCanPublish = () => {
   const [canPublish, setCanPublish] = useState(false);
   const askingRef = useRef(false);
   const [isOffline] = useGlobal('offline');
-  const { accessToken } = useContext(TokenContext).state;
+  const { accessToken, profile } = useContext(TokenContext).state;
   const [errorReporter] = useGlobal('errorReporter');
   const paratext_canPublish = useSelector(
     (state: IState) => state.paratext.canPublish
@@ -25,6 +27,12 @@ export const useCanPublish = () => {
   const t: IProfileStrings = useSelector(profileSelector, shallowEqual);
 
   useEffect(() => {
+    if (API_CONFIG.canPublish !== 'false' && /alpha|beta/.test(version)) {
+      if (API_CONFIG.canPublish === profile?.email) {
+        setCanPublish(true);
+        return
+      }
+    }
     if (!isOffline) {
       if (!askingRef.current && accessToken && !paratext_canPublishStatus) {
         askingRef.current = true; //so we only call it once

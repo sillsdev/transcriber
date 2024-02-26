@@ -3,8 +3,8 @@ const help =
   isElectron && process.env.REACT_APP_DESKTOP_HELP
     ? process.env.REACT_APP_DESKTOP_HELP
     : process.env.REACT_APP_HELP
-    ? process.env.REACT_APP_HELP
-    : '';
+      ? process.env.REACT_APP_HELP
+      : '';
 
 export const OrbitNetworkErrorRetries = 5;
 
@@ -44,4 +44,7 @@ export const API_CONFIG = {
   notify: process.env.REACT_APP_NOTIFY
     ? process.env.REACT_APP_NOTIFY
     : 'https://notify.bugsnag.com',
+  canPublish: process.env.REACT_APP_CAN_PUBLISH
+    ? process.env.REACT_APP_CAN_PUBLISH
+    : 'false',
 };
