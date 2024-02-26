@@ -215,6 +215,7 @@ export function PublishExpansion(props: IProps) {
                 onChange={handleChangeBibleId}
                 variant="outlined"
                 helperText={bibleIdError}
+                error={bibleIdError !== ''}
                 sx={{ width: '100%' }}
                 required
               />
