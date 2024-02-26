@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import * as actions from '../store';
 import { useGlobal } from 'reactn';
 import {
@@ -240,8 +240,7 @@ export function IntegrationPanel(props: IProps) {
   const [local, setLocal] = useState(offline || offlineOnly);
   const { accessToken } = useContext(TokenContext).state;
   const [count, setCount] = useState(-1);
-  const [countMsg, setCountMsg] = useState<string | JSX.Element>(
-  );
+  const [countMsg, setCountMsg] = useState<string | JSX.Element>();
 
   const [paratextIntegration, setParatextIntegration] = useState('');
   const [coordinator] = useGlobal('coordinator');
@@ -388,10 +387,10 @@ export function IntegrationPanel(props: IProps) {
     setSyncing(true);
     var typeId = getTypeId(exportType)
       ? remoteIdNum(
-          'artifacttype',
-          getTypeId(exportType) || '',
-          memory.keyMap as RecordKeyMap
-        )
+        'artifacttype',
+        getTypeId(exportType) || '',
+        memory.keyMap as RecordKeyMap
+      )
       : 0;
     if (passage !== undefined) {
       //from detail screen so just do passage
@@ -507,6 +506,15 @@ export function IntegrationPanel(props: IProps) {
     let language = proj && proj.attributes ? proj.attributes.languageName : '';
     return replLang.replace('{lang0}', language || '');
   };
+
+  const isFirstPassage = useMemo(() => {
+    const sectionId = related(passage, 'section');
+    const sectionPassages = passages
+      .filter((p) => related(p, 'section') === sectionId && !related(p, 'passagetype'))
+      .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
+    return sectionPassages[0].id === passage?.id;
+  }, [passage, passages]);
+
   useEffect(() => {
     setLocal(offline || offlineOnly);
   }, [offline, offlineOnly]);
@@ -523,7 +531,7 @@ export function IntegrationPanel(props: IProps) {
       getParatextDataPath().then((val) => setPtPath(val));
     } else {
       //force a current check -- will set connected
-      checkOnline((result) => {});
+      checkOnline((result) => { });
     }
     resetProjects();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -719,17 +727,19 @@ export function IntegrationPanel(props: IProps) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <FormControlLabel
-        sx={{ m: 1 }}
-        control={
-          <Checkbox
-            checked={exportNumbers}
-            onChange={handleExportSectionNumbers}
-            value="exportNumbers"
-          />
-        }
-        label={t.exportSectionNumbers.replace('{0}', getOrganizedBy(true))}
-      />
+      {isFirstPassage && (
+        <FormControlLabel
+          sx={{ m: 1 }}
+          control={
+            <Checkbox
+              checked={exportNumbers}
+              onChange={handleExportSectionNumbers}
+              value="exportNumbers"
+            />
+          }
+          label={t.exportSectionNumbers.replace('{0}', getOrganizedBy(true))}
+        />
+      )}
       <Accordion id="int-online" defaultExpanded={!local} disabled={local}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -814,9 +824,8 @@ export function IntegrationPanel(props: IProps) {
                           key={option.ParatextId}
                           value={option.ParatextId}
                         >
-                          {`${option.ShortName ? option.ShortName + '/' : ''}${
-                            option.Name
-                          } (${option.LanguageTag})`}
+                          {`${option.ShortName ? option.ShortName + '/' : ''}${option.Name
+                            } (${option.LanguageTag})`}
                         </MenuItem>
                       ))}
                   </TextField>
@@ -835,11 +844,11 @@ export function IntegrationPanel(props: IProps) {
                   hasParatext
                     ? t.yes + ': ' + paratext_username
                     : connected
-                    ? paratext_usernameStatus &&
-                      paratext_usernameStatus.complete
-                      ? t.no
-                      : t.usernamePending
-                    : t.offline
+                      ? paratext_usernameStatus &&
+                        paratext_usernameStatus.complete
+                        ? t.no
+                        : t.usernamePending
+                      : t.offline
                 }
               />
             </ListItem>
@@ -855,8 +864,8 @@ export function IntegrationPanel(props: IProps) {
                   hasPermission
                     ? t.yes + ' :' + ptPermission
                     : connected
-                    ? t.no
-                    : t.offline
+                      ? t.no
+                      : t.offline
                 }
               />
             </ListItem>
@@ -872,10 +881,10 @@ export function IntegrationPanel(props: IProps) {
                   Boolean(countMsg)
                     ? countMsg
                     : count === 1 && passage
-                    ? passageRefText(passage, bookData)
-                    : count >= 0
-                    ? count
-                    : t.countPending
+                      ? passageRefText(passage, bookData)
+                      : count >= 0
+                        ? count
+                        : t.countPending
                 }
               />
             </ListItem>
@@ -883,28 +892,28 @@ export function IntegrationPanel(props: IProps) {
 
           <FormControl component="fieldset" sx={{ m: 3 }}>
             <FormGroup>
-                <FormControlLabel
-                  control={
-                    <PriButton
-                      id="IntWebSync"
-                      key="sync"
-                      aria-label={t.sync}
-                      disabled={
-                        syncing.current ||
-                        !connected ||
-                        !hasPtProj ||
-                        !hasParatext ||
-                        !hasPermission ||
-                        !paratext_count
-                      }
-                      onClick={handleSync}
-                    >
-                      {t.sync}
-                      <SyncIcon sx={{ ml: 1 }} />
-                    </PriButton>
-                  }
-                  label=""
-                />
+              <FormControlLabel
+                control={
+                  <PriButton
+                    id="IntWebSync"
+                    key="sync"
+                    aria-label={t.sync}
+                    disabled={
+                      syncing.current ||
+                      !connected ||
+                      !hasPtProj ||
+                      !hasParatext ||
+                      !hasPermission ||
+                      !paratext_count
+                    }
+                    onClick={handleSync}
+                  >
+                    {t.sync}
+                    <SyncIcon sx={{ ml: 1 }} />
+                  </PriButton>
+                }
+                label=""
+              />
               <FormHelperText>{t.allCriteria}</FormHelperText>
             </FormGroup>
           </FormControl>
@@ -1013,36 +1022,36 @@ export function IntegrationPanel(props: IProps) {
                   Boolean(countMsg)
                     ? countMsg
                     : count === 1 && passage
-                    ? passageRefText(passage, bookData)
-                    : count >= 0
-                    ? count
-                    : t.countPending
+                      ? passageRefText(passage, bookData)
+                      : count >= 0
+                        ? count
+                        : t.countPending
                 }
               />
             </ListItem>
           </List>
           <FormControl component="fieldset" sx={{ m: 3 }}>
             <FormGroup>
-                <FormControlLabel
-                  control={
-                    <PriButton
-                      id="IntLocalSync"
-                      key="localSync"
-                      aria-label={t.sync}
-                      disabled={
-                        syncing.current ||
-                        !ptPath ||
-                        !hasPtProj ||
-                        !paratext_count
-                      }
-                      onClick={handleLocalSync}
-                    >
-                      {t.sync}
-                      <SyncIcon sx={{ ml: 1 }} />
-                    </PriButton>
-                  }
-                  label=""
-                />
+              <FormControlLabel
+                control={
+                  <PriButton
+                    id="IntLocalSync"
+                    key="localSync"
+                    aria-label={t.sync}
+                    disabled={
+                      syncing.current ||
+                      !ptPath ||
+                      !hasPtProj ||
+                      !paratext_count
+                    }
+                    onClick={handleLocalSync}
+                  >
+                    {t.sync}
+                    <SyncIcon sx={{ ml: 1 }} />
+                  </PriButton>
+                }
+                label=""
+              />
               <FormHelperText>{t.allCriteria}</FormHelperText>
             </FormGroup>
           </FormControl>
