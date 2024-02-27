@@ -510,9 +510,15 @@ export function IntegrationPanel(props: IProps) {
   const isFirstPassage = useMemo(() => {
     const sectionId = related(passage, 'section');
     const sectionPassages = passages
-      .filter((p) => related(p, 'section') === sectionId && !related(p, 'passagetype'))
+      .filter(
+        (p) => related(p, 'section') === sectionId && !related(p, 'passagetype')
+      )
       .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
-    return sectionPassages[0].id === passage?.id;
+    return (
+      sectionPassages.length > 0 &&
+      sectionPassages[0]?.id &&
+      sectionPassages[0].id === passage?.id
+    );
   }, [passage, passages]);
 
   useEffect(() => {
