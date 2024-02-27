@@ -159,10 +159,10 @@ export function FilterMenu(props: IProps) {
     const value = getKeyValue(e.target.value);
     if (what === 'minSection') {
       setMapMin(e.target.value);
-      setMinHelp(value ? '' : t.invalidSection);
+      setMinHelp(value ? '' : t.invalidSection.replace('{0}', organizedBy));
     } else {
       setMapMax(e.target.value);
-      setMaxHelp(value ? '' : t.invalidSection);
+      setMaxHelp(value ? '' : t.invalidSection.replace('{0}', organizedBy));
     }
     if (value) {
       filterChange(what, value);
@@ -280,6 +280,7 @@ export function FilterMenu(props: IProps) {
               label={t.minimum}
               value={mapMin || sectionMap.get(localState.minSection) || ''}
               helperText={minHelp}
+              error={Boolean(minHelp)}
               onChange={handleMapChange('minSection')}
             />
             <TextField
@@ -296,6 +297,7 @@ export function FilterMenu(props: IProps) {
                 ''
               }
               helperText={maxHelp}
+              error={Boolean(maxHelp)}
               onChange={handleMapChange('maxSection')}
             />
           </Box>

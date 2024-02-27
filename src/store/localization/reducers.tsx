@@ -1087,7 +1087,7 @@ const initialState = {
 			"disable": "Disable filter to add rows",
 			"hideDone": "Hide Done rows",
 			"hidePublishing": "Hide Publishing Rows",
-			"invalidSection": "Invalid Section",
+			"invalidSection": "Invalid {0}",
 			"step": "Workflow Step",
 			"minimum": "Minimum",
 			"maximum": "Maximum",

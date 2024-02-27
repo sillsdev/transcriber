@@ -5990,7 +5990,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="scriptureTableFilter.invalidSection">
-            <source>Invalid Section</source>
+            <source>Invalid {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
