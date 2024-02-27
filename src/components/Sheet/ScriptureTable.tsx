@@ -214,6 +214,7 @@ export function ScriptureTable(props: IProps) {
     isChanged,
     anySaving,
   } = useContext(UnsavedContext).state;
+  const waitForRemote = useWaitForRemoteQueue();
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
   const [assignSections, setAssignSections] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
@@ -904,7 +905,7 @@ export function ScriptureTable(props: IProps) {
   const saveIfChanged = (cb: () => void) => {
     if (myChangedRef.current) {
       startSave();
-      waitForSave(() => cb(), SaveWait);
+      waitForSave(cb, SaveWait);
     } else cb();
   };
   const waitForPassageId = (i: number, cb: () => void) => {
@@ -1437,30 +1438,49 @@ export function ScriptureTable(props: IProps) {
     [sheet]
   );
 
+  const doToggleSectionPublish = (index: number) => {
+    const { ws } = getByIndex(sheetRef.current, index);
+    if (ws) {
+      const newsht = [...sheetRef.current];
+      newsht[index] = {
+        ...ws,
+        published: !ws.published,
+        sectionUpdated: currentDateTime(),
+      };
+      setSheet(newsht);
+      setChanged(true);
+    }
+  };
+
+  const hasDeleted = useMemo(() => sheet.some((s) => s.deleted), [sheet]);
+
   const toggleSectionPublish = (index: number) => {
-    waitForSave(() => {
-      const { ws } = getByIndex(sheetRef.current, index);
-      if (ws) {
-        const newsht = [...sheetRef.current];
-        newsht[index] = {
-          ...ws,
-          published: !ws.published,
-          sectionUpdated: currentDateTime(),
-        };
-        setSheet(newsht);
-        setChanged(true);
-      }
-    }, SaveWait);
+    if (savingRef.current) {
+      showMessage(t.saving);
+      return;
+    }
+    if (hasDeleted) {
+      startSave(toolId);
+      waitForSave(() => {
+        waitForRemote('finish sheet delete').then(() => {
+          doToggleSectionPublish(index);
+        });
+      }, SaveWait);
+    } else {
+      doToggleSectionPublish(index);
+    }
   };
 
   const onPublishing = (update: boolean) => {
-    waitForSave(async () => {
-      if (update) await doPublish();
-      else if (!hidePublishing) togglePublishing(); //turn it off
-      //if we're going to show now and we don't already have some rows...ask
-      else if (!canHidePublishing) setConfirmPublishingVisible(true);
-      else togglePublishing(); //turn it on - no update
-    }, SaveWait);
+    saveIfChanged(() => {
+      waitForRemote('save before adding publish').then(async () => {
+        if (update) await doPublish();
+        else if (!hidePublishing) togglePublishing(); //turn it off
+        //if we're going to show now and we don't already have some rows...ask
+        else if (!canHidePublishing) setConfirmPublishingVisible(true);
+        else togglePublishing(); //turn it on - no update
+      });
+    });
   };
   const onPublishingReject = () => {
     setConfirmPublishingVisible(false);
