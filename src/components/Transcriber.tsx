@@ -6,7 +6,6 @@ import React, {
   CSSProperties,
   PropsWithChildren,
   useMemo,
-  useCallback,
 } from 'react';
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
@@ -782,7 +781,7 @@ export function Transcriber(props: IProps) {
     setDefaultPosition(playedSecsRef.current || 0);
     setDefaultPosition(position);
   };
-  const handleSubmit = useCallback(
+  const handleSubmit = useMemo(
     () => async () => {
       if (next.hasOwnProperty(state)) {
         let nextState = next[state];
