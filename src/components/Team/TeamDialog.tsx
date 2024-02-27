@@ -80,6 +80,7 @@ export function TeamDialog(props: IProps) {
     setSaving(false);
     setConfirm(false);
     setBibleId('');
+    setBibleIdError('');
     setBible(undefined);
     onOpen && onOpen(false);
     Object.keys(toolsChanged).forEach((t) => clearRequested(t));
