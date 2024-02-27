@@ -79,6 +79,8 @@ export const remotePullAll = async ({
       : await remote.query((q) => q.findRecords(table))
   ) as InitializedRecord[];
   if (!Array.isArray(recs)) recs = [recs];
-  await backup.sync((t) => recs.map((r) => t.addRecord(r)));
-  await memory.sync((t) => recs.map((r) => t.addRecord(r)));
+  if (recs.length > 0) {
+    await backup.sync((t) => recs.map((r) => t.addRecord(r)));
+    await memory.sync((t) => recs.map((r) => t.addRecord(r)));
+  }
 };

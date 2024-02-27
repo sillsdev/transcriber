@@ -41,6 +41,7 @@ import { usePassageUpdate } from '../../crud/usePassageUpdate';
 import { remotePullAll } from '../../crud/syncToMemory';
 import JSONAPISource from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
+import { usePassageType } from '../../crud/usePassageType';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -106,6 +107,7 @@ export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
   const [offlineOnly] = useGlobal('offlineOnly');
   const { showMessage } = useSnackBar();
   const { localizedArtifactCategory } = useArtifactCategory();
+  const { getPassageTypeRec } = usePassageType();
 
   const readOnly = useMemo(
     () => !userIsAdmin || (offline && !offlineOnly),
@@ -272,7 +274,8 @@ export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
         });
       }
     }
-    await updatePassage(passage, undefined, PassageTypeEnum.NOTE, sr.id);
+    const typeRec = getPassageTypeRec(PassageTypeEnum.NOTE);
+    await updatePassage(passage, undefined, typeRec?.id, sr.id);
   };
 
   const copyGraphic = async (sr: SharedResourceD, passage: PassageD) => {
