@@ -173,6 +173,7 @@ export function PublishExpansion(props: IProps) {
   };
   */
   const bibleIdIsValid = (newName: string): string => {
+    if (!newName) return ''
     if (!/^[A-Z]{6}/.test(newName) || newName.length < 6)
       return t.bibleidformat;
     let iso639_3 = languageRef.current?.info?.iso639_3
