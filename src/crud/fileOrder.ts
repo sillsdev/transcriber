@@ -35,6 +35,7 @@ export const staticFiles = [
   { table: 'organizationmembership', sort: 'C' },
   { table: 'organization', sort: 'B' },
   { table: 'orgworkflowstep', sort: 'C' },
+  { table: 'passagetype', sort: 'B' },
   { table: 'plan', sort: 'E' },
   { table: 'plantype', sort: 'B' },
   { table: 'projectintegration', sort: 'E' }, //do we care that they synced locally??

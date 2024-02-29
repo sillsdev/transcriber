@@ -36,7 +36,7 @@ CREATE RULE rule_archivenotdelete AS
 
 ALTER TABLE public.organizationbibles ADD CONSTRAINT fk_organizationbibles_lastmodifiedby FOREIGN KEY (lastmodifiedby) REFERENCES public.users(id) ON DELETE SET NULL;
 ALTER TABLE public.organizationbibles ADD CONSTRAINT fk_organizationbibless_organizationid FOREIGN KEY (organizationid) REFERENCES public.organizations(id) ON DELETE CASCADE;
-ALTER TABLE public.organizationbibles DROP CONSTRAINT fk_organizationbibles_bibleid;
+--ALTER TABLE public.organizationbibles DROP CONSTRAINT fk_organizationbibles_bibleid;
 ALTER TABLE public.organizationbibles ADD CONSTRAINT fk_organizationbibles_bibleid FOREIGN KEY (bibleid) REFERENCES public.bibles(id) ON DELETE CASCADE;
 
 CREATE OR REPLACE FUNCTION update_published() 
@@ -80,15 +80,12 @@ declare
 						inner join plans pl on pl.projectid = p.id where pl.id = new.planid)
 		for UPDATE;
 begin
-	RAISE NOTICE 'here %', new.id;
-
-    if new.published = true AND new.published != old.published then
+	if new.published = true AND new.published != old.published then
 		open mybible;
 		loop --just so the exit works
 		 	fetch mybible into bible;
 				exit when not found;
 			if (bible.anypublished = false) then
-			RAISE NOTICE 'update %', new.id;
 				update bibles
 				set anypublished = true,
 					dateupdated=current_timestamp,
