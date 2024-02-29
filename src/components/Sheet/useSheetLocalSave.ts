@@ -155,14 +155,14 @@ export const useWfLocalSave = (props: IProps) => {
                 user
               )
             );
-          if (psgType?.id !== related(curPass, 'passagetype')) {
+          if (psgType?.id && psgType.id !== related(curPass, 'passagetype')) {
             ops.push(
               ...UpdateRelatedRecord(
                 t,
                 passRec,
                 'passagetype',
                 'passagetype',
-                psgType?.id,
+                psgType.id,
                 user
               )
             );

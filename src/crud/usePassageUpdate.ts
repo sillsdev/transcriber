@@ -20,7 +20,7 @@ export const usePassageUpdate = () => {
         ...ReplaceRelatedRecord(t, passage, 'section', 'section', sectionId)
       );
     }
-    if (passageType) {
+    if (passageType !== undefined) {
       ops.push(
         ...ReplaceRelatedRecord(
           t,

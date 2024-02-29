@@ -21,7 +21,7 @@ export const usePassageType = () => {
     if (pt !== PassageTypeEnum.PASSAGE) {
       var recs = memory.cache.query((q) =>
         q.findRecords('passagetype')
-      ) as unknown as PassageTypeD[];
+      ) as PassageTypeD[];
       recs = recs.filter(
         (r) =>
           r.attributes.abbrev === pt &&
