@@ -50,7 +50,6 @@ import ParatextLogo from '../control/ParatextLogo';
 import {
   remoteIdNum,
   related,
-  useOfflnProjRead,
   remoteId,
   ArtifactTypeSlug,
   useArtifactType,
@@ -64,10 +63,10 @@ import {
   getParatextDataPath,
   useCheckOnline,
   integrationSlug,
+  useDataChanges,
 } from '../utils';
 import { TokenContext } from '../context/TokenProvider';
 import { IAxiosStatus } from '../store/AxiosStatus';
-import { doDataChanges } from '../hoc/DataChanges';
 import Memory from '@orbit/memory';
 import {
   translateParatextErr,
@@ -214,8 +213,6 @@ export function IntegrationPanel(props: IProps) {
   const resetCount = () => dispatch(actions.resetCount());
   const resetProjects = () => dispatch(actions.resetProjects());
   const resetUserName = () => dispatch(actions.resetUserName());
-  const setLanguage = (language: string) =>
-    dispatch(actions.setLanguage(language));
   const projectintegrations =
     useOrbitData<ProjectIntegrationD[]>('projectintegration');
   const integrations = useOrbitData<Integration[]>('integration');
@@ -233,12 +230,11 @@ export function IntegrationPanel(props: IProps) {
   const [myProject, setMyProject] = useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
-  const [projectsLoaded] = useGlobal('projectsLoaded');
-  const getOfflineProject = useOfflnProjRead();
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [local, setLocal] = useState(offline || offlineOnly);
   const { accessToken } = useContext(TokenContext).state;
+  const forceDataChanges = useDataChanges();
   const [count, setCount] = useState(-1);
   const [countMsg, setCountMsg] = useState<string | JSX.Element>();
 
@@ -246,7 +242,6 @@ export function IntegrationPanel(props: IProps) {
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const [plan] = useGlobal('plan');
-  const [fingerprint] = useGlobal('fingerprint');
 
   const [errorReporter] = useGlobal('errorReporter');
   const { showMessage, showTitledMessage } = useSnackBar();
@@ -254,7 +249,6 @@ export function IntegrationPanel(props: IProps) {
   const [ptPath, setPtPath] = useState('');
   const syncing = React.useRef<boolean>(false);
   const setSyncing = (state: boolean) => (syncing.current = state);
-  const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const checkOnline = useCheckOnline();
   const [exportTypes, setExportTypes] = useState([
     ArtifactTypeSlug.Vernacular,
@@ -387,10 +381,10 @@ export function IntegrationPanel(props: IProps) {
     setSyncing(true);
     var typeId = getTypeId(exportType)
       ? remoteIdNum(
-        'artifacttype',
-        getTypeId(exportType) || '',
-        memory.keyMap as RecordKeyMap
-      )
+          'artifacttype',
+          getTypeId(exportType) || '',
+          memory.keyMap as RecordKeyMap
+        )
       : 0;
     if (passage !== undefined) {
       //from detail screen so just do passage
@@ -537,7 +531,7 @@ export function IntegrationPanel(props: IProps) {
       getParatextDataPath().then((val) => setPtPath(val));
     } else {
       //force a current check -- will set connected
-      checkOnline((result) => { });
+      checkOnline((result) => {});
     }
     resetProjects();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -694,17 +688,7 @@ export function IntegrationPanel(props: IProps) {
         resetCount();
         resetSync();
         setSyncing(false);
-        doDataChanges(
-          accessToken || '',
-          coordinator,
-          fingerprint,
-          projectsLoaded,
-          getOfflineProject,
-          errorReporter,
-          user,
-          setLanguage,
-          setDataChangeCount
-        );
+        forceDataChanges();
         if (setStepComplete && currentstep && !paratext_syncStatus.errStatus) {
           setStepComplete(currentstep, true).then(() => {
             if (setCurrentStep) setCurrentStep('');
@@ -830,8 +814,9 @@ export function IntegrationPanel(props: IProps) {
                           key={option.ParatextId}
                           value={option.ParatextId}
                         >
-                          {`${option.ShortName ? option.ShortName + '/' : ''}${option.Name
-                            } (${option.LanguageTag})`}
+                          {`${option.ShortName ? option.ShortName + '/' : ''}${
+                            option.Name
+                          } (${option.LanguageTag})`}
                         </MenuItem>
                       ))}
                   </TextField>
@@ -850,11 +835,11 @@ export function IntegrationPanel(props: IProps) {
                   hasParatext
                     ? t.yes + ': ' + paratext_username
                     : connected
-                      ? paratext_usernameStatus &&
-                        paratext_usernameStatus.complete
-                        ? t.no
-                        : t.usernamePending
-                      : t.offline
+                    ? paratext_usernameStatus &&
+                      paratext_usernameStatus.complete
+                      ? t.no
+                      : t.usernamePending
+                    : t.offline
                 }
               />
             </ListItem>
@@ -870,8 +855,8 @@ export function IntegrationPanel(props: IProps) {
                   hasPermission
                     ? t.yes + ' :' + ptPermission
                     : connected
-                      ? t.no
-                      : t.offline
+                    ? t.no
+                    : t.offline
                 }
               />
             </ListItem>
@@ -887,10 +872,10 @@ export function IntegrationPanel(props: IProps) {
                   Boolean(countMsg)
                     ? countMsg
                     : count === 1 && passage
-                      ? passageRefText(passage, bookData)
-                      : count >= 0
-                        ? count
-                        : t.countPending
+                    ? passageRefText(passage, bookData)
+                    : count >= 0
+                    ? count
+                    : t.countPending
                 }
               />
             </ListItem>
@@ -1028,10 +1013,10 @@ export function IntegrationPanel(props: IProps) {
                   Boolean(countMsg)
                     ? countMsg
                     : count === 1 && passage
-                      ? passageRefText(passage, bookData)
-                      : count >= 0
-                        ? count
-                        : t.countPending
+                    ? passageRefText(passage, bookData)
+                    : count >= 0
+                    ? count
+                    : t.countPending
                 }
               />
             </ListItem>

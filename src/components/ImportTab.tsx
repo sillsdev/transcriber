@@ -45,12 +45,10 @@ import {
   PassageDescription,
   remoteIdGuid,
   useOrganizedBy,
-  useOfflnProjRead,
   SetUserLanguage,
 } from '../crud';
 import ShapingTable from './ShapingTable';
 import { isElectron } from '../api-variable';
-import { doDataChanges } from '../hoc/DataChanges';
 import { HeadHeight } from '../App';
 import {
   localUserKey,
@@ -59,6 +57,7 @@ import {
   Severity,
   axiosError,
   tryParseJSON,
+  useDataChanges,
 } from '../utils';
 import { ActionRow, AltButton, FilterButton } from '../control';
 import { useSelector } from 'react-redux';
@@ -136,7 +135,6 @@ export function ImportTab(props: IProps) {
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
-  const [fingerprint] = useGlobal('fingerprint');
   const [errorReporter] = useGlobal('errorReporter');
   const [user] = useGlobal('user');
   const [isOffline] = useGlobal('offline');
@@ -151,9 +149,7 @@ export function ImportTab(props: IProps) {
   const [filter, setFilter] = useState(false);
   const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
   const { getOrganizedBy } = useOrganizedBy();
-  const [projectsLoaded] = useGlobal('projectsLoaded');
-  const [, setDataChangeCount] = useGlobal('dataChangeCount');
-  const getOfflineProject = useOfflnProjRead();
+  const forceDataChanges = useDataChanges();
   const { handleElectronImport, getElectronImportData } = useElectronImport();
   const handleFilter = () => setFilter(!filter);
   const headerRow = () =>
@@ -685,18 +681,7 @@ export function ImportTab(props: IProps) {
             chdata.length > 0 ? t.onlineChangeReport : t.importComplete
           );
           importComplete();
-          if (remote)
-            doDataChanges(
-              token || '',
-              coordinator,
-              fingerprint,
-              projectsLoaded,
-              getOfflineProject,
-              errorReporter,
-              user,
-              setLanguage,
-              setDataChangeCount
-            );
+          if (remote) forceDataChanges();
           else SetUserLanguage(memory, user, setLanguage);
           setImporting(false);
         }
