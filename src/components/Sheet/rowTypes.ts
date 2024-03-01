@@ -8,7 +8,7 @@ export const rowTypes = (rowInfo: ISheet[]) => {
   const isSectionHead = (i: number) =>
     isSectionType(i) ? rowInfo[i].level === SheetLevel.Section : false;
   const isPassageType = (i: number) =>
-    i > 0 && i < rowInfo.length ? isPassageRow(rowInfo[i]) : false;
+    i >= 0 && i < rowInfo.length ? isPassageRow(rowInfo[i]) : false;
   const isVerseRange = (i: number) =>
     isPassageType(i)
       ? rowInfo[i].passageType === PassageTypeEnum.PASSAGE
