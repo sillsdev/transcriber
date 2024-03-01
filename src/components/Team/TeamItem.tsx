@@ -69,7 +69,7 @@ export const TeamItem = (props: IProps) => {
 
     teamUpdate(values.team);
 
-    cb && await cb(values.team.id);
+    cb && (await cb(values.team.id));
     setEditOpen(false);
   };
 
@@ -132,14 +132,16 @@ export const TeamItem = (props: IProps) => {
           )}
         </div>
       </TeamHeadDiv>
-      <TeamDialog
-        mode={DialogMode.edit}
-        values={{ team } as ITeamDialog}
-        isOpen={editOpen}
-        onOpen={setEditOpen}
-        onCommit={handleCommitSettings}
-        onDelete={handleDeleteTeam}
-      />
+      {editOpen && (
+        <TeamDialog
+          mode={DialogMode.edit}
+          values={{ team } as ITeamDialog}
+          isOpen={editOpen}
+          onOpen={setEditOpen}
+          onCommit={handleCommitSettings}
+          onDelete={handleDeleteTeam}
+        />
+      )}
       <BigDialog
         title={t.members.replace('{0}', team?.attributes?.name || '')}
         isOpen={openMember}

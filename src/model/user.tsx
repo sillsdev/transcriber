@@ -27,6 +27,7 @@ export interface User extends BaseModel {
     newsPreference: boolean | null;
     sharedContentAdmin: boolean | null;
     sharedContentCreator: boolean | null;
+    canPublish: boolean | null;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
@@ -63,6 +64,7 @@ export interface CurrentUser extends User {
     newsPreference: boolean | null;
     sharedContentAdmin: boolean | null;
     sharedContentCreator: boolean | null;
+    canPublish: boolean | null;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;

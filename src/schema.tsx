@@ -446,6 +446,7 @@ const schemaDefinition: RecordSchemaSettings = {
         newsPreference: { type: 'boolean' },
         sharedContentAdmin: { type: 'boolean' },
         sharedContentCreator: { type: 'boolean' },
+        canPublish: { type: 'boolean' },
         dateCreated: { type: 'string' }, // datetime
         dateUpdated: { type: 'string' }, // datetime
         lastModifiedBy: { type: 'number' }, //bkwd compat only
