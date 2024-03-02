@@ -50,9 +50,9 @@ export function GraphicRights(props: IProps) {
       });
     return Array.from(options).map(
       (option) =>
-        ({
-          title: option,
-        } as RightsHolderOption)
+      ({
+        title: option,
+      } as RightsHolderOption)
     );
   }, [graphics, org]);
 
@@ -117,7 +117,7 @@ export function GraphicRights(props: IProps) {
       sx={{ width: 300, p: 1 }}
       freeSolo
       renderInput={(params) => (
-        <TextField {...params} label={t.graphicRightsTitle} />
+        <TextField required {...params} label={t.graphicRightsTitle} />
       )}
     />
   );

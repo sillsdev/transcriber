@@ -239,6 +239,7 @@ export default function CategoryEdit({
             isOpen={uploadGraphicVisible}
             onOpen={handleUploadGraphicVisible}
             showMessage={showMessage}
+            hasRights={Boolean(graphicRights)}
             finish={afterConvert}
             cancelled={cancelled}
             uploadType={UploadType.Graphic}

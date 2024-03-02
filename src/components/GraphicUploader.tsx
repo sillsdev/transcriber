@@ -24,17 +24,6 @@ export interface IGraphicInfo {
   [key: string]: CompressedImages | string | undefined;
 }
 
-interface IProps {
-  defaultFilename?: string;
-  dimension: number[];
-  isOpen: boolean;
-  onOpen: (visible: boolean) => void;
-  showMessage: (msg: string | JSX.Element) => void;
-  finish?: (images: CompressedImages[]) => void; // when conversion complete
-  cancelled: React.MutableRefObject<boolean>;
-  uploadType?: UploadType;
-  metadata?: JSX.Element;
-}
 export const apmGraphic = (graphicRec: GraphicD) => {
   const apmDimStr = `${ApmDim}`;
   const info: IGraphicInfo = JSON.parse(graphicRec.attributes.info);
@@ -46,6 +35,20 @@ export const apmGraphic = (graphicRec: GraphicD) => {
   }
   return undefined;
 };
+
+interface IProps {
+  defaultFilename?: string;
+  dimension: number[];
+  isOpen: boolean;
+  onOpen: (visible: boolean) => void;
+  showMessage: (msg: string | JSX.Element) => void;
+  hasRights?: boolean; // required for upload
+  finish?: (images: CompressedImages[]) => void; // when conversion complete
+  cancelled: React.MutableRefObject<boolean>;
+  uploadType?: UploadType;
+  metadata?: JSX.Element;
+}
+
 export function GraphicUploader(props: IProps) {
   const {
     defaultFilename,
@@ -55,6 +58,7 @@ export function GraphicUploader(props: IProps) {
     showMessage,
     cancelled,
     uploadType,
+    hasRights,
     finish,
     metadata,
   } = props;
@@ -74,9 +78,9 @@ export function GraphicUploader(props: IProps) {
     const value = imageFile.size / 1024 / 1024;
     console.log(
       `${desc} size ` +
-        (value > 1
-          ? `${value.toFixed(2)} MB`
-          : `${(value * 1024).toFixed(2)} KB`)
+      (value > 1
+        ? `${value.toFixed(2)} MB`
+        : `${(value * 1024).toFixed(2)} KB`)
     );
   };
 
@@ -129,6 +133,7 @@ export function GraphicUploader(props: IProps) {
       visible={isOpen}
       onVisible={onOpen}
       uploadType={uploadType || UploadType.Media}
+      ready={() => Boolean(hasRights)}
       uploadMethod={uploadMedia}
       cancelMethod={uploadCancel}
       metaData={metadata}
