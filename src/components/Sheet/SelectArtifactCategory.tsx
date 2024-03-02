@@ -13,6 +13,7 @@ import { LightTooltip, StyledMenuItem } from '../../control';
 import { artifactCategorySelector } from '../../selector';
 import { NewArtifactCategory } from './NewArtifactCategory';
 import { useOrbitData } from '../../hoc/useOrbitData';
+import { useGlobal } from 'reactn';
 
 export enum ScriptureEnum {
   hide,
@@ -61,11 +62,12 @@ export const SelectArtifactCategory = (props: IProps) => {
     useOrbitData<ArtifactCategory[]>('artifactcategory');
   const [categoryId, setCategoryId] = useState(initCategory);
   const [showNew, setShowNew] = useState(false);
+  const [org] = useGlobal('organization');
   const t: ISelectArtifactCategoryStrings = useSelector(
     artifactCategorySelector,
     shallowEqual
   );
-  const { getArtifactCategorys, scriptureTypeCategory } = useArtifactCategory();
+  const { getArtifactCategorys, scriptureTypeCategory } = useArtifactCategory(org);
   const [artifactCategorys, setArtifactCategorys] = useState<
     IArtifactCategory[]
   >([]);
@@ -85,7 +87,7 @@ export const SelectArtifactCategory = (props: IProps) => {
   useEffect(() => {
     getCategorys().then((cats) => setArtifactCategorys(cats));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [artifactCategories, type]);
+  }, [artifactCategories, scripture, org, type]);
 
   const categoryAdded = (newId: string) => {
     getCategorys().then((cats) => {
