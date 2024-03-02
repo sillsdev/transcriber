@@ -57,6 +57,7 @@ import {
   currentDateTime,
   hasAudacity,
   useWaitForRemoteQueue,
+  useDataChanges,
 } from '../../utils';
 import {
   isSectionRow,
@@ -173,6 +174,7 @@ export function ScriptureTable(props: IProps) {
   const myChangedRef = useRef(false);
   const savingRef = useRef(false);
   const updateRef = useRef(false);
+  const doForceDataChanges = useRef(false);
   const { showMessage } = useSnackBar();
   const ctx = React.useContext(PlanContext);
   const {
@@ -215,6 +217,7 @@ export function ScriptureTable(props: IProps) {
     anySaving,
   } = useContext(UnsavedContext).state;
   const waitForRemote = useWaitForRemoteQueue();
+  const forceDataChanges = useDataChanges();
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
   const [assignSections, setAssignSections] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
@@ -511,7 +514,7 @@ export function ScriptureTable(props: IProps) {
       while (
         ++endRowIndex < myWorkflow.length &&
         !isSectionRow(myWorkflow[endRowIndex])
-      ) { }
+      ) {}
       while (i > endRowIndex) {
         myWorkflow = swapRows(myWorkflow, i, i - 1);
         i--;
@@ -1271,6 +1274,10 @@ export function ScriptureTable(props: IProps) {
           setLastSaved(currentDateTime()); //force refresh the sheet
           saveCompleted(toolId);
           setComplete(100);
+          if (doForceDataChanges.current) {
+            forceDataChanges();
+            doForceDataChanges.current = false;
+          }
         });
       }
     };
@@ -1464,8 +1471,20 @@ export function ScriptureTable(props: IProps) {
         published: !ws.published,
         sectionUpdated: currentDateTime(),
       };
+      //if this is a movement...publish all the sections below it
+      if (!ws.published && ws.level === SheetLevel.Movement) {
+        let i = index + 1;
+        while (i < newsht.length) {
+          if (newsht[i].level === SheetLevel.Movement) break;
+          if (isSectionRow(newsht[i])) {
+            newsht[i] = { ...newsht[i], published: true };
+          }
+          i++;
+        }
+      }
       setSheet(newsht);
       setChanged(true);
+      doForceDataChanges.current = true;
     }
   };
 
@@ -1478,6 +1497,7 @@ export function ScriptureTable(props: IProps) {
     }
     if (hasDeleted) {
       startSave(toolId);
+      showMessage(t.saving);
       waitForSave(() => {
         waitForRemote('finish sheet delete').then(() => {
           doToggleSectionPublish(index);
@@ -1854,8 +1874,8 @@ export function ScriptureTable(props: IProps) {
           shared
             ? resStr.resourceEdit
             : isNote
-              ? resStr.noteDetails
-              : ts.versionHistory
+            ? resStr.noteDetails
+            : ts.versionHistory
         }
         isOpen={versionRow !== undefined}
         onOpen={handleVerHistClose}
