@@ -696,7 +696,7 @@ export function ScriptureTable(props: IProps) {
       setSheet(moveSectionTo(sheetRef.current, i, before));
       setChanged(true);
     }
-  }
+  };
 
   const moveSection = (ix: number, before: boolean) => {
     if (savingRef.current) {
@@ -1476,8 +1476,12 @@ export function ScriptureTable(props: IProps) {
         let i = index + 1;
         while (i < newsht.length) {
           if (newsht[i].level === SheetLevel.Movement) break;
-          if (isSectionRow(newsht[i])) {
-            newsht[i] = { ...newsht[i], published: true };
+          if (isSectionRow(newsht[i]) && !newsht[i].published) {
+            newsht[i] = {
+              ...newsht[i],
+              published: true,
+              sectionUpdated: currentDateTime(),
+            };
           }
           i++;
         }
