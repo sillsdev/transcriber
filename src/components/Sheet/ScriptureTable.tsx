@@ -1454,10 +1454,20 @@ export function ScriptureTable(props: IProps) {
         published: !ws.published,
         sectionUpdated: currentDateTime(),
       };
+      //if this is a movement...publish all the sections below it
+      if (!ws.published && ws.level === SheetLevel.Movement) {
+        let i = index + 1;
+        while (i < newsht.length) {
+          if (newsht[i].level === SheetLevel.Movement) break;
+          if (isSectionRow(newsht[i])) {
+            newsht[i] = { ...newsht[i], published: true };
+          }
+          i++;
+        }
+      }
       setSheet(newsht);
       setChanged(true);
       doForceDataChanges.current = true;
-      startSave(toolId);
     }
   };
 
@@ -1470,6 +1480,7 @@ export function ScriptureTable(props: IProps) {
     }
     if (hasDeleted) {
       startSave(toolId);
+      showMessage(t.saving);
       waitForSave(() => {
         waitForRemote('finish sheet delete').then(() => {
           doToggleSectionPublish(index);
