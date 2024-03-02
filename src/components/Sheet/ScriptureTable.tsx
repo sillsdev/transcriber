@@ -227,6 +227,7 @@ export function ScriptureTable(props: IProps) {
   const [isNote, setIsNote] = useState(false);
   const [defaultFilename, setDefaultFilename] = useState('');
   const [uploadType, setUploadType] = useState<UploadType>();
+  const [curGraphicRights, setCurGraphicRights] = useState('');
   const graphicCreate = useGraphicCreate();
   const graphicUpdate = useGraphicUpdate();
   const graphicFind = useGraphicFind();
@@ -1048,6 +1049,7 @@ export function ScriptureTable(props: IProps) {
   const handleRightsChange = (graphicRights: string) => {
     const ws = uploadItem.current;
     if (ws) uploadItem.current = { ...ws, graphicRights };
+    setCurGraphicRights(graphicRights);
   };
 
   const afterConvert = async (images: CompressedImages[]) => {
@@ -1822,6 +1824,7 @@ export function ScriptureTable(props: IProps) {
         isOpen={uploadGraphicVisible}
         onOpen={handleUploadGraphicVisible}
         showMessage={showMessage}
+        hasRights={Boolean(curGraphicRights)}
         finish={afterConvert}
         cancelled={cancelled}
         uploadType={uploadType}
