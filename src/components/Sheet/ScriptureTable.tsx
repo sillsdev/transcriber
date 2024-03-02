@@ -684,18 +684,33 @@ export function ScriptureTable(props: IProps) {
       setChanged(true);
     }
   };
-  const moveSection = (ix: number, before: boolean) => {
-    if (savingRef.current) {
-      showMessage(t.saving);
-      return;
-    }
+
+  const doMoveSection = (ix: number, before: boolean) => {
     setSectionArr([]);
     const i = getUndelIndex(sheetRef.current, ix);
     if (i !== undefined) {
       setSheet(moveSectionTo(sheetRef.current, i, before));
       setChanged(true);
     }
+  }
+
+  const moveSection = (ix: number, before: boolean) => {
+    if (savingRef.current) {
+      showMessage(t.saving);
+      return;
+    }
+    if (myChangedRef.current) {
+      startSave();
+      waitForSave(() => {
+        waitForRemote('save before move').then(() => {
+          doMoveSection(ix, before);
+        });
+      }, SaveWait);
+    } else {
+      doMoveSection(ix, before);
+    }
   };
+
   const getByIndex = (ws: ISheet[], index: number) => {
     let n = 0;
     let i = 0;
