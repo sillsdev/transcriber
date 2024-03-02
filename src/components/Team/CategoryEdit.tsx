@@ -89,7 +89,7 @@ export default function CategoryEdit({
   const [resourceId, setResourceId] = useState(0);
   const [graphicRec, setGraphicRec] = useState<GraphicD>();
   const resourceType = 'category';
-  const defaultColor = '#ed071d';
+
   const t: ICategoryStrings = useSelector(categorySelector, shallowEqual);
 
   const handleTitleChange = (value: string) => {
@@ -122,7 +122,7 @@ export default function CategoryEdit({
       category.id,
       memory.keyMap as RecordKeyMap
     );
-    setColor(category.color === '' ? defaultColor : category?.color);
+    setColor(category.color);
     setMediafile(category.titleMediaId ?? '');
     if (!isNaN(remoteId)) {
       setResourceId(remoteId);
