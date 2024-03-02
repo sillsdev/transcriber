@@ -6,6 +6,7 @@ import { ExtraIcon } from './extraIcon';
 import { positiveWholeOnly } from '../../utils';
 import { shallowEqual, useSelector } from 'react-redux';
 import { planSheetSelector } from '../../selector';
+import { rowTypes } from './rowTypes';
 
 interface IProps {
   sectionMap: Map<number, string>;
@@ -17,17 +18,19 @@ interface IProps {
 
 export const PublishButton = (props: IProps) => {
   const { sectionMap, rowInfo, rowIndex, organizedBy, onAction } = props;
+  const { isMovement } = rowTypes(rowInfo)
   const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
 
   const sectionSequenceNumber =
     sectionMap.get(rowInfo[rowIndex].sectionSeq) ||
     positiveWholeOnly(rowInfo[rowIndex].sectionSeq);
+  const description = isMovement(rowIndex) ? t.movement : organizedBy
   return rowInfo[rowIndex].published ? (
     <PublishIcon
       id="unpublish"
       onClick={() => onAction(rowIndex, ExtraIcon.Publish)}
       title={t.unpublish
-        .replace('{0}', organizedBy)
+        .replace('{0}', description)
         .replace('{1}', sectionSequenceNumber)}
     />
   ) : (
@@ -35,7 +38,7 @@ export const PublishButton = (props: IProps) => {
       id="publish"
       onClick={() => onAction(rowIndex, ExtraIcon.Publish)}
       title={t.publish
-        .replace('{0}', organizedBy)
+        .replace('{0}', description)
         .replace('{1}', sectionSequenceNumber)}
     >
       <RadioButtonUnchecked color="primary" />

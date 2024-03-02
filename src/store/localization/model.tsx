@@ -881,6 +881,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "graphic": string;
     "hidePublishing": string;
     "moveDown": string;
+    "movement": string;
     "moveUp": string;
     "nonNumber": string;
     "insertFirstPassage": string;

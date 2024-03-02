@@ -936,6 +936,7 @@ const initialState = {
 			"graphic": "Graphic",
 			"hidePublishing": "Hide Publishing Information",
 			"moveDown": "Move down",
+			"movement": "Movement",
 			"moveUp": "Move up",
 			"nonNumber": "Do not change to non-number.",
 			"insertFirstPassage": "Add Passage as first in {0} {1}",
