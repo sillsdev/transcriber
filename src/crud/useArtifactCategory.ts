@@ -138,6 +138,7 @@ export const useArtifactCategory = (teamId?: string) => {
     titleMedia?: string,
     color?: string
   ) => {
+    const defaultColor = '#ed071d';
     if (!/^\s*$/.test(newArtifactCategory)) {
       if (await isDuplicateCategory(newArtifactCategory, type))
         return 'duplicate';
@@ -149,7 +150,8 @@ export const useArtifactCategory = (teamId?: string) => {
           resource: type === ArtifactCategoryType.Resource,
           discussion: type === ArtifactCategoryType.Discussion,
           note: type === ArtifactCategoryType.Note,
-          color: color ?? '',
+          color:
+            color ?? type === ArtifactCategoryType.Note ? defaultColor : '',
         },
       } as any;
       const t = new RecordTransformBuilder();
