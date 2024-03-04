@@ -604,7 +604,7 @@
                                     <String></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>file:/C:/Users/Trihus/git/transcriber/localization/compareToEn.xsl</String>
+                                    <String>file:/C:/Users/gtrih/git/transcriber/localization/compareToEn.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String>${currentFileURL}</String>
@@ -687,7 +687,7 @@
                                     <String></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>file:/C:/Users/Trihus/git/transcriber/localization/MissingTargetUpdate.xsl</String>
+                                    <String>file:/C:/Users/gtrih/git/transcriber/localization/MissingTargetUpdate.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String>${currentFileURL}</String>
@@ -770,7 +770,7 @@
                                     <String></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>file:/C:/Users/Trihus/git/transcriber/localization/MissingTargetWithId.xsl</String>
+                                    <String>file:/C:/Users/gtrih/git/transcriber/localization/MissingTargetWithId.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String>${currentFileURL}</String>
@@ -853,7 +853,7 @@
                                     <String></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>file:/C:/Users/Trihus/git/transcriber/localization/MissingTarget.xsl</String>
+                                    <String>file:/C:/Users/gtrih/git/transcriber/localization/MissingTarget.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String>${currentFileURL}</String>
@@ -1249,7 +1249,7 @@
                                                 </paramDescriptor>
                                             </field>
                                             <field name="value">
-                                                <String>file:/C:/Users/Trihus/git/web-transcriber-admin/localization/TranscriberAdmin-fr.xlf</String>
+                                                <String>file:/C:/Users/gtrih/git/web-transcriber-admin/localization/TranscriberAdmin-fr.xlf</String>
                                             </field>
                                             <field name="hasXPathValue">
                                                 <Boolean>false</Boolean>
@@ -1290,7 +1290,7 @@
                                     <String></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>file:/C:/Users/Trihus/git/transcriber/localization/MissingTarget.xsl</String>
+                                    <String>file:/C:/Users/gtrih/git/transcriber/localization/MissingTarget.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String>${currentFileURL}</String>
@@ -1373,7 +1373,7 @@
                                     <String></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>file:/C:/Users/Trihus/git/web-transcriber-admin/localization/captureFallback.xsl</String>
+                                    <String>file:/C:/Users/gtrih/git/web-transcriber-admin/localization/captureFallback.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String>${currentFileURL}</String>
@@ -1456,7 +1456,7 @@
                                     <String></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>file:/C:/Users/Trihus/git/transcriber/localization/MissingTargetUpdate.xsl</String>
+                                    <String>file:/C:/Users/gtrih/git/transcriber/localization/MissingTargetUpdate.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String>${currentFileURL}</String>
@@ -1539,7 +1539,7 @@
                                     <String></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>file:/C:/Users/Trihus/git/transcriber/localization/unitSort.xsl</String>
+                                    <String>file:/C:/Users/gtrih/git/transcriber/localization/unitSort.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String>${pdu}/${cfn}.xlf</String>
@@ -1622,7 +1622,7 @@
                                     <String></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>file:/C:/Users/Trihus/git/transcriber/localization/transunitSort.xsl</String>
+                                    <String>file:/C:/Users/gtrih/git/transcriber/localization/transunitSort.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String>${currentFileURL}</String>
@@ -1708,7 +1708,7 @@
                                     <String>${currentFileURL}</String>
                                 </field>
                                 <field name="inputXMLURL">
-                                    <String>file:/C:/Users/Trihus/git/Transcribe/src/portable/ReactUi/data/localization/TranscriberUi-en-1.2.xliff</String>
+                                    <String>file:/C:/Users/gtrih/git/Transcribe/src/portable/ReactUi/data/localization/TranscriberUi-en-1.2.xliff</String>
                                 </field>
                                 <field name="defaultScenario">
                                     <Boolean>false</Boolean>
@@ -1791,7 +1791,7 @@
                                     <String>${currentFileURL}</String>
                                 </field>
                                 <field name="inputXMLURL">
-                                    <String>file:/C:/Users/Trihus/git/Transcribe/src/portable/ReactUi/data/localization/TranscriberUi-en-1.2.xml</String>
+                                    <String>file:/C:/Users/gtrih/git/Transcribe/src/portable/ReactUi/data/localization/TranscriberUi-en-1.2.xml</String>
                                 </field>
                                 <field name="defaultScenario">
                                     <Boolean>false</Boolean>
@@ -1874,7 +1874,7 @@
                                     <String>${currentFileURL}</String>
                                 </field>
                                 <field name="inputXMLURL">
-                                    <String>file:/C:/Users/Trihus/git/web-transcriber-admin/localization/TranscriberAdmin-en-1.2.xliff</String>
+                                    <String>file:/C:/Users/gtrih/git/web-transcriber-admin/localization/TranscriberAdmin-en-1.2.xliff</String>
                                 </field>
                                 <field name="defaultScenario">
                                     <Boolean>false</Boolean>
@@ -1892,7 +1892,7 @@
                                     <Boolean>false</Boolean>
                                 </field>
                                 <field name="outputFile">
-                                    <File>file:/C:/Users/Trihus/git/web-transcriber-admin/localization/TranscriberAdmin-en-1.2-flt.xliff</File>
+                                    <File>file:/C:/Users/gtrih/git/web-transcriber-admin/localization/TranscriberAdmin-en-1.2-flt.xliff</File>
                                 </field>
                                 <field name="openOtherLocationInBrowser">
                                     <Boolean>false</Boolean>
@@ -1957,7 +1957,7 @@
                                     <String>${currentFileURL}</String>
                                 </field>
                                 <field name="inputXMLURL">
-                                    <String>file:/C:/Users/Trihus/git/web-transcriber-admin/localization/TranscriberAdmin-fr.xlf</String>
+                                    <String>file:/C:/Users/gtrih/git/web-transcriber-admin/localization/TranscriberAdmin-fr.xlf</String>
                                 </field>
                                 <field name="defaultScenario">
                                     <Boolean>false</Boolean>
@@ -1975,7 +1975,7 @@
                                     <Boolean>false</Boolean>
                                 </field>
                                 <field name="outputFile">
-                                    <File>file:/C:/Users/Trihus/git/web-transcriber-admin/localization/TranscriberAdmin-fr-flt.xlf</File>
+                                    <File>file:/C:/Users/gtrih/git/web-transcriber-admin/localization/TranscriberAdmin-fr-flt.xlf</File>
                                 </field>
                                 <field name="openOtherLocationInBrowser">
                                     <Boolean>false</Boolean>
@@ -2040,7 +2040,7 @@
                                     <String>${currentFileURL}</String>
                                 </field>
                                 <field name="inputXMLURL">
-                                    <String>file:/C:/Users/Trihus/git/Transcribe/src/portable/ReactUi/data/localization/TranscriberUi-en.xlf</String>
+                                    <String>file:/C:/Users/gtrih/git/Transcribe/src/portable/ReactUi/data/localization/TranscriberUi-en.xlf</String>
                                 </field>
                                 <field name="defaultScenario">
                                     <Boolean>false</Boolean>
@@ -2123,7 +2123,7 @@
                                     <String>${currentFileURL}</String>
                                 </field>
                                 <field name="inputXMLURL">
-                                    <String>file:/C:/Users/Trihus/git/Transcribe/src/portable/ReactUi/data/localization/TranscriberUi-en.xlf</String>
+                                    <String>file:/C:/Users/gtrih/git/Transcribe/src/portable/ReactUi/data/localization/TranscriberUi-en.xlf</String>
                                 </field>
                                 <field name="defaultScenario">
                                     <Boolean>false</Boolean>
@@ -2206,7 +2206,7 @@
                                     <String>${currentFileURL}</String>
                                 </field>
                                 <field name="inputXMLURL">
-                                    <String>file:/C:/Users/Trihus/git/Transcribe/src/portable/ReactUi/data/localization/es-ES/TranscriberUi-en-1.2.xliff</String>
+                                    <String>file:/C:/Users/gtrih/git/Transcribe/src/portable/ReactUi/data/localization/es-ES/TranscriberUi-en-1.2.xliff</String>
                                 </field>
                                 <field name="defaultScenario">
                                     <Boolean>false</Boolean>
@@ -2224,7 +2224,7 @@
                                     <Boolean>false</Boolean>
                                 </field>
                                 <field name="outputFile">
-                                    <File>C:/Users/Trihus/git/Transcribe/src/portable/ReactUi/data/localization/es-ES/TranscriberUi-en-1.2.xml</File>
+                                    <File>C:/Users/gtrih/git/Transcribe/src/portable/ReactUi/data/localization/es-ES/TranscriberUi-en-1.2.xml</File>
                                 </field>
                                 <field name="openOtherLocationInBrowser">
                                     <Boolean>false</Boolean>
@@ -2289,7 +2289,7 @@
                                     <String>${currentFileURL}</String>
                                 </field>
                                 <field name="inputXMLURL">
-                                    <String>file:/C:/Users/Trihus/git/Transcribe/src/portable/ReactUi/data/localization/fr/TranscriberUi-en-1.2.xliff</String>
+                                    <String>file:/C:/Users/gtrih/git/Transcribe/src/portable/ReactUi/data/localization/fr/TranscriberUi-en-1.2.xliff</String>
                                 </field>
                                 <field name="defaultScenario">
                                     <Boolean>false</Boolean>
@@ -2394,7 +2394,7 @@
                                     <String>${currentFileURL}</String>
                                 </field>
                                 <field name="inputXMLURL">
-                                    <String>file:/C:/Users/Trihus/git/web-transcriber-admin/localization/TranscriberAdmin-pt.xlf</String>
+                                    <String>file:/C:/Users/gtrih/git/web-transcriber-admin/localization/TranscriberAdmin-pt.xlf</String>
                                 </field>
                                 <field name="defaultScenario">
                                     <Boolean>false</Boolean>
@@ -2477,7 +2477,7 @@
                                     <String>${currentFileURL}</String>
                                 </field>
                                 <field name="inputXMLURL">
-                                    <String>file:/C:/Users/Trihus/git/transcriber/localization/TranscriberAdmin-en-1.2.xliff</String>
+                                    <String>file:/C:/Users/gtrih/git/transcriber/localization/TranscriberAdmin-en-1.2.xliff</String>
                                 </field>
                                 <field name="defaultScenario">
                                     <Boolean>false</Boolean>
@@ -2495,7 +2495,7 @@
                                     <Boolean>false</Boolean>
                                 </field>
                                 <field name="outputFile">
-                                    <File>C:/Users/Trihus/git/transcriber/localization/TranscriberAdmin-en-1.2.xml</File>
+                                    <File>C:/Users/gtrih/git/transcriber/localization/TranscriberAdmin-en-1.2.xml</File>
                                 </field>
                                 <field name="openOtherLocationInBrowser">
                                     <Boolean>false</Boolean>
@@ -2560,7 +2560,7 @@
                                     <String>${currentFileURL}</String>
                                 </field>
                                 <field name="inputXMLURL">
-                                    <String>file:/C:/Users/Trihus/git/transcriber/localization/ori.xml</String>
+                                    <String>file:/C:/Users/gtrih/git/transcriber/localization/ori.xml</String>
                                 </field>
                                 <field name="defaultScenario">
                                     <Boolean>false</Boolean>
@@ -2656,6 +2656,7 @@
         <file name="TranscriberAdmin-pt.xlf"/>
         <file name="TranscriberAdmin-ru.xlf"/>
         <file name="TranscriberAdmin-ta.xlf"/>
+        <file name="TranscriberAdmin-zh.xlf"/>
         <file name="transunitSort.xsl"/>
         <file name="unitSort.xsl"/>
     </projectTree>

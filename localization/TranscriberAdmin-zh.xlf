@@ -1,8 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0"
-       srcLang="en"
-       trgLang="en"
-       version="1.0">
+<?xml version="1.0" encoding="utf-8"?><xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="en" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
       <unit id="access.availableUsers">
          <segment>
@@ -250,6 +246,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactCategory.graphic">
+         <segment>
+<source>Graphic</source>
+<target>图形</target>
+</segment>
+      </unit>
       <unit id="artifactCategory.qanda">
          <segment>
             <source>Question and Answer</source>
@@ -267,6 +269,12 @@
             <source>Comment</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="artifactType.graphic">
+         <segment>
+<source>Graphic</source>
+<target>图形</target>
+</segment>
       </unit>
       <unit id="artifactType.projectresource">
          <segment>
@@ -303,6 +311,12 @@
             <source>Testing</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="artifactType.title">
+         <segment>
+<source>Title</source>
+<target>标题</target>
+</segment>
       </unit>
       <unit id="artifactType.vernacular">
          <segment>
@@ -538,11 +552,23 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.bibleid">
+         <segment>
+<source>Bible Id</source>
+<target>圣经 ID</target>
+</segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="cards.closeNoSave">
+         <segment>
+<source>Close without Saving?</source>
+<target>关闭而不保存？</target>
+</segment>
       </unit>
       <unit id="cards.connectParatext">
          <segment>
@@ -622,6 +648,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.explainPublishing">
+         <segment>
+<source>Information to use when publishing audio created by this team.</source>
+<target>发布本团队创建的音频时使用的信息。</target>
+</segment>
+      </unit>
       <unit id="cards.explainTeamDelete">
          <segment>
             <source>Deleting the team will delete all audio projects of the team.</source>
@@ -637,18 +669,6 @@
       <unit id="cards.language">
          <segment>
             <source>Language: {0}</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="cards.longNotesProject">
-         <segment>
-            <source>Project with Long Notes</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="cards.longNotes">
-         <segment>
-            <source>Shared Introductions, Rationales, Devotionals, Podcasts</source>
             <target/>
          </segment>
       </unit>
@@ -742,11 +762,23 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.projectRequired">
+         <segment>
+<source>A project must be added before recordings are allowed</source>
+<target>在允许录音之前必须添加一个项目</target>
+</segment>
+      </unit>
       <unit id="cards.Render">
          <segment>
             <source>Render to Paratext</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="cards.publishing">
+         <segment>
+<source>Publishing</source>
+<target>发布</target>
+</segment>
       </unit>
       <unit id="cards.save">
          <segment>
@@ -808,6 +840,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.yes">
+         <segment>
+<source>Yes</source>
+<target>是</target>
+</segment>
+      </unit>
       <unit id="category.builtIn">
          <segment>
             <source>System Categories</source>
@@ -819,6 +857,12 @@
             <source>Discussion</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="category.close">
+         <segment>
+<source>Close</source>
+<target>关闭</target>
+</segment>
       </unit>
       <unit id="category.discussions">
          <segment>
@@ -1810,6 +1854,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="import.unknownError">
+         <segment>
+<source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+<target>如果在导入离线更改时出现此错误，请立即关闭应用程序并重新打开。 如果错误仍然存在，请联系支持人员。 如果继续使用应用程序，您将丢失离线更改。</target>
+</segment>
+      </unit>
       <unit id="import.invalidProject">
          <segment>
             <source>Import File does not contain current audio project.</source>
@@ -1942,11 +1992,17 @@
             <target/>
          </segment>
       </unit>
+      <unit id="integration.exportSectionNumbers">
+         <segment>
+<source>Sync {0} Numbers</source>
+<target>同步 {0} 数字</target>
+</segment>
+      </unit>
       <unit id="integration.invalidReferences">
          <segment>
-            <source>{0} passages have invalid book or reference.</source>
-            <target/>
-         </segment>
+<source>{0} passage(s) have invalid book or reference.</source>
+<target>{0}段落的书籍或参考文献无效。</target>
+</segment>
       </unit>
       <unit id="integration.no">
          <segment>
@@ -3094,6 +3150,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.graphicRightsAdd">
+         <segment>
+<source>Add {0}</source>
+<target>添加 {0}</target>
+</segment>
+      </unit>
       <unit id="mediaTab.latestVersion">
          <segment>
             <source>Latest Version</source>
@@ -3154,6 +3216,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.published">
+         <segment>
+<source>Published</source>
+<target>已出版</target>
+</segment>
+      </unit>
       <unit id="mediaTab.readyToShare">
          <segment>
             <source>Ready to Share</source>
@@ -3190,12 +3258,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="mediaTab.selectRows">
-         <segment>
-            <source>Please select row(s) to {0}.</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="mediaTab.showHideFilter">
          <segment>
             <source>Show/Hide filter rows</source>
@@ -3226,6 +3288,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.user">
+         <segment>
+<source>User</source>
+<target>用户</target>
+</segment>
+      </unit>
       <unit id="mediaTab.version">
          <segment>
             <source>Version</source>
@@ -3244,6 +3312,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTitle.cancel">
+         <segment>
+<source>Cancel Recording</source>
+<target>取消录音</target>
+</segment>
+      </unit>
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>
@@ -3261,6 +3335,12 @@
             <source>Drag and drop a file here, or click here to browse for the file.</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="mediaUpload.graphicTask">
+         <segment>
+<source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
+<target>将文件拖放到此处，或点击此处浏览文件。可接受的格式有 .png、.jpg（或 .jpeg）和 .webp。</target>
+</segment>
       </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
          <segment>
@@ -3490,6 +3570,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.bookResource">
+         <segment>
+<source>Book</source>
+<target>书籍</target>
+</segment>
+      </unit>
       <unit id="passageDetailArtifacts.canceling">
          <segment>
             <source>Canceling resource creation</source>
@@ -3586,11 +3672,23 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.movementResource">
+         <segment>
+<source>Movement</source>
+<target>运动</target>
+</segment>
+      </unit>
       <unit id="passageDetailArtifacts.no">
          <segment>
             <source>No</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.noteResource">
+         <segment>
+<source>Note</source>
+<target>注意事项</target>
+</segment>
       </unit>
       <unit id="passageDetailArtifacts.passageResource">
          <segment>
@@ -3657,6 +3755,12 @@
             <source>Select Book</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.selectOne">
+         <segment>
+<source>Only the first selected note is used</source>
+<target>只使用第一个选定的音符</target>
+</segment>
       </unit>
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
@@ -3874,6 +3978,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageType.BOOK">
+         <segment>
+<source>Book</source>
+<target>书籍</target>
+</segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4018,6 +4128,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planActions.addNote">
+         <segment>
+<source>Add Note</source>
+<target>添加注释</target>
+</segment>
+      </unit>
       <unit id="planActions.assign">
          <segment>
             <source>Assign</source>
@@ -4029,6 +4145,12 @@
             <source>Delete</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="planActions.noteDetails">
+         <segment>
+<source>Note Details</source>
+<target>笔记详细信息</target>
+</segment>
       </unit>
       <unit id="planActions.passageDetail">
          <segment>
@@ -4078,11 +4200,23 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.addNote">
+         <segment>
+<source>Add Note</source>
+<target>添加注释</target>
+</segment>
+      </unit>
       <unit id="planSheet.addPassage">
          <segment>
             <source>Add Passage</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="planSheet.addPublishing">
+         <segment>
+<source>Update Publishing Rows</source>
+<target>更新发布行</target>
+</segment>
       </unit>
       <unit id="planSheet.addSection">
          <segment>
@@ -4120,6 +4254,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.firstMovement">
+         <segment>
+<source>Start At</source>
+<target>开始于</target>
+</segment>
+      </unit>
       <unit id="planSheet.nonNumber">
          <segment>
             <source>Do not change to non-number.</source>
@@ -4131,6 +4271,12 @@
             <source>Add Passage as first in {0} {1}</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="planSheet.paratextRequired">
+         <segment>
+<source>You must be a Paratext user with access to FOBAI resources to use this feature.</source>
+<target>您必须是可以访问 FOBAI 资源的 Paratext 用户，才能使用此功能。</target>
+</segment>
       </unit>
       <unit id="planSheet.passageBelow">
          <segment>
@@ -4146,21 +4292,27 @@
       </unit>
       <unit id="planSheet.passageToPrevSection">
          <segment>
-            <source>Move Passage to Previous Section</source>
-            <target/>
-         </segment>
+<source>Move {pt} {0} Up</source>
+<target>将 {pt} {0} 上移</target>
+</segment>
       </unit>
       <unit id="planSheet.passageToNextSection">
          <segment>
-            <source>Move Passage to Next Section</source>
-            <target/>
-         </segment>
+<source>Move {pt} {0} Down</source>
+<target>下移 {pt} {0} 行</target>
+</segment>
       </unit>
       <unit id="planSheet.pasting">
          <segment>
             <source>Pasting</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="planSheet.publish">
+         <segment>
+<source>Publish {0} {1}</source>
+<target>发布 {0} {1}</target>
+</segment>
       </unit>
       <unit id="planSheet.refErr">
          <segment>
@@ -4186,6 +4338,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.showPublishing">
+         <segment>
+<source>Show Publishing Information</source>
+<target>显示发布信息</target>
+</segment>
+      </unit>
       <unit id="planSheet.sectionAbove">
          <segment>
             <source>Add {0} above {1} {2}</source>
@@ -4195,12 +4353,6 @@
       <unit id="planSheet.sectionEnd">
          <segment>
             <source>Add {0} to End</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="planSheet.selectRows">
-         <segment>
-            <source>Please select row(s) to {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -4215,6 +4367,12 @@
             <source>Paste Spreadsheet</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="planSheet.unpublish">
+         <segment>
+<source>Remove {0} {1} from published list.</source>
+<target>从已发布列表中删除 {0} {1}。</target>
+</segment>
       </unit>
       <unit id="planSheet.useCtrlV">
          <segment>
@@ -4606,11 +4764,23 @@
             <target/>
          </segment>
       </unit>
+      <unit id="resource.findNote">
+         <segment>
+<source>Find existing note</source>
+<target>查找现有注释</target>
+</segment>
+      </unit>
       <unit id="resource.keywords">
          <segment>
             <source>Keywords</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="resource.link">
+         <segment>
+<source>Link</source>
+<target>链接</target>
+</segment>
       </unit>
       <unit id="resource.overview">
          <segment>
@@ -4660,11 +4830,23 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTable.alternateName">
+         <segment>
+<source>{0} Alternate Name</source>
+<target>{0} 替代名称</target>
+</segment>
+      </unit>
       <unit id="scriptureTable.book">
          <segment>
             <source>Book</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="scriptureTable.chapter">
+         <segment>
+<source>Chapter {0}</source>
+<target>第 {0} 章</target>
+</segment>
       </unit>
       <unit id="scriptureTable.description">
          <segment>
@@ -4702,6 +4884,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTable.pasteInvalidPassageBeforeSection">
+         <segment>
+<source>Invalid passage before {0}.</source>
+<target>{0}之前的段落无效。</target>
+</segment>
+      </unit>
       <unit id="scriptureTable.pasteInvalidSections">
          <segment>
             <source>Invalid {0} number(s):</source>
@@ -4713,6 +4901,12 @@
             <source>No Rows in clipboard.</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="scriptureTable.publishingWarning">
+         <segment>
+<source>Once publishing rows are added, there is no automated way to remove them. Publishing projects cannot be made flat projects.</source>
+<target>一旦添加了出版行，就无法自动删除它们。出版项目不能成为平面项目。</target>
+</segment>
       </unit>
       <unit id="scriptureTable.reference">
          <segment>
@@ -4767,6 +4961,12 @@
             <source>Hide Done rows</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="scriptureTableFilter.hidePublishing">
+         <segment>
+<source>Hide Publishing Rows</source>
+<target>隐藏发布行</target>
+</segment>
       </unit>
       <unit id="scriptureTableFilter.step">
          <segment>
@@ -4935,6 +5135,12 @@
             <source>Cancel</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="shared.close">
+         <segment>
+<source>Close</source>
+<target>关闭</target>
+</segment>
       </unit>
       <unit id="shared.consultant">
          <segment>
@@ -5802,9 +6008,9 @@
       </unit>
       <unit id="transcriber.saveReviewTip">
          <segment>
-            <source>Save transcript, position and segments</source>
-            <target/>
-         </segment>
+<source>Save transcript, position and segments</source>
+<target>保存文本、位置和片段</target>
+</segment>
       </unit>
       <unit id="transcriber.saveTip">
          <segment>
@@ -6274,12 +6480,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="usertable.selectRows">
-         <segment>
-            <source>Please select row(s) to {0}.</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="usertable.selectUser">
          <segment>
             <source>Select User</source>
@@ -6352,6 +6552,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.cannotChangeLayout">
+         <segment>
+<source>Publishing projects cannot be made flat.</source>
+<target>发布项目不能做成平面。</target>
+</segment>
+      </unit>
       <unit id="vProject.correctformat">
          <segment>
             <source>Please enter in the format: singular/plural</source>
@@ -6423,6 +6629,12 @@
             <source>Layout</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="vProject.movement">
+         <segment>
+<source>Movement</source>
+<target>移动</target>
+</segment>
       </unit>
       <unit id="vProject.nameInUse">
          <segment>
