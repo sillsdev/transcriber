@@ -420,14 +420,14 @@ export const useOfflineSetup = () => {
           defaultOrder: -3,
         },
         { usfm: 'toc1', title: 'bookname', abbrev: 'BOOK', defaultOrder: -4 },
-        { usfm: 'esb', title: 'audionote', abbrev: 'NOTE', defaultOrder: 0 },
+        { usfm: 'fn', title: 'audionote', abbrev: 'NOTE', defaultOrder: 0 },
         {
-          usfm: 'cn',
+          usfm: 'c',
           title: 'chapter number',
           abbrev: 'CHNUM',
           defaultOrder: -2,
         },
-        { usfm: 's', title: 'title', abbrev: 'TITLE', defaultOrder: -1 },
+        { usfm: 'ms', title: 'movement', abbrev: 'MOVE', defaultOrder: -1 },
       ].map((n) => {
         let rec = {
           type: 'passagetype',
