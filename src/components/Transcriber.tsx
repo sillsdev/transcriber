@@ -6,6 +6,7 @@ import React, {
   CSSProperties,
   PropsWithChildren,
   useMemo,
+  useCallback,
 } from 'react';
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
@@ -313,6 +314,7 @@ export function Transcriber(props: IProps) {
   const [rejectVisible, setRejectVisible] = useState(false);
   const [addNoteVisible, setAddNoteVisible] = useState(false);
   const [hasParatextName, setHasParatextName] = useState(false);
+  const [noParatext, setNoParatext] = useState(false);
   const [paratextProject, setParatextProject] = React.useState('');
   const [paratextIntegration, setParatextIntegration] = React.useState('');
   const transcriptionIn = React.useRef<string>();
@@ -383,7 +385,6 @@ export function Transcriber(props: IProps) {
       memory,
       offline,
       project,
-      projType,
       plan,
       user,
       orgRole,
@@ -641,8 +642,12 @@ export function Transcriber(props: IProps) {
       } as Project;
       getFontData(rec, offline).then((data) => setProjData(data));
     }
+    const ptCheck = [ArtifactTypeSlug.Retell, ArtifactTypeSlug.QandA].includes(
+      (artifactTypeSlug || '') as ArtifactTypeSlug
+    ) || projType.toLowerCase() !== 'scripture'
+    if (ptCheck !== noParatext) setNoParatext(ptCheck);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project, artifactTypeSlug]);
+  }, [project, projType, artifactTypeSlug]);
 
   useEffect(() => {
     const newAssigned = rowData[index]?.assigned;
@@ -652,14 +657,6 @@ export function Transcriber(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [index, rowData, state]);
 
-  const noParatext = React.useMemo(
-    () =>
-      [ArtifactTypeSlug.Retell, ArtifactTypeSlug.QandA].includes(
-        (artifactTypeSlug || '') as ArtifactTypeSlug
-      ) || projType.toLowerCase() !== 'scripture',
-    [artifactTypeSlug, projType]
-  );
-
   useEffect(() => {
     if (!offline) {
       if (!paratext_usernameStatus && !noParatext) {
@@ -668,7 +665,7 @@ export function Transcriber(props: IProps) {
       setHasParatextName(paratext_username !== '');
     } else setHasParatextName(true);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [paratext_username, paratext_usernameStatus]);
+  }, [paratext_username, paratext_usernameStatus, noParatext, offline]);
 
   const focusOnTranscription = () => {
     if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
@@ -731,41 +728,50 @@ export function Transcriber(props: IProps) {
     }
     setRejectVisible(true);
   };
-  const handleRejected = async (media: MediaFile, comment: string) => {
-    setRejectVisible(false);
-    await memory.update(
-      UpdateMediaStateOps(
-        media.id as string,
-        passage.id as string,
-        media.attributes.transcriptionstate,
-        user,
-        new RecordTransformBuilder(),
-        [],
-        memory,
-        comment
-      )
-    );
-    //todo ?? if (IsVernacular(media))
-    setLastSaved(currentDateTime());
-    if (onReject) onReject(media.attributes.transcriptionstate);
-  };
+  const handleRejected = useCallback(
+    async (media: MediaFile, comment: string) => {
+      setRejectVisible(false);
+      await memory.update(
+        UpdateMediaStateOps(
+          media.id as string,
+          passage.id as string,
+          media.attributes.transcriptionstate,
+          user,
+          new RecordTransformBuilder(),
+          [],
+          memory,
+          comment
+        )
+      );
+      //todo ?? if (IsVernacular(media))
+      setLastSaved(currentDateTime());
+      if (onReject) onReject(media.attributes.transcriptionstate);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [passage.id, user]
+  );
+
   const handleRejectCancel = () => setRejectVisible(false);
 
-  const handleAddNote = async (pass: PassageD) => {
-    setAddNoteVisible(false);
-    var ops = [] as RecordOperation[];
-    AddPassageStateChangeToOps(
-      new RecordTransformBuilder(),
-      ops,
-      pass.id,
-      '',
-      pass.attributes.lastComment,
-      user,
-      memory
-    );
-    await memory.update(ops);
-    pass.attributes.lastComment = '';
-  };
+  const handleAddNote = useCallback(
+    async (pass: PassageD) => {
+      setAddNoteVisible(false);
+      var ops = [] as RecordOperation[];
+      AddPassageStateChangeToOps(
+        new RecordTransformBuilder(),
+        ops,
+        pass.id,
+        '',
+        pass.attributes.lastComment,
+        user,
+        memory
+      );
+      await memory.update(ops);
+      pass.attributes.lastComment = '';
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [user]
+  );
   const handleAddNoteCancel = () => setAddNoteVisible(false);
 
   const next: { [key: string]: string } = {
@@ -781,8 +787,9 @@ export function Transcriber(props: IProps) {
     setDefaultPosition(playedSecsRef.current || 0);
     setDefaultPosition(position);
   };
-  const handleSubmit = useMemo(
-    () => async () => {
+
+  const handleSubmit = useCallback(
+    async () => {
       if (next.hasOwnProperty(state)) {
         let nextState = next[state];
         if (nextState === ActivityStates.Transcribed && !hasChecking)
@@ -808,25 +815,29 @@ export function Transcriber(props: IProps) {
     transcribed: 'editor',
   };
 
-  const handleAssign = async (curState: string) => {
-    const secRec = findRecord(memory, 'section', section.id as string);
-    const role = stateRole[curState];
-    if (secRec && role) {
-      const assigned = related(secRec, role);
-      if (!assigned || assigned === '') {
-        await memory.update(
-          UpdateRelatedRecord(
-            new RecordTransformBuilder(),
-            section,
-            role,
-            'user',
-            user,
-            user
-          )
-        );
+  const handleAssign = useCallback(
+    async (curState: string) => {
+      const secRec = findRecord(memory, 'section', section.id as string);
+      const role = stateRole[curState];
+      if (secRec && role) {
+        const assigned = related(secRec, role);
+        if (!assigned || assigned === '') {
+          await memory.update(
+            UpdateRelatedRecord(
+              new RecordTransformBuilder(),
+              section,
+              role,
+              'user',
+              user,
+              user
+            )
+          );
+        }
       }
-    }
-  };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [section, user]
+  );
 
   const handleEditorSettings = (isOpen: boolean) => {
     if (!isOpen) {
