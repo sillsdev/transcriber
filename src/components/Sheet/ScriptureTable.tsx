@@ -216,7 +216,7 @@ export function ScriptureTable(props: IProps) {
     isChanged,
     anySaving,
   } = useContext(UnsavedContext).state;
-  const waitForRemote = useWaitForRemoteQueue();
+  const waitForRemoteQueue = useWaitForRemoteQueue();
   const forceDataChanges = useDataChanges();
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
   const [assignSections, setAssignSections] = useState<number[]>([]);
@@ -273,7 +273,6 @@ export function ScriptureTable(props: IProps) {
   const [projFirstMovement, setProjFirstMovement] = useState(1);
   const [filterState, setFilterState] =
     useState<ISTFilterState>(defaultFilterState);
-  const waitForRemoteQueue = useWaitForRemoteQueue();
   const secNumCol = React.useMemo(() => {
     return colNames.indexOf('sectionSeq');
   }, [colNames]);
@@ -514,7 +513,7 @@ export function ScriptureTable(props: IProps) {
       while (
         ++endRowIndex < myWorkflow.length &&
         !isSectionRow(myWorkflow[endRowIndex])
-      ) {}
+      ) { }
       while (i > endRowIndex) {
         myWorkflow = swapRows(myWorkflow, i, i - 1);
         i--;
@@ -706,7 +705,7 @@ export function ScriptureTable(props: IProps) {
     if (myChangedRef.current) {
       startSave();
       waitForSave(() => {
-        waitForRemote('save before move').then(() => {
+        waitForRemoteQueue('save before move').then(() => {
           doMoveSection(ix, before);
         });
       }, SaveWait);
@@ -1503,7 +1502,7 @@ export function ScriptureTable(props: IProps) {
       startSave(toolId);
       showMessage(t.saving);
       waitForSave(() => {
-        waitForRemote('finish sheet delete').then(() => {
+        waitForRemoteQueue('finish sheet delete').then(() => {
           doToggleSectionPublish(index);
         });
       }, SaveWait);
@@ -1514,7 +1513,7 @@ export function ScriptureTable(props: IProps) {
 
   const onPublishing = (update: boolean) => {
     saveIfChanged(() => {
-      waitForRemote('save before adding publish').then(async () => {
+      waitForRemoteQueue('save before adding publish').then(async () => {
         if (update) await doPublish();
         else if (!hidePublishing) togglePublishing(); //turn it off
         //if we're going to show now and we don't already have some rows...ask
@@ -1878,8 +1877,8 @@ export function ScriptureTable(props: IProps) {
           shared
             ? resStr.resourceEdit
             : isNote
-            ? resStr.noteDetails
-            : ts.versionHistory
+              ? resStr.noteDetails
+              : ts.versionHistory
         }
         isOpen={versionRow !== undefined}
         onOpen={handleVerHistClose}
