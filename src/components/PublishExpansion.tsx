@@ -57,12 +57,14 @@ interface IProps {
 export function PublishExpansion(props: IProps) {
   const { t, team, bible, readonly, setValue, onChanged, onRecording, bibles } =
     props;
-  const projects = useOrbitData<ProjectD[]>('project')
+  const projects = useOrbitData<ProjectD[]>('project');
   const [isoMediafile, setIsoMediafilex] = useState('');
   const [bibleMediafile, setBibleMediafilex] = useState('');
   const [bibleId, setBibleId] = useState('');
   const [bibleIdError, setBibleIdErrorx] = useState('');
   const [bibleName, setBibleName] = useState('');
+  const [description, setDescription] = useState('');
+  const [copyright, setCopyright] = useState('');
   const { getDefault, setDefault } = useOrgDefaults();
   const [language, setLanguagex] = React.useState<ILanguage>(initLang);
   const languageRef = useRef<ILanguage>(initLang);
@@ -107,7 +109,7 @@ export function PublishExpansion(props: IProps) {
     if (bible) {
       setBibleId(bible.attributes?.bibleId);
       setBibleName(bible.attributes?.bibleName);
-      //TODO setPublishingData(bible.attributes?.publishingData || '{}');
+      setDescription(bible.attributes?.description);
       setIsoMediafilex(related(bible, 'isoMediafile') as string);
       setBibleMediafilex(related(bible, 'bibleMediafile') as string);
     }
@@ -118,6 +120,7 @@ export function PublishExpansion(props: IProps) {
         : initLang;
 
     setLanguage(lang, true);
+    setCopyright(getPublishingData('copyright', bible) as string);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [team, bible]);
 
@@ -136,7 +139,6 @@ export function PublishExpansion(props: IProps) {
   const handleChangeBibleId = (event: any) => {
     const newId = (event.target.value as string).toLocaleUpperCase();
     setBibleIdError(bibleIdIsValid(newId));
-
     setBibleId(newId);
     if (bible?.attributes?.bibleId !== newId) setValue('bibleId', newId);
     return '';
@@ -144,6 +146,21 @@ export function PublishExpansion(props: IProps) {
   const handleChangeBibleName = (value: string) => {
     setBibleName(value);
     if (bible?.attributes?.bibleName !== value) setValue('bibleName', value);
+    return '';
+  };
+  const handleChangeDescription = (event: any) => {
+    const value = event.target.value as string;
+    setDescription(value);
+    if (bible?.attributes?.description !== value)
+      setValue('description', value);
+    return '';
+  };
+  const handleChangeCopyright = (event: any) => {
+    const value = event.target.value as string;
+    setCopyright(value);
+    var b = bible ?? ({ attributes: { publishingData: '{}' } } as Bible);
+    setPublishingData('copyright', value, b);
+    setValue('publishingData', b.attributes.publishingData ?? '{}');
     return '';
   };
   const onMyRecording = (recording: boolean) => {
@@ -162,21 +179,11 @@ export function PublishExpansion(props: IProps) {
     [bibleId]
   );
 
-  //TODO
-  /*
-  const handleChangePublishingData = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    e.persist();
-    setValue('publishingData', e.target.value);
-    setPublishingData(e.target.value);
-  };
-  */
   const bibleIdIsValid = (newName: string): string => {
-    if (!newName) return ''
+    if (!newName) return '';
     if (!/^[A-Z]{6}/.test(newName) || newName.length < 6)
       return t.bibleidformat;
-    let iso639_3 = languageRef.current?.info?.iso639_3
+    let iso639_3 = languageRef.current?.info?.iso639_3;
     if (!iso639_3) {
       const bcp47lg = languageRef.current?.bcp47.split('-')[0];
       if (bcp47lg.length === 3) iso639_3 = bcp47lg;
@@ -192,8 +199,10 @@ export function PublishExpansion(props: IProps) {
   };
 
   const handleCanRecord = useCallback(() => {
-    const canRecord = projects.some(p => related(p, 'organization') === team?.id);
-    if (!canRecord) showMessage(t.projectRequired)
+    const canRecord = projects.some(
+      (p) => related(p, 'organization') === team?.id
+    );
+    if (!canRecord) showMessage(t.projectRequired);
     return canRecord;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projects, team]);
@@ -274,6 +283,22 @@ export function PublishExpansion(props: IProps) {
                 disabled={readonly}
               />
             </div>
+            <TextField
+              id="description"
+              label={t.description}
+              value={description ?? ''}
+              onChange={handleChangeDescription}
+              variant="outlined"
+              sx={{ width: '100%', marginTop: '5px' }}
+            />
+            <TextField
+              id="copyright"
+              label={t.copyright}
+              value={copyright ?? ''}
+              onChange={handleChangeCopyright}
+              variant="outlined"
+              sx={{ width: '100%', marginTop: '8px' }}
+            />
           </FormGroup>
         </AccordionDetails>
       </Accordion>

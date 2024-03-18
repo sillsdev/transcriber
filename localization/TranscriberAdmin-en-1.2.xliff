@@ -723,6 +723,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.copyright">
+            <source>Copyright</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.copySame">
             <source>Copy project to same team.</source>
             <target/>
@@ -768,6 +775,13 @@
          </trans-unit>
          <trans-unit id="cards.deleteTeam">
             <source>Delete Team</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.description">
+            <source>Description</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>

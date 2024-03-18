@@ -51,6 +51,7 @@ export function TeamDialog(props: IProps) {
   const [owner, setOwner] = useState('');
   const [bibleIdError, setBibleIdError] = useState('');
   const [bibleName, setBibleName] = React.useState('');
+  const [description, setDescription] = React.useState('');
   const [defaultParams, setDefaultParams] = React.useState('');
   const bibleMediafileRef = useRef('');
   const isoMediafileRef = useRef('');
@@ -82,6 +83,7 @@ export function TeamDialog(props: IProps) {
     setBibleId('');
     setBibleIdError('');
     setBible(undefined);
+    setDescription('');
     onOpen && onOpen(false);
     Object.keys(toolsChanged).forEach((t) => clearRequested(t));
   };
@@ -143,6 +145,7 @@ export function TeamDialog(props: IProps) {
                 ...newbible?.attributes,
                 bibleId,
                 bibleName,
+                description,
                 iso,
                 publishingData,
               },
@@ -179,6 +182,9 @@ export function TeamDialog(props: IProps) {
         break;
       case 'defaultParams':
         setDefaultParams(value);
+        break;
+      case 'description':
+        setDescription(value);
         break;
       case 'bibleMediafile':
         setBibleMediafile(value);
@@ -256,8 +262,6 @@ export function TeamDialog(props: IProps) {
       if (bibleId && bibleId.length > 5) {
         let newbible = getBible(bibleId);
         if (bible !== newbible) setBible(newbible);
-      } else {
-        setBible(undefined);
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bibleId]);
@@ -271,6 +275,7 @@ export function TeamDialog(props: IProps) {
       setBibleId(bible.attributes?.bibleId || '');
       setIso(bible?.attributes?.iso || '');
       setBibleName(bible?.attributes?.bibleName || '');
+      setDescription(bible?.attributes?.description || '');
       setIsoMediafile(related(bible, 'isoMediafile') as string);
       setBibleMediafile(related(bible, 'bibleMediafile') as string);
       setPublishingData(bible?.attributes?.publishingData || '{}');
