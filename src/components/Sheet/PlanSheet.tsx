@@ -6,6 +6,7 @@ import {
   useMemo,
   MouseEventHandler,
   ReactElement,
+  useCallback,
 } from 'react';
 import { useGlobal } from 'reactn';
 import {
@@ -120,6 +121,9 @@ const ContentDiv = styled('div')(({ theme }) => ({
   },
   '& .data-grid-container .data-grid .cell.shared': {
     backgroundColor: '#f2d6af',
+  },
+  '& .data-grid-container .data-grid .cell.empty': {
+    paddingTop: theme.spacing(3),
   },
   '& tr td:first-of-type > span': {
     display: 'flex!important',
@@ -420,24 +424,29 @@ export function PlanSheet(props: IProps) {
     if (row + 1 !== currentRow) setCurrentRow(row + 1);
     onFirstMovement(newFM);
   };
+
+  const bodyChildren = () => {
+    const gridRef = (sheetRef.current as HTMLDivElement).getElementsByClassName(
+      'data-grid-container'
+    );
+    return gridRef[0]?.firstChild?.firstChild?.childNodes;
+  };
+
   const sheetScroll = () => {
     if (sheetRef.current && currentRowRef.current) {
-      const gridRef = (
-        sheetRef.current as HTMLDivElement
-      ).getElementsByClassName('data-grid-container');
-      const tbodyRef = gridRef[0]?.firstChild?.firstChild?.childNodes[
-        currentRowRef.current
-      ] as HTMLDivElement;
+      const tbodyNodes = bodyChildren();
+      const tbodyRef =
+        tbodyNodes && (tbodyNodes[currentRowRef.current] as HTMLDivElement);
       //only scroll if it's not already visible
       if (tbodyRef && tbodyRef.offsetTop < document.documentElement.scrollTop) {
         window.scrollTo(0, tbodyRef.offsetTop - 10);
       } else if (
         tbodyRef &&
         tbodyRef.offsetTop >
-          document.documentElement.scrollTop +
-            document.documentElement.clientHeight -
-            ActionHeight -
-            200
+        document.documentElement.scrollTop +
+        document.documentElement.clientHeight -
+        ActionHeight -
+        200
       ) {
         window.scrollTo(0, tbodyRef.offsetTop + 10);
       }
@@ -458,14 +467,39 @@ export function PlanSheet(props: IProps) {
     sheetScroll();
   };
 
+  const lastCur = useRef<number>(0);
+  const findCurrentRow = () => {
+    if (sheetRef.current) {
+      const tbodyNodes = bodyChildren();
+      if (!tbodyNodes) return;
+      const currentOff = document.documentElement.scrollTop;
+      let bottom = 0;
+      let top = tbodyNodes.length - 1;
+      while (bottom < top) {
+        let mid = Math.floor((bottom + top) / 2);
+        if ((tbodyNodes[mid] as HTMLDivElement).offsetTop < currentOff) {
+          bottom = mid + 1;
+        } else {
+          top = mid;
+        }
+      }
+      if (bottom !== lastCur.current) {
+        setCurrentRow(bottom);
+        sheetScroll();
+        lastCur.current = bottom;
+      }
+    }
+  };
+  setInterval(findCurrentRow, 100);
+
   const handleValueRender = (cell: ICell) => {
-    return cell.className?.substring(0, 4) === 'book' && bookMap
+    return cell?.className?.substring(0, 4) === 'book' && bookMap
       ? bookMap[cell.value]
-      : cell.className?.includes('num')
-      ? cell.value < 0 || Math.floor(cell.value) !== cell.value
-        ? ''
-        : cell.value
-      : cell.value;
+      : cell?.className?.includes('num')
+        ? cell.value < 0 || Math.floor(cell.value) !== cell.value
+          ? ''
+          : cell.value
+        : cell.value;
   };
   const handleDataRender = (cell: ICell) => cell.value;
 
@@ -622,7 +656,7 @@ export function PlanSheet(props: IProps) {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
       handleAutoSave();
-    }, 1000 * 30);
+    }, 1000 * 60 * 5);
   };
 
   useEffect(() => {
@@ -810,6 +844,33 @@ export function PlanSheet(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRow]);
 
+  const emptyRow = useMemo(() => {
+    const eRow: ICell[] = [];
+    for (let i = 0; i < columns.length + 4; i++) {
+      eRow.push({ value: '', className: 'empty' });
+    }
+    return eRow;
+  }, [columns]);
+
+  const curData = useCallback(
+    (data: ICell[][]) => {
+      if (data.length <= 1) return data as any[][];
+      const retData: any[][] = [data[0]];
+      for (let i = 1; i < currentRow - 20; i++) {
+        retData.push(emptyRow);
+      }
+      const max = Math.min(currentRow + 40, data.length);
+      for (let i = Math.max(currentRow - 20, 1); i < max; i++) {
+        retData.push(data[i]);
+      }
+      for (let i = currentRow + 40; i < data.length; i++) {
+        retData.push(emptyRow);
+      }
+      return retData;
+    },
+    [currentRow, emptyRow]
+  );
+
   return (
     <Box sx={{ display: 'flex' }}>
       <div>
@@ -920,7 +981,7 @@ export function PlanSheet(props: IProps) {
         <ContentDiv id="PlanSheet" ref={sheetRef}>
           {warning && <WarningDiv>{warning}</WarningDiv>}
           <DataSheet
-            data={data as any[][]}
+            data={curData(data)}
             valueRenderer={handleValueRender}
             dataRenderer={handleDataRender}
             onContextMenu={handleContextMenu}

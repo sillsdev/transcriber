@@ -56,8 +56,8 @@ import {
   useCheckOnline,
   currentDateTime,
   hasAudacity,
-  useWaitForRemoteQueue,
   useDataChanges,
+  useWaitForRemoteQueue,
 } from '../../utils';
 import {
   isSectionRow,
@@ -158,9 +158,10 @@ export function ScriptureTable(props: IProps) {
   const bookMap = useSelector((state: IState) => state.books.map);
   const allBookData = useSelector((state: IState) => state.books.bookData);
   const dispatch = useDispatch();
+  const waitForRemoteQueue = useWaitForRemoteQueue();
   const fetchBooks = (lang: string) => dispatch(actions.fetchBooks(lang));
   const { prjId } = useParams();
-  const [width, setWidth] = React.useState(window.innerWidth);
+  const [width, setWidth] = useState(window.innerWidth);
   const [organization] = useGlobal('organization');
   const [project] = useGlobal('project');
   const [plan] = useGlobal('plan');
@@ -204,8 +205,8 @@ export function ScriptureTable(props: IProps) {
   const [confirmPublishingVisible, setConfirmPublishingVisible] =
     useState(false);
   const [view, setView] = useState('');
-  const [audacityItem, setAudacityItem] = React.useState<AudacityInfo>();
-  const [lastSaved, setLastSaved] = React.useState<string>();
+  const [audacityItem, setAudacityItem] = useState<AudacityInfo>();
+  const [lastSaved, setLastSaved] = useState<string>();
   const toolId = 'scriptureTable';
   const {
     saveRequested,
@@ -217,7 +218,6 @@ export function ScriptureTable(props: IProps) {
     isChanged,
     anySaving,
   } = useContext(UnsavedContext).state;
-  const waitForRemoteQueue = useWaitForRemoteQueue();
   const forceDataChanges = useDataChanges();
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
   const [assignSections, setAssignSections] = useState<number[]>([]);
@@ -347,17 +347,22 @@ export function ScriptureTable(props: IProps) {
     toolChanged(toolId, value);
   };
 
+  const setUpdate = (value: boolean) => (updateRef.current = value);
+
   const handleResequence = () => {
-    if (savingRef.current) {
+    if (savingRef.current || updateRef.current) {
       showMessage(t.saving);
       return;
     }
+    if (updateRef.current) return;
+    setUpdate(true);
     const ws = shtResequence(sheetRef.current);
     if (ws !== sheet) {
       setSheet(ws);
       setSectionArr([]);
       setChanged(true);
     }
+    setUpdate(false);
   };
 
   const insertAt = (arr: Array<any>, item: any, index?: number) => {
@@ -473,9 +478,12 @@ export function ScriptureTable(props: IProps) {
     if (index < 0) return;
     const passageRow = { ...sheet[index] };
     if (passageRow.reference === val) return;
+    if (updateRef.current) return;
+    setUpdate(true);
     passageRow.reference = val;
     passageRow.passageUpdated = currentDateTime();
     setSheet(updateRowAt(sheet, passageRow, index));
+    setUpdate(false);
     setChanged(true);
   };
 
@@ -491,6 +499,8 @@ export function ScriptureTable(props: IProps) {
     i: number,
     before: boolean
   ) => {
+    if (updateRef.current) return;
+    setUpdate(true);
     const skipPublishing =
       myWorkflow[i].passageType === PassageTypeEnum.PASSAGE;
     let originalSectionIndex = findSection(
@@ -505,7 +515,10 @@ export function ScriptureTable(props: IProps) {
       before,
       skipPublishing
     );
-    if (newSectionIndex < 0) return;
+    if (newSectionIndex < 0) {
+      setUpdate(false);
+      return;
+    }
     const newSeqVal = myWorkflow[newSectionIndex].sectionSeq;
     myWorkflow = updatePassageSeq(myWorkflow, i, newSeqVal);
     let endRowIndex = newSectionIndex;
@@ -515,7 +528,7 @@ export function ScriptureTable(props: IProps) {
       while (
         ++endRowIndex < myWorkflow.length &&
         !isSectionRow(myWorkflow[endRowIndex])
-      ) {}
+      ) { }
       while (i > endRowIndex) {
         myWorkflow = swapRows(myWorkflow, i, i - 1);
         i--;
@@ -544,6 +557,7 @@ export function ScriptureTable(props: IProps) {
     }
 
     setSheet(myWorkflow);
+    setUpdate(false);
     setChanged(true);
   };
 
@@ -645,6 +659,8 @@ export function ScriptureTable(props: IProps) {
       showMessage(t.saving);
       return;
     }
+    if (updateRef.current) return;
+    setUpdate(true);
     const i = getUndelIndex(sheetRef.current, ix);
     let newRow = newSection(level, sheetRef.current, i);
     if (ptype === PassageTypeEnum.MOVEMENT) {
@@ -658,6 +674,7 @@ export function ScriptureTable(props: IProps) {
     } else {
       setSheet(addPassageTo(level, newData, ptype, i));
     }
+    setUpdate(false);
     setChanged(true);
   };
 
@@ -666,37 +683,47 @@ export function ScriptureTable(props: IProps) {
     ix?: number,
     before?: boolean
   ) => {
-    if (savingRef.current) {
+    if (savingRef.current || updateRef.current) {
       showMessage(t.saving);
       return;
     }
+    setUpdate(true);
     const i = getUndelIndex(sheetRef.current, ix);
     setSheet(
       addPassageTo(SheetLevel.Passage, sheetRef.current, ptype, i, before)
     );
+    setUpdate(false);
     setChanged(true);
   };
   const movePassage = (ix: number, before: boolean, nextSection: boolean) => {
-    if (savingRef.current) {
+    if (savingRef.current || updateRef.current) {
       showMessage(t.saving);
       return;
     }
     if (flat) return;
+    setUpdate(true);
     const i = getUndelIndex(sheetRef.current, ix);
     if (i !== undefined) {
       if (nextSection) movePassageToNextSection(sheetRef.current, i, before);
       else setSheet(movePassageTo(sheetRef.current, i, before));
       setChanged(true);
     }
+    setUpdate(false);
   };
 
   const doMoveSection = (ix: number, before: boolean) => {
+    if (savingRef.current || updateRef.current) {
+      showMessage(t.saving);
+      return;
+    }
+    setUpdate(true);
     setSectionArr([]);
     const i = getUndelIndex(sheetRef.current, ix);
     if (i !== undefined) {
       setSheet(moveSectionTo(sheetRef.current, i, before));
       setChanged(true);
     }
+    setUpdate(false);
   };
 
   const moveSection = (ix: number, before: boolean) => {
@@ -704,16 +731,7 @@ export function ScriptureTable(props: IProps) {
       showMessage(t.saving);
       return;
     }
-    if (myChangedRef.current) {
-      startSave();
-      waitForSave(() => {
-        waitForRemoteQueue('save before move').then(() => {
-          doMoveSection(ix, before);
-        });
-      }, SaveWait);
-    } else {
-      doMoveSection(ix, before);
-    }
+    doMoveSection(ix, before);
   };
 
   const getByIndex = (ws: ISheet[], index: number) => {
@@ -748,6 +766,11 @@ export function ScriptureTable(props: IProps) {
   };
 
   const markDelete = async (index: number) => {
+    if (savingRef.current || updateRef.current) {
+      showMessage(t.saving);
+      return;
+    }
+    setUpdate(true);
     const { ws, i } = getByIndex(sheetRef.current, index);
     const removeItem: number[] = [];
 
@@ -779,6 +802,7 @@ export function ScriptureTable(props: IProps) {
       setSheet([...shtResequence(myWork)]);
       setChanged(true);
     }
+    setUpdate(false);
   };
 
   const handleDelete = async (what: string, where: number[]) => {
@@ -809,16 +833,18 @@ export function ScriptureTable(props: IProps) {
   };
 
   const handleTablePaste = (rows: string[][]) => {
-    if (savingRef.current) {
+    if (savingRef.current || updateRef.current) {
       showMessage(t.saving);
       return Array<Array<string>>();
     }
+    setUpdate(true);
     const { valid, addedWorkflow } = paste(rows);
     if (valid) {
       setSheet(sheetRef.current.concat(addedWorkflow));
       setChanged(true);
       return Array<Array<string>>();
     }
+    setUpdate(false);
     return rows;
   };
 
@@ -830,45 +856,59 @@ export function ScriptureTable(props: IProps) {
     [key: string]: any;
   }
   const updateData = (changes: ICellChange[]) => {
-    var newsht = [...sheetRef.current];
-    changes.forEach((c) => {
-      const { ws, i } = getByIndex(newsht, c.row);
-      const myWf = ws as MyWorkflow | undefined;
-      const name = colNames[c.col];
-      const isNumberCol = c.col === secNumCol || c.col === passNumCol;
+    waitForIt(
+      'finish save or update',
+      () => !savingRef.current && !updateRef.current,
+      () => false,
+      50
+    ).then(() => {
+      setUpdate(true);
+      var newsht = [...sheetRef.current];
+      changes.forEach((c) => {
+        const { ws, i } = getByIndex(newsht, c.row);
+        const myWf = ws as MyWorkflow | undefined;
+        const name = colNames[c.col];
+        const isNumberCol = c.col === secNumCol || c.col === passNumCol;
 
-      if (isNumberCol && !isValidNumber(c.value || '')) {
-        showMessage(s.nonNumber);
-      } else if (myWf && myWf[name] !== c.value) {
-        const isSection = c.col < 2;
-        const sectionUpdated = isSection
-          ? currentDateTime()
-          : ws?.sectionUpdated;
-        const passageUpdated = isSection
-          ? ws?.passageUpdated
-          : currentDateTime();
-        const value = name === 'book' ? findBook(c.value as string) : c.value;
-        var passageType =
-          name === 'reference'
-            ? passageTypeFromRef(c.value as string, flat)
-            : ws?.passageType;
+        if (isNumberCol && !isValidNumber(c.value || '')) {
+          showMessage(s.nonNumber);
+        } else if (myWf && myWf[name] !== c.value) {
+          const isSection = c.col < 2;
+          const sectionUpdated = isSection
+            ? currentDateTime()
+            : ws?.sectionUpdated;
+          const passageUpdated = isSection
+            ? ws?.passageUpdated
+            : currentDateTime();
+          const value = name === 'book' ? findBook(c.value as string) : c.value;
+          var passageType =
+            name === 'reference'
+              ? passageTypeFromRef(c.value as string, flat)
+              : ws?.passageType;
 
-        newsht[i] = {
-          ...ws,
-          [name]: isNumberCol ? parseInt(value ?? '') : value,
-          sectionUpdated,
-          passageUpdated,
-          passageType,
-        } as ISheet;
+          newsht[i] = {
+            ...ws,
+            [name]: isNumberCol ? parseInt(value ?? '') : value,
+            sectionUpdated,
+            passageUpdated,
+            passageType,
+          } as ISheet;
+        }
+      });
+      if (changes.length > 0) {
+        setSheet(newsht);
+        setChanged(true);
       }
+      setUpdate(false);
     });
-    if (changes.length > 0) {
-      setSheet(newsht);
-      setChanged(true);
-    }
   };
 
   const updateTitleMedia = async (index: number, mediaId: string) => {
+    if (savingRef.current || updateRef.current) {
+      showMessage(t.saving);
+      return;
+    }
+    setUpdate(true);
     var newsht = [...sheetRef.current];
     const { ws, i } = getByIndex(newsht, index);
     if (ws) {
@@ -920,6 +960,7 @@ export function ScriptureTable(props: IProps) {
         }
       }
     }
+    setUpdate(false);
   };
 
   const saveIfChanged = (cb: () => void) => {
@@ -980,14 +1021,9 @@ export function ScriptureTable(props: IProps) {
     setAudacityItem(undefined);
   };
 
-  const doAssign = (where: number[]) => {
+  const handleAssign = (where: number[]) => () => {
     setAssignSections(where);
     setAssignSectionVisible(true);
-  };
-  const handleAssign = (where: number[]) => () => {
-    saveIfChanged(() => {
-      doAssign(where);
-    });
   };
 
   const handleAssignClose = () => () => setAssignSectionVisible(false);
@@ -1111,19 +1147,15 @@ export function ScriptureTable(props: IProps) {
   const updateLastModified = async () => {
     var planRec = getPlan(plan) as PlanD;
     if (planRec !== null) {
-      try {
-        await waitForRemoteQueue('priorsave');
-      } finally {
-        //do this even if the wait above failed
-        //don't use sections here, it hasn't been updated yet
-        const plansections = memory.cache.query((qb) =>
-          qb.findRecords('section')
-        ) as Section[];
-        planRec.attributes.sectionCount = plansections.filter(
-          (s) => related(s, 'plan') === plan
-        ).length;
-        await memory.update((t) => UpdateRecord(t, planRec, user));
-      }
+      //do this even if the wait above failed
+      //don't use sections here, it hasn't been updated yet
+      const plansections = memory.cache.query((qb) =>
+        qb.findRecords('section')
+      ) as Section[];
+      planRec.attributes.sectionCount = plansections.filter(
+        (s) => related(s, 'plan') === plan
+      ).length;
+      await memory.update((t) => UpdateRecord(t, planRec, user));
     }
   };
 
@@ -1267,6 +1299,7 @@ export function ScriptureTable(props: IProps) {
     const save = () => {
       if (!savingRef.current && !updateRef.current) {
         setSaving(true);
+        setUpdate(true);
         setChanged(false);
         prevSave = lastSaved || '';
         showMessage(t.saving);
@@ -1275,6 +1308,7 @@ export function ScriptureTable(props: IProps) {
           setLastSaved(currentDateTime()); //force refresh the sheet
           saveCompleted(toolId);
           setComplete(100);
+          setUpdate(false);
           if (doForceDataChanges.current) {
             forceDataChanges();
             doForceDataChanges.current = false;
@@ -1288,7 +1322,7 @@ export function ScriptureTable(props: IProps) {
       setTimeout(() => {
         waitForIt(
           'saving sheet recordings',
-          () => !anySaving(toolId),
+          () => !anySaving(toolId) && !updateRef.current,
           () => false,
           10000
         ).finally(() => {
@@ -1314,7 +1348,6 @@ export function ScriptureTable(props: IProps) {
   // load data when tables change (and initally)
   useEffect(() => {
     if (scripture && allBookData.length === 0) fetchBooks(lang);
-    const setUpdate = (value: boolean) => (updateRef.current = value);
     if (
       !savingRef.current &&
       !myChangedRef.current &&
@@ -1404,56 +1437,60 @@ export function ScriptureTable(props: IProps) {
     let sectionfiltered = false;
     let filtered = false;
 
-    sheetRef.current.forEach((s, index) => {
-      if (isSectionRow(s)) {
-        sectionfiltered = isSectionFiltered(
-          filterState,
-          minSection,
-          s.sectionSeq,
-          hidePublishing,
-          s.reference || ''
-        );
-        if (
-          !sectionfiltered &&
-          hidePublishing &&
-          s.kind === IwsKind.Section &&
-          s.level !== SheetLevel.Section
-        ) {
-          var allMyPassagesArePublishing = true;
-          for (
-            var ix = index + 1;
-            ix < sheetRef.current.length &&
-            isPassageRow(sheetRef.current[ix]) &&
-            allMyPassagesArePublishing;
-            ix++
-          ) {
-            if (!isPublishingTitle(sheetRef.current[ix].reference, flat)) {
-              allMyPassagesArePublishing = false;
-            }
-          }
-          sectionfiltered = allMyPassagesArePublishing;
-        }
-      }
-      if (isPassageRow(s))
-        filtered =
-          sectionfiltered ||
-          isPassageFiltered(
-            s,
+    if (!updateRef.current) {
+      setUpdate(true);
+      sheetRef.current.forEach((s, index) => {
+        if (isSectionRow(s)) {
+          sectionfiltered = isSectionFiltered(
             filterState,
             minSection,
+            s.sectionSeq,
             hidePublishing,
-            orgSteps,
-            doneStepId
+            s.reference || ''
           );
-      else filtered = sectionfiltered;
-      if (filtered !== s.filtered) changed = true;
-      newWork.push({
-        ...s,
-        filtered,
+          if (
+            !sectionfiltered &&
+            hidePublishing &&
+            s.kind === IwsKind.Section &&
+            s.level !== SheetLevel.Section
+          ) {
+            var allMyPassagesArePublishing = true;
+            for (
+              var ix = index + 1;
+              ix < sheetRef.current.length &&
+              isPassageRow(sheetRef.current[ix]) &&
+              allMyPassagesArePublishing;
+              ix++
+            ) {
+              if (!isPublishingTitle(sheetRef.current[ix].reference, flat)) {
+                allMyPassagesArePublishing = false;
+              }
+            }
+            sectionfiltered = allMyPassagesArePublishing;
+          }
+        }
+        if (isPassageRow(s))
+          filtered =
+            sectionfiltered ||
+            isPassageFiltered(
+              s,
+              filterState,
+              minSection,
+              hidePublishing,
+              orgSteps,
+              doneStepId
+            );
+        else filtered = sectionfiltered;
+        if (filtered !== s.filtered) changed = true;
+        newWork.push({
+          ...s,
+          filtered,
+        });
       });
-    });
-    if (changed) {
-      setSheet(newWork);
+      if (changed) {
+        setSheet(newWork);
+      }
+      setUpdate(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgSteps, filterState, doneStepId, hidePublishing]);
@@ -1463,10 +1500,16 @@ export function ScriptureTable(props: IProps) {
     [sheet]
   );
 
-  const doSetSectionPublish = (
+  const setSectionPublish = async (
     index: number,
     publishLevel: PublishLevelEnum
   ) => {
+    await waitForRemoteQueue(t.publishingWarning);
+    if (savingRef.current || updateRef.current) {
+      showMessage(t.saving);
+      return;
+    }
+    setUpdate(true);
     const { ws } = getByIndex(sheetRef.current, index);
     if (ws) {
       const newsht = [...sheetRef.current];
@@ -1497,38 +1540,15 @@ export function ScriptureTable(props: IProps) {
       setChanged(true);
       doForceDataChanges.current = true;
     }
+    setUpdate(false);
   };
 
-  const hasDeleted = useMemo(() => sheet.some((s) => s.deleted), [sheet]);
-
-  const setSectionPublish = (index: number, level: PublishLevelEnum) => {
-    if (savingRef.current) {
-      showMessage(t.saving);
-      return;
-    }
-    if (hasDeleted) {
-      startSave(toolId);
-      showMessage(t.saving);
-      waitForSave(() => {
-        waitForRemoteQueue('finish sheet delete').then(() => {
-          doSetSectionPublish(index, level);
-        });
-      }, SaveWait);
-    } else {
-      doSetSectionPublish(index, level);
-    }
-  };
-
-  const onPublishing = (update: boolean) => {
-    saveIfChanged(() => {
-      waitForRemoteQueue('save before adding publish').then(async () => {
-        if (update) await doPublish();
-        else if (!hidePublishing) togglePublishing(); //turn it off
-        //if we're going to show now and we don't already have some rows...ask
-        else if (!canHidePublishing) setConfirmPublishingVisible(true);
-        else togglePublishing(); //turn it on - no update
-      });
-    });
+  const onPublishing = async (update: boolean) => {
+    if (update) await doPublish();
+    else if (!hidePublishing) togglePublishing(); //turn it off
+    //if we're going to show now and we don't already have some rows...ask
+    else if (!canHidePublishing) setConfirmPublishingVisible(true);
+    else togglePublishing(); //turn it on - no update
   };
   const onPublishingReject = () => {
     setConfirmPublishingVisible(false);
@@ -1646,6 +1666,11 @@ export function ScriptureTable(props: IProps) {
       startChapter(s) !== currentChapter;
 
     let newworkflow: ISheet[] = [];
+    if (savingRef.current || updateRef.current) {
+      showMessage(t.saving);
+      return;
+    }
+    setUpdate(true);
     if (!(await hasBookTitle(PassageTypeEnum.BOOK)))
       newworkflow = AddBook(newworkflow, PassageTypeEnum.BOOK);
 
@@ -1715,6 +1740,7 @@ export function ScriptureTable(props: IProps) {
     });
     setSheet(newworkflow);
     setChanged(true);
+    setUpdate(false);
   };
 
   const rowinfo = useMemo(() => {
@@ -1885,8 +1911,8 @@ export function ScriptureTable(props: IProps) {
           shared
             ? resStr.resourceEdit
             : isNote
-            ? resStr.noteDetails
-            : ts.versionHistory
+              ? resStr.noteDetails
+              : ts.versionHistory
         }
         isOpen={versionRow !== undefined}
         onOpen={handleVerHistClose}
