@@ -132,6 +132,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "connectParatext": string;
     "copyComplete": string;
     "copyNew": string;
+    "copyright": string;
     "copySame": string;
     "copyStatus": string;
     "creatorAdd": string;
@@ -139,6 +140,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "creatorOK": string;
     "delete": string;
     "deleteTeam": string;
+    "description": string;
     "draft": string;
     "editCategory": string;
     "editWorkflow": string;

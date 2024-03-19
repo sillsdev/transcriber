@@ -622,6 +622,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.copyright">
+         <segment>
+            <source>Copyright</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.copySame">
          <segment>
             <source>Copy project to same team.</source>
@@ -661,6 +667,12 @@
       <unit id="cards.deleteTeam">
          <segment>
             <source>Delete Team</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.description">
+         <segment>
+            <source>Description</source>
             <target/>
          </segment>
       </unit>
