@@ -6,7 +6,7 @@ export enum PublishLevelEnum {
 }
 export const usePublishLevel = () => {
   const getPublishLevel = (published: string) => {
-    if ((published || '') === ('' || '{}')) return PublishLevelEnum.None;
+    if ((published || '{}') === '{}') return PublishLevelEnum.None;
     var json = JSON.parse(published);
     if (json['Beta'] === 'true') return PublishLevelEnum.Beta;
     if (json['Public'] === 'true') return PublishLevelEnum.Public;

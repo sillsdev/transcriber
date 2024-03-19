@@ -19,19 +19,19 @@ const StyledIconButton = styled(IconButton, {
 })<StyledIconButtonProps>(({ shared, theme }) => ({
   ...(shared === IMediaShare.OldVersionOnly
     ? {
-        color: 'orange',
-      }
+      color: 'orange',
+    }
     : shared === IMediaShare.Latest
-    ? {
+      ? {
         color: 'green',
       }
-    : shared === IMediaShare.None
-    ? {
-        color: 'red',
-      }
-    : {
-        color: theme.palette.primary.light,
-      }),
+      : shared === IMediaShare.None
+        ? {
+          color: 'red',
+        }
+        : {
+          color: theme.palette.primary.light,
+        }),
 }));
 
 interface IProps {
@@ -71,7 +71,6 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
   const handlePlayStatus = () => () => {
     onPlayStatus(mediaId);
   };
-  console.log('PlanAudioActions', rowIndex, isPassage, isNote, mediaShared);
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       {isPassage && (
@@ -82,8 +81,8 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
             isNote
               ? t.noteDetails
               : mediaShared !== IMediaShare.NotPublic
-              ? t.resourceEdit
-              : t.versions
+                ? t.resourceEdit
+                : t.versions
           }
           disabled={!canEdit}
           onClick={onHistory(rowIndex)}
