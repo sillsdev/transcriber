@@ -45,6 +45,9 @@ export const getAllMediaRecs = (
   artifactTypeId?: string | null,
   version?: number
 ) => {
+  if ((passageId ?? '') === '') {
+    return [];
+  }
   const mediaRecs = (
     memory.cache.query((q) =>
       q.findRecords('mediafile').filter({

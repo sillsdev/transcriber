@@ -12,14 +12,22 @@ import EditIcon from '@mui/icons-material/EditOutlined';
 
 // see: https://mui.com/material-ui/customization/how-to-customize/
 interface StyledIconButtonProps extends IconButtonProps {
-  shared?: boolean;
+  shared?: IMediaShare;
 }
 const StyledIconButton = styled(IconButton, {
   shouldForwardProp: (prop) => prop !== 'shared',
 })<StyledIconButtonProps>(({ shared, theme }) => ({
-  ...(shared
+  ...(shared === IMediaShare.OldVersionOnly
     ? {
-        color: theme.palette.secondary.light,
+        color: 'orange',
+      }
+    : shared === IMediaShare.Latest
+    ? {
+        color: 'green',
+      }
+    : shared === IMediaShare.None
+    ? {
+        color: 'red',
       }
     : {
         color: theme.palette.primary.light,
@@ -63,13 +71,13 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
   const handlePlayStatus = () => () => {
     onPlayStatus(mediaId);
   };
-
+  console.log('PlanAudioActions', rowIndex, isPassage, isNote, mediaShared);
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       {isPassage && (
         <StyledIconButton
           id="passageShare"
-          shared={mediaShared === IMediaShare.OldVersionOnly}
+          shared={mediaShared}
           title={
             isNote
               ? t.noteDetails

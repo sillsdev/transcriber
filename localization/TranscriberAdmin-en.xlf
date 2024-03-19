@@ -4906,6 +4906,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="resource.changes">
+         <segment>
+            <source>Changes made will affect source and all shared locations.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="resource.delete">
          <segment>
             <source>Delete</source>
@@ -4987,6 +4993,12 @@
       <unit id="resource.saving">
          <segment>
             <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.source">
+         <segment>
+            <source>Linked Note Source: </source>
             <target/>
          </segment>
       </unit>
