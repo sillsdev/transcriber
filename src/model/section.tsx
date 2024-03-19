@@ -7,6 +7,7 @@ export interface Section extends BaseModel {
     name: string;
     graphics: string;
     published: boolean;
+    publishTo: string;
     level: number;
     state: string;
     dateCreated: string;

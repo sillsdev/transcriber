@@ -106,3 +106,4 @@ export * from './useAllSharedResourceRead';
 export * from './useNotes';
 export * from './usePassageUpdate';
 export * from './useGraphicFind';
+export * from './usePublishLevel';

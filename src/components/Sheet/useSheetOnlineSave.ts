@@ -9,7 +9,14 @@ import {
 } from '@orbit/records';
 import JSONAPISource from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
-import { remoteId, remoteIdNum, remoteIdGuid, findRecord } from '../../crud';
+import {
+  remoteId,
+  remoteIdNum,
+  remoteIdGuid,
+  findRecord,
+  usePublishLevel,
+  PublishLevelEnum,
+} from '../../crud';
 import {
   isSectionRow,
   isPassageRow,
@@ -35,6 +42,7 @@ interface SaveRec {
   passagetypeId?: string;
   sharedResourceId?: string;
   published: boolean;
+  publishTo: string;
   titlemediafile: string;
 }
 
@@ -49,6 +57,7 @@ export const useWfOnlineSave = (props: IProps) => {
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [plan] = useGlobal('plan');
   const { getPassageTypeRec, checkIt } = usePassageType();
+  const { setPublishLevel } = usePublishLevel();
 
   const getRemoteId = async (table: string, localid: string) => {
     await waitForIt(
@@ -75,7 +84,8 @@ export const useWfOnlineSave = (props: IProps) => {
         let rec = {
           issection: true,
           level: w.level,
-          published: w.published,
+          published: w.published !== PublishLevelEnum.None,
+          publishTo: setPublishLevel(w.published),
           titlemediafile:
             (w?.titleMediaId?.id &&
               (await getRemoteId('mediafile', w?.titleMediaId?.id))) ||

@@ -7,6 +7,7 @@ import { positiveWholeOnly } from '../../utils';
 import { shallowEqual, useSelector } from 'react-redux';
 import { planSheetSelector } from '../../selector';
 import { rowTypes } from './rowTypes';
+import { PublishLevelEnum } from '../../crud/usePublishLevel';
 
 interface IProps {
   sectionMap: Map<number, string>;
@@ -18,18 +19,17 @@ interface IProps {
 
 export const PublishButton = (props: IProps) => {
   const { sectionMap, rowInfo, rowIndex, organizedBy, onAction } = props;
-  const { isMovement } = rowTypes(rowInfo)
+  const { isMovement } = rowTypes(rowInfo);
   const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
-
   const sectionSequenceNumber =
     sectionMap.get(rowInfo[rowIndex].sectionSeq) ||
     positiveWholeOnly(rowInfo[rowIndex].sectionSeq);
-  const description = isMovement(rowIndex) ? t.movement : organizedBy
-  return rowInfo[rowIndex].published ? (
+  const description = isMovement(rowIndex) ? t.movement : organizedBy;
+  return rowInfo[rowIndex].published !== PublishLevelEnum.None ? (
     <PublishIcon
       id="unpublish"
       onClick={() => onAction(rowIndex, ExtraIcon.Publish)}
-      title={t.unpublish
+      title={t.changepublish
         .replace('{0}', description)
         .replace('{1}', sectionSequenceNumber)}
     />

@@ -933,6 +933,9 @@ const initialState = {
 			"audio": "Audio",
 			"bookSelect": "Select Book...",
 			"confirm": "{0} {1} Item(s). Are you sure?",
+			"confirmPublish": "Publish {0}",
+			"confirmPublishMovement": "The latest version of all passages and notes in all {0} in this Movement will be marked as published.",
+			"confirmPublishSection": "The latest version of all passages and notes in this {0} will be marked as published.",
 			"filtered": "Disable filter to add rows.",
 			"firstMovement": "Start At",
 			"graphic": "Graphic",
@@ -959,7 +962,7 @@ const initialState = {
 			"sectionEnd": "Add {0} to End",
 			"step": "Step",
 			"tablePaste": "Paste Spreadsheet",
-			"unpublish": "Remove {0} {1} from published list.",
+			"changepublish": "Update {0} {1} published status.",
 			"useCtrlV": "Select a column head and use CTRL-V to append table rows.",
 		}
 	}),
@@ -1032,6 +1035,13 @@ const initialState = {
 			"download": "Download?",
 			"downloadLater": "Download Later",
 			"downloadMb": "Download {0}MB of offline audio project files?",
+		}
+	}),
+	"publishLevel": new LocalizedStrings({
+		"en": {
+			"none": "Not Published",
+			"beta": "Beta",
+			"public": "Public",
 		}
 	}),
 	"resource": new LocalizedStrings({
@@ -1672,6 +1682,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"profile" : new LocalizedStrings(action.payload.data.profile),
 				"projButtons" : new LocalizedStrings(action.payload.data.projButtons),
 				"projectDownload" : new LocalizedStrings(action.payload.data.projectDownload),
+				"publishLevel" : new LocalizedStrings(action.payload.data.publishLevel),
 				"resource" : new LocalizedStrings(action.payload.data.resource),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
 				"scriptureTableFilter" : new LocalizedStrings(action.payload.data.scriptureTableFilter),

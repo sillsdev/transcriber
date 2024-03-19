@@ -115,6 +115,7 @@ import { getDefaultName } from './getDefaultName';
 import GraphicRights from '../GraphicRights';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity, RecordKeyMap } from '@orbit/records';
+import { PublishLevelEnum, usePublishLevel } from '../../crud/usePublishLevel';
 
 const SaveWait = 500;
 export const FilterParam = 'ProjectFilter';
@@ -255,6 +256,7 @@ export function ScriptureTable(props: IProps) {
     discussions,
     groupmemberships,
   });
+  const { getPublishLevel } = usePublishLevel();
   const [defaultFilterState, setDefaultFilterState] = useState<ISTFilterState>({
     minStep: '', //orgworkflow step to show this step or after
     maxStep: '', //orgworkflow step to show this step or before
@@ -513,7 +515,7 @@ export function ScriptureTable(props: IProps) {
       while (
         ++endRowIndex < myWorkflow.length &&
         !isSectionRow(myWorkflow[endRowIndex])
-      ) { }
+      ) {}
       while (i > endRowIndex) {
         myWorkflow = swapRows(myWorkflow, i, i - 1);
         i--;
@@ -628,7 +630,7 @@ export function ScriptureTable(props: IProps) {
       sectionSeq: nextSecSequence(ws, i, type),
       passageSeq: 0,
       reference: '',
-      published: false,
+      published: PublishLevelEnum.None,
     } as ISheet;
     let prevRowIdx = i ? i - 1 : ws.length - 1;
     if (prevRowIdx >= 0) newRow.book = ws[prevRowIdx].book;
@@ -1324,7 +1326,6 @@ export function ScriptureTable(props: IProps) {
         plan,
         sections,
         passages,
-        graphics,
         flat,
         shared,
         memory,
@@ -1335,7 +1336,8 @@ export function ScriptureTable(props: IProps) {
         hidePublishing,
         doneStepId,
         getDiscussionCount,
-        graphicFind
+        graphicFind,
+        getPublishLevel
       );
       setSheet(newWorkflow);
 
@@ -1461,24 +1463,30 @@ export function ScriptureTable(props: IProps) {
     [sheet]
   );
 
-  const doToggleSectionPublish = (index: number) => {
+  const doSetSectionPublish = (
+    index: number,
+    publishLevel: PublishLevelEnum
+  ) => {
     const { ws } = getByIndex(sheetRef.current, index);
     if (ws) {
       const newsht = [...sheetRef.current];
       newsht[index] = {
         ...ws,
-        published: !ws.published,
+        published: publishLevel,
         sectionUpdated: currentDateTime(),
       };
       //if this is a movement...publish all the sections below it
-      if (!ws.published && ws.level === SheetLevel.Movement) {
+      if (
+        ws.published === PublishLevelEnum.None &&
+        ws.level === SheetLevel.Movement
+      ) {
         let i = index + 1;
         while (i < newsht.length) {
           if (newsht[i].level === SheetLevel.Movement) break;
-          if (isSectionRow(newsht[i]) && !newsht[i].published) {
+          if (isSectionRow(newsht[i]) && newsht[i].published !== publishLevel) {
             newsht[i] = {
               ...newsht[i],
-              published: true,
+              published: publishLevel,
               sectionUpdated: currentDateTime(),
             };
           }
@@ -1493,7 +1501,7 @@ export function ScriptureTable(props: IProps) {
 
   const hasDeleted = useMemo(() => sheet.some((s) => s.deleted), [sheet]);
 
-  const toggleSectionPublish = (index: number) => {
+  const setSectionPublish = (index: number, level: PublishLevelEnum) => {
     if (savingRef.current) {
       showMessage(t.saving);
       return;
@@ -1503,11 +1511,11 @@ export function ScriptureTable(props: IProps) {
       showMessage(t.saving);
       waitForSave(() => {
         waitForRemoteQueue('finish sheet delete').then(() => {
-          doToggleSectionPublish(index);
+          doSetSectionPublish(index, level);
         });
       }, SaveWait);
     } else {
-      doToggleSectionPublish(index);
+      doSetSectionPublish(index, level);
     }
   };
 
@@ -1811,7 +1819,7 @@ export function ScriptureTable(props: IProps) {
         canSetDefault={canSetProjectDefault}
         toolId={toolId}
         onPublishing={onPublishing}
-        toggleSectionPublish={toggleSectionPublish}
+        setSectionPublish={setSectionPublish}
       />
       {assignSectionVisible && (
         <AssignSection
@@ -1877,8 +1885,8 @@ export function ScriptureTable(props: IProps) {
           shared
             ? resStr.resourceEdit
             : isNote
-              ? resStr.noteDetails
-              : ts.versionHistory
+            ? resStr.noteDetails
+            : ts.versionHistory
         }
         isOpen={versionRow !== undefined}
         onOpen={handleVerHistClose}
