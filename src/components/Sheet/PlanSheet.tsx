@@ -16,6 +16,7 @@ import {
   ISheet,
   OrgWorkflowStep,
   SheetLevel,
+  IPassageTypeStrings,
 } from '../../model';
 import { Box, IconButton, styled } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
@@ -44,14 +45,18 @@ import {
   positiveWholeOnly,
   useCanPublish,
 } from '../../utils';
-import { remoteIdGuid, useRole } from '../../crud';
+import { remoteIdGuid, useOrganizedBy, useRole } from '../../crud';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
 import { TabAppBar } from '../../control';
 import { HotKeyContext } from '../../context/HotKeyContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import FilterMenu, { ISTFilterState } from './filterMenu';
-import { planSheetSelector, sharedSelector } from '../../selector';
+import {
+  passageTypeSelector,
+  planSheetSelector,
+  sharedSelector,
+} from '../../selector';
 import { useSelector, shallowEqual } from 'react-redux';
 import { PassageTypeEnum } from '../../model/passageType';
 import { rowTypes } from './rowTypes';
@@ -60,6 +65,8 @@ import { ExtraIcon } from '.';
 import { usePlanSheetFill } from './usePlanSheetFill';
 import { useShowIcon } from './useShowIcon';
 import { RecordKeyMap } from '@orbit/records';
+import { PublishLevelEnum } from '../../crud/usePublishLevel';
+import ConfirmPublishDialog from '../ConfirmPublishDialog';
 
 const DOWN_ARROW = 'ARROWDOWN';
 export const SectionSeqCol = 0;
@@ -177,7 +184,7 @@ interface IProps {
   movePassage: (i: number, before: boolean, section: boolean) => void;
   addSection: (level: SheetLevel, i?: number, ptype?: PassageTypeEnum) => void;
   moveSection: (i: number, before: boolean) => void;
-  toggleSectionPublish: (i: number) => void;
+  setSectionPublish: (i: number, level: PublishLevelEnum) => void;
   onPublishing: (doUpdate: boolean) => void;
   lookupBook: (book: string) => string;
   resequence: () => void;
@@ -225,7 +232,7 @@ export function PlanSheet(props: IProps) {
     onPassageDetail,
     onFilterChange,
     onPublishing,
-    toggleSectionPublish,
+    setSectionPublish,
     onFirstMovement,
   } = props;
   const ctx = useContext(PlanContext);
@@ -278,8 +285,15 @@ export function PlanSheet(props: IProps) {
   const [toRow, setToRow] = useState(0);
   const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const pt: IPassageTypeStrings = useSelector(
+    passageTypeSelector,
+    shallowEqual
+  );
   const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
-  const { isPassageType, isSectionType } = rowTypes(rowInfo);
+  const { isPassageType, isSectionType, isMovement } = rowTypes(rowInfo);
+  const { getOrganizedBy } = useOrganizedBy();
+  const organizedBy = getOrganizedBy(true);
+  const organizedByPlural = getOrganizedBy(false);
   const showIcon = useShowIcon({
     readonly,
     rowInfo,
@@ -287,6 +301,7 @@ export function PlanSheet(props: IProps) {
     hidePublishing,
   });
   const [changed, setChanged] = useState(false); //for button enabling
+  const [confirmPublish, setConfirmPublish] = useState(false);
   const changedRef = useRef(false); //for autosave
   const [saving, setSaving] = useState(false);
   const { userIsAdmin } = useRole();
@@ -300,8 +315,16 @@ export function PlanSheet(props: IProps) {
     startSave();
   };
 
+  const publishConfirm = (level: PublishLevelEnum) => {
+    setConfirmPublish(false);
+    setSectionPublish(currentRowRef.current - 1, level);
+  };
+  const publishRefused = () => {
+    setConfirmPublish(false);
+  };
+
   const onPublish = () => {
-    toggleSectionPublish(currentRowRef.current - 1);
+    setConfirmPublish(true);
   };
 
   const onMovementAbove = () => {
@@ -774,7 +797,14 @@ export function PlanSheet(props: IProps) {
     () => positiveWholeOnly(currentRowPassageSeqNum),
     [currentRowPassageSeqNum]
   );
-
+  const currentRowPublishLevel = useMemo(
+    () =>
+      currentRowRef.current < 1
+        ? PublishLevelEnum.None
+        : rowInfo[currentRowRef.current - 1].published,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentRow, rowInfo]
+  );
   const dataRowisSection = useMemo(() => {
     return isSectionType(currentRow - 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -908,6 +938,22 @@ export function PlanSheet(props: IProps) {
             />
           ) : (
             <></>
+          )}
+          {confirmPublish && (
+            <ConfirmPublishDialog
+              title={t.confirmPublish.replace(
+                '{0}',
+                isMovement(currentRowRef.current - 1) ? pt.MOVE : organizedBy
+              )}
+              description={
+                isMovement(currentRowRef.current - 1)
+                  ? t.confirmPublishMovement.replace('{0}', organizedByPlural)
+                  : t.confirmPublishSection.replace('{0}', organizedBy)
+              }
+              yesResponse={publishConfirm}
+              noResponse={publishRefused}
+              current={currentRowPublishLevel}
+            />
           )}
           <MediaPlayer
             srcMediaId={srcMediaId}

@@ -4378,6 +4378,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.confirmPublish">
+         <segment>
+            <source>Publish {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.confirmPublishMovement">
+         <segment>
+            <source>The latest version of all passages and notes in all {0} in this Movement will be marked as published.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.confirmPublishSection">
+         <segment>
+            <source>The latest version of all passages and notes in this {0} will be marked as published.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
@@ -4534,9 +4552,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.unpublish">
+      <unit id="planSheet.changepublish">
          <segment>
-            <source>Remove {0} {1} from published list.</source>
+            <source>Update {0} {1} published status.</source>
             <target/>
          </segment>
       </unit>
@@ -4873,6 +4891,24 @@
       <unit id="projectDownload.downloadMb">
          <segment>
             <source>Download {0}MB of offline audio project files?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="publishLevel.none">
+         <segment>
+            <source>Not Published</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="publishLevel.beta">
+         <segment>
+            <source>Beta</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="publishLevel.public">
+         <segment>
+            <source>Public</source>
             <target/>
          </segment>
       </unit>

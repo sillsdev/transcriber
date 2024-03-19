@@ -878,6 +878,9 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "audio": string;
     "bookSelect": string;
     "confirm": string;
+    "confirmPublish": string;
+    "confirmPublishMovement": string;
+    "confirmPublishSection": string;
     "filtered": string;
     "firstMovement": string;
     "graphic": string;
@@ -904,7 +907,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "sectionEnd": string;
     "step": string;
     "tablePaste": string;
-    "unpublish": string;
+    "changepublish": string;
     "useCtrlV": string;
 };
 
@@ -973,6 +976,12 @@ export interface IProjectDownloadStrings extends Localize.LocalizedStringsMethod
     "download": string;
     "downloadLater": string;
     "downloadMb": string;
+};
+
+export interface IPublishLevelStrings extends Localize.LocalizedStringsMethods {
+    "none": string;
+    "beta": string;
+    "public": string;
 };
 
 export interface IResourceStrings extends Localize.LocalizedStringsMethods {
@@ -1575,6 +1584,7 @@ export interface ILocalizedStrings {
 	profile: IProfileStrings;
 	projButtons: IProjButtonsStrings;
 	projectDownload: IProjectDownloadStrings;
+	publishLevel: IPublishLevelStrings;
 	resource: IResourceStrings;
 	scriptureTable: IScriptureTableStrings;
 	scriptureTableFilter: IScriptureTableFilterStrings;

@@ -1,6 +1,7 @@
 import { RecordIdentity } from '@orbit/records';
 import { PassageTypeEnum } from './passageType';
 import { PassageD, SharedResourceD } from '.';
+import { PublishLevelEnum } from '../crud';
 
 export enum IwsKind {
   Section,
@@ -46,7 +47,7 @@ export interface ISheet {
   deleted: boolean;
   filtered: boolean;
   discussionCount: number;
-  published: boolean;
+  published: PublishLevelEnum;
   graphicUri?: string;
   graphicRights?: string;
   color?: string;

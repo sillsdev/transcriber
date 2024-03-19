@@ -7,7 +7,6 @@ import {
   SheetLevel,
   SectionD,
   PassageD,
-  GraphicD,
   OrgWorkflowStepD,
   SharedResourceD,
   MediaFileD,
@@ -22,6 +21,7 @@ import { ISTFilterState } from './filterMenu';
 import { PassageTypeEnum } from '../../model/passageType';
 import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
 import { InitializedRecord } from '@orbit/records';
+import { PublishLevelEnum } from '../../crud/usePublishLevel';
 
 const shtSectionUpdate = (item: ISheet, rec: ISheet) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -33,6 +33,7 @@ const shtSectionUpdate = (item: ISheet, rec: ISheet) => {
       rec.editor = item.editor;
       rec.title = item.title;
       rec.deleted = item.deleted;
+      rec.published = item.published;
     }
 };
 
@@ -135,11 +136,11 @@ export const isPassageFiltered = (
       (filterState.maxSection > -1 && w.sectionSeq > filterState.maxSection))
   );
 };
+
 export const getSheet = (
   plan: string,
   sections: SectionD[],
   passages: PassageD[],
-  graphics: GraphicD[],
   flat: boolean,
   projectShared: boolean,
   memory: Memory,
@@ -154,6 +155,7 @@ export const getSheet = (
     rec: InitializedRecord,
     ref?: string
   ) => { uri?: string; rights?: string; color?: string },
+  getPublishLevel: (publishTo: string) => PublishLevelEnum,
   current?: ISheet[]
 ) => {
   const myWork = current || Array<ISheet>();
@@ -202,8 +204,8 @@ export const getSheet = (
         item.reference
       );
       item.filtered = sectionfiltered;
-      item.published = section.attributes.published;
-      curSectionPublished = item.published;
+      item.published = getPublishLevel(section.attributes.publishTo);
+      curSectionPublished = section.attributes.published;
       const gr = graphicFind(section);
       item.graphicUri = gr?.uri;
       item.graphicRights = gr?.rights;

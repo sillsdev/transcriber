@@ -5107,6 +5107,27 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="planSheet.confirmPublish">
+            <source>Publish {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.confirmPublishMovement">
+            <source>The latest version of all passages and notes in all {0} in this Movement will be marked as published.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.confirmPublishSection">
+            <source>The latest version of all passages and notes in this {0} will be marked as published.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planSheet.filtered">
             <source>Disable filter to add rows.</source>
             <target/>
@@ -5289,8 +5310,8 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="planSheet.unpublish">
-            <source>Remove {0} {1} from published list.</source>
+         <trans-unit id="planSheet.changepublish">
+            <source>Update {0} {1} published status.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -5686,6 +5707,27 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="publishLevel.none">
+            <source>Not Published</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="publishLevel.beta">
+            <source>Beta</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="publishLevel.public">
+            <source>Public</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
             </context-group>
          </trans-unit>
       	<trans-unit id="resource.action">

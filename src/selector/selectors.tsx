@@ -156,6 +156,9 @@ export const profileSelector = (state: IState) =>
 export const projectDownloadSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'projectDownload' });
 
+export const publishLevelSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'publishLevel' });
+
 export const resourceSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'passageDetailArtifacts' });
 

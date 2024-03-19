@@ -17,7 +17,12 @@ import {
   RecordIdentity,
   RecordTransformBuilder,
 } from '@orbit/records';
-import { related, UpdateRelatedPassageOps } from '../../crud';
+import {
+  PublishLevelEnum,
+  related,
+  UpdateRelatedPassageOps,
+  usePublishLevel,
+} from '../../crud';
 import {
   isPassageAdding,
   isPassageRow,
@@ -39,7 +44,7 @@ export const useWfLocalSave = (props: IProps) => {
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { getPassageTypeRec, checkIt } = usePassageType();
-
+  const { setPublishLevel } = usePublishLevel();
   return async (
     sheet: ISheet[],
     sections: SectionD[],
@@ -67,7 +72,8 @@ export const useWfLocalSave = (props: IProps) => {
                 sequencenum: item.sectionSeq,
                 name: item.title || '',
                 level: item.level,
-                published: item.published,
+                published: item.published !== PublishLevelEnum.None,
+                publishTo: setPublishLevel(item.published),
                 state: item.level < 3 ? item.reference ?? '' : '',
               },
             };
@@ -101,7 +107,8 @@ export const useWfLocalSave = (props: IProps) => {
                 name: item.title || '',
                 state: item.level < 3 ? item.reference : '',
                 level: item.level,
-                published: item.published, //or false?
+                published: item.published !== PublishLevelEnum.None,
+                publishTo: setPublishLevel(item.published),
               },
             } as any;
             const t = new RecordTransformBuilder();
