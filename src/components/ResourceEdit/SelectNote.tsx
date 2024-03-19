@@ -1,28 +1,16 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArtifactCategoryD,
   IPassageDetailArtifactsStrings,
   IState,
-  Passage,
   PassageD,
-  Plan,
-  SectionD,
   SharedResource,
   SharedResourceD,
   SharedResourceReference,
 } from '../../model';
 import {
   findRecord,
-  passageDescText,
   related,
-  sectionDescription,
   useArtifactCategory,
   useNotes,
   usePlanType,
@@ -32,9 +20,6 @@ import { passageDetailArtifactsSelector } from '../../selector';
 import { useGlobal } from 'reactn';
 import { OptionType } from '../BookSelect';
 import PassageDataTable, { IRRow, RefLevel } from '../PassageDataTable';
-import { PlanContext } from '../../context/PlanContext';
-import { passageTypeFromRef } from '../../control/RefRender';
-import { PassageTypeEnum } from '../../model/passageType';
 import { useSnackBar } from '../../hoc/SnackBar';
 
 interface IProps {
@@ -48,10 +33,7 @@ export const SelectNote = (props: IProps) => {
   const [refLevel, setRefLevel] = useState<RefLevel>(RefLevel.All);
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
-  const ctx = useContext(PlanContext);
-  const { flat, sectionArr } = ctx.state;
-  const sectionMap = new Map<number, string>(sectionArr);
-  const getNotes = useNotes();
+  const { getNotes, noteRefs, noteSource } = useNotes();
   const [notes, setNotes] = useState<SharedResourceD[]>([]);
   const [data, setData] = useState<IRRow[]>([]);
   const planType = usePlanType();
@@ -67,7 +49,6 @@ export const SelectNote = (props: IProps) => {
     passageDetailArtifactsSelector,
     shallowEqual
   );
-  const allBookData = useSelector((state: IState) => state.books.bookData);
   const [value, setValue] = useState(-1);
   const { showMessage } = useSnackBar();
 
@@ -79,31 +60,6 @@ export const SelectNote = (props: IProps) => {
       selecting.current = false;
       onOpen && onOpen(false);
     }
-  };
-
-  const bySeq = (i: Passage, j: Passage) => {
-    return (
-      (i?.attributes?.sequencenum ?? 0) - (j?.attributes?.sequencenum ?? 0)
-    );
-  };
-
-  const noteRefs = (passage: PassageD): string[] => {
-    const section = findRecord(
-      memory,
-      'section',
-      related(passage, 'section') as string
-    ) as SectionD;
-    const secRefs: string[] = [];
-    const passages = memory.cache.query((q) =>
-      q.findRelatedRecords(section, 'passages')
-    ) as PassageD[];
-    passages.sort(bySeq).forEach((recId) => {
-      const passRec = findRecord(memory, 'passage', recId.id) as Passage;
-      const passType = passageTypeFromRef(passRec.attributes.reference, flat);
-      if (passType === PassageTypeEnum.PASSAGE)
-        secRefs.push(passRec.attributes.reference);
-    });
-    return secRefs;
   };
 
   useEffect(() => {
@@ -199,56 +155,6 @@ export const SelectNote = (props: IProps) => {
     setNotes(filtered);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refLevel, refRes]);
-
-  const noteSource = useCallback(
-    (r: SharedResource): string => {
-      const rec = findRecord(
-        memory,
-        'passage',
-        related(r, 'passage')
-      ) as PassageD;
-      if (!rec?.attributes) return '';
-      let source = '';
-      const secRec = findRecord(
-        memory,
-        'section',
-        related(rec, 'section')
-      ) as SectionD;
-      const myPlan = related(secRec, 'plan');
-      const planRec = findRecord(memory, 'plan', myPlan) as Plan;
-      if (planRec?.attributes) {
-        source += planRec.attributes.name + ':';
-      }
-      if (!planType(myPlan)?.scripture) {
-        if (secRec?.attributes) {
-          if (source.length > 0) source += ' - ';
-          source += sectionDescription(secRec, sectionMap);
-        }
-      } else {
-        // make a copy so we don't impact the passage on the sheet
-        const passRec = { ...rec, attributes: { ...rec.attributes } };
-        const secRefs = noteRefs(passRec);
-        const fromRef = secRefs.length > 1 ? secRefs[0].split('-')[0] : '';
-        const fromchap = fromRef.split(':')[0];
-        const toRef = secRefs.length > 1 ? secRefs[secRefs.length - 1] : '';
-        const tochap = toRef.split(':')[0];
-        const toVerseArr = toRef.split('-');
-        const toVerse = toVerseArr.length > 1 ? toVerseArr[1] : '';
-        if (passRec?.attributes) {
-          passRec.attributes.reference =
-            toVerse.length === 0
-              ? fromRef
-              : fromchap === tochap || tochap.length === 0
-              ? `${fromRef}-${toVerse}`
-              : `${fromRef}-${tochap}:${toVerse}`;
-        }
-        source += passageDescText(passRec, allBookData);
-      }
-      return source;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [allBookData]
-  );
 
   useEffect(() => {
     setData(

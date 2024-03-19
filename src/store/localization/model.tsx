@@ -981,6 +981,7 @@ export interface IResourceStrings extends Localize.LocalizedStringsMethods {
     "book": string;
     "bookSelect": string;
     "byWord": string;
+    "changes": string;
     "delete": string;
     "deleteConfirm": string;
     "description": string;
@@ -995,6 +996,7 @@ export interface IResourceStrings extends Localize.LocalizedStringsMethods {
     "resourceEdit": string;
     "rowsSaved": string;
     "saving": string;
+    "source": string;
     "terms": string;
     "title": string;
     "versions": string;

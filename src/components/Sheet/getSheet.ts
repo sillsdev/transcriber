@@ -10,6 +10,7 @@ import {
   GraphicD,
   OrgWorkflowStepD,
   SharedResourceD,
+  MediaFileD,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
@@ -104,7 +105,8 @@ export const isSectionFiltered = (
 ) =>
   (hidePublishing && isPublishingTitle(ref)) ||
   (!filterState.disabled &&
-    ((filterState.minSection > minSection && sectionSeq < filterState.minSection) ||
+    ((filterState.minSection > minSection &&
+      sectionSeq < filterState.minSection) ||
       (filterState.maxSection > -1 && sectionSeq > filterState.maxSection)));
 
 export const isPassageFiltered = (
@@ -128,7 +130,8 @@ export const isPassageFiltered = (
       (filterState.minStep &&
         w.stepId &&
         stepIndex(w.stepId) < stepIndex(filterState.minStep)) ||
-      (filterState.minSection > minSection && w.sectionSeq < filterState.minSection) ||
+      (filterState.minSection > minSection &&
+        w.sectionSeq < filterState.minSection) ||
       (filterState.maxSection > -1 && w.sectionSeq > filterState.maxSection))
   );
 };
@@ -162,6 +165,7 @@ export const getSheet = (
   plansections.forEach((section) => {
     let item = { ...initItem };
     let curSection = 1;
+    let curSectionPublished = false;
     let sectionIndex: number | undefined;
     if (section.attributes) {
       item.level = section.attributes.level || SheetLevel.Section;
@@ -199,6 +203,7 @@ export const getSheet = (
       );
       item.filtered = sectionfiltered;
       item.published = section.attributes.published;
+      curSectionPublished = item.published;
       const gr = graphicFind(section);
       item.graphicUri = gr?.uri;
       item.graphicRights = gr?.rights;
@@ -232,27 +237,28 @@ export const getSheet = (
         item.passageUpdated = passage.attributes.dateUpdated;
         item.passage = passage;
         item.passageType = passageTypeFromRef(passAttr.reference, flat);
-        let mediaRec = getVernacularMediaRec(passage.id, memory);
         if (related(passage, 'sharedResource')) {
           item.sharedResource = findRecord(
             memory,
             'sharedresource',
             related(passage, 'sharedResource')
           ) as SharedResourceD;
-          if (item.sharedResource) {
-            mediaRec = getVernacularMediaRec(
-              related(item.sharedResource, 'passage'),
-              memory
-            );
-          }
         }
+        let mediaRec: MediaFileD | null;
+        if (item.sharedResource) {
+          mediaRec = getVernacularMediaRec(
+            related(item.sharedResource, 'passage'),
+            memory
+          );
+        } else mediaRec = getVernacularMediaRec(passage.id, memory);
 
         item.mediaId = mediaRec
           ? { type: 'mediafile', id: mediaRec.id }
           : undefined;
-        item.mediaShared = projectShared
-          ? getMediaShared(passage.id, memory)
-          : IMediaShare.NotPublic;
+        item.mediaShared =
+          projectShared || (curSectionPublished && !hidePublishing)
+            ? getMediaShared(related(mediaRec, 'passage'), memory)
+            : IMediaShare.NotPublic;
 
         const stepId = getNextStep({
           psgCompleted: getStepComplete(passage),

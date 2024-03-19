@@ -5723,6 +5723,13 @@
       			<context context-type="sourcefile">Access.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="resource.changes">
+      		<source>Changes made will affect source and all shared locations.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="resource.delete">
 			<source>Delete</source>
 			<target/>
@@ -5816,6 +5823,13 @@
       	</trans-unit>
       	<trans-unit id="resource.saving">
       		<source>Saving...</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="resource.source">
+      		<source>Linked Note Source: </source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ResourceOverview.tsx</context>
