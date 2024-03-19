@@ -181,7 +181,7 @@ export const getSheet = (
           ? PassageTypeEnum.ALTBOOK
           : PassageTypeEnum.PASSAGE;
       item.reference =
-        item.passageType === PassageTypeEnum.PASSAGE ? '' : item.passageType;
+        item.passageType === PassageTypeEnum.PASSAGE ? '' : item.level === SheetLevel.Book ? section.attributes.state : item.passageType;
       item.title = section?.attributes?.name;
       const transcriber = related(section, 'transcriber');
       item.transcriber =
