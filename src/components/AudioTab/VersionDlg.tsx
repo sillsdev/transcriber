@@ -10,7 +10,8 @@ import {
   IState,
 } from '../../model';
 import { related, useArtifactType, usePlan } from '../../crud';
-import { IRow, getMedia, IGetMedia } from '.';
+import { IRow, IGetMedia } from '.';
+import { getMedia } from './getMedia';
 import AudioTable from './AudioTable';
 import { ActionRow, GrowingDiv } from '../StepEditor';
 import SelectLatest from './SelectLatest';

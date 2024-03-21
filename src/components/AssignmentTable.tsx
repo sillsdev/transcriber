@@ -47,7 +47,7 @@ import {
   sharedSelector,
 } from '../selector';
 import { positiveWholeOnly } from '../utils';
-import { GetReference } from './AudioTab';
+import { GetReference } from './AudioTab/GetReference';
 
 const AssignmentDiv = styled('div')(() => ({
   display: 'flex',

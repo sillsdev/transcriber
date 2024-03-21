@@ -842,6 +842,7 @@ export function ScriptureTable(props: IProps) {
     if (valid) {
       setSheet(sheetRef.current.concat(addedWorkflow));
       setChanged(true);
+      setUpdate(false);
       return Array<Array<string>>();
     }
     setUpdate(false);
@@ -1334,6 +1335,7 @@ export function ScriptureTable(props: IProps) {
                 saveCompleted(toolId, ts.NoSaveOffline);
                 showMessage(ts.NoSaveOffline);
                 setSaving(false);
+                setUpdate(false);
               } else {
                 save();
               }
