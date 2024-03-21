@@ -19,7 +19,7 @@ import {
   SheetLevel,
   IPassageTypeStrings,
 } from '../../model';
-import { Box, IconButton, styled } from '@mui/material';
+import { Box, IconButton, debounce, styled } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import PublishOffIcon from '@mui/icons-material/PublicOffOutlined';
 import PublishOnIcon from '@mui/icons-material/PublicOutlined';
@@ -71,6 +71,7 @@ import ConfirmPublishDialog from '../ConfirmPublishDialog';
 
 const DOWN_ARROW = 'ARROWDOWN';
 export const SectionSeqCol = 0;
+const SheetMargin = 10;
 
 const ContentDiv = styled('div')(({ theme }) => ({
   paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)})`,
@@ -311,6 +312,9 @@ export function PlanSheet(props: IProps) {
   const { userIsAdmin } = useRole();
   const refErrTest = useRefErrTest();
   const { canPublish } = useCanPublish();
+  const rowsPerPage = useRef(20);
+  const [scrollCount, setScrollCount] = useState(0);
+  const [curTop, setCurTop] = useState(0);
   const moveUp = true;
   const moveDown = false;
   const moveToNewSection = true;
@@ -466,31 +470,6 @@ export function PlanSheet(props: IProps) {
     setCurrentRow(loc.end.i);
     sheetScroll();
   };
-
-  const lastCur = useRef<number>(0);
-  const findCurrentRow = () => {
-    if (sheetRef.current) {
-      const tbodyNodes = bodyChildren();
-      if (!tbodyNodes) return;
-      const currentOff = document.documentElement.scrollTop;
-      let bottom = 0;
-      let top = tbodyNodes.length - 1;
-      while (bottom < top) {
-        let mid = Math.floor((bottom + top) / 2);
-        if ((tbodyNodes[mid] as HTMLDivElement).offsetTop < currentOff) {
-          bottom = mid + 1;
-        } else {
-          top = mid;
-        }
-      }
-      if (bottom !== lastCur.current) {
-        setCurrentRow(bottom);
-        sheetScroll();
-        lastCur.current = bottom;
-      }
-    }
-  };
-  setInterval(findCurrentRow, 100);
 
   const handleValueRender = (cell: ICell) => {
     return cell?.className?.substring(0, 4) === 'book' && bookMap
@@ -659,12 +638,38 @@ export function PlanSheet(props: IProps) {
     }, 1000 * 60 * 5);
   };
 
+  const setRowsPerPage = () => {
+    rowsPerPage.current = Math.ceil(
+      (document.documentElement.clientHeight - ActionHeight - 200) / 42
+    );
+  };
+
+  const handleRowsPerPage = debounce(() => {
+    setRowsPerPage();
+  }, 100);
+
+  const scrollTimer = useRef<any>(null);
+
+  const scrolled = () => {
+    if (!scrollTimer.current) {
+      scrollTimer.current = setTimeout(() => {
+        setScrollCount((prev) => prev + 1);
+        scrollTimer.current = null;
+      }, 100);
+    }
+  };
+
   useEffect(() => {
+    setRowsPerPage();
+    window.addEventListener('resize', handleRowsPerPage);
+    window.addEventListener('scroll', scrolled);
     const keys = [{ key: DOWN_ARROW, cb: sheetScroll }];
     keys.forEach((k) => subscribe(k.key, k.cb));
 
     return () => {
       keys.forEach((k) => unsubscribe(k.key));
+      window.removeEventListener('resize', handleRowsPerPage);
+      window.removeEventListener('scroll', scrolled);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -852,23 +857,48 @@ export function PlanSheet(props: IProps) {
     return eRow;
   }, [columns]);
 
+  useEffect(() => {
+    if (sheetRef.current) {
+      let tbodyNodes = bodyChildren();
+      if (tbodyNodes) {
+        const currentOff = document.documentElement.scrollTop;
+        let bottom = 1;
+        let top = tbodyNodes.length - 1;
+        while (bottom < top) {
+          let mid = Math.floor((bottom + top) / 2);
+          if ((tbodyNodes[mid] as HTMLDivElement).offsetTop < currentOff) {
+            bottom = mid + 1;
+          } else {
+            top = mid;
+          }
+        }
+        if (bottom !== curTop) setCurTop(bottom);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.length, scrollCount]);
+
+  useEffect(() => {
+    if (curTop && curTop !== currentRow) setCurrentRow(curTop);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [curTop]);
+
   const curData = useCallback(
     (data: ICell[][]) => {
       if (data.length <= 1) return data as any[][];
       const retData: any[][] = [data[0]];
-      for (let i = 1; i < currentRow - 20; i++) {
-        retData.push(emptyRow);
-      }
-      const max = Math.min(currentRow + 40, data.length);
-      for (let i = Math.max(currentRow - 20, 1); i < max; i++) {
-        retData.push(data[i]);
-      }
-      for (let i = currentRow + 40; i < data.length; i++) {
-        retData.push(emptyRow);
-      }
+      let baseRow = curTop;
+      const nr = rowsPerPage.current;
+      const before = Math.max(baseRow - SheetMargin, 0);
+      if (before > 0) retData.push(...Array(before).fill(emptyRow));
+      const first = Math.max(baseRow - SheetMargin + 1, 1);
+      const last = Math.min(baseRow + nr + SheetMargin, data.length);
+      retData.push(...(data.slice(first, last) as any[][]));
+      const after = Math.max(0, data.length - baseRow - nr - SheetMargin);
+      if (after > 0) retData.push(...Array(after).fill(emptyRow));
       return retData;
     },
-    [currentRow, emptyRow]
+    [emptyRow, curTop]
   );
 
   return (
