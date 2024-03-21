@@ -152,7 +152,7 @@ export const usePlanSheetFill = ({
     inlinePassages,
     hidePublishing,
   });
-  const { isPassageType, isSectionType, isMovement, isBook, isAltBook } =
+  const { isPassageType, isSectionType, isMovement, isBook, isAltBook, isBeta } =
     rowTypes(rowInfo);
   const { localizedArtifactType } = useArtifactType()
   const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
@@ -660,6 +660,7 @@ export const usePlanSheetFill = ({
         const section = isSectionType(rowIndex);
         const passage = isPassageType(rowIndex);
         const movement = isMovement(rowIndex);
+        const beta = isBeta(rowIndex);
         const book = isBook(rowIndex) || isAltBook(rowIndex);
         const iscurrent: string =
           currentRow === rowIndex + 1 ? ' currentrow ' : '';
@@ -690,7 +691,8 @@ export const usePlanSheetFill = ({
           actionCell({
             passage,
             rowIndex,
-            calcClassName,
+            calcClassName: calcClassName +
+              (beta ? ' beta' : ''),
             srcMediaId,
             mediaPlaying,
             canPlay:

@@ -123,6 +123,9 @@ const ContentDiv = styled('div')(({ theme }) => ({
   '& .data-grid-container .data-grid .cell.shared': {
     backgroundColor: '#f2d6af',
   },
+  '& .data-grid-container .data-grid .cell.beta': {
+    backgroundColor: '#fffbe3',
+  },
   '& .data-grid-container .data-grid .cell.empty': {
     paddingTop: theme.spacing(3),
   },
