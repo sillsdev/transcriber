@@ -499,8 +499,7 @@ export function ScriptureTable(props: IProps) {
     i: number,
     before: boolean
   ) => {
-    if (updateRef.current) return;
-    setUpdate(true);
+    // don't set update flag as it is set in parent.
     const skipPublishing =
       myWorkflow[i].passageType === PassageTypeEnum.PASSAGE;
     let originalSectionIndex = findSection(
@@ -515,10 +514,7 @@ export function ScriptureTable(props: IProps) {
       before,
       skipPublishing
     );
-    if (newSectionIndex < 0) {
-      setUpdate(false);
-      return;
-    }
+    if (newSectionIndex < 0) return;
     const newSeqVal = myWorkflow[newSectionIndex].sectionSeq;
     myWorkflow = updatePassageSeq(myWorkflow, i, newSeqVal);
     let endRowIndex = newSectionIndex;
@@ -557,7 +553,6 @@ export function ScriptureTable(props: IProps) {
     }
 
     setSheet(myWorkflow);
-    setUpdate(false);
     setChanged(true);
   };
 
