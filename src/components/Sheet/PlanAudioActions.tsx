@@ -75,7 +75,7 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       {isPassage && (
         <StyledIconButton
-          id="passageShare"
+          id={isNote ? "noteEdit" : "passageShare"}
           shared={mediaShared}
           title={
             isNote
