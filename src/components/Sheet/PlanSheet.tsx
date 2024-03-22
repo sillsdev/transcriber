@@ -841,7 +841,7 @@ export function PlanSheet(props: IProps) {
   );
   const currentRowPublishLevel = useMemo(
     () =>
-      currentRowRef.current < 1
+      currentRowRef.current < 1 || !rowInfo[currentRowRef.current - 1]
         ? PublishLevelEnum.None
         : rowInfo[currentRowRef.current - 1].published,
     // eslint-disable-next-line react-hooks/exhaustive-deps
