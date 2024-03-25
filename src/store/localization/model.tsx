@@ -889,6 +889,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "movement": string;
     "moveUp": string;
     "nonNumber": string;
+    "noPublishDelete": string;
     "insertFirstPassage": string;
     "paratextRequired": string;
     "passageBelow": string;

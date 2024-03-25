@@ -5184,6 +5184,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="planSheet.noPublishDelete">
+            <source>Do not delete published items.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planSheet.insertFirstPassage">
             <source>Add Passage as first in {0} {1}</source>
             <target/>
