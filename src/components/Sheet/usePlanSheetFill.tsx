@@ -692,7 +692,7 @@ export const usePlanSheetFill = ({
             passage,
             rowIndex,
             calcClassName: calcClassName +
-              (beta ? ' beta' : ''),
+              (beta && !hidePublishing ? ' beta' : ''),
             srcMediaId,
             mediaPlaying,
             canPlay:
