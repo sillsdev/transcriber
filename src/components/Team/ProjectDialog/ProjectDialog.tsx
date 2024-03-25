@@ -9,7 +9,6 @@ import {
   DialogProps,
   styled,
 } from '@mui/material';
-import { TeamContext } from '../../../context/TeamContext';
 import {
   ProjectName,
   ProjectDescription,
@@ -21,6 +20,8 @@ import {
 } from '.';
 import Mode from '../../../model/dialogMode';
 import { IDialog } from '../../../model';
+import { shallowEqual, useSelector } from 'react-redux';
+import { vProjectSelector } from '../../../selector';
 
 const StyledDialog = styled(Dialog)<DialogProps>(() => ({
   '& .MuiDialog-paper': {
@@ -61,8 +62,7 @@ interface IProps extends IDialog<IProjectDialog> {
 
 export function ProjectDialog(props: IProps) {
   const { mode, values, isOpen, onOpen, onCommit, onCancel, nameInUse } = props;
-  const ctx = React.useContext(TeamContext);
-  const t = ctx.state.vProjectStrings;
+  const t = useSelector(vProjectSelector, shallowEqual)
   initState.organizedBy = 'section';
   initState.vProjectStrings = t;
   const [state, setState] = React.useState({ ...initState });

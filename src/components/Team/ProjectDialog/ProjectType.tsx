@@ -3,6 +3,8 @@ import ScriptureIcon from '@mui/icons-material/MenuBook';
 import { BsPencilSquare } from 'react-icons/bs';
 import { TeamContext } from '../../../context/TeamContext';
 import { Options } from '.';
+import { shallowEqual, useSelector } from 'react-redux';
+import { vProjectSelector } from '../../../selector';
 
 const decorations = {
   scripture: <ScriptureIcon />,
@@ -17,8 +19,8 @@ interface IProps {
 export const ProjectType = (props: IProps) => {
   const { type, onChange } = props;
   const ctx = React.useContext(TeamContext);
-  const { planTypes, vProjectStrings } = ctx.state;
-  const t = vProjectStrings;
+  const { planTypes } = ctx.state;
+  const t = useSelector(vProjectSelector, shallowEqual);
 
   return (
     <Options

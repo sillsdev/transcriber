@@ -1,12 +1,12 @@
 import React from 'react';
 import { TextField } from '@mui/material';
-import { TeamContext } from '../../../context/TeamContext';
 import { IProjectDialogState } from './ProjectDialog';
+import { shallowEqual, useSelector } from 'react-redux';
+import { vProjectSelector } from '../../../selector';
 
 export const ProjectDescription = (props: IProjectDialogState) => {
   const { state, setState } = props;
-  const ctx = React.useContext(TeamContext);
-  const t = ctx.state.vProjectStrings;
+  const t = useSelector(vProjectSelector, shallowEqual)
   const { description } = state;
 
   const handleChangeDescription = (e: any) => {
