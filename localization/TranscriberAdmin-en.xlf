@@ -4444,6 +4444,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.noPublishDelete">
+         <segment>
+            <source>Do not delete published items.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.insertFirstPassage">
          <segment>
             <source>Add Passage as first in {0} {1}</source>

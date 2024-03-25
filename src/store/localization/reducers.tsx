@@ -944,6 +944,7 @@ const initialState = {
 			"movement": "Movement",
 			"moveUp": "Move up",
 			"nonNumber": "Do not change to non-number.",
+			"noPublishDelete": "Do not delete published items.",
 			"insertFirstPassage": "Add Passage as first in {0} {1}",
 			"paratextRequired": "You must be a Paratext user with access to FOBAI resources to use this feature.",
 			"passageBelow": "Add Passage below Passage {0}",

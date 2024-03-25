@@ -486,6 +486,14 @@ export function PlanSheet(props: IProps) {
   const handleDataRender = (cell: ICell) => cell.value;
 
   const handleConfirmDelete = (rowIndex: number) => () => {
+    if (
+      [PublishLevelEnum.Public, PublishLevelEnum.Beta].includes(
+        rowInfo[rowIndex]?.published
+      )
+    ) {
+      showMessage(t.noPublishDelete);
+      return;
+    }
     const toDelete = [rowIndex];
     if (isSectionType(rowIndex)) {
       var psg = rowIndex + 1;
