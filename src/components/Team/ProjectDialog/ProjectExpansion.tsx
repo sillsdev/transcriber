@@ -13,7 +13,6 @@ import {
   TypographyProps,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { TeamContext } from '../../../context/TeamContext';
 import { IProjectDialogState } from './ProjectDialog';
 import { EditorSettings } from './EditorSettings';
 import { Options } from '.';
@@ -21,6 +20,9 @@ import RenderLogo from '../../../control/RenderLogo';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import { useOrganizedBy, useRole } from '../../../crud';
 import { useCanBeFlat } from '../../../crud/useCanBeFlat';
+import { IVProjectStrings } from '../../../model';
+import { shallowEqual, useSelector } from 'react-redux';
+import { vProjectSelector } from '../../../selector';
 
 const StyledAccordionSummary = styled(AccordionSummary)<AccordionSummaryProps>(
   ({ theme }) => ({
@@ -36,8 +38,7 @@ const Heading = styled(Typography)<TypographyProps>(({ theme }) => ({
 }));
 
 const RenderRecommended = () => {
-  const ctx = React.useContext(TeamContext);
-  const t = ctx.state.vProjectStrings;
+  const t = useSelector(vProjectSelector, shallowEqual);
 
   return (
     <Typography variant="caption" sx={{ display: 'flex' }}>
@@ -48,8 +49,7 @@ const RenderRecommended = () => {
 };
 
 const RenderCustomize = () => {
-  const ctx = React.useContext(TeamContext);
-  const t = ctx.state.vProjectStrings;
+  const t = useSelector(vProjectSelector, shallowEqual);
 
   return (
     <Typography variant="caption" sx={{ display: 'flex' }}>
@@ -66,8 +66,7 @@ export function ProjectExpansion(props: IProjectDialogState) {
   const { localizedOrganizedBy, fromLocalizedOrganizedBy } = useOrganizedBy();
   const { userIsSharedContentCreator } = useRole();
   const [localOrgBy, setLocalOrgBy] = useState('');
-  const ctx = React.useContext(TeamContext);
-  const t = ctx.state.vProjectStrings;
+  const t: IVProjectStrings = useSelector(vProjectSelector, shallowEqual);
   const [options, setOptions] = React.useState([
     t.sections,
     t.sets,

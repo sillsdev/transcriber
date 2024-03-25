@@ -1,18 +1,15 @@
 import { useGlobal } from 'reactn';
-import { Plan, IState, IVProjectStrings } from '../model';
-import localStrings from '../selector/localize';
+import { Plan, IVProjectStrings } from '../model';
 import { useSelector, shallowEqual } from 'react-redux';
+import {vProjectSelector} from '../selector'
 
 export interface ISwitches {
   [key: string]: string;
 }
-const stringSelector = (state: IState) =>
-  localStrings(state as IState, { layout: 'vProject' });
-
 export const useOrganizedBy = () => {
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
-  const t: IVProjectStrings = useSelector(stringSelector, shallowEqual);
+  const t: IVProjectStrings = useSelector(vProjectSelector, shallowEqual);
 
   const switchToLocal: ISwitches = {
     section: t.sections,
