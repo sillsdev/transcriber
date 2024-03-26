@@ -248,9 +248,9 @@
       </unit>
       <unit id="artifactCategory.graphic">
          <segment>
-<source>Graphic</source>
-<target>图形</target>
-</segment>
+            <source>Graphic</source>
+            <target>图形</target>
+         </segment>
       </unit>
       <unit id="artifactCategory.qanda">
          <segment>
@@ -272,9 +272,9 @@
       </unit>
       <unit id="artifactType.graphic">
          <segment>
-<source>Graphic</source>
-<target>图形</target>
-</segment>
+            <source>Graphic</source>
+            <target>图形</target>
+         </segment>
       </unit>
       <unit id="artifactType.projectresource">
          <segment>
@@ -314,9 +314,9 @@
       </unit>
       <unit id="artifactType.title">
          <segment>
-<source>Title</source>
-<target>标题</target>
-</segment>
+            <source>Title</source>
+            <target>标题</target>
+         </segment>
       </unit>
       <unit id="artifactType.vernacular">
          <segment>
@@ -554,8 +554,14 @@
       </unit>
       <unit id="cards.bibleid">
          <segment>
-<source>Bible Id</source>
-<target>圣经 ID</target>
+            <source>Bible Id</source>
+            <target>圣经 ID</target>
+         </segment>
+      </unit>
+      <unit id="cards.bibleidexists">
+         <segment>
+<source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
+<target>圣经 Id 已经存在。如果您需要使用该圣经，请联系技术支持。</target>
 </segment>
       </unit>
       <unit id="cards.cancel">
@@ -566,9 +572,9 @@
       </unit>
       <unit id="cards.closeNoSave">
          <segment>
-<source>Close without Saving?</source>
-<target>关闭而不保存？</target>
-</segment>
+            <source>Close without Saving?</source>
+            <target>关闭而不保存？</target>
+         </segment>
       </unit>
       <unit id="cards.connectParatext">
          <segment>
@@ -587,6 +593,12 @@
             <source>Copy project to new team.</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="cards.copyright">
+         <segment>
+<source>Copyright</source>
+<target>版权</target>
+</segment>
       </unit>
       <unit id="cards.copySame">
          <segment>
@@ -630,6 +642,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.description">
+         <segment>
+<source>Description</source>
+<target>说明</target>
+</segment>
+      </unit>
       <unit id="cards.draft">
          <segment>
             <source>Oral Drafting</source>
@@ -650,9 +668,9 @@
       </unit>
       <unit id="cards.explainPublishing">
          <segment>
-<source>Information to use when publishing audio created by this team.</source>
-<target>发布本团队创建的音频时使用的信息。</target>
-</segment>
+            <source>Information to use when publishing audio created by this team.</source>
+            <target>发布本团队创建的音频时使用的信息。</target>
+         </segment>
       </unit>
       <unit id="cards.explainTeamDelete">
          <segment>
@@ -764,9 +782,9 @@
       </unit>
       <unit id="cards.projectRequired">
          <segment>
-<source>A project must be added before recordings are allowed</source>
-<target>在允许录音之前必须添加一个项目</target>
-</segment>
+            <source>A project must be added before recordings are allowed</source>
+            <target>在允许录音之前必须添加一个项目</target>
+         </segment>
       </unit>
       <unit id="cards.Render">
          <segment>
@@ -776,9 +794,9 @@
       </unit>
       <unit id="cards.publishing">
          <segment>
-<source>Publishing</source>
-<target>发布</target>
-</segment>
+            <source>Publishing</source>
+            <target>发布</target>
+         </segment>
       </unit>
       <unit id="cards.save">
          <segment>
@@ -842,9 +860,9 @@
       </unit>
       <unit id="cards.yes">
          <segment>
-<source>Yes</source>
-<target>是</target>
-</segment>
+            <source>Yes</source>
+            <target>是</target>
+         </segment>
       </unit>
       <unit id="category.builtIn">
          <segment>
@@ -860,8 +878,14 @@
       </unit>
       <unit id="category.close">
          <segment>
-<source>Close</source>
-<target>关闭</target>
+            <source>Close</source>
+            <target>关闭</target>
+         </segment>
+      </unit>
+      <unit id="category.duplicate">
+         <segment>
+<source>Duplicate Category</source>
+<target>重复类别</target>
 </segment>
       </unit>
       <unit id="category.discussions">
@@ -1856,9 +1880,9 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-<source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
-<target>如果在导入离线更改时出现此错误，请立即关闭应用程序并重新打开。 如果错误仍然存在，请联系支持人员。 如果继续使用应用程序，您将丢失离线更改。</target>
-</segment>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <target>如果在导入离线更改时出现此错误，请立即关闭应用程序并重新打开。 如果错误仍然存在，请联系支持人员。 如果继续使用应用程序，您将丢失离线更改。</target>
+         </segment>
       </unit>
       <unit id="import.invalidProject">
          <segment>
@@ -1994,15 +2018,15 @@
       </unit>
       <unit id="integration.exportSectionNumbers">
          <segment>
-<source>Sync {0} Numbers</source>
-<target>同步 {0} 数字</target>
-</segment>
+            <source>Sync {0} Numbers</source>
+            <target>同步 {0} 数字</target>
+         </segment>
       </unit>
       <unit id="integration.invalidReferences">
          <segment>
-<source>{0} passage(s) have invalid book or reference.</source>
-<target>{0}段落的书籍或参考文献无效。</target>
-</segment>
+            <source>{0} passage(s) have invalid book or reference.</source>
+            <target>{0}段落的书籍或参考文献无效。</target>
+         </segment>
       </unit>
       <unit id="integration.no">
          <segment>
@@ -3152,8 +3176,14 @@
       </unit>
       <unit id="mediaTab.graphicRightsAdd">
          <segment>
-<source>Add {0}</source>
-<target>添加 {0}</target>
+            <source>Add {0}</source>
+            <target>添加 {0}</target>
+         </segment>
+      </unit>
+      <unit id="mediaTab.graphicRightsTitle">
+         <segment>
+<source>Graphics Rights holder</source>
+<target>图形 权利持有人</target>
 </segment>
       </unit>
       <unit id="mediaTab.latestVersion">
@@ -3218,9 +3248,9 @@
       </unit>
       <unit id="mediaTab.published">
          <segment>
-<source>Published</source>
-<target>已出版</target>
-</segment>
+            <source>Published</source>
+            <target>已出版</target>
+         </segment>
       </unit>
       <unit id="mediaTab.readyToShare">
          <segment>
@@ -3290,9 +3320,9 @@
       </unit>
       <unit id="mediaTab.user">
          <segment>
-<source>User</source>
-<target>用户</target>
-</segment>
+            <source>User</source>
+            <target>用户</target>
+         </segment>
       </unit>
       <unit id="mediaTab.version">
          <segment>
@@ -3314,8 +3344,14 @@
       </unit>
       <unit id="mediaTitle.cancel">
          <segment>
-<source>Cancel Recording</source>
-<target>取消录音</target>
+            <source>Cancel Recording</source>
+            <target>取消录音</target>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.playPause">
+         <segment>
+<source>Play / Pause</source>
+<target>播放/暂停</target>
 </segment>
       </unit>
       <unit id="mediaUpload.cancel">
@@ -3338,8 +3374,14 @@
       </unit>
       <unit id="mediaUpload.graphicTask">
          <segment>
-<source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
-<target>将文件拖放到此处，或点击此处浏览文件。可接受的格式有 .png、.jpg（或 .jpeg）和 .webp。</target>
+            <source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
+            <target>将文件拖放到此处，或点击此处浏览文件。可接受的格式有 .png、.jpg（或 .jpeg）和 .webp。</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.graphicTitle">
+         <segment>
+<source>Upload Graphic</source>
+<target>上传图片</target>
 </segment>
       </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
@@ -3572,9 +3614,9 @@
       </unit>
       <unit id="passageDetailArtifacts.bookResource">
          <segment>
-<source>Book</source>
-<target>书籍</target>
-</segment>
+            <source>Book</source>
+            <target>书籍</target>
+         </segment>
       </unit>
       <unit id="passageDetailArtifacts.canceling">
          <segment>
@@ -3674,9 +3716,9 @@
       </unit>
       <unit id="passageDetailArtifacts.movementResource">
          <segment>
-<source>Movement</source>
-<target>运动</target>
-</segment>
+            <source>Movement</source>
+            <target>运动</target>
+         </segment>
       </unit>
       <unit id="passageDetailArtifacts.no">
          <segment>
@@ -3686,9 +3728,9 @@
       </unit>
       <unit id="passageDetailArtifacts.noteResource">
          <segment>
-<source>Note</source>
-<target>注意事项</target>
-</segment>
+            <source>Note</source>
+            <target>注意事项</target>
+         </segment>
       </unit>
       <unit id="passageDetailArtifacts.passageResource">
          <segment>
@@ -3758,9 +3800,9 @@
       </unit>
       <unit id="passageDetailArtifacts.selectOne">
          <segment>
-<source>Only the first selected note is used</source>
-<target>只使用第一个选定的音符</target>
-</segment>
+            <source>Only the first selected note is used</source>
+            <target>只使用第一个选定的音符</target>
+         </segment>
       </unit>
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
@@ -3980,8 +4022,14 @@
       </unit>
       <unit id="passageType.BOOK">
          <segment>
-<source>Book</source>
-<target>书籍</target>
+            <source>Book</source>
+            <target>书籍</target>
+         </segment>
+      </unit>
+      <unit id="passageType.ALTBK">
+         <segment>
+<source>Friendly Book</source>
+<target>友好图书</target>
 </segment>
       </unit>
       <unit id="peer.peerDescription">
@@ -4130,9 +4178,9 @@
       </unit>
       <unit id="planActions.addNote">
          <segment>
-<source>Add Note</source>
-<target>添加注释</target>
-</segment>
+            <source>Add Note</source>
+            <target>添加注释</target>
+         </segment>
       </unit>
       <unit id="planActions.assign">
          <segment>
@@ -4148,9 +4196,9 @@
       </unit>
       <unit id="planActions.noteDetails">
          <segment>
-<source>Note Details</source>
-<target>笔记详细信息</target>
-</segment>
+            <source>Note Details</source>
+            <target>笔记详细信息</target>
+         </segment>
       </unit>
       <unit id="planActions.passageDetail">
          <segment>
@@ -4202,9 +4250,9 @@
       </unit>
       <unit id="planSheet.addNote">
          <segment>
-<source>Add Note</source>
-<target>添加注释</target>
-</segment>
+            <source>Add Note</source>
+            <target>添加注释</target>
+         </segment>
       </unit>
       <unit id="planSheet.addPassage">
          <segment>
@@ -4214,9 +4262,9 @@
       </unit>
       <unit id="planSheet.addPublishing">
          <segment>
-<source>Update Publishing Rows</source>
-<target>更新发布行</target>
-</segment>
+            <source>Update Publishing Rows</source>
+            <target>更新发布行</target>
+         </segment>
       </unit>
       <unit id="planSheet.addSection">
          <segment>
@@ -4248,6 +4296,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.confirmPublish">
+         <segment>
+<source>Publish {0}</source>
+<target>发布 {0}</target>
+</segment>
+      </unit>
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
@@ -4256,8 +4310,14 @@
       </unit>
       <unit id="planSheet.firstMovement">
          <segment>
-<source>Start At</source>
-<target>开始于</target>
+            <source>Start At</source>
+            <target>开始于</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.graphic">
+         <segment>
+<source>Graphic</source>
+<target>图形</target>
 </segment>
       </unit>
       <unit id="planSheet.nonNumber">
@@ -4265,6 +4325,12 @@
             <source>Do not change to non-number.</source>
             <target/>
          </segment>
+      </unit>
+      <unit id="planSheet.noPublishDelete">
+         <segment>
+<source>Do not delete published items.</source>
+<target>不删除已发布的项目。</target>
+</segment>
       </unit>
       <unit id="planSheet.insertFirstPassage">
          <segment>
@@ -4274,9 +4340,9 @@
       </unit>
       <unit id="planSheet.paratextRequired">
          <segment>
-<source>You must be a Paratext user with access to FOBAI resources to use this feature.</source>
-<target>您必须是可以访问 FOBAI 资源的 Paratext 用户，才能使用此功能。</target>
-</segment>
+            <source>You must be a Paratext user with access to FOBAI resources to use this feature.</source>
+            <target>您必须是可以访问 FOBAI 资源的 Paratext 用户，才能使用此功能。</target>
+         </segment>
       </unit>
       <unit id="planSheet.passageBelow">
          <segment>
@@ -4292,15 +4358,15 @@
       </unit>
       <unit id="planSheet.passageToPrevSection">
          <segment>
-<source>Move {pt} {0} Up</source>
-<target>将 {pt} {0} 上移</target>
-</segment>
+            <source>Move {pt} {0} Up</source>
+            <target>将 {pt} {0} 上移</target>
+         </segment>
       </unit>
       <unit id="planSheet.passageToNextSection">
          <segment>
-<source>Move {pt} {0} Down</source>
-<target>下移 {pt} {0} 行</target>
-</segment>
+            <source>Move {pt} {0} Down</source>
+            <target>下移 {pt} {0} 行</target>
+         </segment>
       </unit>
       <unit id="planSheet.pasting">
          <segment>
@@ -4310,9 +4376,9 @@
       </unit>
       <unit id="planSheet.publish">
          <segment>
-<source>Publish {0} {1}</source>
-<target>发布 {0} {1}</target>
-</segment>
+            <source>Publish {0} {1}</source>
+            <target>发布 {0} {1}</target>
+         </segment>
       </unit>
       <unit id="planSheet.refErr">
          <segment>
@@ -4340,8 +4406,14 @@
       </unit>
       <unit id="planSheet.showPublishing">
          <segment>
-<source>Show Publishing Information</source>
-<target>显示发布信息</target>
+            <source>Show Publishing Information</source>
+            <target>显示发布信息</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.movementAbove">
+         <segment>
+<source>Add Movement above {0} {1}</source>
+<target>在 {0} {1} 上添加运动</target>
 </segment>
       </unit>
       <unit id="planSheet.sectionAbove">
@@ -4368,10 +4440,10 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.unpublish">
+      <unit id="planSheet.changepublish">
          <segment>
-<source>Remove {0} {1} from published list.</source>
-<target>从已发布列表中删除 {0} {1}。</target>
+<source>Update {0} {1} published status.</source>
+<target>更新 {0} {1} 已发布状态。</target>
 </segment>
       </unit>
       <unit id="planSheet.useCtrlV">
@@ -4710,6 +4782,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="publishLevel.none">
+         <segment>
+<source>Not Published</source>
+<target>未发布</target>
+</segment>
+      </unit>
       <unit id="resource.action">
          <segment>
             <source>Action</source>
@@ -4740,6 +4818,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="resource.changes">
+         <segment>
+<source>Changes made will affect source and all shared locations.</source>
+<target>所做更改将影响源和所有共享位置。</target>
+</segment>
+      </unit>
       <unit id="resource.delete">
          <segment>
             <source>Delete</source>
@@ -4766,9 +4850,9 @@
       </unit>
       <unit id="resource.findNote">
          <segment>
-<source>Find existing note</source>
-<target>查找现有注释</target>
-</segment>
+            <source>Find existing note</source>
+            <target>查找现有注释</target>
+         </segment>
       </unit>
       <unit id="resource.keywords">
          <segment>
@@ -4778,8 +4862,14 @@
       </unit>
       <unit id="resource.link">
          <segment>
-<source>Link</source>
-<target>链接</target>
+            <source>Link</source>
+            <target>链接</target>
+         </segment>
+      </unit>
+      <unit id="resource.linkError">
+         <segment>
+<source>Link is not a correctly formatted URL</source>
+<target>链接不是格式正确的 URL</target>
 </segment>
       </unit>
       <unit id="resource.overview">
@@ -4812,6 +4902,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="resource.source">
+         <segment>
+<source>Linked Note Source: </source>
+<target>链接注释源： </target>
+</segment>
+      </unit>
       <unit id="resource.terms">
          <segment>
             <source>Terms of use</source>
@@ -4832,9 +4928,9 @@
       </unit>
       <unit id="scriptureTable.alternateName">
          <segment>
-<source>{0} Alternate Name</source>
-<target>{0} 替代名称</target>
-</segment>
+            <source>{0} Alternate Name</source>
+            <target>{0} 替代名称</target>
+         </segment>
       </unit>
       <unit id="scriptureTable.book">
          <segment>
@@ -4844,8 +4940,14 @@
       </unit>
       <unit id="scriptureTable.chapter">
          <segment>
-<source>Chapter {0}</source>
-<target>第 {0} 章</target>
+            <source>Chapter {0}</source>
+            <target>第 {0} 章</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.confirmPublish">
+         <segment>
+<source>Are you sure you want to add publishing rows?</source>
+<target>您确定要添加发布行吗？</target>
 </segment>
       </unit>
       <unit id="scriptureTable.description">
@@ -4886,9 +4988,9 @@
       </unit>
       <unit id="scriptureTable.pasteInvalidPassageBeforeSection">
          <segment>
-<source>Invalid passage before {0}.</source>
-<target>{0}之前的段落无效。</target>
-</segment>
+            <source>Invalid passage before {0}.</source>
+            <target>{0}之前的段落无效。</target>
+         </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidSections">
          <segment>
@@ -4904,9 +5006,9 @@
       </unit>
       <unit id="scriptureTable.publishingWarning">
          <segment>
-<source>Once publishing rows are added, there is no automated way to remove them. Publishing projects cannot be made flat projects.</source>
-<target>一旦添加了出版行，就无法自动删除它们。出版项目不能成为平面项目。</target>
-</segment>
+            <source>Once publishing rows are added, there is no automated way to remove them. Publishing projects cannot be made flat projects.</source>
+            <target>一旦添加了出版行，就无法自动删除它们。出版项目不能成为平面项目。</target>
+         </segment>
       </unit>
       <unit id="scriptureTable.reference">
          <segment>
@@ -4964,8 +5066,14 @@
       </unit>
       <unit id="scriptureTableFilter.hidePublishing">
          <segment>
-<source>Hide Publishing Rows</source>
-<target>隐藏发布行</target>
+            <source>Hide Publishing Rows</source>
+            <target>隐藏发布行</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.invalidSection">
+         <segment>
+<source>Invalid {0}</source>
+<target>无效 {0}</target>
 </segment>
       </unit>
       <unit id="scriptureTableFilter.step">
@@ -5138,9 +5246,9 @@
       </unit>
       <unit id="shared.close">
          <segment>
-<source>Close</source>
-<target>关闭</target>
-</segment>
+            <source>Close</source>
+            <target>关闭</target>
+         </segment>
       </unit>
       <unit id="shared.consultant">
          <segment>
@@ -6008,9 +6116,9 @@
       </unit>
       <unit id="transcriber.saveReviewTip">
          <segment>
-<source>Save transcript, position and segments</source>
-<target>保存文本、位置和片段</target>
-</segment>
+            <source>Save transcript, position and segments</source>
+            <target>保存文本、位置和片段</target>
+         </segment>
       </unit>
       <unit id="transcriber.saveTip">
          <segment>
@@ -6554,9 +6662,9 @@
       </unit>
       <unit id="vProject.cannotChangeLayout">
          <segment>
-<source>Publishing projects cannot be made flat.</source>
-<target>发布项目不能做成平面。</target>
-</segment>
+            <source>Publishing projects cannot be made flat.</source>
+            <target>发布项目不能做成平面。</target>
+         </segment>
       </unit>
       <unit id="vProject.correctformat">
          <segment>
@@ -6632,7 +6740,13 @@
       </unit>
       <unit id="vProject.movement">
          <segment>
-<source>Movement</source>
+            <source>Movement</source>
+            <target>移动</target>
+         </segment>
+      </unit>
+      <unit id="vProject.movements">
+         <segment>
+<source>Movements</source>
 <target>移动</target>
 </segment>
       </unit>

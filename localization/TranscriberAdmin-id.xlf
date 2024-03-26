@@ -559,6 +559,12 @@
             <target>Id Alkitab</target>
          </segment>
       </unit>
+      <unit id="cards.bibleidexists">
+         <segment>
+            <source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
@@ -587,6 +593,12 @@
          <segment>
             <source>Copy project to new team.</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="cards.copyright">
+         <segment>
+            <source>Copyright</source>
+            <target>Hak Cipta</target>
          </segment>
       </unit>
       <unit id="cards.copySame">
@@ -629,6 +641,12 @@
          <segment>
             <source>Delete Team</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="cards.description">
+         <segment>
+            <source>Description</source>
+            <target>Deskripsi</target>
          </segment>
       </unit>
       <unit id="cards.draft">
@@ -865,6 +883,12 @@
             <target>Tutup</target>
          </segment>
       </unit>
+      <unit id="category.duplicate">
+         <segment>
+            <source>Duplicate Category</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="category.discussions">
          <segment>
             <source>discussion(s)</source>
@@ -886,6 +910,12 @@
       <unit id="category.note">
          <segment>
             <source>Audio Note</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.chapternumber">
+         <segment>
+            <source>Chapter Number</source>
             <target/>
          </segment>
       </unit>
@@ -1084,6 +1114,12 @@
       <unit id="consultantCheck.noTranscription">
          <segment>
             <source>No Transcription Available</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.transcription">
+         <segment>
+            <source>Transcription</source>
             <target/>
          </segment>
       </unit>
@@ -1816,7 +1852,7 @@
       <unit id="import.unknownError">
          <segment>
             <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
-            <target>Jika kesalahan ini terjadi saat mengimpor perubahan offline, segera tutup aplikasi dan buka kembali. Jika kesalahan terus berlanjut, hubungi dukungan. Jika Anda terus menggunakan aplikasi, Anda akan kehilangan perubahan offline.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -3115,6 +3151,12 @@
             <target>Tambahkan {0}</target>
          </segment>
       </unit>
+      <unit id="mediaTab.graphicRightsTitle">
+         <segment>
+            <source>Graphics Rights holder</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.latestVersion">
          <segment>
             <source>Latest Version</source>
@@ -3277,6 +3319,12 @@
             <target>Membatalkan Perekaman</target>
          </segment>
       </unit>
+      <unit id="mediaTitle.playPause">
+         <segment>
+            <source>Play / Pause</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>
@@ -3299,6 +3347,12 @@
          <segment>
             <source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
             <target>Seret dan jatuhkan berkas di sini, atau klik di sini untuk mencari berkas. Format yang diterima adalah .png, .jpg (atau .jpeg) dan .webp.</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.graphicTitle">
+         <segment>
+            <source>Upload Graphic</source>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
@@ -3943,6 +3997,12 @@
             <target>Buku</target>
          </segment>
       </unit>
+      <unit id="passageType.ALTBK">
+         <segment>
+            <source>Friendly Book</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4036,7 +4096,7 @@
       <unit id="permission.adminTip">
          <segment>
             <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target>Apakah kita memerlukan grup ini? Atau hanya menggunakan admin tim? Orang-orang di grup ini akan dapat melakukan langkah apa pun, bahkan jika langkah tersebut ditugaskan ke grup yang bukan grup mereka.</target>
+            <target>Apakah kita memerlukan grup ini? Atau hanya menggunakan admin tim? Orang-orang di grup ini akan dapat melakukan langkah apa pun, bahkan jika ditugaskan ke grup yang bukan grup mereka.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4048,7 +4108,7 @@
       <unit id="permission.consultantTip">
          <segment>
             <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
-            <target>Kami juga tidak yakin apakah kami memerlukan izin ini, karena tidak jelas hal-hal khusus apa yang dilakukan oleh konsultan di perangkat lunak ini. Komentar Konsultan Independen akan terlihat oleh semua anggota tim.</target>
+            <target>Kami juga tidak yakin apakah kami memerlukan izin ini, karena tidak jelas hal-hal khusus apa yang dilakukan oleh konsultan dalam perangkat lunak ini. Komentar Konsultan Independen akan dapat dilihat oleh semua anggota tim.</target>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4207,6 +4267,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.confirmPublish">
+         <segment>
+            <source>Publish {0}</source>
+            <target>Publikasikan {0}</target>
+         </segment>
+      </unit>
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
@@ -4219,10 +4285,22 @@
             <target>Mulai dari</target>
          </segment>
       </unit>
+      <unit id="planSheet.graphic">
+         <segment>
+            <source>Graphic</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.nonNumber">
          <segment>
             <source>Do not change to non-number.</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.noPublishDelete">
+         <segment>
+            <source>Do not delete published items.</source>
+            <target>Jangan hapus item yang telah diterbitkan.</target>
          </segment>
       </unit>
       <unit id="planSheet.insertFirstPassage">
@@ -4303,6 +4381,12 @@
             <target>Tampilkan Informasi Penerbitan</target>
          </segment>
       </unit>
+      <unit id="planSheet.movementAbove">
+         <segment>
+            <source>Add Movement above {0} {1}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.sectionAbove">
          <segment>
             <source>Add {0} above {1} {2}</source>
@@ -4327,10 +4411,10 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.unpublish">
+      <unit id="planSheet.changepublish">
          <segment>
-            <source>Remove {0} {1} from published list.</source>
-            <target>Hapus {0} {1} dari daftar yang diterbitkan.</target>
+            <source>Update {0} {1} published status.</source>
+            <target>Perbarui {0} {1} status yang telah diterbitkan.</target>
          </segment>
       </unit>
       <unit id="planSheet.useCtrlV">
@@ -4669,6 +4753,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="publishLevel.none">
+         <segment>
+            <source>Not Published</source>
+            <target>Tidak Diterbitkan</target>
+         </segment>
+      </unit>
       <unit id="resource.action">
          <segment>
             <source>Action</source>
@@ -4697,6 +4787,12 @@
          <segment>
             <source>By Word</source>
             <target>Dengan Word</target>
+         </segment>
+      </unit>
+      <unit id="resource.changes">
+         <segment>
+            <source>Changes made will affect source and all shared locations.</source>
+            <target>Perubahan yang dibuat akan mempengaruhi sumber dan semua lokasi yang dibagikan.</target>
          </segment>
       </unit>
       <unit id="resource.delete">
@@ -4741,6 +4837,12 @@
             <target>Tautan</target>
          </segment>
       </unit>
+      <unit id="resource.linkError">
+         <segment>
+            <source>Link is not a correctly formatted URL</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="resource.overview">
          <segment>
             <source>Overview</source>
@@ -4769,6 +4871,12 @@
          <segment>
             <source>Saving...</source>
             <target>Menyimpan</target>
+         </segment>
+      </unit>
+      <unit id="resource.source">
+         <segment>
+            <source>Linked Note Source: </source>
+            <target>Sumber Catatan yang ditautkan: </target>
          </segment>
       </unit>
       <unit id="resource.terms">
@@ -4805,6 +4913,12 @@
          <segment>
             <source>Chapter {0}</source>
             <target>Bab {0}</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.confirmPublish">
+         <segment>
+            <source>Are you sure you want to add publishing rows?</source>
+            <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.description">
@@ -4925,6 +5039,12 @@
          <segment>
             <source>Hide Publishing Rows</source>
             <target>Sembunyikan Baris Penerbitan</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.invalidSection">
+         <segment>
+            <source>Invalid {0}</source>
+            <target/>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.step">
@@ -6593,6 +6713,12 @@
          <segment>
             <source>Movement</source>
             <target>Gerakan</target>
+         </segment>
+      </unit>
+      <unit id="vProject.movements">
+         <segment>
+            <source>Movements</source>
+            <target/>
          </segment>
       </unit>
       <unit id="vProject.nameInUse">

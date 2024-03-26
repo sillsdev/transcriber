@@ -559,6 +559,12 @@
             <target>Id da Bíblia</target>
          </segment>
       </unit>
+      <unit id="cards.bibleidexists">
+         <segment>
+            <source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
+            <target>A Bíblia Id já existe. Contacte o serviço de apoio se precisar de trabalhar com esta Bíblia.</target>
+         </segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
@@ -587,6 +593,12 @@
          <segment>
             <source>Copy project to new team.</source>
             <target>Copiar o projecto para uma nova equipa.</target>
+         </segment>
+      </unit>
+      <unit id="cards.copyright">
+         <segment>
+            <source>Copyright</source>
+            <target>Direitos de autor</target>
          </segment>
       </unit>
       <unit id="cards.copySame">
@@ -629,6 +641,12 @@
          <segment>
             <source>Delete Team</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="cards.description">
+         <segment>
+            <source>Description</source>
+            <target>Descrição da Bíblia</target>
          </segment>
       </unit>
       <unit id="cards.draft">
@@ -865,6 +883,12 @@
             <target>Fechar</target>
          </segment>
       </unit>
+      <unit id="category.duplicate">
+         <segment>
+            <source>Duplicate Category</source>
+            <target>Categoria duplicada</target>
+         </segment>
+      </unit>
       <unit id="category.discussions">
          <segment>
             <source>discussion(s)</source>
@@ -887,6 +911,12 @@
          <segment>
             <source>Audio Note</source>
             <target>Nota de áudio</target>
+         </segment>
+      </unit>
+      <unit id="category.chapternumber">
+         <segment>
+            <source>Chapter Number</source>
+            <target>Número do capítulo</target>
          </segment>
       </unit>
       <unit id="commentCard.approve">
@@ -1085,6 +1115,12 @@
          <segment>
             <source>No Transcription Available</source>
             <target>Não há transcrição disponível</target>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.transcription">
+         <segment>
+            <source>Transcription</source>
+            <target>Transcrição</target>
          </segment>
       </unit>
       <unit id="control.book">
@@ -1816,7 +1852,7 @@
       <unit id="import.unknownError">
          <segment>
             <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
-            <target>Se este erro ocorreu durante a importação de alterações offline, feche a aplicação imediatamente e volte a abri-la. Se o erro persistir, contacte a assistência. Se continuar a utilizar a aplicação, perderá as alterações offline.</target>
+            <target>Se este erro ocorreu durante a importação de alterações offline, feche imediatamente a aplicação e volte a abri-la. Se o erro persistir, contacte a assistência. Se continuar a utilizar a aplicação, perderá as alterações offline.</target>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -3115,6 +3151,12 @@
             <target>Adicionar {0}</target>
          </segment>
       </unit>
+      <unit id="mediaTab.graphicRightsTitle">
+         <segment>
+            <source>Graphics Rights holder</source>
+            <target>Gráficos Titular dos direitos</target>
+         </segment>
+      </unit>
       <unit id="mediaTab.latestVersion">
          <segment>
             <source>Latest Version</source>
@@ -3277,6 +3319,12 @@
             <target>Cancelar gravação</target>
          </segment>
       </unit>
+      <unit id="mediaTitle.playPause">
+         <segment>
+            <source>Play / Pause</source>
+            <target>Reproduzir / Pausa</target>
+         </segment>
+      </unit>
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>
@@ -3299,6 +3347,12 @@
          <segment>
             <source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
             <target>Arraste e largue um ficheiro aqui, ou clique aqui para procurar o ficheiro. Os formatos aceites são .png, .jpg (ou .jpeg) e .webp.</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.graphicTitle">
+         <segment>
+            <source>Upload Graphic</source>
+            <target>Carregar gráfico</target>
          </segment>
       </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
@@ -3943,6 +3997,12 @@
             <target>Livro</target>
          </segment>
       </unit>
+      <unit id="passageType.ALTBK">
+         <segment>
+            <source>Friendly Book</source>
+            <target>Livro amigável</target>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4084,7 +4144,7 @@
       <unit id="permission.nspTip">
          <segment>
             <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
-            <target>Grupo de pares geral sem permissões especiais. Utilize para atribuir debates a grupos de equipas.</target>
+            <target>Grupo de pares geral sem permissões especiais. Utilizar para atribuir debates a grupos de equipas.</target>
          </segment>
       </unit>
       <unit id="planActions.addNote">
@@ -4207,6 +4267,12 @@
             <target>{0} {1} item(ns). Tem certeza?</target>
          </segment>
       </unit>
+      <unit id="planSheet.confirmPublish">
+         <segment>
+            <source>Publish {0}</source>
+            <target>Publicar {0}</target>
+         </segment>
+      </unit>
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
@@ -4219,10 +4285,22 @@
             <target>Iniciar em</target>
          </segment>
       </unit>
+      <unit id="planSheet.graphic">
+         <segment>
+            <source>Graphic</source>
+            <target>Gráfico</target>
+         </segment>
+      </unit>
       <unit id="planSheet.nonNumber">
          <segment>
             <source>Do not change to non-number.</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.noPublishDelete">
+         <segment>
+            <source>Do not delete published items.</source>
+            <target>Não apagar os itens publicados.</target>
          </segment>
       </unit>
       <unit id="planSheet.insertFirstPassage">
@@ -4303,6 +4381,12 @@
             <target>Mostrar informações de publicação</target>
          </segment>
       </unit>
+      <unit id="planSheet.movementAbove">
+         <segment>
+            <source>Add Movement above {0} {1}</source>
+            <target>Adicionar movimento acima de {0} {1}</target>
+         </segment>
+      </unit>
       <unit id="planSheet.sectionAbove">
          <segment>
             <source>Add {0} above {1} {2}</source>
@@ -4327,10 +4411,10 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.unpublish">
+      <unit id="planSheet.changepublish">
          <segment>
-            <source>Remove {0} {1} from published list.</source>
-            <target>Remover {0} {1} da lista de publicações.</target>
+            <source>Update {0} {1} published status.</source>
+            <target>Atualizar {0} {1} estado publicado.</target>
          </segment>
       </unit>
       <unit id="planSheet.useCtrlV">
@@ -4669,6 +4753,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="publishLevel.none">
+         <segment>
+            <source>Not Published</source>
+            <target>Não publicado</target>
+         </segment>
+      </unit>
       <unit id="resource.action">
          <segment>
             <source>Action</source>
@@ -4697,6 +4787,12 @@
          <segment>
             <source>By Word</source>
             <target>Por palavra</target>
+         </segment>
+      </unit>
+      <unit id="resource.changes">
+         <segment>
+            <source>Changes made will affect source and all shared locations.</source>
+            <target>As alterações efectuadas afectarão a fonte e todas as localizações partilhadas.</target>
          </segment>
       </unit>
       <unit id="resource.delete">
@@ -4741,6 +4837,12 @@
             <target>Ligação</target>
          </segment>
       </unit>
+      <unit id="resource.linkError">
+         <segment>
+            <source>Link is not a correctly formatted URL</source>
+            <target>A ligação não é um URL corretamente formatado</target>
+         </segment>
+      </unit>
       <unit id="resource.overview">
          <segment>
             <source>Overview</source>
@@ -4769,6 +4871,12 @@
          <segment>
             <source>Saving...</source>
             <target>Salvando...</target>
+         </segment>
+      </unit>
+      <unit id="resource.source">
+         <segment>
+            <source>Linked Note Source: </source>
+            <target>Fonte da nota vinculada: </target>
          </segment>
       </unit>
       <unit id="resource.terms">
@@ -4805,6 +4913,12 @@
          <segment>
             <source>Chapter {0}</source>
             <target>Capítulo {0}</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.confirmPublish">
+         <segment>
+            <source>Are you sure you want to add publishing rows?</source>
+            <target>Tem a certeza de que pretende adicionar linhas de publicação?</target>
          </segment>
       </unit>
       <unit id="scriptureTable.description">
@@ -4925,6 +5039,12 @@
          <segment>
             <source>Hide Publishing Rows</source>
             <target>Ocultar linhas de publicação</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.invalidSection">
+         <segment>
+            <source>Invalid {0}</source>
+            <target>Inválido {0}</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.step">
@@ -6268,7 +6388,7 @@
       <unit id="transcriptionTab.offlineData">
          <segment>
             <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
-            <target>Tem novas alterações locais que não foram incluídas na exportação ptf. Exporte também um ficheiro itf para capturar todas as alterações.</target>
+            <target>Tem novas alterações a nível local que não foram incluídas na exportação ptf. Exporte também um ficheiro itf para capturar todas as alterações.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
@@ -6593,6 +6713,12 @@
          <segment>
             <source>Movement</source>
             <target>Movimento</target>
+         </segment>
+      </unit>
+      <unit id="vProject.movements">
+         <segment>
+            <source>Movements</source>
+            <target>Movimentos</target>
          </segment>
       </unit>
       <unit id="vProject.nameInUse">

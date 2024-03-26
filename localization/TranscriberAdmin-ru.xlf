@@ -559,6 +559,12 @@
             <target>Библейский ид</target>
          </segment>
       </unit>
+      <unit id="cards.bibleidexists">
+         <segment>
+            <source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
+            <target>Библия Id уже существует. Пожалуйста, свяжитесь со службой поддержки, если вам нужно поработать с этой Библией.</target>
+         </segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
@@ -587,6 +593,12 @@
          <segment>
             <source>Copy project to new team.</source>
             <target>Копирование проекта в новую команду.</target>
+         </segment>
+      </unit>
+      <unit id="cards.copyright">
+         <segment>
+            <source>Copyright</source>
+            <target>Авторское право</target>
          </segment>
       </unit>
       <unit id="cards.copySame">
@@ -629,6 +641,12 @@
          <segment>
             <source>Delete Team</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="cards.description">
+         <segment>
+            <source>Description</source>
+            <target>Описание</target>
          </segment>
       </unit>
       <unit id="cards.draft">
@@ -865,6 +883,12 @@
             <target>Закрыть</target>
          </segment>
       </unit>
+      <unit id="category.duplicate">
+         <segment>
+            <source>Duplicate Category</source>
+            <target>Категория дубликатов</target>
+         </segment>
+      </unit>
       <unit id="category.discussions">
          <segment>
             <source>discussion(s)</source>
@@ -887,6 +911,12 @@
          <segment>
             <source>Audio Note</source>
             <target>Аудиозаметка</target>
+         </segment>
+      </unit>
+      <unit id="category.chapternumber">
+         <segment>
+            <source>Chapter Number</source>
+            <target>Номер главы</target>
          </segment>
       </unit>
       <unit id="commentCard.approve">
@@ -1085,6 +1115,12 @@
          <segment>
             <source>No Transcription Available</source>
             <target>Транскрипция недоступна</target>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.transcription">
+         <segment>
+            <source>Transcription</source>
+            <target>Транскрипция</target>
          </segment>
       </unit>
       <unit id="control.book">
@@ -3115,6 +3151,12 @@
             <target>Добавить {0}</target>
          </segment>
       </unit>
+      <unit id="mediaTab.graphicRightsTitle">
+         <segment>
+            <source>Graphics Rights holder</source>
+            <target>Графика Правообладатель</target>
+         </segment>
+      </unit>
       <unit id="mediaTab.latestVersion">
          <segment>
             <source>Latest Version</source>
@@ -3277,6 +3319,12 @@
             <target>Отмена записи</target>
          </segment>
       </unit>
+      <unit id="mediaTitle.playPause">
+         <segment>
+            <source>Play / Pause</source>
+            <target>Воспроизведение / Пауза</target>
+         </segment>
+      </unit>
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>
@@ -3299,6 +3347,12 @@
          <segment>
             <source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
             <target>Перетащите файл сюда или нажмите здесь, чтобы найти файл. Принимаются форматы .png, .jpg (или .jpeg) и .webp.</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.graphicTitle">
+         <segment>
+            <source>Upload Graphic</source>
+            <target>Загрузить графику</target>
          </segment>
       </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
@@ -3943,6 +3997,12 @@
             <target>Книга</target>
          </segment>
       </unit>
+      <unit id="passageType.ALTBK">
+         <segment>
+            <source>Friendly Book</source>
+            <target>Дружественная книга</target>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4036,7 +4096,7 @@
       <unit id="permission.adminTip">
          <segment>
             <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target>Нужна ли нам эта группа? Или просто использовать администратора команды? Люди в этой группе смогут выполнять любой шаг, даже если он назначен группе, в которой они не состоят.</target>
+            <target>Нужна ли нам эта группа? Или просто использовать командного администратора? Люди в этой группе смогут выполнять любые действия, даже если они поручены группе, в которой они не состоят.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4048,7 +4108,7 @@
       <unit id="permission.consultantTip">
          <segment>
             <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
-            <target>Не уверен, что нам нужно это разрешение, потому что неясно, что особенного делают консультанты в этой программе. Комментарии независимого консультанта будут видны всем членам команды.</target>
+            <target>Не уверен, что нам нужно это разрешение, потому что неясно, что особенного делают консультанты в этом программном обеспечении. Комментарии независимого консультанта будут видны всем членам команды.</target>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4084,7 +4144,7 @@
       <unit id="permission.nspTip">
          <segment>
             <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
-            <target>Общая группа сверстников без особых прав. Используется для назначения обсуждений группам команды.</target>
+            <target>Общая группа сверстников без особых прав. Используется для распределения обсуждений по группам.</target>
          </segment>
       </unit>
       <unit id="planActions.addNote">
@@ -4207,6 +4267,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.confirmPublish">
+         <segment>
+            <source>Publish {0}</source>
+            <target>Опубликовать {0}</target>
+         </segment>
+      </unit>
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
@@ -4219,10 +4285,22 @@
             <target>Начать с</target>
          </segment>
       </unit>
+      <unit id="planSheet.graphic">
+         <segment>
+            <source>Graphic</source>
+            <target>Графика</target>
+         </segment>
+      </unit>
       <unit id="planSheet.nonNumber">
          <segment>
             <source>Do not change to non-number.</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.noPublishDelete">
+         <segment>
+            <source>Do not delete published items.</source>
+            <target>Не удаляйте опубликованные элементы.</target>
          </segment>
       </unit>
       <unit id="planSheet.insertFirstPassage">
@@ -4303,6 +4381,12 @@
             <target>Показать информацию о публикации</target>
          </segment>
       </unit>
+      <unit id="planSheet.movementAbove">
+         <segment>
+            <source>Add Movement above {0} {1}</source>
+            <target>Добавить движение выше {0} {1}</target>
+         </segment>
+      </unit>
       <unit id="planSheet.sectionAbove">
          <segment>
             <source>Add {0} above {1} {2}</source>
@@ -4327,10 +4411,10 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.unpublish">
+      <unit id="planSheet.changepublish">
          <segment>
-            <source>Remove {0} {1} from published list.</source>
-            <target>Удалить {0} {1} из списка опубликованных.</target>
+            <source>Update {0} {1} published status.</source>
+            <target>Обновить статус опубликованного {0} {1}.</target>
          </segment>
       </unit>
       <unit id="planSheet.useCtrlV">
@@ -4669,6 +4753,12 @@
             <target>Загрузить {0} МБ автономных файлов аудиопроекта?</target>
          </segment>
       </unit>
+      <unit id="publishLevel.none">
+         <segment>
+            <source>Not Published</source>
+            <target>Не опубликовано</target>
+         </segment>
+      </unit>
       <unit id="resource.action">
          <segment>
             <source>Action</source>
@@ -4697,6 +4787,12 @@
          <segment>
             <source>By Word</source>
             <target>По слову</target>
+         </segment>
+      </unit>
+      <unit id="resource.changes">
+         <segment>
+            <source>Changes made will affect source and all shared locations.</source>
+            <target>Внесенные изменения повлияют на источник и все общие локации.</target>
          </segment>
       </unit>
       <unit id="resource.delete">
@@ -4741,6 +4837,12 @@
             <target>Ссылка</target>
          </segment>
       </unit>
+      <unit id="resource.linkError">
+         <segment>
+            <source>Link is not a correctly formatted URL</source>
+            <target>Ссылка не является корректно отформатированным URL</target>
+         </segment>
+      </unit>
       <unit id="resource.overview">
          <segment>
             <source>Overview</source>
@@ -4769,6 +4871,12 @@
          <segment>
             <source>Saving...</source>
             <target>Сохранение...</target>
+         </segment>
+      </unit>
+      <unit id="resource.source">
+         <segment>
+            <source>Linked Note Source: </source>
+            <target>Ссылка на источник примечаний: </target>
          </segment>
       </unit>
       <unit id="resource.terms">
@@ -4805,6 +4913,12 @@
          <segment>
             <source>Chapter {0}</source>
             <target>Глава {0}</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.confirmPublish">
+         <segment>
+            <source>Are you sure you want to add publishing rows?</source>
+            <target>Вы уверены, что хотите добавить строки публикации?</target>
          </segment>
       </unit>
       <unit id="scriptureTable.description">
@@ -4925,6 +5039,12 @@
          <segment>
             <source>Hide Publishing Rows</source>
             <target>Скрыть строки публикации</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.invalidSection">
+         <segment>
+            <source>Invalid {0}</source>
+            <target>Недействительная {0}</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.step">
@@ -6268,7 +6388,7 @@
       <unit id="transcriptionTab.offlineData">
          <segment>
             <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
-            <target>У вас есть новые изменения, которые не были включены в экспорт ptf. Пожалуйста, экспортируйте также файл itf, чтобы отразить все изменения.</target>
+            <target>У вас есть новые локальные изменения, которые не были включены в экспорт ptf. Пожалуйста, экспортируйте также файл itf, чтобы отразить все изменения.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
@@ -6593,6 +6713,12 @@
          <segment>
             <source>Movement</source>
             <target>Движение</target>
+         </segment>
+      </unit>
+      <unit id="vProject.movements">
+         <segment>
+            <source>Movements</source>
+            <target>Движения</target>
          </segment>
       </unit>
       <unit id="vProject.nameInUse">

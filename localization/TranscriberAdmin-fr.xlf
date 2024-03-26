@@ -520,7 +520,7 @@
       <unit id="audacityManager.tip">
          <segment>
             <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
-            <target>Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur BROWSE. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CRÉER.</target>
+            <target>Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur BROWSE. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CREATE.</target>
          </segment>
       </unit>
       <unit id="audacityManager.title">
@@ -559,6 +559,12 @@
             <target>Identité biblique</target>
          </segment>
       </unit>
+      <unit id="cards.bibleidexists">
+         <segment>
+            <source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
+            <target>La Bible Id existe déjà. Veuillez contacter le support si vous avez besoin de travailler sur cette Bible.</target>
+         </segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
@@ -587,6 +593,12 @@
          <segment>
             <source>Copy project to new team.</source>
             <target>Copier le projet dans une nouvelle équipe.</target>
+         </segment>
+      </unit>
+      <unit id="cards.copyright">
+         <segment>
+            <source>Copyright</source>
+            <target>Copyright</target>
          </segment>
       </unit>
       <unit id="cards.copySame">
@@ -629,6 +641,12 @@
          <segment>
             <source>Delete Team</source>
             <target>Supprimer l'équipe</target>
+         </segment>
+      </unit>
+      <unit id="cards.description">
+         <segment>
+            <source>Description</source>
+            <target>Description de la Bible</target>
          </segment>
       </unit>
       <unit id="cards.draft">
@@ -865,6 +883,12 @@
             <target>Fermer</target>
          </segment>
       </unit>
+      <unit id="category.duplicate">
+         <segment>
+            <source>Duplicate Category</source>
+            <target>Catégorie de duplicata</target>
+         </segment>
+      </unit>
       <unit id="category.discussions">
          <segment>
             <source>discussion(s)</source>
@@ -887,6 +911,12 @@
          <segment>
             <source>Audio Note</source>
             <target>Note audio</target>
+         </segment>
+      </unit>
+      <unit id="category.chapternumber">
+         <segment>
+            <source>Chapter Number</source>
+            <target>Numéro de chapitre</target>
          </segment>
       </unit>
       <unit id="commentCard.approve">
@@ -1085,6 +1115,12 @@
          <segment>
             <source>No Transcription Available</source>
             <target>Pas de transcription disponible</target>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.transcription">
+         <segment>
+            <source>Transcription</source>
+            <target>Transcription</target>
          </segment>
       </unit>
       <unit id="control.book">
@@ -1384,7 +1420,7 @@
       <unit id="electronImport.newerVersion">
          <segment>
             <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
-            <target>Ce fichier a été exporté avec une version plus récente du programme. Vous devriez télécharger la dernière version avant de l'importer ! Si vous continuez, il se peut que certaines données ne soient pas importées correctement.</target>
+            <target>Ce fichier a été exporté avec une version plus récente du programme. Vous devez télécharger la dernière version avant de procéder à l'importation ! Si vous continuez, il se peut que certaines données ne soient pas importées correctement.</target>
          </segment>
       </unit>
       <unit id="electronImport.project">
@@ -2770,7 +2806,7 @@
       <unit id="main.inviteError">
          <segment>
             <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
-            <target>Invitation non acceptée. Vous devez vous connecter avec l'email auquel l'invitation a été envoyée.</target>
+            <target>L'invitation n'a pas été acceptée. Vous devez vous connecter avec l'email auquel l'invitation a été envoyée.</target>
          </segment>
       </unit>
       <unit id="main.loadingTable">
@@ -3115,6 +3151,12 @@
             <target>Ajouter {0}</target>
          </segment>
       </unit>
+      <unit id="mediaTab.graphicRightsTitle">
+         <segment>
+            <source>Graphics Rights holder</source>
+            <target>Détenteur des droits graphiques</target>
+         </segment>
+      </unit>
       <unit id="mediaTab.latestVersion">
          <segment>
             <source>Latest Version</source>
@@ -3277,6 +3319,12 @@
             <target>Annuler l'enregistrement</target>
          </segment>
       </unit>
+      <unit id="mediaTitle.playPause">
+         <segment>
+            <source>Play / Pause</source>
+            <target>Lecture / Pause</target>
+         </segment>
+      </unit>
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>
@@ -3299,6 +3347,12 @@
          <segment>
             <source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
             <target>Faites glisser et déposez un fichier ici, ou cliquez ici pour rechercher le fichier. Les formats acceptés sont .png, .jpg (ou .jpeg) et .webp.</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.graphicTitle">
+         <segment>
+            <source>Upload Graphic</source>
+            <target>Télécharger le graphique</target>
          </segment>
       </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
@@ -3943,6 +3997,12 @@
             <target>Livre</target>
          </segment>
       </unit>
+      <unit id="passageType.ALTBK">
+         <segment>
+            <source>Friendly Book</source>
+            <target>Livre amical</target>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4036,7 +4096,7 @@
       <unit id="permission.adminTip">
          <segment>
             <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target>Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur de l'équipe ? Les membres de ce groupe pourront effectuer n'importe quelle étape, même si elle est attribuée à un groupe dont ils ne font pas partie.</target>
+            <target>Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur d'équipe ? Les membres de ce groupe pourront effectuer n'importe quelle étape, même si elle est assignée à un groupe dont ils ne font pas partie.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4048,7 +4108,7 @@
       <unit id="permission.consultantTip">
          <segment>
             <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
-            <target>Il n'est pas certain que nous ayons besoin de cette autorisation non plus, car on ne sait pas très bien ce que les consultants font de particulier dans ce logiciel. Les commentaires du consultant indépendant seront visibles par tous les membres de l'équipe.</target>
+            <target>Nous ne sommes pas sûrs d'avoir besoin de cette autorisation non plus, car on ne sait pas très bien ce que les consultants font de particulier dans ce logiciel. Les commentaires du consultant indépendant seront visibles par tous les membres de l'équipe.</target>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4207,6 +4267,12 @@
             <target>{0} {1} article(s). T'es sûr de toi ?</target>
          </segment>
       </unit>
+      <unit id="planSheet.confirmPublish">
+         <segment>
+            <source>Publish {0}</source>
+            <target>Publier {0}</target>
+         </segment>
+      </unit>
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
@@ -4219,10 +4285,22 @@
             <target>Commencer à</target>
          </segment>
       </unit>
+      <unit id="planSheet.graphic">
+         <segment>
+            <source>Graphic</source>
+            <target>Graphique</target>
+         </segment>
+      </unit>
       <unit id="planSheet.nonNumber">
          <segment>
             <source>Do not change to non-number.</source>
             <target>Ne passez pas au non-numéro.</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.noPublishDelete">
+         <segment>
+            <source>Do not delete published items.</source>
+            <target>Ne pas supprimer les éléments publiés.</target>
          </segment>
       </unit>
       <unit id="planSheet.insertFirstPassage">
@@ -4303,6 +4381,12 @@
             <target>Afficher les informations de publication</target>
          </segment>
       </unit>
+      <unit id="planSheet.movementAbove">
+         <segment>
+            <source>Add Movement above {0} {1}</source>
+            <target>Ajouter un mouvement au-dessus de {0} {1}</target>
+         </segment>
+      </unit>
       <unit id="planSheet.sectionAbove">
          <segment>
             <source>Add {0} above {1} {2}</source>
@@ -4327,10 +4411,10 @@
             <target>Coller le tableur</target>
          </segment>
       </unit>
-      <unit id="planSheet.unpublish">
+      <unit id="planSheet.changepublish">
          <segment>
-            <source>Remove {0} {1} from published list.</source>
-            <target>Supprimer {0} {1} de la liste des publications.</target>
+            <source>Update {0} {1} published status.</source>
+            <target>Mettre à jour l'état de publication de {0} {1}.</target>
          </segment>
       </unit>
       <unit id="planSheet.useCtrlV">
@@ -4669,6 +4753,12 @@
             <target>Télécharger {0}MB de fichiers de projets audio hors ligne ?</target>
          </segment>
       </unit>
+      <unit id="publishLevel.none">
+         <segment>
+            <source>Not Published</source>
+            <target>Non publié</target>
+         </segment>
+      </unit>
       <unit id="resource.action">
          <segment>
             <source>Action</source>
@@ -4697,6 +4787,12 @@
          <segment>
             <source>By Word</source>
             <target>Par mot</target>
+         </segment>
+      </unit>
+      <unit id="resource.changes">
+         <segment>
+            <source>Changes made will affect source and all shared locations.</source>
+            <target>Les modifications apportées affecteront la source et tous les emplacements partagés.</target>
          </segment>
       </unit>
       <unit id="resource.delete">
@@ -4741,6 +4837,12 @@
             <target>Lien</target>
          </segment>
       </unit>
+      <unit id="resource.linkError">
+         <segment>
+            <source>Link is not a correctly formatted URL</source>
+            <target>Le lien n'est pas une URL correctement formatée</target>
+         </segment>
+      </unit>
       <unit id="resource.overview">
          <segment>
             <source>Overview</source>
@@ -4769,6 +4871,12 @@
          <segment>
             <source>Saving...</source>
             <target>Sauvegarde...</target>
+         </segment>
+      </unit>
+      <unit id="resource.source">
+         <segment>
+            <source>Linked Note Source: </source>
+            <target>Note liée à la source : </target>
          </segment>
       </unit>
       <unit id="resource.terms">
@@ -4805,6 +4913,12 @@
          <segment>
             <source>Chapter {0}</source>
             <target>Chapitre {0}</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.confirmPublish">
+         <segment>
+            <source>Are you sure you want to add publishing rows?</source>
+            <target>Êtes-vous sûr de vouloir ajouter des rangées de publication ?</target>
          </segment>
       </unit>
       <unit id="scriptureTable.description">
@@ -4925,6 +5039,12 @@
          <segment>
             <source>Hide Publishing Rows</source>
             <target>Masquer les rangées de publication</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.invalidSection">
+         <segment>
+            <source>Invalid {0}</source>
+            <target>Invalide {0}</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.step">
@@ -5128,7 +5248,7 @@
       <unit id="shared.expiredParatextToken">
          <segment>
             <source>Your paratext login has expired and can't be automatically renewed. Please log out and login again.</source>
-            <target>Votre login paratext a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
+            <target>Votre login paratext a expiré et ne peut être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
@@ -6595,6 +6715,12 @@
             <target>Mouvement</target>
          </segment>
       </unit>
+      <unit id="vProject.movements">
+         <segment>
+            <source>Movements</source>
+            <target>Mouvements</target>
+         </segment>
+      </unit>
       <unit id="vProject.nameInUse">
          <segment>
             <source>Name in use</source>
@@ -6802,7 +6928,7 @@
       <unit id="welcome.setupTeamTip">
          <segment>
             <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-            <target>Configurez le projet audio, en divisant le travail en passages qui peuvent être assignés à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
+            <target>Configurez le projet audio en divisant le travail en passages qui peuvent être assignés à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
          </segment>
       </unit>
       <unit id="welcome.team">
