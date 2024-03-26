@@ -631,7 +631,7 @@ export const usePlanSheetFill = ({
             onAssign={onAssign}
             onFirstMovement={onFirstMovement}
             canAssign={userIsAdmin && !movement && !book}
-            canDelete={userIsAdmin}
+            canDelete={userIsAdmin && (!offline || offlineOnly)}
             active={active - 1 === rowIndex}
             onDisableFilter={
               !readonly && filtered ? disableFilter : undefined
