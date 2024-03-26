@@ -1000,7 +1000,7 @@ export function PlanSheet(props: IProps) {
               maximumSection={maximumSection}
               filtered={filtered}
               hidePublishing={hidePublishing}
-              disabled={!filtered && (rowInfo.length < 3 || anyRecording)}
+              disabled={!filtered && (rowInfo.length < 2 || anyRecording)}
             />
             {userIsAdmin && (
               <>
