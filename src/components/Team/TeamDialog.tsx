@@ -166,7 +166,7 @@ export function TeamDialog(props: IProps) {
       });
     }, 100);
   };
-  const setValue = (what: string, value: string) => {
+  const setValue = (what: string, value: string, init?: boolean) => {
     switch (what) {
       case 'iso':
         setIso(value);
@@ -198,7 +198,9 @@ export function TeamDialog(props: IProps) {
       default:
         return;
     }
-    setChanged(true);
+    if (!init) {
+      setChanged(true);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
