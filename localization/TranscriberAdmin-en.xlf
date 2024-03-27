@@ -4914,19 +4914,19 @@
       </unit>
       <unit id="publishLevel.none">
          <segment>
-            <source>Not Published</source>
+            <source>Not Published - not visible in publishing app</source>
             <target/>
          </segment>
       </unit>
       <unit id="publishLevel.beta">
          <segment>
-            <source>Beta</source>
+            <source>Beta - only visible to users subscribed to app beta channel</source>
             <target/>
          </segment>
       </unit>
       <unit id="publishLevel.public">
          <segment>
-            <source>Public</source>
+            <source>Public - visible to everyone using app</source>
             <target/>
          </segment>
       </unit>

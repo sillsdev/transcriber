@@ -5731,21 +5731,21 @@
             </context-group>
          </trans-unit>
          <trans-unit id="publishLevel.none">
-            <source>Not Published</source>
+            <source>Not Published - not visible in publishing app</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="publishLevel.beta">
-            <source>Beta</source>
+            <source>Beta - only visible to users subscribed to app beta channel</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="publishLevel.public">
-            <source>Public</source>
+            <source>Public - visible to everyone using app</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
