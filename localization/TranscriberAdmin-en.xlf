@@ -3648,7 +3648,7 @@
       </unit>
       <unit id="passageDetailArtifacts.allLevel">
          <segment>
-            <source>All Resources</source>
+            <source>All {0}</source>
             <target/>
          </segment>
       </unit>
@@ -3660,7 +3660,7 @@
       </unit>
       <unit id="passageDetailArtifacts.bookLevel">
          <segment>
-            <source>Resources for the Book</source>
+            <source>{0} for the Book</source>
             <target/>
          </segment>
       </unit>
@@ -3684,7 +3684,7 @@
       </unit>
       <unit id="passageDetailArtifacts.chapterLevel">
          <segment>
-            <source>Resources for the Chapter</source>
+            <source>{0} for the Chapter</source>
             <target/>
          </segment>
       </unit>
@@ -3784,6 +3784,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.notes">
+         <segment>
+            <source>Notes</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.passageResource">
          <segment>
             <source>Passage</source>
@@ -3835,6 +3841,12 @@
       <unit id="passageDetailArtifacts.resource">
          <segment>
             <source>Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.resources">
+         <segment>
+            <source>Resources</source>
             <target/>
          </segment>
       </unit>
@@ -3948,7 +3960,7 @@
       </unit>
       <unit id="passageDetailArtifacts.verseLevel">
          <segment>
-            <source>Resources for verses in this passage</source>
+            <source>{0} for verses in this passage</source>
             <target/>
          </segment>
       </unit>
