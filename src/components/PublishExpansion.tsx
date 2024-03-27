@@ -47,7 +47,7 @@ interface IProps {
   team?: Organization;
   bible?: Bible;
   readonly?: boolean;
-  setValue: (what: string, value: string) => void;
+  setValue: (what: string, value: string, init?: boolean) => void;
   onChanged: (changed: boolean) => void;
   onRecording: (recording: boolean) => void;
   // setCanSave: (canSave: boolean) => void;
@@ -83,10 +83,10 @@ export function PublishExpansion(props: IProps) {
       language?.bcp47 &&
       language?.bcp47 !== 'und'
     ) {
-      setValue('iso', language?.bcp47);
-      setValue('languageName', language?.languageName);
+      setValue('iso', language?.bcp47, init);
+      setValue('languageName', language?.languageName, init);
       setPublishingData('langProps', language, b);
-      setValue('publishingData', b.attributes.publishingData ?? '{}');
+      setValue('publishingData', b.attributes.publishingData ?? '{}', init);
     }
     if (!init) {
       var t = team ?? ({ attributes: { defaultParams: '{}' } } as Organization);
