@@ -25,6 +25,7 @@ export interface VProject extends BaseModel {
     sectionCount: number;
     tags: ITag;
     type: string;
+    defaultParams: string;
     dateCreated: string;
     dateUpdated: string;
     dateArchived: string;

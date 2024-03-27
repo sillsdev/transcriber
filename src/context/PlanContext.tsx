@@ -20,6 +20,7 @@ import { projButtonsSelector } from '../selector';
 export const ProjectHidePublishing = 'hidePublishing';
 export const ProjectFirstMovement = 'firstMovement';
 export const SectionMap = 'sectionMap';
+export const ProjectBook = 'book';
 
 export interface IRowData {}
 
@@ -87,7 +88,7 @@ const PlanProvider = (props: IProps) => {
 
   const getSectionMap = () => {
     return getProjectDefault(SectionMap) as [number, string][] | undefined;
-  }
+  };
 
   const setSectionArr = (newArr: [number, string][]) => {
     setProjectDefault(SectionMap, newArr);

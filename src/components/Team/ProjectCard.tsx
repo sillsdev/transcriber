@@ -17,7 +17,7 @@ import * as actions from '../../store';
 import ScriptureIcon from '@mui/icons-material/MenuBook';
 import { BsPencilSquare } from 'react-icons/bs';
 import moment from 'moment';
-import { DialogMode, IState, VProjectD } from '../../model';
+import { DialogMode, IState, ProjectD, VProjectD } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import ProjectMenu from './ProjectMenu';
 import BigDialog from '../../hoc/BigDialog';
@@ -45,7 +45,7 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import CategoryTabs from './CategoryTabs';
 import { RecordKeyMap } from '@orbit/records';
 import { useProjectDefaults } from '../../crud/useProjectDefaults';
-import { SectionMap } from '../../context/PlanContext';
+import { SectionMap, ProjectBook } from '../../context/PlanContext';
 
 const ProjectCardRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -134,7 +134,7 @@ export const ProjectCard = (props: IProps) => {
   const [deleteItem, setDeleteItem] = useState<VProjectD>();
   const [open, setOpen] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
-  const { getProjectDefault } = useProjectDefaults();
+  const { getProjectDefault, newProjectDefault } = useProjectDefaults();
   const t = cardStrings;
   const tpb = projButtonStrings;
   const { userIsOrgAdmin } = useRole();
@@ -257,7 +257,14 @@ export const ProjectCard = (props: IProps) => {
       rtl,
       tags,
       organizedBy,
+      book,
     } = values;
+    var defaultParams = getProjectDefault(
+      ProjectBook,
+      project as any as ProjectD
+    );
+    var newParams = newProjectDefault(defaultParams, ProjectBook, book);
+    if (newParams) defaultParams = newParams;
     projectUpdate({
       ...project,
       attributes: {
@@ -275,6 +282,7 @@ export const ProjectCard = (props: IProps) => {
         tags,
         flat: values.flat,
         organizedBy,
+        defaultParams,
       },
     });
   };
@@ -295,7 +303,7 @@ export const ProjectCard = (props: IProps) => {
       name: attr.name,
       description: attr.description || '',
       type: attr.type,
-      book: '',
+      book: getProjectDefault(ProjectBook, project as any as ProjectD) || '',
       bcp47: attr.language,
       languageName: attr.languageName || '',
       isPublic: attr.isPublic,
@@ -331,7 +339,7 @@ export const ProjectCard = (props: IProps) => {
               sx={{ display: 'flex', alignItems: 'center' }}
             >
               {(project?.attributes?.type || '').toLowerCase() ===
-                'scripture' ? (
+              'scripture' ? (
                 <ScriptureIcon />
               ) : (
                 <BsPencilSquare />

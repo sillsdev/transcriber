@@ -22,6 +22,7 @@ import Mode from '../../../model/dialogMode';
 import { IDialog } from '../../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { vProjectSelector } from '../../../selector';
+import { ProjectBook } from './ProjectBook';
 
 const StyledDialog = styled(Dialog)<DialogProps>(() => ({
   '& .MuiDialog-paper': {
@@ -62,7 +63,7 @@ interface IProps extends IDialog<IProjectDialog> {
 
 export function ProjectDialog(props: IProps) {
   const { mode, values, isOpen, onOpen, onCommit, onCancel, nameInUse } = props;
-  const t = useSelector(vProjectSelector, shallowEqual)
+  const t = useSelector(vProjectSelector, shallowEqual);
   initState.organizedBy = 'section';
   initState.vProjectStrings = t;
   const [state, setState] = React.useState({ ...initState });
@@ -103,6 +104,7 @@ export function ProjectDialog(props: IProps) {
         <ProjectName state={state} setState={setState} inUse={nameInUse} />
         <ProjectDescription state={state} setState={setState} />
         <ProjectType type={type} onChange={handleTypeChange} />
+        <ProjectBook state={state} setState={setState} />
         <Language {...state} onChange={handleLanguageChange} />
         <ProjectTags state={state} setState={setState} />
         <ProjectExpansion state={state} setState={setState} />
