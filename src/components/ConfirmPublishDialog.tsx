@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { IAlertStrings, IPublishLevelStrings } from '../model';
+import { IAlertStrings, IPublishLevelStrings, ISharedStrings } from '../model';
 import {
   Button,
   Dialog,
@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import DialogActions from '@mui/material/DialogActions';
 import { shallowEqual, useSelector } from 'react-redux';
-import { alertSelector, publishLevelSelector } from '../selector';
+import { alertSelector, publishLevelSelector, sharedSelector } from '../selector';
 import { PublishLevelEnum } from '../crud';
 
 interface IProps {
@@ -28,6 +28,7 @@ interface IProps {
 function ConfirmPublishDialog(props: IProps) {
   const { title, description, yesResponse, noResponse, current } = props;
   const t: IAlertStrings = useSelector(alertSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const l: IPublishLevelStrings = useSelector(
     publishLevelSelector,
     shallowEqual
@@ -99,7 +100,7 @@ function ConfirmPublishDialog(props: IProps) {
       </DialogContent>
       <DialogActions>
         <Button id="alertNo" onClick={handleNo} color="primary">
-          {t.no}
+          {value === current ? ts.cancel : t.no}
         </Button>
         <Button
           id="alertYes"

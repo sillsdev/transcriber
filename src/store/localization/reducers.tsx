@@ -1042,9 +1042,9 @@ const initialState = {
 	}),
 	"publishLevel": new LocalizedStrings({
 		"en": {
-			"none": "Not Published",
-			"beta": "Beta",
-			"public": "Public",
+			"none": "Not Published - not visible in publishing app",
+			"beta": "Beta - only visible to users subscribed to app beta channel",
+			"public": "Public - visible to everyone using app",
 		}
 	}),
 	"resource": new LocalizedStrings({
