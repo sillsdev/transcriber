@@ -106,22 +106,22 @@ export const SelectSharedResource = (props: IProps) => {
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const columnDefs = !isNote
     ? [
-        { name: 'language', title: t.language },
-        { name: 'category', title: t.category },
-        { name: 'title', title: t.title },
-        { name: 'description', title: t.description },
-        { name: 'version', title: t.version },
-        { name: 'keywords', title: t.keywords },
-        { name: 'terms', title: t.termsOfUse },
-        { name: 'source', title: t.source },
-      ]
+      { name: 'language', title: t.language },
+      { name: 'category', title: t.category },
+      { name: 'title', title: t.title },
+      { name: 'description', title: t.description },
+      { name: 'version', title: t.version },
+      { name: 'keywords', title: t.keywords },
+      { name: 'terms', title: t.termsOfUse },
+      { name: 'source', title: t.source },
+    ]
     : [
-        { name: 'category', title: t.category },
-        { name: 'title', title: t.title },
-        { name: 'description', title: t.description },
-        { name: 'keywords', title: t.keywords },
-        { name: 'source', title: t.source },
-      ];
+      { name: 'category', title: t.category },
+      { name: 'title', title: t.title },
+      { name: 'description', title: t.description },
+      { name: 'keywords', title: t.keywords },
+      { name: 'source', title: t.source },
+    ];
   const columnWidths = [
     { columnName: 'language', width: 150 },
     { columnName: 'category', width: 150 },
@@ -144,10 +144,22 @@ export const SelectSharedResource = (props: IProps) => {
     { columnName: 'title', direction: 'asc' },
   ];
   const referenceLevel: RefOption[] = [
-    { label: t.verseLevel, value: RefLevel.Verse },
-    { label: t.chapterLevel, value: RefLevel.Chapter },
-    { label: t.bookLevel, value: RefLevel.Book },
-    { label: t.allLevel, value: RefLevel.All },
+    {
+      label: t.verseLevel.replace('{0}', isNote ? t.notes : t.resources),
+      value: RefLevel.Verse,
+    },
+    {
+      label: t.chapterLevel.replace('{0}', isNote ? t.notes : t.resources),
+      value: RefLevel.Chapter,
+    },
+    {
+      label: t.bookLevel.replace('{0}', isNote ? t.notes : t.resources),
+      value: RefLevel.Book,
+    },
+    {
+      label: t.allLevel.replace('{0}', isNote ? t.notes : t.resources),
+      value: RefLevel.All,
+    },
   ];
 
   const isScripture = useMemo(
@@ -238,7 +250,7 @@ export const SelectSharedResource = (props: IProps) => {
   const handleBookRevert = () => {
     onBookCd(undefined);
   };
-  const handlePreventSave = () => {};
+  const handlePreventSave = () => { };
 
   const handleFindRefChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFindRef(event.target.value);

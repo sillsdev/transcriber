@@ -749,6 +749,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "movementResource": string;
     "no": string;
     "noteResource": string;
+    "notes": string;
     "passageResource": string;
     "pasteFormat": string;
     "pasteError": string;
@@ -758,6 +759,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "projectResourceConfigure": string;
     "reference": string;
     "resource": string;
+    "resources": string;
     "resourcesDeleted": string;
     "selectBook": string;
     "selectOne": string;

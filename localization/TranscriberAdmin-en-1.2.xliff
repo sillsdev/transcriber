@@ -4254,7 +4254,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="passageDetailArtifacts.allLevel">
-      		<source>All Resources</source>
+      		<source>All {0}</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">AddResource.tsx</context>
@@ -4268,7 +4268,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.bookLevel">
-      		<source>Resources for the Book</source>
+      		<source>{0} for the Book</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>
@@ -4296,7 +4296,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="passageDetailArtifacts.chapterLevel">
-      		<source>Resources for the Chapter</source>
+      		<source>{0} for the Chapter</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>
@@ -4414,6 +4414,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.notes">
+            <source>Notes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="passageDetailArtifacts.passageResource">
             <source>Passage</source>
             <target/>
@@ -4472,6 +4479,13 @@
       	</trans-unit>
          <trans-unit id="passageDetailArtifacts.resource">
             <source>Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageDetailArtifacts.resources">
+            <source>Resources</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AddResource.tsx</context>
@@ -4604,7 +4618,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.verseLevel">
-      		<source>Resources for verses in this passage</source>
+      		<source>{0} for verses in this passage</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>
