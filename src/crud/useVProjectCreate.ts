@@ -49,6 +49,7 @@ export const useVProjectCreate = () => {
       flat,
       tags,
       organizedBy,
+      defaultParams,
     } = vProject.attributes;
 
     let project: Project = {
@@ -67,7 +68,7 @@ export const useVProjectCreate = () => {
         allowClaim: true,
         dateCreated: currentDateTime(),
         dateUpdated: currentDateTime(),
-        defaultParams: '{}',
+        defaultParams,
       },
     } as Project;
     await memory.update((t) => [

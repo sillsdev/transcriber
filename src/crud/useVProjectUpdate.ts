@@ -25,6 +25,7 @@ export const useVProjectUpdate = () => {
       flat,
       tags,
       organizedBy,
+      defaultParams,
     } = vProject.attributes;
     await memory.update((t) => [
       ...UpdateRecord(
@@ -43,6 +44,7 @@ export const useVProjectUpdate = () => {
             defaultFont,
             defaultFontSize,
             rtl,
+            defaultParams,
           },
         } as ProjectD,
         user

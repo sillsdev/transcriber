@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { Project, ProjectD, RoleNames } from '../model';
+import { ProjectD, RoleNames } from '../model';
 import { UpdateRecord } from '../model/baseModel';
 import { findRecord } from './tryFindRecord';
 
@@ -12,17 +12,19 @@ export const useProjectDefaults = () => {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [offline] = useGlobal('offline');
 
-  const getProjectDefault = (label: string) => {
-    const proj = findRecord(memory, 'project', project) as Project;
+  const getProjectDefault = (label: string, proj?: ProjectD) => {
+    if (!proj) proj = findRecord(memory, 'project', project) as ProjectD;
     const json = JSON.parse(proj?.attributes.defaultParams ?? '{}');
     if (json.hasOwnProperty(label)) return JSON.parse(json[label]);
     return undefined;
   };
 
-  const setProjectDefault = (label: string, value: any) => {
-    const proj = findRecord(memory, 'project', project) as ProjectD;
-    if (!proj || !proj.attributes) return;
-    const json = JSON.parse(proj?.attributes?.defaultParams ?? '{}');
+  const newProjectDefault = (
+    defaultParams: string,
+    label: string,
+    value: any
+  ) => {
+    const json = JSON.parse(defaultParams ?? '{}');
     var saveIt = false;
     if (value !== undefined) {
       var tmp = JSON.stringify(value);
@@ -35,7 +37,19 @@ export const useProjectDefaults = () => {
       saveIt = true;
     }
     if (saveIt) {
-      proj.attributes.defaultParams = JSON.stringify(json);
+      return JSON.stringify(json);
+    }
+  };
+  const setProjectDefault = (label: string, value: any) => {
+    const proj = findRecord(memory, 'project', project) as ProjectD;
+    if (!proj || !proj.attributes) return;
+    var newDefaultParams = newProjectDefault(
+      proj.attributes.defaultParams,
+      label,
+      value
+    );
+    if (newDefaultParams) {
+      proj.attributes.defaultParams = newDefaultParams;
       memory.update((t) => UpdateRecord(t, proj, user));
     }
   };
@@ -56,6 +70,7 @@ export const useProjectDefaults = () => {
   return {
     getProjectDefault,
     setProjectDefault,
+    newProjectDefault,
     canSetProjectDefault,
     getLocalDefault,
     setLocalDefault,

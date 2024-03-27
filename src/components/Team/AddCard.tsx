@@ -43,6 +43,8 @@ import StickyRedirect from '../StickyRedirect';
 import NewProjectGrid from './NewProjectGrid';
 import { restoreScroll, useHome } from '../../utils';
 import { RecordIdentity, RecordKeyMap } from '@orbit/records';
+import { ProjectBook } from '../../context/PlanContext';
+import { useProjectDefaults } from '../../crud/useProjectDefaults';
 
 const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   minWidth: 275,
@@ -127,6 +129,7 @@ export const AddCard = (props: IProps) => {
   const speakerRef = useRef<string>();
   const { getPlan } = usePlan();
   const getTypeId = useTypeId();
+  const { newProjectDefault } = useProjectDefaults();
 
   useEffect(() => {
     if (localStorage.getItem('autoaddProject') !== null && team === null) {
@@ -235,7 +238,9 @@ export const AddCard = (props: IProps) => {
       rtl,
       tags,
       organizedBy,
+      book,
     } = values;
+    var defaultParams = newProjectDefault('{}', ProjectBook, book) ?? '{}';
     setLanguage({ bcp47, languageName, font, rtl, spellCheck });
     projectCreate(
       {
@@ -253,6 +258,7 @@ export const AddCard = (props: IProps) => {
           tags,
           flat: values.flat,
           organizedBy,
+          defaultParams,
         },
       } as VProject,
       team
