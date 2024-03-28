@@ -3,6 +3,7 @@ import { UserD } from '../model';
 import { List } from '@mui/material';
 import { UserListItem } from '.';
 import { useOrbitData } from '../hoc/useOrbitData';
+import { ListEnum } from '../crud';
 
 export interface ListAction {
   [key: string]: ReactElement;
@@ -12,11 +13,11 @@ interface IProps {
   isSelected: (userId: string) => boolean;
   curId?: string | undefined;
   select?: (userId: string) => void;
-  showTeams?: boolean;
+  show?: ListEnum;
 }
 
 export const UserList = (props: IProps) => {
-  const { isSelected, curId, select, showTeams } = props;
+  const { isSelected, curId, select, show } = props;
   const users = useOrbitData<UserD[]>('user');
 
   return (
@@ -26,7 +27,7 @@ export const UserList = (props: IProps) => {
           .filter((u) => u.id !== curId && isSelected(u.id))
           .sort((i, j) =>
             (i.attributes ? i.attributes.name : '') <=
-            (j.attributes ? j.attributes.name : '')
+              (j.attributes ? j.attributes.name : '')
               ? -1
               : 1
           )
@@ -35,8 +36,7 @@ export const UserList = (props: IProps) => {
               u={u}
               key={i}
               onSelect={select}
-              showTeams={showTeams ?? false}
-            />
+              show={show} />
           ))}
       </List>
     </>

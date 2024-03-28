@@ -245,7 +245,9 @@ async function cleanUpMemberships(memory: Memory, backup: IndexedDBSource) {
   const orgmems: OrganizationMembershipD[] = memory.cache.query((q) =>
     q.findRecords('organizationmembership')
   ) as any;
-  const badom = orgmems.filter((om) => !om.attributes);
+  const badom = orgmems.filter(
+    (om) => !om.attributes || !om.relationships?.user?.data
+  );
   badom.forEach((i) => {
     ops.push(
       t.removeRecord({ type: 'organizationmembership', id: i.id }).toOperation()
@@ -254,7 +256,9 @@ async function cleanUpMemberships(memory: Memory, backup: IndexedDBSource) {
   const grpmems: GroupMembershipD[] = memory.cache.query((q) =>
     q.findRecords('groupmembership')
   ) as any;
-  const badgm = grpmems.filter((om) => !om.attributes);
+  const badgm = grpmems.filter(
+    (om) => !om.attributes || !om.relationships?.user?.data
+  );
   badgm.forEach((i) => {
     ops.push(
       t.removeRecord({ type: 'groupmembership', id: i.id }).toOperation()

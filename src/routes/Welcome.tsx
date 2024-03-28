@@ -87,7 +87,7 @@ const HelpTip = () => {
   );
 };
 
-interface IProps {}
+interface IProps { }
 
 export function Welcome(props: IProps) {
   const importStatus = useSelector(
@@ -186,7 +186,7 @@ export function Welcome(props: IProps) {
     }
     dispatch(setLanguage(localeDefault(isDeveloper)));
     dispatch(fetchLocalization());
-    checkOnline((connected) => {});
+    checkOnline((connected) => { });
     const choice = localStorage.getItem('offlineAdmin');
 
     if (choice !== null) {
@@ -268,7 +268,7 @@ export function Welcome(props: IProps) {
   };
 
   const handleQuickOffline = () => {
-    setOfflineOnly(true);
+    // setOfflineOnly(true);
     setOffline(true);
     if (!hasOfflineProjects || !hasOfflineUsers)
       localStorage.setItem('autoaddProject', 'true');
@@ -283,15 +283,16 @@ export function Welcome(props: IProps) {
       );
 
       if (quickUsers.length !== 0) {
-        setUser(quickUsers[0].id);
+        if (quickUsers.length === 1) setUser(quickUsers[0].id);
         handleGoOffline();
         return;
       }
     }
-    addQuickUser().then((id) => {
-      setUser(id);
-      handleGoOffline();
-    });
+    if ((memory.cache.query((q) => q.findRecords('user')) as InitializedRecord[]).length === 0)
+      addQuickUser().then((id) => {
+        setUser(id);
+        handleGoOffline();
+      });
   };
 
   const handleImport = () => {
