@@ -112,7 +112,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
   const sectionResources = useOrbitData<SectionResource[]>('sectionresource');
   const [memory] = useGlobal('memory');
   const [, setComplete] = useGlobal('progress');
-  const [data, setData] = useState<ICell[][]>([]);
+  const [data, setDatax] = useState<ICell[][]>([]);
   const [suffix, setSuffix] = useState('');
   const [numSegments, setNumSegments] = useState(0);
   const [pastedSegments, setPastedSegments] = useState('');
@@ -191,29 +191,38 @@ export const ProjectResourceConfigure = (props: IProps) => {
     rowCells([t.startStop, t.reference, t.description], true),
   ];
 
-  useEffect(() => {
-    let newData: ICell[][] = emptyTable();
-    const newInfo = items.map((v) => {
-      const rec = memory.cache.query((q) => q.findRecord(v));
-      if (!rec) return {} as IInfo;
-      if (v.type === 'passage') {
-        const section = findRecord(memory, 'section', related(rec, 'section')) as Section;
-        if (!section) return {} as IInfo;
-        const secNum = section?.attributes?.sequencenum || 0;
-        return { secNum, section, passage: rec } as IInfo;
-      } else {
-        const section = rec as Section;
-        const secNum = section?.attributes?.sequencenum || 0;
-        return { secNum, section } as IInfo;
-      }
-    });
-    newInfo.forEach((v) => {
-      newData.push(rowCells(['', fullReference(v), '']));
-    });
-    infoRef.current = newInfo;
-    setData(newData);
+  const setData = (newData: ICell[][]) => {
+    setDatax(newData);
     dataRef.current = newData;
-    if (segmentsRef.current) handleSegment(segmentsRef.current);
+  };
+  useEffect(() => {
+    if (items?.length > 0) {
+      let newData: ICell[][] = emptyTable();
+      const newInfo = items.map((v) => {
+        const rec = memory.cache.query((q) => q.findRecord(v));
+        if (!rec) return {} as IInfo;
+        if (v.type === 'passage') {
+          const section = findRecord(
+            memory,
+            'section',
+            related(rec, 'section')
+          ) as Section;
+          if (!section) return {} as IInfo;
+          const secNum = section?.attributes?.sequencenum || 0;
+          return { secNum, section, passage: rec } as IInfo;
+        } else {
+          const section = rec as Section;
+          const secNum = section?.attributes?.sequencenum || 0;
+          return { secNum, section } as IInfo;
+        }
+      });
+      newInfo.forEach((v) => {
+        newData.push(rowCells(['', fullReference(v), '']));
+      });
+      infoRef.current = newInfo;
+      setData(newData);
+      if (segmentsRef.current) handleSegment(segmentsRef.current, true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
@@ -420,31 +429,13 @@ export const ProjectResourceConfigure = (props: IProps) => {
       newData[c.row][c.col].value = c.value;
     });
     setData(newData);
-    dataRef.current = newData;
-  };
-  /*
-  const fix = (regions: IRegion[]) => {
-    const last = regions.length - 1;
-    if (last < 0) return;
-    let prev: IRegion | undefined = undefined;
-    let max = 0;
-    for (let i of regions) {
-      max = Math.max(i.end, max);
-      if (prev) prev.end = i.start;
-      prev = i;
-    }
-    regions[last].end = max;
   };
 
-  const d1 = (n: number) => `${Math.round(n * 10) / 10}`;
-*/
-
-  const handleSegment = (segments: string) => {
+  const handleSegment = (segments: string, init: boolean) => {
+    if (dataRef.current.length === 0) return;
     const regions = parseRegions(segments).regions.sort(
       (i, j) => i.start - j.start
     );
-    //.regions.filter((r) => d1(r.start) !== d1(r.end) && d1(r.end) !== `0.0`)
-    //fix(regions);
 
     setNumSegments(regions.length);
 
@@ -511,9 +502,8 @@ export const ProjectResourceConfigure = (props: IProps) => {
     }
     if (change) {
       setData(newData);
-      dataRef.current = newData;
       setPastedSegments('');
-      if (!isChanged(wizToolId)) toolChanged(wizToolId);
+      if (!init && !isChanged(wizToolId)) toolChanged(wizToolId);
     }
   };
 

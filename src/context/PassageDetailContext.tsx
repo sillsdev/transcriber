@@ -123,10 +123,10 @@ const initState = {
   currentstep: '',
   tool: ToolSlug.Discuss,
   orgWorkflowSteps: [] as OrgWorkflowStepD[],
-  setOrgWorkflowSteps: (steps: OrgWorkflowStep[]) => { },
-  setCurrentStep: (step: string) => { }, //what the user is looking at
+  setOrgWorkflowSteps: (steps: OrgWorkflowStep[]) => {},
+  setCurrentStep: (step: string) => {}, //what the user is looking at
   firstStepIndex: -1,
-  setFirstStepIndex: (step: number) => { },
+  setFirstStepIndex: (step: number) => {},
   index: 0, //row index?
   mediafileId: '', //This is the latest vernacular
   selected: '',
@@ -134,68 +134,68 @@ const initState = {
     selected: string,
     inPlayer: PlayInPlayer,
     rowData?: IRow[]
-  ) => { },
-  setMediaSelected: (id: string, start: number, end: number) => { },
+  ) => {},
+  setMediaSelected: (id: string, start: number, end: number) => {},
   playerMediafile: undefined as MediaFile | undefined, //passagedetailPlayer id
   playing: false, //vernacular in wavesurfer
-  setPlaying: (playing: boolean) => { },
+  setPlaying: (playing: boolean) => {},
   itemPlaying: false, //resource, bt, retell etc
-  setItemPlaying: (playing: boolean) => { },
+  setItemPlaying: (playing: boolean) => {},
   playItem: '', //resource
-  setPlayItem: (item: string) => { },
+  setPlayItem: (item: string) => {},
   commentPlaying: false,
-  setCommentPlaying: (playing: boolean, ended?: boolean) => { },
+  setCommentPlaying: (playing: boolean, ended?: boolean) => {},
   commentPlayId: '',
-  setCommentPlayId: (mediaId: string) => { },
+  setCommentPlayId: (mediaId: string) => {},
   oldVernacularPlayItem: '',
   oldVernacularStart: 0,
   oldVernacularPlaying: false,
-  handleOldVernacularPlayEnd: () => { },
+  handleOldVernacularPlayEnd: () => {},
   rowData: Array<IRow>(),
   sharedStr: {} as ISharedStrings,
 
   loading: false,
   audioBlob: undefined as Blob | undefined,
   pdBusy: false,
-  setPDBusy: (pdBusy: boolean) => { },
+  setPDBusy: (pdBusy: boolean) => {},
   allBookData: Array<BookName>(),
   getProjectResources: async () => [] as MediaFileD[],
   workflow: Array<SimpleWf>(),
   psgCompleted: [] as StepComplete[],
-  setStepComplete: async (stepId: string, complete: boolean) => { },
+  setStepComplete: async (stepId: string, complete: boolean) => {},
   stepComplete: (stepId: string) => {
     return false;
   },
   discussionSize: { width: 450, height: 900 },
   playerSize: 280,
-  setDiscussionSize: (size: { width: number; height: number }) => { },
-  setPlayerSize: (size: number) => { },
+  setDiscussionSize: (size: { width: number; height: number }) => {},
+  setPlayerSize: (size: number) => {},
   chooserSize: 48,
-  setChooserSize: (size: number) => { },
+  setChooserSize: (size: number) => {},
   defaultFilename: '',
   uploadItem: '',
   currentSegment: '',
   currentSegmentIndex: -1,
-  setCurrentSegment: (segment: IRegion | undefined, index: number) => { }, //replace the above two
-  setupLocate: (cb?: (segments: string) => void) => { },
+  setCurrentSegment: (segment: IRegion | undefined, index: number) => {}, //replace the above two
+  setupLocate: (cb?: (segments: string) => void) => {},
   getCurrentSegment: () => undefined as IRegion | undefined,
-  setPlayerSegments: (segments: string) => { },
+  setPlayerSegments: (segments: string) => {},
   recording: false,
-  setRecording: (recording: boolean) => { },
+  setRecording: (recording: boolean) => {},
   commentRecording: false,
-  setCommentRecording: (commentRecording: boolean) => { },
+  setCommentRecording: (commentRecording: boolean) => {},
   wfStr: {} as IWorkflowStepsStrings,
-  handleItemPlayEnd: () => { },
-  handleItemTogglePlay: () => { },
-  handleCommentPlayEnd: () => { },
-  handleCommentTogglePlay: () => { },
+  handleItemPlayEnd: () => {},
+  handleItemTogglePlay: () => {},
+  handleCommentPlayEnd: () => {},
+  handleCommentTogglePlay: () => {},
   discussionMarkers: [] as IMarker[],
-  setDiscussionMarkers: (markers: IMarker[]) => { },
-  handleHighlightDiscussion: (time: number | undefined) => { },
+  setDiscussionMarkers: (markers: IMarker[]) => {},
+  handleHighlightDiscussion: (time: number | undefined) => {},
   highlightDiscussion: undefined as number | undefined,
   refresh: 0,
   prjId: '',
-  forceRefresh: () => { },
+  forceRefresh: () => {},
   sectionArr: [] as [number, string][],
 };
 
@@ -218,7 +218,9 @@ const PassageDetailProvider = (props: IProps) => {
   const mediafiles = useOrbitData<MediaFileD[]>('mediafile');
   const artifactTypes = useOrbitData<ArtifactType[]>('artifacttype');
   const categories = useOrbitData<ArtifactCategory[]>('artifactcategory');
-  const userResources = useOrbitData<SectionResourceUser[]>('sectionresourceuser');
+  const userResources = useOrbitData<SectionResourceUser[]>(
+    'sectionresourceuser'
+  );
   const sectionResources = useOrbitData<SectionResourceD[]>('sectionresource');
   const orgWorkflowSteps = useOrbitData<OrgWorkflowStep[]>('orgworkflowstep');
   const workflowSteps = useOrbitData<WorkflowStep[]>('workflowstep');
@@ -520,6 +522,7 @@ const PassageDetailProvider = (props: IProps) => {
   };
 
   const setStepComplete = async (stepid: string, complete: boolean) => {
+    if (stepid === '') return;
     var completed = [...state.psgCompleted];
     var remId =
       remoteId('orgworkflowstep', stepid, memory.keyMap as RecordKeyMap) ||
@@ -543,7 +546,7 @@ const PassageDetailProvider = (props: IProps) => {
     let stepComplete = {};
     try {
       stepComplete = JSON.parse(curCompleteStr || '{}');
-    } catch (err) { }
+    } catch (err) {}
     var tb = new RecordTransformBuilder();
     var ops = [] as RecordOperation[];
     ops.push(
@@ -561,7 +564,8 @@ const PassageDetailProvider = (props: IProps) => {
       ops,
       recId.id,
       '',
-      `${complete ? stepCompleteStr.title : stepCompleteStr.incomplete
+      `${
+        complete ? stepCompleteStr.title : stepCompleteStr.incomplete
       } : ${localizedWorkStep(rec.attributes.name)}`,
       user,
       memory

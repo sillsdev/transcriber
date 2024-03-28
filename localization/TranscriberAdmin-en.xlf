@@ -4398,13 +4398,13 @@
       </unit>
       <unit id="planSheet.confirmPublishMovement">
          <segment>
-            <source>The latest version of all passages and notes in all {0} in this Movement will be marked as published.</source>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this Movement will be marked as published. If you have previously published and now choose 'Not Published', the {0} and passages and notes will be marked as not published.</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishSection">
          <segment>
-            <source>The latest version of all passages and notes in this {0} will be marked as published.</source>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes be marked as not published.</source>
             <target/>
          </segment>
       </unit>

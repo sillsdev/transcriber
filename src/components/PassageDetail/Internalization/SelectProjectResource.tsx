@@ -10,9 +10,9 @@ import {
   ListItemSecondaryAction,
   IconButton,
   List,
-  ListItem,
   ListItemIcon,
   ListItemText,
+  ListItemButton,
 } from '@mui/material';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { useArtifactCategory, related, mediaFileName } from '../../../crud';
@@ -99,7 +99,9 @@ export const SelectProjectResource = (props: IProps) => {
 
   useEffect(() => {
     getProjectResources().then((res) => {
-      setResouce(res);
+      setResouce(
+        res.sort((a, b) => a.attributes.topic.localeCompare(b.attributes.topic))
+      );
       if (res.length === 0) {
         onOpen && onOpen(false);
       }
@@ -111,7 +113,7 @@ export const SelectProjectResource = (props: IProps) => {
     <div id="selectProjectResource">
       <List component="div">
         {resource.map((r, i) => (
-          <ListItem button key={i} onClick={handleClick(r)} sx={{ m: 4 }}>
+          <ListItemButton key={i} onClick={handleClick(r)} sx={{ m: 4 }}>
             <ListItemIcon>
               {isVisual(r) ? <ShowIcon /> : <AudioIcon />}
             </ListItemIcon>
@@ -132,7 +134,7 @@ export const SelectProjectResource = (props: IProps) => {
                 </IconButton>
               </>
             </ListItemSecondaryAction>
-          </ListItem>
+          </ListItemButton>
         ))}
       </List>
       <ActionRow>

@@ -186,13 +186,17 @@ export function MediaPlayer(props: IProps) {
   };
 
   const durationChange = () => {
-    if (limits?.end) {
-      setPosition(limits?.start);
-      stop.current = Math.round(limits?.end * 10);
-    }
+    //this is called multiple times for some files
     const el = audioRef.current as HTMLMediaElement;
-    if (el?.duration) setDuration(el.duration);
-    onLoaded && onLoaded();
+    if (duration === 0 && el?.duration) {
+      if (limits?.end) {
+        setPosition(limits?.start);
+        if (limits?.end > el.duration - 0.5) stop.current = 0;
+        else stop.current = limits?.end + 0.25;
+      }
+      setDuration(el.duration);
+      onLoaded && onLoaded();
+    }
   };
 
   const handleError = (e: any) => {
@@ -204,7 +208,7 @@ export function MediaPlayer(props: IProps) {
   const handleSegmentStart = () => {
     setPosition(limits?.start ?? 0);
     if (limits?.end) {
-      stop.current = Math.round((limits?.end ?? 0) * 10);
+      stop.current = limits?.end + 0.25;
     }
   };
 
