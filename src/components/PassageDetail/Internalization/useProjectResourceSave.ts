@@ -112,33 +112,33 @@ export const useProjectResourceSave = () => {
             user
           )
         );
+        attr.segments = segments;
         change = true;
       }
 
-      if (attr.topic !== topic) {
+      if (attr.topic.trim() !== topic.trim()) {
         ops.push(
           ...UpdateRecord(
             t,
             {
               ...medResRec,
-              attributes: { ...attr, topic },
+              attributes: { ...attr, topic: topic.trim() },
             } as MediaFileD,
             user
           )
         );
-        const secResRec =
-          i.passage
-            ? sectionResources.find(
-                (r) =>
-                  related(r, 'passage') === i.passage?.id &&
-                  related(r, 'mediafile') === medResRec?.id
-              )
-            : sectionResources.find(
-                (r) =>
-                  related(r, 'section') === i.section.id &&
-                  !related(r, 'passage') &&
-                  related(r, 'mediafile') === medResRec?.id
-              );
+        const secResRec = i.passage
+          ? sectionResources.find(
+              (r) =>
+                related(r, 'passage') === i.passage?.id &&
+                related(r, 'mediafile') === medResRec?.id
+            )
+          : sectionResources.find(
+              (r) =>
+                related(r, 'section') === i.section.id &&
+                !related(r, 'passage') &&
+                related(r, 'mediafile') === medResRec?.id
+            );
         if (secResRec) {
           ops.push(
             ...UpdateRecord(
@@ -217,8 +217,7 @@ export const useProjectResourceSave = () => {
         )
       );
       await memory.update(ops);
-      const secId =
-        i.passage ? related(i.passage, 'section') : i.section.id;
+      const secId = i.passage ? related(i.passage, 'section') : i.section.id;
       const cnt =
         sectionResources.filter((r) => related(r, 'section') === secId).length +
         1;

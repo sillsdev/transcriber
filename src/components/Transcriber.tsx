@@ -295,7 +295,7 @@ export function Transcriber(props: IProps) {
   const stateRef = useRef<string>(state);
   const [transcribing] = useState(
     state === ActivityStates.Transcribing ||
-    state === ActivityStates.TranscribeReady
+      state === ActivityStates.TranscribeReady
   );
 
   const [showSettings, setShowSettings] = useState(false);
@@ -464,7 +464,7 @@ export function Transcriber(props: IProps) {
         (i) =>
           i.attributes &&
           i.attributes.name ===
-          integrationSlug(artifactTypeSlug, offlineOnly) &&
+            integrationSlug(artifactTypeSlug, offlineOnly) &&
           Boolean(i.keys?.remoteId) !== offlineOnly
       );
       if (intfind > -1)
@@ -500,7 +500,7 @@ export function Transcriber(props: IProps) {
         (i) =>
           i.attributes &&
           i.attributes.name ===
-          integrationSlug(artifactTypeSlug, offlineOnly) &&
+            integrationSlug(artifactTypeSlug, offlineOnly) &&
           Boolean(i.keys?.remoteId) !== offlineOnly
       );
       if (intfind > -1)
@@ -600,7 +600,7 @@ export function Transcriber(props: IProps) {
       toolChanged(toolId, true);
       save(
         mediafile.attributes.transcriptionstate ||
-        ActivityStates.TranscribeReady,
+          ActivityStates.TranscribeReady,
         0,
         segmentsRef.current,
         t.pullParatextStatus
@@ -642,9 +642,10 @@ export function Transcriber(props: IProps) {
       } as Project;
       getFontData(rec, offline).then((data) => setProjData(data));
     }
-    const ptCheck = [ArtifactTypeSlug.Retell, ArtifactTypeSlug.QandA].includes(
-      (artifactTypeSlug || '') as ArtifactTypeSlug
-    ) || projType.toLowerCase() !== 'scripture'
+    const ptCheck =
+      [ArtifactTypeSlug.Retell, ArtifactTypeSlug.QandA].includes(
+        (artifactTypeSlug || '') as ArtifactTypeSlug
+      ) || projType.toLowerCase() !== 'scripture';
     if (ptCheck !== noParatext) setNoParatext(ptCheck);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project, projType, artifactTypeSlug]);
@@ -710,11 +711,11 @@ export function Transcriber(props: IProps) {
           memory.keyMap as RecordKeyMap
         ),
         artifactId &&
-        (remoteId(
-          'artifacttype',
-          artifactId,
-          memory.keyMap as RecordKeyMap
-        ) as string),
+          (remoteId(
+            'artifacttype',
+            artifactId,
+            memory.keyMap as RecordKeyMap
+          ) as string),
         errorReporter,
         t.pullParatextStart
       );
@@ -1056,7 +1057,7 @@ export function Transcriber(props: IProps) {
 
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
 
-  const onSegmentChange = (segments: string) => {
+  const onSegmentChange = (segments: string, init: boolean) => {
     segmentsRef.current = segments;
   };
   const onSegmentParamChange = (
@@ -1086,8 +1087,8 @@ export function Transcriber(props: IProps) {
       slug
         ? slug
         : artifactId
-          ? slugFromId(artifactId)
-          : ArtifactTypeSlug.Vernacular
+        ? slugFromId(artifactId)
+        : ArtifactTypeSlug.Vernacular
     );
   }, [slug, artifactId, slugFromId]);
 

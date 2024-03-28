@@ -1049,8 +1049,11 @@ export function PlanSheet(props: IProps) {
               )}
               description={
                 isMovement(currentRowRef.current - 1)
-                  ? t.confirmPublishMovement.replace('{0}', organizedByPlural)
-                  : t.confirmPublishSection.replace('{0}', organizedBy)
+                  ? t.confirmPublishMovement.replaceAll(
+                      '{0}',
+                      organizedByPlural
+                    )
+                  : t.confirmPublishSection.replaceAll('{0}', organizedBy)
               }
               yesResponse={publishConfirm}
               noResponse={publishRefused}

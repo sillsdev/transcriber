@@ -29,7 +29,7 @@ interface IProps {
   suggestedSegments?: string;
   defaultSegParams?: IRegionParams;
   canSetDefaultParams?: boolean;
-  onSegment?: (segment: string) => void;
+  onSegment?: (segment: string, init: boolean) => void;
   onSegmentParamChange?: (params: IRegionParams, teamDefault: boolean) => void;
   onProgress?: (progress: number) => void;
   onSaveProgress?: (progress: number) => void;
@@ -112,7 +112,7 @@ export function PassageDetailPlayer(props: IProps) {
       setSegmentToWhole();
     }
     setDefaultSegments(segmentsRef.current);
-    onSegment && onSegment(segmentsRef.current);
+    onSegment && onSegment(segmentsRef.current, true);
   };
   useEffect(() => {
     //we need a ref for onDuration
@@ -124,7 +124,7 @@ export function PassageDetailPlayer(props: IProps) {
       if (suggestedSegments) {
         segmentsRef.current = suggestedSegments;
         setDefaultSegments(segmentsRef.current);
-        onSegment && onSegment(segmentsRef.current);
+        onSegment && onSegment(segmentsRef.current, true);
       } else setSegmentToWhole();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowSegment, suggestedSegments]);
@@ -215,7 +215,7 @@ export function PassageDetailPlayer(props: IProps) {
       segmentsRef.current.indexOf('},{') === -1
     ) {
       setDefaultSegments(segments);
-      onSegment && onSegment(segments);
+      onSegment && onSegment(segments, true);
     }
     if (!playingRef.current) {
       var segs = parseRegions(segments);
@@ -242,7 +242,7 @@ export function PassageDetailPlayer(props: IProps) {
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
     setDefaultSegments(segments); //now we'll notice if we reset them in SetPlayerSegments
-    onSegment && onSegment(segments);
+    onSegment && onSegment(segments, false);
     if (allowSegment && saveSegments !== undefined) {
       //if I have a parentToolId it will save the segments
       toolChanged(parentToolId ?? toolId);
@@ -337,7 +337,7 @@ export function PassageDetailPlayer(props: IProps) {
                 id="show-transcription"
                 onClick={handleShowTranscription}
               >
-                <ViewIcon fontSize='small' />
+                <ViewIcon fontSize="small" />
               </IconButton>
             ) : (
               <></>

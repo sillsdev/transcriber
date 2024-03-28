@@ -370,9 +370,11 @@ export function useWaveSurferRegions(
       loadingRef.current = false;
       return true;
     }
-    var regarray = Array.isArray(regions.regions)
-      ? regions.regions
-      : JSON.parse(regions.regions);
+    var regarray = (
+      Array.isArray(regions.regions)
+        ? regions.regions
+        : JSON.parse(regions.regions)
+    ).sort((a: any, b: any) => a.start - b.start);
 
     singleRegionRef.current = regarray.length === 1;
     regarray.forEach(function (region: any) {
