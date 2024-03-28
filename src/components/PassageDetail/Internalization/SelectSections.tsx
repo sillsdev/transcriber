@@ -41,8 +41,10 @@ import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
 import { RecordIdentity } from '@orbit/records';
 import { useOrbitData } from '../../../hoc/useOrbitData';
-import { useProjectDefaults } from '../../../crud/useProjectDefaults';
-import { SectionMap } from '../../../context/PlanContext';
+import {
+  projDefSectionMap,
+  useProjectDefaults,
+} from '../../../crud/useProjectDefaults';
 
 const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -115,7 +117,7 @@ export function SelectSections(props: IProps) {
   const [checks, setChecks] = useState<Array<string | number>>([]);
   const { getProjectDefault } = useProjectDefaults();
   const sectionMap = new Map<number, string>(
-    getProjectDefault(SectionMap) ?? []
+    getProjectDefault(projDefSectionMap) ?? []
   );
   const setDimensions = () => {
     setHeightStyle({

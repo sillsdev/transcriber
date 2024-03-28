@@ -78,7 +78,10 @@ import { RecordKeyMap, StandardRecordNormalizer } from '@orbit/records';
 import { useSelector } from 'react-redux';
 import { integrationSelector, sharedSelector } from '../selector';
 import { useDispatch } from 'react-redux';
-import { useProjectDefaults } from '../crud/useProjectDefaults';
+import {
+  projDefExportNumbers,
+  useProjectDefaults,
+} from '../crud/useProjectDefaults';
 
 const panelProps = { flexDirection: 'column' } as SxProps;
 const textFieldProps = { mx: 1, width: '600px' } as SxProps;
@@ -261,9 +264,9 @@ export function IntegrationPanel(props: IProps) {
   const intSave = React.useRef('');
   const { getOrganizedBy } = useOrganizedBy();
   const { getProjectDefault, setProjectDefault } = useProjectDefaults();
-  const ExportNumbers = 'exportNumbers';
+
   const [exportNumbers, setExportNumbers] = useState(
-    JSON.parse(getProjectDefault(ExportNumbers) ?? false) as boolean
+    JSON.parse(getProjectDefault(projDefExportNumbers) ?? false) as boolean
   );
 
   const handleExportSectionNumbers = (
@@ -271,7 +274,7 @@ export function IntegrationPanel(props: IProps) {
   ) => {
     const checked = event.target.checked;
     setExportNumbers(checked);
-    setProjectDefault(ExportNumbers, JSON.stringify(checked));
+    setProjectDefault(projDefExportNumbers, JSON.stringify(checked));
   };
 
   const TranslateSyncError = (err: IAxiosStatus): JSX.Element => {

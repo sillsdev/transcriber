@@ -36,15 +36,15 @@ import {
   usePlan,
   useTypeId,
   useOrgDefaults,
+  orgDefaultLangProps,
 } from '../../crud';
 import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
 import NewProjectGrid from './NewProjectGrid';
-import { restoreScroll, useHome } from '../../utils';
+import { restoreScroll, useHome, useJsonParams } from '../../utils';
 import { RecordIdentity, RecordKeyMap } from '@orbit/records';
-import { ProjectBook } from '../../context/PlanContext';
-import { useProjectDefaults } from '../../crud/useProjectDefaults';
+import { projDefBook } from '../../crud/useProjectDefaults';
 
 const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   minWidth: 275,
@@ -129,14 +129,17 @@ export const AddCard = (props: IProps) => {
   const speakerRef = useRef<string>();
   const { getPlan } = usePlan();
   const getTypeId = useTypeId();
-  const { newProjectDefault } = useProjectDefaults();
+  const { setParam } = useJsonParams();
 
   useEffect(() => {
     if (localStorage.getItem('autoaddProject') !== null && team === null) {
       setPickOpen(true);
       localStorage.removeItem('autoaddProject');
     }
-    const language = getOrgDefault('langProps', team?.id) as typeof initLang;
+    const language = getOrgDefault(
+      orgDefaultLangProps,
+      team?.id
+    ) as typeof initLang;
     setLanguage(language ?? initLang, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -149,7 +152,7 @@ export const AddCard = (props: IProps) => {
     languageRef.current = language;
     setLanguagex(language);
     setProjDef({ ...projDef, ...language });
-    if (!init) setOrgDefault('langProps', language, team?.id);
+    if (!init) setOrgDefault(orgDefaultLangProps, language, team?.id);
   };
 
   useEffect(() => {
@@ -240,7 +243,7 @@ export const AddCard = (props: IProps) => {
       organizedBy,
       book,
     } = values;
-    var defaultParams = newProjectDefault('{}', ProjectBook, book) ?? '{}';
+    var defaultParams = setParam(projDefBook, book, '{}');
     setLanguage({ bcp47, languageName, font, rtl, spellCheck });
     projectCreate(
       {

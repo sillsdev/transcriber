@@ -17,11 +17,11 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoIcon from '@mui/icons-material/Info';
 import { ILanguage, LightTooltip } from '../control';
-import { related, useOrgDefaults, useBible } from '../crud';
-import MediaTitle from '../control/MediaTitle';
+import { related, useOrgDefaults, useBible, orgDefaultLangProps, pubDataCopyright, pubDataLangProps } from '../crud';
 import { useBibleMedia } from '../crud/useBibleMedia';
-import { useOrbitData } from '../hoc/useOrbitData';
 import { useSnackBar } from '../hoc/SnackBar';
+import { useOrbitData } from '../hoc/useOrbitData';
+import MediaTitle from '../control/MediaTitle';
 
 const GridContainerRow = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
@@ -65,10 +65,10 @@ export function PublishExpansion(props: IProps) {
   const [bibleName, setBibleName] = useState('');
   const [description, setDescription] = useState('');
   const [copyright, setCopyright] = useState('');
-  const { getDefault, setDefault } = useOrgDefaults();
+  const { getDefault } = useOrgDefaults();
   const [language, setLanguagex] = React.useState<ILanguage>(initLang);
   const languageRef = useRef<ILanguage>(initLang);
-  const { getPublishingData, setPublishingData } = useBible();
+  const { getPublishingData } = useBible();
   const { getBibleMediaPlan } = useBibleMedia();
   const [mediaplan, setMediaplan] = useState('');
   const { showMessage } = useSnackBar();
@@ -76,7 +76,6 @@ export function PublishExpansion(props: IProps) {
   const setLanguage = (language: ILanguage, init?: boolean) => {
     languageRef.current = language;
     setLanguagex(language);
-    var b = bible ?? ({ attributes: { publishingData: '{}' } } as Bible);
     if (
       init &&
       !bible?.attributes?.iso &&
@@ -85,17 +84,12 @@ export function PublishExpansion(props: IProps) {
     ) {
       setValue('iso', language?.bcp47, init);
       setValue('languageName', language?.languageName, init);
-      setPublishingData('langProps', language, b);
-      setValue('publishingData', b.attributes.publishingData ?? '{}', init);
+      setValue(pubDataLangProps, JSON.stringify(language), init);
     }
     if (!init) {
-      var t = team ?? ({ attributes: { defaultParams: '{}' } } as Organization);
-      setDefault('langProps', language, t);
-      setValue('defaultParams', t.attributes.defaultParams ?? '{}');
       setValue('iso', language?.bcp47 ?? '');
       setValue('languageName', language?.languageName ?? '');
-      setPublishingData('langProps', language, b);
-      setValue('publishingData', b.attributes.publishingData ?? '{}');
+      setValue(pubDataLangProps, JSON.stringify(language), init);
     }
   };
   useEffect(() => {
@@ -113,14 +107,14 @@ export function PublishExpansion(props: IProps) {
       setIsoMediafilex(related(bible, 'isoMediafile') as string);
       setBibleMediafilex(related(bible, 'bibleMediafile') as string);
     }
-    var lang = getPublishingData('langProps', bible);
+    var lang = getPublishingData(pubDataLangProps, bible);
     if (!lang)
       lang = team
-        ? (getDefault('langProps', team) as typeof initLang) ?? initLang
+        ? (getDefault(orgDefaultLangProps, team) as typeof initLang) ?? initLang
         : initLang;
 
     setLanguage(lang, true);
-    setCopyright(getPublishingData('copyright', bible) as string);
+    setCopyright(getPublishingData(pubDataCopyright, bible) as string);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [team, bible]);
 
@@ -158,9 +152,7 @@ export function PublishExpansion(props: IProps) {
   const handleChangeCopyright = (event: any) => {
     const value = event.target.value as string;
     setCopyright(value);
-    var b = bible ?? ({ attributes: { publishingData: '{}' } } as Bible);
-    setPublishingData('copyright', value, b);
-    setValue('publishingData', b.attributes.publishingData ?? '{}');
+    setValue(pubDataCopyright, value);
     return '';
   };
   const onMyRecording = (recording: boolean) => {

@@ -5,7 +5,11 @@ import CompleteIcon from '@mui/icons-material/CheckBoxOutlined';
 import NotCompleteIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { IPassageDetailStepCompleteStrings } from '../../model';
-import { nextPasId } from '../../crud';
+import {
+  nextPasId,
+  orgDefaultWorkflowProgression,
+  useOrgDefaults,
+} from '../../crud';
 import { usePassageNavigate } from './usePassageNavigate';
 import { passageDetailStepCompleteSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -32,7 +36,7 @@ export const PassageDetailStepComplete = () => {
     passageDetailStepCompleteSelector,
     shallowEqual
   );
-
+  const { getOrgDefault } = useOrgDefaults();
   const passageNavigate = usePassageNavigate(() => {
     setView('');
   });
@@ -46,7 +50,11 @@ export const PassageDetailStepComplete = () => {
   const handleToggleComplete = useCallback(async () => {
     const curStatus = complete;
     await setStepComplete(currentstep, !complete);
-    const pasId = nextPasId(section, passage.id, memory);
+    var gotoNextPassage =
+      getOrgDefault(orgDefaultWorkflowProgression) !== 'step';
+    const pasId = gotoNextPassage
+      ? nextPasId(section, passage.id, memory)
+      : undefined;
     if (pasId && pasId !== passage?.keys?.remoteId && !curStatus) {
       rememberCurrentPassage(memory, pasId);
       setView(`/detail/${prjId}/${pasId}`);

@@ -3,11 +3,9 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { useGlobal } from 'reactn';
 import { IResourceState } from '.';
 import Tags, { filteredOptions } from '../../control/Tags';
-import { useOrgDefaults } from '../../crud';
+import { orgDefaultResKw, useOrgDefaults } from '../../crud';
 import { IResourceStrings, ITag } from '../../model';
 import { sharedResourceSelector } from '../../selector';
-
-export const ResKw = 'ResKw';
 
 export const ResourceKeywords = (props: IResourceState) => {
   const { state, setState } = props;
@@ -18,7 +16,7 @@ export const ResourceKeywords = (props: IResourceState) => {
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
 
   React.useEffect(() => {
-    const resKw = getOrgDefault(ResKw, org);
+    const resKw = getOrgDefault(orgDefaultResKw, org);
     if (resKw) {
       setAllKeywords(resKw);
     }

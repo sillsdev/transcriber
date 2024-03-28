@@ -12,15 +12,14 @@ import {
 } from '../model';
 import { findRecord, usePlanType, useRole } from '../crud';
 import { useCheckOnline, useInterval } from '../utils';
-import { useProjectDefaults } from '../crud/useProjectDefaults';
+import {
+  projDefHidePublishing,
+  projDefSectionMap,
+  useProjectDefaults,
+} from '../crud/useProjectDefaults';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import { projButtonsSelector } from '../selector';
-
-export const ProjectHidePublishing = 'hidePublishing';
-export const ProjectFirstMovement = 'firstMovement';
-export const SectionMap = 'sectionMap';
-export const ProjectBook = 'book';
 
 export interface IRowData {}
 
@@ -87,11 +86,13 @@ const PlanProvider = (props: IProps) => {
   const checkOnline = useCheckOnline();
 
   const getSectionMap = () => {
-    return getProjectDefault(SectionMap) as [number, string][] | undefined;
+    return getProjectDefault(projDefSectionMap) as
+      | [number, string][]
+      | undefined;
   };
 
   const setSectionArr = (newArr: [number, string][]) => {
-    setProjectDefault(SectionMap, newArr);
+    setProjectDefault(projDefSectionMap, newArr);
   };
 
   useEffect(() => {
@@ -108,13 +109,13 @@ const PlanProvider = (props: IProps) => {
     if (projRec) {
       const shared = projRec?.attributes?.isPublic || false;
       const hidePublishing =
-        (getProjectDefault(ProjectHidePublishing) ?? true) ||
+        (getProjectDefault(projDefHidePublishing) ?? true) ||
         (isOffline && !isDeveloper) ||
         shared;
 
       if (
         shared !== state.shared ||
-        hidePublishing !== state[ProjectHidePublishing]
+        hidePublishing !== state[projDefHidePublishing]
       ) {
         setState((state) => ({
           ...state,
@@ -132,7 +133,7 @@ const PlanProvider = (props: IProps) => {
 
   const togglePublishing = () => {
     const { hidePublishing } = state;
-    setProjectDefault(ProjectHidePublishing, !hidePublishing);
+    setProjectDefault(projDefHidePublishing, !hidePublishing);
     setState((state) => ({ ...state, hidePublishing: !hidePublishing }));
   };
 

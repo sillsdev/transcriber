@@ -8,10 +8,15 @@ import {
 } from '../model/baseModel';
 import related from './related';
 import { findRecord } from './tryFindRecord';
+import { useJsonParams } from '../utils';
+
+export const pubDataCopyright = 'copyright';
+export const pubDataLangProps = 'langProps';
 
 export const useBible = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const { getParam, setParam } = useJsonParams();
 
   const getBible = (bibleId: string) => {
     let bibles = (
@@ -137,16 +142,14 @@ export const useBible = () => {
 
   const getPublishingData = (label: string, bible?: Bible) => {
     if (!bible) return undefined;
-    const json = JSON.parse(bible.attributes?.publishingData ?? '{}');
-    if (json[label])
-      if (typeof json[label] === 'string') return JSON.parse(json[label]);
-      else return json[label];
-    return undefined;
+    return getParam(label, bible.attributes?.publishingData);
   };
   const setPublishingData = (label: string, value: any, bible: Bible) => {
-    const json = JSON.parse(bible.attributes.publishingData ?? '{}');
-    json[label] = JSON.stringify(value);
-    bible.attributes.publishingData = JSON.stringify(json);
+    bible.attributes.publishingData = setParam(
+      label,
+      value,
+      bible.attributes.publishingData
+    );
   };
   return {
     getBible,

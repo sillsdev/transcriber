@@ -1,12 +1,19 @@
 import { useState, useEffect } from 'react';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
-import { parseRef, related, useOrgDefaults } from '../../../crud';
+import {
+  orgDefaultKtExcludeTag,
+  orgDefaultKtLang,
+  orgDefaultSortTag,
+  parseRef,
+  related,
+  useOrgDefaults,
+} from '../../../crud';
 import BigDialog from '../../../hoc/BigDialog';
 import { IKeyTerm, ILocalTerm, OrgKeytermTarget } from '../../../model';
 import { SortBy, useKeyTerms } from './useKeyTerms';
 import { cleanFileName } from '../../../utils';
 import KeyTermDetail from './KeyTermDetail';
-import KeyTermExclude, { ExcludeArray, KtExcludeTag } from './KeyTermExclude';
+import KeyTermExclude, { ExcludeArray } from './KeyTermExclude';
 import KeyTermsSort from './KeyTermSort';
 import KeyTermTable, { IKeyTermRow } from './KeyTermTable';
 import { useSelector, shallowEqual } from 'react-redux';
@@ -16,9 +23,6 @@ import { useGlobal } from 'reactn';
 import KeyTermSetting from './KeyTermSetting';
 import { Box } from '@mui/material';
 import { useOrbitData } from '../../../hoc/useOrbitData';
-
-export const SortTag = 'ktSort';
-export const KtLang = 'ktLang';
 
 const KeyTerms = () => {
   const keyTermTargets = useOrbitData<OrgKeytermTarget[]>('orgkeytermtarget');
@@ -57,7 +61,7 @@ const KeyTerms = () => {
 
   const handleSortBy = (by: SortBy) => {
     setSortBy(by);
-    setOrgDefault(SortTag, by);
+    setOrgDefault(orgDefaultSortTag, by);
   };
 
   const handleExclude = (excl: string[]) => {
@@ -75,7 +79,7 @@ const KeyTerms = () => {
         }
       }
     });
-    setOrgDefault(KtExcludeTag, locExcl);
+    setOrgDefault(orgDefaultKtExcludeTag, locExcl);
   };
 
   const handleTargetDelete = (id: string) => {
@@ -85,26 +89,26 @@ const KeyTerms = () => {
   const handleVisibleToggle = (id: number) => () => {
     if (isExcluded(id)) {
       setOrgDefault(
-        KtExcludeTag,
+        orgDefaultKtExcludeTag,
         excluded.filter((v) => v !== id)
       );
     } else {
-      setOrgDefault(KtExcludeTag, excluded.concat(id));
+      setOrgDefault(orgDefaultKtExcludeTag, excluded.concat(id));
     }
     excludeToggle(id);
   };
 
   const handleLang = (code: string) => {
     setLocale(code);
-    setOrgDefault(KtLang, code);
+    setOrgDefault(orgDefaultKtLang, code);
   };
 
   useEffect(() => {
-    const by = getOrgDefault(SortTag) as SortBy;
+    const by = getOrgDefault(orgDefaultSortTag) as SortBy;
     setSortBy(by);
-    const ktLang = getOrgDefault(KtLang) as string;
+    const ktLang = getOrgDefault(orgDefaultKtLang) as string;
     setLocale(ktLang);
-    const excl = getOrgDefault(KtExcludeTag) as ExcludeArray;
+    const excl = getOrgDefault(orgDefaultKtExcludeTag) as ExcludeArray;
     if (excl) initExcluded(excl);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passage.id]);

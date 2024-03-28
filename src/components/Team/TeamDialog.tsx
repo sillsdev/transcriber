@@ -21,12 +21,22 @@ import {
 } from '../../model';
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
-import { defaultWorkflow, related, useBible } from '../../crud';
+import {
+  defaultWorkflow,
+  orgDefaultLangProps,
+  orgDefaultWorkflowProgression,
+  pubDataCopyright,
+  pubDataLangProps,
+  related,
+  useBible,
+  useOrgDefaults,
+} from '../../crud';
 import PublishExpansion from '../PublishExpansion';
 import { UnsavedContext } from '../../context/UnsavedContext';
-import { useCanPublish, waitForIt } from '../../utils';
+import { useCanPublish, useJsonParams, waitForIt } from '../../utils';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity } from '@orbit/records';
+import { Options } from '../../control';
 
 export interface ITeamDialog {
   team: OrganizationD;
@@ -56,6 +66,7 @@ export function TeamDialog(props: IProps) {
   const bibleMediafileRef = useRef('');
   const isoMediafileRef = useRef('');
   const [publishingData, setPublishingData] = React.useState('{}');
+  const { setParam } = useJsonParams();
   const [changed, setChanged] = React.useState(false);
   const ctx = React.useContext(TeamContext);
   const { cardStrings } = ctx.state;
@@ -72,7 +83,14 @@ export function TeamDialog(props: IProps) {
     useContext(UnsavedContext).state;
   const { getBible, getBibleOwner, getOrgBible } = useBible();
   const { canPublish } = useCanPublish();
-
+  const workflowOptions = [
+    t.workflowProgressionPassage,
+    t.workflowProgressionStep,
+  ];
+  const [workflowProgression, setWorkflowProgression] = useState(
+    t.workflowProgressionPassage
+  );
+  const { getDefault } = useOrgDefaults();
   const reset = () => {
     setName('');
     setDefaultParams('');
@@ -84,6 +102,8 @@ export function TeamDialog(props: IProps) {
     setBibleIdError('');
     setBible(undefined);
     setDescription('');
+    setPublishingData('');
+    setWorkflowProgression(t.workflowProgressionPassage);
     onOpen && onOpen(false);
     Object.keys(toolsChanged).forEach((t) => clearRequested(t));
   };
@@ -125,15 +145,22 @@ export function TeamDialog(props: IProps) {
           mode === DialogMode.edit && values
             ? values.team
             : ({ attributes: {} } as OrganizationD);
-
+        const df = setParam(
+          orgDefaultWorkflowProgression,
+          workflowProgression === t.workflowProgressionStep
+            ? 'step'
+            : 'passage',
+          defaultParams
+        );
         const team = {
           ...current,
           attributes: {
             ...current.attributes,
             name,
-            defaultParams,
+            defaultParams: df,
           },
         } as OrganizationD;
+
         let newbible: BibleD | undefined = undefined;
         if (bibleId.length > 0 && bibleIdError === '') {
           newbible =
@@ -180,9 +207,6 @@ export function TeamDialog(props: IProps) {
       case 'bibleName':
         setBibleName(value);
         break;
-      case 'defaultParams':
-        setDefaultParams(value);
-        break;
       case 'description':
         setDescription(value);
         break;
@@ -192,8 +216,12 @@ export function TeamDialog(props: IProps) {
       case 'isoMediafile':
         setIsoMediafile(value);
         break;
-      case 'publishingData':
-        setPublishingData(value);
+      case pubDataCopyright:
+        setPublishingData(setParam(pubDataCopyright, value, publishingData));
+        break;
+      case pubDataLangProps:
+        setDefaultParams(setParam(orgDefaultLangProps, value, defaultParams));
+        setPublishingData(setParam(pubDataLangProps, value, publishingData));
         break;
       default:
         return;
@@ -233,7 +261,16 @@ export function TeamDialog(props: IProps) {
     if (isOpen) {
       if (!defaultParams) {
         setDefaultParams(values?.team.attributes?.defaultParams || '{}');
+
         if (values) {
+          if (values.team) {
+            var wfp = getDefault(orgDefaultWorkflowProgression, values?.team);
+            setWorkflowProgression(
+              wfp === 'step'
+                ? t.workflowProgressionStep
+                : t.workflowProgressionPassage
+            );
+          }
           setName(values.team.attributes?.name || '');
           setBible(getOrgBible(values.team.id));
         }
@@ -286,6 +323,11 @@ export function TeamDialog(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bible]);
 
+  const onChange = (val: string) => {
+    setWorkflowProgression(val);
+    setChanged(true);
+  };
+
   return (
     <div>
       <Dialog
@@ -310,6 +352,12 @@ export function TeamDialog(props: IProps) {
             required
             onChange={handleChange}
             fullWidth
+          />
+          <Options
+            label={t.workflowProgression}
+            defaultValue={workflowProgression}
+            options={workflowOptions}
+            onChange={onChange}
           />
           {mode !== DialogMode.add && canPublish && (
             <PublishExpansion
