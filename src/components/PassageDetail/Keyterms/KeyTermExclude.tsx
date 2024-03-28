@@ -28,7 +28,6 @@ const StyledLabel = styled(InputLabel)<InputLabelProps>(() => ({
   },
 }));
 
-export const KtExcludeTag = 'ktExcl';
 export type TermId = string | number;
 export type ExcludeArray = TermId[];
 

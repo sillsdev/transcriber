@@ -28,8 +28,7 @@ import {
   ResourceLink,
 } from '.';
 import { useGlobal } from 'reactn';
-import { useOrgDefaults } from '../../crud';
-import { ResKw } from './ResourceKeywords';
+import { orgDefaultResKw, useOrgDefaults } from '../../crud';
 import { NoteTitle } from './NoteTitle';
 import SearchIcon from '@mui/icons-material/Search';
 import SelectNote from './SelectNote';
@@ -160,13 +159,13 @@ export default function ResourceOverview(props: IProps) {
 
   React.useEffect(() => {
     if (canSetOrgDefault) {
-      const allKw = getOrgDefault(ResKw) as string | undefined;
+      const allKw = getOrgDefault(orgDefaultResKw) as string | undefined;
       if (allKw || keywords) {
         const allList = allKw ? allKw?.split('|') : [];
         const kwList = keywords ? keywords.split('|') : [];
         const allSet = new Set(allList.concat(kwList));
         const newList = Array.from(allSet).sort().join('|');
-        if (newList !== allKw) setOrgDefault(ResKw, newList);
+        if (newList !== allKw) setOrgDefault(orgDefaultResKw, newList);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

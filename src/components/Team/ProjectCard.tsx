@@ -38,14 +38,17 @@ import {
 } from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
 import OfflineIcon from '@mui/icons-material/OfflinePin';
-import { useHome } from '../../utils';
+import { useHome, useJsonParams } from '../../utils';
 import { copyComplete, CopyProjectProps } from '../../store';
 import { TokenContext } from '../../context/TokenProvider';
 import { useSnackBar } from '../../hoc/SnackBar';
 import CategoryTabs from './CategoryTabs';
 import { RecordKeyMap } from '@orbit/records';
-import { useProjectDefaults } from '../../crud/useProjectDefaults';
-import { SectionMap, ProjectBook } from '../../context/PlanContext';
+import {
+  projDefBook,
+  projDefSectionMap,
+  useProjectDefaults,
+} from '../../crud/useProjectDefaults';
 
 const ProjectCardRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -134,11 +137,12 @@ export const ProjectCard = (props: IProps) => {
   const [deleteItem, setDeleteItem] = useState<VProjectD>();
   const [open, setOpen] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
-  const { getProjectDefault, newProjectDefault } = useProjectDefaults();
+  const { getProjectDefault } = useProjectDefaults();
   const t = cardStrings;
   const tpb = projButtonStrings;
   const { userIsOrgAdmin } = useRole();
   const { leaveHome } = useHome();
+  const { setParam } = useJsonParams();
 
   const handleSelect = (project: VProjectD) => () => {
     loadProject(project);
@@ -259,12 +263,11 @@ export const ProjectCard = (props: IProps) => {
       organizedBy,
       book,
     } = values;
-    var defaultParams = getProjectDefault(
-      ProjectBook,
-      project as any as ProjectD
+    var defaultParams = setParam(
+      projDefBook,
+      book,
+      getProjectDefault(projDefBook, project as any as ProjectD)
     );
-    var newParams = newProjectDefault(defaultParams, ProjectBook, book);
-    if (newParams) defaultParams = newParams;
     projectUpdate({
       ...project,
       attributes: {
@@ -303,7 +306,7 @@ export const ProjectCard = (props: IProps) => {
       name: attr.name,
       description: attr.description || '',
       type: attr.type,
-      book: getProjectDefault(ProjectBook, project as any as ProjectD) || '',
+      book: getProjectDefault(projDefBook, project as any as ProjectD) || '',
       bcp47: attr.language,
       languageName: attr.languageName || '',
       isPublic: attr.isPublic,
@@ -408,7 +411,7 @@ export const ProjectCard = (props: IProps) => {
           {...props}
           projectPlans={projectPlans(projectId)}
           planColumn={true}
-          sectionArr={getProjectDefault(SectionMap) ?? []}
+          sectionArr={getProjectDefault(projDefSectionMap) ?? []}
         />
       </BigDialog>
       <BigDialog

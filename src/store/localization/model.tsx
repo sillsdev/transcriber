@@ -176,6 +176,9 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "teamSettings": string;
     "transcriber": string;
     "uploadProgress": string;
+    "workflowProgression": string;
+    "workflowProgressionPassage": string;
+    "workflowProgressionStep": string;
     "yes": string;
 };
 

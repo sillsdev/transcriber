@@ -191,6 +191,9 @@ const initialState = {
 			"teamSettings": "Team Settings",
 			"transcriber": "Transcribing",
 			"uploadProgress": "Upload Progress",
+			"workflowProgression": "Workflow Progression",
+			"workflowProgressionPassage": "Next Passage",
+			"workflowProgressionStep": "Next Step",
 			"yes": "Yes",
 		}
 	}),

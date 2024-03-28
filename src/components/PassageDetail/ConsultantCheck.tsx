@@ -20,6 +20,7 @@ import {
   useArtifactType,
   useOrgDefaults,
   useUpdateRecord,
+  orgDefaultConsCheckComp,
 } from '../../crud';
 import ConsultantCheckReview from './ConsultantCheckReview';
 import { ActionRow, AltButton, GrowingDiv, PriButton } from '../../control';
@@ -29,8 +30,6 @@ import BigDialog from '../../hoc/BigDialog';
 import ConsultantCheckCompare from './ConsultantCheckCompare';
 import MediaPlayer from '../MediaPlayer';
 import { useSnackBar } from '../../hoc/SnackBar';
-
-const ConsCheckComp = 'ConsultantCheckCompare';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -94,7 +93,7 @@ export function ConsultantCheck({ width }: IProps) {
 
   const handleSetCompare = (newCompare: string[]) => {
     setCompare(newCompare as ArtifactTypeSlug[]);
-    setOrgDefault(ConsCheckComp, newCompare);
+    setOrgDefault(orgDefaultConsCheckComp, newCompare);
     setOpen(false);
   };
 
@@ -178,7 +177,7 @@ export function ConsultantCheck({ width }: IProps) {
         }
       } catch (err) {}
       setApproved(newApproved);
-      const newCompare = getOrgDefault(ConsCheckComp);
+      const newCompare = getOrgDefault(orgDefaultConsCheckComp);
       if (newCompare) {
         setCompare(newCompare as ArtifactTypeSlug[]);
       }

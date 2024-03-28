@@ -3,7 +3,13 @@ import { useGlobal } from 'reactn';
 import { ProjectD, RoleNames } from '../model';
 import { UpdateRecord } from '../model/baseModel';
 import { findRecord } from './tryFindRecord';
+import { useJsonParams } from '../utils';
 
+export const projDefExportNumbers = 'exportNumbers';
+export const projDefSectionMap = 'sectionMap';
+export const projDefBook = 'book';
+export const projDefHidePublishing = 'hidePublishing';
+export const projDefFirstMovement = 'firstMovement';
 export const useProjectDefaults = () => {
   const [project] = useGlobal('project');
   const [orgRole] = useGlobal('orgRole');
@@ -11,45 +17,20 @@ export const useProjectDefaults = () => {
   const [memory] = useGlobal('memory');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [offline] = useGlobal('offline');
+  const { getParam, setParam } = useJsonParams();
 
   const getProjectDefault = (label: string, proj?: ProjectD) => {
     if (!proj) proj = findRecord(memory, 'project', project) as ProjectD;
-    const json = JSON.parse(proj?.attributes.defaultParams ?? '{}');
-    if (json.hasOwnProperty(label)) return JSON.parse(json[label]);
-    return undefined;
+    return getParam(label, proj?.attributes?.defaultParams);
   };
 
-  const newProjectDefault = (
-    defaultParams: string,
-    label: string,
-    value: any
-  ) => {
-    const json = JSON.parse(defaultParams ?? '{}');
-    var saveIt = false;
-    if (value !== undefined) {
-      var tmp = JSON.stringify(value);
-      if (tmp !== json[label]) {
-        saveIt = true;
-        json[label] = tmp;
-      }
-    } else if ((json[label] ?? '') !== '') {
-      delete json[label];
-      saveIt = true;
-    }
-    if (saveIt) {
-      return JSON.stringify(json);
-    }
-  };
   const setProjectDefault = (label: string, value: any) => {
     const proj = findRecord(memory, 'project', project) as ProjectD;
     if (!proj || !proj.attributes) return;
-    var newDefaultParams = newProjectDefault(
-      proj.attributes.defaultParams,
-      label,
-      value
-    );
-    if (newDefaultParams) {
-      proj.attributes.defaultParams = newDefaultParams;
+    var newdefault = setParam(label, value, proj.attributes.defaultParams);
+    var saveIt = newdefault !== proj.attributes.defaultParams;
+    if (saveIt) {
+      proj.attributes.defaultParams = newdefault;
       memory.update((t) => UpdateRecord(t, proj, user));
     }
   };
@@ -70,7 +51,6 @@ export const useProjectDefaults = () => {
   return {
     getProjectDefault,
     setProjectDefault,
-    newProjectDefault,
     canSetProjectDefault,
     getLocalDefault,
     setLocalDefault,

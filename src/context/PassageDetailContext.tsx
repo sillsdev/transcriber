@@ -79,8 +79,10 @@ import {
   RecordTransformBuilder,
 } from '@orbit/records';
 import { useOrbitData } from '../hoc/useOrbitData';
-import { useProjectDefaults } from '../crud/useProjectDefaults';
-import { SectionMap } from './PlanContext';
+import {
+  projDefSectionMap,
+  useProjectDefaults,
+} from '../crud/useProjectDefaults';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -1086,7 +1088,7 @@ const PassageDetailProvider = (props: IProps) => {
           setDiscussionMarkers,
           handleHighlightDiscussion,
           forceRefresh,
-          sectionArr: getProjectDefault(SectionMap) ?? [],
+          sectionArr: getProjectDefault(projDefSectionMap) ?? [],
         },
         setState,
       }}

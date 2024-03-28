@@ -83,7 +83,7 @@ import StickyRedirect from '../StickyRedirect';
 import Uploader from '../Uploader';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import { UpdateRecord, UpdateRelatedRecord } from '../../model/baseModel';
-import { PlanContext, ProjectFirstMovement } from '../../context/PlanContext';
+import { PlanContext } from '../../context/PlanContext';
 import stringReplace from 'react-string-replace';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
@@ -91,7 +91,10 @@ import ResourceTabs from '../ResourceEdit/ResourceTabs';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { ISTFilterState } from './filterMenu';
-import { useProjectDefaults } from '../../crud/useProjectDefaults';
+import {
+  projDefFirstMovement,
+  useProjectDefaults,
+} from '../../crud/useProjectDefaults';
 import {
   planSheetSelector,
   scriptureTableSelector,
@@ -524,7 +527,7 @@ export function ScriptureTable(props: IProps) {
       while (
         ++endRowIndex < myWorkflow.length &&
         !isSectionRow(myWorkflow[endRowIndex])
-      ) { }
+      ) {}
       while (i > endRowIndex) {
         myWorkflow = swapRows(myWorkflow, i, i - 1);
         i--;
@@ -1204,7 +1207,7 @@ export function ScriptureTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project, defaultFilterState]);
   useEffect(() => {
-    var fm = getProjectDefault(ProjectFirstMovement);
+    var fm = getProjectDefault(projDefFirstMovement);
     setFirstMovement(fm ?? 1);
     setProjFirstMovement(fm ?? 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1251,7 +1254,7 @@ export function ScriptureTable(props: IProps) {
     const handleSave = async () => {
       const numChanges = shtNumChanges(sheetRef.current, prevSave);
       if (firstMovement !== projFirstMovement)
-        setProjectDefault(ProjectFirstMovement, firstMovement);
+        setProjectDefault(projDefFirstMovement, firstMovement);
       if (numChanges === 0) return;
       for (const ws of sheetRef.current) {
         if (ws.deleted) await doDetachMedia(ws);
@@ -1908,8 +1911,8 @@ export function ScriptureTable(props: IProps) {
           shared
             ? resStr.resourceEdit
             : isNote
-              ? resStr.noteDetails
-              : ts.versionHistory
+            ? resStr.noteDetails
+            : ts.versionHistory
         }
         isOpen={versionRow !== undefined}
         onOpen={handleVerHistClose}

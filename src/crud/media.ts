@@ -92,7 +92,7 @@ export const getVernacularMediaRec = (passageId: string, memory: Memory) => {
 };
 
 export const getMediaShared = (passageId: string, memory: Memory) => {
-  const mediaRecs = getAllMediaRecs(passageId, memory);
+  const mediaRecs = getAllMediaRecs(passageId, memory, null);
   return mediaRecs.length > 0
     ? mediaRecs[0].attributes.readyToShare
       ? IMediaShare.Latest

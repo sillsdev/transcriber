@@ -1032,6 +1032,27 @@
                <context context-type="sourcefile">AddCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.workflowProgression">
+            <source>Workflow Progression</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.workflowProgressionPassage">
+            <source>Next Passage</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.workflowProgressionStep">
+            <source>Next Step</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.yes">
             <source>Yes</source>
             <target/>

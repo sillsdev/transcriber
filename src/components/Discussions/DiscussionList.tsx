@@ -13,7 +13,7 @@ import {
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { getMediaInPlans, related, useRole, VernacularTag } from '../../crud';
+import { getMediaInPlans, orgDefaultDiscussionFilter, related, useRole, VernacularTag } from '../../crud';
 import {
   Discussion,
   DiscussionD,
@@ -164,13 +164,13 @@ export function DiscussionList() {
   useEffect(() => {
     if (teamDefault && filterState !== orgFilterState) {
       setOrgFilterState(filterState);
-      setOrgDefault('discussionFilter', filterState);
+      setOrgDefault(orgDefaultDiscussionFilter, filterState);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamDefault, filterState]);
 
   useEffect(() => {
-    var def = getOrgDefault('discussionFilter');
+    var def = getOrgDefault(orgDefaultDiscussionFilter);
     if (def) {
       setFilterStatex(def);
       setOrgFilterState(def);

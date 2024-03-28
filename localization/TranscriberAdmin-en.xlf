@@ -886,6 +886,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.workflowProgression">
+         <segment>
+            <source>Workflow Progression</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.workflowProgressionPassage">
+         <segment>
+            <source>Next Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.workflowProgressionStep">
+         <segment>
+            <source>Next Step</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.yes">
          <segment>
             <source>Yes</source>
