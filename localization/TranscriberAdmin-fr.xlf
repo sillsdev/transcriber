@@ -520,7 +520,7 @@
       <unit id="audacityManager.tip">
          <segment>
             <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
-            <target>Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur BROWSE. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CREATE.</target>
+            <target>Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur BROWSE. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CRÉER.</target>
          </segment>
       </unit>
       <unit id="audacityManager.title">
@@ -563,6 +563,12 @@
          <segment>
             <source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
             <target>La Bible Id existe déjà. Veuillez contacter le support si vous avez besoin de travailler sur cette Bible.</target>
+         </segment>
+      </unit>
+      <unit id="cards.bibleidformat">
+         <segment>
+            <source>Bible Id must begin with the language code and version (six letters).</source>
+            <target>L'identifiant biblique doit commencer par le code de la langue et la version (six lettres).</target>
          </segment>
       </unit>
       <unit id="cards.cancel">
@@ -859,6 +865,12 @@
             <target>Progression du téléchargement</target>
          </segment>
       </unit>
+      <unit id="cards.workflowProgression">
+         <segment>
+            <source>Workflow Progression</source>
+            <target>Progression du flux de travail</target>
+         </segment>
+      </unit>
       <unit id="cards.yes">
          <segment>
             <source>Yes</source>
@@ -917,6 +929,12 @@
          <segment>
             <source>Chapter Number</source>
             <target>Numéro de chapitre</target>
+         </segment>
+      </unit>
+      <unit id="category.general">
+         <segment>
+            <source>General Note</source>
+            <target>Note générale</target>
          </segment>
       </unit>
       <unit id="commentCard.approve">
@@ -1420,7 +1438,7 @@
       <unit id="electronImport.newerVersion">
          <segment>
             <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
-            <target>Ce fichier a été exporté avec une version plus récente du programme. Vous devez télécharger la dernière version avant de procéder à l'importation ! Si vous continuez, il se peut que certaines données ne soient pas importées correctement.</target>
+            <target>Ce fichier a été exporté avec une version plus récente du programme. Vous devriez télécharger la dernière version avant de l'importer ! Si vous continuez, il se peut que certaines données ne soient pas importées correctement.</target>
          </segment>
       </unit>
       <unit id="electronImport.project">
@@ -3325,6 +3343,12 @@
             <target>Lecture / Pause</target>
          </segment>
       </unit>
+      <unit id="mediaTitle.record">
+         <segment>
+            <source>Record</source>
+            <target>Enregistrer</target>
+         </segment>
+      </unit>
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>
@@ -3567,8 +3591,8 @@
       </unit>
       <unit id="passageDetailArtifacts.allLevel">
          <segment>
-            <source>All Resources</source>
-            <target>Toutes les ressources</target>
+            <source>All {0}</source>
+            <target>Tout {0}</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.allResources">
@@ -3579,8 +3603,8 @@
       </unit>
       <unit id="passageDetailArtifacts.bookLevel">
          <segment>
-            <source>Resources for the Book</source>
-            <target>Ressources pour le livre</target>
+            <source>{0} for the Book</source>
+            <target>{0} pour le livre</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.bookResource">
@@ -3603,8 +3627,8 @@
       </unit>
       <unit id="passageDetailArtifacts.chapterLevel">
          <segment>
-            <source>Resources for the Chapter</source>
-            <target>Ressources pour le chapitre</target>
+            <source>{0} for the Chapter</source>
+            <target>{0} pour le chapitre</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.chooseLevel">
@@ -3703,6 +3727,12 @@
             <target>Note</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.notes">
+         <segment>
+            <source>Notes</source>
+            <target>Notes</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.passageResource">
          <segment>
             <source>Passage</source>
@@ -3754,6 +3784,12 @@
       <unit id="passageDetailArtifacts.resource">
          <segment>
             <source>Resource</source>
+            <target>Ressources</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.resources">
+         <segment>
+            <source>Resources</source>
             <target>Ressources</target>
          </segment>
       </unit>
@@ -3867,8 +3903,8 @@
       </unit>
       <unit id="passageDetailArtifacts.verseLevel">
          <segment>
-            <source>Resources for verses in this passage</source>
-            <target>Ressources pour les versets de ce passage</target>
+            <source>{0} for verses in this passage</source>
+            <target>{0} pour les versets de ce passage</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.version">
@@ -4003,6 +4039,12 @@
             <target>Livre amical</target>
          </segment>
       </unit>
+      <unit id="passageType.CHNUM">
+         <segment>
+            <source>Chapter number</source>
+            <target>Numéro de chapitre</target>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4096,7 +4138,7 @@
       <unit id="permission.adminTip">
          <segment>
             <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target>Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur d'équipe ? Les membres de ce groupe pourront effectuer n'importe quelle étape, même si elle est assignée à un groupe dont ils ne font pas partie.</target>
+            <target>Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur d'équipe ? Les membres de ce groupe pourront effectuer n'importe quelle étape, même si elle est attribuée à un groupe dont ils ne font pas partie.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4273,6 +4315,12 @@
             <target>Publier {0}</target>
          </segment>
       </unit>
+      <unit id="planSheet.confirmPublishMovement">
+         <segment>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this Movement will be marked as published. If you have previously published and now choose 'Not Published', the {0} and passages and notes will be marked as not published.</source>
+            <target>Si vous choisissez de publier, le {0} et la dernière version de tous les passages et notes dans tous les {0} de ce mouvement seront marqués comme publiés. Si vous avez déjà publié et que vous choisissez maintenant de ne pas publier, les {0} et les passages et notes seront marqués comme non publiés.</target>
+         </segment>
+      </unit>
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
@@ -4289,6 +4337,12 @@
          <segment>
             <source>Graphic</source>
             <target>Graphique</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.hidePublishing">
+         <segment>
+            <source>Hide Publishing Information</source>
+            <target>Masquer les informations de publication</target>
          </segment>
       </unit>
       <unit id="planSheet.nonNumber">
@@ -4755,8 +4809,14 @@
       </unit>
       <unit id="publishLevel.none">
          <segment>
-            <source>Not Published</source>
-            <target>Non publié</target>
+            <source>Not Published - not visible in publishing app</source>
+            <target>Non publié - non visible dans l'application de publication</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.beta">
+         <segment>
+            <source>Beta - only visible to users subscribed to app beta channel</source>
+            <target>Bêta - visible uniquement par les utilisateurs abonnés au canal bêta de l'application</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -4841,6 +4901,12 @@
          <segment>
             <source>Link is not a correctly formatted URL</source>
             <target>Le lien n'est pas une URL correctement formatée</target>
+         </segment>
+      </unit>
+      <unit id="resource.noteDetails">
+         <segment>
+            <source>Note Details</source>
+            <target>Détails de la note</target>
          </segment>
       </unit>
       <unit id="resource.overview">
@@ -6661,6 +6727,12 @@
             <target>Editor Settings</target>
          </segment>
       </unit>
+      <unit id="vProject.errExtrasBookLen">
+         <segment>
+            <source>Book must be 3 characters</source>
+            <target>Le livre doit comporter 3 caractères</target>
+         </segment>
+      </unit>
       <unit id="vProject.flat">
          <segment>
             <source>Flat</source>
@@ -6928,7 +7000,7 @@
       <unit id="welcome.setupTeamTip">
          <segment>
             <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-            <target>Configurez le projet audio en divisant le travail en passages qui peuvent être assignés à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
+            <target>Configurez le projet audio, en divisant le travail en passages qui peuvent être assignés à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
          </segment>
       </unit>
       <unit id="welcome.team">

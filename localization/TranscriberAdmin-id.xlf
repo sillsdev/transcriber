@@ -565,6 +565,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.bibleidformat">
+         <segment>
+            <source>Bible Id must begin with the language code and version (six letters).</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
@@ -859,6 +865,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.workflowProgression">
+         <segment>
+            <source>Workflow Progression</source>
+            <target>Perkembangan Alur Kerja</target>
+         </segment>
+      </unit>
       <unit id="cards.yes">
          <segment>
             <source>Yes</source>
@@ -916,6 +928,12 @@
       <unit id="category.chapternumber">
          <segment>
             <source>Chapter Number</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.general">
+         <segment>
+            <source>General Note</source>
             <target/>
          </segment>
       </unit>
@@ -3325,6 +3343,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTitle.record">
+         <segment>
+            <source>Record</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>
@@ -3567,8 +3591,8 @@
       </unit>
       <unit id="passageDetailArtifacts.allLevel">
          <segment>
-            <source>All Resources</source>
-            <target>Semua Sumber Daya</target>
+            <source>All {0}</source>
+            <target>Semua {0}</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.allResources">
@@ -3579,8 +3603,8 @@
       </unit>
       <unit id="passageDetailArtifacts.bookLevel">
          <segment>
-            <source>Resources for the Book</source>
-            <target>Sumber Daya untuk Buku</target>
+            <source>{0} for the Book</source>
+            <target>{0} untuk Buku</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.bookResource">
@@ -3603,8 +3627,8 @@
       </unit>
       <unit id="passageDetailArtifacts.chapterLevel">
          <segment>
-            <source>Resources for the Chapter</source>
-            <target>Sumber Daya untuk Bab</target>
+            <source>{0} for the Chapter</source>
+            <target>{0} untuk Bab</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.chooseLevel">
@@ -3703,6 +3727,12 @@
             <target>Catatan</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.notes">
+         <segment>
+            <source>Notes</source>
+            <target>Catatan</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.passageResource">
          <segment>
             <source>Passage</source>
@@ -3755,6 +3785,12 @@
          <segment>
             <source>Resource</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.resources">
+         <segment>
+            <source>Resources</source>
+            <target>Sumber-sumber</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.resourcesDeleted">
@@ -3867,8 +3903,8 @@
       </unit>
       <unit id="passageDetailArtifacts.verseLevel">
          <segment>
-            <source>Resources for verses in this passage</source>
-            <target>Sumber-sumber untuk ayat-ayat dalam bagian ini</target>
+            <source>{0} for verses in this passage</source>
+            <target>{0} untuk ayat-ayat dalam bagian ini</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.version">
@@ -4003,6 +4039,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageType.CHNUM">
+         <segment>
+            <source>Chapter number</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4096,7 +4138,7 @@
       <unit id="permission.adminTip">
          <segment>
             <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target>Apakah kita memerlukan grup ini? Atau hanya menggunakan admin tim? Orang-orang di grup ini akan dapat melakukan langkah apa pun, bahkan jika ditugaskan ke grup yang bukan grup mereka.</target>
+            <target>Apakah kita memerlukan grup ini? Atau cukup gunakan admin tim? Orang-orang di grup ini akan dapat melakukan langkah apa pun, bahkan jika ditugaskan ke grup yang bukan grup mereka.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4108,7 +4150,7 @@
       <unit id="permission.consultantTip">
          <segment>
             <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
-            <target>Kami juga tidak yakin apakah kami memerlukan izin ini, karena tidak jelas hal-hal khusus apa yang dilakukan oleh konsultan dalam perangkat lunak ini. Komentar Konsultan Independen akan dapat dilihat oleh semua anggota tim.</target>
+            <target>Kami juga tidak yakin apakah kami memerlukan izin ini, karena tidak jelas hal-hal khusus apa yang dilakukan oleh konsultan dalam perangkat lunak ini. Komentar Konsultan Independen akan terlihat oleh semua anggota tim.</target>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4273,6 +4315,12 @@
             <target>Publikasikan {0}</target>
          </segment>
       </unit>
+      <unit id="planSheet.confirmPublishMovement">
+         <segment>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this Movement will be marked as published. If you have previously published and now choose 'Not Published', the {0} and passages and notes will be marked as not published.</source>
+            <target>Jika Anda memilih untuk mempublikasikan, {0} dan versi terbaru dari semua bagian dan catatan di semua {0} dalam Gerakan ini akan ditandai sebagai dipublikasikan. Jika sebelumnya Anda telah menerbitkan dan sekarang memilih 'Tidak Diterbitkan', {0} dan bagian serta catatan akan ditandai sebagai tidak diterbitkan.</target>
+         </segment>
+      </unit>
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
@@ -4288,6 +4336,12 @@
       <unit id="planSheet.graphic">
          <segment>
             <source>Graphic</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.hidePublishing">
+         <segment>
+            <source>Hide Publishing Information</source>
             <target/>
          </segment>
       </unit>
@@ -4755,8 +4809,14 @@
       </unit>
       <unit id="publishLevel.none">
          <segment>
-            <source>Not Published</source>
-            <target>Tidak Diterbitkan</target>
+            <source>Not Published - not visible in publishing app</source>
+            <target>Tidak Diterbitkan - tidak terlihat di aplikasi penerbitan</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.beta">
+         <segment>
+            <source>Beta - only visible to users subscribed to app beta channel</source>
+            <target>Beta - hanya dapat dilihat oleh pengguna yang berlangganan saluran beta aplikasi</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -4840,6 +4900,12 @@
       <unit id="resource.linkError">
          <segment>
             <source>Link is not a correctly formatted URL</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.noteDetails">
+         <segment>
+            <source>Note Details</source>
             <target/>
          </segment>
       </unit>
@@ -6659,6 +6725,12 @@
          <segment>
             <source>Editor Settings</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.errExtrasBookLen">
+         <segment>
+            <source>Book must be 3 characters</source>
+            <target>Buku harus terdiri dari 3 karakter</target>
          </segment>
       </unit>
       <unit id="vProject.flat">

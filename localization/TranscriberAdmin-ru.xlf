@@ -565,6 +565,12 @@
             <target>Библия Id уже существует. Пожалуйста, свяжитесь со службой поддержки, если вам нужно поработать с этой Библией.</target>
          </segment>
       </unit>
+      <unit id="cards.bibleidformat">
+         <segment>
+            <source>Bible Id must begin with the language code and version (six letters).</source>
+            <target>Идентификатор Библии должен начинаться с кода языка и версии (шесть букв).</target>
+         </segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
@@ -859,6 +865,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.workflowProgression">
+         <segment>
+            <source>Workflow Progression</source>
+            <target>Прогрессия рабочего процесса</target>
+         </segment>
+      </unit>
       <unit id="cards.yes">
          <segment>
             <source>Yes</source>
@@ -917,6 +929,12 @@
          <segment>
             <source>Chapter Number</source>
             <target>Номер главы</target>
+         </segment>
+      </unit>
+      <unit id="category.general">
+         <segment>
+            <source>General Note</source>
+            <target>Общее примечание</target>
          </segment>
       </unit>
       <unit id="commentCard.approve">
@@ -1852,7 +1870,7 @@
       <unit id="import.unknownError">
          <segment>
             <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
-            <target>Если эта ошибка возникла при импорте изменений в автономном режиме, немедленно закройте приложение и откройте его снова. Если ошибка не исчезла, обратитесь в службу поддержки. Если вы продолжите использовать приложение, вы потеряете изменения, сделанные в автономном режиме.</target>
+            <target>Если эта ошибка возникла при импорте изменений в автономном режиме, немедленно закройте приложение и откройте его снова. Если ошибка не исчезла, обратитесь в службу поддержки. Если вы продолжите использовать приложение, вы потеряете изменения, внесенные в автономном режиме.</target>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -3325,6 +3343,12 @@
             <target>Воспроизведение / Пауза</target>
          </segment>
       </unit>
+      <unit id="mediaTitle.record">
+         <segment>
+            <source>Record</source>
+            <target>Запись</target>
+         </segment>
+      </unit>
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>
@@ -3567,8 +3591,8 @@
       </unit>
       <unit id="passageDetailArtifacts.allLevel">
          <segment>
-            <source>All Resources</source>
-            <target>Все ресурсы</target>
+            <source>All {0}</source>
+            <target>Все {0}</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.allResources">
@@ -3579,8 +3603,8 @@
       </unit>
       <unit id="passageDetailArtifacts.bookLevel">
          <segment>
-            <source>Resources for the Book</source>
-            <target>Ресурсы для книги</target>
+            <source>{0} for the Book</source>
+            <target>{0} для книги</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.bookResource">
@@ -3603,8 +3627,8 @@
       </unit>
       <unit id="passageDetailArtifacts.chapterLevel">
          <segment>
-            <source>Resources for the Chapter</source>
-            <target>Ресурсы для главы</target>
+            <source>{0} for the Chapter</source>
+            <target>{0} для главы</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.chooseLevel">
@@ -3703,6 +3727,12 @@
             <target>Нота</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.notes">
+         <segment>
+            <source>Notes</source>
+            <target>Примечания</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.passageResource">
          <segment>
             <source>Passage</source>
@@ -3755,6 +3785,12 @@
          <segment>
             <source>Resource</source>
             <target>Ресурс</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.resources">
+         <segment>
+            <source>Resources</source>
+            <target>Ресурсы</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.resourcesDeleted">
@@ -3867,8 +3903,8 @@
       </unit>
       <unit id="passageDetailArtifacts.verseLevel">
          <segment>
-            <source>Resources for verses in this passage</source>
-            <target>Ресурсы для стихов из этого отрывка</target>
+            <source>{0} for verses in this passage</source>
+            <target>{0} для стихов из этого отрывка</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.version">
@@ -4003,6 +4039,12 @@
             <target>Дружественная книга</target>
          </segment>
       </unit>
+      <unit id="passageType.CHNUM">
+         <segment>
+            <source>Chapter number</source>
+            <target>Номер главы</target>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4096,7 +4138,7 @@
       <unit id="permission.adminTip">
          <segment>
             <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target>Нужна ли нам эта группа? Или просто использовать командного администратора? Люди в этой группе смогут выполнять любые действия, даже если они поручены группе, в которой они не состоят.</target>
+            <target>Нужна ли нам эта группа? Или просто использовать командного администратора? Люди в этой группе смогут выполнять любые действия, даже если они назначены группе, в которой они не состоят.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4144,7 +4186,7 @@
       <unit id="permission.nspTip">
          <segment>
             <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
-            <target>Общая группа сверстников без особых прав. Используется для распределения обсуждений по группам.</target>
+            <target>Общая группа сверстников без особых прав. Используется для назначения обсуждений группам команды.</target>
          </segment>
       </unit>
       <unit id="planActions.addNote">
@@ -4273,6 +4315,12 @@
             <target>Опубликовать {0}</target>
          </segment>
       </unit>
+      <unit id="planSheet.confirmPublishMovement">
+         <segment>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this Movement will be marked as published. If you have previously published and now choose 'Not Published', the {0} and passages and notes will be marked as not published.</source>
+            <target>Если вы выберете публикацию, {0} и последняя версия всех отрывков и заметок во всех {0} в этом Движении будут отмечены как опубликованные. Если вы публиковали ранее и теперь выбрали "Не публиковать", {0}, отрывки и заметки будут помечены как не опубликованные.</target>
+         </segment>
+      </unit>
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
@@ -4289,6 +4337,12 @@
          <segment>
             <source>Graphic</source>
             <target>Графика</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.hidePublishing">
+         <segment>
+            <source>Hide Publishing Information</source>
+            <target>Скрыть информацию о публикации</target>
          </segment>
       </unit>
       <unit id="planSheet.nonNumber">
@@ -4755,8 +4809,14 @@
       </unit>
       <unit id="publishLevel.none">
          <segment>
-            <source>Not Published</source>
-            <target>Не опубликовано</target>
+            <source>Not Published - not visible in publishing app</source>
+            <target>Не опубликовано - не отображается в приложении для публикации</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.beta">
+         <segment>
+            <source>Beta - only visible to users subscribed to app beta channel</source>
+            <target>Бета-версия - видна только пользователям, подписанным на бета-канал приложения</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -4841,6 +4901,12 @@
          <segment>
             <source>Link is not a correctly formatted URL</source>
             <target>Ссылка не является корректно отформатированным URL</target>
+         </segment>
+      </unit>
+      <unit id="resource.noteDetails">
+         <segment>
+            <source>Note Details</source>
+            <target>Детали примечания</target>
          </segment>
       </unit>
       <unit id="resource.overview">
@@ -6388,7 +6454,7 @@
       <unit id="transcriptionTab.offlineData">
          <segment>
             <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
-            <target>У вас есть новые локальные изменения, которые не были включены в экспорт ptf. Пожалуйста, экспортируйте также файл itf, чтобы отразить все изменения.</target>
+            <target>У вас есть новые изменения, которые не были включены в экспорт ptf. Пожалуйста, экспортируйте также файл itf, чтобы отразить все изменения.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
@@ -6659,6 +6725,12 @@
          <segment>
             <source>Editor Settings</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.errExtrasBookLen">
+         <segment>
+            <source>Book must be 3 characters</source>
+            <target>Книга должна состоять из 3 символов</target>
          </segment>
       </unit>
       <unit id="vProject.flat">

@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="en" version="1.0">
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="en" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
       <unit id="access.availableUsers">
          <segment>
@@ -518,7 +519,7 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
             <target/>
          </segment>
       </unit>
@@ -560,9 +561,15 @@
       </unit>
       <unit id="cards.bibleidexists">
          <segment>
-<source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
-<target>圣经 Id 已经存在。如果您需要使用该圣经，请联系技术支持。</target>
-</segment>
+            <source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
+            <target>圣经 Id 已经存在。如果您需要使用该圣经，请联系技术支持。</target>
+         </segment>
+      </unit>
+      <unit id="cards.bibleidformat">
+         <segment>
+            <source>Bible Id must begin with the language code and version (six letters).</source>
+            <target>圣经 ID 必须以语言代码和版本（六个字母）开头。</target>
+         </segment>
       </unit>
       <unit id="cards.cancel">
          <segment>
@@ -596,9 +603,9 @@
       </unit>
       <unit id="cards.copyright">
          <segment>
-<source>Copyright</source>
-<target>版权</target>
-</segment>
+            <source>Copyright</source>
+            <target>版权</target>
+         </segment>
       </unit>
       <unit id="cards.copySame">
          <segment>
@@ -644,9 +651,9 @@
       </unit>
       <unit id="cards.description">
          <segment>
-<source>Description</source>
-<target>说明</target>
-</segment>
+            <source>Description</source>
+            <target>说明</target>
+         </segment>
       </unit>
       <unit id="cards.draft">
          <segment>
@@ -858,6 +865,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.workflowProgression">
+         <segment>
+            <source>Workflow Progression</source>
+            <target>工作流程进展</target>
+         </segment>
+      </unit>
       <unit id="cards.yes">
          <segment>
             <source>Yes</source>
@@ -884,9 +897,9 @@
       </unit>
       <unit id="category.duplicate">
          <segment>
-<source>Duplicate Category</source>
-<target>重复类别</target>
-</segment>
+            <source>Duplicate Category</source>
+            <target>重复类别</target>
+         </segment>
       </unit>
       <unit id="category.discussions">
          <segment>
@@ -1406,7 +1419,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
             <target/>
          </segment>
       </unit>
@@ -1448,7 +1461,7 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
+            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
             <target/>
          </segment>
       </unit>
@@ -1496,7 +1509,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified!  Carry on!</source>
+            <source>I'm verified! Carry on!</source>
             <target/>
          </segment>
       </unit>
@@ -1880,7 +1893,7 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
             <target>如果在导入离线更改时出现此错误，请立即关闭应用程序并重新打开。 如果错误仍然存在，请联系支持人员。 如果继续使用应用程序，您将丢失离线更改。</target>
          </segment>
       </unit>
@@ -1946,7 +1959,7 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
+            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -2834,7 +2847,7 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
             <target/>
          </segment>
       </unit>
@@ -3182,9 +3195,9 @@
       </unit>
       <unit id="mediaTab.graphicRightsTitle">
          <segment>
-<source>Graphics Rights holder</source>
-<target>图形 权利持有人</target>
-</segment>
+            <source>Graphics Rights holder</source>
+            <target>图形 权利持有人</target>
+         </segment>
       </unit>
       <unit id="mediaTab.latestVersion">
          <segment>
@@ -3350,9 +3363,15 @@
       </unit>
       <unit id="mediaTitle.playPause">
          <segment>
-<source>Play / Pause</source>
-<target>播放/暂停</target>
-</segment>
+            <source>Play / Pause</source>
+            <target>播放/暂停</target>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.record">
+         <segment>
+            <source>Record</source>
+            <target>记录</target>
+         </segment>
       </unit>
       <unit id="mediaUpload.cancel">
          <segment>
@@ -3380,9 +3399,9 @@
       </unit>
       <unit id="mediaUpload.graphicTitle">
          <segment>
-<source>Upload Graphic</source>
-<target>上传图片</target>
-</segment>
+            <source>Upload Graphic</source>
+            <target>上传图片</target>
+         </segment>
       </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
          <segment>
@@ -3596,8 +3615,8 @@
       </unit>
       <unit id="passageDetailArtifacts.allLevel">
          <segment>
-            <source>All Resources</source>
-            <target/>
+            <source>All {0}</source>
+            <target>所有 {0}</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.allResources">
@@ -3608,8 +3627,8 @@
       </unit>
       <unit id="passageDetailArtifacts.bookLevel">
          <segment>
-            <source>Resources for the Book</source>
-            <target/>
+            <source>{0} for the Book</source>
+            <target>{0}为书</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.bookResource">
@@ -3632,8 +3651,8 @@
       </unit>
       <unit id="passageDetailArtifacts.chapterLevel">
          <segment>
-            <source>Resources for the Chapter</source>
-            <target/>
+            <source>{0} for the Chapter</source>
+            <target>章节 {0}</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.chooseLevel">
@@ -3732,6 +3751,12 @@
             <target>注意事项</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.notes">
+         <segment>
+            <source>Notes</source>
+            <target>注释</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.passageResource">
          <segment>
             <source>Passage</source>
@@ -3784,6 +3809,12 @@
          <segment>
             <source>Resource</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.resources">
+         <segment>
+            <source>Resources</source>
+            <target>资源</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.resourcesDeleted">
@@ -3896,8 +3927,8 @@
       </unit>
       <unit id="passageDetailArtifacts.verseLevel">
          <segment>
-            <source>Resources for verses in this passage</source>
-            <target/>
+            <source>{0} for verses in this passage</source>
+            <target>{0}为本段落的经文</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.version">
@@ -4028,9 +4059,15 @@
       </unit>
       <unit id="passageType.ALTBK">
          <segment>
-<source>Friendly Book</source>
-<target>友好图书</target>
-</segment>
+            <source>Friendly Book</source>
+            <target>友好图书</target>
+         </segment>
+      </unit>
+      <unit id="passageType.CHNUM">
+         <segment>
+            <source>Chapter number</source>
+            <target>章节编号</target>
+         </segment>
       </unit>
       <unit id="peer.peerDescription">
          <segment>
@@ -4124,7 +4161,7 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
             <target/>
          </segment>
       </unit>
@@ -4136,7 +4173,7 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
             <target/>
          </segment>
       </unit>
@@ -4166,13 +4203,13 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
             <target/>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
+            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
             <target/>
          </segment>
       </unit>
@@ -4298,9 +4335,15 @@
       </unit>
       <unit id="planSheet.confirmPublish">
          <segment>
-<source>Publish {0}</source>
-<target>发布 {0}</target>
-</segment>
+            <source>Publish {0}</source>
+            <target>发布 {0}</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.confirmPublishMovement">
+         <segment>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this Movement will be marked as published. If you have previously published and now choose 'Not Published', the {0} and passages and notes will be marked as not published.</source>
+            <target>如果您选择 "发表"，本乐章中的{0}以及所有{0}中的所有经文和注释的最新版本将被标记为 "已发表"。如果之前已发表，现在选择 "未发表"，则{0}和段落及注释将被标记为未发表。</target>
+         </segment>
       </unit>
       <unit id="planSheet.filtered">
          <segment>
@@ -4316,9 +4359,15 @@
       </unit>
       <unit id="planSheet.graphic">
          <segment>
-<source>Graphic</source>
-<target>图形</target>
-</segment>
+            <source>Graphic</source>
+            <target>图形</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.hidePublishing">
+         <segment>
+            <source>Hide Publishing Information</source>
+            <target>隐藏出版信息</target>
+         </segment>
       </unit>
       <unit id="planSheet.nonNumber">
          <segment>
@@ -4328,9 +4377,9 @@
       </unit>
       <unit id="planSheet.noPublishDelete">
          <segment>
-<source>Do not delete published items.</source>
-<target>不删除已发布的项目。</target>
-</segment>
+            <source>Do not delete published items.</source>
+            <target>不删除已发布的项目。</target>
+         </segment>
       </unit>
       <unit id="planSheet.insertFirstPassage">
          <segment>
@@ -4412,9 +4461,9 @@
       </unit>
       <unit id="planSheet.movementAbove">
          <segment>
-<source>Add Movement above {0} {1}</source>
-<target>在 {0} {1} 上添加运动</target>
-</segment>
+            <source>Add Movement above {0} {1}</source>
+            <target>在 {0} {1} 上添加运动</target>
+         </segment>
       </unit>
       <unit id="planSheet.sectionAbove">
          <segment>
@@ -4442,9 +4491,9 @@
       </unit>
       <unit id="planSheet.changepublish">
          <segment>
-<source>Update {0} {1} published status.</source>
-<target>更新 {0} {1} 已发布状态。</target>
-</segment>
+            <source>Update {0} {1} published status.</source>
+            <target>更新 {0} {1} 已发布状态。</target>
+         </segment>
       </unit>
       <unit id="planSheet.useCtrlV">
          <segment>
@@ -4784,9 +4833,15 @@
       </unit>
       <unit id="publishLevel.none">
          <segment>
-<source>Not Published</source>
-<target>未发布</target>
-</segment>
+            <source>Not Published - not visible in publishing app</source>
+            <target>未发布 - 在发布应用程序中不可见</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.beta">
+         <segment>
+            <source>Beta - only visible to users subscribed to app beta channel</source>
+            <target>测试版 - 仅对订阅应用程序测试版频道的用户可见</target>
+         </segment>
       </unit>
       <unit id="resource.action">
          <segment>
@@ -4820,9 +4875,9 @@
       </unit>
       <unit id="resource.changes">
          <segment>
-<source>Changes made will affect source and all shared locations.</source>
-<target>所做更改将影响源和所有共享位置。</target>
-</segment>
+            <source>Changes made will affect source and all shared locations.</source>
+            <target>所做更改将影响源和所有共享位置。</target>
+         </segment>
       </unit>
       <unit id="resource.delete">
          <segment>
@@ -4868,9 +4923,15 @@
       </unit>
       <unit id="resource.linkError">
          <segment>
-<source>Link is not a correctly formatted URL</source>
-<target>链接不是格式正确的 URL</target>
-</segment>
+            <source>Link is not a correctly formatted URL</source>
+            <target>链接不是格式正确的 URL</target>
+         </segment>
+      </unit>
+      <unit id="resource.noteDetails">
+         <segment>
+            <source>Note Details</source>
+            <target>注释详情</target>
+         </segment>
       </unit>
       <unit id="resource.overview">
          <segment>
@@ -4904,9 +4965,9 @@
       </unit>
       <unit id="resource.source">
          <segment>
-<source>Linked Note Source: </source>
-<target>链接注释源： </target>
-</segment>
+            <source>Linked Note Source: </source>
+            <target>链接注释源： </target>
+         </segment>
       </unit>
       <unit id="resource.terms">
          <segment>
@@ -4946,9 +5007,9 @@
       </unit>
       <unit id="scriptureTable.confirmPublish">
          <segment>
-<source>Are you sure you want to add publishing rows?</source>
-<target>您确定要添加发布行吗？</target>
-</segment>
+            <source>Are you sure you want to add publishing rows?</source>
+            <target>您确定要添加发布行吗？</target>
+         </segment>
       </unit>
       <unit id="scriptureTable.description">
          <segment>
@@ -5072,9 +5133,9 @@
       </unit>
       <unit id="scriptureTableFilter.invalidSection">
          <segment>
-<source>Invalid {0}</source>
-<target>无效 {0}</target>
-</segment>
+            <source>Invalid {0}</source>
+            <target>无效 {0}</target>
+         </segment>
       </unit>
       <unit id="scriptureTableFilter.step">
          <segment>
@@ -5276,13 +5337,13 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Your paratext login has expired and can't be automatically renewed. Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -6158,7 +6219,7 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
+            <source>Transcription updated by {0}. Keep their changes? {1}</source>
             <target/>
          </segment>
       </unit>
@@ -6374,7 +6435,7 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported.  The export file is too large.</source>
+            <source>The audio project cannot be exported. The export file is too large.</source>
             <target/>
          </segment>
       </unit>
@@ -6416,7 +6477,7 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
+            <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
             <target/>
          </segment>
       </unit>
@@ -6690,6 +6751,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.errExtrasBookLen">
+         <segment>
+            <source>Book must be 3 characters</source>
+            <target>书籍必须为 3 个字符</target>
+         </segment>
+      </unit>
       <unit id="vProject.flat">
          <segment>
             <source>Flat</source>
@@ -6746,9 +6813,9 @@
       </unit>
       <unit id="vProject.movements">
          <segment>
-<source>Movements</source>
-<target>移动</target>
-</segment>
+            <source>Movements</source>
+            <target>移动</target>
+         </segment>
       </unit>
       <unit id="vProject.nameInUse">
          <segment>
@@ -6956,7 +7023,7 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
             <target/>
          </segment>
       </unit>
@@ -6974,7 +7041,7 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
             <target/>
          </segment>
       </unit>
