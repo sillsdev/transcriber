@@ -17,7 +17,7 @@ export const useProjectDefaults = () => {
   const [memory] = useGlobal('memory');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [offline] = useGlobal('offline');
-  const { getParam, setParam } = useJsonParams();
+  const { getParam, setParam, willSetParam } = useJsonParams();
 
   const getProjectDefault = (label: string, proj?: ProjectD) => {
     if (!proj) proj = findRecord(memory, 'project', project) as ProjectD;
@@ -27,10 +27,12 @@ export const useProjectDefaults = () => {
   const setProjectDefault = (label: string, value: any) => {
     const proj = findRecord(memory, 'project', project) as ProjectD;
     if (!proj || !proj.attributes) return;
-    var newdefault = setParam(label, value, proj.attributes.defaultParams);
-    var saveIt = newdefault !== proj.attributes.defaultParams;
-    if (saveIt) {
-      proj.attributes.defaultParams = newdefault;
+    if (willSetParam(label, value, proj.attributes.defaultParams)) {
+      proj.attributes.defaultParams = setParam(
+        label,
+        value,
+        proj.attributes.defaultParams
+      );
       memory.update((t) => UpdateRecord(t, proj, user));
     }
   };
