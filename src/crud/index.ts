@@ -58,7 +58,7 @@ export * from './useAudacityProjDelete';
 export * from './useAudacityProjUpdate';
 export * from './useAudProjName';
 export * from './useRecOfType';
-export * from './useOfflineTeamList';
+export * from './useOfflineList';
 export * from './useUpdateOrbitToken';
 export * from './useSecResCreate';
 export * from './useMediaResCreate';

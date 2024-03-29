@@ -178,7 +178,12 @@ export async function electronExport(
     ) => {
       //put in the remoteIds for everything, then stringify
       // const ser = projRec?.keys?.remoteId ? onlineSerlzr : offlineSrlzr;
-      const resources = recs.map((r) => ser.serialize(r));
+      const resources = recs.map((r) => {
+        let ri = ser.serialize(r)
+        ri.id = r.id;
+        ri.relationships = r.relationships;
+        return ri;
+      });
       let json = ![ExportType.AUDIO, ExportType.ELAN].includes(expType)
         ? '{"data":' + JSON.stringify(resources) + '}'
         : JSON.stringify(resources, null, 2);

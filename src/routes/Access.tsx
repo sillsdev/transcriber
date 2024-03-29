@@ -29,7 +29,7 @@ import {
   useHome,
   useMyNavigate,
 } from '../utils';
-import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
+import { related, useOfflnProjRead, useOfflineSetup, ListEnum } from '../crud';
 import { API_CONFIG, isElectron } from '../api-variable';
 import ImportTab from '../components/ImportTab';
 import Confirm from '../components/AlertDialog';
@@ -64,14 +64,14 @@ interface ICurrentUser {
   curUser: UserD;
   action?: () => void;
   goOnline: () => void;
-  showTeams: boolean;
+  show?: ListEnum;
 }
 
 const CurrentUser = ({
   curUser,
   action,
   goOnline,
-  showTeams,
+  show,
 }: ICurrentUser) => {
   const t: IAccessStrings = useSelector(accessSelector, shallowEqual);
 
@@ -82,7 +82,7 @@ const CurrentUser = ({
         <UserListItem
           u={curUser}
           onSelect={action ? action : goOnline}
-          showTeams={showTeams}
+          show={show}
         />
       </Box>
     </>
@@ -285,7 +285,8 @@ export function Access() {
   useEffect(() => {
     if (isElectron) persistData();
     resetProject();
-    checkOnline((online) => {}, true);
+    checkOnline((online) => { }, true);
+
     if (!tokenCtx.state.authenticated() && !isAuthenticated) {
       if (!offline && !isElectron) {
         const hasUsed = localStorage.key(0) !== null;
@@ -347,8 +348,10 @@ export function Access() {
         const thisUser = users.filter(
           (u) => u.id === userId && Boolean(u?.keys?.remoteId)
         );
-        setCurUser(thisUser[0]);
-        setLanguage(thisUser[0]?.attributes?.locale || 'en');
+        if (thisUser.length === 1) {
+          setCurUser(thisUser[0]);
+          setLanguage(thisUser[0]?.attributes?.locale || 'en');
+        }
       } else if (!userId && whichUsers.startsWith('online-cloud')) {
         localStorage.setItem('online-user-id', 'unknown');
         handleGoOnline();
@@ -358,6 +361,7 @@ export function Access() {
   }, [users]);
 
   if (tokenCtx.state.accessToken && !tokenCtx.state.email_verified) {
+
     if (localStorage.getItem('isLoggedIn') === 'true')
       navigate('/emailunverified');
     else doLogout();
@@ -369,7 +373,9 @@ export function Access() {
     setTimeout(() => navigate('/loading'), 200);
   } else if (/Logout/i.test(view)) {
     navigate('/logout');
-  } else if (whichUsers === '') setTimeout(() => navigate('/'), 200);
+  } else if (whichUsers === '') {
+    setTimeout(() => navigate('/'), 200);
+  }
 
   const handleCurUser = () => {
     handleSelect(curUser?.id || '');
@@ -415,7 +421,6 @@ export function Access() {
                       <>
                         <CurrentUser
                           curUser={curUser}
-                          showTeams={false}
                           goOnline={handleGoOnline}
                         />
                         <SectionHead>{t.availableUsers}</SectionHead>
@@ -451,7 +456,7 @@ export function Access() {
                           curUser={curUser}
                           action={handleCurUser}
                           goOnline={handleGoOnline}
-                          showTeams={true}
+                          show={ListEnum.organization}
                         />
                         {countWorkOfflineUsers() > 1 && (
                           <SectionHead>{t.availableUsers}</SectionHead>
@@ -462,7 +467,7 @@ export function Access() {
                       isSelected={isOnlineUserWithOfflineProjects}
                       select={handleSelect}
                       curId={curUser?.id}
-                      showTeams={true}
+                      show={ListEnum.organization}
                     />
                   </>
                 ) : (
@@ -472,7 +477,6 @@ export function Access() {
                         curUser={curUser}
                         action={handleLogout}
                         goOnline={handleGoOnline}
-                        showTeams={false}
                       />
                       <AltButton id="logout" onClick={handleLogout}>
                         {t.logout}
@@ -483,13 +487,14 @@ export function Access() {
               </>
             </ContainerBox>
           )}
-          {whichUsers === 'offline' && (
+          {whichUsers.startsWith('offline') && (
             <ContainerBox>
               <SectionHead>{t.offlineUsers}</SectionHead>
               {importStatus?.complete !== false && hasOfflineUser() && (
                 <UserList
                   isSelected={isOfflineUserWithProjects}
                   select={handleSelect}
+                  show={ListEnum.project}
                 />
               )}
               {isDeveloper && (

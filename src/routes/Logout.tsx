@@ -40,7 +40,8 @@ export function Logout() {
     } else {
       logout({ returnTo: window.origin });
     }
-    setView(wasOfflineOnly ? 'offline' : 'online');
+    if (wasOfflineOnly) localStorage.setItem('offlineAdmin', 'true');
+    setView(localStorage.getItem('offlineAdmin') === 'true' ? 'offline' : 'online');
   };
 
   useEffect(() => {
