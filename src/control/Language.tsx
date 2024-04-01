@@ -61,7 +61,7 @@ export const Language = (props: IProps) => {
 
   const handleInfo = (info: LangTag) => {
     setState((state) => ({ ...state, info }));
-  }
+  };
 
   const handleSpellCheckChange = (e: any) => {
     setState((state) => ({ ...state, spellCheck: e.target.checked }));
@@ -103,7 +103,7 @@ export const Language = (props: IProps) => {
           sx={sx ?? { ml: 0 }}
           control={
             <LanguagePicker
-              value={bcp47}
+              value={bcp47 || 'und'}
               name={languageName ?? ''}
               font={font ?? ''}
               setCode={handleBcp47}

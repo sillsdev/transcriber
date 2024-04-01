@@ -1,9 +1,11 @@
 export const useJsonParams = () => {
   const getParam = (label: string, params: string | undefined) => {
     const json = JSON.parse(params ?? '{}');
-    if (json[label])
-      if (typeof json[label] === 'string') return JSON.parse(json[label]);
-      else return json[label];
+    if (json[label] !== undefined) {
+      if (typeof json[label] === 'string' && json[label].startsWith('{')) {
+        return JSON.parse(json[label]);
+      } else return json[label];
+    }
     return undefined;
   };
 
@@ -12,7 +14,7 @@ export const useJsonParams = () => {
     if (value !== undefined) {
       var tmp = JSON.stringify(value);
       if (tmp !== json[label]) {
-        json[label] = tmp;
+        json[label] = value;
       }
     } else if ((json[label] ?? '') !== '') {
       delete json[label];
