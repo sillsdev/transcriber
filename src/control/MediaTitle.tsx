@@ -337,13 +337,13 @@ export default function MediaTitle(props: IProps) {
         () =>
           offlineOnly ||
           remoteIdGuid('mediafile', mediaId, memory.keyMap as RecordKeyMap) !==
-          undefined,
+            undefined,
         () => false,
         100
       ).then(() => {
         onMediaIdChange(
           remoteIdGuid('mediafile', mediaId, memory.keyMap as RecordKeyMap) ??
-          mediaId
+            mediaId
         );
         reset();
       });
@@ -577,7 +577,15 @@ export default function MediaTitle(props: IProps) {
       />
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [curText, recording, mediaId, canSaveRecording, disabled, helperText, playing]
+    [
+      curText,
+      recording,
+      mediaId,
+      canSaveRecording,
+      disabled,
+      helperText,
+      playing,
+    ]
   );
 
   return (
@@ -596,7 +604,7 @@ export default function MediaTitle(props: IProps) {
             ref={langEl}
             control={
               <LanguagePicker
-                value={language.bcp47}
+                value={language.bcp47 || 'und'}
                 name={language.languageName}
                 font={language.font}
                 setCode={setCode}
