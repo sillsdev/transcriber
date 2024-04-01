@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { shallowEqual, useSelector } from 'react-redux';
-import { PlanContext } from '../../context/PlanContext';
 import {
   IState,
   IMediaTabStrings,
@@ -32,17 +31,20 @@ interface IProps {
   data: IRow[];
   setRefresh: () => void;
   playItem: string;
+  readonly: boolean;
+  shared: boolean;
+  sectionArr: [number, string][];
   setPlayItem: (item: string) => void;
   onAttach?: (checks: number[], attach: boolean) => void;
 }
 export const AudioTable = (props: IProps) => {
   const { data, setRefresh } = props;
-  const { playItem, setPlayItem, onAttach } = props;
+  const { playItem, setPlayItem, onAttach, readonly, shared, sectionArr } =
+    props;
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const lang = useSelector((state: IState) => state.strings.lang);
-  const ctx = React.useContext(PlanContext);
-  const { connected, readonly, shared, sectionArr } = ctx.state;
+  const [offline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -235,7 +237,7 @@ export const AudioTable = (props: IProps) => {
       <MediaActions
         rowIndex={row.index}
         mediaId={row.id}
-        online={connected || offlineOnly}
+        online={!offline || offlineOnly}
         readonly={onAttach ? readonly : true}
         attached={Boolean(row.passId)}
         onAttach={onAttach}
@@ -252,7 +254,7 @@ export const AudioTable = (props: IProps) => {
         <MediaActions2
           rowIndex={row.index}
           mediaId={mediaId || ''}
-          online={connected || offlineOnly}
+          online={!offline || offlineOnly}
           readonly={readonly}
           canDelete={!readonly && !row.readyToShare}
           onDelete={handleConfirmAction}
