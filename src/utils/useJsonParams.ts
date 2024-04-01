@@ -37,14 +37,17 @@ export const useJsonParams = () => {
     value: any,
     params: string | undefined
   ) => {
-    const json = JSON.parse(params ?? '{}');
     if (value !== undefined) {
       var tmp = JSON.stringify(value);
-      if (tmp !== json[label]) {
+      const curVal = JSON.stringify(getParam(label, params));
+      if (tmp !== curVal) {
         return true;
       }
-    } else if ((json[label] ?? '') !== '') {
-      return true;
+    } else {
+      const json = JSON.parse(params ?? '{}');
+      if ((json[label] ?? '') !== '') {
+        return true;
+      }
     }
     return false;
   };
