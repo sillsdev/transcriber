@@ -1519,10 +1519,7 @@ export function ScriptureTable(props: IProps) {
         sectionUpdated: currentDateTime(),
       };
       //if this is a movement...publish all the sections below it
-      if (
-        ws.published === PublishLevelEnum.None &&
-        ws.level === SheetLevel.Movement
-      ) {
+      if (ws.published !== publishLevel && ws.level === SheetLevel.Movement) {
         let i = index + 1;
         while (i < newsht.length) {
           if (newsht[i].level === SheetLevel.Movement) break;
