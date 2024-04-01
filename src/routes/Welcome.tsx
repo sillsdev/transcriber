@@ -114,7 +114,6 @@ export function Welcome(props: IProps) {
   const [hasOnlineUsers, setHasOnlineUsers] = useState(false);
   const [hasOfflineProjects, setHasOfflineProjects] = useState(false);
   const [hasProjects, setHasProjects] = useState(false);
-  const [, setOfflineOnly] = useGlobal('offlineOnly');
   const [, setOffline] = useGlobal('offline');
   const checkOnline = useCheckOnline();
 
