@@ -1908,10 +1908,10 @@ export function ScriptureTable(props: IProps) {
       )}
       <BigDialog
         title={
-          shared
-            ? resStr.resourceEdit
-            : isNote
+          isNote
             ? resStr.noteDetails
+            : shared
+            ? resStr.resourceEdit
             : ts.versionHistory
         }
         isOpen={versionRow !== undefined}

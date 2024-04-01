@@ -25,7 +25,7 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
   var updateddt =
     showId && data.isPassageDate
       ? passage[0]?.attributes?.dateUpdated || ''
-      : f?.attributes?.dateUpdated || '';
+      : f?.attributes?.dateCreated || '';
 
   return {
     planid: related(f, 'plan'),
