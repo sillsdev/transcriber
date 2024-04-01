@@ -3,7 +3,11 @@ export const useJsonParams = () => {
     const json = JSON.parse(params ?? '{}');
     if (json[label] !== undefined) {
       if (typeof json[label] === 'string' && json[label].startsWith('{')) {
-        return JSON.parse(json[label]);
+        var tmp = JSON.parse(json[label]);
+        //because of a bug in setParam that went out with the beta...handle this
+        if (typeof tmp === 'string' && tmp.startsWith('{')) {
+          return JSON.parse(tmp);
+        } else return tmp;
       } else return json[label];
     }
     return undefined;
