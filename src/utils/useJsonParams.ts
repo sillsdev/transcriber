@@ -1,19 +1,14 @@
+import { JSONParse } from './jsonParse';
+
 export const useJsonParams = () => {
-  const safeParse = (json: string) => {
-    try {
-      return JSON.parse(json);
-    } catch (e) {
-      return json;
-    }
-  };
   const getParam = (label: string, params: string | undefined) => {
-    const json = JSON.parse(params ?? '{}');
+    const json = JSONParse(params);
     if (json[label] !== undefined) {
       if (typeof json[label] === 'string') {
-        var tmp = safeParse(json[label]);
+        var tmp = JSONParse(json[label]);
         //because of a bug in setParam that went out with the beta...handle this
         if (typeof tmp === 'string') {
-          return safeParse(tmp);
+          return JSONParse(tmp);
         } else return tmp;
       } else return json[label];
     }
@@ -21,7 +16,8 @@ export const useJsonParams = () => {
   };
 
   const setParam = (label: string, value: any, params: string | undefined) => {
-    const json = JSON.parse(params ?? '{}');
+    const json = JSONParse(params);
+
     if (value !== undefined) {
       var tmp = JSON.stringify(value);
       if (tmp !== json[label]) {
@@ -44,7 +40,7 @@ export const useJsonParams = () => {
         return true;
       }
     } else {
-      const json = JSON.parse(params ?? '{}');
+      const json = JSONParse(params);
       if ((json[label] ?? '') !== '') {
         return true;
       }

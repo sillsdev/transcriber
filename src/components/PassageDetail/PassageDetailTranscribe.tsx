@@ -8,7 +8,7 @@ import { sharedSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import TaskTable, { TaskTableWidth } from '../TaskTable';
 import { ToolSlug } from '../../crud';
-import { waitForIt } from '../../utils';
+import { JSONParse, waitForIt } from '../../utils';
 import { useGlobal } from 'reactn';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 
@@ -65,11 +65,11 @@ export function PassageDetailTranscribe({
       .map((s, ix) => ({
         id: s.id,
         sequencenum: ix,
-        tool: JSON.parse(s?.attributes?.tool ?? '{}').tool,
+        tool: JSONParse(s?.attributes?.tool).tool,
         settings:
-          (JSON.parse(s?.attributes?.tool ?? '{}').settings ?? '') === ''
+          (JSONParse(s?.attributes?.tool).settings ?? '') === ''
             ? '{}'
-            : JSON.parse(s?.attributes?.tool ?? '{}').settings,
+            : JSONParse(s?.attributes?.tool).settings,
       }));
   }, [orgWorkflowSteps]);
 

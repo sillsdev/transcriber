@@ -941,7 +941,7 @@ export function Transcriber(props: IProps) {
               segments: updateSegments(
                 NamedRegions.Transcription,
                 mediaRef.current.attributes?.segments,
-                segments ?? '{}'
+                segments || '{}'
               ),
               transcriptionstate: nextState,
             },
