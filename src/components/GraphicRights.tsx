@@ -8,6 +8,7 @@ import { useOrbitData } from '../hoc/useOrbitData';
 import { Rights } from './GraphicUploader';
 import { useGlobal } from 'reactn';
 import { related } from '../crud';
+import { JSONParse } from '../utils';
 
 interface RightsHolderOption {
   inputValue?: string;
@@ -42,7 +43,7 @@ export function GraphicRights(props: IProps) {
     graphics
       .filter((g) => related(g, 'organization') === org)
       .forEach((graphic) => {
-        const json = JSON.parse(graphic.attributes.info ?? '{}');
+        const json = JSONParse(graphic.attributes.info);
         const rightsHolder = json[Rights] ?? null;
         if (rightsHolder) {
           options.add(rightsHolder);
@@ -50,9 +51,9 @@ export function GraphicRights(props: IProps) {
       });
     return Array.from(options).map(
       (option) =>
-      ({
-        title: option,
-      } as RightsHolderOption)
+        ({
+          title: option,
+        } as RightsHolderOption)
     );
   }, [graphics, org]);
 
