@@ -266,7 +266,7 @@ export const ProjectCard = (props: IProps) => {
     var defaultParams = setParam(
       projDefBook,
       book,
-      getProjectDefault(projDefBook, project as any as ProjectD)
+      project?.attributes?.defaultParams
     );
     projectUpdate({
       ...project,
