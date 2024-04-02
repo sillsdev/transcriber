@@ -30,6 +30,7 @@ import {
 import BookSelect, { OptionType } from './BookSelect';
 import { useGlobal } from 'reactn';
 import { usePlanType } from '../crud';
+import usePassageDetailContext from '../context/usePassageDetailContext';
 
 export enum RefLevel {
   All,
@@ -98,6 +99,7 @@ export const SelectSharedResource = (props: IProps) => {
   const bookSuggestions = useSelector(
     (state: IState) => state.books.suggestions
   );
+  const { passage } = usePassageDetailContext();
   const [findRef, setFindRef] = useState('');
   const t: IPassageDetailArtifactsStrings = useSelector(
     passageDetailArtifactsSelector,
@@ -274,28 +276,32 @@ export const SelectSharedResource = (props: IProps) => {
       {isScripture && (
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', my: 1 }}>
           <GrowingSpacer />
-          <Box sx={{ width: '200px' }}>
-            <BookSelect
-              placeHolder={t.selectBook}
-              suggestions={bookSuggestions}
-              value={bookOpt}
-              autoFocus={false}
-              onCommit={handleBookCommit}
-              onRevert={handleBookRevert}
-              setPreventSave={handlePreventSave}
-            />
-          </Box>
-          <TextField
-            id="find-refs"
-            variant="outlined"
-            value={findRef}
-            onChange={handleFindRefChange}
-            inputProps={{
-              sx: { py: 1 },
-              placeholder: t.reference,
-            }}
-            sx={{ width: '400px' }}
-          />
+          {refLevel !== RefLevel.All && (
+            <>
+              <Box sx={{ width: '200px' }}>
+                <BookSelect
+                  placeHolder={t.selectBook}
+                  suggestions={bookSuggestions}
+                  value={bookOpt}
+                  autoFocus={false}
+                  onCommit={handleBookCommit}
+                  onRevert={handleBookRevert}
+                  setPreventSave={handlePreventSave}
+                />
+              </Box>
+              <TextField
+                id="find-refs"
+                variant="outlined"
+                value={findRef}
+                onChange={handleFindRefChange}
+                inputProps={{
+                  sx: { py: 1 },
+                  placeholder: passage?.attributes.reference ?? t.reference,
+                }}
+                sx={{ width: '400px' }}
+              />
+            </>
+          )}
           {onRefLevel && (
             <ReferenceLevel
               id="ref-level"
