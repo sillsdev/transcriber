@@ -75,15 +75,16 @@ function DataTable(props: IProps) {
   }, [checks]);
 
   const handleSelection = (selection: (number | string)[]) => {
+    if (selection.length === 1 && selection[0] === -1) return;
     setSelected(selection);
     const numSelection =
       selection.length === 0
         ? []
         : selection.map((s) =>
-            typeof s === 'string' ? rows.findIndex((r) => r.id === s) : s
-          );
+          typeof s === 'string' ? rows.findIndex((r) => r.id === s) : s
+        );
     select && select(numSelection);
-  };
+  }
 
   const colSpec = React.useMemo(() => {
     const colSpec: GridColDef[] = columns.map((c) => {
@@ -170,7 +171,7 @@ function DataTable(props: IProps) {
 
   return (
     <DataGrid
-      rows={myRows}
+      rows={myRows.length > 0 ? myRows : [{ id: -1 }]}
       columns={colSpec}
       checkboxSelection
       rowSelectionModel={selected}
