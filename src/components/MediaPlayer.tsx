@@ -143,12 +143,18 @@ export function MediaPlayer(props: IProps) {
   }, [ready, requestPlay, playing, playItem]);
 
   const setPosition = (position: number | undefined) => {
-    if (audioRef.current && position !== undefined)
+    if (
+      audioRef.current &&
+      position !== undefined &&
+      position !== audioRef.current.currentTime
+    ) {
       audioRef.current.currentTime = position;
+    }
   };
 
   useEffect(() => {
     setPosition(limits?.start);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [limits?.start]);
 
   const ended = () => {
@@ -170,14 +176,15 @@ export function MediaPlayer(props: IProps) {
   const timeUpdate = () => {
     if (!Boolean(limits?.end)) return;
     const el = audioRef.current as HTMLMediaElement;
-    const time = Math.round(el.currentTime * 10);
+    const time = Math.round(el.currentTime * 1000) / 1000;
     if (stop.current !== 0 && time >= stop.current) {
+      console.log('stop', time, stop.current, limits?.end, el.duration);
       el.pause();
       ended();
     }
     const start = limits?.start ?? 0;
     const current = Math.round(
-      ((time / 10 - start) / ((limits?.end ?? 0) - start)) * 100
+      ((time - start) / ((limits?.end ?? 0) - start)) * 100
     );
     if (timeTracker.current !== current) {
       timeTracker.current = current;
@@ -223,6 +230,7 @@ export function MediaPlayer(props: IProps) {
   };
 
   const startPlay = () => {
+    if (playing || playSuccess.current) return;
     setPlaying(true);
     playSuccess.current = false;
     if (audioRef.current) {
@@ -232,7 +240,6 @@ export function MediaPlayer(props: IProps) {
           playSuccess.current = true;
         })
         .catch(() => {
-          console.log('play error');
           playSuccess.current = false;
         });
     }
