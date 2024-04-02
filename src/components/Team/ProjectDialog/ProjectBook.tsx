@@ -8,28 +8,35 @@ import { useRef } from 'reactn';
 import BookSelect from '../../BookSelect';
 
 export const ProjectBook = (props: IProjectDialogState) => {
-  const { state, setState } = props;
+  const { state, setState, setBookErr } = props;
   const t = useSelector(vProjectSelector, shallowEqual);
   const { book, type } = state;
   const [newBook, setNewBook] = React.useState<string>(book);
-  const [errmsg, setErrmsg] = React.useState<string>('');
+  const [errmsg, setErrmsgx] = React.useState<string>('');
   const bookSuggestions = useSelector(
     (state: IState) => state.books.suggestions
   );
   const suggestionRef = useRef<Array<OptionType>>();
 
+  const setErrmsg = (bookErr: string) => {
+    setErrmsgx(bookErr);
+    setBookErr && setBookErr(bookErr);
+  };
   React.useEffect(() => {
     suggestionRef.current = bookSuggestions;
   }, [bookSuggestions]);
 
   const handleChangeBook = (e: any) => {
     e.persist();
-    var newbook = e.target?.value || '';
+    var newbook = (e.target?.value || '').toString().toUpperCase();
     setNewBook(newbook);
-    if (bookSuggestions.find((s) => s.value === newbook))
+    if (bookSuggestions.find((s) => s.value === newbook)) {
       setErrmsg(t.errExtrasBookNonScripture);
-    else if (newbook.length < 3) setErrmsg(t.errExtrasBookLen);
-    else {
+      setState((state) => ({ ...state, book: '' }));
+    } else if (newbook.length > 0 && newbook.length < 3) {
+      setErrmsg(t.errExtrasBookLen);
+      setState((state) => ({ ...state, book: '' }));
+    } else {
       setState((state) => ({ ...state, book: newbook }));
       setErrmsg('');
     }
@@ -70,7 +77,7 @@ export const ProjectBook = (props: IProjectDialogState) => {
                 fullWidth
                 inputProps={{ maxLength: 3 }}
               />
-              {errmsg && <Typography color="default">{errmsg}</Typography>}
+              {errmsg && <Typography color="red">{errmsg}</Typography>}
             </>
           )}
         </>

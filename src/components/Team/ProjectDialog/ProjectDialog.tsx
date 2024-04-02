@@ -55,6 +55,7 @@ export type IProjectDialog = typeof initState;
 export interface IProjectDialogState {
   state: IProjectDialog;
   setState: React.Dispatch<React.SetStateAction<IProjectDialog>>;
+  setBookErr?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface IProps extends IDialog<IProjectDialog> {
@@ -68,6 +69,7 @@ export function ProjectDialog(props: IProps) {
   initState.vProjectStrings = t;
   const [state, setState] = React.useState({ ...initState });
   const { name, type, bcp47 } = state;
+  const [bookErr, setBookErr] = React.useState('');
 
   useEffect(() => {
     setState(!values ? { ...initState } : { ...values });
@@ -104,7 +106,11 @@ export function ProjectDialog(props: IProps) {
         <ProjectName state={state} setState={setState} inUse={nameInUse} />
         <ProjectDescription state={state} setState={setState} />
         <ProjectType type={type} onChange={handleTypeChange} />
-        <ProjectBook state={state} setState={setState} />
+        <ProjectBook
+          state={state}
+          setState={setState}
+          setBookErr={setBookErr}
+        />
         <Language {...state} onChange={handleLanguageChange} />
         <ProjectTags state={state} setState={setState} />
         <ProjectExpansion state={state} setState={setState} />
@@ -121,7 +127,8 @@ export function ProjectDialog(props: IProps) {
             (nameInUse && nameInUse(name)) ||
             name === '' ||
             bcp47 === 'und' ||
-            type === ''
+            type === '' ||
+            bookErr !== ''
           }
         >
           {mode === Mode.add ? t.add : t.save}
