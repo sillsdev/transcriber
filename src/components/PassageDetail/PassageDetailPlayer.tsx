@@ -12,7 +12,12 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { IWsAudioPlayerStrings, MediaFile, MediaFileD } from '../../model';
 import { UpdateRecord } from '../../model/baseModel';
 import { playerSelector } from '../../selector';
-import { NamedRegions, getSegments, updateSegments } from '../../utils';
+import {
+  JSONParse,
+  NamedRegions,
+  getSegments,
+  updateSegments,
+} from '../../utils';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import ViewIcon from '@mui/icons-material/RemoveRedEye';
 import TranscriptionShow from '../TranscriptionShow';
@@ -150,7 +155,7 @@ export function PassageDetailPlayer(props: IProps) {
                 attributes: {
                   segments: updateSegments(
                     allowSegment ?? NamedRegions.BackTranslation,
-                    mediafile.attributes?.segments ?? '{}',
+                    mediafile.attributes?.segments || '{}',
                     segmentsRef.current
                   ),
                 },
@@ -173,7 +178,7 @@ export function PassageDetailPlayer(props: IProps) {
 
   const setSegmentToWhole = () => {
     if (allowSegment && setCurrentSegment && durationRef.current) {
-      var segs = JSON.parse(segmentsRef.current || '{}');
+      var segs = JSONParse(segmentsRef.current);
       //might be "[]"
       if ((segs.regions?.length ?? 0) < 3) {
         setCurrentSegment({ start: 0, end: durationRef.current }, -1);
