@@ -346,8 +346,8 @@ export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
             readOnly
               ? DialogMode.view
               : values
-                ? DialogMode.edit
-                : DialogMode.add
+              ? DialogMode.edit
+              : DialogMode.add
           }
           values={values}
           isOpen={true}
@@ -365,15 +365,17 @@ export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
             readOnly
               ? DialogMode.view
               : values
-                ? DialogMode.edit
-                : DialogMode.add
+              ? DialogMode.edit
+              : DialogMode.add
           }
           res={sharedResRec}
           onOpen={handleOverOpen}
         />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <VersionDlg passId={passId} />
+        <VersionDlg
+          passId={sharedResRec ? related(sharedResRec, 'passage') : passId}
+        />
       </TabPanel>
     </Box>
   );
