@@ -88,6 +88,7 @@ export function MediaPlayer(props: IProps) {
   const [playItem, setPlayItem] = useState('');
   const [ready, setReady] = useState(false);
   const [duration, setDuration] = useState(0);
+  const durationSet = useRef(false);
   const [speed, setSpeed] = useState(1);
   const timeTracker = useRef<number>(0);
   const stop = useRef<number>(0);
@@ -107,6 +108,7 @@ export function MediaPlayer(props: IProps) {
       }
       stopPlay();
     }
+    durationSet.current = false;
     if (srcMediaId !== playItem) {
       setReady(false);
       fetchMediaUrl({ id: srcMediaId });
@@ -178,7 +180,6 @@ export function MediaPlayer(props: IProps) {
     const el = audioRef.current as HTMLMediaElement;
     const time = Math.round(el.currentTime * 1000) / 1000;
     if (stop.current !== 0 && time >= stop.current) {
-      console.log('stop', time, stop.current, limits?.end, el.duration);
       el.pause();
       ended();
     }
@@ -195,12 +196,13 @@ export function MediaPlayer(props: IProps) {
   const durationChange = () => {
     //this is called multiple times for some files
     const el = audioRef.current as HTMLMediaElement;
-    if (duration === 0 && el?.duration) {
+    if (!durationSet.current && el?.duration) {
       if (limits?.end) {
         setPosition(limits?.start);
         if (limits?.end > el.duration - 0.5) stop.current = 0;
         else stop.current = limits?.end + 0.25;
       }
+      durationSet.current = true;
       setDuration(el.duration);
       onLoaded && onLoaded();
     }
