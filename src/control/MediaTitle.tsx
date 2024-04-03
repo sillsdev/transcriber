@@ -257,6 +257,7 @@ export default function MediaTitle(props: IProps) {
   const langRef = useRef(language);
   const [recording, setRecording] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [srcMediaId, setSrcMediaId] = useState('');
   // const [myChanged, setMyChanged] = useState(false);
   const { getTypeId } = useArtifactType();
   const tokenCtx = useContext(TokenContext);
@@ -373,6 +374,10 @@ export default function MediaTitle(props: IProps) {
 
   const handlePlay = (e: any) => {
     e.stopPropagation();
+    //on first play...tell the media player to download the media
+    if (!playing && mediaId && !srcMediaId) {
+      setSrcMediaId(mediaId);
+    }
     setPlaying(!playing);
   };
   const handleRecord = (e: any) => {
@@ -633,7 +638,7 @@ export default function MediaTitle(props: IProps) {
         />
       )}
       <MediaPlayer
-        srcMediaId={mediaId || ''}
+        srcMediaId={srcMediaId}
         requestPlay={playing}
         onEnded={playEnded}
       />
