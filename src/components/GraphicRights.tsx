@@ -33,9 +33,7 @@ export function GraphicRights(props: IProps) {
 
   const setValue = (newValue: RightsHolderOption | null) => {
     setValuex(newValue);
-    if (newValue) {
-      onChange(newValue.inputValue ?? newValue.title);
-    }
+    onChange(newValue?.inputValue ?? newValue?.title ?? '');
   };
 
   const rightsHolderOptions = React.useMemo(() => {
