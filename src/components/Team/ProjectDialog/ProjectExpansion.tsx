@@ -60,7 +60,7 @@ const RenderCustomize = () => {
 };
 
 export function ProjectExpansion(props: IProjectDialogState) {
-  const { state, setState } = props;
+  const { state, setState, addMode } = props;
   const { organizedBy, isPublic } = state;
   const canBeFlat = useCanBeFlat();
   const { localizedOrganizedBy, fromLocalizedOrganizedBy } = useOrganizedBy();
@@ -80,7 +80,7 @@ export function ProjectExpansion(props: IProjectDialogState) {
     setState((state) => ({ ...state, isPublic: val }));
   };
   const handleLayoutChange = (val: string) => {
-    if (!canBeFlat()) {
+    if (!addMode && !canBeFlat()) {
       showMessage(t.cannotChangeLayout);
       return;
     }
