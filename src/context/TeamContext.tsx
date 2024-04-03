@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -207,6 +207,7 @@ const TeamProvider = (props: IProps) => {
   const { setMyOrgRole } = useRole();
   const { resetProject } = useHome();
   const { getOrganizedBy, localizedOrganizedBy } = useOrganizedBy();
+  const isMakingPersonal = useRef(false);
 
   const setProjectParams = (plan: PlanD | VProjectD) => {
     const projectId = related(plan, 'project');
@@ -428,7 +429,8 @@ const TeamProvider = (props: IProps) => {
   }, [userProjects, organizations, plans, isOffline]);
 
   useEffect(() => {
-    if (!state.personalTeam) {
+    if (!state.personalTeam && !isMakingPersonal.current) {
+      isMakingPersonal.current = true;
       getTeamId(undefined).then((personalTeam: string) => {
         if (personalTeam) setState((state) => ({ ...state, personalTeam }));
       });
