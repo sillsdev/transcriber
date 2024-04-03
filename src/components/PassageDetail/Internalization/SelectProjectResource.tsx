@@ -100,7 +100,9 @@ export const SelectProjectResource = (props: IProps) => {
   useEffect(() => {
     getProjectResources().then((res) => {
       setResouce(
-        res.sort((a, b) => a.attributes.topic.localeCompare(b.attributes.topic))
+        res.sort((a, b) =>
+          (a.attributes.topic ?? '').localeCompare(b.attributes.topic ?? '')
+        )
       );
       if (res.length === 0) {
         onOpen && onOpen(false);
