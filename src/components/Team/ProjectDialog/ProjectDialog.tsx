@@ -56,6 +56,7 @@ export interface IProjectDialogState {
   state: IProjectDialog;
   setState: React.Dispatch<React.SetStateAction<IProjectDialog>>;
   setBookErr?: React.Dispatch<React.SetStateAction<string>>;
+  addMode?: boolean;
 }
 
 interface IProps extends IDialog<IProjectDialog> {
@@ -113,7 +114,11 @@ export function ProjectDialog(props: IProps) {
         />
         <Language {...state} onChange={handleLanguageChange} />
         <ProjectTags state={state} setState={setState} />
-        <ProjectExpansion state={state} setState={setState} />
+        <ProjectExpansion
+          state={state}
+          setState={setState}
+          addMode={mode === Mode.add}
+        />
       </DialogContent>
       <DialogActions>
         <Button id="projCancel" onClick={handleClose} color="primary">
