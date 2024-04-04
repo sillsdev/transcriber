@@ -58,16 +58,18 @@ export const SelectProjectResource = (props: IProps) => {
 
   const handleClick = (m: MediaFileD) => () => handleSelect(m);
 
-  const handleDelete = (m: MediaFileD) => () => {
-    const mediafiles = memory.cache.query((q) =>
-      q.findRecords('mediafile')
-    ) as MediaFileD[];
-    const affected = mediafiles.filter(
-      (r) => related(r, 'sourceMedia') === m.id
-    );
-    media.current = affected;
-    setConfirm(m);
-  };
+  const handleDelete =
+    (m: MediaFileD) => (event: React.MouseEvent<HTMLElement>) => {
+      event.stopPropagation();
+      const mediafiles = memory.cache.query((q) =>
+        q.findRecords('mediafile')
+      ) as MediaFileD[];
+      const affected = mediafiles.filter(
+        (r) => related(r, 'sourceMedia') === m.id
+      );
+      media.current = affected;
+      setConfirm(m);
+    };
   const handleDeleteRefused = () => {
     setConfirm(undefined);
   };
