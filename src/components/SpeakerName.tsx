@@ -48,6 +48,7 @@ export function SpeakerName({
   };
 
   const nameReset = () => {
+    valueRef.current = '';
     onChange && onChange('');
     onRights && onRights(false);
   };
