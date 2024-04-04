@@ -4,10 +4,10 @@ export const useJsonParams = () => {
   const getParam = (label: string, params: string | undefined) => {
     const json = JSONParse(params);
     if (json[label] !== undefined) {
-      if (typeof json[label] === 'string') {
+      if (typeof json[label] === 'string' && json[label] !== '') {
         var tmp = JSONParse(json[label]);
         //because of a bug in setParam that went out with the beta...handle this
-        if (typeof tmp === 'string') {
+        if (typeof tmp === 'string' && json[label] !== '') {
           return JSONParse(tmp);
         } else return tmp;
       } else return json[label];
