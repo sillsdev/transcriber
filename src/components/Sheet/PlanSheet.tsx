@@ -433,6 +433,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const bodyChildren = () => {
+    if (!sheetRef.current) return undefined;
     const gridRef = (sheetRef.current as HTMLDivElement).getElementsByClassName(
       'data-grid-container'
     );
@@ -450,12 +451,13 @@ export function PlanSheet(props: IProps) {
       } else if (
         tbodyRef &&
         tbodyRef.offsetTop >
-        document.documentElement.scrollTop +
-        document.documentElement.clientHeight -
-        ActionHeight -
-        200
+          document.documentElement.scrollTop +
+            document.documentElement.clientHeight -
+            ActionHeight -
+            200
       ) {
-        window.scrollTo(0, tbodyRef.offsetTop + 10);
+        let adjust = Math.min(rowsPerPage.current, currentRowRef.current);
+        window.scrollTo(0, tbodyRef.offsetTop + 10 - adjust * 20);
       }
     }
     return false;
@@ -478,10 +480,10 @@ export function PlanSheet(props: IProps) {
     return cell?.className?.substring(0, 4) === 'book' && bookMap
       ? bookMap[cell.value]
       : cell?.className?.includes('num')
-        ? cell.value < 0 || Math.floor(cell.value) !== cell.value
-          ? ''
-          : cell.value
-        : cell.value;
+      ? cell.value < 0 || Math.floor(cell.value) !== cell.value
+        ? ''
+        : cell.value
+      : cell.value;
   };
   const handleDataRender = (cell: ICell) => cell.value;
 
@@ -699,15 +701,8 @@ export function PlanSheet(props: IProps) {
         row = rowInfo.findIndex((r) => r.passage?.id === pasGuid);
       }
       if (row >= 0) {
-        let tbodyRef: HTMLDivElement | undefined = undefined;
-        if (sheetRef.current) {
-          const gridRef = (
-            sheetRef.current as HTMLDivElement
-          ).getElementsByClassName('data-grid-container');
-          tbodyRef = gridRef[0]?.firstChild?.firstChild?.childNodes[
-            row + 1
-          ] as HTMLDivElement;
-        }
+        const tableNodes = bodyChildren();
+        let tbodyRef = tableNodes && tableNodes[row + 1];
         if (tbodyRef) {
           setCurrentRow(row + 1);
           sheetScroll();
@@ -869,28 +864,32 @@ export function PlanSheet(props: IProps) {
   }, [columns]);
 
   useEffect(() => {
-    if (sheetRef.current) {
-      let tbodyNodes = bodyChildren();
-      if (tbodyNodes) {
-        const currentOff = document.documentElement.scrollTop;
-        let bottom = 1;
-        let top = tbodyNodes.length - 1;
-        while (bottom < top) {
-          let mid = Math.floor((bottom + top) / 2);
-          if ((tbodyNodes[mid] as HTMLDivElement).offsetTop < currentOff) {
-            bottom = mid + 1;
-          } else {
-            top = mid;
-          }
+    let tbodyNodes = bodyChildren();
+    if (tbodyNodes) {
+      const currentOff = document.documentElement.scrollTop;
+      let bottom = 1;
+      let top = tbodyNodes.length - 1;
+      while (bottom < top) {
+        let mid = Math.floor((bottom + top) / 2);
+        if ((tbodyNodes[mid] as HTMLDivElement).offsetTop < currentOff) {
+          bottom = mid + 1;
+        } else {
+          top = mid;
         }
-        if (bottom !== curTop) setCurTop(bottom);
       }
+      if (bottom !== curTop) setCurTop(bottom);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.length, scrollCount]);
 
   useEffect(() => {
-    if (curTop && curTop !== currentRow) setCurrentRow(curTop);
+    if (
+      curTop &&
+      currentRow > 0 &&
+      (currentRow < curTop || currentRow >= curTop + rowsPerPage.current)
+    ) {
+      setCurrentRow(curTop);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [curTop]);
 
