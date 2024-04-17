@@ -49,7 +49,7 @@ export const useShowIcon = ({
           (isSectionHead(rowIndex) || isMovement(rowIndex)) &&
           !hidePublishing,
         [ExtraIcon.SectionAbove]:
-          !inlinePassages && (isSectionHead(rowIndex) || isMovement(rowIndex)),
+          isSectionHead(rowIndex) || isMovement(rowIndex),
         [ExtraIcon.SectionEnd]: true,
         [ExtraIcon.PassageBelow]:
           !inlinePassages &&
