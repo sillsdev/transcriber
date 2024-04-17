@@ -65,8 +65,14 @@ interface IProps {
 }
 
 export function ConsultantCheck({ width }: IProps) {
-  const { workflow, setStepComplete, stepComplete, currentstep, passage } =
-    usePassageDetailContext();
+  const {
+    workflow,
+    setStepComplete,
+    gotoNextStep,
+    stepComplete,
+    currentstep,
+    passage,
+  } = usePassageDetailContext();
   const [memory] = useGlobal('memory');
   const [checkItems, setCheckItems] = useState<ArtifactTypeSlug[]>([]);
   const [approved, setApproved] = useState<ArtifactTypeSlug[]>([]);
@@ -157,6 +163,7 @@ export function ConsultantCheck({ width }: IProps) {
     } catch (err) {}
     if (newApproved.length >= checkItems.length && !stepComplete(currentstep)) {
       await setStepComplete(currentstep, true);
+      gotoNextStep();
     }
     setBusy(false);
     commitBusy.current = false;

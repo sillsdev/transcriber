@@ -151,7 +151,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
     orgWorkflowSteps,
     mediafileId,
     setStepComplete,
-    setCurrentStep,
+    gotoNextStep,
     sectionArr,
   } = ctx.state;
   const minWidthRef = React.useRef(800);
@@ -207,7 +207,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
 
   const handleSyncComplete = async (step: string, complete: boolean) => {
     await setStepComplete(step, complete);
-    setCurrentStep('');
+    if (complete) gotoNextStep();
   };
 
   const handleHorzSplitSize = debounce((e: number) => {
@@ -327,6 +327,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
               setStepComplete={handleSyncComplete}
               currentstep={currentstep}
               sectionArr={sectionArr}
+              gotoNextStep={gotoNextStep}
             />
           </Stack>
         )}
