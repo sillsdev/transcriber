@@ -137,6 +137,9 @@ export function PassageDetailTranscribe({
       200
     ).then(async () => {
       await setStepComplete(currentstep, complete);
+      //is this what users want if they have next passage set?
+      //do they want to transcribe the next passage...probably?
+      //change this to gotoNextStep()?
       if (complete) setCurrentStep(nextStep || '');
     });
   };

@@ -41,6 +41,9 @@ import {
   ToolSlug,
   getStepComplete,
   useFilteredSteps,
+  useOrgDefaults,
+  orgDefaultWorkflowProgression,
+  nextPasId,
 } from '../crud';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
@@ -48,6 +51,7 @@ import {
   loadBlob,
   logError,
   prettySegment,
+  rememberCurrentPassage,
   Severity,
   waitForIt,
 } from '../utils';
@@ -83,6 +87,7 @@ import {
   projDefSectionMap,
   useProjectDefaults,
 } from '../crud/useProjectDefaults';
+import { usePassageNavigate } from '../components/PassageDetail/usePassageNavigate';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -165,6 +170,7 @@ const initState = {
   workflow: Array<SimpleWf>(),
   psgCompleted: [] as StepComplete[],
   setStepComplete: async (stepId: string, complete: boolean) => {},
+  gotoNextStep: () => {},
   stepComplete: (stepId: string) => {
     return false;
   },
@@ -277,6 +283,17 @@ const PassageDetailProvider = (props: IProps) => {
   const refreshRef = useRef<number>(0);
   const settingSegmentRef = useRef(false);
   const inPlayerRef = useRef<string>();
+  const { getOrgDefault } = useOrgDefaults();
+
+  const setCurrentStep = (stepId: string) => {
+    if (globals.changed) {
+      setConfirm(stepId);
+    } else {
+      handleSetCurrentStep(stepId);
+    }
+  };
+
+  const passageNavigate = usePassageNavigate(() => {}, setCurrentStep);
 
   const handleSetCurrentStep = (stepId: string) => {
     var step = state.orgWorkflowSteps.find((s) => s.id === stepId);
@@ -310,13 +327,6 @@ const PassageDetailProvider = (props: IProps) => {
     setState((state: ICtxState) => {
       return { ...state, refresh: refreshRef.current };
     });
-  };
-  const setCurrentStep = (stepId: string) => {
-    if (globals.changed) {
-      setConfirm(stepId);
-    } else {
-      handleSetCurrentStep(stepId);
-    }
   };
 
   const setFirstStepIndex = (stepIndex: number) => {
@@ -523,6 +533,17 @@ const PassageDetailProvider = (props: IProps) => {
     return Boolean(step?.complete);
   };
 
+  const gotoNextStep = () => {
+    var gotoNextPassage =
+      getOrgDefault(orgDefaultWorkflowProgression) !== 'step';
+    const nextpsg = gotoNextPassage
+      ? nextPasId(state.section, state.passage.id, memory)
+      : undefined;
+    if (nextpsg && nextpsg !== state.passage?.keys?.remoteId) {
+      rememberCurrentPassage(memory, nextpsg);
+      passageNavigate(`/detail/${prjId}/${nextpsg}`);
+    } else setCurrentStep(''); // setting to empty jumps to first uncompleted
+  };
   const setStepComplete = async (stepid: string, complete: boolean) => {
     if (stepid === '') return;
     var completed = [...state.psgCompleted];
@@ -1077,6 +1098,7 @@ const PassageDetailProvider = (props: IProps) => {
           setupLocate,
           stepComplete,
           setStepComplete,
+          gotoNextStep,
           setRecording,
           setCommentRecording,
           setMediaSelected,

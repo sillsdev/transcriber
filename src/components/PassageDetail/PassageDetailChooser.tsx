@@ -55,9 +55,10 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
   const [value, setValue] = useState(0);
   const marks = useRef<Array<Mark>>([]);
   const [view, setView] = useState('');
+  const { setCurrentStep } = usePassageDetailContext();
   const passageNavigate = usePassageNavigate(() => {
     setView('');
-  });
+  }, setCurrentStep);
 
   const t = useSelector(
     passageChooserSelector,

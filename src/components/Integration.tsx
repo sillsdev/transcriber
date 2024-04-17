@@ -97,7 +97,7 @@ interface IProps {
   currentstep?: string;
   sectionArr?: [number, string][];
   setStepComplete?: (stepId: string, complete: boolean) => Promise<void>;
-  setCurrentStep?: (stepId: string) => void;
+  gotoNextStep?: () => void;
 }
 
 export function IntegrationPanel(props: IProps) {
@@ -108,7 +108,7 @@ export function IntegrationPanel(props: IProps) {
     currentstep,
     sectionArr,
     setStepComplete,
-    setCurrentStep,
+    gotoNextStep,
   } = props;
   const t: IIntegrationStrings = useSelector(integrationSelector);
   const ts: ISharedStrings = useSelector(sharedSelector);
@@ -435,7 +435,7 @@ export function IntegrationPanel(props: IProps) {
     resetCount();
     if (setStepComplete && currentstep && !err) {
       await setStepComplete(currentstep, true);
-      if (setCurrentStep) setCurrentStep('');
+      if (gotoNextStep) gotoNextStep();
     }
     setSyncing(false);
   };
@@ -694,7 +694,7 @@ export function IntegrationPanel(props: IProps) {
         forceDataChanges();
         if (setStepComplete && currentstep && !paratext_syncStatus.errStatus) {
           setStepComplete(currentstep, true).then(() => {
-            if (setCurrentStep) setCurrentStep('');
+            if (gotoNextStep) gotoNextStep();
           });
         }
       }
