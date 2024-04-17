@@ -300,7 +300,7 @@ export function TeamDialog(props: IProps) {
     if (isOpen)
       if (bibleId && bibleId.length > 5) {
         let newbible = getBible(bibleId);
-        if (bible !== newbible) setBible(newbible);
+        if (newbible && bible !== newbible) setBible(newbible);
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bibleId]);
