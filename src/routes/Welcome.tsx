@@ -87,7 +87,7 @@ const HelpTip = () => {
   );
 };
 
-interface IProps { }
+interface IProps {}
 
 export function Welcome(props: IProps) {
   const importStatus = useSelector(
@@ -185,7 +185,7 @@ export function Welcome(props: IProps) {
     }
     dispatch(setLanguage(localeDefault(isDeveloper)));
     dispatch(fetchLocalization());
-    checkOnline((connected) => { });
+    checkOnline((connected) => {});
     const choice = localStorage.getItem('offlineAdmin');
 
     if (choice !== null) {
@@ -287,11 +287,13 @@ export function Welcome(props: IProps) {
         return;
       }
     }
-    if ((memory.cache.query((q) => q.findRecords('user')) as InitializedRecord[]).length === 0)
+    if (!hasRecs('user')) {
+      // no offline only user recs
       addQuickUser().then((id) => {
         setUser(id);
         handleGoOffline();
       });
+    }
   };
 
   const handleImport = () => {
