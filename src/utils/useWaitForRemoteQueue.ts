@@ -15,7 +15,7 @@ export const useWaitForRemoteQueue = () => {
       label,
       () => {
         var online = connected;
-        if (remote)
+        if (remote && remote.requestQueue.length > 0)
           checkOnline((connected: boolean) => {
             online = connected;
           }, true);

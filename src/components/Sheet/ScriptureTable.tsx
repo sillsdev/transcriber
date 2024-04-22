@@ -92,6 +92,8 @@ import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { ISTFilterState } from './filterMenu';
 import {
+  projDefBook,
+  projDefFilterParam,
   projDefFirstMovement,
   useProjectDefaults,
 } from '../../crud/useProjectDefaults';
@@ -121,7 +123,6 @@ import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 import { PublishLevelEnum, usePublishLevel } from '../../crud/usePublishLevel';
 
 const SaveWait = 500;
-export const FilterParam = 'ProjectFilter';
 
 interface IProps {
   colNames: string[];
@@ -294,7 +295,7 @@ export function ScriptureTable(props: IProps) {
     filter: ISTFilterState | undefined,
     projDefault: boolean
   ) => {
-    setLocalDefault(FilterParam, filter);
+    setLocalDefault(projDefFilterParam, filter);
     if (projDefault) {
       var def;
       if (filter) {
@@ -313,7 +314,7 @@ export function ScriptureTable(props: IProps) {
             memory.keyMap as RecordKeyMap
           ) as string;
       }
-      setProjectDefault(FilterParam, def);
+      setProjectDefault(projDefFilterParam, def);
     }
     if (filter) setFilterState(() => filter);
     else setFilterState(getFilter(defaultFilterState));
@@ -1186,7 +1187,9 @@ export function ScriptureTable(props: IProps) {
 
   const getFilter = (fs: ISTFilterState) => {
     var filter =
-      getLocalDefault(FilterParam) ?? getProjectDefault(FilterParam) ?? fs;
+      getLocalDefault(projDefFilterParam) ??
+      getProjectDefault(projDefFilterParam) ??
+      fs;
 
     if (filter.minStep && !isNaN(Number(filter.minStep)))
       filter.minStep = remoteIdGuid(
@@ -1496,8 +1499,12 @@ export function ScriptureTable(props: IProps) {
   }, [orgSteps, filterState, doneStepId, hidePublishing]);
 
   const firstBook = useMemo(
-    () => sheet.find((b) => !b.deleted && (b.book ?? '') !== '')?.book ?? '',
-    [sheet]
+    () =>
+      scripture
+        ? sheet.find((b) => !b.deleted && (b.book ?? '') !== '')?.book ?? ''
+        : getProjectDefault(projDefBook),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [scripture, sheet]
   );
 
   const setSectionPublish = async (
@@ -1602,13 +1609,17 @@ export function ScriptureTable(props: IProps) {
 
   const AddBook = (newsht: ISheet[], passageType: PassageTypeEnum) => {
     const sequencenum = passageType === PassageTypeEnum.BOOK ? -4 : -3;
-    if (firstBook) {
-      const baseName = firstBook ? bookMap[firstBook] : '';
+    const baseName = scripture
+      ? firstBook
+        ? bookMap[firstBook]
+        : ''
+      : firstBook;
+
+    if (baseName) {
       const title =
         passageType === PassageTypeEnum.BOOK
           ? baseName
           : alternateName(baseName);
-
       let newRow = {
         level: SheetLevel.Book,
         kind: IwsKind.Section,
