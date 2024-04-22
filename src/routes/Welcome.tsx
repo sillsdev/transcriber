@@ -117,16 +117,24 @@ export function Welcome(props: IProps) {
   const [, setOffline] = useGlobal('offline');
   const checkOnline = useCheckOnline();
 
+  const recsFor = (recType: string, online: boolean) => {
+    const recs = recOfType(recType);
+    return recs.filter(
+      (u) => (u.keys?.remoteId !== undefined) === Boolean(online)
+    );
+  };
+
   const hasRecs = (
     recType: string,
     iRecs?: InitializedRecord[],
-    offline?: Boolean
+    online?: Boolean
   ) => {
-    const recs = iRecs || recOfType(recType);
-    const offlineRecs = recs.filter((u) =>
-      u.keys?.remoteId === undefined ? !offline : offline
-    );
-    return offlineRecs.length > 0;
+    const recs = iRecs
+      ? iRecs.filter(
+          (u) => (u.keys?.remoteId !== undefined) === Boolean(online)
+        )
+      : recsFor(recType, Boolean(online));
+    return recs.length > 0;
   };
 
   const userTypes = () => {
@@ -273,27 +281,17 @@ export function Welcome(props: IProps) {
       localStorage.setItem('autoaddProject', 'true');
 
     if (hasOfflineUsers) {
-      const users = memory.cache.query((q) => q.findRecords('user')) as UserD[];
-      var quickUsers = users.filter(
-        (u) =>
-          u.keys?.remoteId === undefined &&
-          u.attributes?.givenName === t.quickGiven &&
-          u.attributes?.familyName === t.quickFamily
-      );
-
-      if (quickUsers.length !== 0) {
-        if (quickUsers.length === 1) setUser(quickUsers[0].id);
-        handleGoOffline();
-        return;
-      }
+      var recs = recsFor('user', false);
+      if (recs.length === 1) setUser(recs[0].id);
+      handleGoOffline();
+      return;
     }
-    if (!hasRecs('user')) {
-      // no offline only user recs
+    // no offline only user recs
+    else
       addQuickUser().then((id) => {
         setUser(id);
         handleGoOffline();
       });
-    }
   };
 
   const handleImport = () => {
