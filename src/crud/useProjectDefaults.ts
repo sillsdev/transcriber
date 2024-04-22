@@ -10,6 +10,8 @@ export const projDefSectionMap = 'sectionMap';
 export const projDefBook = 'book';
 export const projDefHidePublishing = 'hidePublishing';
 export const projDefFirstMovement = 'firstMovement';
+export const projDefFilterParam = 'ProjectFilter';
+
 export const useProjectDefaults = () => {
   const [project] = useGlobal('project');
   const [orgRole] = useGlobal('orgRole');
