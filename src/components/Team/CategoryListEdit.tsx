@@ -19,7 +19,7 @@ import {
   ICategoryStrings,
   ISharedStrings,
   MediaFile,
-  Section,
+  SharedResourceD,
 } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { categorySelector, sharedSelector } from '../../selector';
@@ -128,9 +128,9 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
       const discussions = memory.cache.query((q) =>
         q.findRecords('discussion')
       ) as Discussion[];
-      const sections = (
-        memory.cache.query((q) => q.findRecords('section')) as Section[]
-      ).filter((s) => Boolean(related(s, 'category')));
+      const sharedResources = memory.cache.query((q) =>
+        q.findRecords('sharedresource')
+      ) as SharedResourceD[];
       cats.forEach((c) => {
         let count = 0;
         if (type === ArtifactCategoryType.Resource)
@@ -142,7 +142,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
             (d) => related(d, 'artifactCategory') === c.id
           ).length;
         else
-          count = sections.filter(
+          count = sharedResources.filter(
             (d) => related(d, 'artifactCategory') === c.id
           ).length;
         inUseMap.set(c.id, count);
