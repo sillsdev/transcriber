@@ -17,7 +17,14 @@ import * as actions from '../../store';
 import ScriptureIcon from '@mui/icons-material/MenuBook';
 import { BsPencilSquare } from 'react-icons/bs';
 import moment from 'moment';
-import { DialogMode, IState, ProjectD, VProjectD } from '../../model';
+import {
+  DialogMode,
+  IState,
+  ProjectD,
+  Section,
+  SectionD,
+  VProjectD,
+} from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import ProjectMenu from './ProjectMenu';
 import BigDialog from '../../hoc/BigDialog';
@@ -49,6 +56,8 @@ import {
   projDefSectionMap,
   useProjectDefaults,
 } from '../../crud/useProjectDefaults';
+import { useOrbitData } from '../../hoc/useOrbitData';
+import { UpdateRecord } from '../../model/baseModel';
 
 const ProjectCardRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -126,6 +135,7 @@ export const ProjectCard = (props: IProps) => {
   const [, setOrganizedBySing] = useState('');
   const [, setOrganizedByPlural] = useState('');
   const [projectId] = useGlobal('project');
+  const [user] = useGlobal('user');
   const projectPlans = useProjectPlans();
   const offlineProjectRead = useOfflnProjRead();
   const offlineAvailToggle = useOfflineAvailToggle();
@@ -142,7 +152,8 @@ export const ProjectCard = (props: IProps) => {
   const tpb = projButtonStrings;
   const { userIsOrgAdmin } = useRole();
   const { leaveHome } = useHome();
-  const { setParam } = useJsonParams();
+  const { getParam, setParam } = useJsonParams();
+  const sections = useOrbitData<Section[]>('section');
 
   const handleSelect = (project: VProjectD) => () => {
     loadProject(project);
@@ -263,6 +274,7 @@ export const ProjectCard = (props: IProps) => {
       organizedBy,
       book,
     } = values;
+    var oldBook = getParam(projDefBook, project?.attributes?.defaultParams);
     var defaultParams = setParam(
       projDefBook,
       book,
@@ -288,8 +300,24 @@ export const ProjectCard = (props: IProps) => {
         defaultParams,
       },
     });
+    if (oldBook !== book) UpdatePublishingBookRows(oldBook, book);
   };
-
+  const UpdatePublishingBookRows = (oldbook: string, book: string) => {
+    var rows = sections.filter((s) => related(s, 'plan') === project.id);
+    const labels = ['BOOK', 'ALTBK'];
+    labels.forEach((label) => {
+      var books = rows.filter((s) =>
+        s.attributes.state.startsWith(label)
+      ) as SectionD[];
+      books.forEach((row) => {
+        if (book) {
+          row.attributes.state = row.attributes.state = `${label} ${book}`;
+          row.attributes.name = row.attributes.name.replace(oldbook, book);
+          memory.update((t) => UpdateRecord(t, row, user));
+        } else memory.update((t) => t.removeRecord(row));
+      });
+    });
+  };
   const handleDeleteConfirmed = () => {
     if (!deleteItem) return;
     projectDelete(deleteItem);
