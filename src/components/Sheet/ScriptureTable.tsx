@@ -214,6 +214,8 @@ export function ScriptureTable(props: IProps) {
   const toolId = 'scriptureTable';
   const {
     saveRequested,
+    clearRequested,
+    clearCompleted,
     startSave,
     saveCompleted,
     waitForSave,
@@ -1349,6 +1351,8 @@ export function ScriptureTable(props: IProps) {
           }
         });
       }, 100);
+    } else if (clearRequested(toolId)) {
+      clearCompleted(toolId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
