@@ -152,6 +152,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "members": string;
     "nameInUse": string;
     "newProject": string;
+    "notesLabel": string;
     "OBS": string;
     "OBT": string;
     "OBTs": string;

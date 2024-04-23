@@ -12,6 +12,7 @@ import { useJsonParams } from '../utils';
 
 export const pubDataCopyright = 'copyright';
 export const pubDataLangProps = 'langProps';
+export const pubDataNoteLabel = 'noteLabel';
 
 export const useBible = () => {
   const [memory] = useGlobal('memory');

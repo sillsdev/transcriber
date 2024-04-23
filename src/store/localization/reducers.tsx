@@ -167,6 +167,7 @@ const initialState = {
 			"members": "Members ({0})",
 			"nameInUse": "Name in use",
 			"newProject": "New Audio Project",
+			"notesLabel": "Introductory Notes Title",
 			"OBS": "Storying",
 			"OBT": "Oral Bible Translation (complete)",
 			"OBTs": "Oral Bible Translation (Simple)",

@@ -742,6 +742,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.notesLabel">
+         <segment>
+            <source>Introductory Notes Title</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.OBS">
          <segment>
             <source>Storying</source>
