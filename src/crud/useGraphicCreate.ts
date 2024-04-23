@@ -1,7 +1,15 @@
 import { useGlobal } from 'reactn';
-import Graphic from '../model/graphic';
-import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
+import Graphic, { GraphicD } from '../model/graphic';
+import {
+  RecordIdentity,
+  RecordKeyMap,
+  RecordTransformBuilder,
+} from '@orbit/records';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
+import JSONAPISource from '@orbit/jsonapi';
+import { waitForIt } from '../utils';
+import remoteId from './remoteId';
+import { recToMemory } from './syncToMemory';
 
 interface GraphicAttributes {
   resourceType: string;
@@ -13,6 +21,8 @@ export const useGraphicCreate = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
+  const [coordinator] = useGlobal('coordinator');
+  const remote = coordinator.getSource('remote') as JSONAPISource;
 
   return async (attributes: GraphicAttributes, mediafileId?: string) => {
     const graphicRec = {
@@ -44,6 +54,21 @@ export const useGraphicCreate = () => {
       );
     }
     await memory.update(ops);
-    return graphicRec.id ?? '';
+    await waitForIt(
+      'remote graphic create',
+      () =>
+        remoteId(
+          'graphic',
+          graphicRec.id as string,
+          memory.keyMap as RecordKeyMap
+        ) !== undefined,
+      () => false,
+      100
+    );
+    return (await recToMemory({
+      recId: graphicRec as RecordIdentity,
+      memory,
+      remote,
+    })) as GraphicD;
   };
 };
