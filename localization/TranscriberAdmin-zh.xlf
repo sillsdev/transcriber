@@ -571,6 +571,12 @@
             <target>圣经 ID 必须以语言代码和版本（六个字母）开头。</target>
          </segment>
       </unit>
+      <unit id="cards.bibleidiso">
+         <segment>
+            <source>Bible Id should begin with the language code.</source>
+            <target>圣经同上应从语言代码开始。</target>
+         </segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
@@ -721,6 +727,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.notesLabel">
+         <segment>
+            <source>Introductory Notes Title</source>
+            <target>介绍性说明 标题</target>
+         </segment>
+      </unit>
       <unit id="cards.OBS">
          <segment>
             <source>Storying</source>
@@ -869,6 +881,12 @@
          <segment>
             <source>Workflow Progression</source>
             <target>工作流程进展</target>
+         </segment>
+      </unit>
+      <unit id="cards.workflowProgressionPassage">
+         <segment>
+            <source>Next Passage</source>
+            <target>下一段经文</target>
          </segment>
       </unit>
       <unit id="cards.yes">
@@ -1894,7 +1912,7 @@
       <unit id="import.unknownError">
          <segment>
             <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
-            <target>如果在导入离线更改时出现此错误，请立即关闭应用程序并重新打开。 如果错误仍然存在，请联系支持人员。 如果继续使用应用程序，您将丢失离线更改。</target>
+            <target>如果在导入离线更改时出现此错误，请立即关闭应用程序并重新打开。 如果错误仍然存在，请联系技术支持。 如果继续使用应用程序，您将丢失离线更改。</target>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -3373,6 +3391,12 @@
             <target>记录</target>
          </segment>
       </unit>
+      <unit id="mediaTitle.recording">
+         <segment>
+            <source>Recording...</source>
+            <target>记录...</target>
+         </segment>
+      </unit>
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>
@@ -4069,6 +4093,12 @@
             <target>章节编号</target>
          </segment>
       </unit>
+      <unit id="passageType.TITLE">
+         <segment>
+            <source>Title</source>
+            <target>标题</target>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4345,6 +4375,12 @@
             <target>如果您选择 "发表"，本乐章中的{0}以及所有{0}中的所有经文和注释的最新版本将被标记为 "已发表"。如果之前已发表，现在选择 "未发表"，则{0}和段落及注释将被标记为未发表。</target>
          </segment>
       </unit>
+      <unit id="planSheet.confirmPublishSection">
+         <segment>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes be marked as not published.</source>
+            <target>如果您选择发布，{0} 以及该{0} 中所有段落和注释的最新版本都将标记为已发布。如果您之前已发布，现在选择 “未发布”，则段落和注释将被标记为未发布。</target>
+         </segment>
+      </unit>
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
@@ -4367,6 +4403,12 @@
          <segment>
             <source>Hide Publishing Information</source>
             <target>隐藏出版信息</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.moveDown">
+         <segment>
+            <source>Move down</source>
+            <target>下移</target>
          </segment>
       </unit>
       <unit id="planSheet.nonNumber">
@@ -4841,6 +4883,12 @@
          <segment>
             <source>Beta - only visible to users subscribed to app beta channel</source>
             <target>测试版 - 仅对订阅应用程序测试版频道的用户可见</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.public">
+         <segment>
+            <source>Public - visible to everyone using app</source>
+            <target>公开 - 每个使用应用程序的人都能看到</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -6755,6 +6803,12 @@
          <segment>
             <source>Book must be 3 characters</source>
             <target>书籍必须为 3 个字符</target>
+         </segment>
+      </unit>
+      <unit id="vProject.errExtrasBookNonScripture">
+         <segment>
+            <source>Book Designation must not be a Scripture book code.</source>
+            <target>书籍名称不得为经文书籍代码。</target>
          </segment>
       </unit>
       <unit id="vProject.flat">

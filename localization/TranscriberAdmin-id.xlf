@@ -571,6 +571,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.bibleidiso">
+         <segment>
+            <source>Bible Id should begin with the language code.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
@@ -719,6 +725,12 @@
          <segment>
             <source>New Audio Project</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="cards.notesLabel">
+         <segment>
+            <source>Introductory Notes Title</source>
+            <target>Catatan Pengantar Judul</target>
          </segment>
       </unit>
       <unit id="cards.OBS">
@@ -871,6 +883,12 @@
             <target>Perkembangan Alur Kerja</target>
          </segment>
       </unit>
+      <unit id="cards.workflowProgressionPassage">
+         <segment>
+            <source>Next Passage</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.yes">
          <segment>
             <source>Yes</source>
@@ -934,6 +952,12 @@
       <unit id="category.general">
          <segment>
             <source>General Note</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.introPara">
+         <segment>
+            <source>Introductory Paragraph</source>
             <target/>
          </segment>
       </unit>
@@ -3349,6 +3373,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTitle.recording">
+         <segment>
+            <source>Recording...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>
@@ -4045,6 +4075,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageType.TITLE">
+         <segment>
+            <source>Title</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4138,7 +4174,7 @@
       <unit id="permission.adminTip">
          <segment>
             <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target>Apakah kita memerlukan grup ini? Atau cukup gunakan admin tim? Orang-orang di grup ini akan dapat melakukan langkah apa pun, bahkan jika ditugaskan ke grup yang bukan grup mereka.</target>
+            <target>Apakah kita memerlukan grup ini? Atau hanya menggunakan admin tim? Orang-orang di grup ini akan dapat melakukan langkah apa pun, bahkan jika ditugaskan ke grup yang bukan grup mereka.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4321,6 +4357,12 @@
             <target>Jika Anda memilih untuk mempublikasikan, {0} dan versi terbaru dari semua bagian dan catatan di semua {0} dalam Gerakan ini akan ditandai sebagai dipublikasikan. Jika sebelumnya Anda telah menerbitkan dan sekarang memilih 'Tidak Diterbitkan', {0} dan bagian serta catatan akan ditandai sebagai tidak diterbitkan.</target>
          </segment>
       </unit>
+      <unit id="planSheet.confirmPublishSection">
+         <segment>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes be marked as not published.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
@@ -4342,6 +4384,12 @@
       <unit id="planSheet.hidePublishing">
          <segment>
             <source>Hide Publishing Information</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.moveDown">
+         <segment>
+            <source>Move down</source>
             <target/>
          </segment>
       </unit>
@@ -4817,6 +4865,12 @@
          <segment>
             <source>Beta - only visible to users subscribed to app beta channel</source>
             <target>Beta - hanya dapat dilihat oleh pengguna yang berlangganan saluran beta aplikasi</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.public">
+         <segment>
+            <source>Public - visible to everyone using app</source>
+            <target/>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -6731,6 +6785,12 @@
          <segment>
             <source>Book must be 3 characters</source>
             <target>Buku harus terdiri dari 3 karakter</target>
+         </segment>
+      </unit>
+      <unit id="vProject.errExtrasBookNonScripture">
+         <segment>
+            <source>Book Designation must not be a Scripture book code.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="vProject.flat">

@@ -571,6 +571,12 @@
             <target>Идентификатор Библии должен начинаться с кода языка и версии (шесть букв).</target>
          </segment>
       </unit>
+      <unit id="cards.bibleidiso">
+         <segment>
+            <source>Bible Id should begin with the language code.</source>
+            <target>Библейский ид должен начинаться с кода языка.</target>
+         </segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
@@ -719,6 +725,12 @@
          <segment>
             <source>New Audio Project</source>
             <target>Новый аудиопроект</target>
+         </segment>
+      </unit>
+      <unit id="cards.notesLabel">
+         <segment>
+            <source>Introductory Notes Title</source>
+            <target>Вводные заметки Название</target>
          </segment>
       </unit>
       <unit id="cards.OBS">
@@ -871,6 +883,12 @@
             <target>Прогрессия рабочего процесса</target>
          </segment>
       </unit>
+      <unit id="cards.workflowProgressionPassage">
+         <segment>
+            <source>Next Passage</source>
+            <target>Следующий отрывок</target>
+         </segment>
+      </unit>
       <unit id="cards.yes">
          <segment>
             <source>Yes</source>
@@ -935,6 +953,12 @@
          <segment>
             <source>General Note</source>
             <target>Общее примечание</target>
+         </segment>
+      </unit>
+      <unit id="category.introPara">
+         <segment>
+            <source>Introductory Paragraph</source>
+            <target>Вводный абзац</target>
          </segment>
       </unit>
       <unit id="commentCard.approve">
@@ -1870,7 +1894,7 @@
       <unit id="import.unknownError">
          <segment>
             <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
-            <target>Если эта ошибка возникла при импорте изменений в автономном режиме, немедленно закройте приложение и откройте его снова. Если ошибка не исчезла, обратитесь в службу поддержки. Если вы продолжите использовать приложение, вы потеряете изменения, внесенные в автономном режиме.</target>
+            <target>Если эта ошибка возникла при импорте изменений в автономном режиме, немедленно закройте приложение и откройте его снова. Если ошибка не исчезла, обратитесь в службу поддержки. Если вы продолжите использовать приложение, вы потеряете изменения, сделанные в автономном режиме.</target>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -3349,6 +3373,12 @@
             <target>Запись</target>
          </segment>
       </unit>
+      <unit id="mediaTitle.recording">
+         <segment>
+            <source>Recording...</source>
+            <target>Запись...</target>
+         </segment>
+      </unit>
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>
@@ -4045,6 +4075,12 @@
             <target>Номер главы</target>
          </segment>
       </unit>
+      <unit id="passageType.TITLE">
+         <segment>
+            <source>Title</source>
+            <target>Название</target>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4138,7 +4174,7 @@
       <unit id="permission.adminTip">
          <segment>
             <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target>Нужна ли нам эта группа? Или просто использовать командного администратора? Люди в этой группе смогут выполнять любые действия, даже если они назначены группе, в которой они не состоят.</target>
+            <target>Нужна ли нам эта группа? Или достаточно использовать администратора команды? Люди в этой группе смогут выполнять любой шаг, даже если он назначен группе, в которой они не состоят.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4321,6 +4357,12 @@
             <target>Если вы выберете публикацию, {0} и последняя версия всех отрывков и заметок во всех {0} в этом Движении будут отмечены как опубликованные. Если вы публиковали ранее и теперь выбрали "Не публиковать", {0}, отрывки и заметки будут помечены как не опубликованные.</target>
          </segment>
       </unit>
+      <unit id="planSheet.confirmPublishSection">
+         <segment>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes be marked as not published.</source>
+            <target>При выборе публикации {0} и последняя версия всех отрывков и заметок в этой {0} будут помечены как опубликованные. Если вы публиковали ранее, а теперь выбрали «Не публиковать», отрывки и заметки будут помечены как не опубликованные.</target>
+         </segment>
+      </unit>
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
@@ -4343,6 +4385,12 @@
          <segment>
             <source>Hide Publishing Information</source>
             <target>Скрыть информацию о публикации</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.moveDown">
+         <segment>
+            <source>Move down</source>
+            <target>Переместить вниз</target>
          </segment>
       </unit>
       <unit id="planSheet.nonNumber">
@@ -4817,6 +4865,12 @@
          <segment>
             <source>Beta - only visible to users subscribed to app beta channel</source>
             <target>Бета-версия - видна только пользователям, подписанным на бета-канал приложения</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.public">
+         <segment>
+            <source>Public - visible to everyone using app</source>
+            <target>Публичный - виден всем, кто использует приложение</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -6454,7 +6508,7 @@
       <unit id="transcriptionTab.offlineData">
          <segment>
             <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
-            <target>У вас есть новые изменения, которые не были включены в экспорт ptf. Пожалуйста, экспортируйте также файл itf, чтобы отразить все изменения.</target>
+            <target>У вас есть новые локальные изменения, которые не были включены в экспорт ptf. Пожалуйста, экспортируйте также файл itf, чтобы отразить все изменения.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
@@ -6731,6 +6785,12 @@
          <segment>
             <source>Book must be 3 characters</source>
             <target>Книга должна состоять из 3 символов</target>
+         </segment>
+      </unit>
+      <unit id="vProject.errExtrasBookNonScripture">
+         <segment>
+            <source>Book Designation must not be a Scripture book code.</source>
+            <target>Обозначение книги не должно быть кодом книги Священного Писания.</target>
          </segment>
       </unit>
       <unit id="vProject.flat">
