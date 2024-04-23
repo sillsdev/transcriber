@@ -154,7 +154,7 @@ export const getSheet = (
   graphicFind: (
     rec: InitializedRecord,
     ref?: string
-  ) => { uri?: string; rights?: string; color?: string },
+  ) => { uri?: string; rights?: string; url?: string; color?: string },
   getPublishLevel: (publishTo: string) => PublishLevelEnum,
   current?: ISheet[]
 ) => {
@@ -183,7 +183,11 @@ export const getSheet = (
           ? PassageTypeEnum.ALTBOOK
           : PassageTypeEnum.PASSAGE;
       item.reference =
-        item.passageType === PassageTypeEnum.PASSAGE ? '' : item.level === SheetLevel.Book ? section.attributes.state : item.passageType;
+        item.passageType === PassageTypeEnum.PASSAGE
+          ? ''
+          : item.level === SheetLevel.Book
+          ? section.attributes.state
+          : item.passageType;
       item.title = section?.attributes?.name;
       const transcriber = related(section, 'transcriber');
       item.transcriber =
@@ -209,6 +213,7 @@ export const getSheet = (
       const gr = graphicFind(section);
       item.graphicUri = gr?.uri;
       item.graphicRights = gr?.rights;
+      item.graphicFullSizeUrl = gr?.url;
       const titleMediaId = related(section, 'titleMediafile');
       item.titleMediaId = titleMediaId
         ? { type: 'mediafile', id: titleMediaId }
@@ -296,6 +301,7 @@ export const getSheet = (
           const gr = graphicFind(passage, item.reference);
           item.graphicUri = gr?.uri;
           item.graphicRights = gr?.rights;
+          item.graphicFullSizeUrl = gr?.url;
           item.color = gr?.color;
         }
       }

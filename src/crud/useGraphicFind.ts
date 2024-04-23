@@ -6,7 +6,8 @@ import { useArtifactCategory } from './useArtifactCategory';
 
 export const useGraphicFind = () => {
   const graphics = useOrbitData<GraphicD[]>('graphic');
-  const artifactCategory = useOrbitData<ArtifactCategoryD[]>('artifactcategory');
+  const artifactCategory =
+    useOrbitData<ArtifactCategoryD[]>('artifactcategory');
   const { fromLocalizedArtifactCategory } = useArtifactCategory();
 
   return (recId: InitializedRecord, ref?: string) => {
@@ -36,8 +37,13 @@ export const useGraphicFind = () => {
     }
     if (graphicRec) {
       var gr = apmGraphic(graphicRec);
-      return { uri: gr?.graphicUri, rights: gr?.graphicRights, color };
+      return {
+        uri: gr?.graphicUri,
+        rights: gr?.graphicRights,
+        url: gr?.url,
+        color,
+      };
     }
-    return { uri: undefined, rights: undefined, color };
+    return { uri: undefined, rights: undefined, url: undefined, color };
   };
 };
