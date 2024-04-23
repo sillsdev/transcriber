@@ -236,6 +236,8 @@ export function ScriptureTable(props: IProps) {
   const [defaultFilename, setDefaultFilename] = useState('');
   const [uploadType, setUploadType] = useState<UploadType>();
   const [curGraphicRights, setCurGraphicRights] = useState('');
+  const [graphicFullsizeUrl, setGraphicFullsizeUrl] = useState('');
+  const [graphicHash, setGraphicHash] = useState(0);
   const graphicCreate = useGraphicCreate();
   const graphicUpdate = useGraphicUpdate();
   const graphicFind = useGraphicFind();
@@ -1082,6 +1084,9 @@ export function ScriptureTable(props: IProps) {
       console.log(`defaultName: ${defaultName}`);
       setDefaultFilename(defaultName);
       uploadItem.current = ws;
+      setGraphicFullsizeUrl(ws?.graphicFullSizeUrl ?? '');
+      setGraphicHash(graphicHash + 1);
+      setCurGraphicRights(ws?.graphicRights ?? '');
       setUploadGraphicVisible(true);
     });
   };
@@ -1893,7 +1898,21 @@ export function ScriptureTable(props: IProps) {
         finish={afterConvert}
         cancelled={cancelled}
         uploadType={uploadType}
-        metadata={<GraphicRights value={''} onChange={handleRightsChange} />}
+        metadata={
+          <>
+            <GraphicRights
+              value={curGraphicRights}
+              onChange={handleRightsChange}
+            />
+            {graphicFullsizeUrl && (
+              <img
+                src={`${graphicFullsizeUrl}?${graphicHash}`}
+                alt="new"
+                width={400}
+              />
+            )}
+          </>
+        }
       />
       {audacityItem?.ws?.passage && (
         <AudacityManager

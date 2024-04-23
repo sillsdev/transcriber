@@ -78,6 +78,8 @@ export default function CategoryEdit({
   const [helperText, setHelperText] = useState(helper ?? '');
   const [graphicRights, setGraphicRights] = useState('');
   const [graphicUri, setGraphicUri] = useState('');
+  const [graphicFullsizeUrl, setGraphicFullsizeUrl] = useState('');
+  const [graphicHash, setGraphicHash] = useState(0);
   const graphics = useOrbitData<GraphicD[]>('graphic');
   const [uploadGraphicVisible, setUploadGraphicVisible] = useState(false);
   const cancelled = useRef(false);
@@ -138,6 +140,7 @@ export default function CategoryEdit({
       var gr = apmGraphic(graphicRec);
       setGraphicRights(gr?.graphicRights ?? '');
       setGraphicUri(gr?.graphicUri ?? '');
+      setGraphicFullsizeUrl(gr?.url ?? '');
     }
   }, [graphicRec]);
 
@@ -163,6 +166,7 @@ export default function CategoryEdit({
         })
       );
     }
+    setGraphicHash(graphicHash + 1);
   };
   const handleColor = (color: ColorResult) => {
     category.color = color.hex;
@@ -242,11 +246,20 @@ export default function CategoryEdit({
             cancelled={cancelled}
             uploadType={UploadType.Graphic}
             metadata={
+              <>
                 <GraphicRights
-                value={''}
+                  value={graphicRights ?? ''}
                   teamId={teamId}
                   onChange={handleRightsChange}
                 />
+                {graphicFullsizeUrl && (
+                  <img
+                    src={`${graphicFullsizeUrl}?${graphicHash}`}
+                    alt="new"
+                    width={400}
+                  />
+                )}
+              </>
             }
           />
         </>

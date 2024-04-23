@@ -12,6 +12,7 @@ import { logError, Severity } from '../utils';
 
 export const ApmDim = 40;
 export const Rights = 'rights';
+const FullSize = 1024;
 
 export interface CompressedImages {
   name: string;
@@ -26,11 +27,17 @@ export interface IGraphicInfo {
 
 export const apmGraphic = (graphicRec: GraphicD) => {
   const apmDimStr = `${ApmDim}`;
+  const fullSizeStr = `${FullSize}`;
   const info: IGraphicInfo = JSON.parse(graphicRec.attributes.info);
+  let url = '';
+  if (info.hasOwnProperty(fullSizeStr)) {
+    url = (info[fullSizeStr] as CompressedImages).content;
+  }
   if (info.hasOwnProperty(apmDimStr)) {
     return {
       graphicUri: (info[apmDimStr] as CompressedImages).content,
       graphicRights: info[Rights] as string | undefined,
+      url: url,
     };
   }
   return undefined;
@@ -78,9 +85,9 @@ export function GraphicUploader(props: IProps) {
     const value = imageFile.size / 1024 / 1024;
     console.log(
       `${desc} size ` +
-      (value > 1
-        ? `${value.toFixed(2)} MB`
-        : `${(value * 1024).toFixed(2)} KB`)
+        (value > 1
+          ? `${value.toFixed(2)} MB`
+          : `${(value * 1024).toFixed(2)} KB`)
     );
   };
 

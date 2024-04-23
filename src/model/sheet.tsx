@@ -50,6 +50,7 @@ export interface ISheet {
   published: PublishLevelEnum;
   graphicUri?: string;
   graphicRights?: string;
+  graphicFullSizeUrl?: string;
   color?: string;
   titleMediaId?: RecordIdentity;
 }
