@@ -718,10 +718,8 @@ export async function electronExport(
       needsRemoteIds: boolean
     ): BaseModelD[] => {
       const defaultQuery = (table: string) => {
-        return (
-          memory.cache.query((q) => q.findRecords(table)) as (BaseModel &
-            InitializedRecord)[]
-        ).filter((r) => Boolean(r?.keys?.remoteId) === needsRemoteIds);
+        return memory.cache.query((q) => q.findRecords(table)) as (BaseModel &
+          InitializedRecord)[];
       };
       switch (info.table) {
         case 'organization':
@@ -827,7 +825,9 @@ export async function electronExport(
           return OrgKeyTermTargets(project, needsRemoteIds);
         default:
           //activitystate,integration,plantype,projecttype,role
-          return defaultQuery(info.table);
+          return defaultQuery(info.table).filter(
+            (r) => Boolean(r?.keys?.remoteId) === needsRemoteIds
+          );
       }
     };
     const AddChanged = async (
