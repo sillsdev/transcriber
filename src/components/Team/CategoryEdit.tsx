@@ -1,7 +1,6 @@
 import {
   ArtifactCategoryType,
   IArtifactCategory,
-  findRecord,
   remoteIdNum,
   useArtifactCategory,
   useGraphicCreate,
@@ -76,7 +75,6 @@ export default function CategoryEdit({
   const graphicUpdate = useGraphicUpdate();
   const [memory] = useGlobal('memory');
   const [mediafile, setMediafile] = useState('');
-  const [titleValue, setTitleValue] = useState('');
   const [helperText, setHelperText] = useState(helper ?? '');
   const [graphicRights, setGraphicRights] = useState('');
   const [graphicUri, setGraphicUri] = useState('');
@@ -94,7 +92,6 @@ export default function CategoryEdit({
 
   const handleTitleChange = (value: string) => {
     value = value.replace(/\|/g, '').trim(); // remove pipe character
-    setTitleValue(value);
     category.category = value;
     onChanged(category);
     isDuplicateCategory(value, type, category.id).then((result) => {
@@ -155,15 +152,16 @@ export default function CategoryEdit({
         ...graphicRec,
         attributes: { ...graphicRec.attributes, info },
       };
-      await graphicUpdate(upd);
-      setGraphicRec(upd);
+      var newrec = (await graphicUpdate(upd)) as GraphicD;
+      setGraphicRec(newrec);
     } else {
-      var id = await graphicCreate({
-        resourceType,
-        resourceId,
-        info,
-      });
-      setGraphicRec(findRecord(memory, 'graphic', id) as GraphicD);
+      setGraphicRec(
+        await graphicCreate({
+          resourceType,
+          resourceId,
+          info,
+        })
+      );
     }
   };
   const handleColor = (color: ColorResult) => {
@@ -184,7 +182,7 @@ export default function CategoryEdit({
         mediaId={mediafile}
         title={localizedArtifactCategory(category.category)}
         onTextChange={handleTitleChange}
-        defaultFilename={defaultMediaName(titleValue)}
+        defaultFilename={defaultMediaName(resourceId.toString() + 'title')}
         onRecording={
           type === ArtifactCategoryType.Note ? onRecording : undefined
         }
@@ -235,7 +233,7 @@ export default function CategoryEdit({
 
           <GraphicUploader
             dimension={[1024, 512, ApmDim]}
-            defaultFilename={defaultMediaName(titleValue)}
+            defaultFilename={defaultMediaName(resourceId.toString())}
             isOpen={uploadGraphicVisible}
             onOpen={handleUploadGraphicVisible}
             showMessage={showMessage}
@@ -244,11 +242,11 @@ export default function CategoryEdit({
             cancelled={cancelled}
             uploadType={UploadType.Graphic}
             metadata={
-              <GraphicRights
+                <GraphicRights
                 value={''}
-                teamId={teamId}
-                onChange={handleRightsChange}
-              />
+                  teamId={teamId}
+                  onChange={handleRightsChange}
+                />
             }
           />
         </>

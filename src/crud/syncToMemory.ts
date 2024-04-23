@@ -60,6 +60,7 @@ export const recToMemory = async ({ recId, remote, memory }: RecSyncProps) => {
     q.findRecord(recId)
   )) as InitializedRecord;
   await memory.sync((t) => t.addRecord(rec));
+  return rec;
 };
 
 interface RemoteBackupSyncProps extends RemoteSyncProps {
