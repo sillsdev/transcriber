@@ -17,7 +17,15 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoIcon from '@mui/icons-material/Info';
 import { ILanguage, LightTooltip } from '../control';
-import { related, useOrgDefaults, useBible, orgDefaultLangProps, pubDataCopyright, pubDataLangProps } from '../crud';
+import {
+  related,
+  useOrgDefaults,
+  useBible,
+  orgDefaultLangProps,
+  pubDataCopyright,
+  pubDataNoteLabel,
+  pubDataLangProps,
+} from '../crud';
 import { useBibleMedia } from '../crud/useBibleMedia';
 import { useSnackBar } from '../hoc/SnackBar';
 import { useOrbitData } from '../hoc/useOrbitData';
@@ -65,6 +73,7 @@ export function PublishExpansion(props: IProps) {
   const [bibleName, setBibleName] = useState('');
   const [description, setDescription] = useState('');
   const [copyright, setCopyright] = useState('');
+  const [noteLabel, setNoteLabel] = useState('');
   const { getDefault } = useOrgDefaults();
   const [language, setLanguagex] = React.useState<ILanguage>(initLang);
   const languageRef = useRef<ILanguage>(initLang);
@@ -115,6 +124,7 @@ export function PublishExpansion(props: IProps) {
 
     setLanguage(lang, true);
     setCopyright(getPublishingData(pubDataCopyright, bible) as string);
+    setNoteLabel(getPublishingData(pubDataNoteLabel, bible) as string);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [team, bible]);
 
@@ -155,6 +165,13 @@ export function PublishExpansion(props: IProps) {
     setValue(pubDataCopyright, value);
     return '';
   };
+  const handleChangeNoteLabel = (event: any) => {
+    const value = event.target.value as string;
+    setNoteLabel(value);
+    setValue(pubDataNoteLabel, value);
+    return '';
+  };
+
   const onMyRecording = (recording: boolean) => {
     if (recording) {
       onChanged(true);
@@ -288,6 +305,14 @@ export function PublishExpansion(props: IProps) {
               label={t.copyright}
               value={copyright ?? ''}
               onChange={handleChangeCopyright}
+              variant="outlined"
+              sx={{ width: '100%', marginTop: '8px' }}
+            />
+            <TextField
+              id="notelabel"
+              label={t.notesLabel}
+              value={noteLabel ?? ''}
+              onChange={handleChangeNoteLabel}
               variant="outlined"
               sx={{ width: '100%', marginTop: '8px' }}
             />

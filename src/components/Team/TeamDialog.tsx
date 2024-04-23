@@ -27,6 +27,7 @@ import {
   orgDefaultWorkflowProgression,
   pubDataCopyright,
   pubDataLangProps,
+  pubDataNoteLabel,
   related,
   useBible,
   useOrgDefaults,
@@ -218,6 +219,9 @@ export function TeamDialog(props: IProps) {
         break;
       case pubDataCopyright:
         setPublishingData(setParam(pubDataCopyright, value, publishingData));
+        break;
+      case pubDataNoteLabel:
+        setPublishingData(setParam(pubDataNoteLabel, value, publishingData));
         break;
       case pubDataLangProps:
         setDefaultParams(setParam(orgDefaultLangProps, value, defaultParams));
