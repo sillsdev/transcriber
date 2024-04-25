@@ -1,6 +1,6 @@
 {
   "name": "audio-project-manager",
-  "version": "3.0.0-beta.6",
+  "version": "3.0.0",
   "description": "Flexible audio-text orality solution",
   "private": true,
   "dependencies": {
@@ -177,7 +177,7 @@
   "build": {
     "appId": "sil.lsdev.audio-project-manager",
     "productName": "Audio Project Manager",
-    "copyright": "Copyright © 2020-2023 ${author}",
+    "copyright": "Copyright © 2020-2024 ${author}",
     "win": {
       "icon": "public/icon.png"
     },
