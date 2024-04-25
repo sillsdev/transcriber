@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { MediaFile, ITranscriptionShowStrings, ProjectD } from '../model';
+import {
+  MediaFile,
+  ITranscriptionShowStrings,
+  ProjectD,
+  OrgWorkflowStep,
+} from '../model';
 import {
   Button,
   Dialog,
@@ -20,9 +25,12 @@ import {
   useTranscription,
   related,
   findRecord,
+  ArtifactTypeSlug,
+  getArtTypeFontData,
 } from '../crud';
 import { useSelector, shallowEqual } from 'react-redux';
 import { transcriptionShowSelector } from '../selector';
+import { useOrbitData } from '../hoc/useOrbitData';
 
 interface IProps {
   id: string;
@@ -36,8 +44,10 @@ interface IProps {
 function TranscriptionShow(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
   const { id, isMediaId, visible, closeMethod, exportId, version } = props;
+  const workflowSteps = useOrbitData<OrgWorkflowStep[]>('orgworkflowstep');
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
+  const [org] = useGlobal('organization');
   const [projectId] = useGlobal('project');
   const [open, setOpen] = useState(visible);
   const { showMessage } = useSnackBar();
@@ -78,18 +88,33 @@ function TranscriptionShow(props: IProps) {
       setTranscription(
         getTranscription(related(mediaRec, 'passage') || id, exportId)
       );
-      const projRec =
-        getMediaProjRec(mediaRec, memory, reporter) ||
-        (findRecord(memory, 'project', projectId) as ProjectD);
-      if (projRec)
-        getFontData(projRec, offline).then((data) => {
-          setFontData(data);
-          setTextStyle({
-            fontFamily: data.fontFamily,
-            fontSize: data.fontSize,
-            direction: data.fontDir as 'ltr' | 'rtl',
+      if (!exportId || exportId === ArtifactTypeSlug.Vernacular) {
+        const projRec =
+          getMediaProjRec(mediaRec, memory, reporter) ||
+          (findRecord(memory, 'project', projectId) as ProjectD);
+        if (projRec)
+          getFontData(projRec, offline).then((data) => {
+            setFontData(data);
+            setTextStyle({
+              fontFamily: data.fontFamily,
+              fontSize: data.fontSize,
+              direction: data.fontDir as 'ltr' | 'rtl',
+            });
           });
+      } else {
+        const orgSteps = workflowSteps
+          .filter((s) => related(s, 'organization') === org)
+          .sort(
+            (a, b) => a.attributes?.sequencenum - b.attributes?.sequencenum
+          );
+        const data = getArtTypeFontData(memory, exportId, orgSteps);
+        setFontData(data);
+        setTextStyle({
+          fontFamily: data.fontFamily,
+          fontSize: data.fontSize,
+          direction: data.fontDir as 'ltr' | 'rtl',
         });
+      }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [id, isMediaId, exportId]);

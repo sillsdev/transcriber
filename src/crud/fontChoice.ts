@@ -1,7 +1,9 @@
-import { Project } from '../model';
+import { ArtifactTypeD, OrgWorkflowStep, Project } from '../model';
 import { dataPath, PathType } from '../utils/dataPath';
 import { isElectron } from '../api-variable';
 import { getFamily, getRtl } from 'mui-language-picker';
+import Memory from '@orbit/memory';
+import { findRecord } from '.';
 
 const ipc = (window as any)?.electron;
 
@@ -64,6 +66,52 @@ export const getFontData = async (r: Project, offline: boolean) => {
     spellCheck,
     fontFamily,
     fontSize,
+    fontDir,
+    url,
+    fontConfig: {
+      custom: {
+        families: [fontFamily],
+        urls: [url],
+      },
+    },
+  };
+  return data;
+};
+
+export const getArtTypeFontData = (
+  memory: Memory,
+  exportId: string,
+  orgSteps: OrgWorkflowStep[]
+) => {
+  const artifactType = findRecord(
+    memory,
+    'artifacttype',
+    exportId
+  ) as ArtifactTypeD;
+  let stepSettings = { language: 'English|en', font: 'CharisSIL' };
+  orgSteps?.find((s) => {
+    const toolData = JSON.parse(s.attributes?.tool || '{}');
+    if (toolData?.settings) {
+      const settings = JSON.parse(toolData.settings);
+      if (
+        settings?.artifactTypeId ===
+        (artifactType?.keys?.remoteId ?? artifactType?.id)
+      ) {
+        stepSettings = settings;
+        return true;
+      }
+    }
+    return false;
+  });
+  const [, langTag] = stepSettings?.language?.split('|') ?? [];
+  const fontDir = getRtl(langTag) ? 'rtl' : 'ltr';
+  const fontFamily = stepSettings?.font || 'CharisSIL';
+  let url = getFontUrl(fontFamily);
+  const data: FontData = {
+    langTag,
+    spellCheck: false,
+    fontFamily,
+    fontSize: 'large',
     fontDir,
     url,
     fontConfig: {
