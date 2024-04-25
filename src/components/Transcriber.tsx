@@ -10,7 +10,6 @@ import React, {
 } from 'react';
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
-import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import {
   default as SplitPaneBar,
   Pane as PaneBar,
@@ -32,13 +31,8 @@ import {
   IActivityStateStrings,
   IVProjectStrings,
 } from '../model';
-import {
-  Grid,
-  Paper,
-  Typography,
-  IconButton,
-  TextareaAutosize,
-} from '@mui/material';
+import { Grid, Paper, Typography, IconButton } from '@mui/material';
+import { StyledTextAreaAudosize } from '../control/WebFontStyles';
 import useTodo from '../context/useTodo';
 import PullIcon from '@mui/icons-material/GetAppOutlined';
 import {
@@ -289,7 +283,6 @@ export function Transcriber(props: IProps) {
   const { accessToken } = useContext(TokenContext).state;
   const [assigned, setAssigned] = useState('');
   const [projData, setProjData] = useState<FontData>();
-  const [fontStatus, setFontStatus] = useState<string>();
   const playedSecsRef = useRef<number>(0);
   const segmentsRef = useRef<string>();
   const stateRef = useRef<string>(state);
@@ -328,7 +321,7 @@ export function Transcriber(props: IProps) {
   } = useContext(UnsavedContext).state;
   const [changed, setChanged] = useState(false);
   const [confirm, setConfirm] = useState<ITrans>();
-  const transcriptionRef = React.useRef<any>();
+  const transcriptionRef = React.useRef<any>(null);
   const playingRef = useRef<Boolean>();
   const mediaRef = useRef<MediaFile>({} as MediaFile);
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
@@ -674,9 +667,6 @@ export function Transcriber(props: IProps) {
   const handleChange = (e: any) => {
     setTextValue(e.target.value);
     toolChanged(toolId, true);
-  };
-  const loadStatus = (status: string) => {
-    setFontStatus(status);
   };
 
   const setShowHistory = (value: boolean) => {
@@ -1167,40 +1157,23 @@ export function Transcriber(props: IProps) {
                 <Pane>
                   <Grid item xs={12} sm container>
                     <Grid
-                      ref={transcriptionRef}
                       item
+                      ref={transcriptionRef}
                       xs={showHistory ? 6 : 12}
                       container
                       direction="column"
                     >
-                      {projData && !fontStatus?.endsWith('active') ? (
-                        <WebFontLoader
-                          config={projData.fontConfig}
-                          onStatus={loadStatus}
-                        >
-                          <TextareaAutosize
-                            autoFocus
-                            id="transcriber.text"
-                            value={textValue}
-                            readOnly={!transSelected || role === 'view'}
-                            style={textAreaStyle}
-                            onChange={handleChange}
-                            lang={projData?.langTag || 'en'}
-                            spellCheck={projData?.spellCheck}
-                          />
-                        </WebFontLoader>
-                      ) : (
-                        <TextareaAutosize
-                          autoFocus
-                          id="transcriber.text"
-                          value={textValue}
-                          readOnly={!transSelected || role === 'view'}
-                          style={textAreaStyle}
-                          onChange={handleChange}
-                          lang={projData?.langTag || 'en'}
-                          spellCheck={projData?.spellCheck}
-                        />
-                      )}
+                      <StyledTextAreaAudosize
+                        autoFocus
+                        id="transcriber.text"
+                        value={textValue}
+                        readOnly={!transSelected || role === 'view'}
+                        config={projData?.fontConfig}
+                        style={textAreaStyle}
+                        onChange={handleChange}
+                        lang={projData?.langTag || 'en'}
+                        spellCheck={projData?.spellCheck}
+                      />
                     </Grid>
                     {showHistory && (
                       <Grid item xs={6} container direction="column">

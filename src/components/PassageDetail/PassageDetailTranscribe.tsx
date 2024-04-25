@@ -131,7 +131,7 @@ export function PassageDetailTranscribe({
 
   const handleComplete = (complete: boolean) => {
     waitForIt(
-      'change cleared afert save',
+      'change cleared after save',
       () => !globals.changed,
       () => false,
       200

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { MediaFile, ITranscriptionShowStrings } from '../model';
-import WebFontLoader from '@dr-kobros/react-webfont-loader';
+import { MediaFile, ITranscriptionShowStrings, ProjectD } from '../model';
 import {
   Button,
-  TextField,
   Dialog,
   DialogActions,
   DialogContent,
@@ -12,6 +10,7 @@ import {
   DialogTitle,
   IconButton,
 } from '@mui/material';
+import { StyledTextField } from '../control/WebFontStyles';
 import { FaCopy } from 'react-icons/fa';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
@@ -20,6 +19,7 @@ import {
   getFontData,
   useTranscription,
   related,
+  findRecord,
 } from '../crud';
 import { useSelector, shallowEqual } from 'react-redux';
 import { transcriptionShowSelector } from '../selector';
@@ -38,20 +38,17 @@ function TranscriptionShow(props: IProps) {
   const { id, isMediaId, visible, closeMethod, exportId, version } = props;
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
+  const [projectId] = useGlobal('project');
   const [open, setOpen] = useState(visible);
   const { showMessage } = useSnackBar();
   const [transcription, setTranscription] = useState('');
   const [fontData, setFontData] = useState<FontData>();
-  const [fontStatus, setFontStatus] = useState<string>();
+  const [textStyle, setTextStyle] = useState<React.CSSProperties>({});
   const getTranscription = useTranscription(true, undefined, version);
   const t: ITranscriptionShowStrings = useSelector(
     transcriptionShowSelector,
     shallowEqual
   );
-  const loadStatus = (status: string) => {
-    setFontStatus(status);
-  };
-
   const handleChange = () => {};
 
   const handleClose = () => {
@@ -81,18 +78,21 @@ function TranscriptionShow(props: IProps) {
       setTranscription(
         getTranscription(related(mediaRec, 'passage') || id, exportId)
       );
-      const projRec = getMediaProjRec(mediaRec, memory, reporter);
+      const projRec =
+        getMediaProjRec(mediaRec, memory, reporter) ||
+        (findRecord(memory, 'project', projectId) as ProjectD);
       if (projRec)
-        getFontData(projRec, offline).then((data) => setFontData(data));
+        getFontData(projRec, offline).then((data) => {
+          setFontData(data);
+          setTextStyle({
+            fontFamily: data.fontFamily,
+            fontSize: data.fontSize,
+            direction: data.fontDir as 'ltr' | 'rtl',
+          });
+        });
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [id, isMediaId, exportId]);
-
-  const textStyle = {
-    fontFamily: fontData?.fontFamily || 'CharisSIL',
-    fontSize: fontData?.fontSize || 'large',
-    direction: fontData?.fontDir || 'ltr',
-  } as React.CSSProperties;
 
   return (
     <div>
@@ -105,39 +105,21 @@ function TranscriptionShow(props: IProps) {
         <DialogTitle id="transShowDlg">{t.transcription}</DialogTitle>
         <DialogContent>
           <DialogContentText>{t.transcriptionDisplay}</DialogContentText>
-          {fontData && fontStatus !== 'active' ? (
-            <WebFontLoader config={fontData.fontConfig} onStatus={loadStatus}>
-              <TextField
-                autoFocus
-                margin="dense"
-                variant="filled"
-                multiline
-                id="transcription"
-                label={t.transcription}
-                value={transcription}
-                onChange={handleChange}
-                inputProps={{ style: textStyle }}
-                fullWidth
-                lang={fontData?.langTag || 'en'}
-                spellCheck={false}
-              />
-            </WebFontLoader>
-          ) : (
-            <TextField
-              autoFocus
-              margin="dense"
-              variant="filled"
-              multiline
-              id="transcription"
-              label={t.transcription}
-              value={transcription}
-              onChange={handleChange}
-              inputProps={{ style: textStyle }}
-              fullWidth
-              lang={fontData?.langTag || 'en'}
-              spellCheck={false}
-            />
-          )}
+          <StyledTextField
+            autoFocus
+            margin="dense"
+            variant="filled"
+            multiline
+            id="transcription"
+            label={t.transcription}
+            value={transcription}
+            config={fontData?.fontConfig}
+            onChange={handleChange}
+            inputProps={{ style: textStyle }}
+            fullWidth
+            lang={fontData?.langTag || 'en'}
+            spellCheck={false}
+          />
         </DialogContent>
         <DialogActions
           sx={{ display: 'flex', justifyContent: 'space-between' }}

@@ -1,8 +1,16 @@
 import { Project } from '../model';
 import { dataPath, PathType } from '../utils/dataPath';
 import { isElectron } from '../api-variable';
+import { getFamily, getRtl } from 'mui-language-picker';
 
 const ipc = (window as any)?.electron;
+
+export interface IFontConfig {
+  custom: {
+    families: string[];
+    urls: string[];
+  };
+}
 
 export interface FontData {
   langTag: string;
@@ -11,13 +19,21 @@ export interface FontData {
   fontSize: string;
   fontDir: string;
   url: string;
-  fontConfig: {
-    custom: {
-      families: string[];
-      urls: string[];
-    };
-  };
+  fontConfig: IFontConfig;
 }
+
+export const getFontUrl = (fontFamily: string) => {
+  const fontData = getFamily(fontFamily);
+  const fontDefault =
+    fontData?.defaults?.woff2 ||
+    fontData?.defaults?.woff ||
+    fontData?.defaults?.ttf;
+  return fontDefault
+    ? fontData?.files?.[fontDefault]?.flourl ??
+        fontData?.files?.[fontDefault]?.url ??
+        ''
+    : '';
+};
 
 export const getFontData = async (r: Project, offline: boolean) => {
   const langTag = r?.attributes?.language;
@@ -28,12 +44,11 @@ export const getFontData = async (r: Project, offline: boolean) => {
   const fontSize = r?.attributes?.defaultFontSize
     ? r.attributes.defaultFontSize
     : 'large';
-  const fontDir = r?.attributes?.rtl ? 'rtl' : 'ltr';
-  const fileName = fontFamily + '.css';
-  var url = 'https://s3.amazonaws.com/fonts.siltranscriber.org/' + fileName;
+  const fontDir = r?.attributes?.rtl || getRtl(langTag) ? 'rtl' : 'ltr';
+  let url = getFontUrl(fontFamily);
   if (isElectron) {
     let local = await dataPath('http', PathType.FONTS, {
-      localname: fileName,
+      localname: fontFamily + '.css',
     });
     if (local && !local.startsWith('http')) {
       if (await ipc?.exists(local)) {
