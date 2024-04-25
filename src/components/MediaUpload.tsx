@@ -139,6 +139,7 @@ interface IProps {
   onSpeaker?: (speaker: string) => void;
   createProject?: (name: string) => Promise<string>;
   team?: string; // used to check for speakers when adding a card
+  onFiles?: (files: File[]) => void;
 }
 
 function MediaUpload(props: IProps) {
@@ -155,6 +156,7 @@ function MediaUpload(props: IProps) {
     onSpeaker,
     createProject,
     team,
+    onFiles,
   } = props;
   const [name, setName] = useState('');
   const [files, setFilesx] = useState<File[]>([]);
@@ -203,13 +205,14 @@ function MediaUpload(props: IProps) {
   const setFiles = (f: File[]) => {
     filesRef.current = f;
     setFilesx(f);
+    onFiles && onFiles(f);
   };
   const fileName = (files: File[]) => {
     return files.length === 0
       ? ''
       : files.length === 1
-        ? files[0].name
-        : files.length.toString() + ' files selected';
+      ? files[0].name
+      : files.length.toString() + ' files selected';
   };
   const checkSizes = (files: File[], sizelimit: number) => {
     var smallenoughfiles = Array.from(

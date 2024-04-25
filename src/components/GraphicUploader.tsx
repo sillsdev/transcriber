@@ -54,6 +54,7 @@ interface IProps {
   cancelled: React.MutableRefObject<boolean>;
   uploadType?: UploadType;
   metadata?: JSX.Element;
+  onFiles?: (files: File[]) => void;
 }
 
 export function GraphicUploader(props: IProps) {
@@ -68,6 +69,7 @@ export function GraphicUploader(props: IProps) {
     hasRights,
     finish,
     metadata,
+    onFiles,
   } = props;
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
   const [errorReporter] = useGlobal('errorReporter');
@@ -89,6 +91,20 @@ export function GraphicUploader(props: IProps) {
           ? `${value.toFixed(2)} MB`
           : `${(value * 1024).toFixed(2)} KB`)
     );
+  };
+  const showFile = (files: File[]) => {
+    const options = {
+      maxSizeMb: SIZELIMIT,
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
+    };
+    if (onFiles && files.length === 1) {
+      try {
+        imageCompression(files[0], options).then((compressedFile) => {
+          onFiles([compressedFile]);
+        });
+      } catch {}
+    }
   };
 
   const sizedName = (name: string, size: number, ext: string | undefined) => {
@@ -144,6 +160,7 @@ export function GraphicUploader(props: IProps) {
       uploadMethod={uploadMedia}
       cancelMethod={uploadCancel}
       metaData={metadata}
+      onFiles={showFile}
     />
   );
 }
