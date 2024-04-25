@@ -239,7 +239,6 @@ export function ScriptureTable(props: IProps) {
   const [uploadType, setUploadType] = useState<UploadType>();
   const [curGraphicRights, setCurGraphicRights] = useState('');
   const [graphicFullsizeUrl, setGraphicFullsizeUrl] = useState('');
-  const [graphicHash, setGraphicHash] = useState(0);
   const graphicCreate = useGraphicCreate();
   const graphicUpdate = useGraphicUpdate();
   const graphicFind = useGraphicFind();
@@ -1083,11 +1082,9 @@ export function ScriptureTable(props: IProps) {
       setUploadType(UploadType.Graphic);
       const { ws } = getByIndex(sheetRef.current, i);
       const defaultName = getDefaultName(ws, 'graphic', memory, plan);
-      console.log(`defaultName: ${defaultName}`);
       setDefaultFilename(defaultName);
       uploadItem.current = ws;
       setGraphicFullsizeUrl(ws?.graphicFullSizeUrl ?? '');
-      setGraphicHash(graphicHash + 1);
       setCurGraphicRights(ws?.graphicRights ?? '');
       setUploadGraphicVisible(true);
     });
@@ -1824,6 +1821,12 @@ export function ScriptureTable(props: IProps) {
       setChanged(true);
     }
   };
+  const onFiles = (files: File[]) => {
+    if (files.length > 0) {
+      setGraphicFullsizeUrl(URL.createObjectURL(files[0]));
+    } else setGraphicFullsizeUrl('');
+  };
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <PlanSheet
@@ -1902,6 +1905,7 @@ export function ScriptureTable(props: IProps) {
         finish={afterConvert}
         cancelled={cancelled}
         uploadType={uploadType}
+        onFiles={onFiles}
         metadata={
           <>
             <GraphicRights
@@ -1909,11 +1913,7 @@ export function ScriptureTable(props: IProps) {
               onChange={handleRightsChange}
             />
             {graphicFullsizeUrl && (
-              <img
-                src={`${graphicFullsizeUrl}?${graphicHash}`}
-                alt="new"
-                width={400}
-              />
+              <img src={graphicFullsizeUrl} alt="new" width={400} />
             )}
           </>
         }

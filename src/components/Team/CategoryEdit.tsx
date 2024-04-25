@@ -79,7 +79,6 @@ export default function CategoryEdit({
   const [graphicRights, setGraphicRights] = useState('');
   const [graphicUri, setGraphicUri] = useState('');
   const [graphicFullsizeUrl, setGraphicFullsizeUrl] = useState('');
-  const [graphicHash, setGraphicHash] = useState(0);
   const graphics = useOrbitData<GraphicD[]>('graphic');
   const [uploadGraphicVisible, setUploadGraphicVisible] = useState(false);
   const cancelled = useRef(false);
@@ -166,7 +165,6 @@ export default function CategoryEdit({
         })
       );
     }
-    setGraphicHash(graphicHash + 1);
   };
   const handleColor = (color: ColorResult) => {
     category.color = color.hex;
@@ -177,7 +175,11 @@ export default function CategoryEdit({
     cancelled.current = false;
     setUploadGraphicVisible(true);
   };
-
+  const onFiles = (files: File[]) => {
+    if (files.length > 0) {
+      setGraphicFullsizeUrl(URL.createObjectURL(files[0]));
+    } else setGraphicFullsizeUrl('');
+  };
   return (
     <RowDiv>
       <MediaTitle
@@ -245,6 +247,7 @@ export default function CategoryEdit({
             finish={afterConvert}
             cancelled={cancelled}
             uploadType={UploadType.Graphic}
+            onFiles={onFiles}
             metadata={
               <>
                 <GraphicRights
@@ -253,11 +256,7 @@ export default function CategoryEdit({
                   onChange={handleRightsChange}
                 />
                 {graphicFullsizeUrl && (
-                  <img
-                    src={`${graphicFullsizeUrl}?${graphicHash}`}
-                    alt="new"
-                    width={400}
-                  />
+                  <img src={graphicFullsizeUrl} alt="new" width={400} />
                 )}
               </>
             }
