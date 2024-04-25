@@ -1,33 +1,31 @@
 import React, { useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
-import { connect } from 'react-redux';
 import {
-  IState,
   IPlanTabsStrings,
   Plan,
   Section,
   Passage,
-  MediaFile,
   flatScrColNames,
   flatGenColNames,
   levScrColNames,
   levGenColNames,
+  MediaFileD,
 } from '../model';
-import localStrings from '../selector/localize';
 import { AppBar, Tabs, Tab, Box } from '@mui/material';
 import grey from '@mui/material/colors/grey';
-import ScriptureTable from './Workflow/ScriptureTable';
+import ScriptureTable from './Sheet/ScriptureTable';
 import AudioTab from '../components/AudioTab/AudioTab';
 import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
 import StickyRedirect from './StickyRedirect';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
 import { PlanContext } from '../context/PlanContext';
 import { useOrganizedBy, useMediaCounts, useSectionCounts } from '../crud';
 import { HeadHeight } from '../App';
 import { TabHeight } from '../control';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { shallowEqual, useSelector } from 'react-redux';
+import { planTabsSelector } from '../selector';
 
 export enum tabs {
   sectionPassage = 0,
@@ -36,22 +34,18 @@ export enum tabs {
   transcription = 3,
 }
 
-interface IStateProps {
-  t: IPlanTabsStrings;
-}
-interface IRecordProps {
-  plans: Plan[];
-  sections: Section[];
-  passages: Passage[];
-  mediafiles: MediaFile[];
-}
-interface IProps extends IStateProps, IRecordProps {
+interface IProps {
   checkSaved: (method: () => void) => void;
 }
 const ScrollableTabsButtonAuto = (props: IProps) => {
-  const { t, checkSaved, plans, sections, passages, mediafiles } = props;
+  const { checkSaved } = props;
+  const t: IPlanTabsStrings = useSelector(planTabsSelector, shallowEqual);
+  const plans = useOrbitData<Plan[]>('plan');
+  const sections = useOrbitData<Section[]>('section');
+  const passages = useOrbitData<Passage[]>('passage');
+  const mediafiles = useOrbitData<MediaFileD[]>('mediafile');
   const ctx = React.useContext(PlanContext);
-  const { flat, scripture } = ctx.state;
+  const { flat, scripture, sectionArr } = ctx.state;
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [plan] = useGlobal('plan');
@@ -185,34 +179,18 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
         {tab === tabs.sectionPassage && (
           <ScriptureTable {...props} colNames={colNames} />
         )}
-        {tab === tabs.media && (
-          <AudioTab
-            {...props}
-            // projectplans={plans.filter((p) => p.id === plan)}
-          />
-        )}
-        {tab === tabs.assignment && <AssignmentTable {...props} />}
+        {tab === tabs.media && <AudioTab />}
+        {tab === tabs.assignment && <AssignmentTable />}
         {tab === tabs.transcription && (
           <TranscriptionTab
             {...props}
             projectPlans={plans.filter((p) => p.id === plan)}
+            sectionArr={sectionArr}
           />
         )}
       </Box>
     </Box>
   );
 };
-const mapRecordsToProps = {
-  plans: (q: QueryBuilder) => q.findRecords('plan'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
-  passages: (q: QueryBuilder) => q.findRecords('passage'),
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-};
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'planTabs' }),
-});
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(ScrollableTabsButtonAuto) as any
-) as any;
+export default ScrollableTabsButtonAuto;

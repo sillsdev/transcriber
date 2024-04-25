@@ -1,20 +1,14 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useGlobal } from 'reactn';
-import { TokenContext } from '../context/TokenProvider';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import {
-  IState,
   User,
+  UserD,
   IProfileStrings,
   DigestPreference,
   OrganizationMembership,
+  OrganizationMembershipD,
 } from '../model';
-import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
-import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   Paper,
   Grid,
@@ -51,11 +45,11 @@ import {
   uiLangDev,
   langName,
   localeDefault,
-  getParatextDataPath,
   waitForIt,
   useMyNavigate,
   localUserKey,
   LocalKey,
+  useWaitForRemoteQueue,
 } from '../utils';
 import moment from 'moment-timezone';
 import {
@@ -69,6 +63,10 @@ import { useSnackBar } from '../hoc/SnackBar';
 import SelectRole from '../control/SelectRole';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { ActionRow, AltButton, PriButton } from '../control';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { shallowEqual, useSelector } from 'react-redux';
+import { profileSelector } from '../selector';
+import { useDispatch } from 'react-redux';
 
 // see: https://mui.com/material-ui/customization/how-to-customize/
 interface ContainerProps extends PaperProps {
@@ -84,11 +82,11 @@ const PaperContainer = styled(Paper, {
   justifyContent: 'center',
   ...(noMargin
     ? {
-        margin: 0,
-      }
+      margin: 0,
+    }
     : {
-        margin: theme.spacing(4),
-      }),
+      margin: theme.spacing(4),
+    }),
 }));
 
 const Caption = styled(Typography)<TypographyProps>(() => ({
@@ -120,46 +118,30 @@ const StyledGrid = styled(Grid)<GridProps>(() => ({
   padding: '0 30px',
 }));
 
-interface IStateProps {
-  t: IProfileStrings;
-  paratext_username: string; // state.paratext.username
-  paratext_usernameStatus?: IAxiosStatus;
-}
-
-interface IDispatchProps {
-  setLanguage: typeof action.setLanguage;
-  getUserName: typeof action.getUserName;
-}
-
-interface IRecordProps {
-  users: Array<User>;
-}
-
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+interface IProps {
   noMargin?: boolean;
   finishAdd?: () => void;
 }
 
 export function Profile(props: IProps) {
-  const { users, t, noMargin, finishAdd, setLanguage } = props;
-  const { paratext_username, paratext_usernameStatus, getUserName } = props;
+  const { noMargin, finishAdd } = props;
+  const users = useOrbitData<UserD[]>('user');
+  const t: IProfileStrings = useSelector(profileSelector, shallowEqual);
+  const dispatch = useDispatch();
+  const setLanguage = (lang: string) => dispatch(action.setLanguage(lang));
   const [isOffline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
-  const [coordinator] = useGlobal('coordinator');
-  const [connected] = useGlobal('connected');
   const [editId, setEditId] = useGlobal('editUserId');
   const [organization] = useGlobal('organization');
   const [user, setUser] = useGlobal('user');
   const [, setLang] = useGlobal('lang');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [errorReporter] = useGlobal('errorReporter');
   const [isDeveloper] = useGlobal('developer');
   const navigate = useMyNavigate();
-  const { accessToken } = useContext(TokenContext).state;
   const { getUserRec } = useUser();
   const { getMbrRoleRec, userIsAdmin, userIsSharedContentAdmin } = useRole();
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
-  const [currentUser, setCurrentUser] = useState<User | undefined>();
+  const [currentUser, setCurrentUser] = useState<UserD | undefined>();
   const [name, setName] = useState('');
   const [given, setGiven] = useState<string | null>(null);
   const [family, setFamily] = useState<string | null>(null);
@@ -181,7 +163,6 @@ export function Profile(props: IProps) {
   const [locked, setLocked] = useState(false);
   const [deleteItem, setDeleteItem] = useState('');
   const [dupName, setDupName] = useState(false);
-  const [hasParatext, setHasParatext] = useState(false);
   const [view, setView] = useState('');
   const {
     startSave,
@@ -194,13 +175,14 @@ export function Profile(props: IProps) {
     isChanged,
   } = useContext(UnsavedContext).state;
   const [myChanged, setMyChanged] = useState(false);
-  const [ptPath, setPtPath] = React.useState('');
   const { showMessage } = useSnackBar();
   const addToOrgAndGroup = useAddToOrgAndGroup();
   const teamDelete = useTeamDelete();
   const toolId = 'profile';
   const saving = useRef(false);
   const [confirmCancel, setConfirmCancel] = useState<string>();
+  const waitForRemoteQueue = useWaitForRemoteQueue();
+
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
   };
@@ -298,7 +280,7 @@ export function Profile(props: IProps) {
       saving.current = true;
       const currentUserId = currentUser === undefined ? user : currentUser.id; //currentuser will not be undefined here
       memory.update(
-        (t: TransformBuilder) =>
+        (t) =>
           UpdateRecord(
             t,
             {
@@ -322,7 +304,7 @@ export function Profile(props: IProps) {
                 sharedContentCreator: sharedContent,
                 avatarUrl,
               },
-            } as User,
+            } as UserD,
             currentUser !== undefined ? currentUser.id : ''
           )
         // we aren't allowing them to change owner oraganization currently
@@ -332,11 +314,11 @@ export function Profile(props: IProps) {
         'organization',
         organization,
         currentUserId
-      ) as OrganizationMembership[];
+      ) as OrganizationMembershipD[];
       if (mbrRec.length > 0) {
         const curRoleId = related(mbrRec[0], 'role');
         if (curRoleId !== role) {
-          memory.update((t: TransformBuilder) =>
+          memory.update((t) =>
             UpdateRelatedRecord(t, mbrRec[0], 'role', 'role', role, user)
           );
         }
@@ -353,7 +335,7 @@ export function Profile(props: IProps) {
 
   const handleAdd = async () => {
     if (isChanged(toolId)) {
-      let userRec: User = {
+      let userRec = {
         type: 'user',
         attributes: {
           name,
@@ -374,12 +356,10 @@ export function Profile(props: IProps) {
           hotKeys,
           avatarUrl,
         },
-      } as any;
+      } as User;
       if (!editId || !organization) {
-        await memory.update((t: TransformBuilder) =>
-          AddRecord(t, userRec, user, memory)
-        );
-        if (offlineOnly) setUser(userRec.id);
+        await memory.update((t) => AddRecord(t, userRec, user, memory));
+        if (offlineOnly) setUser(userRec.id as string);
       } else {
         addToOrgAndGroup(userRec, true);
       }
@@ -390,7 +370,7 @@ export function Profile(props: IProps) {
           () => false,
           100
         );
-        if (offlineOnly) localStorage.setItem('user-id', userRec.id);
+        if (offlineOnly) localStorage.setItem('user-id', userRec.id as string);
       }
       saveCompleted(toolId);
     }
@@ -443,25 +423,14 @@ export function Profile(props: IProps) {
   };
   const handleDeleteConfirmed = async () => {
     const deleteRec = getUserRec(deleteItem);
-    const remote = coordinator.getSource('remote');
-    await waitForIt(
-      'wait for any changes to finish',
-      () => !remote || !connected || remote.requestQueue.length === 0,
-      () => false,
-      200
-    );
+    await waitForRemoteQueue('wait for any changes to finish');
     await RemoveUserFromOrg(memory, deleteRec, undefined, user, teamDelete);
     await memory.update((tb) =>
       tb.removeRecord({ type: 'user', id: deleteItem })
     );
     //wait to be sure orbit remote is done also
     try {
-      await waitForIt(
-        'logout after user delete',
-        () => !remote || !connected || remote.requestQueue.length === 0,
-        () => false,
-        200
-      );
+      await waitForRemoteQueue('logout after user delete');
     } catch {
       //well we tried...
     }
@@ -473,13 +442,12 @@ export function Profile(props: IProps) {
   };
 
   useEffect(() => {
-    if (isOffline) getParatextDataPath().then((val) => setPtPath(val));
     setView('');
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   useEffect(() => {
-    let userRec: User = {
+    let userRec = {
       type: 'user',
       id: '',
       attributes: {
@@ -509,8 +477,8 @@ export function Profile(props: IProps) {
       const current = users.filter((u) => u.id === (editId ? editId : user));
       if (current.length === 1) {
         userRec = current[0];
-        setCurrentUser(userRec);
-        const orgMbrRecs = memory.cache.query((q: QueryBuilder) =>
+        setCurrentUser(userRec as UserD);
+        const orgMbrRecs = memory.cache.query((q) =>
           q.findRecords('organizationmembership')
         ) as OrganizationMembership[];
         const mbrRec = orgMbrRecs.filter(
@@ -528,7 +496,7 @@ export function Profile(props: IProps) {
     setName(attr.name !== attr.email ? attr.name : '');
     setGiven(attr.givenName ? attr.givenName : '');
     setFamily(attr.familyName ? attr.familyName : '');
-    setEmail(attr.email);
+    setEmail(attr.email.toLowerCase());
     setPhone(attr.phone);
     setTimezone(attr.timezone || '');
     setLocale(attr.locale ? attr.locale : localeDefault(isDeveloper));
@@ -554,19 +522,10 @@ export function Profile(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timezone]);
 
-  useEffect(() => {
-    if (!isOffline) {
-      if (!paratext_usernameStatus) {
-        getUserName(accessToken || '', errorReporter, t.checkingParatext);
-      }
-      setHasParatext(paratext_username !== '');
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [paratext_username, paratext_usernameStatus]);
-
   const userNotComplete = () =>
     currentUser === undefined ||
-    currentUser.attributes?.name === currentUser.attributes?.email;
+    currentUser.attributes?.name.toLowerCase() ===
+    currentUser.attributes?.email.toLowerCase();
 
   const requiredComplete = () =>
     (name || '') !== '' &&
@@ -589,14 +548,8 @@ export function Profile(props: IProps) {
           <Grid container>
             <StyledGrid item xs={12} md={5}>
               <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-              {name !== email && <Caption variant="h6">{name || ''}</Caption>}
               <Caption>{email || ''}</Caption>
-              <ParatextLinked
-                hasParatext={hasParatext}
-                ptPath={ptPath}
-                setView={setView}
-                isOffline={isOffline}
-              />
+              <ParatextLinked setView={setView} />
             </StyledGrid>
             <Grid item xs={12} md={7}>
               {editId && /Add/i.test(editId) ? (
@@ -795,16 +748,16 @@ export function Profile(props: IProps) {
                 {((editId && /Add/i.test(editId)) ||
                   (currentUser &&
                     currentUser.attributes?.name !==
-                      currentUser.attributes?.email)) && (
-                  <AltButton
-                    id="profileCancel"
-                    key="cancel"
-                    aria-label={t.cancel}
-                    onClick={handleCancel}
-                  >
-                    {t.cancel}
-                  </AltButton>
-                )}
+                    currentUser.attributes?.email)) && (
+                    <AltButton
+                      id="profileCancel"
+                      key="cancel"
+                      aria-label={t.cancel}
+                      onClick={handleCancel}
+                    >
+                      {t.cancel}
+                    </AltButton>
+                  )}
                 <PriButton
                   id="profileSave"
                   key="add"
@@ -820,8 +773,8 @@ export function Profile(props: IProps) {
                   {editId && /Add/i.test(editId)
                     ? t.add
                     : userNotComplete()
-                    ? t.next
-                    : t.save}
+                      ? t.next
+                      : t.save}
                   <SaveIcon sx={{ ml: 1 }} />
                 </PriButton>
               </ActionRow>
@@ -841,6 +794,7 @@ export function Profile(props: IProps) {
         </Box>
         {deleteItem !== '' && (
           <Confirm
+            text={''}
             yesResponse={handleDeleteConfirmed}
             noResponse={handleDeleteRefused}
           />
@@ -857,26 +811,4 @@ export function Profile(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'profile' }),
-  paratext_username: state.paratext.username,
-  paratext_usernameStatus: state.paratext.usernameStatus,
-});
-
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-};
-
-const mapDispatchToProps = (dispatch: any) => ({
-  ...bindActionCreators(
-    {
-      setLanguage: action.setLanguage,
-      getUserName: action.getUserName,
-    },
-    dispatch
-  ),
-});
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(Profile as any) as any
-) as any;
+export default Profile;

@@ -1,49 +1,25 @@
 import { MenuItem, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
-import {
-  GroupMembership,
-  ISharedStrings,
-  IPeerStrings,
-  User,
-  Group,
-} from '../model';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
+import { IPeerStrings, Group } from '../model';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { useSelector, shallowEqual } from 'react-redux';
 import { peerSelector } from '../selector';
 
-interface IStateProps {
-  ts: ISharedStrings;
-}
-interface IRecordProps {
-  users: User[];
-  groups: Group[];
-  memberships: GroupMembership[];
-}
-interface IProps extends IStateProps, IRecordProps {
+interface IProps {
+  id?: string;
   org: boolean;
   initGroup?: string;
-  required: boolean;
-  disabled: boolean;
+  required?: boolean;
+  disabled?: boolean;
   label?: string;
   groupId?: string;
   onChange: (groupValue: string, groupId?: string) => void;
 }
 
 export const SelectPeerGroup = (props: IProps) => {
-  const {
-    users,
-    groups,
-    memberships,
-    onChange,
-    initGroup,
-    required,
-    disabled,
-    label,
-    groupId,
-  } = props;
-  const { peerGroups } = usePeerGroups({ users, groups, memberships });
+  const { onChange, initGroup, required, disabled, label, groupId } = props;
+  const { id: idIn } = props;
+  const { peerGroups } = usePeerGroups();
   const [groupValue, setGroupValue] = useState(initGroup);
   const t = useSelector(peerSelector, shallowEqual) as IPeerStrings;
 
@@ -58,7 +34,7 @@ export const SelectPeerGroup = (props: IProps) => {
 
   return (
     <TextField
-      id={'select-peer-group' + (groupId || '')}
+      id={idIn || 'select-peer-group' + (groupId || '')}
       sx={{ mx: 1, display: 'flex', flexGrow: 1, minWidth: '8rem' }}
       select
       label={t.peerGroup}
@@ -81,10 +57,4 @@ export const SelectPeerGroup = (props: IProps) => {
   );
 };
 
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-  groups: (q: QueryBuilder) => q.findRecords('group'),
-};
-
-export default withData(mapRecordsToProps)(SelectPeerGroup) as any;
+export default SelectPeerGroup;

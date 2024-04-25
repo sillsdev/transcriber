@@ -7,10 +7,11 @@ import {
   Section,
   MediaFile,
   Passage,
-  PassageStateChange,
+  PassageStateChangeD,
   GroupMembership,
+  GroupMembershipD,
   Group,
-  ProjectIntegration,
+  ProjectIntegrationD,
   OfflineProject,
   VProject,
   Discussion,
@@ -18,11 +19,11 @@ import {
   IApiError,
 } from '../../model';
 import { API_CONFIG } from '../../api-variable';
-import { ResourceDocument } from '@orbit/jsonapi';
 import {
-  getSerializer,
-  JSONAPISerializerCustom,
-} from '../../serializers/JSONAPISerializerCustom';
+  JSONAPIDocumentSerializer,
+  // ResourceDocument
+} from '@orbit/jsonapi';
+import { getDocSerializer } from '../../serializers/getSerializer';
 import {
   EXPORT_PENDING,
   EXPORT_SUCCESS,
@@ -41,7 +42,6 @@ import {
 } from './types';
 import { errStatus, errorStatus } from '../AxiosStatus';
 import Memory from '@orbit/memory';
-import { TransformBuilder, Operation, QueryBuilder } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import { electronExport } from './electronExport';
 import {
@@ -61,6 +61,13 @@ import Coordinator from '@orbit/coordinator';
 import { axiosPost } from '../../utils/axios';
 import { updateBackTranslationType } from '../../crud/updateBackTranslationType';
 import { updateConsultantWorkflowStep } from '../../crud/updateConsultantWorkflowStep';
+import {
+  InitializedRecord,
+  RecordKeyMap,
+  RecordOperation,
+  RecordTransformBuilder,
+} from '@orbit/records';
+import { requestedSchema } from '../../schema';
 const ipc = (window as any)?.electron;
 
 export const exportComplete = () => (dispatch: any) => {
@@ -106,14 +113,16 @@ export const exportProject =
       type: EXPORT_PENDING,
     });
     const getProjRec = (projectid: number | string): Project => {
-      return memory.cache.query((q: QueryBuilder) =>
-        q.findRecord({
-          type: 'project',
-          id:
-            typeof projectid === 'number'
-              ? remoteIdGuid('project', projectid.toString(), memory.keyMap)
-              : projectid,
-        })
+      return findRecord(
+        memory,
+        'project',
+        typeof projectid === 'number'
+          ? (remoteIdGuid(
+              'project',
+              projectid.toString(),
+              memory.keyMap as RecordKeyMap
+            ) as string)
+          : projectid
       ) as Project;
     };
     if (!token || exportType === ExportType.ITFSYNC) {
@@ -151,7 +160,7 @@ export const exportProject =
       const remProjectId =
         typeof projectid === 'number'
           ? projectid.toString()
-          : remoteId('project', projectid, memory.keyMap);
+          : remoteId('project', projectid, memory.keyMap as RecordKeyMap);
       let start = 0;
       let laststart = 0;
       let laststartCount = 0;
@@ -166,7 +175,7 @@ export const exportProject =
             target,
             orgWorkflowSteps,
           } as IExportArtifacts)?.map((m) =>
-            remoteId('mediafile', m.id, memory.keyMap)
+            remoteId('mediafile', m.id, memory.keyMap as RecordKeyMap)
           );
           if (mediaList && mediaList.length > 0) {
             if (artifactType)
@@ -545,14 +554,14 @@ export const importProjectToElectron =
     offlineSetup,
   }: ImportProjectToElectronProps) =>
   async (dispatch: any) => {
-    var tb: TransformBuilder = new TransformBuilder();
-    var oparray: Operation[] = [];
+    var tb = new RecordTransformBuilder();
+    var oparray: RecordOperation[] = [];
 
     const memory = coordinator.getSource('memory') as Memory;
     const backup = coordinator.getSource('backup') as IndexedDBSource;
 
     const importJson = async (
-      ser: JSONAPISerializerCustom,
+      ser: JSONAPIDocumentSerializer,
       file: string,
       folder?: string
     ) => {
@@ -560,10 +569,29 @@ export const importProjectToElectron =
         file = path.join(folder, file);
       }
       const data = (await ipc?.read(file, 'utf-8')) as string;
-      return ser.deserialize(JSON.parse(data) as ResourceDocument);
+      // return ser.deserialize(JSON.parse(data) as ResourceDocument);
+      const doc = JSON.parse(data);
+      const recs = doc.data as InitializedRecord[];
+      if (recs.length > 0 && recs[0].id.length > 10) {
+        const relates = recs.map((r) => r.relationships);
+        recs.forEach((r) => delete r.relationships);
+        const results = ser.deserialize(doc);
+        const resultData = results.data as InitializedRecord[];
+        relates.forEach((r, i) => {
+          const rec = resultData[i];
+          rec.relationships = r;
+          if (rec?.keys?.remoteId) {
+            rec.id = rec.keys.remoteId;
+            delete rec.keys;
+          }
+        });
+        return results;
+      } else {
+        return ser.deserialize(doc);
+      }
     };
 
-    async function getProjectFromFile(ser: JSONAPISerializerCustom) {
+    async function getProjectFromFile(ser: JSONAPIDocumentSerializer) {
       let json = await importJson(ser, 'D_projects.json', filepath);
       var project: any;
       if (Array.isArray(json.data)) project = json.data[0];
@@ -573,7 +601,7 @@ export const importProjectToElectron =
         id = remoteIdGuid(
           project.type,
           project.keys['remoteId'],
-          memory.keyMap
+          memory.keyMap as RecordKeyMap
         );
       }
       try {
@@ -585,7 +613,7 @@ export const importProjectToElectron =
         return undefined;
       }
     }
-    async function removeProject(ser: JSONAPISerializerCustom) {
+    async function removeProject(ser: JSONAPIDocumentSerializer) {
       var rec = await getProjectFromFile(ser);
 
       if (!rec) return;
@@ -596,7 +624,8 @@ export const importProjectToElectron =
       //if this is the only project using this group, then delete the group memberships
       //if not, we'd best leave them alone just in case
       var projectsWithGroup = (
-        memory.cache.query((q) => q.findRecords('project')) as Project[]
+        memory.cache.query((q) => q.findRecords('project')) as (Project &
+          InitializedRecord)[]
       ).filter((p) => related(p, 'group') === group.id);
       var gmids: string[] = [];
       var userids: string[] = [];
@@ -604,7 +633,7 @@ export const importProjectToElectron =
         var gms = (
           memory.cache.query((q) =>
             q.findRecords('groupmembership')
-          ) as GroupMembership[]
+          ) as GroupMembershipD[]
         ).filter((gm) => related(gm, 'group') === group.id);
         gms.forEach((gm) => {
           gmids.push(gm.id);
@@ -620,32 +649,38 @@ export const importProjectToElectron =
       var projintids = (
         memory.cache.query((q) =>
           q.findRecords('projectintegration')
-        ) as ProjectIntegration[]
+        ) as ProjectIntegrationD[]
       )
         .filter((pl) => related(pl, 'project') === rec?.id)
         .map((pi) => pi.id);
-      var planids = (memory.cache.query((q) => q.findRecords('plan')) as Plan[])
+      var planids = (
+        memory.cache.query((q) => q.findRecords('plan')) as (Plan &
+          InitializedRecord)[]
+      )
         .filter((pl) => related(pl, 'project') === rec?.id)
         .map((pl) => pl.id);
       var sectionids = (
-        memory.cache.query((q) => q.findRecords('section')) as Section[]
+        memory.cache.query((q) => q.findRecords('section')) as (Section &
+          InitializedRecord)[]
       )
         .filter((s) => planids.includes(related(s, 'plan')))
         .map((s) => s.id);
       var passageids = (
-        memory.cache.query((q) => q.findRecords('passage')) as Passage[]
+        memory.cache.query((q) => q.findRecords('passage')) as (Passage &
+          InitializedRecord)[]
       )
         .filter((p) => sectionids.includes(related(p, 'section')))
         .map((p) => p.id);
       var pscids = (
         memory.cache.query((q) =>
           q.findRecords('passagestatechange')
-        ) as PassageStateChange[]
+        ) as PassageStateChangeD[]
       )
         .filter((psc) => passageids.includes(related(psc, 'passage')))
         .map((p) => p.id);
       var mediaids = (
-        memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
+        memory.cache.query((q) => q.findRecords('mediafile')) as (MediaFile &
+          InitializedRecord)[]
       )
         .filter(
           (m) =>
@@ -655,12 +690,14 @@ export const importProjectToElectron =
         )
         .map((m) => m.id);
       var discussionids = (
-        memory.cache.query((q) => q.findRecords('discussion')) as Discussion[]
+        memory.cache.query((q) => q.findRecords('discussion')) as (Discussion &
+          InitializedRecord)[]
       )
         .filter((d) => mediaids.includes(related(d, 'mediafile')))
         .map((d) => d.id);
       var commentids = (
-        memory.cache.query((q) => q.findRecords('comment')) as Comment[]
+        memory.cache.query((q) => q.findRecords('comment')) as (Comment &
+          InitializedRecord)[]
       )
         .filter((c) => discussionids.includes(related(c, 'discussion')))
         .map((c) => c.id);
@@ -670,36 +707,52 @@ export const importProjectToElectron =
         type: IMPORT_PENDING,
       });
 
-      var delOpArray: Operation[] = [];
+      var delOpArray: RecordOperation[] = [];
       commentids.forEach((id) =>
-        delOpArray.push(tb.removeRecord({ type: 'comment', id: id }))
+        delOpArray.push(
+          tb.removeRecord({ type: 'comment', id: id }).toOperation()
+        )
       );
       discussionids.forEach((id) =>
-        delOpArray.push(tb.removeRecord({ type: 'discussion', id: id }))
+        delOpArray.push(
+          tb.removeRecord({ type: 'discussion', id: id }).toOperation()
+        )
       );
       mediaids.forEach((id) =>
-        delOpArray.push(tb.removeRecord({ type: 'mediafile', id: id }))
+        delOpArray.push(
+          tb.removeRecord({ type: 'mediafile', id: id }).toOperation()
+        )
       );
       pscids.forEach((id) =>
-        delOpArray.push(tb.removeRecord({ type: 'passagestatechange', id: id }))
+        delOpArray.push(
+          tb.removeRecord({ type: 'passagestatechange', id: id }).toOperation()
+        )
       );
       passageids.forEach((id) =>
-        delOpArray.push(tb.removeRecord({ type: 'passage', id: id }))
+        delOpArray.push(
+          tb.removeRecord({ type: 'passage', id: id }).toOperation()
+        )
       );
       sectionids.forEach((id) =>
-        delOpArray.push(tb.removeRecord({ type: 'section', id: id }))
+        delOpArray.push(
+          tb.removeRecord({ type: 'section', id: id }).toOperation()
+        )
       );
       planids.forEach((id) =>
-        delOpArray.push(tb.removeRecord({ type: 'plan', id: id }))
+        delOpArray.push(tb.removeRecord({ type: 'plan', id: id }).toOperation())
       );
       projintids.forEach((id) =>
-        delOpArray.push(tb.removeRecord({ type: 'projectintegration', id: id }))
+        delOpArray.push(
+          tb.removeRecord({ type: 'projectintegration', id: id }).toOperation()
+        )
       );
       gmids.forEach((id) =>
-        delOpArray.push(tb.removeRecord({ type: 'groupmembership', id: id }))
+        delOpArray.push(
+          tb.removeRecord({ type: 'groupmembership', id: id }).toOperation()
+        )
       );
       userids.forEach((id) =>
-        delOpArray.push(tb.removeRecord({ type: 'user', id: id }))
+        delOpArray.push(tb.removeRecord({ type: 'user', id: id }).toOperation())
       );
       dispatch({
         payload: pendingmsg.replace('{0}', '10'),
@@ -712,7 +765,7 @@ export const importProjectToElectron =
         type: IMPORT_PENDING,
       });
     }
-    async function saveToMemory(oparray: Operation[], title: string) {
+    async function saveToMemory(oparray: RecordOperation[], title: string) {
       try {
         return await memory.update(oparray);
       } catch (err: any) {
@@ -720,10 +773,10 @@ export const importProjectToElectron =
         throw err;
       }
     }
-    async function saveToBackup(oparray: Operation[], title: string) {
+    async function saveToBackup(oparray: RecordOperation[], title: string) {
       if (!coordinator.activated) {
         try {
-          return await backup.push(oparray);
+          return await backup.sync((t) => oparray);
         } catch (err: any) {
           reportError(orbitInfo(err, title));
           throw err;
@@ -733,8 +786,8 @@ export const importProjectToElectron =
     }
     async function syncPassageState(
       project: Project,
-      tb: TransformBuilder,
-      oparray: Operation[]
+      tb: RecordTransformBuilder,
+      oparray: RecordOperation[]
     ) {
       var plans = memory.cache.query((q) => q.findRecords('plan')) as Plan[];
       var planids = plans
@@ -755,18 +808,19 @@ export const importProjectToElectron =
         ) as Passage;
         if (passage) {
           m.attributes.transcriptionstate = passage.attributes.state;
-          oparray.push(tb.updateRecord(m));
+          oparray.push(tb.updateRecord(m).toOperation());
         }
       });
     }
 
     async function processFile(
       file: string,
-      ser: JSONAPISerializerCustom,
+      ser: JSONAPIDocumentSerializer,
       dataDate: string
     ) {
       let json = await importJson(ser, file);
       var project: Project | undefined = undefined;
+      if (!json?.data) return project;
       if (!Array.isArray(json.data)) json.data = [json.data];
       for (let n = 0; n < json.data.length; n += 1) {
         const item = json.data[n];
@@ -780,6 +834,7 @@ export const importProjectToElectron =
             reportError,
             true,
             true,
+            file.includes('D_projects.json'), //not z_supportingprojects
             dataDate
           )) || project;
       }
@@ -809,7 +864,7 @@ export const importProjectToElectron =
       });
     } else {
       const files = result as string[];
-      const ser = getSerializer(memory, offlineOnly);
+      const ser = getDocSerializer(memory);
       try {
         //remove all project data
         await removeProject(ser);
@@ -838,13 +893,13 @@ export const importProjectToElectron =
         });
         //remove records with no attributes...i.e. groups created from user's groupmemberships that we didn't import
         oparray = [];
-        var allrecs = await backup.pull((q) => q.findRecords());
-
-        allrecs[0].operations.forEach((r: any) => {
-          if (r.record.attributes === undefined) {
-            oparray.push(
-              tb.removeRecord({ type: r.record.type, id: r.record.id })
-            );
+        let allrecs = (await backup.query((q) =>
+          q.findRecords()
+        )) as InitializedRecord[];
+        if (!Array.isArray(allrecs)) allrecs = [allrecs];
+        allrecs.forEach((r: InitializedRecord) => {
+          if (r.attributes === undefined) {
+            oparray.push(tb.removeRecord(r).toOperation());
           }
         });
         if (version < 4 && project) {
@@ -858,7 +913,7 @@ export const importProjectToElectron =
           await saveToMemory(oparray, 'remove extra records');
           await saveToBackup(oparray, 'remove extra records from backup');
         }
-        if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 4) {
+        if (requestedSchema > 4) {
           await updateBackTranslationType(
             memory,
             token,
@@ -867,7 +922,7 @@ export const importProjectToElectron =
             offlineSetup
           );
         }
-        if (parseInt(process.env.REACT_APP_SCHEMAVERSION || '100') > 5) {
+        if (requestedSchema > 5) {
           await updateConsultantWorkflowStep(token, memory, user);
         }
         AddProjectLoaded(project?.id || '');

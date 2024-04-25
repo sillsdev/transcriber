@@ -11,15 +11,14 @@ export const useLogoutResets = () => {
   const ctx = useContext(TokenContext).state;
 
   return async () => {
-    if (isElectron) setUser('');
-    if (ctx.accessToken) {
+    if (ctx.accessToken && localStorage.getItem('isLoggedIn')) {
       localStorage.removeItem('isLoggedIn');
       if (isElectron) {
         setIsOffline(isElectron);
         if (coordinator?.sourceNames.includes('remote')) {
           await coordinator.deactivate();
-          coordinator.removeStrategy('remote-push-fail');
-          coordinator.removeStrategy('remote-pull-fail');
+          coordinator.removeStrategy('remote-query-fail');
+          coordinator.removeStrategy('remote-update-fail');
           coordinator.removeStrategy('remote-request');
           coordinator.removeStrategy('remote-update');
           coordinator.removeStrategy('remote-sync');
@@ -28,5 +27,6 @@ export const useLogoutResets = () => {
         }
       }
     }
+    if (isElectron) setUser('');
   };
 };

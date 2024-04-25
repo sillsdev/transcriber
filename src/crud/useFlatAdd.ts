@@ -1,7 +1,7 @@
 import { useGlobal } from 'reactn';
-import { Passage, MediaFile, ActivityStates, ISharedStrings } from '../model';
-import { QueryBuilder } from '@orbit/data';
+import { Passage, ActivityStates, ISharedStrings, MediaFileD } from '../model';
 import { remoteIdGuid, saveNewSection, AddFlatPassage } from '.';
+import { RecordKeyMap } from '@orbit/records';
 
 export const useFlatAdd = (ts: ISharedStrings) => {
   const [memory] = useGlobal('memory');
@@ -13,16 +13,19 @@ export const useFlatAdd = (ts: ISharedStrings) => {
     book: string | undefined,
     setComplete?: (amt: number) => void
   ) => {
-    const mediaRecs = memory.cache.query((q: QueryBuilder) =>
+    const mediaRecs = memory.cache.query((q) =>
       q.findRecords('mediafile')
-    ) as MediaFile[];
+    ) as MediaFileD[];
     const total = mediaRemoteIds.length;
     for (let seq = 0; seq < total; seq++) {
       if (setComplete) setComplete(Math.floor((100.0 * seq) / total));
       const mediaRemoteId = mediaRemoteIds[seq];
       const mediaId =
-        remoteIdGuid('mediafile', mediaRemoteId, memory.keyMap) ||
-        mediaRemoteId;
+        remoteIdGuid(
+          'mediafile',
+          mediaRemoteId,
+          memory.keyMap as RecordKeyMap
+        ) || mediaRemoteId;
       const mediaRec = mediaRecs.filter((m) => m.id === mediaId);
       if (mediaRec.length > 0) {
         const mediaAttr = mediaRec[0].attributes;
@@ -44,7 +47,6 @@ export const useFlatAdd = (ts: ISharedStrings) => {
             book: book,
             reference: ts.part.replace('{0}', (seq + 1).toString()),
             title: '',
-            position: 0,
             hold: false,
             state: ActivityStates.TranscribeReady,
           },

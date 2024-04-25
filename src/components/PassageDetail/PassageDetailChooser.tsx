@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useGlobal } from 'reactn';
-import { Passage, IPassageChooserStrings } from '../../model';
+import { IPassageChooserStrings, PassageD } from '../../model';
 import {
   Typography,
   Box,
@@ -11,16 +11,18 @@ import {
   SxProps,
 } from '@mui/material';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import {
-  related,
-  findRecord,
-  passageReference,
-  getPasIdByNum,
-} from '../../crud';
+import { related, passageRefText, remoteId } from '../../crud';
 import { rememberCurrentPassage } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { passageChooserSelector } from '../../selector';
 import { usePassageNavigate } from './usePassageNavigate';
+import { PassageTypeEnum } from '../../model/passageType';
+import {
+  passageTypeFromRef,
+  isPublishingTitle,
+  RefRender,
+} from '../../control/RefRender';
+import { RecordKeyMap } from '@orbit/records';
 
 interface StyledBoxProps extends BoxProps {
   width?: number;
@@ -36,7 +38,8 @@ const StyledBox = styled(Box, {
 
 interface Mark {
   value: number;
-  label: string;
+  label: React.ReactNode;
+  id: string;
 }
 
 interface IProps {
@@ -52,9 +55,11 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
   const [value, setValue] = useState(0);
   const marks = useRef<Array<Mark>>([]);
   const [view, setView] = useState('');
+  const { setCurrentStep } = usePassageDetailContext();
   const passageNavigate = usePassageNavigate(() => {
     setView('');
-  });
+  }, setCurrentStep);
+
   const t = useSelector(
     passageChooserSelector,
     shallowEqual
@@ -63,7 +68,9 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
   const handleChange = (event: React.SyntheticEvent, newValue: any) => {
     if (typeof newValue === 'number') {
       if (newValue !== value) {
-        const pasId = getPasIdByNum(section, newValue + 1, memory);
+        const selId = marks.current[newValue]?.id;
+        const pasId =
+          remoteId('passage', selId, memory.keyMap as RecordKeyMap) || selId;
         if (pasId) {
           rememberCurrentPassage(memory, pasId);
           setView(`/detail/${prjId}/${pasId}`);
@@ -74,39 +81,53 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
   };
 
   useEffect(() => {
-    const seq = passage?.attributes?.sequencenum;
-    setValue(seq ? seq - 1 : 0);
-  }, [passage]);
-
-  useEffect(() => {
     // Next line doesn't work in desktop app
     // const passages = related(section, 'passages') as Passage[];
     const passages = (
-      memory.cache.query((q) => q.findRecords('passage')) as Passage[]
+      memory.cache.query((q) => q.findRecords('passage')) as PassageD[]
     ).filter((p) => related(p, 'section') === section?.id);
-    if (Array.isArray(passages)) {
-      const newCount = passages.length;
-      if (passageCount !== newCount) setPassageCount(newCount);
-      const newSize = newCount > 1 ? 48 : 0;
-      if (chooserSize !== newSize) setChooserSize(newSize);
-      marks.current = [];
-      passages.forEach((p) => {
-        const passRec = findRecord(memory, 'passage', p.id) as Passage;
-        let reference = passageReference(passRec, allBookData);
-        if (reference.length === 0)
-          reference = `${section?.attributes?.sequencenum}.${
-            passRec?.attributes?.sequencenum || 1
-          }`;
-        if (marks.current.findIndex((m) => m.label === reference) > -1)
-          reference += '#' + passRec?.attributes?.sequencenum.toString();
-        marks.current.push({
-          value: passRec?.attributes?.sequencenum || -1,
-          label: reference,
-        });
+    var newCount = 0;
+    marks.current = [];
+    passages
+      .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum)
+      .forEach((p, i) => {
+        const psgType = passageTypeFromRef(p.attributes?.reference, false);
+        if (!isPublishingTitle(p.attributes?.reference, false)) {
+          newCount++;
+          let reference: React.ReactNode = '';
+          if (psgType === PassageTypeEnum.PASSAGE) {
+            reference = passageRefText(p, allBookData);
+            if ((reference as string).length === 0)
+              reference = `${section?.attributes?.sequencenum}.${
+                p.attributes?.sequencenum || 1
+              }`;
+          } else {
+            //must be a note
+            reference = (
+              <RefRender value={p.attributes?.reference} flat={false} />
+            );
+          }
+          if (marks.current.findIndex((m) => m.label === reference) > -1)
+            reference += '#' + p.attributes?.sequencenum.toString();
+          marks.current.push({
+            value: i,
+            label: reference,
+            id: p.id,
+          });
+        }
       });
-    }
+    if (newCount !== passageCount) setPassageCount(newCount);
+    const newSize = newCount > 1 ? 48 : 0;
+    if (chooserSize !== newSize) setChooserSize(newSize);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [section]);
+  }, [section, allBookData]);
+
+  useEffect(() => {
+    const passId = passage.id;
+    const newValue = marks.current.findIndex((m) => m.id === passId);
+    if (newValue > 0 && newValue !== value) setValue(newValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [passage]);
 
   useEffect(() => {
     passageNavigate(view);

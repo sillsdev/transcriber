@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
-import { IState, MediaFile, ITranscriptionShowStrings } from '../model';
-import localStrings from '../selector/localize';
-import WebFontLoader from '@dr-kobros/react-webfont-loader';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import {
+  MediaFile,
+  ITranscriptionShowStrings,
+  ProjectD,
+  OrgWorkflowStep,
+} from '../model';
 import {
   Button,
-  TextField,
   Dialog,
   DialogActions,
   DialogContent,
@@ -16,6 +15,7 @@ import {
   DialogTitle,
   IconButton,
 } from '@mui/material';
+import { StyledTextField } from '../control/WebFontStyles';
 import { FaCopy } from 'react-icons/fa';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
@@ -24,17 +24,15 @@ import {
   getFontData,
   useTranscription,
   related,
+  findRecord,
+  ArtifactTypeSlug,
+  getArtTypeFontData,
 } from '../crud';
+import { useSelector, shallowEqual } from 'react-redux';
+import { transcriptionShowSelector } from '../selector';
+import { useOrbitData } from '../hoc/useOrbitData';
 
-interface IStateProps {
-  t: ITranscriptionShowStrings;
-}
-
-interface IRecordProps {
-  mediafiles: Array<MediaFile>;
-}
-
-interface IProps extends IRecordProps, IStateProps {
+interface IProps {
   id: string;
   isMediaId?: boolean;
   visible: boolean;
@@ -45,19 +43,22 @@ interface IProps extends IRecordProps, IStateProps {
 
 function TranscriptionShow(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
-  const { id, isMediaId, t, visible, closeMethod, exportId, version } = props;
+  const { id, isMediaId, visible, closeMethod, exportId, version } = props;
+  const workflowSteps = useOrbitData<OrgWorkflowStep[]>('orgworkflowstep');
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
+  const [org] = useGlobal('organization');
+  const [projectId] = useGlobal('project');
   const [open, setOpen] = useState(visible);
   const { showMessage } = useSnackBar();
   const [transcription, setTranscription] = useState('');
   const [fontData, setFontData] = useState<FontData>();
-  const [fontStatus, setFontStatus] = useState<string>();
+  const [textStyle, setTextStyle] = useState<React.CSSProperties>({});
   const getTranscription = useTranscription(true, undefined, version);
-  const loadStatus = (status: string) => {
-    setFontStatus(status);
-  };
-
+  const t: ITranscriptionShowStrings = useSelector(
+    transcriptionShowSelector,
+    shallowEqual
+  );
   const handleChange = () => {};
 
   const handleClose = () => {
@@ -80,25 +81,43 @@ function TranscriptionShow(props: IProps) {
   useEffect(() => {
     if (id) {
       let mediaRec = isMediaId
-        ? (memory.cache.query((q: QueryBuilder) =>
+        ? (memory.cache.query((q) =>
             q.findRecord({ type: 'mediafile', id })
           ) as MediaFile)
         : null;
       setTranscription(
         getTranscription(related(mediaRec, 'passage') || id, exportId)
       );
-      const projRec = getMediaProjRec(mediaRec, memory, reporter);
-      if (projRec)
-        getFontData(projRec, offline).then((data) => setFontData(data));
+      if (!exportId || exportId === ArtifactTypeSlug.Vernacular) {
+        const projRec =
+          getMediaProjRec(mediaRec, memory, reporter) ||
+          (findRecord(memory, 'project', projectId) as ProjectD);
+        if (projRec)
+          getFontData(projRec, offline).then((data) => {
+            setFontData(data);
+            setTextStyle({
+              fontFamily: data.fontFamily,
+              fontSize: data.fontSize,
+              direction: data.fontDir as 'ltr' | 'rtl',
+            });
+          });
+      } else {
+        const orgSteps = workflowSteps
+          .filter((s) => related(s, 'organization') === org)
+          .sort(
+            (a, b) => a.attributes?.sequencenum - b.attributes?.sequencenum
+          );
+        const data = getArtTypeFontData(memory, exportId, orgSteps);
+        setFontData(data);
+        setTextStyle({
+          fontFamily: data.fontFamily,
+          fontSize: data.fontSize,
+          direction: data.fontDir as 'ltr' | 'rtl',
+        });
+      }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [id, isMediaId, exportId]);
-
-  const textStyle = {
-    fontFamily: fontData?.fontFamily || 'CharisSIL',
-    fontSize: fontData?.fontSize || 'large',
-    direction: fontData?.fontDir || 'ltr',
-  } as React.CSSProperties;
 
   return (
     <div>
@@ -111,39 +130,21 @@ function TranscriptionShow(props: IProps) {
         <DialogTitle id="transShowDlg">{t.transcription}</DialogTitle>
         <DialogContent>
           <DialogContentText>{t.transcriptionDisplay}</DialogContentText>
-          {fontData && fontStatus !== 'active' ? (
-            <WebFontLoader config={fontData.fontConfig} onStatus={loadStatus}>
-              <TextField
-                autoFocus
-                margin="dense"
-                variant="filled"
-                multiline
-                id="transcription"
-                label={t.transcription}
-                value={transcription}
-                onChange={handleChange}
-                inputProps={{ style: textStyle }}
-                fullWidth
-                lang={fontData?.langTag || 'en'}
-                spellCheck={false}
-              />
-            </WebFontLoader>
-          ) : (
-            <TextField
-              autoFocus
-              margin="dense"
-              variant="filled"
-              multiline
-              id="transcription"
-              label={t.transcription}
-              value={transcription}
-              onChange={handleChange}
-              inputProps={{ style: textStyle }}
-              fullWidth
-              lang={fontData?.langTag || 'en'}
-              spellCheck={false}
-            />
-          )}
+          <StyledTextField
+            autoFocus
+            margin="dense"
+            variant="filled"
+            multiline
+            id="transcription"
+            label={t.transcription}
+            value={transcription}
+            config={fontData?.fontConfig}
+            onChange={handleChange}
+            inputProps={{ style: textStyle }}
+            fullWidth
+            lang={fontData?.langTag || 'en'}
+            spellCheck={false}
+          />
         </DialogContent>
         <DialogActions
           sx={{ display: 'flex', justifyContent: 'space-between' }}
@@ -165,14 +166,4 @@ function TranscriptionShow(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'transcriptionShow' }),
-});
-
-const mapRecordsToProps = {
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(TranscriptionShow) as any
-) as any;
+export default TranscriptionShow;

@@ -1,5 +1,4 @@
 import { useGlobal } from 'reactn';
-import { TransformBuilder } from '@orbit/data';
 import { useAudacityProjRead } from '.';
 import IndexedDBSource from '@orbit/indexeddb';
 
@@ -11,9 +10,9 @@ export const useAudacityProjDelete = () => {
   return async (passageId: string) => {
     const backup = coordinator.getSource('backup') as IndexedDBSource;
     const op = getAudacityProject(passageId);
-    if (op.attributes)
-      await memory.sync(
-        await backup.push((t: TransformBuilder) => [t.removeRecord(op)])
-      );
+    if (op.attributes) {
+      await backup.sync((t) => [t.removeRecord(op)]);
+      await memory.sync((t) => [t.removeRecord(op)]);
+    }
   };
 };

@@ -5,7 +5,7 @@ import {
   related,
   VernacularTag,
 } from '../crud';
-import { Passage, Plan, Section } from '../model';
+import { Passage, PassageD, Plan, Section } from '../model';
 import Memory from '@orbit/memory';
 import { cleanFileName } from '.';
 
@@ -30,14 +30,14 @@ const noPassageRef = (passage: Passage, memory: Memory) => {
   var plan = findRecord(memory, 'plan', related(sect, 'plan')) as Plan;
   if (plan.attributes.flat && sect.attributes.name.length > 0)
     return sect.attributes.name;
-  return (
-    'S' +
-    pad3(sect.attributes.sequencenum) +
-    (plan.attributes.flat ? '' : '_P' + pad3(passage.attributes.sequencenum))
-  );
+  return `S${sect.attributes.sequencenum.toString().padStart(3, '0')}${
+    plan.attributes.flat
+      ? ''
+      : `_P${passage.attributes.sequencenum.toString().padStart(3, '0')}`
+  }`;
 };
 export const passageDefaultFilename = (
-  passage: Passage,
+  passage: PassageD,
   planId: string,
   memory: Memory,
   artifactType: string | null | undefined,
@@ -48,11 +48,15 @@ export const passageDefaultFilename = (
     var tmp = '';
     parseRef(passage);
     var book = passage.attributes?.book ?? '';
-    if (passage.startChapter) {
-      const chap = pad3(passage.startChapter || 1);
-      const endchap = pad3(passage.endChapter || passage.startChapter);
-      const start = pad3(passage.startVerse || 1);
-      const end = pad3(passage.endVerse || passage?.startVerse || 1);
+    if (passage.attributes.startChapter) {
+      const chap = pad3(passage.attributes.startChapter || 1);
+      const endchap = pad3(
+        passage.attributes.endChapter || passage.attributes.startChapter
+      );
+      const start = pad3(passage.attributes.startVerse || 1);
+      const end = pad3(
+        passage.attributes.endVerse || passage?.attributes.startVerse || 1
+      );
       tmp =
         chap === endchap
           ? start === end

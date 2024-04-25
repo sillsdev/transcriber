@@ -1,4 +1,8 @@
-import { RecordRelationship, RecordHasManyRelationship } from '@orbit/data';
+import {
+  RecordRelationship,
+  RecordHasManyRelationship,
+  InitializedRecord,
+} from '@orbit/records';
 import { BaseModel } from './baseModel';
 
 export interface Passage extends BaseModel {
@@ -14,17 +18,21 @@ export interface Passage extends BaseModel {
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
+    startChapter?: number; //calculated in online db
+    endChapter?: number; //calculated
+    startVerse?: number; //calculated
+    endVerse?: number; //calculated
   };
   relationships?: {
     section: RecordRelationship;
     users: RecordHasManyRelationship;
     media: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
-    passageType: RecordRelationship;
+    sharedResource: RecordRelationship;
+    passagetype: RecordRelationship;
   };
-  startChapter?: number; //calculated
-  endChapter?: number; //calculated
-  startVerse?: number; //calculated
-  endVerse?: number; //calculated
 }
+
+export type PassageD = Passage & InitializedRecord;
+
 export default Passage;

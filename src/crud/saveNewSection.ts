@@ -1,5 +1,5 @@
-import { Section } from '../model';
-import { TransformBuilder, RecordIdentity } from '@orbit/data';
+import { Section, SectionD } from '../model';
+import { RecordIdentity } from '@orbit/records';
 import Memory from '@orbit/memory';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 
@@ -20,9 +20,9 @@ export const saveNewSection = async (props: IProps) => {
       name,
     },
   } as any;
-  await memory.update((t: TransformBuilder) => [
+  await memory.update((t) => [
     ...AddRecord(t, sec, user, memory),
-    ...ReplaceRelatedRecord(t, sec, 'plan', 'plan', plan.id),
+    ...ReplaceRelatedRecord(t, sec as RecordIdentity, 'plan', 'plan', plan.id),
   ]);
-  return sec;
+  return sec as SectionD;
 };

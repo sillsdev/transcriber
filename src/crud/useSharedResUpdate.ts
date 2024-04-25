@@ -1,14 +1,26 @@
 import { useGlobal } from 'reactn';
-import { SharedResource } from '../model';
-import { TransformBuilder } from '@orbit/data';
+import { ArtifactCategory, SharedResourceD } from '../model';
+import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
 import { ReplaceRelatedRecord, UpdateRecord } from '../model/baseModel';
+import { findRecord } from '.';
+import { useArtifactCategory } from '.';
 
-export const useSharedResUpdate = () => {
+interface ShResUpdProps {
+  onUpdRef?: (id: string, val: string) => void;
+}
+
+export const useSharedResUpdate = ({ onUpdRef }: ShResUpdProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const { localizedArtifactCategory } = useArtifactCategory();
 
-  return async (sharedResource: SharedResource, category: string) => {
-    await memory.update((t: TransformBuilder) => [
+  return async (
+    sharedResource: SharedResourceD,
+    category: string,
+    mediaId?: string
+  ) => {
+    const t = new RecordTransformBuilder();
+    const ops = [
       ...UpdateRecord(t, sharedResource, user),
       ...ReplaceRelatedRecord(
         t,
@@ -17,6 +29,27 @@ export const useSharedResUpdate = () => {
         'artifactcategory',
         category
       ),
-    ]);
+      ...ReplaceRelatedRecord(
+        t,
+        sharedResource,
+        'titleMediafile',
+        'mediafile',
+        mediaId
+      ),
+    ];
+    if (sharedResource.attributes.note) {
+      const catRec = findRecord(memory, 'artifactcategory', category) as
+        | ArtifactCategory
+        | undefined;
+      if (catRec && onUpdRef) {
+        const catText = localizedArtifactCategory(
+          catRec.attributes?.categoryname
+        );
+        const passage = sharedResource.relationships.passage
+          .data as RecordIdentity;
+        onUpdRef(passage.id, `NOTE|${catText}`);
+      }
+    }
+    await memory.update(ops);
   };
 };

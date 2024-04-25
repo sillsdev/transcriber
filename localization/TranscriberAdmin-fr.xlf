@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="fr" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xlf">
       <unit id="access.availableUsers">
@@ -247,10 +247,16 @@
             <target>Grammaire</target>
          </segment>
       </unit>
+      <unit id="artifactCategory.graphic">
+         <segment>
+            <source>Graphic</source>
+            <target>Graphique</target>
+         </segment>
+      </unit>
       <unit id="artifactCategory.qanda">
          <segment>
             <source>Question and Answer</source>
-            <target/>
+            <target>Questions et réponses</target>
          </segment>
       </unit>
       <unit id="artifactType.backtranslation">
@@ -263,6 +269,12 @@
          <segment>
             <source>Comment</source>
             <target>Commentaire</target>
+         </segment>
+      </unit>
+      <unit id="artifactType.graphic">
+         <segment>
+            <source>Graphic</source>
+            <target>Graphique</target>
          </segment>
       </unit>
       <unit id="artifactType.projectresource">
@@ -299,6 +311,12 @@
          <segment>
             <source>Testing</source>
             <target>Essais</target>
+         </segment>
+      </unit>
+      <unit id="artifactType.title">
+         <segment>
+            <source>Title</source>
+            <target>Titre</target>
          </segment>
       </unit>
       <unit id="artifactType.vernacular">
@@ -501,8 +519,8 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
-            <target/>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <target>Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur BROWSE. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CRÉER.</target>
          </segment>
       </unit>
       <unit id="audacityManager.title">
@@ -535,10 +553,40 @@
             <target>Ajouter une équipe</target>
          </segment>
       </unit>
+      <unit id="cards.bibleid">
+         <segment>
+            <source>Bible Id</source>
+            <target>Identité biblique</target>
+         </segment>
+      </unit>
+      <unit id="cards.bibleidexists">
+         <segment>
+            <source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
+            <target>La Bible Id existe déjà. Veuillez contacter le support si vous avez besoin de travailler sur cette Bible.</target>
+         </segment>
+      </unit>
+      <unit id="cards.bibleidformat">
+         <segment>
+            <source>Bible Id must begin with the language code and version (six letters).</source>
+            <target>L'identifiant biblique doit commencer par le code de la langue et la version (six lettres).</target>
+         </segment>
+      </unit>
+      <unit id="cards.bibleidiso">
+         <segment>
+            <source>Bible Id should begin with the language code.</source>
+            <target>L'Id de la Bible doit commencer par le code de la langue.</target>
+         </segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
             <target>Annuler</target>
+         </segment>
+      </unit>
+      <unit id="cards.closeNoSave">
+         <segment>
+            <source>Close without Saving?</source>
+            <target>Fermer sans sauvegarder ?</target>
          </segment>
       </unit>
       <unit id="cards.connectParatext">
@@ -557,6 +605,12 @@
          <segment>
             <source>Copy project to new team.</source>
             <target>Copier le projet dans une nouvelle équipe.</target>
+         </segment>
+      </unit>
+      <unit id="cards.copyright">
+         <segment>
+            <source>Copyright</source>
+            <target>Copyright</target>
          </segment>
       </unit>
       <unit id="cards.copySame">
@@ -601,6 +655,12 @@
             <target>Supprimer l'équipe</target>
          </segment>
       </unit>
+      <unit id="cards.description">
+         <segment>
+            <source>Description</source>
+            <target>Description de la Bible</target>
+         </segment>
+      </unit>
       <unit id="cards.draft">
          <segment>
             <source>Oral Drafting</source>
@@ -619,6 +679,12 @@
             <target>Modifier le flux de travail {0}</target>
          </segment>
       </unit>
+      <unit id="cards.explainPublishing">
+         <segment>
+            <source>Information to use when publishing audio created by this team.</source>
+            <target>Informations à utiliser lors de la publication d'enregistrements audio créés par cette équipe.</target>
+         </segment>
+      </unit>
       <unit id="cards.explainTeamDelete">
          <segment>
             <source>Deleting the team will delete all audio projects of the team.</source>
@@ -635,18 +701,6 @@
          <segment>
             <source>Language: {0}</source>
             <target>Langue : {0}</target>
-         </segment>
-      </unit>
-      <unit id="cards.longNotesProject">
-         <segment>
-            <source>Project with Long Notes</source>
-            <target>cards.longNotesProject Projet avec des notes longues</target>
-         </segment>
-      </unit>
-      <unit id="cards.longNotes">
-         <segment>
-            <source>Shared Introductions, Rationales, Devotionals, Podcasts</source>
-            <target>Introductions partagées, raisonnements, dévotionnels, podcasts</target>
          </segment>
       </unit>
       <unit id="cards.mediaUploaded">
@@ -671,6 +725,12 @@
          <segment>
             <source>New Audio Project</source>
             <target>Nouveau projet audio</target>
+         </segment>
+      </unit>
+      <unit id="cards.notesLabel">
+         <segment>
+            <source>Introductory Notes Title</source>
+            <target>Notes d'introduction Titre</target>
          </segment>
       </unit>
       <unit id="cards.OBS">
@@ -739,10 +799,22 @@
             <target>Création d'un projet audio</target>
          </segment>
       </unit>
+      <unit id="cards.projectRequired">
+         <segment>
+            <source>A project must be added before recordings are allowed</source>
+            <target>Un projet doit être ajouté avant que les enregistrements ne soient autorisés.</target>
+         </segment>
+      </unit>
       <unit id="cards.Render">
          <segment>
             <source>Render to Paratext</source>
             <target>Render à Paratext</target>
+         </segment>
+      </unit>
+      <unit id="cards.publishing">
+         <segment>
+            <source>Publishing</source>
+            <target>Publication</target>
          </segment>
       </unit>
       <unit id="cards.save">
@@ -805,6 +877,24 @@
             <target>Progression du téléchargement</target>
          </segment>
       </unit>
+      <unit id="cards.workflowProgression">
+         <segment>
+            <source>Workflow Progression</source>
+            <target>Progression du flux de travail</target>
+         </segment>
+      </unit>
+      <unit id="cards.workflowProgressionPassage">
+         <segment>
+            <source>Next Passage</source>
+            <target>Passage suivant</target>
+         </segment>
+      </unit>
+      <unit id="cards.yes">
+         <segment>
+            <source>Yes</source>
+            <target>Oui</target>
+         </segment>
+      </unit>
       <unit id="category.builtIn">
          <segment>
             <source>System Categories</source>
@@ -817,10 +907,22 @@
             <target>Discussion</target>
          </segment>
       </unit>
+      <unit id="category.close">
+         <segment>
+            <source>Close</source>
+            <target>Fermer</target>
+         </segment>
+      </unit>
+      <unit id="category.duplicate">
+         <segment>
+            <source>Duplicate Category</source>
+            <target>Catégorie de duplicata</target>
+         </segment>
+      </unit>
       <unit id="category.discussions">
          <segment>
             <source>discussion(s)</source>
-            <target/>
+            <target>discussion(s)</target>
          </segment>
       </unit>
       <unit id="category.ignoreInvalid">
@@ -833,6 +935,30 @@
          <segment>
             <source>In use by {0} {1}</source>
             <target>Utilisé par {0} {1}</target>
+         </segment>
+      </unit>
+      <unit id="category.note">
+         <segment>
+            <source>Audio Note</source>
+            <target>Note audio</target>
+         </segment>
+      </unit>
+      <unit id="category.chapternumber">
+         <segment>
+            <source>Chapter Number</source>
+            <target>Numéro de chapitre</target>
+         </segment>
+      </unit>
+      <unit id="category.general">
+         <segment>
+            <source>General Note</source>
+            <target>Note générale</target>
+         </segment>
+      </unit>
+      <unit id="category.introPara">
+         <segment>
+            <source>Introductory Paragraph</source>
+            <target>Paragraphe d'introduction</target>
          </segment>
       </unit>
       <unit id="commentCard.approve">
@@ -1012,7 +1138,7 @@
       <unit id="consultantCheck.compareItems">
          <segment>
             <source>Select Items to Compare</source>
-            <target/>
+            <target>Sélectionner les éléments à comparer</target>
          </segment>
       </unit>
       <unit id="consultantCheck.furtherReview">
@@ -1025,6 +1151,18 @@
          <segment>
             <source>No Media Available</source>
             <target>Pas de média disponible</target>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.noTranscription">
+         <segment>
+            <source>No Transcription Available</source>
+            <target>Pas de transcription disponible</target>
+         </segment>
+      </unit>
+      <unit id="consultantCheck.transcription">
+         <segment>
+            <source>Transcription</source>
+            <target>Transcription</target>
          </segment>
       </unit>
       <unit id="control.book">
@@ -1281,7 +1419,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
             <target/>
          </segment>
       </unit>
@@ -1323,8 +1461,8 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
-            <target/>
+            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
+            <target>Ce fichier a été exporté avec une version plus récente du programme. Vous devriez télécharger la dernière version avant de l'importer ! Si vous continuez, il se peut que certaines données ne soient pas importées correctement.</target>
          </segment>
       </unit>
       <unit id="electronImport.project">
@@ -1371,7 +1509,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified!  Carry on!</source>
+            <source>I'm verified! Carry on!</source>
             <target/>
          </segment>
       </unit>
@@ -1753,6 +1891,12 @@
             <target>Pas un fichier de transcripteur incrémentiel valide (ITF).</target>
          </segment>
       </unit>
+      <unit id="import.unknownError">
+         <segment>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
+            <target>Si cette erreur s'est produite lors de l'importation de modifications hors ligne, veuillez fermer l'application immédiatement et la rouvrir. Si l'erreur persiste, contactez l'assistance. Si vous continuez à utiliser l'application, vous perdrez les modifications hors ligne.</target>
+         </segment>
+      </unit>
       <unit id="import.invalidProject">
          <segment>
             <source>Import File does not contain current audio project.</source>
@@ -1815,8 +1959,8 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
-            <target/>
+            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
+            <target>ITF ne contient pas le projet audio actuel. Il contient le projet audio {0}.</target>
          </segment>
       </unit>
       <unit id="import.showHideFilter">
@@ -1885,10 +2029,16 @@
             <target>Passage {0}.{1}: Livre manquant.</target>
          </segment>
       </unit>
+      <unit id="integration.exportSectionNumbers">
+         <segment>
+            <source>Sync {0} Numbers</source>
+            <target>Sync {0} Numéros</target>
+         </segment>
+      </unit>
       <unit id="integration.invalidReferences">
          <segment>
-            <source>{0} passages have invalid book or reference.</source>
-            <target>Les passages ({0}) ont un livre ou une référence invalide.</target>
+            <source>{0} passage(s) have invalid book or reference.</source>
+            <target>Le(s) passage(s) {0} a(ont) un livre ou une référence invalide.</target>
          </segment>
       </unit>
       <unit id="integration.no">
@@ -2697,8 +2847,8 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
-            <target/>
+            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
+            <target>L'invitation n'a pas été acceptée. Vous devez vous connecter avec l'email auquel l'invitation a été envoyée.</target>
          </segment>
       </unit>
       <unit id="main.loadingTable">
@@ -3037,6 +3187,18 @@
             <target>Filtre</target>
          </segment>
       </unit>
+      <unit id="mediaTab.graphicRightsAdd">
+         <segment>
+            <source>Add {0}</source>
+            <target>Ajouter {0}</target>
+         </segment>
+      </unit>
+      <unit id="mediaTab.graphicRightsTitle">
+         <segment>
+            <source>Graphics Rights holder</source>
+            <target>Détenteur des droits graphiques</target>
+         </segment>
+      </unit>
       <unit id="mediaTab.latestVersion">
          <segment>
             <source>Latest Version</source>
@@ -3097,6 +3259,12 @@
             <target>Proposé</target>
          </segment>
       </unit>
+      <unit id="mediaTab.published">
+         <segment>
+            <source>Published</source>
+            <target>Publié</target>
+         </segment>
+      </unit>
       <unit id="mediaTab.readyToShare">
          <segment>
             <source>Ready to Share</source>
@@ -3133,12 +3301,6 @@
             <target>Veuillez sélectionner les fichiers à télécharger.</target>
          </segment>
       </unit>
-      <unit id="mediaTab.selectRows">
-         <segment>
-            <source>Please select row(s) to {0}.</source>
-            <target>Veuillez sélectionner la ou les lignes de {0}.</target>
-         </segment>
-      </unit>
       <unit id="mediaTab.showHideFilter">
          <segment>
             <source>Show/Hide filter rows</source>
@@ -3169,6 +3331,12 @@
             <target>{0} des {1} fichiers téléchargés avec succès.</target>
          </segment>
       </unit>
+      <unit id="mediaTab.user">
+         <segment>
+            <source>User</source>
+            <target>Utilisateur</target>
+         </segment>
+      </unit>
       <unit id="mediaTab.version">
          <segment>
             <source>Version</source>
@@ -3185,6 +3353,30 @@
          <segment>
             <source>View Associations</source>
             <target>Voir les associations</target>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.cancel">
+         <segment>
+            <source>Cancel Recording</source>
+            <target>Annuler l'enregistrement</target>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.playPause">
+         <segment>
+            <source>Play / Pause</source>
+            <target>Lecture / Pause</target>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.record">
+         <segment>
+            <source>Record</source>
+            <target>Enregistrer</target>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.recording">
+         <segment>
+            <source>Recording...</source>
+            <target>Enregistrement...</target>
          </segment>
       </unit>
       <unit id="mediaUpload.cancel">
@@ -3205,6 +3397,18 @@
             <target>Glissez et déposez un fichier ici, ou cliquez ici pour rechercher le fichier.</target>
          </segment>
       </unit>
+      <unit id="mediaUpload.graphicTask">
+         <segment>
+            <source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
+            <target>Faites glisser et déposez un fichier ici, ou cliquez ici pour rechercher le fichier. Les formats acceptés sont .png, .jpg (ou .jpeg) et .webp.</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.graphicTitle">
+         <segment>
+            <source>Upload Graphic</source>
+            <target>Télécharger le graphique</target>
+         </segment>
+      </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
          <segment>
             <source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
@@ -3220,8 +3424,7 @@
       <unit id="mediaUpload.invalidFile">
          <segment>
             <source>Not valid for this operation: {0} </source>
-            <target>mediaUpload.invalidFile Fichier non valide pour cette opération : {0}
-				</target>
+            <target>mediaUpload.invalidFile Fichier non valide pour cette opération : {0} </target>
          </segment>
       </unit>
       <unit id="mediaUpload.ITFtask">
@@ -3418,8 +3621,8 @@
       </unit>
       <unit id="passageDetailArtifacts.allLevel">
          <segment>
-            <source>All Resources</source>
-            <target>Toutes les ressources</target>
+            <source>All {0}</source>
+            <target>Tout {0}</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.allResources">
@@ -3430,8 +3633,14 @@
       </unit>
       <unit id="passageDetailArtifacts.bookLevel">
          <segment>
-            <source>Resources for the Book</source>
-            <target>Ressources pour le livre</target>
+            <source>{0} for the Book</source>
+            <target>{0} pour le livre</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.bookResource">
+         <segment>
+            <source>Book</source>
+            <target>Livre</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.canceling">
@@ -3448,8 +3657,8 @@
       </unit>
       <unit id="passageDetailArtifacts.chapterLevel">
          <segment>
-            <source>Resources for the Chapter</source>
-            <target>Ressources pour le chapitre</target>
+            <source>{0} for the Chapter</source>
+            <target>{0} pour le chapitre</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.chooseLevel">
@@ -3530,10 +3739,28 @@
             <target>Lien</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.movementResource">
+         <segment>
+            <source>Movement</source>
+            <target>Mouvement</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.no">
          <segment>
             <source>No</source>
             <target>Non</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.noteResource">
+         <segment>
+            <source>Note</source>
+            <target>Note</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.notes">
+         <segment>
+            <source>Notes</source>
+            <target>Notes</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.passageResource">
@@ -3590,6 +3817,12 @@
             <target>Ressources</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.resources">
+         <segment>
+            <source>Resources</source>
+            <target>Ressources</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.resourcesDeleted">
          <segment>
             <source> ({0} resources will be deleted.)</source>
@@ -3600,6 +3833,12 @@
          <segment>
             <source>Select Book</source>
             <target>Sélectionner le livre</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.selectOne">
+         <segment>
+            <source>Only the first selected note is used</source>
+            <target>Seule la première note sélectionnée est utilisée</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.sharedResource">
@@ -3694,8 +3933,8 @@
       </unit>
       <unit id="passageDetailArtifacts.verseLevel">
          <segment>
-            <source>Resources for verses in this passage</source>
-            <target>Ressources pour les versets de ce passage</target>
+            <source>{0} for verses in this passage</source>
+            <target>{0} pour les versets de ce passage</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.version">
@@ -3818,6 +4057,30 @@
             <target>Non compressé</target>
          </segment>
       </unit>
+      <unit id="passageType.BOOK">
+         <segment>
+            <source>Book</source>
+            <target>Livre</target>
+         </segment>
+      </unit>
+      <unit id="passageType.ALTBK">
+         <segment>
+            <source>Friendly Book</source>
+            <target>Livre amical</target>
+         </segment>
+      </unit>
+      <unit id="passageType.CHNUM">
+         <segment>
+            <source>Chapter number</source>
+            <target>Numéro de chapitre</target>
+         </segment>
+      </unit>
+      <unit id="passageType.TITLE">
+         <segment>
+            <source>Title</source>
+            <target>Titre</target>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -3899,7 +4162,7 @@
       <unit id="peerCheck.resourceStart">
          <segment>
             <source>Play from start</source>
-            <target/>
+            <target>Lecture depuis le début</target>
          </segment>
       </unit>
       <unit id="permission.admin">
@@ -3910,8 +4173,8 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target/>
+            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <target>Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur de l'équipe ? Les personnes appartenant à ce groupe pourront effectuer n'importe quelle étape, même si elle est assignée à un groupe dont elles ne font pas partie.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -3922,8 +4185,8 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
-            <target/>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
+            <target>Nous ne sommes pas sûrs d'avoir besoin de cette autorisation non plus, car on ne sait pas très bien ce que les consultants font de particulier dans ce logiciel. Les commentaires du consultant indépendant seront visibles par tous les membres de l'équipe.</target>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -3952,14 +4215,20 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-            <target/>
+            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <target>Les commentaires du mentor ne seront visibles que par les CIT. Les mentors peuvent approuver les commentaires des CIT pour les rendre visibles au reste de l'équipe.</target>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
-            <target/>
+            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
+            <target>Groupe de pairs général sans permissions spéciales. A utiliser pour assigner des discussions à des groupes d'équipe.</target>
+         </segment>
+      </unit>
+      <unit id="planActions.addNote">
+         <segment>
+            <source>Add Note</source>
+            <target>Ajouter une note</target>
          </segment>
       </unit>
       <unit id="planActions.assign">
@@ -3972,6 +4241,12 @@
          <segment>
             <source>Delete</source>
             <target>Supprimer</target>
+         </segment>
+      </unit>
+      <unit id="planActions.noteDetails">
+         <segment>
+            <source>Note Details</source>
+            <target>Détails de la note</target>
          </segment>
       </unit>
       <unit id="planActions.passageDetail">
@@ -4022,10 +4297,22 @@
             <target>Action</target>
          </segment>
       </unit>
+      <unit id="planSheet.addNote">
+         <segment>
+            <source>Add Note</source>
+            <target>Ajouter une note</target>
+         </segment>
+      </unit>
       <unit id="planSheet.addPassage">
          <segment>
             <source>Add Passage</source>
             <target>Ajouter un passage</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.addPublishing">
+         <segment>
+            <source>Update Publishing Rows</source>
+            <target>Mise à jour des lignes de publication</target>
          </segment>
       </unit>
       <unit id="planSheet.addSection">
@@ -4058,10 +4345,52 @@
             <target>{0} {1} article(s). T'es sûr de toi ?</target>
          </segment>
       </unit>
+      <unit id="planSheet.confirmPublish">
+         <segment>
+            <source>Publish {0}</source>
+            <target>Publier {0}</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.confirmPublishMovement">
+         <segment>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this Movement will be marked as published. If you have previously published and now choose 'Not Published', the {0} and passages and notes will be marked as not published.</source>
+            <target>Si vous choisissez de publier, le {0} et la dernière version de tous les passages et notes dans tous les {0} de ce mouvement seront marqués comme publiés. Si vous avez déjà publié et que vous choisissez maintenant de ne pas publier, les {0} et les passages et notes seront marqués comme non publiés.</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.confirmPublishSection">
+         <segment>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes be marked as not published.</source>
+            <target>Si vous choisissez de publier, le {0} et la dernière version de tous les passages et notes dans ce {0} seront marqués comme publiés. Si vous avez déjà publié et que vous choisissez maintenant « Non publié », les passages et les notes seront marqués comme non publiés.</target>
+         </segment>
+      </unit>
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
             <target>Désactivez le filtre pour ajouter des lignes.</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.firstMovement">
+         <segment>
+            <source>Start At</source>
+            <target>Commencer à</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.graphic">
+         <segment>
+            <source>Graphic</source>
+            <target>Graphique</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.hidePublishing">
+         <segment>
+            <source>Hide Publishing Information</source>
+            <target>Masquer les informations de publication</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.moveDown">
+         <segment>
+            <source>Move down</source>
+            <target>Descendre</target>
          </segment>
       </unit>
       <unit id="planSheet.nonNumber">
@@ -4070,10 +4399,22 @@
             <target>Ne passez pas au non-numéro.</target>
          </segment>
       </unit>
+      <unit id="planSheet.noPublishDelete">
+         <segment>
+            <source>Do not delete published items.</source>
+            <target>Ne pas supprimer les éléments publiés.</target>
+         </segment>
+      </unit>
       <unit id="planSheet.insertFirstPassage">
          <segment>
             <source>Add Passage as first in {0} {1}</source>
             <target>Ajouter le passage en premier dans {0} {1}</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.paratextRequired">
+         <segment>
+            <source>You must be a Paratext user with access to FOBAI resources to use this feature.</source>
+            <target>Vous devez être un utilisateur de Paratext ayant accès aux ressources FOBAI pour utiliser cette fonction.</target>
          </segment>
       </unit>
       <unit id="planSheet.passageBelow">
@@ -4090,20 +4431,26 @@
       </unit>
       <unit id="planSheet.passageToPrevSection">
          <segment>
-            <source>Move Passage to Previous Section</source>
-            <target>Déplacer le passage vers la section précédente</target>
+            <source>Move {pt} {0} Up</source>
+            <target>Déplacer {pt} {0} vers le haut</target>
          </segment>
       </unit>
       <unit id="planSheet.passageToNextSection">
          <segment>
-            <source>Move Passage to Next Section</source>
-            <target>Déplacer le passage vers la section suivante</target>
+            <source>Move {pt} {0} Down</source>
+            <target>Déplacer {pt} {0} vers le bas</target>
          </segment>
       </unit>
       <unit id="planSheet.pasting">
          <segment>
             <source>Pasting</source>
             <target>Coller</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.publish">
+         <segment>
+            <source>Publish {0} {1}</source>
+            <target>Publier {0} {1}</target>
          </segment>
       </unit>
       <unit id="planSheet.refErr">
@@ -4130,6 +4477,18 @@
             <target>Épargner...</target>
          </segment>
       </unit>
+      <unit id="planSheet.showPublishing">
+         <segment>
+            <source>Show Publishing Information</source>
+            <target>Afficher les informations de publication</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.movementAbove">
+         <segment>
+            <source>Add Movement above {0} {1}</source>
+            <target>Ajouter un mouvement au-dessus de {0} {1}</target>
+         </segment>
+      </unit>
       <unit id="planSheet.sectionAbove">
          <segment>
             <source>Add {0} above {1} {2}</source>
@@ -4142,12 +4501,6 @@
             <target>Ajouter {0} à la fin</target>
          </segment>
       </unit>
-      <unit id="planSheet.selectRows">
-         <segment>
-            <source>Please select row(s) to {0}.</source>
-            <target>Veuillez sélectionner la ou les lignes de {0}.</target>
-         </segment>
-      </unit>
       <unit id="planSheet.step">
          <segment>
             <source>Step</source>
@@ -4158,6 +4511,12 @@
          <segment>
             <source>Paste Spreadsheet</source>
             <target>Coller le tableur</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.changepublish">
+         <segment>
+            <source>Update {0} {1} published status.</source>
+            <target>Mettre à jour l'état de publication de {0} {1}.</target>
          </segment>
       </unit>
       <unit id="planSheet.useCtrlV">
@@ -4496,6 +4855,24 @@
             <target>Télécharger {0}MB de fichiers de projets audio hors ligne ?</target>
          </segment>
       </unit>
+      <unit id="publishLevel.none">
+         <segment>
+            <source>Not Published - not visible in publishing app</source>
+            <target>Non publié - non visible dans l'application de publication</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.beta">
+         <segment>
+            <source>Beta - only visible to users subscribed to app beta channel</source>
+            <target>Bêta - visible uniquement par les utilisateurs abonnés au canal bêta de l'application</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.public">
+         <segment>
+            <source>Public - visible to everyone using app</source>
+            <target>Public - visible par tous les utilisateurs de l'application</target>
+         </segment>
+      </unit>
       <unit id="resource.action">
          <segment>
             <source>Action</source>
@@ -4526,6 +4903,12 @@
             <target>Par mot</target>
          </segment>
       </unit>
+      <unit id="resource.changes">
+         <segment>
+            <source>Changes made will affect source and all shared locations.</source>
+            <target>Les modifications apportées affecteront la source et tous les emplacements partagés.</target>
+         </segment>
+      </unit>
       <unit id="resource.delete">
          <segment>
             <source>Delete</source>
@@ -4550,10 +4933,34 @@
             <target>Voulez-vous enregistrer et supprimer des données contenant des erreurs ?</target>
          </segment>
       </unit>
+      <unit id="resource.findNote">
+         <segment>
+            <source>Find existing note</source>
+            <target>Rechercher une note existante</target>
+         </segment>
+      </unit>
       <unit id="resource.keywords">
          <segment>
             <source>Keywords</source>
             <target>Mots clés</target>
+         </segment>
+      </unit>
+      <unit id="resource.link">
+         <segment>
+            <source>Link</source>
+            <target>Lien</target>
+         </segment>
+      </unit>
+      <unit id="resource.linkError">
+         <segment>
+            <source>Link is not a correctly formatted URL</source>
+            <target>Le lien n'est pas une URL correctement formatée</target>
+         </segment>
+      </unit>
+      <unit id="resource.noteDetails">
+         <segment>
+            <source>Note Details</source>
+            <target>Détails de la note</target>
          </segment>
       </unit>
       <unit id="resource.overview">
@@ -4586,6 +4993,12 @@
             <target>Sauvegarde...</target>
          </segment>
       </unit>
+      <unit id="resource.source">
+         <segment>
+            <source>Linked Note Source: </source>
+            <target>Note liée à la source : </target>
+         </segment>
+      </unit>
       <unit id="resource.terms">
          <segment>
             <source>Terms of use</source>
@@ -4604,10 +5017,28 @@
             <target>Versions</target>
          </segment>
       </unit>
+      <unit id="scriptureTable.alternateName">
+         <segment>
+            <source>{0} Alternate Name</source>
+            <target>{0} Nom alternatif</target>
+         </segment>
+      </unit>
       <unit id="scriptureTable.book">
          <segment>
             <source>Book</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.chapter">
+         <segment>
+            <source>Chapter {0}</source>
+            <target>Chapitre {0}</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.confirmPublish">
+         <segment>
+            <source>Are you sure you want to add publishing rows?</source>
+            <target>Êtes-vous sûr de vouloir ajouter des rangées de publication ?</target>
          </segment>
       </unit>
       <unit id="scriptureTable.description">
@@ -4646,6 +5077,12 @@
             <target>Nombre de colonnes non valide ({0}). Attend {1} colonnes.</target>
          </segment>
       </unit>
+      <unit id="scriptureTable.pasteInvalidPassageBeforeSection">
+         <segment>
+            <source>Invalid passage before {0}.</source>
+            <target>Passage non valide avant {0}.</target>
+         </segment>
+      </unit>
       <unit id="scriptureTable.pasteInvalidSections">
          <segment>
             <source>Invalid {0} number(s):</source>
@@ -4656,6 +5093,12 @@
          <segment>
             <source>No Rows in clipboard.</source>
             <target>Aucune ligne dans le presse-papiers.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.publishingWarning">
+         <segment>
+            <source>Once publishing rows are added, there is no automated way to remove them. Publishing projects cannot be made flat projects.</source>
+            <target>Une fois les rangées de publication ajoutées, il n'existe aucun moyen automatisé de les supprimer. Les projets de publication ne peuvent pas devenir des projets plats.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.reference">
@@ -4710,6 +5153,18 @@
          <segment>
             <source>Hide Done rows</source>
             <target>Masquez les étapes "Terminé".</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.hidePublishing">
+         <segment>
+            <source>Hide Publishing Rows</source>
+            <target>Masquer les rangées de publication</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.invalidSection">
+         <segment>
+            <source>Invalid {0}</source>
+            <target>Invalide {0}</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.step">
@@ -4880,6 +5335,12 @@
             <target>Annuler</target>
          </segment>
       </unit>
+      <unit id="shared.close">
+         <segment>
+            <source>Close</source>
+            <target>Fermer</target>
+         </segment>
+      </unit>
       <unit id="shared.consultant">
          <segment>
             <source>Consultant</source>
@@ -4906,14 +5367,14 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
+            <source>Your paratext login has expired and can't be automatically renewed. Please log out and login again.</source>
+            <target>Votre login paratext a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
+            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
+            <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
          </segment>
       </unit>
       <unit id="shared.fileNotFound">
@@ -5788,8 +6249,8 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
-            <target/>
+            <source>Transcription updated by {0}. Keep their changes? {1}</source>
+            <target>Transcription mise à jour par {0}. Conserver les modifications ? {1}</target>
          </segment>
       </unit>
       <unit id="transcribeReject.cancel">
@@ -6004,8 +6465,8 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported.  The export file is too large.</source>
-            <target/>
+            <source>The audio project cannot be exported. The export file is too large.</source>
+            <target>Le projet audio ne peut pas être exporté. Le fichier d'exportation est trop volumineux.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportType">
@@ -6046,8 +6507,8 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
-            <target/>
+            <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
+            <target>Vous avez localement de nouvelles modifications qui n'ont pas été incluses dans l'exportation ptf. Veuillez également exporter un fichier itf pour capturer toutes les modifications.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
@@ -6218,12 +6679,6 @@
             <target>Téléphone</target>
          </segment>
       </unit>
-      <unit id="usertable.selectRows">
-         <segment>
-            <source>Please select row(s) to {0}.</source>
-            <target>Veuillez sélectionner la ou les lignes de {0}.</target>
-         </segment>
-      </unit>
       <unit id="usertable.selectUser">
          <segment>
             <source>Select User</source>
@@ -6296,6 +6751,12 @@
             <target>Configurer</target>
          </segment>
       </unit>
+      <unit id="vProject.cannotChangeLayout">
+         <segment>
+            <source>Publishing projects cannot be made flat.</source>
+            <target>Les projets de publication ne peuvent pas être mis à plat.</target>
+         </segment>
+      </unit>
       <unit id="vProject.correctformat">
          <segment>
             <source>Please enter in the format: singular/plural</source>
@@ -6318,6 +6779,18 @@
          <segment>
             <source>Editor Settings</source>
             <target>Editor Settings</target>
+         </segment>
+      </unit>
+      <unit id="vProject.errExtrasBookLen">
+         <segment>
+            <source>Book must be 3 characters</source>
+            <target>Le livre doit comporter 3 caractères</target>
+         </segment>
+      </unit>
+      <unit id="vProject.errExtrasBookNonScripture">
+         <segment>
+            <source>Book Designation must not be a Scripture book code.</source>
+            <target>La désignation du livre ne doit pas être un code de livre d'Ecriture.</target>
          </segment>
       </unit>
       <unit id="vProject.flat">
@@ -6366,6 +6839,18 @@
          <segment>
             <source>Layout</source>
             <target>Mise en page</target>
+         </segment>
+      </unit>
+      <unit id="vProject.movement">
+         <segment>
+            <source>Movement</source>
+            <target>Mouvement</target>
+         </segment>
+      </unit>
+      <unit id="vProject.movements">
+         <segment>
+            <source>Movements</source>
+            <target>Mouvements</target>
          </segment>
       </unit>
       <unit id="vProject.nameInUse">
@@ -6574,8 +7059,8 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-            <target/>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <target>Mettre en place le projet audio, en divisant le travail en passages qui peuvent être assignés à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
          </segment>
       </unit>
       <unit id="welcome.team">
@@ -6592,8 +7077,8 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
-            <target/>
+            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <target>Un projet audio a été créé en ligne. Les transcripteurs et les éditeurs peuvent travailler en ligne, hors ligne en sélectionnant l'option Disponible hors ligne dans le menu de la carte de projet audio, ou hors ligne en l'important.</target>
          </segment>
       </unit>
       <unit id="welcome.title">

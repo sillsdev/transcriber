@@ -1,5 +1,5 @@
 import { useGlobal } from 'reactn';
-import { Button } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import {
@@ -9,12 +9,20 @@ import {
 } from '../../crud/useWavesurferRegions';
 import WSAudioPlayer from '../WSAudioPlayer';
 import { useSelector, shallowEqual } from 'react-redux';
-import { IWsAudioPlayerStrings, MediaFile } from '../../model';
+import { IWsAudioPlayerStrings, MediaFile, MediaFileD } from '../../model';
 import { UpdateRecord } from '../../model/baseModel';
 import { playerSelector } from '../../selector';
-import { NamedRegions, getSegments, updateSegments } from '../../utils';
-import { TransformBuilder } from '@orbit/data';
+import {
+  JSONParse,
+  NamedRegions,
+  getSegments,
+  updateSegments,
+} from '../../utils';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
+import ViewIcon from '@mui/icons-material/RemoveRedEye';
+import TranscriptionShow from '../TranscriptionShow';
+import { related } from '../../crud';
+
 export enum SaveSegments {
   showSaveButton = 0,
   saveButNoButton = 1,
@@ -26,7 +34,7 @@ interface IProps {
   suggestedSegments?: string;
   defaultSegParams?: IRegionParams;
   canSetDefaultParams?: boolean;
-  onSegment?: (segment: string) => void;
+  onSegment?: (segment: string, init: boolean) => void;
   onSegmentParamChange?: (params: IRegionParams, teamDefault: boolean) => void;
   onProgress?: (progress: number) => void;
   onSaveProgress?: (progress: number) => void;
@@ -94,6 +102,7 @@ export function PassageDetailPlayer(props: IProps) {
   } = usePassageDetailContext();
 
   const [defaultSegments, setDefaultSegments] = useState('{}');
+  const [showTranscriptionId, setShowTranscriptionId] = useState('');
 
   const segmentsRef = useRef('');
   const playingRef = useRef(playing);
@@ -108,7 +117,7 @@ export function PassageDetailPlayer(props: IProps) {
       setSegmentToWhole();
     }
     setDefaultSegments(segmentsRef.current);
-    onSegment && onSegment(segmentsRef.current);
+    onSegment && onSegment(segmentsRef.current, true);
   };
   useEffect(() => {
     //we need a ref for onDuration
@@ -120,7 +129,7 @@ export function PassageDetailPlayer(props: IProps) {
       if (suggestedSegments) {
         segmentsRef.current = suggestedSegments;
         setDefaultSegments(segmentsRef.current);
-        onSegment && onSegment(segmentsRef.current);
+        onSegment && onSegment(segmentsRef.current, true);
       } else setSegmentToWhole();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowSegment, suggestedSegments]);
@@ -146,11 +155,11 @@ export function PassageDetailPlayer(props: IProps) {
                 attributes: {
                   segments: updateSegments(
                     allowSegment ?? NamedRegions.BackTranslation,
-                    mediafile.attributes?.segments ?? '{}',
+                    mediafile.attributes?.segments || '{}',
                     segmentsRef.current
                   ),
                 },
-              } as any as MediaFile,
+              } as unknown as MediaFileD,
               user
             ),
           ])
@@ -169,7 +178,7 @@ export function PassageDetailPlayer(props: IProps) {
 
   const setSegmentToWhole = () => {
     if (allowSegment && setCurrentSegment && durationRef.current) {
-      var segs = JSON.parse(segmentsRef.current || '{}');
+      var segs = JSONParse(segmentsRef.current);
       //might be "[]"
       if ((segs.regions?.length ?? 0) < 3) {
         setCurrentSegment({ start: 0, end: durationRef.current }, -1);
@@ -190,9 +199,9 @@ export function PassageDetailPlayer(props: IProps) {
         ${Math.floor(mediafileRef.current.attributes.duration)}`
       );
       memory
-        .update((t: TransformBuilder) =>
+        .update((t) =>
           t.replaceAttribute(
-            mediafileRef.current as MediaFile, //I already checked for undefined
+            mediafileRef.current as MediaFileD, //I already checked for undefined
             'duration',
             Math.floor(duration)
           )
@@ -211,7 +220,7 @@ export function PassageDetailPlayer(props: IProps) {
       segmentsRef.current.indexOf('},{') === -1
     ) {
       setDefaultSegments(segments);
-      onSegment && onSegment(segments);
+      onSegment && onSegment(segments, true);
     }
     if (!playingRef.current) {
       var segs = parseRegions(segments);
@@ -238,7 +247,7 @@ export function PassageDetailPlayer(props: IProps) {
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
     setDefaultSegments(segments); //now we'll notice if we reset them in SetPlayerSegments
-    onSegment && onSegment(segments);
+    onSegment && onSegment(segments, false);
     if (allowSegment && saveSegments !== undefined) {
       //if I have a parentToolId it will save the segments
       toolChanged(parentToolId ?? toolId);
@@ -287,6 +296,14 @@ export function PassageDetailPlayer(props: IProps) {
     setInitialPosition(position);
   }, [position]);
 
+  const handleShowTranscription = () => {
+    setShowTranscriptionId(related(playerMediafile, 'passage') ?? '');
+  };
+
+  const handleCloseTranscription = () => {
+    setShowTranscriptionId('');
+  };
+
   return (
     <div id="detailplayer">
       <WSAudioPlayer
@@ -319,21 +336,40 @@ export function PassageDetailPlayer(props: IProps) {
         onSaveProgress={onSaveProgress}
         onDuration={onDuration}
         metaData={
-          saveSegments === SaveSegments.showSaveButton ? (
-            <Button
-              id="segment-save"
-              onClick={handleSave}
-              variant="contained"
-              color="primary"
-              disabled={!isChanged(toolId)}
-            >
-              {t.saveSegments}
-            </Button>
-          ) : (
-            <></>
-          )
+          <>
+            {playerMediafile?.attributes?.transcription ? (
+              <IconButton
+                id="show-transcription"
+                onClick={handleShowTranscription}
+              >
+                <ViewIcon fontSize="small" />
+              </IconButton>
+            ) : (
+              <></>
+            )}
+            {saveSegments === SaveSegments.showSaveButton ? (
+              <Button
+                id="segment-save"
+                onClick={handleSave}
+                variant="contained"
+                color="primary"
+                disabled={!isChanged(toolId)}
+              >
+                {t.saveSegments}
+              </Button>
+            ) : (
+              <></>
+            )}
+          </>
         }
       />
+      {showTranscriptionId !== '' && (
+        <TranscriptionShow
+          id={showTranscriptionId}
+          visible={showTranscriptionId !== ''}
+          closeMethod={handleCloseTranscription}
+        />
+      )}
     </div>
   );
 }

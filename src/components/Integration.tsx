@@ -1,18 +1,21 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import * as actions from '../store';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
 import {
   IState,
   IIntegrationStrings,
   Project,
+  ProjectD,
   Passage,
+  PassageD,
   ISharedStrings,
-  MediaFile,
+  MediaFileD,
   ActivityStates,
+  ParatextProject,
+  ProjectIntegration,
+  ProjectIntegrationD,
+  Integration,
 } from '../model';
-import { withData } from 'react-orbitjs';
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import {
   AddRecord,
   ReplaceRelatedRecord,
@@ -36,6 +39,7 @@ import {
   MenuItem,
   Box,
   SxProps,
+  Checkbox,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SyncIcon from '@mui/icons-material/Sync';
@@ -46,34 +50,38 @@ import ParatextLogo from '../control/ParatextLogo';
 import {
   remoteIdNum,
   related,
-  useOfflnProjRead,
   remoteId,
   ArtifactTypeSlug,
   useArtifactType,
   useTranscription,
   findRecord,
+  passageRefText,
+  useOrganizedBy,
 } from '../crud';
 import {
   localSync,
   getParatextDataPath,
   useCheckOnline,
   integrationSlug,
+  useDataChanges,
 } from '../utils';
 import { TokenContext } from '../context/TokenProvider';
-import { bindActionCreators } from 'redux';
-import ParatextProject from '../model/paratextProject';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import ProjectIntegration from '../model/projectintegration';
-import Integration from '../model/integration';
 import { IAxiosStatus } from '../store/AxiosStatus';
-import localStrings from '../selector/localize';
-import { doDataChanges } from '../hoc/DataChanges';
 import Memory from '@orbit/memory';
 import {
   translateParatextErr,
   translateParatextError,
 } from '../utils/translateParatextError';
 import { PriButton, SelectExportType, StyledHeading } from '../control';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { RecordKeyMap, StandardRecordNormalizer } from '@orbit/records';
+import { useSelector } from 'react-redux';
+import { integrationSelector, sharedSelector } from '../selector';
+import { useDispatch } from 'react-redux';
+import {
+  projDefExportNumbers,
+  useProjectDefaults,
+} from '../crud/useProjectDefaults';
 
 const panelProps = { flexDirection: 'column' } as SxProps;
 const textFieldProps = { mx: 1, width: '600px' } as SxProps;
@@ -82,82 +90,138 @@ const startAlign = { alignItems: 'flex-start' } as SxProps;
 const avatarProps = { color: 'green' } as SxProps;
 const menuProps = { width: '300px' } as SxProps;
 
-interface IStateProps {
-  paratext_count: number; //state.paratext.count,
-  paratext_countStatus?: IAxiosStatus;
-  paratext_projects: ParatextProject[]; // state.paratext.projects,
-  paratext_projectsStatus?: IAxiosStatus; // state.paratext.projectsQueried,
-  paratext_username: string; // state.paratext.username
-  paratext_usernameStatus?: IAxiosStatus;
-  paratext_syncStatus?: IAxiosStatus; // state.paratext.syncStatus,
-  t: IIntegrationStrings;
-  ts: ISharedStrings;
-}
-
-interface IDispatchProps {
-  getUserName: typeof actions.getUserName;
-  getProjects: typeof actions.getProjects;
-  getLocalProjects: typeof actions.getLocalProjects;
-  getLocalCount: typeof actions.getLocalCount;
-  syncProject: typeof actions.syncProject;
-  syncPassage: typeof actions.syncPassage;
-  resetSync: typeof actions.resetSync;
-  resetCount: typeof actions.resetCount;
-  resetProjects: typeof actions.resetProjects;
-  resetUserName: typeof actions.resetUserName;
-  setLanguage: typeof actions.setLanguage;
-}
-interface IRecordProps {
-  projectintegrations: Array<ProjectIntegration>;
-  integrations: Array<Integration>;
-  projects: Array<Project>;
-  passages: Array<Passage>;
-  mediafiles: Array<MediaFile>;
-}
 interface IProps {
   stopPlayer?: () => void;
   artifactType?: ArtifactTypeSlug;
   passage?: Passage;
   currentstep?: string;
-  setStepComplete?: (stepId: string, complete: boolean) => void;
-  setCurrentStep?: (stepId: string) => void;
+  sectionArr?: [number, string][];
+  setStepComplete?: (stepId: string, complete: boolean) => Promise<void>;
+  gotoNextStep?: () => void;
 }
 
-export function IntegrationPanel(
-  props: IProps & IRecordProps & IStateProps & IDispatchProps
-) {
+export function IntegrationPanel(props: IProps) {
   const {
-    t,
-    ts,
-    paratext_username,
-    paratext_usernameStatus,
-    paratext_count,
-    paratext_countStatus,
-    paratext_projects,
-    paratext_projectsStatus,
-    paratext_syncStatus,
     stopPlayer,
     artifactType,
     passage,
     currentstep,
+    sectionArr,
     setStepComplete,
-    setCurrentStep,
+    gotoNextStep,
   } = props;
-  const {
-    getUserName,
-    getLocalCount,
-    getProjects,
-    getLocalProjects,
-    syncProject,
-    syncPassage,
-    resetSync,
-    resetCount,
-    resetProjects,
-    resetUserName,
-    setLanguage,
-  } = props;
-  const { projectintegrations, integrations, projects, passages, mediafiles } =
-    props;
+  const t: IIntegrationStrings = useSelector(integrationSelector);
+  const ts: ISharedStrings = useSelector(sharedSelector);
+  const bookData = useSelector((state: IState) => state.books.bookData);
+  const paratext_count = useSelector((state: IState) => state.paratext.count);
+  const paratext_countStatus = useSelector(
+    (state: IState) => state.paratext.countStatus
+  );
+  const paratext_username = useSelector(
+    (state: IState) => state.paratext.username
+  );
+  const paratext_usernameStatus = useSelector(
+    (state: IState) => state.paratext.usernameStatus
+  );
+  const paratext_projects = useSelector(
+    (state: IState) => state.paratext.projects
+  );
+  const paratext_projectsStatus = useSelector(
+    (state: IState) => state.paratext.projectsStatus
+  );
+  const paratext_syncStatus = useSelector(
+    (state: IState) => state.paratext.syncStatus
+  );
+  const dispatch = useDispatch();
+  const getLocalCount = (
+    mediafiles: MediaFileD[],
+    plan: string,
+    memory: Memory,
+    errorReporter: any,
+    t: IIntegrationStrings,
+    artifactId: string | null,
+    passageId: string | undefined
+  ) =>
+    dispatch(
+      actions.getLocalCount(
+        mediafiles,
+        plan,
+        memory,
+        errorReporter,
+        t,
+        artifactId,
+        passageId
+      )
+    );
+  const getUserName = (token: string, errorReporter: any, pendingmsg: string) =>
+    dispatch(actions.getUserName(token, errorReporter, pendingmsg));
+  const getProjects = (
+    token: string,
+    pendingmsg: string,
+    errorReporter: any,
+    languageTag?: string
+  ) =>
+    dispatch(
+      actions.getProjects(token, pendingmsg, errorReporter, languageTag)
+    );
+  const getLocalProjects = (
+    ptPath: string,
+    pendingmsg: string,
+    projIds: {
+      Name: string;
+      Id: string;
+    }[],
+    languageTag?: string
+  ) =>
+    dispatch(
+      actions.getLocalProjects(ptPath, pendingmsg, projIds, languageTag)
+    );
+  const syncProject = (
+    token: string,
+    projectId: number,
+    artifactId: number,
+    errorReporter: any,
+    pendingmsg: string,
+    completeMsg: string
+  ) =>
+    dispatch(
+      actions.syncProject(
+        token,
+        projectId,
+        artifactId,
+        errorReporter,
+        pendingmsg,
+        completeMsg
+      )
+    );
+  const syncPassage = (
+    token: string,
+    passageId: number,
+    typeId: number, //0 for vernacular?
+    errorReporter: any,
+    pendingmsg: string,
+    successmsg: string
+  ) =>
+    dispatch(
+      actions.syncPassage(
+        token,
+        passageId,
+        typeId,
+        errorReporter,
+        pendingmsg,
+        successmsg
+      )
+    );
+  const resetSync = () => dispatch(actions.resetSync());
+  const resetCount = () => dispatch(actions.resetCount());
+  const resetProjects = () => dispatch(actions.resetProjects());
+  const resetUserName = () => dispatch(actions.resetUserName());
+  const projectintegrations =
+    useOrbitData<ProjectIntegrationD[]>('projectintegration');
+  const integrations = useOrbitData<Integration[]>('integration');
+  const projects = useOrbitData<ProjectD[]>('project');
+  const passages = useOrbitData<PassageD[]>('passage');
+  const mediafiles = useOrbitData<MediaFileD[]>('mediafile');
   const [connected] = useGlobal('connected');
   const [hasPtProj, setHasPtProj] = useState(false);
   const [ptProj, setPtProj] = useState(-1);
@@ -169,19 +233,18 @@ export function IntegrationPanel(
   const [myProject, setMyProject] = useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
-  const [projectsLoaded] = useGlobal('projectsLoaded');
-  const getOfflineProject = useOfflnProjRead();
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [local, setLocal] = useState(offline || offlineOnly);
   const { accessToken } = useContext(TokenContext).state;
+  const forceDataChanges = useDataChanges();
   const [count, setCount] = useState(-1);
+  const [countMsg, setCountMsg] = useState<string | JSX.Element>();
 
   const [paratextIntegration, setParatextIntegration] = useState('');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const [plan] = useGlobal('plan');
-  const [fingerprint] = useGlobal('fingerprint');
 
   const [errorReporter] = useGlobal('errorReporter');
   const { showMessage, showTitledMessage } = useSnackBar();
@@ -189,7 +252,6 @@ export function IntegrationPanel(
   const [ptPath, setPtPath] = useState('');
   const syncing = React.useRef<boolean>(false);
   const setSyncing = (state: boolean) => (syncing.current = state);
-  const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const checkOnline = useCheckOnline();
   const [exportTypes, setExportTypes] = useState([
     ArtifactTypeSlug.Vernacular,
@@ -200,6 +262,20 @@ export function IntegrationPanel(
   const { getTypeId } = useArtifactType();
   const getTranscription = useTranscription(false, ActivityStates.Approved);
   const intSave = React.useRef('');
+  const { getOrganizedBy } = useOrganizedBy();
+  const { getProjectDefault, setProjectDefault } = useProjectDefaults();
+
+  const [exportNumbers, setExportNumbers] = useState(
+    JSON.parse(getProjectDefault(projDefExportNumbers) ?? false) as boolean
+  );
+
+  const handleExportSectionNumbers = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const checked = event.target.checked;
+    setExportNumbers(checked);
+    setProjectDefault(projDefExportNumbers, JSON.stringify(checked));
+  };
 
   const TranslateSyncError = (err: IAxiosStatus): JSX.Element => {
     return <span>{translateParatextError(err, ts)}</span>;
@@ -207,30 +283,31 @@ export function IntegrationPanel(
 
   const getProject = () => {
     if (!project) return undefined;
-    const projfind: Project[] = projects.filter((p) => p.id === project);
+    const projfind: Project[] = projects.filter((p) => p?.id === project);
     return projfind.length > 0 ? projfind[0] : undefined;
   };
   const addParatextIntegration = async (local: string): Promise<string> => {
-    const int = {
+    const int: Integration = {
       type: 'integration',
       attributes: {
         name: local,
         url: '',
       },
-    } as Integration;
-    memory.schema.initializeRecord(int);
-    await memory.update((t: TransformBuilder) => t.addRecord(int));
-    return int.id;
+    };
+    const rn = new StandardRecordNormalizer({ schema: memory.schema });
+    let rec = rn.normalizeRecord(int);
+    await memory.update((t) => t.addRecord(rec));
+    return rec.id;
   };
   const getParatextIntegration = (local: string) => {
     const intfind: Integration[] = integrations.filter(
       (i) =>
         i.attributes?.name === local &&
-        Boolean(i.keys?.remoteId) !== offlineOnly
+        Boolean(i?.keys?.remoteId) !== offlineOnly
     );
     if (intfind.length === 0)
       addParatextIntegration(local).then((res) => setParatextIntegration(res));
-    else setParatextIntegration(intfind[0].id);
+    else setParatextIntegration(intfind[0].id as string);
   };
 
   const addProjectIntegration = async (
@@ -243,7 +320,7 @@ export function IntegrationPanel(
         settings: setting,
       },
     } as any;
-    await memory.update((t: TransformBuilder) => [
+    await memory.update((t) => [
       ...AddRecord(t, pi, user, memory),
       ...ReplaceRelatedRecord(t, pi, 'project', 'project', project),
       ...ReplaceRelatedRecord(t, pi, 'integration', 'integration', integration),
@@ -258,10 +335,10 @@ export function IntegrationPanel(
       memory,
       'projectintegration',
       projInt
-    ) as ProjectIntegration;
+    ) as ProjectIntegrationD;
     if (pi) {
       pi.attributes.settings = setting;
-      memory.update((t: TransformBuilder) => UpdateRecord(t, pi, user));
+      memory.update((t) => UpdateRecord(t, pi, user));
     }
     return projInt;
   };
@@ -274,7 +351,7 @@ export function IntegrationPanel(
         pi.attributes
     );
     if (projint.length === 0) return '';
-    return projint[0].id;
+    return projint[0].id as string;
   };
 
   const handleParatextProjectChange = (e: any) => {
@@ -294,10 +371,11 @@ export function IntegrationPanel(
         LanguageName: paratextProject.LanguageName,
       };
       let projint = getProjectIntegration(paratextIntegration);
+      const strSettings = JSON.stringify(setting);
       if (projint === '') {
-        addProjectIntegration(paratextIntegration, JSON.stringify(setting));
+        addProjectIntegration(paratextIntegration, strSettings);
       } else {
-        updateProjectIntegration(projint, JSON.stringify(setting));
+        updateProjectIntegration(projint, strSettings);
       }
     }
   };
@@ -305,13 +383,21 @@ export function IntegrationPanel(
     if (stopPlayer) stopPlayer();
     setSyncing(true);
     var typeId = getTypeId(exportType)
-      ? remoteIdNum('artifacttype', getTypeId(exportType) || '', memory.keyMap)
+      ? remoteIdNum(
+          'artifacttype',
+          getTypeId(exportType) || '',
+          memory.keyMap as RecordKeyMap
+        )
       : 0;
     if (passage !== undefined) {
       //from detail screen so just do passage
       syncPassage(
         accessToken || '',
-        remoteIdNum('passage', passage.id, memory.keyMap),
+        remoteIdNum(
+          'passage',
+          passage.id as string,
+          memory.keyMap as RecordKeyMap
+        ),
         typeId,
         errorReporter,
         t.syncPending,
@@ -320,7 +406,7 @@ export function IntegrationPanel(
     } else {
       syncProject(
         accessToken || '',
-        remoteIdNum('project', project, memory.keyMap),
+        remoteIdNum('project', project, memory.keyMap as RecordKeyMap),
         typeId,
         errorReporter,
         t.syncPending,
@@ -340,14 +426,16 @@ export function IntegrationPanel(
       memory,
       user,
       passage,
+      exportNumbers,
+      sectionArr,
       getTypeId(exportType),
       getTranscription
     );
     showMessage(translateParatextErr(err, ts) || t.syncComplete);
     resetCount();
     if (setStepComplete && currentstep && !err) {
-      setStepComplete(currentstep, true);
-      if (setCurrentStep) setCurrentStep('');
+      await setStepComplete(currentstep, true);
+      if (gotoNextStep) gotoNextStep();
     }
     setSyncing(false);
   };
@@ -397,10 +485,10 @@ export function IntegrationPanel(
             LanguageTag: paratext_projects[index].LanguageTag,
             LanguageName: paratext_projects[index].LanguageName,
           };
+          const strSettings = JSON.stringify(setting);
           if (curInt.length > 0) {
-            updateProjectIntegration(curInt[0].id, JSON.stringify(setting));
-          } else
-            addProjectIntegration(paratextIntegration, JSON.stringify(setting));
+            updateProjectIntegration(curInt[0].id as string, strSettings);
+          } else addProjectIntegration(paratextIntegration, strSettings);
         }
       }
     }
@@ -415,6 +503,21 @@ export function IntegrationPanel(
     let language = proj && proj.attributes ? proj.attributes.languageName : '';
     return replLang.replace('{lang0}', language || '');
   };
+
+  const isFirstPassage = useMemo(() => {
+    const sectionId = related(passage, 'section');
+    const sectionPassages = passages
+      .filter(
+        (p) => related(p, 'section') === sectionId && !related(p, 'passagetype')
+      )
+      .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
+    return (
+      sectionPassages.length > 0 &&
+      sectionPassages[0]?.id &&
+      sectionPassages[0].id === passage?.id
+    );
+  }, [passage, passages]);
+
   useEffect(() => {
     setLocal(offline || offlineOnly);
   }, [offline, offlineOnly]);
@@ -440,11 +543,13 @@ export function IntegrationPanel(
   useEffect(() => {
     setHasParatext(false);
     resetUserName();
-  }, [resetUserName, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   useEffect(() => {
     if (connected && !hasParatext) resetUserName();
-  }, [resetUserName, connected, hasParatext]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connected, hasParatext]);
 
   useEffect(() => {
     if (project && project !== myProject) {
@@ -492,7 +597,7 @@ export function IntegrationPanel(
           t.countError,
           translateParatextError(paratext_countStatus, ts)
         );
-        resetCount();
+        setCountMsg(translateParatextError(paratext_countStatus, ts));
       } else if (paratext_countStatus.complete) {
         setCount(paratext_count);
         resetCount();
@@ -533,8 +638,11 @@ export function IntegrationPanel(
             return {
               Name: settings.Name,
               Id:
-                remoteId('project', related(pi, 'project'), memory.keyMap) ||
-                related(pi, 'project'),
+                remoteId(
+                  'project',
+                  related(pi, 'project'),
+                  memory.keyMap as RecordKeyMap
+                ) || related(pi, 'project'),
             };
           });
           getParatextDataPath().then((ptPath) => {
@@ -579,23 +687,15 @@ export function IntegrationPanel(
         showMessage(paratext_syncStatus.statusMsg);
       }
       if (paratext_syncStatus.complete) {
+        if (!paratext_syncStatus.errStatus) setCount(0); //force this to 0 now...if wrong...will reset eventually with new count
         resetCount();
         resetSync();
         setSyncing(false);
-        doDataChanges(
-          accessToken || '',
-          coordinator,
-          fingerprint,
-          projectsLoaded,
-          getOfflineProject,
-          errorReporter,
-          user,
-          setLanguage,
-          setDataChangeCount
-        );
+        forceDataChanges();
         if (setStepComplete && currentstep && !paratext_syncStatus.errStatus) {
-          setStepComplete(currentstep, true);
-          if (setCurrentStep) setCurrentStep('');
+          setStepComplete(currentstep, true).then(() => {
+            if (gotoNextStep) gotoNextStep();
+          });
         }
       }
     }
@@ -620,6 +720,19 @@ export function IntegrationPanel(
 
   return (
     <Box sx={{ width: '100%' }}>
+      {isFirstPassage && (
+        <FormControlLabel
+          sx={{ m: 1 }}
+          control={
+            <Checkbox
+              checked={exportNumbers}
+              onChange={handleExportSectionNumbers}
+              value="exportNumbers"
+            />
+          }
+          label={t.exportSectionNumbers.replace('{0}', getOrganizedBy(true))}
+        />
+      )}
       <Accordion id="int-online" defaultExpanded={!local} disabled={local}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -680,7 +793,11 @@ export function IntegrationPanel(
                     select
                     label={getProjectLabel()}
                     sx={textFieldProps}
-                    value={ptProjId}
+                    value={
+                      paratext_projects.find((p) => p.ParatextId === ptProjId)
+                        ? ptProjId
+                        : ''
+                    }
                     onChange={handleParatextProjectChange}
                     SelectProps={{
                       MenuProps: {
@@ -754,7 +871,15 @@ export function IntegrationPanel(
               </ListItemAvatar>
               <ListItemText
                 primary={t.countReady}
-                secondary={count >= 0 ? count : t.countPending}
+                secondary={
+                  Boolean(countMsg)
+                    ? countMsg
+                    : count === 1 && passage
+                    ? passageRefText(passage, bookData)
+                    : count >= 0
+                    ? count
+                    : t.countPending
+                }
               />
             </ListItem>
           </List>
@@ -848,7 +973,11 @@ export function IntegrationPanel(
                     select
                     label={getProjectLabel()}
                     sx={textFieldProps}
-                    value={ptProjId}
+                    value={
+                      paratext_projects.find((p) => p.ParatextId === ptProjId)
+                        ? ptProjId
+                        : ''
+                    }
                     onChange={handleParatextProjectChange}
                     SelectProps={{
                       MenuProps: {
@@ -883,7 +1012,15 @@ export function IntegrationPanel(
               </ListItemAvatar>
               <ListItemText
                 primary={t.countReady}
-                secondary={count >= 0 ? count : t.countPending}
+                secondary={
+                  Boolean(countMsg)
+                    ? countMsg
+                    : count === 1 && passage
+                    ? passageRefText(passage, bookData)
+                    : count >= 0
+                    ? count
+                    : t.countPending
+                }
               />
             </ListItem>
           </List>
@@ -917,44 +1054,5 @@ export function IntegrationPanel(
     </Box>
   );
 }
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'integration' }),
-  ts: localStrings(state, { layout: 'shared' }),
-  paratext_count: state.paratext.count,
-  paratext_countStatus: state.paratext.countStatus,
-  paratext_username: state.paratext.username,
-  paratext_usernameStatus: state.paratext.usernameStatus,
-  paratext_projects: state.paratext.projects,
-  paratext_projectsStatus: state.paratext.projectsStatus,
-  paratext_syncStatus: state.paratext.syncStatus,
-});
-const mapDispatchToProps = (dispatch: any) => ({
-  ...bindActionCreators(
-    {
-      getUserName: actions.getUserName,
-      getProjects: actions.getProjects,
-      getLocalProjects: actions.getLocalProjects,
-      getLocalCount: actions.getLocalCount,
-      syncProject: actions.syncProject,
-      syncPassage: actions.syncPassage,
-      resetSync: actions.resetSync,
-      resetCount: actions.resetCount,
-      resetProjects: actions.resetProjects,
-      resetUserName: actions.resetUserName,
-      setLanguage: actions.setLanguage,
-    },
-    dispatch
-  ),
-});
 
-const mapRecordsToProps = {
-  projectintegrations: (q: QueryBuilder) => q.findRecords('projectintegration'),
-  integrations: (q: QueryBuilder) => q.findRecords('integration'),
-  projects: (q: QueryBuilder) => q.findRecords('project'),
-  passages: (q: QueryBuilder) => q.findRecords('passage'),
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(IntegrationPanel as any) as any
-) as any as (props: IProps) => JSX.Element;
+export default IntegrationPanel;

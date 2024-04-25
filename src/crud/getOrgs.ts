@@ -1,14 +1,13 @@
-import { QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
 import { Organization, OrganizationMembership } from '../model';
 import { related } from '.';
 
 export function getOrgs(memory: Memory, currentUser: string): Organization[] {
-  let orgs: Organization[] = memory.cache.query((q: QueryBuilder) =>
+  let orgs: Organization[] = memory.cache.query((q) =>
     q.findRecords('organization')
   ) as any;
   if (process.env.REACT_APP_MODE === 'electron') {
-    let oms: OrganizationMembership[] = memory.cache.query((q: QueryBuilder) =>
+    let oms: OrganizationMembership[] = memory.cache.query((q) =>
       q.findRecords('organizationmembership')
     ) as any;
     orgs = orgs.filter((o) =>

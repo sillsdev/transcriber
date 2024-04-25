@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { hot } from 'react-hot-loader';
 import { ThemeProvider, createTheme } from '@mui/material';
 import DataChanges from './hoc/DataChanges';
 import { UnsavedProvider } from './context/UnsavedContext';
@@ -33,4 +32,4 @@ function App() {
   );
 }
 
-export default hot(module)(App);
+export default App;

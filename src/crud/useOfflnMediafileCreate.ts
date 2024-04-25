@@ -1,8 +1,7 @@
-import { Operation, TransformBuilder } from '@orbit/data';
+import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 import { useGlobal } from 'reactn';
-import { MediaFile } from '../model';
+import { MediaFile, MediaFileD } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
-import { currentDateTime } from '../utils';
 import path from 'path-browserify';
 
 export const useOfflnMediafileCreate = () => {
@@ -21,26 +20,40 @@ export const useOfflnMediafileCreate = () => {
     const newMediaRec: MediaFile = {
       type: 'mediafile',
       attributes: {
-        ...data,
         versionNumber: version,
+        eafUrl: data.eafUrl || '',
+        audioUrl: data.audioUrl || '',
+        s3file: data.s3file || '',
+        duration: data.duration || 0,
+        contentType: data.contentType || '',
+        audioQuality: data.audioQuality || '',
+        textQuality: data.textQuality || '',
         transcription: '',
+        originalFile: data.originalFile || '',
         filesize: size,
         position: 0,
-        dateCreated: currentDateTime(),
-        dateUpdated: currentDateTime(),
+        segments: data.segments || null,
+        languagebcp47: data.languagebcp47 || '',
+        link: data.link || false,
+        readyToShare: false,
+        performedBy: data.performedBy || '',
+        sourceSegments: data.sourceSegments || null,
+        sourceMediaOfflineId: '',
+        transcriptionstate: data.transcriptionstate || '',
+        topic: data.topic || '',
       },
-    } as any;
+    } as MediaFile;
     //check new comment version
     if (path.basename(data.audioUrl) !== data.originalFile) {
       newMediaRec.attributes.originalFile = path.basename(data.audioUrl);
     }
-    const t = new TransformBuilder();
-    const ops: Operation[] = [];
+    const t = new RecordTransformBuilder();
+    const ops: RecordOperation[] = [];
     ops.push(...AddRecord(t, newMediaRec, user, memory));
     ops.push(
       ...ReplaceRelatedRecord(
         t,
-        newMediaRec,
+        newMediaRec as MediaFileD,
         'plan',
         'plan',
         plan || data.planId
@@ -48,13 +61,19 @@ export const useOfflnMediafileCreate = () => {
     );
     if (passageId)
       ops.push(
-        ...ReplaceRelatedRecord(t, newMediaRec, 'passage', 'passage', passageId)
+        ...ReplaceRelatedRecord(
+          t,
+          newMediaRec as MediaFileD,
+          'passage',
+          'passage',
+          passageId
+        )
       );
     if (artifactTypeId)
       ops.push(
         ...ReplaceRelatedRecord(
           t,
-          newMediaRec,
+          newMediaRec as MediaFileD,
           'artifactType',
           'artifacttype',
           artifactTypeId
@@ -64,7 +83,7 @@ export const useOfflnMediafileCreate = () => {
       ops.push(
         ...ReplaceRelatedRecord(
           t,
-          newMediaRec,
+          newMediaRec as MediaFileD,
           'sourceMedia',
           'mediafile',
           sourceMediaId
@@ -74,7 +93,7 @@ export const useOfflnMediafileCreate = () => {
       ops.push(
         ...ReplaceRelatedRecord(
           t,
-          newMediaRec,
+          newMediaRec as MediaFileD,
           'recordedbyUser',
           'user',
           recordedbyUserId
@@ -82,7 +101,7 @@ export const useOfflnMediafileCreate = () => {
       );
     await memory.update(ops);
 
-    return newMediaRec;
+    return newMediaRec as MediaFileD;
   };
   return { createMedia };
 };

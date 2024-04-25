@@ -1,30 +1,21 @@
 import React from 'react';
-import { ISharedStrings, IState, Role } from '../model';
-import { connect } from 'react-redux';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
+import { ISharedStrings, RoleD } from '../model';
 import { Avatar } from '@mui/material';
 import { makeAbbr } from '../utils';
 import { useAvatarSource } from '../crud';
-import localStrings from '../selector/localize';
 import { localizeRole } from '../utils';
 import { avatarSize } from '../control';
+import { useSelector } from 'react-redux';
+import { sharedSelector } from '../selector';
 
-interface IStateProps {
-  ts: ISharedStrings;
-}
-
-interface IRecordProps {
-  roles: Array<Role>;
-}
-
-interface IProps extends IStateProps, IRecordProps {
-  roleRec: Role;
+interface IProps {
+  roleRec: RoleD;
   small?: boolean;
 }
 
 export function RoleAvatar(props: IProps) {
-  const { roleRec, small, ts } = props;
+  const { roleRec, small } = props;
+  const ts: ISharedStrings = useSelector(sharedSelector);
   const source = useAvatarSource(roleRec.attributes.roleName, roleRec);
 
   return source ? (
@@ -42,13 +33,4 @@ export function RoleAvatar(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  ts: localStrings(state, { layout: 'shared' }),
-});
-const mapRecordsToProps = {
-  roles: (q: QueryBuilder) => q.findRecords('role'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(RoleAvatar) as any
-) as any;
+export default RoleAvatar;

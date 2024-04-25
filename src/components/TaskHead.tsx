@@ -16,13 +16,13 @@ import {
   Box,
   SxProps,
 } from '@mui/material';
-import { TransformBuilder } from '@orbit/data';
 import { sectionNumber, sectionDescription, useOrganizedBy } from '../crud';
 import PeopleIconOutline from '@mui/icons-material/PeopleAltOutlined';
 import { TaskAvatar } from './TaskAvatar';
 import { UpdateRelatedRecord } from '../model/baseModel';
 import { TaskItemWidth } from './TaskTable';
 import { Section } from '../model';
+import { PassageDetailContext } from '../context/PassageDetailContext';
 
 const menuItemProps = { display: 'flex', flexDirection: 'row' } as SxProps;
 
@@ -41,6 +41,8 @@ export function TaskHead(props: IProps) {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [menuItem, setMenuItem] = React.useState(null);
+  const { sectionArr } = React.useContext(PassageDetailContext).state;
+  const sectionMap = new Map<number, string>(sectionArr);
   const { getOrganizedBy } = useOrganizedBy();
 
   const t = taskItemStr;
@@ -48,7 +50,7 @@ export function TaskHead(props: IProps) {
 
   const planHead = t.section
     .replace('{0}', getOrganizedBy(true))
-    .replace('{1}', sectionNumber(section))
+    .replace('{1}', sectionNumber(section, sectionMap))
     .replace('{2}', '');
 
   const assignAction = t.assign;
@@ -63,7 +65,7 @@ export function TaskHead(props: IProps) {
       setMenuItem(null);
     } else {
       if (role) {
-        memory.update((t: TransformBuilder) =>
+        memory.update((t) =>
           UpdateRelatedRecord(
             t,
             section,

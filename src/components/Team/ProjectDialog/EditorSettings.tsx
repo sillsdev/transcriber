@@ -8,10 +8,12 @@ import {
 import { IVProjectStrings } from '../../../model';
 import FontSize from '../../FontSize';
 import { IProjectDialogState } from './ProjectDialog';
+import { shallowEqual, useSelector } from 'react-redux';
+import { vProjectSelector } from '../../../selector';
 
 export const EditorSettings = (props: IProjectDialogState) => {
   const { state, setState } = props;
-  const t: IVProjectStrings = state.vProjectStrings;
+  const t: IVProjectStrings = useSelector(vProjectSelector, shallowEqual);
   const { font, fontSize, rtl } = state;
 
   const handleChangeRtl = () => {

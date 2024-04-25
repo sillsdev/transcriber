@@ -1,7 +1,8 @@
 import React from 'react';
 import { TextField } from '@mui/material';
-import { TeamContext } from '../../../context/TeamContext';
 import { IProjectDialogState } from './ProjectDialog';
+import { shallowEqual, useSelector } from 'react-redux';
+import { vProjectSelector } from '../../../selector';
 
 interface IProps extends IProjectDialogState {
   inUse?: (newName: string) => boolean;
@@ -10,8 +11,7 @@ interface IProps extends IProjectDialogState {
 export const ProjectName = (props: IProps) => {
   const { state, setState, inUse } = props;
   const { name } = state;
-  const ctx = React.useContext(TeamContext);
-  const t = ctx.state.vProjectStrings;
+  const t = useSelector(vProjectSelector, shallowEqual);
   const [nameInUse, setInUse] = React.useState(false);
 
   const handleChangeName = (e: any) => {

@@ -1,32 +1,27 @@
-import { connect } from 'react-redux';
-import { IPassageDetailArtifactsStrings, IState } from '../../../model';
-import localStrings from '../../../selector/localize';
+import { useSelector } from 'react-redux';
+import { IPassageDetailArtifactsStrings } from '../../../model';
 import { TableRow } from '.';
+import { passageDetailArtifactsSelector } from '../../../selector';
 
-interface IStateProps {
-  t: IPassageDetailArtifactsStrings;
-}
+export const SortableHeader = () => {
+  const t: IPassageDetailArtifactsStrings = useSelector(
+    passageDetailArtifactsSelector
+  );
+  return (
+    <TableRow
+      value={
+        {
+          playItem: t.action,
+          artifactName: t.resource,
+          version: t.version,
+          artifactType: t.type,
+          artifactCategory: t.category,
+          done: t.completed,
+        } as any
+      }
+      header={true}
+    />
+  );
+};
 
-interface IProps extends IStateProps {}
-
-export const SortableHeader = ({ t }: IProps) => (
-  <TableRow
-    value={
-      {
-        playItem: t.action,
-        artifactName: t.resource,
-        version: t.version,
-        artifactType: t.type,
-        artifactCategory: t.category,
-        done: t.completed,
-      } as any
-    }
-    header={true}
-  />
-);
-
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'passageDetailArtifacts' }),
-});
-
-export default connect(mapStateToProps)(SortableHeader) as any as any;
+export default SortableHeader;

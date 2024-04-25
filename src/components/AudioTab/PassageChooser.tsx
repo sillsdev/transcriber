@@ -1,19 +1,15 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { IState, IMediaTabStrings } from '../../model';
+import { IMediaTabStrings } from '../../model';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
-import localStrings from '../../selector/localize';
-import { FormControlLabel, Switch, Radio } from '@mui/material';
+import { FormControlLabel, Switch } from '@mui/material';
 import ShapingTable from '../ShapingTable';
-import { useOrganizedBy, useRole } from '../../crud';
+import { useOrganizedBy } from '../../crud';
 import { IRow, IPRow } from '.';
 import { Sorting } from '@devexpress/dx-react-grid';
+import { useSelector } from 'react-redux';
+import { mediaTabSelector } from '../../selector';
 
-interface IStateProps {
-  t: IMediaTabStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   data: IPRow[];
   row: number;
   doAttach: (row: number, pRow: number) => void;
@@ -25,12 +21,12 @@ interface IProps extends IStateProps {
 }
 
 export const PassageChooser = (props: IProps) => {
-  const { data, row, t, visible, uploadMedia } = props;
+  const { data, row, visible, uploadMedia } = props;
+  const t: IMediaTabStrings = useSelector(mediaTabSelector);
   const { doAttach, setVisible, setUploadMedia, mediaRow } = props;
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const [pcheck, setCheck] = useState(-1);
-  const { userIsAdmin } = useRole();
   const columnDefs = [
     { name: 'sectionDesc', title: organizedBy },
     { name: 'reference', title: t.reference },
@@ -93,21 +89,6 @@ export const PassageChooser = (props: IProps) => {
     setCheck(checks[0] === pcheck ? checks[1] : checks[0]);
   };
 
-  const SelectCell = (props: ICell) => {
-    const handleSelect = () => {
-      props.onToggle && props.onToggle();
-    };
-    return userIsAdmin ? (
-      <Table.Cell {...props}>
-        {(!props.row.fileName || props.row.reference === '') && (
-          <Radio checked={props.selected} onChange={handleSelect} />
-        )}
-      </Table.Cell>
-    ) : (
-      <Table.Cell {...props} />
-    );
-  };
-
   return (
     <div>
       <FormControlLabel
@@ -130,7 +111,6 @@ export const PassageChooser = (props: IProps) => {
         sorting={sorting}
         rows={data}
         select={handleCheck}
-        selectCell={SelectCell}
         checks={pcheck >= 0 ? [pcheck] : []}
         shaping={true}
         hiddenColumnNames={hiddenColumnNames}
@@ -141,8 +121,4 @@ export const PassageChooser = (props: IProps) => {
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'mediaTab' }),
-});
-
-export default connect(mapStateToProps)(PassageChooser) as any;
+export default PassageChooser;

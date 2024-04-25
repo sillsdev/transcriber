@@ -11,4 +11,6 @@ export enum ArtifactTypeSlug {
   ProjectResource = 'projectresource',
   IntellectualProperty = 'intellectualproperty',
   KeyTerm = 'keyterm',
+  Title = 'title',
+  Graphic = 'graphic',
 }

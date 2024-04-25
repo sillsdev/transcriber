@@ -10,6 +10,7 @@ import StickyRedirect from '../components/StickyRedirect';
 import { remoteId } from '../crud';
 import TeamActions from '../components/Team/TeamActions';
 import { UnsavedContext } from '../context/UnsavedContext';
+import { RecordKeyMap } from '@orbit/records';
 
 export const TeamScreen = () => {
   const { pathname } = useLocation();
@@ -37,7 +38,7 @@ export const TeamScreen = () => {
   useEffect(() => {
     if (loaded.current) {
       if (project !== '' && plan && !home) {
-        const remProjId = remoteId('plan', plan, memory.keyMap);
+        const remProjId = remoteId('plan', plan, memory.keyMap as RecordKeyMap);
         const loc = `/plan/${remProjId || plan}/0`;
         if (loc !== localStorage.getItem(localUserKey(LocalKey.url))) {
           setView(loc);

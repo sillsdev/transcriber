@@ -1,31 +1,43 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { User, Group, GroupMembership } from '../../model';
+import { User, GroupD, GroupMembership } from '../../model';
 import { PermissionName, related, useAllUserGroup, useUser } from '../../crud';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
 export interface IUserName {
   userId: string;
   name: string;
 }
 
-interface IProps {
-  users: User[];
-  groups: Group[];
-  memberships: GroupMembership[];
-}
-
-export const usePeerGroups = ({ users, groups, memberships }: IProps) => {
+export const usePeerGroups = () => {
+  const users = useOrbitData<User[]>('user');
+  const groups = useOrbitData<GroupD[]>('group');
+  const memberships = useOrbitData<GroupMembership[]>('groupmembership');
   const [organization] = useGlobal('organization');
   const allUsersGroup = useAllUserGroup();
   const { getUserRec } = useUser();
   const [userNames, setUserNames] = useState<IUserName[]>([]);
-  const [peerGroups, setPeerGroups] = useState<Group[]>([]);
-  const [myGroups, setMyGroups] = useState<Group[]>([]);
-  const [check, setCheck] = useState<Set<string>>();
+  const [peerGroups, setPeerGroups] = useState<GroupD[]>([]);
+  const [myGroups, setMyGroups] = useState<GroupD[]>([]);
+  const [check, setCheck] = useState<string[]>();
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
 
   const cKey = (userId: string, groupId: string) => `${userId}_${groupId}`;
+
+  const cAdd = (v: string, c: string[]) => {
+    if (!c.includes(v)) {
+      c.push(v);
+      setCheck(c.sort());
+    }
+  };
+
+  const cDelete = (v: string, c: string[]) => {
+    if (c.includes(v)) {
+      c.splice(c.indexOf(v), 1);
+      setCheck(c.sort());
+    }
+  };
 
   const allUserId = useMemo(
     () => allUsersGroup(organization)?.id,
@@ -44,25 +56,34 @@ export const usePeerGroups = ({ users, groups, memberships }: IProps) => {
         return { userId: id, name: userRec?.attributes?.name };
       })
     );
-    var groupIds = memberships
+
+    const groupIds = memberships
       .filter((m) => related(m, 'user') === user)
       .map((om) => related(om, 'group'));
+
     setMyGroups(
       groups.filter(
         (g) =>
-          !g.attributes.allUsers &&
+          g?.attributes &&
+          !g.attributes?.allUsers &&
           groupIds.includes(g.id) &&
           related(g, 'owner') === organization
       )
     );
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [memberships, organization, users]);
 
   useEffect(() => {
-    const newCols = groups.filter(
-      (g) => !g.attributes.allUsers && related(g, 'owner') === organization
+    setPeerGroups(
+      groups.filter(
+        (g) =>
+          g?.attributes &&
+          !g.attributes?.allUsers &&
+          related(g, 'owner') === organization
+      )
     );
-    setPeerGroups(newCols);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groups, organization]);
 
   useEffect(() => {
@@ -74,7 +95,7 @@ export const usePeerGroups = ({ users, groups, memberships }: IProps) => {
       const g = related(m, 'group');
       if (users.includes(u) && grps.includes(g)) checks.add(cKey(u, g));
     });
-    setCheck(checks);
+    setCheck(Array.from(checks));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userNames, peerGroups]);
 
@@ -115,7 +136,8 @@ export const usePeerGroups = ({ users, groups, memberships }: IProps) => {
     userNames,
     peerGroups,
     check,
-    setCheck,
+    cAdd,
+    cDelete,
     cKey,
     myGroups,
     getGroupId,

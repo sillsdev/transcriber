@@ -52,18 +52,21 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
     "uncategorized": string;
     "retelling": string;
     "grammar": string;
+    "graphic": string;
     "qanda": string;
 };
 
 export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
     "backtranslation": string;
     "comment": string;
+    "graphic": string;
     "projectresource": string;
     "qanda": string;
     "resource": string;
     "retell": string;
     "sharedresource": string;
     "testing": string;
+    "title": string;
     "vernacular": string;
     "wholebacktranslation": string;
 };
@@ -118,10 +121,18 @@ export interface IAudioDownloadStrings extends Localize.LocalizedStringsMethods 
 export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "add": string;
     "addTeam": string;
+    "bibleid": string;
+    "bibleidexists": string;
+    "bibleidformat": string;
+    "bibleidiso": string;
+    "bibleIdExplain": string;
+    "biblename": string;
     "cancel": string;
+    "closeNoSave": string;
     "connectParatext": string;
     "copyComplete": string;
     "copyNew": string;
+    "copyright": string;
     "copySame": string;
     "copyStatus": string;
     "creatorAdd": string;
@@ -129,18 +140,19 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "creatorOK": string;
     "delete": string;
     "deleteTeam": string;
+    "description": string;
     "draft": string;
     "editCategory": string;
     "editWorkflow": string;
+    "explainPublishing": string;
     "explainTeamDelete": string;
     "import": string;
     "language": string;
-    "longNotesProject": string;
-    "longNotes": string;
     "mediaUploaded": string;
     "members": string;
     "nameInUse": string;
     "newProject": string;
+    "notesLabel": string;
     "OBS": string;
     "OBT": string;
     "OBTs": string;
@@ -152,7 +164,9 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "personalProjects": string;
     "process": string;
     "projectCreated": string;
+    "projectRequired": string;
     "Render": string;
+    "publishing": string;
     "save": string;
     "sectionStatus": string;
     "settings": string;
@@ -163,11 +177,17 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "teamSettings": string;
     "transcriber": string;
     "uploadProgress": string;
+    "workflowProgression": string;
+    "workflowProgressionPassage": string;
+    "workflowProgressionStep": string;
+    "yes": string;
 };
 
 export interface ICategoryStrings extends Localize.LocalizedStringsMethods {
     "builtIn": string;
     "discussion": string;
+    "close": string;
+    "duplicate": string;
     "discussions": string;
     "ignoreInvalid": string;
     "inUseBy": string;
@@ -381,6 +401,7 @@ export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "importProject": string;
     "importSync": string;
     "invalidITF": string;
+    "unknownError": string;
     "invalidProject": string;
     "locale": string;
     "noFile": string;
@@ -406,6 +427,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "countPending": string;
     "countReady": string;
     "emptyBook": string;
+    "exportSectionNumbers": string;
     "invalidReferences": string;
     "no": string;
     "noProject": string;
@@ -619,6 +641,8 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "fileAttached": string;
     "fileName": string;
     "filter": string;
+    "graphicRightsAdd": string;
+    "graphicRightsTitle": string;
     "latestVersion": string;
     "loadingTable": string;
     "matchAdded": string;
@@ -629,27 +653,39 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "passageAttached": string;
     "planName": string;
     "proposed": string;
+    "published": string;
     "readyToShare": string;
     "reference": string;
     "save": string;
     "saving": string;
     "savingComplete": string;
     "selectFiles": string;
-    "selectRows": string;
     "showHideFilter": string;
     "size": string;
     "toobig": string;
     "unsupported": string;
     "uploadComplete": string;
+    "user": string;
     "version": string;
     "versionHistory": string;
     "viewAssociations": string;
+};
+
+export interface IMediaTitleStrings extends Localize.LocalizedStringsMethods {
+    "cancel": string;
+    "playPause": string;
+    "record": string;
+    "recording": string;
+    "save": string;
+    "saving": string;
 };
 
 export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
     "cancel": string;
     "dragDropMultiple": string;
     "dragDropSingle": string;
+    "graphicTask": string;
+    "graphicTitle": string;
     "intellectualPropertyTask": string;
     "intellectualPropertyTitle": string;
     "invalidFile": string;
@@ -697,6 +733,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "allLevel": string;
     "allResources": string;
     "bookLevel": string;
+    "bookResource": string;
     "canceling": string;
     "category": string;
     "chapterLevel": string;
@@ -713,7 +750,10 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "keywords": string;
     "language": string;
     "link": string;
+    "movementResource": string;
     "no": string;
+    "noteResource": string;
+    "notes": string;
     "passageResource": string;
     "pasteFormat": string;
     "pasteError": string;
@@ -723,8 +763,10 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "projectResourceConfigure": string;
     "reference": string;
     "resource": string;
+    "resources": string;
     "resourcesDeleted": string;
     "selectBook": string;
+    "selectOne": string;
     "sharedResource": string;
     "source": string;
     "startStop": string;
@@ -775,6 +817,16 @@ export interface IPassageRecordStrings extends Localize.LocalizedStringsMethods 
     "uncompressed": string;
 };
 
+export interface IPassageTypeStrings extends Localize.LocalizedStringsMethods {
+    "BOOK": string;
+    "ALTBK": string;
+    "CHNUM": string;
+    "TITLE": string;
+    "MOVE": string;
+    "PASS": string;
+    "NOTE": string;
+};
+
 export interface IPeerStrings extends Localize.LocalizedStringsMethods {
     "peerDescription": string;
     "editPeerGroup": string;
@@ -809,8 +861,10 @@ export interface IPermissionStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
+    "addNote": string;
     "assign": string;
     "delete": string;
+    "noteDetails": string;
     "passageDetail": string;
     "playpause": string;
     "recordAudio": string;
@@ -822,29 +876,45 @@ export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
 
 export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "action": string;
+    "addNote": string;
     "addPassage": string;
+    "addPublishing": string;
     "addSection": string;
     "assigned": string;
     "audio": string;
     "bookSelect": string;
     "confirm": string;
+    "confirmPublish": string;
+    "confirmPublishMovement": string;
+    "confirmPublishSection": string;
     "filtered": string;
+    "firstMovement": string;
+    "graphic": string;
+    "hidePublishing": string;
+    "moveDown": string;
+    "movement": string;
+    "moveUp": string;
     "nonNumber": string;
+    "noPublishDelete": string;
     "insertFirstPassage": string;
+    "paratextRequired": string;
     "passageBelow": string;
     "passageEnd": string;
     "passageToPrevSection": string;
     "passageToNextSection": string;
     "pasting": string;
+    "publish": string;
     "refErr": string;
     "resequence": string;
     "save": string;
     "saving": string;
+    "showPublishing": string;
+    "movementAbove": string;
     "sectionAbove": string;
     "sectionEnd": string;
-    "selectRows": string;
     "step": string;
     "tablePaste": string;
+    "changepublish": string;
     "useCtrlV": string;
 };
 
@@ -915,37 +985,54 @@ export interface IProjectDownloadStrings extends Localize.LocalizedStringsMethod
     "downloadMb": string;
 };
 
+export interface IPublishLevelStrings extends Localize.LocalizedStringsMethods {
+    "none": string;
+    "beta": string;
+    "public": string;
+};
+
 export interface IResourceStrings extends Localize.LocalizedStringsMethods {
     "action": string;
     "add": string;
     "book": string;
     "bookSelect": string;
     "byWord": string;
+    "changes": string;
     "delete": string;
     "deleteConfirm": string;
     "description": string;
     "errorData": string;
+    "findNote": string;
     "keywords": string;
+    "link": string;
+    "linkError": string;
+    "noteDetails": string;
     "overview": string;
     "references": string;
     "resourceEdit": string;
     "rowsSaved": string;
     "saving": string;
+    "source": string;
     "terms": string;
     "title": string;
     "versions": string;
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
+    "alternateName": string;
     "book": string;
+    "chapter": string;
+    "confirmPublish": string;
     "description": string;
     "extras": string;
     "installAudacity": string;
     "loadingTable": string;
     "passage": string;
     "pasteInvalidColumns": string;
+    "pasteInvalidPassageBeforeSection": string;
     "pasteInvalidSections": string;
     "pasteNoRows": string;
+    "publishingWarning": string;
     "reference": string;
     "saveFirst": string;
     "saving": string;
@@ -958,6 +1045,8 @@ export interface IScriptureTableFilterStrings extends Localize.LocalizedStringsM
     "clear": string;
     "disable": string;
     "hideDone": string;
+    "hidePublishing": string;
+    "invalidSection": string;
     "step": string;
     "minimum": string;
     "maximum": string;
@@ -1001,6 +1090,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "bookNotInParatext": string;
     "BookNotSet": string;
     "cancel": string;
+    "close": string;
     "consultant": string;
     "delete": string;
     "description": string;
@@ -1278,7 +1368,6 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "locale": string;
     "name": string;
     "phone": string;
-    "selectRows": string;
     "selectUser": string;
     "showHideFilter": string;
     "timezone": string;
@@ -1297,10 +1386,14 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "backtranslation": string;
     "cancel": string;
     "configure": string;
+    "cannotChangeLayout": string;
     "correctformat": string;
     "description": string;
     "edit": string;
     "editorSettings": string;
+    "errExtrasBookLen": string;
+    "errExtrasBookNonScripture": string;
+    "extrasBook": string;
     "flat": string;
     "font": string;
     "fontSize": string;
@@ -1309,6 +1402,8 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "howToPublic": string;
     "language": string;
     "layout": string;
+    "movement": string;
+    "movements": string;
     "nameInUse": string;
     "newProject": string;
     "organizedBy": string;
@@ -1480,6 +1575,7 @@ export interface ILocalizedStrings {
 	main: IMainStrings;
 	mediaActions: IMediaActionsStrings;
 	mediaTab: IMediaTabStrings;
+	mediaTitle: IMediaTitleStrings;
 	mediaUpload: IMediaUploadStrings;
 	newProject: INewProjectStrings;
 	passageChooser: IPassageChooserStrings;
@@ -1488,6 +1584,7 @@ export interface ILocalizedStrings {
 	passageDetailToolbar: IPassageDetailToolbarStrings;
 	passageMedia: IPassageMediaStrings;
 	passageRecord: IPassageRecordStrings;
+	passageType: IPassageTypeStrings;
 	peer: IPeerStrings;
 	peerCheck: IPeerCheckStrings;
 	permission: IPermissionStrings;
@@ -1497,6 +1594,7 @@ export interface ILocalizedStrings {
 	profile: IProfileStrings;
 	projButtons: IProjButtonsStrings;
 	projectDownload: IProjectDownloadStrings;
+	publishLevel: IPublishLevelStrings;
 	resource: IResourceStrings;
 	scriptureTable: IScriptureTableStrings;
 	scriptureTableFilter: IScriptureTableFilterStrings;

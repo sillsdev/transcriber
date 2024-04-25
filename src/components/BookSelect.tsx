@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import Select from 'react-select';
-import keycode from 'keycode';
 
 export interface OptionType {
   label: string;
@@ -13,6 +12,7 @@ interface IProps {
   value?: OptionType;
   suggestions: OptionType[];
   placeHolder?: string;
+  autoFocus?: boolean;
   onCommit: (newValue: string, e?: KeyEvent) => void;
   onRevert: () => void;
   setPreventSave: (v: boolean) => void;
@@ -39,7 +39,7 @@ class SelectEditor extends PureComponent<IProps, SelectState> {
     const { onCommit, onRevert, setPreventSave } = this.props;
     const { e } = this.state;
     setPreventSave(false);
-    if (!opt || e?.which === keycode('ESC')) {
+    if (!opt || e?.key === 'ESC') {
       return onRevert();
     }
     if (e) onCommit(opt.value, e);
@@ -47,12 +47,12 @@ class SelectEditor extends PureComponent<IProps, SelectState> {
   }
 
   handleKeyDown(e: KeyEvent) {
-    if (e.which === keycode('ESC')) {
+    if (e.key === 'ESC') {
       this.props.setPreventSave(false);
       this.props.onRevert();
     }
     // record last key pressed so we can handle enter
-    else if ([keycode('ENTER'), keycode('TAB')].indexOf(e.which) !== -1) {
+    else if (['ENTER', 'TAB'].indexOf(e.key) !== -1) {
       e.persist();
       this.setState({ e });
     } else {
@@ -64,14 +64,13 @@ class SelectEditor extends PureComponent<IProps, SelectState> {
   render() {
     return (
       <Select
-        autoFocus
-        openOnFocus
-        closeOnSelect
+        autoFocus={this.props.autoFocus ?? true}
+        openMenuOnFocus
+        closeMenuOnSelect
         placeholder={this.props.placeHolder || 'Select Book...'}
         value={this.props.value}
         menuShouldScrollIntoView
         onChange={this.handleChange}
-        onInputKeyDown={this.handleKeyDown}
         onKeyDown={this.handleKeyDown}
         options={this.props.suggestions}
       />

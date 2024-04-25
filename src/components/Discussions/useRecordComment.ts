@@ -14,8 +14,9 @@ import { cleanFileName } from '../../utils';
 import JSONAPISource from '@orbit/jsonapi';
 import { TokenContext } from '../../context/TokenProvider';
 import { useDispatch } from 'react-redux';
-import IndexedDBSource from '@orbit/indexeddb/dist/types/source';
+import { IndexedDBSource } from '@orbit/indexeddb';
 import { UploadType } from '../MediaUpload';
+import { RecordKeyMap } from '@orbit/records';
 
 interface IProps {
   mediafileId: string;
@@ -79,7 +80,7 @@ export const useRecordComment = ({
         )
       ).id;
     }
-    if (!offline) {
+    if (!offline && mediaIdRef.current) {
       pullTableList(
         'mediafile',
         Array(mediaIdRef.current),
@@ -98,12 +99,16 @@ export const useRecordComment = ({
   };
 
   const uploadMedia = async (files: File[]) => {
-    const getPlanId = () => remoteIdNum('plan', plan, memory.keyMap) || plan;
+    const getPlanId = () =>
+      remoteIdNum('plan', plan, memory.keyMap as RecordKeyMap) || plan;
     const getArtifactId = () =>
-      remoteIdNum('artifacttype', commentId, memory.keyMap) || commentId;
+      remoteIdNum('artifacttype', commentId, memory.keyMap as RecordKeyMap) ||
+      commentId;
     const getPassageId = () =>
-      remoteIdNum('passage', passageId, memory.keyMap) || passageId;
-    const getUserId = () => remoteIdNum('user', user, memory.keyMap) || user;
+      remoteIdNum('passage', passageId, memory.keyMap as RecordKeyMap) ||
+      passageId;
+    const getUserId = () =>
+      remoteIdNum('user', user, memory.keyMap as RecordKeyMap) || user;
 
     uploadFiles(files);
     fileList.current = files;
@@ -114,7 +119,7 @@ export const useRecordComment = ({
       contentType: files[0].type,
       artifactTypeId: getArtifactId(),
       passageId: getPassageId(),
-      recordedByUserId: getUserId(),
+      recordedbyUserId: getUserId(),
       userId: getUserId(),
     } as any;
     nextUpload({

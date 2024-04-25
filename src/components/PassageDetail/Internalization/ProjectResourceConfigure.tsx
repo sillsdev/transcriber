@@ -6,6 +6,7 @@ import {
   ITranscriptionTabStrings,
   ISharedStrings,
   MediaFile,
+  MediaFileD,
   SectionResource,
 } from '../../../model';
 import {
@@ -21,8 +22,6 @@ import {
 import SkipIcon from '@mui/icons-material/NotInterested';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
-import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
 import PassageDetailPlayer from '../PassageDetailPlayer';
 import { parseRegions, IRegion } from '../../../crud/useWavesurferRegions';
 import { prettySegment, cleanClipboard } from '../../../utils';
@@ -46,6 +45,8 @@ import {
   LightTooltip,
   PriButton,
 } from '../../../control';
+import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
+import { useOrbitData } from '../../../hoc/useOrbitData';
 
 const NotTable = 408;
 
@@ -99,22 +100,19 @@ interface ICellChange {
   value: string | null;
 }
 
-interface IRecordProps {
-  sectionResources: SectionResource[];
-  mediafiles: MediaFile[];
-}
-
-interface IProps extends IRecordProps {
-  media: MediaFile | undefined;
+interface IProps {
+  media: MediaFileD | undefined;
   items: RecordIdentity[];
   onOpen?: (open: boolean) => void;
 }
 
 export const ProjectResourceConfigure = (props: IProps) => {
-  const { media, items, onOpen, mediafiles, sectionResources } = props;
+  const { media, items, onOpen } = props;
+  const mediafiles = useOrbitData<MediaFile[]>('mediafile');
+  const sectionResources = useOrbitData<SectionResource[]>('sectionresource');
   const [memory] = useGlobal('memory');
   const [, setComplete] = useGlobal('progress');
-  const [data, setData] = useState<ICell[][]>([]);
+  const [data, setDatax] = useState<ICell[][]>([]);
   const [suffix, setSuffix] = useState('');
   const [numSegments, setNumSegments] = useState(0);
   const [pastedSegments, setPastedSegments] = useState('');
@@ -193,24 +191,38 @@ export const ProjectResourceConfigure = (props: IProps) => {
     rowCells([t.startStop, t.reference, t.description], true),
   ];
 
-  useEffect(() => {
-    let newData: ICell[][] = emptyTable();
-    const newInfo = items.map((v) => {
-      const rec = memory.cache.query((q) => q.findRecord(v));
-      const secRec = (
-        v.type === 'passage'
-          ? findRecord(memory, 'section', related(rec, 'section'))
-          : rec
-      ) as Section | undefined;
-      return { rec, secNum: secRec?.attributes?.sequencenum || 0 } as IInfo;
-    });
-    newInfo.forEach((v) => {
-      newData.push(rowCells(['', fullReference(v), '']));
-    });
-    infoRef.current = newInfo;
-    setData(newData);
+  const setData = (newData: ICell[][]) => {
+    setDatax(newData);
     dataRef.current = newData;
-    if (segmentsRef.current) handleSegment(segmentsRef.current);
+  };
+  useEffect(() => {
+    if (items?.length > 0) {
+      let newData: ICell[][] = emptyTable();
+      const newInfo = items.map((v) => {
+        const rec = memory.cache.query((q) => q.findRecord(v));
+        if (!rec) return {} as IInfo;
+        if (v.type === 'passage') {
+          const section = findRecord(
+            memory,
+            'section',
+            related(rec, 'section')
+          ) as Section;
+          if (!section) return {} as IInfo;
+          const secNum = section?.attributes?.sequencenum || 0;
+          return { secNum, section, passage: rec } as IInfo;
+        } else {
+          const section = rec as Section;
+          const secNum = section?.attributes?.sequencenum || 0;
+          return { secNum, section } as IInfo;
+        }
+      });
+      newInfo.forEach((v) => {
+        newData.push(rowCells(['', fullReference(v), '']));
+      });
+      infoRef.current = newInfo;
+      setData(newData);
+      if (segmentsRef.current) handleSegment(segmentsRef.current, true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
@@ -218,7 +230,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     if (!savingRef.current) {
       savingRef.current = true;
       if (media) {
-        const t = new TransformBuilder();
+        const t = new RecordTransformBuilder();
         let ix = 0;
         const d = dataRef.current;
         const total = infoRef.current.length;
@@ -417,31 +429,13 @@ export const ProjectResourceConfigure = (props: IProps) => {
       newData[c.row][c.col].value = c.value;
     });
     setData(newData);
-    dataRef.current = newData;
-  };
-  /*
-  const fix = (regions: IRegion[]) => {
-    const last = regions.length - 1;
-    if (last < 0) return;
-    let prev: IRegion | undefined = undefined;
-    let max = 0;
-    for (let i of regions) {
-      max = Math.max(i.end, max);
-      if (prev) prev.end = i.start;
-      prev = i;
-    }
-    regions[last].end = max;
   };
 
-  const d1 = (n: number) => `${Math.round(n * 10) / 10}`;
-*/
-
-  const handleSegment = (segments: string) => {
+  const handleSegment = (segments: string, init: boolean) => {
+    if (dataRef.current.length === 0) return;
     const regions = parseRegions(segments).regions.sort(
       (i, j) => i.start - j.start
     );
-    //.regions.filter((r) => d1(r.start) !== d1(r.end) && d1(r.end) !== `0.0`)
-    //fix(regions);
 
     setNumSegments(regions.length);
 
@@ -459,7 +453,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     const secI = new Map<number, number>();
     regions.forEach((r, i) => {
       const v = prettySegment(r);
-      while (ix < ilen && infoRef.current[ix].rec.type === 'section') {
+      while (ix < ilen && infoRef.current[ix].passage === undefined) {
         secI.set(infoRef.current[ix].secNum, ix + 1);
         ix += 1;
         newData.push(dataRef.current[ix]);
@@ -508,9 +502,8 @@ export const ProjectResourceConfigure = (props: IProps) => {
     }
     if (change) {
       setData(newData);
-      dataRef.current = newData;
       setPastedSegments('');
-      if (!isChanged(wizToolId)) toolChanged(wizToolId);
+      if (!init && !isChanged(wizToolId)) toolChanged(wizToolId);
     }
   };
 
@@ -582,9 +575,4 @@ export const ProjectResourceConfigure = (props: IProps) => {
   );
 };
 
-const mapRecordsToProps = {
-  sectionResources: (q: QueryBuilder) => q.findRecords('sectionresource'),
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-};
-
-export default withData(mapRecordsToProps)(ProjectResourceConfigure) as any;
+export default ProjectResourceConfigure;

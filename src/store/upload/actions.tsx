@@ -44,7 +44,7 @@ let writeName = ''; // used for message if copy fails
 export const writeFileLocal = async (file: File, remoteName?: string) => {
   var local = { localname: '' };
   const filePath = (file as any)?.path || '';
-  dataPath(
+  await dataPath(
     remoteName ? remoteName : `http://${filePath}`,
     PathType.MEDIA,
     local

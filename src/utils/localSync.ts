@@ -1,13 +1,19 @@
 import xpath from 'xpath';
 import { DOMParser, XMLSerializer } from 'xmldom';
-import { Passage, ActivityStates, MediaFile, Section } from '../model';
+import {
+  Passage,
+  ActivityStates,
+  Section,
+  PassageD,
+  MediaFileD,
+} from '../model';
 import Memory from '@orbit/memory';
-import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
+import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 import { related, parseRef, UpdateMediaStateOps } from '../crud';
 import { getReadWriteProg } from './paratextPath';
 
 interface PassageInfo {
-  passage: Passage;
+  passage: PassageD;
   mediaId: string;
   transcription: string;
 }
@@ -21,9 +27,9 @@ const vrefRe = /^([0-9]+)[^0-9]?([0-9]+)?$/;
 const vInt = (s: string) => (typeof s === 'string' ? parseInt(s) : s);
 
 const passageVerses = (p: Passage) =>
-  (p?.startVerse || 0).toString() +
-  ((p?.endVerse || 0) > (p?.startVerse || 0)
-    ? '-' + (p?.endVerse || 0).toString()
+  (p?.attributes.startVerse || 0).toString() +
+  ((p?.attributes.endVerse || 0) > (p?.attributes.startVerse || 0)
+    ? '-' + (p?.attributes.endVerse || 0).toString()
     : '');
 
 const domVnum = (v: Element) => {
@@ -177,19 +183,23 @@ const addSection = (
   passage: Passage,
   verse: Element,
   memory: Memory,
-  addNumbers = true
+  addNumbers = true,
+  sectionArr: [number, string][] | undefined
 ) => {
-  var sections = memory.cache.query((q: QueryBuilder) =>
+  var sections = memory.cache.query((q) =>
     q.findRecords('section')
   ) as Section[];
   /* get the section for this passage to get the plan */
   const sectionId = related(passage, 'section');
   const sectionRec = sections.filter((s) => s.id === sectionId)[0];
   var para = moveToPara(doc, verse);
+  const seqnum = sectionRec.attributes.sequencenum;
+  const sectionMap = new Map(sectionArr);
+  const mapNum = sectionMap?.get(seqnum);
   doc.insertBefore(
     paratextSection(
       doc,
-      (addNumbers ? sectionRec.attributes.sequencenum.toString() + ' - ' : '') +
+      (addNumbers ? (mapNum ?? seqnum.toString()) + ' - ' : '') +
         sectionRec.attributes.name
     ),
     para
@@ -369,7 +379,7 @@ const ParseTranscription = (currentPassage: Passage, transcription: string) => {
       attributes: {
         book: currentPassage.attributes.book,
         reference:
-          (currentPassage.startChapter || 0).toString() +
+          (currentPassage.attributes.startChapter || 0).toString() +
           ':' +
           match[0].replace('\\v', '').trimStart(),
         lastComment: t.trimStart().trimEnd(),
@@ -381,7 +391,13 @@ const ParseTranscription = (currentPassage: Passage, transcription: string) => {
   ret.forEach((p) => parseRef(p));
   return ret;
 };
-const postPass = (doc: Document, currentPI: PassageInfo, memory: Memory) => {
+const postPass = (
+  doc: Document,
+  currentPI: PassageInfo,
+  exportNumbers: boolean,
+  sectionArr: [number, string][] | undefined,
+  memory: Memory
+) => {
   //get transcription
   var transcription = currentPI.transcription;
   var parsed = ParseTranscription(currentPI.passage, transcription);
@@ -405,8 +421,8 @@ const postPass = (doc: Document, currentPI: PassageInfo, memory: Memory) => {
       var nextVerse = findNodeAfterVerse(
         doc,
         verses,
-        p?.startVerse || 0,
-        p?.endVerse || 0
+        p?.attributes.startVerse || 0,
+        p?.attributes.endVerse || 0
       );
       thisVerse = addParatextVerse(
         doc,
@@ -417,18 +433,10 @@ const postPass = (doc: Document, currentPI: PassageInfo, memory: Memory) => {
       );
     }
     if (p.attributes.sequencenum === 1) {
-      addSection(doc, p, thisVerse, memory, true);
+      addSection(doc, p, thisVerse, memory, exportNumbers, sectionArr);
     }
   });
 };
-
-/*
-  const passageChapter = (p: Passage) => {
-  var nums = /[0-9]+/.exec(p.attributes.reference);
-  if (nums && nums.length > 0) return nums[0];
-  return null;
-};
-*/
 
 const removeSection = (v: Element) => v.parentNode?.removeChild(v);
 
@@ -452,8 +460,8 @@ const getExistingVerses = (
 ) => {
   var verses = getVerses(doc.documentElement);
   const allVerses = Array<Element>();
-  var first = p?.startVerse || 0;
-  var last = p?.endVerse || 0;
+  var first = p?.attributes.startVerse || 0;
+  var last = p?.attributes.endVerse || 0;
   var exactVerse: Element | undefined;
   verses.forEach((v) => {
     var [vstart, vend] = domVnum(v);
@@ -564,23 +572,26 @@ const doChapter = async (
   ptProjName: string,
   memory: Memory,
   userId: string,
-  addNumberToSection: boolean
+  exportNumbers: boolean,
+  sectionArr: [number, string][] | undefined
 ) => {
   const paths = await paratextPaths(chap);
 
   let usxDom: Document = await getChapter(paths, ptProjName);
 
   passInfo = passInfo.sort(
-    (i, j) => (i.passage?.startVerse || 0) - (j.passage?.startVerse || 0)
+    (i, j) =>
+      (i.passage?.attributes.startVerse || 0) -
+      (j.passage?.attributes.startVerse || 0)
   );
   passInfo.forEach((p) => {
-    postPass(usxDom, p, memory);
+    postPass(usxDom, p, exportNumbers, sectionArr, memory);
   });
 
   const { stdoutw } = await writeChapter(paths, ptProjName, usxDom);
   if (stdoutw) console.log(stdoutw);
-  var ops: Operation[] = [];
-  var tb = new TransformBuilder();
+  var ops: RecordOperation[] = [];
+  var tb = new RecordTransformBuilder();
   for (let p of passInfo) {
     var cmt = p.passage.attributes.lastComment;
     p.passage.attributes.lastComment = '';
@@ -605,7 +616,7 @@ export const getLocalParatextText = async (
   ptProjName: string
 ) => {
   parseRef(pass);
-  const chap = pass.attributes.book + '-' + pass.startChapter;
+  const chap = pass.attributes.book + '-' + pass.attributes.startChapter;
   const paths = await paratextPaths(chap);
 
   let usxDom: Document = await getChapter(paths, ptProjName);
@@ -615,11 +626,13 @@ export const getLocalParatextText = async (
 export const localSync = async (
   plan: string,
   ptProjName: string,
-  mediafiles: MediaFile[],
-  passages: Passage[],
+  mediafiles: MediaFileD[],
+  passages: PassageD[],
   memory: Memory,
   userId: string,
   passage: Passage | undefined,
+  exportNumbers: boolean,
+  sectionArr: [number, string][] | undefined,
   artifactId: string | null,
   getTranscription: (passId: string, artifactId: string | null) => string
 ) => {
@@ -665,7 +678,7 @@ export const localSync = async (
   });
   ready.forEach((r) => {
     parseRef(r.passage);
-    let chap = r.passage.startChapter;
+    let chap = r.passage.attributes.startChapter;
     if (chap) {
       const k = r.passage.attributes?.book + '-' + chap;
       if (chapChg.hasOwnProperty(k)) {
@@ -677,7 +690,16 @@ export const localSync = async (
   });
   for (let c of Object.keys(chapChg)) {
     try {
-      await doChapter(plan, c, chapChg[c], ptProjName, memory, userId, false);
+      await doChapter(
+        plan,
+        c,
+        chapChg[c],
+        ptProjName,
+        memory,
+        userId,
+        exportNumbers,
+        sectionArr
+      );
     } catch (error: any) {
       return error.message.replace(
         'Missing Localizer implementation. English text will be used instead.',

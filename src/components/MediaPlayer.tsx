@@ -81,11 +81,14 @@ export function MediaPlayer(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const playSuccess = useRef(false);
   const [value, setValue] = useState(0);
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlayingx] = useState(false);
+  const playingRef = useRef(false);
   const [playItem, setPlayItem] = useState('');
   const [ready, setReady] = useState(false);
   const [duration, setDuration] = useState(0);
+  const durationSet = useRef(false);
   const [speed, setSpeed] = useState(1);
   const timeTracker = useRef<number>(0);
   const stop = useRef<number>(0);
@@ -93,14 +96,19 @@ export function MediaPlayer(props: IProps) {
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const t: IPeerCheckStrings = useSelector(peerCheckSelector, shallowEqual);
 
+  const setPlaying = (x: boolean) => {
+    setPlayingx(x);
+    playingRef.current = x;
+  };
   useEffect(() => {
-    if (playing) {
+    if (playingRef.current) {
       if (audioRef.current) {
-        audioRef.current.pause();
+        if (playSuccess.current) audioRef.current.pause();
         audioRef.current.currentTime = 0;
       }
-      setPlaying(false);
+      stopPlay();
     }
+    durationSet.current = false;
     if (srcMediaId !== playItem) {
       setReady(false);
       fetchMediaUrl({ id: srcMediaId });
@@ -126,28 +134,34 @@ export function MediaPlayer(props: IProps) {
 
   useEffect(() => {
     if (ready && audioRef.current && playItem !== '' && requestPlay) {
-      setPlaying(true);
-      audioRef.current.play();
+      startPlay();
     } else if (!requestPlay) {
-      if (playing) {
-        if (audioRef.current) audioRef.current.pause();
-        setPlaying(false);
+      if (playingRef.current) {
+        if (audioRef.current && playSuccess.current) audioRef.current.pause();
+        stopPlay();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, requestPlay, playing, playItem]);
 
   const setPosition = (position: number | undefined) => {
-    if (audioRef.current && position !== undefined)
+    if (
+      audioRef.current &&
+      position !== undefined &&
+      position !== audioRef.current.currentTime
+    ) {
       audioRef.current.currentTime = position;
+    }
   };
 
   useEffect(() => {
     setPosition(limits?.start);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [limits?.start]);
 
   const ended = () => {
     if (audioRef.current) audioRef.current.currentTime = limits?.start ?? 0;
-    setPlaying(false);
+    stopPlay();
     if (onEnded) onEnded();
   };
 
@@ -158,20 +172,20 @@ export function MediaPlayer(props: IProps) {
     toggle(true);
   };
   const toggle = (play: boolean) => {
-    if (play !== playing && onTogglePlay) onTogglePlay();
+    if (play !== playingRef.current && onTogglePlay) onTogglePlay();
   };
 
   const timeUpdate = () => {
     if (!Boolean(limits?.end)) return;
     const el = audioRef.current as HTMLMediaElement;
-    const time = Math.round(el.currentTime * 10);
+    const time = Math.round(el.currentTime * 1000) / 1000;
     if (stop.current !== 0 && time >= stop.current) {
       el.pause();
       ended();
     }
     const start = limits?.start ?? 0;
     const current = Math.round(
-      ((time / 10 - start) / ((limits?.end ?? 0) - start)) * 100
+      ((time - start) / ((limits?.end ?? 0) - start)) * 100
     );
     if (timeTracker.current !== current) {
       timeTracker.current = current;
@@ -180,13 +194,18 @@ export function MediaPlayer(props: IProps) {
   };
 
   const durationChange = () => {
-    if (limits?.end) {
-      setPosition(limits?.start);
-      stop.current = Math.round(limits?.end * 10);
-    }
+    //this is called multiple times for some files
     const el = audioRef.current as HTMLMediaElement;
-    if (el?.duration) setDuration(el.duration);
-    onLoaded && onLoaded();
+    if (!durationSet.current && el?.duration) {
+      if (limits?.end) {
+        setPosition(limits?.start);
+        if (limits?.end > el.duration - 0.5) stop.current = 0;
+        else stop.current = limits?.end + 0.25;
+      }
+      durationSet.current = true;
+      setDuration(el.duration);
+      onLoaded && onLoaded();
+    }
   };
 
   const handleError = (e: any) => {
@@ -198,7 +217,7 @@ export function MediaPlayer(props: IProps) {
   const handleSegmentStart = () => {
     setPosition(limits?.start ?? 0);
     if (limits?.end) {
-      stop.current = Math.round((limits?.end ?? 0) * 10);
+      stop.current = limits?.end + 0.25;
     }
   };
 
@@ -212,10 +231,30 @@ export function MediaPlayer(props: IProps) {
     stop.current = 0;
   };
 
-  const handlePlayPause = () => {
+  const startPlay = () => {
+    if (playing || playSuccess.current) return;
+    setPlaying(true);
+    playSuccess.current = false;
     if (audioRef.current) {
-      if (playing) audioRef.current.pause();
-      else audioRef.current.play();
+      audioRef.current
+        .play()
+        .then(() => {
+          playSuccess.current = true;
+        })
+        .catch(() => {
+          playSuccess.current = false;
+        });
+    }
+  };
+  const stopPlay = () => {
+    setPlaying(false);
+    playSuccess.current = false;
+  };
+  const handlePlayPause = async () => {
+    if (audioRef.current) {
+      if (playingRef.current) {
+        if (playSuccess.current) audioRef.current.pause();
+      } else startPlay();
     }
   };
 

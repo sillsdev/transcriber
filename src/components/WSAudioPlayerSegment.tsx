@@ -1,7 +1,7 @@
 import { IconButton, Grid } from '@mui/material';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { GrowingDiv, LightTooltip, ToolbarGrid } from '../control';
-import { IWsAudioPlayerSegmentStrings, IState } from '../model';
+import { IWsAudioPlayerSegmentStrings } from '../model';
 import { IoMdBarcode } from 'react-icons/io';
 import RemoveOneIcon from '@mui/icons-material/Clear';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -9,24 +9,21 @@ import ClearIcon from '@mui/icons-material/Delete';
 import { HotKeyContext } from '../context/HotKeyContext';
 import PlusMinusLogo from '../control/PlusMinus';
 import { IRegionChange, IRegionParams } from '../crud/useWavesurferRegions';
-import { connect } from 'react-redux';
-import localStrings from '../selector/localize';
+import { useSelector } from 'react-redux';
 import WSSegmentParameters from './WSSegmentParameters';
 import { useSnackBar } from '../hoc/SnackBar';
+import { audioPlayerSegmentSelector } from '../selector';
 
-interface IStateProps {
-  t: IWsAudioPlayerSegmentStrings;
-}
-interface IProps extends IStateProps {
+interface IProps {
   ready: boolean;
   loop: boolean;
   currentNumRegions: number;
-  params: IRegionParams;
+  params?: IRegionParams;
   playing: boolean;
   canSetDefault?: boolean;
   onSplit: (split: IRegionChange) => void;
-  onParamChange: (params: IRegionParams, teamDefault: boolean) => void;
-  wsAutoSegment: (loop: boolean, params: IRegionParams) => number;
+  onParamChange?: (params: IRegionParams, teamDefault: boolean) => void;
+  wsAutoSegment?: (loop: boolean | undefined, params: IRegionParams) => number;
   wsRemoveSplitRegion: (next?: boolean) => IRegionChange | undefined;
   wsAddOrRemoveRegion: () => IRegionChange | undefined;
   wsClearRegions: () => void;
@@ -35,7 +32,6 @@ interface IProps extends IStateProps {
 
 function WSAudioPlayerSegment(props: IProps) {
   const {
-    t,
     ready,
     loop,
     currentNumRegions,
@@ -50,6 +46,9 @@ function WSAudioPlayerSegment(props: IProps) {
     wsClearRegions,
     setBusy,
   } = props;
+  const t: IWsAudioPlayerSegmentStrings = useSelector(
+    audioPlayerSegmentSelector
+  );
   const [segParams, setSegParams] = useState<IRegionParams>({
     silenceThreshold: 0.004,
     timeThreshold: 0.02,
@@ -134,7 +133,7 @@ function WSAudioPlayerSegment(props: IProps) {
     teamDefault: boolean
   ) => {
     setSegParams(params);
-    onParamChange(params, teamDefault);
+    onParamChange && onParamChange(params, teamDefault);
   };
   return (
     <GrowingDiv>
@@ -221,8 +220,5 @@ function WSAudioPlayerSegment(props: IProps) {
     </GrowingDiv>
   );
 }
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'wsAudioPlayerSegment' }),
-});
 
-export default connect(mapStateToProps)(WSAudioPlayerSegment) as any;
+export default WSAudioPlayerSegment;

@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { ActivityStates } from '.';
 import { BaseModel } from './baseModel';
 
@@ -16,4 +16,7 @@ export interface PassageStateChange extends BaseModel {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type PassageStateChangeD = PassageStateChange & InitializedRecord;
+
 export default PassageStateChange;

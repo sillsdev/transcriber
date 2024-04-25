@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation, useParams } from 'react-router-dom';
 import { IState, IMainStrings, IViewModeStrings } from '../../model';
-import { connect, shallowEqual, useSelector } from 'react-redux';
-import localStrings from '../../selector/localize';
+import { shallowEqual, useSelector } from 'react-redux';
 import {
   AppBar,
   Toolbar,
@@ -30,12 +29,12 @@ import {
   localUserKey,
   LocalKey,
   useMounted,
-  waitForIt,
   logError,
   Severity,
   infoMsg,
   exitApp,
   useMyNavigate,
+  useWaitForRemoteQueue,
 } from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
 import { usePlan } from '../../crud';
@@ -47,7 +46,7 @@ import moment from 'moment';
 import { useSnackBar, AlertSeverity } from '../../hoc/SnackBar';
 import PolicyDialog from '../PolicyDialog';
 import JSONAPISource from '@orbit/jsonapi';
-import { viewModeSelector } from '../../selector';
+import { mainSelector, viewModeSelector } from '../../selector';
 import { useHome } from '../../utils/useHome';
 const ipc = (window as any)?.electron;
 
@@ -101,24 +100,16 @@ const ProjectName = ({ setView, switchTo }: INameProps) => {
   );
 };
 
-interface IStateProps {
-  t: IMainStrings;
-  orbitStatus: number | undefined;
-  orbitErrorMsg: string;
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'main' }),
-  orbitStatus: state.orbit.status,
-  orbitErrorMsg: state.orbit.message,
-});
-
-interface IProps extends IStateProps {
+interface IProps {
   resetRequests: () => Promise<void>;
   switchTo: boolean;
 }
 
 export const AppHead = (props: IProps) => {
-  const { resetRequests, switchTo, t, orbitStatus, orbitErrorMsg } = props;
+  const { resetRequests, switchTo } = props;
+  const orbitStatus = useSelector((state: IState) => state.orbit.status);
+  const orbitErrorMsg = useSelector((state: IState) => state.orbit.message);
+  const t: IMainStrings = useSelector(mainSelector, shallowEqual);
   const { pathname } = useLocation();
   const navigate = useMyNavigate();
   const [home] = useGlobal('home');
@@ -154,6 +145,7 @@ export const AppHead = (props: IProps) => {
   const [downloadAlert, setDownloadAlert] = useState(false);
   const [updateTipOpen, setUpdateTipOpen] = useState(false);
   const [showTerms, setShowTerms] = useState('');
+  const waitForRemoteQueue = useWaitForRemoteQueue();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const saving = useMemo(() => anySaving(), [toolsChanged]);
@@ -174,16 +166,13 @@ export const AppHead = (props: IProps) => {
       resetData();
       exitElectronApp();
     }
-    const remote = coordinator.getSource('remote');
+
     if (isElectron && /Logout/i.test(what)) {
       localStorage.removeItem('user-id');
       checkSavedFn(() => {
-        waitForIt(
-          'logout on electron...',
-          () => !remote || !connected || remote.requestQueue.length === 0,
-          () => false,
-          200
-        ).then(() => setDownloadAlert(true));
+        waitForRemoteQueue('logout on electron...').then(() =>
+          setDownloadAlert(true)
+        );
       });
       return;
     }
@@ -198,12 +187,7 @@ export const AppHead = (props: IProps) => {
         if (resetRequests) resetRequests().then(() => setView(what));
       } else if (/Logout/i.test(what)) {
         checkSavedFn(() => {
-          waitForIt(
-            'logout on web...',
-            () => !remote || !connected || remote.requestQueue.length === 0,
-            () => false,
-            200
-          ).then(() => setView('Logout'));
+          waitForRemoteQueue('logout on web...').then(() => setView('Logout'));
         });
       } else checkSavedFn(() => setView(what));
     }
@@ -458,4 +442,4 @@ export const AppHead = (props: IProps) => {
   );
 };
 
-export default withBucket(connect(mapStateToProps)(AppHead));
+export default withBucket(AppHead);

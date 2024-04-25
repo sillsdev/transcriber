@@ -2,7 +2,7 @@ import * as React from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import CategoryList from './CategoryListEdit';
+import CategoryListEdit from './CategoryListEdit';
 import { shallowEqual, useSelector } from 'react-redux';
 import { categorySelector } from '../../selector';
 import { ICategoryStrings } from '../../model';
@@ -40,12 +40,13 @@ function a11yProps(index: number) {
 
 interface IProps {
   teamId: string;
+  flat: boolean;
   onClose?: () => void;
 }
 
-export default function CategoryTabs({ teamId, onClose }: IProps) {
+export default function CategoryTabs({ teamId, flat, onClose }: IProps) {
   const [value, setValue] = React.useState(0);
-  const [isDeveloper] = useGlobal('developer');
+  const [offline] = useGlobal('offline');
   const t: ICategoryStrings = useSelector(categorySelector, shallowEqual);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -58,32 +59,30 @@ export default function CategoryTabs({ teamId, onClose }: IProps) {
         <Tabs value={value} onChange={handleChange} aria-label="category tabs">
           <Tab label={t.resource} {...a11yProps(0)} />
           <Tab label={t.discussion} {...a11yProps(1)} />
-          {isDeveloper && <Tab label={t.note} {...a11yProps(2)} />}
+          {!flat && !offline && <Tab label={t.note} {...a11yProps(2)} />}
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <CategoryList
+        <CategoryListEdit
           type={ArtifactCategoryType.Resource}
           teamId={teamId}
           onClose={onClose}
         />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <CategoryList
+        <CategoryListEdit
           type={ArtifactCategoryType.Discussion}
           teamId={teamId}
           onClose={onClose}
         />
       </TabPanel>
-      {isDeveloper && (
-        <TabPanel value={value} index={2}>
-          <CategoryList
-            type={ArtifactCategoryType.Note}
-            teamId={teamId}
-            onClose={onClose}
-          />
-        </TabPanel>
-      )}
+      <TabPanel value={value} index={2}>
+        <CategoryListEdit
+          type={ArtifactCategoryType.Note}
+          teamId={teamId}
+          onClose={onClose}
+        />
+      </TabPanel>
     </Box>
   );
 }

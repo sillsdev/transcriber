@@ -4,9 +4,9 @@ import { findRecord, related, staticFiles, updateableFiles } from '.';
 import Memory from '@orbit/memory';
 import moment from 'moment';
 import { BaseModel } from '../model/baseModel';
-import JSONAPISource from '@orbit/jsonapi/dist/types/jsonapi-source';
+import { JSONAPISource } from '@orbit/jsonapi';
 import { logError, Severity } from '../utils';
-import { Project, Plan, VwChecksum } from '../model';
+import { VwChecksum, PlanD, ProjectD } from '../model';
 import * as actions from '../store';
 import { TokenContext } from '../context/TokenProvider';
 import { API_CONFIG } from '../api-variable';
@@ -51,7 +51,6 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           setDataChangeCount: (value: number) => {},
           cb,
         });
-        console.log(table, 'startNext', startNext, start);
         if (startNext === start) tries--;
         else start = startNext;
       }
@@ -179,6 +178,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
       switch (table) {
         case 'activitystate':
         case 'artifacttype':
+        case 'bible':
         case 'integration':
         case 'passagetype':
         case 'plantype':
@@ -215,9 +215,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
         case 'discussion':
           return discussionRows();
         case 'graphic':
-          return (
-            memory.cache.query((q) => q.findRecords('graphic')) as BaseModel[]
-          ).filter((g) => related(g, 'project') === project.id);
+          return filterByOrg('graphic');
         case 'groupmembership':
           var groups = groupRows().map((g) => g.id);
           return (
@@ -238,6 +236,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
         case 'organization':
           return [findRecord(memory, 'organization', org)];
 
+        case 'organizationbible':
         case 'organizationmembership':
         case 'orgkeyterm':
         case 'orgkeytermreference':
@@ -295,7 +294,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           ).filter(
             (srr) =>
               sharedresources.find(
-                (id) => id === related(srr, 'sharedresource')
+                (id) => id === related(srr, 'sharedResource')
               ) !== undefined
           );
         case 'user':
@@ -362,7 +361,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
       }
     };
 
-    var project = findRecord(memory, 'project', projectId) as Project;
+    var project = findRecord(memory, 'project', projectId) as ProjectD;
     var remoteProjectId = project?.keys?.remoteId ?? '';
     if (!isOffline && project?.keys?.remoteId) {
       var tables = staticFiles
@@ -374,9 +373,10 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           relation: 'project',
           record: { type: 'project', id: projectId },
         })
-      ) as Plan[];
+      ) as PlanD[];
       var plan = plans[0];
 
+      await remote.activated;
       var checksums = (await remote.query((q) =>
         q
           .findRecords('vwchecksum')

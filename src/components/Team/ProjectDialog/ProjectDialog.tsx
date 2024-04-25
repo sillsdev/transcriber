@@ -9,7 +9,6 @@ import {
   DialogProps,
   styled,
 } from '@mui/material';
-import { TeamContext } from '../../../context/TeamContext';
 import {
   ProjectName,
   ProjectDescription,
@@ -21,6 +20,9 @@ import {
 } from '.';
 import Mode from '../../../model/dialogMode';
 import { IDialog } from '../../../model';
+import { shallowEqual, useSelector } from 'react-redux';
+import { vProjectSelector } from '../../../selector';
+import { ProjectBook } from './ProjectBook';
 
 const StyledDialog = styled(Dialog)<DialogProps>(() => ({
   '& .MuiDialog-paper': {
@@ -53,6 +55,8 @@ export type IProjectDialog = typeof initState;
 export interface IProjectDialogState {
   state: IProjectDialog;
   setState: React.Dispatch<React.SetStateAction<IProjectDialog>>;
+  setBookErr?: React.Dispatch<React.SetStateAction<string>>;
+  addMode?: boolean;
 }
 
 interface IProps extends IDialog<IProjectDialog> {
@@ -61,15 +65,17 @@ interface IProps extends IDialog<IProjectDialog> {
 
 export function ProjectDialog(props: IProps) {
   const { mode, values, isOpen, onOpen, onCommit, onCancel, nameInUse } = props;
-  const ctx = React.useContext(TeamContext);
-  const t = ctx.state.vProjectStrings;
+  const t = useSelector(vProjectSelector, shallowEqual);
   initState.organizedBy = 'section';
   initState.vProjectStrings = t;
   const [state, setState] = React.useState({ ...initState });
   const { name, type, bcp47 } = state;
+  const [bookErr, setBookErr] = React.useState('');
+  const addingRef = React.useRef(false);
 
   useEffect(() => {
     setState(!values ? { ...initState } : { ...values });
+    if (isOpen) addingRef.current = false;
   }, [values, isOpen]);
 
   const handleClose = () => {
@@ -78,8 +84,12 @@ export function ProjectDialog(props: IProps) {
   };
 
   const handleAdd = () => {
-    if (onOpen) onOpen(false);
-    onCommit(state);
+    if (!addingRef.current) {
+      addingRef.current = true;
+
+      if (onOpen) onOpen(false);
+      onCommit(state);
+    }
   };
 
   const handleTypeChange = (val: string) => {
@@ -103,9 +113,18 @@ export function ProjectDialog(props: IProps) {
         <ProjectName state={state} setState={setState} inUse={nameInUse} />
         <ProjectDescription state={state} setState={setState} />
         <ProjectType type={type} onChange={handleTypeChange} />
+        <ProjectBook
+          state={state}
+          setState={setState}
+          setBookErr={setBookErr}
+        />
         <Language {...state} onChange={handleLanguageChange} />
         <ProjectTags state={state} setState={setState} />
-        <ProjectExpansion state={state} setState={setState} />
+        <ProjectExpansion
+          state={state}
+          setState={setState}
+          addMode={mode === Mode.add}
+        />
       </DialogContent>
       <DialogActions>
         <Button id="projCancel" onClick={handleClose} color="primary">
@@ -119,7 +138,8 @@ export function ProjectDialog(props: IProps) {
             (nameInUse && nameInUse(name)) ||
             name === '' ||
             bcp47 === 'und' ||
-            type === ''
+            type === '' ||
+            bookErr !== ''
           }
         >
           {mode === Mode.add ? t.add : t.save}

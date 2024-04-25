@@ -1,13 +1,13 @@
 import { IconButton } from '@mui/material';
 import OpenIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import DoneIcon from '@mui/icons-material/CheckBoxOutlined';
-import { SectionResource } from '../../../model';
+import { SectionResourceD } from '../../../model';
 
 interface IProps {
   value: boolean;
   id: string;
-  res: SectionResource | null;
-  cb: (id: string, res: SectionResource | null) => void;
+  res: SectionResourceD | null;
+  cb: (id: string, res: SectionResourceD | null) => void;
 }
 
 const handleDone =

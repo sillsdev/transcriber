@@ -250,6 +250,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactCategory.graphic">
+         <segment>
+            <source>Graphic</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactCategory.qanda">
          <segment>
             <source>Question and Answer</source>
@@ -265,6 +271,12 @@
       <unit id="artifactType.comment">
          <segment>
             <source>Comment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.graphic">
+         <segment>
+            <source>Graphic</source>
             <target/>
          </segment>
       </unit>
@@ -301,6 +313,12 @@
       <unit id="artifactType.testing">
          <segment>
             <source>Testing</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactType.title">
+         <segment>
+            <source>Title</source>
             <target/>
          </segment>
       </unit>
@@ -538,9 +556,51 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.bibleid">
+         <segment>
+            <source>Bible Id</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.bibleidexists">
+         <segment>
+            <source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.bibleidformat">
+         <segment>
+            <source>Bible Id must begin with the language code and version (six letters).</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.bibleidiso">
+         <segment>
+            <source>Bible Id should begin with the language code.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.bibleIdExplain">
+         <segment>
+            <source>Explain Bible Id</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.biblename">
+         <segment>
+            <source>Name of Bible</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.closeNoSave">
+         <segment>
+            <source>Close without Saving?</source>
             <target/>
          </segment>
       </unit>
@@ -559,6 +619,12 @@
       <unit id="cards.copyNew">
          <segment>
             <source>Copy project to new team.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.copyright">
+         <segment>
+            <source>Copyright</source>
             <target/>
          </segment>
       </unit>
@@ -604,6 +670,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.description">
+         <segment>
+            <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.draft">
          <segment>
             <source>Oral Drafting</source>
@@ -622,6 +694,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.explainPublishing">
+         <segment>
+            <source>Information to use when publishing audio created by this team.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.explainTeamDelete">
          <segment>
             <source>Deleting the team will delete all audio projects of the team.</source>
@@ -637,18 +715,6 @@
       <unit id="cards.language">
          <segment>
             <source>Language: {0}</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="cards.longNotesProject">
-         <segment>
-            <source>Project with Long Notes</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="cards.longNotes">
-         <segment>
-            <source>Shared Introductions, Rationales, Devotionals, Podcasts</source>
             <target/>
          </segment>
       </unit>
@@ -673,6 +739,12 @@
       <unit id="cards.newProject">
          <segment>
             <source>New Audio Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.notesLabel">
+         <segment>
+            <source>Introductory Notes Title</source>
             <target/>
          </segment>
       </unit>
@@ -742,9 +814,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.projectRequired">
+         <segment>
+            <source>A project must be added before recordings are allowed</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.Render">
          <segment>
             <source>Render to Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.publishing">
+         <segment>
+            <source>Publishing</source>
             <target/>
          </segment>
       </unit>
@@ -808,6 +892,30 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.workflowProgression">
+         <segment>
+            <source>Workflow Progression</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.workflowProgressionPassage">
+         <segment>
+            <source>Next Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.workflowProgressionStep">
+         <segment>
+            <source>Next Step</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.yes">
+         <segment>
+            <source>Yes</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="category.builtIn">
          <segment>
             <source>System Categories</source>
@@ -817,6 +925,18 @@
       <unit id="category.discussion">
          <segment>
             <source>Discussion</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.close">
+         <segment>
+            <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.duplicate">
+         <segment>
+            <source>Duplicate Category</source>
             <target/>
          </segment>
       </unit>
@@ -1810,6 +1930,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="import.unknownError">
+         <segment>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="import.invalidProject">
          <segment>
             <source>Import File does not contain current audio project.</source>
@@ -1942,9 +2068,15 @@
             <target/>
          </segment>
       </unit>
+      <unit id="integration.exportSectionNumbers">
+         <segment>
+            <source>Sync {0} Numbers</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="integration.invalidReferences">
          <segment>
-            <source>{0} passages have invalid book or reference.</source>
+            <source>{0} passage(s) have invalid book or reference.</source>
             <target/>
          </segment>
       </unit>
@@ -3094,6 +3226,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.graphicRightsAdd">
+         <segment>
+            <source>Add {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.graphicRightsTitle">
+         <segment>
+            <source>Graphics Rights holder</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.latestVersion">
          <segment>
             <source>Latest Version</source>
@@ -3154,6 +3298,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.published">
+         <segment>
+            <source>Published</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.readyToShare">
          <segment>
             <source>Ready to Share</source>
@@ -3190,12 +3340,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="mediaTab.selectRows">
-         <segment>
-            <source>Please select row(s) to {0}.</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="mediaTab.showHideFilter">
          <segment>
             <source>Show/Hide filter rows</source>
@@ -3226,6 +3370,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.user">
+         <segment>
+            <source>User</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.version">
          <segment>
             <source>Version</source>
@@ -3244,6 +3394,42 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTitle.cancel">
+         <segment>
+            <source>Cancel Recording</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.playPause">
+         <segment>
+            <source>Play / Pause</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.record">
+         <segment>
+            <source>Record</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.recording">
+         <segment>
+            <source>Recording...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.save">
+         <segment>
+            <source>Save Recording</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.saving">
+         <segment>
+            <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>
@@ -3259,6 +3445,18 @@
       <unit id="mediaUpload.dragDropSingle">
          <segment>
             <source>Drag and drop a file here, or click here to browse for the file.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.graphicTask">
+         <segment>
+            <source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.graphicTitle">
+         <segment>
+            <source>Upload Graphic</source>
             <target/>
          </segment>
       </unit>
@@ -3474,7 +3672,7 @@
       </unit>
       <unit id="passageDetailArtifacts.allLevel">
          <segment>
-            <source>All Resources</source>
+            <source>All {0}</source>
             <target/>
          </segment>
       </unit>
@@ -3486,7 +3684,13 @@
       </unit>
       <unit id="passageDetailArtifacts.bookLevel">
          <segment>
-            <source>Resources for the Book</source>
+            <source>{0} for the Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.bookResource">
+         <segment>
+            <source>Book</source>
             <target/>
          </segment>
       </unit>
@@ -3504,7 +3708,7 @@
       </unit>
       <unit id="passageDetailArtifacts.chapterLevel">
          <segment>
-            <source>Resources for the Chapter</source>
+            <source>{0} for the Chapter</source>
             <target/>
          </segment>
       </unit>
@@ -3586,9 +3790,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.movementResource">
+         <segment>
+            <source>Movement</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.no">
          <segment>
             <source>No</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.noteResource">
+         <segment>
+            <source>Note</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.notes">
+         <segment>
+            <source>Notes</source>
             <target/>
          </segment>
       </unit>
@@ -3646,6 +3868,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.resources">
+         <segment>
+            <source>Resources</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.resourcesDeleted">
          <segment>
             <source> ({0} resources will be deleted.)</source>
@@ -3655,6 +3883,12 @@
       <unit id="passageDetailArtifacts.selectBook">
          <segment>
             <source>Select Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.selectOne">
+         <segment>
+            <source>Only the first selected note is used</source>
             <target/>
          </segment>
       </unit>
@@ -3750,7 +3984,7 @@
       </unit>
       <unit id="passageDetailArtifacts.verseLevel">
          <segment>
-            <source>Resources for verses in this passage</source>
+            <source>{0} for verses in this passage</source>
             <target/>
          </segment>
       </unit>
@@ -3871,6 +4105,48 @@
       <unit id="passageRecord.uncompressed">
          <segment>
             <source>Uncompressed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageType.BOOK">
+         <segment>
+            <source>Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageType.ALTBK">
+         <segment>
+            <source>Friendly Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageType.CHNUM">
+         <segment>
+            <source>Chapter number</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageType.TITLE">
+         <segment>
+            <source>Title</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageType.MOVE">
+         <segment>
+            <source>Movement</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageType.PASS">
+         <segment>
+            <source>Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageType.NOTE">
+         <segment>
+            <source>Note</source>
             <target/>
          </segment>
       </unit>
@@ -4018,6 +4294,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planActions.addNote">
+         <segment>
+            <source>Add Note</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planActions.assign">
          <segment>
             <source>Assign</source>
@@ -4027,6 +4309,12 @@
       <unit id="planActions.delete">
          <segment>
             <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planActions.noteDetails">
+         <segment>
+            <source>Note Details</source>
             <target/>
          </segment>
       </unit>
@@ -4078,9 +4366,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.addNote">
+         <segment>
+            <source>Add Note</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.addPassage">
          <segment>
             <source>Add Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.addPublishing">
+         <segment>
+            <source>Update Publishing Rows</source>
             <target/>
          </segment>
       </unit>
@@ -4114,9 +4414,63 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.confirmPublish">
+         <segment>
+            <source>Publish {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.confirmPublishMovement">
+         <segment>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this Movement will be marked as published. If you have previously published and now choose 'Not Published', the {0} and passages and notes will be marked as not published.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.confirmPublishSection">
+         <segment>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes be marked as not published.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.firstMovement">
+         <segment>
+            <source>Start At</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.graphic">
+         <segment>
+            <source>Graphic</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.hidePublishing">
+         <segment>
+            <source>Hide Publishing Information</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.moveDown">
+         <segment>
+            <source>Move down</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.movement">
+         <segment>
+            <source>Movement</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.moveUp">
+         <segment>
+            <source>Move up</source>
             <target/>
          </segment>
       </unit>
@@ -4126,9 +4480,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.noPublishDelete">
+         <segment>
+            <source>Do not delete published items.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.insertFirstPassage">
          <segment>
             <source>Add Passage as first in {0} {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.paratextRequired">
+         <segment>
+            <source>You must be a Paratext user with access to FOBAI resources to use this feature.</source>
             <target/>
          </segment>
       </unit>
@@ -4146,19 +4512,25 @@
       </unit>
       <unit id="planSheet.passageToPrevSection">
          <segment>
-            <source>Move Passage to Previous Section</source>
+            <source>Move {pt} {0} Up</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.passageToNextSection">
          <segment>
-            <source>Move Passage to Next Section</source>
+            <source>Move {pt} {0} Down</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.pasting">
          <segment>
             <source>Pasting</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.publish">
+         <segment>
+            <source>Publish {0} {1}</source>
             <target/>
          </segment>
       </unit>
@@ -4186,6 +4558,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.showPublishing">
+         <segment>
+            <source>Show Publishing Information</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.movementAbove">
+         <segment>
+            <source>Add Movement above {0} {1}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.sectionAbove">
          <segment>
             <source>Add {0} above {1} {2}</source>
@@ -4198,12 +4582,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.selectRows">
-         <segment>
-            <source>Please select row(s) to {0}.</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="planSheet.step">
          <segment>
             <source>Step</source>
@@ -4213,6 +4591,12 @@
       <unit id="planSheet.tablePaste">
          <segment>
             <source>Paste Spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.changepublish">
+         <segment>
+            <source>Update {0} {1} published status.</source>
             <target/>
          </segment>
       </unit>
@@ -4552,6 +4936,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="publishLevel.none">
+         <segment>
+            <source>Not Published - not visible in publishing app</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="publishLevel.beta">
+         <segment>
+            <source>Beta - only visible to users subscribed to app beta channel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="publishLevel.public">
+         <segment>
+            <source>Public - visible to everyone using app</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="resource.action">
          <segment>
             <source>Action</source>
@@ -4582,6 +4984,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="resource.changes">
+         <segment>
+            <source>Changes made will affect source and all shared locations.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="resource.delete">
          <segment>
             <source>Delete</source>
@@ -4606,9 +5014,33 @@
             <target/>
          </segment>
       </unit>
+      <unit id="resource.findNote">
+         <segment>
+            <source>Find existing note</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="resource.keywords">
          <segment>
             <source>Keywords</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.link">
+         <segment>
+            <source>Link</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.linkError">
+         <segment>
+            <source>Link is not a correctly formatted URL</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="resource.noteDetails">
+         <segment>
+            <source>Note Details</source>
             <target/>
          </segment>
       </unit>
@@ -4642,6 +5074,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="resource.source">
+         <segment>
+            <source>Linked Note Source: </source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="resource.terms">
          <segment>
             <source>Terms of use</source>
@@ -4660,9 +5098,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTable.alternateName">
+         <segment>
+            <source>{0} Alternate Name</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.book">
          <segment>
             <source>Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.chapter">
+         <segment>
+            <source>Chapter {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.confirmPublish">
+         <segment>
+            <source>Are you sure you want to add publishing rows?</source>
             <target/>
          </segment>
       </unit>
@@ -4702,6 +5158,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTable.pasteInvalidPassageBeforeSection">
+         <segment>
+            <source>Invalid passage before {0}.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.pasteInvalidSections">
          <segment>
             <source>Invalid {0} number(s):</source>
@@ -4711,6 +5173,12 @@
       <unit id="scriptureTable.pasteNoRows">
          <segment>
             <source>No Rows in clipboard.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.publishingWarning">
+         <segment>
+            <source>Once publishing rows are added, there is no automated way to remove them. Publishing projects cannot be made flat projects.</source>
             <target/>
          </segment>
       </unit>
@@ -4765,6 +5233,18 @@
       <unit id="scriptureTableFilter.hideDone">
          <segment>
             <source>Hide Done rows</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.hidePublishing">
+         <segment>
+            <source>Hide Publishing Rows</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.invalidSection">
+         <segment>
+            <source>Invalid {0}</source>
             <target/>
          </segment>
       </unit>
@@ -4933,6 +5413,12 @@
       <unit id="shared.cancel">
          <segment>
             <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.close">
+         <segment>
+            <source>Close</source>
             <target/>
          </segment>
       </unit>
@@ -6274,12 +6760,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="usertable.selectRows">
-         <segment>
-            <source>Please select row(s) to {0}.</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="usertable.selectUser">
          <segment>
             <source>Select User</source>
@@ -6352,6 +6832,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.cannotChangeLayout">
+         <segment>
+            <source>Publishing projects cannot be made flat.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.correctformat">
          <segment>
             <source>Please enter in the format: singular/plural</source>
@@ -6373,6 +6859,24 @@
       <unit id="vProject.editorSettings">
          <segment>
             <source>Editor Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.errExtrasBookLen">
+         <segment>
+            <source>Book must be 3 characters</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.errExtrasBookNonScripture">
+         <segment>
+            <source>Book Designation must not be a Scripture book code.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.extrasBook">
+         <segment>
+            <source>Akuo Extras Book Designation</source>
             <target/>
          </segment>
       </unit>
@@ -6421,6 +6925,18 @@
       <unit id="vProject.layout">
          <segment>
             <source>Layout</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.movement">
+         <segment>
+            <source>Movement</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.movements">
+         <segment>
+            <source>Movements</source>
             <target/>
          </segment>
       </unit>

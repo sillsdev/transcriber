@@ -1,32 +1,38 @@
 import { Section, Passage, IState, BookName } from '../../../model';
-import { passageDescription, sectionNumber } from '../../../crud';
+import { passageDescText, sectionNumber } from '../../../crud';
 import { useSelector } from 'react-redux';
+import { getSection } from '../../AudioTab/getSection';
+import {
+  projDefSectionMap,
+  useProjectDefaults,
+} from '../../../crud/useProjectDefaults';
 
 export interface IInfo {
-  rec: Section | Passage;
   secNum: number;
+  section: Section;
+  passage: Passage | undefined;
 }
 
-const getSection = (section: Section) => {
-  const name =
-    section && section.attributes && section.attributes.name
-      ? section.attributes.name
-      : '';
-  return sectionNumber(section) + ' ' + name;
-};
-
-const getPassage = (info: IInfo, bookData: BookName[]) => {
-  return `${info.secNum}.${passageDescription(
-    info.rec as Passage,
+const getPassage = (
+  info: IInfo,
+  bookData: BookName[],
+  sectionMap: Map<number, string>
+) => {
+  return `${sectionNumber(info.section, sectionMap)}.${passageDescText(
+    info.passage as Passage,
     bookData
   ).trim()}`;
 };
 
 export const useFullReference = () => {
   const bookData = useSelector((state: IState) => state.books.bookData);
+  const { getProjectDefault } = useProjectDefaults();
+  const sectionMap = new Map<number, string>(
+    getProjectDefault(projDefSectionMap) ?? []
+  );
 
   return (info: IInfo) =>
-    info.rec.type === 'passage'
-      ? getPassage(info, bookData)
-      : getSection(info.rec as Section);
+    info.passage
+      ? getPassage(info, bookData, sectionMap)
+      : getSection([info.section], sectionMap);
 };

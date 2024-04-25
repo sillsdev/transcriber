@@ -1,20 +1,18 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import Axios from 'axios';
 import { useGlobal } from 'reactn';
 import { TokenContext } from '../context/TokenProvider';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { shallowEqual } from 'react-redux';
 import {
   IState,
   IToken,
   IMainStrings,
   Invitation,
   User,
-  ISharedStrings,
-  IFetchResults,
+  InvitationD,
+  IApiError,
+  UserD,
 } from '../model';
-import { QueryBuilder } from '@orbit/data';
-import localStrings from '../selector/localize';
 import { Box, SxProps } from '@mui/material';
 import * as action from '../store';
 import Memory from '@orbit/memory';
@@ -51,36 +49,28 @@ import ImportTab from '../components/ImportTab';
 import jwtDecode from 'jwt-decode';
 import { ApmSplash } from '../components/ApmSplash';
 import { AltButton, PriButton } from '../control';
+import { RecordKeyMap } from '@orbit/records';
+import { useSelector } from 'react-redux';
+import { mainSelector } from '../selector';
+import { useDispatch } from 'react-redux';
 
 const centerProps = { display: 'flex', justifyContent: 'center' } as SxProps;
 
-interface IStateProps {
-  t: IMainStrings;
-  ts: ISharedStrings;
-  orbitFetchResults: IFetchResults | undefined;
-}
-
-interface IDispatchProps {
-  fetchLocalization: typeof action.fetchLocalization;
-  setLanguage: typeof action.setLanguage;
-  fetchOrbitData: typeof action.fetchOrbitData;
-  setExpireAt: typeof action.setExpireAt;
-  doOrbitError: typeof action.doOrbitError;
-  orbitComplete: typeof action.orbitComplete;
-}
-
-interface IProps {}
-
-export function Loading(props: IProps & IStateProps & IDispatchProps) {
-  const { orbitFetchResults, t } = props;
-  const {
-    fetchOrbitData,
-    orbitComplete,
-    doOrbitError,
-    fetchLocalization,
-    setLanguage,
-    setExpireAt,
-  } = props;
+export function Loading() {
+  const orbitFetchResults = useSelector(
+    (state: IState) => state.orbit.fetchResults
+  );
+  const t: IMainStrings = useSelector(mainSelector, shallowEqual);
+  const dispatch = useDispatch();
+  const fetchLocalization = () => dispatch(action.fetchLocalization());
+  const setLanguage = (lang: string) => dispatch(action.setLanguage(lang));
+  const fetchOrbitData = (props: action.IFetchOrbitData) =>
+    dispatch(action.fetchOrbitData(props));
+  const setExpireAt = (expireAt: number) =>
+    dispatch(action.setExpireAt(expireAt));
+  const doOrbitError = (error: IApiError) =>
+    dispatch(action.doOrbitError(error));
+  const orbitComplete = () => dispatch(action.orbitComplete());
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
@@ -115,6 +105,7 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
   const [, setPlan] = useGlobal('plan');
   const [view, setView] = useState('');
   const [inviteError, setInviteError] = useState('');
+  const mounted = useRef(0);
 
   //remote is passed in because it wasn't always available in global
   const InviteUser = async (newremote: JSONAPISource, userEmail: string) => {
@@ -122,9 +113,9 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
     var inviteErr = '';
 
     //filter will be passed to api which will lowercase the email before comparison
-    var allinvites: Invitation[] = (await newremote.query((q: QueryBuilder) =>
+    var allinvites: InvitationD[] = (await newremote.query((q) =>
       q.findRecords('invitation').filter(
-        { attribute: 'email', value: userEmail }
+        { attribute: 'email', value: userEmail.toLowerCase() }
         // { attribute: 'accepted', value: false }  //went from AND to OR between attributes :/
       )
     )) as any;
@@ -140,7 +131,7 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
         try {
           //ARGH...this ignores the id and just gets them all...
           const thisinvite: Invitation[] = (
-            (await newremote.query((q: QueryBuilder) =>
+            (await newremote.query((q) =>
               q.findRecord({ type: 'invitation', id: inviteId })
             )) as Invitation[]
           ).filter((i) => i.keys?.remoteId === inviteId);
@@ -186,6 +177,8 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
   };
   useEffect(() => {
     // console.clear();
+    if (mounted.current > 0) return;
+    mounted.current += 1;
     if (!offline && !authenticated()) return;
     if (!offline) {
       const decodedToken = jwtDecode(accessToken || '') as IToken;
@@ -194,7 +187,7 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
     setLanguage(localeDefault(isDeveloper));
     localStorage.removeItem('inviteError');
     fetchLocalization();
-    fetchOrbitData(
+    fetchOrbitData({
       coordinator,
       tokenCtx,
       fingerprint,
@@ -202,11 +195,11 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
       setProjectsLoaded,
       setOrbitRetries,
       setLang,
-      globalStore,
+      global: globalStore,
       getOfflineProject,
       offlineSetup,
-      showMessage
-    );
+      showMessage,
+    });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
@@ -224,7 +217,8 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
         setSyncComplete(true);
       }
     }
-  }, [orbitFetchResults, memory, setLanguage, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orbitFetchResults, memory, user]);
 
   useEffect(() => {
     if (!importOpen && doSync) {
@@ -271,7 +265,8 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
     if (fromUrl) {
       const m = /^\/[workplandetail]+\/([0-9a-f-]+)/.exec(fromUrl);
       if (m) {
-        const planId = remoteIdGuid('plan', m[1], memory.keyMap) || m[1];
+        const planId =
+          remoteIdGuid('plan', m[1], memory.keyMap as RecordKeyMap) || m[1];
         const planRec = getPlan(planId);
         if (offline) {
           const oProjRec = planRec && getOfflineProject(planRec);
@@ -281,7 +276,7 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
           if (projectId) {
             waitToNavigate = true;
             LoadProjData(projectId, () => {
-              const projRec = memory.cache.query((q: QueryBuilder) =>
+              const projRec = memory.cache.query((q) =>
                 q.findRecord({ type: 'project', id: projectId })
               );
               if (projRec) {
@@ -306,37 +301,44 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
       const tokData = profile || { sub: '' };
       localStorage.removeItem('goingOnline');
       remote
-        .pull((q) =>
+        .query((q) =>
           q
             .findRecords('user')
             .filter({ attribute: 'auth0Id', value: tokData.sub })
         )
-        .then((tr) => {
-          const user = (tr[0].operations[0] as any).record as User;
-          InviteUser(remote, user?.attributes?.email || 'neverhere').then(
-            () => {
-              setCompleted(10);
-              LoadData(coordinator, setCompleted, doOrbitError).then(() => {
-                LoadComplete();
-              });
-            }
-          );
+        .then((result) => {
+          let users: UserD[] = result as any;
+          if (!Array.isArray(users)) users = [users];
+          const user = users[0];
+          InviteUser(
+            remote,
+            user?.attributes?.email?.toLowerCase() || 'neverhere'
+          ).then(() => {
+            setCompleted(10);
+            LoadData(coordinator, setCompleted, doOrbitError).then(() => {
+              LoadComplete();
+            });
+          });
         });
     };
-    //sync was either not needed, or is done
-    if (syncComplete && orbitFetchResults) {
-      if (orbitFetchResults.goRemote) {
-        localStorage.setItem(localUserKey(LocalKey.time), currentDateTime());
-        if (isElectron) finishRemoteLoad();
-        else
-          backup.reset().then(() => {
+    const processBackup = async () => {
+      //sync was either not needed, or is done
+      if (syncComplete && orbitFetchResults) {
+        if (orbitFetchResults.goRemote) {
+          localStorage.setItem(localUserKey(LocalKey.time), currentDateTime());
+          if (isElectron) finishRemoteLoad();
+          else {
+            await backup.reset();
+            await backup.cache.openDB();
             setProjectsLoaded([]);
             finishRemoteLoad();
-          });
-      } else {
-        LoadComplete();
+          }
+        } else {
+          LoadComplete();
+        }
       }
-    }
+    };
+    processBackup();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [syncComplete, orbitFetchResults]);
   const continueWithCurrentUser = () => {
@@ -355,7 +357,7 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <AppHead {...props} />
+      <AppHead />
       <Box sx={centerProps}>
         <ApmSplash
           message={inviteError}
@@ -387,27 +389,4 @@ export function Loading(props: IProps & IStateProps & IDispatchProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'main' }),
-  ts: localStrings(state, { layout: 'shared' }),
-  orbitFetchResults: state.orbit.fetchResults,
-});
-
-const mapDispatchToProps = (dispatch: any) => ({
-  ...bindActionCreators(
-    {
-      fetchLocalization: action.fetchLocalization,
-      setLanguage: action.setLanguage,
-      fetchOrbitData: action.fetchOrbitData,
-      setExpireAt: action.setExpireAt,
-      doOrbitError: action.doOrbitError,
-      orbitComplete: action.orbitComplete,
-    },
-    dispatch
-  ),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Loading as any) as any as (props: IProps) => JSX.Element;
+export default Loading;

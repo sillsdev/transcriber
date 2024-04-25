@@ -1,5 +1,9 @@
 import { useGlobal } from 'reactn';
-import { Operation, TransformBuilder } from '@orbit/data';
+import {
+  RecordIdentity,
+  RecordOperation,
+  RecordTransformBuilder,
+} from '@orbit/records';
 import { SharedResourceReference, SharedResource } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { BookRef } from '../model';
@@ -14,8 +18,8 @@ export const useShaRefCreate = (sharedResource: SharedResource) => {
   const [user] = useGlobal('user');
 
   return async (bookRefs: BookRef[]) => {
-    const t = new TransformBuilder();
-    let ops: Operation[] = [];
+    const t = new RecordTransformBuilder();
+    let ops: RecordOperation[] = [];
     const chapMap = new Map<string, string>();
     for (const bookRef of bookRefs) {
       const chapRefs = bookRef.refs.replace(/\s*/g, '').split(';');
@@ -50,12 +54,11 @@ export const useShaRefCreate = (sharedResource: SharedResource) => {
           verses: refs,
         },
       } as SharedResourceReference;
-      memory.schema.initializeRecord(shaRefRec);
       ops = ops.concat([
         ...AddRecord(t, shaRefRec, user, memory),
         ...ReplaceRelatedRecord(
           t,
-          shaRefRec,
+          shaRefRec as RecordIdentity,
           'sharedResource',
           'sharedresource',
           sharedResource.id

@@ -289,6 +289,13 @@
                <context context-type="sourcefile">artifactCategory.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="artifactCategory.graphic">
+      		<source>Graphic</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">artifactCategory.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="artifactCategory.qanda">
             <source>Question and Answer</source>
             <target/>
@@ -305,6 +312,13 @@
          </trans-unit>
          <trans-unit id="artifactType.comment">
             <source>Comment</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.graphic">
+            <source>Graphic</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AlertDialog.tsx</context>
@@ -347,6 +361,13 @@
          </trans-unit>
          <trans-unit id="artifactType.testing">
             <source>Testing</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactType.title">
+            <source>Title</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AlertDialog.tsx</context>
@@ -625,8 +646,57 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.bibleid">
+            <source>Bible Id</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.bibleidexists">
+            <source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.bibleidformat">
+            <source>Bible Id must begin with the language code and version (six letters).</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.bibleidiso">
+            <source>Bible Id should begin with the language code.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+      	<trans-unit id="cards.bibleIdExplain">
+      		<source>Explain Bible Id</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">addCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="cards.biblename">
+            <source>Name of Bible</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.cancel">
             <source>Cancel</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.closeNoSave">
+            <source>Close without Saving?</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
@@ -648,6 +718,13 @@
          </trans-unit>
          <trans-unit id="cards.copyNew">
             <source>Copy project to new team.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.copyright">
+            <source>Copyright</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
@@ -703,6 +780,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.description">
+            <source>Description</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.draft">
             <source>Oral Drafting</source>
             <target/>
@@ -724,6 +808,13 @@
                <context context-type="sourcefile">TeamDialog.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.explainPublishing">
+            <source>Information to use when publishing audio created by this team.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TeamDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.explainTeamDelete">
             <source>Deleting the team will delete all audio projects of the team.</source>
             <target/>
@@ -731,32 +822,18 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="cards.import">
-            <source>Import Audio Project</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">addCard.tsx</context>
-            </context-group>
-         </trans-unit>
+      	<trans-unit id="cards.import">
+      		<source>Import Audio Project</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">addCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="cards.language">
             <source>Language: {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="cards.longNotesProject">
-            <source>Project with Long Notes</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">ProjectButtons.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="cards.longNotes">
-            <source>Shared Introductions, Rationales, Devotionals, Podcasts</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">ProjectButtons.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="cards.mediaUploaded">
@@ -782,6 +859,13 @@
          </trans-unit>
          <trans-unit id="cards.newProject">
             <source>New Audio Project</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.notesLabel">
+            <source>Introductory Notes Title</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
@@ -864,8 +948,22 @@
                <context context-type="sourcefile">AddCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.projectRequired">
+            <source>A project must be added before recordings are allowed</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TeamDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.Render">
             <source>Render to Paratext</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TeamDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.publishing">
+            <source>Publishing</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TeamDialog.tsx</context>
@@ -941,6 +1039,34 @@
                <context context-type="sourcefile">AddCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="cards.workflowProgression">
+            <source>Workflow Progression</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.workflowProgressionPassage">
+            <source>Next Passage</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.workflowProgressionStep">
+            <source>Next Step</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="cards.yes">
+            <source>Yes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddCard.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="category.builtIn">
       		<source>System Categories</source>
       		<target/>
@@ -955,7 +1081,21 @@
       			<context context-type="sourcefile">CategoryTabs.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="category.discussions">
+      	<trans-unit id="category.close">
+      		<source>Close</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="category.duplicate">
+      		<source>Duplicate Category</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">CategoryListEdit.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="category.discussions">
       		<source>discussion(s)</source>
       		<target/>
       		<context-group>
@@ -2111,6 +2251,13 @@
                <context context-type="sourcefile">import.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="import.unknownError">
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">import.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="import.invalidProject">
             <source>Import File does not contain current audio project.</source>
             <target/>
@@ -2265,8 +2412,15 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="integration.exportSectionNumbers">
+            <source>Sync {0} Numbers</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="integration.invalidReferences">
-            <source>{0} passages have invalid book or reference.</source>
+            <source>{0} passage(s) have invalid book or reference.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">integration.tsx</context>
@@ -3609,6 +3763,20 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="mediaTab.graphicRightsAdd">
+      		<source>Add {0}</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaTab.graphicRightsTitle">
+      		<source>Graphics Rights holder</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="mediaTab.latestVersion">
             <source>Latest Version</source>
             <target/>
@@ -3679,6 +3847,13 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="mediaTab.published">
+            <source>Published</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="mediaTab.readyToShare">
             <source>Ready to Share</source>
             <target/>
@@ -3721,13 +3896,6 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaTab.selectRows">
-            <source>Please select row(s) to {0}.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">MediaTab.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="mediaTab.showHideFilter">
             <source>Show/Hide filter rows</source>
             <target/>
@@ -3763,6 +3931,13 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="mediaTab.user">
+            <source>User</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="mediaTab.version">
             <source>Version</source>
             <target/>
@@ -3779,6 +3954,48 @@
          </trans-unit>
          <trans-unit id="mediaTab.viewAssociations">
             <source>View Associations</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.cancel">
+            <source>Cancel Recording</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.playPause">
+            <source>Play / Pause</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.record">
+            <source>Record</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.recording">
+            <source>Recording...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.save">
+            <source>Save Recording</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaTitle.saving">
+            <source>Saving...</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaTab.tsx</context>
@@ -3805,6 +4022,20 @@
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="mediaUpload.graphicTask">
+      		<source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaUpload.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaUpload.graphicTitle">
+      		<source>Upload Graphic</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaUpload.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="mediaUpload.intellectualPropertyTask">
       		<source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
       		<target/>
@@ -4051,7 +4282,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="passageDetailArtifacts.allLevel">
-      		<source>All Resources</source>
+      		<source>All {0}</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">AddResource.tsx</context>
@@ -4065,12 +4296,19 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.bookLevel">
-      		<source>Resources for the Book</source>
+      		<source>{0} for the Book</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.bookResource">
+            <source>Book</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="passageDetailArtifacts.canceling">
       		<source>Canceling resource creation</source>
       		<target/>
@@ -4086,7 +4324,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="passageDetailArtifacts.chapterLevel">
-      		<source>Resources for the Chapter</source>
+      		<source>{0} for the Chapter</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>
@@ -4183,6 +4421,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.movementResource">
+            <source>Movement</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="passageDetailArtifacts.no">
       		<source>No</source>
       		<target/>
@@ -4190,14 +4435,28 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="passageDetailArtifacts.passageResource">
-      		<source>Passage</source>
+      	<trans-unit id="passageDetailArtifacts.noteResource">
+      		<source>Note</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="passageDetailArtifacts.pasteFormat">
+         <trans-unit id="passageDetailArtifacts.notes">
+            <source>Notes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageDetailArtifacts.passageResource">
+            <source>Passage</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageDetailArtifacts.pasteFormat">
       		<source>Pasted data must contain two or three columns. One of them must be the reference.</source>
       		<target/>
       		<context-group>
@@ -4253,6 +4512,13 @@
                <context context-type="sourcefile">AddResource.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="passageDetailArtifacts.resources">
+            <source>Resources</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="passageDetailArtifacts.resourcesDeleted">
       		<source> ({0} resources will be deleted.)</source>
       		<target/>
@@ -4262,6 +4528,13 @@
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.selectBook">
       		<source>Select Book</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AddResource.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageDetailArtifacts.selectOne">
+      		<source>Only the first selected note is used</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">AddResource.tsx</context>
@@ -4373,7 +4646,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.verseLevel">
-      		<source>Resources for verses in this passage</source>
+      		<source>{0} for verses in this passage</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>
@@ -4519,6 +4792,55 @@
                <context context-type="sourcefile">passageRecord.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="passageType.BOOK">
+      		<source>Book</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageType.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageType.ALTBK">
+      		<source>Friendly Book</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageType.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageType.CHNUM">
+      		<source>Chapter number</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageType.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageType.TITLE">
+      		<source>Title</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageType.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageType.MOVE">
+      		<source>Movement</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageType.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageType.PASS">
+      		<source>Passage</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageType.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="passageType.NOTE">
+      		<source>Note</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">passageType.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="peer.peerDescription">
       		<source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
       		<target/>
@@ -4687,6 +5009,13 @@
       			<context context-type="sourcefile">GroupDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="planActions.addNote">
+            <source>Add Note</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planActions.assign">
             <source>Assign</source>
             <target/>
@@ -4701,6 +5030,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="planActions.noteDetails">
+      		<source>Note Details</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="planActions.passageDetail">
             <source>Passage Detail</source>
             <target/>
@@ -4757,8 +5093,22 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="planSheet.addNote">
+            <source>Add Note</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planSheet.addPassage">
             <source>Add Passage</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.addPublishing">
+            <source>Update Publishing Rows</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -4799,6 +5149,27 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="planSheet.confirmPublish">
+            <source>Publish {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.confirmPublishMovement">
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this Movement will be marked as published. If you have previously published and now choose 'Not Published', the {0} and passages and notes will be marked as not published.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.confirmPublishSection">
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes be marked as not published.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planSheet.filtered">
             <source>Disable filter to add rows.</source>
             <target/>
@@ -4806,8 +5177,57 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="planSheet.firstMovement">
+      		<source>Start At</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="planSheet.graphic">
+      		<source>Graphic</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="planSheet.hidePublishing">
+      		<source>Hide Publishing Information</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="planSheet.moveDown">
+      		<source>Move down</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="planSheet.movement">
+            <source>Movement</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+      	<trans-unit id="planSheet.moveUp">
+      		<source>Move up</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="planSheet.nonNumber">
             <source>Do not change to non-number.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.noPublishDelete">
+            <source>Do not delete published items.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -4820,7 +5240,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-
+         <trans-unit id="planSheet.paratextRequired">
+            <source>You must be a Paratext user with access to FOBAI resources to use this feature.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planSheet.passageBelow">
             <source>Add Passage below Passage {0}</source>
             <target/>
@@ -4836,14 +5262,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.passageToPrevSection">
-            <source>Move Passage to Previous Section</source>
+            <source>Move {pt} {0} Up</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.passageToNextSection">
-            <source>Move Passage to Next Section</source>
+            <source>Move {pt} {0} Down</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -4851,6 +5277,13 @@
          </trans-unit>
          <trans-unit id="planSheet.pasting">
             <source>Pasting</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.publish">
+            <source>Publish {0} {1}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -4884,6 +5317,20 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="planSheet.showPublishing">
+      		<source>Show Publishing Information</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
+         <trans-unit id="planSheet.movementAbove">
+            <source>Add Movement above {0} {1}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planSheet.sectionAbove">
             <source>Add {0} above {1} {2}</source>
             <target/>
@@ -4898,13 +5345,6 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="planSheet.selectRows">
-            <source>Please select row(s) to {0}.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">PlanSheet.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="planSheet.step">
             <source>Step</source>
             <target/>
@@ -4914,6 +5354,13 @@
          </trans-unit>
          <trans-unit id="planSheet.tablePaste">
             <source>Paste Spreadsheet</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.changepublish">
+            <source>Update {0} {1} published status.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -5311,6 +5758,27 @@
                <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="publishLevel.none">
+            <source>Not Published - not visible in publishing app</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="publishLevel.beta">
+            <source>Beta - only visible to users subscribed to app beta channel</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="publishLevel.public">
+            <source>Public - visible to everyone using app</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="resource.action">
          	<source>Action</source>
          	<target/>
@@ -5346,6 +5814,13 @@
       			<context context-type="sourcefile">Access.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="resource.changes">
+      		<source>Changes made will affect source and all shared locations.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="resource.delete">
 			<source>Delete</source>
 			<target/>
@@ -5374,8 +5849,36 @@
       			<context context-type="sourcefile">Access.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="resource.findNote">
+      		<source>Find existing note</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="resource.keywords">
       		<source>Keywords</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.link">
+      		<source>Link</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.linkError">
+      		<source>Link is not a correctly formatted URL</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="resource.noteDetails">
+      		<source>Note Details</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ResourceOverview.tsx</context>
@@ -5416,6 +5919,13 @@
       			<context context-type="sourcefile">ResourceOverview.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="resource.source">
+      		<source>Linked Note Source: </source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ResourceOverview.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="resource.terms">
       		<source>Terms of use</source>
       		<target/>
@@ -5437,6 +5947,13 @@
       			<context context-type="sourcefile">ResourceOverview.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="scriptureTable.alternateName">
+      		<source>{0} Alternate Name</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ScriptureTable.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="scriptureTable.book">
             <source>Book</source>
             <target/>
@@ -5444,6 +5961,20 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="scriptureTable.chapter">
+            <source>Chapter {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+      	<trans-unit id="scriptureTable.confirmPublish">
+      		<source>Are you sure you want to add publishing rows?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ScriptureTable.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="scriptureTable.description">
             <source>Description</source>
             <target/>
@@ -5486,6 +6017,13 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="scriptureTable.pasteInvalidPassageBeforeSection">
+            <source>Invalid passage before {0}.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="scriptureTable.pasteInvalidSections">
             <source>Invalid {0} number(s):</source>
             <target/>
@@ -5500,6 +6038,13 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="scriptureTable.publishingWarning">
+      		<source>Once publishing rows are added, there is no automated way to remove them. Publishing projects cannot be made flat projects.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ScriptureTable.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="scriptureTable.reference">
             <source>Reference</source>
             <target/>
@@ -5558,6 +6103,20 @@
          </trans-unit>
          <trans-unit id="scriptureTableFilter.hideDone">
             <source>Hide Done rows</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTableFilter.hidePublishing">
+            <source>Hide Publishing Rows</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTableFilter.invalidSection">
+            <source>Invalid {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -5754,6 +6313,13 @@
          </trans-unit>
          <trans-unit id="shared.cancel">
             <source>Cancel</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Access.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.close">
+            <source>Close</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
@@ -7321,13 +7887,7 @@
                <context context-type="sourcefile">UserTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="usertable.selectRows">
-            <source>Please select row(s) to {0}.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">UserTable.tsx</context>
-            </context-group>
-         </trans-unit>
+
          <trans-unit id="usertable.selectUser">
             <source>Select User</source>
             <target/>
@@ -7412,6 +7972,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="vProject.cannotChangeLayout">
+      		<source>Publishing projects cannot be made flat.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">addCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="vProject.correctformat">
             <source>Please enter in the format: singular/plural</source>
             <target/>
@@ -7435,6 +8002,28 @@
          </trans-unit>
          <trans-unit id="vProject.editorSettings">
             <source>Editor Settings</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="vProject.errExtrasBookLen">
+            <source>Book must be 3 characters</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="vProject.errExtrasBookNonScripture">
+            <source>Book Designation must not be a Scripture book code.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+
+         <trans-unit id="vProject.extrasBook">
+            <source>Akuo Extras Book Designation</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
@@ -7491,6 +8080,20 @@
          </trans-unit>
          <trans-unit id="vProject.layout">
             <source>Layout</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="vProject.movement">
+            <source>Movement</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="vProject.movements">
+            <source>Movements</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>

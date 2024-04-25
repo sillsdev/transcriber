@@ -5,44 +5,46 @@ import {
   remoteIdGuid,
   remoteIdNum,
 } from '.';
-import {
-  getSerializer,
-  JSONAPISerializerCustom,
-} from '../serializers/JSONAPISerializerCustom';
-import JSONAPISource, { ResourceDocument } from '@orbit/jsonapi';
+import { getDocSerializer } from '../serializers/getSerializer';
+import JSONAPISource, {
+  JSONAPIDocumentSerializer,
+  ResourceDocument,
+} from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
 import {
-  Record,
-  TransformBuilder,
-  Operation,
-  QueryBuilder,
+  RecordTransformBuilder,
+  RecordOperation,
   RecordIdentity,
-} from '@orbit/data';
+  InitializedRecord,
+  StandardRecordNormalizer,
+  RecordKeyMap,
+} from '@orbit/records';
 import Memory from '@orbit/memory';
 import {
-  Project,
   OrgData,
-  OrganizationMembership,
-  GroupMembership,
   IApiError,
+  ProjectD,
+  GroupMembershipD,
+  OrganizationMembershipD,
 } from '../model';
-import * as actions from '../store';
 import { orbitInfo } from '../utils/infoMsg';
 import ProjData from '../model/projData';
 import Coordinator from '@orbit/coordinator';
 import { getFingerprint, currentDateTime, orbitErr } from '../utils';
 import { ReplaceRelatedRecord } from '../model/baseModel';
 
+import PassageType from '../model/passageType';
+
 const completePerTable = 3;
 
 const saveOfflineProject = async (
-  project: Project,
+  project: ProjectD,
   memory: Memory,
   backup: IndexedDBSource,
   dataDate: string | undefined,
   isImport: boolean
 ) => {
-  var oparray: Operation[] = [];
+  var oparray: RecordOperation[] = [];
   /* don't update to undefined dataDate from here */
   if (
     !dataDate ||
@@ -70,27 +72,33 @@ const saveOfflineProject = async (
       );
     }
   }
-  await memory.sync(await backup.push((t: TransformBuilder) => oparray));
+  await backup.sync((t) => oparray);
+  await memory.sync((t) => oparray);
 };
 
 export async function insertData(
-  item: Record,
+  item: InitializedRecord,
   memory: Memory,
   backup: IndexedDBSource,
-  tb: TransformBuilder,
-  oparray: Operation[],
+  tb: RecordTransformBuilder,
+  oparray: RecordOperation[],
   orbitError: (ex: IApiError) => void,
   checkExisting: boolean,
   isImport: boolean,
+  isProject: boolean,
   snapshotDate?: string
 ) {
-  var rec: Record | Record[] | null = null;
-  var project: Project | undefined = undefined;
+  var rec: InitializedRecord | InitializedRecord[] | null = null;
+  var project: ProjectD | undefined = undefined;
   try {
     if (item.keys && checkExisting) {
-      var id = remoteIdGuid(item.type, item.keys['remoteId'], memory.keyMap);
+      var id = remoteIdGuid(
+        item.type,
+        item.keys['remoteId'],
+        memory.keyMap as RecordKeyMap
+      );
       rec = memory.cache.query((q) =>
-        q.findRecord({ type: item.type, id: id })
+        q.findRecord({ type: item.type, id: id as string })
       );
     }
   } catch (err: any) {
@@ -101,15 +109,15 @@ export async function insertData(
     if (rec) {
       if (Array.isArray(rec)) rec = rec[0]; //won't be...
       rec.attributes = { ...item.attributes };
-      oparray.push(tb.updateRecord(rec));
+      oparray.push(tb.updateRecord(rec).toOperation());
       if (rec.type === 'project') {
-        project = rec as Project;
+        if (isProject) project = rec as ProjectD;
         await saveOfflineProject(
-          project,
+          rec as ProjectD,
           memory,
           backup,
-          snapshotDate,
-          isImport
+          isProject ? snapshotDate : undefined,
+          isImport && isProject
         );
       }
       for (var rel in item.relationships) {
@@ -133,17 +141,18 @@ export async function insertData(
           );
       }
     } else {
+      const rn = new StandardRecordNormalizer({ schema: memory.schema });
       try {
-        if (typeof item.id === 'number') memory.schema.initializeRecord(item);
-        oparray.push(tb.addRecord(item));
+        if (typeof item.id === 'number') item = rn.normalizeRecord(item);
+        oparray.push(tb.addRecord(item).toOperation());
         if (item.type === 'project') {
-          project = item as Project;
+          if (isProject) project = item as ProjectD;
           await saveOfflineProject(
-            project,
+            item as ProjectD,
             memory,
             backup,
-            snapshotDate,
-            isImport
+            isProject ? snapshotDate : undefined,
+            isImport && isProject
           );
         }
       } catch (err: any) {
@@ -166,22 +175,23 @@ export async function insertData(
 async function processData(
   start: number,
   data: string,
-  ser: JSONAPISerializerCustom,
+  ser: JSONAPIDocumentSerializer,
   memory: Memory,
   backup: IndexedDBSource,
-  tb: TransformBuilder,
+  tb: RecordTransformBuilder,
   setCompleted: undefined | ((valud: number) => void),
   orbitError: (ex: IApiError) => void
 ) {
-  var x = JSON.parse(data);
-  var tables: ResourceDocument[] = x.data;
-  var oparray: Operation[] = [];
-  var completed: number = 15 + start * completePerTable;
+  const x = JSON.parse(data);
+  const tables: ResourceDocument[] = x.data;
+  const oparray: RecordOperation[] = [];
+  let completed: number = 15 + start * completePerTable;
 
   for (let ti = 0; ti < tables.length; ti += 1) {
     const t = tables[ti];
     try {
-      var jsonData = ser.deserialize(t).data;
+      let jsonData = ser.deserialize(t).data;
+      if (!jsonData) continue;
       if (!Array.isArray(jsonData)) jsonData = [jsonData];
       for (let ji = 0; ji < jsonData.length; ji += 1) {
         const item = jsonData[ji];
@@ -194,10 +204,12 @@ async function processData(
           orbitError,
           false,
           false,
+          true, //isProject
           undefined
         );
       }
-    } catch {
+    } catch (err: any) {
+      console.error(err);
       //ignore it
     }
     completed += completePerTable;
@@ -228,34 +240,44 @@ async function processData(
   }
 }
 async function cleanUpMemberships(memory: Memory, backup: IndexedDBSource) {
-  var t = new TransformBuilder();
-  var ops: Operation[] = [];
-  const orgmems: OrganizationMembership[] = memory.cache.query(
-    (q: QueryBuilder) => q.findRecords('organizationmembership')
+  var t = new RecordTransformBuilder();
+  var ops: RecordOperation[] = [];
+  const orgmems: OrganizationMembershipD[] = memory.cache.query((q) =>
+    q.findRecords('organizationmembership')
   ) as any;
-  const badom = orgmems.filter((om) => !om.attributes);
+  const badom = orgmems.filter(
+    (om) => !om.attributes || !om.relationships?.user?.data
+  );
   badom.forEach((i) => {
-    ops.push(t.removeRecord({ type: 'organizationmembership', id: i.id }));
+    ops.push(
+      t.removeRecord({ type: 'organizationmembership', id: i.id }).toOperation()
+    );
   });
-  const grpmems: GroupMembership[] = memory.cache.query((q: QueryBuilder) =>
+  const grpmems: GroupMembershipD[] = memory.cache.query((q) =>
     q.findRecords('groupmembership')
   ) as any;
-  const badgm = grpmems.filter((om) => !om.attributes);
+  const badgm = grpmems.filter(
+    (om) => !om.attributes || !om.relationships?.user?.data
+  );
   badgm.forEach((i) => {
-    ops.push(t.removeRecord({ type: 'groupmembership', id: i.id }));
+    ops.push(
+      t.removeRecord({ type: 'groupmembership', id: i.id }).toOperation()
+    );
   });
-  await memory.sync(await backup.push(ops));
+  await backup.sync((t) => ops);
+  await memory.sync((t) => ops);
 }
 export async function LoadData(
   coordinator: Coordinator,
   setCompleted: (valud: number) => void,
-  orbitError: typeof actions.doOrbitError
+  orbitError: (ex: IApiError) => void
 ): Promise<boolean> {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
-  var tb: TransformBuilder = new TransformBuilder();
-  const ser = getSerializer(memory);
+  var tb: RecordTransformBuilder = new RecordTransformBuilder();
+  const ser = getDocSerializer(memory);
+  //const { checkIt } = usePassageType();
 
   try {
     let start = 0;
@@ -263,7 +285,7 @@ export async function LoadData(
     do {
       var transform: OrgData[] = (await remote.query(
         // eslint-disable-next-line no-loop-func
-        (q: QueryBuilder) =>
+        (q) =>
           q.findRecords('orgdata').filter(
             {
               attribute: 'json',
@@ -300,7 +322,13 @@ export async function LoadData(
         //bail - never expect to be here
         start = -1;
       }
+      //checkIt();
+      var len = (
+        memory.cache.query((q) => q.findRecords('passagetype')) as PassageType[]
+      ).filter((p) => Boolean(p?.keys?.remoteId)).length;
+      if (len > 5) console.log('orgdata passagetype ' + len.toString());
     } while (start > -1);
+
     await cleanUpMemberships(memory, backup);
   } catch (rejected: any) {
     orbitError(orbitErr(rejected, 'load data rejected'));
@@ -319,20 +347,26 @@ export async function LoadProjectData(
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
+  //const { checkIt } = usePassageType();
   if (projectsLoaded.includes(project)) return true;
   if (!remote || !online) throw new Error('offline.');
 
-  const projectid = remoteIdNum('project', project, memory.keyMap);
-  var tb: TransformBuilder = new TransformBuilder();
-  const ser = getSerializer(memory, !online);
+  const projectid = remoteIdNum(
+    'project',
+    project,
+    memory.keyMap as RecordKeyMap
+  );
+  var tb: RecordTransformBuilder = new RecordTransformBuilder();
+  const ser = getDocSerializer(memory);
 
   try {
     let start = 0;
     setBusy(true);
+    const oparray: RecordOperation[] = [];
     do {
       var transform: ProjData[] = (await remote.query(
         // eslint-disable-next-line no-loop-func
-        (q: QueryBuilder) =>
+        (q) =>
           q.findRecords('projdata').filter(
             {
               attribute: 'json',
@@ -365,8 +399,15 @@ export async function LoadProjectData(
           undefined,
           orbitError
         );
+        //checkIt();
+        var len = (
+          memory.cache.query((q) =>
+            q.findRecords('passagetype')
+          ) as PassageType[]
+        ).filter((p) => Boolean(p?.keys?.remoteId)).length;
+        if (len > 5) console.log('projdata passagetype ' + len.toString());
+
         if (start === 0) {
-          var oparray: Operation[] = [];
           offlineProjectUpdateSnapshot(
             project,
             oparray,
@@ -375,7 +416,8 @@ export async function LoadProjectData(
             0,
             false
           );
-          await memory.sync(await backup.push(oparray));
+          await backup.sync((t) => oparray);
+          await memory.sync((t) => oparray);
         }
         start = r.attributes.startnext;
       } else {

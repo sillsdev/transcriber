@@ -6,14 +6,14 @@ import { passageDetailArtifactsSelector } from '../../../selector';
 import {
   IState,
   Passage,
+  PassageD,
   Section,
+  SectionD,
   Plan,
   BookName,
   IPassageDetailArtifactsStrings,
 } from '../../../model';
 import { ITranscriptionTabStrings } from '../../../model';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import {
   Box,
   Button,
@@ -29,7 +29,7 @@ import {
   sectionNumber,
   sectionCompare,
   passageCompare,
-  passageDescription,
+  passageDescText,
   useOrganizedBy,
   findRecord,
   usePlanType,
@@ -37,6 +37,14 @@ import {
 } from '../../../crud';
 import { transcriptionTabSelector } from '../../../selector';
 import { eqSet } from '../../../utils';
+import { passageTypeFromRef } from '../../../control/RefRender';
+import { PassageTypeEnum } from '../../../model/passageType';
+import { RecordIdentity } from '@orbit/records';
+import { useOrbitData } from '../../../hoc/useOrbitData';
+import {
+  projDefSectionMap,
+  useProjectDefaults,
+} from '../../../crud/useProjectDefaults';
 
 const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -64,31 +72,29 @@ const getChildRows = (row: any, rootRows: any[]) => {
 const getSection = (
   section: Section,
   passages: Passage[],
+  sectionMap: Map<number, string>,
   bookData: BookName[]
 ) => {
   const name =
     sectionRef(section, passages, bookData) ?? section?.attributes?.name ?? '';
-  return sectionNumber(section) + '.\u00A0\u00A0' + name;
+  return sectionNumber(section, sectionMap) + '.\u00A0\u00A0' + name;
 };
 
 /* build the passage name = sequence + book + reference */
 const getReference = (passage: Passage, bookData: BookName[] = []) => {
-  return passageDescription(passage, bookData);
+  return passageDescText(passage, bookData);
 };
 
-interface IRecordProps {
-  passages: Array<Passage>;
-  sections: Array<Section>;
-}
-
-interface IProps extends IRecordProps {
+interface IProps {
   title: string;
   visual?: boolean;
   onSelect?: (items: RecordIdentity[]) => void;
 }
 
 export function SelectSections(props: IProps) {
-  const { passages, sections, visual, title, onSelect } = props;
+  const { visual, title, onSelect } = props;
+  const passages = useOrbitData<PassageD[]>('passage');
+  const sections = useOrbitData<SectionD[]>('section');
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const [data, setData] = useState(Array<IRow>());
@@ -109,6 +115,10 @@ export function SelectSections(props: IProps) {
   const [columnDefs, setColumnDefs] = useState<Column[]>([]);
   const [columnWidths, setColumnWidths] = useState<TableColumnWidthInfo[]>([]);
   const [checks, setChecks] = useState<Array<string | number>>([]);
+  const { getProjectDefault } = useProjectDefaults();
+  const sectionMap = new Map<number, string>(
+    getProjectDefault(projDefSectionMap) ?? []
+  );
   const setDimensions = () => {
     setHeightStyle({
       maxHeight: `${window.innerHeight - 250}px`,
@@ -168,8 +178,8 @@ export function SelectSections(props: IProps) {
   }, [isFlat]);
 
   const getSections = (
-    passages: Array<Passage>,
-    sections: Array<Section>,
+    passages: PassageD[],
+    sections: SectionD[],
     bookData: BookName[]
   ) => {
     const rowData: IRow[] = [];
@@ -178,20 +188,25 @@ export function SelectSections(props: IProps) {
       .sort(sectionCompare)
       .forEach((section) => {
         const sectionpassages = passages
-          .filter((ps) => related(ps, 'section') === section.id)
+          .filter(
+            (ps) =>
+              related(ps, 'section') === section.id &&
+              passageTypeFromRef(ps.attributes?.reference, isFlat) ===
+                PassageTypeEnum.PASSAGE
+          )
           .sort(passageCompare);
         const passageCount = sectionpassages.length;
         if (!isFlat && passageCount > 1)
           rowData.push({
             id: section.id,
-            name: getSection(section, sectionpassages, bookData),
+            name: getSection(section, sectionpassages, sectionMap, bookData),
             passages: passageCount.toString(),
             parentId: '',
           });
         sectionpassages.forEach((passage: Passage) => {
           rowData.push({
             id: passage.id,
-            name: `${sectionNumber(section)}.${getReference(
+            name: `${sectionNumber(section, sectionMap)}.${getReference(
               passage,
               bookData
             )}`,
@@ -278,9 +293,4 @@ export function SelectSections(props: IProps) {
   );
 }
 
-const mapRecordsToProps = {
-  passages: (q: QueryBuilder) => q.findRecords('passage'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
-};
-
-export default withData(mapRecordsToProps)(SelectSections) as any;
+export default SelectSections;

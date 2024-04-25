@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
+import { shallowEqual } from 'react-redux';
 import {
   IState,
   Passage,
@@ -9,16 +9,11 @@ import {
   IAssignmentTableStrings,
   IActivityStateStrings,
   Role,
-  BookName,
   ISharedStrings,
   MediaFile,
 } from '../model';
-import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { RecordIdentity } from '@orbit/records';
 import { styled } from '@mui/material';
-import FilterIcon from '@mui/icons-material/FilterList';
-import SelectAllIcon from '@mui/icons-material/SelectAll';
 import { AltButton } from '../control';
 import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
@@ -30,7 +25,6 @@ import {
   sectionEditorName,
   sectionTranscriberName,
   sectionCompare,
-  passageDescription,
   passageCompare,
   useOrganizedBy,
   usePassageState,
@@ -41,10 +35,19 @@ import {
   TabActions,
   PaddedBox,
   GrowingSpacer,
-  iconMargin,
+  FilterButton,
 } from '../control';
 import { ReplaceRelatedRecord, UpdateLastModifiedBy } from '../model/baseModel';
 import { PlanContext } from '../context/PlanContext';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { useSelector } from 'react-redux';
+import {
+  activitySelector,
+  assignmentSelector,
+  sharedSelector,
+} from '../selector';
+import { positiveWholeOnly } from '../utils';
+import { GetReference } from './AudioTab/GetReference';
 
 const AssignmentDiv = styled('div')(() => ({
   display: 'flex',
@@ -55,68 +58,72 @@ const AssignmentDiv = styled('div')(() => ({
 
 interface IRow {
   id: string;
-  name: string;
+  name: React.ReactNode;
   state: string;
   transcriber: string;
   editor: string;
   passages: string;
   parentId: string;
+  sort: string;
 }
 const getChildRows = (row: any, rootRows: any[]) => {
   const childRows = rootRows.filter((r) => r.parentId === (row ? row.id : ''));
   return childRows.length ? childRows : null;
 };
 
-interface IStateProps {
-  activityState: IActivityStateStrings;
-  t: IAssignmentTableStrings;
-  ts: ISharedStrings;
-  allBookData: BookName[];
-}
-
-interface IRecordProps {
-  passages: Array<Passage>;
-  mediafiles: Array<MediaFile>;
-  sections: Array<Section>;
-  users: Array<User>;
-  roles: Array<Role>;
-}
-
-interface IProps extends IStateProps, IRecordProps {
+interface IProps {
   action?: (what: string, where: number[]) => boolean;
 }
 
 export function AssignmentTable(props: IProps) {
-  const {
-    activityState,
-    t,
-    ts,
-    passages,
-    mediafiles,
-    sections,
-    users,
-    roles,
-    allBookData,
-  } = props;
+  const t: IAssignmentTableStrings = useSelector(
+    assignmentSelector,
+    shallowEqual
+  );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const activityState: IActivityStateStrings = useSelector(
+    activitySelector,
+    shallowEqual
+  );
+  const allBookData = useSelector((state: IState) => state.books.bookData);
+  const passages = useOrbitData<Passage[]>('passage');
+  const sections = useOrbitData<Section[]>('section');
+  const mediafiles = useOrbitData<MediaFile[]>('mediafile');
+  const users = useOrbitData<User[]>('user');
+  const roles = useOrbitData<Role[]>('role');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [plan] = useGlobal('plan');
   const { showMessage } = useSnackBar();
   const ctx = useContext(PlanContext);
-  const { flat } = ctx.state;
+  const { flat, sectionArr } = ctx.state;
   const [data, setData] = useState(Array<IRow>());
   const [check, setCheck] = useState(Array<number>());
+  const sectionMap = new Map<number, string>(sectionArr);
+  const [selectedSections, setSelectedSections] = useState<Section[]>([]);
   const [confirmAction, setConfirmAction] = useState('');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const [organizedByPlural] = useState(getOrganizedBy(false));
-  const columnDefs = [
-    { name: 'name', title: organizedBy },
-    { name: 'state', title: t.sectionstate },
-    { name: 'passages', title: t.passages },
-    { name: 'transcriber', title: ts.transcriber },
-    { name: 'editor', title: ts.editor },
-  ];
+  const [refresh, setRefresh] = useState(0);
+  const columnDefs = useMemo(
+    () =>
+      !flat
+        ? [
+          { name: 'name', title: organizedBy },
+          { name: 'state', title: t.sectionstate },
+          { name: 'passages', title: t.passages },
+          { name: 'transcriber', title: ts.transcriber },
+          { name: 'editor', title: ts.editor },
+        ]
+        : [
+          { name: 'name', title: organizedBy },
+          { name: 'state', title: t.sectionstate },
+          { name: 'transcriber', title: ts.transcriber },
+          { name: 'editor', title: ts.editor },
+        ],
+    [flat, organizedBy, t.passages, t.sectionstate, ts.editor, ts.transcriber]
+  );
   const [filter, setFilter] = useState(false);
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
   const getPassageState = usePassageState();
@@ -136,18 +143,25 @@ export function AssignmentTable(props: IProps) {
     let sectionRow: IRow;
     const rowData: IRow[] = [];
     const plansections = sections
-      .filter((s) => related(s, 'plan') === plan && s.attributes)
+      .filter(
+        (s) =>
+          related(s, 'plan') === plan &&
+          s.attributes &&
+          positiveWholeOnly(s.attributes.sequencenum) ===
+          s.attributes.sequencenum.toString()
+      )
       .sort(sectionCompare);
 
     plansections.forEach(function (section) {
       sectionRow = {
-        id: section.id,
-        name: sectionDescription(section),
+        id: section.id as string,
+        name: sectionDescription(section, sectionMap),
         state: '',
         editor: sectionEditorName(section, users),
         transcriber: sectionTranscriberName(section, users),
         passages: '0', //string so we can have blank, alternatively we could format in the tree to not show on passage rows
         parentId: '',
+        sort: (section.attributes?.sequencenum || 0).toFixed(2).toString(),
       };
       rowData.push(sectionRow);
       const sectionps = passages
@@ -157,7 +171,7 @@ export function AssignmentTable(props: IProps) {
       sectionps.forEach(function (passage: Passage) {
         rowData.push({
           id: passage.id,
-          name: passageDescription(passage, allBookData),
+          name: <GetReference passage={[passage]} bookData={allBookData} flat={false} />,
           state: activityState.getString(getPassageState(passage)),
           editor: '',
           transcriber: '',
@@ -192,24 +206,18 @@ export function AssignmentTable(props: IProps) {
       }
     }
   };
-  const getSelectedSections = () => {
-    let selected = Array<Section>();
-    let one: any;
-    check.forEach((c) => {
-      one = sections.find(function (s) {
-        return c < data.length ? s.id === data[c].id : undefined;
-      });
-      if (one !== undefined) selected.push(one);
-    });
-    //setSelectedSections(selected);
-    return selected;
-  };
 
   const RemoveOneAssignment = async (s: Section) => {
-    await memory.update((t: TransformBuilder) => [
-      ...UpdateLastModifiedBy(t, s, user),
-      ...ReplaceRelatedRecord(t, s, 'transcriber', 'user', ''),
-      ...ReplaceRelatedRecord(t, s, 'editor', 'user', ''),
+    await memory.update((t) => [
+      ...UpdateLastModifiedBy(t, s as RecordIdentity, user),
+      ...ReplaceRelatedRecord(
+        t,
+        s as RecordIdentity,
+        'transcriber',
+        'user',
+        ''
+      ),
+      ...ReplaceRelatedRecord(t, s as RecordIdentity, 'editor', 'user', ''),
       ...UpdateLastModifiedBy(
         t,
         { type: 'plan', id: related(s, 'plan') },
@@ -220,9 +228,9 @@ export function AssignmentTable(props: IProps) {
 
   const handleRemoveAssignmentsConfirmed = async () => {
     setConfirmAction('');
-    let sections = getSelectedSections();
-    for (let i = 0; i < sections.length; i += 1)
-      await RemoveOneAssignment(sections[i]);
+    for (let i = 0; i < selectedSections.length; i += 1)
+      await RemoveOneAssignment(selectedSections[i]);
+    setRefresh(refresh + 1);
   };
   const handleRemoveAssignmentsRefused = () => setConfirmAction('');
 
@@ -244,7 +252,22 @@ export function AssignmentTable(props: IProps) {
     roles,
     activityState,
     allBookData,
+    refresh,
   ]);
+
+  useEffect(() => {
+    let selected = Array<Section>();
+    let one: any;
+    check.forEach((c) => {
+      one = sections.find(function (s) {
+        return c < data.length ? s.id === data[c].id : undefined;
+      });
+      if (one !== undefined) selected.push(one);
+    });
+    setSelectedSections(selected);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [check, sections]);
 
   return (
     <AssignmentDiv id="AssignmentTable">
@@ -274,20 +297,7 @@ export function AssignmentTable(props: IProps) {
               </>
             )}
             <GrowingSpacer />
-            <AltButton
-              id="assignFilt"
-              key="filter"
-              aria-label={t.filter}
-              onClick={handleFilter}
-              title={t.showHideFilter}
-            >
-              {t.filter}
-              {filter ? (
-                <SelectAllIcon sx={iconMargin} />
-              ) : (
-                <FilterIcon sx={iconMargin} />
-              )}
-            </AltButton>
+            <FilterButton filter={filter} onFilter={handleFilter} />
           </TabActions>
         </TabAppBar>
         <PaddedBox>
@@ -305,19 +315,21 @@ export function AssignmentTable(props: IProps) {
               { columnName: 'name', groupingEnabled: false },
               { columnName: 'passages', groupingEnabled: false },
             ]}
-            sorting={[{ columnName: 'name', direction: 'asc' }]}
+            sorting={[{ columnName: 'sort', direction: 'asc' }]}
             treeColumn={'name'}
             showfilters={filter}
             showgroups={filter}
             checks={check}
             select={handleCheck}
+            canSelectRow={(row) => row?.parentId === ''}
           />
         </PaddedBox>
       </div>
       <AssignSection
-        sections={getSelectedSections()}
+        sections={selectedSections}
         visible={assignSectionVisible}
         closeMethod={handleAssignSection(false)}
+        refresh={() => setRefresh(refresh + 1)}
       />
       {confirmAction !== '' ? (
         <Confirm
@@ -332,21 +344,4 @@ export function AssignmentTable(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'assignmentTable' }),
-  ts: localStrings(state, { layout: 'shared' }),
-  activityState: localStrings(state, { layout: 'activityState' }),
-  allBookData: state.books.bookData,
-});
-
-const mapRecordsToProps = {
-  passages: (q: QueryBuilder) => q.findRecords('passage'),
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  roles: (q: QueryBuilder) => q.findRecords('role'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(AssignmentTable) as any
-) as any;
+export default AssignmentTable;

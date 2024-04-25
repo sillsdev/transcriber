@@ -1,9 +1,10 @@
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
-import { QueryBuilder, Transform } from '@orbit/data';
+import { RecordKeyMap } from '@orbit/records';
 import IndexedDBSource from '@orbit/indexeddb';
 import { logError, Severity } from '../utils';
 import { waitForLocalId } from '.';
+import { remotePullAll } from './syncToMemory';
 
 export const pullTableList = async (
   table: string,
@@ -14,16 +15,11 @@ export const pullTableList = async (
   errorReporter: any
 ) => {
   try {
-    var t: Transform[] = await remote.pull((q: QueryBuilder) =>
-      q
-        .findRecords(table)
-        .filter({ attribute: 'id-list', value: ids.join('|') })
-    );
-    for (const tr of t) {
-      await memory.sync(await backup.push(tr.operations));
-    }
+    if (ids.length === 0) return;
+    const filter = [{ attribute: 'id-list', value: ids.join('|') }];
+    await remotePullAll({ table, memory, remote, backup, filter });
     for (const id of ids) {
-      await waitForLocalId(table, id, memory.keyMap);
+      await waitForLocalId(table, id, memory.keyMap as RecordKeyMap);
     }
   } catch (err: any) {
     logError(Severity.error, errorReporter, err.message);

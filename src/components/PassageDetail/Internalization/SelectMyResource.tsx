@@ -1,23 +1,19 @@
 import { shallowEqual, useSelector } from 'react-redux';
 import { MenuItem, TextField } from '@mui/material';
 import { useContext, useEffect, useState, useRef, RefObject } from 'react';
-import { ITeamCheckReferenceStrings, SectionResource } from '../../../model';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
+import { ITeamCheckReferenceStrings } from '../../../model';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { related, useArtifactCategory } from '../../../crud';
 import { teamCheckRefSelector } from '../../../selector';
 
-interface IRecordProps {
-  sectionResource: Array<SectionResource>;
-}
 interface IProps {
   inResource?: string;
   label?: string;
   onChange?: (resource: string) => void;
   required?: boolean;
 }
-export const SelectMyResource = (props: IProps & IRecordProps) => {
+
+export const SelectMyResource = (props: IProps) => {
   const { onChange, inResource, required } = props;
   const ctx = useContext(PassageDetailContext);
   const { rowData, section, passage } = ctx.state;
@@ -90,10 +86,4 @@ export const SelectMyResource = (props: IProps & IRecordProps) => {
     </TextField>
   );
 };
-const mapRecordsToProps = {
-  sectionResource: (q: QueryBuilder) => q.findRecords('sectionresource'),
-};
-
-export default withData(mapRecordsToProps)(SelectMyResource) as any as (
-  props: IProps
-) => JSX.Element;
+export default SelectMyResource;

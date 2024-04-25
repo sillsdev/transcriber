@@ -8,8 +8,8 @@ import {
   TextField,
   styled,
 } from '@mui/material';
-import { DialogMode, Organization } from '../../model';
-import TeamDialog from './TeamDialog';
+import { DialogMode } from '../../model';
+import TeamDialog, { ITeamDialog } from './TeamDialog';
 import { TeamContext } from '../../context/TeamContext';
 import { API_CONFIG, isElectron } from '../../api-variable';
 import ImportTab from '../ImportTab';
@@ -59,11 +59,11 @@ const TeamActions = () => {
     setOpenContent(true);
   };
   const handleAdd = (
-    value: { team: Organization; process: string },
+    value: ITeamDialog,
     cb?: (id: string) => Promise<void>
   ) => {
     setBusy(true); //this will be reset by datachanges
-    teamCreate(value.team, value.process, async (id: string) => {
+    teamCreate(value.team, value.process ?? '', async (id: string) => {
       cb && (await cb(id));
       setOpenAdd(false);
     });
@@ -101,8 +101,9 @@ const TeamActions = () => {
       });
   };
   const handleEmailChange = (e: any) => {
-    setEmail(e.target.value);
-    setValidEmail(ValidateEmail(e.target.value));
+    const value = e.target.value as string;
+    setEmail(value.toLowerCase());
+    setValidEmail(ValidateEmail(value.toLowerCase()));
   };
   const ValidateEmail = (email: string) => {
     return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email);

@@ -8,7 +8,7 @@ import {
   Box,
   SxProps,
 } from '@mui/material';
-import { LanguagePicker } from 'mui-language-picker';
+import { LanguagePicker, LangTag } from 'mui-language-picker';
 import { useSelector, shallowEqual } from 'react-redux';
 import { vProjectSelector, pickerSelector } from '../selector';
 
@@ -18,6 +18,7 @@ export interface ILanguage {
   font: string;
   rtl: boolean;
   spellCheck: boolean;
+  info?: LangTag;
 }
 
 interface IProps extends ILanguage {
@@ -56,6 +57,10 @@ export const Language = (props: IProps) => {
 
   const handleDir = (rtl: boolean) => {
     setState((state) => ({ ...state, rtl }));
+  };
+
+  const handleInfo = (info: LangTag) => {
+    setState((state) => ({ ...state, info }));
   };
 
   const handleSpellCheckChange = (e: any) => {
@@ -98,13 +103,14 @@ export const Language = (props: IProps) => {
           sx={sx ?? { ml: 0 }}
           control={
             <LanguagePicker
-              value={bcp47}
+              value={bcp47 || 'und'}
               name={languageName ?? ''}
               font={font ?? ''}
               setCode={handleBcp47}
               setName={handleLanguage}
               setFont={handleFont}
               setDir={handleDir}
+              setInfo={handleInfo}
               t={lt}
               disabled={props.disabled}
             />

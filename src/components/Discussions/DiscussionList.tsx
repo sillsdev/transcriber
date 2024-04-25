@@ -10,15 +10,15 @@ import {
   TypographyProps,
   useTheme,
 } from '@mui/material';
-import QueryBuilder from '@orbit/data/dist/types/query-builder';
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { getMediaInPlans, related, useRole, VernacularTag } from '../../crud';
+import { getMediaInPlans, orgDefaultDiscussionFilter, related, useRole, VernacularTag } from '../../crud';
 import {
   Discussion,
+  DiscussionD,
   IDiscussionListStrings,
-  MediaFile,
+  MediaFileD,
   Group,
   User,
   GroupMembership,
@@ -29,7 +29,6 @@ import ShowIcon from '@mui/icons-material/ArrowDropDown';
 import DiscussionCard, { DiscussionRegion } from './DiscussionCard';
 import BigDialog from '../../hoc/BigDialog';
 import CategoryList, { CatData } from './CategoryList';
-import { withData } from 'react-orbitjs';
 import { useGlobal } from 'reactn';
 import { useDiscussionOrg, useOrgDefaults } from '../../crud';
 import FilterMenu, { IFilterState, Resolved } from './FilterMenu';
@@ -38,6 +37,7 @@ import { onlyUnique, prettySegment, waitForIt } from '../../utils';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import SortMenu, { ISortState } from './SortMenu';
 import { discussionListSelector } from '../../selector';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
 const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -56,25 +56,21 @@ const Title = styled(Typography)<TypographyProps>(() => ({
 
 const actionButtonProps = { color: 'primary.light' } as SxProps;
 
-interface IRecordProps {
-  discussions: Discussion[];
-  mediafiles: MediaFile[];
-  users: User[];
-  groups: Group[];
-  groupMemberships: GroupMembership[];
-}
-interface IProps {}
 export const NewDiscussionToolId = 'newDiscussion';
 export const NewCommentToolId = NewDiscussionToolId + 'comment';
 
-export function DiscussionList(props: IProps & IRecordProps) {
-  const { discussions, mediafiles, users, groups, groupMemberships } = props;
+export function DiscussionList() {
+  const discussions = useOrbitData<DiscussionD[]>('discussion');
+  const mediafiles = useOrbitData<MediaFileD[]>('mediafile');
+  const users = useOrbitData<User[]>('user');
+  const groups = useOrbitData<Group[]>('group');
+  const groupMemberships = useOrbitData<GroupMembership[]>('groupmembership');
   const theme = useTheme();
   const [planId] = useGlobal('plan');
   const [userId] = useGlobal('user');
   const [organization] = useGlobal('organization');
   const [isOffline] = useGlobal('offline');
-  const [displayDiscussions, setDisplayDiscussions] = useState<Discussion[]>(
+  const [displayDiscussions, setDisplayDiscussions] = useState<DiscussionD[]>(
     []
   );
   const [collapsed, setCollapsed] = useState(false);
@@ -91,7 +87,7 @@ export function DiscussionList(props: IProps & IRecordProps) {
     setDiscussionMarkers,
   } = ctx.state;
   const discussionSizeRef = useRef(discussionSize);
-  const { toolsChanged, isChanged, startSave, startClear } =
+  const { toolsChanged, isChanged, startSave, startClear, clearCompleted } =
     useContext(UnsavedContext).state;
   const t: IDiscussionListStrings = useSelector(
     discussionListSelector,
@@ -168,13 +164,13 @@ export function DiscussionList(props: IProps & IRecordProps) {
   useEffect(() => {
     if (teamDefault && filterState !== orgFilterState) {
       setOrgFilterState(filterState);
-      setOrgDefault('discussionFilter', filterState);
+      setOrgDefault(orgDefaultDiscussionFilter, filterState);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamDefault, filterState]);
 
   useEffect(() => {
-    var def = getOrgDefault('discussionFilter');
+    var def = getOrgDefault(orgDefaultDiscussionFilter);
     if (def) {
       setFilterStatex(def);
       setOrgFilterState(def);
@@ -276,7 +272,7 @@ export function DiscussionList(props: IProps & IRecordProps) {
           attributes: {
             subject: topic,
           },
-        } as any as Discussion,
+        } as DiscussionD,
       ]);
     } else {
       setDisplayDiscussions(
@@ -427,6 +423,8 @@ export function DiscussionList(props: IProps & IRecordProps) {
   const handleAddComplete = (id: string) => {
     setAdding(false);
     setHighlightNew(id);
+    clearCompleted(NewDiscussionToolId);
+    clearCompleted(NewCommentToolId);
   };
 
   const handleAddDiscussion = async () => {
@@ -526,6 +524,7 @@ export function DiscussionList(props: IProps & IRecordProps) {
                 showReference={allPassages}
                 setRef={setHighlightedRef}
                 requestHighlight={highlightNew}
+                refreshList={resetDiscussionList}
               />
             ))}
           </Grid>
@@ -550,14 +549,4 @@ export function DiscussionList(props: IProps & IRecordProps) {
   );
 }
 
-const mapRecordsToProps = {
-  discussions: (q: QueryBuilder) => q.findRecords('discussion'),
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  groups: (q: QueryBuilder) => q.findRecords('group'),
-  groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-};
-
-export default withData(mapRecordsToProps)(DiscussionList) as any as (
-  props: IProps
-) => JSX.Element;
+export default DiscussionList;

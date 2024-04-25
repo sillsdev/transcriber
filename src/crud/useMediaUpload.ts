@@ -6,8 +6,9 @@ import JSONAPISource from '@orbit/jsonapi';
 import { TokenContext } from '../context/TokenProvider';
 import { useDispatch } from 'react-redux';
 import { PassageDetailContext } from '../context/PassageDetailContext';
-import IndexedDBSource from '@orbit/indexeddb/dist/types/source';
+import { IndexedDBSource } from '@orbit/indexeddb';
 import { UploadType } from '../components/MediaUpload';
+import { RecordKeyMap } from '@orbit/records';
 
 interface IProps {
   artifactId: string;
@@ -53,7 +54,7 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
         )
       ).id;
     }
-    if (!offline) {
+    if (!offline && mediaIdRef.current) {
       pullTableList(
         'mediafile',
         Array(mediaIdRef.current),
@@ -72,12 +73,16 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
   };
 
   return async (files: File[]) => {
-    const getPlanId = () => remoteIdNum('plan', plan, memory.keyMap) || plan;
+    const getPlanId = () =>
+      remoteIdNum('plan', plan, memory.keyMap as RecordKeyMap) || plan;
     const getArtifactId = () =>
-      remoteIdNum('artifacttype', artifactId, memory.keyMap) || artifactId;
+      remoteIdNum('artifacttype', artifactId, memory.keyMap as RecordKeyMap) ||
+      artifactId;
     const getPassageId = () =>
-      remoteIdNum('passage', passage.id, memory.keyMap) || passage.id;
-    const getUserId = () => remoteIdNum('user', user, memory.keyMap) || user;
+      remoteIdNum('passage', passage.id, memory.keyMap as RecordKeyMap) ||
+      passage.id;
+    const getUserId = () =>
+      remoteIdNum('user', user, memory.keyMap as RecordKeyMap) || user;
 
     uploadFiles(files);
     fileList.current = files;
@@ -88,7 +93,7 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
       contentType: files[0].type,
       artifactTypeId: getArtifactId(),
       passageId: getPassageId(),
-      recordedByUserId: getUserId(),
+      recordedbyUserId: getUserId(),
       userId: getUserId(),
     };
     nextUpload({

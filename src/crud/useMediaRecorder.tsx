@@ -100,7 +100,7 @@ export function useMediaRecorder(
       mediaChunks.current.push(e.data);
       if (lastSendDoneRef.current) {
         lastSendDoneRef.current = false;
-        onDataAvailable(e.data, createBlob()).then(() => {
+        onDataAvailable(e.data, createBlob()).finally(() => {
           lastSendDoneRef.current = true;
         });
       }

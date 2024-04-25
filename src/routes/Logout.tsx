@@ -1,8 +1,7 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useLocation } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { useDispatch } from 'react-redux';
 import * as action from '../store';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
@@ -17,19 +16,14 @@ import { useLogoutResets } from '../utils/useLogoutResets';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
-interface IDispatchProps {
-  fetchLocalization: typeof action.fetchLocalization;
-  setLanguage: typeof action.setLanguage;
-}
-
-interface IProps {}
-
-export function Logout(props: IProps & IDispatchProps) {
+export function Logout() {
+  const dispatch = useDispatch();
+  const fetchLocalization = () => dispatch(action.fetchLocalization());
+  const setLanguage = (lang: string) => dispatch(action.setLanguage(lang));
   const { logout } = useAuth0();
   const { pathname } = useLocation();
   const navigate = useMyNavigate();
   const curPath = useRef('');
-  const { fetchLocalization, setLanguage } = props;
   const [user] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
   const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
@@ -46,7 +40,8 @@ export function Logout(props: IProps & IDispatchProps) {
     } else {
       logout({ returnTo: window.origin });
     }
-    setView(wasOfflineOnly ? 'offline' : 'online');
+    if (wasOfflineOnly) localStorage.setItem('offlineAdmin', 'true');
+    setView(localStorage.getItem('offlineAdmin') === 'true' ? 'offline' : 'online');
   };
 
   useEffect(() => {
@@ -107,16 +102,4 @@ export function Logout(props: IProps & IDispatchProps) {
   );
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
-  ...bindActionCreators(
-    {
-      fetchLocalization: action.fetchLocalization,
-      setLanguage: action.setLanguage,
-    },
-    dispatch
-  ),
-});
-
-export default connect(null, mapDispatchToProps)(Logout as any) as any as (
-  props: IProps
-) => JSX.Element;
+export default Logout;

@@ -1,4 +1,4 @@
-import { ICommunityStrings, ISharedStrings, MediaFile } from '../model';
+import { ICommunityStrings, ISharedStrings } from '../model';
 import {
   Button,
   Paper,
@@ -17,8 +17,6 @@ import {
 } from '../crud';
 import Memory from '@orbit/memory';
 import { useSnackBar } from '../hoc/SnackBar';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import { cleanFileName } from '../utils';
 import MediaRecord from './MediaRecord';
 import { useGlobal } from 'reactn';
@@ -31,6 +29,11 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import IntellectualProperty from '../model/intellectualProperty';
 import { UploadType } from './MediaUpload';
+import {
+  RecordIdentity,
+  RecordKeyMap,
+  UninitializedRecord,
+} from '@orbit/records';
 
 const paperProps = { p: 2, m: 'auto', width: `calc(100% - 32px)` } as SxProps;
 const rowProp = { display: 'flex', p: 2 };
@@ -42,9 +45,6 @@ const statusProps = {
   gutterBottom: 'true',
 } as SxProps;
 
-interface IRecordProps {
-  mediafiles: Array<MediaFile>;
-}
 interface IProps {
   speaker: string;
   recordType: ArtifactTypeSlug;
@@ -53,7 +53,7 @@ interface IProps {
   team?: string;
 }
 
-export function ProvideRights(props: IProps & IRecordProps) {
+export function ProvideRights(props: IProps) {
   const { speaker, recordType, onRights, createProject, team } = props;
   const [user] = useGlobal('user');
   const [organizationId] = useGlobal('organization');
@@ -129,24 +129,33 @@ export function ProvideRights(props: IProps & IRecordProps) {
           orgId = related(projRec, 'organization');
         }
         const mediaId =
-          remoteIdGuid('mediafile', mediaRemoteIds[0], memory.keyMap) ??
-          mediaRemoteIds[0];
+          remoteIdGuid(
+            'mediafile',
+            mediaRemoteIds[0],
+            memory.keyMap as RecordKeyMap
+          ) ?? mediaRemoteIds[0];
         const ip = {
           type: 'intellectualproperty',
           attributes: {
             rightsHolder: speaker,
           },
-        } as IntellectualProperty;
+        } as IntellectualProperty & UninitializedRecord;
         await memory.update((t) => [
           ...AddRecord(t, ip, user, memory),
           ...ReplaceRelatedRecord(
             t,
-            ip,
+            ip as RecordIdentity,
             'releaseMediafile',
             'mediafile',
             mediaId
           ),
-          ...ReplaceRelatedRecord(t, ip, 'organization', 'organization', orgId),
+          ...ReplaceRelatedRecord(
+            t,
+            ip as RecordIdentity,
+            'organization',
+            'organization',
+            orgId
+          ),
         ]);
         onRights && onRights(true);
       }
@@ -192,7 +201,7 @@ export function ProvideRights(props: IProps & IRecordProps) {
         <Box sx={rowProp}>
           <Button
             sx={buttonProp}
-            id="pdRecordUpload"
+            id="spkr-upload"
             onClick={handleUpload}
             title={ts.uploadRights}
           >
@@ -216,13 +225,15 @@ export function ProvideRights(props: IProps & IRecordProps) {
           size={200}
         />
         <Box sx={rowProp}>
-          <Button onClick={handleLater}>{t.later}</Button>
+          <Button id="spkr-later" onClick={handleLater}>
+            {t.later}
+          </Button>
           <Typography variant="caption" sx={statusProps}>
             {statusText}
           </Typography>
           <GrowingSpacer />
           <PriButton
-            id="rec-save"
+            id="spkr-save"
             sx={buttonProp}
             onClick={handleSave}
             disabled={!canSave}
@@ -259,9 +270,4 @@ export function ProvideRights(props: IProps & IRecordProps) {
   );
 }
 
-const mapRecordsToProps = {
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-};
-export default withData(mapRecordsToProps)(ProvideRights) as any as (
-  props: IProps
-) => JSX.Element;
+export default ProvideRights;

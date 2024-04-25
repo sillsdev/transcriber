@@ -7,9 +7,7 @@ import React, {
   useContext,
 } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
 import { IState, IPassageRecordStrings } from '../model';
-import localStrings from '../selector/localize';
 import * as actions from '../store';
 import {
   Stack,
@@ -25,23 +23,14 @@ import WSAudioPlayer from './WSAudioPlayer';
 import { generateUUID, loadBlob, waitForIt, cleanFileName } from '../utils';
 import { IMediaState, MediaSt, useFetchMediaUrl } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
-import { bindActionCreators } from 'redux';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { UploadType, SIZELIMIT } from './MediaUpload';
 import AudioFileIcon from '@mui/icons-material/AudioFileOutlined';
-const controlProps = { m: 1 } as SxProps;
+import { useSelector } from 'react-redux';
+import { passageRecordSelector } from '../selector';
+import { useDispatch } from 'react-redux';
 
-interface IDispatchProps {
-  convertBlob: typeof actions.convertBlob;
-  resetConvertBlob: typeof actions.resetConvertBlob;
-}
-interface IStateProps {
-  t: IPassageRecordStrings;
-  convert_status: string;
-  convert_complete: boolean;
-  convert_blob: Blob;
-  convert_guid: string;
-}
+const controlProps = { m: 1 } as SxProps;
 
 interface IProps {
   toolId: string;
@@ -52,7 +41,6 @@ interface IProps {
   mediaId?: string;
   metaData?: JSX.Element;
   defaultFilename?: string;
-  startSave?: boolean;
   setCanSave: (canSave: boolean) => void;
   setCanCancel?: (canCancel: boolean) => void;
   setStatusText: (status: string) => void;
@@ -72,9 +60,8 @@ interface IProps {
   trackState?: (mediaState: IMediaState) => void;
 }
 
-function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
+function MediaRecord(props: IProps) {
   const {
-    t,
     toolId,
     onReady,
     onSaving,
@@ -93,12 +80,6 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     autoStart,
     doReset,
     setDoReset,
-    convert_status,
-    convert_complete,
-    convert_blob,
-    convert_guid,
-    convertBlob,
-    resetConvertBlob,
     size,
     metaData,
     showLoad,
@@ -106,6 +87,19 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     onLoaded,
     trackState,
   } = props;
+  const t: IPassageRecordStrings = useSelector(passageRecordSelector);
+  const convert_status = useSelector(
+    (state: IState) => state.convertBlob.statusmsg
+  );
+  const convert_complete = useSelector(
+    (state: IState) => state.convertBlob.complete
+  );
+  const convert_blob = useSelector((state: IState) => state.convertBlob.blob);
+  const convert_guid = useSelector((state: IState) => state.convertBlob.guid);
+  const dispatch = useDispatch();
+  const convertBlob = (audioBlob: Blob, mimeType: string, guid: string) =>
+    dispatch(actions.convertBlob(audioBlob, mimeType, guid));
+  const resetConvertBlob = () => dispatch(actions.resetConvertBlob());
   const WARNINGLIMIT = 1;
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
@@ -279,6 +273,9 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
           });
         }
         return;
+      } else {
+        saveCompleted(toolId);
+        onReady && onReady();
       }
     } else if (clearRequested(toolId)) {
       reset();
@@ -471,25 +468,4 @@ function MediaRecord(props: IProps & IStateProps & IDispatchProps) {
     </Paper>
   );
 }
-const mapDispatchToProps = (dispatch: any) => ({
-  ...bindActionCreators(
-    {
-      convertBlob: actions.convertBlob,
-      resetConvertBlob: actions.resetConvertBlob,
-    },
-    dispatch
-  ),
-});
-
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'passageRecord' }),
-  convert_status: state.convertBlob.statusmsg,
-  convert_complete: state.convertBlob.complete,
-  convert_blob: state.convertBlob.blob,
-  convert_guid: state.convertBlob.guid,
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MediaRecord as any) as any as (props: IProps) => JSX.Element;
+export default MediaRecord;

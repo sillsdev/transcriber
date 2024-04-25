@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArtifactTypeSlug, remoteIdGuid, useArtifactType } from '../../crud';
-import SelectArtifactType from '../Workflow/SelectArtifactType';
+import SelectArtifactType from '../Sheet/SelectArtifactType';
 import { ILanguage, Language } from '../../control';
 import { useGlobal } from 'reactn';
+import { RecordKeyMap } from '@orbit/records';
+import { JSONParse } from '../../utils';
 
 interface LangState {
   artId: string;
@@ -44,14 +46,14 @@ export const TranscribeStepSettings = ({ toolSettings, onChange }: IProps) => {
   const [memory] = useGlobal('memory');
 
   const handleSelect = (artifactTypeId: string | null) => {
-    const json = toolSettings ? JSON.parse(toolSettings) : {};
+    const json = JSONParse(toolSettings);
     onChange(JSON.stringify({ ...json, artifactTypeId: artifactTypeId }));
   };
 
   const handleLanguageChange = (val: ILanguage) => {
     if (lgState.bcp47 !== val.bcp47 || lgState.font !== val.font) {
       setLgState((state) => ({ ...state, ...val, changed: true }));
-      const json = toolSettings ? JSON.parse(toolSettings) : {};
+      const json = JSONParse(toolSettings);
       onChange(
         JSON.stringify({
           ...json,
@@ -71,7 +73,11 @@ export const TranscribeStepSettings = ({ toolSettings, onChange }: IProps) => {
   const hasLang = useMemo(() => {
     const id =
       (lgState.artId &&
-        remoteIdGuid('artifacttype', lgState.artId, memory.keyMap)) ??
+        remoteIdGuid(
+          'artifacttype',
+          lgState.artId,
+          memory.keyMap as RecordKeyMap
+        )) ??
       lgState.artId;
     return id && langSlugs.includes(slugFromId(id) as ArtifactTypeSlug);
     // eslint-disable-next-line react-hooks/exhaustive-deps

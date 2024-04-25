@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { MediaFile } from '../../model';
+import { MediaFileD } from '../../model';
 import {
   ArtifactTypeSlug,
   useArtifactType,
@@ -41,7 +41,7 @@ export default function ConsultantCheckReview({
   playId,
 }: IProps) {
   const { rowData, mediafileId } = usePassageDetailContext();
-  const [allMedia, setAllMedia] = useState<MediaFile[]>([]);
+  const [allMedia, setAllMedia] = useState<MediaFileD[]>([]);
   const { localizedArtifactType } = useArtifactType();
   const t = useSelector(consultantSelector, shallowEqual);
 
@@ -91,6 +91,8 @@ export default function ConsultantCheckReview({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item]);
 
+  const hasTranscription = allMedia.some(m => m.attributes.transcription);
+
   return (
     <Stack id="check-review">
       {allMedia.length === 0 && (
@@ -98,7 +100,7 @@ export default function ConsultantCheckReview({
       )}
       {allMedia.length > 0 && (
         <Table>
-          {allMedia.length > 1 && (
+          {allMedia.length > 1 && hasTranscription && (
             <TableHead>
               <TableRow>
                 <StyledCell />
@@ -115,12 +117,14 @@ export default function ConsultantCheckReview({
                   </IconButton>
                 </StyledCell>
                 <StyledCell>
-                  <Typography
-                    data-testid="transcription"
-                    sx={{ whiteSpace: 'break-spaces' }}
-                  >
-                    {m.attributes.transcription ?? t.noTranscription}
-                  </Typography>
+                  {hasTranscription && (
+                    <Typography
+                      data-testid="transcription"
+                      sx={{ whiteSpace: 'break-spaces' }}
+                    >
+                      {m.attributes.transcription ?? t.noTranscription}
+                    </Typography>
+                  )}
                 </StyledCell>
               </TableRow>
             ))}

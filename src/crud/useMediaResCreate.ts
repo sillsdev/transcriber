@@ -1,6 +1,6 @@
 import { useGlobal } from 'reactn';
-import { RecordIdentity, TransformBuilder } from '@orbit/data';
-import { Resource, MediaFile } from '../model';
+import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
+import { Resource, MediaFile, MediaFileD } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { ArtifactTypeSlug, useArtifactType } from '.';
 
@@ -31,20 +31,30 @@ export const useMediaResCreate = (passage: RecordIdentity, stepId: string) => {
         resourcePassageId: attr.passageId,
       },
     } as any as MediaFile;
-    memory.schema.initializeRecord(mediaRec);
-    const t = new TransformBuilder();
+    const t = new RecordTransformBuilder();
     const ops = [
       ...AddRecord(t, mediaRec, user, memory),
-
-      ...ReplaceRelatedRecord(t, mediaRec, 'plan', 'plan', plan),
-      ...ReplaceRelatedRecord(t, mediaRec, 'recordedbyUser', 'user', user),
+      ...ReplaceRelatedRecord(
+        t,
+        mediaRec as RecordIdentity,
+        'plan',
+        'plan',
+        plan
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        mediaRec as RecordIdentity,
+        'recordedbyUser',
+        'user',
+        user
+      ),
       // shared resources are not associated with a single passage
       // ...ReplaceRelatedRecord(t, mediaRec, 'passage', 'passage', passage.id),
     ];
     ops.push(
       ...ReplaceRelatedRecord(
         t,
-        mediaRec,
+        mediaRec as RecordIdentity,
         'artifactType',
         'artifacttype',
         getTypeId(ArtifactTypeSlug.SharedResource)
@@ -54,7 +64,7 @@ export const useMediaResCreate = (passage: RecordIdentity, stepId: string) => {
       ops.push(
         ...ReplaceRelatedRecord(
           t,
-          mediaRec,
+          mediaRec as RecordIdentity,
           'artifactCategory',
           'artifactcategory',
           artifactCategoryId
@@ -64,13 +74,13 @@ export const useMediaResCreate = (passage: RecordIdentity, stepId: string) => {
       ops.push(
         ...ReplaceRelatedRecord(
           t,
-          mediaRec,
+          mediaRec as RecordIdentity,
           'orgWorkflowStep',
           'orgworkflowstep',
           stepId
         )
       );
     await memory.update(ops);
-    return mediaRec;
+    return mediaRec as MediaFileD;
   };
 };

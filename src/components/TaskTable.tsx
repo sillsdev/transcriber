@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef, useMemo, CSSProperties } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  CSSProperties,
+  useContext,
+} from 'react';
 import { useGlobal } from 'reactn';
 import {
   IconButton,
@@ -10,7 +17,6 @@ import {
 } from '@mui/material';
 import PlayIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-import CloseIcon from '@mui/icons-material/Close';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import useTodo from '../context/useTodo';
 import ShapingTable from './ShapingTable';
@@ -20,19 +26,20 @@ import BigDialog from '../hoc/BigDialog';
 import IntegrationTab from './Integration';
 import ExportTab from './TranscriptionTab';
 import Visualize from './Visualize';
-import ProjectMenu from './Team/ProjectMenu';
+// import ProjectMenu from './Team/ProjectMenu';
 import { formatTime, GrowingSpacer, LightTooltip, iconSize } from '../control';
 import { ChipText } from './TaskFlag';
 import {
   sectionNumber,
   sectionDescription,
-  passageNumber,
+  taskPassageNumber,
   useOrganizedBy,
   usePlan,
-  useOfflineAvailToggle,
-  useRole,
+  // useOfflineAvailToggle,
+  // useRole,
+  paddedSectionNumber,
 } from '../crud';
-import { numCompare } from '../utils';
+import { numCompare, prettySegmentStart } from '../utils';
 import { useProjectPlans } from '../crud';
 import { debounce } from 'lodash';
 import MediaPlayer from './MediaPlayer';
@@ -41,6 +48,7 @@ import { mediaActionsSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { GridColumnExtension } from '@devexpress/dx-react-grid';
 import usePassageDetailContext from '../context/usePassageDetailContext';
+import { PassageDetailContext } from '../context/PassageDetailContext';
 
 export const TaskItemWidth = 240;
 export const TaskTableWidth = 265;
@@ -102,11 +110,11 @@ export const Header = styled(Box, {
   alignItems: 'center',
   ...(filter
     ? {
-        width: 'auto',
-      }
+      width: 'auto',
+    }
     : {
-        width: `${TaskItemWidth - 30}px`,
-      }),
+      width: `${TaskItemWidth - 30}px`,
+    }),
 }));
 
 interface IRow {
@@ -132,7 +140,9 @@ interface IProps {
 }
 
 export function TaskTable(props: IProps) {
-  const { onFilter, isDetail } = props;
+  const { onFilter,
+    // isDetail 
+  } = props;
   const {
     rowData,
     activityStateStr,
@@ -140,7 +150,7 @@ export function TaskTable(props: IProps) {
     projButtonStr,
     expandedGroups,
     filter,
-    setFilter,
+    // setFilter,
     flat,
   } = useTodo();
   const {
@@ -151,6 +161,7 @@ export function TaskTable(props: IProps) {
     pdBusy,
     discussionSize,
   } = usePassageDetailContext();
+  const { sectionArr } = useContext(PassageDetailContext).state;
   const filterRef = useRef(filter);
   const t = todoStr;
   const tpb = projButtonStr;
@@ -161,7 +172,7 @@ export function TaskTable(props: IProps) {
   );
   const [width, setWidth] = useState(TaskTableWidth);
   const { getPlan, getPlanName } = usePlan();
-  const offlineAvailableToggle = useOfflineAvailToggle();
+  // const offlineAvailableToggle = useOfflineAvailToggle();
   const [planId] = useGlobal('plan');
   const [planName, setPlanName] = useState('');
   const [projectId] = useGlobal('project');
@@ -231,15 +242,15 @@ export function TaskTable(props: IProps) {
   const selectedRef = useRef<any>();
   const notSelectedRef = useRef<any>();
   const busyRef = useRef(false);
-  const { userIsAdmin } = useRole();
+  // const { userIsAdmin } = useRole();
   const hiddenColumnNames = useMemo(() => (flat ? ['sectPass'] : []), [flat]);
 
-  const handleToggleFilter = () => {
-    handleStopPlayer();
-    setPlayItem('');
-    if (onFilter) onFilter(!filter);
-    setFilter(!filter);
-  };
+  // const handleToggleFilter = () => {
+  //   handleStopPlayer();
+  //   setPlayItem('');
+  //   if (onFilter) onFilter(!filter);
+  //   setFilter(!filter);
+  // };
 
   const setDimensions = () => {
     const newWidth = filterRef.current
@@ -277,19 +288,19 @@ export function TaskTable(props: IProps) {
     if (playing) setPlaying(false);
   };
 
-  const handleProjectMenu = (what: string) => {
-    if (what === 'offlineAvail') {
-      offlineAvailableToggle(projectId);
-    } else if (what === 'integration') {
-      setOpenIntegration(true);
-    } else if (what === 'export') {
-      setOpenExport(true);
-    } else if (what === 'reports') {
-      setOpenReports(true);
-    } else if (what === 'filter') {
-      handleToggleFilter();
-    }
-  };
+  // const handleProjectMenu = (what: string) => {
+  //   if (what === 'offlineAvail') {
+  //     offlineAvailableToggle(projectId);
+  //   } else if (what === 'integration') {
+  //     setOpenIntegration(true);
+  //   } else if (what === 'export') {
+  //     setOpenExport(true);
+  //   } else if (what === 'reports') {
+  //     setOpenReports(true);
+  //   } else if (what === 'filter') {
+  //     handleToggleFilter();
+  //   }
+  // };
 
   const handlePlay = (id: string) => () => {
     if (id !== playItem) {
@@ -408,8 +419,9 @@ export function TaskTable(props: IProps) {
       assigned: r.assigned === user ? t.yes : t.no,
       mediaId: r.mediafile.id,
       rowKey:
-        sectionNumber(r.section) +
-        (r.mediafile.id ? passageNumber(r.passage) : '   '),
+        paddedSectionNumber(r.section) +
+        (r.mediafile.id ? taskPassageNumber(r.passage) : '   ') +
+        prettySegmentStart(r.mediafile?.attributes?.sourceSegments),
     }));
     setRows(newRows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -503,19 +515,19 @@ export function TaskTable(props: IProps) {
           <Header filter={filter}>
             <Typography variant="h6">{t.tasks}</Typography>
             <GrowingSpacer />
-            <ProjectMenu
+            {/* <ProjectMenu
               action={handleProjectMenu}
               stopPlayer={handleStopPlayer}
               inProject={true}
               isAdmin={userIsAdmin}
               project={projectId}
               justFilter={isDetail}
-            />
-            {filter && (
+            /> */}
+            {/** filter && (
               <IconButton id="taskFiltClose" onClick={handleToggleFilter}>
                 <CloseIcon />
               </IconButton>
-            )}
+            ) **/}
           </Header>
           <ShapingTable
             columns={columns}
@@ -558,6 +570,7 @@ export function TaskTable(props: IProps) {
           {...props}
           projectPlans={projectPlans(projectId)}
           planColumn={true}
+          sectionArr={sectionArr}
         />
       </BigDialog>
       <BigDialog

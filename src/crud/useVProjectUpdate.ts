@@ -1,6 +1,5 @@
 import { useGlobal } from 'reactn';
-import { Plan, Project, VProject } from '../model';
-import { TransformBuilder } from '@orbit/data';
+import { PlanD, ProjectD, VProjectD } from '../model';
 import { related, useTypeId } from '.';
 import { ReplaceRelatedRecord, UpdateRecord } from '../model/baseModel';
 
@@ -9,7 +8,7 @@ export const useVProjectUpdate = () => {
   const [user] = useGlobal('user');
   const getTypeId = useTypeId();
 
-  return async (vProject: VProject) => {
+  return async (vProject: VProjectD) => {
     const id = related(vProject, 'project');
     const {
       name,
@@ -26,8 +25,9 @@ export const useVProjectUpdate = () => {
       flat,
       tags,
       organizedBy,
+      defaultParams,
     } = vProject.attributes;
-    await memory.update((t: TransformBuilder) => [
+    await memory.update((t) => [
       ...UpdateRecord(
         t,
         {
@@ -44,8 +44,9 @@ export const useVProjectUpdate = () => {
             defaultFont,
             defaultFontSize,
             rtl,
+            defaultParams,
           },
-        } as Project,
+        } as ProjectD,
         user
       ),
       // We use the plan type and not the project type
@@ -62,7 +63,7 @@ export const useVProjectUpdate = () => {
       //we aren't allowing them to change group, owner or oraganization currently
     ]);
 
-    await memory.update((t: TransformBuilder) => [
+    await memory.update((t) => [
       ...UpdateRecord(
         t,
         {
@@ -73,8 +74,10 @@ export const useVProjectUpdate = () => {
             flat,
             tags: JSON.stringify(tags),
             organizedBy,
+            sectionCount: vProject.attributes.sectionCount,
+            slug: vProject.attributes.slug,
           },
-        } as any as Plan,
+        } as any as PlanD,
         user
       ),
       ...ReplaceRelatedRecord(

@@ -1,12 +1,12 @@
 import { useGlobal } from 'reactn';
-import { Plan, Passage, Section } from '../model';
-import { RecordIdentity, Record } from '@orbit/data';
+import { SectionD, PlanD, PassageD } from '../model';
+import { RecordIdentity, InitializedRecord } from '@orbit/records';
 import { related, usePlan } from '.';
 import { toCamel, pad2, cleanFileName } from '../utils';
 const ipc = (window as any)?.electron;
 const path = require('path-browserify');
 
-const planSlug = (rec: Plan | null) => {
+const planSlug = (rec: PlanD | null) => {
   const name = rec?.attributes?.name || '';
   return (
     rec?.attributes?.slug ||
@@ -15,7 +15,7 @@ const planSlug = (rec: Plan | null) => {
   );
 };
 
-const recSlug = (rec: Record, seq: number) => {
+const recSlug = (rec: InitializedRecord, seq: number) => {
   return `-${pad2(seq)}${rec.type.slice(0, 1)}${
     rec?.keys?.remoteId || rec?.id.slice(0, 4)
   }`;
@@ -28,11 +28,11 @@ export const useAudProjName = () => {
   return async (passageId: RecordIdentity) => {
     const passRec = memory.cache.query((q) =>
       q.findRecord(passageId)
-    ) as Passage;
+    ) as PassageD;
     const secId = related(passRec, 'section');
     const secRec = memory.cache.query((q) =>
       q.findRecord({ type: 'section', id: secId })
-    ) as Section;
+    ) as SectionD;
     const planRec = getPlan(related(secRec, 'plan'));
     const docs = await ipc?.getPath('documents');
     const book = passRec?.attributes?.book;

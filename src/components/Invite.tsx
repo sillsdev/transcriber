@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
-  Role,
   Invitation,
   IInviteStrings,
   Group,
@@ -10,8 +9,6 @@ import {
   User,
   Project,
 } from '../model';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   Button,
   TextField,
@@ -32,24 +29,19 @@ import { API_CONFIG } from '../api-variable';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import SelectRole from '../control/SelectRole';
 import { inviteSelector } from '../selector';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { InitializedRecord } from '@orbit/records';
 
 const StyledLabel = styled('label')(({ theme }) => ({
   marginTop: theme.spacing(1),
 }));
-
-interface IRecordProps {
-  roles: Array<Role>;
-  groups: Array<Group>;
-  users: Array<User>;
-  projects: Array<Project>;
-}
 
 export interface IInviteData {
   email: string;
   role: string;
 }
 
-interface IProps extends IRecordProps {
+interface IProps {
   inviteIn: IInviteData | null;
   visible: boolean;
   addCompleteMethod?: (inviteRec: IInviteData) => void;
@@ -60,14 +52,14 @@ interface IProps extends IRecordProps {
 function Invite(props: IProps) {
   const {
     visible,
-    groups,
-    users,
-    projects,
     addCompleteMethod,
     editCompleteMethod,
     cancelMethod,
     inviteIn,
   } = props;
+  const projects = useOrbitData<Project[]>('project');
+  const groups = useOrbitData<Group[]>('group');
+  const users = useOrbitData<User[]>('user');
   const [isDeveloper] = useGlobal('developer');
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
@@ -107,17 +99,29 @@ function Invite(props: IProps) {
         strings: JSON.stringify(strings),
       },
     } as any;
-    await memory.update((t: TransformBuilder) => [
+    await memory.update((t) => [
       ...AddRecord(t, invitation, user, memory),
       ...ReplaceRelatedRecord(
         t,
-        invitation,
+        invitation as InitializedRecord,
         'organization',
         'organization',
         organization
       ),
-      ...ReplaceRelatedRecord(t, invitation, 'role', 'role', role),
-      ...ReplaceRelatedRecord(t, invitation, 'allUsersRole', 'role', role),
+      ...ReplaceRelatedRecord(
+        t,
+        invitation as InitializedRecord,
+        'role',
+        'role',
+        role
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        invitation as InitializedRecord,
+        'allUsersRole',
+        'role',
+        role
+      ),
     ]);
   };
   const handleEdit = async () => {
@@ -155,13 +159,14 @@ function Invite(props: IProps) {
     setOpen(false);
   };
   const handleEmailChange = (e: any) => {
-    setEmail(e.target.value);
+    const email = e.target.value as string;
+    setEmail(email.toLowerCase());
   };
-  const handleRoleChange = (e: string, rowid: string) => {
+  const handleRoleChange = (e: string, rowid?: string) => {
     setRole(e);
   };
   const hasInvite = (email: string) => {
-    const selectInvite: Invitation[] = memory.cache.query((q: QueryBuilder) =>
+    const selectInvite: Invitation[] = memory.cache.query((q) =>
       q.findRecords('invitation').filter({ attribute: 'email', value: email })
     ) as any;
     const checkOrg =
@@ -173,35 +178,37 @@ function Invite(props: IProps) {
   useEffect(() => {
     if (user !== '') {
       let cur = getUserById(users, user);
-      setcurrentUser(
+      const curUser =
         cur && cur.attributes
           ? cur.attributes.name + ' (' + cur.attributes.email + ')'
-          : '??'
-      );
+          : '??';
+      if (curUser !== currentUser) {
+        setcurrentUser(curUser);
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, users]);
 
   useEffect(() => {
     const allusersgroup = groups.filter(
-      (g) =>
-        g.attributes &&
-        g.attributes.allUsers &&
-        related(g, 'owner') === organization
+      (g) => g?.attributes?.allUsers && related(g, 'owner') === organization
     );
     if (allusersgroup.length > 0) {
       var assocProjects = projects
         .filter((p) => related(p, 'group') === allusersgroup[0].id)
         .map((p) => p.attributes.name);
-      setAllUsersProjects(
-        assocProjects.length > 0 ? assocProjects.join(', ') : t.noProjects
-      );
+      const newValue =
+        assocProjects.length > 0 ? assocProjects.join(', ') : t.noProjects;
+      if (newValue !== allUsersProjects) {
+        setAllUsersProjects(newValue);
+      }
     }
 
     if (inviteIn) {
-      setEmail(inviteIn.email);
-      setRole(inviteIn.role);
+      if (inviteIn.email !== email) setEmail(inviteIn.email.toLowerCase());
+      if (inviteIn.role !== role) setRole(inviteIn.role);
     } else {
-      resetFields();
+      if (email !== '') resetFields();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [inviteIn, groups]);
@@ -318,11 +325,4 @@ function Invite(props: IProps) {
   );
 }
 
-const mapRecordsToProps = {
-  roles: (q: QueryBuilder) => q.findRecords('role'),
-  groups: (q: QueryBuilder) => q.findRecords('group'),
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  projects: (q: QueryBuilder) => q.findRecords('project'),
-};
-
-export default withData(mapRecordsToProps)(Invite) as any;
+export default Invite;

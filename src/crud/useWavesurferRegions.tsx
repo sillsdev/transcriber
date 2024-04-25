@@ -370,9 +370,11 @@ export function useWaveSurferRegions(
       loadingRef.current = false;
       return true;
     }
-    var regarray = Array.isArray(regions.regions)
-      ? regions.regions
-      : JSON.parse(regions.regions);
+    var regarray = (
+      Array.isArray(regions.regions)
+        ? regions.regions
+        : JSON.parse(regions.regions)
+    ).sort((a: any, b: any) => a.start - b.start);
 
     singleRegionRef.current = regarray.length === 1;
     regarray.forEach(function (region: any) {
@@ -520,7 +522,7 @@ export function useWaveSurferRegions(
   };
 
   function wsAutoSegment(loop: boolean = false, params: IRegionParams) {
-    if (!wavesurferRef.current) return;
+    if (!wavesurferRef.current) return 0;
     var regions = extractRegions(params);
     paramsRef.current = params;
     loadRegions({ params: params, regions: regions }, loop, true);

@@ -1,10 +1,10 @@
-import React, { useRef, useContext } from 'react';
+import React, { useRef, useContext, useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import * as actions from '../store';
 import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
-import { styled } from '@mui/material';
 import MediaUpload, { SIZELIMIT, UploadType } from './MediaUpload';
 import {
+  findRecord,
   pullTableList,
   related,
   remoteIdNum,
@@ -21,13 +21,10 @@ import { NextUploadProps } from '../store';
 import { useDispatch } from 'react-redux';
 import { mediaTabSelector, sharedSelector } from '../selector';
 import { passageDefaultSuffix } from '../utils/passageDefaultFilename';
-import IndexedDBSource from '@orbit/indexeddb/dist/types/source';
+import { IndexedDBSource } from '@orbit/indexeddb';
 import path from 'path-browserify';
-import { QueryBuilder } from '@orbit/data';
-
-const ErrorMessage = styled('span')(({ theme }) => ({
-  color: theme.palette.secondary.light,
-}));
+import { RecordKeyMap } from '@orbit/records';
+import { AlertSeverity } from '../hoc/SnackBar';
 
 interface IProps {
   noBusy?: boolean;
@@ -36,7 +33,7 @@ interface IProps {
   defaultFilename?: string;
   isOpen: boolean;
   onOpen: (visible: boolean) => void;
-  showMessage: (msg: string | JSX.Element) => void;
+  showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void;
   finish?: (planId: string, mediaRemoteIds?: string[]) => void; // logic when upload complete
   metaData?: JSX.Element; // component embeded in dialog
   ready?: () => boolean; // if false control is disabled
@@ -107,20 +104,29 @@ export const Uploader = (props: IProps) => {
   const artifactTypeRef = useRef<string>('');
   const { createMedia } = useOfflnMediafileCreate();
   const [, setComplete] = useGlobal('progress');
+  const [errMsgs, setErrMsgs] = useState<string[]>([]);
   const { localizedArtifactTypeFromId } = useArtifactType();
-
   const handleSpeakerChange = (speaker: string) => {
     onSpeakerChange && onSpeakerChange(speaker);
   };
 
   const finishMessage = () => {
+    //wait for any error messages to show up
     setTimeout(() => {
-      if (fileList.current)
-        showMessage(
-          t.uploadComplete
-            .replace('{0}', successCount.current.toString())
-            .replace('{1}', fileList.current.length.toString())
-        );
+      errMsgs.forEach((err, ix) => {
+        setTimeout(() => showMessage(err, AlertSeverity.Error), ix ? 2000 : 0);
+      });
+      setErrMsgs([]);
+      //wait to show the final message if there are errors
+      setTimeout(() => {
+        if (fileList.current) {
+          showMessage(
+            t.uploadComplete
+              .replace('{0}', successCount.current.toString())
+              .replace('{1}', fileList.current.length.toString())
+          );
+        }
+      }, errMsgs.length * 2000);
       uploadComplete();
       setComplete(0);
       setBusy(false);
@@ -131,16 +137,23 @@ export const Uploader = (props: IProps) => {
 
   const getArtifactTypeId = () =>
     artifactTypeId
-      ? remoteIdNum('artifacttype', artifactTypeId, memory.keyMap) ||
-        artifactTypeId
+      ? remoteIdNum(
+          'artifacttype',
+          artifactTypeId,
+          memory.keyMap as RecordKeyMap
+        ) || artifactTypeId
       : artifactTypeId;
   const getPassageId = () =>
-    remoteIdNum('passage', passageId || '', memory.keyMap) || passageId;
+    remoteIdNum('passage', passageId || '', memory.keyMap as RecordKeyMap) ||
+    passageId;
   const getSourceMediaId = () =>
-    remoteIdNum('mediafile', sourceMediaId || '', memory.keyMap) ||
-    sourceMediaId;
+    remoteIdNum(
+      'mediafile',
+      sourceMediaId || '',
+      memory.keyMap as RecordKeyMap
+    ) || sourceMediaId;
   const getUserId = () =>
-    remoteIdNum('user', user || '', memory.keyMap) || user;
+    remoteIdNum('user', user || '', memory.keyMap as RecordKeyMap) || user;
 
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     if (success) successCount.current += 1;
@@ -153,9 +166,7 @@ export const Uploader = (props: IProps) => {
       var num = 1;
       if (psgId && !artifactTypeId) {
         const mediaFiles = (
-          memory.cache.query((q: QueryBuilder) =>
-            q.findRecords('mediafile')
-          ) as MediaFile[]
+          memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
         )
           .filter(
             (m) =>
@@ -203,7 +214,8 @@ export const Uploader = (props: IProps) => {
   };
 
   const getPlanId = () =>
-    remoteIdNum('plan', planIdRef.current, memory.keyMap) || planIdRef.current;
+    remoteIdNum('plan', planIdRef.current, memory.keyMap as RecordKeyMap) ||
+    planIdRef.current;
 
   const doUpload = (currentlyLoading: number) => {
     const uploadList = fileList.current;
@@ -283,55 +295,53 @@ export const Uploader = (props: IProps) => {
     if (cancelled) cancelled.current = true;
     restoreScroll();
   };
-  //This doesn't actually show the message from sections/passages
-  //calls showMessage...but doesn't show it
-  React.useEffect(() => {
+
+  useEffect(() => {
+    setErrMsgs([]);
+  }, []);
+
+  useEffect(() => {
     if (uploadError && uploadError !== '') {
+      var msg = uploadError;
       if (uploadError.indexOf('unsupported') > 0)
-        showMessage(
-          <ErrorMessage>
-            {t.unsupported.replace(
-              '{0}',
-              uploadError.substring(0, uploadError.indexOf(':unsupported'))
-            )}
-          </ErrorMessage>
+        msg = t.unsupported.replace(
+          '{0}',
+          uploadError.substring(0, uploadError.indexOf(':unsupported'))
         );
       else if (uploadError.indexOf('toobig') > 0) {
-        showMessage(
-          <ErrorMessage>
-            {t.toobig
-              .replace(
-                '{0}',
-                uploadError.substring(0, uploadError.indexOf(':toobig'))
-              )
-              .replace(
-                '{1}',
-                uploadError.substring(
-                  uploadError.indexOf('toobig:') + 'toobig:'.length
-                )
-              )
-              .replace(
-                '{2}',
-                SIZELIMIT(uploadType ?? UploadType.Media).toString()
-              )}
-          </ErrorMessage>
-        );
-      } else showMessage(uploadError);
+        msg = t.toobig
+          .replace(
+            '{0}',
+            uploadError.substring(0, uploadError.indexOf(':toobig'))
+          )
+          .replace(
+            '{1}',
+            uploadError.substring(
+              uploadError.indexOf('toobig:') + 'toobig:'.length
+            )
+          )
+          .replace('{2}', SIZELIMIT(uploadType ?? UploadType.Media).toString());
+      }
+      errMsgs.push(msg);
       setBusy(false);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [uploadError]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (importList) {
       uploadMedia(importList);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [importList]);
 
-  React.useEffect(() => {
-    if (plan !== '') planIdRef.current = plan;
-  }, [plan]);
+  useEffect(() => {
+    if (passageId) {
+      var psg = findRecord(memory, 'passage', passageId);
+      var section = findRecord(memory, 'section', related(psg, 'section'));
+      planIdRef.current = related(section, 'plan');
+    } else if (plan !== '') planIdRef.current = plan;
+  }, [plan, passageId, memory]);
 
   return (
     <div>

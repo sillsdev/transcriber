@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useGlobal } from 'reactn';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import Confirm from '../AlertDialog';
 import {
   Button,
   TextField,
@@ -11,100 +10,229 @@ import {
   DialogTitle,
   MenuItem,
   LinearProgress,
-  SxProps,
 } from '@mui/material';
 import {
-  Organization,
+  OrganizationD,
   IDialog,
   DialogMode,
   OptionType,
   WorkflowStep,
-  Project,
+  BibleD,
 } from '../../model';
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
-import { defaultWorkflow, related } from '../../crud';
+import {
+  defaultWorkflow,
+  orgDefaultLangProps,
+  orgDefaultWorkflowProgression,
+  pubDataCopyright,
+  pubDataLangProps,
+  pubDataNoteLabel,
+  related,
+  useBible,
+  useOrgDefaults,
+} from '../../crud';
+import PublishExpansion from '../PublishExpansion';
+import { UnsavedContext } from '../../context/UnsavedContext';
+import { useCanPublish, useJsonParams, waitForIt } from '../../utils';
+import { useOrbitData } from '../../hoc/useOrbitData';
+import { RecordIdentity } from '@orbit/records';
+import { Options } from '../../control';
 
-interface IRecordProps {
-  organizations: Array<Organization>;
-  projects: Array<Project>;
-}
-interface ITeamDialog {
-  team: Organization;
+export interface ITeamDialog {
+  team: OrganizationD;
+  bible?: BibleD;
   process?: string;
+  bibleMediafile: string;
+  isoMediafile: string;
 }
-interface IProps extends IRecordProps, IDialog<ITeamDialog> {
-  onDelete?: (team: Organization) => void;
+interface IProps extends IDialog<ITeamDialog> {
+  onDelete?: (team: RecordIdentity) => void;
+  disabled?: boolean;
 }
-const formText = { fontSize: 'small' } as SxProps;
-const menuProps = { width: '300px' } as SxProps;
-const textFieldProps = { mx: 1, width: '300px' } as SxProps;
-
 export function TeamDialog(props: IProps) {
-  const {
-    mode,
-    values,
-    isOpen,
-    organizations,
-    projects,
-    onOpen,
-    onCommit,
-    onDelete,
-  } = props;
+  const { mode, values, isOpen, disabled, onOpen, onCommit, onDelete } = props;
+  const bibles = useOrbitData<BibleD[]>('bible');
+  const organizations = useOrbitData<OrganizationD[]>('organization');
   const [name, setName] = React.useState('');
+  const [iso, setIso] = React.useState('');
+  const [bible, setBible] = React.useState<BibleD | undefined>(values?.bible);
+  const [bibleId, setBibleId] = React.useState('');
+  const [readonly, setReadonly] = useState(false);
+  const [owner, setOwner] = useState('');
+  const [bibleIdError, setBibleIdError] = useState('');
+  const [bibleName, setBibleName] = React.useState('');
+  const [description, setDescription] = React.useState('');
+  const [defaultParams, setDefaultParams] = React.useState('');
+  const bibleMediafileRef = useRef('');
+  const isoMediafileRef = useRef('');
+  const [publishingData, setPublishingData] = React.useState('{}');
+  const { setParam } = useJsonParams();
   const [changed, setChanged] = React.useState(false);
   const ctx = React.useContext(TeamContext);
   const { cardStrings } = ctx.state;
   const t = cardStrings;
   const [memory] = useGlobal('memory');
-  const [isDeveloper] = useGlobal('developer');
   const [process, setProcess] = useState<string>();
   const [processOptions, setProcessOptions] = useState<OptionType[]>([]);
   const savingRef = useRef(false);
   const [saving, setSavingx] = useState(false);
-  //NR? const [noteProjId, setNoteProjId] = useState('');
-  const [myProjects, setMyProjects] = useState<Project[]>([]);
-
+  const recordingRef = useRef(false);
+  const [recording, setRecordingx] = useState(false);
+  const [confirm, setConfirm] = React.useState(false);
+  const { anySaving, toolsChanged, startSave, clearRequested } =
+    useContext(UnsavedContext).state;
+  const { getBible, getBibleOwner, getOrgBible } = useBible();
+  const { canPublish } = useCanPublish();
+  const workflowOptions = [
+    t.workflowProgressionPassage,
+    t.workflowProgressionStep,
+  ];
+  const [workflowProgression, setWorkflowProgression] = useState(
+    t.workflowProgressionPassage
+  );
+  const { getDefault } = useOrgDefaults();
   const reset = () => {
     setName('');
+    setDefaultParams('');
     setChanged(false);
+    setProcess(undefined);
+    setSaving(false);
+    setConfirm(false);
+    setBibleId('');
+    setBibleIdError('');
+    setBible(undefined);
+    setDescription('');
+    setPublishingData('');
+    setWorkflowProgression(t.workflowProgressionPassage);
+    onOpen && onOpen(false);
+    Object.keys(toolsChanged).forEach((t) => clearRequested(t));
   };
   const handleClose = () => {
-    reset();
-    setProcess(undefined);
-    onOpen && onOpen(false);
+    if (changed) {
+      setConfirm(true);
+    } else reset();
   };
-
+  const dontDoIt = () => {
+    setConfirm(false);
+  };
   const setSaving = (saving: boolean) => {
     setSavingx(saving);
     savingRef.current = saving;
   };
-
-  const handleCommit = (process: string | undefined) => async () => {
+  const setRecording = (recording: boolean) => {
+    setRecordingx(recording);
+    recordingRef.current = recording;
+  };
+  const setBibleMediafile = (value: string) => {
+    bibleMediafileRef.current = value;
+  };
+  const setIsoMediafile = (value: string) => {
+    isoMediafileRef.current = value;
+  };
+  const handleCommit = (process: string | undefined) => () => {
     if (savingRef.current) return;
     setSaving(true);
-    const current =
-      mode === DialogMode.edit && values
-        ? values.team
-        : ({ attributes: {} } as Organization);
-    //NR? if (current.hasOwnProperty('relationships')) delete current?.relationships;
-    const team = {
-      ...current,
-      attributes: { ...current.attributes, name },
-      //NR?
-      /* relationships: {
-        noteProject: {
-          data: noteProjId ? { type: 'project', id: noteProjId } : null,
-        },
-      }, */
-    } as Organization;
-    onCommit(
-      { team, process: process || defaultWorkflow },
-      async (id: string) => {
-        setProcess(undefined);
-        setSaving(false);
-      }
-    );
+    startSave();
+    //wait a beat for the save to register
+    setTimeout(() => {
+      waitForIt(
+        'anySaving',
+        () => !anySaving(),
+        () => false,
+        10000
+      ).finally(() => {
+        const current =
+          mode === DialogMode.edit && values
+            ? values.team
+            : ({ attributes: {} } as OrganizationD);
+        const df = setParam(
+          orgDefaultWorkflowProgression,
+          workflowProgression === t.workflowProgressionStep
+            ? 'step'
+            : 'passage',
+          defaultParams
+        );
+        const team = {
+          ...current,
+          attributes: {
+            ...current.attributes,
+            name,
+            defaultParams: df,
+          },
+        } as OrganizationD;
+
+        let newbible: BibleD | undefined = undefined;
+        if (bibleId.length > 0 && bibleIdError === '') {
+          newbible =
+            getOrgBible(team.id) ?? ({ ...bible, type: 'bible' } as BibleD);
+          if (bibleId)
+            newbible = {
+              ...newbible,
+              attributes: {
+                ...newbible?.attributes,
+                bibleId,
+                bibleName,
+                description,
+                iso,
+                publishingData,
+              },
+            } as BibleD;
+        }
+        onCommit(
+          {
+            team,
+            bible: newbible,
+            bibleMediafile: bibleMediafileRef.current,
+            isoMediafile: isoMediafileRef.current,
+            process: process || defaultWorkflow,
+          },
+          async (id: string) => {
+            reset();
+          }
+        );
+      });
+    }, 100);
+  };
+  const setValue = (what: string, value: string, init?: boolean) => {
+    switch (what) {
+      case 'iso':
+        setIso(value);
+        break;
+      case 'bibleId':
+        setBibleId(value);
+        break;
+      case 'bibleIdError':
+        setBibleIdError(value);
+        break;
+      case 'bibleName':
+        setBibleName(value);
+        break;
+      case 'description':
+        setDescription(value);
+        break;
+      case 'bibleMediafile':
+        setBibleMediafile(value);
+        break;
+      case 'isoMediafile':
+        setIsoMediafile(value);
+        break;
+      case pubDataCopyright:
+        setPublishingData(setParam(pubDataCopyright, value, publishingData));
+        break;
+      case pubDataNoteLabel:
+        setPublishingData(setParam(pubDataNoteLabel, value, publishingData));
+        break;
+      case pubDataLangProps:
+        setDefaultParams(setParam(orgDefaultLangProps, value, defaultParams));
+        setPublishingData(setParam(pubDataLangProps, value, publishingData));
+        break;
+      default:
+        return;
+    }
+    if (!init) {
+      setChanged(true);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,7 +244,7 @@ export function TeamDialog(props: IProps) {
   const handleDelete = () => {
     if (savingRef.current) return;
     setSaving(true);
-    const team = { ...values?.team, attributes: { name } } as Organization;
+    const team = { ...values?.team } as RecordIdentity;
     onDelete && onDelete(team);
     setSaving(false);
   };
@@ -134,23 +262,27 @@ export function TeamDialog(props: IProps) {
   };
 
   useEffect(() => {
-    if (isOpen && values && projects) {
-      setMyProjects(
-        projects.filter((p) => related(p, 'organization') === values.team.id)
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values, projects, isOpen]);
+    if (isOpen) {
+      if (!defaultParams) {
+        setDefaultParams(values?.team.attributes?.defaultParams || '{}');
 
-  useEffect(() => {
-    if (isOpen && !name) {
-      setName(values?.team.attributes?.name || '');
-      //NR?setNoteProjId(values ? related(values, 'noteProject') : '');
-    } else if (!isOpen) {
-      reset();
-    }
+        if (values) {
+          if (values.team) {
+            var wfp = getDefault(orgDefaultWorkflowProgression, values?.team);
+            setWorkflowProgression(
+              wfp === 'step'
+                ? t.workflowProgressionStep
+                : t.workflowProgressionPassage
+            );
+          }
+          setName(values.team.attributes?.name || '');
+          setBible(getOrgBible(values.team.id));
+        }
+      }
+    } else reset();
+
     if (isOpen && mode === DialogMode.add && processOptions.length === 0) {
-      const opts = memory.cache.query((q: QueryBuilder) =>
+      const opts = memory.cache.query((q) =>
         q.findRecords('workflowstep')
       ) as WorkflowStep[];
       const newProcess = opts.reduce((prev, cur) => {
@@ -168,8 +300,35 @@ export function TeamDialog(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values, isOpen]);
 
-  const handleNoteProjectChange = (e: any) => {
-    //NR?  setNoteProjId(e.target.value);
+  useEffect(() => {
+    if (isOpen)
+      if (bibleId && bibleId.length > 5) {
+        let newbible = getBible(bibleId);
+        if (newbible && bible !== newbible) setBible(newbible);
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bibleId]);
+
+  useEffect(() => {
+    setReadonly((owner && owner !== values?.team.id) || bibleId.length === 0);
+  }, [owner, bibleIdError, bibleId, values]);
+
+  useEffect(() => {
+    if (bible) {
+      setBibleId(bible.attributes?.bibleId || '');
+      setIso(bible?.attributes?.iso || '');
+      setBibleName(bible?.attributes?.bibleName || '');
+      setDescription(bible?.attributes?.description || '');
+      setIsoMediafile(related(bible, 'isoMediafile') as string);
+      setBibleMediafile(related(bible, 'bibleMediafile') as string);
+      setPublishingData(bible?.attributes?.publishingData || '{}');
+      setOwner(getBibleOwner(bible.id));
+    } else setOwner('');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bible]);
+
+  const onChange = (val: string) => {
+    setWorkflowProgression(val);
     setChanged(true);
   };
 
@@ -194,15 +353,40 @@ export function TeamDialog(props: IProps) {
             label={t.teamName}
             value={name}
             helperText={!saving && name && nameInUse(name) && t.nameInUse}
+            required
             onChange={handleChange}
             fullWidth
           />
+          <Options
+            label={t.workflowProgression}
+            defaultValue={workflowProgression}
+            options={workflowOptions}
+            onChange={onChange}
+          />
+          {mode !== DialogMode.add && canPublish && (
+            <PublishExpansion
+              t={t}
+              team={values?.team}
+              bible={bible}
+              onChanged={setChanged}
+              onRecording={setRecording}
+              setValue={setValue}
+              bibles={bibles}
+              readonly={readonly}
+            />
+          )}
           {mode === DialogMode.add && (
             <TextField
               id="process"
               select
               label={t.process}
-              value={process || defaultWorkflow}
+              value={
+                processOptions
+                  .map((o) => o.value)
+                  .includes(process || defaultWorkflow)
+                  ? process || defaultWorkflow
+                  : ''
+              }
               onChange={handleProcess}
               sx={{ my: 2, width: '300px' }}
             >
@@ -217,37 +401,6 @@ export function TeamDialog(props: IProps) {
           )}
           {mode === DialogMode.edit && (
             <div>
-              {isDeveloper && (
-                <TextField
-                  id="select-note-project"
-                  select
-                  label={t.notesProject}
-                  helperText={t.notesHelper}
-                  value={''} //NR?noteProjId ?? ''}
-                  onChange={handleNoteProjectChange}
-                  SelectProps={{
-                    MenuProps: {
-                      sx: menuProps,
-                    },
-                  }}
-                  sx={textFieldProps}
-                  InputProps={{ sx: formText }}
-                  InputLabelProps={{ sx: formText }}
-                  margin="normal"
-                  variant="filled"
-                  required={true}
-                >
-                  {myProjects
-                    .sort((i, j) =>
-                      i.attributes.name <= j.attributes.name ? -1 : 1
-                    )
-                    .map((option: Project) => (
-                      <MenuItem key={option.id} value={option.id}>
-                        {option.attributes.name}
-                      </MenuItem>
-                    ))}
-                </TextField>
-              )}
               <DeleteExpansion
                 title={t.deleteTeam}
                 explain={t.explainTeamDelete}
@@ -270,19 +423,31 @@ export function TeamDialog(props: IProps) {
             id="teamCommit"
             onClick={handleCommit(process)}
             color="primary"
-            disabled={saving || name === '' || nameInUse(name) || !changed}
+            disabled={
+              disabled ||
+              recording ||
+              saving ||
+              name === '' ||
+              nameInUse(name) ||
+              !changed ||
+              bibleIdError !== ''
+            }
           >
             {mode === DialogMode.add ? t.add : t.save}
           </Button>
         </DialogActions>
+        {confirm && (
+          <Confirm
+            text={t.closeNoSave}
+            no={t.cancel}
+            noResponse={dontDoIt}
+            yes={t.yes}
+            yesResponse={reset}
+          />
+        )}
       </Dialog>
     </div>
   );
 }
 
-const mapRecordsToProps = {
-  organizations: (q: QueryBuilder) => q.findRecords('organization'),
-  projects: (q: QueryBuilder) => q.findRecords('project'),
-};
-
-export default withData(mapRecordsToProps)(TeamDialog) as any;
+export default TeamDialog;

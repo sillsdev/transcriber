@@ -5,8 +5,9 @@ import {
   IArtifactTypeStrings,
   ArtifactType,
   MediaFile,
+  ArtifactTypeD,
 } from '../model';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { RecordKeyMap, RecordTransformBuilder } from '@orbit/records';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { findRecord, related, remoteId, ArtifactTypeSlug } from '.';
@@ -66,15 +67,16 @@ export const useArtifactType = () => {
         type: localizedArtifactType(ArtifactTypeSlug.Vernacular),
         id: undefined,
       });
-    const artifacts: ArtifactType[] = memory.cache.query((q: QueryBuilder) =>
+    const artifacts: ArtifactTypeD[] = memory.cache.query((q) =>
       q.findRecords('artifacttype')
     ) as any;
     artifacts
       .filter(
         (r) =>
-          Boolean(r.relationships) &&
-          (related(r, 'organization') === organization ||
-            related(r, 'organization') === null) &&
+          (!Boolean(r.relationships) ||
+            (Boolean(r.relationships) &&
+              (related(r, 'organization') === organization ||
+                related(r, 'organization') === null))) &&
           Boolean(r.keys?.remoteId) !== offlineOnly
       )
       .sort((i, j) =>
@@ -89,7 +91,7 @@ export const useArtifactType = () => {
             type: localizedArtifactType(r.attributes.typename),
             id:
               remoteIds && !offlineOnly
-                ? remoteId('artifacttype', r.id, memory.keyMap)
+                ? remoteId('artifacttype', r.id, memory.keyMap as RecordKeyMap)
                 : r.id,
           });
       });
@@ -102,7 +104,7 @@ export const useArtifactType = () => {
 
   const getTypeId = (typeSlug: string, forceOffline: boolean = false) => {
     if (typeSlug === ArtifactTypeSlug.Vernacular) return null;
-    const types = memory.cache.query((q: QueryBuilder) =>
+    const types = memory.cache.query((q) =>
       q
         .findRecords('artifacttype')
         .filter({ attribute: 'typename', value: typeSlug })
@@ -124,13 +126,13 @@ export const useArtifactType = () => {
   }, [offlineOnly]);
 
   const addNewArtifactType = async (newArtifactType: string) => {
-    const artifactType: ArtifactType = {
+    const artifactType: ArtifactTypeD = {
       type: 'artifacttype',
       attributes: {
         typename: newArtifactType,
       },
     } as any;
-    const t = new TransformBuilder();
+    const t = new RecordTransformBuilder();
     await memory.update([
       ...AddRecord(t, artifactType, user, memory),
       ...ReplaceRelatedRecord(

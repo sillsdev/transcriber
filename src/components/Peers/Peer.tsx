@@ -14,39 +14,31 @@ import UncheckedIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckedIcon from '@mui/icons-material/CheckBoxOutlined';
 import GroupDialog from './GroupDialog';
 import {
-  User,
   GroupMembership,
   Group,
+  GroupD,
   RoleNames,
   IPeerStrings,
 } from '../../model';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import { related, usePermissions, useRole } from '../../crud';
 import { AddRecord, ReplaceRelatedRecord } from '../../model/baseModel';
 import { toCamel } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { peerSelector } from '../../selector';
 import { usePeerGroups, IUserName } from './usePeerGroups';
+import { InitializedRecord } from '@orbit/records';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
-interface IRecordProps {
-  users: User[];
-  memberships: GroupMembership[];
-  groups: Group[];
-}
-
-interface IProps extends IRecordProps {}
-
-export function Peer(props: IProps) {
-  const { memberships } = props;
+export function Peer() {
+  const memberships = useOrbitData<GroupMembership[]>('groupmembership');
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
-  const { userNames, peerGroups, check, setCheck, cKey } = usePeerGroups(props);
+  const { userNames, peerGroups, check, cAdd, cDelete, cKey } = usePeerGroups();
   const { getRoleId, getMyOrgRole } = useRole();
   const t = useSelector(peerSelector, shallowEqual) as IPeerStrings;
-  const { localizePermission } = usePermissions(props);
+  const { localizePermission } = usePermissions();
 
   const handleSave = async (name: string, permissions: string, id?: string) => {
     if (id) {
@@ -80,7 +72,7 @@ export function Peer(props: IProps) {
       ...AddRecord(t, groupRec, user, memory),
       ...ReplaceRelatedRecord(
         t,
-        groupRec,
+        groupRec as GroupD,
         'owner',
         'organization',
         organization
@@ -93,35 +85,45 @@ export function Peer(props: IProps) {
   };
 
   const handleCheck = (row: IUserName, col: Group) => async () => {
-    check?.add(cKey(row.userId, col.id));
+    cAdd(cKey(row.userId, col.id as string), check ?? []);
     const membership: GroupMembership = {
       type: 'groupmembership',
     } as GroupMembership;
     await memory.update((t) => [
       ...AddRecord(t, membership, user, memory),
-      ...ReplaceRelatedRecord(t, membership, 'user', 'user', row.userId),
-      ...ReplaceRelatedRecord(t, membership, 'group', 'group', col.id),
       ...ReplaceRelatedRecord(
         t,
-        membership,
+        membership as InitializedRecord,
+        'user',
+        'user',
+        row.userId
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        membership as InitializedRecord,
+        'group',
+        'group',
+        col.id
+      ),
+      ...ReplaceRelatedRecord(
+        t,
+        membership as InitializedRecord,
         'role',
         'role',
         getRoleId(RoleNames.Member)
       ),
     ]);
-    setCheck(new Set(check));
   };
 
   const handleUncheck = (row: IUserName, col: Group) => async () => {
-    check?.delete(cKey(row.userId, col.id));
+    cDelete(cKey(row.userId, col.id as string), check ?? []);
     const recs = memberships.filter(
       (m) => related(m, 'user') === row.userId && related(m, 'group') === col.id
     );
     if (recs.length > 0)
       await memory.update((t) =>
-        t.removeRecord({ type: 'groupmembership', id: recs[0].id })
+        t.removeRecord({ type: 'groupmembership', id: recs[0].id as string })
       );
-    setCheck(new Set(check));
   };
 
   const canEditPeer = useMemo(
@@ -131,7 +133,8 @@ export function Peer(props: IProps) {
   );
 
   const inUse = useMemo(
-    () => peerGroups.map((c) => c.attributes.name.toLocaleLowerCase()),
+    () => peerGroups.map((c) => c.attributes.name.toLocaleLowerCase()).sort(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [peerGroups]
   );
 
@@ -185,7 +188,7 @@ export function Peer(props: IProps) {
                   )
                   .map((col) => (
                     <TableCell align="center" key={col.id}>
-                      {check?.has(cKey(row.userId, col.id)) ? (
+                      {check?.includes(cKey(row.userId, col.id)) ? (
                         <IconButton
                           id={`${col.attributes.abbreviation}Check`}
                           onClick={handleUncheck(row, col)}
@@ -212,10 +215,4 @@ export function Peer(props: IProps) {
   );
 }
 
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-  groups: (q: QueryBuilder) => q.findRecords('group'),
-};
-
-export default withData(mapRecordsToProps)(Peer) as any;
+export default Peer;

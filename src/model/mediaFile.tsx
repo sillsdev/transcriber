@@ -1,9 +1,8 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 
 export interface MediaFile extends BaseModel {
   attributes: {
-    planId: number; //allow this because we use axios to create a mediafile
     versionNumber: number;
     eafUrl: string | null;
     audioUrl: string;
@@ -43,4 +42,7 @@ export interface MediaFile extends BaseModel {
     sourceMedia: RecordRelationship;
   };
 }
+
+export type MediaFileD = MediaFile & InitializedRecord;
+
 export default MediaFile;

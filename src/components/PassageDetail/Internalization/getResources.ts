@@ -1,8 +1,8 @@
-import { MediaFile, SectionResource } from '../../../model';
+import { MediaFile, SectionResourceD } from '../../../model';
 import { related } from '../../../crud';
 
 export const getResources = (
-  sectionResources: SectionResource[],
+  sectionResources: SectionResourceD[],
   mediafiles: MediaFile[],
   sectionId: string
 ) => {

@@ -1,6 +1,5 @@
 import { useGlobal } from 'reactn';
-import { User } from '../model';
-import { QueryBuilder } from '@orbit/data';
+import { UserD } from '../model';
 
 export const useUser = () => {
   const [memory] = useGlobal('memory');
@@ -8,14 +7,14 @@ export const useUser = () => {
     let user = {
       id: '',
       attributes: { avatarUrl: null, name: 'Unknown', familyName: '' },
-    } as any;
+    } as UserD;
     if (!id) {
       return user;
     }
     try {
-      user = memory.cache.query((q: QueryBuilder) =>
+      user = memory.cache.query((q) =>
         q.findRecord({ type: 'user', id })
-      ) as User;
+      ) as UserD;
     } catch (error) {
       // leave default user data
     }

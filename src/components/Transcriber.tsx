@@ -6,11 +6,10 @@ import React, {
   CSSProperties,
   PropsWithChildren,
   useMemo,
+  useCallback,
 } from 'react';
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
-import { connect } from 'react-redux';
-import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import {
   default as SplitPaneBar,
   Pane as PaneBar,
@@ -24,6 +23,7 @@ import {
   Project,
   ActivityStates,
   Passage,
+  PassageD,
   Section,
   IState,
   Integration,
@@ -31,14 +31,8 @@ import {
   IActivityStateStrings,
   IVProjectStrings,
 } from '../model';
-import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
-import {
-  Grid,
-  Paper,
-  Typography,
-  IconButton,
-  TextareaAutosize,
-} from '@mui/material';
+import { Grid, Paper, Typography, IconButton } from '@mui/material';
+import { StyledTextAreaAudosize } from '../control/WebFontStyles';
 import useTodo from '../context/useTodo';
 import PullIcon from '@mui/icons-material/GetAppOutlined';
 import {
@@ -72,11 +66,11 @@ import {
   currentDateTime,
   getParatextDataPath,
   refMatch,
-  waitForIt,
   integrationSlug,
   getSegments,
   NamedRegions,
   updateSegments,
+  useWaitForRemoteQueue,
 } from '../utils';
 import { isElectron } from '../api-variable';
 import { TokenContext } from '../context/TokenProvider';
@@ -84,10 +78,7 @@ import { debounce } from 'lodash';
 import { AllDone } from './AllDone';
 import { LastEdit } from '../control';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
-import { withData } from 'react-orbitjs';
-import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
-import { bindActionCreators } from 'redux';
 import { translateParatextError } from '../utils/translateParatextError';
 import TranscribeAddNote from './TranscribeAddNote';
 import PassageHistory from './PassageHistory';
@@ -110,6 +101,14 @@ import {
   initProjectState,
 } from './Team/ProjectDialog';
 import BigDialog from '../hoc/BigDialog';
+import { useOrbitData } from '../hoc/useOrbitData';
+import {
+  InitializedRecord,
+  RecordTransformBuilder,
+  RecordOperation,
+  RecordKeyMap,
+} from '@orbit/records';
+import { useDispatch } from 'react-redux';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -180,45 +179,6 @@ const Pane = (props: PaneProps & PropsWithChildren) => {
   return <PaneBar {...props} className={props.className || 'pane'} />;
 };
 
-interface IRecordProps {
-  mediafiles: MediaFile[];
-  integrations: Integration[];
-  projintegrations: ProjectIntegration[];
-}
-const mapRecordsToProps = {
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  integrations: (q: QueryBuilder) => q.findRecords('integration'),
-  projintegrations: (q: QueryBuilder) => q.findRecords('projectintegration'),
-};
-
-const mapDispatchToProps = (dispatch: any) => ({
-  ...bindActionCreators(
-    {
-      getUserName: action.getUserName,
-      getParatextText: action.getParatextText,
-      getParatextTextLocal: action.getParatextTextLocal,
-      resetParatextText: action.resetParatextText,
-    },
-    dispatch
-  ),
-});
-
-interface IDispatchProps {
-  getUserName: typeof action.getUserName;
-  getParatextText: typeof action.getParatextText;
-  getParatextTextLocal: typeof action.getParatextTextLocal;
-  resetParatextText: typeof action.resetParatextText;
-}
-interface IStateProps {
-  paratext_textStatus?: IAxiosStatus;
-  paratext_username: string; // state.paratext.username
-  paratext_usernameStatus?: IAxiosStatus;
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-  paratext_textStatus: state.paratext.textStatus,
-  paratext_username: state.paratext.username,
-  paratext_usernameStatus: state.paratext.usernameStatus,
-});
 interface IProps {
   defaultWidth: number;
   stepSettings?: string;
@@ -234,9 +194,7 @@ interface ITrans {
   position: number;
 }
 
-export function Transcriber(
-  props: IProps & IStateProps & IDispatchProps & IRecordProps
-) {
+export function Transcriber(props: IProps) {
   const {
     stepSettings,
     hasChecking,
@@ -244,17 +202,52 @@ export function Transcriber(
     onReopen,
     onReject,
     onReloadPlayer,
-    mediafiles,
-    projintegrations,
-    integrations,
-    paratext_textStatus,
-    paratext_username,
-    paratext_usernameStatus,
-    getUserName,
-    getParatextText,
-    getParatextTextLocal,
-    resetParatextText,
   } = props;
+  const paratext_textStatus = useSelector(
+    (state: IState) => state.paratext.textStatus
+  );
+  const paratext_username = useSelector(
+    (state: IState) => state.paratext.username
+  );
+  const paratext_usernameStatus = useSelector(
+    (state: IState) => state.paratext.usernameStatus
+  );
+  const dispatch = useDispatch();
+  const resetParatextText = () => dispatch(action.resetParatextText());
+  const getUserName = (token: string, errorReporter: any, msg: string) =>
+    dispatch(action.getUserName(token, errorReporter, msg));
+  const getParatextText = (
+    token: string,
+    passageId: number,
+    artifactId: string | null,
+    errorReporter: any,
+    pendingmsg: string
+  ) =>
+    dispatch(
+      action.getParatextText(
+        token,
+        passageId,
+        artifactId,
+        errorReporter,
+        pendingmsg
+      )
+    );
+  const getParatextTextLocal = (
+    ptPath: string,
+    passage: Passage,
+    ptProjName: string,
+    errorReporter: any,
+    pendingmsg: string
+  ) =>
+    dispatch(
+      action.getParatextTextLocal(
+        ptPath,
+        passage,
+        ptProjName,
+        errorReporter,
+        pendingmsg
+      )
+    );
   const {
     rowData,
     index,
@@ -265,6 +258,9 @@ export function Transcriber(
     allDone,
     artifactId,
   } = useTodo();
+  const integrations = useOrbitData<Integration[]>('integration');
+  const projintegrations =
+    useOrbitData<ProjectIntegration[]>('projectintegration');
 
   const { slug } = useParams();
   const { section, passage, mediafile, state, role } = rowData[index] || {
@@ -274,6 +270,7 @@ export function Transcriber(
     state: '',
     role: '',
   };
+
   const { toolChanged, saveCompleted } = useContext(UnsavedContext).state;
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
@@ -286,7 +283,6 @@ export function Transcriber(
   const { accessToken } = useContext(TokenContext).state;
   const [assigned, setAssigned] = useState('');
   const [projData, setProjData] = useState<FontData>();
-  const [fontStatus, setFontStatus] = useState<string>();
   const playedSecsRef = useRef<number>(0);
   const segmentsRef = useRef<string>();
   const stateRef = useRef<string>(state);
@@ -304,18 +300,16 @@ export function Transcriber(
   const [textValue, setTextValue] = useState('');
   const [lastSaved, setLastSaved] = useState('');
   const [defaultPosition, setDefaultPosition] = useState(0.0);
-
+  const waitForRemoteQueue = useWaitForRemoteQueue();
   const { showMessage } = useSnackBar();
   const showHistoryRef = useRef(false);
   const [showHistory, setShowHistoryx] = useState(false);
   const [rejectVisible, setRejectVisible] = useState(false);
   const [addNoteVisible, setAddNoteVisible] = useState(false);
   const [hasParatextName, setHasParatextName] = useState(false);
+  const [noParatext, setNoParatext] = useState(false);
   const [paratextProject, setParatextProject] = React.useState('');
   const [paratextIntegration, setParatextIntegration] = React.useState('');
-  const [connected] = useGlobal('connected');
-  const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote');
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
   const {
@@ -327,7 +321,7 @@ export function Transcriber(
   } = useContext(UnsavedContext).state;
   const [changed, setChanged] = useState(false);
   const [confirm, setConfirm] = useState<ITrans>();
-  const transcriptionRef = React.useRef<any>();
+  const transcriptionRef = React.useRef<any>(null);
   const playingRef = useRef<Boolean>();
   const mediaRef = useRef<MediaFile>({} as MediaFile);
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
@@ -384,7 +378,6 @@ export function Transcriber(
       memory,
       offline,
       project,
-      projType,
       plan,
       user,
       orgRole,
@@ -467,7 +460,8 @@ export function Transcriber(
             integrationSlug(artifactTypeSlug, offlineOnly) &&
           Boolean(i.keys?.remoteId) !== offlineOnly
       );
-      if (intfind > -1) setParatextIntegration(integrations[intfind].id);
+      if (intfind > -1)
+        setParatextIntegration(integrations[intfind].id as string);
     };
     if (playerSize < INIT_PLAYER_HEIGHT) setPlayerSize(INIT_PLAYER_HEIGHT);
     getParatextIntegration();
@@ -502,7 +496,8 @@ export function Transcriber(
             integrationSlug(artifactTypeSlug, offlineOnly) &&
           Boolean(i.keys?.remoteId) !== offlineOnly
       );
-      if (intfind > -1) setParatextIntegration(integrations[intfind].id);
+      if (intfind > -1)
+        setParatextIntegration(integrations[intfind].id as string);
     };
 
     getParatextIntegration();
@@ -565,7 +560,7 @@ export function Transcriber(
     }
     mediaRef.current = mediafile;
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediafiles, mediafile]);
+  }, [mediafile]);
 
   useEffect(() => {
     if (autosaveTimer.current === undefined) {
@@ -640,8 +635,13 @@ export function Transcriber(
       } as Project;
       getFontData(rec, offline).then((data) => setProjData(data));
     }
+    const ptCheck =
+      [ArtifactTypeSlug.Retell, ArtifactTypeSlug.QandA].includes(
+        (artifactTypeSlug || '') as ArtifactTypeSlug
+      ) || projType.toLowerCase() !== 'scripture';
+    if (ptCheck !== noParatext) setNoParatext(ptCheck);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project, artifactTypeSlug]);
+  }, [project, projType, artifactTypeSlug]);
 
   useEffect(() => {
     const newAssigned = rowData[index]?.assigned;
@@ -659,7 +659,7 @@ export function Transcriber(
       setHasParatextName(paratext_username !== '');
     } else setHasParatextName(true);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [paratext_username, paratext_usernameStatus]);
+  }, [paratext_username, paratext_usernameStatus, noParatext, offline]);
 
   const focusOnTranscription = () => {
     if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
@@ -667,9 +667,6 @@ export function Transcriber(
   const handleChange = (e: any) => {
     setTextValue(e.target.value);
     toolChanged(toolId, true);
-  };
-  const loadStatus = (status: string) => {
-    setFontStatus(status);
   };
 
   const setShowHistory = (value: boolean) => {
@@ -698,8 +695,17 @@ export function Transcriber(
     } else {
       getParatextText(
         accessToken || '',
-        remoteIdNum('passage', passage.id, memory.keyMap),
-        artifactId && remoteId('artifacttype', artifactId, memory.keyMap),
+        remoteIdNum(
+          'passage',
+          passage.id as string,
+          memory.keyMap as RecordKeyMap
+        ),
+        artifactId &&
+          (remoteId(
+            'artifacttype',
+            artifactId,
+            memory.keyMap as RecordKeyMap
+          ) as string),
         errorReporter,
         t.pullParatextStart
       );
@@ -713,41 +719,50 @@ export function Transcriber(
     }
     setRejectVisible(true);
   };
-  const handleRejected = async (media: MediaFile, comment: string) => {
-    setRejectVisible(false);
-    await memory.update(
-      UpdateMediaStateOps(
-        media.id,
-        passage.id,
-        media.attributes.transcriptionstate,
-        user,
-        new TransformBuilder(),
-        [],
-        memory,
-        comment
-      )
-    );
-    //todo ?? if (IsVernacular(media))
-    setLastSaved(currentDateTime());
-    if (onReject) onReject(media.attributes.transcriptionstate);
-  };
+  const handleRejected = useCallback(
+    async (media: MediaFile, comment: string) => {
+      setRejectVisible(false);
+      await memory.update(
+        UpdateMediaStateOps(
+          media.id as string,
+          passage.id as string,
+          media.attributes.transcriptionstate,
+          user,
+          new RecordTransformBuilder(),
+          [],
+          memory,
+          comment
+        )
+      );
+      //todo ?? if (IsVernacular(media))
+      setLastSaved(currentDateTime());
+      if (onReject) onReject(media.attributes.transcriptionstate);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [passage.id, user]
+  );
+
   const handleRejectCancel = () => setRejectVisible(false);
 
-  const handleAddNote = async (pass: Passage) => {
-    setAddNoteVisible(false);
-    var ops = [] as Operation[];
-    AddPassageStateChangeToOps(
-      new TransformBuilder(),
-      ops,
-      pass.id,
-      '',
-      pass.attributes.lastComment,
-      user,
-      memory
-    );
-    await memory.update(ops);
-    pass.attributes.lastComment = '';
-  };
+  const handleAddNote = useCallback(
+    async (pass: PassageD) => {
+      setAddNoteVisible(false);
+      var ops = [] as RecordOperation[];
+      AddPassageStateChangeToOps(
+        new RecordTransformBuilder(),
+        ops,
+        pass.id,
+        '',
+        pass.attributes.lastComment,
+        user,
+        memory
+      );
+      await memory.update(ops);
+      pass.attributes.lastComment = '';
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [user]
+  );
   const handleAddNoteCancel = () => setAddNoteVisible(false);
 
   const next: { [key: string]: string } = {
@@ -763,21 +778,26 @@ export function Transcriber(
     setDefaultPosition(playedSecsRef.current || 0);
     setDefaultPosition(position);
   };
-  const handleSubmit = async () => {
-    if (next.hasOwnProperty(state)) {
-      let nextState = next[state];
-      if (nextState === ActivityStates.Transcribed && !hasChecking)
-        nextState = ActivityStates.Approved;
-      if (nextState === ActivityStates.Approved && noParatext)
-        nextState = ActivityStates.Done;
-      await save(nextState, 0, segmentsRef.current, '');
-      onReloadPlayer && onReloadPlayer(mediaRef.current);
-      forcePosition(0);
-      if (setComplete) setComplete(true);
-    } else {
-      logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
-    }
-  };
+
+  const handleSubmit = useCallback(
+    async () => {
+      if (next.hasOwnProperty(state)) {
+        let nextState = next[state];
+        if (nextState === ActivityStates.Transcribed && !hasChecking)
+          nextState = ActivityStates.Approved;
+        if (nextState === ActivityStates.Approved && noParatext)
+          nextState = ActivityStates.Done;
+        await save(nextState, 0, segmentsRef.current, '');
+        onReloadPlayer && onReloadPlayer(mediaRef.current);
+        forcePosition(0);
+        if (setComplete) setComplete(true);
+      } else {
+        logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [errorReporter, hasChecking, noParatext, state]
+  );
 
   const stateRole: { [key: string]: string } = {
     transcribing: 'transcriber',
@@ -786,25 +806,29 @@ export function Transcriber(
     transcribed: 'editor',
   };
 
-  const handleAssign = async (curState: string) => {
-    const secRec = findRecord(memory, 'section', section.id);
-    const role = stateRole[curState];
-    if (secRec && role) {
-      const assigned = related(secRec, role);
-      if (!assigned || assigned === '') {
-        await memory.update(
-          UpdateRelatedRecord(
-            new TransformBuilder(),
-            section,
-            role,
-            'user',
-            user,
-            user
-          )
-        );
+  const handleAssign = useCallback(
+    async (curState: string) => {
+      const secRec = findRecord(memory, 'section', section.id as string);
+      const role = stateRole[curState];
+      if (secRec && role) {
+        const assigned = related(secRec, role);
+        if (!assigned || assigned === '') {
+          await memory.update(
+            UpdateRelatedRecord(
+              new RecordTransformBuilder(),
+              section,
+              role,
+              'user',
+              user,
+              user
+            )
+          );
+        }
       }
-    }
-  };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [section, user]
+  );
 
   const handleEditorSettings = (isOpen: boolean) => {
     if (!isOpen) {
@@ -880,8 +904,8 @@ export function Transcriber(
       saving.current = true;
       let transcription = transcriptionRef.current.firstChild.value;
       const curState = stateRef.current;
-      const tb = new TransformBuilder();
-      let ops: Operation[] = [];
+      const tb = new RecordTransformBuilder();
+      let ops: RecordOperation[] = [];
       //todo
       //always update the state, because we need the dateupdated to be updated
       if (stateRef.current !== nextState || thiscomment)
@@ -907,15 +931,16 @@ export function Transcriber(
               segments: updateSegments(
                 NamedRegions.Transcription,
                 mediaRef.current.attributes?.segments,
-                segments ?? '{}'
+                segments || '{}'
               ),
               transcriptionstate: nextState,
             },
-          } as any as MediaFile,
+          } as InitializedRecord & MediaFile,
           user
         )
       );
       //have to do this before the mediafiles useEffect kicks in
+      var prevtran = transcriptionIn.current;
       transcriptionIn.current = transcription;
       await memory
         .update(ops)
@@ -928,6 +953,7 @@ export function Transcriber(
         })
         .catch((err) => {
           //so we don't come here...we go to continue/logout
+          transcriptionIn.current = prevtran;
           saveCompleted(toolId, err.message);
           saving.current = false;
         });
@@ -959,7 +985,7 @@ export function Transcriber(
           passage.id,
           previous[state],
           user,
-          new TransformBuilder(),
+          new RecordTransformBuilder(),
           [],
           memory,
           ''
@@ -970,12 +996,9 @@ export function Transcriber(
     }
   };
   const handleReopen = async () => {
-    await waitForIt(
-      'busy before reopen',
-      () => !remote || !connected || remote.requestQueue.length === 0,
-      () => false,
-      20
-    ).then(() => doReopen().then(() => onReopen && onReopen()));
+    waitForRemoteQueue('busy before reopen').then(() =>
+      doReopen().then(() => onReopen && onReopen())
+    );
   };
 
   const getTranscription = () => {
@@ -1024,7 +1047,7 @@ export function Transcriber(
 
   const onProgress = (progress: number) => (playedSecsRef.current = progress);
 
-  const onSegmentChange = (segments: string) => {
+  const onSegmentChange = (segments: string, init: boolean) => {
     segmentsRef.current = segments;
   };
   const onSegmentParamChange = (
@@ -1049,13 +1072,6 @@ export function Transcriber(
     setPlayerSize(e);
   }, 50);
 
-  const noParatext = React.useMemo(
-    () =>
-      [ArtifactTypeSlug.Retell, ArtifactTypeSlug.QandA].includes(
-        (artifactTypeSlug || '') as ArtifactTypeSlug
-      ) || projType.toLowerCase() !== 'scripture',
-    [artifactTypeSlug, projType]
-  );
   useEffect(() => {
     setArtifactTypeSlug(
       slug
@@ -1141,40 +1157,23 @@ export function Transcriber(
                 <Pane>
                   <Grid item xs={12} sm container>
                     <Grid
-                      ref={transcriptionRef}
                       item
+                      ref={transcriptionRef}
                       xs={showHistory ? 6 : 12}
                       container
                       direction="column"
                     >
-                      {projData && !fontStatus?.endsWith('active') ? (
-                        <WebFontLoader
-                          config={projData.fontConfig}
-                          onStatus={loadStatus}
-                        >
-                          <TextareaAutosize
-                            autoFocus
-                            id="transcriber.text"
-                            value={textValue}
-                            readOnly={!transSelected || role === 'view'}
-                            style={textAreaStyle}
-                            onChange={handleChange}
-                            lang={projData?.langTag || 'en'}
-                            spellCheck={projData?.spellCheck}
-                          />
-                        </WebFontLoader>
-                      ) : (
-                        <TextareaAutosize
-                          autoFocus
-                          id="transcriber.text"
-                          value={textValue}
-                          readOnly={!transSelected || role === 'view'}
-                          style={textAreaStyle}
-                          onChange={handleChange}
-                          lang={projData?.langTag || 'en'}
-                          spellCheck={projData?.spellCheck}
-                        />
-                      )}
+                      <StyledTextAreaAudosize
+                        autoFocus
+                        id="transcriber.text"
+                        value={textValue}
+                        readOnly={!transSelected || role === 'view'}
+                        config={projData?.fontConfig}
+                        style={textAreaStyle}
+                        onChange={handleChange}
+                        lang={projData?.langTag || 'en'}
+                        spellCheck={projData?.spellCheck}
+                      />
                     </Grid>
                     {showHistory && (
                       <Grid item xs={6} container direction="column">
@@ -1313,6 +1312,4 @@ export function Transcriber(
   );
 }
 
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(Transcriber as any) as any
-) as any as (props: IProps) => JSX.Element;
+export default Transcriber;

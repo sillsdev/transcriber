@@ -1,18 +1,15 @@
 import { IconButton, Grid } from '@mui/material';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { GrowingDiv, LightTooltip, ToolbarGrid } from '../control';
-import { IState, IWsAudioPlayerZoomStrings } from '../model';
+import { IWsAudioPlayerZoomStrings } from '../model';
 import { HotKeyContext } from '../context/HotKeyContext';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import ZoomWidthIcon from '@mui/icons-material/Pageview';
-import { connect } from 'react-redux';
-import localStrings from '../selector/localize';
+import { useSelector } from 'react-redux';
+import { audioPlayerZoomSelector } from '../selector';
 
-interface IStateProps {
-  t: IWsAudioPlayerZoomStrings;
-}
-interface IProps extends IStateProps {
+interface IProps {
   ready: boolean;
   wsZoom: (val: number) => number;
   wsPctWidth: () => number;
@@ -25,7 +22,8 @@ function WSAudioPlayerZoom(props: IProps) {
   const zoomRef = useRef(20);
   const zoomMax = 500;
 
-  const { t, ready, wsZoom, wsPctWidth } = props;
+  const { ready, wsZoom, wsPctWidth } = props;
+  const t: IWsAudioPlayerZoomStrings = useSelector(audioPlayerZoomSelector);
   const readyRef = useRef(ready);
 
   const ZOOMIN_KEY = 'CTRL+1';
@@ -118,8 +116,4 @@ function WSAudioPlayerZoom(props: IProps) {
     </GrowingDiv>
   );
 }
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'wsAudioPlayerZoom' }),
-});
-
-export default connect(mapStateToProps)(WSAudioPlayerZoom) as any;
+export default WSAudioPlayerZoom;

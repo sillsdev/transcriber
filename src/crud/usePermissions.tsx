@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useGlobal } from 'reactn';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
-import { Group, GroupMembership, IPermissionStrings, User } from '../model';
+import { IPermissionStrings } from '../model';
 import { permissionsSelector } from '../selector';
 import { onlyUnique } from '../utils';
 import remoteId, { remoteIdGuid } from './remoteId';
+import { RecordKeyMap } from '@orbit/records';
 
 export enum PermissionName {
   //Admin = 'admin',
@@ -16,13 +17,7 @@ export enum PermissionName {
   Mentor = 'mentor',
   CIT = 'consultantInTraining',
 }
-interface IProps {
-  users: User[];
-  groups: Group[];
-  memberships: GroupMembership[];
-}
-
-export const usePermissions = ({ users, groups, memberships }: IProps) => {
+export const usePermissions = () => {
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
   const [permissions, setPermissions] = useState('');
@@ -30,7 +25,7 @@ export const usePermissions = ({ users, groups, memberships }: IProps) => {
     permissionsSelector,
     shallowEqual
   ) as IPermissionStrings;
-  const { myGroups } = usePeerGroups({ users, groups, memberships });
+  const { myGroups } = usePeerGroups();
 
   useEffect(() => {
     var perms: string[] = [];
@@ -41,7 +36,9 @@ export const usePermissions = ({ users, groups, memberships }: IProps) => {
         perms.push(p.permissions.split());
       }
     });
-    setPermissions(perms.filter(onlyUnique).join());
+    const newValue = perms.filter(onlyUnique).sort().join();
+    if (permissions !== newValue) setPermissions(newValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [myGroups]);
 
   const getPermissionFromJson = (jsonstr: string) => {
@@ -96,7 +93,7 @@ export const usePermissions = ({ users, groups, memberships }: IProps) => {
     return {
       ...json,
       approved: false,
-      author: remoteId('user', user, memory.keyMap) ?? user,
+      author: remoteId('user', user, memory.keyMap as RecordKeyMap) ?? user,
     };
   };
 
@@ -118,7 +115,8 @@ export const usePermissions = ({ users, groups, memberships }: IProps) => {
     var json = JSON.parse(perms);
     if (Object.keys(json).length === 0) return undefined;
     return (
-      remoteIdGuid('user', json['author'], memory.keyMap) ?? json['author']
+      remoteIdGuid('user', json['author'], memory.keyMap as RecordKeyMap) ??
+      json['author']
     );
   };
   //given one permission "mentor"

@@ -17,7 +17,14 @@ import * as actions from '../../store';
 import ScriptureIcon from '@mui/icons-material/MenuBook';
 import { BsPencilSquare } from 'react-icons/bs';
 import moment from 'moment';
-import { VProject, DialogMode, IState } from '../../model';
+import {
+  DialogMode,
+  IState,
+  ProjectD,
+  Section,
+  SectionD,
+  VProjectD,
+} from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import ProjectMenu from './ProjectMenu';
 import BigDialog from '../../hoc/BigDialog';
@@ -38,11 +45,19 @@ import {
 } from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
 import OfflineIcon from '@mui/icons-material/OfflinePin';
-import { useHome } from '../../utils';
+import { useHome, useJsonParams } from '../../utils';
 import { copyComplete, CopyProjectProps } from '../../store';
 import { TokenContext } from '../../context/TokenProvider';
 import { useSnackBar } from '../../hoc/SnackBar';
 import CategoryTabs from './CategoryTabs';
+import { RecordKeyMap } from '@orbit/records';
+import {
+  projDefBook,
+  projDefSectionMap,
+  useProjectDefaults,
+} from '../../crud/useProjectDefaults';
+import { useOrbitData } from '../../hoc/useOrbitData';
+import { UpdateRecord } from '../../model/baseModel';
 
 const ProjectCardRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -82,7 +97,7 @@ const StyledChip = styled(Chip)<ChipProps>(({ theme }) => ({
 }));
 
 interface IProps {
-  project: VProject;
+  project: VProjectD;
 }
 
 export const ProjectCard = (props: IProps) => {
@@ -99,7 +114,6 @@ export const ProjectCard = (props: IProps) => {
     cardStrings,
     vProjectStrings,
     projButtonStrings,
-    sections,
     personalProjects,
     doImport,
   } = ctx.state;
@@ -118,9 +132,10 @@ export const ProjectCard = (props: IProps) => {
   const [, setBusy] = useGlobal('importexportBusy');
   const { getPlanName } = usePlan();
   const { localizedOrganizedBy } = useOrganizedBy();
-  const [organizedBySing, setOrganizedBySing] = useState('');
-  const [organizedByPlural, setOrganizedByPlural] = useState('');
+  const [, setOrganizedBySing] = useState('');
+  const [, setOrganizedByPlural] = useState('');
   const [projectId] = useGlobal('project');
+  const [user] = useGlobal('user');
   const projectPlans = useProjectPlans();
   const offlineProjectRead = useOfflnProjRead();
   const offlineAvailToggle = useOfflineAvailToggle();
@@ -129,15 +144,18 @@ export const ProjectCard = (props: IProps) => {
   const [openExport, setOpenExport] = useState(false);
   const [openReports, setOpenReports] = useState(false);
   const [openCategory, setOpenCategory] = useState(false);
-  const [deleteItem, setDeleteItem] = useState<VProject>();
+  const [deleteItem, setDeleteItem] = useState<VProjectD>();
   const [open, setOpen] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
+  const { getProjectDefault } = useProjectDefaults();
   const t = cardStrings;
   const tpb = projButtonStrings;
   const { userIsOrgAdmin } = useRole();
   const { leaveHome } = useHome();
+  const { getParam, setParam } = useJsonParams();
+  const sections = useOrbitData<Section[]>('section');
 
-  const handleSelect = (project: VProject) => () => {
+  const handleSelect = (project: VProjectD) => () => {
     loadProject(project);
     leaveHome();
   };
@@ -157,6 +175,7 @@ export const ProjectCard = (props: IProps) => {
     setIsAdmin(userIsOrgAdmin(related(project, 'organization')));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
+
   useEffect(() => {
     if (copying && copyStatus) {
       if (copyStatus.errStatus || copyStatus.complete) {
@@ -206,7 +225,11 @@ export const ProjectCard = (props: IProps) => {
       case 'copynew':
         setCopying(true);
         copyProject({
-          projectid: remoteIdNum('project', projectId, memory.keyMap),
+          projectid: remoteIdNum(
+            'project',
+            projectId,
+            memory.keyMap as RecordKeyMap
+          ),
           sameorg: what === 'copysame',
           token: accessToken,
           errorReporter: errorReporter,
@@ -249,7 +272,14 @@ export const ProjectCard = (props: IProps) => {
       rtl,
       tags,
       organizedBy,
+      book,
     } = values;
+    var oldBook = getParam(projDefBook, project?.attributes?.defaultParams);
+    var defaultParams = setParam(
+      projDefBook,
+      book,
+      project?.attributes?.defaultParams
+    );
     projectUpdate({
       ...project,
       attributes: {
@@ -267,10 +297,27 @@ export const ProjectCard = (props: IProps) => {
         tags,
         flat: values.flat,
         organizedBy,
+        defaultParams,
       },
     });
+    if (oldBook !== book) UpdatePublishingBookRows(oldBook, book);
   };
-
+  const UpdatePublishingBookRows = (oldbook: string, book: string) => {
+    var rows = sections.filter((s) => related(s, 'plan') === project.id);
+    const labels = ['BOOK', 'ALTBK'];
+    labels.forEach((label) => {
+      var books = rows.filter((s) =>
+        s.attributes.state.startsWith(label)
+      ) as SectionD[];
+      books.forEach((row) => {
+        if (book) {
+          row.attributes.state = row.attributes.state = `${label} ${book}`;
+          row.attributes.name = row.attributes.name.replace(oldbook, book);
+          memory.update((t) => UpdateRecord(t, row, user));
+        } else memory.update((t) => t.removeRecord(row));
+      });
+    });
+  };
   const handleDeleteConfirmed = () => {
     if (!deleteItem) return;
     projectDelete(deleteItem);
@@ -281,13 +328,13 @@ export const ProjectCard = (props: IProps) => {
     setDeleteItem(undefined);
   };
 
-  const projectValues = (project: VProject) => {
+  const projectValues = (project: VProjectD) => {
     const attr = project.attributes;
     const value: IProjectDialog = {
       name: attr.name,
       description: attr.description || '',
       type: attr.type,
-      book: '',
+      book: getProjectDefault(projDefBook, project as any as ProjectD) || '',
       bcp47: attr.language,
       languageName: attr.languageName || '',
       isPublic: attr.isPublic,
@@ -309,7 +356,7 @@ export const ProjectCard = (props: IProps) => {
   const sectionCount = useMemo(
     () => projectSections(project),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [project, sections.length]
+    [project]
   );
 
   return (
@@ -343,15 +390,7 @@ export const ProjectCard = (props: IProps) => {
             {t.language.replace('{0}', projectLanguage(project))}
           </Typography>
           <Typography variant="body2" component="p">
-            {sectionCount !== '<na>' &&
-              t.sectionStatus
-                .replace('{0}', sectionCount)
-                .replace(
-                  '{1}',
-                  Number(sectionCount) === 1
-                    ? organizedBySing
-                    : organizedByPlural
-                )}
+            {sectionCount !== '<na>' && sectionCount}
           </Typography>
         </StyledCardContent>
         {project?.attributes?.tags && (
@@ -400,6 +439,7 @@ export const ProjectCard = (props: IProps) => {
           {...props}
           projectPlans={projectPlans(projectId)}
           planColumn={true}
+          sectionArr={getProjectDefault(projDefSectionMap) ?? []}
         />
       </BigDialog>
       <BigDialog
@@ -416,11 +456,13 @@ export const ProjectCard = (props: IProps) => {
       >
         <CategoryTabs
           teamId={related(project, 'organization') as string}
+          flat={project.attributes.flat ?? false}
           onClose={handleCloseCategory}
         />
       </BigDialog>
       {deleteItem && (
         <Confirm
+          text={''}
           yesResponse={handleDeleteConfirmed}
           noResponse={handleDeleteRefused}
         />

@@ -10,8 +10,7 @@ const createAppWindow = require('./app-process');
 const { createAuthWindow, createLogoutWindow } = require('./auth-process');
 const authService = require('./auth-service');
 const fs = require('fs-extra');
-const unzipper = require('unzipper');
-const execa = require('execa');
+const StreamZip = require('node-stream-zip');
 const AdmZip = require('adm-zip');
 const {
   downloadFile,
@@ -19,6 +18,10 @@ const {
   downloadClose,
 } = require('./downloadFile');
 const generateUUID = require('./generateUUID');
+const convert = require('xml-js');
+const ChildProcess = require('child_process');
+// execa is an ESM module so we included source to make it work
+const execa = require('./execa');
 
 const ipcMethods = () => {
   ipcMain.handle('availSpellLangs', async () => {
@@ -61,7 +64,7 @@ const ipcMethods = () => {
     ]);
     const cmd = platformMap.get(process.platform);
     return new Promise((resolve, reject) => {
-      require('child_process').exec(cmd, (err, stdout, stderr) => {
+      ChildProcess.exec(cmd, (err, stdout, stderr) => {
         if (err) reject(err);
 
         resolve(stdout.toLowerCase().indexOf(name.toLowerCase()) > -1);
@@ -164,8 +167,6 @@ const ipcMethods = () => {
     }
   });
 
-  const convert = require('xml-js');
-
   ipcMain.handle('fileJson', async (event, settings) => {
     if (fs.existsSync(settings)) {
       const data = fs.readFileSync(settings, 'utf-8');
@@ -254,18 +255,51 @@ const ipcMethods = () => {
   ipcMain.handle('zipExtract', async (event, zip, folder, replace) => {
     return admZip.get(zip).extractAllTo(folder, replace);
   });
-  ipcMain.handle('zipExtractOpen', async (event, zip, folder) => {
-    return new Promise((resolve, reject) => {
-      unzipper.Open.file(zip).then((d) =>
-        d.extract({ path: folder, concurrency: 5 })
-        .then(() => resolve())
-        .catch((err) => { reject(err); }))
-      .catch((err) => { reject(err); });
-    })
-  });
 
   ipcMain.handle('zipClose', async (event, zip) => {
     admZip.delete(zip);
+  });
+
+  ipcMain.handle('zipStreamExtract', async (event, zip, folder) => {
+    const zipStrm = new StreamZip.async({ file: zip });
+    const count = await zipStrm.extract(null, folder);
+    console.log(`Extracted ${count} entries`);
+    await zipStrm.close();
+    return;
+  });
+
+  let zipStr = new Map();
+  ipcMain.handle('zipStreamOpen', async (event, fullPath) => {
+    const index = generateUUID();
+    zipStr.set(
+      index,
+      new StreamZip.async({ file: fullPath, nameEncoding: 'utf8' })
+    );
+    return index;
+  });
+
+  ipcMain.handle('zipStreamEntries', async (event, zip) => {
+    return JSON.stringify(await zipStr.get(zip).entries());
+  });
+
+  ipcMain.handle('zipStreamEntry', async (event, zip, name) => {
+    return JSON.stringify(await zipStr.get(zip).entry(name));
+  });
+
+  ipcMain.handle('zipStreamEntryData', async (event, zip, name) => {
+    return await zipStr.get(zip).entryData(name);
+  });
+
+  ipcMain.handle('zipStreamEntryText', async (event, zip, name) => {
+    const data = await zipStr.get(zip).entryData(name);
+    return String.fromCharCode(...Array.from(data));
+  });
+
+  ipcMain.handle('zipStreamClose', async (event, zip) => {
+    if (zipStr.has(zip)) {
+      await zipStr.get(zip).close();
+      zipStr.delete(zip);
+    }
   });
 
   let isLogingIn = false;

@@ -11,7 +11,7 @@ import {
   Typography,
   TableBody,
 } from '@mui/material';
-import { OrgWorkflowStep, Passage } from '../../model';
+import { OrgWorkflowStep, Passage, PassageD } from '../../model';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import {
   ToolSlug,
@@ -20,6 +20,7 @@ import {
   useArtifactType,
   useOrgDefaults,
   useUpdateRecord,
+  orgDefaultConsCheckComp,
 } from '../../crud';
 import ConsultantCheckReview from './ConsultantCheckReview';
 import { ActionRow, AltButton, GrowingDiv, PriButton } from '../../control';
@@ -29,8 +30,6 @@ import BigDialog from '../../hoc/BigDialog';
 import ConsultantCheckCompare from './ConsultantCheckCompare';
 import MediaPlayer from '../MediaPlayer';
 import { useSnackBar } from '../../hoc/SnackBar';
-
-const ConsCheckComp = 'ConsultantCheckCompare';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -66,8 +65,14 @@ interface IProps {
 }
 
 export function ConsultantCheck({ width }: IProps) {
-  const { workflow, setStepComplete, stepComplete, currentstep, passage } =
-    usePassageDetailContext();
+  const {
+    workflow,
+    setStepComplete,
+    gotoNextStep,
+    stepComplete,
+    currentstep,
+    passage,
+  } = usePassageDetailContext();
   const [memory] = useGlobal('memory');
   const [checkItems, setCheckItems] = useState<ArtifactTypeSlug[]>([]);
   const [approved, setApproved] = useState<ArtifactTypeSlug[]>([]);
@@ -94,7 +99,7 @@ export function ConsultantCheck({ width }: IProps) {
 
   const handleSetCompare = (newCompare: string[]) => {
     setCompare(newCompare as ArtifactTypeSlug[]);
-    setOrgDefault(ConsCheckComp, newCompare);
+    setOrgDefault(orgDefaultConsCheckComp, newCompare);
     setOpen(false);
   };
 
@@ -134,7 +139,7 @@ export function ConsultantCheck({ width }: IProps) {
     setApproved(newApproved);
     try {
       const pasRec = findRecord(memory, 'passage', passage?.id) as
-        | Passage
+        | PassageD
         | undefined;
       const stepComplete = pasRec?.attributes?.stepComplete
         ? JSON.parse(pasRec?.attributes?.stepComplete)
@@ -152,12 +157,13 @@ export function ConsultantCheck({ width }: IProps) {
           attributes: {
             ...pasRec.attributes,
             stepComplete: newStepComplete,
-          } as any,
+          },
         });
       }
     } catch (err) {}
     if (newApproved.length >= checkItems.length && !stepComplete(currentstep)) {
-      setStepComplete(currentstep, true);
+      await setStepComplete(currentstep, true);
+      gotoNextStep();
     }
     setBusy(false);
     commitBusy.current = false;
@@ -178,7 +184,7 @@ export function ConsultantCheck({ width }: IProps) {
         }
       } catch (err) {}
       setApproved(newApproved);
-      const newCompare = getOrgDefault(ConsCheckComp);
+      const newCompare = getOrgDefault(orgDefaultConsCheckComp);
       if (newCompare) {
         setCompare(newCompare as ArtifactTypeSlug[]);
       }

@@ -41,7 +41,7 @@ const ParatextReducers = function (
             count: -1, //pending
             countStatus: action.payload,
           }
-        : { ...state, countStatus: action.payload }; //reset status;
+        : { ...state, countStatus: undefined }; //reset status;
     case type.COUNT_SUCCESS:
       return {
         ...state,
@@ -102,6 +102,27 @@ const ParatextReducers = function (
         ...state,
         textStatus: action.payload,
       };
+    case type.CANPUBLISH_PENDING:
+      return action.payload
+        ? {
+            ...state,
+            canPublish: undefined, //pending
+            canPublishStatus: action.payload,
+          }
+        : { ...state, canPublishStatus: undefined }; //reset status;
+    case type.CANPUBLISH_SUCCESS:
+      return {
+        ...state,
+        canPublish: Boolean(action.payload),
+        canPublishStatus: successStatus(''),
+      };
+    case type.CANPUBLISH_ERROR:
+      return {
+        ...state,
+        canPublish: undefined,
+        canPublishStatus: action.payload,
+      };
+
     default:
       return { ...state };
   }

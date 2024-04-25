@@ -1,27 +1,24 @@
 import React, { ReactElement } from 'react';
-import { User } from '../model';
+import { UserD } from '../model';
 import { List } from '@mui/material';
 import { UserListItem } from '.';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { ListEnum } from '../crud';
 
 export interface ListAction {
   [key: string]: ReactElement;
 }
 
-interface IRecordProps {
-  users: Array<User>;
-}
-
-interface IProps extends IRecordProps {
+interface IProps {
   isSelected: (userId: string) => boolean;
-  curId: string | undefined;
+  curId?: string | undefined;
   select?: (userId: string) => void;
-  showTeams: boolean;
+  show?: ListEnum;
 }
 
 export const UserList = (props: IProps) => {
-  const { users, isSelected, curId, select, showTeams } = props;
+  const { isSelected, curId, select, show } = props;
+  const users = useOrbitData<UserD[]>('user');
 
   return (
     <>
@@ -30,7 +27,7 @@ export const UserList = (props: IProps) => {
           .filter((u) => u.id !== curId && isSelected(u.id))
           .sort((i, j) =>
             (i.attributes ? i.attributes.name : '') <=
-            (j.attributes ? j.attributes.name : '')
+              (j.attributes ? j.attributes.name : '')
               ? -1
               : 1
           )
@@ -38,18 +35,12 @@ export const UserList = (props: IProps) => {
             <UserListItem
               u={u}
               key={i}
-              users={users}
               onSelect={select}
-              showTeams={showTeams}
-            />
+              show={show} />
           ))}
       </List>
     </>
   );
 };
 
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-};
-
-export default withData(mapRecordsToProps)(UserList) as any;
+export default UserList;

@@ -17,7 +17,7 @@ import { mediaUploadSelector } from '../selector';
 import { API_CONFIG } from '../api-variable';
 
 const FileDrop =
-  process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
+  process.env.NODE_ENV !== 'test' ? require('react-file-drop').FileDrop : <></>;
 
 const MyLabel = styled('label')(({ theme }) => ({
   display: 'flex',
@@ -48,6 +48,7 @@ export enum UploadType {
   LOGO = 4 /* do we need separate ones for org and avatar? */,
   ProjectResource = 5,
   IntellectualProperty = 6,
+  Graphic = 7,
 }
 const PROJECTRESOURCE_SIZELIMIT = 50;
 const NO_SIZELIMIT = 10000;
@@ -138,6 +139,7 @@ interface IProps {
   onSpeaker?: (speaker: string) => void;
   createProject?: (name: string) => Promise<string>;
   team?: string; // used to check for speakers when adding a card
+  onFiles?: (files: File[]) => void;
 }
 
 function MediaUpload(props: IProps) {
@@ -154,6 +156,7 @@ function MediaUpload(props: IProps) {
     onSpeaker,
     createProject,
     team,
+    onFiles,
   } = props;
   const [name, setName] = useState('');
   const [files, setFilesx] = useState<File[]>([]);
@@ -172,6 +175,7 @@ function MediaUpload(props: IProps) {
     'FUTURE TODO',
     t.resourceTitle,
     t.intellectualPropertyTitle,
+    t.graphicTitle,
   ];
   const text = [
     t.task,
@@ -181,6 +185,7 @@ function MediaUpload(props: IProps) {
     'FUTURE TODO',
     t.projectResourceTask,
     t.intellectualPropertyTask,
+    t.graphicTask,
   ];
 
   const handleAddOrSave = () => {
@@ -200,6 +205,7 @@ function MediaUpload(props: IProps) {
   const setFiles = (f: File[]) => {
     filesRef.current = f;
     setFilesx(f);
+    onFiles && onFiles(f);
   };
   const fileName = (files: File[]) => {
     return files.length === 0
@@ -266,9 +272,10 @@ function MediaUpload(props: IProps) {
         '.mp3, .m4a, .wav, .ogg, .pdf',
         '.itf',
         '.ptf',
-        '.jpg, .svg, .png',
+        '.jpg, .jpeg, .svg, .png',
         '.mp3, .m4a, .wav, .ogg, .pdf',
-        '.mp3, .m4a, .wav, .ogg, .pdf, .png, .jpg',
+        '.mp3, .m4a, .wav, .ogg, .pdf, .png, .jpg, .jpeg',
+        '.png, .jpg, .jpeg, .webp',
       ].map((s) => s)[uploadType]
     );
     setAcceptMime(
@@ -277,9 +284,10 @@ function MediaUpload(props: IProps) {
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf',
         'application/itf',
         'application/ptf',
-        'image/jpeg, image/svg+xml, image/png',
+        'image/jpeg, image/jpeg, image/svg+xml, image/png',
         'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf',
-        'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf, image/png, image/jpeg',
+        'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg, application/pdf, image/png, image/jpeg, image/jpeg',
+        'image/png, image/jpeg, image/jpeg, image/webp',
       ].map((s) => s)[uploadType]
     );
     var size = SIZELIMIT(uploadType);

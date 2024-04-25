@@ -1,13 +1,15 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 
 export interface Section extends BaseModel {
   attributes: {
     sequencenum: number;
     name: string;
-    //NR?graphics: string;
-    //NR?published: boolean;
-    //NR?level: number;
+    graphics: string;
+    published: boolean;
+    publishTo: string;
+    level: number;
+    state: string;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;
@@ -19,7 +21,11 @@ export interface Section extends BaseModel {
     transcriber: RecordRelationship;
     editor: RecordRelationship;
     group: RecordRelationship;
+    titleMediafile: RecordRelationship;
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type SectionD = Section & InitializedRecord;
+
 export default Section;

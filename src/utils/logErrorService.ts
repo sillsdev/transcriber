@@ -78,12 +78,28 @@ const axiosErrorText = (err: AxiosError) => {
   return msg;
 };
 
+function stringify(obj: any) {
+  let cache: any[] | null = [];
+  let str = JSON.stringify(obj, function (key, value) {
+    if (typeof value === 'object' && value !== null) {
+      if (cache?.indexOf(value) !== -1) {
+        // Circular reference found, discard key
+        return;
+      }
+      // Store value in our collection
+      cache.push(value);
+    }
+    return value;
+  });
+  cache = null; // reset the cache
+  return str;
+}
 const msgText = (message: Error | string | AxiosError) =>
   typeof message === 'string'
     ? message
     : message instanceof AxiosError
     ? axiosErrorText(message as AxiosError)
-    : JSON.stringify(message) + '\n';
+    : stringify(message) + '\n';
 
 const logMessage = async (
   logFullName: string,
@@ -91,7 +107,7 @@ const logMessage = async (
   msg: Error | string | AxiosError
 ) => {
   // Add file header
-  console.log(`creating new file ${logFullName}`);
+  // console.log(`creating new file ${logFullName}`);
   await ipc?.append(
     logFullName,
     `${new Date().toISOString()} ${levelText(level)}: ${msgText(msg)}\n`

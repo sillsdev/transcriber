@@ -1,16 +1,23 @@
-import { useState, useEffect, useRef, useContext, useMemo } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  useMemo,
+  PropsWithChildren,
+} from 'react';
 import { useGlobal } from 'reactn';
 import { infoMsg, logError, Severity, useCheckOnline } from '../utils';
 import { useInterval } from '../utils/useInterval';
 import Axios from 'axios';
 import {
-  QueryBuilder,
-  Transform,
-  TransformBuilder,
-  Operation,
+  RecordTransform,
+  RecordTransformBuilder,
+  RecordOperation,
   UpdateRecordOperation,
   RecordIdentity,
-} from '@orbit/data';
+  RecordKeyMap,
+} from '@orbit/records';
 import Coordinator from '@orbit/coordinator';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
@@ -37,41 +44,22 @@ import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import {
   ExportType,
   Invitation,
-  IState,
-  MediaFile,
+  InvitationD,
+  MediaFileD,
   OfflineProject,
-  PassageStateChange,
+  PassageStateChangeD,
   Plan,
   VProject,
 } from '../model';
 import IndexedDBSource from '@orbit/indexeddb';
 import * as actions from '../store';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import { TokenContext } from '../context/TokenProvider';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { ReplaceRelatedRecord } from '../model/baseModel';
 import { useSanityCheck } from '../crud/useSanityCheck';
-interface IStateProps {}
-
-interface IDispatchProps {
-  setLanguage: typeof actions.setLanguage;
-}
-
-interface IProps extends IStateProps, IDispatchProps {
-  children: JSX.Element;
-}
-const mapStateToProps = (state: IState): IStateProps => ({});
-
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      setLanguage: actions.setLanguage,
-      resetOrbitError: actions.resetOrbitError,
-    },
-    dispatch
-  ),
-});
+import { useBibleMedia } from '../crud/useBibleMedia';
+import { useDispatch } from 'react-redux';
+import { pullRemoteToMemory } from '../crud/syncToMemory';
 
 export const processDataChanges = async (pdc: {
   token: string | null;
@@ -105,36 +93,40 @@ export const processDataChanges = async (pdc: {
     const orgmem = findRecord(memory, 'organizationmembership', localId);
     if (orgmem) {
       if (related(orgmem, 'user') === user) {
-        memory.sync(await remote.pull((q) => q.findRecords('organization')));
-        memory.sync(await remote.pull((q) => q.findRecords('orgworkflowstep')));
-        memory.sync(
-          await remote.pull((q) => q.findRecords('organizationmembership'))
-        );
+        for (const table of [
+          'organization',
+          'orgworkflowstep',
+          'organizationmembership',
+        ]) {
+          await pullRemoteToMemory({ table, memory, remote });
+        }
       }
     } else
-      memory.update((tb) =>
-        tb.removeRecord({ type: 'organizationmembership', id: localId })
-      );
+      await pullRemoteToMemory({
+        table: 'organizationmembership',
+        memory,
+        remote,
+      });
   };
 
   const reloadProjects = async (localId: string) => {
     const grpmem = findRecord(memory, 'groupmembership', localId);
     if (grpmem) {
       if (related(grpmem, 'user') === user) {
-        memory.sync(await remote.pull((q) => q.findRecords('group')));
-        memory.sync(await remote.pull((q) => q.findRecords('project')));
-        memory.sync(await remote.pull((q) => q.findRecords('plan')));
-        memory.sync(await remote.pull((q) => q.findRecords('groupmembership')));
+        for (const table of ['group', 'project', 'plan', 'groupmembership']) {
+          await pullRemoteToMemory({ table, memory, remote });
+        }
       }
     } else
-      memory.update((tb) =>
-        tb.removeRecord({ type: 'groupmembership', id: localId })
-      );
+      await pullRemoteToMemory({ table: 'groupmembership', memory, remote });
   };
-  const processTableChanges = async (t: Transform[], cb?: () => void) => {
+  const processTableChanges = async (
+    transforms: RecordTransform[],
+    cb?: () => void
+  ) => {
     const setRelated = (
-      newOps: Operation[],
-      tb: TransformBuilder,
+      newOps: RecordOperation[],
+      tb: RecordTransformBuilder,
       relationship: string,
       record: RecordIdentity,
       value: string
@@ -150,8 +142,8 @@ export const processDataChanges = async (pdc: {
       );
     };
     const resetRelated = (
-      newOps: Operation[],
-      tb: TransformBuilder,
+      newOps: RecordOperation[],
+      tb: RecordTransformBuilder,
       relationship: string,
       record: RecordIdentity
     ) => {
@@ -159,40 +151,42 @@ export const processDataChanges = async (pdc: {
     };
 
     const DeleteLocalCopy = (
-      offlineId: string | null,
+      offlineId: string | undefined | null,
       type: string,
-      tb: TransformBuilder,
-      localOps: Operation[]
+      tb: RecordTransformBuilder,
+      localOps: RecordOperation[]
     ) => {
       if (offlineId) {
         const myRecord = findRecord(memory, type, offlineId);
         if (myRecord) {
           localOps.push(
-            tb.removeRecord({
-              type: type,
-              id: offlineId,
-            })
+            tb
+              .removeRecord({
+                type: type,
+                id: offlineId,
+              })
+              .toOperation()
           );
         }
       }
     };
 
-    for (const tr of t) {
-      const tb = new TransformBuilder();
-      const localOps: Operation[] = [];
+    for (const tr of transforms) {
+      const tb = new RecordTransformBuilder();
+      const localOps: RecordOperation[] = [];
       let upRec: UpdateRecordOperation;
 
-      await memory.sync(
-        await backup.push(
-          tr.operations.filter(
-            (o) =>
-              o.op !== 'updateRecord' ||
-              Boolean((o as UpdateRecordOperation).record.relationships)
-          )
-        )
+      let myOps = tr.operations;
+      if (!Array.isArray(myOps)) myOps = [myOps];
+      const ops = myOps.filter(
+        (o) =>
+          o.op !== 'updateRecord' ||
+          Boolean((o as UpdateRecordOperation).record.relationships)
       );
+      await backup.sync((t) => ops);
+      await memory.sync((t) => ops);
 
-      for (const o of tr.operations) {
+      for (const o of myOps) {
         if (o.op === 'updateRecord') {
           upRec = o as UpdateRecordOperation;
           if (!upRec.record.relationships)
@@ -209,7 +203,7 @@ export const processDataChanges = async (pdc: {
             case 'mediafile':
               //await CheckUploadLocal(upRec);
               DeleteLocalCopy(
-                upRec.record.attributes?.offlineId,
+                upRec.record.attributes?.offlineId as string | undefined,
                 upRec.record.type,
                 tb,
                 localOps
@@ -219,10 +213,10 @@ export const processDataChanges = async (pdc: {
               var localId = remoteIdGuid(
                 'mediafile',
                 upRec.record?.keys?.remoteId ?? '',
-                memory.keyMap
+                memory.keyMap as RecordKeyMap
               );
               if (localId) {
-                var mr = findRecord(memory, 'mediafile', localId) as MediaFile;
+                var mr = findRecord(memory, 'mediafile', localId) as MediaFileD;
                 if (related(mr, 'plan') === undefined)
                   setRelated(
                     localOps,
@@ -245,7 +239,7 @@ export const processDataChanges = async (pdc: {
             case 'orgkeytermtarget':
             case 'passagestatechange':
               DeleteLocalCopy(
-                upRec.record.attributes?.offlineId,
+                upRec.record.attributes?.offlineId as string | undefined,
                 upRec.record.type,
                 tb,
                 localOps
@@ -258,7 +252,7 @@ export const processDataChanges = async (pdc: {
                 (upRec.record as Invitation).attributes?.email.toLowerCase() ===
                 userrec.attributes.email.toLowerCase()
               )
-                AcceptInvitation(remote, upRec.record as Invitation);
+                AcceptInvitation(remote, upRec.record as InvitationD);
               break;
             case 'organizationmembership':
               reloadOrgs(upRec.record.id);
@@ -269,7 +263,10 @@ export const processDataChanges = async (pdc: {
           }
         }
       }
-      if (localOps.length > 0) memory.sync(await backup.push(localOps));
+      if (localOps.length > 0) {
+        await backup.sync((t) => localOps);
+        await memory.sync((t) => localOps);
+      }
     }
     if (cb) cb();
   };
@@ -289,23 +286,30 @@ export const processDataChanges = async (pdc: {
     for (const table of changes) {
       if (table.ids.length > 0) {
         if (!remote) return started;
-        var t = await remote.pull((q: QueryBuilder) =>
-          q
-            .findRecords(table.type)
-            .filter({ attribute: 'id-list', value: table.ids.join('|') })
+        var results = await remote.query(
+          (q) =>
+            q
+              .findRecords(table.type)
+              .filter({ attribute: 'id-list', value: table.ids.join('|') }),
+          { fullResponse: true }
         );
-        await processTableChanges(t, cb);
+        if (results?.transforms)
+          await processTableChanges(results.transforms, cb);
       }
     }
     setDataChangeCount(deletes.length);
-    const tb: TransformBuilder = new TransformBuilder();
+    const tb: RecordTransformBuilder = new RecordTransformBuilder();
 
     for (let ix = 0; ix < deletes.length; ix++) {
       const table = deletes[ix];
-      let operations: Operation[] = [];
+      let operations: RecordOperation[] = [];
       // eslint-disable-next-line no-loop-func
       table.ids.forEach((r) => {
-        const localId = remoteIdGuid(table.type, r.toString(), memory.keyMap);
+        const localId = remoteIdGuid(
+          table.type,
+          r.toString(),
+          memory.keyMap as RecordKeyMap
+        );
         if (localId) {
           switch (table.type) {
             case 'organizationmembership':
@@ -315,11 +319,14 @@ export const processDataChanges = async (pdc: {
               reloadProjects(localId);
               break;
           }
-          operations.push(tb.removeRecord({ type: table.type, id: localId }));
+          operations.push(
+            tb.removeRecord({ type: table.type, id: localId }).toOperation()
+          );
         }
       });
       if (operations.length > 0) {
-        await memory.sync(await backup.push(operations));
+        await backup.sync((t) => operations);
+        await memory.sync((t) => operations);
       }
     }
 
@@ -360,9 +367,10 @@ export const doDataChanges = async (
     newDate: string,
     start: number
   ) => {
-    const oparray: Operation[] = [];
+    const oparray: RecordOperation[] = [];
     offlineProjectUpdateSnapshot(pid, oparray, memory, newDate, start, false);
-    await memory.sync(await backup.push((t: TransformBuilder) => oparray));
+    await backup.sync((t) => oparray);
+    await memory.sync((t) => oparray);
   };
 
   const version = backup.cache.dbVersion;
@@ -375,7 +383,7 @@ export const doDataChanges = async (
       const p = projectsLoaded[ix];
       const op = getOfflineProject(p);
       if (
-        !isNaN(remoteIdNum('project', p, memory.keyMap)) &&
+        !isNaN(remoteIdNum('project', p, memory.keyMap as RecordKeyMap)) &&
         op.attributes?.snapshotDate &&
         Date.parse(op.attributes.snapshotDate) < Date.parse(lastTime)
       ) {
@@ -390,7 +398,7 @@ export const doDataChanges = async (
               [
                 'projlist',
                 JSON.stringify({
-                  id: remoteId('project', p, memory.keyMap),
+                  id: remoteId('project', p, memory.keyMap as RecordKeyMap),
                   since: op.attributes.snapshotDate,
                 }),
               ],
@@ -437,26 +445,31 @@ export const doDataChanges = async (
     localStorage.setItem(userNextStartKey, (startNext + 1).toString());
   else {
     if (version === 6) {
-      let operations: Operation[] = [];
+      let operations: RecordOperation[] = [];
       //clean up abandoned pscs
       var pscs = (
-        memory.cache.query((q: QueryBuilder) =>
+        memory.cache.query((q) =>
           q.findRecords('passagestatechange')
-        ) as PassageStateChange[]
+        ) as PassageStateChangeD[]
       ).filter((p) => !Boolean(p.keys?.remoteId));
       if (pscs.length > 0) {
-        const tb = new TransformBuilder();
+        const tb = new RecordTransformBuilder();
         pscs.forEach((p) =>
-          operations.push(tb.removeRecord({ type: p.type, id: p.id }))
+          operations.push(
+            tb.removeRecord({ type: p.type, id: p.id }).toOperation()
+          )
         );
-        await memory.sync(await backup.push(operations));
+        await backup.sync((t) => operations);
+        await memory.sync((t) => operations);
       }
     }
   }
 };
 
-export function DataChanges(props: IProps) {
-  const { children, setLanguage } = props;
+export function DataChanges(props: PropsWithChildren) {
+  const { children } = props;
+  const dispatch = useDispatch();
+  const setLanguage = (lang: string) => dispatch(actions.setLanguage(lang));
   const [isOffline] = useGlobal('offline');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
@@ -485,6 +498,7 @@ export function DataChanges(props: IProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const saving = useMemo(() => anySaving(), [toolsChanged]);
   const doSanityCheck = useSanityCheck(setLanguage);
+  const { getBibleMediaProject, getBibleMediaPlan } = useBibleMedia();
 
   useEffect(() => {
     const defaultBusyDelay = 1000;
@@ -540,6 +554,9 @@ export function DataChanges(props: IProps) {
         setDataChangeCount
       );
       if (check) {
+        //make sure we have a bible media project and plan downloaded
+        await getBibleMediaPlan();
+        await doSanityCheck((await getBibleMediaProject()).id);
         for (var ix = 0; ix < projectsLoaded.length; ix++)
           await doSanityCheck(projectsLoaded[ix]);
       }
@@ -572,6 +589,6 @@ export function DataChanges(props: IProps) {
   useInterval(updateData, dataDelay);
   useInterval(backupElectron, defaultBackupDelay);
   // render the children component.
-  return children;
+  return children as JSX.Element;
 }
-export default connect(mapStateToProps, mapDispatchToProps)(DataChanges) as any;
+export default DataChanges;

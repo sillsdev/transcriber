@@ -1,59 +1,74 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
-import { withData } from 'react-orbitjs';
 import {
-  IState,
   MediaFile,
+  MediaFileD,
   Passage,
   Section,
   Plan,
   BookName,
-  IMediaTabStrings,
+  IState,
+  ProjectD,
 } from '../../model';
-import localStrings from '../../selector/localize';
-import { QueryBuilder } from '@orbit/data';
-import { related, useArtifactType, usePlan } from '../../crud';
-import { IRow, getMedia, IGetMedia } from '.';
+import {
+  findRecord,
+  related,
+  useArtifactType,
+  usePlan,
+  useRole,
+} from '../../crud';
+import { IRow, IGetMedia } from '.';
+import { getMedia } from './getMedia';
 import AudioTable from './AudioTable';
 import { ActionRow, GrowingDiv } from '../StepEditor';
 import SelectLatest from './SelectLatest';
 import { UpdateRecord } from '../../model/baseModel';
+import { useOrbitData } from '../../hoc/useOrbitData';
+import { useSelector } from 'react-redux';
 
-interface IStateProps {
-  t: IMediaTabStrings;
-  allBookData: BookName[];
-}
+import {
+  projDefSectionMap,
+  useProjectDefaults,
+} from '../../crud/useProjectDefaults';
 
-interface IRecordProps {
-  mediaFiles: Array<MediaFile>;
-  passages: Array<Passage>;
-  sections: Array<Section>;
-}
-
-interface IProps extends IStateProps, IRecordProps {
+interface IProps {
   passId: string;
 }
 export const VersionDlg = (props: IProps) => {
-  const { passId, allBookData } = props;
-  const { mediaFiles, passages, sections } = props;
+  const { passId } = props;
+  const mediaFiles = useOrbitData<MediaFile[]>('mediafile');
+  const sections = useOrbitData<Section[]>('section');
+  const passages = useOrbitData<Passage[]>('passage');
+
   const [plan] = useGlobal('plan');
+  const [project] = useGlobal('project');
   const [memory] = useGlobal('memory');
+  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const { getPlan } = usePlan();
   const [user] = useGlobal('user');
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [playItem, setPlayItem] = useState('');
   const [data, setData] = useState<IRow[]>([]);
+  const [sectionArr, setSectionArr] = useState<[number, string][]>([]);
+  const [sectionMap, setSectionMap] = useState(new Map<number, string>());
+  const [shared, setShared] = useState(false);
   const [versions, setVersions] = useState<number[]>([]);
   const [refresh, setRefresh] = useState(0);
   const { IsVernacularMedia } = useArtifactType();
   const handleRefresh = () => setRefresh(refresh + 1);
+  const allBookData: BookName[] = useSelector(
+    (state: IState) => state.books.bookData
+  );
+  const { getProjectDefault } = useProjectDefaults();
+  const { userIsAdmin } = useRole();
+  const [readonly] = useState((offline && !offlineOnly) || !userIsAdmin);
 
   const handleLatest = (version: number) => {
     const id = data.find((d) => parseInt(d.version) === version)?.id;
     const nextVersion = Math.max(...versions) + 1;
     if (id) {
-      const pi = mediaFiles.find((m) => m.id === id);
+      const pi = mediaFiles.find((m) => m.id === id) as MediaFileD | undefined;
       if (pi) {
         pi.attributes.versionNumber = nextVersion;
         memory
@@ -62,6 +77,17 @@ export const VersionDlg = (props: IProps) => {
       }
     }
   };
+  useEffect(() => {
+    let projRec = findRecord(memory, 'project', project) as ProjectD;
+    let projSectionArr: undefined | [number, string][] = [];
+    if (projRec) {
+      setShared(projRec?.attributes?.isPublic || false);
+      projSectionArr = getProjectDefault(projDefSectionMap, projRec);
+    }
+    setSectionArr(projSectionArr || []);
+    setSectionMap(new Map(projSectionArr || []));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project]);
 
   useEffect(() => {
     const playChange = data[0]?.playIcon !== playItem;
@@ -75,6 +101,7 @@ export const VersionDlg = (props: IProps) => {
       sections,
       playItem,
       allBookData,
+      sectionMap,
       isPassageDate: false,
     };
     const newData = getMedia(media, mediaData);
@@ -92,6 +119,9 @@ export const VersionDlg = (props: IProps) => {
         setRefresh={handleRefresh}
         playItem={playItem}
         setPlayItem={setPlayItem}
+        readonly={readonly}
+        sectionArr={sectionArr}
+        shared={shared}
       />
       <ActionRow>
         <GrowingDiv />
@@ -101,17 +131,4 @@ export const VersionDlg = (props: IProps) => {
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'mediaTab' }),
-  allBookData: state.books.bookData,
-});
-
-const mapRecordsToProps = {
-  mediaFiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  passages: (q: QueryBuilder) => q.findRecords('passage'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(VersionDlg) as any
-) as any;
+export default VersionDlg;

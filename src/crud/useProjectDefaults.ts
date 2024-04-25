@@ -1,9 +1,16 @@
-import { TransformBuilder } from '@orbit/data';
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
-import { Project, RoleNames } from '../model';
+import { ProjectD, RoleNames } from '../model';
 import { UpdateRecord } from '../model/baseModel';
 import { findRecord } from './tryFindRecord';
+import { useJsonParams } from '../utils';
+
+export const projDefExportNumbers = 'exportNumbers';
+export const projDefSectionMap = 'sectionMap';
+export const projDefBook = 'book';
+export const projDefHidePublishing = 'hidePublishing';
+export const projDefFirstMovement = 'firstMovement';
+export const projDefFilterParam = 'ProjectFilter';
 
 export const useProjectDefaults = () => {
   const [project] = useGlobal('project');
@@ -12,20 +19,24 @@ export const useProjectDefaults = () => {
   const [memory] = useGlobal('memory');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [offline] = useGlobal('offline');
+  const { getParam, setParam, willSetParam } = useJsonParams();
 
-  const getProjectDefault = (label: string) => {
-    const proj = findRecord(memory, 'project', project) as Project;
-    const json = JSON.parse(proj?.attributes.defaultParams ?? '{}');
-    if (json.hasOwnProperty(label)) return JSON.parse(json[label]);
-    return undefined;
+  const getProjectDefault = (label: string, proj?: ProjectD) => {
+    if (!proj) proj = findRecord(memory, 'project', project) as ProjectD;
+    return getParam(label, proj?.attributes?.defaultParams);
   };
+
   const setProjectDefault = (label: string, value: any) => {
-    const proj = findRecord(memory, 'project', project) as Project;
-    const json = JSON.parse(proj.attributes.defaultParams ?? '{}');
-    if (value) json[label] = JSON.stringify(value);
-    else delete json[label];
-    proj.attributes.defaultParams = JSON.stringify(json);
-    memory.update((t: TransformBuilder) => UpdateRecord(t, proj, user));
+    const proj = findRecord(memory, 'project', project) as ProjectD;
+    if (!proj || !proj.attributes) return;
+    if (willSetParam(label, value, proj.attributes.defaultParams)) {
+      proj.attributes.defaultParams = setParam(
+        label,
+        value,
+        proj.attributes.defaultParams
+      );
+      memory.update((t) => UpdateRecord(t, proj, user));
+    }
   };
 
   const canSetProjectDefault = useMemo(

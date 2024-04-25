@@ -8,7 +8,7 @@ import { sharedSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import TaskTable, { TaskTableWidth } from '../TaskTable';
 import { ToolSlug } from '../../crud';
-import { waitForIt } from '../../utils';
+import { JSONParse, waitForIt } from '../../utils';
 import { useGlobal } from 'reactn';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 
@@ -65,11 +65,11 @@ export function PassageDetailTranscribe({
       .map((s, ix) => ({
         id: s.id,
         sequencenum: ix,
-        tool: JSON.parse(s?.attributes?.tool ?? '{}').tool,
+        tool: JSONParse(s?.attributes?.tool).tool,
         settings:
-          (JSON.parse(s?.attributes?.tool ?? '{}').settings ?? '') === ''
+          (JSONParse(s?.attributes?.tool).settings ?? '') === ''
             ? '{}'
-            : JSON.parse(s?.attributes?.tool ?? '{}').settings,
+            : JSONParse(s?.attributes?.tool).settings,
       }));
   }, [orgWorkflowSteps]);
 
@@ -131,19 +131,22 @@ export function PassageDetailTranscribe({
 
   const handleComplete = (complete: boolean) => {
     waitForIt(
-      'change cleared afert save',
+      'change cleared after save',
       () => !globals.changed,
       () => false,
       200
-    ).then(() => {
-      setStepComplete(currentstep, complete);
+    ).then(async () => {
+      await setStepComplete(currentstep, complete);
+      //is this what users want if they have next passage set?
+      //do they want to transcribe the next passage...probably?
+      //change this to gotoNextStep()?
       if (complete) setCurrentStep(nextStep || '');
     });
   };
 
-  const uncompletedSteps = () => {
-    setStepComplete(currentstep, false);
-    if (hasChecking && nextStep) setStepComplete(nextStep, false);
+  const uncompletedSteps = async () => {
+    await setStepComplete(currentstep, false);
+    if (hasChecking && nextStep) await setStepComplete(nextStep, false);
     if (curRole === 'editor' && prevStep) setCurrentStep(prevStep || '');
   };
 
@@ -151,12 +154,12 @@ export function PassageDetailTranscribe({
     uncompletedSteps();
   };
 
-  const handleReject = (reason: string) => {
+  const handleReject = async (reason: string) => {
     uncompletedSteps();
     if (reason === ActivityStates.NeedsNewRecording) {
       const recordStep = parsedSteps.find((s) => s.tool === ToolSlug.Record);
       if (recordStep) {
-        setStepComplete(recordStep.id, false);
+        await setStepComplete(recordStep.id, false);
         setCurrentStep(recordStep.id);
         return;
       }

@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { WorkflowStep } from '.';
 
 export interface OrgWorkflowStep extends WorkflowStep {
@@ -17,5 +17,7 @@ export interface OrgWorkflowStep extends WorkflowStep {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type OrgWorkflowStepD = OrgWorkflowStep & InitializedRecord;
 
 export default OrgWorkflowStep;

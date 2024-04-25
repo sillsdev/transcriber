@@ -1,9 +1,14 @@
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { Grid, GridProps, styled, Typography } from '@mui/material';
-import { passageReference, sectionDescription } from '../crud';
-import { BookName, Passage, Section, Plan } from '../model';
-import { QueryBuilder } from '@orbit/data';
+import {
+  passageRefText,
+  PassageReference,
+  sectionDescription,
+  usePlanType,
+} from '../crud';
+import { BookName, Passage, Section } from '../model';
+import { PassageDetailContext } from '../context/PassageDetailContext';
 
 const GridRoot = styled(Grid)<GridProps>(({ theme }) => ({
   display: 'flex',
@@ -18,19 +23,19 @@ interface IProps {
 export const SectionPassageTitle = (props: IProps) => {
   const { section, passage, allBookData } = props;
   const [plan] = useGlobal('plan');
-  const [memory] = useGlobal('memory');
+  const { sectionArr } = useContext(PassageDetailContext).state;
+  const sectionMap = new Map<number, string>(sectionArr);
+  const planType = usePlanType();
 
-  const isFlat = useMemo(() => {
-    const plans = (
-      memory.cache.query((q: QueryBuilder) => q.findRecords('plan')) as Plan[]
-    ).filter((p) => p.id === plan);
-    return plans.length === 0 || plans[0].attributes?.flat;
+  const isFlat = useMemo(
+    () => planType(plan)?.flat,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plan]);
+    [plan]
+  );
 
   const passNum = !isFlat ? passage : undefined;
-  const ref = passageReference(passage, allBookData);
-  const refText = ref !== '' ? ` - ${ref}` : '';
+  const ref = passageRefText(passage, allBookData);
+  const refDelim = ref !== '' ? `\u00A0-\u00A0` : '';
 
   return (
     <GridRoot container direction="row">
@@ -40,7 +45,13 @@ export const SectionPassageTitle = (props: IProps) => {
           id="sectionpassagetitle"
           sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
         >
-          {sectionDescription(section, passNum) + refText}
+          {sectionDescription(section, sectionMap, passNum)}
+          {refDelim}
+          <PassageReference
+            passage={passage}
+            bookData={allBookData}
+            flat={isFlat}
+          />
         </Typography>
       </Grid>
     </GridRoot>

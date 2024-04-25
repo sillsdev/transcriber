@@ -9,14 +9,13 @@ import { shallowEqual } from 'react-redux';
 import {
   IState,
   MediaFile,
-  Passage,
-  Section,
+  MediaFileD,
   IMediaTabStrings,
   Plan,
   ISharedStrings,
+  PassageD,
+  SectionD,
 } from '../../model';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import JSONAPISource from '@orbit/jsonapi';
 import { Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -43,30 +42,20 @@ import { useMediaAttach } from '../../crud/useMediaAttach';
 import Memory from '@orbit/memory';
 import PassageChooser from './PassageChooser';
 import Template from './Template';
-import {
-  getMedia,
-  getPassages,
-  IAttachMap,
-  IGetMedia,
-  IPassageData,
-  IPRow,
-  IRow,
-} from '.';
+import { getMedia, IAttachMap, IGetMedia, IPRow, IRow } from '.';
 import { IMatchData, makeMatchMap } from './makeRefMap';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { useSelector } from 'react-redux';
 import { mediaTabSelector, sharedSelector } from '../../selector';
+import { IPassageData, getPassages } from './getPassages';
+import { useOrbitData } from '../../hoc/useOrbitData';
+import { RecordKeyMap } from '@orbit/records';
+import { PlanContext } from '../../context/PlanContext';
 
-interface IRecordProps {
-  mediaFiles: Array<MediaFile>;
-  passages: Array<Passage>;
-  sections: Array<Section>;
-}
-
-interface IProps {}
-
-export function AudioTab(props: IProps & IRecordProps) {
-  const { mediaFiles, passages, sections } = props;
+export function AudioTab() {
+  const passages = useOrbitData<PassageD[]>('passage');
+  const sections = useOrbitData<SectionD[]>('section');
+  const mediaFiles = useOrbitData<MediaFileD[]>('mediafile');
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const allBookData = useSelector((state: IState) => state.books.bookData);
@@ -84,6 +73,8 @@ export function AudioTab(props: IProps & IRecordProps) {
   const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
+  const { sectionArr, shared, readonly } = React.useContext(PlanContext).state;
+  const sectionMap = new Map<number, string>(sectionArr);
   const [attachVisible, setAttachVisible] = useState(false);
   const [mcheck, setMCheck] = useState(-1);
   const [pcheck, setPCheck] = useState(-1);
@@ -98,9 +89,7 @@ export function AudioTab(props: IProps & IRecordProps) {
   const [uploadMedia, setUploadMedia] = useState<string>();
   const inProcess = React.useRef<boolean>(false);
   const [speaker, setSpeaker] = useState('');
-  const [attachPassage, detachPassage] = useMediaAttach({
-    ...props,
-  });
+  const [attachPassage, detachPassage] = useMediaAttach();
   const [refresh, setRefresh] = useState(0);
   const { userIsAdmin } = useRole();
   const cloudSync = useRef(false);
@@ -248,6 +237,7 @@ export function AudioTab(props: IProps & IRecordProps) {
     if (plan) {
       setPlanMedia(getMediaInPlans([plan], mediaFiles, VernacularTag, true));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaFiles, plan, refresh]);
 
   // Check if playItem changes
@@ -259,10 +249,10 @@ export function AudioTab(props: IProps & IRecordProps) {
         sections,
         playItem,
         allBookData,
+        sectionMap,
         isPassageDate: true,
       };
-      const newData = getMedia(planMedia, mediaData);
-      setData(newData);
+      setData(getMedia(planMedia, mediaData));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playItem]);
@@ -274,18 +264,17 @@ export function AudioTab(props: IProps & IRecordProps) {
       sections,
       playItem,
       allBookData,
+      sectionMap,
       isPassageDate: true,
     };
-    const newData = getMedia(planMedia, mediaData);
-    setData(newData);
+    setData(getMedia(planMedia, mediaData));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planMedia, passages, sections, refresh]);
 
   useEffect(() => {
     if (attachVisible || autoMatch) {
       const passData: IPassageData = { media: planMedia, allBookData };
-      const newPassData = getPassages(plan, passages, sections, passData);
-      setPData(newPassData);
+      setPData(getPassages(plan, passages, sections, passData));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planMedia, passages, sections, attachVisible, autoMatch]);
@@ -312,8 +301,11 @@ export function AudioTab(props: IProps & IRecordProps) {
     if (mediaRemoteIds && mediaRemoteIds.length === 1) {
       if (!cancelled.current) {
         setUploadMedia(
-          remoteIdGuid('mediafile', mediaRemoteIds[0], memory.keyMap) ||
-            mediaRemoteIds[0]
+          remoteIdGuid(
+            'mediafile',
+            mediaRemoteIds[0],
+            memory.keyMap as RecordKeyMap
+          ) || mediaRemoteIds[0]
         );
         setAttachVisible(true);
       }
@@ -393,6 +385,9 @@ export function AudioTab(props: IProps & IRecordProps) {
               playItem={playItem}
               setPlayItem={setPlayItem}
               onAttach={onAttach}
+              readonly={readonly}
+              sectionArr={sectionArr}
+              shared={shared}
             />
             {attachVisible && (
               <BigDialog
@@ -431,12 +426,4 @@ export function AudioTab(props: IProps & IRecordProps) {
   );
 }
 
-const mapRecordsToProps = {
-  mediaFiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  passages: (q: QueryBuilder) => q.findRecords('passage'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
-};
-
-export default withData(mapRecordsToProps)(AudioTab) as any as (
-  props: IProps
-) => JSX.Element;
+export default AudioTab;

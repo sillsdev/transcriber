@@ -1,7 +1,5 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import * as actions from '../store';
 import path from 'path-browserify';
 import {
@@ -10,14 +8,15 @@ import {
   ExportType,
   Project,
   ISharedStrings,
-  FileResponse,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
-import localStrings from '../selector/localize';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../hoc/SnackBar';
 import Progress from '../control/UploadProgress';
-import { offlineProjectUpdateFilesDownloaded, useProjectExport } from '../crud';
+import {
+  findRecord,
+  offlineProjectUpdateFilesDownloaded,
+  useProjectExport,
+} from '../crud';
 import {
   currentDateTime,
   dataPath,
@@ -25,8 +24,11 @@ import {
   PathType,
   Severity,
 } from '../utils';
-import { Operation } from '@orbit/data';
+import { RecordOperation } from '@orbit/records';
 import IndexedDBSource from '@orbit/indexeddb';
+import { useSelector } from 'react-redux';
+import { sharedSelector, transcriptionTabSelector } from '../selector';
+import { useDispatch } from 'react-redux';
 const ipc = (window as any)?.electron;
 
 enum Steps {
@@ -37,29 +39,24 @@ enum Steps {
   Error,
 }
 
-interface IStateProps {
-  t: ITranscriptionTabStrings;
-  ts: ISharedStrings;
-  exportFile: FileResponse;
-  exportStatus: IAxiosStatus | undefined;
-}
-
-interface IDispatchProps {
-  exportProject: typeof actions.exportProject;
-  exportComplete: typeof actions.exportComplete;
-}
-
 interface IProps {
-  open: Boolean;
+  open: boolean;
   projectIds: string[];
   finish: () => void;
 }
 
-export const ProjectDownload = (
-  props: IProps & IStateProps & IDispatchProps
-) => {
-  const { open, projectIds, t, ts, finish } = props;
-  const { exportProject, exportComplete, exportStatus, exportFile } = props;
+export const ProjectDownload = (props: IProps) => {
+  const { open, projectIds, finish } = props;
+  const t: ITranscriptionTabStrings = useSelector(transcriptionTabSelector);
+  const ts: ISharedStrings = useSelector(sharedSelector);
+  const exportStatus = useSelector(
+    (state: IState) => state.importexport.importexportStatus
+  );
+  const exportFile = useSelector(
+    (state: IState) => state.importexport.exportFile
+  );
+  const dispatch = useDispatch();
+  const exportComplete = () => dispatch(actions.exportComplete());
   const [errorReporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
@@ -67,8 +64,6 @@ export const ProjectDownload = (
   const [busy, setBusy] = useGlobal('importexportBusy');
   const { showMessage, showTitledMessage } = useSnackBar();
   const doProjectExport = useProjectExport({
-    exportProject,
-    t,
     message: t.creatingDownloadFile,
   });
   const [progress, setProgress] = React.useState<Steps>(Steps.Prepare);
@@ -76,7 +71,7 @@ export const ProjectDownload = (
   const [currentStep, setCurrentStep] = React.useState(0);
   const [exportName, setExportName] = React.useState('');
   const [exportUrl, setExportUrl] = React.useState('');
-  const [offlineUpdates] = React.useState<Operation[]>([]);
+  const [offlineUpdates] = React.useState<RecordOperation[]>([]);
   const backup = coordinator.getSource('backup') as IndexedDBSource;
 
   const translateError = (err: IAxiosStatus): string => {
@@ -87,17 +82,14 @@ export const ProjectDownload = (
 
   React.useEffect(() => {
     const updateLocalOnly = async () => {
-      await memory.sync(
-        await backup.push((t: TransformBuilder) => offlineUpdates)
-      );
+      await backup.sync((t) => offlineUpdates);
+      await memory.sync((t) => offlineUpdates);
     };
     if (open && projectIds.length > 0 && progress === Steps.Prepare) {
       if (currentStep < projectIds.length) {
         let newSteps = new Array<string>();
         projectIds.forEach((pId) => {
-          const projRec = memory.cache.query((q: QueryBuilder) =>
-            q.findRecord({ type: 'project', id: pId })
-          ) as Project;
+          const projRec = findRecord(memory, 'project', pId) as Project;
           if (projRec) newSteps = newSteps.concat(projRec.attributes.name);
         });
         setSteps(newSteps);
@@ -148,46 +140,47 @@ export const ProjectDownload = (
 
   React.useEffect(() => {
     if (progress === Steps.Download) {
-      const localPath = dataPath(exportName, PathType.ZIP);
-      ipc?.createFolder(path.dirname(localPath)).then(() => {
-        ipc
-          ?.downloadLaunch(exportUrl, localPath)
-          .then((token: string) => {
-            const timer = setInterval(() => {
-              ipc?.downloadStat(token).then((reply: string) => {
-                const { received, total, error } = reply
-                  ? (JSON.parse(reply) as StatReply)
-                  : {
-                      received: 0,
-                      total: 0,
-                      error: 'no downloadStat reply for ' + token,
-                    };
-                if (error) {
-                  logError(Severity.error, errorReporter, error);
-                  clearInterval(timer);
-                  ipc?.downloadClose(token);
-                } else if (received < total) {
-                  showTitledMessage(
-                    t.downloadProject,
-                    t.downloading.replace(
-                      '{0}',
-                      `${exportName} ${Math.round((received * 100) / total)}%`
-                    )
-                  );
-                } else {
-                  clearInterval(timer);
-                  ipc?.downloadClose(token);
-                  setProgress(Steps.Import);
-                }
-              });
-            }, 500);
-          })
-          .catch((ex: Error) => {
-            logError(Severity.error, errorReporter, ex);
-          })
-          .finally(() => {
-            URL.revokeObjectURL(exportUrl);
-          });
+      dataPath(exportName, PathType.ZIP).then((localPath) => {
+        ipc?.createFolder(path.dirname(localPath)).then(() => {
+          ipc
+            ?.downloadLaunch(exportUrl, localPath)
+            .then((token: string) => {
+              const timer = setInterval(() => {
+                ipc?.downloadStat(token).then((reply: string) => {
+                  const { received, total, error } = reply
+                    ? (JSON.parse(reply) as StatReply)
+                    : {
+                        received: 0,
+                        total: 0,
+                        error: 'no downloadStat reply for ' + token,
+                      };
+                  if (error) {
+                    logError(Severity.error, errorReporter, error);
+                    clearInterval(timer);
+                    ipc?.downloadClose(token);
+                  } else if (received < total) {
+                    showTitledMessage(
+                      t.downloadProject,
+                      t.downloading.replace(
+                        '{0}',
+                        `${exportName} ${Math.round((received * 100) / total)}%`
+                      )
+                    );
+                  } else {
+                    clearInterval(timer);
+                    ipc?.downloadClose(token);
+                    setProgress(Steps.Import);
+                  }
+                });
+              }, 500);
+            })
+            .catch((ex: Error) => {
+              logError(Severity.error, errorReporter, ex);
+            })
+            .finally(() => {
+              URL.revokeObjectURL(exportUrl);
+            });
+        });
       });
       showTitledMessage(
         t.downloadProject,
@@ -200,8 +193,9 @@ export const ProjectDownload = (
   React.useEffect(() => {
     if (progress === Steps.Import) {
       (async () => {
-        const localPath = dataPath(exportName, PathType.ZIP);
-        await ipc?.zipExtractOpen(localPath, dataPath());
+        const localPath = await dataPath(exportName, PathType.ZIP);
+        const dest = await dataPath();
+        await ipc?.zipStreamExtract(localPath, dest);
         offlineProjectUpdateFilesDownloaded(
           projectIds[currentStep],
           offlineUpdates,
@@ -220,9 +214,11 @@ export const ProjectDownload = (
 
   React.useEffect(() => {
     return () => {
-      exportComplete();
-      setBusy(false);
-      finish();
+      if (projectIds.length > 0) {
+        exportComplete();
+        setBusy(false);
+        finish();
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -249,24 +245,4 @@ export const ProjectDownload = (
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'transcriptionTab' }),
-  ts: localStrings(state, { layout: 'shared' }),
-  exportFile: state.importexport.exportFile,
-  exportStatus: state.importexport.importexportStatus,
-});
-
-const mapDispatchToProps = (dispatch: any) => ({
-  ...bindActionCreators(
-    {
-      exportProject: actions.exportProject,
-      exportComplete: actions.exportComplete,
-    },
-    dispatch
-  ),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProjectDownload as any) as any;
+export default ProjectDownload;

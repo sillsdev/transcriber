@@ -1,8 +1,18 @@
-import { Operation, TransformBuilder } from '@orbit/data';
+import {
+  RecordOperation,
+  RecordKeyMap,
+  RecordTransformBuilder,
+  RecordIdentity,
+} from '@orbit/records';
 import { useDispatch } from 'react-redux';
 import { useGlobal } from 'reactn';
 import { findRecord, remoteIdGuid } from '.';
-import { MediaFile, OrgKeytermTarget, IApiError } from '../model';
+import {
+  MediaFile,
+  OrgKeytermTarget,
+  IApiError,
+  OrgKeytermTargetD,
+} from '../model';
 import {
   AddRecord,
   UpdateRecord,
@@ -34,23 +44,24 @@ export const useKeyTermSave = ({ cb }: IProps) => {
     let mediaRec: MediaFile | undefined = undefined;
     if (mediaRemId) {
       const id =
-        remoteIdGuid('mediafile', mediaRemId, memory.keyMap) || mediaRemId;
+        remoteIdGuid('mediafile', mediaRemId, memory.keyMap as RecordKeyMap) ||
+        mediaRemId;
       mediaRec = findRecord(memory, 'mediafile', id) as MediaFile;
     }
 
-    const t = new TransformBuilder();
-    const ops: Operation[] = [];
+    const t = new RecordTransformBuilder();
+    const ops: RecordOperation[] = [];
     var termTargetRec: OrgKeytermTarget;
     if (termTargetId) {
       termTargetRec = findRecord(
         memory,
         'comment',
         termTargetId
-      ) as OrgKeytermTarget;
+      ) as OrgKeytermTargetD;
       termTargetRec.attributes.term = term;
       termTargetRec.attributes.termIndex = termIndex;
       termTargetRec.attributes.target = target;
-      ops.push(...UpdateRecord(t, termTargetRec, user));
+      ops.push(...UpdateRecord(t, termTargetRec as OrgKeytermTargetD, user));
     } else {
       termTargetRec = {
         type: 'orgkeytermtarget',
@@ -60,7 +71,7 @@ export const useKeyTermSave = ({ cb }: IProps) => {
         ...AddRecord(t, termTargetRec, user, memory),
         ...ReplaceRelatedRecord(
           t,
-          termTargetRec,
+          termTargetRec as RecordIdentity,
           'organization',
           'organization',
           org
@@ -71,7 +82,7 @@ export const useKeyTermSave = ({ cb }: IProps) => {
       ops.push(
         ...UpdateRelatedRecord(
           t,
-          termTargetRec,
+          termTargetRec as OrgKeytermTargetD,
           'mediafile',
           'mediafile',
           mediaRec.id,

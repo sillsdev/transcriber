@@ -1,10 +1,10 @@
-import { Record } from '@orbit/data';
+import { InitializedRecord } from '@orbit/records';
 
 interface ChangeList {
   type: string;
   ids: number[];
 }
-export interface DataChange extends Record {
+export interface DataChange extends InitializedRecord {
   attributes: {
     startnext: number;
     querydate: Date;

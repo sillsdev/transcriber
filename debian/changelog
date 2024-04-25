@@ -1,3 +1,143 @@
+audio-project-manager (3.0.0.0)  experimental; urgency=high
+
+ * TT-2526 Update Project Card Counts (#1526)
+ * TT-3103 Remember when User completes Resource (#1542)
+ * TT-5076 move discussion to another step
+ * TT-5101 TT-5415 note searching (#1407)
+ * TT-5158 Track user making the recording in versions table (#1421)
+ * TT-5208 Keep Phrase Back Translation order (#1491)
+ * TT-5226 No Transcription Header without Transcriptions
+ * TT-5282 ignore other books besides the first one (#1422)
+ * TT-5292 TT-5289 implement move section up/down (#1415)
+ * TT-5321 Retain Section head badge (#1481)
+ * TT-5333 Add ability to record note titles (#1404)
+ * TT-5353 Speaker Name (#1528)
+ * TT-5370 no auto save while recording title (#1423)
+ * TT-5386 Enable editing sheet titles (#1454)
+ * TT-5412 Add graphic, color, title recording to categories for notes (#1406)
+ * TT-5414 Note title (#1426)
+ * TT-5416 Check BibleId format (#1529)
+ * TT-5418 No offline title recording (#1412)
+ * TT-5420 show chapter number in reference (#1428)
+ * TT-5453 step complete navigation
+ * TT-5463 Title Play - Pause- check if recording is allowed
+ * TT-5470 disable everything while recording
+ * TT-5476 no longer need a project to save language/bible info
+ * TT-5478 No Offline Linked Resources (#1527)
+ * TT-5486 remove position field from passage
+ * TT-5495 Always set permission titles (#1402)
+ * TT-5499 Downloading offline content (#1417)
+ * TT-5501  * TT-4979  * TT-5453 Show Transcription (#1413)
+ * TT-5502 Launching Audacity (#1405)
+ * TT-5509 Team Graphic Rights- limit graphic rights list to team rights holders
+ * TT-5521 Customize color picker (#1530)
+ * TT-5525 Sync bulk upload (#1555)
+ * TT-5528 Note Category Graphic and color (#1429)
+ * TT-5530 Note Title required (#1433)
+ * TT-5533 Remove Categories with Team (#1479)
+ * TT-5539 show team changes (#1437)
+ * TT-5540 assigning refreshed selected sections
+ * TT-5545 Edit linked notes from anywhere they are refenced (#1448)
+ * TT-5550 Lower case email
+ * TT-5551 Display Netflix publishing section and movement seq
+ * TT-5554 Simplify moves (#1446)
+ * TT-5562 Allow user to set beginning movement number (#1457)
+ * TT-5563 positive whole section numbers
+ * TT-5567 Labeling first movement (#1474)
+ * TT-5578 Offline Categories- no notes for offline only
+ * TT-5580 initial movement
+ * TT-5582 Movements whole >= 1
+ * TT-5587 allow note to move into movement or book above first section (#1471)
+ * TT-5590 No Discussion save on cancel (#1478)
+ * TT-5591 Category Rights (#1480)
+ * TT-5597 handle label undefined in Stage control (#1482)
+ * TT-5600 downloading notes from other projects (#1492)
+ * TT-5602 Netflix numbering (#1485)
+ * TT-5605 loading chinese
+ * TT-5606 Spanish book names (#1486)
+ * TT-5608 Update Resource Terms (#1494)
+ * TT-5611 Login invalid state (#1488)
+ * TT-5612 uploading general (#1489)
+ * TT-5614 Selectively sync section numbers to Paratext (#1502)
+ * TT-5615 No Resequence with publishing (#1496)
+ * TT-5624 set project defaults only if necessary
+ * TT-5629 disable linking notes offline (#1499)
+ * TT-5636 set count to 0 immediately after sync (#1507)
+ * TT-5642 Import offline project (#1574)
+ * TT-5643 Only Team Linked Notes (#1512)
+ * TT-5646 Sync Numbers on 1st passage in section
+ * TT-5651 New Discussion Save (#1515)
+ * TT-5655 Refresh Discussions (#1521)
+ * TT-5661 Graphic Rights Required (#1552)
+ * TT-5661 notice if the graphic right holder is removed (#1588)
+ * TT-5681 Offline Workflow Settings (#1587)
+ * TT-5683 use paratext fobai permission to allow publish (#1538)
+ * TT-5684 Publication Media Sharing
+ * TT-5686 Improve shared resource  search (#1586)
+ * TT-5687 remember the section state (#1559)
+ * TT-5689 Accept .jpeg for graphic (#1537)
+ * TT-5690 Don't delete last admin (#1540)
+ * TT-5707 Allow admin to delete other users
+ * TT-5710 moving sections in large project (#1550)
+ * TT-5717 dont reset bible if no bibleid (yet)
+ * TT-5722 Team setting to stay on current passage next step on set complete (#1573)
+ * TT-5723 Add description and copyright to bible (#1557)
+ * TT-5724 Explain Publishing Options (#1570)
+ * TT-5731 don't download media titles until asked to play (#1595)
+ * TT-5732 indicate publication status with colors red/yellow/green (#1556)
+ * TT-5734 Get Artifact Font from workflow
+ * TT-5734 Setting font and direction when showing transcription
+ * TT-5737 delete online only
+ * TT-5738 reset name when cleared (#1598)
+ * TT-5742 add publishTo to indicate publishing level.  Current values = beta or public (#1558)
+ * TT-5746 don't set team default until save
+ * TT-5747 deleting section after creating
+ * TT-5748 Add book designation for General Projects for use in akuo (#1572)
+ * TT-5749 beta background
+ * TT-5749 Movement Beta to Public (#1581)
+ * TT-5751 passage to new section
+ * TT-5753 Labels for Project Expansion (#1566)
+ * TT-5755 Only Yes on publish change (#1565)
+ * TT-5757 Only show beta for published (#1564)
+ * TT-5758 Don't delete published items (#1563)
+ * TT-5769 show media created date (#1577)
+ * TT-5774 change version history to version
+ * TT-5775 don't use the PlanContext in VersionDlg (#1579)
+ * TT-5778 check for empty recs on import (#1584)
+ * TT-5784 reset duration when restarting (#1594)
+ * TT-5787 if they update the bibleid and we already have a bible, update the current bible's id (#1602)
+ * TT-5791 don't create new offline user if they have one (#1604)
+ * TT-5793 show current full size graphic on graphic uploader (#1607)
+ * TT-5796 Move to next step/passage after sync, consultant check (#1601)
+ * TT-5797 Set current to top if current already set (#1599)
+ * TT-5808 No InUse note category delete (#1610)
+ * TT-5818 grab book from project for general (#1605)
+ * TT-5818 Update publishing rows if general book code changes (#1608)
+ * TT-5822 Add Notes Title to Publishing Settings (#1611)
+ * Database serializes json with space so check value not serialized string (#1575)
+ * Fix offline only file name
+ * focus language picker on field first time
+ * Force Data Change After Publish (#1549)
+ * get font info from language picker
+ * Hide publishing sections.  Filter passages if section is filtered (#1473)
+ * keep scrolled region on screen
+ * Mark sections as needing saving.
+ * Only one personal team (#1590)
+ * Only update publishing on first show or from menuitem (#1449)
+ * Publishing info in section state (#1400)
+ * Save default category color (#1553)
+ * set direction based on project or language
+ * Show note source in overview
+ * show projects of each offline user
+ * Sort project resources in Configure list
+ * sync updated graphic record to memory
+ * update language picker for better handling of IPA
+ * updated help
+ * Use resource id to create graphic name (#1606)
+ * varibale rate .mp3 files the position may be slightly off sometimes. (#1582)
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 25 Apr 2024 14:49:00 -0600
+
 audio-project-manager (2.16.9.0)  experimental; urgency=high
 
   * update sanity check checksum logic

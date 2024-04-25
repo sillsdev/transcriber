@@ -3,8 +3,8 @@ const help =
   isElectron && process.env.REACT_APP_DESKTOP_HELP
     ? process.env.REACT_APP_DESKTOP_HELP
     : process.env.REACT_APP_HELP
-    ? process.env.REACT_APP_HELP
-    : '';
+      ? process.env.REACT_APP_HELP
+      : '';
 
 export const OrbitNetworkErrorRetries = 5;
 

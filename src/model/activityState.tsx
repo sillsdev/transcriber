@@ -1,4 +1,4 @@
-import { Record } from '@orbit/data';
+import { UninitializedRecord } from '@orbit/records';
 import { IActivityStateStrings } from '.';
 
 export enum ActivityStates {
@@ -14,7 +14,7 @@ export enum ActivityStates {
   Synced = 'synced',
   Incomplete = 'incomplete',
 }
-export interface ActivityState extends Record {
+export interface ActivityState extends UninitializedRecord {
   attributes: {
     state: string;
     sequencenum: string;

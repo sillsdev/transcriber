@@ -1,11 +1,12 @@
 import { shallowEqual, useSelector } from 'react-redux';
 import { ISharedStrings, MediaFile } from '../../model';
 import { Typography, Box, Stack } from '@mui/material';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   findRecord,
   IMediaState,
   MediaSt,
+  related,
   useFetchMediaUrl,
   VernacularTag,
 } from '../../crud';
@@ -14,24 +15,20 @@ import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import Memory from '@orbit/memory';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import MediaRecord from '../MediaRecord';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import Uploader from '../Uploader';
-import AudacityManager from '../Workflow/AudacityManager';
+import AudacityManager from '../Sheet/AudacityManager';
 import { isElectron } from '../../api-variable';
 import { PriButton } from '../../control';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from '../AudioTab/VersionDlg';
-import { PlanProvider } from '../../context/PlanContext';
 import SpeakerName from '../SpeakerName';
 import { sharedSelector } from '../../selector';
 import { RecordButtons } from './RecordButtons';
+import { useOrbitData } from '../../hoc/useOrbitData';
+import { RecordIdentity } from '@orbit/records';
 
-interface IRecordProps {
-  mediafiles: Array<MediaFile>;
-}
 interface IProps {
   ready?: () => boolean;
   width?: number;
@@ -39,8 +36,9 @@ interface IProps {
 
 const SaveWait = 500;
 
-export function PassageDetailRecord(props: IProps & IRecordProps) {
-  const { ready, mediafiles } = props;
+export function PassageDetailRecord(props: IProps) {
+  const { ready } = props;
+  const mediafiles = useOrbitData<MediaFile[]>('mediafile');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const {
     startSave,
@@ -61,7 +59,7 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   const [coordinator] = useGlobal('coordinator');
   const [offline] = useGlobal('offline');
   const memory = coordinator.getSource('memory') as Memory;
-  const { passage, mediafileId, chooserSize, setRecording } =
+  const { passage, sharedResource, mediafileId, chooserSize, setRecording } =
     usePassageDetailContext();
   const { showMessage } = useSnackBar();
   const toolId = 'RecordTool';
@@ -127,11 +125,15 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   useEffect(() => {
     setHasExistingVersion(
       Boolean(mediafileId) &&
-        recorderState?.status === MediaSt.FETCHED &&
-        recorderState?.id === mediafileId
+      recorderState?.status === MediaSt.FETCHED &&
+      recorderState?.id === mediafileId
     );
   }, [mediafileId, recorderState]);
 
+  const passageId = useMemo(
+    () => related(sharedResource, 'passage') ?? passage.id,
+    [sharedResource, passage]
+  );
   const handleSave = () => {
     startSave(toolId);
   };
@@ -187,108 +189,107 @@ export function PassageDetailRecord(props: IProps & IRecordProps) {
   const handleVerHistClose = () => {
     setVersionVisible(false);
   };
-  const handleNameChange = (name: string) => setSpeaker(name);
+  const handleNameChange = (name: string) => {
+    setSpeaker(name);
+  };
   const handleRights = (hasRights: boolean) => setHasRight(hasRights);
   const handleReload = () => setPreload(preload + 1);
   const handleTrackRecorder = (state: IMediaState) => setRecorderState(state);
   return (
-    <PlanProvider {...props}>
-      <Stack sx={{ width: props.width }}>
-        <RecordButtons
-          onVersions={hasExistingVersion ? handleVersions : undefined}
-          onReload={hasExistingVersion ? handleReload : undefined}
-          onUpload={handleUpload}
-          onAudacity={isElectron ? handleAudacity : undefined}
+    <Stack sx={{ width: props.width }}>
+      <RecordButtons
+        onVersions={hasExistingVersion ? handleVersions : undefined}
+        onReload={hasExistingVersion ? handleReload : undefined}
+        onUpload={handleUpload}
+        onAudacity={isElectron ? handleAudacity : undefined}
+      />
+      <Box sx={{ py: 1 }}>
+        <SpeakerName
+          name={speaker}
+          onChange={handleNameChange}
+          onRights={handleRights}
         />
-        <Box sx={{ py: 1 }}>
-          <SpeakerName
-            name={speaker}
-            onChange={handleNameChange}
-            onRights={handleRights}
-          />
-        </Box>
-        <MediaRecord
-          toolId={toolId}
-          mediaId={mediafileId}
-          uploadMethod={uploadMedia}
-          onSaving={onSaving}
-          onReady={onReady}
-          onRecording={setRecording}
-          defaultFilename={defaultFilename}
-          allowRecord={hasRights}
-          allowWave={true}
-          showFilename={true}
-          showLoad={false}
-          preload={preload}
-          trackState={handleTrackRecorder}
-          setCanSave={setCanSave}
-          setStatusText={setStatusText}
-          doReset={resetMedia}
-          setDoReset={setResetMedia}
-          size={300 - chooserSize}
-          metaData={
-            <>
-              <Typography
-                variant="caption"
-                sx={{
-                  mr: 2,
-                  alignSelf: 'center',
-                  display: 'block',
-                  gutterBottom: 'true',
-                }}
-              >
-                {statusText}
-              </Typography>
-              <PriButton
-                id="rec-save"
-                onClick={handleSave}
-                disabled={(ready && !ready()) || !canSave || !hasRights}
-              >
-                {ts.save}
-              </PriButton>
-            </>
-          }
-        />
+      </Box>
+      <MediaRecord
+        toolId={toolId}
+        mediaId={mediafileId}
+        uploadMethod={uploadMedia}
+        onSaving={onSaving}
+        onReady={onReady}
+        onRecording={setRecording}
+        defaultFilename={defaultFilename}
+        allowRecord={hasRights}
+        allowWave={true}
+        showFilename={true}
+        showLoad={false}
+        preload={preload}
+        trackState={handleTrackRecorder}
+        setCanSave={setCanSave}
+        setStatusText={setStatusText}
+        doReset={resetMedia}
+        setDoReset={setResetMedia}
+        size={300 - chooserSize}
+        metaData={
+          <>
+            <Typography
+              variant="caption"
+              sx={{
+                mr: 2,
+                alignSelf: 'center',
+                display: 'block',
+                gutterBottom: 'true',
+              }}
+            >
+              {statusText}
+            </Typography>
+            <PriButton
+              id="rec-save"
+              onClick={handleSave}
+              disabled={(ready && !ready()) || !canSave || !hasRights}
+            >
+              {ts.save}
+            </PriButton>
+          </>
+        }
+      />
 
-        <Uploader
-          recordAudio={false}
-          importList={importList}
-          isOpen={uploadVisible}
-          onOpen={handleUploadVisible}
-          showMessage={showMessage}
-          multiple={false}
-          finish={afterUpload}
-          cancelled={cancelled}
-          passageId={passage.id}
-          performedBy={speaker}
-          onSpeakerChange={handleNameChange}
-        />
-        <AudacityManager
-          item={1}
-          open={audacityVisible}
-          onClose={handleAudacityClose}
-          passageId={{ type: 'passage', id: passage.id } as RecordIdentity}
-          mediaId={mediafileId}
-          onImport={handleAudacityImport}
-          speaker={speaker}
-          onSpeaker={handleNameChange}
-        />
-        <BigDialog
-          title={ts.versionHistory}
-          isOpen={versionVisible}
-          onOpen={handleVerHistClose}
-        >
-          <VersionDlg passId={passage.id} />
-        </BigDialog>
-      </Stack>
-    </PlanProvider>
+      <Uploader
+        recordAudio={false}
+        importList={importList}
+        isOpen={uploadVisible}
+        onOpen={handleUploadVisible}
+        showMessage={showMessage}
+        multiple={false}
+        finish={afterUpload}
+        cancelled={cancelled}
+        passageId={passageId}
+        performedBy={speaker}
+        onSpeakerChange={handleNameChange}
+      />
+      <AudacityManager
+        item={1}
+        open={audacityVisible}
+        onClose={handleAudacityClose}
+        passageId={
+          {
+            type: 'passage',
+            id: passageId,
+          } as RecordIdentity
+        }
+        mediaId={mediafileId}
+        onImport={handleAudacityImport}
+        speaker={speaker}
+        onSpeaker={handleNameChange}
+      />
+      <BigDialog
+        title={ts.versionHistory}
+        isOpen={versionVisible}
+        onOpen={handleVerHistClose}
+      >
+        <VersionDlg passId={passageId} />
+      </BigDialog>
+    </Stack>
   );
 }
 
-const mapRecordsToProps = {
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-};
-
-export default withData(mapRecordsToProps)(PassageDetailRecord) as any as (
-  props: IProps
-) => JSX.Element;
+export default PassageDetailRecord;

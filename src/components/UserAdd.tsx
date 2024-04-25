@@ -1,9 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { User, GroupMembership, IState, IUsertableStrings } from '../model';
-import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
-import { connect } from 'react-redux';
+import { User, GroupMembership, IUsertableStrings } from '../model';
 import {
   Button,
   Dialog,
@@ -13,9 +10,11 @@ import {
   styled,
   DialogProps,
 } from '@mui/material';
-import { QueryBuilder } from '@orbit/data';
 import UserList from '../control/UserList';
 import { related, allUsersRec } from '../crud';
+import { useOrbitData } from '../hoc/useOrbitData';
+import { shallowEqual, useSelector } from 'react-redux';
+import { userTableSelector } from '../selector';
 
 const StyledDialog = styled(Dialog)<DialogProps>(() => ({
   '& .MuiPaper-root': {
@@ -23,25 +22,19 @@ const StyledDialog = styled(Dialog)<DialogProps>(() => ({
   },
 }));
 
-interface IStateProps {
-  t: IUsertableStrings;
-}
-
-interface IRecordProps {
-  users: Array<User>;
-}
-
-interface IProps extends IStateProps, IRecordProps {
+interface IProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   select: (userId: string) => () => void;
   add: () => void;
 }
 export function UserAdd(props: IProps) {
-  const { open, setOpen, select, add, users, t } = props;
+  const { open, setOpen, select, add } = props;
+  const users = useOrbitData<User[]>('user');
   const [scroll] = React.useState<DialogProps['scroll']>('paper');
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
+  const t: IUsertableStrings = useSelector(userTableSelector, shallowEqual);
 
   // const handleClickOpen = (scrollType: DialogProps['scroll']) => () => {
   //   setOpen(true);
@@ -61,7 +54,7 @@ export function UserAdd(props: IProps) {
     const userRec = users.filter((u) => u?.id === userId);
     if (userRec.length === 0) return false;
     const groupId = allUsersRec(memory, organization)?.id;
-    const memberRecs = memory.cache.query((q: QueryBuilder) =>
+    const memberRecs = memory.cache.query((q) =>
       q.findRecords('groupmembership')
     ) as GroupMembership[];
     const memberRec = memberRecs.filter(
@@ -72,7 +65,7 @@ export function UserAdd(props: IProps) {
 
   const hasIncluded = () => {
     for (let i = users.length; i >= 0; i -= 1)
-      if (isIncluded(users[i]?.id)) return true;
+      if (isIncluded(users[i]?.id as string)) return true;
     return false;
   };
 
@@ -115,14 +108,4 @@ export function UserAdd(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'usertable' }),
-});
-
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(UserAdd) as any
-) as any;
+export default UserAdd;

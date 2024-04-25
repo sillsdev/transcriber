@@ -1,13 +1,5 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import {
-  Discussion,
-  Group,
-  GroupMembership,
-  MediaFile,
-  User,
-} from '../../model';
-import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
+import { DiscussionD } from '../../model';
 import { CommentEditor } from './CommentEditor';
 import { useRecordComment } from './useRecordComment';
 import { useSaveComment } from '../../crud/useSaveComment';
@@ -16,19 +8,13 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 import { Box } from '@mui/material';
 import { related } from '../../crud';
 
-interface IRecordProps {
-  mediafiles: Array<MediaFile>;
-  users: Array<User>;
-  groups: Array<Group>;
-  memberships: Array<GroupMembership>;
-}
 interface IProps {
-  discussion: Discussion;
+  discussion: DiscussionD;
   commentNumber: number;
 }
 
-export const ReplyCard = (props: IProps & IRecordProps) => {
-  const { discussion, commentNumber, users, groups, memberships } = props;
+export const ReplyCard = (props: IProps) => {
+  const { discussion, commentNumber } = props;
   const [refresh, setRefresh] = useState(0);
   const isMounted = useMounted('replycard');
   const {
@@ -48,12 +34,7 @@ export const ReplyCard = (props: IProps & IRecordProps) => {
       setRefresh(refresh + 1);
     }
   };
-  const saveComment = useSaveComment({
-    cb: afterSavecb,
-    users,
-    groups,
-    memberships,
-  });
+  const saveComment = useSaveComment({ cb: afterSavecb });
   const commentText = useRef('');
   const afterUploadcb = async (mediaId: string) => {
     saveComment(discussion.id, '', commentText.current, mediaId, undefined);
@@ -122,13 +103,5 @@ export const ReplyCard = (props: IProps & IRecordProps) => {
     </Box>
   );
 };
-const mapRecordsToProps = {
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  groups: (q: QueryBuilder) => q.findRecords('group'),
-  memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-};
 
-export default withData(mapRecordsToProps)(ReplyCard) as any as (
-  props: IProps
-) => JSX.Element;
+export default ReplyCard;

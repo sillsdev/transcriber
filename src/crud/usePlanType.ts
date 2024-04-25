@@ -1,5 +1,4 @@
 import { Plan, PlanType } from '../model';
-import { QueryBuilder } from '@orbit/data';
 import { useGlobal } from 'reactn';
 import { related, usePlan } from '.';
 
@@ -13,7 +12,7 @@ export const usePlanType = () => {
     const typeId = planRec && related(planRec, 'plantype');
     let typeRec: PlanType | null = null;
     if (typeId)
-      typeRec = memory.cache.query((q: QueryBuilder) =>
+      typeRec = memory.cache.query((q) =>
         q.findRecord({ type: 'plantype', id: typeId })
       ) as PlanType;
     const flat = planRec ? planRec?.attributes?.flat : false;

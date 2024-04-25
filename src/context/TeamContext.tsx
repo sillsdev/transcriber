@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -6,12 +6,16 @@ import * as actions from '../store';
 import {
   IState,
   GroupMembership,
-  Project,
+  ProjectD,
   Plan,
+  PlanD,
   PlanType,
+  PlanTypeD,
   Organization,
+  OrganizationD,
   OrganizationMembership,
   VProject,
+  VProjectD,
   ICardsStrings,
   IVProjectStrings,
   ILanguagePickerStrings,
@@ -21,11 +25,10 @@ import {
   BookNameMap,
   BookName,
   RoleNames,
-  Section,
+  SectionD,
+  SheetLevel,
 } from '../model';
 import { OptionType } from '../model';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import {
   related,
   useFlatAdd,
@@ -44,6 +47,7 @@ import {
   useLoadProjectData,
   useProjectType,
   isPersonalTeam,
+  useOrganizedBy,
 } from '../crud';
 import {
   cardsSelector,
@@ -56,44 +60,27 @@ import {
 } from '../selector';
 import { useDispatch } from 'react-redux';
 import { useHome } from '../utils';
+import { RecordIdentity } from '@orbit/records';
+import { useOrbitData } from '../hoc/useOrbitData';
 
-export type TeamIdType = Organization | null;
-
-interface IRecordProps {
-  organizations: Organization[];
-  orgMembers: OrganizationMembership[];
-  groupMemberships: GroupMembership[];
-  projects: Project[];
-  plans: Plan[];
-  planTypes: PlanType[];
-  sections: Section[];
-}
-const mapRecordsToProps = {
-  organizations: (q: QueryBuilder) => q.findRecords('organization'),
-  orgMembers: (q: QueryBuilder) => q.findRecords('organizationmembership'),
-  groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-  projects: (q: QueryBuilder) => q.findRecords('project'),
-  plans: (q: QueryBuilder) => q.findRecords('plan'),
-  planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
-};
+export type TeamIdType = OrganizationD | null;
 
 const initState = {
   lang: 'en',
   ts: {} as ISharedStrings,
-  resetOrbitError: (() => {}) as typeof actions.resetOrbitError,
+  resetOrbitError: (() => { }) as typeof actions.resetOrbitError,
   bookSuggestions: Array<OptionType>(),
   bookMap: {} as BookNameMap,
   allBookData: Array<BookName>(),
   planTypes: Array<PlanType>(),
   isDeleting: false,
-  teams: Array<Organization>(),
+  teams: Array<OrganizationD>(),
   personalTeam: '',
-  personalProjects: Array<VProject>(),
-  teamProjects: (teamId: string) => Array<VProject>(),
+  personalProjects: Array<VProjectD>(),
+  teamProjects: (teamId: string) => Array<VProjectD>(),
   teamMembers: (teamId: string) => 0,
-  loadProject: (plan: Plan, cb?: () => void) => {},
-  setProjectParams: (project: Plan) => {
+  loadProject: (plan: PlanD, cb?: () => void) => { },
+  setProjectParams: (project: PlanD) => {
     return ['', ''];
   },
   projectType: (project: Plan) => '',
@@ -101,23 +88,23 @@ const initState = {
   projectDescription: (project: Plan) => '',
   projectLanguage: (project: Plan) => '',
   projectCreate: async (project: VProject, team: TeamIdType) => '',
-  projectUpdate: (project: VProject) => {},
-  projectDelete: (project: VProject) => {},
+  projectUpdate: (project: VProjectD) => { },
+  projectDelete: (project: VProjectD) => { },
   teamCreate: (
     team: Organization,
     process: string,
     cb?: (org: string) => Promise<void>
-  ) => {},
-  teamUpdate: (team: Organization) => {},
-  teamDelete: async (team: Organization) => {},
-  isAdmin: (team: Organization) => false,
+  ) => { },
+  teamUpdate: (team: OrganizationD) => { },
+  teamDelete: async (team: RecordIdentity) => { },
+  isAdmin: (team: OrganizationD) => false,
   isProjectAdmin: (team: Organization) => false,
   flatAdd: async (
     planId: string,
     mediaRemoteIds: string[],
     book: string | undefined,
     setComplete?: (amt: number) => void
-  ) => {},
+  ) => { },
   cardStrings: {} as ICardsStrings,
   sharedStrings: {} as ISharedStrings,
   vProjectStrings: {} as IVProjectStrings,
@@ -125,10 +112,9 @@ const initState = {
   projButtonStrings: {} as IProjButtonsStrings,
   newProjectStrings: {} as INewProjectStrings,
   importOpen: false,
-  setImportOpen: (val: boolean) => {},
+  setImportOpen: (val: boolean) => { },
   importProject: undefined as any,
-  doImport: (p: VProject | undefined = undefined) => {},
-  sections: Array<Section>(),
+  doImport: (p: VProject | undefined = undefined) => { },
 };
 
 export type ICtxState = typeof initState & {};
@@ -144,334 +130,354 @@ interface IProps {
   children: React.ReactElement;
 }
 
-const TeamProvider = withData(mapRecordsToProps)(
-  (props: IProps & IRecordProps) => {
-    const {
-      organizations,
-      orgMembers,
-      projects,
-      groupMemberships,
-      plans,
-      planTypes,
+const TeamProvider = (props: IProps) => {
+  const projects = useOrbitData<ProjectD[]>('project');
+  const plans = useOrbitData<PlanD[]>('plan');
+  const planTypes = useOrbitData<PlanTypeD[]>('plantype');
+  const organizations = useOrbitData<OrganizationD[]>('organization');
+  const orgMembers = useOrbitData<OrganizationMembership[]>(
+    'organizationmembership'
+  );
+  const groupMemberships = useOrbitData<GroupMembership[]>('groupmembership');
+  const sections = useOrbitData<SectionD[]>('section');
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const sharedStrings = ts;
+  const cardStrings: ICardsStrings = useSelector(cardsSelector, shallowEqual);
+  const vProjectStrings: IVProjectStrings = useSelector(
+    vProjectSelector,
+    shallowEqual
+  );
+  const pickerStrings: ILanguagePickerStrings = useSelector(
+    pickerSelector,
+    shallowEqual
+  );
+  const projButtonStrings: IProjButtonsStrings = useSelector(
+    projButtonsSelector,
+    shallowEqual
+  );
+  const newProjectStrings: INewProjectStrings = useSelector(
+    newProjectSelector,
+    shallowEqual
+  );
+  const lang = useSelector((state: IState) => state.strings.lang);
+  const allBookData = useSelector((state: IState) => state.books.bookData);
+  const bookMap = useSelector((state: IState) => state.books.map);
+  const bookSuggestions = useSelector(
+    (state: IState) => state.books.suggestions
+  );
+  const dispatch = useDispatch();
+  const fetchBooks = (lang: string) => dispatch(actions.fetchBooks(lang));
+  const resetOrbitError = () => dispatch(actions.resetOrbitError());
+  const [, setOrganization] = useGlobal('organization');
+  const [, setProject] = useGlobal('project');
+  const [, setPlan] = useGlobal('plan');
+  const [user] = useGlobal('user');
+  const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
+  const [importOpen, setImportOpen] = useState(false);
+  const [importProject, setImportProject] = useState<VProject>();
+  const [state, setState] = useState({
+    ...initState,
+    lang,
+    cardStrings,
+    sharedStrings,
+    vProjectStrings,
+    pickerStrings,
+    projButtonStrings,
+    newProjectStrings,
+    ts,
+    resetOrbitError,
+  });
+  const controlStrings = useSelector(controlSelector, shallowEqual);
+  const vProjectCreate = useVProjectCreate();
+  const vProjectUpdate = useVProjectUpdate();
+  const vProjectDelete = useVProjectDelete();
+  const orbitTeamCreate = useTeamCreate();
+  const orbitTeamUpdate = useTeamUpdate();
+  const orbitTeamDelete = useTeamDelete();
+  const orbitFlatAdd = useFlatAdd(sharedStrings);
+  const getTeamId = useNewTeamId();
+  const getPlanType = useTableType('plan');
+  const vProject = useVProjectRead();
+  const oProjRead = useOfflnProjRead();
+  const { getMyOrgRole } = useRole();
+  const { setProjectType } = useProjectType();
+  const { getPlan } = usePlan();
+  const LoadData = useLoadProjectData();
+  const { setMyOrgRole } = useRole();
+  const { resetProject } = useHome();
+  const { getOrganizedBy, localizedOrganizedBy } = useOrganizedBy();
+  const isMakingPersonal = useRef(false);
 
-      sections,
-    } = props;
-    const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-    const sharedStrings = ts;
-    const cardStrings: ICardsStrings = useSelector(cardsSelector, shallowEqual);
-    const vProjectStrings: IVProjectStrings = useSelector(
-      vProjectSelector,
-      shallowEqual
-    );
-    const pickerStrings: ILanguagePickerStrings = useSelector(
-      pickerSelector,
-      shallowEqual
-    );
-    const projButtonStrings: IProjButtonsStrings = useSelector(
-      projButtonsSelector,
-      shallowEqual
-    );
-    const newProjectStrings: INewProjectStrings = useSelector(
-      newProjectSelector,
-      shallowEqual
-    );
-    const lang = useSelector((state: IState) => state.strings.lang);
-    const allBookData = useSelector((state: IState) => state.books.bookData);
-    const bookMap = useSelector((state: IState) => state.books.map);
-    const bookSuggestions = useSelector(
-      (state: IState) => state.books.suggestions
-    );
-    const dispatch = useDispatch();
-    const fetchBooks = (lang: string) => dispatch(actions.fetchBooks(lang));
-    const resetOrbitError = () => dispatch(actions.resetOrbitError());
-    const [, setOrganization] = useGlobal('organization');
-    const [, setProject] = useGlobal('project');
-    const [, setPlan] = useGlobal('plan');
-    const [user] = useGlobal('user');
-    const [memory] = useGlobal('memory');
-    const [isOffline] = useGlobal('offline');
-    const [offlineOnly] = useGlobal('offlineOnly');
-    const userProjects = useRef(projects);
-    const [importOpen, setImportOpen] = useState(false);
-    const [importProject, setImportProject] = useState<VProject>();
-    const [state, setState] = useState({
-      ...initState,
-      lang,
-      cardStrings,
-      sharedStrings,
-      vProjectStrings,
-      pickerStrings,
-      projButtonStrings,
-      newProjectStrings,
-      sections,
-      ts,
-      resetOrbitError,
+  const setProjectParams = (plan: PlanD | VProjectD) => {
+    const projectId = related(plan, 'project');
+    const vproj = plan.type === 'plan' ? vProject(plan) : plan;
+    const orgId = related(vproj, 'organization');
+    setOrganization(orgId);
+    setMyOrgRole(orgId);
+    setProject(projectId);
+    setProjectType(projectId);
+    setPlan(plan.id);
+    return [projectId, orgId];
+  };
+
+  const doImport = (proj: VProject | undefined = undefined) => {
+    setImportProject(proj);
+    setImportOpen(true);
+  };
+
+  const loadProject = (
+    plan: PlanD,
+    cb: (() => void) | undefined = undefined
+  ) => {
+    const [projectId] = setProjectParams(plan);
+    LoadData(projectId, () => {
+      if (cb) cb();
     });
-    const controlStrings = useSelector(controlSelector, shallowEqual);
-    const vProjectCreate = useVProjectCreate();
-    const vProjectUpdate = useVProjectUpdate();
-    const vProjectDelete = useVProjectDelete();
-    const orbitTeamCreate = useTeamCreate();
-    const orbitTeamUpdate = useTeamUpdate();
-    const orbitTeamDelete = useTeamDelete();
-    const orbitFlatAdd = useFlatAdd(sharedStrings);
-    const getTeamId = useNewTeamId();
-    const getPlanType = useTableType('plan');
-    const vProject = useVProjectRead();
-    const oProjRead = useOfflnProjRead();
-    const { getMyOrgRole } = useRole();
-    const { setProjectType } = useProjectType();
-    const { getPlan } = usePlan();
-    const LoadData = useLoadProjectData();
-    const { setMyOrgRole } = useRole();
-    const { resetProject } = useHome();
+  };
 
-    const setProjectParams = (plan: Plan | VProject) => {
-      const projectId = related(plan, 'project');
-      const vproj = plan.type === 'plan' ? vProject(plan) : plan;
-      const orgId = related(vproj, 'organization');
-      setOrganization(orgId);
-      setMyOrgRole(orgId);
-      setProject(projectId);
-      setProjectType(projectId);
-      setPlan(plan.id);
-      return [projectId, orgId];
-    };
+  const isAdmin = (org: OrganizationD) => {
+    const role = getMyOrgRole(org.id);
+    return role === RoleNames.Admin;
+  };
 
-    const doImport = (proj: VProject | undefined = undefined) => {
-      setImportProject(proj);
-      setImportOpen(true);
-    };
-
-    const loadProject = (
-      plan: Plan,
-      cb: (() => void) | undefined = undefined
-    ) => {
-      const [projectId] = setProjectParams(plan);
-      LoadData(projectId, () => {
-        if (cb) cb();
-      });
-    };
-
-    const isAdmin = (org: Organization) => {
-      const role = getMyOrgRole(org.id);
-      return role === RoleNames.Admin;
-    };
-
-    const teamMembers = (teamId: string) => {
-      const recs = orgMembers.filter(
-        (o) => related(o, 'organization') === teamId
-      );
-      return recs.length;
-    };
-
-    const getTeams = () => {
-      let orgs = organizations;
-      //online or offline we may have other user's orgs in the db
-      const orgIds = orgMembers
-        .filter((om) => related(om, 'user') === user)
-        .map((om) => related(om, 'organization'));
-      orgs = organizations.filter((o) => orgIds.includes(o.id));
-      return orgs
-        .filter(
-          (o) =>
-            !isPersonalTeam(o.id, organizations) &&
-            (!isOffline || offlineOnly || teamProjects(o.id).length > 0)
-        )
-        .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1));
-    };
-
-    const projectType = (plan: Plan) => {
-      const planType = getPlanType(plan);
-      return (
-        (planType && controlStrings.getString(planType.toLowerCase())) ||
-        'Training'
-      );
-    };
-
-    const teamProjects = (teamId: string) => {
-      const projIds = userProjects.current
-        .filter(
-          (p) =>
-            related(p, 'organization') === teamId &&
-            (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
-        )
-        .map((p) => p.id);
-      return plans
-        .filter((p) => projIds.includes(related(p, 'project')))
-        .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1))
-        .map((p) => vProject(p));
-    };
-
-    const projectSections = (plan: Plan) => {
-      const sectionIds: string[] | null = related(plan, 'sections');
-      return sectionIds ? sectionIds.length.toString() : '<na>';
-    };
-
-    const getProject = (plan: Plan) => {
-      const projectId = related(plan, 'project');
-      const projRecs = projects.filter((p) => p.id === projectId);
-      if (projRecs.length > 0) return projRecs[0];
-      return null;
-    };
-
-    const projectDescription = (plan: Plan) => {
-      const projRec = getProject(plan);
-      return projRec?.attributes?.description || '';
-    };
-
-    const projectLanguage = (plan: Plan) => {
-      const projRec = getProject(plan);
-      return projRec?.attributes?.languageName || 'English';
-    };
-
-    const projectCreate = async (project: VProject, team: TeamIdType) => {
-      const teamId = await getTeamId(team?.id);
-      return await vProjectCreate(project, teamId);
-    };
-
-    const projectUpdate = (project: VProject) => {
-      vProjectUpdate(project);
-    };
-
-    const projectDelete = async (project: VProject) => {
-      await vProjectDelete(project);
-      resetProject();
-    };
-
-    const teamCreate = (
-      team: Organization,
-      process: string,
-      cb?: (org: string) => Promise<void>
-    ) => {
-      orbitTeamCreate(team, process, cb);
-    };
-
-    const teamUpdate = (team: Organization) => {
-      orbitTeamUpdate(team);
-    };
-
-    const teamDelete = async (team: Organization) => {
-      setState((state) => ({ ...state, isDeleting: true }));
-      await orbitTeamDelete(team.id);
-      setState((state) => ({ ...state, isDeleting: false }));
-    };
-
-    interface IUniqueTypes {
-      [key: string]: PlanType;
-    }
-
-    const getPlanTypes = React.useMemo(() => {
-      const uniqueTypes = {} as IUniqueTypes;
-      planTypes.forEach((t) => {
-        if (offlineOnly !== Boolean(t?.keys?.remoteId)) {
-          if (t?.attributes?.name) uniqueTypes[t.attributes.name] = t;
-        }
-      });
-      return Object.values(uniqueTypes);
-    }, [offlineOnly, planTypes]);
-
-    const flatAdd = async (
-      planId: string,
-      mediaRemoteIds: string[],
-      book: string | undefined,
-      setComplete?: (amt: number) => void
-    ) => {
-      await orbitFlatAdd(planId, mediaRemoteIds, book, setComplete);
-      const planRec = getPlan(planId);
-      if (planRec) setProjectParams(planRec);
-    };
-
-    useEffect(() => {
-      if (allBookData.length === 0) fetchBooks(lang);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [lang, allBookData]);
-
-    useEffect(() => {
-      const getPersonalProjects = () => {
-        const projIds = userProjects.current
-          .filter(
-            (p) =>
-              isPersonalTeam(related(p, 'organization'), organizations) &&
-              (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
-          )
-          .map((p) => p.id);
-        return plans
-          .filter((p) => projIds.includes(related(p, 'project')))
-          .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1))
-          .map((p) => vProject(p));
-      };
-      /* after deleting a project, sometimes we get here before the projects
-       ** list is updated.  So, get an updated list all the time
-       */
-
-      var projs = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('project')
-      ) as Project[];
-      const grpIds = groupMemberships
-        .filter((gm) => related(gm, 'user') === user)
-        .map((gm) => related(gm, 'group'));
-
-      userProjects.current = projs.filter((p) =>
-        grpIds.includes(related(p, 'group'))
-      );
-      setState((state) => ({
-        ...state,
-        personalProjects: getPersonalProjects(),
-      }));
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [projects, plans, groupMemberships, user, isOffline]);
-
-    useEffect(() => {
-      if (!state.personalTeam) {
-        getTeamId(undefined).then((personalTeam: string) => {
-          if (personalTeam) setState((state) => ({ ...state, personalTeam }));
-        });
-      }
-      setState((state) => ({
-        ...state,
-        teams: getTeams(),
-      }));
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [organizations, orgMembers, user, isOffline]);
-
-    return (
-      <TeamContext.Provider
-        value={{
-          state: {
-            ...state,
-            bookSuggestions,
-            bookMap,
-            allBookData,
-            planTypes: getPlanTypes,
-            teamProjects,
-            teamMembers,
-            projectType,
-            projectSections,
-            projectDescription,
-            projectLanguage,
-            loadProject,
-            setProjectParams,
-            projectCreate,
-            projectUpdate,
-            projectDelete,
-            teamCreate,
-            teamUpdate,
-            teamDelete,
-            isAdmin,
-            flatAdd,
-            importOpen,
-            setImportOpen,
-            importProject,
-            doImport,
-          },
-          setState,
-        }}
-      >
-        {props.children}
-      </TeamContext.Provider>
+  const teamMembers = (teamId: string) => {
+    const recs = orgMembers.filter(
+      (o) => related(o, 'organization') === teamId
     );
+    return recs.length;
+  };
+
+  const getTeams = () => {
+    let orgs = organizations;
+    //online or offline we may have other user's orgs in the db
+    const orgIds = orgMembers
+      .filter((om) => related(om, 'user') === user)
+      .map((om) => related(om, 'organization'));
+    orgs = organizations.filter((o) => orgIds.includes(o.id));
+    return orgs
+      .filter(
+        (o) =>
+          !isPersonalTeam(o.id, organizations) &&
+          (!isOffline || offlineOnly || teamProjects(o.id).length > 0)
+      )
+      .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1));
+  };
+
+  const projectType = (plan: Plan) => {
+    const planType = getPlanType(plan);
+    return (
+      (planType && controlStrings.getString(planType.toLowerCase())) ||
+      'Training'
+    );
+  };
+
+  const userProjects = useMemo(() => {
+    const grpIds = groupMemberships
+      .filter((gm) => related(gm, 'user') === user)
+      .map((gm) => related(gm, 'group'));
+
+    return projects.filter((p) => grpIds.includes(related(p, 'group')));
+  }, [projects, groupMemberships, user]);
+
+  const teamProjects = (teamId: string) => {
+    const projIds = userProjects
+      .filter(
+        (p) =>
+          related(p, 'organization') === teamId &&
+          (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
+      )
+      .map((p) => p.id);
+    return plans
+      .filter((p) => projIds.includes(related(p, 'project')))
+      .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1))
+      .map((p) => vProject(p));
+  };
+
+  const projectSections = (plan: Plan) => {
+    const planSections = sections.filter((s) => related(s, 'plan') === plan.id);
+    if (planSections.length === 0) return '<na>';
+    const status = planSections?.reduce(
+      (prev, cur) => ({
+        movement:
+          cur.attributes?.level === SheetLevel.Movement
+            ? prev.movement + 1
+            : prev.movement,
+        section:
+          cur.attributes?.level === SheetLevel.Section &&
+            cur.attributes?.sequencenum > 0
+            ? prev.section + 1
+            : prev.section,
+      }),
+      { movement: 0, section: 0 }
+    );
+    let msg = '';
+    if (status.movement > 0)
+      msg += `{0} {1}, `
+        .replace('{0}', status.movement.toString())
+        .replace(
+          '{1}',
+          status.movement === 1
+            ? localizedOrganizedBy('movement', true)
+            : localizedOrganizedBy('movement', false)
+        );
+    if (status.section > 0)
+      msg += `{0} {1}`
+        .replace('{0}', status.section.toString())
+        .replace('{1}', getOrganizedBy(status.section === 1));
+    return status.movement + status.section > 0 ? msg : '<na>';
+  };
+
+  const getProject = (plan: Plan) => {
+    const projectId = related(plan, 'project');
+    const projRecs = projects.filter((p) => p.id === projectId);
+    if (projRecs.length > 0) return projRecs[0];
+    return null;
+  };
+
+  const projectDescription = (plan: Plan) => {
+    const projRec = getProject(plan);
+    return projRec?.attributes?.description || '';
+  };
+
+  const projectLanguage = (plan: Plan) => {
+    const projRec = getProject(plan);
+    return projRec?.attributes?.languageName || 'English';
+  };
+
+  const projectCreate = async (project: VProject, team: TeamIdType) => {
+    const teamId = await getTeamId(team?.id);
+    return await vProjectCreate(project, teamId);
+  };
+
+  const projectUpdate = (project: VProjectD) => {
+    vProjectUpdate(project);
+  };
+
+  const projectDelete = async (project: VProjectD) => {
+    await vProjectDelete(project);
+    resetProject();
+  };
+
+  const teamCreate = (
+    team: Organization,
+    process: string,
+    cb?: (org: string) => Promise<void>
+  ) => {
+    orbitTeamCreate(team, process, cb);
+  };
+
+  const teamUpdate = (team: OrganizationD) => {
+    orbitTeamUpdate(team);
+  };
+
+  const teamDelete = async (team: RecordIdentity) => {
+    setState((state) => ({ ...state, isDeleting: true }));
+    await orbitTeamDelete(team.id);
+    setState((state) => ({ ...state, isDeleting: false }));
+  };
+
+  interface IUniqueTypes {
+    [key: string]: PlanType;
   }
-);
+
+  const getPlanTypes = React.useMemo(() => {
+    const uniqueTypes = {} as IUniqueTypes;
+    planTypes.forEach((t) => {
+      if (offlineOnly !== Boolean(t?.keys?.remoteId)) {
+        if (t?.attributes?.name) uniqueTypes[t.attributes.name] = t;
+      }
+    });
+    return Object.values(uniqueTypes);
+  }, [offlineOnly, planTypes]);
+
+  const flatAdd = async (
+    planId: string,
+    mediaRemoteIds: string[],
+    book: string | undefined,
+    setComplete?: (amt: number) => void
+  ) => {
+    await orbitFlatAdd(planId, mediaRemoteIds, book, setComplete);
+    const planRec = getPlan(planId);
+    if (planRec) setProjectParams(planRec);
+  };
+
+  useEffect(() => {
+    if (allBookData.length === 0) fetchBooks(lang);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang, allBookData]);
+
+  useEffect(() => {
+    const projIds = userProjects
+      .filter(
+        (p) =>
+          isPersonalTeam(related(p, 'organization'), organizations) &&
+          (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
+      )
+      .map((p) => p.id);
+    const personalProjects = plans
+      .filter((p) => projIds.includes(related(p, 'project')))
+      .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1))
+      .map((p) =>
+        vProject(
+          p,
+          userProjects.find((up) => up.id === related(p, 'project'))
+        )
+      );
+    setState((state) => ({ ...state, personalProjects }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userProjects, organizations, plans, isOffline]);
+
+  useEffect(() => {
+    if (!state.personalTeam && !isMakingPersonal.current) {
+      isMakingPersonal.current = true;
+      getTeamId(undefined).then((personalTeam: string) => {
+        if (personalTeam) setState((state) => ({ ...state, personalTeam }));
+      });
+    }
+    const teams = getTeams();
+    if (JSON.stringify(teams) !== JSON.stringify(state.teams)) {
+      setState((state) => ({ ...state, teams }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [organizations, orgMembers, user, isOffline]);
+
+  return (
+    <TeamContext.Provider
+      value={{
+        state: {
+          ...state,
+          bookSuggestions,
+          bookMap,
+          allBookData,
+          planTypes: getPlanTypes,
+          teamProjects,
+          teamMembers,
+          projectType,
+          projectSections,
+          projectDescription,
+          projectLanguage,
+          loadProject,
+          setProjectParams,
+          projectCreate,
+          projectUpdate,
+          projectDelete,
+          teamCreate,
+          teamUpdate,
+          teamDelete,
+          isAdmin,
+          flatAdd,
+          importOpen,
+          setImportOpen,
+          importProject,
+          doImport,
+        },
+        setState,
+      }}
+    >
+      {props.children}
+    </TeamContext.Provider>
+  );
+};
 
 export { TeamContext, TeamProvider };

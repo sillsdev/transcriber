@@ -1,6 +1,5 @@
 import { useGlobal } from 'reactn';
-import { Plan } from '../model';
-import { QueryBuilder, Record } from '@orbit/data';
+import { Plan, PlanTypeD } from '../model';
 import { related } from '.';
 
 export const useTableType = (table: string) => {
@@ -8,9 +7,9 @@ export const useTableType = (table: string) => {
 
   return (plan: Plan) => {
     const typeId = related(plan, 'plantype');
-    const planTypes = memory.cache.query((q: QueryBuilder) =>
+    const planTypes = memory.cache.query((q) =>
       q.findRecords(`${table}type`)
-    ) as Record[];
+    ) as PlanTypeD[];
     const typeRecs = planTypes.filter((t) => t.id === typeId);
     const planType = typeRecs[0]?.attributes?.name;
     return planType ? planType.toLowerCase() : 'other';

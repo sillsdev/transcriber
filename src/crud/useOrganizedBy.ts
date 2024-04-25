@@ -1,19 +1,15 @@
 import { useGlobal } from 'reactn';
-import { Plan, IState, IVProjectStrings } from '../model';
-import { QueryBuilder } from '@orbit/data';
-import localStrings from '../selector/localize';
+import { Plan, IVProjectStrings } from '../model';
 import { useSelector, shallowEqual } from 'react-redux';
+import {vProjectSelector} from '../selector'
 
 export interface ISwitches {
   [key: string]: string;
 }
-const stringSelector = (state: IState) =>
-  localStrings(state as IState, { layout: 'vProject' });
-
 export const useOrganizedBy = () => {
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
-  const t: IVProjectStrings = useSelector(stringSelector, shallowEqual);
+  const t: IVProjectStrings = useSelector(vProjectSelector, shallowEqual);
 
   const switchToLocal: ISwitches = {
     section: t.sections,
@@ -21,6 +17,7 @@ export const useOrganizedBy = () => {
     story: t.stories,
     scene: t.scenes,
     pericope: t.pericopes,
+    movement: t.movements,
   };
   const switchFromLocal: ISwitches = {
     [t.sections]: 'section',
@@ -28,6 +25,7 @@ export const useOrganizedBy = () => {
     [t.stories]: 'story',
     [t.scenes]: 'scene',
     [t.pericopes]: 'pericope',
+    [t.movements]: 'movement',
   };
 
   const splitLocalized = (val: string, singular?: boolean) => {
@@ -56,9 +54,7 @@ export const useOrganizedBy = () => {
     if (!planId || planId === '') planId = plan;
     if (!planId || planId === '')
       return localizedOrganizedBy('section', singular);
-    const planRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('plan')
-    ) as Plan[];
+    const planRec = memory.cache.query((q) => q.findRecords('plan')) as Plan[];
     const selected = planRec.filter((p) => p.id === planId);
     if (selected.length > 0) {
       return localizedOrganizedBy(

@@ -1,5 +1,4 @@
-import { GroupMembership } from '../model';
-import { TransformBuilder } from '@orbit/data';
+import { GroupMembership, GroupMembershipD } from '../model';
 import MemorySource from '@orbit/memory';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 
@@ -13,12 +12,29 @@ export async function addGroupMember(
   groupMemberRec = {
     type: 'groupmembership',
   } as any;
-  memory.schema.initializeRecord(groupMemberRec);
-  await memory.update((t: TransformBuilder) => [
+  await memory.update((t) => [
     ...AddRecord(t, groupMemberRec, user, memory),
-    ...ReplaceRelatedRecord(t, groupMemberRec, 'user', 'user', user),
-    ...ReplaceRelatedRecord(t, groupMemberRec, 'group', 'group', group),
-    ...ReplaceRelatedRecord(t, groupMemberRec, 'role', 'role', role),
+    ...ReplaceRelatedRecord(
+      t,
+      groupMemberRec as GroupMembershipD,
+      'user',
+      'user',
+      user
+    ),
+    ...ReplaceRelatedRecord(
+      t,
+      groupMemberRec as GroupMembershipD,
+      'group',
+      'group',
+      group
+    ),
+    ...ReplaceRelatedRecord(
+      t,
+      groupMemberRec as GroupMembershipD,
+      'role',
+      'role',
+      role
+    ),
   ]);
   return groupMemberRec;
 }

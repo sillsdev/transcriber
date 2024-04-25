@@ -17,7 +17,6 @@ import {
   IActivityStateStrings,
   IApiError,
 } from '../model';
-import { withData } from 'react-orbitjs';
 import Confirm from './AlertDialog';
 import {
   Button,
@@ -35,7 +34,6 @@ import {
 } from '@mui/material';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
-import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import { shallowEqual } from 'react-redux';
 import * as actions from '../store';
 import MediaUpload, { UploadType } from './MediaUpload';
@@ -44,17 +42,13 @@ import { useElectronImport } from '../routes/ElectronImport';
 import { useGlobal } from 'reactn';
 import {
   remoteIdNum,
-  passageDescription,
+  PassageDescription,
   remoteIdGuid,
   useOrganizedBy,
-  useOfflnProjRead,
   SetUserLanguage,
 } from '../crud';
 import ShapingTable from './ShapingTable';
 import { isElectron } from '../api-variable';
-import FilterIcon from '@mui/icons-material/FilterList';
-import SelectAllIcon from '@mui/icons-material/SelectAll';
-import { doDataChanges } from '../hoc/DataChanges';
 import { HeadHeight } from '../App';
 import {
   localUserKey,
@@ -63,8 +57,9 @@ import {
   Severity,
   axiosError,
   tryParseJSON,
+  useDataChanges,
 } from '../utils';
-import { ActionRow, AltButton, iconMargin } from '../control';
+import { ActionRow, AltButton, FilterButton } from '../control';
 import { useSelector } from 'react-redux';
 import { activitySelector, importSelector, sharedSelector } from '../selector';
 import { useDispatch } from 'react-redux';
@@ -73,6 +68,7 @@ import {
   ImportProjectToElectronProps,
   ImportSyncFromElectronProps,
 } from '../store';
+import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 
 const headerProps = {
   display: 'flex',
@@ -98,9 +94,6 @@ const ProgressBar = styled(AppBar)<AppBarProps>(({ theme }) => ({
   width: '100%',
 }));
 
-interface IRecordProps {
-  projects: Array<Project>;
-}
 interface IProps {
   project?: string;
   planName?: string;
@@ -109,7 +102,7 @@ interface IProps {
   isOpen: boolean;
   onOpen: (val: boolean) => void;
 }
-export function ImportTab(props: IProps & IRecordProps) {
+export function ImportTab(props: IProps) {
   const { isOpen, onOpen, project, planName, syncBuffer, syncFile } = props;
   const t: IImportStrings = useSelector(importSelector, shallowEqual);
   const ta: IActivityStateStrings = useSelector(activitySelector, shallowEqual);
@@ -131,7 +124,7 @@ export function ImportTab(props: IProps & IRecordProps) {
   interface IRow {
     plan: string;
     section: string;
-    passage: string;
+    passage: React.ReactNode;
     other: string;
     old: string;
     imported: string;
@@ -142,7 +135,6 @@ export function ImportTab(props: IProps & IRecordProps) {
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
-  const [fingerprint] = useGlobal('fingerprint');
   const [errorReporter] = useGlobal('errorReporter');
   const [user] = useGlobal('user');
   const [isOffline] = useGlobal('offline');
@@ -157,9 +149,7 @@ export function ImportTab(props: IProps & IRecordProps) {
   const [filter, setFilter] = useState(false);
   const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
   const { getOrganizedBy } = useOrganizedBy();
-  const [projectsLoaded] = useGlobal('projectsLoaded');
-  const [, setDataChangeCount] = useGlobal('dataChangeCount');
-  const getOfflineProject = useOfflnProjRead();
+  const forceDataChanges = useDataChanges();
   const { handleElectronImport, getElectronImportData } = useElectronImport();
   const handleFilter = () => setFilter(!filter);
   const headerRow = () =>
@@ -265,7 +255,11 @@ export function ImportTab(props: IProps & IRecordProps) {
         setImporting(true);
         importProjectFromElectron({
           files,
-          projectid: remoteIdNum('project', project, memory.keyMap),
+          projectid: remoteIdNum(
+            'project',
+            project,
+            memory.keyMap as RecordKeyMap
+          ),
           token,
           errorReporter,
           pendingmsg: t.importPending,
@@ -316,16 +310,20 @@ export function ImportTab(props: IProps & IRecordProps) {
       case 450:
         return t.invalidProject;
     }
-    return err.errMsg;
+    return t.unknownError + ' ' + err.errMsg;
   };
   const sectionFromPassage = (passage: Passage, remote: boolean) => {
     var sectionid = passage.relationships?.section?.data as RecordIdentity;
     if (sectionid) {
-      return memory.cache.query((q: QueryBuilder) =>
+      return memory.cache.query((q) =>
         q.findRecord({
           type: 'section',
           id: remote
-            ? remoteIdGuid('section', sectionid.id, memory.keyMap)
+            ? (remoteIdGuid(
+                'section',
+                sectionid.id,
+                memory.keyMap as RecordKeyMap
+              ) as string)
             : sectionid.id,
         })
       ) as Section;
@@ -336,11 +334,15 @@ export function ImportTab(props: IProps & IRecordProps) {
   const planFromSection = (section: Section, remote: boolean) => {
     var planid = section.relationships?.plan?.data as RecordIdentity;
     if (planid) {
-      return memory.cache.query((q: QueryBuilder) =>
+      return memory.cache.query((q) =>
         q.findRecord({
           type: 'plan',
           id: remote
-            ? remoteIdGuid('plan', planid.id, memory.keyMap)
+            ? (remoteIdGuid(
+                'plan',
+                planid.id,
+                memory.keyMap as RecordKeyMap
+              ) as string)
             : planid.id,
         })
       ) as Section;
@@ -380,10 +382,14 @@ export function ImportTab(props: IProps & IRecordProps) {
             var passageid = mediafile.relationships?.passage
               ?.data as RecordIdentity;
             if (passageid) {
-              passage = memory.cache.query((q: QueryBuilder) =>
+              passage = memory.cache.query((q) =>
                 q.findRecord({
                   type: 'passage',
-                  id: remoteIdGuid('passage', passageid.id, memory.keyMap),
+                  id: remoteIdGuid(
+                    'passage',
+                    passageid.id,
+                    memory.keyMap as RecordKeyMap
+                  ) as string,
                 })
               ) as Passage;
               section = sectionFromPassage(passage, false);
@@ -432,7 +438,7 @@ export function ImportTab(props: IProps & IRecordProps) {
                   (oldsection?.relationships?.editor.data as RecordIdentity).id
               ) {
                 var editor = section?.relationships?.editor?.data
-                  ? (memory.cache.query((q: QueryBuilder) =>
+                  ? (memory.cache.query((q) =>
                       q.findRecord({
                         type: 'user',
                         id: remoteIdGuid(
@@ -441,20 +447,20 @@ export function ImportTab(props: IProps & IRecordProps) {
                             section?.relationships?.editor
                               .data as RecordIdentity
                           ).id,
-                          memory.keyMap
-                        ),
+                          memory.keyMap as RecordKeyMap
+                        ) as string,
                       })
                     ) as User)
                   : undefined;
-                var oldeditor = memory.cache.query((q: QueryBuilder) =>
+                var oldeditor = memory.cache.query((q) =>
                   q.findRecord({
                     type: 'user',
                     id: remoteIdGuid(
                       'user',
                       (oldsection?.relationships?.editor.data as RecordIdentity)
                         .id,
-                      memory.keyMap
-                    ),
+                      memory.keyMap as RecordKeyMap
+                    ) as string,
                   })
                 ) as User;
                 imported +=
@@ -474,7 +480,7 @@ export function ImportTab(props: IProps & IRecordProps) {
                   )?.id
               ) {
                 var transcriber = section.relationships?.transcriber?.data
-                  ? (memory.cache.query((q: QueryBuilder) =>
+                  ? (memory.cache.query((q) =>
                       q.findRecord({
                         type: 'user',
                         id: remoteIdGuid(
@@ -483,12 +489,12 @@ export function ImportTab(props: IProps & IRecordProps) {
                             section?.relationships?.transcriber
                               .data as RecordIdentity
                           ).id,
-                          memory.keyMap
-                        ),
+                          memory.keyMap as RecordKeyMap
+                        ) as string,
                       })
                     ) as User)
                   : undefined;
-                var oldtranscriber = memory.cache.query((q: QueryBuilder) =>
+                var oldtranscriber = memory.cache.query((q) =>
                   q.findRecord({
                     type: 'user',
                     id: remoteIdGuid(
@@ -497,8 +503,8 @@ export function ImportTab(props: IProps & IRecordProps) {
                         oldsection?.relationships?.transcriber
                           .data as RecordIdentity
                       ).id,
-                      memory.keyMap
-                    ),
+                      memory.keyMap as RecordKeyMap
+                    ) as string,
                   })
                 ) as User;
                 imported +=
@@ -528,7 +534,7 @@ export function ImportTab(props: IProps & IRecordProps) {
               c.online.data.attributes['given-name'];
             olduser.attributes.familyName =
               c.online.data.attributes['family-name'];
-            other = usr.attributes.email;
+            other = usr.attributes.email?.toLowerCase();
             imported = '';
             old = '';
             if (usr.attributes.name !== olduser.attributes.name) {
@@ -603,14 +609,14 @@ export function ImportTab(props: IProps & IRecordProps) {
             break;
           case 'groupmembership':
             var gm = c.imported.data as GroupMembership;
-            var group = memory.cache.query((q: QueryBuilder) =>
+            var group = memory.cache.query((q) =>
               q.findRecord({
                 type: 'group',
                 id: remoteIdGuid(
                   'group',
                   (gm?.relationships?.group.data as RecordIdentity).id,
-                  memory.keyMap
-                ),
+                  memory.keyMap as RecordKeyMap
+                ) as string,
               })
             ) as Group;
             other = group.attributes.name;
@@ -628,7 +634,13 @@ export function ImportTab(props: IProps & IRecordProps) {
             section: section
               ? section.attributes.sequencenum + ' ' + section.attributes.name
               : '',
-            passage: passage ? passageDescription(passage, allBookData) : '',
+            passage: passage
+              ? PassageDescription({
+                  passage,
+                  bookData: allBookData,
+                  flat: false,
+                }) //flat here?
+              : '',
             other: other,
             old: old,
             imported: imported,
@@ -669,18 +681,7 @@ export function ImportTab(props: IProps & IRecordProps) {
             chdata.length > 0 ? t.onlineChangeReport : t.importComplete
           );
           importComplete();
-          if (remote)
-            doDataChanges(
-              token || '',
-              coordinator,
-              fingerprint,
-              projectsLoaded,
-              getOfflineProject,
-              errorReporter,
-              user,
-              setLanguage,
-              setDataChangeCount
-            );
+          if (remote) forceDataChanges();
           else SetUserLanguage(memory, user, setLanguage);
           setImporting(false);
         }
@@ -741,20 +742,7 @@ export function ImportTab(props: IProps & IRecordProps) {
               >
                 {t.copy}
               </AltButton>
-              <AltButton
-                id="importFilt"
-                key="filter"
-                aria-label={t.filter}
-                onClick={handleFilter}
-                title={t.showHideFilter}
-              >
-                {t.filter}
-                {filter ? (
-                  <SelectAllIcon sx={iconMargin} />
-                ) : (
-                  <FilterIcon sx={iconMargin} />
-                )}
-              </AltButton>
+              <FilterButton filter={filter} onFilter={handleFilter} />
             </ActionRow>
           )}
           {changeData.length > 0 && (
@@ -785,7 +773,13 @@ export function ImportTab(props: IProps & IRecordProps) {
           />
           {confirmAction === '' || (
             <Confirm
-              jsx={isString(confirmAction) ? <span></span> : confirmAction}
+              jsx={
+                isString(confirmAction) ? (
+                  <span></span>
+                ) : (
+                  (confirmAction as JSX.Element)
+                )
+              }
               text={
                 (isString(confirmAction) ? confirmAction + '  ' : '') +
                 t.continue
@@ -817,10 +811,4 @@ export function ImportTab(props: IProps & IRecordProps) {
     </StyledDialog>
   );
 }
-const mapRecordsToProps = {
-  passages: (q: QueryBuilder) => q.findRecords('passage'),
-};
-
-export default withData(mapRecordsToProps)(ImportTab) as any as (
-  props: IProps
-) => JSX.Element;
+export default ImportTab;

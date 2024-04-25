@@ -1,130 +1,45 @@
-import React, { PropsWithChildren } from 'react';
-import { Input, styled } from '@mui/material';
+import React, { CSSProperties } from 'react';
 import {
   Column,
   FilteringState,
   Filter,
-  GroupingState,
-  SummaryState,
   SummaryItem,
-  IntegratedFiltering,
-  IntegratedGrouping,
-  IntegratedPaging,
-  IntegratedSelection,
   IntegratedSorting,
-  IntegratedSummary,
   TableColumnWidthInfo,
-  PagingState,
-  SelectionState,
   SortingState,
   Sorting,
   Grouping,
-  DataTypeProvider,
-  DataTypeProviderProps,
-  TableColumnVisibility,
   GridColumnExtension,
 } from '@devexpress/dx-react-grid';
+import { TableBandHeader } from '@devexpress/dx-react-grid-material-ui';
 import {
-  DragDropProvider,
-  Grid as GridBar,
-  GroupingPanel,
-  PagingPanel,
+  Radio,
+  Paper,
   Table,
-  TableFilterRow,
-  TableGroupRow,
-  TableHeaderRow,
-  TableBandHeader,
-  TableColumnResizing,
-  TableSelection,
-  TableSummaryRow,
-  Toolbar,
-  GridProps,
-} from '@devexpress/dx-react-grid-material-ui';
-import { IGridStrings } from '../model';
-import { useEffect } from 'react';
-import { localizeGrid } from '../utils';
-import { shallowEqual, useSelector } from 'react-redux';
-import { gridSelector } from '../selector';
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 
-type SizeFormatterProps = DataTypeProvider.ValueFormatterProps;
-type SizeEditorProps = DataTypeProvider.ValueEditorProps;
+interface IColSpec {
+  name: string;
+  title: string;
+  width: number;
+  align: string;
+  wordWrapEnabled: boolean;
+  hidden: boolean;
+  sort?: (a: any, b: any) => number;
+  isFiltered: boolean;
+  filterValue?: string;
+  filterOperation?: string;
+}
 
-const Grid = (props: GridProps & PropsWithChildren) => {
-  return <GridBar {...props} />;
-};
-
-const availableFilterOperations: string[] = [
-  'equal',
-  'notEqual',
-  'greaterThan',
-  'greaterThanOrEqual',
-  'lessThan',
-  'lessThanOrEqual',
-];
-
-const PREFIX = 'st';
-const classes = {
-  size: `${PREFIX}-size`,
-  numericInput: `${PREFIX}-numericInput`,
-};
-const StyledInput = styled(Input)(({ theme }) => ({
-  [`& .${classes.numericInput}`]: {
-    width: '100%',
-  },
-}));
-const StyledI = styled('i')(({ theme }) => ({
-  [`& .${classes.size}`]: {
-    display: 'flex',
-    flexGrow: 1,
-    justifyContent: 'flex-end',
-    marginRight: theme.spacing(5),
-    fontWeight: theme.typography.fontWeightMedium,
-  },
-}));
-
-const getInputValue = (value?: string): string =>
-  value === undefined ? '' : value;
-
-const SizeEditor = ({ onValueChange, value }: SizeEditorProps) => {
-  const handleChange = (event: any) => {
-    const { value: targetValue } = event.target;
-    if (targetValue.trim() === '') {
-      onValueChange(undefined);
-      return;
-    }
-    onValueChange(parseInt(targetValue, 10));
-  };
-  return (
-    <StyledInput
-      type="number"
-      classes={{
-        input: classes.numericInput,
-      }}
-      fullWidth={true}
-      value={getInputValue(value)}
-      inputProps={{
-        min: 0,
-        placeholder: 'Filter...',
-      }}
-      onChange={handleChange}
-    />
-  );
-};
-
-const SizeFormatter = ({ value }: SizeFormatterProps) => (
-  <StyledI>{value}</StyledI>
-);
-
-const SizeTypeProvider: React.ComponentType<DataTypeProviderProps> = (
-  props: DataTypeProviderProps
-) => (
-  <DataTypeProvider
-    formatterComponent={SizeFormatter}
-    editorComponent={SizeEditor}
-    availableFilterOperations={availableFilterOperations}
-    {...props}
-  />
-);
+const style = (c: IColSpec) =>
+  ({
+    whiteSpace: c.wordWrapEnabled ? 'break-spaces' : 'nowrap',
+  } as CSSProperties);
 
 interface IProps {
   columns: Array<Column>;
@@ -134,9 +49,7 @@ interface IProps {
   pageSizes?: Array<number>;
   sortingEnabled?: Array<SortingState.ColumnExtension>;
   filteringEnabled?: Array<FilteringState.ColumnExtension>;
-  filterCell?: any;
   filters?: Filter[];
-  onFiltersChange?: (filters: Filter[]) => void; // this caused problems
   hiddenColumnNames?: Array<string>;
   defaultGrouping?: Grouping[];
   expandedGroups?: string[];
@@ -159,15 +72,9 @@ function ShapingTable(props: IProps) {
     columnWidths,
     columnFormatting,
     columnSorting /* special sort function for each column as needed */,
-    pageSizes,
     sortingEnabled /* whether sorting is enabled for each column */,
     filteringEnabled /* whether filtering is enabled for each column */,
-    filterCell,
-    filters /* start with these filters */,
-    onFiltersChange /* when set, filter looses focus on typing */,
     hiddenColumnNames,
-    defaultGrouping,
-    expandedGroups,
     dataCell,
     noDataCell,
     numCols,
@@ -176,182 +83,225 @@ function ShapingTable(props: IProps) {
     checks,
     select,
     selectCell,
-    shaping,
-    bandHeader,
-    summaryItems,
+    filters,
   } = props;
-  const tg: IGridStrings = useSelector(gridSelector, shallowEqual);
-  const [myGroups, setMyGroups] = React.useState<string[]>();
-  const [currentFilters, setCurrentFilters] = React.useState(filters || []);
-  const {
-    localizeFilter,
-    localizeGroupingPanel,
-    localizePaging,
-    localizeRowSummary,
-    localizeTableMessages,
-  } = localizeGrid(tg);
+  type ColRef = number | string;
+  const [selected, setSelected] = React.useState<ColRef[]>([]);
 
-  const handleExpGrp = (groups: string[]) => {
-    setMyGroups(groups);
-  };
+  React.useEffect(() => {
+    if (checks)
+      setSelected(checks.map((c) => (typeof c === 'string' ? parseInt(c) : c)));
+  }, [checks]);
 
-  const handleSelect = (checks: Array<string | number>) => {
-    if (select) {
-      select(checks.map((c) => (typeof c === 'string' ? parseInt(c) : c)));
+  const handleClick = (event: React.MouseEvent<unknown>, id: ColRef) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected: ColRef[] = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
     }
+    setSelected(newSelected);
+    const selectRows = newSelected.map((s) =>
+      rows.findIndex((r) => r.id === s)
+    );
+    select && select(selectRows);
   };
-  const noRow = () => <></>;
-  const noCols = () => <span>{tg.noColumns}</span>;
 
-  useEffect(() => {
-    setCurrentFilters(filters || []);
-  }, [filters]);
+  const isSelected = (id: number) => selected.indexOf(id) !== -1;
+
+  const rowSort = (a: any, b: any) => {
+    for (let s of sorting || []) {
+      if (
+        !(
+          sortingEnabled?.find((se) => se.columnName === s.columnName)
+            ?.sortingEnabled ?? true
+        )
+      )
+        continue;
+      let sort = columnSorting?.find(
+        (cs) => cs.columnName === s.columnName
+      )?.compare;
+      if (!sort) sort = (a: any, b: any) => (a === b ? 0 : a > b ? 1 : -1);
+      const aValue = a[s.columnName];
+      const bValue = b[s.columnName];
+      const res = sort(aValue, bValue);
+      if (res !== 0) return s.direction === 'desc' ? -1 * res : res;
+    }
+    return 0;
+  };
+
+  const rowFilter = (r: any) => {
+    for (let f of filters || []) {
+      if (
+        !(
+          filteringEnabled?.find((fe) => fe.columnName === f.columnName)
+            ?.filteringEnabled ?? true
+        )
+      )
+        continue;
+      const curValue = r[f.columnName];
+      const filterValue = f.value;
+      const filterOp = f.operation;
+      if (filterOp === 'contains') {
+        if (!curValue.includes(filterValue)) return false;
+      } else if (filterOp === 'startsWith') {
+        if (!curValue.startsWith(filterValue)) return false;
+      } else if (filterOp === 'endsWith') {
+        if (!curValue.endsWith(filterValue)) return false;
+      } else if (filterOp === 'equal') {
+        if (curValue !== filterValue) return false;
+      } else if (filterOp === 'notEqual') {
+        if (curValue === filterValue) return false;
+      } else if (filterOp === 'greaterThan') {
+        if (curValue <= filterValue) return false;
+      } else if (filterOp === 'greaterThanOrEqual') {
+        if (curValue < filterValue) return false;
+      } else if (filterOp === 'lessThan') {
+        if (curValue >= filterValue) return false;
+      } else if (filterOp === 'lessThanOrEqual') {
+        if (curValue > filterValue) return false;
+      }
+    }
+    return true;
+  };
+
+  const colSpec = React.useMemo(() => {
+    const colSpec: IColSpec[] = columns.map((c) => {
+      const col = {
+        name: c.name,
+        title: c.title ?? c.name,
+      } as IColSpec;
+      if (columnWidths) {
+        const cw = columnWidths.find((w) => w.columnName === c.name);
+        if (cw) {
+          col.width =
+            typeof cw.width === 'number' ? cw.width : parseInt(cw.width);
+        }
+      }
+      if (hiddenColumnNames) {
+        const hc = hiddenColumnNames.find((h) => h === c.name);
+        if (hc) {
+          col.hidden = true;
+        }
+      }
+      if (numCols) {
+        const nc = numCols.find((n) => n === c.name);
+        if (nc) {
+          col.align = 'right';
+        }
+      }
+      if (columnFormatting) {
+        const cf = columnFormatting.find((f) => f.columnName === c.name);
+        if (cf) {
+          col.align = cf.align ?? 'left';
+          col.wordWrapEnabled = cf.wordWrapEnabled ?? false;
+          if (!col.width)
+            col.width =
+              typeof cf.width === 'string'
+                ? parseInt(cf.width)
+                : cf?.width ?? 100;
+        }
+      }
+      return col;
+    });
+    return colSpec;
+  }, [columns, columnWidths, hiddenColumnNames, numCols, columnFormatting]);
+
+  interface ICell {
+    value: string;
+    style?: React.CSSProperties;
+    row: object[];
+    column: IColSpec;
+  }
 
   return (
-    <Grid rows={rows} columns={columns}>
-      {onFiltersChange /* when set filter looses focus on typing */ ? (
-        <FilteringState
-          columnExtensions={filteringEnabled || []}
-          filters={filters || []}
-          onFiltersChange={onFiltersChange}
-        />
-      ) : (
-        <FilteringState
-          columnExtensions={filteringEnabled || []}
-          filters={currentFilters}
-          onFiltersChange={setCurrentFilters}
-        />
-      )}
+    <TableContainer component={Paper}>
+      <Table size="small" aria-label={'dense table'}>
+        <TableHead>
+          <TableRow>
+            <>
+              {select || selectCell ? <TableCell /> : <></>}
+              {colSpec.map((c) =>
+                !c.hidden ? (
+                  <TableCell
+                    key={c.name}
+                    id={c.name}
+                    sx={{ minWidth: c.width }}
+                    align={c.align as any}
+                  >
+                    {c.title}
+                  </TableCell>
+                ) : (
+                  <></>
+                )
+              )}
+            </>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows
+            .filter(rowFilter)
+            .sort(rowSort)
+            .map((r, i) => {
+              const isItemSelected = isSelected(r?.id ?? i);
 
-      <SortingState
-        defaultSorting={sorting ? sorting : Array<Sorting>()}
-        columnExtensions={sortingEnabled || []}
-      />
-      {pageSizes && pageSizes.length > 0 && <PagingState />}
-
-      <SelectionState selection={checks} onSelectionChange={handleSelect} />
-
-      <GroupingState
-        columnGroupingEnabled={shaping !== null ? shaping : true}
-        defaultGrouping={defaultGrouping}
-        expandedGroups={!myGroups ? expandedGroups : myGroups}
-        onExpandedGroupsChange={handleExpGrp}
-      />
-      {summaryItems && <SummaryState totalItems={summaryItems} />}
-
-      {/* <PagingState /> */}
-
-      <IntegratedGrouping />
-      <IntegratedFiltering />
-      <IntegratedSorting
-        columnExtensions={columnSorting ? columnSorting : undefined}
-      />
-      {pageSizes && pageSizes.length > 0 && <IntegratedPaging />}
-      <IntegratedSelection />
-      {summaryItems && <IntegratedSummary />}
-
-      <SizeTypeProvider for={numCols || []} />
-
-      <DragDropProvider />
-
-      {dataCell && noDataCell && !columnFormatting ? (
-        <Table
-          messages={localizeTableMessages}
-          cellComponent={dataCell}
-          noDataCellComponent={noDataCell}
-        />
-      ) : dataCell && !noDataCell && !columnFormatting ? (
-        <Table messages={localizeTableMessages} cellComponent={dataCell} />
-      ) : !dataCell && noDataCell && !columnFormatting ? (
-        <Table
-          messages={localizeTableMessages}
-          noDataCellComponent={noDataCell}
-        />
-      ) : dataCell && noDataCell && columnFormatting ? (
-        <Table
-          messages={localizeTableMessages}
-          cellComponent={dataCell}
-          noDataCellComponent={noDataCell}
-          columnExtensions={columnFormatting}
-        />
-      ) : dataCell && !noDataCell && columnFormatting ? (
-        <Table
-          messages={localizeTableMessages}
-          cellComponent={dataCell}
-          columnExtensions={columnFormatting}
-        />
-      ) : !dataCell && noDataCell && columnFormatting ? (
-        <Table
-          messages={localizeTableMessages}
-          noDataCellComponent={noDataCell}
-          columnExtensions={columnFormatting}
-        />
-      ) : !dataCell && !noDataCell && columnFormatting ? (
-        <Table
-          messages={localizeTableMessages}
-          columnExtensions={columnFormatting}
-        />
-      ) : (
-        <Table />
-      )}
-      <TableColumnVisibility
-        hiddenColumnNames={hiddenColumnNames || []}
-        emptyMessageComponent={noCols}
-      />
-      {columnWidths && (
-        <TableColumnResizing
-          minColumnWidth={50}
-          defaultColumnWidths={columnWidths}
-        />
-      )}
-      {select && !selectCell ? (
-        <TableSelection showSelectAll={true} />
-      ) : (
-        select &&
-        selectCell && (
-          <TableSelection showSelectAll={false} cellComponent={selectCell} />
-        )
-      )}
-
-      <TableHeaderRow showSortingControls={true} />
-
-      {shaping !== null && !shaping ? (
-        <TableFilterRow
-          showFilterSelector={true}
-          messages={localizeFilter}
-          rowComponent={noRow}
-        />
-      ) : filterCell ? (
-        <TableFilterRow
-          showFilterSelector={true}
-          messages={localizeFilter}
-          cellComponent={filterCell}
-        />
-      ) : (
-        <TableFilterRow showFilterSelector={true} messages={localizeFilter} />
-      )}
-      {pageSizes && pageSizes.length > 0 && (
-        <PagingPanel pageSizes={pageSizes} messages={localizePaging} />
-      )}
-
-      <TableGroupRow />
-      {summaryItems && <TableSummaryRow messages={localizeRowSummary} />}
-      {bandHeader && <TableBandHeader columnBands={bandHeader} />}
-      {(shaping !== null && !shaping) || expandedGroups ? (
-        <Toolbar rootComponent={noRow} />
-      ) : (
-        <Toolbar />
-      )}
-      {shaping !== null && !shaping && !expandedGroups ? (
-        <GroupingPanel
-          showSortingControls={true}
-          emptyMessageComponent={noRow}
-          messages={localizeGroupingPanel}
-        />
-      ) : (
-        !expandedGroups && <GroupingPanel showSortingControls={true} />
-      )}
-    </Grid>
+              return (
+                <TableRow
+                  key={`row-${i}`}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <>
+                    {select && selectCell ? (
+                      selectCell({ row: r } as ICell)
+                    ) : select ? (
+                      <TableCell>
+                        <Radio
+                          color="primary"
+                          checked={isItemSelected}
+                          onClick={(event) => handleClick(event, r?.id ?? i)}
+                        />
+                      </TableCell>
+                    ) : (
+                      <></>
+                    )}
+                    {colSpec.map((c, n) => {
+                      const value = r[c.name];
+                      const key = `cell-${r?.id ?? i}.${c?.name ?? n}`;
+                      const props = {
+                        value,
+                        row: r,
+                        column: c,
+                        style: style(c),
+                        align: c.align as any,
+                        key,
+                        id: key,
+                      };
+                      return c.hidden ? (
+                        <></>
+                      ) : dataCell ? (
+                        dataCell(props)
+                      ) : !r[c.name] && noDataCell ? (
+                        noDataCell(props)
+                      ) : (
+                        <TableCell {...props}>{value}</TableCell>
+                      );
+                    })}
+                  </>
+                </TableRow>
+              );
+            })}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
 export default ShapingTable;

@@ -1,4 +1,4 @@
-import { User } from '../model';
+import { UserD } from '../model';
 import {
   Button,
   ListItem,
@@ -6,9 +6,10 @@ import {
   ListItemText,
   ButtonProps,
   styled,
+  ListItemButton,
 } from '@mui/material';
 import UserAvatar from '../components/UserAvatar';
-import { useOfflineTeamList } from '../crud';
+import { ListEnum, useOfflineList } from '../crud';
 
 const StyledButton = styled(Button)<ButtonProps>(() => ({
   '& .MuiTypography-root': {
@@ -17,14 +18,13 @@ const StyledButton = styled(Button)<ButtonProps>(() => ({
 }));
 
 interface IProps {
-  u: User;
-  users: User[];
+  u: UserD;
   onSelect?: (user: string) => void;
-  showTeams: boolean;
+  show?: ListEnum;
 }
 export const UserListItem = (props: IProps) => {
-  const { u, users, onSelect, showTeams } = props;
-  const teams = useOfflineTeamList();
+  const { u, onSelect, show } = props;
+  const list = useOfflineList();
 
   const handleSelect = (user: string) => () => {
     onSelect && onSelect(user);
@@ -33,24 +33,23 @@ export const UserListItem = (props: IProps) => {
   const ItemContent = () => (
     <StyledButton variant="outlined">
       <ListItemIcon>
-        <UserAvatar {...props} users={users} userRec={u} />
+        <UserAvatar {...props} userRec={u} />
       </ListItemIcon>
       <ListItemText
         primary={u?.attributes?.name || ''}
-        secondary={showTeams ? teams(u) : ''}
+        secondary={show ? list(u, show) : ''}
       />
     </StyledButton>
   );
 
   return onSelect ? (
-    <ListItem
+    <ListItemButton
       id={`user-${u.id}`}
       key={u.id}
       onClick={handleSelect(u.id)}
-      button
     >
       <ItemContent />
-    </ListItem>
+    </ListItemButton>
   ) : (
     <ListItem id={`user-${u.id}`} key={u.id}>
       <ItemContent />

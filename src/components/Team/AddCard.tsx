@@ -9,7 +9,13 @@ import {
   styled,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { VProject, DialogMode, OptionType, Project, Plan } from '../../model';
+import {
+  VProject,
+  DialogMode,
+  OptionType,
+  Project,
+  ProjectD,
+} from '../../model';
 import {
   ProjectDialog,
   IProjectDialog,
@@ -30,13 +36,15 @@ import {
   usePlan,
   useTypeId,
   useOrgDefaults,
+  orgDefaultLangProps,
 } from '../../crud';
 import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
 import NewProjectGrid from './NewProjectGrid';
-import { restoreScroll, useHome } from '../../utils';
-import { RecordIdentity } from '@orbit/data';
+import { restoreScroll, useHome, useJsonParams } from '../../utils';
+import { RecordIdentity, RecordKeyMap } from '@orbit/records';
+import { projDefBook } from '../../crud/useProjectDefaults';
 
 const StyledCard = styled(Card)<CardProps>(({ theme }) => ({
   minWidth: 275,
@@ -121,13 +129,17 @@ export const AddCard = (props: IProps) => {
   const speakerRef = useRef<string>();
   const { getPlan } = usePlan();
   const getTypeId = useTypeId();
+  const { setParam } = useJsonParams();
 
   useEffect(() => {
     if (localStorage.getItem('autoaddProject') !== null && team === null) {
       setPickOpen(true);
       localStorage.removeItem('autoaddProject');
     }
-    const language = getOrgDefault('langProps', team?.id) as typeof initLang;
+    const language = getOrgDefault(
+      orgDefaultLangProps,
+      team?.id
+    ) as typeof initLang;
     setLanguage(language ?? initLang, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -140,7 +152,7 @@ export const AddCard = (props: IProps) => {
     languageRef.current = language;
     setLanguagex(language);
     setProjDef({ ...projDef, ...language });
-    if (!init) setOrgDefault('langProps', language, team?.id);
+    if (!init) setOrgDefault(orgDefaultLangProps, language, team?.id);
   };
 
   useEffect(() => {
@@ -229,7 +241,9 @@ export const AddCard = (props: IProps) => {
       rtl,
       tags,
       organizedBy,
+      book,
     } = values;
+    var defaultParams = setParam(projDefBook, book, '{}');
     setLanguage({ bcp47, languageName, font, rtl, spellCheck });
     projectCreate(
       {
@@ -247,6 +261,7 @@ export const AddCard = (props: IProps) => {
           tags,
           flat: values.flat,
           organizedBy,
+          defaultParams,
         },
       } as VProject,
       team
@@ -289,10 +304,12 @@ export const AddCard = (props: IProps) => {
             spellCheck: languageRef.current.spellCheck,
             defaultFont: languageRef.current.font,
           },
-        } as Project;
+        } as ProjectD;
         await memory.update((t) => [
           ...UpdateRecord(t, updProj, user),
-          t.replaceAttribute(planRec as Plan, 'name', newName),
+          t
+            .replaceAttribute(planRec as RecordIdentity, 'name', newName)
+            .toOperation(),
         ]);
         return planRef.current;
       }
@@ -322,7 +339,7 @@ export const AddCard = (props: IProps) => {
     if (!offlineOnly)
       await waitForRemoteId(
         { type: 'plan', id: planRef.current },
-        memory.keyMap
+        memory.keyMap as RecordKeyMap
       );
     stepRef.current = 1;
     return planRef.current;
@@ -357,7 +374,11 @@ export const AddCard = (props: IProps) => {
       // Allow time for last check mark
       setInProgress(false);
       stepRef.current = 0;
-      setView(`/plan/${remoteId('plan', planId, memory.keyMap) || planId}/0`);
+      setView(
+        `/plan/${
+          remoteId('plan', planId, memory.keyMap as RecordKeyMap) || planId
+        }/0`
+      );
     }, 1000);
   };
 

@@ -1,7 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import localStrings from '../selector/localize';
-import { IState, ISpellingStrings } from '../model';
+import { ISpellingStrings } from '../model';
 import { IconButton } from '@mui/material';
 import SpellCheckIcon from '@mui/icons-material/Spellcheck';
 import SpellingTabs from './SpellingTabs';
@@ -9,14 +7,12 @@ import BigDialog from '../hoc/BigDialog';
 import Confirm from './AlertDialog';
 import { LightTooltip } from '../control';
 import { relaunchApp, exitApp } from '../utils';
+import { useSelector } from 'react-redux';
+import { spellingSelector } from '../selector';
 const ipc = (window as any)?.electron;
 
-interface IStateProps {
-  t: ISpellingStrings;
-}
-
-export const Spelling = (props: IStateProps) => {
-  const { t } = props;
+export const Spelling = () => {
+  const t: ISpellingStrings = useSelector(spellingSelector);
   const [open, setOpen] = React.useState(false);
   const [codes, setCodes] = React.useState<string[]>([]);
   const [confirm, setConfirm] = React.useState(false);
@@ -87,8 +83,4 @@ export const Spelling = (props: IStateProps) => {
   );
 };
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'spelling' }),
-});
-
-export default connect(mapStateToProps)(Spelling);
+export default Spelling;

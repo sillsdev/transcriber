@@ -19,25 +19,24 @@ import {
 import Confirm from '../AlertDialog';
 import {
   Discussion,
+  DiscussionD,
   Comment,
+  CommentD,
   IDiscussionCardStrings,
-  Group,
-  User,
   MediaFile,
   ISharedStrings,
   ArtifactCategory,
   Section,
   Plan,
   Passage,
-  GroupMembership,
+  GroupD,
+  UserD,
 } from '../../model';
 import ResolveIcon from '@mui/icons-material/Check';
 import HideIcon from '@mui/icons-material/ArrowDropUp';
 import ShowIcon from '@mui/icons-material/ArrowDropDown';
 import LocationIcon from '@mui/icons-material/LocationSearching';
 import { shallowEqual } from 'react-redux';
-import { Operation, QueryBuilder, TransformBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
 import { PermissionName, related, usePermissions, useRole } from '../../crud';
 import CommentCard from './CommentCard';
 import ReplyCard from './ReplyCard';
@@ -58,10 +57,14 @@ import SelectUser from '../../control/SelectUser';
 import { LightTooltip, StageReport } from '../../control';
 import SelectArtifactCategory, {
   ScriptureEnum,
-} from '../Workflow/SelectArtifactCategory';
+} from '../Sheet/SelectArtifactCategory';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { removeExtension, startEnd, waitForIt } from '../../utils';
-import JSONAPISource from '@orbit/jsonapi';
+import {
+  removeExtension,
+  startEnd,
+  useWaitForRemoteQueue,
+  waitForIt,
+} from '../../utils';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { NewDiscussionToolId, NewCommentToolId } from './DiscussionList';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -76,6 +79,8 @@ import { useSaveComment } from '../../crud/useSaveComment';
 import { useRecordComment } from './useRecordComment';
 import BigDialog from '../../hoc/BigDialog';
 import { DiscussionMove } from './DiscussionMove';
+import { useOrbitData } from '../../hoc/useOrbitData';
+import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 
 const DiscussionCardRoot = styled(Box)<BoxProps>(() => ({
   width: '100%',
@@ -160,34 +165,23 @@ const cardFlowProps = {
 } as SxProps;
 const lightButton = { color: 'background.paper' } as SxProps;
 
-interface IRecordProps {
-  comments: Array<Comment>;
-  mediafiles: Array<MediaFile>;
-  sections: Array<Section>;
-  passages: Array<Passage>;
-  plans: Array<Plan>;
-  artifactcategorys: Array<ArtifactCategory>;
-  groups: Array<Group>;
-  users: Array<User>;
-  memberships: Array<GroupMembership>;
-}
-
 interface IProps {
   id: string;
-  discussion: Discussion;
+  discussion: DiscussionD;
   collapsed: boolean;
   showStep: boolean;
   showReference: boolean;
   onAddComplete?: (id: string) => void;
   setRef: (ref: any) => void;
   requestHighlight: string;
+  refreshList: () => void;
 }
 
 export const DiscussionRegion = (discussion: Discussion) => {
   return startEnd(discussion.attributes?.subject);
 };
 
-export const DiscussionCard = (props: IProps & IRecordProps) => {
+export const DiscussionCard = (props: IProps) => {
   const {
     id,
     discussion,
@@ -197,16 +191,17 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     onAddComplete,
     setRef,
     requestHighlight,
-    comments,
-    mediafiles,
-    sections,
-    passages,
-    plans,
-    artifactcategorys,
-    groups,
-    users,
-    memberships,
+    refreshList,
   } = props;
+  const comments = useOrbitData<CommentD[]>('comment');
+  const mediafiles = useOrbitData<MediaFile[]>('mediafile');
+  const passages = useOrbitData<Passage[]>('passage');
+  const sections = useOrbitData<Section[]>('section');
+  const plans = useOrbitData<Plan[]>('plan');
+  const artifactcategorys =
+    useOrbitData<ArtifactCategory[]>('artifactcategory');
+  const users = useOrbitData<UserD[]>('user');
+  const groups = useOrbitData<GroupD[]>('group');
   const t: IDiscussionCardStrings = useSelector(
     discussionCardSelector,
     shallowEqual
@@ -237,7 +232,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [myComments, setMyComments] = useState<Comment[]>([]);
+  const [myComments, setMyComments] = useState<CommentD[]>([]);
   const [showComments, setShowComments] = useState(true);
   const [artifactCategory, setArtifactCategory] = useState('');
   const [step, setStep] = useState('');
@@ -245,28 +240,19 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   const [sourceMediafile, setSourceMediafile] = useState<MediaFile>();
   const [editing, setEditing] = useState(false);
   const [confirmAction, setConfirmAction] = useState('');
-  const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const changeRef = useRef(false);
   const [myChanged, setMyChanged] = useState(false);
   const savingRef = useRef(false);
   const [showMove, setShowMove] = useState(false);
   const [moveTo, setMoveTo] = useState<string>();
-
+  const waitForRemoteQueue = useWaitForRemoteQueue();
   const [editSubject, setEditSubject] = useState(
     discussion.attributes?.subject
   );
   const assignedToMeRef = useRef(false);
   const { permissions, canAccess, approvalStatus, getAuthor, hasPermission } =
-    usePermissions({
-      users,
-      groups,
-      memberships,
-    });
-  const { myGroups, citGroup, mentorGroup } = usePeerGroups({
-    users,
-    groups,
-    memberships,
-  });
+    usePermissions();
+  const { myGroups, citGroup, mentorGroup } = usePeerGroups();
   const [editAssigned, setEditAssigned] = useState<string>('');
   const [editCategory, setEditCategory] = useState('');
   const [editCard, setEditCard] = useState(false);
@@ -290,12 +276,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   const afterSaveCommentcb = () => {
     saveCompleted(NewCommentToolId);
   };
-  const saveComment = useSaveComment({
-    cb: afterSaveCommentcb,
-    users,
-    groups,
-    memberships,
-  });
+  const saveComment = useSaveComment({ cb: afterSaveCommentcb });
   const saveMyComment = async (mediaId: string) => {
     commentMediaId.current = mediaId;
     if (discussion.id) {
@@ -370,7 +351,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
 
   useEffect(() => {
     //if any of my comments are changed, add the discussion to the toolChanged list so DiscussionList will pick it up
-    if (!myChanged) {
+    if (!changeRef.current) {
       var anyChanged = Object.keys(toolsChanged).some(
         (t) => myCommentIds.includes(t) && !toolsChanged[t].clearChanged
       );
@@ -378,7 +359,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
         if (discussion.id) toolChanged(myToolId, anyChanged);
         //new discussion and my comment changed so set myChanged also
         else setChanged(true);
-      else if (!myChanged) saveCompleted(myToolId);
+      else if (!changeRef.current) saveCompleted(myToolId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, myComments, myChanged]);
@@ -502,14 +483,15 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   };
   const handleResolveDiscussion = (resolved: boolean) => {
     discussion.attributes.resolved = resolved;
-    memory.update((t: TransformBuilder) => UpdateRecord(t, discussion, user));
+    memory.update((t) => UpdateRecord(t, discussion, user));
+    refreshList();
   };
   const handleSetSegment = async () => {
     if (savingRef.current) return;
     savingRef.current = true;
-    let ops: Operation[] = [];
-    let ops2: Operation[] = [];
-    let t = new TransformBuilder();
+    let ops: RecordOperation[] = [];
+    let ops2: RecordOperation[] = [];
+    let t = new RecordTransformBuilder();
 
     if (myRegion) {
       const subWords = editSubject.split(' ');
@@ -526,7 +508,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
         ops2.push(
           ...ReplaceRelatedRecord(
             t,
-            newCmt,
+            newCmt as CommentD,
             'discussion',
             'discussion',
             discussion.id
@@ -535,7 +517,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
         ops2.push(
           ...ReplaceRelatedRecord(
             t,
-            newCmt,
+            newCmt as CommentD,
             'mediafile',
             'mediafile',
             prevMedia
@@ -603,21 +585,25 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
   };
 
   const handleDelete = () => {
-    var ops: Operation[] = [];
-    var t = new TransformBuilder();
+    var ops: RecordOperation[] = [];
+    var t = new RecordTransformBuilder();
     myComments.forEach((c) =>
       ops.push(
-        t.removeRecord({
-          type: 'comment',
-          id: c.id,
-        })
+        t
+          .removeRecord({
+            type: 'comment',
+            id: c.id,
+          })
+          .toOperation()
       )
     );
     ops.push(
-      t.removeRecord({
-        type: 'discussion',
-        id: discussion.id,
-      })
+      t
+        .removeRecord({
+          type: 'discussion',
+          id: discussion.id,
+        })
+        .toOperation()
     );
     memory.update(ops);
   };
@@ -639,9 +625,11 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     if (changed && !myChanged) {
       toolChanged(myToolId);
       setMyChanged(true);
+      changeRef.current = true;
     } else if (!changed && myChanged) {
       saveCompleted(myToolId);
       setMyChanged(false);
+      changeRef.current = false;
     }
   };
   const handleSubjectChange = (e: any) => {
@@ -690,8 +678,8 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
       //we should only get here with no subject if they've clicked off the screen and then told us to save with no subject
       discussion.attributes.subject =
         editSubject.length > 0 ? editSubject : tdcs.topic;
-      var ops: Operation[] = [];
-      var t = new TransformBuilder();
+      var ops: RecordOperation[] = [];
+      var t = new RecordTransformBuilder();
       if (!discussion.id) {
         ops.push(...AddRecord(t, discussion, user, memory));
 
@@ -786,12 +774,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
       myCommentIds.forEach((id) => startSave(id));
       savingRef.current = true;
       handleSave().then(() => {
-        waitForIt(
-          'category update',
-          () => !remote || remote.requestQueue.length === 0,
-          () => offline && !offlineOnly,
-          200
-        ).then(() => {
+        waitForRemoteQueue('discussion save').then(() => {
           savingRef.current = false;
         });
       });
@@ -1027,7 +1010,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
                         onClick={handleAssignedClick}
                         sx={{ p: '1px' }}
                       >
-                        <GroupAvatar groupRec={assignedGroup} org={false} />
+                        <GroupAvatar groupRec={assignedGroup} />
                       </IconButton>
                     </LightTooltip>
                   )}
@@ -1045,7 +1028,7 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
                     <SelectDiscussionAssignment
                       id={`group-${discussion.id}`}
                       org={false}
-                      initAssigned={editAssigned}
+                      initAssignment={editAssigned}
                       onChange={handleAssignedChange}
                       required={false}
                       label={t.assign}
@@ -1147,17 +1130,4 @@ export const DiscussionCard = (props: IProps & IRecordProps) => {
     </DiscussionCardRoot>
   );
 };
-const mapRecordsToProps = {
-  comments: (q: QueryBuilder) => q.findRecords('comment'),
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  sections: (q: QueryBuilder) => q.findRecords('section'),
-  passages: (q: QueryBuilder) => q.findRecords('passage'),
-  plans: (q: QueryBuilder) => q.findRecords('plan'),
-  artifactcategorys: (q: QueryBuilder) => q.findRecords('artifactcategory'),
-  groups: (q: QueryBuilder) => q.findRecords('group'),
-  users: (q: QueryBuilder) => q.findRecords('user'),
-  memberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-};
-export default withData(mapRecordsToProps)(DiscussionCard) as any as (
-  props: IProps
-) => JSX.Element;
+export default DiscussionCard;

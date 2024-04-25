@@ -1,18 +1,17 @@
 import { useGlobal } from 'reactn';
-import { AudacityProject } from '../model';
-import { QueryBuilder } from '@orbit/data';
+import { AudacityProjectD } from '../model';
 import { related } from '.';
 
 export const useAudacityProjRead = () => {
   const [memory] = useGlobal('memory');
 
   return (passageId: string) => {
-    const audacityProjectRecs = memory.cache.query((q: QueryBuilder) =>
+    const audacityProjectRecs = memory.cache.query((q) =>
       q.findRecords('audacityproject')
-    ) as AudacityProject[];
+    ) as AudacityProjectD[];
     const selected = audacityProjectRecs.filter(
       (o) => related(o, 'passage') === passageId
     );
-    return selected.length > 0 ? selected[0] : ({} as AudacityProject);
+    return selected.length > 0 ? selected[0] : ({} as AudacityProjectD);
   };
 };

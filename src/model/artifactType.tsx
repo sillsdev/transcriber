@@ -1,4 +1,4 @@
-import { RecordRelationship } from '@orbit/data';
+import { InitializedRecord, RecordRelationship } from '@orbit/records';
 import { BaseModel } from './baseModel';
 
 export interface ArtifactType extends BaseModel {
@@ -13,5 +13,7 @@ export interface ArtifactType extends BaseModel {
     lastModifiedByUser: RecordRelationship;
   };
 }
+
+export type ArtifactTypeD = ArtifactType & InitializedRecord;
 
 export default ArtifactType;

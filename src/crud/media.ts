@@ -1,14 +1,17 @@
 import {
   User,
   MediaFile,
+  MediaFileD,
   Plan,
+  PlanD,
   Project,
+  ProjectD,
   Passage,
   Section,
   IMediaShare,
-  OrgWorkflowStep,
+  OrgWorkflowStepD,
+  PassageD,
 } from '../model';
-import { QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
 import {
   related,
@@ -42,16 +45,19 @@ export const getAllMediaRecs = (
   artifactTypeId?: string | null,
   version?: number
 ) => {
+  if ((passageId ?? '') === '') {
+    return [];
+  }
   const mediaRecs = (
-    memory.cache.query((q: QueryBuilder) =>
+    memory.cache.query((q) =>
       q.findRecords('mediafile').filter({
         relation: 'passage',
         record: { type: 'passage', id: passageId },
       })
-    ) as MediaFile[]
+    ) as MediaFileD[]
   )
     .sort((a, b) => vernSort(a) - vernSort(b))
-    .sort((a, b) => b.attributes.versionNumber - a.attributes.versionNumber);
+    .sort((a, b) => b.attributes?.versionNumber - a.attributes?.versionNumber);
   if (artifactTypeId !== undefined) {
     const allOfType = mediaRecs.filter(
       (m) => related(m, 'artifactType') === artifactTypeId
@@ -86,7 +92,7 @@ export const getVernacularMediaRec = (passageId: string, memory: Memory) => {
 };
 
 export const getMediaShared = (passageId: string, memory: Memory) => {
-  const mediaRecs = getAllMediaRecs(passageId, memory);
+  const mediaRecs = getAllMediaRecs(passageId, memory, null);
   return mediaRecs.length > 0
     ? mediaRecs[0].attributes.readyToShare
       ? IMediaShare.Latest
@@ -101,7 +107,7 @@ const getMediaPlanRec = (rec: MediaFile | null, memory: Memory) => {
   if (rec) {
     const planId = related(rec, 'plan') as string;
     if (planId)
-      planRec = memory.cache.query((q: QueryBuilder) =>
+      planRec = memory.cache.query((q) =>
         q.findRecord({ type: 'plan', id: planId })
       ) as Plan;
   }
@@ -119,7 +125,7 @@ export const getMediaProjRec = (
     if (planRec) {
       const projId = related(planRec, 'project');
       if (projId)
-        projRec = memory.cache.query((q: QueryBuilder) =>
+        projRec = memory.cache.query((q) =>
           q.findRecord({ type: 'project', id: projId })
         ) as Project;
     }
@@ -140,11 +146,11 @@ export const getMediaName = (
   let passageRec: Passage | undefined = undefined;
   const passageId = related(rec, 'passage');
   if (passageId)
-    passageRec = memory.cache.query((q: QueryBuilder) =>
+    passageRec = memory.cache.query((q) =>
       q.findRecord({ type: 'passage', id: passageId })
     ) as Passage;
   const secId = related(passageRec, 'section');
-  const secRec = memory.cache.query((q: QueryBuilder) =>
+  const secRec = memory.cache.query((q) =>
     q.findRecord({ type: 'section', id: secId })
   ) as Section;
   const secAttr = secRec && secRec.attributes;
@@ -231,7 +237,7 @@ const pad3 = (n: number) => ('00' + n).slice(-3);
 
 interface IExportCommon {
   memory: Memory;
-  projRec: Project;
+  projRec: ProjectD;
 }
 
 interface IExportScripture {
@@ -241,7 +247,7 @@ interface IExportScripture {
 interface IExportFilter {
   artifactType: string | null | undefined;
   target: string;
-  orgWorkflowSteps: OrgWorkflowStep[];
+  orgWorkflowSteps: OrgWorkflowStepD[];
 }
 
 export interface IExportScripturePath extends IExportCommon, IExportScripture {}
@@ -254,7 +260,7 @@ export interface IBurritoMeta
   userId: string;
 }
 
-export const scriptureFullPath = (
+export const scriptureFullPath = async (
   mf: MediaFile,
   { memory, scripturePackage, projRec }: IExportScripturePath
 ) => {
@@ -262,7 +268,7 @@ export const scriptureFullPath = (
   let book = '';
   let ref = '';
   if (scripturePackage) {
-    const mp = dataPath(mf.attributes.audioUrl, PathType.MEDIA);
+    const mp = await dataPath(mf.attributes.audioUrl, PathType.MEDIA);
     const passRec = findRecord(
       memory,
       'passage',
@@ -272,9 +278,11 @@ export const scriptureFullPath = (
     ref = passRec?.attributes?.reference;
     book = passRec.attributes?.book;
     const lang = projRec?.attributes?.language;
-    const chap = pad3(passRec?.startChapter || 1);
-    const start = pad3(passRec?.startVerse || 1);
-    const end = pad3(passRec?.endVerse || passRec?.startVerse || 1);
+    const chap = pad3(passRec?.attributes?.startChapter || 1);
+    const start = pad3(passRec?.attributes?.startVerse || 1);
+    const end = pad3(
+      passRec?.attributes?.endVerse || passRec?.attributes?.startVerse || 1
+    );
     const ver = mf.attributes?.versionNumber;
     const { ext } = removeExtension(mp);
     if (passRec) {
@@ -284,7 +292,7 @@ export const scriptureFullPath = (
   return { fullPath, book, ref };
 };
 export const mediaFileName = (mf: MediaFile | undefined) =>
-  mf?.attributes?.s3file ?? mf?.attributes?.originalFile ?? '';
+  mf?.attributes?.s3file || mf?.attributes?.originalFile || '';
 
 export const nameFromTemplate = (
   mf: MediaFile,
@@ -296,7 +304,7 @@ export const nameFromTemplate = (
     memory,
     'passage',
     related(mf, 'passage')
-  ) as Passage;
+  ) as PassageD;
   if (!passRec) return mediaFileName(mf);
   if (template === '') {
     var tmp = passageDefaultFilename(
@@ -324,11 +332,11 @@ export const mediaArtifacts = ({
   target,
   orgWorkflowSteps,
 }: IExportArtifacts) => {
-  const plans = (related(projRec, 'plans') as Plan[])?.map((p) => p.id);
-  const media = memory.cache.query((q: QueryBuilder) =>
+  const plans = (related(projRec, 'plans') as PlanD[])?.map((p) => p.id);
+  const media = memory.cache.query((q) =>
     q.findRecords('mediafile')
-  ) as MediaFile[];
-  let planMedia: MediaFile[] | undefined = undefined;
+  ) as MediaFileD[];
+  let planMedia: MediaFileD[] | undefined = undefined;
   if (plans && plans.length > 0) {
     planMedia = getMediaInPlans(
       plans,
@@ -370,38 +378,40 @@ export const mediaArtifacts = ({
     .sort((i, j) => ((key.get(i.id) || '') <= (key.get(j.id) || '') ? -1 : 1));
 };
 
-export const getBurritoMeta = (props: IBurritoMeta) => {
+export const getBurritoMeta = async (props: IBurritoMeta) => {
   const { memory, userId, projRec } = props;
   const userRec = findRecord(memory, 'user', userId) as User;
   const burritoMeta = burritoMetadata({ projRec, userRec });
   const ingredients = mediaArtifacts(props);
   const scopes = burritoMeta.type.flavorType.currentScope;
   const formats = {} as FormatsType;
-  ingredients?.forEach((mf) => {
-    const { fullPath, book, ref } = scriptureFullPath(mf, props);
-    if (book && book.length > 0) {
-      if (scopes.hasOwnProperty(book)) {
-        scopes[book].push(ref);
-      } else {
-        scopes[book] = [ref];
+  if (ingredients) {
+    for (const mf of ingredients) {
+      const { fullPath, book, ref } = await scriptureFullPath(mf, props);
+      if (book && book.length > 0) {
+        if (scopes.hasOwnProperty(book)) {
+          scopes[book].push(ref);
+        } else {
+          scopes[book] = [ref];
+        }
       }
-    }
-    if (fullPath) {
-      const { ext } = removeExtension(fullPath);
-      if (!formats.hasOwnProperty(ext)) {
-        formats[ext] = {
-          compression: ext,
+      if (fullPath) {
+        const { ext } = removeExtension(fullPath);
+        if (!formats.hasOwnProperty(ext)) {
+          formats[ext] = {
+            compression: ext,
+          };
+        }
+        burritoMeta.ingredients[fullPath] = {
+          mimeType: mimeMap[ext],
+          size: mf.attributes.filesize,
+          scope: {
+            [book]: [ref],
+          },
         };
       }
-      burritoMeta.ingredients[fullPath] = {
-        mimeType: mimeMap[ext],
-        size: mf.attributes.filesize,
-        scope: {
-          [book]: [ref],
-        },
-      };
     }
-  });
+  }
   let formatn = 1;
   for (let val of Object.values(formats)) {
     burritoMeta.type.flavorType.flavor.formats[`format${formatn}`] = val;

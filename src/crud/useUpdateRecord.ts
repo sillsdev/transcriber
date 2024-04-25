@@ -1,12 +1,12 @@
-import { TransformBuilder } from '@orbit/data';
 import { useGlobal } from 'reactn';
-import { UpdateRecord, BaseModel } from '../model/baseModel';
+import { BaseModel, UpdateRecord } from '../model/baseModel';
+import { InitializedRecord } from '@orbit/records';
 
 export const useUpdateRecord = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
-  return async (rec: BaseModel) => {
-    await memory.update((t: TransformBuilder) => UpdateRecord(t, rec, user));
+  return async (rec: BaseModel & InitializedRecord) => {
+    await memory.update((t) => UpdateRecord(t, rec, user));
   };
 };

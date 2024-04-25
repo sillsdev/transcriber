@@ -4,7 +4,7 @@ import {
   Passage,
   ActivityStates,
   IIntegrationStrings,
-  MediaFile,
+  MediaFileD,
 } from '../../model';
 import {
   USERNAME_PENDING,
@@ -22,6 +22,9 @@ import {
   TEXT_PENDING,
   TEXT_ERROR,
   TEXT_SUCCESS,
+  CANPUBLISH_PENDING,
+  CANPUBLISH_SUCCESS,
+  CANPUBLISH_ERROR,
 } from './types';
 import { ParatextProject } from '../../model/paratextProject';
 import { pendingStatus, errStatus, errorStatus } from '../AxiosStatus';
@@ -159,6 +162,39 @@ export const getUserName =
       });
     }
   };
+
+export const getCanPublish =
+  (token: string, errorReporter: any, pendingmsg: string) =>
+  async (dispatch: any) => {
+    dispatch({
+      payload: pendingStatus(pendingmsg),
+      type: CANPUBLISH_PENDING,
+    });
+    try {
+      let response = await Axios.get(
+        API_CONFIG.host + '/api/paratext/canpublish',
+        {
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        }
+      );
+      dispatch({ payload: response.data, type: CANPUBLISH_SUCCESS });
+    } catch (err: any) {
+      logError(Severity.info, errorReporter, 'CanPublish failed');
+      dispatch({
+        payload: errStatus(err),
+        type: CANPUBLISH_ERROR,
+      });
+    }
+  };
+
+export const resetCanPublish = () => (dispatch: any) => {
+  dispatch({
+    payload: undefined,
+    type: CANPUBLISH_PENDING,
+  });
+};
 export const resetProjects = () => (dispatch: any) => {
   dispatch({
     payload: undefined,
@@ -319,7 +355,7 @@ export const getCount =
 
 export const getLocalCount =
   (
-    mediafiles: MediaFile[],
+    mediafiles: MediaFileD[],
     plan: string,
     memory: MemorySource,
     errorReporter: any,
@@ -349,9 +385,12 @@ export const getLocalCount =
         'passage',
         related(m, 'passage')
       ) as Passage;
+      const ref = passage?.attributes?.reference ?? 'Err';
       return (
-        !refMatch(passage?.attributes?.reference || 'Err') ||
-        !passage?.attributes?.book
+        !(
+          // TODO: /^NOTE/.test(ref) ||
+          refMatch(ref)
+        ) || !passage?.attributes?.book
       );
     });
     if (refMissing.length > 0) {
