@@ -113,6 +113,7 @@ export const TranscribeStepSettings = ({ toolSettings, onChange }: IProps) => {
           onChange={handleLanguageChange}
           hideSpelling
           hideFont
+          required={false}
           disabled={false}
           sx={{ ml: 1 }}
         />

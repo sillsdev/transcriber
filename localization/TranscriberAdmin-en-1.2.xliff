@@ -3161,6 +3161,13 @@
                <context context-type="sourcefile">LanguagePicker.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="languagePicker.noFonts">
+            <source>No recommended font</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">LanguagePicker.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="languagePicker.phonetic">
             <source>Phonetic</source>
             <target/>

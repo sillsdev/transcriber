@@ -583,6 +583,7 @@ const initialState = {
 			"inScript": " in the $1 script",
 			"language": "Language",
 			"languageOf": "A Language of $1$2.",
+			"noFonts": "No recommended font",
 			"phonetic": "Phonetic",
 			"script": "Script",
 			"select": "Save",

@@ -26,11 +26,13 @@ interface IProps extends ILanguage {
   hideSpelling?: boolean;
   hideFont?: boolean;
   disabled?: boolean;
+  required?: boolean;
   sx?: SxProps;
 }
 
 export const Language = (props: IProps) => {
-  const { bcp47, languageName, font, rtl, spellCheck, sx, onChange } = props;
+  const { bcp47, languageName, font, rtl, spellCheck, required, sx, onChange } =
+    props;
   const [state, setState] = React.useState<ILanguage>({
     bcp47,
     languageName,
@@ -103,6 +105,7 @@ export const Language = (props: IProps) => {
           sx={sx ?? { ml: 0 }}
           control={
             <LanguagePicker
+              required={required ?? true}
               value={bcp47 || 'und'}
               name={languageName ?? ''}
               font={font ?? ''}

@@ -2710,6 +2710,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="languagePicker.noFonts">
+         <segment>
+            <source>No recommended font</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="languagePicker.phonetic">
          <segment>
             <source>Phonetic</source>
