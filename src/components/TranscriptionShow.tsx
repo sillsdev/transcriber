@@ -52,8 +52,11 @@ function TranscriptionShow(props: IProps) {
   const [open, setOpen] = useState(visible);
   const { showMessage } = useSnackBar();
   const [transcription, setTranscription] = useState('');
-  const [fontData, setFontData] = useState<FontData>();
-  const [textStyle, setTextStyle] = useState<React.CSSProperties>({});
+  const [lang, setLang] = useState('');
+  const [family, setFamily] = useState('');
+  const [url, setUrl] = useState('');
+  const [size, setSize] = useState('');
+  const [dir, setDir] = useState<'ltr' | 'rtl'>('ltr');
   const getTranscription = useTranscription(true, undefined, version);
   const t: ITranscriptionShowStrings = useSelector(
     transcriptionShowSelector,
@@ -78,6 +81,14 @@ function TranscriptionShow(props: IProps) {
     setOpen(visible);
   }, [visible]);
 
+  const setFontValues = (data: FontData) => {
+    setLang(data.langTag);
+    setFamily(data?.fontConfig?.custom?.families[0] || '');
+    setUrl(data?.fontConfig?.custom?.urls[0] || '');
+    setSize(data.fontSize);
+    setDir(data.fontDir as 'ltr' | 'rtl');
+  };
+
   useEffect(() => {
     if (id) {
       let mediaRec = isMediaId
@@ -94,12 +105,7 @@ function TranscriptionShow(props: IProps) {
           (findRecord(memory, 'project', projectId) as ProjectD);
         if (projRec)
           getFontData(projRec, offline).then((data) => {
-            setFontData(data);
-            setTextStyle({
-              fontFamily: data.fontFamily,
-              fontSize: data.fontSize,
-              direction: data.fontDir as 'ltr' | 'rtl',
-            });
+            setFontValues(data);
           });
       } else {
         const orgSteps = workflowSteps
@@ -108,12 +114,7 @@ function TranscriptionShow(props: IProps) {
             (a, b) => a.attributes?.sequencenum - b.attributes?.sequencenum
           );
         const data = getArtTypeFontData(memory, exportId, orgSteps);
-        setFontData(data);
-        setTextStyle({
-          fontFamily: data.fontFamily,
-          fontSize: data.fontSize,
-          direction: data.fontDir as 'ltr' | 'rtl',
-        });
+        setFontValues(data);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -138,11 +139,18 @@ function TranscriptionShow(props: IProps) {
             id="transcription"
             label={t.transcription}
             value={transcription}
-            config={fontData?.fontConfig}
+            family={family}
+            url={url}
             onChange={handleChange}
-            inputProps={{ style: textStyle }}
+            inputProps={{
+              style: {
+                fontFamily: family || 'charissil',
+                direction: dir || 'ltr',
+                fontSize: size || 'large',
+              },
+            }}
             fullWidth
-            lang={fontData?.langTag || 'en'}
+            lang={lang || 'en'}
             spellCheck={false}
           />
         </DialogContent>

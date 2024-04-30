@@ -5,30 +5,31 @@ import {
   TextField,
   FilledTextFieldProps,
 } from '@mui/material';
-import { IFontConfig } from '../crud';
 
 export interface StyledTextAreaAutosizeProps extends TextareaAutosizeProps {
-  config?: IFontConfig;
+  family: string;
+  url: string;
 }
 
 export const StyledTextAreaAudosize = styled(TextareaAutosize, {
   shouldForwardProp: (prop) => prop !== 'config',
-})<StyledTextAreaAutosizeProps>(({ config }) => ({
+})<StyledTextAreaAutosizeProps>(({ family, url }) => ({
   '@font-face': {
-    fontFamily: `${config?.custom?.families[0]}`,
-    src: `url(${config?.custom?.urls[0]})`,
+    fontFamily: family,
+    src: `url(${url})`,
   },
 }));
 
 export interface StyledTextFieldProps extends FilledTextFieldProps {
-  config?: IFontConfig;
+  family: string;
+  url: string;
 }
 
 export const StyledTextField = styled(TextField, {
   shouldForwardProp: (prop) => prop !== 'config',
-})<StyledTextFieldProps>(({ config }) => ({
+})<StyledTextFieldProps>(({ family, url }) => ({
   '@font-face': {
-    fontFamily: `${config?.custom?.families[0]}`,
-    src: `url(${config?.custom?.urls[0]})`,
+    fontFamily: family,
+    src: `url(${url})`,
   },
 }));
