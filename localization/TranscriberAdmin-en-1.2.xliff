@@ -886,7 +886,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="cards.OBTs">
-      		<source>Oral Bible Translation (Simple)</source>
+      		<source>Oral Bible Translation (simple)</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TeamDialog.tsx</context>

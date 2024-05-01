@@ -170,7 +170,7 @@ const initialState = {
 			"notesLabel": "Introductory Notes Title",
 			"OBS": "Storying",
 			"OBT": "Oral Bible Translation (complete)",
-			"OBTs": "Oral Bible Translation (Simple)",
+			"OBTs": "Oral Bible Translation (simple)",
 			"OBTr": "Oral Bible Translation (like Render)",
 			"OBTo": "Oral Bible Translation (oral only)",
 			"offline": "Offline",
