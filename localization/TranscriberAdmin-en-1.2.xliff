@@ -886,7 +886,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="cards.OBTs">
-      		<source>Oral Bible Translation (Simple)</source>
+      		<source>Oral Bible Translation (simple)</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TeamDialog.tsx</context>
@@ -3156,6 +3156,13 @@
          </trans-unit>
          <trans-unit id="languagePicker.languageOf">
             <source>A Language of $1$2.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">LanguagePicker.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="languagePicker.noFonts">
+            <source>No recommended font</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">LanguagePicker.tsx</context>

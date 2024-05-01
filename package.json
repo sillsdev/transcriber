@@ -1,6 +1,6 @@
 {
   "name": "audio-project-manager",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Flexible audio-text orality solution",
   "private": true,
   "dependencies": {
@@ -53,7 +53,7 @@
     "luxon": "^3.4.3",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.43",
-    "mui-language-picker": "^2.1.2",
+    "mui-language-picker": "^2.1.5",
     "node-html-encoder": "^0.0.2",
     "node-stream-zip": "^1.15.0",
     "original-fs": "^1.2.0",
@@ -238,5 +238,7 @@
   "engines": {
     "npm": ">=8.0.0 <9.0.0",
     "node": ">=16.0.0 <17.0.0"
-  }
+  },
+  "main": "public/electron.js",
+  "homepage": "./"
 }

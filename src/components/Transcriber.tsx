@@ -1168,7 +1168,8 @@ export function Transcriber(props: IProps) {
                         id="transcriber.text"
                         value={textValue}
                         readOnly={!transSelected || role === 'view'}
-                        config={projData?.fontConfig}
+                        family={projData?.fontConfig?.custom?.families[0] ?? ''}
+                        url={projData?.fontConfig?.custom?.urls[0] ?? ''}
                         style={textAreaStyle}
                         onChange={handleChange}
                         lang={projData?.langTag || 'en'}

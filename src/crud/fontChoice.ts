@@ -1,11 +1,11 @@
 import { ArtifactTypeD, OrgWorkflowStep, Project } from '../model';
-import { dataPath, PathType } from '../utils/dataPath';
-import { isElectron } from '../api-variable';
+// import { dataPath, PathType } from '../utils/dataPath';
+// import { isElectron } from '../api-variable';
 import { getFamily, getRtl } from 'mui-language-picker';
 import Memory from '@orbit/memory';
 import { findRecord } from '.';
 
-const ipc = (window as any)?.electron;
+// const ipc = (window as any)?.electron;
 
 export interface IFontConfig {
   custom: {
@@ -48,19 +48,19 @@ export const getFontData = async (r: Project, offline: boolean) => {
     : 'large';
   const fontDir = r?.attributes?.rtl || getRtl(langTag) ? 'rtl' : 'ltr';
   let url = getFontUrl(fontFamily);
-  if (isElectron) {
-    let local = await dataPath('http', PathType.FONTS, {
-      localname: fontFamily + '.css',
-    });
-    if (local && !local.startsWith('http')) {
-      if (await ipc?.exists(local)) {
-        url = (await ipc?.isWindows())
-          ? new URL(local).toString().slice(8)
-          : local;
-        url = `transcribe-safe://${url}`;
-      }
-    }
-  }
+  // if (isElectron) {
+  //   let local = await dataPath('http', PathType.FONTS, {
+  //     localname: fontFamily + '.css',
+  //   });
+  //   if (local && !local.startsWith('http')) {
+  //     if (await ipc?.exists(local)) {
+  //       url = (await ipc?.isWindows())
+  //         ? new URL(local).toString().slice(8)
+  //         : local;
+  //       url = `transcribe-safe://${url}`;
+  //     }
+  //   }
+  // }
   const data: FontData = {
     langTag,
     spellCheck,
