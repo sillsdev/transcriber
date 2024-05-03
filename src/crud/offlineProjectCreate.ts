@@ -6,7 +6,7 @@ import {
   RecordTransformBuilder,
   StandardRecordNormalizer,
 } from '@orbit/records';
-import { currentDateTime } from '../utils';
+import { currentDateTime } from '../utils/currentDateTime';
 import { ReplaceRelatedRecord } from '../model/baseModel';
 
 export const offlineProjectCreate = (

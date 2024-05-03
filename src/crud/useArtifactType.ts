@@ -10,7 +10,10 @@ import {
 import { RecordKeyMap, RecordTransformBuilder } from '@orbit/records';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
-import { findRecord, related, remoteId, ArtifactTypeSlug } from '.';
+import { findRecord } from './tryFindRecord';
+import { related } from './related';
+import { remoteId } from './remoteId';
+import { ArtifactTypeSlug } from './artifactTypeSlug';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 
 export const VernacularTag = null; // used to test the relationship

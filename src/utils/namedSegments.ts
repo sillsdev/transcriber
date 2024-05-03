@@ -5,6 +5,7 @@ export enum NamedRegions {
   Transcription = 'Transcription',
   BackTranslation = 'BT',
   ProjectResource = 'ProjRes',
+  Verse = 'Verse',
 }
 export function updateSegments(
   name: string,

@@ -1,14 +1,27 @@
 import { cleanup } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
 import {
-  Section,
-  Passage,
   ISheet,
-  OrgWorkflowStep,
   IWorkflowStepsStrings,
+  SectionD,
+  PassageD,
+  OrgWorkflowStepD,
+  SheetLevel,
+  IwsKind,
+  IMediaShare,
 } from '../model';
-import { getSheet } from '../components/Sheet';
-import { memory } from '../schema';
+import Memory from '@orbit/memory';
+import { getSheet } from '../components/Sheet/getSheet';
+import { InitializedRecord } from '@orbit/records';
+import { PublishLevelEnum } from '../crud/usePublishLevel';
+import { ISTFilterState } from '../components/Sheet/filterMenu';
+import { PassageTypeEnum } from '../model/passageType';
+
+var mockMemory = {} as Memory;
+
+jest.mock('../crud/media', () => ({
+  getVernacularMediaRec: jest.fn(),
+  getMediaShared: jest.fn(),
+}));
 
 const wfStr = {
   internalize: 'Internalize',
@@ -18,7 +31,7 @@ const wfStr = {
   getString: (v: string) => (wfStr as any)[v],
 } as IWorkflowStepsStrings;
 
-const s1: Section = {
+const s1 = {
   type: 'section',
   id: 's1',
   attributes: {
@@ -35,9 +48,9 @@ const s1: Section = {
     passages: { data: [{ type: 'passage', id: 'pa1' }] },
     lastModifiedByUser: { data: { type: 'user', id: 'u0' } },
   },
-};
+} as SectionD;
 
-const pa1: Passage = {
+const pa1 = {
   type: 'passage',
   id: 'pa1',
   attributes: {
@@ -59,9 +72,9 @@ const pa1: Passage = {
     media: {},
     lastModifiedByUser: { data: { type: 'user', id: 'u0' } },
   },
-} as Passage;
+} as PassageD;
 
-const pa2: Passage = {
+const pa2 = {
   type: 'passage',
   id: 'pa2',
   attributes: {
@@ -83,9 +96,9 @@ const pa2: Passage = {
     media: {},
     lastModifiedByUser: { data: { type: 'user', id: 'u0' } },
   },
-} as Passage;
+} as PassageD;
 
-const pa3: Passage = {
+const pa3 = {
   type: 'passage',
   id: 'pa3',
   attributes: {
@@ -107,9 +120,9 @@ const pa3: Passage = {
     media: {},
     lastModifiedByUser: { data: { type: 'user', id: 'u0' } },
   },
-} as Passage;
+} as PassageD;
 
-const s2: Section = {
+const s2 = {
   type: 'section',
   id: 's2',
   attributes: {
@@ -126,9 +139,9 @@ const s2: Section = {
     passages: { data: [{ type: 'passage', id: 'pa4' }] },
     lastModifiedByUser: { data: { type: 'user', id: 'u0' } },
   },
-};
+} as SectionD;
 
-const pa4: Passage = {
+const pa4 = {
   type: 'passage',
   id: 'pa4',
   attributes: {
@@ -150,9 +163,9 @@ const pa4: Passage = {
     media: {},
     lastModifiedByUser: { data: { type: 'user', id: 'u0' } },
   },
-} as Passage;
+} as PassageD;
 
-const s3: Section = {
+const s3 = {
   type: 'section',
   id: 's3',
   attributes: {
@@ -169,9 +182,9 @@ const s3: Section = {
     passages: { data: [{ type: 'passage', id: 'pa11' }] },
     lastModifiedByUser: { data: { type: 'user', id: 'u0' } },
   },
-};
+} as SectionD;
 
-const pa11: Passage = {
+const pa11 = {
   type: 'passage',
   id: 'pa11',
   attributes: {
@@ -193,10 +206,11 @@ const pa11: Passage = {
     media: {},
     lastModifiedByUser: { data: { type: 'user', id: 'u0' } },
   },
-} as Passage;
+} as PassageD;
+
 const getDiscussionCount = (psg: string, step: string) => 0;
 
-const owf: OrgWorkflowStep[] = [
+const owf: OrgWorkflowStepD[] = [
   {
     type: 'orgworkflowstep',
     id: 'owf1',
@@ -275,521 +289,420 @@ const owf: OrgWorkflowStep[] = [
   },
 ];
 
+// Declare some default parameters
+var defaultFilterState: ISTFilterState = {
+  minStep: '', //orgworkflow step to show this step or after
+  maxStep: '', //orgworkflow step to show this step or before
+  minSection: -1,
+  maxSection: 99999,
+  assignedToMe: false,
+  hideDone: false,
+  disabled: false,
+  canHideDone: false,
+};
+var getPublishLevel = (publishTo: string): PublishLevelEnum =>
+  PublishLevelEnum.None;
+interface FindResult {
+  uri?: string;
+  rights?: string;
+  url?: string;
+  color?: string;
+}
+var graphicFind = (rec: InitializedRecord, ref?: string): FindResult => ({});
+var curSheet: ISheet[] | undefined = undefined;
+
+var gsDefaults = {
+  plan: '',
+  sections: [] as SectionD[],
+  passages: [] as PassageD[],
+  flat: false,
+  projectShared: false,
+  memory: mockMemory,
+  orgWorkflowSteps: [] as OrgWorkflowStepD[],
+  wfStr,
+  filterState: defaultFilterState,
+  minSection: -1,
+  hidePublishing: false,
+  doneStepId: 'done-1',
+  getDiscussionCount,
+  graphicFind,
+  getPublishLevel,
+  current: curSheet,
+};
+
+var secResult = {
+  level: SheetLevel.Section,
+  kind: IwsKind.Section,
+  sectionSeq: 1,
+  passageSeq: 0,
+  passageType: PassageTypeEnum.PASSAGE,
+  deleted: false,
+  filtered: false,
+  published: PublishLevelEnum.None,
+  editor: undefined,
+  graphicUri: undefined,
+  graphicFullSizeUrl: undefined,
+  graphicRights: undefined,
+  reference: '',
+  titleMediaId: undefined,
+  transcriber: undefined,
+} as ISheet;
+
+var pasResult = {
+  level: SheetLevel.Passage,
+  kind: IwsKind.Passage,
+  sectionSeq: 1,
+  passageSeq: 1,
+  passageType: PassageTypeEnum.PASSAGE,
+  deleted: false,
+  filtered: false,
+  mediaShared: IMediaShare.NotPublic,
+  mediaId: undefined,
+};
+
+var flatResult = {
+  level: SheetLevel.Section,
+  kind: IwsKind.SectionPassage,
+  sectionSeq: 1,
+  passageSeq: 1,
+  passageType: PassageTypeEnum.PASSAGE,
+  deleted: false,
+  filtered: false,
+  published: PublishLevelEnum.None,
+  mediaShared: IMediaShare.NotPublic,
+  mediaId: undefined,
+  editor: undefined,
+  graphicUri: undefined,
+  graphicFullSizeUrl: undefined,
+  graphicRights: undefined,
+  reference: '',
+  titleMediaId: undefined,
+  transcriber: undefined,
+};
+
 afterEach(cleanup);
 
-test('empty input gives empty output', async () => {
-  expect(
-    getSheet('', [], [], false, false, memory, [], wfStr, getDiscussionCount)
-  ).toEqual([]);
+test('empty input gives empty output', () => {
+  expect(getSheet({ ...gsDefaults })).toEqual([]);
 });
 
-test('empty flat input gives empty output', async () => {
-  expect(
-    getSheet('', [], [], true, false, memory, [], wfStr, getDiscussionCount)
-  ).toEqual([]);
+test('empty flat input gives empty output', () => {
+  expect(getSheet({ ...gsDefaults, flat: true })).toEqual([]);
 });
 
-test('empty input with plan id gives empty output', async () => {
-  expect(
-    getSheet('pl1', [], [], false, false, memory, [], wfStr, getDiscussionCount)
-  ).toEqual([]);
+test('empty input with plan id gives empty output', () => {
+  expect(getSheet({ ...gsDefaults, plan: 'pl1' })).toEqual([]);
 });
 
-test('one section gives output', async () => {
-  expect(
-    getSheet(
-      'pl1',
-      [s1],
-      [],
-      false,
-      false,
-      memory,
-      [],
-      wfStr,
-      getDiscussionCount
-    )
-  ).toEqual([
+test('one section gives output', () => {
+  expect(getSheet({ ...gsDefaults, plan: 'pl1', sections: [s1] })).toEqual([
     {
-      level: 0,
-      kind: 0,
-      sectionSeq: 1,
+      ...secResult,
       title: 'Intro',
-      passageSeq: 0,
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      deleted: false,
+    },
+  ]);
+});
+
+test('one section and one passage gives output', () => {
+  expect(
+    getSheet({ ...gsDefaults, plan: 'pl1', sections: [s1], passages: [pa1] })
+  ).toEqual([
+    {
+      ...secResult,
+      title: 'Intro',
+      sectionId: { type: 'section', id: 's1' },
+      sectionUpdated: '2021-09-15',
+    },
+    {
+      ...pasResult,
+      book: 'LUK',
+      reference: '1:1-4',
+      comment: 'salutation',
+      passageUpdated: '2021-09-15',
+      passage: pa1,
     },
   ] as ISheet[]);
 });
 
-test('one section and one passage gives output', async () => {
+test('one section and two passages gives output', () => {
   expect(
-    getSheet(
-      'pl1',
-      [s1],
-      [pa1],
-      false,
-      false,
-      memory,
-      [],
-      wfStr,
-      getDiscussionCount
-    )
+    getSheet({
+      ...gsDefaults,
+      plan: 'pl1',
+      sections: [s1],
+      passages: [pa1, pa2],
+    })
   ).toEqual([
     {
-      level: 0,
-      kind: 0,
-      sectionSeq: 1,
+      ...secResult,
       title: 'Intro',
-      passageSeq: 0,
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      deleted: false,
     },
     {
-      level: 1,
-      kind: 1,
-      sectionSeq: 1,
+      ...pasResult,
+      level: SheetLevel.Passage,
+      kind: IwsKind.Passage,
       passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
       passageUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa1' },
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
-    },
-  ] as ISheet[]);
-});
-
-test('one section and two passages gives output', async () => {
-  expect(
-    getSheet(
-      'pl1',
-      [s1],
-      [pa1, pa2],
-      false,
-      false,
-      memory,
-
-      [],
-      wfStr,
-      getDiscussionCount
-    )
-  ).toEqual([
-    {
-      level: 0,
-      kind: 0,
-      sectionSeq: 1,
-      title: 'Intro',
-      passageSeq: 0,
-      sectionId: { type: 'section', id: 's1' },
-      sectionUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      deleted: false,
+      passage: pa1,
     },
     {
-      level: 1,
-      kind: 1,
-      sectionSeq: 1,
-      passageSeq: 1,
-      book: 'LUK',
-      reference: '1:1-4',
-      comment: 'salutation',
-      passageUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa1' },
-      deleted: false,
-      mediaId: undefined,
-      mediaShared: 3,
-    },
-    {
-      level: 1,
-      kind: 1,
-      sectionSeq: 1,
+      ...pasResult,
+      level: SheetLevel.Passage,
+      kind: IwsKind.Passage,
       passageSeq: 2,
       book: 'LUK',
       reference: '1:5-7',
       comment: 'introducing John',
       passageUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa2' },
-      deleted: false,
-      mediaId: undefined,
-      mediaShared: 3,
+      passage: pa2,
     },
-  ] as ISheet[]);
+  ]);
 });
 
-test('one section and two passages with flat output', async () => {
+test('one section and two passages with flat output', () => {
   expect(
-    getSheet(
-      'pl1',
-      [s1],
-      [pa1, pa2],
-      true,
-      false,
-      memory,
-
-      [],
-      wfStr,
-      getDiscussionCount
-    )
+    getSheet({
+      ...gsDefaults,
+      plan: 'pl1',
+      sections: [s1],
+      passages: [pa1, pa2],
+      flat: true,
+    })
   ).toEqual([
     {
-      level: 0,
-      kind: 2,
-      sectionSeq: 1,
+      ...flatResult,
       title: 'Intro',
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
       passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
       passageUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa1' },
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
+      passage: pa1,
     },
     {
-      level: 1,
-      kind: 1,
-      sectionSeq: 1,
+      ...pasResult,
       passageSeq: 2,
       book: 'LUK',
       reference: '1:5-7',
       comment: 'introducing John',
       passageUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa2' },
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
+      passage: pa2,
     },
-  ] as ISheet[]);
+  ]);
 });
 
-test('one section and three passages out of order', async () => {
+test('one section and three passages out of order', () => {
   expect(
-    getSheet(
-      'pl1',
-      [s1],
-      [pa3, pa1, pa2],
-      false,
-      false,
-      memory,
-
-      [],
-      wfStr,
-      getDiscussionCount
-    )
+    getSheet({
+      ...gsDefaults,
+      plan: 'pl1',
+      sections: [s1],
+      passages: [pa3, pa1, pa2],
+    })
   ).toEqual([
     {
-      level: 0,
-      kind: 0,
-      sectionSeq: 1,
+      ...secResult,
       title: 'Intro',
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      passageSeq: 0,
-      deleted: false,
     },
     {
-      level: 1,
-      kind: 1,
-      sectionSeq: 1,
+      ...pasResult,
+      level: SheetLevel.Passage,
+      kind: IwsKind.Passage,
       passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
       passageUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa1' },
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
+      passage: pa1,
     },
     {
-      level: 1,
-      kind: 1,
-      sectionSeq: 1,
+      ...pasResult,
+      level: SheetLevel.Passage,
+      kind: IwsKind.Passage,
       passageSeq: 2,
       book: 'LUK',
       reference: '1:5-7',
       comment: 'introducing John',
       passageUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa2' },
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
+      passage: pa2,
     },
     {
-      level: 1,
-      kind: 1,
-      sectionSeq: 1,
+      ...pasResult,
+      level: SheetLevel.Passage,
+      kind: IwsKind.Passage,
       passageSeq: 3,
       book: 'LUK',
       reference: '1:8-10',
       comment: "John's call",
       passageUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa3' },
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
+      passage: pa3,
     },
-  ] as ISheet[]);
+  ]);
 });
 
-test('one flat section and with one passage gives output', async () => {
+test('one flat section and with one passage gives output', () => {
   expect(
-    getSheet(
-      'pl1',
-      [s1],
-      [pa1],
-      true,
-      false,
-      memory,
-      [],
-      wfStr,
-      getDiscussionCount
-    )
+    getSheet({
+      ...gsDefaults,
+      plan: 'pl1',
+      sections: [s1],
+      passages: [pa1],
+      flat: true,
+    })
   ).toEqual([
     {
-      level: 0,
-      kind: 2,
-      sectionSeq: 1,
+      ...flatResult,
       title: 'Intro',
-      passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa1' },
+      passage: pa1,
       passageUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
     },
-  ] as ISheet[]);
+  ]);
 });
 
-test('two flat sections and one from another plan gives output', async () => {
+test('two flat sections and one from another plan gives output', () => {
   expect(
-    getSheet(
-      'pl1',
-      [s1, s2, s3],
-      [pa1, pa4, pa11],
-      true,
-      false,
-      memory,
-
-      [],
-      wfStr,
-      getDiscussionCount
-    )
+    getSheet({
+      ...gsDefaults,
+      plan: 'pl1',
+      sections: [s1, s2, s3],
+      passages: [pa1, pa4, pa11],
+      flat: true,
+    })
   ).toEqual([
     {
-      level: 0,
-      kind: 2,
-      sectionSeq: 1,
+      ...flatResult,
       title: 'Intro',
-      passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa1' },
+      passage: pa1,
       passageUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
     },
     {
-      level: 0,
-      kind: 2,
+      ...flatResult,
       sectionSeq: 2,
       title: 'Birth of John',
-      passageSeq: 1,
       book: 'LUK',
       reference: '1:11-14',
       comment: 'Zechariah at the temple',
       sectionId: { type: 'section', id: 's2' },
       sectionUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa4' },
+      passage: pa4,
       passageUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
     },
-  ] as ISheet[]);
+  ]);
 });
 
-test('two sections and passages with one from another plan', async () => {
+test('two sections and passages with one from another plan', () => {
   expect(
-    getSheet(
-      'pl1',
-      [s1, s2, s3],
-      [pa11, pa3, pa1, pa4, pa2],
-      false,
-      false,
-      memory,
-
-      [],
-      wfStr,
-      getDiscussionCount
-    )
+    getSheet({
+      ...gsDefaults,
+      plan: 'pl1',
+      sections: [s1, s2, s3],
+      passages: [pa11, pa3, pa1, pa4, pa2],
+    })
   ).toEqual([
     {
-      level: 0,
-      kind: 0,
-      sectionSeq: 1,
+      ...secResult,
       title: 'Intro',
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      passageSeq: 0,
-      deleted: false,
     },
     {
-      level: 1,
-      kind: 1,
-      sectionSeq: 1,
-      passageSeq: 1,
+      ...pasResult,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
       passageUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa1' },
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
+      passage: pa1,
     },
     {
-      level: 1,
-      kind: 1,
-      sectionSeq: 1,
+      ...pasResult,
       passageSeq: 2,
       book: 'LUK',
       reference: '1:5-7',
       comment: 'introducing John',
       passageUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa2' },
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
+      passage: pa2,
     },
     {
-      level: 1,
-      kind: 1,
-      sectionSeq: 1,
+      ...pasResult,
       passageSeq: 3,
       book: 'LUK',
       reference: '1:8-10',
       comment: "John's call",
       passageUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa3' },
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
+      passage: pa3,
     },
     {
-      level: 0,
-      kind: 0,
+      ...secResult,
       sectionSeq: 2,
       title: 'Birth of John',
       sectionId: { type: 'section', id: 's2' },
       sectionUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      passageSeq: 0,
-      deleted: false,
     },
     {
-      level: 1,
-      kind: 1,
+      ...pasResult,
       sectionSeq: 2,
-      passageSeq: 1,
       book: 'LUK',
       reference: '1:11-14',
       comment: 'Zechariah at the temple',
       passageUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa4' },
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
+      passage: pa4,
     },
-  ] as ISheet[]);
+  ]);
 });
 
-test('update one flat section to two flat section ignoring other plan', async () => {
-  const sheet = getSheet(
-    'pl1',
-    [s1, s3],
-    [pa1, pa11],
-    true,
-    false,
-    memory,
-
-    [],
-    wfStr,
-    getDiscussionCount
-  );
+test('update one flat section to two flat section ignoring other plan', () => {
+  const sheet = getSheet({
+    ...gsDefaults,
+    plan: 'pl1',
+    sections: [s1, s3],
+    passages: [pa1, pa11],
+    flat: true,
+  });
   expect(sheet).toEqual([
     {
-      level: 0,
-      kind: 2,
-      sectionSeq: 1,
+      ...flatResult,
       title: 'Intro',
-      passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      passage: { type: 'passage', id: 'pa1' } as Passage,
+      passage: pa1,
       passageUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
     },
-  ] as ISheet[]);
-  const updated = getSheet(
-    'pl1',
-    [s1, s2, s3],
-    [pa1, pa4, pa11],
-    true,
-    false,
-    memory,
-
-    [],
-    wfStr,
-    getDiscussionCount,
-    sheet
-  );
+  ]);
+  const updated = getSheet({
+    ...gsDefaults,
+    plan: 'pl1',
+    sections: [s1, s2, s3],
+    passages: [pa1, pa4, pa11],
+    flat: true,
+    current: sheet,
+  });
   expect(updated).toEqual([
     {
-      level: 0,
-      kind: 2,
-      sectionSeq: 1,
+      ...flatResult,
       title: 'Intro',
       passageSeq: 1,
       book: 'LUK',
@@ -797,142 +710,106 @@ test('update one flat section to two flat section ignoring other plan', async ()
       comment: 'salutation',
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      passage: { type: 'passage', id: 'pa1' } as Passage,
+      passage: pa1,
       passageUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
     },
     {
-      level: 0,
-      kind: 2,
+      ...flatResult,
       sectionSeq: 2,
       title: 'Birth of John',
-      passageSeq: 1,
       book: 'LUK',
       reference: '1:11-14',
       comment: 'Zechariah at the temple',
       sectionId: { type: 'section', id: 's2' },
       sectionUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa4' },
+      passage: pa4,
       passageUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
     },
-  ] as ISheet[]);
+  ]);
 });
 
-test('one section and one passage with step gives output', async () => {
+test('one section and one passage with step gives output', () => {
   expect(
-    getSheet(
-      'pl1',
-      [s1],
-      [pa1],
-      false,
-      false,
-      memory,
-      owf,
-      wfStr,
-      getDiscussionCount
-    )
+    getSheet({
+      ...gsDefaults,
+      plan: 'pl1',
+      sections: [s1],
+      passages: [pa1],
+      orgWorkflowSteps: owf,
+    })
   ).toEqual([
     {
-      level: 0,
-      kind: 0,
+      ...secResult,
       sectionSeq: 1,
       title: 'Intro',
-      passageSeq: 0,
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      deleted: false,
     },
     {
-      level: 1,
-      kind: 1,
+      ...pasResult,
+      level: SheetLevel.Passage,
+      kind: IwsKind.Passage,
       step: 'Internalize',
-      sectionSeq: 1,
       passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
       passageUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa1' },
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
+      passage: pa1,
+      discussionCount: 0,
+      stepId: 'owf1',
     },
-  ] as ISheet[]);
+  ]);
 });
 
-test('two flat sections with steps gives output', async () => {
+test('two flat sections with steps gives output', () => {
+  const stepStatus =
+    '{"completed": [{"name": "Internalize", "stepid": "1", "complete": true}, {"name": "Record", "stepid": "2", "complete": true}, {"name": "TeamCheck", "stepid": "3", "complete": true}]}';
   const pa1b = {
     ...pa1,
     attributes: {
       ...pa1.attributes,
-      stepComplete:
-        '{"completed": [{"name": "Internalize", "stepid": "1", "complete": true}, {"name": "Record", "stepid": "2", "complete": true}, {"name": "TeamCheck", "stepid": "3", "complete": true}]}',
+      stepComplete: stepStatus,
     },
-  } as Passage;
+  } as PassageD;
   expect(
-    getSheet(
-      'pl1',
-      [s1, s2],
-      [pa1b, pa4, pa11],
-      true,
-      false,
-      memory,
-
-      owf,
-      wfStr,
-      getDiscussionCount
-    )
+    getSheet({
+      ...gsDefaults,
+      plan: 'pl1',
+      sections: [s1, s2],
+      passages: [pa1b, pa4, pa11],
+      orgWorkflowSteps: owf,
+      flat: true,
+    })
   ).toEqual([
     {
-      level: 0,
-      kind: 2,
+      ...flatResult,
       step: 'Peer Review',
-      sectionSeq: 1,
       title: 'Intro',
-      passageSeq: 1,
       book: 'LUK',
       reference: '1:1-4',
       comment: 'salutation',
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa1' },
+      passage: pa1b,
       passageUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
+      discussionCount: 0,
+      stepId: 'owf4',
     },
     {
-      level: 0,
-      kind: 2,
+      ...flatResult,
       step: 'Internalize',
       sectionSeq: 2,
       title: 'Birth of John',
-      passageSeq: 1,
       book: 'LUK',
       reference: '1:11-14',
       comment: 'Zechariah at the temple',
       sectionId: { type: 'section', id: 's2' },
       sectionUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa4' },
+      passage: pa4,
       passageUpdated: '2021-09-15',
-      transcriber: undefined,
-      editor: undefined,
-      mediaId: undefined,
-      mediaShared: 3,
-      deleted: false,
+      discussionCount: 0,
+      stepId: 'owf1',
     },
-  ] as ISheet[]);
+  ]);
 });

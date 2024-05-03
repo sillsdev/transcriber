@@ -29,7 +29,7 @@ export * from './waitForIt';
 export * from './lookupBook';
 export * from './refMatch';
 export * from './localUserKey';
-export * from './getFIngerprint';
+export * from './getFingerprint';
 export * from './useProjectsLoaded';
 export * from './useMounted';
 export * from './execFolder';
