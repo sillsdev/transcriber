@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { Snackbar, IconButton, styled, BoxProps, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import { useMounted } from '../utils';
+import { useMounted } from '../utils/useMounted';
 
 const Alert = (props: AlertProps) => {
   return <MuiAlert elevation={6} {...props} />;

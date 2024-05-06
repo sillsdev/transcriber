@@ -1,5 +1,7 @@
 import Memory from '@orbit/memory';
-import { findRecord, mediaFileName, related } from '.';
+import { findRecord } from './tryFindRecord';
+import { mediaFileName } from './media';
+import { related } from './related';
 import {
   PassageStateChange,
   ActivityStates,

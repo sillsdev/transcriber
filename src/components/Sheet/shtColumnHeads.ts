@@ -1,5 +1,5 @@
 import { ISheet } from '../../model';
-import { workSheet } from '.';
+import { workSheet } from './workSheet';
 
 interface ILocalName {
   [key: string]: string;

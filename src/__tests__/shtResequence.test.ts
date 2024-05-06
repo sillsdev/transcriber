@@ -1,5 +1,5 @@
-import { ISheet, IwsKind, IMediaShare } from '../model';
-import { shtResequence } from '../components/Sheet';
+import { ISheet, IwsKind, IMediaShare, SheetLevel } from '../model';
+import { shtResequence } from '../components/Sheet/shtResequence';
 
 test('resequence empty give empty', () => {
   expect(shtResequence([])).toEqual([]);
@@ -10,9 +10,9 @@ test('resequence empty give empty with section num', () => {
 });
 
 test('resequence 3 sections', () => {
-  const sheet: ISheet[] = [
+  const sheet = [
     {
-      level: 0,
+      level: SheetLevel.Section,
       kind: IwsKind.Section,
       sectionSeq: 3,
       title: 'Luke wrote this book about Jesus for Theophilus',
@@ -24,7 +24,7 @@ test('resequence 3 sections', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 3,
       title: '',
@@ -36,7 +36,7 @@ test('resequence 3 sections', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 0,
+      level: SheetLevel.Section,
       kind: IwsKind.Section,
       sectionSeq: 2,
       title: 'An angel said that John the Baptizer would be born',
@@ -48,7 +48,7 @@ test('resequence 3 sections', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
@@ -60,7 +60,7 @@ test('resequence 3 sections', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
@@ -72,7 +72,7 @@ test('resequence 3 sections', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
@@ -84,7 +84,7 @@ test('resequence 3 sections', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
@@ -96,7 +96,7 @@ test('resequence 3 sections', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
@@ -108,7 +108,7 @@ test('resequence 3 sections', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 0,
+      level: SheetLevel.Section,
       kind: IwsKind.Section,
       sectionSeq: 1,
       title: 'An angel told Mary that Jesus would be born',
@@ -120,7 +120,7 @@ test('resequence 3 sections', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 1,
       title: '',
@@ -132,7 +132,7 @@ test('resequence 3 sections', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 1,
       title: '',
@@ -144,7 +144,7 @@ test('resequence 3 sections', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 1,
       title: '',
@@ -155,7 +155,7 @@ test('resequence 3 sections', () => {
       deleted: false,
       mediaShared: IMediaShare.NotPublic,
     },
-  ];
+  ] as ISheet[];
 
   const reseq = shtResequence(sheet);
   expect(reseq.length).toBe(sheet.length);
@@ -177,9 +177,9 @@ test('resequence 3 sections', () => {
 });
 
 test('correct sequence is unchanged', () => {
-  const sheet: ISheet[] = [
+  const sheet = [
     {
-      level: 0,
+      level: SheetLevel.Section,
       kind: IwsKind.Section,
       sectionSeq: 1,
       title: 'Luke wrote this book about Jesus for Theophilus',
@@ -191,7 +191,7 @@ test('correct sequence is unchanged', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 1,
       title: '',
@@ -203,7 +203,7 @@ test('correct sequence is unchanged', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 0,
+      level: SheetLevel.Section,
       kind: IwsKind.Section,
       sectionSeq: 2,
       title: 'An angel said that John the Baptizer would be born',
@@ -215,7 +215,7 @@ test('correct sequence is unchanged', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
@@ -227,7 +227,7 @@ test('correct sequence is unchanged', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
@@ -239,7 +239,7 @@ test('correct sequence is unchanged', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
@@ -251,7 +251,7 @@ test('correct sequence is unchanged', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
@@ -263,7 +263,7 @@ test('correct sequence is unchanged', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 2,
       title: '',
@@ -275,7 +275,7 @@ test('correct sequence is unchanged', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 0,
+      level: SheetLevel.Section,
       kind: IwsKind.Section,
       sectionSeq: 3,
       title: 'An angel told Mary that Jesus would be born',
@@ -287,7 +287,7 @@ test('correct sequence is unchanged', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 3,
       title: '',
@@ -299,7 +299,7 @@ test('correct sequence is unchanged', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 3,
       title: '',
@@ -311,7 +311,7 @@ test('correct sequence is unchanged', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 1,
+      level: SheetLevel.Passage,
       kind: IwsKind.Passage,
       sectionSeq: 3,
       title: '',
@@ -322,7 +322,7 @@ test('correct sequence is unchanged', () => {
       deleted: false,
       mediaShared: IMediaShare.NotPublic,
     },
-  ];
+  ] as ISheet[];
 
   const reseq = shtResequence(sheet);
   expect(reseq.length).toBe(sheet.length);
@@ -344,9 +344,9 @@ test('correct sequence is unchanged', () => {
 });
 
 test('flat set sections in order, passage is 1', () => {
-  const sheet: ISheet[] = [
+  const sheet = [
     {
-      level: 0,
+      level: SheetLevel.Section,
       kind: IwsKind.SectionPassage,
       sectionSeq: 1,
       title: 'The Temptation of Jesus',
@@ -358,7 +358,7 @@ test('flat set sections in order, passage is 1', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 0,
+      level: SheetLevel.Section,
       kind: IwsKind.SectionPassage,
       sectionSeq: 2,
       title: 'Jesus Casts Out a Demon',
@@ -370,7 +370,7 @@ test('flat set sections in order, passage is 1', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 0,
+      level: SheetLevel.Section,
       kind: IwsKind.SectionPassage,
       sectionSeq: 3,
       title: 'Jesus Heals and Preaches',
@@ -382,7 +382,7 @@ test('flat set sections in order, passage is 1', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 0,
+      level: SheetLevel.Section,
       kind: IwsKind.SectionPassage,
       sectionSeq: 4,
       title: 'The First Disciples',
@@ -394,7 +394,7 @@ test('flat set sections in order, passage is 1', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 0,
+      level: SheetLevel.Section,
       kind: IwsKind.SectionPassage,
       sectionSeq: 5,
       title: 'Jesus Heals a Man with Leprosy',
@@ -406,7 +406,7 @@ test('flat set sections in order, passage is 1', () => {
       mediaShared: IMediaShare.NotPublic,
     },
     {
-      level: 0,
+      level: SheetLevel.Section,
       kind: IwsKind.SectionPassage,
       sectionSeq: 6,
       title: 'Jesus Heals a Paralyzed Man',
@@ -417,17 +417,17 @@ test('flat set sections in order, passage is 1', () => {
       deleted: false,
       mediaShared: IMediaShare.NotPublic,
     },
-  ];
+  ] as ISheet[];
 
   const reseq = shtResequence(sheet);
   expect(reseq.length).toBe(sheet.length);
   expect(reseq[0].sectionSeq).toBe(1);
   expect(reseq.map((i) => `${i.sectionSeq}.${i.passageSeq}`)).toEqual([
-    '1.1',
-    '2.1',
-    '3.1',
-    '4.1',
-    '5.1',
-    '6.1',
+    '1.2',
+    '2.2',
+    '3.2',
+    '4.2',
+    '5.2',
+    '6.2',
   ]);
 });

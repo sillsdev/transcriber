@@ -1,5 +1,5 @@
-import { ISheet, IwsKind, levScrColNames } from '../model';
-import { shtColumnHeads } from '../components/Sheet';
+import { ISheet, IwsKind, SheetLevel, levScrColNames } from '../model';
+import { shtColumnHeads } from '../components/Sheet/shtColumnHeads';
 
 interface StrMap {
   [key: string]: string;
@@ -11,7 +11,7 @@ interface NumMap {
 
 const sheet = [
   {
-    level: 0,
+    level: SheetLevel.Section,
     kind: IwsKind.SectionPassage,
     sectionSeq: 1,
     title: 'The Temptation of Jesus',

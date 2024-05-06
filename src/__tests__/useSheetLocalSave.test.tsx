@@ -8,10 +8,11 @@ import {
   SectionD,
   PassageD,
 } from '../model';
-import { useWfLocalSave } from '../components/Sheet';
+import { useWfLocalSave } from '../components/Sheet/useSheetLocalSave';
 import { memory } from '../schema';
 import { PassageTypeEnum } from '../model/passageType';
 import DataProvider from '../hoc/DataProvider';
+import { PublishLevelEnum } from '../crud/usePublishLevel';
 
 const defaultSheet: ISheet = {
   level: SheetLevel.Section,
@@ -27,7 +28,7 @@ const defaultSheet: ISheet = {
   passageType: PassageTypeEnum.PASSAGE,
   filtered: false,
   discussionCount: 0,
-  published: false,
+  published: PublishLevelEnum.None,
 };
 
 // see https://jestjs.io/docs/mock-functions#mocking-modules
@@ -47,6 +48,8 @@ jest.mock('../schema', () => {
     },
   };
 });
+
+var indexedDbStub: any = undefined;
 
 // see: https://kentcdodds.com/blog/how-to-test-custom-react-hooks
 interface HookProps {
@@ -184,7 +187,7 @@ test('update section and passage', async () => {
     },
   ];
 
-  const sections: SectionD[] = [
+  const sections = [
     {
       type: 'section',
       id: 's1',
@@ -198,7 +201,7 @@ test('update section and passage', async () => {
         dateUpdated: '2021-09-21',
         lastModifiedBy: 1,
       },
-    },
+    } as SectionD,
   ];
 
   const passages: PassageD[] = [
@@ -262,7 +265,7 @@ test('no update if same date', async () => {
     },
   ];
 
-  const sections: SectionD[] = [
+  const sections = [
     {
       type: 'section',
       id: 's1',
@@ -276,7 +279,7 @@ test('no update if same date', async () => {
         dateUpdated: '2021-09-21',
         lastModifiedBy: 1,
       },
-    },
+    } as SectionD,
   ];
 
   const passages: PassageD[] = [

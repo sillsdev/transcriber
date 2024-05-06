@@ -17,20 +17,16 @@ import {
   RecordIdentity,
   RecordTransformBuilder,
 } from '@orbit/records';
-import {
-  PublishLevelEnum,
-  related,
-  UpdateRelatedPassageOps,
-  usePublishLevel,
-} from '../../crud';
+import { usePublishLevel, PublishLevelEnum } from '../../crud/usePublishLevel';
+import { related } from '../../crud/related';
+import { UpdateRelatedPassageOps } from '../../crud/updatePassageState';
+import { isPassageRow, isSectionRow } from './isSectionPassage';
 import {
   isPassageAdding,
-  isPassageRow,
   isPassageUpdated,
   isSectionAdding,
-  isSectionRow,
   isSectionUpdated,
-} from '.';
+} from './isSectionPassageUpdated';
 import { usePassageType } from '../../crud/usePassageType';
 
 interface IProps {

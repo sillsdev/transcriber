@@ -1,9 +1,12 @@
-import { ISheet, IwsKind } from '../model';
-import { isSectionRow, isPassageRow } from '../components/Sheet';
+import { ISheet, IwsKind, PassageD, SheetLevel } from '../model';
+import {
+  isSectionRow,
+  isPassageRow,
+} from '../components/Sheet/isSectionPassage';
 
 test('return true for section row if valid hierarchy section', () => {
   const workflowItem: ISheet = {
-    level: 0,
+    level: SheetLevel.Section,
     kind: IwsKind.Section,
     sectionSeq: 1,
     title: 'Intro',
@@ -19,7 +22,7 @@ test('return true for section row if valid hierarchy section', () => {
 
 test('return true for section row if valid flat section', () => {
   const workflowItem: ISheet = {
-    level: 0,
+    level: SheetLevel.Section,
     kind: IwsKind.SectionPassage,
     sectionSeq: 1,
     title: 'Intro',
@@ -29,7 +32,7 @@ test('return true for section row if valid flat section', () => {
     comment: 'salutation',
     sectionId: { type: 'section', id: 's1' },
     sectionUpdated: '2021-09-15',
-    passageId: { type: 'passage', id: 'pa1' },
+    passage: { type: 'passage', id: 'pa1' } as PassageD,
     passageUpdated: '2021-09-15',
     transcriber: undefined,
     editor: undefined,
@@ -39,8 +42,8 @@ test('return true for section row if valid flat section', () => {
 });
 
 test('return false for section row if hierarchy passage', () => {
-  const workflowItem: ISheet = {
-    level: 1,
+  const workflowItem = {
+    level: SheetLevel.Passage,
     kind: IwsKind.Passage,
     sectionSeq: 1,
     passageSeq: 1,
@@ -48,15 +51,15 @@ test('return false for section row if hierarchy passage', () => {
     reference: '1:1-4',
     comment: 'salutation',
     passageUpdated: '2021-09-15',
-    passageId: { type: 'passage', id: 'pa1' },
+    passage: { type: 'passage', id: 'pa1' } as PassageD,
     deleted: false,
-  };
+  } as ISheet;
   expect(isSectionRow(workflowItem)).toBeFalsy();
 });
 
 test('return false for passage row if valid hierarchy section', () => {
-  const workflowItem: ISheet = {
-    level: 0,
+  const workflowItem = {
+    level: SheetLevel.Section,
     kind: IwsKind.Section,
     sectionSeq: 1,
     title: 'Intro',
@@ -66,13 +69,13 @@ test('return false for passage row if valid hierarchy section', () => {
     editor: undefined,
     passageSeq: 1,
     deleted: false,
-  };
+  } as ISheet;
   expect(isPassageRow(workflowItem)).toBeFalsy();
 });
 
 test('return true for passage row if valid flat passage', () => {
   const workflowItem: ISheet = {
-    level: 0,
+    level: SheetLevel.Section,
     kind: IwsKind.SectionPassage,
     sectionSeq: 1,
     title: 'Intro',
@@ -93,7 +96,7 @@ test('return true for passage row if valid flat passage', () => {
 
 test('return true for passage row if hierarchy passage', () => {
   const workflowItem: ISheet = {
-    level: 1,
+    level: SheetLevel.Passage,
     kind: IwsKind.Passage,
     sectionSeq: 1,
     passageSeq: 1,

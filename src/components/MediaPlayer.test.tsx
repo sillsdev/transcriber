@@ -370,14 +370,21 @@ describe('<MediaPlayer />', () => {
     const currentTimeStub = jest
       .spyOn(window.HTMLMediaElement.prototype, 'currentTime', 'set')
       .mockImplementation(currentTime);
+    const durationStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'duration', 'get')
+      .mockImplementation(() => 200);
+
     const { container } = render(<MediaPlayer {...props} />);
     await waitFor(() => expect(container.firstChild).not.toBe(null));
-    container
-      .querySelector('audio')
-      ?.dispatchEvent(new Event('durationchange'));
+    act(() => {
+      container
+        .querySelector('audio')
+        ?.dispatchEvent(new Event('durationchange'));
+    });
     expect(props.onLoaded).toHaveBeenCalled();
     await waitFor(() => expect(currentTime).toHaveBeenCalledWith(10));
     currentTimeStub.mockRestore();
+    durationStub.mockRestore();
   });
 
   it('should call onEnded if timeUpdate is more than limits.end', async () => {
@@ -404,6 +411,9 @@ describe('<MediaPlayer />', () => {
     const currentTimeStub = jest
       .spyOn(window.HTMLMediaElement.prototype, 'currentTime', 'get')
       .mockImplementation(() => 101);
+    const durationStub = jest
+      .spyOn(window.HTMLMediaElement.prototype, 'duration', 'get')
+      .mockImplementation(() => 200);
     const { container } = render(<MediaPlayer {...props} />);
     await waitFor(() => expect(container.firstChild).not.toBe(null));
     act(() => {
@@ -417,6 +427,7 @@ describe('<MediaPlayer />', () => {
     expect(pauseFn).toHaveBeenCalled();
     currentTimeStub.mockRestore();
     pauseStub.mockRestore();
+    durationStub.mockRestore();
   });
 
   it('should not call onEnded if timeUpdate is less than limits.end', async () => {

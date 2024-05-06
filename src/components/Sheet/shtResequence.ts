@@ -1,6 +1,6 @@
 import { ISheet, IwsKind, SheetLevel } from '../../model';
-import { isSectionRow, isPassageRow } from '.';
-import { currentDateTime } from '../../utils';
+import { isSectionRow, isPassageRow } from './isSectionPassage';
+import { currentDateTime } from '../../utils/currentDateTime';
 import { PassageTypeEnum } from '../../model/passageType';
 
 export const nextNum = (

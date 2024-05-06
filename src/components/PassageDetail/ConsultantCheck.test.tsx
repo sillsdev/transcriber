@@ -52,6 +52,7 @@ jest.mock('../../context/usePassageDetailContext', () => () => ({
   workflow: mockWorkflow,
   stepComplete: () => false,
   setStepComplete: mockSetStepComplete,
+  gotoNextStep: jest.fn(),
   currentstep: mockCurrentStep,
   passage: { attributes: { stepComplete: mockPassageStepComplete } },
 }));
