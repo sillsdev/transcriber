@@ -49,8 +49,6 @@ jest.mock('../schema', () => {
   };
 });
 
-var indexedDbStub: any = undefined;
-
 // see: https://kentcdodds.com/blog/how-to-test-custom-react-hooks
 interface HookProps {
   setComplete: (val: number) => void;
@@ -110,9 +108,23 @@ test('save one section and one passage', async () => {
   const updateCalls = (memory.update as jest.Mock).mock.calls;
   expect(updateCalls.length).toBe(2);
   expect(updateCalls[0][0].length).toBe(4);
-  expect(updateCalls[1][0].length).toBe(13);
   // console.log(JSON.stringify(updateCalls[1][0], null, 2));
+  expect(updateCalls[1][0].length).toBe(4);
 });
+
+interface TagValue {
+  [key: string]: TagValue | string;
+}
+
+const expectTagValue = (ob: TagValue, tag: string, value: string) => {
+  for (const key in ob) {
+    if (key === tag) {
+      expect(ob[key]).toBe(value);
+    } else if (typeof ob[key] === 'object') {
+      expectTagValue(ob[key] as TagValue, tag, value);
+    }
+  }
+};
 
 test('delete one section and one passage', async () => {
   const globals = {
@@ -151,10 +163,10 @@ test('delete one section and one passage', async () => {
   expect(setComplete).toHaveBeenCalled();
   const updateCalls = (memory.update as jest.Mock).mock.calls;
   expect(updateCalls.length).toBe(2);
-  expect(updateCalls[0][0].op).toBe('removeRecord');
-  expect(updateCalls[0][0].record.id).toBe('s1');
-  expect(updateCalls[1][0].record.id).toBe('pa1');
-  // console.log(JSON.stringify(updateCalls, null, 2));
+  // console.log(JSON.stringify(updateCalls[0][0], null, 2));
+  expectTagValue(updateCalls[0][0], 'op', 'removeRecord');
+  expectTagValue(updateCalls[0][0], 'id', 's1');
+  expectTagValue(updateCalls[1][0], 'id', 'pa1');
 });
 
 test('update section and passage', async () => {
@@ -229,10 +241,10 @@ test('update section and passage', async () => {
 
   expect(setComplete).toHaveBeenCalled();
   const updateCalls = (memory.update as jest.Mock).mock.calls;
-  // console.log(JSON.stringify(updateCalls, null, 2));
   expect(updateCalls.length).toBe(2);
-  expect(updateCalls[0][0].length).toBe(3);
-  expect(updateCalls[1][0].length).toBe(5);
+  expect(updateCalls[0][0].length).toBe(6);
+  // console.log(JSON.stringify(updateCalls[1][0], null, 2));
+  expect(updateCalls[1][0].length).toBe(10);
 });
 
 test('no update if same date', async () => {

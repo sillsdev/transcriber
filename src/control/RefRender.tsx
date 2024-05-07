@@ -70,7 +70,6 @@ export const passageTypeFromRef = (
  */
 export const isPublishingTitle = (ref?: string, flat?: boolean): boolean => {
   const passageType = passageTypeFromRef(ref, flat);
-  console.log(passageType, ref, flat);
   return (
     passageType !== PassageTypeEnum.PASSAGE &&
     passageType !== PassageTypeEnum.NOTE

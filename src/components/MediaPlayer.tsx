@@ -179,7 +179,6 @@ export function MediaPlayer(props: IProps) {
     if (!Boolean(limits?.end)) return;
     const el = audioRef.current as HTMLMediaElement;
     const time = Math.round(el.currentTime * 1000) / 1000;
-    console.log('time', time, stop.current, limits?.end);
     if (stop.current !== 0 && time >= stop.current) {
       el.pause();
       ended();
