@@ -11,7 +11,10 @@ import {
   SectionD,
   SharedResourceD,
 } from '../model';
-import { findRecord, mediaFileName, related, VernacularTag } from '.';
+import { findRecord } from './tryFindRecord';
+import { mediaFileName } from './media';
+import { related } from './related';
+import { VernacularTag } from './useArtifactType';
 import MemorySource from '@orbit/memory';
 
 interface ILatest {

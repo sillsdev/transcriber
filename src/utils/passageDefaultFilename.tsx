@@ -1,13 +1,11 @@
-import {
-  findRecord,
-  getVernacularMediaRec,
-  parseRef,
-  related,
-  VernacularTag,
-} from '../crud';
+import { findRecord } from '../crud/tryFindRecord';
+import { getVernacularMediaRec } from '../crud/media';
+import { parseRef } from '../crud/passage';
+import { related } from '../crud/related';
+import { VernacularTag } from '../crud/useArtifactType';
 import { Passage, PassageD, Plan, Section } from '../model';
 import Memory from '@orbit/memory';
-import { cleanFileName } from '.';
+import { cleanFileName } from './cleanFileName';
 
 export const passageDefaultSuffix = (
   planId: string,

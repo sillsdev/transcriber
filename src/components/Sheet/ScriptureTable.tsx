@@ -1364,14 +1364,14 @@ export function ScriptureTable(props: IProps) {
       !updateRef.current
     ) {
       setUpdate(true);
-      const newWorkflow = getSheet(
+      const newWorkflow = getSheet({
         plan,
         sections,
         passages,
         flat,
-        shared,
+        projectShared: shared,
         memory,
-        orgSteps,
+        orgWorkflowSteps: orgSteps,
         wfStr,
         filterState,
         minSection,
@@ -1379,8 +1379,8 @@ export function ScriptureTable(props: IProps) {
         doneStepId,
         getDiscussionCount,
         graphicFind,
-        getPublishLevel
-      );
+        getPublishLevel,
+      });
       setSheet(newWorkflow);
 
       getLastModified(plan);
