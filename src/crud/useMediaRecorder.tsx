@@ -3,7 +3,8 @@ import { useGlobal } from 'reactn';
 import { useState, useEffect } from 'react';
 import { useUserMedia } from './useUserMedia';
 import { useSnackBar } from '../hoc/SnackBar';
-import { logError, Severity, waitForIt } from '../utils';
+import { logError, Severity } from '../utils';
+import { waitForIt } from '../utils/waitForIt';
 
 const CAPTURE_OPTIONS = {
   audio: true,

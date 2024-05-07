@@ -1,6 +1,8 @@
 import { IconButton, Grid } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { GrowingDiv, LightTooltip, ToolbarGrid } from '../control';
+import { GrowingDiv } from '../control/GrowingDiv';
+import { LightTooltip } from '../control/LightTooltip';
+import { ToolbarGrid } from '../control/ToolbarGrid';
 import { IWsAudioPlayerSegmentStrings } from '../model';
 import { IoMdBarcode } from 'react-icons/io';
 import RemoveOneIcon from '@mui/icons-material/Clear';

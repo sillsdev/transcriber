@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
-import { waitForIt } from '../utils';
+import { waitForIt } from '../utils/waitForIt';
 
 export interface IRegionChange {
   start: number;

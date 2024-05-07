@@ -1,5 +1,6 @@
 import { Section, Passage, IState, BookName } from '../../../model';
-import { passageDescText, sectionNumber } from '../../../crud';
+import { passageDescText } from '../../../crud/passage';
+import { sectionNumber } from '../../../crud/section';
 import { useSelector } from 'react-redux';
 import { getSection } from '../../AudioTab/getSection';
 import {

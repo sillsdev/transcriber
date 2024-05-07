@@ -35,7 +35,10 @@ import {
 
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
 import { IMarker, useWaveSurfer } from '../crud/useWaveSurfer';
-import { Duration, GrowingSpacer, LightTooltip, IosSlider } from '../control';
+import { Duration } from '../control/Duration';
+import { GrowingSpacer } from '../control/GrowingSpacer';
+import { LightTooltip } from '../control/LightTooltip';
+import { IosSlider } from '../control/IosSlider';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
 import WSAudioPlayerZoom from './WSAudioPlayerZoom';
@@ -48,7 +51,7 @@ import {
 } from '../crud/useWavesurferRegions';
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 import Confirm from './AlertDialog';
-import { NamedRegions } from '../utils';
+import { NamedRegions } from '../utils/namedSegments';
 import { wsAudioPlayerSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 

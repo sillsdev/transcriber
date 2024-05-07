@@ -1,5 +1,5 @@
 import { Section } from '../../model';
-import { sectionDescription } from '../../crud';
+import { sectionDescription } from '../../crud/section';
 
 export const getSection = (
   section: Section[],

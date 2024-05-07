@@ -2,7 +2,7 @@ import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { IMainStrings } from '../model';
-import { waitForIt } from '../utils';
+import { waitForIt } from '../utils/waitForIt';
 import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from '../components/AlertDialog';
 import { useSelector } from 'react-redux';

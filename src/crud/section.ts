@@ -1,7 +1,8 @@
 import { Section, Passage, User, BookName } from '../model';
-import { parseRef, passageBook, related } from '.';
+import { parseRef, passageBook } from './passage';
+import { related } from './related';
 import { numCompare } from '../utils/sort';
-import { positiveWholeOnly } from '../utils';
+import { positiveWholeOnly } from '../utils/positiveWholeOnly';
 
 function sectionReviewer(s: Section, users: Array<User>) {
   let user = users.filter((u) => u.id === related(s, 'editor'));
