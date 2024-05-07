@@ -1,0 +1,533 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProjectResourceConfigure should render correctly 1`] = `
+<div
+  class="MuiBox-root css-0"
+>
+  <div>
+    PassageDetailPlayer
+  </div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-ar2ja2-MuiPaper-root"
+    id="proj-res-sheet"
+    style="max-height: 360px;"
+  >
+    <div
+      class="css-106me0j"
+      id="proj-res-sheet"
+    >
+      <div
+        class="MuiStack-root css-niqf4j-MuiStack-root"
+      >
+        <span
+          class="data-grid-container"
+          tabindex="0"
+        >
+          <table
+            class="data-grid"
+          >
+            <tbody />
+          </table>
+        </span>
+        <div>
+          <span>
+            LightTooltip
+          </span>
+          <div
+            class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
+          >
+            <label
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
+              data-shrink="false"
+              for=":r0:"
+              id=":r0:-label"
+            >
+              Suffix
+            </label>
+            <div
+              class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root"
+            >
+              <input
+                aria-invalid="false"
+                class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
+                id=":r0:"
+                type="text"
+                value=""
+              />
+              <fieldset
+                aria-hidden="true"
+                class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+              >
+                <legend
+                  class="css-yjsfm1"
+                >
+                  <span>
+                    Suffix
+                  </span>
+                </legend>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <span>
+      ActionRow
+    </span>
+    <div>
+      <span>
+        AltButton
+      </span>
+      Copy to Clipboard
+    </div>
+    <div>
+      GrowingSpacer
+    </div>
+    <div>
+      <span>
+        PriButton
+      </span>
+      Create Resources
+    </div>
+    <div>
+      <span>
+        AltButton
+      </span>
+      Cancel
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ProjectResourceConfigure should render correctly with items 1`] = `
+<div
+  class="MuiBox-root css-0"
+>
+  <div>
+    PassageDetailPlayer
+  </div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-ar2ja2-MuiPaper-root"
+    id="proj-res-sheet"
+    style="max-height: 360px;"
+  >
+    <div
+      class="css-106me0j"
+      id="proj-res-sheet"
+    >
+      <div
+        class="MuiStack-root css-niqf4j-MuiStack-root"
+      >
+        <span
+          class="data-grid-container"
+          tabindex="0"
+        >
+          <table
+            class="data-grid"
+          >
+            <tbody>
+              <tr>
+                <td
+                  class="cTitle cell read-only"
+                  style="width: 150px;"
+                >
+                  <span
+                    class="value-viewer"
+                  >
+                    Start/Stop
+                  </span>
+                </td>
+                <td
+                  class="cTitle cell read-only"
+                  style="width: 200px;"
+                >
+                  <span
+                    class="value-viewer"
+                  >
+                    Reference
+                  </span>
+                </td>
+                <td
+                  class="cTitle cell read-only"
+                  style="width: 300px;"
+                >
+                  <span
+                    class="value-viewer"
+                  >
+                    Description
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="lim cell"
+                  style="width: 150px;"
+                >
+                  <span
+                    class="value-viewer"
+                  />
+                </td>
+                <td
+                  class="ref cell read-only"
+                  style="width: 200px;"
+                >
+                  <span
+                    class="value-viewer"
+                  >
+                      1.1  Lk 1:1-4
+                  </span>
+                </td>
+                <td
+                  class="des cell"
+                  style="width: 300px;"
+                >
+                  <span
+                    class="value-viewer"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="lim cell"
+                  style="width: 150px;"
+                >
+                  <span
+                    class="value-viewer"
+                  />
+                </td>
+                <td
+                  class="ref cell read-only"
+                  style="width: 200px;"
+                >
+                  <span
+                    class="value-viewer"
+                  >
+                      2  An angel said that John the Baptizer would be born
+                  </span>
+                </td>
+                <td
+                  class="des cell"
+                  style="width: 300px;"
+                >
+                  <span
+                    class="value-viewer"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="lim cell"
+                  style="width: 150px;"
+                >
+                  <span
+                    class="value-viewer"
+                  />
+                </td>
+                <td
+                  class="ref cell read-only"
+                  style="width: 200px;"
+                >
+                  <span
+                    class="value-viewer"
+                  >
+                      2.1  Lk 1:5-7
+                  </span>
+                </td>
+                <td
+                  class="des cell"
+                  style="width: 300px;"
+                >
+                  <span
+                    class="value-viewer"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="lim cell"
+                  style="width: 150px;"
+                >
+                  <span
+                    class="value-viewer"
+                  />
+                </td>
+                <td
+                  class="ref cell read-only"
+                  style="width: 200px;"
+                >
+                  <span
+                    class="value-viewer"
+                  >
+                      2.2  Lk 1:8-10
+                  </span>
+                </td>
+                <td
+                  class="des cell"
+                  style="width: 300px;"
+                >
+                  <span
+                    class="value-viewer"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="lim cell"
+                  style="width: 150px;"
+                >
+                  <span
+                    class="value-viewer"
+                  />
+                </td>
+                <td
+                  class="ref cell read-only"
+                  style="width: 200px;"
+                >
+                  <span
+                    class="value-viewer"
+                  >
+                      2.3  Lk 1:11-17
+                  </span>
+                </td>
+                <td
+                  class="des cell"
+                  style="width: 300px;"
+                >
+                  <span
+                    class="value-viewer"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="lim cell"
+                  style="width: 150px;"
+                >
+                  <span
+                    class="value-viewer"
+                  />
+                </td>
+                <td
+                  class="ref cell read-only"
+                  style="width: 200px;"
+                >
+                  <span
+                    class="value-viewer"
+                  >
+                      2.4  Lk 1:18-20
+                  </span>
+                </td>
+                <td
+                  class="des cell"
+                  style="width: 300px;"
+                >
+                  <span
+                    class="value-viewer"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="lim cell"
+                  style="width: 150px;"
+                >
+                  <span
+                    class="value-viewer"
+                  />
+                </td>
+                <td
+                  class="ref cell read-only"
+                  style="width: 200px;"
+                >
+                  <span
+                    class="value-viewer"
+                  >
+                      2.5  Lk 1:21-25
+                  </span>
+                </td>
+                <td
+                  class="des cell"
+                  style="width: 300px;"
+                >
+                  <span
+                    class="value-viewer"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </span>
+        <div>
+          <span>
+            LightTooltip
+          </span>
+          <div
+            class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
+          >
+            <label
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
+              data-shrink="false"
+              for=":r4:"
+              id=":r4:-label"
+            >
+              Suffix
+            </label>
+            <div
+              class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root"
+            >
+              <input
+                aria-invalid="false"
+                class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
+                id=":r4:"
+                type="text"
+                value=""
+              />
+              <fieldset
+                aria-hidden="true"
+                class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+              >
+                <legend
+                  class="css-yjsfm1"
+                >
+                  <span>
+                    Suffix
+                  </span>
+                </legend>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <span>
+      ActionRow
+    </span>
+    <div>
+      <span>
+        AltButton
+      </span>
+      Copy to Clipboard
+    </div>
+    <div>
+      GrowingSpacer
+    </div>
+    <div>
+      <span>
+        PriButton
+      </span>
+      Create Resources
+    </div>
+    <div>
+      <span>
+        AltButton
+      </span>
+      Cancel
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ProjectResourceConfigure should render correctly with media 1`] = `
+<div
+  class="MuiBox-root css-0"
+>
+  <div>
+    PassageDetailPlayer
+  </div>
+  <div
+    class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 css-ar2ja2-MuiPaper-root"
+    id="proj-res-sheet"
+    style="max-height: 360px;"
+  >
+    <div
+      class="css-106me0j"
+      id="proj-res-sheet"
+    >
+      <div
+        class="MuiStack-root css-niqf4j-MuiStack-root"
+      >
+        <span
+          class="data-grid-container"
+          tabindex="0"
+        >
+          <table
+            class="data-grid"
+          >
+            <tbody />
+          </table>
+        </span>
+        <div>
+          <span>
+            LightTooltip
+          </span>
+          <div
+            class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
+          >
+            <label
+              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
+              data-shrink="false"
+              for=":r2:"
+              id=":r2:-label"
+            >
+              Suffix
+            </label>
+            <div
+              class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root"
+            >
+              <input
+                aria-invalid="false"
+                class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
+                id=":r2:"
+                type="text"
+                value=""
+              />
+              <fieldset
+                aria-hidden="true"
+                class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+              >
+                <legend
+                  class="css-yjsfm1"
+                >
+                  <span>
+                    Suffix
+                  </span>
+                </legend>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <span>
+      ActionRow
+    </span>
+    <div>
+      <span>
+        AltButton
+      </span>
+      Copy to Clipboard
+    </div>
+    <div>
+      GrowingSpacer
+    </div>
+    <div>
+      <span>
+        PriButton
+      </span>
+      Create Resources
+    </div>
+    <div>
+      <span>
+        AltButton
+      </span>
+      Cancel
+    </div>
+  </div>
+</div>
+`;

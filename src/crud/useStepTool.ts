@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { OrgWorkflowStep } from '../model';
-import { findRecord } from '.';
+import { findRecord } from './tryFindRecord';
 
 export const getTool = (jsonTool?: string) => {
   if (jsonTool) {

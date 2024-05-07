@@ -1,4 +1,4 @@
-import { tryParseJSON } from '.';
+import { tryParseJSON } from './tryParseJson';
 import { INamedRegion } from '../crud/useWavesurferRegions';
 
 export enum NamedRegions {

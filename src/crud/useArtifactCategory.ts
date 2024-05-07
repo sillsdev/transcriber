@@ -10,13 +10,15 @@ import {
 import { RecordTransformBuilder } from '@orbit/records';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
-import { related, findRecord } from '.';
+import { related } from './related';
+import { findRecord } from './tryFindRecord';
 import {
   AddRecord,
   ReplaceRelatedRecord,
   UpdateRecord,
 } from '../model/baseModel';
-import { cleanFileName, useWaitForRemoteQueue } from '../utils';
+import { cleanFileName } from '../utils/cleanFileName';
+import { useWaitForRemoteQueue } from '../utils/useWaitForRemoteQueue';
 
 interface ISwitches {
   [key: string]: any;

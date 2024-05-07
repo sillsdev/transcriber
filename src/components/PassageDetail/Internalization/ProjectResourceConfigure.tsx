@@ -8,6 +8,7 @@ import {
   MediaFile,
   MediaFileD,
   SectionResource,
+  BookName,
 } from '../../../model';
 import {
   Box,
@@ -22,7 +23,7 @@ import {
 import SkipIcon from '@mui/icons-material/NotInterested';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
-import PassageDetailPlayer from '../PassageDetailPlayer';
+import { PassageDetailPlayer } from '../PassageDetailPlayer';
 import { parseRegions, IRegion } from '../../../crud/useWavesurferRegions';
 import { prettySegment } from '../../../utils/prettySegment';
 import { cleanClipboard } from '../../../utils/cleanClipboard';
@@ -106,6 +107,7 @@ interface IProps {
   media: MediaFileD | undefined;
   items: RecordIdentity[];
   onOpen?: (open: boolean) => void;
+  bookData?: BookName[];
 }
 
 export const ProjectResourceConfigure = (props: IProps) => {
@@ -124,7 +126,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
   const dataRef = useRef<ICell[][]>([]);
   const infoRef = useRef<IInfo[]>([]);
   const segmentsRef = useRef('{}');
-  const fullReference = useFullReference();
+  const fullReference = useFullReference(props.bookData);
   const t: IPassageDetailArtifactsStrings = useSelector(
     resourceSelector,
     shallowEqual

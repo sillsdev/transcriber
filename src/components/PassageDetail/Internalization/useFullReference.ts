@@ -25,7 +25,7 @@ const getPassage = (
   ).trim()}`;
 };
 
-export const useFullReference = () => {
+export const useFullReference = (inBookData?: BookName[]) => {
   const bookData = useSelector((state: IState) => state.books.bookData);
   const { getProjectDefault } = useProjectDefaults();
   const sectionMap = new Map<number, string>(
@@ -34,6 +34,6 @@ export const useFullReference = () => {
 
   return (info: IInfo) =>
     info.passage
-      ? getPassage(info, bookData, sectionMap)
+      ? getPassage(info, inBookData ?? bookData, sectionMap)
       : getSection([info.section], sectionMap);
 };

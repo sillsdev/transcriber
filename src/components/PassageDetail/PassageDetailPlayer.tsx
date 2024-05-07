@@ -12,12 +12,12 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { IWsAudioPlayerStrings, MediaFile, MediaFileD } from '../../model';
 import { UpdateRecord } from '../../model/baseModel';
 import { playerSelector } from '../../selector';
+import { JSONParse } from '../../utils/jsonParse';
 import {
-  JSONParse,
   NamedRegions,
   getSegments,
   updateSegments,
-} from '../../utils';
+} from '../../utils/namedSegments';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import ViewIcon from '@mui/icons-material/RemoveRedEye';
 import TranscriptionShow from '../TranscriptionShow';
