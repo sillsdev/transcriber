@@ -1,5 +1,6 @@
+/* eslint-disable jest/valid-expect */
 /* eslint-disable testing-library/no-node-access */
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import ProjectResourceConfigure from '../components/PassageDetail/Internalization/ProjectResourceConfigure';
 import { MediaFile, MediaFileD, SectionResource } from '../model';
 import { UnsavedProvider } from '../context/UnsavedContext';
@@ -12,7 +13,9 @@ var mockMediafile: MediaFile[] = [];
 var mockSectionResource: SectionResource[] = [];
 
 jest.mock('../components/passageDetail/PassageDetailPlayer', () => ({
-  PassageDetailPlayer: () => <div>PassageDetailPlayer</div>,
+  PassageDetailPlayer: (props: any) => (
+    <div>PassageDetailPlayer {JSON.stringify(props)}</div>
+  ),
 }));
 jest.mock(
   '../components/PassageDetail/Internalization/useProjectResourceSave',
@@ -319,17 +322,24 @@ describe('ProjectResourceConfigure', () => {
       media: undefined,
       items: [],
     };
-    const { container } = runTest(props);
-    expect(container.firstChild).toMatchSnapshot();
+    runTest(props);
+    expect(screen.getByTestId('proj-res-sheet')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('proj-res-sheet')
+    )?.firstChild?.firstChild.toBeEmpty();
   });
 
   it('should render correctly with media', () => {
+    // media is only used when creating segments so no change in output
     const props = {
       media: defMedia,
       items: [],
     };
-    const { container } = runTest(props);
-    expect(container.firstChild).toMatchSnapshot();
+    runTest(props);
+    expect(screen.getByTestId('proj-res-sheet')).toBeInTheDocument();
+    expect(
+      screen.getByTestId('proj-res-sheet')
+    )?.firstChild?.firstChild.toBeEmpty();
   });
 
   it('should render correctly with items', async () => {
@@ -342,7 +352,12 @@ describe('ProjectResourceConfigure', () => {
     for (let rec of recs) {
       await memory.update((t) => t.addRecord(rec));
     }
-    const { container } = runTest(props);
-    expect(container.firstChild).toMatchSnapshot();
+    runTest(props);
+    const tbody = screen.getByTestId('proj-res-sheet')?.firstChild?.firstChild
+      ?.firstChild as HTMLElement;
+    expect(tbody.children.length).toBe(props.items.length + 1);
+    expect(tbody.children[0].children.length).toBe(3);
+    expect(tbody.children[0].children[0].textContent).toBe('Start/Stop');
+    expect(tbody.children[1].children[1].textContent).toContain('Lk 1:1-4');
   });
 });

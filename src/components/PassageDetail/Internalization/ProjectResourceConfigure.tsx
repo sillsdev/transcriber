@@ -537,7 +537,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
       />
       <StyledPaper id="proj-res-sheet" style={heightStyle}>
         <StyledTable id="proj-res-sheet">
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} data-testid="proj-res-sheet">
             <DataSheet
               data={data}
               valueRenderer={handleValueRenderer}
