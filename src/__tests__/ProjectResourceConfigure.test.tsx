@@ -89,7 +89,7 @@ jest.mock('react-redux', () => ({
   shallowEqual: jest.fn(),
 }));
 
-const defMedia: MediaFileD = {
+const defMedia = {
   type: 'mediafile',
   attributes: {
     versionNumber: 1,
@@ -104,18 +104,18 @@ const defMedia: MediaFileD = {
     originalFile: 'OT_Book_32___01_Jonah_______ESV_lLuke.ogg',
     filesize: 1011383,
     position: 0,
-    segments: '{}', // value null incompatible with string
+    segments: '{}',
     languagebcp47: '',
     link: false,
     readyToShare: false,
     performedBy: '',
-    sourceSegments: '{}', // value null incompatible with string
+    sourceSegments: '{}',
     sourceMediaOfflineId: '',
     transcriptionstate: '',
     topic: '',
-    lastModifiedBy: -1, // Add the missing property
-    resourcePassageId: -1, // Add the missing property
-    offlineId: '', // Add the missing property
+    lastModifiedBy: -1,
+    resourcePassageId: -1,
+    offlineId: '',
     dateCreated: '2024-05-08T15:38:09.121Z',
     dateUpdated: '2024-05-08T15:38:09.121Z',
   },
