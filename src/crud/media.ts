@@ -56,6 +56,7 @@ export const getAllMediaRecs = (
       })
     ) as MediaFileD[]
   )
+    .filter((m) => m?.attributes?.versionNumber !== undefined)
     .sort((a, b) => vernSort(a) - vernSort(b))
     .sort((a, b) => b.attributes?.versionNumber - a.attributes?.versionNumber);
   if (artifactTypeId !== undefined) {
