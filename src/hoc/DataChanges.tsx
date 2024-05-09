@@ -556,7 +556,7 @@ export function DataChanges(props: PropsWithChildren) {
       if (check) {
         //make sure we have a bible media project and plan downloaded
         await getBibleMediaPlan();
-        await doSanityCheck((await getBibleMediaProject()).id);
+        await doSanityCheck((await getBibleMediaProject())?.id);
         for (var ix = 0; ix < projectsLoaded.length; ix++)
           await doSanityCheck(projectsLoaded[ix]);
       }

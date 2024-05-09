@@ -311,7 +311,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
       }
     };
     const removeDups = (rows: BaseModel[]) => {
-      rows = rows.filter((r) => r.relationships !== null);
+      rows = rows.filter((r) => Boolean(r?.relationships));
       var uniqueids = new Set(rows.map((mf) => mf.keys?.remoteId || '0'));
       var unique = new Array<{ id: string; num: number }>();
       uniqueids.forEach((id) =>
