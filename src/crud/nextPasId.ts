@@ -1,6 +1,7 @@
 import { Section, PassageD } from '../model';
 import Memory from '@orbit/memory';
-import { related, findRecord } from '.';
+import { related } from './related';
+import { findRecord } from './tryFindRecord';
 import { isPublishingTitle } from '../control/RefRender';
 import { RecordIdentity } from '@orbit/records';
 

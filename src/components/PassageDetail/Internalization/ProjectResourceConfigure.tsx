@@ -8,6 +8,7 @@ import {
   MediaFile,
   MediaFileD,
   SectionResource,
+  BookName,
 } from '../../../model';
 import {
   Box,
@@ -22,9 +23,13 @@ import {
 import SkipIcon from '@mui/icons-material/NotInterested';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
-import PassageDetailPlayer from '../PassageDetailPlayer';
+import { PassageDetailPlayer } from '../PassageDetailPlayer';
 import { parseRegions, IRegion } from '../../../crud/useWavesurferRegions';
-import { prettySegment, cleanClipboard } from '../../../utils';
+import { prettySegment } from '../../../utils/prettySegment';
+import { cleanClipboard } from '../../../utils/cleanClipboard';
+import { NamedRegions, updateSegments } from '../../../utils/namedSegments';
+import { findRecord } from '../../../crud/tryFindRecord';
+import { related } from '../../../crud/related';
 import {
   resourceSelector,
   sharedSelector,
@@ -32,11 +37,9 @@ import {
 } from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { UnsavedContext } from '../../../context/UnsavedContext';
-import { NamedRegions, updateSegments } from '../../../utils';
 import { useProjectResourceSave } from './useProjectResourceSave';
 import { useProjectSegmentSave } from './useProjectSegmentSave';
 import { useFullReference, IInfo } from './useFullReference';
-import { findRecord, related } from '../../../crud';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import {
   ActionRow,
@@ -104,6 +107,7 @@ interface IProps {
   media: MediaFileD | undefined;
   items: RecordIdentity[];
   onOpen?: (open: boolean) => void;
+  bookData?: BookName[];
 }
 
 export const ProjectResourceConfigure = (props: IProps) => {
@@ -122,7 +126,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
   const dataRef = useRef<ICell[][]>([]);
   const infoRef = useRef<IInfo[]>([]);
   const segmentsRef = useRef('{}');
-  const fullReference = useFullReference();
+  const fullReference = useFullReference(props.bookData);
   const t: IPassageDetailArtifactsStrings = useSelector(
     resourceSelector,
     shallowEqual
@@ -533,7 +537,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
       />
       <StyledPaper id="proj-res-sheet" style={heightStyle}>
         <StyledTable id="proj-res-sheet">
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} data-testid="proj-res-sheet">
             <DataSheet
               data={data}
               valueRenderer={handleValueRenderer}

@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { ProjectD, RoleNames } from '../model';
 import { UpdateRecord } from '../model/baseModel';
 import { findRecord } from './tryFindRecord';
-import { useJsonParams } from '../utils';
+import { useJsonParams } from '../utils/useJsonParams';
 
 export const projDefExportNumbers = 'exportNumbers';
 export const projDefSectionMap = 'sectionMap';
