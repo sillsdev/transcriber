@@ -146,7 +146,7 @@ export function PassageHistory(props: IProps) {
       let curState: ActivityStates = ActivityStates.Done;
       let curComment = '';
       curStateChanges.forEach((psc) => {
-        const comment = psc.attributes.comments || '';
+        const comment = psc?.attributes?.comments || '';
         if (comment !== '' && comment !== curComment) {
           curComment = comment;
           results.push(
@@ -158,7 +158,7 @@ export function PassageHistory(props: IProps) {
             )
           );
         }
-        if (psc.attributes.state && psc.attributes.state !== curState) {
+        if (psc?.attributes?.state && psc.attributes.state !== curState) {
           curState = psc.attributes.state;
           results.push(
             historyItem(psc, activityStateStr.getString(curState), 's', false)

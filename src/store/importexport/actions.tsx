@@ -806,7 +806,7 @@ export const importProjectToElectron =
           'passage',
           related(m, 'passage')
         ) as Passage;
-        if (passage) {
+        if (passage?.attributes?.state) {
           m.attributes.transcriptionstate = passage.attributes.state;
           oparray.push(tb.updateRecord(m).toOperation());
         }

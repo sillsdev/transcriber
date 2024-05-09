@@ -1063,7 +1063,10 @@ const MoveTranscriptionState = async (
       );
     if (meds.length > 0) {
       const mediafile = meds[0];
-      if (mediafile?.attributes?.transcriptionstate !== r.attributes.state) {
+      if (
+        Boolean(r?.attributes?.state) &&
+        mediafile?.attributes?.transcriptionstate !== r.attributes.state
+      ) {
         mediafile.attributes = {
           ...mediafile.attributes,
           transcriptionstate: r.attributes.state,

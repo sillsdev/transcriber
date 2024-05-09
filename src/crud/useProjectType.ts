@@ -30,6 +30,7 @@ export const useProjectType = () => {
       );
       return 'Scripture';
     }
+
     var ptId = related(proj, 'projecttype');
     var pt: ProjectType;
     if (ptId) {
@@ -37,7 +38,7 @@ export const useProjectType = () => {
         q.findRecord({ type: 'projecttype', id: ptId })
       ) as ProjectType;
       return pt.attributes.name;
-    } else {
+    } else if (Boolean(proj?.attributes)) {
       //default to scripture so they don't lose any book info they have
       logError(
         Severity.error,

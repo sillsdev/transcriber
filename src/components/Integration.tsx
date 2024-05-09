@@ -508,7 +508,10 @@ export function IntegrationPanel(props: IProps) {
     const sectionId = related(passage, 'section');
     const sectionPassages = passages
       .filter(
-        (p) => related(p, 'section') === sectionId && !related(p, 'passagetype')
+        (p) =>
+          related(p, 'section') === sectionId &&
+          !related(p, 'passagetype') &&
+          Boolean(p?.attributes)
       )
       .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
     return (
