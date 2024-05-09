@@ -12,7 +12,7 @@ var mockMemory = memory;
 var mockMediafile: MediaFile[] = [];
 var mockSectionResource: SectionResource[] = [];
 
-jest.mock('../components/passageDetail/PassageDetailPlayer', () => ({
+jest.mock('../components/PassageDetail/PassageDetailPlayer', () => ({
   PassageDetailPlayer: (props: any) => (
     <div>PassageDetailPlayer {JSON.stringify(props)}</div>
   ),
