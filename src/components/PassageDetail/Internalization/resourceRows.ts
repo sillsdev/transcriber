@@ -90,6 +90,7 @@ export const mediaRows = (props: MediaProps) => {
   // sort takes the greatest version but if they're equal, keeps the
   // one loaded first which is the vernacular media
   mediafiles
+    .filter((m) => m?.attributes?.versionNumber !== undefined)
     .sort((i, j) => {
       const iType = related(i, 'artifactType');
       const jType = related(j, 'artifactType');

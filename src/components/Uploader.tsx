@@ -173,6 +173,7 @@ export const Uploader = (props: IProps) => {
               related(m, 'passage') === psgId &&
               related(m, 'artifactType') === null
           )
+          .filter((m) => m?.attributes?.versionNumber !== undefined)
           .sort(
             (i, j) => j.attributes.versionNumber - i.attributes.versionNumber
           );

@@ -1,3 +1,10 @@
+audio-project-manager (3.1.1.0)  experimental; urgency=high
+
+ * fix loading crashes reported by a few users
+ * remove horizontal scroll bar from language picker
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 9 May 2024 14:47:00 -0600
+
 audio-project-manager (3.1.0.0)  experimental; urgency=high
 
  * update language picker
