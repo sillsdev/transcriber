@@ -16,8 +16,8 @@ test('verse range with two letters', () => {
   expect(refMatch('1:1c-4a')).toBeTruthy();
 });
 
-test('cross chapter boundary to fail', () => {
-  expect(refMatch('1:25-2:4')).toBeFalsy();
+test('cross chapter boundary to succeed', () => {
+  expect(refMatch('1:25-2:4')).toBeTruthy();
 });
 
 test('chapter of 1:2-4 to be 1', () => {
@@ -43,4 +43,10 @@ test('start verse of 1:2c-4a to be 2c', () => {
 test('end verse of 1:2c-4a to be 4a', () => {
   const match = refMatch('1:2c-4a');
   expect(match && match[3]).toBe('4a');
+});
+
+test('end chapter of 1:2c-2:4a to be 2', () => {
+  const match = refMatch('1:2c-2:4a');
+  expect(match && match[3]).toBe('2');
+  expect(match && match[4]).toBe('4a');
 });
