@@ -795,7 +795,7 @@ function WSAudioPlayer(props: IProps) {
                   <Grid item>
                     <WSAudioPlayerZoom
                       // startBig={allowRecord || false}
-                      ready={ready}
+                      ready={ready && !recording}
                       wsZoom={wsZoom}
                       wsPctWidth={wsPctWidth}
                     ></WSAudioPlayerZoom>

@@ -419,6 +419,7 @@ function MediaRecord(props: IProps) {
       <WSAudioPlayer
         allowRecord={allowRecord !== false}
         allowSilence={allowWave}
+        allowZoom={true}
         oneTryOnly={oneTryOnly}
         size={size || 300}
         blob={originalBlob}
