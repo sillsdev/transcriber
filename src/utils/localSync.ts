@@ -11,6 +11,7 @@ import Memory from '@orbit/memory';
 import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 import { related, parseRef, UpdateMediaStateOps } from '../crud';
 import { getReadWriteProg } from './paratextPath';
+import chapVrs from '../assets/eng-vrs';
 
 interface PassageInfo {
   passage: PassageD;
@@ -409,13 +410,18 @@ const postPass = (
       if (isSection(v)) removeSection(v);
     });
   }
+  var altRef =
+    currentPI.passage.attributes.startChapter !==
+    currentPI.passage.attributes.endChapter
+      ? `[${currentPI.passage.attributes.reference}] `
+      : '';
   parsed.forEach((p) => {
     //remove existing verses
     var thisVerse = removeOverlappingVerses(doc, p);
 
     if (thisVerse) {
       thisVerse = moveToPara(doc, thisVerse);
-      ReplaceText(doc, thisVerse, p.attributes.lastComment);
+      ReplaceText(doc, thisVerse, altRef + p.attributes.lastComment);
     } else {
       let verses = getVerses(doc.documentElement);
       var nextVerse = findNodeAfterVerse(
@@ -428,7 +434,7 @@ const postPass = (
         doc,
         nextVerse,
         passageVerses(p),
-        p.attributes.lastComment,
+        altRef + p.attributes.lastComment,
         true
       );
     }
@@ -679,7 +685,26 @@ export const localSync = async (
   ready.forEach((r) => {
     parseRef(r.passage);
     let chap = r.passage.attributes.startChapter;
+    let endChap = r.passage.attributes.endChapter;
     if (chap) {
+      if (endChap && endChap !== chap) {
+        if (endChap !== chap + 1)
+          return `Chapter range (${chap}-${endChap}) too large`;
+        let chapVrsData = new Map(chapVrs as [string, number[]][]);
+        let chap1Vrs = chapVrsData.get(r.passage.attributes.book);
+        let endVerse = r.passage.attributes.endVerse;
+        let startVerse = r.passage.attributes.startVerse;
+        if (endVerse && startVerse && chap1Vrs && chap1Vrs[chap - 1]) {
+          const lastVerse = chap1Vrs[chap - 1];
+          if (endVerse > lastVerse - startVerse + 1) {
+            // put content in chapter with most verses
+            chap = endChap;
+            r.passage.attributes.startVerse = 1;
+          } else {
+            r.passage.attributes.endVerse = lastVerse;
+          }
+        }
+      }
       const k = r.passage.attributes?.book + '-' + chap;
       if (chapChg.hasOwnProperty(k)) {
         chapChg[k].push(r);
