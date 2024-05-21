@@ -411,8 +411,9 @@ const postPass = (
     });
   }
   var altRef =
+    transcription.indexOf('\\v') === -1 &&
     currentPI.passage.attributes.startChapter !==
-    currentPI.passage.attributes.endChapter
+      currentPI.passage.attributes.endChapter
       ? `[${currentPI.passage.attributes.reference}] `
       : '';
   parsed.forEach((p) => {
@@ -617,13 +618,42 @@ const doChapter = async (
   ipc?.delete(paths.chapterFile);
 };
 
+// returns the chapter with the most verses
+// side effect: modifies the startVerse and endVerse of the passage
+const crossChapterRefs = (pass: Passage) => {
+  const { book, startChapter, endChapter, startVerse, endVerse } =
+    pass.attributes;
+  let chap = startChapter;
+  if (chap) {
+    if (endChapter && endChapter !== chap) {
+      if (endChapter !== chap + 1)
+        return `Chapter range (${chap}-${endChapter}) too large`;
+      let chapVrsData = new Map(chapVrs as [string, number[]][]);
+      let chap1Vrs = chapVrsData.get(book);
+      if (endVerse && startVerse && chap1Vrs && chap1Vrs[chap - 1]) {
+        const lastVerse = chap1Vrs[chap - 1];
+        if (endVerse > lastVerse - startVerse + 1) {
+          // put content in chapter with most verses
+          chap = endChapter;
+          pass.attributes.startVerse = 1;
+        } else {
+          pass.attributes.endVerse = lastVerse;
+        }
+      }
+    }
+  }
+  return chap;
+};
+
 export const getLocalParatextText = async (
   pass: Passage,
   ptProjName: string
 ) => {
+  pass.attributes.startChapter = undefined;
   parseRef(pass);
-  const chap = pass.attributes.book + '-' + pass.attributes.startChapter;
-  const paths = await paratextPaths(chap);
+  const chap = crossChapterRefs(pass);
+  const chapKey = pass.attributes.book + '-' + (chap ?? '1');
+  const paths = await paratextPaths(chapKey);
 
   let usxDom: Document = await getChapter(paths, ptProjName);
   return getPassageVerses(usxDom, pass);
@@ -683,28 +713,10 @@ export const localSync = async (
     }
   });
   ready.forEach((r) => {
+    r.passage.attributes.startChapter = undefined;
     parseRef(r.passage);
-    let chap = r.passage.attributes.startChapter;
-    let endChap = r.passage.attributes.endChapter;
+    const chap = crossChapterRefs(r.passage);
     if (chap) {
-      if (endChap && endChap !== chap) {
-        if (endChap !== chap + 1)
-          return `Chapter range (${chap}-${endChap}) too large`;
-        let chapVrsData = new Map(chapVrs as [string, number[]][]);
-        let chap1Vrs = chapVrsData.get(r.passage.attributes.book);
-        let endVerse = r.passage.attributes.endVerse;
-        let startVerse = r.passage.attributes.startVerse;
-        if (endVerse && startVerse && chap1Vrs && chap1Vrs[chap - 1]) {
-          const lastVerse = chap1Vrs[chap - 1];
-          if (endVerse > lastVerse - startVerse + 1) {
-            // put content in chapter with most verses
-            chap = endChap;
-            r.passage.attributes.startVerse = 1;
-          } else {
-            r.passage.attributes.endVerse = lastVerse;
-          }
-        }
-      }
       const k = r.passage.attributes?.book + '-' + chap;
       if (chapChg.hasOwnProperty(k)) {
         chapChg[k].push(r);
