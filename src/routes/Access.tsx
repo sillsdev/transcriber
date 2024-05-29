@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation } from 'react-router-dom';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0, RedirectLoginOptions } from '@auth0/auth0-react';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
   IState,
@@ -67,12 +67,7 @@ interface ICurrentUser {
   show?: ListEnum;
 }
 
-const CurrentUser = ({
-  curUser,
-  action,
-  goOnline,
-  show,
-}: ICurrentUser) => {
+const CurrentUser = ({ curUser, action, goOnline, show }: ICurrentUser) => {
   const t: IAccessStrings = useSelector(accessSelector, shallowEqual);
 
   return (
@@ -285,7 +280,7 @@ export function Access() {
   useEffect(() => {
     if (isElectron) persistData();
     resetProject();
-    checkOnline((online) => { }, true);
+    checkOnline((online) => {}, true);
 
     if (!tokenCtx.state.authenticated() && !isAuthenticated) {
       if (!offline && !isElectron) {
@@ -295,8 +290,8 @@ export function Access() {
         } else {
           const opts =
             API_CONFIG.snagId !== ''
-              ? { mode: 'signUp' }
-              : { login_hint: 'signUp' };
+              ? ({ mode: 'signUp' } as RedirectLoginOptions)
+              : ({ login_hint: 'signUp' } as RedirectLoginOptions);
           loginWithRedirect(opts);
         }
       }
@@ -361,7 +356,6 @@ export function Access() {
   }, [users]);
 
   if (tokenCtx.state.accessToken && !tokenCtx.state.email_verified) {
-
     if (localStorage.getItem('isLoggedIn') === 'true')
       navigate('/emailunverified');
     else doLogout();

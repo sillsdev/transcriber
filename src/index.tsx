@@ -174,10 +174,12 @@ const AuthApp = () => {
     <Auth0Provider
       domain={auth0Domain}
       clientId={webClientId}
-      audience={apiIdentifier}
-      redirectUri={process.env.REACT_APP_CALLBACK}
-      useRefreshTokens={true}
-      onRedirectCallback={onRedirectingCallbck}
+      authorizationParams={{
+        audience: apiIdentifier,
+        redirectUri: process.env.REACT_APP_CALLBACK,
+        useRefreshTokens: true,
+        onRedirectCallback: onRedirectingCallbck,
+      }}
     >
       <TokenChecked />
     </Auth0Provider>

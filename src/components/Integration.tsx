@@ -59,12 +59,12 @@ import {
   useOrganizedBy,
 } from '../crud';
 import {
-  localSync,
   getParatextDataPath,
   useCheckOnline,
   integrationSlug,
   useDataChanges,
 } from '../utils';
+import { localSync } from '../business/localParatext/localSync';
 import { TokenContext } from '../context/TokenProvider';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import Memory from '@orbit/memory';

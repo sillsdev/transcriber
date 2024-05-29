@@ -11,7 +11,6 @@ export * from './insertAtCursor';
 export * from './launch';
 export * from './linuxProgPath';
 export * from './localeDefault';
-export * from './localSync';
 export * from './logErrorService';
 export * from './makeAbbr';
 export * from './useCheckOnline';
