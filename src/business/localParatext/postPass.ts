@@ -18,14 +18,23 @@ import {
 import { isSection } from './usxNodeType';
 import { Passage } from '../../model';
 
-export const postPass = (
-  doc: Document,
-  chap: string,
-  currentPI: PassageInfo,
-  exportNumbers: boolean,
-  sectionArr: [number, string][] | undefined,
-  memory: Memory
-) => {
+export interface IPostPass {
+  doc: Document;
+  chap: string;
+  currentPI: PassageInfo;
+  exportNumbers: boolean;
+  sectionArr: [number, string][] | undefined;
+  memory: Memory;
+}
+
+export const postPass = ({
+  doc,
+  chap,
+  currentPI,
+  exportNumbers,
+  sectionArr,
+  memory,
+}: IPostPass) => {
   //get transcription
   var transcription = currentPI.transcription;
 

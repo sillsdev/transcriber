@@ -84,15 +84,15 @@ export const localSync = async (
   });
   for (let c of Object.keys(chapChg)) {
     try {
-      await doChapter(
-        c,
-        chapChg[c],
+      await doChapter({
+        chap: c,
+        passInfo: chapChg[c],
         ptProjName,
         memory,
         userId,
         exportNumbers,
-        sectionArr
-      );
+        sectionArr,
+      });
     } catch (error: any) {
       return error.message.replace(
         'Missing Localizer implementation. English text will be used instead.',

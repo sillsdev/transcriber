@@ -9,15 +9,25 @@ import { ActivityStates } from '../../model';
 import { UpdateMediaStateOps } from '../../crud/updatePassageState';
 const ipc = (window as any)?.electron;
 
-export const doChapter = async (
-  chap: string,
-  passInfo: PassageInfo[],
-  ptProjName: string,
-  memory: Memory,
-  userId: string,
-  exportNumbers: boolean,
-  sectionArr: [number, string][] | undefined
-) => {
+interface IDoChapter {
+  chap: string;
+  passInfo: PassageInfo[];
+  ptProjName: string;
+  memory: Memory;
+  userId: string;
+  exportNumbers: boolean;
+  sectionArr: [number, string][] | undefined;
+}
+
+export const doChapter = async ({
+  chap,
+  passInfo,
+  ptProjName,
+  memory,
+  userId,
+  exportNumbers,
+  sectionArr,
+}: IDoChapter) => {
   const paths = await paratextPaths(chap);
 
   let usxDom: Document = await readChapter(paths, ptProjName);
@@ -27,12 +37,20 @@ export const doChapter = async (
       (i.passage?.attributes.startVerse || 0) -
       (j.passage?.attributes.startVerse || 0)
   );
+
   passInfo.forEach((p) => {
-    postPass(usxDom, chap.split('-')[1], p, exportNumbers, sectionArr, memory);
+    postPass({
+      doc: usxDom,
+      chap: chap.split('-')[1],
+      currentPI: p,
+      exportNumbers,
+      sectionArr,
+      memory,
+    });
   });
 
-  const { stdoutw } = await writeChapter(paths, ptProjName, usxDom);
-  if (stdoutw) console.log(stdoutw);
+  const { stdout } = await writeChapter(paths, ptProjName, usxDom);
+  if (stdout) console.log(stdout);
   var ops: RecordOperation[] = [];
   var tb = new RecordTransformBuilder();
   for (let p of passInfo) {
