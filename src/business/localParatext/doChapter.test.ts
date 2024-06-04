@@ -6,11 +6,8 @@ const domParser = new DOMParser();
 
 var mockChapDom = domParser.parseFromString('<usx></usx>');
 var mockMemory = { update: jest.fn() } as unknown as Memory;
-var mockParatextPaths: any;
-var mockReadChapter: any;
-var mockPostPass: any;
-var mockWriteChapger: any;
 
+var mockParatextPaths: any;
 jest.mock('./paratextPaths', () => {
   const retValue = {
     paratextPaths: jest.fn(),
@@ -19,6 +16,7 @@ jest.mock('./paratextPaths', () => {
   return retValue;
 });
 
+var mockReadChapter: any;
 jest.mock('./readChapter', () => {
   const retValue = {
     readChapter: jest.fn(),
@@ -27,6 +25,7 @@ jest.mock('./readChapter', () => {
   return retValue;
 });
 
+var mockPostPass: any;
 jest.mock('./postPass', () => {
   const retValue = {
     postPass: jest.fn(),
@@ -35,6 +34,7 @@ jest.mock('./postPass', () => {
   return retValue;
 });
 
+var mockWriteChapger: any;
 jest.mock('./writeChapter', () => {
   const retValue = {
     writeChapter: jest.fn(),

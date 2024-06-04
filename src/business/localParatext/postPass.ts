@@ -17,6 +17,13 @@ import {
 } from './usxNodeChange';
 import { isSection } from './usxNodeType';
 import { Passage } from '../../model';
+import { crossChapterRefs } from './crossChapterRefs';
+
+const passageVerses = (p: Passage) =>
+  (p?.attributes.startVerse || 0).toString() +
+  ((p?.attributes.endVerse || 0) > (p?.attributes.startVerse || 0)
+    ? '-' + (p?.attributes.endVerse || 0).toString()
+    : '');
 
 export interface IPostPass {
   doc: Document;
@@ -37,6 +44,7 @@ export const postPass = ({
 }: IPostPass) => {
   //get transcription
   var transcription = currentPI.transcription;
+  const hasVerse = transcription.indexOf('\\v') > -1;
 
   // set start and end for currently loaded chapter
   const curChap = vInt(chap);
@@ -46,16 +54,17 @@ export const postPass = ({
   };
   parseRef(curPass);
   const { book, startChapter, endChapter } = curPass.attributes;
-  if (startChapter !== endChapter) {
-    if (curChap !== startChapter) {
-      curPass.attributes.startChapter = curChap;
+  if (startChapter !== endChapter && !hasVerse) {
+    const primChap = crossChapterRefs(curPass);
+    if (primChap !== startChapter) {
+      curPass.attributes.startChapter = primChap;
       curPass.attributes.startVerse = 1;
     } else {
       curPass.attributes.endVerse = getLastVerse(book, curChap);
     }
   }
 
-  var parsed = parseTranscription(currentPI.passage, transcription);
+  var parsed = parseTranscription(curPass, transcription);
   if (parsed.length > 1) {
     //remove original range if it exists and we're replacing with multiple
     var existing = getExistingVerses(doc, curPass);
@@ -65,7 +74,7 @@ export const postPass = ({
     });
   }
   var altRef =
-    transcription.indexOf('\\v') === -1 &&
+    !hasVerse &&
     currentPI.passage.attributes.startChapter !==
       currentPI.passage.attributes.endChapter
       ? `[${currentPI.passage.attributes.reference}] `
@@ -100,6 +109,3 @@ export const postPass = ({
       }
     });
 };
-function passageVerses(p: Passage): string {
-  throw new Error('Function not implemented.');
-}

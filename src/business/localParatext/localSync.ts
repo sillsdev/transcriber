@@ -6,19 +6,33 @@ import { parseRef } from '../../crud/passage';
 import { crossChapterRefs } from './crossChapterRefs';
 import { doChapter } from './doChapter';
 
-export const localSync = async (
-  plan: string,
-  ptProjName: string,
-  mediafiles: MediaFileD[],
-  passages: PassageD[],
-  memory: Memory,
-  userId: string,
-  passage: Passage | undefined,
-  exportNumbers: boolean,
-  sectionArr: [number, string][] | undefined,
-  artifactId: string | null,
-  getTranscription: (passId: string, artifactId: string | null) => string
-) => {
+interface IlocalSync {
+  plan: string;
+  ptProjName: string;
+  mediafiles: MediaFileD[];
+  passages: PassageD[];
+  memory: Memory;
+  userId: string;
+  passage: Passage | undefined;
+  exportNumbers: boolean;
+  sectionArr: [number, string][] | undefined;
+  artifactId: string | null;
+  getTranscription: (passId: string, artifactId: string | null) => string;
+}
+
+export const localSync = async ({
+  plan,
+  ptProjName,
+  mediafiles,
+  passages,
+  memory,
+  userId,
+  passage,
+  exportNumbers,
+  sectionArr,
+  artifactId,
+  getTranscription,
+}: IlocalSync): Promise<string> => {
   let chapChg: { [key: string]: PassageInfo[] } = {};
   let probablyready = mediafiles.filter(
     (m) =>

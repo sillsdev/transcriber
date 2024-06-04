@@ -418,19 +418,19 @@ export function IntegrationPanel(props: IProps) {
     if (stopPlayer) stopPlayer();
     setSyncing(true);
     showMessage(t.syncPending);
-    var err = await localSync(
+    var err = await localSync({
       plan,
-      ptShortName,
+      ptProjName: ptShortName,
       mediafiles,
       passages,
       memory,
-      user,
+      userId: user,
       passage,
       exportNumbers,
       sectionArr,
-      getTypeId(exportType),
-      getTranscription
-    );
+      artifactId: getTypeId(exportType),
+      getTranscription,
+    });
     showMessage(translateParatextErr(err, ts) || t.syncComplete);
     resetCount();
     if (setStepComplete && currentstep && !err) {

@@ -23,6 +23,10 @@ export const parseTranscription = (
       index < internalverses.length - 1
         ? transcription.substring(start, internalverses![index + 1].index!)
         : transcription.substring(start);
+    const newChapIdx = t.indexOf('\\c');
+    if (newChapIdx > -1) {
+      t = t.slice(0, newChapIdx);
+    }
     ret.push({
       attributes: {
         book: currentPassage.attributes.book,

@@ -8,7 +8,7 @@ export const crossChapterRefs = (pass: Passage) => {
   if (chap) {
     if (endChapter && endChapter !== chap) {
       if (endChapter !== chap + 1)
-        return `Chapter range (${chap}-${endChapter}) too large`;
+        throw Error(`Chapter range (${chap}-${endChapter}) too large`);
       const lastVerse = getLastVerse(book, chap);
       if (endVerse && startVerse && lastVerse) {
         if (endVerse > lastVerse - startVerse + 1) {

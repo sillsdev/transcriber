@@ -80,8 +80,13 @@ describe('crossChapterRefs', () => {
       },
     };
     // Act
-    const result = crossChapterRefs(pass as Passage);
-    // Assert
-    expect(result).toBe('Chapter range (1-3) too large');
+    try {
+      const result = crossChapterRefs(pass as Passage);
+      expect(result).toBe(false);
+    } catch (e: any) {
+      // Assert
+      // eslint-disable-next-line jest/no-conditional-expect
+      expect(e?.message).toBe('Chapter range (1-3) too large');
+    }
   });
 });

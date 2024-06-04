@@ -42,6 +42,17 @@ export const getParatextDataPath = async () => {
   }
 };
 
+// see: https://nodejs.org/api/child_process.html#child_processexecsynccommand-options
+export interface IExecResult {
+  pid: number;
+  output: string[];
+  stdout: Buffer | string;
+  stderr: Buffer | string;
+  status: number | null;
+  signal: string | null;
+  error: Error | null;
+}
+
 export const getReadWriteProg = async () => {
   if (await ipc?.isWindows()) {
     const progPath =
@@ -49,7 +60,9 @@ export const getReadWriteProg = async () => {
       (await getRegVal(regKey, progVal9)) ||
       (await getRegVal(regKey, progVal8));
     return async (args: string[]) => {
-      return JSON.parse(await ipc?.exec(path.join(progPath, 'rdwrtp8'), args));
+      return JSON.parse(
+        await ipc?.exec(path.join(progPath, 'rdwrtp8'), args)
+      ) as IExecResult;
     };
   } else {
     return async (args: string[]) => {
@@ -57,7 +70,7 @@ export const getReadWriteProg = async () => {
         await ipc?.exec('/usr/bin/paratext9', ['--rdwrtp8'].concat(args), {
           env: { ...{ ...process }.env, DISPLAY: ':0' },
         })
-      );
+      ) as IExecResult;
     };
   }
 };
