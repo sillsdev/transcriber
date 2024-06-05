@@ -1,4 +1,5 @@
 import { DOMParser } from 'xmldom';
+import { IExecResult } from '../../model';
 const ipc = (window as any)?.electron;
 const domParser = new DOMParser();
 
@@ -7,7 +8,7 @@ export const readChapter = async (
     chapterFile: string;
     book: string;
     chapter: string;
-    program: (args: string[]) => Promise<any>;
+    program: (args: string[]) => Promise<IExecResult>;
   },
   ptProjName: string
 ) => {

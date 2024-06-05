@@ -1,3 +1,4 @@
+import { IExecResult } from '../model';
 import { fileJson, getRegVal } from '../utils';
 const path = require('path-browserify');
 const ipc = (window as any)?.electron;
@@ -41,17 +42,6 @@ export const getParatextDataPath = async () => {
     return dir;
   }
 };
-
-// see: https://nodejs.org/api/child_process.html#child_processexecsynccommand-options
-export interface IExecResult {
-  pid: number;
-  output: string[];
-  stdout: Buffer | string;
-  stderr: Buffer | string;
-  status: number | null;
-  signal: string | null;
-  error: Error | null;
-}
 
 export const getReadWriteProg = async () => {
   if (await ipc?.isWindows()) {
