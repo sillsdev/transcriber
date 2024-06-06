@@ -1,5 +1,6 @@
 import { XMLSerializer } from 'xmldom';
 const ipc = (window as any)?.electron;
+const xmlSerializer = new XMLSerializer();
 
 export const writeChapter = async (
   paths: {
@@ -11,7 +12,7 @@ export const writeChapter = async (
   ptProjName: string,
   usxDom: Document
 ) => {
-  const usxXml: string = XMLSerializer.serializeToString(usxDom);
+  const usxXml: string = xmlSerializer.serializeToString(usxDom);
   ipc?.write(paths.chapterFile, usxXml);
   return await paths.program([
     '-w',
