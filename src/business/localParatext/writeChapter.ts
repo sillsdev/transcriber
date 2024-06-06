@@ -1,4 +1,4 @@
-import { XMLSerializer } from 'xmldom';
+import { XMLSerializer } from '@xmldom/xmldom';
 const ipc = (window as any)?.electron;
 const xmlSerializer = new XMLSerializer();
 

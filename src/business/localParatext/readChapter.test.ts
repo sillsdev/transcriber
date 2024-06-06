@@ -1,4 +1,4 @@
-import { DOMParser } from 'xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 const domParser = new DOMParser();
 
 describe('readChapter', () => {

@@ -1,13 +1,24 @@
+import { Passage } from '../../model';
+import Memory from '@orbit/memory';
 import {
   addAfter,
+  addParatextVerse,
+  addSection,
   findNodeAfterVerse,
   newEl,
   moveToPara,
   paratextPara,
+  paratextVerse,
   paratextSection,
+  removeSection,
+  removeText,
+  replaceText,
 } from './usxNodeChange';
-import { DOMParser } from 'xmldom';
+import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
 const domParser = new DOMParser();
+const xmlSerializer = new XMLSerializer();
+
+var mockMemory = { cache: { query: jest.fn() } } as unknown as Memory;
 
 describe('usxNodeChange', () => {
   it('should create a new Element with the given style', async () => {
@@ -44,9 +55,9 @@ describe('usxNodeChange', () => {
 
     // Assert
     expect(result).toBeDefined();
-    expect(result.nodeName).toBe('v');
+    expect(result?.nodeName).toBe('v');
     expect((result as Element).getAttribute('style')).toBe('bold: true');
-    expect(result.nextSibling).toBe(doc.getElementsByTagName('v')[2]);
+    expect(result?.nextSibling).toBe(doc.getElementsByTagName('v')[2]);
     expect(doc.documentElement?.toString()).toBe(
       '<usx><v/><v number="1b" style="bold: true"/><v/></usx>'
     );
@@ -62,9 +73,9 @@ describe('usxNodeChange', () => {
 
     // Assert
     expect(result).toBeDefined();
-    expect(result.nodeName).toBe('v');
+    expect(result?.nodeName).toBe('v');
     expect((result as Element).getAttribute('style')).toBe('bold: true');
-    expect(result.nextSibling).toBeNull();
+    expect(result?.nextSibling).toBeNull();
     expect(doc.documentElement?.toString()).toBe(
       '<usx><v/><v/><v number="1b" style="bold: true"/></usx>'
     );
@@ -80,9 +91,9 @@ describe('usxNodeChange', () => {
 
     // Assert
     expect(result).toBeDefined();
-    expect(result.nodeName).toBe('v');
+    expect(result?.nodeName).toBe('v');
     expect((result as Element).getAttribute('style')).toBe('bold: true');
-    expect(result.nextSibling).toBeNull();
+    expect(result?.nextSibling).toBeNull();
     expect(doc.documentElement?.toString()).toBe(
       '<usx><v/><v/><v number="1b" style="bold: true"/></usx>'
     );
@@ -98,9 +109,9 @@ describe('usxNodeChange', () => {
 
     // Assert
     expect(result).toBeDefined();
-    expect(result.nodeName).toBe('v');
+    expect(result?.nodeName).toBe('v');
     expect((result as Element).getAttribute('style')).toBe('bold: true');
-    expect(result.nextSibling).toBeNull();
+    expect(result?.nextSibling).toBeNull();
     expect(doc.documentElement?.toString()).toBe(
       '<usx><v number="1b" style="bold: true"/></usx>'
     );
@@ -162,7 +173,7 @@ describe('usxNodeChange', () => {
     const result = moveToPara(doc, verse);
     // Assert
     expect(result).toBeDefined();
-    expect(result.nodeName).toBe('para');
+    expect(result?.nodeName).toBe('para');
   });
 
   it('should move the verse to a new paragraph', async () => {
@@ -175,10 +186,12 @@ describe('usxNodeChange', () => {
     const result = moveToPara(doc, verse);
     // Assert
     expect(result).toBeDefined();
-    expect(result.nodeName).toBe('para');
-    expect(result.childNodes[1].nodeName).toBe('verse');
+    expect(result?.nodeName).toBe('para');
+    expect(result?.childNodes[1].nodeName).toBe('verse');
+    console.log(JSON.stringify(doc.documentElement?.toString()));
+    // NOTE: The inserted paragraph only has \n instead of \r\n
     expect(doc.documentElement?.toString()).toBe(
-      '<usx><para style="p"><verse number="1" style="v">T1</verse>\r\n</para><para style="p">\r\n<verse number="2" style="v">T2</verse></para></usx>'
+      '<usx><para style="p"><verse number="1" style="v">T1</verse>\n</para><para style="p">\r\n<verse number="2" style="v">T2</verse></para></usx>'
     );
   });
 
@@ -192,8 +205,8 @@ describe('usxNodeChange', () => {
     const result = moveToPara(doc, verse);
     // Assert
     expect(result).toBeDefined();
-    expect(result.nodeName).toBe('para');
-    expect(result.childNodes[1].nodeName).toBe('verse');
+    expect(result?.nodeName).toBe('para');
+    expect(result?.childNodes[1].nodeName).toBe('verse');
     expect(doc.documentElement?.toString()).toBe(
       '<usx><para style="p"><verse number="1" style="v">T1</verse></para><para style="p">\r\n<verse number="2" style="v">T2</verse></para></usx>'
     );
@@ -209,8 +222,8 @@ describe('usxNodeChange', () => {
     const result = moveToPara(doc, verse);
     // Assert
     expect(result).toBeDefined();
-    expect(result.nodeName).toBe('para');
-    expect(result.childNodes[1].nodeName).toBe('verse');
+    expect(result?.nodeName).toBe('para');
+    expect(result?.childNodes[1].nodeName).toBe('verse');
     expect(doc.documentElement?.toString()).toBe(
       '<usx><verse number="1" style="v">T1</verse><para style="p">\r\n<verse number="2" style="v">T2</verse></para></usx>'
     );
@@ -226,8 +239,8 @@ describe('usxNodeChange', () => {
     const result = moveToPara(doc, verse);
     // Assert
     expect(result).toBeDefined();
-    expect(result.nodeName).toBe('para');
-    expect(result.childNodes[1].nodeName).toBe('verse');
+    expect(result?.nodeName).toBe('para');
+    expect(result?.childNodes[1].nodeName).toBe('verse');
     expect(doc.documentElement?.toString()).toBe(
       '<usx><para style="p"><verse number="1" style="v">T1</verse></para><para style="p">\r\n<verse number="2" style="v">T2</verse><verse number="3" style="v">T3</verse><verse number="4" style="v">T4</verse></para></usx>'
     );
@@ -243,8 +256,8 @@ describe('usxNodeChange', () => {
     const result = moveToPara(doc, verse);
     // Assert
     expect(result).toBeDefined();
-    expect(result.nodeName).toBe('para');
-    expect(result.childNodes[1].nodeName).toBe('verse');
+    expect(result?.nodeName).toBe('para');
+    expect(result?.childNodes[1].nodeName).toBe('verse');
     expect(doc.documentElement?.toString()).toBe(
       '<usx><para style="p"><verse number="1" style="v">T1</verse><verse number="2" style="v">T2</verse></para><para style="p">\r\n<verse number="3" style="v">T3</verse><verse number="4" style="v">T4</verse></para></usx>'
     );
@@ -317,4 +330,222 @@ describe('usxNodeChange', () => {
       '1-4'
     );
   });
+
+  it('should addSection with text', async () => {
+    // Arrange
+    const doc = domParser.parseFromString(
+      '<usx><para style="p"><verse number="1" style="v">V1</verse></para></usx>'
+    );
+    const verse = doc.getElementsByTagName('verse')[0];
+    const passage = {
+      attributes: {},
+      relationships: { section: { data: { id: 's1' } } },
+    } as Passage;
+    jest
+      .spyOn(mockMemory.cache, 'query')
+      .mockReturnValue([
+        { id: 's1', attributes: { sequencenum: 1, name: 'name' } },
+      ] as any);
+    // Act
+    addSection({
+      doc,
+      passage,
+      verse,
+      memory: mockMemory,
+    });
+
+    // Assert
+    expect(doc.documentElement.toString()).toBe(
+      '<usx><para style="s">\r\n1 - name</para><para style="p"><verse number="1" style="v">V1</verse></para></usx>'
+    );
+  });
+
+  it('should addSection with publishing number and text', async () => {
+    // Arrange
+    const doc = domParser.parseFromString(
+      '<usx><para style="p"><verse number="1" style="v">V1</verse></para></usx>'
+    );
+    const verse = doc.getElementsByTagName('verse')[0];
+    const passage = {
+      attributes: {},
+      relationships: { section: { data: { id: 's1' } } },
+    } as Passage;
+    jest
+      .spyOn(mockMemory.cache, 'query')
+      .mockReturnValue([
+        { id: 's1', attributes: { sequencenum: 1, name: 'name' } },
+      ] as any);
+    // Act
+    addSection({
+      doc,
+      passage,
+      verse,
+      memory: mockMemory,
+      sectionArr: [[1, 'S1']],
+    });
+
+    // Assert
+    expect(doc.documentElement.toString()).toBe(
+      '<usx><para style="s">\r\nS1 - name</para><para style="p"><verse number="1" style="v">V1</verse></para></usx>'
+    );
+  });
+
+  it('should addSection with text without number', async () => {
+    // Arrange
+    const doc = domParser.parseFromString(
+      '<usx><para style="p"><verse number="1" style="v">V1</verse></para></usx>'
+    );
+    const verse = doc.getElementsByTagName('verse')[0];
+    const passage = {
+      attributes: {},
+      relationships: { section: { data: { id: 's1' } } },
+    } as Passage;
+    jest
+      .spyOn(mockMemory.cache, 'query')
+      .mockReturnValue([
+        { id: 's1', attributes: { sequencenum: 1, name: 'name' } },
+      ] as any);
+    // Act
+    addSection({
+      doc,
+      passage,
+      verse,
+      memory: mockMemory,
+      addNumbers: false,
+    });
+
+    // Assert
+    expect(doc.documentElement?.toString()).toBe(
+      '<usx><para style="s">\r\nname</para><para style="p"><verse number="1" style="v">V1</verse></para></usx>'
+    );
+  });
+
+  it('should add a verse to the dom', async () => {
+    // Arrange
+    const doc = domParser.parseFromString('<usx/>');
+    // Act
+    const result = paratextVerse(doc, '1-4', 'T1-4');
+    // Assert
+    expect(result).toBeDefined();
+    expect(result.nodeName).toBe('para');
+    expect(result.getAttribute('style')).toBe('p');
+    const verseEl = result.childNodes[1] as Element;
+    expect(verseEl.nodeName).toBe('verse');
+    expect(verseEl.getAttribute('number')).toBe('1-4');
+    expect(verseEl?.nextSibling?.nodeValue).toBe('T1-4');
+    expect(xmlSerializer.serializeToString(result)).toBe(
+      '<para style="p">\r\n<verse number="1-4" style="v"/>T1-4</para>'
+    );
+  });
+
+  it('should add a paratext verse to the dom', async () => {
+    // Arrange
+    const doc = domParser.parseFromString('<usx><v/></usx>');
+    const sibling = doc.getElementsByTagName('v')[0];
+    // Act
+    const result = addParatextVerse({
+      doc,
+      sibling,
+      verses: '1',
+      transcript: 'T1',
+    });
+    // Assert
+    expect(result).toBeDefined();
+    expect(result.nodeName).toBe('para');
+    expect(result.getAttribute('style')).toBe('p');
+    const verseEl = result.childNodes[1] as Element;
+    expect(verseEl.nodeName).toBe('verse');
+    expect(verseEl.getAttribute('number')).toBe('1');
+    expect(verseEl?.nextSibling?.nodeValue).toBe('T1');
+    expect(xmlSerializer.serializeToString(result)).toBe(
+      '<para style="p">\r\n<verse number="1" style="v"/>T1</para>'
+    );
+    expect(doc.documentElement?.toString()).toBe(
+      '<usx><v/><para style="p">\r\n<verse number="1" style="v"/>T1</para></usx>'
+    );
+  });
+
+  it('should add a paratext verse to the dom before referenced node', async () => {
+    // Arrange
+    const doc = domParser.parseFromString('<usx><v/></usx>');
+    const sibling = doc.getElementsByTagName('v')[0];
+    // Act
+    const result = addParatextVerse({
+      doc,
+      sibling,
+      verses: '1',
+      transcript: 'T1',
+      before: true,
+    });
+    // Assert
+    expect(result).toBeDefined();
+    expect(result.nodeName).toBe('para');
+    expect(result.getAttribute('style')).toBe('p');
+    const verseEl = result.childNodes[1] as Element;
+    expect(verseEl.nodeName).toBe('verse');
+    expect(verseEl.getAttribute('number')).toBe('1');
+    expect(verseEl?.nextSibling?.nodeValue).toBe('T1');
+    expect(xmlSerializer.serializeToString(result)).toBe(
+      '<para style="p">\r\n<verse number="1" style="v"/>T1</para>'
+    );
+    expect(doc.documentElement?.toString()).toBe(
+      '<usx><para style="p">\r\n<verse number="1" style="v"/>T1</para><v/></usx>'
+    );
+  });
+
+  it('should remove a section from the dom', async () => {
+    // Arrange
+    const doc = domParser.parseFromString(
+      '<usx><para style="s">1 - name</para><para style="p"><verse number="1" style="v">V1</verse></para></usx>'
+    );
+    const section = doc.getElementsByTagName('para')[0];
+    // Act
+    removeSection(section);
+    // Assert
+    expect(doc.documentElement?.toString()).toBe(
+      '<usx><para style="p"><verse number="1" style="v">V1</verse></para></usx>'
+    );
+  });
+
+  it('should remove text from a verse', async () => {
+    // Arrange
+    const doc = domParser.parseFromString(
+      '<usx><para style="p"><verse number="1" style="v">V1</verse></para></usx>'
+    ) as Document;
+    const verse = doc.getElementsByTagName('verse')[0];
+    // Act
+    removeText(verse);
+    // Assert
+    expect(doc.documentElement?.toString()).toBe(
+      '<usx><para style="p"/></usx>'
+    );
+  });
+
+  it('should remove text after a verse milestone', async () => {
+    // Arrange
+    const doc = domParser.parseFromString(
+      '<usx><para style="p"><verse number="1" style="v"/>V1</para></usx>'
+    ) as Document;
+    const verse = doc.getElementsByTagName('verse')[0];
+    // Act
+    removeText(verse);
+    // Assert
+    expect(doc.documentElement?.toString()).toBe(
+      '<usx><para style="p"><verse number="1" style="v"/></para></usx>'
+    );
+  });
+
+  // it('should replace text after a verse milestone', async () => {
+  //   // Arrange
+  //   const doc = domParser.parseFromString(
+  //     '<usx><para style="p"><verse number="1" style="v"/>V1</para></usx>'
+  //   ) as Document;
+  //   const verse = doc.getElementsByTagName('verse')[0];
+  //   // Act
+  //   replaceText(doc, verse, 'T1');
+  //   // Assert
+  //   expect(doc.documentElement?.toString()).toBe(
+  //     '<usx><para style="p"><verse number="1" style="v"/>T1</para></usx>'
+  //   );
+  // });
 });

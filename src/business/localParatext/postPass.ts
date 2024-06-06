@@ -87,7 +87,8 @@ export const postPass = ({
 
       if (thisVerse) {
         thisVerse = moveToPara(doc, thisVerse);
-        replaceText(doc, thisVerse, altRef + p.attributes.lastComment);
+        if (thisVerse)
+          replaceText(doc, thisVerse, altRef + p.attributes.lastComment);
       } else {
         let verses = getVerses(doc.documentElement);
         var nextVerse = findNodeAfterVerse(
@@ -96,16 +97,23 @@ export const postPass = ({
           p?.attributes.startVerse || 0,
           p?.attributes.endVerse || 0
         );
-        thisVerse = addParatextVerse(
+        thisVerse = addParatextVerse({
           doc,
-          nextVerse,
-          passageVerses(p),
-          altRef + p.attributes.lastComment,
-          true
-        );
+          sibling: nextVerse,
+          verses: passageVerses(p),
+          transcript: altRef + p.attributes.lastComment,
+          before: true,
+        });
       }
-      if (p.attributes.sequencenum === 1) {
-        addSection(doc, p, thisVerse, memory, exportNumbers, sectionArr);
+      if (p.attributes.sequencenum === 1 && thisVerse) {
+        addSection({
+          doc,
+          passage: p,
+          verse: thisVerse,
+          memory,
+          addNumbers: exportNumbers,
+          sectionArr,
+        });
       }
     });
 };

@@ -1,4 +1,4 @@
-import { DOMParser } from 'xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 import { IExecResult } from '../../model';
 const ipc = (window as any)?.electron;
 const domParser = new DOMParser();

@@ -1,7 +1,7 @@
 import { doChapter } from './doChapter';
 import Memory from '@orbit/memory';
 import { PassageD } from '../../model';
-import { DOMParser } from 'xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 const domParser = new DOMParser();
 
 var mockChapDom = domParser.parseFromString('<usx></usx>');

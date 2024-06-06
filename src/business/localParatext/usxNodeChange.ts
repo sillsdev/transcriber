@@ -39,7 +39,7 @@ export const addAfter = (
   next: Node
 ) =>
   last?.nextSibling
-    ? doc.insertBefore(next, last.nextSibling)
+    ? last?.parentNode?.insertBefore(next, last.nextSibling)
     : last?.parentNode
     ? last?.parentNode.appendChild(next)
     : doc.documentElement.appendChild(next);
@@ -89,8 +89,8 @@ export const moveToPara = (doc: Document, verse: Element) => {
     }
     return verse.parentNode as Element;
   } else {
-    var para = doc.insertBefore(paratextPara(doc, 'p'), verse);
-    para.appendChild(verse);
+    var para = verse.parentNode?.insertBefore(paratextPara(doc, 'p'), verse);
+    para?.appendChild(verse);
     return para;
   }
 };
@@ -117,19 +117,19 @@ export const findNodeAfterVerse = (
   });
   if (after) {
     after = moveToPara(doc, after);
-    var style = after.getAttribute('style');
+    var style = after?.getAttribute('style');
     if (style && style.startsWith('q')) {
       var level = parseInt(style.substring(1)) || 0;
       while (level > 1) {
         if (
-          after.parentNode &&
+          after?.parentNode &&
           (after.parentNode as Element).getAttribute('style') &&
           (after.parentNode as Element).getAttribute('style')?.startsWith('q')
         )
           //we don't want to put our stuff in between q levels
           //find the q1 - I'd expect it to be my parent...but it's a previous sibling...
           after = after.parentNode as Element;
-        else after = after.previousSibling as Element;
+        else after = after?.previousSibling as Element;
         while (
           !(after.getAttribute('style') || '').startsWith('q') &&
           after.previousSibling
@@ -144,21 +144,30 @@ export const findNodeAfterVerse = (
       }
     }
     //skip section if there
-    if (isAfterSection(after)) {
+    if (after && isAfterSection(after)) {
       return isAfterSection(after);
     }
   }
   return after;
 };
 
-export const addSection = (
-  doc: Document,
-  passage: Passage,
-  verse: Element,
-  memory: Memory,
+export interface IaddSection {
+  doc: Document;
+  passage: Passage;
+  verse: Element;
+  memory: Memory;
+  addNumbers?: boolean;
+  sectionArr?: [number, string][];
+}
+
+export const addSection = ({
+  doc,
+  passage,
+  verse,
+  memory,
   addNumbers = true,
-  sectionArr: [number, string][] | undefined
-) => {
+  sectionArr = [],
+}: IaddSection) => {
   var sections = memory.cache.query((q) =>
     q.findRecords('section')
   ) as Section[];
@@ -169,14 +178,12 @@ export const addSection = (
   const seqnum = sectionRec.attributes.sequencenum;
   const sectionMap = new Map(sectionArr);
   const mapNum = sectionMap?.get(seqnum);
-  doc.insertBefore(
-    paratextSection(
-      doc,
-      (addNumbers ? (mapNum ?? seqnum.toString()) + ' - ' : '') +
-        sectionRec.attributes.name
-    ),
-    para
+  const sectionNode = paratextSection(
+    doc,
+    (addNumbers ? (mapNum ?? seqnum.toString()) + ' - ' : '') +
+      sectionRec.attributes.name
   );
+  return para?.parentNode?.insertBefore(sectionNode, para);
 };
 
 export const paratextVerse = (
@@ -190,16 +197,24 @@ export const paratextVerse = (
   return para;
 };
 
-export const addParatextVerse = (
-  doc: Document,
-  sibling: Node | null | undefined,
-  verses: string,
-  transcript: string,
-  before: boolean = false
-) => {
+export interface IaddParatextVerse {
+  doc: Document;
+  sibling: Node | null | undefined;
+  verses: string;
+  transcript: string;
+  before?: boolean;
+}
+
+export const addParatextVerse = ({
+  doc,
+  sibling,
+  verses,
+  transcript,
+  before = false,
+}: IaddParatextVerse) => {
   var lines: string[] = removeTimestamps(transcript).split('\n');
   var first = paratextVerse(doc, verses, lines[0]);
-  if (before && sibling) doc.insertBefore(first, sibling);
+  if (before && sibling) sibling.parentNode?.insertBefore(first, sibling);
   else addAfter(doc, sibling, first);
 
   var last = first;
@@ -212,15 +227,6 @@ export const addParatextVerse = (
 };
 
 export const removeSection = (v: Element) => v.parentNode?.removeChild(v);
-
-export const removeOverlappingVerses = (doc: Document, p: Passage) => {
-  const existing = getExistingVerses(doc, p);
-  existing.allVerses.forEach((v) => {
-    if (isVerse(v)) removeVerse(v);
-    else removeSection(v);
-  });
-  return existing.exactVerse;
-};
 
 export const removeText = (v: Element) => {
   if (!isVerse(v)) return;
@@ -272,4 +278,13 @@ export const removeVerse = (v: Element) => {
   removeText(v);
   v.parentNode?.removeChild(v);
   if (removeParent != null) removeParent.parentNode?.removeChild(removeParent);
+};
+
+export const removeOverlappingVerses = (doc: Document, p: Passage) => {
+  const existing = getExistingVerses(doc, p);
+  existing.allVerses.forEach((v) => {
+    if (isVerse(v)) removeVerse(v);
+    else removeSection(v);
+  });
+  return existing.exactVerse;
 };

@@ -1,7 +1,7 @@
 import Memory from '@orbit/memory';
 import { postPass } from './postPass';
 import { PassageInfo } from './PassageInfo';
-import { DOMParser } from 'xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 import { PassageD } from '../../model';
 const domParser = new DOMParser();
 
