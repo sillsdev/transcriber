@@ -11,10 +11,13 @@ import {
   paratextVerse,
   paratextSection,
   removeSection,
+  removeOverlappingVerses,
   removeText,
+  removeVerse,
   replaceText,
 } from './usxNodeChange';
 import { DOMParser, XMLSerializer } from '@xmldom/xmldom';
+import { parseRef } from '../../crud/passage';
 const domParser = new DOMParser();
 const xmlSerializer = new XMLSerializer();
 
@@ -188,7 +191,6 @@ describe('usxNodeChange', () => {
     expect(result).toBeDefined();
     expect(result?.nodeName).toBe('para');
     expect(result?.childNodes[1].nodeName).toBe('verse');
-    console.log(JSON.stringify(doc.documentElement?.toString()));
     // NOTE: The inserted paragraph only has \n instead of \r\n
     expect(doc.documentElement?.toString()).toBe(
       '<usx><para style="p"><verse number="1" style="v">T1</verse>\n</para><para style="p">\r\n<verse number="2" style="v">T2</verse></para></usx>'
@@ -535,17 +537,138 @@ describe('usxNodeChange', () => {
     );
   });
 
-  // it('should replace text after a verse milestone', async () => {
-  //   // Arrange
-  //   const doc = domParser.parseFromString(
-  //     '<usx><para style="p"><verse number="1" style="v"/>V1</para></usx>'
-  //   ) as Document;
-  //   const verse = doc.getElementsByTagName('verse')[0];
-  //   // Act
-  //   replaceText(doc, verse, 'T1');
-  //   // Assert
-  //   expect(doc.documentElement?.toString()).toBe(
-  //     '<usx><para style="p"><verse number="1" style="v"/>T1</para></usx>'
-  //   );
-  // });
+  it('should replace text after a verse milestone', async () => {
+    // Arrange
+    const doc = domParser.parseFromString(
+      '<usx><para style="p"><verse number="1" style="v"/>V1</para></usx>'
+    ) as Document;
+    const para = doc.getElementsByTagName('para')[0];
+    // Act
+    replaceText(doc, para, 'T1');
+    // Assert
+    expect(doc.documentElement?.toString()).toBe(
+      '<usx><para style="p"><verse number="1" style="v"/>T1</para></usx>'
+    );
+  });
+
+  it('should replace text after a verse milestone with preceding newline', async () => {
+    // Arrange
+    const doc = domParser.parseFromString(
+      '<usx><para style="p">\r\n<verse number="1" style="v"/>V1</para></usx>'
+    ) as Document;
+    const para = doc.getElementsByTagName('para')[0];
+    // Act
+    replaceText(doc, para, 'T1');
+    // Assert
+    expect(doc.documentElement?.toString()).toBe(
+      '<usx><para style="p">\n<verse number="1" style="v"/>T1</para></usx>'
+    );
+    // NOTE: The \r of the newline is removed
+  });
+
+  it('should remove the verse from the dom', async () => {
+    // Arrange
+    const doc = domParser.parseFromString(
+      '<usx><para style="p"><verse number="1" style="v"/>V1</para></usx>'
+    ) as Document;
+    const verse = doc.getElementsByTagName('verse')[0];
+    // Act
+    removeVerse(verse);
+    // Assert
+    expect(doc.documentElement?.toString()).toBe('<usx/>');
+  });
+
+  it('should remove the verse from the dom leaving preceding newline', async () => {
+    // Arrange
+    const doc = domParser.parseFromString(
+      '<usx><para style="p">\r\n<verse number="1" style="v"/>V1</para></usx>'
+    ) as Document;
+    const verse = doc.getElementsByTagName('verse')[0];
+    // Act
+    removeVerse(verse);
+    // Assert
+    expect(doc.documentElement?.toString()).toBe('<usx/>');
+  });
+
+  it('should remove overlapping verses for 1:2-3 from the dom', async () => {
+    // Arrange
+    const doc = domParser.parseFromString(
+      '<usx><para style="p"><verse number="1" style="v"/>V1<verse number="2" style="v"/>V2<verse number="3" style="v"/>V3</para></usx>'
+    ) as Document;
+    const passage = { attributes: { reference: '1:2-3' } } as Passage;
+    // Act
+    parseRef(passage);
+    const result = removeOverlappingVerses(doc, passage);
+    // Assert
+    expect(result).toBeUndefined();
+    expect(doc.documentElement?.toString()).toBe(
+      '<usx><para style="p"><verse number="1" style="v"/>V1</para></usx>'
+    );
+  });
+
+  it('should remove overlapping verses for 1:1-3 from the dom', async () => {
+    // Arrange
+    const doc = domParser.parseFromString(
+      '<usx><para style="p"><verse number="1" style="v"/>V1<verse number="2-3" style="v"/>V2-3</para></usx>'
+    ) as Document;
+    const passage = { attributes: { reference: '1:1-3' } } as Passage;
+    // Act
+    parseRef(passage);
+    const result = removeOverlappingVerses(doc, passage);
+    // Assert
+    expect(result).toBeUndefined();
+    expect(doc.documentElement?.toString()).toBe('<usx/>');
+  });
+
+  it('should remove completely contained verses for 1:1-2 from the dom', async () => {
+    // Arrange
+    const doc = domParser.parseFromString(
+      '<usx><para style="p"><verse number="1" style="v"/>V1<verse number="2-3" style="v"/>V2-3</para></usx>'
+    ) as Document;
+    const passage = { attributes: { reference: '1:1-2' } } as Passage;
+    // Act
+    parseRef(passage);
+    const result = removeOverlappingVerses(doc, passage);
+    // Assert
+    expect(result).toBeUndefined();
+    expect(doc.documentElement?.toString()).toBe(
+      '<usx><para style="p"><verse number="2-3" style="v"/>V2-3</para></usx>'
+    );
+  });
+
+  it('should remove overlapping returns node matching exact reference 1:2 from dom', async () => {
+    // Arrange
+    const doc = domParser.parseFromString(
+      '<usx><para style="p"><verse number="1" style="v"/>V1<verse number="2" style="v"/>V2<verse number="3" style="v"/>V3</para></usx>'
+    ) as Document;
+    const passage = { attributes: { reference: '1:2' } } as Passage;
+    // Act
+    parseRef(passage);
+    const result = removeOverlappingVerses(doc, passage);
+    // Assert
+    expect(result && xmlSerializer.serializeToString(result)).toBe(
+      '<verse number="2" style="v"/>'
+    );
+    expect(doc.documentElement?.toString()).toBe(
+      '<usx><para style="p"><verse number="1" style="v"/>V1<verse number="2" style="v"/>V2<verse number="3" style="v"/>V3</para></usx>'
+    );
+  });
+
+  it('should remove overlapping returns node matching exact reference 1:2-3 from dom', async () => {
+    // Arrange
+    const doc = domParser.parseFromString(
+      '<usx><para style="p"><verse number="1" style="v"/>V1<verse number="2-3" style="v"/>V2-3</para></usx>'
+    ) as Document;
+    const passage = { attributes: { reference: '1:2-3' } } as Passage;
+    // Act
+    parseRef(passage);
+    const result = removeOverlappingVerses(doc, passage);
+    // Assert
+    expect(result && xmlSerializer.serializeToString(result)).toBe(
+      '<verse number="2-3" style="v"/>'
+    );
+    expect(doc.documentElement?.toString()).toBe(
+      '<usx><para style="p"><verse number="1" style="v"/>V1<verse number="2-3" style="v"/>V2-3</para></usx>'
+    );
+  });
 });

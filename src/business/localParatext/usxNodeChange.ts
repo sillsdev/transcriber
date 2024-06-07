@@ -270,14 +270,13 @@ export const replaceText = (
 export const removeVerse = (v: Element) => {
   if (!isVerse(v)) return;
   var removeParent =
-    v.parentNode !== null &&
-    isEmptyPara(v.parentNode) &&
-    getVerses(v.parentNode).length === 1
+    v.parentNode !== null && getVerses(v.parentNode).length === 1
       ? v.parentNode
       : null;
   removeText(v);
   v.parentNode?.removeChild(v);
-  if (removeParent != null) removeParent.parentNode?.removeChild(removeParent);
+  if (removeParent != null && isEmptyPara(removeParent))
+    removeParent.parentNode?.removeChild(removeParent);
 };
 
 export const removeOverlappingVerses = (doc: Document, p: Passage) => {
