@@ -586,6 +586,8 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "media": string;
     "myAccount": string;
     "NoLoadOffline": string;
+    "openNotes": string;
+    "openContent": string;
     "passages": string;
     "privacy": string;
     "project": string;
@@ -594,6 +596,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "reportIssue": string;
     "reports": string;
     "reportWhenOnline": string;
+    "resources": string;
     "saveFirst": string;
     "saving": string;
     "sessionExpireTask": string;

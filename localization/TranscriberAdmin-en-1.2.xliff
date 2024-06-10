@@ -3420,6 +3420,20 @@
                <context context-type="sourcefile">drawer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="main.openNotes">
+            <source>Access Open Notes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="main.openContent">
+            <source>Access Open Content</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="main.passages">
             <source>Passages</source>
             <target/>
@@ -3471,6 +3485,13 @@
          </trans-unit>
          <trans-unit id="main.reportWhenOnline">
             <source>You must be online to report an problem.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="main.resources">
+            <source>Access Translation Reources</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">HelpMenu.tsx</context>

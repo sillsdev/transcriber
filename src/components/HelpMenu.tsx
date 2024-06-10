@@ -4,6 +4,8 @@ import { useGlobal } from 'reactn';
 import { IMainStrings, Plan } from '../model';
 import { IconButton, ListItemIcon, ListItemText, SxProps } from '@mui/material';
 import ReportIcon from '@mui/icons-material/Report';
+import NotesIcon from '@mui/icons-material/SpeakerNotes';
+import BooksIcon from '@mui/icons-material/LibraryBooks';
 import HelpIcon from '@mui/icons-material/Help';
 import InfoIcon from '@mui/icons-material/Info';
 import DownloadIcon from '@mui/icons-material/CloudDownload';
@@ -77,9 +79,9 @@ export function HelpMenu(props: IProps) {
     if (action) action('Download');
   };
 
-  const handleReportIssue = () => {
+  const handleSite = (site: string) => () => {
     if (!online) showMessage(t.reportWhenOnline);
-    else launch(API_CONFIG.community, online);
+    else launch(site, online);
   };
 
   const handleDeveloper = () => {
@@ -214,7 +216,10 @@ export function HelpMenu(props: IProps) {
           </StyledMenuItem>
         )}
         {isElectron && (
-          <StyledMenuItem id="helpFeedbackOff" onClick={handleReportIssue}>
+          <StyledMenuItem
+            id="helpFeedbackOff"
+            onClick={handleSite(API_CONFIG.community)}
+          >
             <ListItemIcon>
               <ReportIcon />
             </ListItemIcon>
@@ -233,6 +238,84 @@ export function HelpMenu(props: IProps) {
                 <ReportIcon />
               </ListItemIcon>
               <ListItemText primary={t.reportIssue} />
+            </StyledMenuItem>
+          </a>
+        )}
+        {isElectron && (
+          <StyledMenuItem
+            id="helpFeedbackOff"
+            onClick={handleSite(API_CONFIG.openNotes)}
+          >
+            <ListItemIcon>
+              <NotesIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.openNotes} />
+          </StyledMenuItem>
+        )}
+        {!isElectron && (
+          <a
+            href={API_CONFIG.openNotes}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem id="helpFeedbackOn">
+              <ListItemIcon>
+                <NotesIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.openNotes} />
+            </StyledMenuItem>
+          </a>
+        )}
+        {isElectron && (
+          <StyledMenuItem
+            id="helpFeedbackOff"
+            onClick={handleSite(API_CONFIG.resources)}
+          >
+            <ListItemIcon>
+              <BooksIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.resources} />
+          </StyledMenuItem>
+        )}
+        {!isElectron && (
+          <a
+            href={API_CONFIG.resources}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem id="helpFeedbackOn">
+              <ListItemIcon>
+                <BooksIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.resources} />
+            </StyledMenuItem>
+          </a>
+        )}
+        {isElectron && (
+          <StyledMenuItem
+            id="helpFeedbackOff"
+            onClick={handleSite(API_CONFIG.openContent)}
+          >
+            <ListItemIcon>
+              <BooksIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.openContent} />
+          </StyledMenuItem>
+        )}
+        {!isElectron && (
+          <a
+            href={API_CONFIG.openContent}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem id="helpFeedbackOn">
+              <ListItemIcon>
+                <BooksIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.openContent} />
             </StyledMenuItem>
           </a>
         )}

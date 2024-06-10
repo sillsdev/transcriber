@@ -3,8 +3,8 @@ const help =
   isElectron && process.env.REACT_APP_DESKTOP_HELP
     ? process.env.REACT_APP_DESKTOP_HELP
     : process.env.REACT_APP_HELP
-      ? process.env.REACT_APP_HELP
-      : '';
+    ? process.env.REACT_APP_HELP
+    : '';
 
 export const OrbitNetworkErrorRetries = 5;
 
@@ -17,6 +17,15 @@ export const API_CONFIG = {
   chmHelp: process.env.REACT_APP_CHM_HELP ? process.env.REACT_APP_CHM_HELP : '',
   community: process.env.REACT_APP_COMMUNITY
     ? process.env.REACT_APP_COMMUNITY
+    : '',
+  openNotes: process.env.REACT_APP_OPENNOTES
+    ? process.env.REACT_APP_OPENNOTES
+    : '',
+  resources: process.env.REACT_APP_RESOURCES
+    ? process.env.REACT_APP_RESOURCES
+    : '',
+  openContent: process.env.REACT_APP_OPENCONTENT
+    ? process.env.REACT_APP_OPENCONTENT
     : '',
   endpoint: process.env.REACT_APP_ENDPOINT
     ? process.env.REACT_APP_ENDPOINT

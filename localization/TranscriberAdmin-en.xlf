@@ -2932,6 +2932,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.openNotes">
+         <segment>
+            <source>Access Open Notes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.openContent">
+         <segment>
+            <source>Access Open Content</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.passages">
          <segment>
             <source>Passages</source>
@@ -2977,6 +2989,12 @@
       <unit id="main.reportWhenOnline">
          <segment>
             <source>You must be online to report an problem.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.resources">
+         <segment>
+            <source>Access Translation Reources</source>
             <target/>
          </segment>
       </unit>
