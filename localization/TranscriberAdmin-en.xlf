@@ -2760,7 +2760,7 @@
       </unit>
       <unit id="main.akuo">
          <segment>
-            <source>Access Akuo site</source>
+            <source>Access Akuo Site</source>
             <target/>
          </segment>
       </unit>
@@ -3006,7 +3006,7 @@
       </unit>
       <unit id="main.resources">
          <segment>
-            <source>Access Translation Reources</source>
+            <source>Access Translation Resources</source>
             <target/>
          </segment>
       </unit>

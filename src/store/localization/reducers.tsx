@@ -595,7 +595,7 @@ const initialState = {
 		"en": {
 			"about": "About",
 			"admin": "Admin",
-			"akuo": "Access Akuo site",
+			"akuo": "Access Akuo Site",
 			"apiError": "API Error:",
 			"cancel": "Cancel",
 			"cantCopy": "Unable to copy to clipboard",
@@ -636,7 +636,7 @@ const initialState = {
 			"reportIssue": "Report an Issue",
 			"reports": "Reports",
 			"reportWhenOnline": "You must be online to report an problem.",
-			"resources": "Access Translation Reources",
+			"resources": "Access Translation Resources",
 			"saveFirst": "Do you want to save before leaving this page?",
 			"saving": "Saving...",
 			"sessionExpireTask": "Your session will expire in {0} seconds. Would you like to continue?",

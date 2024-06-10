@@ -6,6 +6,8 @@ import { IconButton, ListItemIcon, ListItemText, SxProps } from '@mui/material';
 import ReportIcon from '@mui/icons-material/Report';
 import NotesIcon from '@mui/icons-material/SpeakerNotes';
 import BooksIcon from '@mui/icons-material/LibraryBooks';
+import TrainingIcon from '@mui/icons-material/FlightClass';
+import PublishIcon from '@mui/icons-material/Language';
 import HelpIcon from '@mui/icons-material/Help';
 import InfoIcon from '@mui/icons-material/Info';
 import DownloadIcon from '@mui/icons-material/CloudDownload';
@@ -299,7 +301,7 @@ export function HelpMenu(props: IProps) {
             onClick={handleSite(API_CONFIG.course)}
           >
             <ListItemIcon>
-              <BooksIcon />
+              <TrainingIcon />
             </ListItemIcon>
             <ListItemText primary={t.course} />
           </StyledMenuItem>
@@ -313,7 +315,7 @@ export function HelpMenu(props: IProps) {
           >
             <StyledMenuItem id="helpCourseOn">
               <ListItemIcon>
-                <BooksIcon />
+                <TrainingIcon />
               </ListItemIcon>
               <ListItemText primary={t.course} />
             </StyledMenuItem>
@@ -325,7 +327,7 @@ export function HelpMenu(props: IProps) {
             onClick={handleSite(API_CONFIG.videoTraining)}
           >
             <ListItemIcon>
-              <BooksIcon />
+              <TrainingIcon />
             </ListItemIcon>
             <ListItemText primary={t.videos} />
           </StyledMenuItem>
@@ -339,7 +341,7 @@ export function HelpMenu(props: IProps) {
           >
             <StyledMenuItem id="helpVideosOn">
               <ListItemIcon>
-                <BooksIcon />
+                <TrainingIcon />
               </ListItemIcon>
               <ListItemText primary={t.videos} />
             </StyledMenuItem>
@@ -351,7 +353,7 @@ export function HelpMenu(props: IProps) {
             onClick={handleSite(API_CONFIG.walkThru)}
           >
             <ListItemIcon>
-              <BooksIcon />
+              <TrainingIcon />
             </ListItemIcon>
             <ListItemText primary={t.walkThru} />
           </StyledMenuItem>
@@ -365,7 +367,7 @@ export function HelpMenu(props: IProps) {
           >
             <StyledMenuItem id="helpWalkThruOn">
               <ListItemIcon>
-                <BooksIcon />
+                <TrainingIcon />
               </ListItemIcon>
               <ListItemText primary={t.walkThru} />
             </StyledMenuItem>
@@ -377,7 +379,7 @@ export function HelpMenu(props: IProps) {
             onClick={handleSite(API_CONFIG.akuo)}
           >
             <ListItemIcon>
-              <BooksIcon />
+              <PublishIcon />
             </ListItemIcon>
             <ListItemText primary={t.akuo} />
           </StyledMenuItem>
@@ -391,7 +393,7 @@ export function HelpMenu(props: IProps) {
           >
             <StyledMenuItem id="helpAkuoOn">
               <ListItemIcon>
-                <BooksIcon />
+                <PublishIcon />
               </ListItemIcon>
               <ListItemText primary={t.akuo} />
             </StyledMenuItem>

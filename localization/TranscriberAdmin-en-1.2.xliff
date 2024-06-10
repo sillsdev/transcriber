@@ -3218,7 +3218,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="main.akuo">
-            <source>Access Akuo site</source>
+            <source>Access Akuo Site</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">HelpMenu.tsx</context>
@@ -3505,7 +3505,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="main.resources">
-            <source>Access Translation Reources</source>
+            <source>Access Translation Resources</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">HelpMenu.tsx</context>
