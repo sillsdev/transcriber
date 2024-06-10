@@ -48,23 +48,18 @@ export const postPass = ({
 
   // set start and end for currently loaded chapter
   const curChap = vInt(chap);
+  currentPI.passage.attributes.startChapter = undefined;
+  parseRef(currentPI.passage);
   const curPass = {
     ...currentPI.passage,
     attributes: { ...currentPI.passage.attributes },
   };
-  parseRef(curPass);
-  const { book, startChapter, endChapter } = curPass.attributes;
+  const { startChapter, endChapter } = curPass.attributes;
   if (startChapter !== endChapter && !hasVerse) {
-    const primChap = crossChapterRefs(curPass);
-    if (primChap !== startChapter) {
-      curPass.attributes.startChapter = primChap;
-      curPass.attributes.startVerse = 1;
-    } else {
-      curPass.attributes.endVerse = getLastVerse(book, curChap);
-    }
+    curPass.attributes.startChapter = crossChapterRefs(curPass);
   }
 
-  var parsed = parseTranscription(curPass, transcription);
+  const parsed = parseTranscription(curPass, transcription);
   if (parsed.length > 1) {
     //remove original range if it exists and we're replacing with multiple
     var existing = getExistingVerses(doc, curPass);
@@ -73,11 +68,11 @@ export const postPass = ({
       if (isSection(v)) removeSection(v);
     });
   }
-  var altRef =
+  const altRef =
     !hasVerse &&
     currentPI.passage.attributes.startChapter !==
       currentPI.passage.attributes.endChapter
-      ? `[${currentPI.passage.attributes.reference}] `
+      ? `[${curPass.attributes.reference}] `
       : '';
   parsed
     .filter((p) => p.attributes.startChapter === curChap)
