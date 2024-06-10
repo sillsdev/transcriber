@@ -557,12 +557,14 @@ export interface ILanguagePickerStrings extends Localize.LocalizedStringsMethods
 export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "about": string;
     "admin": string;
+    "akuo": string;
     "apiError": string;
     "cancel": string;
     "cantCopy": string;
     "clearCache": string;
     "clearLogout": string;
     "continue": string;
+    "course": string;
     "continueCurrentUser": string;
     "copyClipboard": string;
     "crashMessage": string;
@@ -611,6 +613,8 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "UnsavedData": string;
     "updateAvailable": string;
     "version": string;
+    "videos": string;
+    "walkThru": string;
 };
 
 export interface IMediaActionsStrings extends Localize.LocalizedStringsMethods {

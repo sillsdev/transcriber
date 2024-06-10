@@ -2758,6 +2758,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.akuo">
+         <segment>
+            <source>Access Akuo site</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.apiError">
          <segment>
             <source>API Error:</source>
@@ -2791,6 +2797,12 @@
       <unit id="main.continue">
          <segment>
             <source>Continue</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.course">
+         <segment>
+            <source>Access Accredited Course</source>
             <target/>
          </segment>
       </unit>
@@ -3079,6 +3091,18 @@
       <unit id="main.version">
          <segment>
             <source>Version: {0} - {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.videos">
+         <segment>
+            <source>Access Training Videos</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.walkThru">
+         <segment>
+            <source>Access Walk Through</source>
             <target/>
          </segment>
       </unit>

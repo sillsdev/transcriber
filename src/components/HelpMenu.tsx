@@ -217,6 +217,196 @@ export function HelpMenu(props: IProps) {
         )}
         {isElectron && (
           <StyledMenuItem
+            id="helpOpenNotesOff"
+            onClick={handleSite(API_CONFIG.openNotes)}
+          >
+            <ListItemIcon>
+              <NotesIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.openNotes} />
+          </StyledMenuItem>
+        )}
+        {!isElectron && (
+          <a
+            href={API_CONFIG.openNotes}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem id="helpOpenNotesOn">
+              <ListItemIcon>
+                <NotesIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.openNotes} />
+            </StyledMenuItem>
+          </a>
+        )}
+        {isElectron && (
+          <StyledMenuItem
+            id="helpResourcesOff"
+            onClick={handleSite(API_CONFIG.resources)}
+          >
+            <ListItemIcon>
+              <BooksIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.resources} />
+          </StyledMenuItem>
+        )}
+        {!isElectron && (
+          <a
+            href={API_CONFIG.resources}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem id="helpResourcesOn">
+              <ListItemIcon>
+                <BooksIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.resources} />
+            </StyledMenuItem>
+          </a>
+        )}
+        {isElectron && (
+          <StyledMenuItem
+            id="helpOPenContentOff"
+            onClick={handleSite(API_CONFIG.openContent)}
+          >
+            <ListItemIcon>
+              <BooksIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.openContent} />
+          </StyledMenuItem>
+        )}
+        {!isElectron && (
+          <a
+            href={API_CONFIG.openContent}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem id="helpOpenContentkOn">
+              <ListItemIcon>
+                <BooksIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.openContent} />
+            </StyledMenuItem>
+          </a>
+        )}
+        {isElectron && (
+          <StyledMenuItem
+            id="helpCourseOff"
+            onClick={handleSite(API_CONFIG.course)}
+          >
+            <ListItemIcon>
+              <BooksIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.course} />
+          </StyledMenuItem>
+        )}
+        {!isElectron && (
+          <a
+            href={API_CONFIG.course}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem id="helpCourseOn">
+              <ListItemIcon>
+                <BooksIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.course} />
+            </StyledMenuItem>
+          </a>
+        )}
+        {isElectron && (
+          <StyledMenuItem
+            id="helpVideosOff"
+            onClick={handleSite(API_CONFIG.videoTraining)}
+          >
+            <ListItemIcon>
+              <BooksIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.videos} />
+          </StyledMenuItem>
+        )}
+        {!isElectron && (
+          <a
+            href={API_CONFIG.videoTraining}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem id="helpVideosOn">
+              <ListItemIcon>
+                <BooksIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.videos} />
+            </StyledMenuItem>
+          </a>
+        )}
+        {isElectron && (
+          <StyledMenuItem
+            id="helpWalkThruOff"
+            onClick={handleSite(API_CONFIG.walkThru)}
+          >
+            <ListItemIcon>
+              <BooksIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.walkThru} />
+          </StyledMenuItem>
+        )}
+        {!isElectron && (
+          <a
+            href={API_CONFIG.walkThru}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem id="helpWalkThruOn">
+              <ListItemIcon>
+                <BooksIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.walkThru} />
+            </StyledMenuItem>
+          </a>
+        )}
+        {isElectron && (
+          <StyledMenuItem
+            id="helpAkuoOff"
+            onClick={handleSite(API_CONFIG.akuo)}
+          >
+            <ListItemIcon>
+              <BooksIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.akuo} />
+          </StyledMenuItem>
+        )}
+        {!isElectron && (
+          <a
+            href={API_CONFIG.akuo}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem id="helpAkuoOn">
+              <ListItemIcon>
+                <BooksIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.akuo} />
+            </StyledMenuItem>
+          </a>
+        )}
+        {shift && (
+          <StyledMenuItem id="helpDevMode" onClick={handleDeveloper}>
+            <ListItemIcon>
+              {developer ? <RemoveIcon /> : <AddIcon />}
+            </ListItemIcon>
+            <ListItemText primary={t.developer} />
+          </StyledMenuItem>
+        )}
+        {isElectron && (
+          <StyledMenuItem
             id="helpFeedbackOff"
             onClick={handleSite(API_CONFIG.community)}
           >
@@ -240,92 +430,6 @@ export function HelpMenu(props: IProps) {
               <ListItemText primary={t.reportIssue} />
             </StyledMenuItem>
           </a>
-        )}
-        {isElectron && (
-          <StyledMenuItem
-            id="helpFeedbackOff"
-            onClick={handleSite(API_CONFIG.openNotes)}
-          >
-            <ListItemIcon>
-              <NotesIcon />
-            </ListItemIcon>
-            <ListItemText primary={t.openNotes} />
-          </StyledMenuItem>
-        )}
-        {!isElectron && (
-          <a
-            href={API_CONFIG.openNotes}
-            style={{ textDecoration: 'none' }}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <StyledMenuItem id="helpFeedbackOn">
-              <ListItemIcon>
-                <NotesIcon />
-              </ListItemIcon>
-              <ListItemText primary={t.openNotes} />
-            </StyledMenuItem>
-          </a>
-        )}
-        {isElectron && (
-          <StyledMenuItem
-            id="helpFeedbackOff"
-            onClick={handleSite(API_CONFIG.resources)}
-          >
-            <ListItemIcon>
-              <BooksIcon />
-            </ListItemIcon>
-            <ListItemText primary={t.resources} />
-          </StyledMenuItem>
-        )}
-        {!isElectron && (
-          <a
-            href={API_CONFIG.resources}
-            style={{ textDecoration: 'none' }}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <StyledMenuItem id="helpFeedbackOn">
-              <ListItemIcon>
-                <BooksIcon />
-              </ListItemIcon>
-              <ListItemText primary={t.resources} />
-            </StyledMenuItem>
-          </a>
-        )}
-        {isElectron && (
-          <StyledMenuItem
-            id="helpFeedbackOff"
-            onClick={handleSite(API_CONFIG.openContent)}
-          >
-            <ListItemIcon>
-              <BooksIcon />
-            </ListItemIcon>
-            <ListItemText primary={t.openContent} />
-          </StyledMenuItem>
-        )}
-        {!isElectron && (
-          <a
-            href={API_CONFIG.openContent}
-            style={{ textDecoration: 'none' }}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <StyledMenuItem id="helpFeedbackOn">
-              <ListItemIcon>
-                <BooksIcon />
-              </ListItemIcon>
-              <ListItemText primary={t.openContent} />
-            </StyledMenuItem>
-          </a>
-        )}
-        {shift && (
-          <StyledMenuItem id="helpDevMode" onClick={handleDeveloper}>
-            <ListItemIcon>
-              {developer ? <RemoveIcon /> : <AddIcon />}
-            </ListItemIcon>
-            <ListItemText primary={t.developer} />
-          </StyledMenuItem>
         )}
         <StyledMenuItem id="helpAbout" onClick={handleAbout(true)}>
           <ListItemIcon>

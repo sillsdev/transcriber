@@ -3217,6 +3217,13 @@
                <context context-type="sourcefile">drawer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="main.akuo">
+            <source>Access Akuo site</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="main.apiError">
             <source>API Error:</source>
             <target/>
@@ -3254,6 +3261,13 @@
          </trans-unit>
          <trans-unit id="main.continue">
             <source>Continue</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="main.course">
+            <source>Access Accredited Course</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TokenProvider.tsx</context>
@@ -3593,6 +3607,20 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">AboutDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="main.videos">
+            <source>Access Training Videos</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="main.walkThru">
+            <source>Access Walk Through</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="mediaActions.attach">

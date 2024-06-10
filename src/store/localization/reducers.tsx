@@ -595,12 +595,14 @@ const initialState = {
 		"en": {
 			"about": "About",
 			"admin": "Admin",
+			"akuo": "Access Akuo site",
 			"apiError": "API Error:",
 			"cancel": "Cancel",
 			"cantCopy": "Unable to copy to clipboard",
 			"clearCache": "Clear cache",
 			"clearLogout": "Log Out and Force Data Reload",
 			"continue": "Continue",
+			"course": "Access Accredited Course",
 			"continueCurrentUser": "Continue as current user",
 			"copyClipboard": "Copy Version to Clipboard",
 			"crashMessage": "Something went wrong. The developers need to address this issue.",
@@ -649,6 +651,8 @@ const initialState = {
 			"UnsavedData": "Unsaved Data",
 			"updateAvailable": "Update available: Version {0} was released {1}",
 			"version": "Version: {0} - {1}",
+			"videos": "Access Training Videos",
+			"walkThru": "Access Walk Through",
 		}
 	}),
 	"mediaActions": new LocalizedStrings({

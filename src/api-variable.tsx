@@ -27,6 +27,14 @@ export const API_CONFIG = {
   openContent: process.env.REACT_APP_OPENCONTENT
     ? process.env.REACT_APP_OPENCONTENT
     : '',
+  course: process.env.REACT_APP_COURSE ? process.env.REACT_APP_COURSE : '',
+  videoTraining: process.env.REACT_APP_VIDEO_TRAINING
+    ? process.env.REACT_APP_VIDEO_TRAINING
+    : '',
+  walkThru: process.env.REACT_APP_WALK_THRU
+    ? process.env.REACT_APP_WALK_THRU
+    : '',
+  akuo: process.env.REACT_APP_AKUO ? process.env.REACT_APP_AKUO : '',
   endpoint: process.env.REACT_APP_ENDPOINT
     ? process.env.REACT_APP_ENDPOINT
     : '',
