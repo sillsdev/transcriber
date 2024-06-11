@@ -11,10 +11,26 @@ export const getLocalParatextText = async (
 ) => {
   pass.attributes.startChapter = undefined;
   parseRef(pass);
-  const chap = crossChapterRefs(pass);
-  const chapKey = pass.attributes.book + '-' + (chap ?? '1');
-  const paths = await paratextPaths(chapKey);
+  let chap = crossChapterRefs(pass);
+  let transcription = '';
+  if (chap !== pass.attributes.startChapter) {
+    transcription += `\\c ${chap} `;
+  }
+  let chapKey = pass.attributes.book + '-' + (chap ?? '1');
+  let paths = await paratextPaths(chapKey);
 
   let usxDom: Document = await readChapter(paths, ptProjName);
-  return getPassageVerses(usxDom, pass);
+  transcription += getPassageVerses(usxDom, pass);
+  if (chap !== pass.attributes.endChapter) {
+    pass.attributes.startChapter = undefined;
+    parseRef(pass);
+    chap = pass.attributes.endChapter;
+    pass.attributes.startChapter = chap;
+    pass.attributes.startVerse = 1;
+    chapKey = pass.attributes.book + '-' + (chap ?? '1');
+    paths = await paratextPaths(chapKey);
+    usxDom = await readChapter(paths, ptProjName);
+    transcription += `\\c ${chap} ` + getPassageVerses(usxDom, pass);
+  }
+  return transcription;
 };

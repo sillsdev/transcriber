@@ -2,7 +2,6 @@ import Memory from '@orbit/memory';
 import { parseRef } from '../../crud/passage';
 import { PassageInfo } from './PassageInfo';
 import { vInt } from './vInt';
-import { getLastVerse } from './getLastVerse';
 import { parseTranscription } from './parseTranscription';
 import { getExistingVerses, getVerses } from './usxNodeContent';
 import {
