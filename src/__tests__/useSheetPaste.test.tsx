@@ -146,6 +146,7 @@ test('paste hieararchical', () => {
     installAudacity: 'installAudacity',
     loadingTable: 'Loading data',
     passage: 'Passage',
+    pasteInvalidBooks: 'Invalid book: {0}',
     pasteInvalidColumns:
       'Invalid number of columns ({0}). Expecting {1}} columns.',
     pasteInvalidSections: 'Invalid {0} number(s):',
