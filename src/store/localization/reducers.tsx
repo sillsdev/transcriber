@@ -635,7 +635,7 @@ const initialState = {
 			"reliesOn": "{0} relies on other works",
 			"reportIssue": "Report an Issue",
 			"reports": "Reports",
-			"reportWhenOnline": "You must be online to report an problem.",
+			"reportWhenOnline": "You must be online to use this menu item.",
 			"resources": "Access Translation Resources",
 			"saveFirst": "Do you want to save before leaving this page?",
 			"saving": "Saving...",

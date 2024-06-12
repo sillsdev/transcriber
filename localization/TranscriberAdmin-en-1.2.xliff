@@ -3498,7 +3498,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="main.reportWhenOnline">
-            <source>You must be online to report an problem.</source>
+            <source>You must be online to use this menu item.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">HelpMenu.tsx</context>
