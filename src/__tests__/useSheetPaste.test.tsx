@@ -8,6 +8,12 @@ import {
 } from '../model';
 import { useWfPaste } from '../components/Sheet/useSheetPaste';
 import { PublishLevelEnum } from '../crud/usePublishLevel';
+import { act } from 'react-dom/test-utils';
+
+interface IPasteResult {
+  valid: boolean;
+  addedWorkflow: ISheet[];
+}
 
 // see https://jestjs.io/docs/mock-functions#mocking-modules
 jest.mock('../crud/useOrganizedBy', () => {
@@ -54,6 +60,27 @@ const flatDef = {
   deleted: false,
   mediaShared: IMediaShare.NotPublic,
 };
+
+const t = {
+  book: 'Book',
+  description: 'Description',
+  extras: 'Extras',
+  installAudacity: 'installAudacity',
+  loadingTable: 'Loading data',
+  passage: 'Passage',
+  pasteInvalidBooks: 'Invalid book: {0}',
+  pasteInvalidColumns:
+    'Invalid number of columns ({0}). Expecting {1}} columns.',
+  pasteInvalidPassageBeforeSection: 'Passage before section {0}',
+  pasteInvalidSections: 'Invalid {0} number(s):',
+  pasteNoRows: 'No Rows in clipboard.',
+  reference: 'Reference',
+  saveFirst: 'You must save changes first!',
+  saving: 'Saving...',
+  title: 'Title',
+} as IScriptureTableStrings;
+
+const findBook = (val: string) => (/LUK/i.test(val) ? 'LUK' : '');
 
 test('paste hieararchical', () => {
   const pasted = [
@@ -138,24 +165,6 @@ test('paste hieararchical', () => {
     'reference',
     'comment',
   ];
-  const findBook = (val: string) => (/LUK/i.test(val) ? 'LUK' : val);
-  const t = {
-    book: 'Book',
-    description: 'Description',
-    extras: 'Extras',
-    installAudacity: 'installAudacity',
-    loadingTable: 'Loading data',
-    passage: 'Passage',
-    pasteInvalidBooks: 'Invalid book: {0}',
-    pasteInvalidColumns:
-      'Invalid number of columns ({0}). Expecting {1}} columns.',
-    pasteInvalidSections: 'Invalid {0} number(s):',
-    pasteNoRows: 'No Rows in clipboard.',
-    reference: 'Reference',
-    saveFirst: 'You must save changes first!',
-    saving: 'Saving...',
-    title: 'Title',
-  } as IScriptureTableStrings;
   const { result } = renderHook(() =>
     useWfPaste({
       secNumCol: colNames.indexOf('sectionSeq'),
@@ -168,12 +177,15 @@ test('paste hieararchical', () => {
       shared: false,
     })
   );
-  const { valid, addedWorkflow } = result.current(pasted);
-  expect(valid).toBeTruthy();
-  expect(addedWorkflow[0].passageUpdated).toMatch(
+  let hookResult: IPasteResult | undefined;
+  act(() => {
+    hookResult = result.current(pasted);
+  });
+  expect(hookResult?.valid).toBeTruthy();
+  expect(hookResult?.addedWorkflow[0].passageUpdated).toMatch(
     /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/
   );
-  const passageUpdated = addedWorkflow[0].passageUpdated;
+  const passageUpdated = hookResult?.addedWorkflow[0].passageUpdated;
   const sectionUpdated = passageUpdated;
   const testVal = (
     [
@@ -323,7 +335,7 @@ test('paste hieararchical', () => {
     passageUpdated,
     sectionUpdated,
   }));
-  expect(addedWorkflow).toEqual(testVal);
+  expect(hookResult?.addedWorkflow).toEqual(testVal);
 });
 
 test('paste flat', () => {
@@ -351,23 +363,6 @@ test('paste flat', () => {
     'reference',
     'comment',
   ];
-  const findBook = (val: string) => (/LUK/i.test(val) ? 'LUK' : val);
-  const t = {
-    book: 'Book',
-    description: 'Description',
-    extras: 'Extras',
-    installAudacity: 'installAudacity',
-    loadingTable: 'Loading data',
-    passage: 'Passage',
-    pasteInvalidColumns:
-      'Invalid number of columns ({0}). Expecting {1}} columns.',
-    pasteInvalidSections: 'Invalid {0} number(s):',
-    pasteNoRows: 'No Rows in clipboard.',
-    reference: 'Reference',
-    saveFirst: 'You must save changes first!',
-    saving: 'Saving...',
-    title: 'Title',
-  } as IScriptureTableStrings;
   const { result } = renderHook(() =>
     useWfPaste({
       secNumCol: colNames.indexOf('sectionSeq'),
@@ -380,12 +375,15 @@ test('paste flat', () => {
       shared: false,
     })
   );
-  const { valid, addedWorkflow } = result.current(pasted);
-  expect(valid).toBeTruthy();
-  expect(addedWorkflow[0].passageUpdated).toMatch(
+  let hookResult: IPasteResult | undefined;
+  act(() => {
+    hookResult = result.current(pasted);
+  });
+  expect(hookResult?.valid).toBeTruthy();
+  expect(hookResult?.addedWorkflow[0].passageUpdated).toMatch(
     /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/
   );
-  const passageUpdated = addedWorkflow[0].passageUpdated;
+  const passageUpdated = hookResult?.addedWorkflow[0].passageUpdated;
   const sectionUpdated = passageUpdated;
   const testValue = (
     [
@@ -426,7 +424,7 @@ test('paste flat', () => {
       },
     ] as ISheet[]
   ).map((i) => ({ ...i, passageUpdated, sectionUpdated }));
-  expect(addedWorkflow).toEqual(testValue);
+  expect(hookResult?.addedWorkflow).toEqual(testValue);
 });
 
 test('paste flat data into hierarchy', () => {
@@ -450,23 +448,6 @@ test('paste flat data into hierarchy', () => {
     'reference',
     'comment',
   ];
-  const findBook = (val: string) => (/LUK/i.test(val) ? 'LUK' : val);
-  const t = {
-    book: 'Book',
-    description: 'Description',
-    extras: 'Extras',
-    installAudacity: 'installAudacity',
-    loadingTable: 'Loading data',
-    passage: 'Passage',
-    pasteInvalidColumns:
-      'Invalid number of columns ({0}). Expecting {1}} columns.',
-    pasteInvalidSections: 'Invalid {0} number(s):',
-    pasteNoRows: 'No Rows in clipboard.',
-    reference: 'Reference',
-    saveFirst: 'You must save changes first!',
-    saving: 'Saving...',
-    title: 'Title',
-  } as IScriptureTableStrings;
   const { result } = renderHook(() =>
     useWfPaste({
       secNumCol: colNames.indexOf('sectionSeq'),
@@ -479,12 +460,15 @@ test('paste flat data into hierarchy', () => {
       shared: false,
     })
   );
-  const { valid, addedWorkflow } = result.current(pasted);
-  expect(valid).toBeTruthy();
-  expect(addedWorkflow[0].passageUpdated).toMatch(
+  let hookResult: IPasteResult | undefined;
+  act(() => {
+    hookResult = result.current(pasted);
+  });
+  expect(hookResult?.valid).toBeTruthy();
+  expect(hookResult?.addedWorkflow[0].passageUpdated).toMatch(
     /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/
   );
-  const passageUpdated = addedWorkflow[0].passageUpdated;
+  const passageUpdated = hookResult?.addedWorkflow[0].passageUpdated;
   const sectionUpdated = passageUpdated;
   const testValue = (
     [
@@ -516,5 +500,230 @@ test('paste flat data into hierarchy', () => {
       },
     ] as ISheet[]
   ).map((i) => ({ ...i, passageUpdated, sectionUpdated }));
-  expect(addedWorkflow).toEqual(testValue);
+  expect(hookResult?.addedWorkflow).toEqual(testValue);
+});
+
+test('paste bad book fails', () => {
+  const pasted = [
+    [
+      'Set #',
+      "Title in Translator's Notes",
+      'Passage',
+      'Book',
+      'Breaks',
+      'Description',
+    ],
+    ['', '', '', '', '', ''],
+    [
+      '1',
+      'Luke wrote this book about Jesus for Theophilus',
+      '',
+      'Luk',
+      'Section 1:1–4',
+      '',
+    ],
+    ['', '', '1', 'Lu5', '1:1-4', ''],
+  ];
+  const colNames = [
+    'sectionSeq',
+    'title',
+    'passageSeq',
+    'book',
+    'reference',
+    'comment',
+  ];
+  const { result } = renderHook(() =>
+    useWfPaste({
+      secNumCol: colNames.indexOf('sectionSeq'),
+      passNumCol: colNames.indexOf('passageSeq'),
+      scripture: true,
+      flat: false,
+      colNames,
+      findBook,
+      t,
+      shared: false,
+    })
+  );
+  let hookResult: IPasteResult | undefined;
+  act(() => {
+    hookResult = result.current(pasted);
+  });
+  expect(hookResult?.valid).toBeFalsy();
+});
+
+test('paste missing book fails', () => {
+  const pasted = [
+    [
+      'Set #',
+      "Title in Translator's Notes",
+      'Passage',
+      'Book',
+      'Breaks',
+      'Description',
+    ],
+    ['', '', '', '', '', ''],
+    [
+      '1',
+      'Luke wrote this book about Jesus for Theophilus',
+      '',
+      'Luk',
+      'Section 1:1–4',
+      '',
+    ],
+    ['', '', '1', '', '1:1-4', ''],
+  ];
+  const colNames = [
+    'sectionSeq',
+    'title',
+    'passageSeq',
+    'book',
+    'reference',
+    'comment',
+  ];
+  const { result } = renderHook(() =>
+    useWfPaste({
+      secNumCol: colNames.indexOf('sectionSeq'),
+      passNumCol: colNames.indexOf('passageSeq'),
+      scripture: true,
+      flat: false,
+      colNames,
+      findBook,
+      t,
+      shared: false,
+    })
+  );
+  let hookResult: IPasteResult | undefined;
+  act(() => {
+    hookResult = result.current(pasted);
+  });
+  expect(hookResult?.valid).toBeFalsy();
+});
+
+test('paste missing passage fails', () => {
+  const pasted = [
+    [
+      'Set #',
+      "Title in Translator's Notes",
+      'Passage',
+      'Book',
+      'Breaks',
+      'Description',
+    ],
+    ['', '', '', '', '', ''],
+    [
+      '1',
+      'Luke wrote this book about Jesus for Theophilus',
+      '',
+      'Luk',
+      'Section 1:1–4',
+      '',
+    ],
+  ];
+  const colNames = [
+    'sectionSeq',
+    'title',
+    'passageSeq',
+    'book',
+    'reference',
+    'comment',
+  ];
+  const { result } = renderHook(() =>
+    useWfPaste({
+      secNumCol: colNames.indexOf('sectionSeq'),
+      passNumCol: colNames.indexOf('passageSeq'),
+      scripture: true,
+      flat: false,
+      colNames,
+      findBook,
+      t,
+      shared: false,
+    })
+  );
+  let hookResult: IPasteResult | undefined;
+  act(() => {
+    hookResult = result.current(pasted);
+  });
+  expect(hookResult?.valid).toBeFalsy();
+});
+
+test('paste bad flat book fails', () => {
+  const pasted = [
+    [
+      'Set #',
+      "Title in Translator's Notes",
+      'Passage',
+      'Book',
+      'Breaks',
+      'Description',
+    ],
+    ['1', 'The Temptation of Jesus', '1', 'Luk', '4:1-13', ''],
+    ['2', 'Jesus Casts Out a Demon', '1', 'Lu5', '4:31-37', ''],
+    ['3', 'Jesus Heals and Preaches', '1', 'Luk', '4:38-44', ''],
+  ];
+  const colNames = [
+    'sectionSeq',
+    'title',
+    'passageSeq',
+    'book',
+    'reference',
+    'comment',
+  ];
+  const { result } = renderHook(() =>
+    useWfPaste({
+      secNumCol: colNames.indexOf('sectionSeq'),
+      passNumCol: colNames.indexOf('passageSeq'),
+      scripture: true,
+      flat: true,
+      colNames,
+      findBook,
+      t,
+      shared: false,
+    })
+  );
+  let hookResult: IPasteResult | undefined;
+  act(() => {
+    hookResult = result.current(pasted);
+  });
+  expect(hookResult?.valid).toBeFalsy();
+});
+
+test('paste missing flat book fails', () => {
+  const pasted = [
+    [
+      'Set #',
+      "Title in Translator's Notes",
+      'Passage',
+      'Book',
+      'Breaks',
+      'Description',
+    ],
+    ['1', 'The Temptation of Jesus', '1', 'Luk', '4:1-13', ''],
+    ['2', 'Jesus Casts Out a Demon', '1', '', '4:31-37', ''],
+    ['3', 'Jesus Heals and Preaches', '1', 'Luk', '4:38-44', ''],
+  ];
+  const colNames = [
+    'sectionSeq',
+    'title',
+    'passageSeq',
+    'book',
+    'reference',
+    'comment',
+  ];
+  const { result } = renderHook(() =>
+    useWfPaste({
+      secNumCol: colNames.indexOf('sectionSeq'),
+      passNumCol: colNames.indexOf('passageSeq'),
+      scripture: true,
+      flat: true,
+      colNames,
+      findBook,
+      t,
+      shared: false,
+    })
+  );
+  let hookResult: IPasteResult | undefined;
+  act(() => {
+    hookResult = result.current(pasted);
+  });
+  expect(hookResult?.valid).toBeFalsy();
 });

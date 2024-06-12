@@ -59,7 +59,11 @@ export const useWfPaste = (props: IProps) => {
       const bookCol = colNames.indexOf('book');
       const invalidBooks = new Set<string>();
       rows.forEach((row, rowIndex) => {
-        if (rowIndex > 0 && row[bookCol] && !findBook(row[bookCol])) {
+        if (
+          rowIndex > 0 &&
+          (passNumCol < 0 || row[passNumCol]) &&
+          !findBook(row[bookCol])
+        ) {
           invalidBooks.add(row[bookCol]);
         }
       });
