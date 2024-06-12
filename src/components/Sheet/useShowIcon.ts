@@ -28,7 +28,7 @@ export const useShowIcon = ({
     isMovement,
     isNote,
     isChapter,
-    isBook,
+    // isBook,
     isAltBook,
     firstInSection,
     firstSection,
@@ -63,8 +63,7 @@ export const useShowIcon = ({
         [ExtraIcon.Note]:
           !inlinePassages &&
           !hidePublishing &&
-          (isBook(rowIndex) ||
-            isChapter(rowIndex) ||
+          (isChapter(rowIndex) ||
             isMovement(rowIndex) ||
             isSectionHead(rowIndex) ||
             isVerseRange(rowIndex) ||
