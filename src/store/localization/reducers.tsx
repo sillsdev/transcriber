@@ -1098,6 +1098,7 @@ const initialState = {
 			"installAudacity": "Install {Audacity} to use this feature.",
 			"loadingTable": "Loading data",
 			"passage": "Passage",
+			"pasteInvalidBooks": "Invalid book codes: {0}.",
 			"pasteInvalidColumns": "Invalid number of columns ({0}). Expecting {1} columns.",
 			"pasteInvalidPassageBeforeSection": "Invalid passage before {0}.",
 			"pasteInvalidSections": "Invalid {0} number(s):",

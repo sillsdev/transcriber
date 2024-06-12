@@ -5200,6 +5200,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTable.pasteInvalidBooks">
+         <segment>
+            <source>Invalid book codes: {0}.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.pasteInvalidColumns">
          <segment>
             <source>Invalid number of columns ({0}). Expecting {1} columns.</source>
