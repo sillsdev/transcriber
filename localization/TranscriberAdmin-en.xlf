@@ -2926,6 +2926,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.logos">
+         <segment>
+            <source>Access Logos Resources</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.media">
          <segment>
             <source>Audio</source>
@@ -2946,7 +2952,7 @@
       </unit>
       <unit id="main.openNotes">
          <segment>
-            <source>Access Open Notes</source>
+            <source>Access Translator's Notes</source>
             <target/>
          </segment>
       </unit>
@@ -3006,7 +3012,7 @@
       </unit>
       <unit id="main.resources">
          <segment>
-            <source>Access Translation Resources</source>
+            <source>Access UBS Resources</source>
             <target/>
          </segment>
       </unit>

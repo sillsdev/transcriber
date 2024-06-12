@@ -3413,6 +3413,13 @@
                <context context-type="sourcefile">UserMenu.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="main.logos">
+            <source>Access Logos Resources</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="main.media">
             <source>Audio</source>
             <target/>
@@ -3435,7 +3442,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="main.openNotes">
-            <source>Access Open Notes</source>
+            <source>Access Translator's Notes</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">HelpMenu.tsx</context>
@@ -3505,7 +3512,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="main.resources">
-            <source>Access Translation Resources</source>
+            <source>Access UBS Resources</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">HelpMenu.tsx</context>

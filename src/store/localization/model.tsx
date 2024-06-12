@@ -585,6 +585,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "loadingTable": string;
     "loadingTranscriber": string;
     "logout": string;
+    "logos": string;
     "media": string;
     "myAccount": string;
     "NoLoadOffline": string;

@@ -13,6 +13,7 @@ import DownloadIcon from '@mui/icons-material/CloudDownload';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { AkuoLogo } from '../control/akuoLogo';
+import { LogosIcon } from '../control/logosIcon';
 import { StyledMenu, StyledMenuItem } from '../control';
 import path from 'path-browserify';
 import { isElectron, API_CONFIG } from '../api-variable';
@@ -31,6 +32,8 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { ContextHelp } from './ContextHelp';
 import { RecordKeyMap } from '@orbit/records';
 const ipc = (window as any)?.electron;
+
+const logosAppUri = 'https://app.logos.com/';
 
 interface IProps {
   online: boolean;
@@ -278,6 +281,29 @@ export function HelpMenu(props: IProps) {
               <BooksIcon />
             </ListItemIcon>
             <ListItemText primary={t.openContent} />
+          </StyledMenuItem>
+        )}
+        {!isElectron && (
+          <a
+            href={logosAppUri}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem id="helpLogosOn">
+              <ListItemIcon>
+                <LogosIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.logos} />
+            </StyledMenuItem>
+          </a>
+        )}
+        {isElectron && (
+          <StyledMenuItem id="helpLogosOff" onClick={handleSite(logosAppUri)}>
+            <ListItemIcon>
+              <LogosIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.logos} />
           </StyledMenuItem>
         )}
         {!isElectron && (
