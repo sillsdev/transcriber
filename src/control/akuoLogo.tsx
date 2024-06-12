@@ -1,4 +1,4 @@
-import akuoLogo from '../assets/akuologo.png';
+import akuoLogo from '../assets/akuo-logo-40.png';
 import { LogoImg } from '.';
 import { SxProps } from '@mui/material';
 
