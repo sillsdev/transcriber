@@ -13,7 +13,7 @@ import {
 import { useCheckOnline, cleanFileName } from '../utils';
 import {
   offlineError,
-  useArtifactType,
+  useArtifactCategory,
   useOrgWorkflowSteps,
   useProjectType,
   useRole,
@@ -42,7 +42,7 @@ export const useTeamCreate = () => {
   const checkOnline = useCheckOnline();
   const workingOnItRef = useRef(false);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const { localizedArtifactType } = useArtifactType();
+  const { localizedArtifactCategory } = useArtifactCategory();
 
   const memory = useMemo(
     () => coordinator.getSource('memory') as Memory,
@@ -105,7 +105,7 @@ export const useTeamCreate = () => {
         type: 'artifactcategory',
         attributes: {
           specialuse: category,
-          categoryname: localizedArtifactType(category),
+          categoryname: localizedArtifactCategory(category),
           discussion: false,
           resource: false,
           note: true,
