@@ -8,6 +8,7 @@ export interface ArtifactCategory extends BaseModel {
     resource: boolean;
     note: boolean;
     color: string;
+    specialuse: string;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;

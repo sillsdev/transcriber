@@ -30,6 +30,7 @@ export interface IArtifactCategory {
   id: string;
   titleMediaId: string;
   color: string;
+  specialuse: string;
 }
 export enum ArtifactCategoryType {
   Resource = 'resource',
@@ -104,6 +105,7 @@ export const useArtifactCategory = (teamId?: string) => {
         id: r.id,
         titleMediaId: related(r, 'titleMediafile') ?? '',
         color: r.attributes?.color ?? '',
+        specialuse: r.attributes?.specialuse ?? '',
       })
     );
     return categorys;

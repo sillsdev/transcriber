@@ -591,6 +591,7 @@ if (requestedSchema > 3 && schemaDefinition.models) {
       resource: { type: 'boolean' },
       note: { type: 'boolean' },
       color: { type: 'string' },
+      specialuse: { type: 'string' },
       dateCreated: { type: 'string' }, // datetime
       dateUpdated: { type: 'string' }, // datetime
       lastModifiedBy: { type: 'number' }, //bkwd compat only
