@@ -80,8 +80,7 @@ export const SelectArtifactCategory = (props: IProps) => {
     var cats = await getArtifactCategorys(type);
     if (scripture === ScriptureEnum.hide)
       cats = cats.filter((c) => !scriptureTypeCategory(c.slug));
-
-    return cats;
+    return cats.filter((c) => (c.specialuse ?? '') === '');
   };
 
   useEffect(() => {
