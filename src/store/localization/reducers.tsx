@@ -56,6 +56,7 @@ const initialState = {
 			"activity": "Activity",
 			"biblestory": "Bible Story",
 			"bookintro": "Book Introduction",
+			"chapter": "Chapter Number",
 			"scripture": "Scripture",
 			"translationresource": "Translation Resource",
 			"uncategorized": "Uncategorized",
@@ -63,6 +64,7 @@ const initialState = {
 			"grammar": "Grammar",
 			"graphic": "Graphic",
 			"qanda": "Question and Answer",
+			"title": "Title",
 		}
 	}),
 	"artifactType": new LocalizedStrings({

@@ -8,9 +8,16 @@ import {
   OrganizationMembershipD,
   GroupMembershipD,
   GroupD,
+  ArtifactCategoryD,
 } from '../model';
 import { useCheckOnline, cleanFileName } from '../utils';
-import { offlineError, useOrgWorkflowSteps, useProjectType, useRole } from '.';
+import {
+  offlineError,
+  useArtifactCategory,
+  useOrgWorkflowSteps,
+  useProjectType,
+  useRole,
+} from '.';
 import { useSnackBar } from '../hoc/SnackBar';
 import Memory from '@orbit/memory';
 import { setDefaultProj, allUsersRec } from '.';
@@ -27,7 +34,7 @@ export const useTeamCreate = () => {
   const [, setOrganization] = useGlobal('organization');
   const [, setOrgRole] = useGlobal('orgRole');
   const [, setProject] = useGlobal('project');
-  const [, offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const { showMessage } = useSnackBar();
   const { setProjectType } = useProjectType();
   const { getRoleId } = useRole();
@@ -35,6 +42,7 @@ export const useTeamCreate = () => {
   const checkOnline = useCheckOnline();
   const workingOnItRef = useRef(false);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const { localizedArtifactCategory } = useArtifactCategory();
 
   const memory = useMemo(
     () => coordinator.getSource('memory') as Memory,
@@ -88,6 +96,33 @@ export const useTeamCreate = () => {
       ...ReplaceRelatedRecord(t, groupMbr, 'role', 'role', orgRoleId),
     ]);
   };
+  const OrgNoteCategories = async (orgRec: OrganizationD) => {
+    if (offlineOnly) return;
+    // Add default note categories
+    const noteCategories = ['chapter', 'title'];
+    noteCategories.forEach(async (category) => {
+      let noteCategory: ArtifactCategoryD = {
+        type: 'artifactcategory',
+        attributes: {
+          specialuse: category,
+          categoryname: localizedArtifactCategory(category),
+          discussion: false,
+          resource: false,
+          note: true,
+        },
+      } as ArtifactCategoryD;
+      await memory.update((t) => [
+        ...AddRecord(t, noteCategory, user, memory),
+        ...ReplaceRelatedRecord(
+          t,
+          noteCategory,
+          'organization',
+          'organization',
+          orgRec.id
+        ),
+      ]);
+    });
+  };
 
   interface ICreateOrgProps {
     orgRec: Organization;
@@ -106,9 +141,10 @@ export const useTeamCreate = () => {
         user
       ),
     ]);
-    if (!offlineOnly) await teamApiPull(orgRec.id as string); // Update slug value
     await OrgRelated(orgRec as OrganizationD);
+    await OrgNoteCategories(orgRec as OrganizationD);
     await CreateOrgWorkflowSteps(process, orgRec.id as string);
+    if (!offlineOnly) await teamApiPull(orgRec.id as string); // Update slug value
     setOrganization(orgRec.id as string);
     setOrgRole(RoleNames.Admin);
     setDefaultProj(orgRec.id as string, memory, (pid: string) => {

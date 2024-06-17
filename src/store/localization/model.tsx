@@ -47,6 +47,7 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
     "activity": string;
     "biblestory": string;
     "bookintro": string;
+    "chapter": string;
     "scripture": string;
     "translationresource": string;
     "uncategorized": string;
@@ -54,6 +55,7 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
     "grammar": string;
     "graphic": string;
     "qanda": string;
+    "title": string;
 };
 
 export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {

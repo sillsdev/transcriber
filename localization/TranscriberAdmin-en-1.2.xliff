@@ -254,6 +254,13 @@
                <context context-type="sourcefile">artifactCategory.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="artifactCategory.chapter">
+            <source>Chapter Number</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="artifactCategory.scripture">
             <source>Scripture</source>
             <target/>
@@ -298,6 +305,13 @@
       	</trans-unit>
          <trans-unit id="artifactCategory.qanda">
             <source>Question and Answer</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.title">
+            <source>Title</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">artifactCategory.tsx</context>

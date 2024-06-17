@@ -220,6 +220,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactCategory.chapter">
+         <segment>
+            <source>Chapter Number</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactCategory.scripture">
          <segment>
             <source>Scripture</source>
@@ -259,6 +265,12 @@
       <unit id="artifactCategory.qanda">
          <segment>
             <source>Question and Answer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.title">
+         <segment>
+            <source>Title</source>
             <target/>
          </segment>
       </unit>

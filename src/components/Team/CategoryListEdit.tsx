@@ -19,7 +19,7 @@ import {
   ICategoryStrings,
   ISharedStrings,
   MediaFile,
-  SharedResourceD,
+  SharedResource,
 } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { categorySelector, sharedSelector } from '../../selector';
@@ -29,6 +29,7 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import { NewArtifactCategory } from '../Sheet/NewArtifactCategory';
 import { useBibleMedia } from '../../crud/useBibleMedia';
 import CategoryEdit from './CategoryEdit';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
 interface IProps {
   type: ArtifactCategoryType;
@@ -48,6 +49,9 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   const [mediaplan, setMediaplan] = useState('');
   const { getBibleMediaPlan } = useBibleMedia();
   const [recording, setRecording] = useState('');
+  const media = useOrbitData('mediafile') as MediaFile[];
+  const discussions = useOrbitData('discussion') as Discussion[];
+  const sharedResources = useOrbitData('sharedresource') as SharedResource[];
   const {
     getArtifactCategorys,
     localizedArtifactCategory,
@@ -122,15 +126,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
       setCategories(cats.filter((c) => c.org !== '').sort(sortCats));
       setBuiltIn(cats.filter((c) => c.org === '').sort(sortCats));
       const inUseMap = new Map<string, number>();
-      const media = memory.cache.query((q) =>
-        q.findRecords('mediafile')
-      ) as MediaFile[];
-      const discussions = memory.cache.query((q) =>
-        q.findRecords('discussion')
-      ) as Discussion[];
-      const sharedResources = memory.cache.query((q) =>
-        q.findRecords('sharedresource')
-      ) as SharedResourceD[];
+
       cats.forEach((c) => {
         let count = 0;
         if (type === ArtifactCategoryType.Resource)
@@ -150,10 +146,16 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
       setInUse(Array.from(inUseMap));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type, refresh]);
+  }, [type, refresh, media, discussions, sharedResources]);
 
   const sortCats = (i: IArtifactCategory, j: IArtifactCategory) =>
-    i.category <= j.category ? -1 : 1;
+    i.specialuse < j.specialuse
+      ? -1
+      : i.specialuse > j.specialuse
+      ? 1
+      : i.category <= j.category
+      ? -1
+      : 1;
 
   const onRecording = (c: IArtifactCategory) => (recording: boolean) => {
     //disable all the others
@@ -177,7 +179,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
                   edge="end"
                   aria-label="delete"
                   onClick={handleDelete(c)}
-                  disabled={displayCount(c) > 0}
+                  disabled={displayCount(c) > 0 || c.specialuse !== ''}
                 >
                   <DeleteIcon />
                 </IconButton>
