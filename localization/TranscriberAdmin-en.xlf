@@ -3820,6 +3820,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.deleteUnused">
+         <segment>
+            <source>Remove unused: assign segment to a passage again.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.description">
          <segment>
             <source>Description</source>
@@ -3853,6 +3859,12 @@
       <unit id="passageDetailArtifacts.link">
          <segment>
             <source>Link</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.markUnused">
+         <segment>
+            <source>Mark segment unused: passage will start in next segment.</source>
             <target/>
          </segment>
       </unit>
@@ -4027,6 +4039,12 @@
       <unit id="passageDetailArtifacts.tip2b">
          <segment>
             <source>Steps through connecting chunks of a general resource with {0} and passages.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.unused">
+         <segment>
+            <source>Unused</source>
             <target/>
          </segment>
       </unit>

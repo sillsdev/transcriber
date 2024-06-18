@@ -353,10 +353,10 @@ describe('ProjectResourceConfigure', () => {
       await memory.update((t) => t.addRecord(rec));
     }
     runTest(props);
-    const tbody = screen.getByTestId('proj-res-sheet')?.firstChild?.firstChild
-      ?.firstChild as HTMLElement;
+    const tbody = screen.getByTestId('proj-res-sheet')?.firstChild?.nextSibling
+      ?.firstChild?.firstChild as HTMLElement;
     expect(tbody.children.length).toBe(props.items.length + 1);
-    expect(tbody.children[0].children.length).toBe(3);
+    expect(tbody.children[0].children.length).toBe(4);
     expect(tbody.children[0].children[0].textContent).toBe('Start/Stop');
     expect(tbody.children[1].children[1].textContent).toContain('Lk 1:1-4');
   });

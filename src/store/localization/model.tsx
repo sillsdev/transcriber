@@ -755,12 +755,14 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "copyToClipboard": string;
     "createResources": string;
     "deleteConfirm": string;
+    "deleteUnused": string;
     "description": string;
     "editResource": string;
     "generalResources": string;
     "keywords": string;
     "language": string;
     "link": string;
+    "markUnused": string;
     "movementResource": string;
     "no": string;
     "noteResource": string;
@@ -790,6 +792,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "tip1a": string;
     "tip1b": string;
     "tip2b": string;
+    "unused": string;
     "unusedSegment": string;
     "upload": string;
     "uploadProject": string;

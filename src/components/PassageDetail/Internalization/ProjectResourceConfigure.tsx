@@ -20,7 +20,7 @@ import {
   debounce,
   styled,
 } from '@mui/material';
-import SkipIcon from '@mui/icons-material/NotInterested';
+import SkipIcon from '@mui/icons-material/InsertPageBreak';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import { PassageDetailPlayer } from '../PassageDetailPlayer';
@@ -50,6 +50,7 @@ import {
 } from '../../../control';
 import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
 import { useOrbitData } from '../../../hoc/useOrbitData';
+import Delete from '@mui/icons-material/Delete';
 
 const NotTable = 408;
 
@@ -153,14 +154,15 @@ export const ProjectResourceConfigure = (props: IProps) => {
   const projectSegmentSave = useProjectSegmentSave();
   const { showMessage } = useSnackBar();
 
-  const readOnlys = [false, true, false];
-  const widths = [150, 200, 300];
-  const cClass = ['lim', 'ref', 'des'];
+  const readOnlys = [false, true, false, true];
+  const widths = [150, 200, 400, 100];
+  const cClass = ['lim', 'ref', 'des', 'act'];
 
   enum ColName {
     Limits,
     Ref,
     Desc,
+    Action,
   }
   const setDimensions = () => {
     setHeightStyle({
@@ -192,7 +194,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     );
 
   const emptyTable = () => [
-    rowCells([t.startStop, t.reference, t.description], true),
+    rowCells([t.startStop, t.reference, t.description, t.action], true),
   ];
 
   const setData = (newData: ICell[][]) => {
@@ -220,8 +222,8 @@ export const ProjectResourceConfigure = (props: IProps) => {
           return { secNum, section } as IInfo;
         }
       });
-      newInfo.forEach((v) => {
-        newData.push(rowCells(['', fullReference(v), '']));
+      newInfo.forEach((v, i) => {
+        newData.push(rowCells(['', fullReference(v), '', `${i}`]));
       });
       infoRef.current = newInfo;
       setData(newData);
@@ -229,6 +231,11 @@ export const ProjectResourceConfigure = (props: IProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
+
+  const hasRef = (row: ICell[]) =>
+    row.length > 0 &&
+    row[ColName.Ref].value !== t.unused &&
+    row[ColName.Ref].value !== '';
 
   const writeResources = async () => {
     if (!savingRef.current) {
@@ -242,7 +249,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
           if (canceling.current) break;
           ix += 1;
           let row = d[ix];
-          while (row[ColName.Ref].value === '' && ix < d.length) {
+          while (!hasRef(row) && ix < d.length) {
             ix += 1;
             row = d[ix];
           }
@@ -484,7 +491,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
         newData.push(row);
       } else {
         showMessage(t.unusedSegment);
-        newData.push(rowCells([v, '', '']));
+        newData.push(rowCells([v, t.unused, '', `${i}`]));
         change = true;
       }
       ix += 1;
@@ -515,13 +522,93 @@ export const ProjectResourceConfigure = (props: IProps) => {
     setSuffix(e.target.value);
   };
 
-  const handleSkip = (v: string) => () => {
-    console.log(`skip ${v}`);
+  const skipSetup = (v: string) => {
+    const idx = parseInt(v);
+    let newData: ICell[][] = dataRef.current
+      .filter((r, i) => i < idx + 1)
+      .map((r) => r);
+    return { idx, newData };
   };
 
-  const handleValueRenderer = (cell: ICell) =>
-    cell.className === 'act' ? (
-      <IconButton onClick={handleSkip(cell.value)}>
+  const handleSkip = (v: string) => () => {
+    const { idx, newData } = skipSetup(v);
+    const curRow = dataRef.current[idx + 1];
+    newData.push(
+      rowCells([curRow[ColName.Limits].value, t.unused, '', `${idx}`])
+    );
+    let p: ICell[] = []; // previous row
+    dataRef.current
+      .filter((r, i) => i > idx)
+      .forEach((r, i) => {
+        if (i > 0) {
+          newData.push(
+            rowCells([
+              r[ColName.Limits].value,
+              p[ColName.Ref].value,
+              p[ColName.Desc].value,
+              `${i + idx}`,
+            ])
+          );
+        }
+        p = r;
+      });
+    if (hasRef(p)) {
+      newData.push(
+        rowCells([
+          '',
+          p[ColName.Ref].value,
+          p[ColName.Desc].value,
+          `${dataRef.current.length}`,
+        ])
+      );
+    }
+    setData(newData);
+  };
+
+  const hasLimits = (row: ICell[]) =>
+    row.length > 0 && row[ColName.Limits].value !== '';
+
+  const handleDelete = (v: string) => () => {
+    const { idx, newData } = skipSetup(v);
+    let p: ICell[] = []; // previous row
+    dataRef.current
+      .filter((r, i) => i > idx)
+      .forEach((r, i) => {
+        if (i > 0) {
+          newData.push(
+            rowCells([
+              p[ColName.Limits].value,
+              r[ColName.Ref].value,
+              r[ColName.Desc].value,
+              p[ColName.Action].value,
+            ])
+          );
+        }
+        p = r;
+      });
+    if (hasLimits(p)) {
+      newData.push(
+        rowCells([
+          p[ColName.Limits].value,
+          t.unused,
+          p[ColName.Desc].value,
+          p[ColName.Action].value,
+        ])
+      );
+    }
+    setData(newData);
+  };
+
+  const handleValueRenderer = (cell: ICell, row: number) =>
+    cell.className === 'act' && dataRef.current[row][0].value === '' ? (
+      ''
+    ) : cell.className === 'act' &&
+      dataRef.current[row][1].value === t.unused ? (
+      <IconButton onClick={handleDelete(cell.value)} title={t.deleteUnused}>
+        <Delete fontSize="small" />
+      </IconButton>
+    ) : cell.className === 'act' ? (
+      <IconButton onClick={handleSkip(cell.value)} title={t.markUnused}>
         <SkipIcon fontSize="small" />
       </IconButton>
     ) : (
@@ -537,21 +624,25 @@ export const ProjectResourceConfigure = (props: IProps) => {
       />
       <StyledPaper id="proj-res-sheet" style={heightStyle}>
         <StyledTable id="proj-res-sheet">
-          <Stack direction="row" spacing={1} data-testid="proj-res-sheet">
+          <Stack direction="column" spacing={1} data-testid="proj-res-sheet">
+            <Stack direction="row">
+              <Box sx={{ width: widths[0] }} />
+              <LightTooltip title={t.suffixTip}>
+                <TextField
+                  label={t.suffix}
+                  variant="outlined"
+                  value={suffix}
+                  onChange={handleSuffix}
+                />
+              </LightTooltip>
+              <Box sx={{ width: widths[2] }} />
+            </Stack>
             <DataSheet
               data={data}
               valueRenderer={handleValueRenderer}
               onCellsChanged={handleCellsChanged}
               parsePaste={handleParsePaste}
             />
-            <LightTooltip title={t.suffixTip}>
-              <TextField
-                label={t.suffix}
-                variant="outlined"
-                value={suffix}
-                onChange={handleSuffix}
-              />
-            </LightTooltip>
           </Stack>
         </StyledTable>
       </StyledPaper>
