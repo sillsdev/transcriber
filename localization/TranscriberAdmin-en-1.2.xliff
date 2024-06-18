@@ -4456,6 +4456,13 @@
       			<context context-type="sourcefile">PassageMedia.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.deleteUnused">
+            <source>Remove unused: assign segment to a passage again.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="passageDetailArtifacts.description">
       		<source>Description</source>
       		<target/>
@@ -4498,6 +4505,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.markUnused">
+            <source>Mark segment unused: passage will start in next segment.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="passageDetailArtifacts.movementResource">
             <source>Movement</source>
             <target/>
@@ -4699,6 +4713,13 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageDetailArtifacts.unused">
+            <source>Unused</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageArtifactConfigure.tsx</context>
             </context-group>
          </trans-unit>
       	<trans-unit id="passageDetailArtifacts.unusedSegment">
