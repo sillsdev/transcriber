@@ -127,6 +127,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
   const dataRef = useRef<ICell[][]>([]);
   const infoRef = useRef<IInfo[]>([]);
   const segmentsRef = useRef('{}');
+  const unusedRef = useRef<number[]>([]);
   const fullReference = useFullReference(props.bookData);
   const t: IPassageDetailArtifactsStrings = useSelector(
     resourceSelector,
@@ -457,6 +458,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     let change = false;
     let newData = new Array<ICell[]>();
     newData.push(dataRef.current[0]);
+    let newInfo = new Array<IInfo>();
     const dlen = dataRef.current.length;
     const ilen = infoRef.current.length;
     let ix = 0;
@@ -464,38 +466,69 @@ export const ProjectResourceConfigure = (props: IProps) => {
     const secI = new Map<number, number>();
     regions.forEach((r, i) => {
       const v = prettySegment(r);
+
+      function pushNext(ref: string, info: IInfo) {
+        newData.push(rowCells([v, ref, '', `${newData.length - 1}`]));
+        newInfo.push(info);
+      }
+
+      function unusedSegment() {
+        showMessage(t.unusedSegment);
+        pushNext(t.unused, {} as IInfo);
+        change = true;
+      }
+
+      if (unusedRef.current.includes(i)) {
+        unusedSegment();
+        return;
+      } else {
+        while (
+          ix < ilen &&
+          dataRef.current[ix][ColName.Ref].value === t.unused
+        ) {
+          ix += 1;
+        }
+      }
+
       while (ix < ilen && infoRef.current[ix].passage === undefined) {
-        secI.set(infoRef.current[ix].secNum, ix + 1);
+        secI.set(infoRef.current[ix].secNum, newData.length);
         ix += 1;
-        newData.push(dataRef.current[ix]);
+        pushNext(dataRef.current[ix][ColName.Ref].value, infoRef.current[ix]);
       }
       if (ix < ilen) {
-        const [vStart, vEnd] = v.split('-').map((n) => parseFloat(n));
-        const secNum = infoRef.current[ix].secNum;
-        if (regs.has(secNum)) {
-          regs.set(secNum, {
-            start: Math.min(vStart, regs.get(secNum)?.start as number),
-            end: Math.max(vEnd, regs.get(secNum)?.end as number),
-          });
-        } else {
-          regs.set(secNum, { start: vStart, end: vEnd });
+        const secNum = infoRef.current[ix]?.secNum;
+        if (secNum) {
+          const [vStart, vEnd] = v.split('-').map((n) => parseFloat(n));
+          if (regs.has(secNum)) {
+            regs.set(secNum, {
+              start: Math.min(vStart, regs.get(secNum)?.start as number),
+              end: Math.max(vEnd, regs.get(secNum)?.end as number),
+            });
+          } else {
+            regs.set(secNum, { start: vStart, end: vEnd });
+          }
         }
       }
-      const dx = ix + 1; // account for header
+      const dx = ix + 1; //skip the title row
       if (dx < dlen) {
-        let row = dataRef.current[dx].map((v) => v);
+        let row = dataRef.current[dx];
         if (row[ColName.Limits].value !== v) {
-          row[ColName.Limits].value = v;
           change = true;
         }
-        newData.push(row);
+        pushNext(row[ColName.Ref].value, infoRef.current[dx]);
       } else {
-        showMessage(t.unusedSegment);
-        newData.push(rowCells([v, t.unused, '', `${i}`]));
-        change = true;
+        unusedSegment();
       }
       ix += 1;
     });
+    while (ix < ilen) {
+      ix += 1;
+      const row = dataRef.current[ix];
+      row[ColName.Limits].value = '';
+      row[ColName.Action].value = `${newData.length - 1}`;
+      newData.push(row);
+      newInfo.push(infoRef.current[ix]);
+    }
     secI.forEach((v, k) => {
       if (regs.has(k)) {
         newData[v][ColName.Limits].value = prettySegment(
@@ -513,6 +546,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     }
     if (change) {
       setData(newData);
+      infoRef.current = newInfo;
       setPastedSegments('');
       if (!init && !isChanged(wizToolId)) toolChanged(wizToolId);
     }
@@ -522,81 +556,16 @@ export const ProjectResourceConfigure = (props: IProps) => {
     setSuffix(e.target.value);
   };
 
-  const skipSetup = (v: string) => {
-    const idx = parseInt(v);
-    let newData: ICell[][] = dataRef.current
-      .filter((r, i) => i < idx + 1)
-      .map((r) => r);
-    return { idx, newData };
-  };
-
   const handleSkip = (v: string) => () => {
-    const { idx, newData } = skipSetup(v);
-    const curRow = dataRef.current[idx + 1];
-    newData.push(
-      rowCells([curRow[ColName.Limits].value, t.unused, '', `${idx}`])
-    );
-    let p: ICell[] = []; // previous row
-    dataRef.current
-      .filter((r, i) => i > idx)
-      .forEach((r, i) => {
-        if (i > 0) {
-          newData.push(
-            rowCells([
-              r[ColName.Limits].value,
-              p[ColName.Ref].value,
-              p[ColName.Desc].value,
-              `${i + idx}`,
-            ])
-          );
-        }
-        p = r;
-      });
-    if (hasRef(p)) {
-      newData.push(
-        rowCells([
-          '',
-          p[ColName.Ref].value,
-          p[ColName.Desc].value,
-          `${dataRef.current.length}`,
-        ])
-      );
-    }
-    setData(newData);
+    const idx = parseInt(v);
+    unusedRef.current.push(idx);
+    handleSegment(segmentsRef.current, false);
   };
-
-  const hasLimits = (row: ICell[]) =>
-    row.length > 0 && row[ColName.Limits].value !== '';
 
   const handleDelete = (v: string) => () => {
-    const { idx, newData } = skipSetup(v);
-    let p: ICell[] = []; // previous row
-    dataRef.current
-      .filter((r, i) => i > idx)
-      .forEach((r, i) => {
-        if (i > 0) {
-          newData.push(
-            rowCells([
-              p[ColName.Limits].value,
-              r[ColName.Ref].value,
-              r[ColName.Desc].value,
-              p[ColName.Action].value,
-            ])
-          );
-        }
-        p = r;
-      });
-    if (hasLimits(p)) {
-      newData.push(
-        rowCells([
-          p[ColName.Limits].value,
-          t.unused,
-          p[ColName.Desc].value,
-          p[ColName.Action].value,
-        ])
-      );
-    }
-    setData(newData);
+    const idx = parseInt(v);
+    unusedRef.current = unusedRef.current.filter((r) => r !== idx);
+    handleSegment(segmentsRef.current, false);
   };
 
   const handleValueRenderer = (cell: ICell, row: number) =>
