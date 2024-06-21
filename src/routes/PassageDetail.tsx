@@ -33,6 +33,7 @@ import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
 import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord';
 import PassageDetailItem from '../components/PassageDetail/PassageDetailItem';
+import PassageDetailMarkVerses from '../components/PassageDetail/PassageDetailMarkVerses';
 import PassageDetailTranscribe from '../components/PassageDetail/PassageDetailTranscribe';
 import PassageDetailChooser from '../components/PassageDetail/PassageDetailChooser';
 import ConsultantCheck from '../components/PassageDetail/ConsultantCheck';
@@ -159,6 +160,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   const { slugFromId } = useArtifactType();
   const [horizSize, setHorizSize] = useState(window.innerWidth - 450);
   const discussionSizeRef = React.useRef(discussionSize);
+  const t = useSelector(toolSelector, shallowEqual) as IToolStrings;
 
   useEffect(() => {
     discussionSizeRef.current = discussionSize;
@@ -195,7 +197,6 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   const [wholeBackTranslationSlugs] = useState([
     ArtifactTypeSlug.WholeBackTranslation,
   ]);
-  const t = useSelector(toolSelector, shallowEqual) as IToolStrings;
 
   const handleVertSplitSize = debounce((e: number) => {
     setHorizSize(e);
@@ -334,6 +335,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
         {(tool === ToolSlug.Discuss ||
           tool === ToolSlug.TeamCheck ||
           tool === ToolSlug.Record ||
+          tool === ToolSlug.Verses ||
           tool === ToolSlug.Transcribe ||
           tool === ToolSlug.ConsultantCheck ||
           tool === ToolSlug.KeyTerm) && (
@@ -351,6 +353,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
               >
                 <Pane>
                   {tool !== ToolSlug.Transcribe &&
+                  tool !== ToolSlug.Verses &&
                   tool !== ToolSlug.Record &&
                   tool !== ToolSlug.ConsultantCheck ? (
                     <SplitPane
@@ -383,6 +386,11 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                       <PassageDetailChooser
                         width={width - discussionSize.width - 16}
                       />
+                      {tool === ToolSlug.Verses && (
+                        <PassageDetailMarkVerses
+                          width={width - discussionSize.width - 16}
+                        />
+                      )}
                       {tool === ToolSlug.Transcribe && (
                         <PassageDetailTranscribe
                           width={width - discussionSize.width - 16}

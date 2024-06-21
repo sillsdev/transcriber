@@ -1323,6 +1323,7 @@ const initialState = {
 			"segment": "Segment",
 			"teamCheck": "Compare",
 			"transcribe": "Transcribe",
+			"verses": "Mark Verses",
 			"wholeBackTranslate": "Whole Back Translate",
 		}
 	}),
@@ -1469,6 +1470,18 @@ const initialState = {
 			"selectUser": "Select User",
 			"showHideFilter": "Show/Hide filter rows",
 			"timezone": "Timezone",
+		}
+	}),
+	"verse": new LocalizedStrings({
+		"en": {
+			"canceling": "Canceling verse markup",
+			"clipboard": "clipboard",
+			"copyToClipboard": "Copy to clipboard",
+			"markVerses": "Mark Verses",
+			"pasteFormat": "Invalid number of columns on clipboard.",
+			"reference": "Reference",
+			"saveVerseMarkup": "Save Verse Markup",
+			"startStop": "Start --> Stop",
 		}
 	}),
 	"viewMode": new LocalizedStrings({
@@ -1731,6 +1744,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"uploadProgress" : new LocalizedStrings(action.payload.data.uploadProgress),
 				"userListMode" : new LocalizedStrings(action.payload.data.userListMode),
 				"usertable" : new LocalizedStrings(action.payload.data.usertable),
+				"verse" : new LocalizedStrings(action.payload.data.verse),
 				"viewMode" : new LocalizedStrings(action.payload.data.viewMode),
 				"vProject" : new LocalizedStrings(action.payload.data.vProject),
 				"welcome" : new LocalizedStrings(action.payload.data.welcome),

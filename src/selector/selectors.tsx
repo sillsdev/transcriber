@@ -240,6 +240,9 @@ export const userListModeSelector = (state: IState) =>
 export const usertableSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'usertable' });
 
+export const verseSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'verse' });
+
 export const vProjectSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'vProject' });
 
