@@ -11,6 +11,7 @@ const toolSlugs = [
   ToolSlug.TeamCheck,
   ToolSlug.Community,
   ToolSlug.Discuss,
+  ToolSlug.Verses,
   ToolSlug.Transcribe,
   ToolSlug.PhraseBackTranslate,
   ToolSlug.WholeBackTranslate,

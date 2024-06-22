@@ -7250,6 +7250,13 @@
                <context context-type="sourcefile">useTools.ts</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="tool.verses">
+            <source>Mark Verses</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">useTools.ts</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="tool.wholeBackTranslate">
       		<source>Whole Back Translate</source>
       		<target/>
@@ -7991,6 +7998,62 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">UserTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.canceling">
+            <source>Canceling verse markup</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.clipboard">
+            <source>clipboard</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.copyToClipboard">
+            <source>Copy to clipboard</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.markVerses">
+            <source>Mark Verses</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.pasteFormat">
+            <source>Invalid number of columns on clipboard.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.reference">
+            <source>Reference</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.saveVerseMarkup">
+            <source>Save Verse Markup</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.startStop">
+            <source>Start --> Stop</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="viewMode.audioProject">

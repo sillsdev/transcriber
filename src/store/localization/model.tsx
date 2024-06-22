@@ -1247,6 +1247,7 @@ export interface IToolStrings extends Localize.LocalizedStringsMethods {
     "segment": string;
     "teamCheck": string;
     "transcribe": string;
+    "verses": string;
     "wholeBackTranslate": string;
 };
 
@@ -1383,6 +1384,17 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "selectUser": string;
     "showHideFilter": string;
     "timezone": string;
+};
+
+export interface IVerseStrings extends Localize.LocalizedStringsMethods {
+    "canceling": string;
+    "clipboard": string;
+    "copyToClipboard": string;
+    "markVerses": string;
+    "pasteFormat": string;
+    "reference": string;
+    "saveVerseMarkup": string;
+    "startStop": string;
 };
 
 export interface IViewModeStrings extends Localize.LocalizedStringsMethods {
@@ -1633,6 +1645,7 @@ export interface ILocalizedStrings {
 	uploadProgress: IUploadProgressStrings;
 	userListMode: IUserListModeStrings;
 	usertable: IUsertableStrings;
+	verse: IVerseStrings;
 	viewMode: IViewModeStrings;
 	vProject: IVProjectStrings;
 	welcome: IWelcomeStrings;

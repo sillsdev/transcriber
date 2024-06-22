@@ -4,6 +4,7 @@ export enum ToolSlug {
   KeyTerm = 'keyterm',
   TeamCheck = 'teamCheck',
   Discuss = 'discuss',
+  Verses = 'verses',
   Transcribe = 'transcribe',
   PhraseBackTranslate = 'phraseBackTranslate',
   WholeBackTranslate = 'wholeBackTranslate',

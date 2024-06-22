@@ -6214,6 +6214,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="tool.verses">
+         <segment>
+            <source>Mark Verses</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="tool.wholeBackTranslate">
          <segment>
             <source>Whole Back Translate</source>
@@ -6847,6 +6853,54 @@
       <unit id="usertable.timezone">
          <segment>
             <source>Timezone</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.canceling">
+         <segment>
+            <source>Canceling verse markup</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.clipboard">
+         <segment>
+            <source>clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.copyToClipboard">
+         <segment>
+            <source>Copy to clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.markVerses">
+         <segment>
+            <source>Mark Verses</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.pasteFormat">
+         <segment>
+            <source>Invalid number of columns on clipboard.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.reference">
+         <segment>
+            <source>Reference</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.saveVerseMarkup">
+         <segment>
+            <source>Save Verse Markup</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.startStop">
+         <segment>
+            <source>Start --&gt; Stop</source>
             <target/>
          </segment>
       </unit>
