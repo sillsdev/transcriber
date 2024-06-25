@@ -24,7 +24,10 @@ import {
 import { shallowEqual, useSelector } from 'react-redux';
 import { findRecord } from '../../crud/tryFindRecord';
 import { parseRef } from '../../crud/passage';
-import { ActionRow, AltButton, GrowingSpacer, PriButton } from '../../control';
+import { ActionRow } from '../../control/ActionRow';
+import { AltButton } from '../../control/AltButton';
+import { GrowingSpacer } from '../../control/GrowingSpacer';
+import { PriButton } from '../../control/PriButton';
 import PassageDetailPlayer from './PassageDetailPlayer';
 import { NamedRegions, updateSegments } from '../../utils/namedSegments';
 import { useSnackBar } from '../../hoc/SnackBar';
@@ -305,24 +308,25 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   const formLim = ({ start, end }: IRegion) => `${d3(start)} --> ${d3(end)}`;
 
   const handleSegment = (segments: string, init: boolean) => {
-    if (dataRef.current.length === 0) return;
     const regions = parseRegions(segments).regions.sort(
       (i, j) => i.start - j.start
     );
-
-    for (let i = regions.length; i < numSegments; i++) {
-      dataRef.current[i + 1][ColName.Limits].value = '';
-    }
     let change = numSegments !== regions.length;
     setNumSegments(regions.length);
-
     segmentsRef.current = segments;
+
+    if (dataRef.current.length === 0) return;
+
+    for (let i = regions.length; i < numSegments; i++) {
+      if (i + 1 >= dataRef.current.length) break;
+      dataRef.current[i + 1][ColName.Limits].value = '';
+    }
     let newData = new Array<ICell[]>();
     newData.push(dataRef.current[0]);
 
     const dLen = dataRef.current.length;
     regions.forEach((r, i) => {
-      if (i >= dLen) {
+      if (i + 1 >= dLen) {
         newData.push(rowCells([formLim(r), '']));
         change = true;
       } else {
@@ -331,6 +335,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
           row[ColName.Limits].value = formLim(r);
           change = true;
         }
+        newData.push(row);
       }
     });
 

@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { IHotKeyStrings } from '../model';
-import { useMounted } from '../utils';
+import { useMounted } from '../utils/useMounted';
 import { useSelector } from 'react-redux';
 import { hotKeySelector } from '../selector';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react

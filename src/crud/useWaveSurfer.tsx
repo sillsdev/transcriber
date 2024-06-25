@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useGlobal } from 'reactn';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
-import { logError, Severity, waitForIt } from '../utils';
+import { logError, Severity } from '../utils/logErrorService';
+import { waitForIt } from '../utils/waitForIt';
 import {
   IRegion,
   IRegions,
