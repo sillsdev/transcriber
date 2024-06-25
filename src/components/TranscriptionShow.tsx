@@ -18,16 +18,12 @@ import {
 import { StyledTextField } from '../control/WebFontStyles';
 import { FaCopy } from 'react-icons/fa';
 import { useSnackBar } from '../hoc/SnackBar';
-import {
-  getMediaProjRec,
-  FontData,
-  getFontData,
-  useTranscription,
-  related,
-  findRecord,
-  ArtifactTypeSlug,
-  getArtTypeFontData,
-} from '../crud';
+import { getMediaProjRec } from '../crud/media';
+import { FontData, getFontData, getArtTypeFontData } from '../crud/fontChoice';
+import { useTranscription } from '../crud/useTranscription';
+import { related } from '../crud/related';
+import { findRecord } from '../crud/tryFindRecord';
+import { ArtifactTypeSlug } from '../crud/artifactTypeSlug';
 import { useSelector, shallowEqual } from 'react-redux';
 import { transcriptionShowSelector } from '../selector';
 import { useOrbitData } from '../hoc/useOrbitData';

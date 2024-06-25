@@ -8,9 +8,9 @@ import PassageDetailMarkVerses, {
 } from './PassageDetailMarkVerses';
 import { PassageD, OrgWorkflowStepD } from '../../model';
 import { memory } from '../../schema';
-import { PropsWithChildren } from 'react';
+// import { HotKeyProvider } from '../../context/HotKeyContext';
 
-var mockMemory = { ...memory };
+var mockMemory = memory;
 var mockMediafileId = 'm1';
 var mockPassageId = 'p1';
 var mockCurrentStep = 'step1';
@@ -62,8 +62,17 @@ jest.mock('../../context/usePassageDetailContext', () => () => ({
   currentstep: mockCurrentStep,
   setCurrentStep: mockSetCurrentStep,
   orgWorkflowSteps: [mockOrgWorkflowStep],
+  setupLocate: jest.fn(),
 }));
 jest.mock('./PassageDetailPlayer', () => () => <div>PassageDetailPlayer</div>);
+// jest.mock('../../crud/useMediaRecorder', () => ({
+//   useMediaRecorder: () => ({
+//     allowRecord: false,
+//     onRecordStart: jest.fn(),
+//     onRecordStop: jest.fn(),
+//   }),
+// }));
+jest.mock('../../utils/logErrorService', () => jest.fn());
 jest.mock('reactn', () => ({
   useGlobal: (arg: string) =>
     arg === 'memory' ? [mockMemory, jest.fn()] : [{}, jest.fn()],
@@ -82,46 +91,30 @@ jest.mock('react-redux', () => ({
     reference: 'Reference',
     saveVerseMarkup: 'Save Verse Markup',
     startStop: 'Start --> Stop',
+    // prevRegion: 'Previous Segment [{0}]',
+    // nextRegion: 'Next Segment [{0}]',
+    // beginningTip: 'Go to Beginning [{0}]',
+    // aheadTip: 'Ahead {jump} {1} [{0}]',
+    // backTip: 'Rewind {jump} {1} [{0}]',
+    // pauseTip: 'Pause [{0}]',
+    // playTip: 'Play [{0}]',
+    // endTip: 'Go to End [{0}]',
+    // splitSegment: 'Add/Remove Boundary [Double Click/{0}]',
+    // removeSegment: 'Remove Next Boundary [{0}]',
   }),
   shallowEqual: jest.fn(),
-}));
-jest.mock('../../control', () => ({
-  ActionRow: ({ children }: PropsWithChildren) => (
-    <div>
-      <span>ActionRow</span>
-      {children}
-    </div>
-  ),
-  AltButton: ({ children }: PropsWithChildren) => (
-    <div>
-      <span>AltButton</span>
-      {children}
-    </div>
-  ),
-  GrowingSpacer: () => <div>GrowingSpacer</div>,
-  LightTooltip: ({ children }: PropsWithChildren) => (
-    <div>
-      <span>LightTooltip</span>
-      {children}
-    </div>
-  ),
-  PriButton: ({ children }: PropsWithChildren) => (
-    <div>
-      <span>PriButton</span>
-      {children}
-    </div>
-  ),
 }));
 
 const runTest = (props: MarkVersesProps) =>
   render(
+    // <HotKeyProvider>
     <UnsavedProvider>
       <PassageDetailMarkVerses {...props} />
     </UnsavedProvider>
+    // </HotKeyProvider>
   );
 
 afterEach(() => {
-  mockMemory = { ...memory };
   mockPassage.attributes = { ...passageAttributes } as any;
   cleanup();
   jest.clearAllMocks();
@@ -177,7 +170,7 @@ test('should prevent changes', async () => {
   expect(firstLimit.textContent).toBe('');
 });
 
-test('should handle start verse with a letter in one chapter', async () => {
+test('should handle start verse with a letter in one chapter', () => {
   // Arrange
   mockPassage.attributes = { ...passageAttributes, reference: '1:1b-4' } as any;
 
@@ -191,7 +184,7 @@ test('should handle start verse with a letter in one chapter', async () => {
   expect(firstReference.textContent).toBe('1:1b');
 });
 
-test('should handle end verse with a letter in one chapter', async () => {
+test('should handle end verse with a letter in one chapter', () => {
   // Arrange
   mockPassage.attributes = { ...passageAttributes, reference: '1:1-2a' } as any;
 

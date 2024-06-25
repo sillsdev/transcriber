@@ -21,7 +21,7 @@ import {
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import ViewIcon from '@mui/icons-material/RemoveRedEye';
 import TranscriptionShow from '../TranscriptionShow';
-import { related } from '../../crud';
+import { related } from '../../crud/related';
 
 export enum SaveSegments {
   showSaveButton = 0,

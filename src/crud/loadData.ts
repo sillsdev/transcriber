@@ -30,7 +30,9 @@ import {
 import { orbitInfo } from '../utils/infoMsg';
 import ProjData from '../model/projData';
 import Coordinator from '@orbit/coordinator';
-import { getFingerprint, currentDateTime, orbitErr } from '../utils';
+import { getFingerprint } from '../utils/getFingerprint';
+import { currentDateTime } from '../utils/currentDateTime';
+import { orbitErr } from '../utils/infoMsg';
 import { ReplaceRelatedRecord } from '../model/baseModel';
 
 import PassageType from '../model/passageType';

@@ -1,6 +1,8 @@
 import { useGlobal } from 'reactn';
 import { ActivityStates } from '../model';
-import { getVernacularMediaRec, getAllMediaRecs, VernacularTag } from '.';
+import { getVernacularMediaRec, getAllMediaRecs } from './media';
+import { VernacularTag } from './useArtifactType';
+
 export const useTranscription = (
   addSpeaker: boolean,
   state?: ActivityStates,

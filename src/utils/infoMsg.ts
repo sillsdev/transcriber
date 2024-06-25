@@ -1,6 +1,6 @@
 import { IApiError } from '../model';
 import { ServerError } from '@orbit/jsonapi';
-import { Severity } from '.';
+import { Severity } from './logErrorService';
 import { IAxiosStatus } from '../store/AxiosStatus';
 
 export const infoMsg = (e: Error, info: string) => {
