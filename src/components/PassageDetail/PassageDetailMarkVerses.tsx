@@ -34,6 +34,7 @@ import { waitForIt } from '../../utils/waitForIt';
 import { JSONParse } from '../../utils/jsonParse';
 import { IRegion, parseRegions } from '../../crud/useWavesurferRegions';
 import { cleanClipboard } from '../../utils/cleanClipboard';
+import { refMatch } from '../../utils/refMatch';
 
 const NotTable = 490;
 const verseToolId = 'VerseTool';
@@ -82,11 +83,11 @@ interface ICellChange {
   value: string | null;
 }
 
-interface IProps {
+export interface MarkVersesProps {
   width: number;
 }
 
-export function PassageDetailMarkVerses({ width }: IProps) {
+export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   const {
     mediafileId,
     passage,
@@ -128,7 +129,7 @@ export function PassageDetailMarkVerses({ width }: IProps) {
   const projectSegmentSave = useProjectSegmentSave();
   const { showMessage } = useSnackBar();
 
-  const readOnlys = [false, true];
+  const readOnlys = [true, true];
   const widths = [200, 150];
   const cClass = ['lim', 'ref'];
 
@@ -192,10 +193,17 @@ export function PassageDetailMarkVerses({ width }: IProps) {
     parseRef(passage);
     const { startChapter, startVerse, endChapter, endVerse } =
       passage.attributes;
+    const match = refMatch(passage.attributes.reference);
+    let firstVerse = startVerse ?? 1;
+    if (match && `${firstVerse}` !== match[2]) {
+      firstVerse += 1;
+      list.push(`${startChapter}:${match[2]}`);
+    }
     if (startChapter === endChapter) {
-      for (let i = startVerse ?? 1; i <= (endVerse ?? startVerse ?? 1); i++) {
+      for (let i = firstVerse; i < (endVerse ?? firstVerse ?? 1); i++) {
         list.push(`${startChapter}:${i}`);
       }
+      if (match) list.push(`${endChapter}:${match[3]}`);
       setupData(list);
     } else {
       import('../../assets/eng-vrs').then((module) => {
@@ -203,12 +211,13 @@ export function PassageDetailMarkVerses({ width }: IProps) {
         const endChap1 = (engVrs.get(passage.attributes.book) ?? [])[
           (startChapter ?? 1) - 1
         ];
-        for (let i = startVerse ?? 1; i <= endChap1; i++) {
+        for (let i = firstVerse; i <= endChap1; i++) {
           list.push(`${startChapter}:${i}`);
         }
         for (let i = 1; i < (endVerse ?? 1); i++) {
           list.push(`${endChapter}:${i}`);
         }
+        if (match) list.push(`${endChapter}:${match[4]}`);
         setupData(list);
       });
     }
@@ -301,10 +310,13 @@ export function PassageDetailMarkVerses({ width }: IProps) {
       (i, j) => i.start - j.start
     );
 
+    for (let i = regions.length; i < numSegments; i++) {
+      dataRef.current[i + 1][ColName.Limits].value = '';
+    }
+    let change = numSegments !== regions.length;
     setNumSegments(regions.length);
 
     segmentsRef.current = segments;
-    let change = false;
     let newData = new Array<ICell[]>();
     newData.push(dataRef.current[0]);
 
@@ -409,8 +421,8 @@ export function PassageDetailMarkVerses({ width }: IProps) {
         onSegment={handleSegment}
         suggestedSegments={pastedSegments}
       />
-      <StyledPaper id="proj-res-sheet" style={heightStyle}>
-        <StyledTable id="proj-res-sheet">
+      <StyledPaper style={heightStyle}>
+        <StyledTable id="verse-sheet" data-testid="verse-sheet">
           <DataSheet
             data={data}
             valueRenderer={handleValueRenderer}
@@ -421,7 +433,7 @@ export function PassageDetailMarkVerses({ width }: IProps) {
       </StyledPaper>
       <ActionRow>
         <AltButton
-          id="copy-configure"
+          id="copy-verse-sheet"
           onClick={handleCopy}
           disabled={numSegments === 0}
         >
@@ -429,7 +441,7 @@ export function PassageDetailMarkVerses({ width }: IProps) {
         </AltButton>
         <GrowingSpacer />
         <PriButton
-          id="res-create"
+          id="create-mark-verse"
           onClick={handleSaveMarkup}
           disabled={
             numSegments === 0 || savingRef.current || !isChanged(verseToolId)
@@ -437,7 +449,7 @@ export function PassageDetailMarkVerses({ width }: IProps) {
         >
           {t.saveVerseMarkup}
         </PriButton>
-        <AltButton id="res-create-cancel" onClick={handleCancel}>
+        <AltButton id="cancel-mark-verse" onClick={handleCancel}>
           {ts.cancel}
         </AltButton>
       </ActionRow>
