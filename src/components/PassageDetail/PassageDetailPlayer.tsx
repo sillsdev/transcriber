@@ -27,7 +27,7 @@ export enum SaveSegments {
   showSaveButton = 0,
   saveButNoButton = 1,
 }
-interface IProps {
+export interface DetailPlayerProps {
   allowSegment?: NamedRegions | undefined;
   saveSegments?: SaveSegments;
   allowAutoSegment?: boolean;
@@ -45,7 +45,7 @@ interface IProps {
   parentToolId?: string;
 }
 
-export function PassageDetailPlayer(props: IProps) {
+export function PassageDetailPlayer(props: DetailPlayerProps) {
   const {
     allowSegment,
     allowAutoSegment,

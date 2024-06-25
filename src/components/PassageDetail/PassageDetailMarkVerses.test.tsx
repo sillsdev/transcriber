@@ -8,6 +8,8 @@ import PassageDetailMarkVerses, {
 } from './PassageDetailMarkVerses';
 import { PassageD, OrgWorkflowStepD } from '../../model';
 import { memory } from '../../schema';
+import { DetailPlayerProps } from './PassageDetailPlayer';
+import { act } from 'react-dom/test-utils';
 // import { HotKeyProvider } from '../../context/HotKeyContext';
 
 var mockMemory = memory;
@@ -15,6 +17,7 @@ var mockMediafileId = 'm1';
 var mockPassageId = 'p1';
 var mockCurrentStep = 'step1';
 var mockSetCurrentStep = jest.fn();
+var mockPlayerAction: ((segment: string, init: boolean) => void) | undefined;
 
 const passageAttributes = {
   sequencenum: 1,
@@ -64,7 +67,10 @@ jest.mock('../../context/usePassageDetailContext', () => () => ({
   orgWorkflowSteps: [mockOrgWorkflowStep],
   setupLocate: jest.fn(),
 }));
-jest.mock('./PassageDetailPlayer', () => () => <div>PassageDetailPlayer</div>);
+jest.mock('./PassageDetailPlayer', () => ({ onSegment }: DetailPlayerProps) => {
+  mockPlayerAction = onSegment;
+  return <div>PassageDetailPlayer</div>;
+});
 // jest.mock('../../crud/useMediaRecorder', () => ({
 //   useMediaRecorder: () => ({
 //     allowRecord: false,
@@ -196,4 +202,34 @@ test('should handle end verse with a letter in one chapter', () => {
 
   // Assert
   expect(firstReference.textContent).toBe('1:2a');
+});
+
+test('should add limits to the table', () => {
+  // Arrange
+
+  // Act
+  runTest({ width: 1000 });
+  const tbody = screen.getByTestId('verse-sheet')?.firstChild?.firstChild
+    ?.firstChild as HTMLElement;
+  const firstLimit = tbody.children[1].firstChild as HTMLTableCellElement;
+  act(() => {
+    if (mockPlayerAction) {
+      mockPlayerAction(
+        '{"regions":"[{\\"start\\":0,\\"end\\":5},{\\"start\\":5,\\"end\\":9},{\\"start\\":12,\\"end\\":17},{\\"start\\":17,\\"end\\":24},{\\"start\\":24,\\"end\\":28},{\\"start\\":9,\\"end\\":12}]"}',
+        true
+      );
+    }
+  });
+
+  // Assert
+  expect(tbody.children.length).toBe(7); // 6 limits (4 with verss) + 1 header
+  expect(firstLimit.textContent).toBe('0.000 --> 5.000');
+  expect(tbody.children[2].children[0].textContent).toBe('5.000 --> 9.000');
+  expect(tbody.children[3].children[0].textContent).toBe('9.000 --> 12.000');
+  expect(tbody.children[4].children[0].textContent).toBe('12.000 --> 17.000');
+  // added extra rows
+  expect(tbody.children[5].children[0].textContent).toBe('17.000 --> 24.000');
+  expect(tbody.children[5].children[1].textContent).toBe('');
+  expect(tbody.children[6].children[0].textContent).toBe('24.000 --> 28.000');
+  expect(tbody.children[6].children[1].textContent).toBe('');
 });

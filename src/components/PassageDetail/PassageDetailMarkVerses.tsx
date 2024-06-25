@@ -422,6 +422,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   return Boolean(mediafileId) ? (
     <Box>
       <PassageDetailPlayer
+        data-testid="player"
         allowSegment={NamedRegions.Verse}
         onSegment={handleSegment}
         suggestedSegments={pastedSegments}
