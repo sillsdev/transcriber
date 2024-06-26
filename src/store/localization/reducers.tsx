@@ -1474,10 +1474,16 @@ const initialState = {
 	}),
 	"verse": new LocalizedStrings({
 		"en": {
+			"badReferences": "ERROR: Markup contains bad references",
 			"canceling": "Canceling verse markup",
 			"clipboard": "clipboard",
 			"copyToClipboard": "Copy to clipboard",
+			"issues": "The verse markup has issues. Do you want to continue?",
 			"markVerses": "Mark Verses",
+			"missingReferences": "Warning: Verses in passage not included: ({0})",
+			"noReferences": "Warning: Some audio segments will not be included in verses",
+			"noSegments": "ERROR: Some verses have no segment: ({0})",
+			"outsideReferences": "ERROR: Some verses are outside passage: ({0})",
 			"pasteFormat": "Invalid number of columns on clipboard.",
 			"reference": "Reference",
 			"saveVerseMarkup": "Save Verse Markup",

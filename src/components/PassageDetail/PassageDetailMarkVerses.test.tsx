@@ -233,3 +233,25 @@ test('should add limits to the table', () => {
   expect(tbody.children[6].children[0].textContent).toBe('24.000 --> 28.000');
   expect(tbody.children[6].children[1].textContent).toBe('');
 });
+
+test('should add limits with label to the table', () => {
+  // Arrange
+
+  // Act
+  runTest({ width: 1000 });
+  const tbody = screen.getByTestId('verse-sheet')?.firstChild?.firstChild
+    ?.firstChild as HTMLElement;
+  const firstLimit = tbody.children[1].firstChild as HTMLTableCellElement;
+  act(() => {
+    if (mockPlayerAction) {
+      mockPlayerAction(
+        '{"regions":"[{\\"start\\":0,\\"end\\":5,\\"label\\":\\"1:1-2\\"},{\\"start\\":5,\\"end\\":9},{\\"start\\":12,\\"end\\":17},{\\"start\\":17,\\"end\\":24},{\\"start\\":24,\\"end\\":28},{\\"start\\":9,\\"end\\":12}]"}',
+        true
+      );
+    }
+  });
+
+  // Assert
+  expect(firstLimit.textContent).toBe('0.000 --> 5.000');
+  expect(tbody.children[1].children[1].textContent).toBe('1:1-2');
+});

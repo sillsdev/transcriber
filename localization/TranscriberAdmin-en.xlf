@@ -6856,6 +6856,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="verse.badReferences">
+         <segment>
+            <source>ERROR: Markup contains bad references</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="verse.canceling">
          <segment>
             <source>Canceling verse markup</source>
@@ -6874,9 +6880,39 @@
             <target/>
          </segment>
       </unit>
+      <unit id="verse.issues">
+         <segment>
+            <source>The verse markup has issues. Do you want to continue?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="verse.markVerses">
          <segment>
             <source>Mark Verses</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.missingReferences">
+         <segment>
+            <source>Warning: Verses in passage not included: ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.noReferences">
+         <segment>
+            <source>Warning: Some audio segments will not be included in verses</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.noSegments">
+         <segment>
+            <source>ERROR: Some verses have no segment: ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.outsideReferences">
+         <segment>
+            <source>ERROR: Some verses are outside passage: ({0})</source>
             <target/>
          </segment>
       </unit>
