@@ -8000,6 +8000,13 @@
                <context context-type="sourcefile">UserTable.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="verse.badReferences">
+            <source>ERROR: Markup contains bad references</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="verse.canceling">
             <source>Canceling verse markup</source>
             <target/>
@@ -8021,8 +8028,43 @@
                <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="verse.issues">
+            <source>The verse markup has issues. Do you want to continue?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="verse.markVerses">
             <source>Mark Verses</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.missingReferences">
+            <source>Warning: Verses in passage not included: ({0})</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.noReferences">
+            <source>Warning: Some audio segments will not be included in verses</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.noSegments">
+            <source>ERROR: Some verses have no segment: ({0})</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.outsideReferences">
+            <source>ERROR: Some verses are outside passage: ({0})</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>

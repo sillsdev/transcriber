@@ -16,6 +16,7 @@ export interface IRegionParams {
 export interface IRegion {
   start: number;
   end: number;
+  label?: string;
 }
 export interface IRegions {
   params: IRegionParams;

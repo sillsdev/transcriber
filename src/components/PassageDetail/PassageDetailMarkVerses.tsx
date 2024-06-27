@@ -38,6 +38,7 @@ import { JSONParse } from '../../utils/jsonParse';
 import { IRegion, parseRegions } from '../../crud/useWavesurferRegions';
 import { cleanClipboard } from '../../utils/cleanClipboard';
 import { refMatch } from '../../utils/refMatch';
+import Confirm from '../AlertDialog';
 
 const NotTable = 490;
 const verseToolId = 'VerseTool';
@@ -63,13 +64,13 @@ const StyledTable = styled('div')(({ theme }) => ({
   },
   '& .lim': {
     verticalAlign: 'inherit !important',
-    '& .value-viewer': {
-      textAlign: 'center',
-    },
+    '& .value-viewer': { textAlign: 'center' },
   },
   '& .ref': {
     verticalAlign: 'inherit !important',
+    '& .value-viewer': { textAlign: 'center' },
   },
+  '& .data-grid .Err': { backgroundColor: 'orange' },
 }));
 
 interface ICell {
@@ -103,6 +104,8 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   const [, setComplete] = useGlobal('progress');
   const [globals] = useGlobal();
   const [data, setDatax] = useState<ICell[][]>([]);
+  const [issues, setIssues] = useState<string[]>([]);
+  const [confirm, setConfirm] = useState('');
   const [numSegments, setNumSegments] = useState(0);
   const [pastedSegments, setPastedSegments] = useState('');
   const [heightStyle, setHeightStyle] = useState({
@@ -112,6 +115,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   const canceling = useRef(false);
   const dataRef = useRef<ICell[][]>([]);
   const segmentsRef = useRef('{}');
+  const passageRefs = useRef<string[]>([]);
   const t = useSelector(verseSelector, shallowEqual) as IVerseStrings;
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const tt: ITranscriptionTabStrings = useSelector(
@@ -132,7 +136,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   const projectSegmentSave = useProjectSegmentSave();
   const { showMessage } = useSnackBar();
 
-  const readOnlys = [true, true];
+  const readOnlys = [true, false];
   const widths = [200, 150];
   const cClass = ['lim', 'ref'];
 
@@ -165,7 +169,10 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
           value: v,
           width: widths[i],
           readOnly: first || readOnlys[i],
-          className: first ? 'cTitle' : cClass[i],
+          className: first
+            ? 'cTitle'
+            : cClass[i] +
+              (i === ColName.Ref && v && !refMatch(v) ? ' Err' : ''),
         } as ICell)
     );
 
@@ -183,6 +190,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   );
 
   const setupData = (items: string[]) => {
+    passageRefs.current = items;
     const newData = emptyTable();
     items.forEach((v) => {
       newData.push(rowCells(['', v]));
@@ -274,10 +282,26 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     });
   };
 
+  const getRegions = (segments: string) =>
+    parseRegions(segments).regions.sort((i, j) => i.start - j.start);
+
   const writeResources = async () => {
     if (!savingRef.current) {
       savingRef.current = true;
       if (media) {
+        if (numSegments !== 0) {
+          let segs = getRegions(segmentsRef.current);
+          segs = segs.map((r, i) =>
+            i + 1 < dataRef.current.length
+              ? {
+                  ...r,
+                  label: dataRef.current[i + 1][ColName.Ref].value,
+                }
+              : { ...r, label: '' }
+          );
+          const regions = JSON.stringify(segs);
+          segmentsRef.current = JSON.stringify({ regions });
+        }
         projectSegmentSave({
           media,
           segments: updateSegments(
@@ -308,9 +332,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   const formLim = ({ start, end }: IRegion) => `${d3(start)} --> ${d3(end)}`;
 
   const handleSegment = (segments: string, init: boolean) => {
-    const regions = parseRegions(segments).regions.sort(
-      (i, j) => i.start - j.start
-    );
+    const regions = getRegions(segments);
     let change = numSegments !== regions.length;
     setNumSegments(regions.length);
     segmentsRef.current = segments;
@@ -322,17 +344,22 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
       dataRef.current[i + 1][ColName.Limits].value = '';
     }
     let newData = new Array<ICell[]>();
-    newData.push(dataRef.current[0]);
+    newData.push(dataRef.current[0]); // copy title row
 
     const dLen = dataRef.current.length;
     regions.forEach((r, i) => {
       if (i + 1 >= dLen) {
-        newData.push(rowCells([formLim(r), '']));
+        newData.push(rowCells([formLim(r), r.label ?? '']));
         change = true;
       } else {
         const row = dataRef.current[i + 1];
         if (row[ColName.Limits].value !== formLim(r)) {
           row[ColName.Limits].value = formLim(r);
+          change = true;
+        }
+        if (r?.label !== undefined && row[ColName.Ref].value !== r.label) {
+          row[ColName.Ref].value = r.label;
+          if (!refMatch(r.label)) row[ColName.Ref].className = 'ref Err';
           change = true;
         }
         newData.push(row);
@@ -352,10 +379,26 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
 
   const handleCellsChanged = (changes: Array<ICellChange>) => {
     const newData = dataRef.current.map((r) => r);
+    let changed = false;
     changes.forEach((c) => {
-      newData[c.row][c.col].value = c.value;
+      const value = c.value?.trim();
+      if (value !== newData[c.row][c.col].value) {
+        changed = true;
+        if (c.col === ColName.Ref) {
+          newData[c.row][c.col] = {
+            ...newData[c.row][c.col],
+            value,
+            className: 'ref' + (c.value && !refMatch(c.value) ? ' Err' : ''),
+          };
+        } else {
+          newData[c.row][c.col].value = value;
+        }
+      }
     });
-    setData(newData);
+    if (changed) {
+      setData(newData);
+      toolChanged(verseToolId);
+    }
   };
 
   const handleParsePaste = (clipBoard: string) => {
@@ -365,12 +408,17 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
       return [];
     }
     const rawWidth = rawData[0].length;
-    if (![2, 3].includes(rawWidth)) {
+    if (![1, 2].includes(rawWidth)) {
       showMessage(t.pasteFormat);
       return [];
     }
 
-    showMessage('not implemented');
+    if (rawWidth === 1) {
+      toolChanged(verseToolId);
+      return rawData;
+    }
+
+    showMessage('TODO: multi-column paste not implemented');
     return [];
   };
 
@@ -401,6 +449,64 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
+  const checkRefs = () => {
+    const refs: string[] = [];
+    dataRef.current
+      .filter((v, i) => i > 0 && v[ColName.Ref].value)
+      .forEach((v) => {
+        const value = v[ColName.Ref].value;
+        const m = refMatch(value);
+        if (m) {
+          if (!m[3]) {
+            // single verse
+            refs.push(value);
+          } else {
+            if (!m[4]) {
+              // single chapter
+              const stop = parseInt(m[3]);
+              for (let i = parseInt(m[2]); i <= stop; i++) {
+                refs.push(`${m[1]}:${i}`);
+              }
+            } else {
+              showMessage('TODO: cross chapter verse checking not implemented');
+            }
+          }
+        } else {
+          // not a valid reference
+          refs.push(value);
+        }
+      });
+    const noSegRefs = dataRef.current
+      .filter((v, i) => i > 0)
+      .filter((v) => v[ColName.Ref].value && !v[ColName.Limits].value)
+      .map((v) => v[ColName.Ref].value);
+    const noRefSegs = dataRef.current.some(
+      (v, i) => i > 0 || (!v[ColName.Ref].value && v[ColName.Limits].value)
+    );
+    const matchAll = refs.every((r) => refMatch(r));
+    const refSet = new Set(passageRefs.current);
+    const outsideRefs = new Set<string>();
+    refs.forEach((r) => {
+      if (refSet.has(r)) refSet.delete(r);
+      else if (refMatch(r)) outsideRefs.add(r);
+    });
+    const issues: string[] = [];
+    if (!matchAll) issues.push(t.badReferences);
+    if (noSegRefs.length > 0)
+      issues.push(t.noSegments.replace('{0}', noSegRefs.join(', ')));
+    if (refSet.size > 0)
+      issues.push(
+        t.missingReferences.replace('{0}', Array.from(refSet).sort().join(', '))
+      );
+    if (outsideRefs.size > 0) {
+      issues.push(
+        t.outsideReferences.replace('{0}', Array.from(outsideRefs).join(', '))
+      );
+    }
+    if (noRefSegs) issues.push(t.noReferences);
+    return issues;
+  };
+
   const handleCancel = () => {
     if (savingRef.current) {
       showMessage(t.canceling);
@@ -409,13 +515,29 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     }
     checkSavedFn(() => {
       toolChanged(verseToolId, false);
-      handleComplete(false);
+      handleComplete(true); // cancel advances to next step
     });
   };
 
-  const handleSaveMarkup = () => {
+  const resetSave = () => {
+    setConfirm('');
+    setIssues([]);
+  };
+
+  const handleNoIssueSave = () => {
     if (!saveRequested(verseToolId)) {
       startSave(verseToolId);
+    }
+    resetSave();
+  };
+
+  const handleSaveMarkup = () => {
+    const issues = checkRefs();
+    if (issues.length > 0) {
+      setIssues(issues);
+      setConfirm(t.issues);
+    } else {
+      handleNoIssueSave();
     }
   };
 
@@ -459,6 +581,20 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
           {ts.cancel}
         </AltButton>
       </ActionRow>
+      {confirm && (
+        <Confirm
+          jsx={
+            <ul>
+              {issues.map((i, j) => (
+                <li key={`i${j}`}>{i}</li>
+              ))}
+            </ul>
+          }
+          text={confirm}
+          noResponse={resetSave}
+          yesResponse={handleNoIssueSave}
+        />
+      )}
     </Box>
   ) : (
     <Typography variant="h2" align="center">

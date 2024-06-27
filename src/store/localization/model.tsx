@@ -1387,10 +1387,16 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IVerseStrings extends Localize.LocalizedStringsMethods {
+    "badReferences": string;
     "canceling": string;
     "clipboard": string;
     "copyToClipboard": string;
+    "issues": string;
     "markVerses": string;
+    "missingReferences": string;
+    "noReferences": string;
+    "noSegments": string;
+    "outsideReferences": string;
     "pasteFormat": string;
     "reference": string;
     "saveVerseMarkup": string;
