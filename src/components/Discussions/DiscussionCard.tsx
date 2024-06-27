@@ -1,6 +1,7 @@
 import { useEffect, useContext, useMemo, useRef, useState } from 'react';
 import { useGlobal } from 'reactn';
 import {
+  alpha,
   Box,
   BoxProps,
   Button,
@@ -132,7 +133,7 @@ const StyledCard = styled(Card, {
       }
     : {
         margin: theme.spacing(1),
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: alpha(theme.palette.primary.light, 0.4),
         flexGrow: 1,
       }),
 }));
