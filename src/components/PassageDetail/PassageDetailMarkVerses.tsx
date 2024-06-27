@@ -480,9 +480,9 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
       .filter((v, i) => i > 0)
       .filter((v) => v[ColName.Ref].value && !v[ColName.Limits].value)
       .map((v) => v[ColName.Ref].value);
-    const noRefSegs = dataRef.current.some(
-      (v, i) => i > 0 || (!v[ColName.Ref].value && v[ColName.Limits].value)
-    );
+    const noRefSegs = dataRef.current
+      .filter((v, i) => i > 0)
+      .some((v, i) => !v[ColName.Ref].value && v[ColName.Limits].value);
     const matchAll = refs.every((r) => refMatch(r));
     const refSet = new Set(passageRefs.current);
     const outsideRefs = new Set<string>();
