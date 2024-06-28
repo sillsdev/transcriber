@@ -5,6 +5,7 @@ import {
   ITranscriptionTabStrings,
   IVerseStrings,
   MediaFileD,
+  Passage,
 } from '../../model';
 import {
   Box,
@@ -115,6 +116,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   const [heightStyle, setHeightStyle] = useState({
     maxHeight: `${window.innerHeight - NotTable}px`,
   });
+  const [engVrs, setEngVrs] = useState<Map<string, number[]>>(new Map());
   const savingRef = useRef(false);
   const canceling = useRef(false);
   const dataRef = useRef<ICell[][]>([]);
@@ -160,6 +162,11 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
       setDimensions();
     }, 100);
     window.addEventListener('resize', handleResize);
+
+    import('../../assets/eng-vrs').then((module) => {
+      setEngVrs(new Map<string, number[]>(module.default as IVrs[]));
+    });
+
     return () => {
       window.removeEventListener('resize', handleResize);
     };
@@ -203,39 +210,40 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     if (segmentsRef.current) handleSegment(segmentsRef.current, true);
   };
 
-  useEffect(() => {
-    const list: string[] = [];
-    parseRef(passage);
-    const { startChapter, startVerse, endChapter, endVerse } =
-      passage.attributes;
-    const match = refMatch(passage.attributes.reference);
+  const getRefs = (value: string) => {
+    const refs: string[] = [];
+    const psg = { attributes: { reference: value } } as Passage;
+    parseRef(psg);
+    const { startChapter, startVerse, endChapter, endVerse } = psg.attributes;
+    const match = refMatch(psg.attributes.reference);
     let firstVerse = startVerse ?? 1;
     if (match && `${firstVerse}` !== match[2]) {
       firstVerse += 1;
-      list.push(`${startChapter}:${match[2]}`);
+      refs.push(`${startChapter}:${match[2]}`);
     }
     if (startChapter === endChapter) {
       for (let i = firstVerse; i < (endVerse ?? firstVerse ?? 1); i++) {
-        list.push(`${startChapter}:${i}`);
+        refs.push(`${startChapter}:${i}`);
       }
-      if (match) list.push(`${endChapter}:${match[3]}`);
-      setupData(list);
+      if (match) refs.push(`${endChapter}:${match[3] || match[2]}`);
     } else {
-      import('../../assets/eng-vrs').then((module) => {
-        const engVrs = new Map<string, number[]>(module.default as IVrs[]);
-        const endChap1 = (engVrs.get(passage.attributes.book) ?? [])[
-          (startChapter ?? 1) - 1
-        ];
-        for (let i = firstVerse; i <= endChap1; i++) {
-          list.push(`${startChapter}:${i}`);
-        }
-        for (let i = 1; i < (endVerse ?? 1); i++) {
-          list.push(`${endChapter}:${i}`);
-        }
-        if (match) list.push(`${endChapter}:${match[4]}`);
-        setupData(list);
-      });
+      const endChap1 = (engVrs.get(psg.attributes.book) ?? [])[
+        (startChapter ?? 1) - 1
+      ];
+      for (let i = firstVerse; i <= endChap1; i++) {
+        refs.push(`${startChapter}:${i}`);
+      }
+      for (let i = 1; i < (endVerse ?? 1); i++) {
+        refs.push(`${endChapter}:${i}`);
+      }
+      if (match) refs.push(`${endChapter}:${match[4]}`);
     }
+    return refs;
+  };
+
+  useEffect(() => {
+    const refs = getRefs(passage.attributes.reference);
+    setupData(refs);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passage]);
 
@@ -328,6 +336,17 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     }
   };
 
+  const collectRefs = (data: ICell[][]) => {
+    let refs: string[] = [];
+    data
+      .filter((v, i) => i > 0)
+      .forEach((v) => {
+        const value = v[ColName.Ref].value;
+        if (refMatch(value)) refs.push(...getRefs(value));
+      });
+    return refs;
+  };
+
   const d3 = (d: number) => d.toFixed(3);
 
   const formLim = ({ start, end }: IRegion) => `${d3(start)} --> ${d3(end)}`;
@@ -353,12 +372,17 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
         newData.push(rowCells([formLim(r), r.label ?? '']));
         change = true;
       } else {
+        const refsSoFar = collectRefs(newData);
         const row = dataRef.current[i + 1];
         if (row[ColName.Limits].value !== formLim(r)) {
           row[ColName.Limits].value = formLim(r);
           change = true;
         }
-        if (r?.label !== undefined && row[ColName.Ref].value !== r.label) {
+        if (
+          r?.label !== undefined &&
+          row[ColName.Ref].value !== r.label &&
+          !refsSoFar.includes(r.label)
+        ) {
           row[ColName.Ref].value = r.label;
           if (!refMatch(r.label)) row[ColName.Ref].className = 'ref Err';
           change = true;
@@ -367,7 +391,12 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
       }
     });
 
-    dataRef.current.slice(newData.length).forEach((r) => newData.push(r));
+    const refs = collectRefs(newData);
+    dataRef.current.slice(newData.length).forEach((r) => {
+      if (!refs.includes(r[ColName.Ref].value)) {
+        newData.push(r);
+      }
+    });
 
     if (change) {
       setData(newData);
@@ -451,32 +480,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   }, [toolsChanged]);
 
   const checkRefs = () => {
-    const refs: string[] = [];
-    dataRef.current
-      .filter((v, i) => i > 0 && v[ColName.Ref].value)
-      .forEach((v) => {
-        const value = v[ColName.Ref].value;
-        const m = refMatch(value);
-        if (m) {
-          if (!m[3]) {
-            // single verse
-            refs.push(value);
-          } else {
-            if (!m[4]) {
-              // single chapter
-              const stop = parseInt(m[3]);
-              for (let i = parseInt(m[2]); i <= stop; i++) {
-                refs.push(`${m[1]}:${i}`);
-              }
-            } else {
-              showMessage('TODO: cross chapter verse checking not implemented');
-            }
-          }
-        } else {
-          // not a valid reference
-          refs.push(value);
-        }
-      });
+    const refs: string[] = collectRefs(dataRef.current);
     const noSegRefs = dataRef.current
       .filter((v, i) => i > 0)
       .filter((v) => v[ColName.Ref].value && !v[ColName.Limits].value)

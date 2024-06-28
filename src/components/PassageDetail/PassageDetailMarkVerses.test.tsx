@@ -1,6 +1,6 @@
 /* eslint-disable testing-library/no-unnecessary-act */
 /* eslint-disable testing-library/no-node-access */
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UnsavedProvider } from '../../context/UnsavedContext';
 import PassageDetailMarkVerses, {
@@ -126,16 +126,17 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-test('should render a table of verses', () => {
+test('should render a table of verses', async () => {
   // Arrange
 
   // Act
   runTest({ width: 1000 });
-
-  // Assert
   const tbody = screen.getByTestId('verse-sheet')?.firstChild?.firstChild
     ?.firstChild as HTMLElement;
-  expect(tbody.children.length).toBe(5); // 4 verses + 1 header
+  await waitFor(() => expect(tbody.children.length).toBeTruthy()); // table loaded
+
+  // Assert
+  expect(tbody.children.length).toBe(5); // 4 verses + 1 header row
   expect(tbody.children[0].children.length).toBe(2); // 2 columns
 });
 
@@ -147,13 +148,13 @@ test('should mark cell selected when clicking', async () => {
   runTest({ width: 1000 });
   const tbody = screen.getByTestId('verse-sheet')?.firstChild?.firstChild
     ?.firstChild as HTMLElement;
-  const firstLimit = tbody.children[1].firstChild as HTMLTableCellElement;
+  await waitFor(() => expect(tbody.children.length).toBeTruthy()); // table loaded
 
+  // Assert
+  const firstLimit = tbody.children[1].firstChild as HTMLTableCellElement;
   expect(firstLimit.getAttribute('class')?.includes('selected')).toBeFalsy();
 
   await user.click(firstLimit);
-
-  // Assert
   expect(firstLimit.getAttribute('class')?.includes('selected')).toBeTruthy();
 });
 
@@ -165,6 +166,8 @@ test('should prevent changes', async () => {
   runTest({ width: 1000 });
   const tbody = screen.getByTestId('verse-sheet')?.firstChild?.firstChild
     ?.firstChild as HTMLElement;
+  await waitFor(() => expect(tbody.children.length).toBeTruthy()); // table loaded
+
   const headerLimit = tbody.children[0].firstChild as HTMLTableCellElement;
   const firstLimit = tbody.children[1].firstChild as HTMLTableCellElement;
 
@@ -176,7 +179,7 @@ test('should prevent changes', async () => {
   expect(firstLimit.textContent).toBe('');
 });
 
-test('should handle start verse with a letter in one chapter', () => {
+test('should handle start verse with a letter in one chapter', async () => {
   // Arrange
   mockPassage.attributes = { ...passageAttributes, reference: '1:1b-4' } as any;
 
@@ -184,13 +187,15 @@ test('should handle start verse with a letter in one chapter', () => {
   runTest({ width: 1000 });
   const tbody = screen.getByTestId('verse-sheet')?.firstChild?.firstChild
     ?.firstChild as HTMLElement;
+  await waitFor(() => expect(tbody.children.length).toBeTruthy()); // table loaded
+
   const firstReference = tbody.children[1].children[1] as HTMLTableCellElement;
 
   // Assert
   expect(firstReference.textContent).toBe('1:1b');
 });
 
-test('should handle end verse with a letter in one chapter', () => {
+test('should handle end verse with a letter in one chapter', async () => {
   // Arrange
   mockPassage.attributes = { ...passageAttributes, reference: '1:1-2a' } as any;
 
@@ -198,19 +203,23 @@ test('should handle end verse with a letter in one chapter', () => {
   runTest({ width: 1000 });
   const tbody = screen.getByTestId('verse-sheet')?.firstChild?.firstChild
     ?.firstChild as HTMLElement;
+  await waitFor(() => expect(tbody.children.length).toBeTruthy()); // table loaded
+
   const firstReference = tbody.children[2].children[1] as HTMLTableCellElement;
 
   // Assert
   expect(firstReference.textContent).toBe('1:2a');
 });
 
-test('should add limits to the table', () => {
+test('should add limits to the table', async () => {
   // Arrange
 
   // Act
   runTest({ width: 1000 });
   const tbody = screen.getByTestId('verse-sheet')?.firstChild?.firstChild
     ?.firstChild as HTMLElement;
+  await waitFor(() => expect(tbody.children.length).toBeTruthy()); // table loaded
+
   const firstLimit = tbody.children[1].firstChild as HTMLTableCellElement;
   act(() => {
     if (mockPlayerAction) {
@@ -234,13 +243,15 @@ test('should add limits to the table', () => {
   expect(tbody.children[6].children[1].textContent).toBe('');
 });
 
-test('should add limits with label to the table', () => {
+test('should add limits with label to the table', async () => {
   // Arrange
 
   // Act
   runTest({ width: 1000 });
   const tbody = screen.getByTestId('verse-sheet')?.firstChild?.firstChild
     ?.firstChild as HTMLElement;
+  await waitFor(() => expect(tbody.children.length).toBeTruthy()); // table loaded
+
   const firstLimit = tbody.children[1].firstChild as HTMLTableCellElement;
   act(() => {
     if (mockPlayerAction) {
@@ -254,4 +265,48 @@ test('should add limits with label to the table', () => {
   // Assert
   expect(firstLimit.textContent).toBe('0.000 --> 5.000');
   expect(tbody.children[1].children[1].textContent).toBe('1:1-2');
+});
+
+test('should not add refs included already in bridges or labels', async () => {
+  // Arrange
+
+  // Act
+  runTest({ width: 1000 });
+  const tbody = screen.getByTestId('verse-sheet')?.firstChild?.firstChild
+    ?.firstChild as HTMLElement;
+  await waitFor(() => expect(tbody.children.length).toBeTruthy()); // table loaded
+
+  act(() => {
+    if (mockPlayerAction) {
+      mockPlayerAction(
+        '{"regions":"[{\\"start\\":0,\\"end\\":5,\\"label\\":\\"1:1-2\\"},{\\"start\\":5,\\"end\\":9,\\"label\\":\\"1:3\\"},{\\"start\\":12,\\"end\\":17,\\"label\\":\\"1:4\\"},{\\"start\\":17,\\"end\\":24},{\\"start\\":24,\\"end\\":28},{\\"start\\":9,\\"end\\":12}]"}',
+        true
+      );
+    }
+  });
+
+  // Assert
+  expect(tbody.children[5].children[1].textContent).toBe('');
+});
+
+test('should not add rows including refs already in table', async () => {
+  // Arrange
+
+  // Act
+  runTest({ width: 1000 });
+  const tbody = screen.getByTestId('verse-sheet')?.firstChild?.firstChild
+    ?.firstChild as HTMLElement;
+  await waitFor(() => expect(tbody.children.length).toBeTruthy()); // table loaded
+
+  act(() => {
+    if (mockPlayerAction) {
+      mockPlayerAction(
+        '{"regions":"[{\\"start\\":0,\\"end\\":5,\\"label\\":\\"1:1-2\\"},{\\"start\\":5,\\"end\\":9,\\"label\\":\\"1:3\\"},{\\"start\\":12,\\"end\\":17,\\"label\\":\\"1:4\\"}]"}',
+        true
+      );
+    }
+  });
+
+  // Assert
+  expect(tbody.children.length).toBe(4); // 3 limits (with 3 verse refs) + 1 header
 });
