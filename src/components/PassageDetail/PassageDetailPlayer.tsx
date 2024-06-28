@@ -36,6 +36,7 @@ export interface DetailPlayerProps {
   canSetDefaultParams?: boolean;
   onSegment?: (segment: string, init: boolean) => void;
   onSegmentParamChange?: (params: IRegionParams, teamDefault: boolean) => void;
+  onStartRegion?: (position: number) => void;
   onProgress?: (progress: number) => void;
   onSaveProgress?: (progress: number) => void;
   onInteraction?: () => void;
@@ -55,6 +56,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     canSetDefaultParams,
     onSegment,
     onSegmentParamChange,
+    onStartRegion,
     onProgress,
     onSaveProgress,
     onInteraction,
@@ -327,6 +329,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
         setBusy={setPDBusy}
         onSegmentChange={onSegmentChange}
         onSegmentParamChange={onSegmentParamChange}
+        onStartRegion={onStartRegion}
         onPlayStatus={onPlayStatus}
         onInteraction={onInteraction}
         onCurrentSegment={onCurrentSegment}

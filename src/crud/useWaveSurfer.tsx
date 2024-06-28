@@ -37,7 +37,8 @@ export function useWaveSurfer(
   singleRegionOnly: boolean = false,
   timelineContainer?: any,
   currentSegmentIndex?: number,
-  onCurrentRegion?: (currentRegion: IRegion | undefined) => void
+  onCurrentRegion?: (currentRegion: IRegion | undefined) => void,
+  onStartRegion?: (start: number) => void
 ) {
   //const isMounted = useMounted('wavesurfer');
   const [globalStore] = useGlobal();
@@ -150,7 +151,8 @@ export function useWaveSurfer(
     wsGoto,
     progress,
     setPlaying,
-    onCurrentRegion
+    onCurrentRegion,
+    onStartRegion
   );
 
   const wavesurfer = () =>

@@ -29,13 +29,17 @@ import { AltButton } from '../../control/AltButton';
 import { GrowingSpacer } from '../../control/GrowingSpacer';
 import { PriButton } from '../../control/PriButton';
 import PassageDetailPlayer from './PassageDetailPlayer';
-import { NamedRegions, updateSegments } from '../../utils/namedSegments';
+import {
+  NamedRegions,
+  updateSegments,
+  getSortedRegions,
+} from '../../utils/namedSegments';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { useProjectSegmentSave } from './Internalization/useProjectSegmentSave';
 import { waitForIt } from '../../utils/waitForIt';
 import { JSONParse } from '../../utils/jsonParse';
-import { IRegion, parseRegions } from '../../crud/useWavesurferRegions';
+import { IRegion } from '../../crud/useWavesurferRegions';
 import { cleanClipboard } from '../../utils/cleanClipboard';
 import { refMatch } from '../../utils/refMatch';
 import Confirm from '../AlertDialog';
@@ -282,15 +286,12 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     });
   };
 
-  const getRegions = (segments: string) =>
-    parseRegions(segments).regions.sort((i, j) => i.start - j.start);
-
   const writeResources = async () => {
     if (!savingRef.current) {
       savingRef.current = true;
       if (media) {
         if (numSegments !== 0) {
-          let segs = getRegions(segmentsRef.current);
+          let segs = getSortedRegions(segmentsRef.current);
           segs = segs.map((r, i) =>
             i + 1 < dataRef.current.length
               ? {
@@ -332,7 +333,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   const formLim = ({ start, end }: IRegion) => `${d3(start)} --> ${d3(end)}`;
 
   const handleSegment = (segments: string, init: boolean) => {
-    const regions = getRegions(segments);
+    const regions = getSortedRegions(segments);
     let change = numSegments !== regions.length;
     setNumSegments(regions.length);
     segmentsRef.current = segments;
