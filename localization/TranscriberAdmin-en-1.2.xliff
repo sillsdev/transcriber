@@ -8785,6 +8785,13 @@
                <context context-type="sourcefile">passageDetail.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="workflowSteps.markVerses">
+            <source>Mark Verses</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="workflowSteps.wholeBackTranslate">
             <source>Whole Back Translate</source>
             <target/>
