@@ -13,7 +13,11 @@ export const useFilteredSteps = () => {
     GetOrgWorkflowSteps({ process: 'ANY', org: organization }).then(
       (orgsteps: OrgWorkflowStepD[]) => {
         const wf = orgsteps.filter(
-          (s) => scripture || getTool(s.attributes?.tool) !== ToolSlug.Paratext
+          (s) =>
+            scripture ||
+            ![ToolSlug.Paratext, ToolSlug.Verses].includes(
+              getTool(s.attributes?.tool)
+            )
         );
         cb(wf);
       }
