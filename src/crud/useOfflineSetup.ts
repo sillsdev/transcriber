@@ -179,6 +179,7 @@ export const useOfflineSetup = () => {
         { name: 'Internalize', tool: 'resource' },
         { name: 'Record', tool: 'record' },
         { name: 'TermIdentify', tool: 'keyterm' },
+        { name: 'MarkVerses', tool: 'verses' },
         { name: 'Transcribe', tool: 'transcribe' },
         { name: 'Review', tool: 'transcribe' },
         { name: 'ParatextSync', tool: 'paratext' },
@@ -255,6 +256,7 @@ export const useOfflineSetup = () => {
         { name: 'Internalize', tool: 'resource' },
         { name: 'Record', tool: 'record' },
         { name: 'TeamCheck', tool: 'teamCheck' },
+        { name: 'MarkVerses', tool: 'verses' },
         { name: 'Transcribe', tool: 'transcribe' },
         { name: 'Review', tool: 'transcribe' },
         { name: 'ParatextSync', tool: 'paratext' },
@@ -263,6 +265,7 @@ export const useOfflineSetup = () => {
 
       await makeWorkflowProcessSteps('transcriber', [
         { name: 'Record', tool: 'record' },
+        { name: 'MarkVerses', tool: 'verses' },
         { name: 'Transcribe', tool: 'transcribe' },
         { name: 'ParatextSync', tool: 'paratext' },
         { name: 'Export', tool: 'export' },

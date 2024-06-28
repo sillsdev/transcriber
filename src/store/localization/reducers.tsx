@@ -1602,6 +1602,7 @@ const initialState = {
 			"teamReview": "Term Review",
 			"transcribe": "Transcribe",
 			"unsaved": "Unsaved content",
+			"markVerses": "Mark Verses",
 			"wholeBackTranslate": "Whole Back Translate",
 			"wholeBackTranslation": "Whole Back Translate",
 			"wBTTranscribe": "Whole BT Transcribe",
