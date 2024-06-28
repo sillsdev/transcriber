@@ -31,7 +31,7 @@ export const PublishButton = (props: IProps) => {
         color:
           rowInfo[rowIndex].published === PublishLevelEnum.Public
             ? 'green'
-            : 'orange',
+            : 'amber',
       }}
       id="unpublish"
       onClick={() => onAction(rowIndex, ExtraIcon.Publish)}

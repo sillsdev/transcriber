@@ -19,19 +19,19 @@ const StyledIconButton = styled(IconButton, {
 })<StyledIconButtonProps>(({ shared, theme }) => ({
   ...(shared === IMediaShare.OldVersionOnly
     ? {
-      color: 'orange',
-    }
+        color: 'amber',
+      }
     : shared === IMediaShare.Latest
-      ? {
+    ? {
         color: 'green',
       }
-      : shared === IMediaShare.None
-        ? {
-          color: 'red',
-        }
-        : {
-          color: theme.palette.primary.light,
-        }),
+    : shared === IMediaShare.None
+    ? {
+        color: 'red',
+      }
+    : {
+        color: theme.palette.primary.light,
+      }),
 }));
 
 interface IProps {
@@ -75,14 +75,14 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       {isPassage && (
         <StyledIconButton
-          id={isNote ? "noteEdit" : "passageShare"}
+          id={isNote ? 'noteEdit' : 'passageShare'}
           shared={mediaShared}
           title={
             isNote
               ? t.noteDetails
               : mediaShared !== IMediaShare.NotPublic
-                ? t.resourceEdit
-                : t.versions
+              ? t.resourceEdit
+              : t.versions
           }
           disabled={!canEdit}
           onClick={onHistory(rowIndex)}
