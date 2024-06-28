@@ -60,6 +60,7 @@ export const AudioTable = (props: IProps) => {
       ? [
           { name: 'planName', title: t.planName },
           { name: 'actions', title: '\u00A0' },
+          { name: 'version', title: t.version },
           {
             name: 'readyToShare',
             title: shared ? t.readyToShare : t.published,
@@ -70,20 +71,19 @@ export const AudioTable = (props: IProps) => {
           { name: 'user', title: t.user },
           { name: 'duration', title: t.duration },
           { name: 'size', title: t.size },
-          { name: 'version', title: t.version },
           { name: 'date', title: t.date },
           { name: 'detach', title: '\u00A0' },
         ]
       : [
           { name: 'planName', title: t.planName },
           { name: 'actions', title: '\u00A0' },
+          { name: 'version', title: t.version },
           { name: 'fileName', title: t.fileName },
           { name: 'sectionDesc', title: organizedBy },
           { name: 'reference', title: t.reference },
           { name: 'user', title: t.user },
           { name: 'duration', title: t.duration },
           { name: 'size', title: t.size },
-          { name: 'version', title: t.version },
           { name: 'date', title: t.date },
           { name: 'detach', title: '\u00A0' },
         ];
@@ -92,6 +92,7 @@ export const AudioTable = (props: IProps) => {
       ? [
           { columnName: 'planName', width: 150 },
           { columnName: 'actions', width: onAttach ? 120 : 70 },
+          { columnName: 'version', width: 100 },
           { columnName: 'readyToShare', width: 100 },
           { columnName: 'fileName', width: 220 },
           { columnName: 'sectionDesc', width: 150 },
@@ -99,20 +100,19 @@ export const AudioTable = (props: IProps) => {
           { columnName: 'user', width: 30 },
           { columnName: 'duration', width: 100 },
           { columnName: 'size', width: 100 },
-          { columnName: 'version', width: 100 },
           { columnName: 'date', width: 100 },
           { columnName: 'detach', width: 120 },
         ]
       : [
           { columnName: 'planName', width: 150 },
           { columnName: 'actions', width: onAttach ? 120 : 70 },
+          { columnName: 'version', width: 100 },
           { columnName: 'fileName', width: 220 },
           { columnName: 'sectionDesc', width: 150 },
           { columnName: 'reference', width: 150 },
           { columnName: 'user', width: 30 },
           { columnName: 'duration', width: 100 },
           { columnName: 'size', width: 100 },
-          { columnName: 'version', width: 100 },
           { columnName: 'date', width: 100 },
           { columnName: 'detach', width: 120 },
         ];
