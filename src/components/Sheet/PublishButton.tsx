@@ -27,6 +27,12 @@ export const PublishButton = (props: IProps) => {
   const description = isMovement(rowIndex) ? t.movement : organizedBy;
   return rowInfo[rowIndex].published !== PublishLevelEnum.None ? (
     <PublishIcon
+      sx={{
+        color:
+          rowInfo[rowIndex].published === PublishLevelEnum.Public
+            ? 'green'
+            : 'orange',
+      }}
       id="unpublish"
       onClick={() => onAction(rowIndex, ExtraIcon.Publish)}
       title={t.changepublish
