@@ -1,4 +1,4 @@
-import { IconButton } from '@mui/material';
+import { IconButton, alpha } from '@mui/material';
 import RadioButtonUnchecked from '@mui/icons-material/RadioButtonUnchecked';
 import { PublishIcon } from '../../control/PlanIcons';
 import { IPlanSheetStrings, ISheet } from '../../model';
@@ -27,6 +27,12 @@ export const PublishButton = (props: IProps) => {
   const description = isMovement(rowIndex) ? t.movement : organizedBy;
   return rowInfo[rowIndex].published !== PublishLevelEnum.None ? (
     <PublishIcon
+      sx={{
+        color:
+          rowInfo[rowIndex].published === PublishLevelEnum.Public
+            ? 'green'
+            : alpha('#8f9a27', 0.6),
+      }}
       id="unpublish"
       onClick={() => onAction(rowIndex, ExtraIcon.Publish)}
       title={t.changepublish
