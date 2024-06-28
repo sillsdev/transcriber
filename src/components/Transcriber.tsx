@@ -71,6 +71,7 @@ import {
   NamedRegions,
   updateSegments,
   useWaitForRemoteQueue,
+  getSortedRegions,
 } from '../utils';
 import { isElectron } from '../api-variable';
 import { TokenContext } from '../context/TokenProvider';
@@ -283,6 +284,8 @@ export function Transcriber(props: IProps) {
   const { accessToken } = useContext(TokenContext).state;
   const [assigned, setAssigned] = useState('');
   const [projData, setProjData] = useState<FontData>();
+  const [suggestedSegs, setSuggestedSegs] = useState<string>();
+  const verseSegs = useRef<string>();
   const playedSecsRef = useRef<number>(0);
   const segmentsRef = useRef<string>();
   const stateRef = useRef<string>(state);
@@ -449,7 +452,11 @@ export function Transcriber(props: IProps) {
     return true;
   };
 
-  const keys = [{ key: HISTORY_KEY, cb: handleShowHistory }];
+  const keys = [
+    { key: HISTORY_KEY, cb: handleShowHistory },
+    { key: 'SHIFT+ARROWRIGHT', cb: () => false },
+    { key: 'SHIFT+ARROWLEFT', cb: () => false },
+  ];
 
   useEffect(() => {
     const getParatextIntegration = () => {
@@ -556,6 +563,27 @@ export function Transcriber(props: IProps) {
       ) {
         //if someone else changed it...let the user pick
         setConfirm(trans);
+      }
+      const defaultSegments = mediafile?.attributes?.segments;
+      if (defaultSegments) {
+        const segs = getSortedRegions(
+          getSegments(NamedRegions.Verse, defaultSegments)
+        );
+        if (segs.length > 0) {
+          const textArea = transcriptionRef.current
+            .firstChild as HTMLTextAreaElement;
+          if (!textArea.value || textArea.value === 'undefined') {
+            let refText = segs.find(
+              (s) => s?.label && refMatch(s.label)
+            )?.label;
+            refText = `\\v ${refText?.split(':')[1]} `;
+            if (textArea.value === 'undefined') textArea.value = '';
+            insertAtCursor(textArea, refText);
+            setTextValue(textArea.value ?? '');
+          }
+        }
+        verseSegs.current = JSON.stringify({ regions: JSON.stringify(segs) });
+        setSuggestedSegs(verseSegs.current);
       }
     }
     mediaRef.current = mediafile;
@@ -665,7 +693,7 @@ export function Transcriber(props: IProps) {
     if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
   };
   const handleChange = (e: any) => {
-    setTextValue(e.target.value);
+    setTextValue(e.target.value ?? '');
     toolChanged(toolId, true);
   };
 
@@ -1065,7 +1093,7 @@ export function Transcriber(props: IProps) {
       const textArea = transcriptionRef.current
         .firstChild as HTMLTextAreaElement;
       insertAtCursor(textArea, timeStamp);
-      setTextValue(textArea.value);
+      setTextValue(textArea.value ?? '');
     }
   };
   const handleSplitSize = debounce((e: any) => {
@@ -1081,6 +1109,26 @@ export function Transcriber(props: IProps) {
         : ArtifactTypeSlug.Vernacular
     );
   }, [slug, artifactId, slugFromId]);
+
+  const handleStartRegion = (position: number) => {
+    const segs = getSortedRegions(verseSegs.current || '');
+    const ref = segs.find((s) => s.start === position)?.label;
+    const m = refMatch(ref || '');
+    if (ref && m) {
+      let refText = `\\v ${ref.substring(m[1].length + 1)} `;
+      const textArea = transcriptionRef.current
+        .firstChild as HTMLTextAreaElement;
+      const refPos = textArea.value.indexOf(refText);
+      if (refPos === -1) {
+        refText = ' ' + refText;
+        if (parseInt(m[2]) === 1) {
+          refText = ` \\c ${m[1]} ` + refText;
+        }
+        insertAtCursor(textArea, refText);
+        setTextValue(textArea.value ?? '');
+      }
+    }
+  };
 
   return (
     <GrowingDiv>
@@ -1141,6 +1189,8 @@ export function Transcriber(props: IProps) {
                         allowSegment={allowSegment}
                         allowZoomAndSpeed={true}
                         onProgress={onProgress}
+                        suggestedSegments={suggestedSegs}
+                        onStartRegion={handleStartRegion}
                         onSegment={onSegmentChange}
                         onSegmentParamChange={onSegmentParamChange}
                         onInteraction={onInteraction}

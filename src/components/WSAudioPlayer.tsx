@@ -107,6 +107,7 @@ interface IProps {
   onProgress?: (progress: number) => void;
   onSegmentChange?: (segments: string) => void;
   onSegmentParamChange?: (params: IRegionParams, teamDefault: boolean) => void;
+  onStartRegion?: (position: number) => void;
   onBlobReady?: (blob: Blob | undefined) => void;
   setBlobReady?: (ready: boolean) => void;
   setChanged?: (changed: boolean) => void;
@@ -167,6 +168,7 @@ function WSAudioPlayer(props: IProps) {
     onProgress,
     onSegmentChange,
     onSegmentParamChange,
+    onStartRegion,
     onPlayStatus,
     onBlobReady,
     setBlobReady,
@@ -267,7 +269,8 @@ function WSAudioPlayer(props: IProps) {
     allowRecord,
     timelineRef.current,
     currentSegmentIndex,
-    onCurrentSegment
+    onCurrentSegment,
+    onStartRegion
   );
   //because we have to call hooks consistently, call this even if we aren't going to record
   const { startRecording, stopRecording, acceptedMimes } = useMediaRecorder(

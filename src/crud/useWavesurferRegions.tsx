@@ -55,7 +55,8 @@ export function useWaveSurferRegions(
   goto: (position: number) => void,
   progress: () => number,
   setPlaying: (playing: boolean) => void,
-  onCurrentRegion?: (currentRegion: IRegion | undefined) => void
+  onCurrentRegion?: (currentRegion: IRegion | undefined) => void,
+  onStartRegion?: (start: number) => void
 ) {
   const [ws, setWaveSurfer] = useState<WaveSurfer>();
   const wavesurferRef = useRef<WaveSurfer>();
@@ -535,6 +536,7 @@ export function useWaveSurferRegions(
     var r = findPrevRegion(currentRegion());
     var newPlay = true;
     if (r) {
+      onStartRegion && onStartRegion(r.start);
       goto(r.start);
       loopingRegionRef.current = r;
     } else {
@@ -551,6 +553,7 @@ export function useWaveSurferRegions(
     var r = findNextRegion(currentRegion(), false);
     var newPlay = true;
     if (r) {
+      onStartRegion && onStartRegion(r.start);
       goto(r.start);
       loopingRegionRef.current = r;
     } else {

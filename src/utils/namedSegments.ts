@@ -1,5 +1,5 @@
 import { tryParseJSON } from './tryParseJson';
-import { INamedRegion } from '../crud/useWavesurferRegions';
+import { INamedRegion, parseRegions } from '../crud/useWavesurferRegions';
 
 export enum NamedRegions {
   Transcription = 'Transcription',
@@ -45,4 +45,8 @@ export function getSegments(name: string, segments: string) {
   //old style
   if (name === NamedRegions.Transcription) return segments;
   return '{}';
+}
+
+export function getSortedRegions(segments: string) {
+  return parseRegions(segments).regions.sort((i, j) => i.start - j.start);
 }
