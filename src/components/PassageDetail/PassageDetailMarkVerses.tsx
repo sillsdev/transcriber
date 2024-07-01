@@ -1,4 +1,11 @@
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useGlobal } from 'reactn';
 import {
   ISharedStrings,
@@ -210,42 +217,43 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     if (segmentsRef.current) handleSegment(segmentsRef.current, true);
   };
 
-  const getRefs = (value: string) => {
-    const refs: string[] = [];
-    const psg = { attributes: { reference: value } } as Passage;
-    parseRef(psg);
-    const { startChapter, startVerse, endChapter, endVerse } = psg.attributes;
-    const match = refMatch(psg.attributes.reference);
-    let firstVerse = startVerse ?? 1;
-    if (match && `${firstVerse}` !== match[2]) {
-      firstVerse += 1;
-      refs.push(`${startChapter}:${match[2]}`);
-    }
-    if (startChapter === endChapter) {
-      for (let i = firstVerse; i < (endVerse ?? firstVerse ?? 1); i++) {
-        refs.push(`${startChapter}:${i}`);
+  const getRefs = useCallback(
+    (value: string, book: string) => {
+      const refs: string[] = [];
+      const psg = { attributes: { reference: value } } as Passage;
+      parseRef(psg);
+      const { startChapter, startVerse, endChapter, endVerse } = psg.attributes;
+      const match = refMatch(psg.attributes.reference);
+      let firstVerse = startVerse ?? 1;
+      if (match && `${firstVerse}` !== match[2]) {
+        firstVerse += 1;
+        refs.push(`${startChapter}:${match[2]}`);
       }
-      if (match) refs.push(`${endChapter}:${match[3] || match[2]}`);
-    } else {
-      const endChap1 = (engVrs.get(psg.attributes.book) ?? [])[
-        (startChapter ?? 1) - 1
-      ];
-      for (let i = firstVerse; i <= endChap1; i++) {
-        refs.push(`${startChapter}:${i}`);
+      if (startChapter === endChapter) {
+        for (let i = firstVerse; i < (endVerse ?? firstVerse ?? 1); i++) {
+          refs.push(`${startChapter}:${i}`);
+        }
+        if (match) refs.push(`${endChapter}:${match[3] || match[2]}`);
+      } else {
+        const endChap1 = (engVrs.get(book) ?? [])[(startChapter ?? 1) - 1];
+        for (let i = firstVerse; i <= endChap1; i++) {
+          refs.push(`${startChapter}:${i}`);
+        }
+        for (let i = 1; i < (endVerse ?? 1); i++) {
+          refs.push(`${endChapter}:${i}`);
+        }
+        if (match) refs.push(`${endChapter}:${match[4]}`);
       }
-      for (let i = 1; i < (endVerse ?? 1); i++) {
-        refs.push(`${endChapter}:${i}`);
-      }
-      if (match) refs.push(`${endChapter}:${match[4]}`);
-    }
-    return refs;
-  };
+      return refs;
+    },
+    [engVrs]
+  );
 
   useEffect(() => {
-    const refs = getRefs(passage.attributes.reference);
+    const refs = getRefs(passage.attributes.reference, passage.attributes.book);
     setupData(refs);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passage]);
+  }, [passage, engVrs]);
 
   const parsedSteps = useMemo(() => {
     if (!orgWorkflowSteps) return [];
@@ -342,7 +350,8 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
       .filter((v, i) => i > 0)
       .forEach((v) => {
         const value = v[ColName.Ref].value;
-        if (refMatch(value)) refs.push(...getRefs(value));
+        if (refMatch(value))
+          refs.push(...getRefs(value, passage.attributes.book));
       });
     return refs;
   };

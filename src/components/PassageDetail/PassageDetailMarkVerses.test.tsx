@@ -205,10 +205,33 @@ test('should handle end verse with a letter in one chapter', async () => {
     ?.firstChild as HTMLElement;
   await waitFor(() => expect(tbody.children.length).toBeTruthy()); // table loaded
 
-  const firstReference = tbody.children[2].children[1] as HTMLTableCellElement;
+  const secondReference = tbody.children[2].children[1] as HTMLTableCellElement;
 
   // Assert
-  expect(firstReference.textContent).toBe('1:2a');
+  expect(secondReference.textContent).toBe('1:2a');
+});
+
+test('should handle cross chapter reference', async () => {
+  // Arrange
+  mockPassage.attributes = {
+    ...passageAttributes,
+    reference: '1:80-2:2a',
+  } as any;
+
+  // Act
+  runTest({ width: 1000 });
+  const tbody = screen.getByTestId('verse-sheet')?.firstChild?.firstChild
+    ?.firstChild as HTMLElement;
+  await waitFor(() => expect(tbody.children.length).toBeTruthy()); // table loaded
+
+  const firstReference = tbody.children[1].children[1] as HTMLTableCellElement;
+
+  // Assert
+  // table loads without first chapter final verse
+  // then reloads once the final verse map is loaded.
+  await waitFor(() => expect(firstReference.textContent).toBe('1:80'));
+  expect(tbody.children[2].children[1].textContent).toBe('2:1');
+  expect(tbody.children[3].children[1].textContent).toBe('2:2a');
 });
 
 test('should add limits to the table', async () => {
