@@ -566,7 +566,7 @@ export function Transcriber(props: IProps) {
       }
       const defaultSegments = mediafile?.attributes?.segments;
       if (defaultSegments) {
-        const segs = getSortedRegions(
+        let segs = getSortedRegions(
           getSegments(NamedRegions.Verse, defaultSegments)
         );
         if (segs.length > 0) {
@@ -583,7 +583,12 @@ export function Transcriber(props: IProps) {
           }
         }
         verseSegs.current = JSON.stringify({ regions: JSON.stringify(segs) });
-        setSuggestedSegs(verseSegs.current);
+        segs = segs.concat(
+          getSortedRegions(
+            getSegments(NamedRegions.Transcription, defaultSegments)
+          )
+        );
+        setSuggestedSegs(JSON.stringify({ regions: JSON.stringify(segs) }));
       }
     }
     mediaRef.current = mediafile;
