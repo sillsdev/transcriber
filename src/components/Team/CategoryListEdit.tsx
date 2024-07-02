@@ -40,7 +40,10 @@ interface IProps {
 export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   const [refresh, setRefresh] = React.useState(0);
   const [categories, setCategories] = useState<IArtifactCategory[]>([]);
-  const [edited, setEdited] = useState<[string, IArtifactCategory][]>([]);
+  const [edited, setEdited] = useState<Map<string, IArtifactCategory>>(
+    new Map()
+  );
+  const editRef = React.useRef<Map<string, IArtifactCategory>>(new Map());
   const [deleted, setDeleted] = useState<string[]>([]);
   const [builtIn, setBuiltIn] = useState<IArtifactCategory[]>([]);
   const [inUse, setInUse] = useState<[string, number][]>([]);
@@ -80,24 +83,30 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
     return value ? value[1] : 0;
   };
 
+  //without useCallback edited was always empty
+  //even after useCallback edited was always one behind the ref value.
+  //so I took it back out and just used the ref
   const handleChange = (c: IArtifactCategory) => {
-    const editMap = new Map<string, IArtifactCategory>(edited);
-    editMap.set(c.id, { ...c });
-    setEdited(Array.from(editMap));
+    editRef.current.set(c.id, { ...c });
+    const editMap = new Map<string, IArtifactCategory>(editRef.current);
+    setEdited(editMap);
   };
 
   const handleDelete = (c: IArtifactCategory) => () => {
     setDeleted((deleted) => deleted.concat(c.id));
   };
   const canSave = useMemo(
-    () => edited.length + deleted.length > 0,
+    () => edited.size + deleted.length > 0,
     [edited, deleted]
   );
 
   const handleClose = () => onClose && onClose();
 
   const handleSave = async () => {
-    const recs = edited.filter((r) => !deleted.includes(r[0])).map((r) => r[1]);
+    deleted.forEach((d) => {
+      edited.delete(d);
+    });
+    const recs = Array.from(edited.values());
     const t = new RecordTransformBuilder();
     const ops: RecordOperation[] = [];
     for (const r of recs) {
