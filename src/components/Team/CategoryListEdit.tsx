@@ -194,7 +194,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
                 teamId={teamId}
                 disabled={recording !== '' && c.id !== recording}
                 type={type}
-                category={c}
+                category={editRef.current.get(c.id) ?? c}
               />
             </ListItem>
           ))}
