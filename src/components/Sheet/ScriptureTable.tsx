@@ -941,8 +941,24 @@ export function ScriptureTable(props: IProps) {
           const mediaRec = findRecord(memory, 'mediafile', mediaId) as
             | MediaFileD
             | undefined;
-          if (mediaRec)
+          if (mediaRec) {
+            //get latest version before this
+            const prevMedia = mediafiles
+              .filter(
+                (m) =>
+                  m.id !== mediaId &&
+                  related(m, 'passage') === ws.passage?.id &&
+                  related(m, 'artifactType') === VernacularTag
+              )
+              .sort(
+                (a, b) =>
+                  a.attributes.versionNumber - b.attributes.versionNumber
+              )
+              .pop();
+            mediaRec.attributes.versionNumber =
+              (prevMedia?.attributes.versionNumber ?? 0) + 1;
             await memory.update((t) => [
+              ...UpdateRecord(t, mediaRec, user),
               ...UpdateRelatedRecord(
                 t,
                 mediaRec,
@@ -960,6 +976,7 @@ export function ScriptureTable(props: IProps) {
                 user
               ),
             ]);
+          }
         }
       }
     }

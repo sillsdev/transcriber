@@ -133,6 +133,11 @@ export function MediaPlayer(props: IProps) {
   }, [mediaState]);
 
   useEffect(() => {
+    stopPlay();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playItem]);
+
+  useEffect(() => {
     if (ready && audioRef.current && playItem !== '' && requestPlay) {
       startPlay();
     } else if (!requestPlay) {
@@ -239,7 +244,7 @@ export function MediaPlayer(props: IProps) {
       audioRef.current
         .play()
         .then(() => {
-          playSuccess.current = true;
+          if (audioRef.current) playSuccess.current = true;
         })
         .catch(() => {
           playSuccess.current = false;

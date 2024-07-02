@@ -375,7 +375,7 @@ export default function MediaTitle(props: IProps) {
   const handlePlay = (e: any) => {
     e.stopPropagation();
     //on first play...tell the media player to download the media
-    if (!playing && mediaId && !srcMediaId) {
+    if (!playing && mediaId && srcMediaId !== mediaId) {
       setSrcMediaId(mediaId);
     }
     setPlaying(!playing);
