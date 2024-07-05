@@ -41,6 +41,7 @@ import {
   remoteIdNum,
   useArtifactType,
   useOfflnMediafileCreate,
+  VernacularTag,
 } from '../crud';
 import { useGlobal } from 'reactn';
 import { TokenContext } from '../context/TokenProvider';
@@ -209,6 +210,7 @@ interface IProps {
   onMediaIdChange: (mediaId: string) => void;
   disabled?: boolean;
   required?: boolean;
+  passageId?: string;
 }
 
 export default function MediaTitle(props: IProps) {
@@ -228,6 +230,7 @@ export default function MediaTitle(props: IProps) {
     useplan,
     disabled,
     required,
+    passageId,
   } = props;
   const dispatch = useDispatch();
   const uploadFiles = (files: File[]) => dispatch(actions.uploadFiles(files));
@@ -458,7 +461,9 @@ export default function MediaTitle(props: IProps) {
   };
   const getUserId = () =>
     remoteIdNum('user', user || '', memory.keyMap as RecordKeyMap) || user;
-
+  const getPassageId = () =>
+    remoteIdNum('passage', passageId || '', memory.keyMap as RecordKeyMap) ||
+    passageId;
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     const uploadList = fileList.current;
     if (!uploadList) return; // This should never happen
@@ -468,7 +473,15 @@ export default function MediaTitle(props: IProps) {
       // offlineOnly
       var num = 1;
       mediaIdRef.current = (
-        await createMedia(data, num, uploadList[n].size, '', TitleId, '', user)
+        await createMedia(
+          data,
+          num,
+          uploadList[n].size,
+          passageId ?? '',
+          TitleId,
+          '',
+          user
+        )
       ).id;
     }
     if (!offline && mediaIdRef.current) {
@@ -497,9 +510,10 @@ export default function MediaTitle(props: IProps) {
       versionNumber: 1,
       originalFile: files[0].name,
       contentType: files[0].type,
-      artifactTypeId: TitleId,
+      artifactTypeId: passageId !== undefined ? VernacularTag : TitleId,
       recordedbyUserId: getUserId(),
       userId: getUserId(),
+      passageId: getPassageId(),
     };
     nextUpload({
       record: mediaFile,

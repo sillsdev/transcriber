@@ -14,7 +14,7 @@ export const useDownloadMedia = () => {
   const tryDownload = async (url: string, safe: boolean) => {
     var local = { localname: '' };
     var where = await dataPath(url, PathType.MEDIA, local);
-    console.log('tryDownload', where, local.localname, url);
+
     if (where !== local.localname) {
       try {
         ipc?.createFolder(path.dirname(local.localname));
