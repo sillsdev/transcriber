@@ -39,22 +39,20 @@ import { related } from '../crud/related';
 import { remoteId, remoteIdGuid } from '../crud/remoteId';
 import { useArtifactCategory } from '../crud/useArtifactCategory';
 import { useArtifactType } from '../crud/useArtifactType';
-import { useFetchMediaUrl } from '../crud/useFetchMediaUrl';
+import { BlobStatus, useFetchMediaBlob } from '../crud/useFetchMediaBlob';
 import { useFilteredSteps } from '../crud/useFilteredSteps';
 import { useOrgDefaults } from '../crud/useOrgDefaults';
 import { useOrgWorkflowSteps } from '../crud/useOrgWorkflowSteps';
 import StickyRedirect from '../components/StickyRedirect';
 import {
-  loadBlob,
   logError,
   prettySegment,
   rememberCurrentPassage,
   Severity,
-  waitForIt,
 } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
 import * as actions from '../store';
-import MediaPlayer from '../components/MediaPlayer';
+import LimitedMediaPlayer from '../components/LimitedMediaPlayer';
 import {
   getResources,
   mediaRows,
@@ -92,7 +90,6 @@ export const getPlanName = (plan: Plan) => {
 export enum PlayInPlayer {
   no = 0,
   yes = 1,
-  tryAgain = 2,
 }
 
 export interface IRow {
@@ -217,7 +214,6 @@ interface IProps {
   children: React.ReactElement;
 }
 const PassageDetailProvider = (props: IProps) => {
-  const [reporter] = useGlobal('errorReporter');
   const passages = useOrbitData<Passage[]>('passage');
   const sections = useOrbitData<Section[]>('section');
   const mediafiles = useOrbitData<MediaFileD[]>('mediafile');
@@ -252,7 +248,6 @@ const PassageDetailProvider = (props: IProps) => {
   const [saveResult, setSaveResult] = useGlobal('saveResult');
   const [confirm, setConfirm] = useState('');
   const view = React.useRef('');
-  const mediaUrlRef = useRef('');
   const { showMessage } = useSnackBar();
   const [plan] = useGlobal('plan');
   const { getProjectDefault } = useProjectDefaults();
@@ -262,7 +257,7 @@ const PassageDetailProvider = (props: IProps) => {
     wfStr,
     prjId: prjId ?? '',
   });
-  const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
+  const [blobState, fetchBlob] = useFetchMediaBlob();
   const fetching = useRef('');
   const segmentsCb = useRef<(segments: string) => void>();
   const getFilteredSteps = useFilteredSteps();
@@ -628,9 +623,7 @@ const PassageDetailProvider = (props: IProps) => {
         i = newRows.length - 1;
       } else {
         oldVernReset();
-        fetchMediaUrl({
-          id: '',
-        });
+        fetchBlob('');
         setState((state: ICtxState) => {
           return {
             ...state,
@@ -651,23 +644,15 @@ const PassageDetailProvider = (props: IProps) => {
     }
     const r = rowData[i];
     var resetBlob = false;
-    //we've gotten a 403 and requeried so selected hasn't changed
-    if (inPlayer === PlayInPlayer.tryAgain)
-      inPlayer =
-        state.playerMediafile?.id === r.mediafile.id
-          ? PlayInPlayer.yes
-          : PlayInPlayer.no;
     //if this is a file that will be played in the wavesurfer..fetch it
     if (inPlayer === PlayInPlayer.yes) {
       inPlayerRef.current = r.mediafile.id;
       if (
-        mediaState.id !== r.mediafile.id &&
+        blobState.id !== r.mediafile.id &&
         fetching.current !== r.mediafile.id
       ) {
         fetching.current = r.mediafile.id;
-        fetchMediaUrl({
-          id: r.mediafile.id,
-        });
+        fetchBlob(r.mediafile.id);
         resetBlob = true;
       }
 
@@ -869,66 +854,21 @@ const PassageDetailProvider = (props: IProps) => {
   }, [lang, booksLoaded, allBookData]);
 
   useEffect(() => {
-    if (mediaState.url) {
-      mediaUrlRef.current = mediaState.url;
-      fetching.current = '';
-      try {
-        loadBlob(mediaState.url, (urlOrError, b) => {
-          if (!b) {
-            if (urlOrError.includes('403')) {
-              //force requery for new media url
-              fetchMediaUrl({
-                id: '',
-              });
-              waitForIt(
-                'requery url',
-                () => mediaState.id === '',
-                () => false,
-                500
-              ).then(() => {
-                setSelected(state.selected, PlayInPlayer.tryAgain);
-              });
-            } else {
-              //no blob
-              showMessage(urlOrError);
-              setState((state: ICtxState) => {
-                return {
-                  ...state,
-                  loading: false,
-                  audioBlob: undefined,
-                  playing: false,
-                };
-              });
-            }
-            return;
-          }
-          //not sure what this intermediary file is, but causes console errors
-          if (b.type !== 'text/html' && b.type !== 'application/xml') {
-            if (urlOrError === mediaUrlRef.current) {
-              setState((state: ICtxState) => {
-                return {
-                  ...state,
-                  loading: false,
-                  audioBlob: b,
-                  playing: false,
-                };
-              });
-            }
-          }
-        });
-      } catch (e: any) {
-        logError(Severity.error, errorReporter, e);
-        showMessage(e.message);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mediaState.url]);
-
-  useEffect(() => {
-    if (mediaState.error) {
-      if (mediaState.error.startsWith('no offline file'))
+    if (blobState.blobStat === BlobStatus.FETCHED) {
+      setState((state: ICtxState) => {
+        return {
+          ...state,
+          loading: false,
+          audioBlob: blobState.blob,
+          playing: false,
+        };
+      });
+    } else if (blobState.blobStat === BlobStatus.ERROR) {
+      const errText = blobState?.error || 'Blob loading error';
+      if (errText.startsWith('no offline file'))
         showMessage(sharedStr.fileNotFound);
-      else showMessage(mediaState.error);
+      else showMessage(errText);
+      logError(Severity.error, errorReporter, errText);
       setState((state: ICtxState) => {
         return {
           ...state,
@@ -939,7 +879,8 @@ const PassageDetailProvider = (props: IProps) => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mediaState.error]);
+  }, [blobState]);
+
   useEffect(() => {
     if (saveResult) {
       logError(Severity.error, errorReporter, saveResult);
@@ -1114,7 +1055,7 @@ const PassageDetailProvider = (props: IProps) => {
     >
       {props.children}
       {/*this is only used to play old vernacular file segments*/}
-      <MediaPlayer
+      <LimitedMediaPlayer
         srcMediaId={state.oldVernacularPlayItem}
         requestPlay={state.oldVernacularPlaying}
         onEnded={handleOldVernacularPlayEnd}
