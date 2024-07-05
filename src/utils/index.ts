@@ -77,3 +77,4 @@ export * from './useCanPublish';
 export * from './useDataChanges';
 export * from './useJsonParams';
 export * from './jsonParse';
+export * from './useDownloadMedia';

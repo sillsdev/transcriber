@@ -7,7 +7,13 @@ import {
   PropsWithChildren,
 } from 'react';
 import { useGlobal } from 'reactn';
-import { infoMsg, logError, Severity, useCheckOnline } from '../utils';
+import {
+  infoMsg,
+  logError,
+  Severity,
+  useCheckOnline,
+  useDownloadMedia,
+} from '../utils';
 import { useInterval } from '../utils/useInterval';
 import Axios from 'axios';
 import {
@@ -71,6 +77,7 @@ export const processDataChanges = async (pdc: {
   errorReporter: any;
   setLanguage: typeof actions.setLanguage;
   setDataChangeCount: (value: number) => void;
+  tryDownload: (url: string, safe: boolean) => Promise<string>;
   cb?: () => void;
 }) => {
   const {
@@ -83,6 +90,7 @@ export const processDataChanges = async (pdc: {
     errorReporter,
     setLanguage,
     setDataChangeCount,
+    tryDownload,
     cb,
   } = pdc;
 
@@ -122,6 +130,7 @@ export const processDataChanges = async (pdc: {
   };
   const processTableChanges = async (
     transforms: RecordTransform[],
+    tryDownload: (url: string, safe: boolean) => Promise<string>,
     cb?: () => void
   ) => {
     const setRelated = (
@@ -227,6 +236,7 @@ export const processDataChanges = async (pdc: {
                       ?.id ?? ''
                   );
               }
+              tryDownload(upRec.record.attributes?.audioUrl as string, false);
               break;
 
             case 'user':
@@ -294,7 +304,7 @@ export const processDataChanges = async (pdc: {
           { fullResponse: true }
         );
         if (results?.transforms)
-          await processTableChanges(results.transforms, cb);
+          await processTableChanges(results.transforms, tryDownload, cb);
       }
     }
     setDataChangeCount(deletes.length);
@@ -350,7 +360,8 @@ export const doDataChanges = async (
   errorReporter: any,
   user: string,
   setLanguage: typeof actions.setLanguage,
-  setDataChangeCount: (value: number) => void
+  setDataChangeCount: (value: number) => void,
+  tryDownload: (url: string, safe: boolean) => Promise<string>
 ) => {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -409,6 +420,7 @@ export const doDataChanges = async (
             errorReporter,
             setLanguage,
             setDataChangeCount,
+            tryDownload,
           });
           if (startNext === start) tries--;
           else start = startNext;
@@ -436,6 +448,7 @@ export const doDataChanges = async (
       errorReporter,
       setLanguage,
       setDataChangeCount,
+      tryDownload,
     });
     if (startNext === start) tries--;
     else start = startNext;
@@ -499,6 +512,7 @@ export function DataChanges(props: PropsWithChildren) {
   const saving = useMemo(() => anySaving(), [toolsChanged]);
   const doSanityCheck = useSanityCheck(setLanguage);
   const { getBibleMediaProject, getBibleMediaPlan } = useBibleMedia();
+  const { tryDownload } = useDownloadMedia();
 
   useEffect(() => {
     const defaultBusyDelay = 1000;
@@ -551,7 +565,8 @@ export function DataChanges(props: PropsWithChildren) {
         errorReporter,
         user,
         setLanguage,
-        setDataChangeCount
+        setDataChangeCount,
+        tryDownload
       );
       if (check) {
         //make sure we have a bible media project and plan downloaded

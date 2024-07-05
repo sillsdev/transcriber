@@ -5,7 +5,7 @@ import Memory from '@orbit/memory';
 import moment from 'moment';
 import { BaseModel } from '../model/baseModel';
 import { JSONAPISource } from '@orbit/jsonapi';
-import { logError, Severity } from '../utils';
+import { logError, Severity, useDownloadMedia } from '../utils';
 import { VwChecksum, PlanD, ProjectD } from '../model';
 import * as actions from '../store';
 import { TokenContext } from '../context/TokenProvider';
@@ -19,6 +19,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
   const token = useContext(TokenContext).state.accessToken;
   const [errorReporter] = useGlobal('errorReporter');
   const [isOffline] = useGlobal('offline');
+  const { tryDownload } = useDownloadMedia();
 
   const stringToDateNum = (val: string) =>
     val ? moment(val.endsWith('Z') ? val : val + 'Z').valueOf() : 0;
@@ -49,6 +50,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           errorReporter,
           setLanguage,
           setDataChangeCount: (value: number) => {},
+          tryDownload,
           cb,
         });
         if (startNext === start) tries--;
