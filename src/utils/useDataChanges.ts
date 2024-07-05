@@ -5,6 +5,7 @@ import { doDataChanges } from '../hoc/DataChanges';
 import { useOfflnProjRead } from '../crud';
 import * as actions from '../store';
 import { useGlobal } from 'reactn';
+import { useDownloadMedia } from './useDownloadMedia';
 
 export const useDataChanges = () => {
   const { accessToken } = useContext(TokenContext).state;
@@ -17,7 +18,7 @@ export const useDataChanges = () => {
   const dispatch = useDispatch();
   const setLanguage = (lang: string) => dispatch(actions.setLanguage(lang));
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
-
+  const { tryDownload } = useDownloadMedia();
   return () => {
     doDataChanges(
       accessToken || '',
@@ -28,7 +29,8 @@ export const useDataChanges = () => {
       errorReporter,
       user,
       setLanguage,
-      setDataChangeCount
+      setDataChangeCount,
+      tryDownload
     );
   };
 };

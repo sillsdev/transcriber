@@ -37,8 +37,9 @@ import {
   audPrefsName,
   setAudacityPref,
   execFolder,
+  useDownloadMedia,
 } from '../../utils';
-import { dataPath, PathType } from '../../utils';
+
 import { extensions, mimes } from '.';
 import SpeakerName from '../SpeakerName';
 import { audacityManagerSelector } from '../../selector';
@@ -101,6 +102,7 @@ function AudacityManager(props: IProps) {
     audacityManagerSelector,
     shallowEqual
   );
+  const { tryDownload } = useDownloadMedia();
 
   const handleClose = () => {
     onClose();
@@ -152,7 +154,7 @@ function AudacityManager(props: IProps) {
     let mediaName = '';
     if ((mediaId || '') !== '') {
       const url = getMediaUrl(mediaId);
-      mediaName = await dataPath(url, PathType.MEDIA);
+      mediaName = await tryDownload(url, false);
       if (!(await ipc?.exists(mediaName))) {
         showMessage(t.checkDownload);
         return;

@@ -6,9 +6,9 @@ import { TokenContext } from '../context/TokenProvider';
 import { remoteIdGuid, remoteId } from '../crud';
 import { dataPath, PathType } from '../utils/dataPath';
 import { MediaFile } from '../model';
-import { infoMsg, logError, Severity } from '../utils';
+import { infoMsg, logError, Severity, useDownloadMedia } from '../utils';
 import { RecordKeyMap } from '@orbit/records';
-const ipc = (window as any)?.electron;
+
 // See: https://www.smashingmagazine.com/2020/07/custom-react-hook-fetch-cache-data/
 
 export enum MediaSt {
@@ -79,6 +79,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const { accessToken } = useContext(TokenContext).state;
+  const { tryDownload, safeURL } = useDownloadMedia();
 
   const guidId = (id: string) => {
     return !isNaN(Number(id))
@@ -90,15 +91,6 @@ export const useFetchMediaUrl = (reporter?: any) => {
     return isNaN(Number(id))
       ? (remoteId('mediafile', id, memory.keyMap as RecordKeyMap) as string)
       : id;
-  };
-
-  const safeURL = async (path: string) => {
-    if (!path.startsWith('http')) {
-      const start = (await ipc?.isWindows()) ? 8 : 7;
-      const url = new URL(`file://${path}`).toString().slice(start);
-      return `transcribe-safe://${url}`;
-    }
-    return path;
   };
 
   useEffect(() => {
@@ -131,8 +123,8 @@ export const useFetchMediaUrl = (reporter?: any) => {
               mediarec.attributes.audioUrl ??
               mediarec.attributes.s3file ??
               mediarec.attributes.originalFile;
-            const path = await dataPath(audioUrl, PathType.MEDIA, local);
-            const foundLocal = local.localname === path;
+            let path = await dataPath(audioUrl, PathType.MEDIA, local);
+            let foundLocal = local.localname === path;
             if (foundLocal || offline) {
               if (!path.startsWith('http')) {
                 if (cancelled()) return;
@@ -166,7 +158,15 @@ export const useFetchMediaUrl = (reporter?: any) => {
         .then((strings) => {
           const attr: any = strings.data.data.attributes;
           if (cancelled()) return;
-          dispatch({ payload: attr['audio-url'], type: MediaSt.FETCHED });
+          const audioUrl = attr['audio-url'];
+          if (isElectron) {
+            tryDownload(audioUrl, true).then((url) => {
+              dispatch({
+                payload: url,
+                type: MediaSt.FETCHED,
+              });
+            });
+          } else dispatch({ payload: audioUrl, type: MediaSt.FETCHED });
         })
         .catch((e) => {
           if (cancelled()) return;
