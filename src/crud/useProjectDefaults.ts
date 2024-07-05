@@ -4,6 +4,7 @@ import { ProjectD, RoleNames } from '../model';
 import { UpdateRecord } from '../model/baseModel';
 import { findRecord } from './tryFindRecord';
 import { useJsonParams } from '../utils/useJsonParams';
+import { tryParseJSON } from '../utils/tryParseJson';
 
 export const projDefExportNumbers = 'exportNumbers';
 export const projDefSectionMap = 'sectionMap';
@@ -45,7 +46,11 @@ export const useProjectDefaults = () => {
   );
   const getLocalDefault = (label: string) => {
     var str = localStorage.getItem(label + project);
-    if (str) return JSON.parse(str);
+    if (str) {
+      var ret = tryParseJSON(str);
+      if (ret !== false) return ret;
+      return str;
+    }
     return undefined;
   };
   const setLocalDefault = (label: string, value: any) => {
