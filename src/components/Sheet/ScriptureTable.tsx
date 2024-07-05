@@ -82,7 +82,7 @@ import AssignSection from '../AssignSection';
 import StickyRedirect from '../StickyRedirect';
 import Uploader from '../Uploader';
 import { useMediaAttach } from '../../crud/useMediaAttach';
-import { UpdateRecord, UpdateRelatedRecord } from '../../model/baseModel';
+import { UpdateRecord } from '../../model/baseModel';
 import { PlanContext } from '../../context/PlanContext';
 import stringReplace from 'react-string-replace';
 import BigDialog from '../../hoc/BigDialog';

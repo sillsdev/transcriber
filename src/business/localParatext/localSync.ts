@@ -88,7 +88,10 @@ export const localSync = async ({
     parseRef(r.passage);
     const { startChapter, endChapter } = r.passage.attributes;
     if (startChapter !== endChapter && r.transcription.indexOf('\\c') !== -1) {
-      const k = r.passage.attributes?.book + '-' + endChapter;
+      const k =
+        r.passage.attributes?.book +
+        '-' +
+        (chap === startChapter ? endChapter : startChapter);
       if (chapChg.hasOwnProperty(k)) {
         chapChg[k].push(r);
       } else {
