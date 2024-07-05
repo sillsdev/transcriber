@@ -937,47 +937,6 @@ export function ScriptureTable(props: IProps) {
         } as ISheet;
         setSheet(newsht);
         setChanged(true);
-        if (ws?.passage?.id) {
-          const mediaRec = findRecord(memory, 'mediafile', mediaId) as
-            | MediaFileD
-            | undefined;
-          if (mediaRec) {
-            //get latest version before this
-            const prevMedia = mediafiles
-              .filter(
-                (m) =>
-                  m.id !== mediaId &&
-                  related(m, 'passage') === ws.passage?.id &&
-                  related(m, 'artifactType') === VernacularTag
-              )
-              .sort(
-                (a, b) =>
-                  a.attributes.versionNumber - b.attributes.versionNumber
-              )
-              .pop();
-            mediaRec.attributes.versionNumber =
-              (prevMedia?.attributes.versionNumber ?? 0) + 1;
-            await memory.update((t) => [
-              ...UpdateRecord(t, mediaRec, user),
-              ...UpdateRelatedRecord(
-                t,
-                mediaRec,
-                'passage',
-                'passage',
-                ws?.passage?.id as string,
-                user
-              ),
-              ...UpdateRelatedRecord(
-                t,
-                mediaRec,
-                'artifactType',
-                'artifacttype',
-                VernacularTag as any,
-                user
-              ),
-            ]);
-          }
-        }
       }
     }
     setUpdate(false);
