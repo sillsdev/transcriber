@@ -368,9 +368,8 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
 
     if (dataRef.current.length === 0) return;
 
-    for (let i = regions.length; i < numSegments; i++) {
-      if (i + 1 >= dataRef.current.length) break;
-      dataRef.current[i + 1][ColName.Limits].value = '';
+    for (let i = regions.length; i < dataRef.current.length; i++) {
+      dataRef.current[i][ColName.Limits].value = '';
     }
     let newData = new Array<ICell[]>();
     newData.push(dataRef.current[0]); // copy title row
@@ -402,7 +401,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
 
     const refs = collectRefs(newData);
     dataRef.current.slice(newData.length).forEach((r) => {
-      if (!refs.includes(r[ColName.Ref].value)) {
+      if (r[ColName.Ref].value !== '' && !refs.includes(r[ColName.Ref].value)) {
         newData.push(r);
       }
     });
