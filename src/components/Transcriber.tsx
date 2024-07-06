@@ -576,10 +576,13 @@ export function Transcriber(props: IProps) {
             let refText = segs.find(
               (s) => s?.label && refMatch(s.label)
             )?.label;
-            refText = `\\v ${refText?.split(':')[1]} `;
-            if (textArea.value === 'undefined') textArea.value = '';
-            insertAtCursor(textArea, refText);
-            setTextValue(textArea.value ?? '');
+            const vNum = refText?.split(':')[1];
+            if (vNum) {
+              refText = `\\v ${vNum} `;
+              if (textArea.value === 'undefined') textArea.value = '';
+              insertAtCursor(textArea, refText);
+              setTextValue(textArea.value ?? '');
+            }
           }
         }
         verseSegs.current = JSON.stringify({ regions: JSON.stringify(segs) });
@@ -1120,12 +1123,16 @@ export function Transcriber(props: IProps) {
     const ref = segs.find((s) => s.start === position)?.label;
     const m = refMatch(ref || '');
     if (ref && m) {
-      let refText = `\\v ${ref.substring(m[1].length + 1)} `;
+      const vNum = ref.substring(m[1].length + 1);
+      let refText = `\\v ${vNum} `;
       const textArea = transcriptionRef.current
         .firstChild as HTMLTextAreaElement;
       const refPos = textArea.value.indexOf(refText);
-      if (refPos === -1) {
-        refText = ' ' + refText;
+      // look for alternate verse markup format too
+      const refPos2 = textArea.value.indexOf(`\\v${vNum} `);
+      if (refPos === -1 && refPos2 === -1) {
+        // vNum is undefined for bad references
+        refText = vNum ? ' ' + refText : '';
         if (parseInt(m[2]) === 1) {
           refText = ` \\c ${m[1]} ` + refText;
         }
