@@ -108,22 +108,22 @@ export const SelectSharedResource = (props: IProps) => {
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const columnDefs = !isNote
     ? [
-      { name: 'language', title: t.language },
-      { name: 'category', title: t.category },
-      { name: 'title', title: t.title },
-      { name: 'description', title: t.description },
-      { name: 'version', title: t.version },
-      { name: 'keywords', title: t.keywords },
-      { name: 'terms', title: t.termsOfUse },
-      { name: 'source', title: t.source },
-    ]
+        { name: 'language', title: t.language },
+        { name: 'category', title: t.category },
+        { name: 'title', title: t.title },
+        { name: 'description', title: t.description },
+        { name: 'version', title: t.version },
+        { name: 'keywords', title: t.keywords },
+        { name: 'terms', title: t.termsOfUse },
+        { name: 'source', title: t.source },
+      ]
     : [
-      { name: 'category', title: t.category },
-      { name: 'title', title: t.title },
-      { name: 'description', title: t.description },
-      { name: 'keywords', title: t.keywords },
-      { name: 'source', title: t.source },
-    ];
+        { name: 'category', title: t.category },
+        { name: 'title', title: t.title },
+        { name: 'description', title: t.description },
+        { name: 'keywords', title: t.keywords },
+        { name: 'source', title: t.source },
+      ];
   const columnWidths = [
     { columnName: 'language', width: 150 },
     { columnName: 'category', width: 150 },
@@ -252,7 +252,7 @@ export const SelectSharedResource = (props: IProps) => {
   const handleBookRevert = () => {
     onBookCd(undefined);
   };
-  const handlePreventSave = () => { };
+  const handlePreventSave = () => {};
 
   const handleFindRefChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFindRef(event.target.value);
@@ -289,17 +289,19 @@ export const SelectSharedResource = (props: IProps) => {
                   setPreventSave={handlePreventSave}
                 />
               </Box>
-              <TextField
-                id="find-refs"
-                variant="outlined"
-                value={findRef}
-                onChange={handleFindRefChange}
-                inputProps={{
-                  sx: { py: 1 },
-                  placeholder: passage?.attributes.reference ?? t.reference,
-                }}
-                sx={{ width: '400px' }}
-              />
+              {refLevel !== RefLevel.Book && (
+                <TextField
+                  id="find-refs"
+                  variant="outlined"
+                  value={findRef}
+                  onChange={handleFindRefChange}
+                  inputProps={{
+                    sx: { py: 1 },
+                    placeholder: passage?.attributes.reference ?? t.reference,
+                  }}
+                  sx={{ width: '400px' }}
+                />
+              )}
             </>
           )}
           {onRefLevel && (
