@@ -411,7 +411,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                     </Grid>
                   )}
                 </Pane>
-                {!topFilter && (
+                {!topFilter && Boolean(mediafileId) && (
                   <Pane>
                     <Grid item xs={12} sm container>
                       <Grid item container direction="column">
