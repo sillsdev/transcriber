@@ -5843,14 +5843,21 @@
             </context-group>
          </trans-unit>
          <trans-unit id="publishLevel.beta">
-            <source>Beta - only visible to users subscribed to app beta channel</source>
+            <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="publishLevel.betalink">
+            <source>https://akuobible.org/?beta=true</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="publishLevel.public">
-            <source>Public - visible to everyone using app</source>
+            <source>Public - visible to everyone using Akuo website or app</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>

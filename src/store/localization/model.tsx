@@ -999,6 +999,7 @@ export interface IProjectDownloadStrings extends Localize.LocalizedStringsMethod
 export interface IPublishLevelStrings extends Localize.LocalizedStringsMethods {
     "none": string;
     "beta": string;
+    "betalink": string;
     "public": string;
 };
 
