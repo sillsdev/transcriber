@@ -9,6 +9,7 @@ import {
   FormControl,
   FormControlLabel,
   FormHelperText,
+  Link,
   Radio,
   RadioGroup,
   Typography,
@@ -64,6 +65,10 @@ function ConfirmPublishDialog(props: IProps) {
     setValue(Number((event.target as HTMLInputElement).value));
   };
 
+  const handleLink = (link: string) => () => {
+    window.open(link, '_blank');
+  };
+
   return (
     <Dialog
       open={open}
@@ -88,7 +93,9 @@ function ConfirmPublishDialog(props: IProps) {
                 control={<Radio />}
                 label={l.beta}
               />
-              <FormHelperText>{l.betalink}</FormHelperText>
+              <FormHelperText sx={{ textAlign: 'center' }}>
+                <Link onClick={handleLink(l.betalink)}>{l.betalink}</Link>
+              </FormHelperText>
               <FormControlLabel
                 value={PublishLevelEnum.Public}
                 control={<Radio />}
