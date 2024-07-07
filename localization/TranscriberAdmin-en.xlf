@@ -5010,13 +5010,19 @@
       </unit>
       <unit id="publishLevel.beta">
          <segment>
-            <source>Beta - only visible to users subscribed to app beta channel</source>
+            <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="publishLevel.betalink">
+         <segment>
+            <source>https://akuobible.org/?beta=true</source>
             <target/>
          </segment>
       </unit>
       <unit id="publishLevel.public">
          <segment>
-            <source>Public - visible to everyone using app</source>
+            <source>Public - visible to everyone using Akuo website or app</source>
             <target/>
          </segment>
       </unit>

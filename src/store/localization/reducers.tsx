@@ -1058,8 +1058,9 @@ const initialState = {
 	"publishLevel": new LocalizedStrings({
 		"en": {
 			"none": "Not Published - not visible in publishing app",
-			"beta": "Beta - only visible to users subscribed to app beta channel",
-			"public": "Public - visible to everyone using app",
+			"beta": "Beta - visible on the Akuo website when using the beta parameter (not available in the app)",
+			"betalink": "https://akuobible.org/?beta=true",
+			"public": "Public - visible to everyone using Akuo website or app",
 		}
 	}),
 	"resource": new LocalizedStrings({

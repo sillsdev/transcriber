@@ -8,13 +8,19 @@ import {
   DialogTitle,
   FormControl,
   FormControlLabel,
+  FormHelperText,
+  Link,
   Radio,
   RadioGroup,
   Typography,
 } from '@mui/material';
 import DialogActions from '@mui/material/DialogActions';
 import { shallowEqual, useSelector } from 'react-redux';
-import { alertSelector, publishLevelSelector, sharedSelector } from '../selector';
+import {
+  alertSelector,
+  publishLevelSelector,
+  sharedSelector,
+} from '../selector';
 import { PublishLevelEnum } from '../crud';
 
 interface IProps {
@@ -59,6 +65,10 @@ function ConfirmPublishDialog(props: IProps) {
     setValue(Number((event.target as HTMLInputElement).value));
   };
 
+  const handleLink = (link: string) => () => {
+    window.open(link, '_blank');
+  };
+
   return (
     <Dialog
       open={open}
@@ -83,6 +93,9 @@ function ConfirmPublishDialog(props: IProps) {
                 control={<Radio />}
                 label={l.beta}
               />
+              <FormHelperText sx={{ textAlign: 'center' }}>
+                <Link onClick={handleLink(l.betalink)}>{l.betalink}</Link>
+              </FormHelperText>
               <FormControlLabel
                 value={PublishLevelEnum.Public}
                 control={<Radio />}
