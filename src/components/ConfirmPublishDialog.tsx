@@ -22,6 +22,9 @@ import {
   sharedSelector,
 } from '../selector';
 import { PublishLevelEnum } from '../crud';
+import { isElectron } from '../api-variable';
+import { launch } from '../utils';
+import { useGlobal } from 'reactn';
 
 interface IProps {
   title: string;
@@ -41,6 +44,7 @@ function ConfirmPublishDialog(props: IProps) {
   );
   const [open, setOpen] = useState(true);
   const [value, setValue] = useState(current);
+  const [offline] = useGlobal('offline');
 
   const handleClose = () => {
     if (noResponse !== null) {
@@ -65,8 +69,8 @@ function ConfirmPublishDialog(props: IProps) {
     setValue(Number((event.target as HTMLInputElement).value));
   };
 
-  const handleLink = (link: string) => () => {
-    window.open(link, '_blank');
+  const handleLink = (site: string) => () => {
+    if (!offline) launch(site, true);
   };
 
   return (
@@ -94,7 +98,18 @@ function ConfirmPublishDialog(props: IProps) {
                 label={l.beta}
               />
               <FormHelperText sx={{ textAlign: 'center' }}>
-                <Link onClick={handleLink(l.betalink)}>{l.betalink}</Link>
+                {isElectron && (
+                  <Link onClick={handleLink(l.betalink)}>{l.betalink}</Link>
+                )}
+                {!isElectron && (
+                  <Link
+                    href={l.betalink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {l.betalink}
+                  </Link>
+                )}
               </FormHelperText>
               <FormControlLabel
                 value={PublishLevelEnum.Public}
