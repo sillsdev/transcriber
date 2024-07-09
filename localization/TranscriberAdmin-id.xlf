@@ -217,6 +217,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactCategory.chapter">
+         <segment>
+            <source>Chapter Number</source>
+            <target>Nomor Bab</target>
+         </segment>
+      </unit>
       <unit id="artifactCategory.scripture">
          <segment>
             <source>Scripture</source>
@@ -257,6 +263,12 @@
          <segment>
             <source>Question and Answer</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.title">
+         <segment>
+            <source>Title</source>
+            <target>Judul</target>
          </segment>
       </unit>
       <unit id="artifactType.backtranslation">
@@ -519,7 +531,7 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
             <target/>
          </segment>
       </unit>
@@ -580,6 +592,12 @@
       <unit id="cards.bibleIdExplain">
          <segment>
             <source>Explain Bible Id</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.biblename">
+         <segment>
+            <source>Name of Bible</source>
             <target/>
          </segment>
       </unit>
@@ -753,8 +771,8 @@
       </unit>
       <unit id="cards.OBTs">
          <segment>
-            <source>Oral Bible Translation (Simple)</source>
-            <target>Terjemahan Alkitab Lisan (Sederhana)</target>
+            <source>Oral Bible Translation (simple)</source>
+            <target/>
          </segment>
       </unit>
       <unit id="cards.OBTr">
@@ -976,6 +994,12 @@
       <unit id="category.resource">
          <segment>
             <source>Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="category.notes">
+         <segment>
+            <source>audio note(s)</source>
             <target/>
          </segment>
       </unit>
@@ -1437,7 +1461,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
             <target/>
          </segment>
       </unit>
@@ -1479,7 +1503,7 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
+            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
             <target/>
          </segment>
       </unit>
@@ -1527,7 +1551,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified!  Carry on!</source>
+            <source>I'm verified! Carry on!</source>
             <target/>
          </segment>
       </unit>
@@ -1911,7 +1935,7 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
             <target/>
          </segment>
       </unit>
@@ -1977,7 +2001,7 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
+            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -2737,6 +2761,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.akuo">
+         <segment>
+            <source>Access Akuo Site</source>
+            <target>Akses Situs Akuo</target>
+         </segment>
+      </unit>
       <unit id="main.apiError">
          <segment>
             <source>API Error:</source>
@@ -2771,6 +2801,12 @@
          <segment>
             <source>Continue</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="main.course">
+         <segment>
+            <source>Access Accredited Course</source>
+            <target>Akses Kursus Terakreditasi</target>
          </segment>
       </unit>
       <unit id="main.continueCurrentUser">
@@ -2871,7 +2907,7 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
             <target/>
          </segment>
       </unit>
@@ -2893,6 +2929,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.logos">
+         <segment>
+            <source>Access Logos Resources</source>
+            <target>Akses Sumber Daya Logo</target>
+         </segment>
+      </unit>
       <unit id="main.media">
          <segment>
             <source>Audio</source>
@@ -2909,6 +2951,12 @@
          <segment>
             <source>Unable to load audio project data offline.</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="main.openNotes">
+         <segment>
+            <source>Access Translator's Notes</source>
+            <target>Akses Catatan Penerjemah</target>
          </segment>
       </unit>
       <unit id="main.passages">
@@ -2955,8 +3003,14 @@
       </unit>
       <unit id="main.reportWhenOnline">
          <segment>
-            <source>You must be online to report an problem.</source>
-            <target/>
+            <source>You must be online to use this menu item.</source>
+            <target>Anda harus online untuk menggunakan item menu ini.</target>
+         </segment>
+      </unit>
+      <unit id="main.resources">
+         <segment>
+            <source>Access UBS Resources</source>
+            <target>Mengakses Sumber Daya UBS</target>
          </segment>
       </unit>
       <unit id="main.saveFirst">
@@ -3041,6 +3095,12 @@
          <segment>
             <source>Version: {0} - {1}</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="main.videos">
+         <segment>
+            <source>Access Training Videos</source>
+            <target>Mengakses Video Pelatihan</target>
          </segment>
       </unit>
       <unit id="mediaActions.attach">
@@ -3406,6 +3466,12 @@
       <unit id="mediaTitle.save">
          <segment>
             <source>Save Recording</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.saving">
+         <segment>
+            <source>Saving...</source>
             <target/>
          </segment>
       </unit>
@@ -4117,6 +4183,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageType.PASS">
+         <segment>
+            <source>Passage</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4209,8 +4281,8 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target/>
+            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <target>Apakah kita memerlukan grup ini? Atau cukup gunakan admin tim? Orang-orang di grup ini akan dapat melakukan langkah apa pun, bahkan jika ditugaskan ke grup yang bukan grup mereka.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4221,8 +4293,8 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
-            <target/>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
+            <target>Kami juga tidak yakin apakah kami memerlukan izin ini, karena tidak jelas hal-hal khusus apa yang dilakukan oleh konsultan di perangkat lunak ini. Komentar Konsultan Independen akan terlihat oleh semua anggota tim.</target>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4251,13 +4323,13 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
             <target/>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
+            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
             <target/>
          </segment>
       </unit>
@@ -4432,6 +4504,12 @@
       <unit id="planSheet.movement">
          <segment>
             <source>Movement</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.moveUp">
+         <segment>
+            <source>Move up</source>
             <target/>
          </segment>
       </unit>
@@ -4905,14 +4983,20 @@
       </unit>
       <unit id="publishLevel.beta">
          <segment>
-            <source>Beta - only visible to users subscribed to app beta channel</source>
-            <target>Beta - hanya dapat dilihat oleh pengguna yang berlangganan saluran beta aplikasi</target>
+            <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>
+            <target>Beta - terlihat di situs web Akuo ketika menggunakan parameter beta (tidak tersedia di aplikasi)</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.betalink">
+         <segment>
+            <source>https://akuobible.org/?beta=true</source>
+            <target>https://akuobible.org/?beta=true</target>
          </segment>
       </unit>
       <unit id="publishLevel.public">
          <segment>
-            <source>Public - visible to everyone using app</source>
-            <target/>
+            <source>Public - visible to everyone using Akuo website or app</source>
+            <target>Publik - dapat dilihat oleh semua orang yang menggunakan situs web atau aplikasi Akuo</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -5111,6 +5195,12 @@
          <segment>
             <source>Passage</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidBooks">
+         <segment>
+            <source>Invalid book codes: {0}.</source>
+            <target>Kode buku tidak valid: {0}.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidColumns">
@@ -5409,13 +5499,13 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Your paratext login has expired and can't be automatically renewed. Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -6103,6 +6193,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="tool.verses">
+         <segment>
+            <source>Mark Verses</source>
+            <target>Tandai Ayat</target>
+         </segment>
+      </unit>
       <unit id="tool.wholeBackTranslate">
          <segment>
             <source>Whole Back Translate</source>
@@ -6291,7 +6387,7 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
+            <source>Transcription updated by {0}. Keep their changes? {1}</source>
             <target/>
          </segment>
       </unit>
@@ -6507,7 +6603,7 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported.  The export file is too large.</source>
+            <source>The audio project cannot be exported. The export file is too large.</source>
             <target/>
          </segment>
       </unit>
@@ -6549,7 +6645,7 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
+            <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
             <target/>
          </segment>
       </unit>
@@ -6737,6 +6833,12 @@
          <segment>
             <source>Timezone</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="verse.badReferences">
+         <segment>
+            <source>ERROR: Markup contains bad references</source>
+            <target>KESALAHAN: Markah mengandung referensi yang buruk</target>
          </segment>
       </unit>
       <unit id="viewMode.audioProject">
@@ -7107,7 +7209,7 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
             <target/>
          </segment>
       </unit>
@@ -7125,7 +7227,7 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
             <target/>
          </segment>
       </unit>
@@ -7325,6 +7427,12 @@
          <segment>
             <source>Unsaved content</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.markVerses">
+         <segment>
+            <source>Mark Verses</source>
+            <target>Tandai Ayat</target>
          </segment>
       </unit>
       <unit id="workflowSteps.wholeBackTranslate">
