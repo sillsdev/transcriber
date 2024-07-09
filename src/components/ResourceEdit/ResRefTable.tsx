@@ -1,5 +1,5 @@
 import { Box, BoxProps, Stack, styled } from '@mui/material';
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { BookRef, IResourceStrings, ISharedStrings } from '../../model';
 import DataSheet from 'react-datasheet';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ import { ActionRow, AltButton, PriButton } from '../StepEditor';
 import Confirm from '../AlertDialog';
 import ActionCol from './ResActionCol';
 import { sharedResourceSelector, sharedSelector } from '../../selector';
+import { refMatch } from '../../utils/refMatch';
 
 const refPat =
   /(?:\d+\s*(?::\s*(?:\d+(?:\s*-\s*\d+)?,\s*)*\d+(?:\s*-\s*\d+)?)?;\s*)*(?:\d+\s*(?::\s*(?:\d+(?:\s*-\s*\d+)?,\s*)*\d+(?:\s*-\s*\d+)?)?)?/;
@@ -29,6 +30,8 @@ const Content = styled(Box)<BoxProps>(({ theme }) => ({
     backgroundColor: 'orange',
   },
 }));
+
+type LastVerses = [string, number[]];
 
 interface ICell {
   value: any;
@@ -57,6 +60,7 @@ export default function ReferenceTable({
   onCancel,
 }: ReferenceTableProps) {
   const [data, setData] = React.useState<ICell[][]>([]);
+  const [lastVerses, setLastVerses] = React.useState<Map<string, number[]>>();
   const dataRef = React.useRef<ICell[][]>([]);
   const [confirmRow, setConfirmRow] = React.useState<number>();
   const [confirmErr, setConfirmErr] = React.useState<BookRef[]>();
@@ -79,6 +83,12 @@ export default function ReferenceTable({
     Refs,
     Act,
   }
+
+  useEffect(() => {
+    import('../../assets/eng-vrs').then((verseData) => {
+      setLastVerses(new Map(verseData.default as LastVerses[]));
+    });
+  }, []);
 
   const handleSetPreventSave = (val: boolean) => {
     preventSave.current = val;
@@ -237,6 +247,21 @@ export default function ReferenceTable({
       const bookCng =
         c.col === ColName.Book &&
         Boolean(c.value) !== Boolean(newData[c.row][c.col].value);
+      if (c.col === ColName.Refs && c.value) {
+        c.value = c.value.replace(/ /g, '');
+        const chapList = c.value.split(';').map((chapItem) => {
+          const m = refMatch(chapItem);
+          if (!m || !Boolean(m[4])) return chapItem;
+          // split cross chapter reference
+          const chapter = parseInt(m[1]);
+          const lastVerse = lastVerses?.get(
+            dataRef.current[c.row][ColName.Book].value
+          )?.[chapter - 1];
+          if (!lastVerse) return chapItem;
+          return `${m[1]}:${m[2]}-${lastVerse};${m[3]}:1-${m[4]}`;
+        });
+        c.value = chapList.join(';');
+      }
       newData[c.row][c.col].value = c.value;
       if (bookCng || c.col === ColName.Refs)
         // Turns error background on and off
