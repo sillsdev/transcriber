@@ -27,10 +27,13 @@ export const localeLanguages = [
   'zh-Hant',
 ];
 
+type LastVerses = [string, number[]];
+
 export const useKeyTerms = () => {
   const [terms, setTerms] = React.useState<Map<number, IKeyTerm>>();
   const [localTerm, setLocalTerm] = React.useState<Map<number, ILocalTerm>>();
   const [verseTerm, setVerseTerm] = React.useState<Map<string, number[]>>();
+  const [lastVerses, setLastVerses] = React.useState<Map<string, number[]>>();
   const [excluded, setExcluded] = React.useState(Array<string | number>());
   const [lang] = useGlobal('lang');
   const [language, setLanguage] = React.useState(
@@ -61,15 +64,16 @@ export const useKeyTerms = () => {
   };
 
   React.useEffect(() => {
-    console.log(`key terms loading... `);
     import('../../../assets/terms').then((termData) =>
       setTerms(new Map(termData.default as any))
     );
     import('../../../assets/verseTerm').then((verseTermData) =>
       setVerseTerm(new Map(verseTermData.default as any))
     );
-    console.log(`key terms loaded.`);
     initExcluded(['PN', 'FL', 'FA', ktHide]);
+    import('../../../assets/eng-vrs').then((lastVerseData) =>
+      setLastVerses(new Map(lastVerseData.default as LastVerses[]))
+    );
   }, []);
 
   React.useEffect(() => {
@@ -137,6 +141,7 @@ export const useKeyTerms = () => {
     book: string,
     chapter: number,
     start: number,
+    lastChap?: number,
     end?: number,
     sort?: SortBy // force refresh on sort change
   ): IKeyTerm[] => {
@@ -144,10 +149,24 @@ export const useKeyTerms = () => {
     const bookn = bookN(book);
     let termSet = new Set<number>();
     if (verseTerm) {
-      for (let v = start; v <= (end ?? start); v += 1) {
-        (verseTerm.get(bcvKey(bookn, chapter, v)) ?? []).forEach((n) =>
-          termSet.add(n)
-        );
+      if (lastChap && lastChap === chapter) {
+        for (let v = start; v <= (end ?? start); v += 1) {
+          (verseTerm.get(bcvKey(bookn, chapter, v)) ?? []).forEach((n) =>
+            termSet.add(n)
+          );
+        }
+      } else if (lastChap) {
+        const endVerse = lastVerses?.get(book)?.[chapter - 1] ?? start ?? 1;
+        for (let v = start; v <= endVerse; v += 1) {
+          (verseTerm.get(bcvKey(bookn, chapter, v)) ?? []).forEach((n) =>
+            termSet.add(n)
+          );
+        }
+        for (let v = 1; v <= (end ?? 1); v += 1) {
+          (verseTerm.get(bcvKey(bookn, lastChap, v)) ?? []).forEach((n) =>
+            termSet.add(n)
+          );
+        }
       }
     }
     if (terms) {
@@ -172,7 +191,7 @@ export const useKeyTerms = () => {
       return `${to?.W} /${to?.T}/ ${lt?.G}`;
     }
     if (sortBy === SortBy.Gloss) {
-      const m = /^[^,;\uff1b\u3002\uff0c]+/u.exec(lt?.G ?? '');
+      const m = /^[^,;\uff1b\u3002\uff0c]+/.exec(lt?.G ?? '');
       return m ? m[0] : lt?.G.trim() ?? '';
     }
     if (sortBy === SortBy.Transliteration) return to?.T ?? '';
