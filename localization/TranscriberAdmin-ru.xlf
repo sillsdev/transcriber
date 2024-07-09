@@ -63,8 +63,12 @@
       </unit>
       <unit id="access.noOnlineUsers2">
          <segment>
-            <source>Log in and select Offline Available in the audio project card menu and then log out. Or, click IMPORT AUDIO PROJECT to import an audio project your admin exported.</source>
-            <target>Войдите в систему и выберите «Доступен в автономном режиме» в меню карточкироекта, а затем выйдите из системы. Или щелкните ИМПОРТ ПРОЕКТА, чтобымпортировать проект, экспортированный администратором.</target>
+            <source>Log in and select Offline Available in the audio project card menu and then log
+               out. Or, click IMPORT AUDIO PROJECT to import an audio project your admin
+               exported.</source>
+            <target>Войдите в систему и выберите «Доступен в автономном режиме» в меню
+               карточкироекта, а затем выйдите из системы. Или щелкните ИМПОРТ ПРОЕКТА,
+               чтобымпортировать проект, экспортированный администратором.</target>
          </segment>
       </unit>
       <unit id="access.noOnlineUsers3">
@@ -217,6 +221,12 @@
             <target>Введение в книгу</target>
          </segment>
       </unit>
+      <unit id="artifactCategory.chapter">
+         <segment>
+            <source>Chapter Number</source>
+            <target>Номер главы</target>
+         </segment>
+      </unit>
       <unit id="artifactCategory.scripture">
          <segment>
             <source>Scripture</source>
@@ -257,6 +267,12 @@
          <segment>
             <source>Question and Answer</source>
             <target>Вопрос и ответ</target>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.title">
+         <segment>
+            <source>Title</source>
+            <target>Название</target>
          </segment>
       </unit>
       <unit id="artifactType.backtranslation">
@@ -447,8 +463,12 @@
       </unit>
       <unit id="audacityManager.checkDownload">
          <segment>
-            <source>Return to the team screen, mark the project for offline use and change modes to let the project be downloaded. That will put the media files into a local folder where Audacity can get them.</source>
-            <target>Вернитесь на экран команды, отметьте проект для автономного использования и измените режим, чтобы проект был загружен. В результате медиафайлы будут помещены в локальную папку, откуда Audacity сможет их получить.</target>
+            <source>Return to the team screen, mark the project for offline use and change modes to
+               let the project be downloaded. That will put the media files into a local folder
+               where Audacity can get them.</source>
+            <target>Вернитесь на экран команды, отметьте проект для автономного использования и
+               измените режим, чтобы проект был загружен. В результате медиафайлы будут помещены в
+               локальную папку, откуда Audacity сможет их получить.</target>
          </segment>
       </unit>
       <unit id="audacityManager.close">
@@ -460,7 +480,8 @@
       <unit id="audacityManager.closeAudacity">
          <segment>
             <source>Audacity is current running. Close before using this function.</source>
-            <target>Audacity запущена в данный момент. Закройте его перед использованием этойункции.</target>
+            <target>Audacity запущена в данный момент. Закройте его перед использованием
+               этойункции.</target>
          </segment>
       </unit>
       <unit id="audacityManager.create">
@@ -490,19 +511,23 @@
       <unit id="audacityManager.loadingAudio">
          <segment>
             <source>Use File:Import in Audacity to load current audio if desired.</source>
-            <target>"Используйте Файл:Импорт в Audacity для загрузки текущего аудио, если этоеобходимо."</target>
+            <target>"Используйте Файл:Импорт в Audacity для загрузки текущего аудио, если
+               этоеобходимо."</target>
          </segment>
       </unit>
       <unit id="audacityManager.missingImport">
          <segment>
-            <source>Missing import file: {0}. Please open Audacity again and use File, Export to save the contents and then use Import here.</source>
-            <target>Отсутствует файл импорта: {0}. Пожалуйста, откройте Audacity снова и используйте File, Export для сохранения содержимого, а затем используйте Import здесь.</target>
+            <source>Missing import file: {0}. Please open Audacity again and use File, Export to
+               save the contents and then use Import here.</source>
+            <target>Отсутствует файл импорта: {0}. Пожалуйста, откройте Audacity снова и используйте
+               File, Export для сохранения содержимого, а затем используйте Import здесь.</target>
          </segment>
       </unit>
       <unit id="audacityManager.missingProject">
          <segment>
             <source>Missing file. Use Browse to search for it or Create to make a new file.</source>
-            <target>Отсутствующий файл. Используйте Browse для его поиска или Create дляоздания нового файла.</target>
+            <target>Отсутствующий файл. Используйте Browse для его поиска или Create дляоздания
+               нового файла.</target>
          </segment>
       </unit>
       <unit id="audacityManager.open">
@@ -519,7 +544,9 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <source>If you have an existing Audacity project you want to link to this passage, click
+               BROWSE. To create a new Audacity project with an automatically created name, click
+               CREATE.</source>
             <target/>
          </segment>
       </unit>
@@ -561,14 +588,17 @@
       </unit>
       <unit id="cards.bibleidexists">
          <segment>
-            <source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
-            <target>Библия Id уже существует. Пожалуйста, свяжитесь со службой поддержки, если вам нужно поработать с этой Библией.</target>
+            <source>Bible Id already exists. Please contact support if you need to work on this
+               Bible.</source>
+            <target>Библия Id уже существует. Пожалуйста, свяжитесь со службой поддержки, если вам
+               нужно поработать с этой Библией.</target>
          </segment>
       </unit>
       <unit id="cards.bibleidformat">
          <segment>
             <source>Bible Id must begin with the language code and version (six letters).</source>
-            <target>Идентификатор Библии должен начинаться с кода языка и версии (шесть букв).</target>
+            <target>Идентификатор Библии должен начинаться с кода языка и версии (шесть
+               букв).</target>
          </segment>
       </unit>
       <unit id="cards.bibleidiso">
@@ -580,7 +610,13 @@
       <unit id="cards.bibleIdExplain">
          <segment>
             <source>Explain Bible Id</source>
-            <target/>
+            <target>Объясните идентификатор Библии</target>
+         </segment>
+      </unit>
+      <unit id="cards.biblename">
+         <segment>
+            <source>Name of Bible</source>
+            <target>Название Библии</target>
          </segment>
       </unit>
       <unit id="cards.cancel">
@@ -688,7 +724,8 @@
       <unit id="cards.explainPublishing">
          <segment>
             <source>Information to use when publishing audio created by this team.</source>
-            <target>Информация для использования при публикации аудиозаписей, созданных этой командой.</target>
+            <target>Информация для использования при публикации аудиозаписей, созданных этой
+               командой.</target>
          </segment>
       </unit>
       <unit id="cards.explainTeamDelete">
@@ -753,7 +790,7 @@
       </unit>
       <unit id="cards.OBTs">
          <segment>
-            <source>Oral Bible Translation (Simple)</source>
+            <source>Oral Bible Translation (simple)</source>
             <target>Устный перевод Библии (простой)</target>
          </segment>
       </unit>
@@ -898,7 +935,7 @@
       <unit id="cards.workflowProgressionStep">
          <segment>
             <source>Next Step</source>
-            <target/>
+            <target>Следующий шаг</target>
          </segment>
       </unit>
       <unit id="cards.yes">
@@ -976,7 +1013,13 @@
       <unit id="category.resource">
          <segment>
             <source>Resource</source>
-            <target/>
+            <target>Ресурс</target>
+         </segment>
+      </unit>
+      <unit id="category.notes">
+         <segment>
+            <source>audio note(s)</source>
+            <target>аудиозаметка(и)</target>
          </segment>
       </unit>
       <unit id="commentCard.approve">
@@ -1089,8 +1132,10 @@
       </unit>
       <unit id="community.releaseRights">
          <segment>
-            <source>Upload or record a statement releasing the rights to publish material recorded by this speaker.</source>
-            <target>Загрузите или запишите заявление об освобождении прав на публикацию материалов, записанных этим оратором.</target>
+            <source>Upload or record a statement releasing the rights to publish material recorded
+               by this speaker.</source>
+            <target>Загрузите или запишите заявление об освобождении прав на публикацию материалов,
+               записанных этим оратором.</target>
          </segment>
       </unit>
       <unit id="community.rights">
@@ -1437,7 +1482,8 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version. Reexport your PTF file from
+               the online version.</source>
             <target/>
          </segment>
       </unit>
@@ -1462,7 +1508,8 @@
       <unit id="electronImport.lastExported">
          <segment>
             <source>Current data in audio project {name0} was last exported {date0}.</source>
-            <target>Текущие данные в аудиопроекте {name0} были последний раз экспортированы {дата0}.</target>
+            <target>Текущие данные в аудиопроекте {name0} были последний раз экспортированы
+               {дата0}.</target>
          </segment>
       </unit>
       <unit id="electronImport.members">
@@ -1473,13 +1520,17 @@
       </unit>
       <unit id="electronImport.neverExported">
          <segment>
-            <source>Current data in audio project {name0} has never been exported to an itf file to preserve changes.</source>
-            <target>Текущие данные в проекте {name0} никогда не экспортировались в itf-файл дляохранения изменений.</target>
+            <source>Current data in audio project {name0} has never been exported to an itf file to
+               preserve changes.</source>
+            <target>Текущие данные в проекте {name0} никогда не экспортировались в itf-файл
+               дляохранения изменений.</target>
          </segment>
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
+            <source>This file was exported with a newer version of the program. You should download
+               the latest version before importing! If you continue, some data may not be imported
+               correctly.</source>
             <target/>
          </segment>
       </unit>
@@ -1492,7 +1543,8 @@
       <unit id="electronImport.projectImported">
          <segment>
             <source>Audio Project {name0} was previously imported with a newer file: {date1} </source>
-            <target>Аудиопроект {name0} был ранее импортирован с более новым файлом: {дата1}.</target>
+            <target>Аудиопроект {name0} был ранее импортирован с более новым файлом:
+               {дата1}.</target>
          </segment>
       </unit>
       <unit id="electronImport.ptfError">
@@ -1503,8 +1555,10 @@
       </unit>
       <unit id="electronImport.userWontSeeProject">
          <segment>
-            <source>You are not a member of this audio project team. This audio project will not be accessible after import.</source>
-            <target>Вы не являетесь членом этой проектной команды. Этот проект будет недоступеносле импорта.</target>
+            <source>You are not a member of this audio project team. This audio project will not be
+               accessible after import.</source>
+            <target>Вы не являетесь членом этой проектной команды. Этот проект будет недоступеносле
+               импорта.</target>
          </segment>
       </unit>
       <unit id="emailUnverified.emailUnverified">
@@ -1527,13 +1581,14 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified!  Carry on!</source>
+            <source>I'm verified! Carry on!</source>
             <target/>
          </segment>
       </unit>
       <unit id="emailUnverified.verify">
          <segment>
-            <source>Please verify by clicking on the link in the authorization email sent to your account.</source>
+            <source>Please verify by clicking on the link in the authorization email sent to your
+               account.</source>
             <target/>
          </segment>
       </unit>
@@ -1911,8 +1966,13 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
-            <target/>
+            <source>If this error occured while importing offline changes, please close the app
+               immediately and reopen. If the error persists, contact support. If you continue to
+               use the app, you will lose offline changes.</source>
+            <target>Если эта ошибка возникла при импорте изменений в автономном режиме, немедленно
+               закройте приложение и откройте его снова. Если ошибка не исчезла, обратитесь в службу
+               поддержки. Если вы продолжите использовать приложение, вы потеряете изменения в
+               автономном режиме.</target>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -1942,7 +2002,8 @@
       <unit id="import.onlineChangeReport">
          <segment>
             <source>Changes made since data provided to offline member:</source>
-            <target>Изменения внесены с момента предоставления данных автономномуользователю:</target>
+            <target>Изменения внесены с момента предоставления данных
+               автономномуользователю:</target>
          </segment>
       </unit>
       <unit id="import.other">
@@ -1977,7 +2038,8 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
+            <source>ITF does not contain current audio project. It contains audio project
+               {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -2350,7 +2412,8 @@
       <unit id="invite.newInviteTask">
          <segment>
             <source>Enter the email address of the person to invite.</source>
-            <target>Введите адрес электронной почты человека, которого необходимо пригласить.</target>
+            <target>Введите адрес электронной почты человека, которого необходимо
+               пригласить.</target>
          </segment>
       </unit>
       <unit id="invite.noProjects">
@@ -2737,6 +2800,12 @@
             <target>Администратор</target>
          </segment>
       </unit>
+      <unit id="main.akuo">
+         <segment>
+            <source>Access Akuo Site</source>
+            <target>Доступ к сайту Akuo</target>
+         </segment>
+      </unit>
       <unit id="main.apiError">
          <segment>
             <source>API Error:</source>
@@ -2771,6 +2840,12 @@
          <segment>
             <source>Continue</source>
             <target>Продолжать</target>
+         </segment>
+      </unit>
+      <unit id="main.course">
+         <segment>
+            <source>Access Accredited Course</source>
+            <target>Доступ к аккредитованным курсам</target>
          </segment>
       </unit>
       <unit id="main.continueCurrentUser">
@@ -2871,7 +2946,8 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+            <source>Invitation not accepted. You must login with the email that the invitation was
+               sent to.</source>
             <target/>
          </segment>
       </unit>
@@ -2893,6 +2969,12 @@
             <target>Выйти</target>
          </segment>
       </unit>
+      <unit id="main.logos">
+         <segment>
+            <source>Access Logos Resources</source>
+            <target>Доступ к ресурсам Logos</target>
+         </segment>
+      </unit>
       <unit id="main.media">
          <segment>
             <source>Audio</source>
@@ -2909,6 +2991,12 @@
          <segment>
             <source>Unable to load audio project data offline.</source>
             <target>Невозможно загрузить данные аудиопроекта в автономном режиме.</target>
+         </segment>
+      </unit>
+      <unit id="main.openNotes">
+         <segment>
+            <source>Access Translator's Notes</source>
+            <target>Доступ к заметкам переводчика</target>
          </segment>
       </unit>
       <unit id="main.passages">
@@ -2955,8 +3043,14 @@
       </unit>
       <unit id="main.reportWhenOnline">
          <segment>
-            <source>You must be online to report an problem.</source>
-            <target/>
+            <source>You must be online to use this menu item.</source>
+            <target>Вы должны быть онлайн, чтобы использовать этот пункт меню.</target>
+         </segment>
+      </unit>
+      <unit id="main.resources">
+         <segment>
+            <source>Access UBS Resources</source>
+            <target>Доступ к ресурсам UBS</target>
          </segment>
       </unit>
       <unit id="main.saveFirst">
@@ -3041,6 +3135,12 @@
          <segment>
             <source>Version: {0} - {1}</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="main.videos">
+         <segment>
+            <source>Access Training Videos</source>
+            <target>Доступ к учебным видеоматериалам</target>
          </segment>
       </unit>
       <unit id="mediaActions.attach">
@@ -3406,7 +3506,13 @@
       <unit id="mediaTitle.save">
          <segment>
             <source>Save Recording</source>
-            <target/>
+            <target>Сохранить запись</target>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.saving">
+         <segment>
+            <source>Saving...</source>
+            <target>Сохранение...</target>
          </segment>
       </unit>
       <unit id="mediaUpload.cancel">
@@ -3429,8 +3535,10 @@
       </unit>
       <unit id="mediaUpload.graphicTask">
          <segment>
-            <source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
-            <target>Перетащите файл сюда или нажмите здесь, чтобы найти файл. Принимаются форматы .png, .jpg (или .jpeg) и .webp.</target>
+            <source>Drag and drop a file here, or click here to browse for the file. Formats
+               accepted are .png, .jpg (or .jpeg) and .webp.</source>
+            <target>Перетащите файл сюда или нажмите здесь, чтобы найти файл. Принимаются форматы
+               .png, .jpg (или .jpeg) и .webp.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.graphicTitle">
@@ -3441,8 +3549,12 @@
       </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
          <segment>
-            <source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
-            <target>Загрузите релиз интеллектуальной собственности для {0} в аудио- или визуальном формате. Принимаются аудиоформаты .mp3, .m4a, .wav или .ogg. Визуальные форматы: .pdf, .png или .jpg.</target>
+            <source>Upload an intellectual property release for {0} in audio or visual format. Audio
+               formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf,
+               .png, or .jpg.</source>
+            <target>Загрузите релиз интеллектуальной собственности для {0} в аудио- или визуальном
+               формате. Принимаются аудиоформаты .mp3, .m4a, .wav или .ogg. Визуальные форматы:
+               .pdf, .png или .jpg.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.intellectualPropertyTitle">
@@ -3459,7 +3571,8 @@
       </unit>
       <unit id="mediaUpload.ITFtask">
          <segment>
-            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop app.</source>
+            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop
+               app.</source>
             <target/>
          </segment>
       </unit>
@@ -3471,8 +3584,10 @@
       </unit>
       <unit id="mediaUpload.projectResourceTask">
          <segment>
-            <source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
-            <target>Загружайте аудиофайлы в формате .mp3, .m4a, .wav или .ogg или визуальныйонтент в формате .pdf.</target>
+            <source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf
+               format.</source>
+            <target>Загружайте аудиофайлы в формате .mp3, .m4a, .wav или .ogg или визуальныйонтент в
+               формате .pdf.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.PTFtask">
@@ -3489,8 +3604,10 @@
       </unit>
       <unit id="mediaUpload.resourceTask">
          <segment>
-            <source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
-            <target>Загружайте аудиофайлы в формате .mp3, .m4a, .wav или .ogg или визуальныйонтент в формате .pdf.</target>
+            <source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf
+               format.</source>
+            <target>Загружайте аудиофайлы в формате .mp3, .m4a, .wav или .ogg или визуальныйонтент в
+               формате .pdf.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.resourceTitle">
@@ -3568,12 +3685,14 @@
       <unit id="newProject.generalFactor1">
          <segment>
             <source>you have one or a few prerecorded audio files for passages</source>
-            <target>у вас есть один или несколько предварительно записанных аудиофайлов для отрывков</target>
+            <target>у вас есть один или несколько предварительно записанных аудиофайлов для
+               отрывков</target>
          </segment>
       </unit>
       <unit id="newProject.generalFactor2">
          <segment>
-            <source>you just want to try out the program before you set up an actual project</source>
+            <source>you just want to try out the program before you set up an actual
+               project</source>
             <target>вы просто хотите опробовать программу перед созданием реального проекта</target>
          </segment>
       </unit>
@@ -3591,8 +3710,11 @@
       </unit>
       <unit id="newProject.likeTemplate">
          <segment>
-            <source>Here are optional ways to get started. Later, you can use the Edit Audio Project Settings dialog box to change any of your initial settings.</source>
-            <target>Здесь приведены дополнительные способы начать работу. Позже вы можете использовать диалоговое окно Edit Audio Project Settings для изменения любых начальных настроек.</target>
+            <source>Here are optional ways to get started. Later, you can use the Edit Audio Project
+               Settings dialog box to change any of your initial settings.</source>
+            <target>Здесь приведены дополнительные способы начать работу. Позже вы можете
+               использовать диалоговое окно Edit Audio Project Settings для изменения любых
+               начальных настроек.</target>
          </segment>
       </unit>
       <unit id="newProject.newProject">
@@ -3801,14 +3923,18 @@
       </unit>
       <unit id="passageDetailArtifacts.pasteFormat">
          <segment>
-            <source>Pasted data must contain two or three columns. One of them must be the reference.</source>
-            <target>Вставленные данные должны содержать два или три столбца. Один из них должен быть ссылкой.</target>
+            <source>Pasted data must contain two or three columns. One of them must be the
+               reference.</source>
+            <target>Вставленные данные должны содержать два или три столбца. Один из них должен быть
+               ссылкой.</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.pasteError">
          <segment>
-            <source>Unable to parse {0} segment boundaries. {1} segment boundaries were adjusted.</source>
-            <target>Невозможно разобрать {0} границ сегментов. Границы сегментов {1} были скорректированы.</target>
+            <source>Unable to parse {0} segment boundaries. {1} segment boundaries were
+               adjusted.</source>
+            <target>Невозможно разобрать {0} границ сегментов. Границы сегментов {1} были
+               скорректированы.</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.pasteNoChange">
@@ -3897,8 +4023,10 @@
       </unit>
       <unit id="passageDetailArtifacts.suffixTip">
          <segment>
-            <source>A Suffix is added to the end of the Reference (if there is no Description to override it).</source>
-            <target>В конце ссылки добавляется суффикс (если нет описания, которое можно было бы отменить).</target>
+            <source>A Suffix is added to the end of the Reference (if there is no Description to
+               override it).</source>
+            <target>В конце ссылки добавляется суффикс (если нет описания, которое можно было бы
+               отменить).</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.termsOfUse">
@@ -3939,14 +4067,16 @@
       </unit>
       <unit id="passageDetailArtifacts.tip2b">
          <segment>
-            <source>Steps through connecting chunks of a general resource with {0} and passages.</source>
+            <source>Steps through connecting chunks of a general resource with {0} and
+               passages.</source>
             <target>Шаги по соединению фрагментов общего ресурса с {0} и переходами.</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.unusedSegment">
          <segment>
             <source>Unused segment: only segments with References will create resources</source>
-            <target>Неиспользуемый сегмент: только сегменты с References будут создавать ресурсы</target>
+            <target>Неиспользуемый сегмент: только сегменты с References будут создавать
+               ресурсы</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.upload">
@@ -3957,8 +4087,10 @@
       </unit>
       <unit id="passageDetailArtifacts.uploadProject">
          <segment>
-            <source>General - to be used by multiple {0} or passages. (Uploaded files will only appear under Configure General.)</source>
-            <target>Общие - для использования несколькими {0} или переходами. (Загруженные файлы будут отображаться только в разделе Configure General).</target>
+            <source>General - to be used by multiple {0} or passages. (Uploaded files will only
+               appear under Configure General.)</source>
+            <target>Общие - для использования несколькими {0} или переходами. (Загруженные файлы
+               будут отображаться только в разделе Configure General).</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.verseLevel">
@@ -4114,13 +4246,21 @@
       <unit id="passageType.MOVE">
          <segment>
             <source>Movement</source>
-            <target/>
+            <target>Движение</target>
+         </segment>
+      </unit>
+      <unit id="passageType.PASS">
+         <segment>
+            <source>Passage</source>
+            <target>Прохождение</target>
          </segment>
       </unit>
       <unit id="peer.peerDescription">
          <segment>
-            <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
-            <target>Группы коллег позволяют назначать задания группе, а не отдельному человеку.</target>
+            <source>Peer Groups allow you to assign tasks to a group rather than an
+               individual.</source>
+            <target>Группы коллег позволяют назначать задания группе, а не отдельному
+               человеку.</target>
          </segment>
       </unit>
       <unit id="peer.editPeerGroup">
@@ -4179,8 +4319,10 @@
       </unit>
       <unit id="peer.removeConfirm">
          <segment>
-            <source>Do you want to remove the peer group and information about who are the members?</source>
-            <target>Вы хотите удалить одноранговую группу и информацию о том, кто является ее членами?</target>
+            <source>Do you want to remove the peer group and information about who are the
+               members?</source>
+            <target>Вы хотите удалить одноранговую группу и информацию о том, кто является ее
+               членами?</target>
          </segment>
       </unit>
       <unit id="peerCheck.afterResource">
@@ -4209,8 +4351,11 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target/>
+            <source>Do we need this group? Or just use team admin? People in this group will be able
+               to do any step, even if it is assigned to a group they are not in.</source>
+            <target>Нужна ли нам эта группа? Или просто использовать командного администратора? Люди
+               в этой группе смогут выполнять любые действия, даже если они назначены группе, в
+               которой они не состоят.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4221,8 +4366,12 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
-            <target/>
+            <source>Not sure we need this permission either, because it is unclear what special
+               things consultants do in this software. Independant Consultant's comments will be
+               visible to all team members.</source>
+            <target>Не уверен, что нам нужно это разрешение, потому что неясно, что особенного
+               делают консультанты в этой программе. Комментарии независимого консультанта будут
+               видны всем членам команды.</target>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4233,8 +4382,10 @@
       </unit>
       <unit id="permission.consultantInTrainingTip">
          <segment>
-            <source>CITs comments will only be visible to Mentors until a mentor approves the comment.</source>
-            <target>Комментарии CIT будут видны только наставникам, пока наставник не одобрит комментарий.</target>
+            <source>CITs comments will only be visible to Mentors until a mentor approves the
+               comment.</source>
+            <target>Комментарии CIT будут видны только наставникам, пока наставник не одобрит
+               комментарий.</target>
          </segment>
       </unit>
       <unit id="permission.nsp">
@@ -4251,14 +4402,18 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-            <target/>
+            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's
+               comments to make them visible to the rest of the team.</source>
+            <target>Комментарии наставника будут видны только CIT. Наставники могут одобрить
+               комментарии CIT, чтобы сделать их видимыми для остальных членов команды.</target>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
-            <target/>
+            <source>General Peer Group with no special permissions. Use to assign discussions to
+               team groups.</source>
+            <target>Общая группа сверстников без особых прав. Используется для распределения
+               обсуждений по группам.</target>
          </segment>
       </unit>
       <unit id="planActions.addNote">
@@ -4389,14 +4544,25 @@
       </unit>
       <unit id="planSheet.confirmPublishMovement">
          <segment>
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this Movement will be marked as published. If you have previously published and now choose 'Not Published', the {0} and passages and notes will be marked as not published.</source>
-            <target>Если вы выберете публикацию, {0} и последняя версия всех отрывков и заметок во всех {0} в этом Движении будут отмечены как опубликованные. Если вы публиковали ранее и теперь выбрали "Не публиковать", {0}, отрывки и заметки будут помечены как не опубликованные.</target>
+            <source>If you choose to publish, the {0} and the latest version of all passages and
+               notes in all {0} in this Movement will be marked as published. If you have previously
+               published and now choose 'Not Published', the {0} and passages and notes will be
+               marked as not published.</source>
+            <target>Если вы выберете публикацию, {0} и последняя версия всех отрывков и заметок во
+               всех {0} в этом Движении будут отмечены как опубликованные. Если вы публиковали ранее
+               и теперь выбрали "Не публиковать", {0}, отрывки и заметки будут помечены как не
+               опубликованные.</target>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishSection">
          <segment>
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes be marked as not published.</source>
-            <target>При выборе публикации {0} и последняя версия всех отрывков и заметок в этой {0} будут помечены как опубликованные. Если вы публиковали ранее, а теперь выбрали «Не публиковать», отрывки и заметки будут помечены как не опубликованные.</target>
+            <source>If you choose to publish, the {0} and the latest version of all passages and
+               notes in this {0} will be marked as published. If you have previously published and
+               now choose 'Not Published', the passages and notes be marked as not
+               published.</source>
+            <target>При выборе публикации {0} и последняя версия всех отрывков и заметок в этой {0}
+               будут помечены как опубликованные. Если вы публиковали ранее, а теперь выбрали «Не
+               публиковать», отрывки и заметки будут помечены как не опубликованные.</target>
          </segment>
       </unit>
       <unit id="planSheet.filtered">
@@ -4432,7 +4598,13 @@
       <unit id="planSheet.movement">
          <segment>
             <source>Movement</source>
-            <target/>
+            <target>Перемещение</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.moveUp">
+         <segment>
+            <source>Move up</source>
+            <target>Движение вверх</target>
          </segment>
       </unit>
       <unit id="planSheet.nonNumber">
@@ -4455,8 +4627,10 @@
       </unit>
       <unit id="planSheet.paratextRequired">
          <segment>
-            <source>You must be a Paratext user with access to FOBAI resources to use this feature.</source>
-            <target>Для использования этой функции вы должны быть пользователем Paratext с доступом к ресурсам FOBAI.</target>
+            <source>You must be a Paratext user with access to FOBAI resources to use this
+               feature.</source>
+            <target>Для использования этой функции вы должны быть пользователем Paratext с доступом
+               к ресурсам FOBAI.</target>
          </segment>
       </unit>
       <unit id="planSheet.passageBelow">
@@ -4497,8 +4671,10 @@
       </unit>
       <unit id="planSheet.refErr">
          <segment>
-            <source>This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
-            <target>Этот аудиопроект содержит недопустимые ссылки и не будет синхронизирован саратекстом должным образом. (Правильной ссылкой будет 3:2-5 илиналогичная).</target>
+            <source>This audio project contains invalid references and will not sync to Paratext
+               properly. (A valid reference would be 3:2-5 or similar.)</source>
+            <target>Этот аудиопроект содержит недопустимые ссылки и не будет синхронизирован
+               саратекстом должным образом. (Правильной ссылкой будет 3:2-5 илиналогичная).</target>
          </segment>
       </unit>
       <unit id="planSheet.resequence">
@@ -4665,7 +4841,8 @@
       </unit>
       <unit id="profile.deleteExplained">
          <segment>
-            <source>Deleting your user will block you from using the program and remove references to your work.</source>
+            <source>Deleting your user will block you from using the program and remove references
+               to your work.</source>
             <target/>
          </segment>
       </unit>
@@ -4905,14 +5082,22 @@
       </unit>
       <unit id="publishLevel.beta">
          <segment>
-            <source>Beta - only visible to users subscribed to app beta channel</source>
-            <target>Бета-версия - видна только пользователям, подписанным на бета-канал приложения</target>
+            <source>Beta - visible on the Akuo website when using the beta parameter (not available
+               in the app)</source>
+            <target>Бета-версия - видна на сайте Akuo при использовании параметра бета-версии
+               (недоступна в приложении).</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.betalink">
+         <segment>
+            <source>https://akuobible.org/?beta=true</source>
+            <target>https://akuobible.org/?beta=true</target>
          </segment>
       </unit>
       <unit id="publishLevel.public">
          <segment>
-            <source>Public - visible to everyone using app</source>
-            <target>Публичный - виден всем, кто использует приложение</target>
+            <source>Public - visible to everyone using Akuo website or app</source>
+            <target>Публичный - виден всем, кто пользуется сайтом или приложением Akuo.</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -5113,6 +5298,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="scriptureTable.pasteInvalidBooks">
+         <segment>
+            <source>Invalid book codes: {0}.</source>
+            <target>Неверные коды книг: {0}.</target>
+         </segment>
+      </unit>
       <unit id="scriptureTable.pasteInvalidColumns">
          <segment>
             <source>Invalid number of columns ({0}). Expecting {1} columns.</source>
@@ -5139,8 +5330,10 @@
       </unit>
       <unit id="scriptureTable.publishingWarning">
          <segment>
-            <source>Once publishing rows are added, there is no automated way to remove them. Publishing projects cannot be made flat projects.</source>
-            <target>После добавления строк публикации их нельзя автоматически удалить. Издательские проекты не могут быть сделаны плоскими проектами.</target>
+            <source>Once publishing rows are added, there is no automated way to remove them.
+               Publishing projects cannot be made flat projects.</source>
+            <target>После добавления строк публикации их нельзя автоматически удалить. Издательские
+               проекты не могут быть сделаны плоскими проектами.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.reference">
@@ -5283,8 +5476,10 @@
       </unit>
       <unit id="selectArtifactCategory.scriptureHighlight">
          <segment>
-            <source>Resources of this type will be available in steps using the Compare tool.</source>
-            <target>Ресурсы этого типа будут доступны пошагово с помощью инструментаравнение.</target>
+            <source>Resources of this type will be available in steps using the Compare
+               tool.</source>
+            <target>Ресурсы этого типа будут доступны пошагово с помощью
+               инструментаравнение.</target>
          </segment>
       </unit>
       <unit id="selectArtifactType.addNewType">
@@ -5409,13 +5604,15 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Your paratext login has expired and can't be automatically renewed. Please log
+               out and login again.</source>
             <target/>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed. Please log out
+               and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -5541,8 +5738,10 @@
       </unit>
       <unit id="shared.referenceNotFound">
          <segment>
-            <source>Reference does not exist in Paratext chapter, or reference is within a larger verse range.</source>
-            <target>Ссылка не существует в главе Паратекста, или ссылка находится в пределахольшего диапазона стихов.</target>
+            <source>Reference does not exist in Paratext chapter, or reference is within a larger
+               verse range.</source>
+            <target>Ссылка не существует в главе Паратекста, или ссылка находится в пределахольшего
+               диапазона стихов.</target>
          </segment>
       </unit>
       <unit id="shared.role">
@@ -5679,8 +5878,12 @@
       </unit>
       <unit id="spelling.restart">
          <segment>
-            <source>To load or unload dictionaries requires this app to be restarted. Loading dictionaries that have not been loaded before will require this device to have a connection to the Internet. Do you want to restart this desktop app now?</source>
-            <target>Для загрузки или выгрузки словарей необходимо перезапустить приложение.агрузка словарей, которые не были загружены ранее, требует наличия соединения снтернетом на этом устройстве. Вы хотите перезапустить это настольное приложениеейчас?</target>
+            <source>To load or unload dictionaries requires this app to be restarted. Loading
+               dictionaries that have not been loaded before will require this device to have a
+               connection to the Internet. Do you want to restart this desktop app now?</source>
+            <target>Для загрузки или выгрузки словарей необходимо перезапустить приложение.агрузка
+               словарей, которые не были загружены ранее, требует наличия соединения снтернетом на
+               этом устройстве. Вы хотите перезапустить это настольное приложениеейчас?</target>
          </segment>
       </unit>
       <unit id="spelling.restartApp">
@@ -6103,6 +6306,12 @@
             <target>Транскрибировать</target>
          </segment>
       </unit>
+      <unit id="tool.verses">
+         <segment>
+            <source>Mark Verses</source>
+            <target>Марк Стихов</target>
+         </segment>
+      </unit>
       <unit id="tool.wholeBackTranslate">
          <segment>
             <source>Whole Back Translate</source>
@@ -6291,8 +6500,8 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
-            <target/>
+            <source>Transcription updated by {0}. Keep their changes? {1}</source>
+            <target>Транскрипция обновлена {0}. Сохранить их изменения? {1}</target>
          </segment>
       </unit>
       <unit id="transcribeReject.cancel">
@@ -6375,8 +6584,10 @@
       </unit>
       <unit id="transcriptionTab.availableOnClipboard">
          <segment>
-            <source>Exported data is available on the clipboard. Use paste to insert it into another program.</source>
-            <target>"Экспортированные данные доступны в буфере обмена. Используйте paste, чтобыставить их в другую программу."</target>
+            <source>Exported data is available on the clipboard. Use paste to insert it into another
+               program.</source>
+            <target>"Экспортированные данные доступны в буфере обмена. Используйте paste,
+               чтобыставить их в другую программу."</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.download">
@@ -6465,8 +6676,11 @@
       </unit>
       <unit id="transcriptionTab.exportExplanation">
          <segment>
-            <source>Export the full audio project to store locally or share with another offline member. Export incremental file to import changes into online app.</source>
-            <target>"Экспортируйте полный аудиопроект, чтобы сохранить его локально илиоделиться с другим участником в автономном режиме. Экспортируйте инкрементныйайл для импорта изменений в онлайн-приложение."</target>
+            <source>Export the full audio project to store locally or share with another offline
+               member. Export incremental file to import changes into online app.</source>
+            <target>"Экспортируйте полный аудиопроект, чтобы сохранить его локально илиоделиться с
+               другим участником в автономном режиме. Экспортируйте инкрементныйайл для импорта
+               изменений в онлайн-приложение."</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportingProject">
@@ -6507,7 +6721,7 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported.  The export file is too large.</source>
+            <source>The audio project cannot be exported. The export file is too large.</source>
             <target/>
          </segment>
       </unit>
@@ -6549,8 +6763,10 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
-            <target/>
+            <source>You have new changes locally that were not included in the ptf export. Please
+               also export an itf file to capture all changes.</source>
+            <target>У вас есть новые изменения, которые не были включены в экспорт ptf. Пожалуйста,
+               экспортируйте также файл itf, чтобы отразить все изменения.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
@@ -6739,6 +6955,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="verse.badReferences">
+         <segment>
+            <source>ERROR: Markup contains bad references</source>
+            <target>ОШИБКА: Разметка содержит неверные ссылки</target>
+         </segment>
+      </unit>
       <unit id="viewMode.audioProject">
          <segment>
             <source>Audio Project Setup</source>
@@ -6838,7 +7060,7 @@
       <unit id="vProject.extrasBook">
          <segment>
             <source>Akuo Extras Book Designation</source>
-            <target/>
+            <target>Akuo Extras Book Designation</target>
          </segment>
       </unit>
       <unit id="vProject.flat">
@@ -6867,14 +7089,18 @@
       </unit>
       <unit id="vProject.isPublic">
          <segment>
-            <source>This project contains resources that can be used in other projects for Internalization.</source>
-            <target>"Этот проект содержит ресурсы, которые могут быть использованы в другихроектах по интернализации."</target>
+            <source>This project contains resources that can be used in other projects for
+               Internalization.</source>
+            <target>"Этот проект содержит ресурсы, которые могут быть использованы в другихроектах
+               по интернализации."</target>
          </segment>
       </unit>
       <unit id="vProject.howToPublic">
          <segment>
-            <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
-            <target>Свяжитесь с Натаном Пейном (nathan_payne@sil.org), чтобы получить доступ к созданию общего контента.</target>
+            <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared
+               content.</source>
+            <target>Свяжитесь с Натаном Пейном (nathan_payne@sil.org), чтобы получить доступ к
+               созданию общего контента.</target>
          </segment>
       </unit>
       <unit id="vProject.language">
@@ -7096,7 +7322,8 @@
       <unit id="welcome.setupFactor2Help">
          <segment>
             <source>Select the Offline Available option on the audio project card menu.</source>
-            <target>Проекты доступны в автономном режиме через меню "Больше" с тремя точками нааждой карточке проекта.</target>
+            <target>Проекты доступны в автономном режиме через меню "Больше" с тремя точками нааждой
+               карточке проекта.</target>
          </segment>
       </unit>
       <unit id="welcome.setupTeam">
@@ -7107,7 +7334,9 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <source>Set up the audio project, dividing work into passages that can be assigned to
+               various transcribers and editors. Transcribers and editors can work online or offline
+               by downloading or importing the audio project.</source>
             <target/>
          </segment>
       </unit>
@@ -7125,7 +7354,9 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <source>A audio project has been set up online. Transcribers and editors can work
+               online, offline by selecting the Offline Available option on the audio project card
+               menu, or offline by importing it.</source>
             <target/>
          </segment>
       </unit>
@@ -7325,6 +7556,12 @@
          <segment>
             <source>Unsaved content</source>
             <target>Несохраненное содержимое</target>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.markVerses">
+         <segment>
+            <source>Mark Verses</source>
+            <target>Отметить стихи</target>
          </segment>
       </unit>
       <unit id="workflowSteps.wholeBackTranslate">

@@ -217,6 +217,12 @@
             <target>Introduction au livre</target>
          </segment>
       </unit>
+      <unit id="artifactCategory.chapter">
+         <segment>
+            <source>Chapter Number</source>
+            <target>Numéro de chapitre</target>
+         </segment>
+      </unit>
       <unit id="artifactCategory.scripture">
          <segment>
             <source>Scripture</source>
@@ -257,6 +263,12 @@
          <segment>
             <source>Question and Answer</source>
             <target>Questions et réponses</target>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.title">
+         <segment>
+            <source>Title</source>
+            <target>Titre</target>
          </segment>
       </unit>
       <unit id="artifactType.backtranslation">
@@ -519,8 +531,8 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
-            <target/>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <target>Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur BROWSE. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CRÉER.</target>
          </segment>
       </unit>
       <unit id="audacityManager.title">
@@ -580,7 +592,13 @@
       <unit id="cards.bibleIdExplain">
          <segment>
             <source>Explain Bible Id</source>
-            <target/>
+            <target>Expliquer l'identifiant de la Bible</target>
+         </segment>
+      </unit>
+      <unit id="cards.biblename">
+         <segment>
+            <source>Name of Bible</source>
+            <target>Nom de la Bible</target>
          </segment>
       </unit>
       <unit id="cards.cancel">
@@ -753,7 +771,7 @@
       </unit>
       <unit id="cards.OBTs">
          <segment>
-            <source>Oral Bible Translation (Simple)</source>
+            <source>Oral Bible Translation (simple)</source>
             <target>Traduction orale de la Bible (simple)</target>
          </segment>
       </unit>
@@ -898,7 +916,7 @@
       <unit id="cards.workflowProgressionStep">
          <segment>
             <source>Next Step</source>
-            <target/>
+            <target>Étape suivante</target>
          </segment>
       </unit>
       <unit id="cards.yes">
@@ -976,7 +994,13 @@
       <unit id="category.resource">
          <segment>
             <source>Resource</source>
-            <target/>
+            <target>Ressources</target>
+         </segment>
+      </unit>
+      <unit id="category.notes">
+         <segment>
+            <source>audio note(s)</source>
+            <target>note(s) audio</target>
          </segment>
       </unit>
       <unit id="commentCard.approve">
@@ -1437,7 +1461,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
             <target/>
          </segment>
       </unit>
@@ -1479,8 +1503,8 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
-            <target/>
+            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
+            <target>Ce fichier a été exporté avec une version plus récente du programme. Vous devriez télécharger la dernière version avant de l'importer ! Si vous continuez, il se peut que certaines données ne soient pas importées correctement.</target>
          </segment>
       </unit>
       <unit id="electronImport.project">
@@ -1527,7 +1551,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified!  Carry on!</source>
+            <source>I'm verified! Carry on!</source>
             <target/>
          </segment>
       </unit>
@@ -1911,8 +1935,8 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
-            <target/>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
+            <target>Si cette erreur s'est produite lors de l'importation de modifications hors ligne, veuillez fermer l'application immédiatement et la rouvrir. Si l'erreur persiste, contactez l'assistance. Si vous continuez à utiliser l'application, vous perdrez les modifications hors ligne.</target>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -1977,8 +2001,8 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
-            <target/>
+            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
+            <target>ITF ne contient pas le projet audio actuel. Il contient le projet audio {0}.</target>
          </segment>
       </unit>
       <unit id="import.showHideFilter">
@@ -2737,6 +2761,12 @@
             <target>Admin</target>
          </segment>
       </unit>
+      <unit id="main.akuo">
+         <segment>
+            <source>Access Akuo Site</source>
+            <target>Accéder au site d'Akuo</target>
+         </segment>
+      </unit>
       <unit id="main.apiError">
          <segment>
             <source>API Error:</source>
@@ -2771,6 +2801,12 @@
          <segment>
             <source>Continue</source>
             <target>Continuer</target>
+         </segment>
+      </unit>
+      <unit id="main.course">
+         <segment>
+            <source>Access Accredited Course</source>
+            <target>Accéder à un cours accrédité</target>
          </segment>
       </unit>
       <unit id="main.continueCurrentUser">
@@ -2871,8 +2907,8 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
-            <target/>
+            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
+            <target>Invitation non acceptée. Vous devez vous connecter avec l'email auquel l'invitation a été envoyée.</target>
          </segment>
       </unit>
       <unit id="main.loadingTable">
@@ -2893,6 +2929,12 @@
             <target>Déconnexion</target>
          </segment>
       </unit>
+      <unit id="main.logos">
+         <segment>
+            <source>Access Logos Resources</source>
+            <target>Accès Ressources Logos</target>
+         </segment>
+      </unit>
       <unit id="main.media">
          <segment>
             <source>Audio</source>
@@ -2909,6 +2951,12 @@
          <segment>
             <source>Unable to load audio project data offline.</source>
             <target>Impossible de charger les données du projet audio hors ligne.</target>
+         </segment>
+      </unit>
+      <unit id="main.openNotes">
+         <segment>
+            <source>Access Translator's Notes</source>
+            <target>Accéder aux notes du traducteur</target>
          </segment>
       </unit>
       <unit id="main.passages">
@@ -2955,8 +3003,14 @@
       </unit>
       <unit id="main.reportWhenOnline">
          <segment>
-            <source>You must be online to report an problem.</source>
-            <target>Vous devez être en ligne pour signaler un problème.</target>
+            <source>You must be online to use this menu item.</source>
+            <target>Vous devez être en ligne pour utiliser cet élément de menu.</target>
+         </segment>
+      </unit>
+      <unit id="main.resources">
+         <segment>
+            <source>Access UBS Resources</source>
+            <target>Accès aux ressources d'UBS</target>
          </segment>
       </unit>
       <unit id="main.saveFirst">
@@ -3041,6 +3095,12 @@
          <segment>
             <source>Version: {0} - {1}</source>
             <target>Version : {0} - {1}</target>
+         </segment>
+      </unit>
+      <unit id="main.videos">
+         <segment>
+            <source>Access Training Videos</source>
+            <target>Accéder aux vidéos de formation</target>
          </segment>
       </unit>
       <unit id="mediaActions.attach">
@@ -3406,7 +3466,13 @@
       <unit id="mediaTitle.save">
          <segment>
             <source>Save Recording</source>
-            <target/>
+            <target>Sauvegarder l'enregistrement</target>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.saving">
+         <segment>
+            <source>Saving...</source>
+            <target>Sauvegarder...</target>
          </segment>
       </unit>
       <unit id="mediaUpload.cancel">
@@ -4114,7 +4180,13 @@
       <unit id="passageType.MOVE">
          <segment>
             <source>Movement</source>
-            <target/>
+            <target>Mouvement</target>
+         </segment>
+      </unit>
+      <unit id="passageType.PASS">
+         <segment>
+            <source>Passage</source>
+            <target>Passage</target>
          </segment>
       </unit>
       <unit id="peer.peerDescription">
@@ -4209,8 +4281,8 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target/>
+            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <target>Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur d'équipe ? Les membres de ce groupe pourront effectuer n'importe quelle étape, même si elle est assignée à un groupe dont ils ne font pas partie.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4221,8 +4293,8 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
-            <target/>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
+            <target>Nous ne sommes pas sûrs d'avoir besoin de cette autorisation non plus, car on ne sait pas très bien ce que les consultants font de particulier dans ce logiciel. Les commentaires du consultant indépendant seront visibles par tous les membres de l'équipe.</target>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4251,14 +4323,14 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-            <target/>
+            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <target>Les commentaires du mentor ne seront visibles que par les CIT. Les mentors peuvent approuver les commentaires des CIT pour les rendre visibles au reste de l'équipe.</target>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
-            <target/>
+            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
+            <target>Groupe de pairs général sans permissions spéciales. A utiliser pour assigner des discussions à des groupes d'équipe.</target>
          </segment>
       </unit>
       <unit id="planActions.addNote">
@@ -4432,7 +4504,13 @@
       <unit id="planSheet.movement">
          <segment>
             <source>Movement</source>
-            <target/>
+            <target>Mouvement</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.moveUp">
+         <segment>
+            <source>Move up</source>
+            <target>Avancer</target>
          </segment>
       </unit>
       <unit id="planSheet.nonNumber">
@@ -4905,14 +4983,20 @@
       </unit>
       <unit id="publishLevel.beta">
          <segment>
-            <source>Beta - only visible to users subscribed to app beta channel</source>
-            <target>Bêta - visible uniquement par les utilisateurs abonnés au canal bêta de l'application</target>
+            <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>
+            <target>Bêta - visible sur le site web d'Akuo lors de l'utilisation du paramètre bêta (non disponible dans l'application).</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.betalink">
+         <segment>
+            <source>https://akuobible.org/?beta=true</source>
+            <target>https://akuobible.org/?beta=true</target>
          </segment>
       </unit>
       <unit id="publishLevel.public">
          <segment>
-            <source>Public - visible to everyone using app</source>
-            <target>Public - visible par tous les utilisateurs de l'application</target>
+            <source>Public - visible to everyone using Akuo website or app</source>
+            <target>Public - visible par tous ceux qui utilisent le site web ou l'application Akuo.</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -5111,6 +5195,12 @@
          <segment>
             <source>Passage</source>
             <target>Passage</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidBooks">
+         <segment>
+            <source>Invalid book codes: {0}.</source>
+            <target>Codes livres invalides : {0}.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidColumns">
@@ -5409,14 +5499,14 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
+            <source>Your paratext login has expired and can't be automatically renewed. Please log out and login again.</source>
+            <target>Votre login paratext a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
+            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
+            <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
          </segment>
       </unit>
       <unit id="shared.fileNotFound">
@@ -6103,6 +6193,12 @@
             <target>Transcrire</target>
          </segment>
       </unit>
+      <unit id="tool.verses">
+         <segment>
+            <source>Mark Verses</source>
+            <target>Versets de la marque</target>
+         </segment>
+      </unit>
       <unit id="tool.wholeBackTranslate">
          <segment>
             <source>Whole Back Translate</source>
@@ -6291,8 +6387,8 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
-            <target/>
+            <source>Transcription updated by {0}. Keep their changes? {1}</source>
+            <target>Transcription mise à jour par {0}. Conserver les modifications ? {1}</target>
          </segment>
       </unit>
       <unit id="transcribeReject.cancel">
@@ -6507,8 +6603,8 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported.  The export file is too large.</source>
-            <target/>
+            <source>The audio project cannot be exported. The export file is too large.</source>
+            <target>Le projet audio ne peut pas être exporté. Le fichier d'exportation est trop volumineux.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportType">
@@ -6549,8 +6645,8 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
-            <target/>
+            <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
+            <target>Vous avez localement de nouvelles modifications qui n'ont pas été incluses dans l'exportation ptf. Veuillez également exporter un fichier itf pour capturer toutes les modifications.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
@@ -6739,6 +6835,12 @@
             <target>Fuseau horaire</target>
          </segment>
       </unit>
+      <unit id="verse.badReferences">
+         <segment>
+            <source>ERROR: Markup contains bad references</source>
+            <target>ERREUR : Le balisage contient de mauvaises références</target>
+         </segment>
+      </unit>
       <unit id="viewMode.audioProject">
          <segment>
             <source>Audio Project Setup</source>
@@ -6838,7 +6940,7 @@
       <unit id="vProject.extrasBook">
          <segment>
             <source>Akuo Extras Book Designation</source>
-            <target/>
+            <target>Désignation du livre d'Akuo Extras</target>
          </segment>
       </unit>
       <unit id="vProject.flat">
@@ -7107,8 +7209,8 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-            <target/>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <target>Configurer le projet audio, en divisant le travail en passages qui peuvent être assignés à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
          </segment>
       </unit>
       <unit id="welcome.team">
@@ -7125,8 +7227,8 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
-            <target/>
+            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <target>Un projet audio a été créé en ligne. Les transcripteurs et les éditeurs peuvent travailler en ligne, hors ligne en sélectionnant l'option Disponible hors ligne dans le menu de la carte de projet audio, ou hors ligne en l'important.</target>
          </segment>
       </unit>
       <unit id="welcome.title">
@@ -7325,6 +7427,12 @@
          <segment>
             <source>Unsaved content</source>
             <target>Contenu non sauvegardé</target>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.markVerses">
+         <segment>
+            <source>Mark Verses</source>
+            <target>Marquer les versets</target>
          </segment>
       </unit>
       <unit id="workflowSteps.wholeBackTranslate">

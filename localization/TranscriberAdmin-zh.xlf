@@ -217,6 +217,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactCategory.chapter">
+         <segment>
+            <source>Chapter Number</source>
+            <target>章节编号</target>
+         </segment>
+      </unit>
       <unit id="artifactCategory.scripture">
          <segment>
             <source>Scripture</source>
@@ -257,6 +263,12 @@
          <segment>
             <source>Question and Answer</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.title">
+         <segment>
+            <source>Title</source>
+            <target>标题</target>
          </segment>
       </unit>
       <unit id="artifactType.backtranslation">
@@ -519,7 +531,7 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
             <target/>
          </segment>
       </unit>
@@ -580,7 +592,13 @@
       <unit id="cards.bibleIdExplain">
          <segment>
             <source>Explain Bible Id</source>
-            <target/>
+            <target>解释圣经编号</target>
+         </segment>
+      </unit>
+      <unit id="cards.biblename">
+         <segment>
+            <source>Name of Bible</source>
+            <target>圣经名称</target>
          </segment>
       </unit>
       <unit id="cards.cancel">
@@ -753,8 +771,8 @@
       </unit>
       <unit id="cards.OBTs">
          <segment>
-            <source>Oral Bible Translation (Simple)</source>
-            <target/>
+            <source>Oral Bible Translation (simple)</source>
+            <target>口译圣经（简单）</target>
          </segment>
       </unit>
       <unit id="cards.OBTr">
@@ -898,7 +916,7 @@
       <unit id="cards.workflowProgressionStep">
          <segment>
             <source>Next Step</source>
-            <target/>
+            <target>下一步</target>
          </segment>
       </unit>
       <unit id="cards.yes">
@@ -1449,7 +1467,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
             <target/>
          </segment>
       </unit>
@@ -1491,7 +1509,7 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
+            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
             <target/>
          </segment>
       </unit>
@@ -1539,7 +1557,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified!  Carry on!</source>
+            <source>I'm verified! Carry on!</source>
             <target/>
          </segment>
       </unit>
@@ -1923,8 +1941,8 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
-            <target/>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
+            <target>如果在导入离线更改时出现此错误，请立即关闭应用程序并重新打开。 如果错误仍然存在，请联系支持人员。 如果继续使用应用程序，您将丢失离线更改。</target>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -1989,7 +2007,7 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
+            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -2749,6 +2767,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.akuo">
+         <segment>
+            <source>Access Akuo Site</source>
+            <target>访问 Akuo 网站</target>
+         </segment>
+      </unit>
       <unit id="main.apiError">
          <segment>
             <source>API Error:</source>
@@ -2783,6 +2807,12 @@
          <segment>
             <source>Continue</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="main.course">
+         <segment>
+            <source>Access Accredited Course</source>
+            <target>访问认证课程</target>
          </segment>
       </unit>
       <unit id="main.continueCurrentUser">
@@ -2883,7 +2913,7 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
             <target/>
          </segment>
       </unit>
@@ -2905,6 +2935,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.logos">
+         <segment>
+            <source>Access Logos Resources</source>
+            <target>访问徽标资源</target>
+         </segment>
+      </unit>
       <unit id="main.media">
          <segment>
             <source>Audio</source>
@@ -2921,6 +2957,12 @@
          <segment>
             <source>Unable to load audio project data offline.</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="main.openNotes">
+         <segment>
+            <source>Access Translator's Notes</source>
+            <target>访问翻译笔记</target>
          </segment>
       </unit>
       <unit id="main.passages">
@@ -2967,8 +3009,14 @@
       </unit>
       <unit id="main.reportWhenOnline">
          <segment>
-            <source>You must be online to report an problem.</source>
-            <target/>
+            <source>You must be online to use this menu item.</source>
+            <target>您必须在线才能使用此菜单项。</target>
+         </segment>
+      </unit>
+      <unit id="main.resources">
+         <segment>
+            <source>Access UBS Resources</source>
+            <target>访问 UBS 资源</target>
          </segment>
       </unit>
       <unit id="main.saveFirst">
@@ -3053,6 +3101,12 @@
          <segment>
             <source>Version: {0} - {1}</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="main.videos">
+         <segment>
+            <source>Access Training Videos</source>
+            <target>访问培训视频</target>
          </segment>
       </unit>
       <unit id="mediaActions.attach">
@@ -3418,7 +3472,13 @@
       <unit id="mediaTitle.save">
          <segment>
             <source>Save Recording</source>
-            <target/>
+            <target>保存录音</target>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.saving">
+         <segment>
+            <source>Saving...</source>
+            <target>保存...</target>
          </segment>
       </unit>
       <unit id="mediaUpload.cancel">
@@ -4126,7 +4186,13 @@
       <unit id="passageType.MOVE">
          <segment>
             <source>Movement</source>
-            <target/>
+            <target>移动</target>
+         </segment>
+      </unit>
+      <unit id="passageType.PASS">
+         <segment>
+            <source>Passage</source>
+            <target>通道</target>
          </segment>
       </unit>
       <unit id="peer.peerDescription">
@@ -4221,7 +4287,7 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
             <target/>
          </segment>
       </unit>
@@ -4233,7 +4299,7 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
             <target/>
          </segment>
       </unit>
@@ -4263,13 +4329,13 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
             <target/>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
+            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
             <target/>
          </segment>
       </unit>
@@ -4444,7 +4510,13 @@
       <unit id="planSheet.movement">
          <segment>
             <source>Movement</source>
-            <target/>
+            <target>移动</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.moveUp">
+         <segment>
+            <source>Move up</source>
+            <target>上移</target>
          </segment>
       </unit>
       <unit id="planSheet.nonNumber">
@@ -4917,14 +4989,20 @@
       </unit>
       <unit id="publishLevel.beta">
          <segment>
-            <source>Beta - only visible to users subscribed to app beta channel</source>
-            <target>测试版 - 仅对订阅应用程序测试版频道的用户可见</target>
+            <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>
+            <target>测试版 - 使用测试版参数时在 Akuo 网站上可见（应用程序中不可用）</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.betalink">
+         <segment>
+            <source>https://akuobible.org/?beta=true</source>
+            <target>https://akuobible.org/?beta=true</target>
          </segment>
       </unit>
       <unit id="publishLevel.public">
          <segment>
-            <source>Public - visible to everyone using app</source>
-            <target>公开 - 每个使用应用程序的人都能看到</target>
+            <source>Public - visible to everyone using Akuo website or app</source>
+            <target>公开--使用阿库乌网站或应用程序的所有人都可看到</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -5123,6 +5201,12 @@
          <segment>
             <source>Passage</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidBooks">
+         <segment>
+            <source>Invalid book codes: {0}.</source>
+            <target>无效书籍代码： {0}.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidColumns">
@@ -5421,13 +5505,13 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Your paratext login has expired and can't be automatically renewed. Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -6115,6 +6199,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="tool.verses">
+         <segment>
+            <source>Mark Verses</source>
+            <target>标记诗句</target>
+         </segment>
+      </unit>
       <unit id="tool.wholeBackTranslate">
          <segment>
             <source>Whole Back Translate</source>
@@ -6303,7 +6393,7 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
+            <source>Transcription updated by {0}. Keep their changes? {1}</source>
             <target/>
          </segment>
       </unit>
@@ -6519,7 +6609,7 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported.  The export file is too large.</source>
+            <source>The audio project cannot be exported. The export file is too large.</source>
             <target/>
          </segment>
       </unit>
@@ -6561,7 +6651,7 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
+            <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
             <target/>
          </segment>
       </unit>
@@ -6751,6 +6841,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="verse.badReferences">
+         <segment>
+            <source>ERROR: Markup contains bad references</source>
+            <target>错误： 标记包含错误引用</target>
+         </segment>
+      </unit>
       <unit id="viewMode.audioProject">
          <segment>
             <source>Audio Project Setup</source>
@@ -6850,7 +6946,7 @@
       <unit id="vProject.extrasBook">
          <segment>
             <source>Akuo Extras Book Designation</source>
-            <target/>
+            <target>Akuo Extras 书籍名称</target>
          </segment>
       </unit>
       <unit id="vProject.flat">
@@ -7119,7 +7215,7 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
             <target/>
          </segment>
       </unit>
@@ -7137,7 +7233,7 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
             <target/>
          </segment>
       </unit>
@@ -7337,6 +7433,12 @@
          <segment>
             <source>Unsaved content</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.markVerses">
+         <segment>
+            <source>Mark Verses</source>
+            <target>标记诗句</target>
          </segment>
       </unit>
       <unit id="workflowSteps.wholeBackTranslate">
