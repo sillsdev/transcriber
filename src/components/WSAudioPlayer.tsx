@@ -575,7 +575,7 @@ function WSAudioPlayer(props: IProps) {
     if (isPlaying !== undefined && playingRef.current !== isPlaying)
       handlePlayStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPlaying]);
+  }, [isPlaying, duration]);
 
   function onRecordStart() {}
 
