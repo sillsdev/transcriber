@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+
 import {
   IState,
   Section,
@@ -45,7 +46,6 @@ import {
   ToolSlug,
   remoteId,
   remoteIdGuid,
-  getStartChapter,
   findRecord,
   useGraphicUpdate,
   useGraphicFind,
@@ -121,6 +121,7 @@ import GraphicRights from '../GraphicRights';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 import { PublishLevelEnum, usePublishLevel } from '../../crud/usePublishLevel';
+import { getLastVerse } from '../../business/localParatext/getLastVerse';
 
 const SaveWait = 500;
 
@@ -1626,6 +1627,9 @@ export function ScriptureTable(props: IProps) {
       : false;
   };
 
+  const chapterNumberReference = (chapter: number) =>
+    PassageTypeEnum.CHAPTERNUMBER + ' ' + chapter.toString();
+
   const addChapterNumber = (newsht: ISheet[], chapter: number) => {
     if (chapter > 0) {
       const title = chapterNumberTitle(chapter);
@@ -1636,7 +1640,7 @@ export function ScriptureTable(props: IProps) {
         undefined,
         undefined,
         title,
-        PassageTypeEnum.CHAPTERNUMBER + ' ' + chapter.toString()
+        chapterNumberReference(chapter)
       );
     }
     return newsht;
@@ -1645,9 +1649,21 @@ export function ScriptureTable(props: IProps) {
   const doPublish = async () => {
     let currentChapter = 0;
 
-    const startChapter = (s: ISheet) =>
-      (s.passage && s.passage.attributes.startChapter) ??
-      getStartChapter(s.reference);
+    const startChapter = (s: ISheet) => {
+      var startchap = s.passage?.attributes?.startChapter ?? 0;
+      var endchap = s.passage?.attributes?.endChapter ?? 0;
+      if (startchap > 0 && startchap !== endchap) {
+        var lastverse = getLastVerse(s.book ?? '', startchap) ?? 0;
+        if (lastverse > 0) {
+          var startverse = s.passage?.attributes.startVerse ?? 0;
+          var endverse = s.passage?.attributes.endVerse ?? 0;
+          if (endverse > lastverse - startverse + 1) {
+            return endchap;
+          }
+        }
+      }
+      return startchap;
+    };
 
     const chapterChanged = (s: ISheet) =>
       s.passageType === PassageTypeEnum.PASSAGE &&
@@ -1655,6 +1671,24 @@ export function ScriptureTable(props: IProps) {
       startChapter(s) > 0 &&
       startChapter(s) !== currentChapter;
 
+    const haveChapterNumber = (
+      sht: ISheet[],
+      nextchap: number,
+      startcheck: number,
+      endcheck: number
+    ) => {
+      var gotit = false;
+
+      while (startcheck++ < endcheck) {
+        if (
+          isKind(startcheck, PassageTypeEnum.CHAPTERNUMBER) &&
+          sht[startcheck].reference === chapterNumberReference(nextchap)
+        ) {
+          gotit = true;
+        }
+      }
+      return gotit;
+    };
     let newworkflow: ISheet[] = [];
     if (savingRef.current || updateRef.current) {
       showMessage(t.saving);
@@ -1685,22 +1719,14 @@ export function ScriptureTable(props: IProps) {
             r.sectionSeq === s.sectionSeq &&
             r.passageSeq > 0
         );
+
         if (vernpsg > 0 && chapterChanged(sht[vernpsg])) {
-          var check = index;
-          var gotit = false;
-          while (check++ < vernpsg) {
-            if (isKind(check, PassageTypeEnum.CHAPTERNUMBER)) {
-              gotit = true;
-            }
-          }
-          if (!gotit) {
-            newworkflow = addChapterNumber(
-              newworkflow,
-              startChapter(sht[vernpsg])
-            );
+          var nextchap = startChapter(sht[vernpsg]);
+          if (!haveChapterNumber(sht, nextchap, index, vernpsg)) {
+            newworkflow = addChapterNumber(newworkflow, nextchap);
             nextpsg += 0.01;
           }
-          currentChapter = startChapter(sht[vernpsg]);
+          currentChapter = nextchap;
         }
       } //just a passage
       else {
@@ -1708,10 +1734,7 @@ export function ScriptureTable(props: IProps) {
         var prevrow = index - 1;
         while (sht[prevrow].deleted) prevrow--;
         if (!isSectionRow(sht[prevrow]) && !s.deleted && chapterChanged(s)) {
-          if (
-            !isKind(index - 1, PassageTypeEnum.CHAPTERNUMBER) &&
-            !isKind(index - 2, PassageTypeEnum.CHAPTERNUMBER)
-          ) {
+          if (!haveChapterNumber(sht, startChapter(s), index - 2, index)) {
             newworkflow = addChapterNumber(newworkflow, startChapter(s));
             nextpsg += 0.01;
           }
