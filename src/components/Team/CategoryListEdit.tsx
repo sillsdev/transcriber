@@ -95,8 +95,20 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   const handleDelete = (c: IArtifactCategory) => () => {
     setDeleted((deleted) => deleted.concat(c.id));
   };
+
+  const hasDuplicates = () => {
+    const recs = Array.from(edited.values());
+    const items = new Set<string>(recs.map((r) => r.category));
+    if (items.size < recs.length) {
+      showMessage(t.duplicate);
+      return true;
+    }
+    return false;
+  };
+
   const canSave = useMemo(
-    () => edited.size + deleted.length > 0,
+    () => edited.size + deleted.length > 0 && !hasDuplicates(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [edited, deleted]
   );
 
@@ -107,6 +119,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
       edited.delete(d);
     });
     const recs = Array.from(edited.values());
+    if (hasDuplicates()) return;
     const t = new RecordTransformBuilder();
     const ops: RecordOperation[] = [];
     for (const r of recs) {
