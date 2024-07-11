@@ -70,7 +70,7 @@ const stateReducer = (state: IMediaState, action: Action): IMediaState => {
   }
 };
 
-interface IProps {
+export interface IFetchMediaProps {
   id: string;
 }
 
@@ -183,7 +183,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.id]);
 
-  const fetchMediaUrl = (props: IProps) => {
+  const fetchMediaUrl = (props: IFetchMediaProps) => {
     let { id } = props;
     if (!id) {
       dispatch({ payload: undefined, type: MediaSt.IDLE });

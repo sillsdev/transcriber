@@ -2,10 +2,9 @@ import { useContext } from 'react';
 import { TokenContext } from '../context/TokenProvider';
 import { useDispatch } from 'react-redux';
 import { doDataChanges } from '../hoc/DataChanges';
-import { useOfflnProjRead } from '../crud';
+import { useFetchMediaUrl, useOfflnProjRead } from '../crud';
 import * as actions from '../store';
 import { useGlobal } from 'reactn';
-import { useDownloadMedia } from './useDownloadMedia';
 
 export const useDataChanges = () => {
   const { accessToken } = useContext(TokenContext).state;
@@ -18,7 +17,7 @@ export const useDataChanges = () => {
   const dispatch = useDispatch();
   const setLanguage = (lang: string) => dispatch(actions.setLanguage(lang));
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
-  const { tryDownload } = useDownloadMedia();
+  const { fetchMediaUrl } = useFetchMediaUrl(errorReporter);
   return () => {
     doDataChanges(
       accessToken || '',
@@ -30,7 +29,7 @@ export const useDataChanges = () => {
       user,
       setLanguage,
       setDataChangeCount,
-      tryDownload
+      fetchMediaUrl
     );
   };
 };
