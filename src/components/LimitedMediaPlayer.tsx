@@ -78,12 +78,17 @@ export function LimitedMediaPlayer(props: IProps) {
   const [playing, setPlayingx] = useState(false);
   const playingRef = useRef(false);
   const [blobState, fetchBlob] = useFetchMediaBlob();
-  const [duration, setDuration] = useState(0);
-  const durationSet = useRef(false);
+  const [duration, setDurationx] = useState(0);
+  const durationRef = useRef(0);
   const timeTracker = useRef<number>(0);
   const stop = useRef<number>(0);
   const [currentTime, setCurrentTime] = useState(0);
   const t: IPeerCheckStrings = useSelector(peerCheckSelector, shallowEqual);
+
+  const setDuration = (value: number) => {
+    setDurationx(value);
+    durationRef.current = value;
+  };
 
   const setPlaying = (play: boolean) => {
     setPlayingx(play);
@@ -169,8 +174,8 @@ export function LimitedMediaPlayer(props: IProps) {
   };
 
   const timeUpdate = (progress: number) => {
-    if (!Boolean(limits.start) && !Boolean(limits.end)) return;
     const time = Math.round(progress * 1000) / 1000;
+    const durValue = durationRef.current;
     if (
       (stop.current !== 0 && time >= stop.current) ||
       (time === 0 && limits.start !== 0)
@@ -179,7 +184,7 @@ export function LimitedMediaPlayer(props: IProps) {
     }
     const start = limits.start ?? 0;
     const current = Math.round(
-      ((time - start) / ((limits.end ?? 0) - start)) * 100
+      ((time - start) / ((limits.end ?? durValue ?? 0) - start)) * 100
     );
     if (timeTracker.current !== current && playingRef.current) {
       timeTracker.current = current;
@@ -190,22 +195,19 @@ export function LimitedMediaPlayer(props: IProps) {
 
   const durationChange = (duration: number) => {
     //this is called multiple times for some files
-    if (!durationSet.current && duration) {
+    if (!Boolean(durationRef.current) && duration) {
       if (limits.end) {
         setPosition(limits.start);
         if (limits.end > duration - 0.5) stop.current = 0;
         else stop.current = limits.end + 0.25;
-      }
-      durationSet.current = true;
+      } else stop.current = duration;
       setDuration(duration);
     }
   };
 
   const handleSegmentStart = () => {
     setPosition(limits.start ?? 0);
-    if (limits.end) {
-      stop.current = limits.end + 0.25;
-    }
+    stop.current = limits.end ? limits.end + 0.25 : durationRef.current ?? 0;
     setValue(0);
   };
 
@@ -213,13 +215,13 @@ export function LimitedMediaPlayer(props: IProps) {
     const newPos = Math.max(currentTime - 3, 0);
     setPosition(newPos);
     const start = limits.start ?? 0;
-    const duration = (limits.end ?? 0) - start;
+    const duration = (limits.end || durationRef.current) - start;
     const slider = Math.round(((newPos - start) * 100) / duration);
     setValue(slider);
   };
 
   const handleSkipNext = () => {
-    setPosition(limits.end);
+    setPosition(limits.end || durationRef.current);
     stop.current = 0;
     setValue(100);
   };
@@ -228,7 +230,7 @@ export function LimitedMediaPlayer(props: IProps) {
     const curValue = Array.isArray(value) ? value[0] : value;
     const percent = curValue / 100;
     const start = limits.start ?? 0;
-    const duration = (limits.end ?? 0) - start;
+    const duration = (limits.end || durationRef.current) - start;
     const time = duration * percent + start;
     setCurrentTime(time);
     timeTracker.current = time;
@@ -274,7 +276,9 @@ export function LimitedMediaPlayer(props: IProps) {
               </IconButton>
               <Duration seconds={(currentTime ?? 0) - (limits.start ?? 0)} />
               {' / '}
-              <Duration seconds={(limits.end ?? 0) - (limits.start ?? 0)} />
+              <Duration
+                seconds={(limits.end || duration) - (limits.start ?? 0)}
+              />
             </>
           }
           label={
