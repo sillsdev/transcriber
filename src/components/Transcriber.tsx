@@ -72,6 +72,7 @@ import {
   updateSegments,
   useWaitForRemoteQueue,
   getSortedRegions,
+  mergedSegments,
 } from '../utils';
 import { isElectron } from '../api-variable';
 import { TokenContext } from '../context/TokenProvider';
@@ -586,12 +587,13 @@ export function Transcriber(props: IProps) {
           }
         }
         verseSegs.current = JSON.stringify({ regions: JSON.stringify(segs) });
-        segs = segs.concat(
-          getSortedRegions(
-            getSegments(NamedRegions.Transcription, defaultSegments)
-          )
-        );
-        setSuggestedSegs(JSON.stringify({ regions: JSON.stringify(segs) }));
+        const suggested = mergedSegments({
+          from: NamedRegions.Verse,
+          into: NamedRegions.Transcription,
+          params: segParams,
+          savedSegs: defaultSegments,
+        });
+        setSuggestedSegs(suggested);
       }
     }
     mediaRef.current = mediafile;

@@ -1,5 +1,10 @@
 import { tryParseJSON } from './tryParseJson';
-import { INamedRegion, parseRegions } from '../crud/useWavesurferRegions';
+import {
+  INamedRegion,
+  IRegion,
+  IRegionParams,
+  parseRegions,
+} from '../crud/useWavesurferRegions';
 
 export enum NamedRegions {
   Transcription = 'Transcription',
@@ -49,4 +54,48 @@ export function getSegments(name: string, segments: string) {
 
 export function getSortedRegions(segments: string) {
   return parseRegions(segments).regions.sort((i, j) => i.start - j.start);
+}
+
+export interface MergedSegmentProps {
+  from: NamedRegions;
+  into: NamedRegions;
+  params: IRegionParams;
+  savedSegs: string;
+}
+export function mergedSegments({
+  from,
+  into,
+  params,
+  savedSegs,
+}: MergedSegmentProps) {
+  const segs = getSortedRegions(getSegments(from, savedSegs));
+  const tsegs = getSortedRegions(getSegments(into, savedSegs));
+  let x = 0;
+  const suggested: IRegion[] = [];
+  const minLen = params?.segLenThreshold || 0.5;
+  segs.forEach((s) => {
+    let i = tsegs.findIndex((t) => t.end > s.start);
+    if (i < 0) {
+      suggested.push(s);
+    } else {
+      suggested.push(...tsegs.slice(x, i));
+      x = i;
+      if (tsegs[i].start < s.start) {
+        if (s.start - tsegs[i].start >= minLen) {
+          suggested.push({ ...tsegs[i], end: s.start });
+        } else {
+          suggested[suggested.length - 1].end = s.start;
+        }
+      }
+      if (tsegs[i].end - s.start >= minLen) {
+        suggested.push({ ...s, end: tsegs[i].end });
+      } else {
+        x++; // skip the next one
+        suggested.push({ ...s, end: tsegs[x].end });
+      }
+      x++;
+    }
+  });
+  suggested.push(...tsegs.slice(x));
+  return JSON.stringify({ regions: JSON.stringify(suggested) });
 }
