@@ -460,7 +460,7 @@ export function IntegrationPanel(props: IProps) {
         pi.attributes &&
         related(pi, 'project') === project
     ) as ProjectIntegration[];
-    let index = 0;
+    let index = -1;
     if (curInt.length > 0) {
       const settings = JSON.parse(curInt[0].attributes.settings);
       index = paratext_projects.findIndex((p) => {
@@ -585,7 +585,6 @@ export function IntegrationPanel(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafiles, plan, exportType]);
 
-  /* do this once */
   useEffect(() => {
     if (integrations.length > 0) {
       getParatextIntegration(integrationSlug(exportType, offlineOnly));
