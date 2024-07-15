@@ -8,7 +8,6 @@ import {
   OrganizationMembershipD,
   GroupMembershipD,
   GroupD,
-  ArtifactCategoryD,
 } from '../model';
 import { useCheckOnline, cleanFileName } from '../utils';
 import {
@@ -42,7 +41,7 @@ export const useTeamCreate = () => {
   const checkOnline = useCheckOnline();
   const workingOnItRef = useRef(false);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const { localizedArtifactCategory } = useArtifactCategory();
+  const { AddOrgNoteCategories } = useArtifactCategory();
 
   const memory = useMemo(
     () => coordinator.getSource('memory') as Memory,
@@ -96,33 +95,6 @@ export const useTeamCreate = () => {
       ...ReplaceRelatedRecord(t, groupMbr, 'role', 'role', orgRoleId),
     ]);
   };
-  const OrgNoteCategories = async (orgRec: OrganizationD) => {
-    if (offlineOnly) return;
-    // Add default note categories
-    const noteCategories = ['chapter', 'title'];
-    noteCategories.forEach(async (category) => {
-      let noteCategory: ArtifactCategoryD = {
-        type: 'artifactcategory',
-        attributes: {
-          specialuse: category,
-          categoryname: localizedArtifactCategory(category),
-          discussion: false,
-          resource: false,
-          note: true,
-        },
-      } as ArtifactCategoryD;
-      await memory.update((t) => [
-        ...AddRecord(t, noteCategory, user, memory),
-        ...ReplaceRelatedRecord(
-          t,
-          noteCategory,
-          'organization',
-          'organization',
-          orgRec.id
-        ),
-      ]);
-    });
-  };
 
   interface ICreateOrgProps {
     orgRec: Organization;
@@ -142,7 +114,7 @@ export const useTeamCreate = () => {
       ),
     ]);
     await OrgRelated(orgRec as OrganizationD);
-    await OrgNoteCategories(orgRec as OrganizationD);
+    await AddOrgNoteCategories(orgRec.id);
     await CreateOrgWorkflowSteps(process, orgRec.id as string);
     if (!offlineOnly) await teamApiPull(orgRec.id as string); // Update slug value
     setOrganization(orgRec.id as string);
