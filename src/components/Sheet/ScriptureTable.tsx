@@ -1050,7 +1050,7 @@ export function ScriptureTable(props: IProps) {
   };
 
   const handleUploadGraphicVisible = (v: boolean) => {
-    setUploadType(undefined);
+    setUploadType(v ? UploadType.Graphic : undefined);
     setUploadGraphicVisible(v);
   };
 
@@ -1063,9 +1063,11 @@ export function ScriptureTable(props: IProps) {
       uploadItem.current = ws;
       setGraphicFullsizeUrl(ws?.graphicFullSizeUrl ?? '');
       setCurGraphicRights(ws?.graphicRights ?? '');
-      setUploadGraphicVisible(true);
     });
   };
+  useEffect(() => {
+    setUploadGraphicVisible(uploadType === UploadType.Graphic);
+  }, [uploadType]);
 
   const handleRightsChange = (graphicRights: string) => {
     const ws = uploadItem.current;
