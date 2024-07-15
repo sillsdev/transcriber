@@ -49,7 +49,7 @@ export const useArtifactCategory = (teamId?: string) => {
   const waitForRemoteQueue = useWaitForRemoteQueue();
   const t: IArtifactCategoryStrings = useSelector(stringSelector, shallowEqual);
   const [fromLocal] = useState<ISwitches>({});
-
+  const specialNoteCategories = ['chapter', 'title'];
   const localizedArtifactCategory = (val: string) => {
     return (t as ISwitches)[val] || val;
   };
@@ -75,9 +75,50 @@ export const useArtifactCategory = (teamId?: string) => {
     return cleanFileName(orgRec?.attributes?.slug + 'cat' + name) ?? '';
   };
 
+  const AddOrgNoteCategories = async (orgId?: string) => {
+    if (offlineOnly) return;
+    // Add default note categories
+
+    specialNoteCategories.forEach(async (category) => {
+      let noteCategory: ArtifactCategoryD = {
+        type: 'artifactcategory',
+        attributes: {
+          specialuse: category,
+          categoryname: localizedArtifactCategory(category),
+          discussion: false,
+          resource: false,
+          note: true,
+        },
+      } as ArtifactCategoryD;
+      await memory.update((t) => [
+        ...AddRecord(t, noteCategory, user, memory),
+        ...ReplaceRelatedRecord(
+          t,
+          noteCategory,
+          'organization',
+          'organization',
+          orgId ?? curOrg
+        ),
+      ]);
+    });
+  };
   const getArtifactCategorys = async (type: ArtifactCategoryType) => {
     const categorys: IArtifactCategory[] = [];
     /* wait for new categories remote id to fill in */
+    if (!offlineOnly && type === ArtifactCategoryType.Note) {
+      var special = (await memory.query((q) =>
+        q
+          .findRecords('artifactcategory')
+          .filter({ attribute: 'specialuse', value: specialNoteCategories[0] })
+      )) as ArtifactCategoryD[];
+      if (
+        special.filter((r) => related(r, 'organization') === curOrg).length ===
+        0
+      ) {
+        await AddOrgNoteCategories(curOrg);
+      }
+    }
+
     await waitForRemoteQueue('category update');
     var orgrecs: ArtifactCategoryD[] = (
       memory.cache.query((q) =>
@@ -238,5 +279,6 @@ export const useArtifactCategory = (teamId?: string) => {
     scriptureTypeCategory,
     slugFromId,
     defaultMediaName,
+    AddOrgNoteCategories,
   };
 };
