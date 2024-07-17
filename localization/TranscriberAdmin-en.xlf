@@ -4912,6 +4912,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="profile.syncFrequency">
+         <segment>
+            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="profile.timezone">
          <segment>
             <source>Time zone</source>

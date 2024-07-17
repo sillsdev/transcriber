@@ -5730,6 +5730,13 @@
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="profile.syncFrequency">
+            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Profile.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="profile.timezone">
             <source>Time zone</source>
             <target/>
