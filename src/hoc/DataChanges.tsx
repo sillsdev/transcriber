@@ -51,6 +51,7 @@ import {
   OfflineProject,
   PassageStateChangeD,
   Plan,
+  UserD,
   VProject,
 } from '../model';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -62,6 +63,7 @@ import { useSanityCheck } from '../crud/useSanityCheck';
 import { useBibleMedia } from '../crud/useBibleMedia';
 import { useDispatch } from 'react-redux';
 import { pullRemoteToMemory } from '../crud/syncToMemory';
+import { useOrbitData } from './useOrbitData';
 
 export const processDataChanges = async (pdc: {
   token: string | null;
@@ -509,12 +511,23 @@ export function DataChanges(props: PropsWithChildren) {
   const doSanityCheck = useSanityCheck(setLanguage);
   const { getBibleMediaProject, getBibleMediaPlan } = useBibleMedia();
   const { fetchMediaUrl } = useFetchMediaUrl();
+  const users = useOrbitData<UserD[]>('user');
+  const defaultDataDelayInMinutes = 2;
+  const [userDataDelay, setUserDataDelay] = useState(defaultDataDelayInMinutes);
+  useEffect(() => {
+    var userRec = findRecord(memory, 'user', user) as UserD; //make sure we have the user record in memory
+    const hk = JSON.parse(userRec?.attributes?.hotKeys ?? '{}');
+    setUserDataDelay(hk.syncFreq ?? defaultDataDelayInMinutes);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [users, user]);
 
   useEffect(() => {
     const defaultBusyDelay = 1000;
-    const defaultDataDelay = 1000 * 100;
+    const defaultDataDelay = 1000 * (userDataDelay * 60);
 
     setFirstRun(dataDelay === null);
+    //if userDataDelay = 0, then we don't want to sync but don't set it to null
+    //because that means we haven't run yet.
     const newDelay =
       connected && loadComplete && remote && authenticated()
         ? dataDelay === null
@@ -529,7 +542,7 @@ export function DataChanges(props: PropsWithChildren) {
       remote && authenticated() ? defaultBusyDelay * (connected ? 1 : 10) : null
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [remote, ctx, loadComplete, connected, firstRun]);
+  }, [remote, ctx, loadComplete, connected, firstRun, userDataDelay]);
   const updateBusy = () => {
     const checkBusy =
       user === '' || (remote && remote.requestQueue.length !== 0);
@@ -597,7 +610,7 @@ export function DataChanges(props: PropsWithChildren) {
     }
   };
   useInterval(updateBusy, busyDelay);
-  useInterval(updateData, dataDelay);
+  useInterval(updateData, (dataDelay ?? 0) <= 0 ? null : dataDelay);
   useInterval(backupElectron, defaultBackupDelay);
   // render the children component.
   return children as JSX.Element;

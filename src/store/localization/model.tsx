@@ -973,6 +973,7 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "sendDigest": string;
     "sharedContentCreator": string;
+    "syncFrequency": string;
     "timezone": string;
     "userExists": string;
     "userProfile": string;

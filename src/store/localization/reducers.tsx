@@ -1030,6 +1030,7 @@ const initialState = {
 			"save": "Save",
 			"sendDigest": "Receive Email Notifications and Digests",
 			"sharedContentCreator": "Allow user to create shared content projects.",
+			"syncFrequency": "Frequency of data sync in minutes.  0 to turn off sync.",
 			"timezone": "Time zone",
 			"userExists": "This offline user exists.",
 			"userProfile": "User profile",
