@@ -11,7 +11,6 @@ import {
   GroupMembership,
 } from '../model';
 import { findRecord, usePlanType, useRole } from '../crud';
-import { useCheckOnline, useInterval } from '../utils';
 import {
   projDefHidePublishing,
   projDefSectionMap,
@@ -83,7 +82,6 @@ const PlanProvider = (props: IProps) => {
     discussions,
     groupmemberships,
   });
-  const checkOnline = useCheckOnline();
 
   const getSectionMap = () => {
     return getProjectDefault(projDefSectionMap) as
@@ -142,12 +140,14 @@ const PlanProvider = (props: IProps) => {
     if (readonly !== newValue) setReadOnly(newValue);
   }, [userIsAdmin, isOffline, offlineOnly, readonly]);
 
+  //don't do this anymore because we also check in the busy checks
+  /*
   //do this every 30 seconds to warn they can't save
   useInterval(
     () => checkOnline((result: boolean) => {}),
     isOffline ? null : 1000 * 30
   );
-
+  */
   return (
     <PlanContext.Provider
       value={{
