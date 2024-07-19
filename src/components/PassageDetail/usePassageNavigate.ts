@@ -13,23 +13,19 @@ export const usePassageNavigate = (
   const { checkSavedFn } = useContext(UnsavedContext).state;
 
   return (view: string) => {
-    setTimeout(() => {
-      if (view) {
-        if (view !== pathname) {
-          checkSavedFn(() => {
-            if (!view.endsWith('null'))
-              localStorage.setItem(localUserKey(LocalKey.url), view);
-            setTimeout(() => {
-              navigate(view);
-              setTimeout(() => {
-                // Jump to first uncompleted step
-                setCurrentStep('');
-              }, 500); // go to first step
-            }, 500); // go to next passage
-            cb();
-          });
-        }
-      }
-    }, 1000); // Make sure this step is complete
-  };
+    if (view && view !== pathname) {
+      checkSavedFn(() => {
+        if (!view.endsWith('null'))
+          localStorage.setItem(localUserKey(LocalKey.url), view);
+        setTimeout(() => {
+          navigate(view);
+          setTimeout(() => {
+            // Jump to first uncompleted step
+            setCurrentStep('');
+          }, 500); // go to first step
+        }, 500); // go to next passage
+        cb();
+      });
+    }
+  }; // Make sure this step is complete
 };
