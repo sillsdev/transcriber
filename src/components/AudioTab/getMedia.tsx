@@ -3,6 +3,7 @@ import { mediaFileName, related } from '../../crud';
 import { IRow } from '.';
 import { GetReference } from './GetReference';
 import { getSection } from './getSection';
+import { formatTime } from '../../control/Duration';
 
 export interface IGetMedia {
   planName: string;
@@ -39,7 +40,7 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
     reference: (
       <GetReference passage={passage} bookData={allBookData} flat={false} />
     ),
-    duration: f.attributes.duration ? f.attributes.duration.toString() : '',
+    duration: formatTime(f.attributes.duration),
     size: Math.round((f.attributes.filesize / 1024 / 1024) * 10) / 10.0,
     version: f.attributes.versionNumber
       ? f.attributes.versionNumber.toString()
