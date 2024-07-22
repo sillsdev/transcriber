@@ -8,7 +8,9 @@ export const useWaitForRemoteQueue = () => {
   const remote = coordinator.getSource('remote');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const checkOnline = useCheckOnline();
+  const checkOnline = useCheckOnline(
+    'Wait for remote queue' + (offlineOnly ? ' (offline only)' : '')
+  );
 
   return async (label: string) =>
     waitForIt(

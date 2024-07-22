@@ -38,7 +38,7 @@ export const useTeamCreate = () => {
   const { setProjectType } = useProjectType();
   const { getRoleId } = useRole();
   const teamApiPull = useTeamApiPull();
-  const checkOnline = useCheckOnline();
+  const checkOnline = useCheckOnline('Team Create');
   const workingOnItRef = useRef(false);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { AddOrgNoteCategories } = useArtifactCategory();

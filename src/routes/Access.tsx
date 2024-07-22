@@ -142,7 +142,7 @@ export function Access() {
   );
   const [goOnlineConfirmation, setGoOnlineConfirmation] =
     useState<React.MouseEvent<HTMLElement>>();
-  const checkOnline = useCheckOnline();
+  const checkOnline = useCheckOnline('Access');
   const handleModeChange = (mode: ListMode) => {
     setListMode(mode);
   };
