@@ -58,7 +58,6 @@ function TranscriptionShow(props: IProps) {
     transcriptionShowSelector,
     shallowEqual
   );
-  const handleChange = () => {};
 
   const handleClose = () => {
     if (closeMethod) {
@@ -137,13 +136,13 @@ function TranscriptionShow(props: IProps) {
             value={transcription}
             family={family}
             url={url}
-            onChange={handleChange}
             inputProps={{
               style: {
                 fontFamily: family || 'charissil',
                 direction: dir || 'ltr',
                 fontSize: size || 'large',
               },
+              readOnly: true,
             }}
             fullWidth
             lang={lang || 'en'}
