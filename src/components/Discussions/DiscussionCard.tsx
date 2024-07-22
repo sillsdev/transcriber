@@ -796,8 +796,7 @@ export const DiscussionCard = (props: IProps) => {
   useEffect(() => {
     //locate my region
     if (highlightDiscussion === undefined) {
-      if (id === 'card-0' || discussion.id === requestHighlight)
-        setRef(cardRef);
+      if (discussion.id === requestHighlight) setRef(cardRef);
     } else if (myRegion?.start === highlightDiscussion) {
       handleLocate();
       setRef(cardRef);
