@@ -398,14 +398,14 @@ export function DiscussionList() {
 
   const handleSaveFirstConfirmed = () => {
     var myIds = displayDiscussions.map((d) => d.id);
-    myIds.push(NewDiscussionToolId);
+    if (adding) myIds.push(NewDiscussionToolId);
     myIds.forEach((id) => startSave(id));
     waitSaveOrClear();
   };
 
   const handleSaveFirstRefused = () => {
     var myIds = displayDiscussions.map((d) => d.id);
-    myIds.push(NewDiscussionToolId);
+    if (adding) myIds.push(NewDiscussionToolId);
     myIds.forEach((id) => startClear(id));
     waitSaveOrClear();
   };
