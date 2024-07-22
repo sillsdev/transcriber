@@ -247,7 +247,7 @@ export function ScriptureTable(props: IProps) {
   const localSave = useWfLocalSave({ setComplete });
   const onlineSave = useWfOnlineSave({ setComplete });
   const [detachPassage] = useMediaAttach();
-  const checkOnline = useCheckOnline();
+  const checkOnline = useCheckOnline('ScriptureTable');
   const [speaker, setSpeaker] = useState('');
   const getStepsBusy = useRef(false);
   const [orgSteps, setOrgSteps] = useState<OrgWorkflowStepD[]>([]);

@@ -503,7 +503,7 @@ export function DataChanges(props: PropsWithChildren) {
   const [orbitRetries] = useGlobal('orbitRetries');
   const doingChanges = useRef(false);
   const getOfflineProject = useOfflnProjRead();
-  const checkOnline = useCheckOnline();
+  const checkOnline = useCheckOnline('DataChanges');
   const { anySaving, toolsChanged } = useContext(UnsavedContext).state;
   const defaultBackupDelay = isOffline ? 1000 * 60 * 30 : null; //30 minutes;
   // eslint-disable-next-line react-hooks/exhaustive-deps

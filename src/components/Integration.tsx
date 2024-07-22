@@ -252,7 +252,7 @@ export function IntegrationPanel(props: IProps) {
   const [ptPath, setPtPath] = useState('');
   const syncing = React.useRef<boolean>(false);
   const setSyncing = (state: boolean) => (syncing.current = state);
-  const checkOnline = useCheckOnline();
+  const checkOnline = useCheckOnline('Integration');
   const [exportTypes, setExportTypes] = useState([
     ArtifactTypeSlug.Vernacular,
     ArtifactTypeSlug.WholeBackTranslation,
