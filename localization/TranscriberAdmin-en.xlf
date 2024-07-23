@@ -3270,7 +3270,7 @@
       </unit>
       <unit id="mediaTab.duration">
          <segment>
-            <source>Length (s)</source>
+            <source>Duration</source>
             <target/>
          </segment>
       </unit>
