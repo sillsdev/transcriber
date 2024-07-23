@@ -688,7 +688,7 @@ const initialState = {
 			"delete": "Delete",
 			"deleteConfirm": "Delete {0}? Are you sure?",
 			"detach": "Detach",
-			"duration": "Length (s)",
+			"duration": "Duration",
 			"fileAttached": "File already attached",
 			"fileName": "File Name",
 			"filter": "Filter",

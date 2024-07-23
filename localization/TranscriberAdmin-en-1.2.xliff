@@ -3813,7 +3813,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="mediaTab.duration">
-            <source>Length (s)</source>
+            <source>Duration</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaTab.tsx</context>
