@@ -105,20 +105,6 @@ export const useArtifactCategory = (teamId?: string) => {
   const getArtifactCategorys = async (type: ArtifactCategoryType) => {
     const categorys: IArtifactCategory[] = [];
     /* wait for new categories remote id to fill in */
-    if (!offlineOnly && type === ArtifactCategoryType.Note) {
-      var special = (await memory.query((q) =>
-        q
-          .findRecords('artifactcategory')
-          .filter({ attribute: 'specialuse', value: specialNoteCategories[0] })
-      )) as ArtifactCategoryD[];
-      if (
-        special.filter((r) => related(r, 'organization') === curOrg).length ===
-        0
-      ) {
-        await AddOrgNoteCategories(curOrg);
-      }
-    }
-
     await waitForRemoteQueue('category update');
     var orgrecs: ArtifactCategoryD[] = (
       memory.cache.query((q) =>
@@ -131,6 +117,31 @@ export const useArtifactCategory = (teamId?: string) => {
           related(r, 'organization') === null) &&
         Boolean(r.keys?.remoteId) !== offlineOnly
     );
+    if (!offlineOnly && type === ArtifactCategoryType.Note) {
+      if (
+        orgrecs.filter(
+          (r) =>
+            r.attributes.note &&
+            r.attributes.specialuse === specialNoteCategories[0]
+        ).length === 0
+      ) {
+        //double check online
+        var special = (await memory.query((q) =>
+          q.findRecords('artifactcategory').filter({
+            attribute: 'specialuse',
+            value: specialNoteCategories[0],
+          })
+        )) as ArtifactCategoryD[];
+        if (
+          special.filter((r) => related(r, 'organization') === curOrg)
+            .length === 0
+        ) {
+          await AddOrgNoteCategories(curOrg);
+          await waitForRemoteQueue('category add special');
+        }
+      }
+    }
+
     if (type === ArtifactCategoryType.Resource)
       orgrecs = orgrecs.filter((r) => r.attributes.resource);
     else if (type === ArtifactCategoryType.Discussion)

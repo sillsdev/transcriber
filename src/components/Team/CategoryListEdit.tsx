@@ -12,6 +12,7 @@ import {
   IArtifactCategory,
   related,
   useArtifactCategory,
+  waitForRemoteId,
 } from '../../crud';
 import { ActionRow, AltButton, PriButton } from '../StepEditor';
 import {
@@ -24,7 +25,11 @@ import {
 import { useSelector, shallowEqual } from 'react-redux';
 import { categorySelector, sharedSelector } from '../../selector';
 import { useEffect, useGlobal, useMemo, useState } from 'reactn';
-import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
+import {
+  RecordKeyMap,
+  RecordOperation,
+  RecordTransformBuilder,
+} from '@orbit/records';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { NewArtifactCategory } from '../Sheet/NewArtifactCategory';
 import { useBibleMedia } from '../../crud/useBibleMedia';
@@ -39,6 +44,7 @@ interface IProps {
 
 export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   const [refresh, setRefresh] = React.useState(0);
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [categories, setCategories] = useState<IArtifactCategory[]>([]);
   const [edited, setEdited] = useState<Map<string, IArtifactCategory>>(
     new Map()
@@ -140,7 +146,14 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
     onClose && onClose();
   };
   const categoryAdded = (newId: string) => {
-    setRefresh(refresh + 1);
+    if (offlineOnly) setRefresh(refresh + 1);
+    else
+      waitForRemoteId(
+        { type: 'artifactcategory', id: newId },
+        memory.keyMap as RecordKeyMap
+      ).then(() => {
+        setRefresh(refresh + 1);
+      });
   };
 
   React.useEffect(() => {
