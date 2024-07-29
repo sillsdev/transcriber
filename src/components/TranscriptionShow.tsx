@@ -152,9 +152,12 @@ function TranscriptionShow(props: IProps) {
         <DialogActions
           sx={{ display: 'flex', justifyContent: 'space-between' }}
         >
-          <IconButton id="transCopy" onClick={handleCopy(transcription)}>
-            <FaCopy />
-          </IconButton>
+          {transcription === '' && <>{'\u00A0'}</>}
+          {transcription !== '' && (
+            <IconButton id="transCopy" onClick={handleCopy(transcription)}>
+              <FaCopy />
+            </IconButton>
+          )}
           <Button
             id="transClose"
             onClick={handleClose}
