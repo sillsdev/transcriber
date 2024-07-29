@@ -12,18 +12,24 @@ export const useWaitForRemoteQueue = () => {
     'Wait for remote queue' + (offlineOnly ? ' (offline only)' : '')
   );
 
-  return async (label: string) =>
+  return async (label: string) => {
+    var firstTry = true;
+    const checkIt = () => {
+      var online = connected;
+      if (remote && remote.requestQueue.length > 0 && firstTry) {
+        //this adds a query to the remote queue...shooting ourselves in the foot here, so just double check online status once
+        checkOnline((connected: boolean) => {
+          online = connected;
+        }, true);
+        firstTry = false;
+      }
+      return !remote || !online || remote.requestQueue.length === 0;
+    };
     waitForIt(
       label,
-      () => {
-        var online = connected;
-        if (remote && remote.requestQueue.length > 0)
-          checkOnline((connected: boolean) => {
-            online = connected;
-          }, true);
-        return !remote || !online || remote.requestQueue.length === 0;
-      },
+      () => checkIt(),
       () => offline && !offlineOnly,
       200
     );
+  };
 };
