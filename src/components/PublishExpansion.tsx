@@ -299,6 +299,7 @@ export function PublishExpansion(props: IProps) {
               onChange={handleChangeDescription}
               variant="outlined"
               sx={{ width: '100%', marginTop: '5px' }}
+              disabled={readonly}
             />
             <TextField
               id="copyright"
@@ -307,6 +308,7 @@ export function PublishExpansion(props: IProps) {
               onChange={handleChangeCopyright}
               variant="outlined"
               sx={{ width: '100%', marginTop: '8px' }}
+              disabled={readonly}
             />
             {/* <TextField
               id="notelabel"
