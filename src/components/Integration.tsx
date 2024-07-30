@@ -454,13 +454,14 @@ export function IntegrationPanel(props: IProps) {
   };
   const findConnectedProject = () => {
     if (paratext_projects.length === 0) return;
-    const curInt = projectintegrations.filter(
+    let curInt = projectintegrations.filter(
       (pi) =>
         related(pi, 'integration') === paratextIntegration &&
         pi.attributes &&
         related(pi, 'project') === project
     ) as ProjectIntegration[];
     let index = -1;
+    if (!offline) curInt = curInt.filter((i) => Boolean(i?.keys?.remoteId));
     if (curInt.length > 0) {
       const settings = JSON.parse(curInt[0].attributes.settings);
       index = paratext_projects.findIndex((p) => {
@@ -473,23 +474,22 @@ export function IntegrationPanel(props: IProps) {
           Boolean(p.BaseProject) ===
           (exportType !== ArtifactTypeSlug.Vernacular)
       );
-      if (index >= 0 && !intSave.current) {
-        if (
-          intSave.current !== paratext_projects[index].ParatextId &&
-          paratextIntegration
-        ) {
-          intSave.current = paratext_projects[index].ParatextId;
-          const setting = {
-            Name: paratext_projects[index].Name,
-            ParatextId: paratext_projects[index].ParatextId,
-            LanguageTag: paratext_projects[index].LanguageTag,
-            LanguageName: paratext_projects[index].LanguageName,
-          };
-          const strSettings = JSON.stringify(setting);
-          if (curInt.length > 0) {
-            updateProjectIntegration(curInt[0].id as string, strSettings);
-          } else addProjectIntegration(paratextIntegration, strSettings);
-        }
+      if (
+        index >= 0 &&
+        intSave.current !== paratext_projects[index].ParatextId &&
+        paratextIntegration
+      ) {
+        intSave.current = paratext_projects[index].ParatextId;
+        const setting = {
+          Name: paratext_projects[index].Name,
+          ParatextId: paratext_projects[index].ParatextId,
+          LanguageTag: paratext_projects[index].LanguageTag,
+          LanguageName: paratext_projects[index].LanguageName,
+        };
+        const strSettings = JSON.stringify(setting);
+        if (curInt.length > 0) {
+          updateProjectIntegration(curInt[0].id as string, strSettings);
+        } else addProjectIntegration(paratextIntegration, strSettings);
       }
     }
     setPtProj(index);
