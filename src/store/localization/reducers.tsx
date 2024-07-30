@@ -616,6 +616,7 @@ const initialState = {
 			"flatSample": "Scripture flat sample spreadsheet",
 			"genFlatSample": "General flat sample spreadsheet",
 			"genHierarchicalSample": "General hierarchical sample spreadsheet",
+			"googleSamples": "Sample Google spreadsheets",
 			"helpCenter": "Help Center",
 			"helpSpreadsheet": "View spreadsheet convention",
 			"hierarchicalSample": "Scripture hierarchical sample spreadsheet",

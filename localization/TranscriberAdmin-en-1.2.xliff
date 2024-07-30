@@ -3364,6 +3364,13 @@
                <context context-type="sourcefile">HelpMenu.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="main.googleSamples">
+            <source>Sample Google spreadsheets</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="main.helpCenter">
             <source>Help Center</source>
             <target/>

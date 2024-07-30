@@ -578,6 +578,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "flatSample": string;
     "genFlatSample": string;
     "genHierarchicalSample": string;
+    "googleSamples": string;
     "helpCenter": string;
     "helpSpreadsheet": string;
     "hierarchicalSample": string;

@@ -52,6 +52,9 @@ export const API_CONFIG = {
   genHierarchicalSample: process.env.REACT_APP_GEN_HIERARCHICAL
     ? process.env.REACT_APP_GEN_HIERARCHICAL
     : '',
+  googleSamples: process.env.REACT_APP_GOOGLE_SAMPLES
+    ? process.env.REACT_APP_GOOGLE_SAMPLES
+    : '',
   sizeLimit: process.env.REACT_APP_SIZELIMIT
     ? process.env.REACT_APP_SIZELIMIT
     : '20',
