@@ -10,6 +10,7 @@ import TrainingIcon from '@mui/icons-material/FlightClass';
 import HelpIcon from '@mui/icons-material/Help';
 import InfoIcon from '@mui/icons-material/Info';
 import DownloadIcon from '@mui/icons-material/CloudDownload';
+import FolderIcon from '@mui/icons-material/Folder';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { AkuoLogo } from '../control/akuoLogo';
@@ -219,6 +220,32 @@ export function HelpMenu(props: IProps) {
             </ListItemIcon>
             <ListItemText primary={sampleDesc} />
           </StyledMenuItem>
+        )}
+        {planRec && isElectron && (
+          <StyledMenuItem
+            id="helpSampleGoogleOff"
+            onClick={handleSite(API_CONFIG.googleSamples)}
+          >
+            <ListItemIcon>
+              <FolderIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.googleSamples} />
+          </StyledMenuItem>
+        )}
+        {planRec && !isElectron && (
+          <a
+            href={API_CONFIG.googleSamples}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem id="helpOpenNotesOn">
+              <ListItemIcon>
+                <FolderIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.googleSamples} />
+            </StyledMenuItem>
+          </a>
         )}
         {isElectron && (
           <StyledMenuItem
