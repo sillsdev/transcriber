@@ -386,14 +386,14 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
           row[ColName.Limits].value = formLim(r);
           change = true;
         }
-        if (
-          r?.label !== undefined &&
-          row[ColName.Ref].value !== r.label &&
-          !refsSoFar.includes(r.label)
-        ) {
-          row[ColName.Ref].value = r.label;
-          if (!refMatch(r.label)) row[ColName.Ref].className = 'ref Err';
-          change = true;
+        if (r?.label !== undefined && row[ColName.Ref].value !== r.label) {
+          if (!refsSoFar.includes(r.label)) {
+            row[ColName.Ref].value = r.label;
+            if (!refMatch(r.label)) row[ColName.Ref].className = 'ref Err';
+            change = true;
+          } else {
+            init = false; // force a toolChanged
+          }
         }
         newData.push(row);
       }
