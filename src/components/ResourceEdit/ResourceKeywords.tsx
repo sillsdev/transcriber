@@ -16,17 +16,18 @@ export const ResourceKeywords = (props: IResourceState) => {
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
 
   React.useEffect(() => {
-    const resKw = getOrgDefault(orgDefaultResKw, org);
-    if (resKw) {
+    const resKw = getOrgDefault(orgDefaultResKw, org) as string | undefined;
+    if (resKw && resKw !== allKeywords) {
       setAllKeywords(resKw);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
 
   const tags = React.useMemo(() => {
-    const kwList = keywords.split('|');
+    const kwList = keywords?.split('|') || [];
     const kwSet = new Set(kwList);
-    const allKw = Array.from(new Set(allKeywords.split('|').concat(kwList)));
+    const allKwList = allKeywords?.split('|') || [];
+    const allKw = Array.from(new Set(allKwList.concat(kwList)));
     const tags: ITag = {};
     allKw
       .filter((k) => k) // don't include empty string
