@@ -5842,7 +5842,7 @@
       <unit id="stepEditor.nextStep">
          <segment>
             <source>Next Step</source>
-            <target/>
+            <target>下一步</target>
          </segment>
       </unit>
       <unit id="stepEditor.oneHidden">

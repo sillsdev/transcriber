@@ -1194,6 +1194,7 @@ const initialState = {
 			"no": "No",
 			"noAudio": "No Audio Available!",
 			"NoSaveOffline": "Unable to save while offline.",
+			"notSupported": "This feature is not supported yet.",
 			"observer": "Observer",
 			"paratextchapterSpan": "Passage {0}.{1} {2}: Passage must not span chapters.",
 			"part": "Part {0}",

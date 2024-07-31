@@ -6570,6 +6570,13 @@
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shared.notSupported">
+            <source>This feature is not supported yet.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailParatextIntegration.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.observer">
             <source>Observer</source>
             <target/>
