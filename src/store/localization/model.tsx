@@ -1126,6 +1126,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "no": string;
     "noAudio": string;
     "NoSaveOffline": string;
+    "notSupported": string;
     "observer": string;
     "paratextchapterSpan": string;
     "part": string;

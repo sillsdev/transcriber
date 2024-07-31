@@ -5632,6 +5632,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.notSupported">
+         <segment>
+            <source>This feature is not supported yet.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.observer">
          <segment>
             <source>Observer</source>
