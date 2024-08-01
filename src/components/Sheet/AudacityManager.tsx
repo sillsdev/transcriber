@@ -27,17 +27,18 @@ import {
   useAudProjName,
   usePassageRec,
   passageDescText,
+  useFetchUrlNow,
+  remoteId,
 } from '../../crud';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { debounce } from 'lodash';
-import { RecordIdentity } from '@orbit/records';
+import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 import {
   launchAudacity,
   loadBlob,
   audPrefsName,
   setAudacityPref,
   execFolder,
-  useDownloadMedia,
 } from '../../utils';
 
 import { extensions, mimes } from '.';
@@ -102,7 +103,7 @@ function AudacityManager(props: IProps) {
     audacityManagerSelector,
     shallowEqual
   );
-  const { tryDownload } = useDownloadMedia();
+  const fetchUrl = useFetchUrlNow();
 
   const handleClose = () => {
     onClose();
@@ -120,17 +121,6 @@ function AudacityManager(props: IProps) {
         setName(fullName[0]);
       }
     });
-  };
-
-  const getMediaUrl = (mediaId: string) => {
-    let mediaUrl = '';
-    if (mediaId !== '') {
-      const mediaRec = memory.cache.query((q) =>
-        q.findRecord({ type: 'mediafile', id: mediaId })
-      ) as MediaFile;
-      mediaUrl = mediaRec?.attributes?.audioUrl || '';
-    }
-    return mediaUrl;
   };
 
   const getMediaUpdated = (mediaId: string) => {
@@ -153,8 +143,12 @@ function AudacityManager(props: IProps) {
 
     let mediaName = '';
     if ((mediaId || '') !== '') {
-      const url = getMediaUrl(mediaId);
-      mediaName = await tryDownload(url, false);
+      mediaName =
+        (await fetchUrl({
+          id:
+            remoteId('mediafile', mediaId, memory.keyMap as RecordKeyMap) ?? '',
+          cancelled: () => false,
+        })) ?? '';
       if (!(await ipc?.exists(mediaName))) {
         showMessage(t.checkDownload);
         return;
