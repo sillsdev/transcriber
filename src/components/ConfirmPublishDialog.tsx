@@ -9,7 +9,6 @@ import {
   FormControl,
   FormControlLabel,
   FormHelperText,
-  Link,
   Radio,
   RadioGroup,
   Typography,
@@ -22,9 +21,7 @@ import {
   sharedSelector,
 } from '../selector';
 import { PublishLevelEnum } from '../crud';
-import { isElectron } from '../api-variable';
-import { launch } from '../utils';
-import { useGlobal } from 'reactn';
+import ShowLink from '../control/ShowLink';
 
 interface IProps {
   title: string;
@@ -44,7 +41,6 @@ function ConfirmPublishDialog(props: IProps) {
   );
   const [open, setOpen] = useState(true);
   const [value, setValue] = useState(current);
-  const [offline] = useGlobal('offline');
 
   const handleClose = () => {
     if (noResponse !== null) {
@@ -67,10 +63,6 @@ function ConfirmPublishDialog(props: IProps) {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(Number((event.target as HTMLInputElement).value));
-  };
-
-  const handleLink = (site: string) => () => {
-    if (!offline) launch(site, true);
   };
 
   return (
@@ -98,18 +90,7 @@ function ConfirmPublishDialog(props: IProps) {
                 label={l.beta}
               />
               <FormHelperText sx={{ textAlign: 'center' }}>
-                {isElectron && (
-                  <Link onClick={handleLink(l.betalink)}>{l.betalink}</Link>
-                )}
-                {!isElectron && (
-                  <Link
-                    href={l.betalink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {l.betalink}
-                  </Link>
-                )}
+                <ShowLink link={l.betalink} />
               </FormHelperText>
               <FormControlLabel
                 value={PublishLevelEnum.Public}
