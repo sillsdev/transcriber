@@ -194,7 +194,6 @@ export const processDataChanges = async (pdc: {
       await memory.sync((t) => ops);
 
       for (const o of myOps) {
-        // TODO remove this line? console.log(o);
         if (o.op === 'updateRecord') {
           upRec = o as UpdateRecordOperation;
           if (!upRec.record.relationships)
@@ -209,7 +208,6 @@ export const processDataChanges = async (pdc: {
               break;
 
             case 'mediafile':
-              // TODO remove this line? console.log(upRec.record);
               //await CheckUploadLocal(upRec);
               DeleteLocalCopy(
                 upRec.record.attributes?.offlineId as string | undefined,
@@ -552,12 +550,6 @@ export function DataChanges(props: PropsWithChildren) {
   const updateBusy = () => {
     const checkBusy =
       user === '' || (remote && remote.requestQueue.length !== 0);
-    // TODO remove this line? console.log(
-    //   'checkBusy',
-    //   checkBusy,
-    //   'remote.requestQueue.length',
-    //   remote.requestQueue.length
-    // );
     //we know we're offline, or we've retried something so maybe we're offline
     if (!connected || (checkBusy && orbitRetries < OrbitNetworkErrorRetries)) {
       checkOnline((result) => {
