@@ -243,8 +243,8 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
           .findIndex(
             (r: IRegion) => r.start <= segment.start && r.end >= segment.end
           ) + 1;
+      setCurrentSegment && setCurrentSegment(segment, index);
     }
-    setCurrentSegment && setCurrentSegment(segment, index);
   };
   const onSegmentChange = (segments: string) => {
     segmentsRef.current = segments;
