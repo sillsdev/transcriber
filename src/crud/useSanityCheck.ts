@@ -49,7 +49,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           errorReporter,
           setLanguage,
           setDataChangeCount: (value: number) => {},
-          fetchMediaUrl: undefined,
+          fetchUrl: undefined,
           cb,
         });
         if (startNext === start) tries--;

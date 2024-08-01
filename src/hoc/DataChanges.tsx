@@ -31,14 +31,14 @@ import {
   AcceptInvitation,
   findRecord,
   GetUser,
-  IFetchMediaProps,
+  IFetchNowProps,
   offlineProjectUpdateSnapshot,
   related,
   remoteId,
   remoteIdGuid,
   remoteIdNum,
   SetUserLanguage,
-  useFetchMediaUrl,
+  useFetchUrlNow,
 } from '../crud';
 import { currentDateTime, localUserKey, LocalKey } from '../utils';
 import { electronExport } from '../store/importexport/electronExport';
@@ -75,7 +75,7 @@ export const processDataChanges = async (pdc: {
   errorReporter: any;
   setLanguage: typeof actions.setLanguage;
   setDataChangeCount: (value: number) => void;
-  fetchMediaUrl?: (props: IFetchMediaProps) => void;
+  fetchUrl?: (props: IFetchNowProps) => Promise<string | undefined>;
   cb?: () => void;
 }) => {
   const {
@@ -88,7 +88,7 @@ export const processDataChanges = async (pdc: {
     errorReporter,
     setLanguage,
     setDataChangeCount,
-    fetchMediaUrl,
+    fetchUrl,
     cb,
   } = pdc;
 
@@ -128,7 +128,7 @@ export const processDataChanges = async (pdc: {
   };
   const processTableChanges = async (
     transforms: RecordTransform[],
-    fetchMediaUrl?: (props: IFetchMediaProps) => void,
+    fetchUrl?: (props: IFetchNowProps) => Promise<string | undefined>,
     cb?: () => void
   ) => {
     const setRelated = (
@@ -194,6 +194,7 @@ export const processDataChanges = async (pdc: {
       await memory.sync((t) => ops);
 
       for (const o of myOps) {
+        // TODO remove this line? console.log(o);
         if (o.op === 'updateRecord') {
           upRec = o as UpdateRecordOperation;
           if (!upRec.record.relationships)
@@ -208,6 +209,7 @@ export const processDataChanges = async (pdc: {
               break;
 
             case 'mediafile':
+              // TODO remove this line? console.log(upRec.record);
               //await CheckUploadLocal(upRec);
               DeleteLocalCopy(
                 upRec.record.attributes?.offlineId as string | undefined,
@@ -234,7 +236,11 @@ export const processDataChanges = async (pdc: {
                       ?.id ?? ''
                   );
               }
-              if (fetchMediaUrl) fetchMediaUrl({ id: upRec.record.id });
+              if (fetchUrl && upRec.record?.keys?.remoteId)
+                fetchUrl({
+                  id: upRec.record.keys.remoteId,
+                  cancelled: () => false,
+                });
               break;
 
             case 'user':
@@ -302,7 +308,7 @@ export const processDataChanges = async (pdc: {
           { fullResponse: true }
         );
         if (results?.transforms)
-          await processTableChanges(results.transforms, fetchMediaUrl, cb);
+          await processTableChanges(results.transforms, fetchUrl, cb);
       }
     }
     setDataChangeCount(deletes.length);
@@ -359,7 +365,7 @@ export const doDataChanges = async (
   user: string,
   setLanguage: typeof actions.setLanguage,
   setDataChangeCount: (value: number) => void,
-  fetchMediaUrl: (props: IFetchMediaProps) => void
+  fetchUrl?: (props: IFetchNowProps) => Promise<string | undefined>
 ) => {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource; //to check busy
@@ -418,7 +424,7 @@ export const doDataChanges = async (
             errorReporter,
             setLanguage,
             setDataChangeCount,
-            fetchMediaUrl,
+            fetchUrl,
           });
           if (startNext === start) tries--;
           else start = startNext;
@@ -446,7 +452,7 @@ export const doDataChanges = async (
       errorReporter,
       setLanguage,
       setDataChangeCount,
-      fetchMediaUrl,
+      fetchUrl,
     });
     if (startNext === start) tries--;
     else start = startNext;
@@ -510,7 +516,7 @@ export function DataChanges(props: PropsWithChildren) {
   const saving = useMemo(() => anySaving(), [toolsChanged]);
   const doSanityCheck = useSanityCheck(setLanguage);
   const { getBibleMediaProject, getBibleMediaPlan } = useBibleMedia();
-  const { fetchMediaUrl } = useFetchMediaUrl();
+  const fetchUrl = useFetchUrlNow();
   const users = useOrbitData<UserD[]>('user');
   const defaultDataDelayInMinutes = 2;
   const [userDataDelay, setUserDataDelay] = useState(defaultDataDelayInMinutes);
@@ -546,6 +552,12 @@ export function DataChanges(props: PropsWithChildren) {
   const updateBusy = () => {
     const checkBusy =
       user === '' || (remote && remote.requestQueue.length !== 0);
+    // TODO remove this line? console.log(
+    //   'checkBusy',
+    //   checkBusy,
+    //   'remote.requestQueue.length',
+    //   remote.requestQueue.length
+    // );
     //we know we're offline, or we've retried something so maybe we're offline
     if (!connected || (checkBusy && orbitRetries < OrbitNetworkErrorRetries)) {
       checkOnline((result) => {
@@ -575,7 +587,7 @@ export function DataChanges(props: PropsWithChildren) {
         user,
         setLanguage,
         setDataChangeCount,
-        fetchMediaUrl
+        fetchUrl
       );
       if (check) {
         //make sure we have a bible media project and plan downloaded
