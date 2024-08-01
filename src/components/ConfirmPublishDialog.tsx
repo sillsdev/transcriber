@@ -99,7 +99,9 @@ function ConfirmPublishDialog(props: IProps) {
               />
               <FormHelperText sx={{ textAlign: 'center' }}>
                 {isElectron && (
-                  <Link onClick={handleLink(l.betalink)}>{l.betalink}</Link>
+                  <Link href={l.betalink} onClick={handleLink(l.betalink)}>
+                    {l.betalink}
+                  </Link>
                 )}
                 {!isElectron && (
                   <Link
