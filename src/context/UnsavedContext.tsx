@@ -262,6 +262,8 @@ const UnsavedProvider = (props: PropsWithChildren) => {
 
   const checkSavedFn = (method: () => any) => {
     var timeout = busy || importexportBusy || anySaving() ? 200 : 0;
+    //sometimes the useEffect misses some so set it correctly to begin with and then hope it doesn't miss any...
+    busyRef.current = busy || importexportBusy;
     setTimeout(() => {
       waitForIt(
         'checkSavedFn',
