@@ -1,12 +1,11 @@
-import { useEffect, useReducer, useContext } from 'react';
+import { useEffect, useReducer } from 'react';
 import { useGlobal } from 'reactn';
-import Axios from 'axios';
-import { API_CONFIG, isElectron } from '../api-variable';
-import { TokenContext } from '../context/TokenProvider';
+import { isElectron } from '../api-variable';
 import { remoteIdGuid, remoteId } from '../crud';
 import { dataPath, PathType } from '../utils/dataPath';
 import { MediaFile } from '../model';
 import { infoMsg, logError, Severity, useDownloadMedia } from '../utils';
+import { useFetchUrlNow } from './useFetchUrlNow';
 import { RecordKeyMap } from '@orbit/records';
 
 // See: https://www.smashingmagazine.com/2020/07/custom-react-hook-fetch-cache-data/
@@ -78,8 +77,8 @@ export const useFetchMediaUrl = (reporter?: any) => {
   const [state, dispatch] = useReducer(stateReducer, mediaClean);
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
-  const { accessToken } = useContext(TokenContext).state;
-  const { tryDownload, safeURL } = useDownloadMedia();
+  const { safeURL } = useDownloadMedia();
+  const fetchUrl = useFetchUrlNow();
 
   const guidId = (id: string) => {
     return !isNaN(Number(id))
@@ -150,29 +149,25 @@ export const useFetchMediaUrl = (reporter?: any) => {
         }
       }
       if (cancelled()) return;
-      Axios.get(`${API_CONFIG.host}/api/mediafiles/${state.remoteId}/fileurl`, {
-        headers: {
-          Authorization: 'Bearer ' + accessToken,
-        },
-      })
-        .then((strings) => {
-          const attr: any = strings.data.data.attributes;
-          if (cancelled()) return;
-          const audioUrl = attr['audio-url'];
-          if (isElectron) {
-            tryDownload(audioUrl, true).then((url) => {
-              dispatch({
-                payload: url,
-                type: MediaSt.FETCHED,
-              });
+      try {
+        fetchUrl({ id: state.remoteId, cancelled }).then((url) => {
+          if (url)
+            dispatch({
+              payload: url,
+              type: MediaSt.FETCHED,
             });
-          } else dispatch({ payload: audioUrl, type: MediaSt.FETCHED });
-        })
-        .catch((e) => {
-          if (cancelled()) return;
-          logError(Severity.error, reporter, infoMsg(e, 'media fetch failure'));
-          dispatch({ payload: e.message, type: MediaSt.ERROR });
+          else if (cancelled()) return;
+          else
+            dispatch({
+              payload: 'no url',
+              type: MediaSt.ERROR,
+            });
         });
+      } catch (e: any) {
+        if (cancelled()) return;
+        logError(Severity.error, reporter, infoMsg(e, 'media fetch failure'));
+        dispatch({ payload: e.message, type: MediaSt.ERROR });
+      }
     };
 
     fetchData();
