@@ -1,10 +1,10 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 
-import { IRegion, parseRegions } from '../crud/useWavesurferRegions';
+import { IRegion } from '../crud/useWavesurferRegions';
 import WSAudioPlayer from './WSAudioPlayer';
 import { MediaFile } from '../model';
-import { JSONParse } from '../utils/jsonParse';
-import { NamedRegions, getSegments } from '../utils/namedSegments';
+import { NamedRegions } from '../utils/namedSegments';
+import { usePlayerLogic } from '../business/player/usePlayerLogic';
 
 export interface HiddenPlayerProps {
   allowSegment?: NamedRegions | undefined;
@@ -50,76 +50,22 @@ export function HiddenPlayer(props: HiddenPlayerProps) {
   const mediafileRef = useRef<MediaFile>();
   const durationRef = useRef(0);
 
-  const loadSegments = () => {
-    const segs = mediafileRef.current?.attributes?.segments || '{}';
-    if (allowSegment) {
-      segmentsRef.current = getSegments(allowSegment, segs);
-      setSegmentToWhole();
-    }
-    setDefaultSegments(segmentsRef.current);
-  };
-
-  useEffect(() => {
-    //we need a ref for onDuration
-    mediafileRef.current = playerMediafile;
-  }, [playerMediafile]);
-
-  useEffect(() => {
-    if (allowSegment)
-      if (suggestedSegments) {
-        segmentsRef.current = suggestedSegments;
-        setDefaultSegments(segmentsRef.current);
-      } else setSegmentToWhole();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allowSegment, suggestedSegments]);
-
-  useEffect(() => {
-    if (allowSegment) loadSegments();
-    else setDefaultSegments('{}');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allowSegment, playerMediafile]);
-
-  const setSegmentToWhole = () => {
-    if (allowSegment && setCurrentSegment && durationRef.current) {
-      var segs = JSONParse(segmentsRef.current);
-      //might be "[]"
-      if ((segs.regions?.length ?? 0) < 3) {
-        setCurrentSegment({ start: 0, end: durationRef.current }, -1);
-      }
-    }
-  };
-
-  const onCurrentSegment = (segment: IRegion | undefined) => {
-    var index = 0;
-    if (segment && segmentsRef.current) {
-      var segs = parseRegions(segmentsRef.current);
-      index =
-        segs.regions
-          .sort((a: IRegion, b: IRegion) => a.start - b.start)
-          .findIndex(
-            (r: IRegion) => r.start <= segment.start && r.end >= segment.end
-          ) + 1;
-    }
-    setCurrentSegment && setCurrentSegment(segment, index);
-  };
-
-  const onPlayStatus = (newPlaying: boolean) => {
-    if (playingRef.current !== newPlaying) {
-      setPlaying && setPlaying(newPlaying);
-      playingRef.current = newPlaying;
-      setRequestPlay({ play: undefined, regionOnly: false });
-      setInitialPosition(undefined);
-    }
-  };
-
-  useEffect(() => {
-    if (playing !== playingRef.current)
-      setRequestPlay({ play: playing, regionOnly: false });
-  }, [playing]);
-
-  useEffect(() => {
-    setInitialPosition(position);
-  }, [position]);
+  const { onPlayStatus, onCurrentSegment } = usePlayerLogic({
+    allowSegment,
+    suggestedSegments,
+    position,
+    playing,
+    setPlaying,
+    setCurrentSegment,
+    playerMediafile,
+    setDefaultSegments,
+    setRequestPlay,
+    setInitialPosition,
+    mediafileRef,
+    segmentsRef,
+    durationRef,
+    playingRef,
+  });
 
   return (
     <div id="hiddenplayer">
