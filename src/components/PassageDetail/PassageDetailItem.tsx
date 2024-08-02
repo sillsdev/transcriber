@@ -37,7 +37,7 @@ import {
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import Memory from '@orbit/memory';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { NamedRegions } from '../../utils';
+import { mergedSegments, NamedRegions } from '../../utils/namedSegments';
 import styledHtml from 'styled-components';
 import {
   default as SplitPaneBar,
@@ -60,6 +60,13 @@ import { useSelector } from 'react-redux';
 import { communitySelector, sharedSelector } from '../../selector';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import PassageDetailChooser from './PassageDetailChooser';
+import ArtifactStatus from '../ArtifactStatus';
+
+export const btDefaultSegParams = {
+  silenceThreshold: 0.004,
+  timeThreshold: 0.12,
+  segLenThreshold: 4.5,
+};
 
 const PlayerRow = styled('div')(() => ({
   width: '100%',
@@ -204,13 +211,8 @@ export function PassageDetailItem(props: IProps) {
   const { showMessage } = useSnackBar();
   const [recordType, setRecordType] = useState<ArtifactTypeSlug>(slugs[0]);
   const [currentVersion, setCurrentVersion] = useState(1);
-
+  const [segString, setSegString] = useState('{}');
   const cancelled = useRef(false);
-  const btDefaultSegParams = {
-    silenceThreshold: 0.004,
-    timeThreshold: 0.12,
-    segLenThreshold: 4.5,
-  };
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
   const [segParams, setSegParams] = useState<IRegionParams>(btDefaultSegParams);
   const toolId = 'RecordArtifactTool';
@@ -247,7 +249,15 @@ export function PassageDetailItem(props: IProps) {
 
   useEffect(() => {
     if (mediafileId !== mediaState.id) fetchMediaUrl({ id: mediafileId });
-    var mediaRec = findRecord(memory, 'mediafile', mediafileId) as MediaFile;
+    const mediaRec = findRecord(memory, 'mediafile', mediafileId) as MediaFile;
+    const defaultSegments = mediaRec?.attributes?.segments;
+    const suggested = mergedSegments({
+      from: NamedRegions.Verse,
+      into: NamedRegions.BackTranslation,
+      params: segParams,
+      savedSegs: defaultSegments,
+    });
+    setSegString(suggested);
     setCurrentVersion(mediaRec?.attributes?.versionNumber || 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafileId]);
@@ -405,6 +415,7 @@ export function PassageDetailItem(props: IProps) {
                           : undefined
                       }
                       defaultSegParams={segParams}
+                      suggestedSegments={segString}
                       canSetDefaultParams={canSetOrgDefault}
                       onSegmentParamChange={onSegmentParamChange}
                       chooserReduce={chooserSize}
@@ -413,6 +424,13 @@ export function PassageDetailItem(props: IProps) {
                   {currentVersion !== 0 ? (
                     <Pane>
                       <Paper sx={paperProps}>
+                        <Box sx={rowProp}>
+                          <ArtifactStatus
+                            recordType={recordType}
+                            currentVersion={currentVersion}
+                            segments={segString}
+                          />
+                        </Box>
                         <Box sx={rowProp}>
                           <Button
                             sx={buttonProp}

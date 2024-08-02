@@ -240,9 +240,12 @@ const initialState = {
 	"community": new LocalizedStrings({
 		"en": {
 			"addSpeaker": "Add '{0}'",
+			"backTranslationComplete": "Version {0}: Back translation: {1}",
 			"deleteItem": "Delete Item",
+			"finished": "finished",
 			"later": "Do later",
 			"loading": "Loading:",
+			"none": "none",
 			"playTest": "Play Test",
 			"provideRights": "Provide Rights",
 			"record": "Record",
@@ -250,6 +253,7 @@ const initialState = {
 			"rights": "Rights",
 			"saveFirst": "Save or Clear your recording before uploading.",
 			"segment": "Segment",
+			"segmentsComplete": "Version {0}: Segments complete ({2}): {1}",
 			"speaker": "Speaker",
 			"topic": "Topic",
 			"transcribe": "Transcribe",

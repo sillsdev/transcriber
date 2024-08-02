@@ -221,9 +221,12 @@ export interface ICommentEditorStrings extends Localize.LocalizedStringsMethods 
 
 export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
     "addSpeaker": string;
+    "backTranslationComplete": string;
     "deleteItem": string;
+    "finished": string;
     "later": string;
     "loading": string;
+    "none": string;
     "playTest": string;
     "provideRights": string;
     "record": string;
@@ -231,6 +234,7 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
     "rights": string;
     "saveFirst": string;
     "segment": string;
+    "segmentsComplete": string;
     "speaker": string;
     "topic": string;
     "transcribe": string;

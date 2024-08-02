@@ -77,18 +77,10 @@ export const usePlayerLogic = (props: PlayerLogicProps) => {
   }, [allowSegment, playerMediafile]);
 
   const setSegmentToWhole = () => {
-    console.log(
-      'setSegmentToWhole',
-      allowSegment,
-      setCurrentSegment,
-      durationRef.current
-    );
     if (allowSegment && setCurrentSegment && durationRef.current) {
       var segs = JSONParse(segmentsRef.current);
-      console.log('setSegmentToWhole', segs);
       //might be "[]"
       if ((segs.regions?.length ?? 0) < 3) {
-        console.log('setSegmentToWhole', durationRef.current);
         setCurrentSegment({ start: 0, end: durationRef.current }, -1);
       }
     }
