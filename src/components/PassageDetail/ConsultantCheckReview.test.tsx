@@ -3,9 +3,19 @@ import ConsultantCheckReview from './ConsultantCheckReview';
 import { ArtifactTypeSlug } from '../../crud/artifactTypeSlug';
 import { IRow } from '../../context/PassageDetailContext';
 import { MediaFile } from '../../model/mediaFile';
+interface ArtifactStatusProps {
+  recordType: ArtifactTypeSlug;
+  currentVersion: number;
+  segments: string;
+}
 
 let mockRowData: IRow[] = [];
 var mockMediafileId = '';
+var mockbtDefaultSegParams = {
+  silenceThreshold: 0.004,
+  timeThreshold: 0.12,
+  segLenThreshold: 4.5,
+};
 
 jest.mock('../../crud', () => ({
   ArtifactTypeSlug: jest.requireActual('../../crud/artifactTypeSlug')
@@ -38,6 +48,31 @@ jest.mock('react-redux', () => ({
     noTranscription: 'No Transcription',
   }),
   shallowEqual: jest.fn(),
+}));
+jest.mock('./PassageDetailItem', () => ({
+  btDefaultSegParams: mockbtDefaultSegParams,
+}));
+jest.mock('../../crud/useOrgDefaults', () => ({
+  useOrgDefaults: () => ({
+    getOrgDefault: jest.fn().mockReturnValue(mockbtDefaultSegParams),
+  }),
+}));
+jest.mock('../../crud/useArtifactType', () => ({
+  useArtifactType: () => ({
+    localizedArtifactType: jest.fn((slug: ArtifactTypeSlug) => {
+      if (slug === 'vernacular') {
+        return 'Vernacular';
+      } else if (slug === 'backtranslation') {
+        return 'Phrase Back Translation';
+      }
+    }),
+  }),
+}));
+jest.mock('../ArtifactStatus', () => ({
+  __esModule: true,
+  default: (props: ArtifactStatusProps) => (
+    <div>ArtifactStatus {props.recordType}</div>
+  ),
 }));
 
 describe('ConsultantCheckReview', () => {

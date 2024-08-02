@@ -1084,9 +1084,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="community.backTranslationComplete">
+         <segment>
+            <source>Version {0}: Back translation: {1}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="community.deleteItem">
          <segment>
             <source>Delete Item</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.finished">
+         <segment>
+            <source>finished</source>
             <target/>
          </segment>
       </unit>
@@ -1099,6 +1111,12 @@
       <unit id="community.loading">
          <segment>
             <source>Loading:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.none">
+         <segment>
+            <source>none</source>
             <target/>
          </segment>
       </unit>
@@ -1141,6 +1159,12 @@
       <unit id="community.segment">
          <segment>
             <source>Segment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.segmentsComplete">
+         <segment>
+            <source>Version {0}: Segments complete ({2}): {1}</source>
             <target/>
          </segment>
       </unit>

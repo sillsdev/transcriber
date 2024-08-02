@@ -91,7 +91,7 @@ export function mergedSegments({
         suggested.push({ ...s, end: tsegs[i].end });
       } else {
         x++; // skip the next one
-        suggested.push({ ...s, end: tsegs[x].end });
+        suggested.push({ ...s, end: tsegs[x]?.end ?? 0 });
       }
       x++;
     }

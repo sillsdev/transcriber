@@ -1263,11 +1263,25 @@
       			<context context-type="sourcefile">SpeakerName.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="community.backTranslationComplete">
+            <source>Version {0}: Back translation: {1}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailItem.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="community.deleteItem">
             <source>Delete Item</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="community.finished">
+            <source>finished</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailItem.tsx</context>
             </context-group>
          </trans-unit>
       	<trans-unit id="community.later">
@@ -1284,6 +1298,13 @@
       			<context context-type="sourcefile">SpeakerName.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="community.none">
+            <source>none</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">SpeakerName.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="community.playTest">
             <source>Play Test</source>
             <target/>
@@ -1328,6 +1349,13 @@
          </trans-unit>
          <trans-unit id="community.segment">
             <source>Segment</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="community.segmentsComplete">
+            <source>Version {0}: Segments complete ({2}): {1}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
