@@ -294,7 +294,9 @@ export function LimitedMediaPlayer(props: IProps) {
           deleteIcon={
             duration && (limits.end ?? 0) < duration ? (
               <>
-                <StyledTip title={t.afterResource}>
+                <StyledTip
+                  title={Boolean(limits.end) ? t.afterResource : t.toEnd}
+                >
                   <IconButton
                     data-testid="skip-next"
                     sx={{ alignSelf: 'center' }}

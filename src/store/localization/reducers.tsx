@@ -913,6 +913,7 @@ const initialState = {
 			"afterResource": "Play following context",
 			"back3Seconds": "Skip back 3 seconds",
 			"resourceStart": "Play from start",
+			"toEnd": "Jump to end",
 		}
 	}),
 	"permission": new LocalizedStrings({

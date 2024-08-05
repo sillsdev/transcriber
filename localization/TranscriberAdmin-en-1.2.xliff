@@ -5051,6 +5051,13 @@
       			<context context-type="sourcefile">TeamCheckReference.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="peerCheck.toEnd">
+            <source>Jump to end</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TeamCheckReference.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="permission.admin">
       		<source>Admin</source>
       		<target/>
