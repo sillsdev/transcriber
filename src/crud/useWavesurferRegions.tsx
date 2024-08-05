@@ -43,6 +43,7 @@ export const parseRegions = (regionstr: string) => {
   var segs = JSON.parse(regionstr);
   if (segs.regions) segs.regions = JSON.parse(segs.regions);
   else segs.regions = [];
+  segs.regions.sort((a: IRegion, b: IRegion) => a.start - b.start);
   return segs as IRegions;
 };
 export function useWaveSurferRegions(
