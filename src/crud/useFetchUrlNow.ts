@@ -27,7 +27,6 @@ export const useFetchUrlNow = () => {
     const attr: any = strings.data.data.attributes;
     if (!attr || cancelled()) return;
     const audioUrl = attr['audio-url'] as string;
-    console.log('tryDownload', audioUrl);
     if (isElectron) {
       return await tryDownload(audioUrl, true);
     } else return audioUrl;

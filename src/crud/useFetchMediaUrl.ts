@@ -4,10 +4,10 @@ import { isElectron } from '../api-variable';
 import { remoteIdGuid, remoteId } from '../crud';
 import { dataPath, PathType } from '../utils/dataPath';
 import { MediaFile } from '../model';
-import { infoMsg, logError, Severity, useDownloadMedia } from '../utils';
+import { infoMsg, logError, Severity } from '../utils';
 import { useFetchUrlNow } from './useFetchUrlNow';
 import { RecordKeyMap } from '@orbit/records';
-
+const ipc = (window as any)?.electron;
 // See: https://www.smashingmagazine.com/2020/07/custom-react-hook-fetch-cache-data/
 
 export enum MediaSt {
@@ -77,9 +77,16 @@ export const useFetchMediaUrl = (reporter?: any) => {
   const [state, dispatch] = useReducer(stateReducer, mediaClean);
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
-  const { safeURL } = useDownloadMedia();
-  const fetchUrl = useFetchUrlNow();
 
+  const fetchUrl = useFetchUrlNow();
+  const safeURL = async (path: string) => {
+    if (!path.startsWith('http')) {
+      const start = (await ipc?.isWindows()) ? 8 : 7;
+      const url = new URL(`file://${path}`).toString().slice(start);
+      return `transcribe-safe://${url}`;
+    }
+    return path;
+  };
   const guidId = (id: string) => {
     return !isNaN(Number(id))
       ? (remoteIdGuid('mediafile', id, memory.keyMap as RecordKeyMap) as string)
@@ -152,9 +159,11 @@ export const useFetchMediaUrl = (reporter?: any) => {
       try {
         fetchUrl({ id: state.remoteId, cancelled }).then((url) => {
           if (url)
-            dispatch({
-              payload: url,
-              type: MediaSt.FETCHED,
+            safeURL(url).then((path) => {
+              dispatch({
+                payload: path,
+                type: MediaSt.FETCHED,
+              });
             });
           else if (cancelled()) return;
           else

@@ -238,7 +238,7 @@ export const processDataChanges = async (pdc: {
                 fetchUrl({
                   id: upRec.record.keys.remoteId,
                   cancelled: () => false,
-                });
+                }); //downloads the file
               break;
 
             case 'user':
