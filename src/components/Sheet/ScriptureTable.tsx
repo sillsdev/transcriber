@@ -580,7 +580,7 @@ export function ScriptureTable(props: IProps) {
       ...myWorkflow[index],
       level: flat && level ? level : SheetLevel.Passage,
       kind: flat ? IwsKind.SectionPassage : IwsKind.Passage,
-      book: firstBook,
+      book: scripture ? firstBook : '',
       reference: reference ?? ptype ?? '',
       mediaId: undefined,
       comment: title ?? '',
@@ -648,13 +648,8 @@ export function ScriptureTable(props: IProps) {
       passageSeq: 0,
       reference: '',
       published: PublishLevelEnum.None,
-      book: '',
+      book: scripture ? firstBook : '',
     } as ISheet;
-    if (scripture) {
-      let prevRowIdx = i ? i - 1 : ws.length - 1;
-      if (prevRowIdx >= 0 && ws[prevRowIdx].book)
-        newRow.book = ws[prevRowIdx].book;
-    }
     return newRow;
   };
   const addSection = (
