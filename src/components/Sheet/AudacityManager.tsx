@@ -149,7 +149,7 @@ function AudacityManager(props: IProps) {
             remoteId('mediafile', mediaId, memory.keyMap as RecordKeyMap) ?? '',
           cancelled: () => false,
         })) ?? '';
-      if (!(await ipc?.exists(mediaName))) {
+      if (!mediaName.startsWith('transcribe-safe')) {
         showMessage(t.checkDownload);
         return;
       }
