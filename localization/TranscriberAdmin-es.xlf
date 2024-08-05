@@ -531,8 +531,8 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
-            <target>Si tiene un proyecto Audacity existente que desea vincular a este pasaje, haga clic en BROWSE. Para crear un nuevo proyecto Audacity con un nombre creado automáticamente, haga clic en CREAR.</target>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="audacityManager.title">
@@ -1491,8 +1491,8 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
-            <target>Este archivo no fue exportado desde la última versión. Vuelva a exportar el archivo PTF desde la versión en línea.</target>
+            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="electronImport.importPending">
@@ -1533,8 +1533,8 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
-            <target>Este archivo se exportó con una versión más reciente del programa. Debe descargar la última versión antes de importar. Si continúa, es posible que algunos datos no se importen correctamente.</target>
+            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="electronImport.project">
@@ -1581,8 +1581,8 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified! Carry on!</source>
-            <target>¡Estoy verificado! ¡Continúe!</target>
+            <source>I'm verified!  Carry on!</source>
+            <target/>
          </segment>
       </unit>
       <unit id="emailUnverified.verify">
@@ -1965,8 +1965,8 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
-            <target>Si este error se ha producido al importar cambios sin conexión, cierra la aplicación inmediatamente y vuelve a abrirla. Si el error persiste, ponte en contacto con el servicio de asistencia. Si continúa utilizando la aplicación, perderá los cambios sin conexión.</target>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -2031,8 +2031,8 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
-            <target>ITF no contiene el proyecto de audio actual. Contiene el proyecto de audio {0}.</target>
+            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="import.showHideFilter">
@@ -2943,8 +2943,8 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
-            <target>Invitación no aceptada. Debe iniciar sesión con el correo electrónico al que se envió la invitación.</target>
+            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="main.loadingTable">
@@ -4327,6 +4327,12 @@
             <target>Reproducir desde el principio</target>
          </segment>
       </unit>
+      <unit id="peerCheck.toEnd">
+         <segment>
+            <source>Jump to end</source>
+            <target>Saltar al final</target>
+         </segment>
+      </unit>
       <unit id="permission.admin">
          <segment>
             <source>Admin</source>
@@ -4335,8 +4341,8 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target>¿Necesitamos este grupo? ¿O basta con utilizar team admin? Las personas de este grupo podrán realizar cualquier paso, aunque esté asignado a un grupo en el que no estén.</target>
+            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4347,8 +4353,8 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
-            <target>Tampoco estoy seguro de que necesitemos este permiso, porque no está claro qué cosas especiales hacen los consultores en este software. Los comentarios de los Consultores Independientes serán visibles para todos los miembros del equipo.</target>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4377,14 +4383,14 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-            <target>Los comentarios de los mentores sólo serán visibles para los CIT. Los mentores pueden aprobar los comentarios de los CIT para hacerlos visibles al resto del equipo.</target>
+            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
-            <target>Grupo de compañeros general sin permisos especiales. Utilícelo para asignar debates a grupos de equipo.</target>
+            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planActions.addNote">
@@ -4941,8 +4947,8 @@
       </unit>
       <unit id="profile.syncFrequency">
          <segment>
-            <source>Frequency of data sync in minutes. 0 to turn off sync.</source>
-            <target>Frecuencia de sincronización de datos en minutos. 0 para desactivar la sincronización.</target>
+            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.timezone">
@@ -5559,14 +5565,14 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed. Please log out and login again.</source>
-            <target>Tu inicio de sesión en paratext ha caducado y no se puede renovar automáticamente. Por favor, cierre la sesión y vuelva a iniciarla.</target>
+            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
-            <target>Su nombre de usuario ha caducado y no se puede renovar automáticamente. Cierre la sesión y vuelva a iniciarla.</target>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="shared.fileNotFound">
@@ -6453,8 +6459,8 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}. Keep their changes? {1}</source>
-            <target>Transcripción actualizada por {0}. ¿Mantener sus cambios? {1}</target>
+            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcribeReject.cancel">
@@ -6669,8 +6675,8 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported. The export file is too large.</source>
-            <target>El proyecto de audio no se puede exportar. El archivo de exportación es demasiado grande.</target>
+            <source>The audio project cannot be exported.  The export file is too large.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportType">
@@ -6711,8 +6717,8 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
-            <target>Tiene nuevos cambios a nivel local que no se incluyeron en la exportación ptf. Por favor, exporte también un archivo itf para capturar todos los cambios.</target>
+            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
@@ -6911,6 +6917,12 @@
          <segment>
             <source>Canceling verse markup</source>
             <target>Cancelación del marcado de versos</target>
+         </segment>
+      </unit>
+      <unit id="verse.clipboard">
+         <segment>
+            <source>clipboard</source>
+            <target/>
          </segment>
       </unit>
       <unit id="viewMode.audioProject">
@@ -7281,8 +7293,8 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-            <target>Configure el proyecto de audio, dividiendo el trabajo en pasajes que puedan asignarse a varios transcriptores y editores. Los transcriptores y editores pueden trabajar en línea o fuera de línea descargando o importando el proyecto de audio.</target>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="welcome.team">
@@ -7299,8 +7311,8 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
-            <target>Se ha creado un proyecto de audio en línea. Los transcriptores y editores pueden trabajar en línea, fuera de línea seleccionando la opción Disponible sin conexión en el menú de la tarjeta del proyecto de audio, o fuera de línea importándolo.</target>
+            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="welcome.title">

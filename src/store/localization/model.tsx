@@ -861,6 +861,7 @@ export interface IPeerCheckStrings extends Localize.LocalizedStringsMethods {
     "afterResource": string;
     "back3Seconds": string;
     "resourceStart": string;
+    "toEnd": string;
 };
 
 export interface IPermissionStrings extends Localize.LocalizedStringsMethods {
