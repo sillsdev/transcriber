@@ -648,9 +648,13 @@ export function ScriptureTable(props: IProps) {
       passageSeq: 0,
       reference: '',
       published: PublishLevelEnum.None,
+      book: '',
     } as ISheet;
-    let prevRowIdx = i ? i - 1 : ws.length - 1;
-    if (prevRowIdx >= 0) newRow.book = ws[prevRowIdx].book;
+    if (scripture) {
+      let prevRowIdx = i ? i - 1 : ws.length - 1;
+      if (prevRowIdx >= 0 && ws[prevRowIdx].book)
+        newRow.book = ws[prevRowIdx].book;
+    }
     return newRow;
   };
   const addSection = (
