@@ -220,7 +220,7 @@
       <unit id="artifactCategory.chapter">
          <segment>
             <source>Chapter Number</source>
-            <target/>
+            <target>Número de capítulo</target>
          </segment>
       </unit>
       <unit id="artifactCategory.scripture">
@@ -268,7 +268,7 @@
       <unit id="artifactCategory.title">
          <segment>
             <source>Title</source>
-            <target/>
+            <target>Título</target>
          </segment>
       </unit>
       <unit id="artifactType.backtranslation">
@@ -532,7 +532,7 @@
       <unit id="audacityManager.tip">
          <segment>
             <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
-            <target/>
+            <target>Si tiene un proyecto Audacity existente que desea vincular a este pasaje, haga clic en BROWSE. Para crear un nuevo proyecto Audacity con un nombre creado automáticamente, haga clic en CREAR.</target>
          </segment>
       </unit>
       <unit id="audacityManager.title">
@@ -592,13 +592,13 @@
       <unit id="cards.bibleIdExplain">
          <segment>
             <source>Explain Bible Id</source>
-            <target/>
+            <target>Explicar Id. de la Biblia</target>
          </segment>
       </unit>
       <unit id="cards.biblename">
          <segment>
             <source>Name of Bible</source>
-            <target/>
+            <target>Nombre de la Biblia</target>
          </segment>
       </unit>
       <unit id="cards.cancel">
@@ -772,7 +772,7 @@
       <unit id="cards.OBTs">
          <segment>
             <source>Oral Bible Translation (simple)</source>
-            <target/>
+            <target>Traducción oral de la Biblia (simple)</target>
          </segment>
       </unit>
       <unit id="cards.OBTr">
@@ -916,7 +916,7 @@
       <unit id="cards.workflowProgressionStep">
          <segment>
             <source>Next Step</source>
-            <target/>
+            <target>Paso siguiente</target>
          </segment>
       </unit>
       <unit id="cards.yes">
@@ -994,13 +994,19 @@
       <unit id="category.resource">
          <segment>
             <source>Resource</source>
-            <target/>
+            <target>Recurso</target>
          </segment>
       </unit>
       <unit id="category.notes">
          <segment>
             <source>audio note(s)</source>
-            <target/>
+            <target>nota(s) de audio</target>
+         </segment>
+      </unit>
+      <unit id="category.resources">
+         <segment>
+            <source>resource(s)</source>
+            <target>recurso(s)</target>
          </segment>
       </unit>
       <unit id="commentCard.approve">
@@ -1075,10 +1081,22 @@
             <target>Añadir '{0}'</target>
          </segment>
       </unit>
+      <unit id="community.backTranslationComplete">
+         <segment>
+            <source>Version {0}: Back translation: {1}</source>
+            <target>Versión {0}: Traducción inversa: {1}</target>
+         </segment>
+      </unit>
       <unit id="community.deleteItem">
          <segment>
             <source>Delete Item</source>
             <target>Borrar elemento</target>
+         </segment>
+      </unit>
+      <unit id="community.finished">
+         <segment>
+            <source>finished</source>
+            <target>terminado</target>
          </segment>
       </unit>
       <unit id="community.later">
@@ -1091,6 +1109,12 @@
          <segment>
             <source>Loading:</source>
             <target>Cargar:</target>
+         </segment>
+      </unit>
+      <unit id="community.none">
+         <segment>
+            <source>none</source>
+            <target>ninguno</target>
          </segment>
       </unit>
       <unit id="community.playTest">
@@ -1133,6 +1157,12 @@
          <segment>
             <source>Segment</source>
             <target>Segmento</target>
+         </segment>
+      </unit>
+      <unit id="community.segmentsComplete">
+         <segment>
+            <source>Version {0}: Segments complete ({2}): {1}</source>
+            <target>Versión {0}: Segmentos completos ({2}): {1}</target>
          </segment>
       </unit>
       <unit id="community.speaker">
@@ -1462,7 +1492,7 @@
       <unit id="electronImport.importOldFile">
          <segment>
             <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
-            <target/>
+            <target>Este archivo no fue exportado desde la última versión. Vuelva a exportar el archivo PTF desde la versión en línea.</target>
          </segment>
       </unit>
       <unit id="electronImport.importPending">
@@ -1504,7 +1534,7 @@
       <unit id="electronImport.newerVersion">
          <segment>
             <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
-            <target/>
+            <target>Este archivo se exportó con una versión más reciente del programa. Debe descargar la última versión antes de importar. Si continúa, es posible que algunos datos no se importen correctamente.</target>
          </segment>
       </unit>
       <unit id="electronImport.project">
@@ -1552,7 +1582,7 @@
       <unit id="emailUnverified.verified">
          <segment>
             <source>I'm verified! Carry on!</source>
-            <target/>
+            <target>¡Estoy verificado! ¡Continúe!</target>
          </segment>
       </unit>
       <unit id="emailUnverified.verify">
@@ -1936,7 +1966,7 @@
       <unit id="import.unknownError">
          <segment>
             <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
-            <target/>
+            <target>Si este error se ha producido al importar cambios sin conexión, cierra la aplicación inmediatamente y vuelve a abrirla. Si el error persiste, ponte en contacto con el servicio de asistencia. Si continúa utilizando la aplicación, perderá los cambios sin conexión.</target>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -2002,7 +2032,7 @@
       <unit id="import.projectNotFound">
          <segment>
             <source>ITF does not contain current audio project. It contains audio project {0}.</source>
-            <target/>
+            <target>ITF no contiene el proyecto de audio actual. Contiene el proyecto de audio {0}.</target>
          </segment>
       </unit>
       <unit id="import.showHideFilter">
@@ -2764,7 +2794,7 @@
       <unit id="main.akuo">
          <segment>
             <source>Access Akuo Site</source>
-            <target/>
+            <target>Acceder al sitio Akuo</target>
          </segment>
       </unit>
       <unit id="main.apiError">
@@ -2875,6 +2905,12 @@
             <target>Hoja de cálculo de muestra jerárquica general</target>
          </segment>
       </unit>
+      <unit id="main.googleSamples">
+         <segment>
+            <source>Sample Google spreadsheets</source>
+            <target>Ejemplo de hojas de cálculo de Google</target>
+         </segment>
+      </unit>
       <unit id="main.helpCenter">
          <segment>
             <source>Help Center</source>
@@ -2908,7 +2944,7 @@
       <unit id="main.inviteError">
          <segment>
             <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
-            <target>Invitación no aceptada. Debe acceder con el correo electrónico al que se envió la invitación.</target>
+            <target>Invitación no aceptada. Debe iniciar sesión con el correo electrónico al que se envió la invitación.</target>
          </segment>
       </unit>
       <unit id="main.loadingTable">
@@ -2957,6 +2993,12 @@
          <segment>
             <source>Access Translator's Notes</source>
             <target>Acceso a Notas del Traductor</target>
+         </segment>
+      </unit>
+      <unit id="main.openContent">
+         <segment>
+            <source>Access Open Content</source>
+            <target>Acceso a contenido abierto</target>
          </segment>
       </unit>
       <unit id="main.passages">
@@ -3101,6 +3143,12 @@
          <segment>
             <source>Access Training Videos</source>
             <target>Acceder a los vídeos de formación</target>
+         </segment>
+      </unit>
+      <unit id="main.walkThru">
+         <segment>
+            <source>Access Walk Through</source>
+            <target>Acceder al recorrido</target>
          </segment>
       </unit>
       <unit id="mediaActions.attach">
@@ -3249,8 +3297,8 @@
       </unit>
       <unit id="mediaTab.duration">
          <segment>
-            <source>Length (s)</source>
-            <target>Longitud (s)</target>
+            <source>Duration</source>
+            <target>Duración</target>
          </segment>
       </unit>
       <unit id="mediaTab.fileAttached">
@@ -4189,6 +4237,12 @@
             <target>Pasaje</target>
          </segment>
       </unit>
+      <unit id="passageType.NOTE">
+         <segment>
+            <source>Note</source>
+            <target>Nota</target>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4885,6 +4939,12 @@
             <target>Permitir al usuario crear proyectos de contenido compartido.</target>
          </segment>
       </unit>
+      <unit id="profile.syncFrequency">
+         <segment>
+            <source>Frequency of data sync in minutes. 0 to turn off sync.</source>
+            <target>Frecuencia de sincronización de datos en minutos. 0 para desactivar la sincronización.</target>
+         </segment>
+      </unit>
       <unit id="profile.timezone">
          <segment>
             <source>Time zone</source>
@@ -5500,13 +5560,13 @@
       <unit id="shared.expiredParatextToken">
          <segment>
             <source>Your paratext login has expired and can't be automatically renewed. Please log out and login again.</source>
-            <target>Su paratext login ha caducado y no puede ser renovado automáticamente. Por favor, cierre la sesión y vuelva a iniciarla.</target>
+            <target>Tu inicio de sesión en paratext ha caducado y no se puede renovar automáticamente. Por favor, cierre la sesión y vuelva a iniciarla.</target>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
             <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
-            <target>Su nombre de usuario ha caducado y no puede ser renovado automáticamente. Cierre la sesión y vuelva a iniciarla.</target>
+            <target>Su nombre de usuario ha caducado y no se puede renovar automáticamente. Cierre la sesión y vuelva a iniciarla.</target>
          </segment>
       </unit>
       <unit id="shared.fileNotFound">
@@ -5591,6 +5651,12 @@
          <segment>
             <source>Unable to save while offline.</source>
             <target>No se puede guardar mientras está desconectado.</target>
+         </segment>
+      </unit>
+      <unit id="shared.notSupported">
+         <segment>
+            <source>This feature is not supported yet.</source>
+            <target>Esta función aún no está disponible.</target>
          </segment>
       </unit>
       <unit id="shared.observer">
@@ -6604,7 +6670,7 @@
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
             <source>The audio project cannot be exported. The export file is too large.</source>
-            <target>No se puede exportar el proyecto de audio. El archivo de exportación es demasiado grande.</target>
+            <target>El proyecto de audio no se puede exportar. El archivo de exportación es demasiado grande.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportType">
@@ -6646,7 +6712,7 @@
       <unit id="transcriptionTab.offlineData">
          <segment>
             <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
-            <target>Tiene nuevos cambios localmente que no se incluyeron en la exportación ptf. Por favor, exporte también un archivo itf para capturar todos los cambios.</target>
+            <target>Tiene nuevos cambios a nivel local que no se incluyeron en la exportación ptf. Por favor, exporte también un archivo itf para capturar todos los cambios.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
@@ -6839,6 +6905,12 @@
          <segment>
             <source>ERROR: Markup contains bad references</source>
             <target>ERROR: El marcado contiene referencias erróneas</target>
+         </segment>
+      </unit>
+      <unit id="verse.canceling">
+         <segment>
+            <source>Canceling verse markup</source>
+            <target>Cancelación del marcado de versos</target>
          </segment>
       </unit>
       <unit id="viewMode.audioProject">
@@ -7210,7 +7282,7 @@
       <unit id="welcome.setupTeamTip">
          <segment>
             <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-            <target>Configure el proyecto de audio, dividiendo el trabajo en pasajes que pueden asignarse a varios transcriptores y editores. Los transcriptores y editores pueden trabajar en línea o fuera de línea descargando o importando el proyecto de audio.</target>
+            <target>Configure el proyecto de audio, dividiendo el trabajo en pasajes que puedan asignarse a varios transcriptores y editores. Los transcriptores y editores pueden trabajar en línea o fuera de línea descargando o importando el proyecto de audio.</target>
          </segment>
       </unit>
       <unit id="welcome.team">

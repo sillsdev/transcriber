@@ -9,7 +9,7 @@
 	<!-- Find: (.+)\t(.+)\t(.+) and replace with: <r id="$1"><s>$2</s><t>$3</t></r> add <root> to top and </root> to bottom -->
 	<xsl:output omit-xml-declaration="yes"/>
 	<xsl:variable name="crowd"
-		select="document('file:/C:/Users/gtrih/git/transcriber/localization/TranscriberAdmin-zh-1.2.xliff')"/>
+		select="document('file:/C:/Users/gtrih/git/transcriber/localization/TranscriberAdmin-xx-1.2.xliff')"/>
 
 	<xsl:template match="node() |@*">
 		<xsl:variable name="id" select="parent::*/@id"/>

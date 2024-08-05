@@ -532,7 +532,7 @@
       <unit id="audacityManager.tip">
          <segment>
             <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
-            <target>Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur BROWSE. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CRÉER.</target>
+            <target>Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur BROWSE. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CREATE.</target>
          </segment>
       </unit>
       <unit id="audacityManager.title">
@@ -1003,6 +1003,12 @@
             <target>note(s) audio</target>
          </segment>
       </unit>
+      <unit id="category.resources">
+         <segment>
+            <source>resource(s)</source>
+            <target>ressource(s)</target>
+         </segment>
+      </unit>
       <unit id="commentCard.approve">
          <segment>
             <source>Approve</source>
@@ -1075,10 +1081,22 @@
             <target>Ajouter '{0}'.</target>
          </segment>
       </unit>
+      <unit id="community.backTranslationComplete">
+         <segment>
+            <source>Version {0}: Back translation: {1}</source>
+            <target>Version {0} : Back translation : {1}</target>
+         </segment>
+      </unit>
       <unit id="community.deleteItem">
          <segment>
             <source>Delete Item</source>
             <target>Supprimer l'élément</target>
+         </segment>
+      </unit>
+      <unit id="community.finished">
+         <segment>
+            <source>finished</source>
+            <target>terminé</target>
          </segment>
       </unit>
       <unit id="community.later">
@@ -1091,6 +1109,12 @@
          <segment>
             <source>Loading:</source>
             <target>Chargement :</target>
+         </segment>
+      </unit>
+      <unit id="community.none">
+         <segment>
+            <source>none</source>
+            <target>aucun</target>
          </segment>
       </unit>
       <unit id="community.playTest">
@@ -1133,6 +1157,12 @@
          <segment>
             <source>Segment</source>
             <target>Segmenter</target>
+         </segment>
+      </unit>
+      <unit id="community.segmentsComplete">
+         <segment>
+            <source>Version {0}: Segments complete ({2}): {1}</source>
+            <target>Version {0} : Segments terminés ({2}) : {1}</target>
          </segment>
       </unit>
       <unit id="community.speaker">
@@ -1504,7 +1534,7 @@
       <unit id="electronImport.newerVersion">
          <segment>
             <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
-            <target>Ce fichier a été exporté avec une version plus récente du programme. Vous devriez télécharger la dernière version avant de l'importer ! Si vous continuez, il se peut que certaines données ne soient pas importées correctement.</target>
+            <target>Ce fichier a été exporté avec une version plus récente du programme. Vous devez télécharger la dernière version avant de procéder à l'importation ! Si vous continuez, certaines données risquent de ne pas être importées correctement.</target>
          </segment>
       </unit>
       <unit id="electronImport.project">
@@ -2875,6 +2905,12 @@
             <target>Exemple de tableur hiérarchique général</target>
          </segment>
       </unit>
+      <unit id="main.googleSamples">
+         <segment>
+            <source>Sample Google spreadsheets</source>
+            <target>Exemple de feuilles de calcul Google</target>
+         </segment>
+      </unit>
       <unit id="main.helpCenter">
          <segment>
             <source>Help Center</source>
@@ -2908,7 +2944,7 @@
       <unit id="main.inviteError">
          <segment>
             <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
-            <target>Invitation non acceptée. Vous devez vous connecter avec l'email auquel l'invitation a été envoyée.</target>
+            <target>Invitation non acceptée. Vous devez vous connecter à l'aide de l'adresse électronique à laquelle l'invitation a été envoyée.</target>
          </segment>
       </unit>
       <unit id="main.loadingTable">
@@ -2957,6 +2993,12 @@
          <segment>
             <source>Access Translator's Notes</source>
             <target>Accéder aux notes du traducteur</target>
+         </segment>
+      </unit>
+      <unit id="main.openContent">
+         <segment>
+            <source>Access Open Content</source>
+            <target>Accéder au contenu ouvert</target>
          </segment>
       </unit>
       <unit id="main.passages">
@@ -3101,6 +3143,12 @@
          <segment>
             <source>Access Training Videos</source>
             <target>Accéder aux vidéos de formation</target>
+         </segment>
+      </unit>
+      <unit id="main.walkThru">
+         <segment>
+            <source>Access Walk Through</source>
+            <target>Accès à la visite guidée</target>
          </segment>
       </unit>
       <unit id="mediaActions.attach">
@@ -3249,8 +3297,8 @@
       </unit>
       <unit id="mediaTab.duration">
          <segment>
-            <source>Length (s)</source>
-            <target>Durée (s)</target>
+            <source>Duration</source>
+            <target>Durée de la visite</target>
          </segment>
       </unit>
       <unit id="mediaTab.fileAttached">
@@ -4189,6 +4237,12 @@
             <target>Passage</target>
          </segment>
       </unit>
+      <unit id="passageType.NOTE">
+         <segment>
+            <source>Note</source>
+            <target>Remarque</target>
+         </segment>
+      </unit>
       <unit id="peer.peerDescription">
          <segment>
             <source>Peer Groups allow you to assign tasks to a group rather than an individual.</source>
@@ -4282,7 +4336,7 @@
       <unit id="permission.adminTip">
          <segment>
             <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target>Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur d'équipe ? Les membres de ce groupe pourront effectuer n'importe quelle étape, même si elle est assignée à un groupe dont ils ne font pas partie.</target>
+            <target>Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur de l'équipe ? Les personnes appartenant à ce groupe pourront effectuer n'importe quelle étape, même si elle est attribuée à un groupe dont elles ne font pas partie.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4883,6 +4937,12 @@
          <segment>
             <source>Allow user to create shared content projects.</source>
             <target>Autoriser l'utilisateur à créer des projets de contenu partagé.</target>
+         </segment>
+      </unit>
+      <unit id="profile.syncFrequency">
+         <segment>
+            <source>Frequency of data sync in minutes. 0 to turn off sync.</source>
+            <target>Fréquence de synchronisation des données en minutes. 0 pour désactiver la synchronisation.</target>
          </segment>
       </unit>
       <unit id="profile.timezone">
@@ -5506,7 +5566,7 @@
       <unit id="shared.expiredToken">
          <segment>
             <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
-            <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
+            <target>Votre jeton de connexion a expiré et ne peut être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
          </segment>
       </unit>
       <unit id="shared.fileNotFound">
@@ -5591,6 +5651,12 @@
          <segment>
             <source>Unable to save while offline.</source>
             <target>Impossible d'enregistrer en mode hors connexion.</target>
+         </segment>
+      </unit>
+      <unit id="shared.notSupported">
+         <segment>
+            <source>This feature is not supported yet.</source>
+            <target>Cette fonctionnalité n'est pas encore prise en charge.</target>
          </segment>
       </unit>
       <unit id="shared.observer">
@@ -6841,6 +6907,12 @@
             <target>ERREUR : Le balisage contient de mauvaises références</target>
          </segment>
       </unit>
+      <unit id="verse.canceling">
+         <segment>
+            <source>Canceling verse markup</source>
+            <target>Annulation du balisage du couplet</target>
+         </segment>
+      </unit>
       <unit id="viewMode.audioProject">
          <segment>
             <source>Audio Project Setup</source>
@@ -7210,7 +7282,7 @@
       <unit id="welcome.setupTeamTip">
          <segment>
             <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-            <target>Configurer le projet audio, en divisant le travail en passages qui peuvent être assignés à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
+            <target>Configurez le projet audio en divisant le travail en passages qui peuvent être assignés à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
          </segment>
       </unit>
       <unit id="welcome.team">
