@@ -119,6 +119,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     segmentsRef,
     durationRef,
     playingRef,
+    onSegment,
   });
 
   const writeSegments = async () => {
