@@ -126,7 +126,7 @@ export default function ConsultantCheckReview({
           {item === ArtifactTypeSlug.PhraseBackTranslation && (
             <ArtifactStatus
               recordType={item}
-              currentVersion={allMedia[0].attributes.versionNumber}
+              currentVersion={rowData[0].mediafile.attributes?.versionNumber}
               segments={segments}
             />
           )}
