@@ -368,7 +368,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
 
     if (dataRef.current.length === 0) return;
 
-    for (let i = regions.length; i < dataRef.current.length; i++) {
+    for (let i = regions.length + 1; i < dataRef.current.length; i++) {
       dataRef.current[i][ColName.Limits].value = '';
     }
     let newData = new Array<ICell[]>();
