@@ -863,6 +863,7 @@ const PassageDetailProvider = (props: IProps) => {
           playing: false,
         };
       });
+      fetching.current = '';
     } else if (blobState.blobStat === BlobStatus.ERROR) {
       const errText = blobState?.error || 'Blob loading error';
       if (errText.startsWith('no offline file'))
@@ -877,6 +878,7 @@ const PassageDetailProvider = (props: IProps) => {
           playing: false,
         };
       });
+      fetching.current = '';
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blobState]);
