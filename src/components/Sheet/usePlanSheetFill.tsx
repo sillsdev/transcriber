@@ -39,6 +39,7 @@ import { positiveWholeOnly, stringAvatar } from '../../utils';
 import { TitleEdit } from './TitleEdit';
 import { getPubRefs } from './getPubRefs';
 import { PublishButton } from './PublishButton';
+import { NoteIcon } from '../../control/PlanIcons';
 
 type ICellEditor = (props: any) => JSX.Element;
 type IRow = (string | number)[];
@@ -361,7 +362,8 @@ export const usePlanSheetFill = ({
     e: string | number,
     rowIndex: number,
     cellIndex: number,
-    anyRecording: boolean
+    anyRecording: boolean,
+    isNote: boolean = false
   ) => {
     const handleTextChange = (value: string) => {
       const change: ICellChange = {
@@ -376,26 +378,40 @@ export const usePlanSheetFill = ({
     const handleMediaIdChange = (mediaId: string) => {
       titleMediaChanged(rowIndex, mediaId);
     };
-
+    const noteTitle = (e: string) => {
+      return (
+        <>
+          {'\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0'}
+          {NoteIcon}
+          {'\u00A0'}
+          {e}
+        </>
+      );
+    };
     return (
-      <TitleEdit
-        title={e as string}
-        mediaId={
-          rowInfo[rowIndex]?.titleMediaId?.id ||
-          rowInfo[rowIndex]?.mediaId?.id ||
-          ''
-        }
-        ws={rowInfo[rowIndex]}
-        anyRecording={anyRecording}
-        onRecording={onRecording}
-        onTextChange={handleTextChange}
-        onMediaIdChange={handleMediaIdChange}
-        passageId={
-          rowInfo[rowIndex].kind === IwsKind.Passage
-            ? rowInfo[rowIndex].passage?.id
-            : undefined
-        }
-      />
+      <>
+        {isNote && noteTitle(e as string)}
+        {!isNote && (
+          <TitleEdit
+            title={e as string}
+            mediaId={
+              rowInfo[rowIndex]?.titleMediaId?.id ||
+              rowInfo[rowIndex]?.mediaId?.id ||
+              ''
+            }
+            ws={rowInfo[rowIndex]}
+            anyRecording={anyRecording}
+            onRecording={onRecording}
+            onTextChange={handleTextChange}
+            onMediaIdChange={handleMediaIdChange}
+            passageId={
+              rowInfo[rowIndex].kind === IwsKind.Passage
+                ? rowInfo[rowIndex].passage?.id
+                : undefined
+            }
+          />
+        )}
+      </>
     );
   };
 
@@ -537,6 +553,26 @@ export const usePlanSheetFill = ({
             className: calcClassName,
           };
         }
+      }
+      if (
+        /NOTE/.test(rowData[rowIndex][refCol] as string) &&
+        !hidePublishing &&
+        canHidePublishing &&
+        cellIndex === titleCol
+      ) {
+        return {
+          value: e,
+          component: TitleValue(
+            rowInfo[rowIndex].sharedResource?.attributes.title || '',
+            rowIndex,
+            cellIndex,
+            anyRecording,
+            true
+          ),
+          forceComponent: true,
+          readOnly: true,
+          className: calcClassName,
+        };
       }
 
       if (cellIndex === refCol) {
