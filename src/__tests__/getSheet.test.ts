@@ -309,6 +309,8 @@ interface FindResult {
   color?: string;
 }
 var graphicFind = (rec: InitializedRecord, ref?: string): FindResult => ({});
+var readSharedResource = (passageId: string) => undefined;
+
 var curSheet: ISheet[] | undefined = undefined;
 
 var gsDefaults = {
@@ -327,6 +329,7 @@ var gsDefaults = {
   getDiscussionCount,
   graphicFind,
   getPublishLevel,
+  readSharedResource,
   current: curSheet,
 };
 
