@@ -49,6 +49,7 @@ import {
   findRecord,
   useGraphicUpdate,
   useGraphicFind,
+  useSharedResRead,
 } from '../../crud';
 import {
   lookupBook,
@@ -258,6 +259,7 @@ export function ScriptureTable(props: IProps) {
     getLocalDefault,
     setLocalDefault,
   } = useProjectDefaults();
+  const readSharedResource = useSharedResRead();
   const getFilteredSteps = useFilteredSteps();
   const getDiscussionCount = useDiscussionCount({
     mediafiles,
@@ -1358,6 +1360,7 @@ export function ScriptureTable(props: IProps) {
         getDiscussionCount,
         graphicFind,
         getPublishLevel,
+        readSharedResource,
       });
       setSheet(newWorkflow);
 

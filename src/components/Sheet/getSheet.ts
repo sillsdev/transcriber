@@ -157,6 +157,7 @@ export interface GetSheetProps {
     ref?: string
   ) => { uri?: string; rights?: string; url?: string; color?: string };
   getPublishLevel: (publishTo: string) => PublishLevelEnum;
+  readSharedResource: (passId: string) => SharedResourceD | undefined;
   current?: ISheet[];
 }
 
@@ -176,6 +177,7 @@ export const getSheet = ({
   getDiscussionCount,
   graphicFind,
   getPublishLevel,
+  readSharedResource,
   current,
 }: GetSheetProps) => {
   const myWork = current || Array<ISheet>();
@@ -270,7 +272,7 @@ export const getSheet = ({
             'sharedresource',
             related(passage, 'sharedResource')
           ) as SharedResourceD;
-        }
+        } else item.sharedResource = readSharedResource(passage.id);
         let mediaRec: MediaFileD | null;
         if (item.sharedResource) {
           mediaRec = getVernacularMediaRec(
