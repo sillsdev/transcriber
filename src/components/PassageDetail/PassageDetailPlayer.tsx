@@ -24,6 +24,7 @@ export interface DetailPlayerProps {
   saveSegments?: SaveSegments;
   allowAutoSegment?: boolean;
   suggestedSegments?: string;
+  verses?: string;
   defaultSegParams?: IRegionParams;
   canSetDefaultParams?: boolean;
   onSegment?: (segment: string, init: boolean) => void;
@@ -44,6 +45,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     allowAutoSegment,
     saveSegments,
     suggestedSegments,
+    verses,
     defaultSegParams,
     canSetDefaultParams,
     onSegment,
@@ -264,6 +266,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
         defaultRegionParams={defaultSegParams}
         canSetDefaultParams={canSetDefaultParams}
         segments={defaultSegments}
+        verses={verses}
         currentSegmentIndex={currentSegmentIndex}
         markers={discussionMarkers}
         onMarkerClick={handleHighlightDiscussion}

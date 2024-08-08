@@ -1484,6 +1484,7 @@ const initialState = {
 	"verse": new LocalizedStrings({
 		"en": {
 			"badReferences": "ERROR: Markup contains bad references",
+			"btNotUpdated": "WARNING: Since back translation recordings already exist, back translation segments will not be updated to line up with verse changes.",
 			"canceling": "Canceling verse markup",
 			"clipboard": "clipboard",
 			"copyToClipboard": "Copy to clipboard",

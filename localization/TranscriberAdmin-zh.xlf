@@ -6913,6 +6913,12 @@
             <target>错误： 标记包含错误引用</target>
          </segment>
       </unit>
+      <unit id="verse.btNotUpdated">
+         <segment>
+            <source>WARNING: Since back translation recordings already exist, back translation segments will not be updated to line up with verse changes.</source>
+            <target>警告：由于背译录音已经存在，背译片段将不会更新以与诗句变化保持一致。</target>
+         </segment>
+      </unit>
       <unit id="verse.canceling">
          <segment>
             <source>Canceling verse markup</source>
@@ -6922,6 +6928,12 @@
       <unit id="verse.clipboard">
          <segment>
             <source>clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.copyToClipboard">
+         <segment>
+            <source>Copy to clipboard</source>
             <target/>
          </segment>
       </unit>

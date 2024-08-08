@@ -57,7 +57,8 @@ export function useWaveSurferRegions(
   progress: () => number,
   setPlaying: (playing: boolean) => void,
   onCurrentRegion?: (currentRegion: IRegion | undefined) => void,
-  onStartRegion?: (start: number) => void
+  onStartRegion?: (start: number) => void,
+  verses?: string
 ) {
   const [ws, setWaveSurfer] = useState<WaveSurfer>();
   const wavesurferRef = useRef<WaveSurfer>();
@@ -245,6 +246,40 @@ export function useWaveSurferRegions(
     return peaksRef.current;
   };
 
+  const mergeVerses = (autosegs: IRegion[]) => {
+    if (!verses) return autosegs;
+    const segs = parseRegions(verses)?.regions;
+    if (!segs || !segs.length) return autosegs;
+    let x = 0;
+    var suggested: IRegion[] = [];
+    var minLen = paramsRef.current?.segLenThreshold || 0.5;
+    segs.forEach((s) => {
+      let i = autosegs.findIndex((t: IRegion) => t.end > s.start);
+      if (i < 0) {
+        suggested.push(s);
+      } else {
+        suggested.push(...autosegs.slice(x, i));
+        x = i;
+        if (autosegs[i].start < s.start) {
+          if (s.start - autosegs[i].start >= minLen) {
+            suggested.push({ ...autosegs[i], end: s.start });
+          } else {
+            suggested[suggested.length - 1].end = s.start;
+          }
+        }
+        if (autosegs[i].end - s.start >= minLen) {
+          suggested.push({ ...s, end: autosegs[i].end });
+        } else {
+          x++; // skip the next one
+          suggested.push({ ...s, end: autosegs[x]?.end ?? 0 });
+        }
+        x++;
+      }
+    });
+    suggested.push(...autosegs.slice(x));
+    return suggested;
+  };
+
   const extractRegions = (params: IRegionParams) => {
     // Silence params
     const minValue = params.silenceThreshold || 0.002;
@@ -295,8 +330,8 @@ export function useWaveSurferRegions(
     // Return time-based regions
     var tRegions = regions.map(function (reg) {
       return {
-        start: Math.round(reg.start * coef * 10) / 10,
-        end: Math.round(reg.end * coef * 10) / 10,
+        start: Math.round(reg.start * coef * 1000) / 1000,
+        end: Math.round(reg.end * coef * 1000) / 1000,
       };
     });
 
@@ -526,7 +561,7 @@ export function useWaveSurferRegions(
 
   function wsAutoSegment(loop: boolean = false, params: IRegionParams) {
     if (!wavesurferRef.current) return 0;
-    var regions = extractRegions(params);
+    var regions = mergeVerses(extractRegions(params));
     paramsRef.current = params;
     loadRegions({ params: params, regions: regions }, loop, true);
     onRegion(regions.length, true);

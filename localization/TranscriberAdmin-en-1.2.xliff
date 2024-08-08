@@ -8070,6 +8070,13 @@
                <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="verse.btNotUpdated">
+            <source>WARNING: Since back translation recordings already exist, back translation segments will not be updated to line up with verse changes.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="verse.canceling">
             <source>Canceling verse markup</source>
             <target/>

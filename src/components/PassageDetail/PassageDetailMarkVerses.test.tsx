@@ -6,11 +6,38 @@ import { UnsavedProvider } from '../../context/UnsavedContext';
 import PassageDetailMarkVerses, {
   MarkVersesProps,
 } from './PassageDetailMarkVerses';
-import { PassageD, OrgWorkflowStepD } from '../../model';
+import {
+  PassageD,
+  OrgWorkflowStepD,
+  MediaFileD,
+  SectionResourceD,
+} from '../../model';
 import { memory } from '../../schema';
 import { DetailPlayerProps } from './PassageDetailPlayer';
 import { act } from 'react-dom/test-utils';
+// import { IRow } from '../../context/PassageDetailContext';
 // import { HotKeyProvider } from '../../context/HotKeyContext';
+
+interface IRow {
+  id: string;
+  sequenceNum: number;
+  version: number;
+  mediafile: MediaFileD;
+  playItem: string;
+  artifactName: string;
+  artifactType: string;
+  artifactCategory: string;
+  done: boolean;
+  editAction: JSX.Element | null;
+  resource: SectionResourceD | null;
+  passageId: string;
+  isVernacular: boolean;
+  isResource: boolean;
+  isComment: boolean;
+  isKeyTerm: boolean;
+  isText: boolean;
+  sourceVersion: number;
+}
 
 var mockMemory = memory;
 var mockMediafileId = 'm1';
@@ -18,6 +45,7 @@ var mockPassageId = 'p1';
 var mockCurrentStep = 'step1';
 var mockSetCurrentStep = jest.fn();
 var mockPlayerAction: ((segment: string, init: boolean) => void) | undefined;
+var mockRowData: IRow[] = [];
 
 const passageAttributes = {
   sequencenum: 1,
@@ -66,6 +94,7 @@ jest.mock('../../context/usePassageDetailContext', () => () => ({
   setCurrentStep: mockSetCurrentStep,
   orgWorkflowSteps: [mockOrgWorkflowStep],
   setupLocate: jest.fn(),
+  rowData: mockRowData,
 }));
 jest.mock('./PassageDetailPlayer', () => ({ onSegment }: DetailPlayerProps) => {
   mockPlayerAction = onSegment;
@@ -97,16 +126,14 @@ jest.mock('react-redux', () => ({
     reference: 'Reference',
     saveVerseMarkup: 'Save Verse Markup',
     startStop: 'Start --> Stop',
-    // prevRegion: 'Previous Segment [{0}]',
-    // nextRegion: 'Next Segment [{0}]',
-    // beginningTip: 'Go to Beginning [{0}]',
-    // aheadTip: 'Ahead {jump} {1} [{0}]',
-    // backTip: 'Rewind {jump} {1} [{0}]',
-    // pauseTip: 'Pause [{0}]',
-    // playTip: 'Play [{0}]',
-    // endTip: 'Go to End [{0}]',
-    // splitSegment: 'Add/Remove Boundary [Double Click/{0}]',
-    // removeSegment: 'Remove Next Boundary [{0}]',
+    badReferences: 'ERROR: Markup contains bad references',
+    btNotUpdated:
+      'WARNING: Since back translation recordings already exist, back translation segments will not be updated to line up with verse changes.',
+    issues: 'The verse markup has issues. Do you want to continue?',
+    missingReferences: 'Warning: Verses in passage not included: ({0})',
+    noReferences: 'Warning: Some audio segments will not be included in verses',
+    noSegments: 'ERROR: Some verses have no segment: ({0})',
+    outsideReferences: 'ERROR: Some verses are outside passage: ({0})',
   }),
   shallowEqual: jest.fn(),
 }));
