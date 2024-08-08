@@ -319,11 +319,20 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
           const regions = JSON.stringify(segs);
           segmentsRef.current = JSON.stringify({ regions });
         }
+        // update all three segment types: verse, transcription, backtranslation
         projectSegmentSave({
           media,
           segments: updateSegments(
-            NamedRegions.Verse,
-            media.attributes?.segments,
+            NamedRegions.BackTranslation,
+            updateSegments(
+              NamedRegions.Transcription,
+              updateSegments(
+                NamedRegions.Verse,
+                media.attributes?.segments,
+                segmentsRef.current
+              ),
+              segmentsRef.current
+            ),
             segmentsRef.current
           ),
         })
@@ -331,7 +340,6 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
             saveCompleted(verseToolId);
           })
           .catch((err) => {
-            //so we don't come here...we go to continue/logout
             saveCompleted(verseToolId, err.message);
           })
           .finally(() => {

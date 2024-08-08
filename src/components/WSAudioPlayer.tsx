@@ -89,6 +89,7 @@ interface IProps {
   oneTryOnly?: boolean;
   size: number;
   segments: string;
+  verses?: string;
   currentSegmentIndex?: number;
   markers?: IMarker[];
   metaData?: JSX.Element;
@@ -151,6 +152,7 @@ function WSAudioPlayer(props: IProps) {
     oneTryOnly,
     size,
     segments,
+    verses,
     currentSegmentIndex,
     markers,
     metaData,
@@ -270,7 +272,8 @@ function WSAudioPlayer(props: IProps) {
     timelineRef.current,
     currentSegmentIndex,
     onCurrentSegment,
-    onStartRegion
+    onStartRegion,
+    verses
   );
   //because we have to call hooks consistently, call this even if we aren't going to record
   const { startRecording, stopRecording, acceptedMimes } = useMediaRecorder(
@@ -366,6 +369,15 @@ function WSAudioPlayer(props: IProps) {
     recordingRef.current = value;
     setRecordingx(value);
     if (onRecording) onRecording(value);
+  };
+
+  const handleClearRegions = () => {
+    wsClearRegions();
+    if (verses) {
+      segmentsRef.current = verses;
+      loadRegions();
+      onSegmentChange && onSegmentChange(verses);
+    }
   };
   //#endregion
 
@@ -919,7 +931,7 @@ function WSAudioPlayer(props: IProps) {
                   wsAutoSegment={allowAutoSegment ? wsAutoSegment : undefined}
                   wsRemoveSplitRegion={wsRemoveSplitRegion}
                   wsAddOrRemoveRegion={wsAddOrRemoveRegion}
-                  wsClearRegions={wsClearRegions}
+                  wsClearRegions={handleClearRegions}
                   setBusy={setBusy}
                 />
               )}

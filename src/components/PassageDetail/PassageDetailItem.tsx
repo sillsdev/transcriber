@@ -37,7 +37,7 @@ import {
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import Memory from '@orbit/memory';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { mergedSegments, NamedRegions } from '../../utils/namedSegments';
+import { getSegments, NamedRegions } from '../../utils/namedSegments';
 import styledHtml from 'styled-components';
 import {
   default as SplitPaneBar,
@@ -212,6 +212,7 @@ export function PassageDetailItem(props: IProps) {
   const [recordType, setRecordType] = useState<ArtifactTypeSlug>(slugs[0]);
   const [currentVersion, setCurrentVersion] = useState(1);
   const [segString, setSegString] = useState('{}');
+  const [verses, setVerses] = useState('');
   const cancelled = useRef(false);
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
   const [segParams, setSegParams] = useState<IRegionParams>(btDefaultSegParams);
@@ -251,13 +252,8 @@ export function PassageDetailItem(props: IProps) {
     if (mediafileId !== mediaState.id) fetchMediaUrl({ id: mediafileId });
     const mediaRec = findRecord(memory, 'mediafile', mediafileId) as MediaFile;
     const defaultSegments = mediaRec?.attributes?.segments;
-    const suggested = mergedSegments({
-      from: NamedRegions.Verse,
-      into: NamedRegions.BackTranslation,
-      params: segParams,
-      savedSegs: defaultSegments,
-    });
-    setSegString(suggested);
+    setSegString(getSegments(NamedRegions.BackTranslation, defaultSegments));
+    setVerses(getSegments(NamedRegions.Verse, defaultSegments));
     setCurrentVersion(mediaRec?.attributes?.versionNumber || 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafileId]);
@@ -416,6 +412,7 @@ export function PassageDetailItem(props: IProps) {
                       }
                       defaultSegParams={segParams}
                       suggestedSegments={segString}
+                      verses={verses}
                       canSetDefaultParams={canSetOrgDefault}
                       onSegmentParamChange={onSegmentParamChange}
                       chooserReduce={chooserSize}

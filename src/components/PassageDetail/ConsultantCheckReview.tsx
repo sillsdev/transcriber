@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { MediaFileD } from '../../model';
-import { useOrgDefaults } from '../../crud/useOrgDefaults';
 import { mediaFileName } from '../../crud/media';
 import { useArtifactType } from '../../crud/useArtifactType';
 import { related } from '../../crud/related';
@@ -25,8 +24,7 @@ import PlayArrow from '@mui/icons-material/PlayArrow';
 import CancelPlay from '@mui/icons-material/Clear';
 import { prettySegment } from '../../utils/prettySegment';
 import ArtifactStatus from '../ArtifactStatus';
-import { mergedSegments, NamedRegions } from '../../utils/namedSegments';
-import { btDefaultSegParams } from './PassageDetailItem';
+import { getSegments, NamedRegions } from '../../utils/namedSegments';
 
 const StyledCell = styled(TableCell)<TableCellProps>(({ theme }) => ({
   padding: '4px',
@@ -47,7 +45,6 @@ export default function ConsultantCheckReview({
   const [allMedia, setAllMedia] = useState<MediaFileD[]>([]);
   const [segments, setSegments] = useState('');
   const { localizedArtifactType } = useArtifactType();
-  const { getOrgDefault } = useOrgDefaults();
   const t = useSelector(consultantSelector, shallowEqual);
 
   const handleSelect = (id: string) => () => {
@@ -101,14 +98,7 @@ export default function ConsultantCheckReview({
         rowData[0]?.mediafile;
       if (mediaRec) {
         const defaultSegments = mediaRec?.attributes?.segments;
-        const params = getOrgDefault(segments) || btDefaultSegParams;
-        const suggested = mergedSegments({
-          from: NamedRegions.Verse,
-          into: NamedRegions.BackTranslation,
-          params,
-          savedSegs: defaultSegments,
-        });
-        setSegments(suggested);
+        setSegments(getSegments(NamedRegions.BackTranslation, defaultSegments));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
