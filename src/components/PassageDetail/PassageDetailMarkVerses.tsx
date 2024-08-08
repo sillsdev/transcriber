@@ -51,6 +51,8 @@ import { IRegion } from '../../crud/useWavesurferRegions';
 import { cleanClipboard } from '../../utils/cleanClipboard';
 import { refMatch } from '../../utils/refMatch';
 import Confirm from '../AlertDialog';
+import { useArtifactType } from '../../crud/useArtifactType';
+import { ArtifactTypeSlug } from '../../crud/artifactTypeSlug';
 
 const NotTable = 490;
 const verseToolId = 'VerseTool';
@@ -111,6 +113,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     setStepComplete,
     setCurrentStep,
     orgWorkflowSteps,
+    rowData,
   } = usePassageDetailContext();
   const [memory] = useGlobal('memory');
   const [, setComplete] = useGlobal('progress');
@@ -129,6 +132,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   const dataRef = useRef<ICell[][]>([]);
   const segmentsRef = useRef('{}');
   const passageRefs = useRef<string[]>([]);
+  const { localizedArtifactType } = useArtifactType();
   const t = useSelector(verseSelector, shallowEqual) as IVerseStrings;
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const tt: ITranscriptionTabStrings = useSelector(
@@ -206,6 +210,14 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [mediafileId]
   );
+
+  const hasBtRecordings = useMemo(() => {
+    const btType = localizedArtifactType(
+      ArtifactTypeSlug.PhraseBackTranslation
+    );
+    return rowData.some((r) => r.artifactType === btType);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowData]);
 
   const setupData = (items: string[]) => {
     passageRefs.current = items;
@@ -320,22 +332,23 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
           segmentsRef.current = JSON.stringify({ regions });
         }
         // update all three segment types: verse, transcription, backtranslation
-        projectSegmentSave({
-          media,
-          segments: updateSegments(
-            NamedRegions.BackTranslation,
-            updateSegments(
-              NamedRegions.Transcription,
-              updateSegments(
-                NamedRegions.Verse,
-                media.attributes?.segments,
-                segmentsRef.current
-              ),
-              segmentsRef.current
-            ),
+        let segments = updateSegments(
+          NamedRegions.Transcription,
+          updateSegments(
+            NamedRegions.Verse,
+            media.attributes?.segments,
             segmentsRef.current
           ),
-        })
+          segmentsRef.current
+        );
+        if (!hasBtRecordings) {
+          segments = updateSegments(
+            NamedRegions.BackTranslation,
+            segments,
+            segmentsRef.current
+          );
+        }
+        projectSegmentSave({ media, segments })
           .then(() => {
             saveCompleted(verseToolId);
           })
@@ -525,6 +538,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
       );
     }
     if (noRefSegs) issues.push(t.noReferences);
+    if (hasBtRecordings) issues.push(t.btNotUpdated);
     return issues;
   };
 

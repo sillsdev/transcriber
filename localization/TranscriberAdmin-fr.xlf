@@ -6913,6 +6913,12 @@
             <target>ERREUR : Le balisage contient de mauvaises références</target>
          </segment>
       </unit>
+      <unit id="verse.btNotUpdated">
+         <segment>
+            <source>WARNING: Since back translation recordings already exist, back translation segments will not be updated to line up with verse changes.</source>
+            <target>AVERTISSEMENT : Puisque les enregistrements de rétro-traduction existent déjà, les segments de rétro-traduction ne seront pas mis à jour pour s'aligner sur les changements de versets.</target>
+         </segment>
+      </unit>
       <unit id="verse.canceling">
          <segment>
             <source>Canceling verse markup</source>
@@ -6922,6 +6928,12 @@
       <unit id="verse.clipboard">
          <segment>
             <source>clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.copyToClipboard">
+         <segment>
+            <source>Copy to clipboard</source>
             <target/>
          </segment>
       </unit>

@@ -6913,6 +6913,12 @@
             <target>KESALAHAN: Markah mengandung referensi yang buruk</target>
          </segment>
       </unit>
+      <unit id="verse.btNotUpdated">
+         <segment>
+            <source>WARNING: Since back translation recordings already exist, back translation segments will not be updated to line up with verse changes.</source>
+            <target>PERINGATAN: Karena rekaman terjemahan belakang sudah ada, segmen terjemahan belakang tidak akan diperbarui untuk menyesuaikan dengan perubahan ayat.</target>
+         </segment>
+      </unit>
       <unit id="verse.canceling">
          <segment>
             <source>Canceling verse markup</source>
@@ -6922,6 +6928,12 @@
       <unit id="verse.clipboard">
          <segment>
             <source>clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.copyToClipboard">
+         <segment>
+            <source>Copy to clipboard</source>
             <target/>
          </segment>
       </unit>

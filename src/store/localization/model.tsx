@@ -1397,6 +1397,7 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
 
 export interface IVerseStrings extends Localize.LocalizedStringsMethods {
     "badReferences": string;
+    "btNotUpdated": string;
     "canceling": string;
     "clipboard": string;
     "copyToClipboard": string;
