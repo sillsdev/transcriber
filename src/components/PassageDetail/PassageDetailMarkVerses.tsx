@@ -84,6 +84,10 @@ const StyledTable = styled('div')(({ theme }) => ({
     verticalAlign: 'inherit !important',
     '& .value-viewer': { textAlign: 'center' },
   },
+  '& .lim.cur': {
+    verticalAlign: 'inherit !important',
+    '& .value-viewer': { textAlign: 'center', backgroundColor: 'yellow' },
+  },
   '& .data-grid .Err': { backgroundColor: 'orange' },
 }));
 
@@ -110,6 +114,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     mediafileId,
     passage,
     currentstep,
+    currentSegment,
     setStepComplete,
     setCurrentStep,
     orgWorkflowSteps,
@@ -265,7 +270,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     const refs = getRefs(passage.attributes.reference, passage.attributes.book);
     setupData(refs);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passage, engVrs]);
+  }, [passage, engVrs, currentSegment]);
 
   const parsedSteps = useMemo(() => {
     if (!orgWorkflowSteps) return [];
@@ -377,9 +382,9 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     return refs;
   };
 
-  const d3 = (d: number) => d.toFixed(3);
+  const d1 = (d: number) => d.toFixed(1);
 
-  const formLim = ({ start, end }: IRegion) => `${d3(start)} --> ${d3(end)}`;
+  const formLim = ({ start, end }: IRegion) => `${d1(start)}-${d1(end)}`;
 
   const handleSegment = (segments: string, init: boolean) => {
     const regions = getSortedRegions(segments);
@@ -404,7 +409,10 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
         const refsSoFar = collectRefs(newData);
         const row = dataRef.current[i + 1];
         if (row[ColName.Limits].value !== formLim(r)) {
-          row[ColName.Limits].value = formLim(r);
+          const value = formLim(r);
+          row[ColName.Limits].value = value;
+          if (value === currentSegment.trim())
+            row[ColName.Limits].className += ' cur';
           change = true;
         }
         if (r?.label !== undefined && row[ColName.Ref].value !== r.label) {
