@@ -1354,6 +1354,13 @@
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="community.segmentsChanged">
+            <source>Changing segments will invalidate some recordings since they are linked to the segment start and end.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="community.segmentsComplete">
             <source>Version {0}: Segments complete ({2}): {1}</source>
             <target/>

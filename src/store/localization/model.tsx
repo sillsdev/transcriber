@@ -234,6 +234,7 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
     "rights": string;
     "saveFirst": string;
     "segment": string;
+    "segmentsChanged": string;
     "segmentsComplete": string;
     "speaker": string;
     "topic": string;

@@ -117,6 +117,7 @@ export default function ConsultantCheckReview({
             <ArtifactStatus
               recordType={item}
               currentVersion={rowData[0].mediafile.attributes?.versionNumber}
+              rowData={rowData}
               segments={segments}
             />
           )}

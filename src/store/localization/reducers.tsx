@@ -253,6 +253,7 @@ const initialState = {
 			"rights": "Rights",
 			"saveFirst": "Save or Clear your recording before uploading.",
 			"segment": "Segment",
+			"segmentsChanged": "Changing segments will invalidate some recordings since they are linked to the segment start and end.",
 			"segmentsComplete": "Version {0}: Segments complete ({2}): {1}",
 			"speaker": "Speaker",
 			"topic": "Topic",
