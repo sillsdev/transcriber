@@ -91,6 +91,7 @@ jest.mock('../../context/usePassageDetailContext', () => () => ({
   mediafileId: mockMediafileId,
   passage: mockPassage,
   currentstep: mockCurrentStep,
+  currentSegment: '',
   setCurrentStep: mockSetCurrentStep,
   orgWorkflowSteps: [mockOrgWorkflowStep],
   setupLocate: jest.fn(),
@@ -282,14 +283,14 @@ test('should add limits to the table', async () => {
 
   // Assert
   expect(tbody.children.length).toBe(7); // 6 limits (4 with verss) + 1 header
-  expect(firstLimit.textContent).toBe('0.000 --> 5.000');
-  expect(tbody.children[2].children[0].textContent).toBe('5.000 --> 9.000');
-  expect(tbody.children[3].children[0].textContent).toBe('9.000 --> 12.000');
-  expect(tbody.children[4].children[0].textContent).toBe('12.000 --> 17.000');
+  expect(firstLimit.textContent).toBe('0.0-5.0');
+  expect(tbody.children[2].children[0].textContent).toBe('5.0-9.0');
+  expect(tbody.children[3].children[0].textContent).toBe('9.0-12.0');
+  expect(tbody.children[4].children[0].textContent).toBe('12.0-17.0');
   // added extra rows
-  expect(tbody.children[5].children[0].textContent).toBe('17.000 --> 24.000');
+  expect(tbody.children[5].children[0].textContent).toBe('17.0-24.0');
   expect(tbody.children[5].children[1].textContent).toBe('');
-  expect(tbody.children[6].children[0].textContent).toBe('24.000 --> 28.000');
+  expect(tbody.children[6].children[0].textContent).toBe('24.0-28.0');
   expect(tbody.children[6].children[1].textContent).toBe('');
 });
 
@@ -313,7 +314,7 @@ test('should add limits with label to the table', async () => {
   });
 
   // Assert
-  expect(firstLimit.textContent).toBe('0.000 --> 5.000');
+  expect(firstLimit.textContent).toBe('0.0-5.0');
   expect(tbody.children[1].children[1].textContent).toBe('1:1-2');
 });
 
