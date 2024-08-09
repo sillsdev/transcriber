@@ -1,5 +1,5 @@
 import { shallowEqual } from 'react-redux';
-import { ICommunityStrings, ISharedStrings, MediaFile } from '../../model';
+import { ICommunityStrings, ISharedStrings, MediaFileD } from '../../model';
 import {
   Button,
   debounce,
@@ -26,7 +26,6 @@ import {
 } from 'react';
 import {
   ArtifactTypeSlug,
-  findRecord,
   IRegionParams,
   related,
   useArtifactType,
@@ -36,7 +35,7 @@ import {
 } from '../../crud';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import Memory from '@orbit/memory';
-import { useSnackBar } from '../../hoc/SnackBar';
+import { AlertSeverity, useSnackBar } from '../../hoc/SnackBar';
 import { getSegments, NamedRegions } from '../../utils/namedSegments';
 import styledHtml from 'styled-components';
 import {
@@ -61,6 +60,7 @@ import { communitySelector, sharedSelector } from '../../selector';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import PassageDetailChooser from './PassageDetailChooser';
 import ArtifactStatus from '../ArtifactStatus';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
 export const btDefaultSegParams = {
   silenceThreshold: 0.004,
@@ -162,6 +162,7 @@ interface IProps {
 
 export function PassageDetailItem(props: IProps) {
   const { width, slugs, segments, showTopic } = props;
+  const mediafiles = useOrbitData<MediaFileD[]>('mediafile');
   const oneTryOnly = slugs.includes(ArtifactTypeSlug.WholeBackTranslation);
   const t: ICommunityStrings = useSelector(communitySelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
@@ -250,13 +251,37 @@ export function PassageDetailItem(props: IProps) {
 
   useEffect(() => {
     if (mediafileId !== mediaState.id) fetchMediaUrl({ id: mediafileId });
-    const mediaRec = findRecord(memory, 'mediafile', mediafileId) as MediaFile;
-    const defaultSegments = mediaRec?.attributes?.segments;
-    setSegString(getSegments(NamedRegions.BackTranslation, defaultSegments));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mediafileId, mediaState.id]);
+
+  const hasBtRecordings = useMemo(() => {
+    const mediaRec = mediafiles.find((m) => m.id === mediafileId);
+    const btType = localizedArtifactType(
+      ArtifactTypeSlug.PhraseBackTranslation
+    );
+    const version = mediaRec?.attributes.versionNumber;
+    return rowData.some(
+      (r) => r.artifactType === btType && r.sourceVersion === version
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowData, mediafileId, mediafiles]);
+
+  useEffect(() => {
+    const mediaRec = mediafiles.find((m) => m.id === mediafileId);
+    const defaultSegments = mediaRec?.attributes?.segments ?? '{}';
+    const newSegString = getSegments(
+      NamedRegions.BackTranslation,
+      defaultSegments
+    );
+    if (segString !== newSegString) {
+      setSegString(newSegString);
+      if (hasBtRecordings)
+        showMessage(t.segmentsChanged, AlertSeverity.Warning);
+    }
     setVerses(getSegments(NamedRegions.Verse, defaultSegments));
     setCurrentVersion(mediaRec?.attributes?.versionNumber || 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mediafileId]);
+  }, [mediafileId, mediafiles, hasBtRecordings]);
 
   const recordTypeId = useMemo(
     () => getTypeId(recordType),
@@ -425,6 +450,7 @@ export function PassageDetailItem(props: IProps) {
                           <ArtifactStatus
                             recordType={recordType}
                             currentVersion={currentVersion}
+                            rowData={rowData}
                             segments={segString}
                           />
                         </Box>

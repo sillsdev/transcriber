@@ -1162,6 +1162,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="community.segmentsChanged">
+         <segment>
+            <source>Changing segments will invalidate some recordings since they are linked to the segment start and end.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="community.segmentsComplete">
          <segment>
             <source>Version {0}: Segments complete ({2}): {1}</source>

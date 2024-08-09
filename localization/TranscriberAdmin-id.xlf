@@ -1159,6 +1159,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="community.segmentsChanged">
+         <segment>
+            <source>Changing segments will invalidate some recordings since they are linked to the segment start and end.</source>
+            <target>Mengubah segmen akan membatalkan beberapa rekaman karena rekaman tersebut terkait dengan awal dan akhir segmen.</target>
+         </segment>
+      </unit>
       <unit id="community.segmentsComplete">
          <segment>
             <source>Version {0}: Segments complete ({2}): {1}</source>
@@ -6934,6 +6940,12 @@
       <unit id="verse.copyToClipboard">
          <segment>
             <source>Copy to clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.issues">
+         <segment>
+            <source>The verse markup has issues. Do you want to continue?</source>
             <target/>
          </segment>
       </unit>
