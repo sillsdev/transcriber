@@ -15,7 +15,7 @@ import { processDataChanges } from '../hoc/DataChanges';
 export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const remote = coordinator.getSource('datachanges') as JSONAPISource;
   const token = useContext(TokenContext).state.accessToken;
   const [errorReporter] = useGlobal('errorReporter');
   const [isOffline] = useGlobal('offline');
@@ -49,6 +49,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
           errorReporter,
           setLanguage,
           setDataChangeCount: (value: number) => {},
+          fetchUrl: undefined,
           cb,
         });
         if (startNext === start) tries--;

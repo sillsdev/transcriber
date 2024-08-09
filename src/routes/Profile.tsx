@@ -82,11 +82,11 @@ const PaperContainer = styled(Paper, {
   justifyContent: 'center',
   ...(noMargin
     ? {
-      margin: 0,
-    }
+        margin: 0,
+      }
     : {
-      margin: theme.spacing(4),
-    }),
+        margin: theme.spacing(4),
+      }),
 }));
 
 const Caption = styled(Typography)<TypographyProps>(() => ({
@@ -147,6 +147,7 @@ export function Profile(props: IProps) {
   const [family, setFamily] = useState<string | null>(null);
   const [email, setEmail] = useState('');
   const [timezone, setTimezone] = useState<string>(moment.tz.guess() || '');
+  const [syncFreq, setSyncFreq] = useState(2);
   const [role, setRole] = useState('');
   const [locale, setLocale] = useState<string>(localeDefault(isDeveloper));
   const [news, setNews] = useState<boolean | null>(null);
@@ -219,7 +220,14 @@ export function Profile(props: IProps) {
     toolChanged(toolId, true);
     setFamily(e.target.value);
   };
-
+  const handleSyncFreqChange = (e: any) => {
+    if (e.target.value < 0) e.target.value = 0;
+    if (e.target.value > 720) e.target.value = 720;
+    toolChanged(toolId, true);
+    setSyncFreq(e.target.value);
+    var hk = JSON.parse(hotKeys ?? '{}');
+    setHotKeys(JSON.stringify({ ...hk, syncFreq: e.target.value }));
+  };
   const handlePhoneChange = (e: any) => {
     toolChanged(toolId, true);
     setPhone(e.target.value);
@@ -299,6 +307,7 @@ export function Profile(props: IProps) {
                 timercountUp: timerDir,
                 playbackSpeed: speed,
                 progressbarTypeid: progBar,
+                hotKeys: hotKeys,
                 digestPreference: digest,
                 newsPreference: news,
                 sharedContentCreator: sharedContent,
@@ -510,9 +519,14 @@ export function Profile(props: IProps) {
     setProgBar(attr.progressbarTypeid);
     setHotKeys(attr.hotKeys);
     setAvatarUrl(attr.avatarUrl);
+    setSyncFreq(getSyncFreq(attr.hotKeys));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [user]);
 
+  const getSyncFreq = (hotKeys: string | null) => {
+    const hk = JSON.parse(hotKeys ?? '{}');
+    return hk.syncFreq ?? 2;
+  };
   useEffect(() => {
     if (timezone === '') {
       const myZone = moment.tz.guess();
@@ -525,7 +539,7 @@ export function Profile(props: IProps) {
   const userNotComplete = () =>
     currentUser === undefined ||
     currentUser.attributes?.name.toLowerCase() ===
-    currentUser.attributes?.email.toLowerCase();
+      currentUser.attributes?.email.toLowerCase();
 
   const requiredComplete = () =>
     (name || '') !== '' &&
@@ -684,7 +698,19 @@ export function Profile(props: IProps) {
                     }
                     label=""
                   />
-
+                  <FormControlLabel
+                    control={
+                      <input
+                        value={syncFreq}
+                        onChange={handleSyncFreqChange}
+                        type="number"
+                        min={0}
+                        max={720}
+                        style={{ width: '3em', margin: '8px' }}
+                      />
+                    }
+                    label={t.syncFrequency}
+                  />
                   {email !== '' && (
                     <FormControlLabel
                       sx={textFieldProps}
@@ -748,16 +774,16 @@ export function Profile(props: IProps) {
                 {((editId && /Add/i.test(editId)) ||
                   (currentUser &&
                     currentUser.attributes?.name !==
-                    currentUser.attributes?.email)) && (
-                    <AltButton
-                      id="profileCancel"
-                      key="cancel"
-                      aria-label={t.cancel}
-                      onClick={handleCancel}
-                    >
-                      {t.cancel}
-                    </AltButton>
-                  )}
+                      currentUser.attributes?.email)) && (
+                  <AltButton
+                    id="profileCancel"
+                    key="cancel"
+                    aria-label={t.cancel}
+                    onClick={handleCancel}
+                  >
+                    {t.cancel}
+                  </AltButton>
+                )}
                 <PriButton
                   id="profileSave"
                   key="add"
@@ -773,8 +799,8 @@ export function Profile(props: IProps) {
                   {editId && /Add/i.test(editId)
                     ? t.add
                     : userNotComplete()
-                      ? t.next
-                      : t.save}
+                    ? t.next
+                    : t.save}
                   <SaveIcon sx={{ ml: 1 }} />
                 </PriButton>
               </ActionRow>

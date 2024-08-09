@@ -220,6 +220,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="artifactCategory.chapter">
+         <segment>
+            <source>Chapter Number</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="artifactCategory.scripture">
          <segment>
             <source>Scripture</source>
@@ -259,6 +265,12 @@
       <unit id="artifactCategory.qanda">
          <segment>
             <source>Question and Answer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.title">
+         <segment>
+            <source>Title</source>
             <target/>
          </segment>
       </unit>
@@ -1072,9 +1084,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="community.backTranslationComplete">
+         <segment>
+            <source>Version {0}: Back translation: {1}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="community.deleteItem">
          <segment>
             <source>Delete Item</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.finished">
+         <segment>
+            <source>finished</source>
             <target/>
          </segment>
       </unit>
@@ -1087,6 +1111,12 @@
       <unit id="community.loading">
          <segment>
             <source>Loading:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.none">
+         <segment>
+            <source>none</source>
             <target/>
          </segment>
       </unit>
@@ -1129,6 +1159,18 @@
       <unit id="community.segment">
          <segment>
             <source>Segment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.segmentsChanged">
+         <segment>
+            <source>Changing segments will invalidate some recordings since they are linked to the segment start and end.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="community.segmentsComplete">
+         <segment>
+            <source>Version {0}: Segments complete ({2}): {1}</source>
             <target/>
          </segment>
       </unit>
@@ -2758,6 +2800,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.akuo">
+         <segment>
+            <source>Access Akuo Site</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.apiError">
          <segment>
             <source>API Error:</source>
@@ -2791,6 +2839,12 @@
       <unit id="main.continue">
          <segment>
             <source>Continue</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.course">
+         <segment>
+            <source>Access Accredited Course</source>
             <target/>
          </segment>
       </unit>
@@ -2860,6 +2914,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.googleSamples">
+         <segment>
+            <source>Sample Google spreadsheets</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.helpCenter">
          <segment>
             <source>Help Center</source>
@@ -2914,6 +2974,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.logos">
+         <segment>
+            <source>Access Logos Resources</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.media">
          <segment>
             <source>Audio</source>
@@ -2929,6 +2995,18 @@
       <unit id="main.NoLoadOffline">
          <segment>
             <source>Unable to load audio project data offline.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.openNotes">
+         <segment>
+            <source>Access Translator's Notes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.openContent">
+         <segment>
+            <source>Access Open Content</source>
             <target/>
          </segment>
       </unit>
@@ -2976,7 +3054,13 @@
       </unit>
       <unit id="main.reportWhenOnline">
          <segment>
-            <source>You must be online to report an problem.</source>
+            <source>You must be online to use this menu item.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.resources">
+         <segment>
+            <source>Access UBS Resources</source>
             <target/>
          </segment>
       </unit>
@@ -3061,6 +3145,18 @@
       <unit id="main.version">
          <segment>
             <source>Version: {0} - {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.videos">
+         <segment>
+            <source>Access Training Videos</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.walkThru">
+         <segment>
+            <source>Access Walk Through</source>
             <target/>
          </segment>
       </unit>
@@ -3210,7 +3306,7 @@
       </unit>
       <unit id="mediaTab.duration">
          <segment>
-            <source>Length (s)</source>
+            <source>Duration</source>
             <target/>
          </segment>
       </unit>
@@ -4240,6 +4336,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="peerCheck.toEnd">
+         <segment>
+            <source>Jump to end</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="permission.admin">
          <segment>
             <source>Admin</source>
@@ -4852,6 +4954,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="profile.syncFrequency">
+         <segment>
+            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="profile.timezone">
          <segment>
             <source>Time zone</source>
@@ -4950,13 +5058,19 @@
       </unit>
       <unit id="publishLevel.beta">
          <segment>
-            <source>Beta - only visible to users subscribed to app beta channel</source>
+            <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="publishLevel.betalink">
+         <segment>
+            <source>https://akuobible.org/?beta=true</source>
             <target/>
          </segment>
       </unit>
       <unit id="publishLevel.public">
          <segment>
-            <source>Public - visible to everyone using app</source>
+            <source>Public - visible to everyone using Akuo website or app</source>
             <target/>
          </segment>
       </unit>
@@ -5155,6 +5269,12 @@
       <unit id="scriptureTable.passage">
          <segment>
             <source>Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidBooks">
+         <segment>
+            <source>Invalid book codes: {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -5545,6 +5665,12 @@
       <unit id="shared.NoSaveOffline">
          <segment>
             <source>Unable to save while offline.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.notSupported">
+         <segment>
+            <source>This feature is not supported yet.</source>
             <target/>
          </segment>
       </unit>
@@ -6145,6 +6271,12 @@
       <unit id="tool.transcribe">
          <segment>
             <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="tool.verses">
+         <segment>
+            <source>Mark Verses</source>
             <target/>
          </segment>
       </unit>
@@ -6784,6 +6916,96 @@
             <target/>
          </segment>
       </unit>
+      <unit id="verse.badReferences">
+         <segment>
+            <source>ERROR: Markup contains bad references</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.btNotUpdated">
+         <segment>
+            <source>WARNING: Since back translation recordings already exist, back translation segments will not be updated to line up with verse changes.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.canceling">
+         <segment>
+            <source>Canceling verse markup</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.clipboard">
+         <segment>
+            <source>clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.copyToClipboard">
+         <segment>
+            <source>Copy to clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.issues">
+         <segment>
+            <source>The verse markup has issues. Do you want to continue?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.markVerses">
+         <segment>
+            <source>Mark Verses</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.missingReferences">
+         <segment>
+            <source>Warning: Verses in passage not included: ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.noReferences">
+         <segment>
+            <source>Warning: Some audio segments will not be included in verses</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.noSegments">
+         <segment>
+            <source>ERROR: Some verses have no segment: ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.outsideReferences">
+         <segment>
+            <source>ERROR: Some verses are outside passage: ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.pasteFormat">
+         <segment>
+            <source>Invalid number of columns on clipboard.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.reference">
+         <segment>
+            <source>Reference</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.saveVerseMarkup">
+         <segment>
+            <source>Save Verse Markup</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.startStop">
+         <segment>
+            <source>Start --&gt; Stop</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="viewMode.audioProject">
          <segment>
             <source>Audio Project Setup</source>
@@ -7369,6 +7591,12 @@
       <unit id="workflowSteps.unsaved">
          <segment>
             <source>Unsaved content</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.markVerses">
+         <segment>
+            <source>Mark Verses</source>
             <target/>
          </segment>
       </unit>

@@ -10,7 +10,13 @@ import {
   GroupD,
 } from '../model';
 import { useCheckOnline, cleanFileName } from '../utils';
-import { offlineError, useOrgWorkflowSteps, useProjectType, useRole } from '.';
+import {
+  offlineError,
+  useArtifactCategory,
+  useOrgWorkflowSteps,
+  useProjectType,
+  useRole,
+} from '.';
 import { useSnackBar } from '../hoc/SnackBar';
 import Memory from '@orbit/memory';
 import { setDefaultProj, allUsersRec } from '.';
@@ -27,14 +33,15 @@ export const useTeamCreate = () => {
   const [, setOrganization] = useGlobal('organization');
   const [, setOrgRole] = useGlobal('orgRole');
   const [, setProject] = useGlobal('project');
-  const [, offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const { showMessage } = useSnackBar();
   const { setProjectType } = useProjectType();
   const { getRoleId } = useRole();
   const teamApiPull = useTeamApiPull();
-  const checkOnline = useCheckOnline();
+  const checkOnline = useCheckOnline('Team Create');
   const workingOnItRef = useRef(false);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const { AddOrgNoteCategories } = useArtifactCategory();
 
   const memory = useMemo(
     () => coordinator.getSource('memory') as Memory,
@@ -106,9 +113,10 @@ export const useTeamCreate = () => {
         user
       ),
     ]);
-    if (!offlineOnly) await teamApiPull(orgRec.id as string); // Update slug value
     await OrgRelated(orgRec as OrganizationD);
+    await AddOrgNoteCategories(orgRec.id);
     await CreateOrgWorkflowSteps(process, orgRec.id as string);
+    if (!offlineOnly) await teamApiPull(orgRec.id as string); // Update slug value
     setOrganization(orgRec.id as string);
     setOrgRole(RoleNames.Admin);
     setDefaultProj(orgRec.id as string, memory, (pid: string) => {

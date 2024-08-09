@@ -23,7 +23,7 @@ import {
   useBible,
   orgDefaultLangProps,
   pubDataCopyright,
-  pubDataNoteLabel,
+  // pubDataNoteLabel,
   pubDataLangProps,
 } from '../crud';
 import { useBibleMedia } from '../crud/useBibleMedia';
@@ -73,7 +73,7 @@ export function PublishExpansion(props: IProps) {
   const [bibleName, setBibleName] = useState('');
   const [description, setDescription] = useState('');
   const [copyright, setCopyright] = useState('');
-  const [noteLabel, setNoteLabel] = useState('');
+  // const [noteLabel, setNoteLabel] = useState('');
   const { getDefault } = useOrgDefaults();
   const [language, setLanguagex] = React.useState<ILanguage>(initLang);
   const languageRef = useRef<ILanguage>(initLang);
@@ -124,7 +124,7 @@ export function PublishExpansion(props: IProps) {
 
     setLanguage(lang, true);
     setCopyright(getPublishingData(pubDataCopyright, bible) as string);
-    setNoteLabel(getPublishingData(pubDataNoteLabel, bible) as string);
+    // setNoteLabel(getPublishingData(pubDataNoteLabel, bible) as string);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [team, bible]);
 
@@ -165,12 +165,12 @@ export function PublishExpansion(props: IProps) {
     setValue(pubDataCopyright, value);
     return '';
   };
-  const handleChangeNoteLabel = (event: any) => {
-    const value = event.target.value as string;
-    setNoteLabel(value);
-    setValue(pubDataNoteLabel, value);
-    return '';
-  };
+  // const handleChangeNoteLabel = (event: any) => {
+  //   const value = event.target.value as string;
+  //   setNoteLabel(value);
+  //   setValue(pubDataNoteLabel, value);
+  //   return '';
+  // };
 
   const onMyRecording = (recording: boolean) => {
     if (recording) {
@@ -299,6 +299,7 @@ export function PublishExpansion(props: IProps) {
               onChange={handleChangeDescription}
               variant="outlined"
               sx={{ width: '100%', marginTop: '5px' }}
+              disabled={readonly}
             />
             <TextField
               id="copyright"
@@ -307,15 +308,16 @@ export function PublishExpansion(props: IProps) {
               onChange={handleChangeCopyright}
               variant="outlined"
               sx={{ width: '100%', marginTop: '8px' }}
+              disabled={readonly}
             />
-            <TextField
+            {/* <TextField
               id="notelabel"
               label={t.notesLabel}
               value={noteLabel ?? ''}
               onChange={handleChangeNoteLabel}
               variant="outlined"
               sx={{ width: '100%', marginTop: '8px' }}
-            />
+            /> */}
           </FormGroup>
         </AccordionDetails>
       </Accordion>

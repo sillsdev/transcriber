@@ -15,8 +15,9 @@ import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
 import { getVernacularMediaRec, getMediaShared } from '../../crud/media';
 import { getNextStep } from '../../crud/getNextStep';
-import { findRecord, getStepComplete } from '../../crud';
-import { toCamel } from '../../utils';
+import { findRecord } from '../../crud/tryFindRecord';
+import { getStepComplete } from '../../crud/getStepComplete';
+import { toCamel } from '../../utils/toCamel';
 import { ISTFilterState } from './filterMenu';
 import { PassageTypeEnum } from '../../model/passageType';
 import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
@@ -137,27 +138,48 @@ export const isPassageFiltered = (
   );
 };
 
-export const getSheet = (
-  plan: string,
-  sections: SectionD[],
-  passages: PassageD[],
-  flat: boolean,
-  projectShared: boolean,
-  memory: Memory,
-  orgWorkflowSteps: OrgWorkflowStepD[],
-  wfStr: IWorkflowStepsStrings,
-  filterState: ISTFilterState,
-  minSection: number,
-  hidePublishing: boolean,
-  doneStepId: string,
-  getDiscussionCount: (passageId: string, stepId: string) => number,
+export interface GetSheetProps {
+  plan: string;
+  sections: SectionD[];
+  passages: PassageD[];
+  flat: boolean;
+  projectShared: boolean;
+  memory: Memory;
+  orgWorkflowSteps: OrgWorkflowStepD[];
+  wfStr: IWorkflowStepsStrings;
+  filterState: ISTFilterState;
+  minSection: number;
+  hidePublishing: boolean;
+  doneStepId: string;
+  getDiscussionCount: (passageId: string, stepId: string) => number;
   graphicFind: (
     rec: InitializedRecord,
     ref?: string
-  ) => { uri?: string; rights?: string; url?: string; color?: string },
-  getPublishLevel: (publishTo: string) => PublishLevelEnum,
-  current?: ISheet[]
-) => {
+  ) => { uri?: string; rights?: string; url?: string; color?: string };
+  getPublishLevel: (publishTo: string) => PublishLevelEnum;
+  readSharedResource: (passId: string) => SharedResourceD | undefined;
+  current?: ISheet[];
+}
+
+export const getSheet = ({
+  plan,
+  sections,
+  passages,
+  flat,
+  projectShared,
+  memory,
+  orgWorkflowSteps,
+  wfStr,
+  filterState,
+  minSection,
+  hidePublishing,
+  doneStepId,
+  getDiscussionCount,
+  graphicFind,
+  getPublishLevel,
+  readSharedResource,
+  current,
+}: GetSheetProps) => {
   const myWork = current || Array<ISheet>();
   let plansections = sections
     .filter((s) => related(s, 'plan') === plan)
@@ -250,7 +272,7 @@ export const getSheet = (
             'sharedresource',
             related(passage, 'sharedResource')
           ) as SharedResourceD;
-        }
+        } else item.sharedResource = readSharedResource(passage.id);
         let mediaRec: MediaFileD | null;
         if (item.sharedResource) {
           mediaRec = getVernacularMediaRec(

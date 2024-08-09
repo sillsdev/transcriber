@@ -20,11 +20,21 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 const StyledIcon = styled(IconButton)<IconButtonProps>(({ theme }) => ({
   color: theme.palette.primary.light,
 }));
-export const MovementIcon = <FontAwesomeIcon icon={faArchway} />;
-export const BookIcon = <FontAwesomeIcon icon={faBook} />;
-export const AltBookIcon = <FontAwesomeIcon icon={faBookOpen} />;
-export const ChapterNumberIcon = <FontAwesomeIcon icon={faHashtag} />;
-export const NoteIcon = <FontAwesomeIcon icon={faMessage as IconProp} />;
+export const MovementIcon = (
+  <FontAwesomeIcon icon={faArchway} data-testid="move-icon" />
+);
+export const BookIcon = (
+  <FontAwesomeIcon icon={faBook} data-testid="book-icon" />
+);
+export const AltBookIcon = (
+  <FontAwesomeIcon icon={faBookOpen} data-testid="alt-icon" />
+);
+export const ChapterNumberIcon = (
+  <FontAwesomeIcon icon={faHashtag} data-testid="chap-icon" />
+);
+export const NoteIcon = (
+  <FontAwesomeIcon icon={faMessage as IconProp} data-testid="note-icon" />
+);
 
 export const PublishIcon = (props: IconButtonProps) => (
   <StyledIcon size="small" {...props}>

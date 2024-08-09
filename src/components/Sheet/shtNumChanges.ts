@@ -1,9 +1,5 @@
-import {
-  isSectionRow,
-  isPassageRow,
-  isSectionUpdated,
-  isPassageUpdated,
-} from '.';
+import { isSectionRow, isPassageRow } from './isSectionPassage';
+import { isSectionUpdated, isPassageUpdated } from './isSectionPassageUpdated';
 import { ISheet } from '../../model';
 
 export const shtNumChanges = (sheet: ISheet[], lastSaved: string | undefined) =>

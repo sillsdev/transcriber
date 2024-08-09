@@ -3,11 +3,18 @@ import {
   IPlanSheetStrings,
   ISheet,
   IViewModeStrings,
+  IwsKind,
   OptionType,
 } from '../../model';
 import { ICell, ICellChange } from './PlanSheet';
 import { planSheetSelector, viewModeSelector } from '../../selector';
-import { related, useOrganizedBy, useRole, ArtifactTypeSlug, useArtifactType } from '../../crud';
+import {
+  related,
+  useOrganizedBy,
+  useRole,
+  ArtifactTypeSlug,
+  useArtifactType,
+} from '../../crud';
 import { rowTypes } from './rowTypes';
 import { StageReport } from '../../control';
 import { Avatar, Badge } from '@mui/material';
@@ -32,6 +39,7 @@ import { positiveWholeOnly, stringAvatar } from '../../utils';
 import { TitleEdit } from './TitleEdit';
 import { getPubRefs } from './getPubRefs';
 import { PublishButton } from './PublishButton';
+import { NoteIcon } from '../../control/PlanIcons';
 
 type ICellEditor = (props: any) => JSX.Element;
 type IRow = (string | number)[];
@@ -152,9 +160,15 @@ export const usePlanSheetFill = ({
     inlinePassages,
     hidePublishing,
   });
-  const { isPassageType, isSectionType, isMovement, isBook, isAltBook, isBeta } =
-    rowTypes(rowInfo);
-  const { localizedArtifactType } = useArtifactType()
+  const {
+    isPassageType,
+    isSectionType,
+    isMovement,
+    isBook,
+    isAltBook,
+    isBeta,
+  } = rowTypes(rowInfo);
+  const { localizedArtifactType } = useArtifactType();
   const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
   const tv: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
 
@@ -242,35 +256,35 @@ export const usePlanSheetFill = ({
     calcClassName,
     readonly,
   }: StepCellProps) =>
-  ({
-    value: passage &&
-      refCol > 0 &&
-      !isPublishingTitle(row[refCol].toString(), inlinePassages) && (
-        <Badge
-          badgeContent={rowInfo[rowIndex].discussionCount}
-          color="secondary"
-        >
-          <StageReport
-            onClick={readonly ? undefined : handlePassageDetail(rowIndex)}
-            step={rowInfo[rowIndex].step || ''}
-            tip={tv.gotowork}
-          />
-        </Badge>
-      ),
-    readOnly: true,
-    className: calcClassName,
-  } as ICell);
+    ({
+      value: passage &&
+        refCol > 0 &&
+        !isPublishingTitle(row[refCol].toString(), inlinePassages) && (
+          <Badge
+            badgeContent={rowInfo[rowIndex].discussionCount}
+            color="secondary"
+          >
+            <StageReport
+              onClick={readonly ? undefined : handlePassageDetail(rowIndex)}
+              step={rowInfo[rowIndex].step || ''}
+              tip={tv.gotowork}
+            />
+          </Badge>
+        ),
+      readOnly: true,
+      className: calcClassName,
+    } as ICell);
 
   const assignmentCell = (rowIndex: number, calcClassName: string) =>
-  ({
-    value: (
-      <MemoizedTaskAvatar
-        assigned={rowInfo[rowIndex].transcriber?.id || ''}
-      />
-    ),
-    readOnly: true,
-    className: calcClassName,
-  } as ICell);
+    ({
+      value: (
+        <MemoizedTaskAvatar
+          assigned={rowInfo[rowIndex].transcriber?.id || ''}
+        />
+      ),
+      readOnly: true,
+      className: calcClassName,
+    } as ICell);
 
   interface ActionValueProps {
     passage: boolean;
@@ -331,24 +345,25 @@ export const usePlanSheetFill = ({
     canEdit,
     canPlay,
   }: ActionCellProps) =>
-  ({
-    value: actionValue({
-      passage,
-      rowIndex,
-      srcMediaId,
-      mediaPlaying,
-      canEdit,
-      canPlay,
-    }),
-    readOnly: true,
-    className: calcClassName,
-  } as ICell);
+    ({
+      value: actionValue({
+        passage,
+        rowIndex,
+        srcMediaId,
+        mediaPlaying,
+        canEdit,
+        canPlay,
+      }),
+      readOnly: true,
+      className: calcClassName,
+    } as ICell);
 
   const TitleValue = (
     e: string | number,
     rowIndex: number,
     cellIndex: number,
-    anyRecording: boolean
+    anyRecording: boolean,
+    isNote: boolean = false
   ) => {
     const handleTextChange = (value: string) => {
       const change: ICellChange = {
@@ -363,21 +378,40 @@ export const usePlanSheetFill = ({
     const handleMediaIdChange = (mediaId: string) => {
       titleMediaChanged(rowIndex, mediaId);
     };
-
+    const noteTitle = (e: string) => {
+      return (
+        <>
+          {'\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0'}
+          {NoteIcon}
+          {'\u00A0'}
+          {e}
+        </>
+      );
+    };
     return (
-      <TitleEdit
-        title={e as string}
-        mediaId={
-          rowInfo[rowIndex]?.titleMediaId?.id ||
-          rowInfo[rowIndex]?.mediaId?.id ||
-          ''
-        }
-        ws={rowInfo[rowIndex]}
-        anyRecording={anyRecording}
-        onRecording={onRecording}
-        onTextChange={handleTextChange}
-        onMediaIdChange={handleMediaIdChange}
-      />
+      <>
+        {isNote && noteTitle(e as string)}
+        {!isNote && (
+          <TitleEdit
+            title={e as string}
+            mediaId={
+              rowInfo[rowIndex]?.titleMediaId?.id ||
+              rowInfo[rowIndex]?.mediaId?.id ||
+              ''
+            }
+            ws={rowInfo[rowIndex]}
+            anyRecording={anyRecording}
+            onRecording={onRecording}
+            onTextChange={handleTextChange}
+            onMediaIdChange={handleMediaIdChange}
+            passageId={
+              rowInfo[rowIndex].kind === IwsKind.Passage
+                ? rowInfo[rowIndex].passage?.id
+                : undefined
+            }
+          />
+        )}
+      </>
     );
   };
 
@@ -416,7 +450,7 @@ export const usePlanSheetFill = ({
       <Avatar
         {...stringAvatar(
           rowInfo[rowIndex].reference ||
-          `${organizedBy} ${rowInfo[rowIndex].sectionSeq}`,
+            `${organizedBy} ${rowInfo[rowIndex].sectionSeq}`,
           { ...pointer, ...border }
         )}
         variant="rounded"
@@ -460,119 +494,139 @@ export const usePlanSheetFill = ({
       anyRecording,
       sharedRes,
     }: RowCellsProps) =>
-      (e: string | number, cellIndex: number) => {
-        const bookCol = colSlugs.indexOf('book');
-        const titleCol = colSlugs.indexOf('title');
-        const descCol = colSlugs.indexOf('comment');
-        if (cellIndex === SectionSeqCol && section && !hidePublishing) {
-          return {
-            value: e,
-            component: (<>{sectionMap.get(e as number) || ''}</>) as ReactElement,
-            forceComponent: true,
-            readOnly: true,
-            className: calcClassName,
-          };
-        }
-        if (cellIndex === bookCol && passage)
-          return {
-            value: e,
-            readOnly: readonly,
-            className: 'book ' + calcClassName,
-            dataEditor: bookEditor,
-          };
-        if (
-          cellIndex === titleCol &&
-          !passage &&
-          !hidePublishing &&
-          canHidePublishing
-        ) {
-          return {
-            value: e,
-            component: TitleValue(e, rowIndex, cellIndex, anyRecording),
-            forceComponent: true,
-            readOnly: true,
-            className: calcClassName,
-          };
-        }
-        if (
-          /CHNUM/.test(rowData[rowIndex][refCol] as string) &&
-          !hidePublishing &&
-          canHidePublishing
-        ) {
-          if (cellIndex === titleCol) {
-            return {
-              value: '',
-              component: TitleValue(
-                rowData[rowIndex][descCol] as string,
-                rowIndex,
-                descCol,
-                anyRecording
-              ),
-              forceComponent: true,
-              readOnly: true,
-              className: calcClassName,
-            };
-          } else if (cellIndex === descCol) {
-            return {
-              value: '',
-              readOnly: readonly,
-              className: calcClassName,
-            };
-          }
-        }
-
-        if (cellIndex === refCol) {
-          if (
-            readonly ||
-            !passage ||
-            (!inlinePassages &&
-              passageTypeFromRef(e as string, inlinePassages) !==
-              PassageTypeEnum.PASSAGE)
-          ) {
-            return {
-              value: e,
-              component: (<>{refValue(e)}</>) as ReactElement,
-              forceComponent: true,
-              readOnly: true,
-              className:
-                calcClassName +
-                (passage
-                  ? ' ref' +
-                  (bookCol > 0 && refErrTest(e) ? 'Err' : '') +
-                  (sharedRes ? ' shared' : '')
-                  : ''),
-            };
-          } else {
-            return {
-              value: e,
-              className:
-                calcClassName +
-                (passage
-                  ? ' ref' +
-                  (bookCol > 0 && refErrTest(e) ? 'Err' : '') +
-                  (sharedRes ? ' shared' : '')
-                  : ''),
-            };
-          }
-        }
+    (e: string | number, cellIndex: number) => {
+      const bookCol = colSlugs.indexOf('book');
+      const titleCol = colSlugs.indexOf('title');
+      const descCol = colSlugs.indexOf('comment');
+      if (cellIndex === SectionSeqCol && section && !hidePublishing) {
         return {
           value: e,
-          readOnly:
-            readonly ||
-              (cellIndex === SectionSeqCol && (e as number) < 0) ||
-              cellIndex === passageSeqCol ||
-              (sharedRes && offline) ||
-              passage
-              ? false
-              : section
-                ? cellIndex > 1
-                : cellIndex <= 1,
-          className:
-            (cellIndex === SectionSeqCol || cellIndex === passageSeqCol
-              ? 'num '
-              : '') + calcClassName,
+          component: (<>{sectionMap.get(e as number) || ''}</>) as ReactElement,
+          forceComponent: true,
+          readOnly: true,
+          className: calcClassName,
         };
+      }
+      if (cellIndex === bookCol && passage)
+        return {
+          value: e,
+          readOnly: readonly,
+          className: 'book ' + calcClassName,
+          dataEditor: bookEditor,
+        };
+      if (
+        cellIndex === titleCol &&
+        !passage &&
+        !hidePublishing &&
+        canHidePublishing
+      ) {
+        return {
+          value: e,
+          component: TitleValue(e, rowIndex, cellIndex, anyRecording),
+          forceComponent: true,
+          readOnly: true,
+          className: calcClassName,
+        };
+      }
+      if (
+        /CHNUM/.test(rowData[rowIndex][refCol] as string) &&
+        !hidePublishing &&
+        canHidePublishing
+      ) {
+        if (cellIndex === titleCol) {
+          return {
+            value: '',
+            component: TitleValue(
+              rowData[rowIndex][descCol] as string,
+              rowIndex,
+              descCol,
+              anyRecording
+            ),
+            forceComponent: true,
+            readOnly: true,
+            className: calcClassName,
+          };
+        } else if (cellIndex === descCol) {
+          return {
+            value: '',
+            readOnly: readonly,
+            className: calcClassName,
+          };
+        }
+      }
+      if (
+        /NOTE/.test(rowData[rowIndex][refCol] as string) &&
+        !hidePublishing &&
+        canHidePublishing &&
+        cellIndex === titleCol
+      ) {
+        return {
+          value: e,
+          component: TitleValue(
+            rowInfo[rowIndex].sharedResource?.attributes.title || '',
+            rowIndex,
+            cellIndex,
+            anyRecording,
+            true
+          ),
+          forceComponent: true,
+          readOnly: true,
+          className: calcClassName,
+        };
+      }
+
+      if (cellIndex === refCol) {
+        if (
+          readonly ||
+          !passage ||
+          (!inlinePassages &&
+            passageTypeFromRef(e as string, inlinePassages) !==
+              PassageTypeEnum.PASSAGE)
+        ) {
+          return {
+            value: e,
+            component: (<>{refValue(e)}</>) as ReactElement,
+            forceComponent: true,
+            readOnly: true,
+            className:
+              calcClassName +
+              (passage
+                ? ' ref' +
+                  (bookCol > 0 && refErrTest(e) ? 'Err' : '') +
+                  (sharedRes ? ' shared' : '')
+                : ''),
+          };
+        } else {
+          return {
+            value: e,
+            className:
+              calcClassName +
+              (passage
+                ? ' ref' +
+                  (bookCol > 0 && refErrTest(e) ? 'Err' : '') +
+                  (sharedRes ? ' shared' : '')
+                : ''),
+          };
+        }
+      }
+      return {
+        value: e,
+        readOnly:
+          readonly ||
+          (cellIndex === SectionSeqCol && (e as number) < 0) ||
+          cellIndex === passageSeqCol ||
+          (sharedRes && offline) ||
+          passage
+            ? false
+            : section
+            ? cellIndex > 1
+            : cellIndex <= 1,
+        className:
+          (cellIndex === SectionSeqCol || cellIndex === passageSeqCol
+            ? 'num '
+            : '') + calcClassName,
       };
+    };
 
   interface ExtrasCellProps {
     section: boolean;
@@ -603,47 +657,47 @@ export const usePlanSheetFill = ({
   }: ExtrasCellProps) =>
     readonly
       ? ({
-        value: '',
-        readOnly: true,
-      } as ICell)
+          value: '',
+          readOnly: true,
+        } as ICell)
       : ({
-        value: (
-          <PlanActionMenu
-            rowIndex={rowIndex}
-            isSection={section}
-            isPassage={passage}
-            firstMovement={firstMovement}
-            psgType={rowInfo[rowIndex].passageType}
-            organizedBy={organizedBy}
-            sectionSequenceNumber={
-              sectionMap.get(row[SectionSeqCol] as number) ??
-              positiveWholeOnly(row[SectionSeqCol] as number)
-            }
-            passageSequenceNumber={positiveWholeOnly(
-              row[passageSeqCol >= 0 ? passageSeqCol : 0] as number
-            )}
-            readonly={readonly || check.length > 0}
-            onDelete={onDelete}
-            onPlayStatus={onPlayStatus}
-            onAudacity={onAudacity}
-            onRecord={onRecord}
-            onUpload={onUpload}
-            onAssign={onAssign}
-            onFirstMovement={onFirstMovement}
-            canAssign={userIsAdmin && !movement && !book}
-            canDelete={userIsAdmin && (!offline || offlineOnly)}
-            active={active - 1 === rowIndex}
-            onDisableFilter={
-              !readonly && filtered ? disableFilter : undefined
-            }
-            showIcon={showIcon(filtered, offline && !offlineOnly, rowIndex)}
-            onAction={onAction}
-          />
-        ),
-        // readOnly: true,
-        className: calcClassName,
-        dataEditor: ActivateCell,
-      } as ICell);
+          value: (
+            <PlanActionMenu
+              rowIndex={rowIndex}
+              isSection={section}
+              isPassage={passage}
+              firstMovement={firstMovement}
+              psgType={rowInfo[rowIndex].passageType}
+              organizedBy={organizedBy}
+              sectionSequenceNumber={
+                sectionMap.get(row[SectionSeqCol] as number) ??
+                positiveWholeOnly(row[SectionSeqCol] as number)
+              }
+              passageSequenceNumber={positiveWholeOnly(
+                row[passageSeqCol >= 0 ? passageSeqCol : 0] as number
+              )}
+              readonly={readonly || check.length > 0}
+              onDelete={onDelete}
+              onPlayStatus={onPlayStatus}
+              onAudacity={onAudacity}
+              onRecord={onRecord}
+              onUpload={onUpload}
+              onAssign={onAssign}
+              onFirstMovement={onFirstMovement}
+              canAssign={userIsAdmin && !movement && !book}
+              canDelete={userIsAdmin && (!offline || offlineOnly)}
+              active={active - 1 === rowIndex}
+              onDisableFilter={
+                !readonly && filtered ? disableFilter : undefined
+              }
+              showIcon={showIcon(filtered, offline && !offlineOnly, rowIndex)}
+              onAction={onAction}
+            />
+          ),
+          // readOnly: true,
+          className: calcClassName,
+          dataEditor: ActivateCell,
+        } as ICell);
 
   const eachRow =
     ({
@@ -655,92 +709,92 @@ export const usePlanSheetFill = ({
       filtered,
       anyRecording,
     }: IFillProps) =>
-      (row: IRow, rowIndex: number) => {
-        const refCol = colSlugs.indexOf('reference');
-        const section = isSectionType(rowIndex);
-        const passage = isPassageType(rowIndex);
-        const movement = isMovement(rowIndex);
-        const beta = isBeta(rowIndex);
-        const book = isBook(rowIndex) || isAltBook(rowIndex);
-        const iscurrent: string =
-          currentRow === rowIndex + 1 ? ' currentrow ' : '';
-        const sharedRes =
-          passage &&
-          Boolean(rowInfo[rowIndex].sharedResource) &&
-          related(rowInfo[rowIndex].sharedResource, 'passage') !==
+    (row: IRow, rowIndex: number) => {
+      const refCol = colSlugs.indexOf('reference');
+      const section = isSectionType(rowIndex);
+      const passage = isPassageType(rowIndex);
+      const movement = isMovement(rowIndex);
+      const beta = isBeta(rowIndex);
+      const book = isBook(rowIndex) || isAltBook(rowIndex);
+      const iscurrent: string =
+        currentRow === rowIndex + 1 ? ' currentrow ' : '';
+      const sharedRes =
+        passage &&
+        Boolean(rowInfo[rowIndex].sharedResource) &&
+        related(rowInfo[rowIndex].sharedResource, 'passage') !==
           rowInfo[rowIndex].passage?.id;
 
-        const calcClassName =
-          iscurrent +
-          (section
-            ? 'set' +
+      const calcClassName =
+        iscurrent +
+        (section
+          ? 'set' +
             (passage ? 'p' : '') +
             (movement ? ' movement' : book ? ' bk' : '')
-            : 'pass');
+          : 'pass');
 
-        const sheetRow = [
-          stepCell({
-            passage,
-            row,
-            refCol,
+      const sheetRow = [
+        stepCell({
+          passage,
+          row,
+          refCol,
+          rowIndex,
+          calcClassName,
+          readonly: anyRecording || (sharedRes && offline),
+        }),
+        assignmentCell(rowIndex, calcClassName),
+        actionCell({
+          passage,
+          rowIndex,
+          calcClassName:
+            calcClassName + (beta && !hidePublishing ? ' beta' : ''),
+          srcMediaId,
+          mediaPlaying,
+          canPlay:
+            !anyRecording && (rowInfo[rowIndex].mediaId?.id || '') !== '',
+          canEdit: !anyRecording && !(sharedRes && offline),
+        }),
+      ];
+      if (!hidePublishing && canHidePublishing)
+        sheetRow.push(
+          graphicCell(
             rowIndex,
             calcClassName,
-            readonly: anyRecording || (sharedRes && offline),
-          }),
-          assignmentCell(rowIndex, calcClassName),
-          actionCell({
-            passage,
-            rowIndex,
-            calcClassName: calcClassName +
-              (beta && !hidePublishing ? ' beta' : ''),
-            srcMediaId,
-            mediaPlaying,
-            canPlay:
-              !anyRecording && (rowInfo[rowIndex].mediaId?.id || '') !== '',
-            canEdit: !anyRecording && !(sharedRes && offline),
-          }),
-        ];
-        if (!hidePublishing && canHidePublishing)
-          sheetRow.push(
-            graphicCell(
-              rowIndex,
-              calcClassName,
-              anyRecording || (sharedRes && offline)
-            )
-          );
-        row
-          .slice(0, 6) // quits when it runs out of columns
-          .map(
-            rowCells({
-              section,
-              passage,
-              refCol,
-              calcClassName,
-              rowIndex,
-              anyRecording,
-              sharedRes,
-            })
+            anyRecording || (sharedRes && offline)
           )
-          .forEach((c) => {
-            sheetRow.push(c);
-          });
-        sheetRow.push(
-          extrasCell({
+        );
+      row
+        .slice(0, 6) // quits when it runs out of columns
+        .map(
+          rowCells({
             section,
             passage,
-            rowIndex,
+            refCol,
             calcClassName,
-            row,
-            check,
-            movement,
-            book,
-            active,
-            filtered,
-            readonly: anyRecording || (sharedRes && offline),
+            rowIndex,
+            anyRecording,
+            sharedRes,
           })
-        );
-        return sheetRow;
-      };
+        )
+        .forEach((c) => {
+          sheetRow.push(c);
+        });
+      sheetRow.push(
+        extrasCell({
+          section,
+          passage,
+          rowIndex,
+          calcClassName,
+          row,
+          check,
+          movement,
+          book,
+          active,
+          filtered,
+          readonly: anyRecording || (sharedRes && offline),
+        })
+      );
+      return sheetRow;
+    };
 
   if (rowData.length > 0 && rowInfo.length > 0) {
     if (!filtered) {

@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import { MediaFileD } from '../../model';
-import {
-  ArtifactTypeSlug,
-  useArtifactType,
-  related,
-  mediaFileName,
-} from '../../crud';
+import { mediaFileName } from '../../crud/media';
+import { useArtifactType } from '../../crud/useArtifactType';
+import { related } from '../../crud/related';
+import { ArtifactTypeSlug } from '../../crud/artifactTypeSlug';
 import { IRow } from '../../context/PassageDetailContext';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import {
@@ -24,6 +22,9 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { consultantSelector } from '../../selector';
 import PlayArrow from '@mui/icons-material/PlayArrow';
 import CancelPlay from '@mui/icons-material/Clear';
+import { prettySegment } from '../../utils/prettySegment';
+import ArtifactStatus from '../ArtifactStatus';
+import { getSegments, NamedRegions } from '../../utils/namedSegments';
 
 const StyledCell = styled(TableCell)<TableCellProps>(({ theme }) => ({
   padding: '4px',
@@ -42,6 +43,7 @@ export default function ConsultantCheckReview({
 }: IProps) {
   const { rowData, mediafileId } = usePassageDetailContext();
   const [allMedia, setAllMedia] = useState<MediaFileD[]>([]);
+  const [segments, setSegments] = useState('');
   const { localizedArtifactType } = useArtifactType();
   const t = useSelector(consultantSelector, shallowEqual);
 
@@ -88,10 +90,21 @@ export default function ConsultantCheckReview({
       setAllMedia(media);
       onPlayer && onPlayer('');
     }
+
+    if (item === ArtifactTypeSlug.PhraseBackTranslation) {
+      const mediaRec =
+        rowData[0]?.mediafile &&
+        mediafileId === rowData[0]?.mediafile.id &&
+        rowData[0]?.mediafile;
+      if (mediaRec) {
+        const defaultSegments = mediaRec?.attributes?.segments;
+        setSegments(getSegments(NamedRegions.BackTranslation, defaultSegments));
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item]);
 
-  const hasTranscription = allMedia.some(m => m.attributes.transcription);
+  const hasTranscription = allMedia.some((m) => m.attributes.transcription);
 
   return (
     <Stack id="check-review">
@@ -99,37 +112,54 @@ export default function ConsultantCheckReview({
         <Typography data-testid="no-media">{t.noMedia}</Typography>
       )}
       {allMedia.length > 0 && (
-        <Table>
-          {allMedia.length > 1 && hasTranscription && (
-            <TableHead>
-              <TableRow>
-                <StyledCell />
-                <StyledCell>{t.transcription}</StyledCell>
-              </TableRow>
-            </TableHead>
+        <>
+          {item === ArtifactTypeSlug.PhraseBackTranslation && (
+            <ArtifactStatus
+              recordType={item}
+              currentVersion={rowData[0].mediafile.attributes?.versionNumber}
+              rowData={rowData}
+              segments={segments}
+            />
           )}
-          <TableBody>
-            {allMedia.map((m) => (
-              <TableRow key={m.id}>
-                <StyledCell sx={{ width: '40px' }}>
-                  <IconButton onClick={handleSelect(m.id)} data-testid="play">
-                    {m.id !== playId ? <PlayArrow /> : <CancelPlay />}
-                  </IconButton>
-                </StyledCell>
-                <StyledCell>
-                  {hasTranscription && (
-                    <Typography
-                      data-testid="transcription"
-                      sx={{ whiteSpace: 'break-spaces' }}
-                    >
-                      {m.attributes.transcription ?? t.noTranscription}
-                    </Typography>
-                  )}
-                </StyledCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+          <Table>
+            {allMedia.length > 1 && hasTranscription && (
+              <TableHead>
+                <TableRow>
+                  <StyledCell />
+                  <StyledCell>{t.transcription}</StyledCell>
+                </TableRow>
+              </TableHead>
+            )}
+            <TableBody>
+              {allMedia.map((m) => (
+                <TableRow key={m.id}>
+                  <StyledCell sx={{ width: '40px' }}>
+                    <>
+                      <IconButton
+                        onClick={handleSelect(m.id)}
+                        data-testid="play"
+                      >
+                        {m.id !== playId ? <PlayArrow /> : <CancelPlay />}
+                      </IconButton>
+                      {item === ArtifactTypeSlug.PhraseBackTranslation &&
+                        prettySegment(m.attributes.sourceSegments)}
+                    </>
+                  </StyledCell>
+                  <StyledCell>
+                    {hasTranscription && (
+                      <Typography
+                        data-testid="transcription"
+                        sx={{ whiteSpace: 'break-spaces' }}
+                      >
+                        {m.attributes.transcription ?? t.noTranscription}
+                      </Typography>
+                    )}
+                  </StyledCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </>
       )}
     </Stack>
   );

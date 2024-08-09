@@ -180,6 +180,7 @@ export const Sources = async (
     coordinator.addStrategy(new EventLoggingStrategy({ name: 'logging' }));
 
   let remote: JSONAPISource = {} as JSONAPISource;
+  let datachangeremote: JSONAPISource = {} as JSONAPISource;
 
   const offline = !tokenCtx.state.accessToken;
 
@@ -205,10 +206,6 @@ export const Sources = async (
             useRemoteId: true,
           },
         });
-    // remote.requestProcessor.serializer.resourceKey = () => {
-    //   return 'remoteId';
-    // };
-
     if (!coordinator.sourceNames.includes('remote')) {
       coordinator.addSource(remote);
     }
@@ -295,6 +292,36 @@ export const Sources = async (
           blocking: true,
         })
       );
+
+    datachangeremote = coordinator.sourceNames.includes('datachanges')
+      ? (coordinator.getSource('datachanges') as JSONAPISource)
+      : new JSONAPISource({
+          schema: memory.schema,
+          keyMap: memory.keyMap,
+          bucket: new IndexedDBBucket({
+            namespace:
+              'datachanges-' +
+              (tokData.sub || '').replace(/\|/g, '-') +
+              '-bucket',
+          }),
+          name: 'datachanges',
+          namespace: 'api',
+          host: API_CONFIG.host,
+          serializerSettingsFor: serializersSettings(),
+          defaultFetchSettings: {
+            headers: {
+              Authorization: 'Bearer ' + tokenCtx.state.accessToken,
+              'X-FP': fingerprint,
+            },
+            timeout: 100000,
+          },
+          defaultTransformOptions: {
+            useRemoteId: true,
+          },
+        });
+    if (!coordinator.sourceNames.includes('datachanges')) {
+      coordinator.addSource(datachangeremote);
+    }
   } //!offline
   if (!coordinator.activated)
     await coordinator.activate({ logLevel: LogLevel.Warnings });

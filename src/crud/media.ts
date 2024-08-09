@@ -13,25 +13,20 @@ import {
   PassageD,
 } from '../model';
 import Memory from '@orbit/memory';
-import {
-  related,
-  VernacularTag,
-  findRecord,
-  parseRef,
-  getMediaInPlans,
-  getStepComplete,
-  afterStep,
-} from '.';
-import {
-  cleanFileName,
-  updateXml,
-  burritoMetadata,
-  FormatsType,
-  removeExtension,
-  mimeMap,
-  dataPath,
-  PathType,
-} from '../utils';
+import { related } from './related';
+import { VernacularTag } from './useArtifactType';
+import { findRecord } from './tryFindRecord';
+import { parseRef } from './passage';
+import { getMediaInPlans } from './getMediaInPlans';
+import { getStepComplete } from './getStepComplete';
+import { afterStep } from './getNextStep';
+import { cleanFileName } from '../utils/cleanFileName';
+import { updateXml } from '../utils/updateXml';
+import { burritoMetadata } from '../utils/burritoMetadata';
+import { FormatsType } from '../utils/burritoMetadata';
+import { removeExtension } from '../utils/removeExtension';
+import { mimeMap } from '../utils/loadBlob';
+import { dataPath, PathType } from '../utils/dataPath';
 import moment from 'moment';
 import eaf from '../utils/transcriptionEaf';
 import path from 'path-browserify';

@@ -2,9 +2,20 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import ConsultantCheckReview from './ConsultantCheckReview';
 import { ArtifactTypeSlug } from '../../crud/artifactTypeSlug';
 import { IRow } from '../../context/PassageDetailContext';
+import { MediaFile } from '../../model/mediaFile';
+interface ArtifactStatusProps {
+  recordType: ArtifactTypeSlug;
+  currentVersion: number;
+  segments: string;
+}
 
 let mockRowData: IRow[] = [];
 var mockMediafileId = '';
+var mockbtDefaultSegParams = {
+  silenceThreshold: 0.004,
+  timeThreshold: 0.12,
+  segLenThreshold: 4.5,
+};
 
 jest.mock('../../crud', () => ({
   ArtifactTypeSlug: jest.requireActual('../../crud/artifactTypeSlug')
@@ -20,6 +31,8 @@ jest.mock('../../crud', () => ({
     }),
   }),
   related: jest.requireActual('../../crud/related').related,
+  mediaFileName: (mf: MediaFile | undefined) =>
+    mf?.attributes?.s3file || mf?.attributes?.originalFile || '',
 }));
 jest.mock('../../context/usePassageDetailContext', () => () => ({
   rowData: mockRowData,
@@ -35,6 +48,31 @@ jest.mock('react-redux', () => ({
     noTranscription: 'No Transcription',
   }),
   shallowEqual: jest.fn(),
+}));
+jest.mock('./PassageDetailItem', () => ({
+  btDefaultSegParams: mockbtDefaultSegParams,
+}));
+jest.mock('../../crud/useOrgDefaults', () => ({
+  useOrgDefaults: () => ({
+    getOrgDefault: jest.fn().mockReturnValue(mockbtDefaultSegParams),
+  }),
+}));
+jest.mock('../../crud/useArtifactType', () => ({
+  useArtifactType: () => ({
+    localizedArtifactType: jest.fn((slug: ArtifactTypeSlug) => {
+      if (slug === 'vernacular') {
+        return 'Vernacular';
+      } else if (slug === 'backtranslation') {
+        return 'Phrase Back Translation';
+      }
+    }),
+  }),
+}));
+jest.mock('../ArtifactStatus', () => ({
+  __esModule: true,
+  default: (props: ArtifactStatusProps) => (
+    <div>ArtifactStatus {props.recordType}</div>
+  ),
 }));
 
 describe('ConsultantCheckReview', () => {
@@ -173,9 +211,7 @@ describe('ConsultantCheckReview', () => {
     ];
     render(<ConsultantCheckReview item={ArtifactTypeSlug.Vernacular} />);
     // eslint-disable-next-line testing-library/no-node-access
-    expect(screen.getByTestId('transcription').firstChild?.textContent).toBe(
-      'No Transcription'
-    );
+    expect(screen.queryAllByTestId('transcription')).toHaveLength(0);
   });
 
   it('should not have a missing media message if there is phrase back translation media', () => {
@@ -287,6 +323,8 @@ describe('ConsultantCheckReview', () => {
           id: '1',
           attributes: {
             transcription: 'transcription',
+            s3file: 's3file-1',
+            originalFile: 'originalFile-1',
           } as any,
           type: 'mediafile',
         },
@@ -299,6 +337,8 @@ describe('ConsultantCheckReview', () => {
           id: '2',
           attributes: {
             transcription: 'transcription PBT (1)',
+            s3file: 's3file-2',
+            originalFile: 'originalFile-2',
           } as any,
           relationships: {
             sourceMedia: {
@@ -318,6 +358,8 @@ describe('ConsultantCheckReview', () => {
           id: '3',
           attributes: {
             transcription: 'transcription PBT (2)',
+            s3file: 's3file-3',
+            originalFile: 'originalFile-3',
           } as any,
           relationships: {
             sourceMedia: {

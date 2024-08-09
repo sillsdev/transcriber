@@ -25,16 +25,19 @@ function downloadFile(url, localPath, token) {
       uri: url,
     });
 
-    const out = await fs.createWriteStream(localPath);
+    const out = fs.createWriteStream(localPath);
     req.pipe(out);
 
     req.on('response', function (data) {
       total_bytes = parseInt(data.headers['content-length'] || '');
+      if (isNaN(total_bytes)) {
+        error = new Error('Invalid content-length');
+      }
       if (token) {
         downloadMap.set(token, {
           received: 0,
           total: total_bytes,
-          error: undefined,
+          error: error,
         });
         key = token;
       }
@@ -48,30 +51,32 @@ function downloadFile(url, localPath, token) {
       }
     });
 
-    // req.on('end', function () {
-    //   if (!error) resolve();
-    // });
-
     req.on('error', function (err) {
       error = err;
       if (key) {
         const status = downloadMap.get(key);
         downloadMap.set(key, { ...status, error });
       }
-      reject(err);
     });
 
-    out.on('close', function () {
-      if (!error) resolve(undefined);
+    out.on('finish', function () {
+      var err = error;
+      if (key) {
+        err = downloadMap.get(key).error;
+      }
+      if (err) {
+        fs.unlink(localPath);
+        reject(err);
+      } else {
+        resolve();
+      }
     });
-
     out.on('error', function (err) {
       error = err;
       if (key) {
         const status = downloadMap.get(key);
         downloadMap.set(key, { ...status, error });
       }
-      reject(err);
     });
   });
 }

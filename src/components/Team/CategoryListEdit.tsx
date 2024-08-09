@@ -12,6 +12,7 @@ import {
   IArtifactCategory,
   related,
   useArtifactCategory,
+  waitForRemoteId,
 } from '../../crud';
 import { ActionRow, AltButton, PriButton } from '../StepEditor';
 import {
@@ -19,16 +20,21 @@ import {
   ICategoryStrings,
   ISharedStrings,
   MediaFile,
-  SharedResourceD,
+  SharedResource,
 } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { categorySelector, sharedSelector } from '../../selector';
 import { useEffect, useGlobal, useMemo, useState } from 'reactn';
-import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
+import {
+  RecordKeyMap,
+  RecordOperation,
+  RecordTransformBuilder,
+} from '@orbit/records';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { NewArtifactCategory } from '../Sheet/NewArtifactCategory';
 import { useBibleMedia } from '../../crud/useBibleMedia';
 import CategoryEdit from './CategoryEdit';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
 interface IProps {
   type: ArtifactCategoryType;
@@ -38,8 +44,12 @@ interface IProps {
 
 export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   const [refresh, setRefresh] = React.useState(0);
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [categories, setCategories] = useState<IArtifactCategory[]>([]);
-  const [edited, setEdited] = useState<[string, IArtifactCategory][]>([]);
+  const [edited, setEdited] = useState<Map<string, IArtifactCategory>>(
+    new Map()
+  );
+  const editRef = React.useRef<Map<string, IArtifactCategory>>(new Map());
   const [deleted, setDeleted] = useState<string[]>([]);
   const [builtIn, setBuiltIn] = useState<IArtifactCategory[]>([]);
   const [inUse, setInUse] = useState<[string, number][]>([]);
@@ -48,6 +58,9 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   const [mediaplan, setMediaplan] = useState('');
   const { getBibleMediaPlan } = useBibleMedia();
   const [recording, setRecording] = useState('');
+  const media = useOrbitData('mediafile') as MediaFile[];
+  const discussions = useOrbitData('discussion') as Discussion[];
+  const sharedResources = useOrbitData('sharedresource') as SharedResource[];
   const {
     getArtifactCategorys,
     localizedArtifactCategory,
@@ -76,24 +89,43 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
     return value ? value[1] : 0;
   };
 
+  //without useCallback edited was always empty
+  //even after useCallback edited was always one behind the ref value.
+  //so I took it back out and just used the ref
   const handleChange = (c: IArtifactCategory) => {
-    const editMap = new Map<string, IArtifactCategory>(edited);
-    editMap.set(c.id, { ...c });
-    setEdited(Array.from(editMap));
+    editRef.current.set(c.id, { ...c });
+    const editMap = new Map<string, IArtifactCategory>(editRef.current);
+    setEdited(editMap);
   };
 
   const handleDelete = (c: IArtifactCategory) => () => {
     setDeleted((deleted) => deleted.concat(c.id));
   };
+
+  const hasDuplicates = () => {
+    const recs = Array.from(edited.values());
+    const items = new Set<string>(recs.map((r) => r.category));
+    if (items.size < recs.length) {
+      showMessage(t.duplicate);
+      return true;
+    }
+    return false;
+  };
+
   const canSave = useMemo(
-    () => edited.length + deleted.length > 0,
+    () => edited.size + deleted.length > 0 && !hasDuplicates(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [edited, deleted]
   );
 
   const handleClose = () => onClose && onClose();
 
   const handleSave = async () => {
-    const recs = edited.filter((r) => !deleted.includes(r[0])).map((r) => r[1]);
+    deleted.forEach((d) => {
+      edited.delete(d);
+    });
+    const recs = Array.from(edited.values());
+    if (hasDuplicates()) return;
     const t = new RecordTransformBuilder();
     const ops: RecordOperation[] = [];
     for (const r of recs) {
@@ -114,7 +146,14 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
     onClose && onClose();
   };
   const categoryAdded = (newId: string) => {
-    setRefresh(refresh + 1);
+    if (offlineOnly) setRefresh(refresh + 1);
+    else
+      waitForRemoteId(
+        { type: 'artifactcategory', id: newId },
+        memory.keyMap as RecordKeyMap
+      ).then(() => {
+        setRefresh(refresh + 1);
+      });
   };
 
   React.useEffect(() => {
@@ -122,15 +161,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
       setCategories(cats.filter((c) => c.org !== '').sort(sortCats));
       setBuiltIn(cats.filter((c) => c.org === '').sort(sortCats));
       const inUseMap = new Map<string, number>();
-      const media = memory.cache.query((q) =>
-        q.findRecords('mediafile')
-      ) as MediaFile[];
-      const discussions = memory.cache.query((q) =>
-        q.findRecords('discussion')
-      ) as Discussion[];
-      const sharedResources = memory.cache.query((q) =>
-        q.findRecords('sharedresource')
-      ) as SharedResourceD[];
+
       cats.forEach((c) => {
         let count = 0;
         if (type === ArtifactCategoryType.Resource)
@@ -150,10 +181,16 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
       setInUse(Array.from(inUseMap));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type, refresh]);
+  }, [type, refresh, media, discussions, sharedResources]);
 
   const sortCats = (i: IArtifactCategory, j: IArtifactCategory) =>
-    i.category <= j.category ? -1 : 1;
+    i.specialuse < j.specialuse
+      ? -1
+      : i.specialuse > j.specialuse
+      ? 1
+      : i.category <= j.category
+      ? -1
+      : 1;
 
   const onRecording = (c: IArtifactCategory) => (recording: boolean) => {
     //disable all the others
@@ -177,7 +214,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
                   edge="end"
                   aria-label="delete"
                   onClick={handleDelete(c)}
-                  disabled={displayCount(c) > 0}
+                  disabled={displayCount(c) > 0 || c.specialuse !== ''}
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -192,7 +229,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
                 teamId={teamId}
                 disabled={recording !== '' && c.id !== recording}
                 type={type}
-                category={c}
+                category={editRef.current.get(c.id) ?? c}
               />
             </ListItem>
           ))}

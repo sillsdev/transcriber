@@ -9,6 +9,7 @@
         "link-name": "off"
       }
     ],
-    "compat-api/html": "off"
+    "compat-api/html": "off",
+    "no-inline-styles": "off"
   }
 }

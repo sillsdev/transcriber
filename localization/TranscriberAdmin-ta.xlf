@@ -1,24 +1,6 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="ta" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
-      <unit id="access.accessFirst">
-         <segment>
-            <source>Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="access.accessSilTranscriber">
-         <segment>
-            <source>To transcribe or review without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="access.importProject">
-         <segment>
-            <source>Import PTF File</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="activityState.approved">
          <segment>
             <source>Ready to Sync</source>
@@ -67,6 +49,12 @@
             <target>மதிப்பாய்வு நடைபெறுகிறது</target>
          </segment>
       </unit>
+      <unit id="activityState.synced">
+         <segment>
+            <source>Synced</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="activityState.transcribe">
          <segment>
             <source>Transcribe</source>
@@ -103,6 +91,12 @@
             <target>உறுதிப்படுத்தல்</target>
          </segment>
       </unit>
+      <unit id="alert.delete">
+         <segment>
+            <source>Continue with Delete?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="alert.no">
          <segment>
             <source>No</source>
@@ -113,6 +107,18 @@
          <segment>
             <source>Yes</source>
             <target>ஆம்</target>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.activity">
+         <segment>
+            <source>Activity</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.biblestory">
+         <segment>
+            <source>Bible Story</source>
+            <target/>
          </segment>
       </unit>
       <unit id="assignmentTable.assignSec">
@@ -195,7 +201,7 @@
       </unit>
       <unit id="assignSection.title">
          <segment>
-            <source>Assign {0} to Members</source>
+            <source>Assign {0}</source>
             <target/>
          </segment>
       </unit>
@@ -203,6 +209,18 @@
          <segment>
             <source>Members</source>
             <target>உறுப்பினர்கள்</target>
+         </segment>
+      </unit>
+      <unit id="audacityManager.audacityProject">
+         <segment>
+            <source>Audacity Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="audacityManager.badProjName">
+         <segment>
+            <source>Invalid Audacity project name</source>
+            <target/>
          </segment>
       </unit>
       <unit id="cards.add">
@@ -217,15 +235,45 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.bibleid">
+         <segment>
+            <source>Bible Id</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.bibleidexists">
+         <segment>
+            <source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
             <target>ரத்து செய்</target>
          </segment>
       </unit>
+      <unit id="cards.closeNoSave">
+         <segment>
+            <source>Close without Saving?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.connectParatext">
          <segment>
             <source>Connect a Paratext Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.copyComplete">
+         <segment>
+            <source>Copy Complete {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.copyNew">
+         <segment>
+            <source>Copy project to new team.</source>
             <target/>
          </segment>
       </unit>
@@ -241,15 +289,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.description">
+         <segment>
+            <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.draft">
+         <segment>
+            <source>Oral Drafting</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.explainTeamDelete">
          <segment>
-            <source>Deleting the team will delete all projects of the team.</source>
+            <source>Deleting the team will delete all audio projects of the team.</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.import">
          <segment>
-            <source>Import PTF File</source>
+            <source>Import Audio Project</source>
             <target/>
          </segment>
       </unit>
@@ -261,7 +321,7 @@
       </unit>
       <unit id="cards.mediaUploaded">
          <segment>
-            <source>Media Uploaded</source>
+            <source>Audio Uploaded</source>
             <target/>
          </segment>
       </unit>
@@ -271,9 +331,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.nameInUse">
+         <segment>
+            <source>Name in use</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.newProject">
          <segment>
-            <source>New Project</source>
+            <source>New Audio Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.notesLabel">
+         <segment>
+            <source>Introductory Notes Title</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.OBS">
+         <segment>
+            <source>Storying</source>
             <target/>
          </segment>
       </unit>
@@ -285,13 +363,31 @@
       </unit>
       <unit id="cards.personalProjects">
          <segment>
-            <source>Personal Projects</source>
+            <source>Personal Audio Projects</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.process">
+         <segment>
+            <source>Default Workflow</source>
             <target/>
          </segment>
       </unit>
       <unit id="cards.projectCreated">
          <segment>
-            <source>Project Created</source>
+            <source>Audio Project Created</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.projectRequired">
+         <segment>
+            <source>A project must be added before recordings are allowed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.Render">
+         <segment>
+            <source>Render to Paratext</source>
             <target/>
          </segment>
       </unit>
@@ -313,6 +409,18 @@
             <target>அமைப்புகள்</target>
          </segment>
       </unit>
+      <unit id="cards.notesHelper">
+         <segment>
+            <source>Shared explanations, rationales, footnotes, etc.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.notesProject">
+         <segment>
+            <source>Project with Notes</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.sync">
          <segment>
             <source>Sync ({0})</source>
@@ -331,16 +439,40 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.transcriber">
+         <segment>
+            <source>Transcribing</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.uploadProgress">
          <segment>
             <source>Upload Progress</source>
             <target/>
          </segment>
       </unit>
+      <unit id="cards.workflowProgression">
+         <segment>
+            <source>Workflow Progression</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.workflowProgressionPassage">
+         <segment>
+            <source>Next Passage</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="control.other">
          <segment>
-            <source>General Transcription</source>
-            <target>General Transcription</target>
+            <source>General</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="control.scripture">
+         <segment>
+            <source>Scripture</source>
+            <target/>
          </segment>
       </unit>
       <unit id="deleteExpansion.advanced">
@@ -359,6 +491,18 @@
          <segment>
             <source>Delete</source>
             <target>நீக்கு</target>
+         </segment>
+      </unit>
+      <unit id="discussionCard.addComment">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="discussionCard.assign">
+         <segment>
+            <source>Assign to a Group or Team Member</source>
+            <target/>
          </segment>
       </unit>
       <unit id="electronImport.allDataOverwritten">
@@ -399,31 +543,49 @@
       </unit>
       <unit id="electronImport.importProject">
          <segment>
-            <source>Import Project</source>
+            <source>Import Audio Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="electronImport.invalidProject">
          <segment>
-            <source>Import File does not contain current project.</source>
+            <source>Import File does not contain current audio project.</source>
             <target/>
          </segment>
       </unit>
       <unit id="electronImport.lastExported">
          <segment>
-            <source>Current data in project {name0} was last exported {date0}.</source>
+            <source>Current data in audio project {name0} was last exported {date0}.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="electronImport.members">
+         <segment>
+            <source>Members</source>
             <target/>
          </segment>
       </unit>
       <unit id="electronImport.neverExported">
          <segment>
-            <source>Current data in project {name0} has never been exported.</source>
+            <source>Current data in audio project {name0} has never been exported to an itf file to preserve changes.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="electronImport.newerVersion">
+         <segment>
+            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="electronImport.project">
+         <segment>
+            <source>Audio Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="electronImport.projectImported">
          <segment>
-            <source>Project {name0} was previously imported with a newer file: {date1} </source>
+            <source>Audio Project {name0} was previously imported with a newer file: {date1} </source>
             <target/>
          </segment>
       </unit>
@@ -433,9 +595,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="electronImport.userWontSeeProject">
+         <segment>
+            <source>You are not a member of this audio project team. This audio project will not be accessible after import.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="emailUnverified.emailUnverified">
          <segment>
             <source>Your email is unverified.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="emailUnverified.logout">
+         <segment>
+            <source>Logout</source>
             <target/>
          </segment>
       </unit>
@@ -457,6 +631,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="filterMenu.all">
+         <segment>
+            <source>All</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="filterMenu.allPassages">
+         <segment>
+            <source>All Passages on all team projects</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="groupTabs.groups">
          <segment>
             <source>Groups</source>
@@ -467,6 +653,12 @@
          <segment>
             <source>Invitations</source>
             <target>அழைப்பிதழ்கள்</target>
+         </segment>
+      </unit>
+      <unit id="groupTabs.peerGroups">
+         <segment>
+            <source>Peer Groups</source>
+            <target/>
          </segment>
       </unit>
       <unit id="groupTabs.roles">
@@ -481,6 +673,18 @@
             <target>உறுப்பினர்கள்</target>
          </segment>
       </unit>
+      <unit id="hotKey.altKey">
+         <segment>
+            <source>Alt</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.ctrlKey">
+         <segment>
+            <source>Ctrl</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="import.close">
          <segment>
             <source>Close</source>
@@ -493,15 +697,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="import.error">
+      <unit id="import.copy">
          <segment>
-            <source>Import Error</source>
+            <source>Copy Report</source>
             <target/>
          </segment>
       </unit>
-      <unit id="import.expiredToken">
+      <unit id="import.copyfail">
          <segment>
-            <source>Your log in token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Copy Failed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.error">
+         <segment>
+            <source>Import Error</source>
             <target/>
          </segment>
       </unit>
@@ -555,7 +765,7 @@
       </unit>
       <unit id="import.importProject">
          <segment>
-            <source>Import Project</source>
+            <source>Import Audio Project</source>
             <target/>
          </segment>
       </unit>
@@ -571,9 +781,15 @@
             <target/>
          </segment>
       </unit>
+      <unit id="import.unknownError">
+         <segment>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="import.invalidProject">
          <segment>
-            <source>Import File does not contain current project.</source>
+            <source>Import File does not contain current audio project.</source>
             <target/>
          </segment>
       </unit>
@@ -597,7 +813,7 @@
       </unit>
       <unit id="import.onlineChangeReport">
          <segment>
-            <source>Online changes made since data provided to offline member:</source>
+            <source>Changes made since data provided to offline member:</source>
             <target/>
          </segment>
       </unit>
@@ -621,8 +837,20 @@
       </unit>
       <unit id="import.plan">
          <segment>
-            <source>Project</source>
-            <target>திட்டம்</target>
+            <source>Audio Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.projectDeleted">
+         <segment>
+            <source>Audio Project {0} has been deleted online.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.projectNotFound">
+         <segment>
+            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="import.showHideFilter">
@@ -667,24 +895,6 @@
             <target>ஒத்திசைக்க அனைத்து வரை கூறுகளையும் நீங்கள் பூர்த்தி செய்ய வேண்டும்.</target>
          </segment>
       </unit>
-      <unit id="integration.bookNotFound">
-         <segment>
-            <source>Book not included in this project</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.bookNotInParatext">
-         <segment>
-            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.chapterSpan">
-         <segment>
-            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="integration.countError">
          <segment>
             <source>Count query error: </source>
@@ -709,27 +919,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="integration.expiredParatextToken">
+      <unit id="integration.exportSectionNumbers">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Sync {0} Numbers</source>
             <target/>
          </segment>
       </unit>
-      <unit id="integration.expiredToken">
+      <unit id="integration.invalidReferences">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.invalidParatextLogin">
-         <segment>
-            <source>You must login with a valid paratext login to sync projects.</source>
-            <target>You must login with a valid paratext login to sync projects.</target>
-         </segment>
-      </unit>
-      <unit id="integration.invalidReference">
-         <segment>
-            <source>Passage {0}.{1} {2}: Invalid Reference</source>
+            <source>{0} passage(s) have invalid book or reference.</source>
             <target/>
          </segment>
       </unit>
@@ -777,14 +975,14 @@
       </unit>
       <unit id="integration.projectError">
          <segment>
-            <source>Project Query error:</source>
-            <target>திட்ட வினவல் பிழை:</target>
+            <source>Audio Project Query error:</source>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.projectsPending">
          <segment>
-            <source>Querying projects...</source>
-            <target>வினவல் திட்டங்கள்...</target>
+            <source>Querying Paratext projects...</source>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.questionAccount">
@@ -819,8 +1017,8 @@
       </unit>
       <unit id="integration.removeProject">
          <segment>
-            <source>Remove Project Association</source>
-            <target>திட்டம் சார்ந்த இணைவை அகற்று</target>
+            <source>Remove Paratext Project Association</source>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.render">
@@ -945,14 +1143,14 @@
       </unit>
       <unit id="invite.addInvite">
          <segment>
-            <source>Invite Member</source>
+            <source>Invite Person</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.allUsersProjects">
          <segment>
-            <source>Projects</source>
-            <target>திட்டங்கள்</target>
+            <source>Audio Projects</source>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.alreadyInvited">
@@ -965,6 +1163,12 @@
          <segment>
             <source>Cancel</source>
             <target>ரத்து செய்</target>
+         </segment>
+      </unit>
+      <unit id="invite.detail">
+         <segment>
+            <source>{0} Detail</source>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.editInvite">
@@ -985,7 +1189,6 @@
             <target/>
          </segment>
       </unit>
-
       <unit id="invite.instructions">
          <segment>
             <source>Please click the following link to accept the invitation:</source>
@@ -1010,15 +1213,21 @@
             <target>Join</target>
          </segment>
       </unit>
+      <unit id="invite.member">
+         <segment>
+            <source>Member</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="invite.newInviteTask">
          <segment>
-            <source>Enter the email address of the member to invite.</source>
+            <source>Enter the email address of the person to invite.</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.noProjects">
          <segment>
-            <source>No Projects are associated with this group.</source>
+            <source>This team has no audio projects.</source>
             <target/>
          </segment>
       </unit>
@@ -1054,7 +1263,7 @@
       </unit>
       <unit id="invite.selectTeamRole">
          <segment>
-            <source>Select Team Role</source>
+            <source>Select team role.</source>
             <target/>
          </segment>
       </unit>
@@ -1068,6 +1277,18 @@
          <segment>
             <source>SIL International</source>
             <target>SIL International</target>
+         </segment>
+      </unit>
+      <unit id="keyTerms.addTargetWord">
+         <segment>
+            <source>Add Translation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="keyTerms.all">
+         <segment>
+            <source>All</source>
+            <target/>
          </segment>
       </unit>
       <unit id="languagePicker.font">
@@ -1088,13 +1309,13 @@
             <target>மொழி</target>
          </segment>
       </unit>
-   	<unit id="languagePicker.phonetic">
-   		<segment>
-   			<source>Phonetic</source>
-   			<target/>
-   		</segment>
-   	</unit>
-   	<unit id="languagePicker.selectLanguage">
+      <unit id="languagePicker.phonetic">
+         <segment>
+            <source>Phonetic</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="languagePicker.selectLanguage">
          <segment>
             <source>Choose Language Details</source>
             <target>மொழி விவரங்களை தேர்வுசெய்க</target>
@@ -1118,6 +1339,12 @@
             <target>துணை குறிச்சொற்கள்</target>
          </segment>
       </unit>
+      <unit id="main.about">
+         <segment>
+            <source>About</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="languagePicker.details">
          <segment>
             <source>Details</source>
@@ -1128,6 +1355,12 @@
          <segment>
             <source>A Language of $1$2.</source>
             <target>$1$2. இன் மொழி.</target>
+         </segment>
+      </unit>
+      <unit id="languagePicker.noFonts">
+         <segment>
+            <source>No recommended font</source>
+            <target/>
          </segment>
       </unit>
       <unit id="languagePicker.inScript">
@@ -1154,6 +1387,12 @@
             <target>Admin</target>
          </segment>
       </unit>
+      <unit id="main.akuo">
+         <segment>
+            <source>Access Akuo Site</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.apiError">
          <segment>
             <source>API Error:</source>
@@ -1164,6 +1403,12 @@
          <segment>
             <source>Cancel</source>
             <target>ரத்து செய்</target>
+         </segment>
+      </unit>
+      <unit id="main.cantCopy">
+         <segment>
+            <source>Unable to copy to clipboard</source>
+            <target/>
          </segment>
       </unit>
       <unit id="main.clearCache">
@@ -1184,6 +1429,18 @@
             <target>தொடரவும்</target>
          </segment>
       </unit>
+      <unit id="main.course">
+         <segment>
+            <source>Access Accredited Course</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.continueCurrentUser">
+         <segment>
+            <source>Continue as current user</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.crashMessage">
          <segment>
             <source>Something went wrong. The developers need to address this issue.</source>
@@ -1193,6 +1450,12 @@
       <unit id="main.deletedInvitation">
          <segment>
             <source>Invitation is no longer valid.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.details">
+         <segment>
+            <source>Details</source>
             <target/>
          </segment>
       </unit>
@@ -1214,10 +1477,34 @@
             <target>Export</target>
          </segment>
       </unit>
+      <unit id="main.flatSample">
+         <segment>
+            <source>Scripture flat sample spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.genFlatSample">
+         <segment>
+            <source>General flat sample spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.helpCenter">
          <segment>
             <source>Help Center</source>
             <target>உதவி மையம்</target>
+         </segment>
+      </unit>
+      <unit id="main.helpSpreadsheet">
+         <segment>
+            <source>View spreadsheet convention</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.hierarchicalSample">
+         <segment>
+            <source>Scripture hierarchical sample spreadsheet</source>
+            <target/>
          </segment>
       </unit>
       <unit id="main.import">
@@ -1256,16 +1543,16 @@
             <target>வெளியேறு</target>
          </segment>
       </unit>
-      <unit id="main.logoutRequired">
+      <unit id="main.logos">
          <segment>
-            <source>Log out of other tab required</source>
+            <source>Access Logos Resources</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.media">
          <segment>
-            <source>Media</source>
-            <target>ஊடகம்</target>
+            <source>Audio</source>
+            <target/>
          </segment>
       </unit>
       <unit id="main.myAccount">
@@ -1276,7 +1563,19 @@
       </unit>
       <unit id="main.NoLoadOffline">
          <segment>
-            <source>Unable to load project data offline.</source>
+            <source>Unable to load audio project data offline.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.openNotes">
+         <segment>
+            <source>Access Translator's Notes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.openContent">
+         <segment>
+            <source>Access Open Content</source>
             <target/>
          </segment>
       </unit>
@@ -1286,16 +1585,28 @@
             <target>பத்திகள்</target>
          </segment>
       </unit>
+      <unit id="main.privacy">
+         <segment>
+            <source>Privacy Policy</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.project">
          <segment>
-            <source>Project</source>
-            <target>திட்டம்</target>
+            <source>Audio Project</source>
+            <target/>
          </segment>
       </unit>
       <unit id="main.orgRole">
          <segment>
             <source>Role:</source>
             <target>Role:</target>
+         </segment>
+      </unit>
+      <unit id="main.reliesOn">
+         <segment>
+            <source>{0} relies on other works</source>
+            <target/>
          </segment>
       </unit>
       <unit id="main.reportIssue">
@@ -1308,6 +1619,18 @@
          <segment>
             <source>Reports</source>
             <target>Reports</target>
+         </segment>
+      </unit>
+      <unit id="main.reportWhenOnline">
+         <segment>
+            <source>You must be online to use this menu item.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.resources">
+         <segment>
+            <source>Access UBS Resources</source>
+            <target/>
          </segment>
       </unit>
       <unit id="main.saveFirst">
@@ -1340,10 +1663,28 @@
             <target>அமைப்புகள்</target>
          </segment>
       </unit>
+      <unit id="main.switchUser">
+         <segment>
+            <source>Switch Mode or User</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.tasks">
          <segment>
             <source>Tasks</source>
             <target>Tasks</target>
+         </segment>
+      </unit>
+      <unit id="main.team">
+         <segment>
+            <source>Team</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.terms">
+         <segment>
+            <source>Terms of Use</source>
+            <target/>
          </segment>
       </unit>
       <unit id="main.transcribe">
@@ -1358,10 +1699,28 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.updateAvailable">
+         <segment>
+            <source>Update available: Version {0} was released {1}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.version">
          <segment>
-            <source>Version: </source>
-            <target>பதிப்பு: </target>
+            <source>Version: {0} - {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.videos">
+         <segment>
+            <source>Access Training Videos</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.walkThru">
+         <segment>
+            <source>Access Walk Through</source>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.action">
@@ -1370,9 +1729,27 @@
             <target>நடவடிக்கை</target>
          </segment>
       </unit>
+      <unit id="mediaTab.actions">
+         <segment>
+            <source>Actions</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.all">
          <segment>
             <source>All</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.alreadyAssociated">
+         <segment>
+            <source>Show Passages Already Associated</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.associated">
+         <segment>
+            <source>Associated</source>
             <target/>
          </segment>
       </unit>
@@ -1394,6 +1771,18 @@
             <target>புத்தகம்</target>
          </segment>
       </unit>
+      <unit id="mediaTab.cancelling">
+         <segment>
+            <source>Cancelling with {0} of {1} completed.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.choosePassage">
+         <segment>
+            <source>Choose Passage</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.date">
          <segment>
             <source>Date</source>
@@ -1406,6 +1795,12 @@
             <target>நீக்கு</target>
          </segment>
       </unit>
+      <unit id="mediaTab.deleteConfirm">
+         <segment>
+            <source>Delete {0}? Are you sure?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.detach">
          <segment>
             <source>Detach</source>
@@ -1414,8 +1809,8 @@
       </unit>
       <unit id="mediaTab.duration">
          <segment>
-            <source>Length (s)</source>
-            <target>நீளம் (கள்)</target>
+            <source>Duration</source>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.fileAttached">
@@ -1436,6 +1831,18 @@
             <target>வடிகட்டி</target>
          </segment>
       </unit>
+      <unit id="mediaTab.graphicRightsAdd">
+         <segment>
+            <source>Add {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.graphicRightsTitle">
+         <segment>
+            <source>Graphics Rights holder</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.loadingTable">
          <segment>
             <source>Loading data</source>
@@ -1450,7 +1857,7 @@
       </unit>
       <unit id="mediaTab.mediaAssociations">
          <segment>
-            <source>Media Associations</source>
+            <source>Audio Associations</source>
             <target/>
          </segment>
       </unit>
@@ -1490,6 +1897,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.published">
+         <segment>
+            <source>Published</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.readyToShare">
+         <segment>
+            <source>Ready to Share</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.reference">
          <segment>
             <source>Reference</source>
@@ -1520,12 +1939,6 @@
             <target>பதிவேற்ற வேண்டிய கோப்புகளை தேர்ந்தெடுக்கவும்.</target>
          </segment>
       </unit>
-      <unit id="mediaTab.selectRows">
-         <segment>
-            <source>Please select row(s) to {0}.</source>
-            <target>{0}. க்கு வரிசை(களை) த் தேர்ந்தெடுக்கவும்.</target>
-         </segment>
-      </unit>
       <unit id="mediaTab.showHideFilter">
          <segment>
             <source>Show/Hide filter rows</source>
@@ -1536,6 +1949,12 @@
          <segment>
             <source>Size (MB)</source>
             <target>அளவு (கேபி)</target>
+         </segment>
+      </unit>
+      <unit id="mediaTab.toobig">
+         <segment>
+            <source>File {0} is too large {1}. File Limit is {2}MB</source>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.unsupported">
@@ -1550,15 +1969,39 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.user">
+         <segment>
+            <source>User</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.version">
          <segment>
             <source>Version</source>
             <target>பதிப்பு</target>
          </segment>
       </unit>
+      <unit id="mediaTab.versionHistory">
+         <segment>
+            <source>Version History</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.viewAssociations">
          <segment>
             <source>View Associations</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.cancel">
+         <segment>
+            <source>Cancel Recording</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.playPause">
+         <segment>
+            <source>Play / Pause</source>
             <target/>
          </segment>
       </unit>
@@ -1580,15 +2023,33 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.graphicTask">
+         <segment>
+            <source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.graphicTitle">
+         <segment>
+            <source>Upload Graphic</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.ITFtask">
          <segment>
-            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop Extension.</source>
+            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop app.</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.ITFtitle">
          <segment>
-            <source>Upload Change Data from Desktop Extension</source>
+            <source>Upload Change Data from Desktop app.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.projectResourceTask">
+         <segment>
+            <source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
             <target/>
          </segment>
       </unit>
@@ -1600,7 +2061,19 @@
       </unit>
       <unit id="mediaUpload.PTFtitle">
          <segment>
-            <source>Upload complete Project Data from PTF</source>
+            <source>Upload complete Audio Project Data from PTF</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.resourceTask">
+         <segment>
+            <source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.resourceTitle">
+         <segment>
+            <source>Upload Resources</source>
             <target/>
          </segment>
       </unit>
@@ -1612,8 +2085,14 @@
       </unit>
       <unit id="mediaUpload.title">
          <segment>
-            <source>Upload Media</source>
-            <target>ஊடகத்தை பதிவேற்று</target>
+            <source>Upload Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.toobig">
+         <segment>
+            <source>Too large: {0}. File Limit is {1}MB</source>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.upload">
@@ -1622,10 +2101,34 @@
             <target>பதிவேற்று</target>
          </segment>
       </unit>
+      <unit id="newProject.audioProduct">
+         <segment>
+            <source>Audio Product</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.blank">
+         <segment>
+            <source>Audio Project</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageMedia.close">
          <segment>
             <source>Close</source>
             <target>மூடு</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageRecord.compressed">
+         <segment>
+            <source>Compressed</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planActions.assign">
@@ -1640,10 +2143,34 @@
             <target>நீக்கு</target>
          </segment>
       </unit>
+      <unit id="planActions.noteDetails">
+         <segment>
+            <source>Note Details</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planActions.passageDetail">
+         <segment>
+            <source>Passage Detail</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planActions.playpause">
          <segment>
-            <source>Play / Pause</source>
-            <target>இயங்கு / இடைநிறுத்து</target>
+            <source>Play/Pause</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planActions.recordAudio">
+         <segment>
+            <source>Record/Edit Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planActions.resourceEdit">
+         <segment>
+            <source>Resource Edit</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planActions.transcribe">
@@ -1652,10 +2179,22 @@
             <target>Transcribe</target>
          </segment>
       </unit>
+      <unit id="planActions.versions">
+         <segment>
+            <source>Versions</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.action">
          <segment>
             <source>Action</source>
             <target>நடவடிக்கை</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.addNote">
+         <segment>
+            <source>Add Note</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planSheet.addPassage">
@@ -1664,9 +2203,27 @@
             <target>பத்தியைச் சேர்க்கவும்</target>
          </segment>
       </unit>
+      <unit id="planSheet.addPublishing">
+         <segment>
+            <source>Update Publishing Rows</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.addSection">
          <segment>
             <source>Add {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.assigned">
+         <segment>
+            <source>Assigned</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.audio">
+         <segment>
+            <source>Audio</source>
             <target/>
          </segment>
       </unit>
@@ -1682,15 +2239,51 @@
             <target>{0} {1} Item(s). Are you sure?</target>
          </segment>
       </unit>
+      <unit id="planSheet.confirmPublish">
+         <segment>
+            <source>Publish {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.confirmPublishMovement">
+         <segment>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this Movement will be marked as published. If you have previously published and now choose 'Not Published', the {0} and passages and notes will be marked as not published.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.nonNumber">
          <segment>
             <source>Do not change to non-number.</source>
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.noPublishDelete">
+         <segment>
+            <source>Do not delete published items.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.insertFirstPassage">
+         <segment>
+            <source>Add Passage as first in {0} {1}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.passageBelow">
          <segment>
-            <source>Insert passage below {0}</source>
+            <source>Add Passage below Passage {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.passageEnd">
+         <segment>
+            <source>Add Passage to End</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.passageToPrevSection">
+         <segment>
+            <source>Move {pt} {0} Up</source>
             <target/>
          </segment>
       </unit>
@@ -1700,9 +2293,15 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.publish">
+         <segment>
+            <source>Publish {0} {1}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.refErr">
          <segment>
-            <source>This project contains invalid references and will not sync to Paratext properly.</source>
+            <source>This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
             <target/>
          </segment>
       </unit>
@@ -1724,21 +2323,45 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.sectionAbove">
+      <unit id="planSheet.showPublishing">
          <segment>
-            <source>Insert {0} above</source>
+            <source>Show Publishing Information</source>
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.selectRows">
+      <unit id="planSheet.movementAbove">
          <segment>
-            <source>Please select row(s) to {0}.</source>
-            <target>{0}. க்கு வரிசை(களை) த் தேர்ந்தெடுக்கவும்.</target>
+            <source>Add Movement above {0} {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.sectionAbove">
+         <segment>
+            <source>Add {0} above {1} {2}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.sectionEnd">
+         <segment>
+            <source>Add {0} to End</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.step">
+         <segment>
+            <source>Step</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planSheet.tablePaste">
          <segment>
-            <source>Paste Table</source>
+            <source>Paste Spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.changepublish">
+         <segment>
+            <source>Update {0} {1} published status.</source>
             <target/>
          </segment>
       </unit>
@@ -1762,13 +2385,13 @@
       </unit>
       <unit id="planTabs.media">
          <segment>
-            <source>Media</source>
-            <target>ஊடகம்</target>
+            <source>Audio</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planTabs.mediaStatus">
          <segment>
-            <source>{1} of {2} media files</source>
+            <source>{1} of {2} associations</source>
             <target/>
          </segment>
       </unit>
@@ -1802,9 +2425,9 @@
             <target>சேர்க்கவும்</target>
          </segment>
       </unit>
-      <unit id="profile.addOfflineUser">
+      <unit id="profile.addMember">
          <segment>
-            <source>Add Offline Desktop Member</source>
+            <source>Complete User Profile</source>
             <target/>
          </segment>
       </unit>
@@ -1828,19 +2451,43 @@
       </unit>
       <unit id="profile.completeProfile">
          <segment>
-            <source>Complete Member Profile</source>
+            <source>Complete User Profile</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.defaultLocale">
+         <segment>
+            <source>Default locale set.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.defaultTimezone">
+         <segment>
+            <source>Default timezone set.</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.deleteExplained">
          <segment>
-            <source>Deleting your member will block you from using the program and remove references to your work.</source>
+            <source>Deleting your user will block you from using the program and remove references to your work.</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.deleteUser">
          <segment>
-            <source>Delete Member</source>
+            <source>Delete User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.discardChanges">
+         <segment>
+            <source>Discard unsaved Changes?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.discardChangesExplained">
+         <segment>
+            <source>Discard unsaved Changes? ({0})</source>
             <target/>
          </segment>
       </unit>
@@ -1898,10 +2545,22 @@
             <target>Full Name</target>
          </segment>
       </unit>
+      <unit id="profile.nameNotEmail">
+         <segment>
+            <source>Please choose a name other than your email address.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="profile.next">
          <segment>
             <source>Next</source>
             <target>Next</target>
+         </segment>
+      </unit>
+      <unit id="profile.notLinked">
+         <segment>
+            <source>Not linked to Paratext</source>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.paratextLinked">
@@ -1946,9 +2605,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="profile.sendNews">
+      <unit id="profile.sharedContentCreator">
          <segment>
-            <source>Receive {0} and Language Technology news</source>
+            <source>Allow user to create shared content projects.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.syncFrequency">
+         <segment>
+            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
             <target/>
          </segment>
       </unit>
@@ -1960,13 +2625,19 @@
       </unit>
       <unit id="profile.userExists">
          <segment>
-            <source>This offline member exists.</source>
+            <source>This offline user exists.</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.userProfile">
          <segment>
-            <source>Member profile</source>
+            <source>User profile</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projButtons.categoryTitle">
+         <segment>
+            <source>Edit Team Categories</source>
             <target/>
          </segment>
       </unit>
@@ -2018,10 +2689,16 @@
             <target/>
          </segment>
       </unit>
-      <unit id="scriptureTable.action">
+      <unit id="projectDownload.download">
          <segment>
-            <source>Action</source>
-            <target>நடவடிக்கை</target>
+            <source>Download?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.downloadLater">
+         <segment>
+            <source>Download Later</source>
+            <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.book">
@@ -2030,10 +2707,34 @@
             <target>புத்தகம்</target>
          </segment>
       </unit>
+      <unit id="scriptureTable.chapter">
+         <segment>
+            <source>Chapter {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.confirmPublish">
+         <segment>
+            <source>Are you sure you want to add publishing rows?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.description">
          <segment>
             <source>Description</source>
             <target>விளக்கம்</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.extras">
+         <segment>
+            <source>Extras</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.installAudacity">
+         <segment>
+            <source>Install {Audacity} to use this feature.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.loadingTable">
@@ -2048,9 +2749,21 @@
             <target>பத்தி</target>
          </segment>
       </unit>
+      <unit id="scriptureTable.pasteInvalidBooks">
+         <segment>
+            <source>Invalid book codes: {0}.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.pasteInvalidColumns">
          <segment>
             <source>Invalid number of columns ({0}). Expecting {1} columns.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidPassageBeforeSection">
+         <segment>
+            <source>Invalid passage before {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -2063,6 +2776,12 @@
       <unit id="scriptureTable.pasteNoRows">
          <segment>
             <source>No Rows in clipboard.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.publishingWarning">
+         <segment>
+            <source>Once publishing rows are added, there is no automated way to remove them. Publishing projects cannot be made flat projects.</source>
             <target/>
          </segment>
       </unit>
@@ -2090,10 +2809,16 @@
             <target>தலைப்பு</target>
          </segment>
       </unit>
-      <unit id="shapingTable.NoColumns">
+      <unit id="scriptureTableFilter.apply">
          <segment>
-            <source>No columns visible</source>
-            <target>பத்திகள் ஏதும் புலப்படவில்லை</target>
+            <source>Apply</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTableFilter.assignedToMe">
+         <segment>
+            <source>Only rows with discussions assigned to me</source>
+            <target/>
          </segment>
       </unit>
       <unit id="shared.admin">
@@ -2102,9 +2827,33 @@
             <target>Admin</target>
          </segment>
       </unit>
+      <unit id="shared.bookNotInParatext">
+         <segment>
+            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.BookNotSet">
+         <segment>
+            <source>Book was not set for Section {0} Passage {1}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.editor">
          <segment>
             <source>Editor</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.expiredParatextToken">
+         <segment>
+            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.expiredToken">
+         <segment>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -2114,9 +2863,39 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.launchAudacity">
+         <segment>
+            <source>Launch Audacity</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.loading">
+         <segment>
+            <source>Loading...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.NoSaveOffline">
          <segment>
             <source>Unable to save while offline.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.notSupported">
+         <segment>
+            <source>This feature is not supported yet.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.observer">
+         <segment>
+            <source>Observer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.paratextchapterSpan">
+         <segment>
+            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
             <target/>
          </segment>
       </unit>
@@ -2126,16 +2905,34 @@
             <target>எழுத்து வடிவமைப்பவர்</target>
          </segment>
       </unit>
+      <unit id="shared.translator">
+         <segment>
+            <source>Translator</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.uploadMediaPlural">
          <segment>
-            <source>Upload Media</source>
-            <target>ஊடகத்தை பதிவேற்று</target>
+            <source>Upload Audio</source>
+            <target/>
          </segment>
       </unit>
       <unit id="shared.uploadMediaSingular">
          <segment>
-            <source>Upload Media</source>
-            <target>ஊடகத்தை பதிவேற்று</target>
+            <source>Upload Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.uploadRights">
+         <segment>
+            <source>Upload Rights File</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.user">
+         <segment>
+            <source>Team Member</source>
+            <target/>
          </segment>
       </unit>
       <unit id="taskItem.assign">
@@ -2156,9 +2953,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="teamCheckReference.resource">
+         <segment>
+            <source>Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="teamCheckReference.resourcehelper">
+         <segment>
+            <source>Scripture or Bible Story Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="template.apply">
          <segment>
             <source>Apply</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="template.autoMatchTemplate">
+         <segment>
+            <source>Auto Match Template</source>
             <target/>
          </segment>
       </unit>
@@ -2170,7 +2985,13 @@
       </unit>
       <unit id="template.book">
          <segment>
-            <source>Paratext book identifier</source>
+            <source>Paratext book identifier (Length 3 uppercase)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="template.bookname">
+         <segment>
+            <source>Book name</source>
             <target/>
          </segment>
       </unit>
@@ -2201,6 +3022,12 @@
       <unit id="template.passage">
          <segment>
             <source>Passage number(within {0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="template.renderExportTemplate">
+         <segment>
+            <source>The {SECT} template works for files exported from Render.</source>
             <target/>
          </segment>
       </unit>
@@ -2272,8 +3099,14 @@
       </unit>
       <unit id="toDoTable.project">
          <segment>
-            <source>Project</source>
-            <target>திட்டம்</target>
+            <source>Audio Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.speaker">
+         <segment>
+            <source>Speaker</source>
+            <target/>
          </segment>
       </unit>
       <unit id="toDoTable.state">
@@ -2294,6 +3127,12 @@
             <target>தலைப்பு</target>
          </segment>
       </unit>
+      <unit id="toDoTable.topic">
+         <segment>
+            <source>Topic</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="toDoTable.transcriber">
          <segment>
             <source>Transcribe</source>
@@ -2306,16 +3145,16 @@
             <target>ஆம்</target>
          </segment>
       </unit>
-      <unit id="transcriber.aheadTip">
+      <unit id="tool.community">
          <segment>
-            <source>Skip ahead ({0})</source>
-            <target>Skip ahead ({0})</target>
+            <source>Community Test</source>
+            <target/>
          </segment>
       </unit>
-      <unit id="transcriber.backTip">
+      <unit id="tool.consultantCheck">
          <segment>
-            <source>Skip back ({0})</source>
-            <target>Skip back ({0})</target>
+            <source>Consultant Check</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.comment">
@@ -2324,22 +3163,22 @@
             <target>Comment</target>
          </segment>
       </unit>
+      <unit id="transcriber.congratulation">
+         <segment>
+            <source>Congratulations</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriber.done">
          <segment>
             <source>Completed</source>
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.fasterTip">
-         <segment>
-            <source>Faster ({0})</source>
-            <target>Faster ({0})</target>
-         </segment>
-      </unit>
       <unit id="transcriber.historyTip">
          <segment>
-            <source>History ({0})</source>
-            <target>History ({0})</target>
+            <source>History [{0}]</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.incomplete">
@@ -2348,10 +3187,10 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.makeComment">
+      <unit id="transcriber.invalidReference">
          <segment>
-            <source>Make Comment</source>
-            <target>Make Comment</target>
+            <source>Book or Reference is invalid.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.needsNewRecording">
@@ -2372,16 +3211,16 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.pauseTip">
+      <unit id="transcriber.noMoreTasks">
          <segment>
-            <source>Play ({0})</source>
-            <target>Play ({0})</target>
+            <source>You have no more tasks to work on!</source>
+            <target/>
          </segment>
       </unit>
-      <unit id="transcriber.playTip">
+      <unit id="transcriber.pullParatextCaption">
          <segment>
-            <source>Pause ({0})</source>
-            <target>Pause ({0})</target>
+            <source>Paratext</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.reject">
@@ -2410,7 +3249,7 @@
       </unit>
       <unit id="transcriber.saveReviewTip">
          <segment>
-            <source>Save position and comment</source>
+            <source>Save transcript, position and segments</source>
             <target/>
          </segment>
       </unit>
@@ -2424,12 +3263,6 @@
          <segment>
             <source>Saving...</source>
             <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.slowerTip">
-         <segment>
-            <source>Slower ({0})</source>
-            <target>Slower ({0})</target>
          </segment>
       </unit>
       <unit id="transcriber.submit">
@@ -2450,21 +3283,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.timerTip">
-         <segment>
-            <source>Timestamp ({0})</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriber.transcribing">
          <segment>
             <source>Started to transcribe</source>
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.updateByOther">
+      <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by another person or process.</source>
+            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
             <target/>
          </segment>
       </unit>
@@ -2540,6 +3367,18 @@
             <target>இந்த பக்கம் சேமிக்கப்பட்ட ஒலிபெயர்தலைமதிப்பாய்வு செய்ய உங்களை அனுமதிக்கிறது.</target>
          </segment>
       </unit>
+      <unit id="transcriptionTab.audioExport">
+         <segment>
+            <source>Export Audio Files</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.availableOnClipboard">
+         <segment>
+            <source>Exported data is available on the clipboard. Use paste to insert it into another program.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.cancel">
          <segment>
             <source>Cancel</source>
@@ -2564,21 +3403,45 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.creatingDownloadFile">
+         <segment>
+            <source>Creating File...{0}%</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.writingDownloadFile">
+         <segment>
+            <source>Writing file...It could take up to 6 minutes to resume progress.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.downloading">
          <segment>
             <source>Creation complete. Downloading {0}</source>
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.downloadingProject">
+         <segment>
+            <source>Downloading...{0}%</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.downloadProject">
+         <segment>
+            <source>Download Audio Project</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.elan">
          <segment>
-            <source>Elan</source>
-            <target>Elan</target>
+            <source>ELAN</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.electronBackup">
          <segment>
-            <source>Backup All Projects</source>
+            <source>Back up All Audio Projects</source>
             <target/>
          </segment>
       </unit>
@@ -2586,12 +3449,6 @@
          <segment>
             <source>Export Error</source>
             <target>Export Error</target>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.expiredToken">
-         <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.export">
@@ -2602,7 +3459,7 @@
       </unit>
       <unit id="transcriptionTab.exportExplanation">
          <segment>
-            <source>Export the full project to store locally or share with another offline member. Export incremental file to import changes into online app.</source>
+            <source>Export the full audio project to store locally or share with another offline member. Export incremental file to import changes into online app.</source>
             <target/>
          </segment>
       </unit>
@@ -2620,19 +3477,31 @@
       </unit>
       <unit id="transcriptionTab.exportProject">
          <segment>
-            <source>Export Project</source>
-            <target>Export Project</target>
+            <source>Export Audio Project</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportPTFtype">
          <segment>
-            <source>Export Project (ptf)</source>
+            <source>Export Audio Project (ptf)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportSince">
+         <segment>
+            <source>Changes since date</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportSinceGo">
+         <segment>
+            <source>Export from date</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The project cannot be exported.  The export file is too large.</source>
+            <source>The audio project cannot be exported.  The export file is too large.</source>
             <target/>
          </segment>
       </unit>
@@ -2648,6 +3517,18 @@
             <target>வடிகட்டி</target>
          </segment>
       </unit>
+      <unit id="transcriptionTab.incompletePlan">
+         <segment>
+            <source>Plan is incomplete: attach audio to passages.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.latestAudio">
+         <segment>
+            <source>Latest Audio</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.passages">
          <segment>
             <source>Passages</source>
@@ -2658,6 +3539,12 @@
          <segment>
             <source>Plan</source>
             <target>திட்டம்</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.scriptureBurrito">
+         <segment>
+            <source>Scripture Burrito</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.sectionstate">
@@ -2678,10 +3565,22 @@
             <target/>
          </segment>
       </unit>
+      <unit id="treeChart.contributions">
+         <segment>
+            <source>Contributions toward</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="treeChart.noData">
          <segment>
             <source>No Transcription Data Yet</source>
             <target>ஒலிபெயர்தல் தரவு இன்னும் இல்லை</target>
+         </segment>
+      </unit>
+      <unit id="treeChart.status">
+         <segment>
+            <source>Status of</source>
+            <target/>
          </segment>
       </unit>
       <unit id="uploadProgress.cancel">
@@ -2702,10 +3601,34 @@
             <target/>
          </segment>
       </unit>
+      <unit id="userListMode.logOut">
+         <segment>
+            <source>Log Out</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="userListMode.switchUser">
+         <segment>
+            <source>Work Online</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="usertable.action">
          <segment>
             <source>Action</source>
             <target>நடவடிக்கை</target>
+         </segment>
+      </unit>
+      <unit id="usertable.addMember">
+         <segment>
+            <source>Add Member</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="usertable.addNewUser">
+         <segment>
+            <source>Add New Member</source>
+            <target/>
          </segment>
       </unit>
       <unit id="usertable.cancel">
@@ -2756,28 +3679,16 @@
             <target>பெயர்</target>
          </segment>
       </unit>
-      <unit id="usertable.offline">
-         <segment>
-            <source>Offline Desktop Member</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="usertable.phone">
          <segment>
             <source>Phone</source>
             <target>தொலைபேசி</target>
          </segment>
       </unit>
-      <unit id="usertable.role">
+      <unit id="usertable.selectUser">
          <segment>
-            <source>Team Role</source>
+            <source>Select User</source>
             <target/>
-         </segment>
-      </unit>
-      <unit id="usertable.selectRows">
-         <segment>
-            <source>Please select row(s) to {0}.</source>
-            <target>{0}. க்கு வரிசை(களை) த் தேர்ந்தெடுக்கவும்.</target>
          </segment>
       </unit>
       <unit id="usertable.showHideFilter">
@@ -2790,6 +3701,18 @@
          <segment>
             <source>Timezone</source>
             <target>நேரம் மண்டலம்</target>
+         </segment>
+      </unit>
+      <unit id="verse.badReferences">
+         <segment>
+            <source>ERROR: Markup contains bad references</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.canceling">
+         <segment>
+            <source>Canceling verse markup</source>
+            <target/>
          </segment>
       </unit>
       <unit id="vProject.add">
@@ -2816,6 +3739,18 @@
             <target>ரத்து செய்</target>
          </segment>
       </unit>
+      <unit id="vProject.configure">
+         <segment>
+            <source>Configure</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.cannotChangeLayout">
+         <segment>
+            <source>Publishing projects cannot be made flat.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.correctformat">
          <segment>
             <source>Please enter in the format: singular/plural</source>
@@ -2837,6 +3772,18 @@
       <unit id="vProject.editorSettings">
          <segment>
             <source>Editor Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.errExtrasBookLen">
+         <segment>
+            <source>Book must be 3 characters</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.errExtrasBookNonScripture">
+         <segment>
+            <source>Book Designation must not be a Scripture book code.</source>
             <target/>
          </segment>
       </unit>
@@ -2864,6 +3811,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.isPublic">
+         <segment>
+            <source>This project contains resources that can be used in other projects for Internalization.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.howToPublic">
+         <segment>
+            <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.language">
          <segment>
             <source>Language</source>
@@ -2876,15 +3835,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="vProject.new">
+      <unit id="vProject.movement">
          <segment>
-            <source>New</source>
+            <source>Movement</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.movements">
+         <segment>
+            <source>Movements</source>
             <target/>
          </segment>
       </unit>
       <unit id="vProject.newProject">
          <segment>
-            <source>{0} Project</source>
+            <source>{0} Audio Project Settings</source>
             <target/>
          </segment>
       </unit>
@@ -2914,8 +3879,8 @@
       </unit>
       <unit id="vProject.projectName">
          <segment>
-            <source>Project Name</source>
-            <target>திட்டப்பணி பெயர்</target>
+            <source>Audio Project Name</source>
+            <target/>
          </segment>
       </unit>
       <unit id="vProject.renderCustomize">
@@ -2960,6 +3925,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.sharedResources">
+         <segment>
+            <source>Shared Resources</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.spellCheck">
+         <segment>
+            <source>Spell Check</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.stories">
          <segment>
             <source>Story/Stories</source>
@@ -2986,8 +3963,20 @@
       </unit>
       <unit id="vProject.type">
          <segment>
-            <source>Project Type</source>
-            <target>திட்ட வகை</target>
+            <source>Audio Project Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.alone">
+         <segment>
+            <source>Work Alone</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="welcome.aloneFactor">
+         <segment>
+            <source>Audio Projects cannot be changed to team audio projects later</source>
+            <target/>
          </segment>
       </unit>
    </file>

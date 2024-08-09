@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { Grid, GridProps, styled } from '@mui/material';
 import SelectMyResource from './Internalization/SelectMyResource';
-import { MediaPlayer } from '../MediaPlayer';
+import { LimitedMediaPlayer } from '../LimitedMediaPlayer';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { getSegments, LocalKey, localUserKey, NamedRegions } from '../../utils';
 
@@ -33,6 +33,7 @@ export function TeamCheckReference() {
   const [mediaStart, setMediaStart] = useState<number | undefined>();
   const [mediaEnd, setMediaEnd] = useState<number | undefined>();
   const [resource, setResource] = useState('');
+  const [resetCount, setResetCount] = useState(0);
 
   const storeKey = (keyType?: string) =>
     `${localUserKey(LocalKey.compare)}_${
@@ -76,7 +77,9 @@ export function TeamCheckReference() {
   };
 
   const handleEnded = () => {
+    setPlayItem('');
     handleItemPlayEnd();
+    setTimeout(() => setResetCount(resetCount + 1), 100);
   };
 
   useEffect(() => {
@@ -89,7 +92,7 @@ export function TeamCheckReference() {
       handleResource(res);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [section, passage, currentstep]);
+  }, [section, passage, currentstep, resetCount]);
 
   return (
     <Grid container direction="column">
@@ -97,7 +100,7 @@ export function TeamCheckReference() {
         <SelectMyResource onChange={handleResource} inResource={resource} />
       </Grid>
       <StyledGrid item xs={10}>
-        <MediaPlayer
+        <LimitedMediaPlayer
           srcMediaId={playItem}
           requestPlay={itemPlaying}
           onTogglePlay={handleItemTogglePlay}

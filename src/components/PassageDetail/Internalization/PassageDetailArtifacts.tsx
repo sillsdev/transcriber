@@ -54,7 +54,7 @@ import SelectProjectResource from './SelectProjectResource';
 import SelectSections from './SelectSections';
 import ResourceData from './ResourceData';
 import { UploadType } from '../../MediaUpload';
-import MediaPlayer from '../../MediaPlayer';
+import LimitedMediaPlayer from '../../LimitedMediaPlayer';
 import { Box, BoxProps, styled } from '@mui/material';
 import { ReplaceRelatedRecord } from '../../../model/baseModel';
 import { PassageResourceButton } from './PassageResourceButton';
@@ -626,7 +626,9 @@ export function PassageDetailArtifacts() {
   };
 
   const handleLoaded = () => {
-    if (playItem !== '' && !itemPlaying) setItemPlaying(true);
+    if (playItem !== '' && !itemPlaying) {
+      setTimeout(() => handleItemTogglePlay(), 1000);
+    }
   };
 
   return (
@@ -636,15 +638,17 @@ export function PassageDetailArtifacts() {
           <AddResource action={handleAction} />
         )}
         <MediaContainer>
-          <MediaPlayer
-            srcMediaId={playItem}
-            requestPlay={itemPlaying}
-            onEnded={handleEnded}
-            onLoaded={handleLoaded}
-            onTogglePlay={handleItemTogglePlay}
-            controls={playItem !== ''}
-            limits={{ start: mediaStart, end: mediaEnd }}
-          />
+          {playItem !== '' && (
+            <LimitedMediaPlayer
+              srcMediaId={playItem}
+              requestPlay={itemPlaying}
+              onEnded={handleEnded}
+              onLoaded={handleLoaded}
+              onTogglePlay={handleItemTogglePlay}
+              controls={playItem !== ''}
+              limits={{ start: mediaStart, end: mediaEnd }}
+            />
+          )}
         </MediaContainer>
         {otherResourcesAvailable && (
           <PassageResourceButton

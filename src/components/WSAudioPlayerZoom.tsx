@@ -1,6 +1,8 @@
 import { IconButton, Grid } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
-import { GrowingDiv, LightTooltip, ToolbarGrid } from '../control';
+import { GrowingDiv } from '../control/GrowingDiv';
+import { LightTooltip } from '../control/LightTooltip';
+import { ToolbarGrid } from '../control/ToolbarGrid';
 import { IWsAudioPlayerZoomStrings } from '../model';
 import { HotKeyContext } from '../context/HotKeyContext';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';

@@ -3,7 +3,7 @@ import { ArtifactTypeD, OrgWorkflowStep, Project } from '../model';
 // import { isElectron } from '../api-variable';
 import { getFamily, getRtl } from 'mui-language-picker';
 import Memory from '@orbit/memory';
-import { findRecord } from '.';
+import { findRecord } from './tryFindRecord';
 
 // const ipc = (window as any)?.electron;
 

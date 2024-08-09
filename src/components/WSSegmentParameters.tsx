@@ -16,7 +16,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import Paper from '@mui/material/Paper';
 import { default as DraggableBar, DraggableProps } from 'react-draggable';
 import { IRegionParams } from '../crud/useWavesurferRegions';
-import { AltButton, GrowingSpacer, IosSlider, PriButton } from '../control';
+import { AltButton } from '../control/AltButton';
+import { GrowingSpacer } from '../control/GrowingSpacer';
+import { IosSlider } from '../control/IosSlider';
+import { PriButton } from '../control/PriButton';
 import { wsAudioPlayerSegmentSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 

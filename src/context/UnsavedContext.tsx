@@ -2,7 +2,7 @@ import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { IMainStrings } from '../model';
-import { waitForIt } from '../utils';
+import { waitForIt } from '../utils/waitForIt';
 import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from '../components/AlertDialog';
 import { useSelector } from 'react-redux';
@@ -54,6 +54,7 @@ const UnsavedProvider = (props: PropsWithChildren) => {
   const t: IMainStrings = useSelector(mainSelector);
   const [importexportBusy] = useGlobal('importexportBusy');
   const [busy, setBusy] = useGlobal('remoteBusy');
+  const busyRef = useRef(false);
   const [alertOpen, setAlertOpen] = useGlobal('alertOpen'); //global because planSheet checks it
   const saveConfirm = React.useRef<() => any>();
   const { showMessage } = useSnackBar();
@@ -78,6 +79,10 @@ const UnsavedProvider = (props: PropsWithChildren) => {
   useEffect(() => {
     saveErr.current = saveResult;
   }, [saveResult]);
+
+  useEffect(() => {
+    busyRef.current = busy || importexportBusy;
+  }, [busy, importexportBusy]);
 
   const startSave = (id?: string) => {
     var setit = false;
@@ -256,20 +261,28 @@ const UnsavedProvider = (props: PropsWithChildren) => {
   };
 
   const checkSavedFn = (method: () => any) => {
-    if (busy || importexportBusy) {
-      showMessage(t.loadingTable);
-      return;
-    }
-    if (changedRef.current) {
-      if (anySaving()) {
-        showMessage(t.saving);
-        return;
-      }
-      saveConfirm.current = method;
-      setAlertOpen(true);
-    } else {
-      method();
-    }
+    var timeout = busy || importexportBusy || anySaving() ? 200 : 0;
+    //sometimes the useEffect misses some so set it correctly to begin with and then hope it doesn't miss any...
+    busyRef.current = busy || importexportBusy;
+    setTimeout(() => {
+      waitForIt(
+        'checkSavedFn',
+        () => !busyRef.current && !anySaving(),
+        () => false,
+        1000
+      )
+        .then(() => {
+          if (changedRef.current) {
+            saveConfirm.current = method;
+            setAlertOpen(true);
+          } else {
+            method();
+          }
+        })
+        .catch((err) => {
+          showMessage(t.loadingTable);
+        });
+    }, timeout);
   };
 
   const handleSaveRefused = () => {

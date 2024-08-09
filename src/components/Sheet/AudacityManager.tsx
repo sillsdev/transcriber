@@ -27,10 +27,12 @@ import {
   useAudProjName,
   usePassageRec,
   passageDescText,
+  useFetchUrlNow,
+  remoteId,
 } from '../../crud';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { debounce } from 'lodash';
-import { RecordIdentity } from '@orbit/records';
+import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 import {
   launchAudacity,
   loadBlob,
@@ -38,7 +40,7 @@ import {
   setAudacityPref,
   execFolder,
 } from '../../utils';
-import { dataPath, PathType } from '../../utils';
+
 import { extensions, mimes } from '.';
 import SpeakerName from '../SpeakerName';
 import { audacityManagerSelector } from '../../selector';
@@ -101,6 +103,7 @@ function AudacityManager(props: IProps) {
     audacityManagerSelector,
     shallowEqual
   );
+  const fetchUrl = useFetchUrlNow();
 
   const handleClose = () => {
     onClose();
@@ -118,17 +121,6 @@ function AudacityManager(props: IProps) {
         setName(fullName[0]);
       }
     });
-  };
-
-  const getMediaUrl = (mediaId: string) => {
-    let mediaUrl = '';
-    if (mediaId !== '') {
-      const mediaRec = memory.cache.query((q) =>
-        q.findRecord({ type: 'mediafile', id: mediaId })
-      ) as MediaFile;
-      mediaUrl = mediaRec?.attributes?.audioUrl || '';
-    }
-    return mediaUrl;
   };
 
   const getMediaUpdated = (mediaId: string) => {
@@ -151,9 +143,13 @@ function AudacityManager(props: IProps) {
 
     let mediaName = '';
     if ((mediaId || '') !== '') {
-      const url = getMediaUrl(mediaId);
-      mediaName = await dataPath(url, PathType.MEDIA);
-      if (!(await ipc?.exists(mediaName))) {
+      mediaName =
+        (await fetchUrl({
+          id:
+            remoteId('mediafile', mediaId, memory.keyMap as RecordKeyMap) ?? '',
+          cancelled: () => false,
+        })) ?? '';
+      if (mediaName.startsWith('http')) {
         showMessage(t.checkDownload);
         return;
       }

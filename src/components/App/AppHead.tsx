@@ -170,9 +170,10 @@ export const AppHead = (props: IProps) => {
     if (isElectron && /Logout/i.test(what)) {
       localStorage.removeItem('user-id');
       checkSavedFn(() => {
-        waitForRemoteQueue('logout on electron...').then(() =>
-          setDownloadAlert(true)
-        );
+        waitForRemoteQueue('logout on electron...').then(() => {
+          if (isOffline) downDone();
+          else setDownloadAlert(true);
+        });
       });
       return;
     }

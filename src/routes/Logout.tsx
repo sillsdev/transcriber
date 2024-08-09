@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, useRef } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0, RedirectLoginOptions } from '@auth0/auth0-react';
 import { useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import * as action from '../store';
@@ -38,10 +38,12 @@ export function Logout() {
     if (isElectron) {
       ctx.logout();
     } else {
-      logout({ returnTo: window.origin });
+      logout({ returnTo: window.origin } as RedirectLoginOptions);
     }
     if (wasOfflineOnly) localStorage.setItem('offlineAdmin', 'true');
-    setView(localStorage.getItem('offlineAdmin') === 'true' ? 'offline' : 'online');
+    setView(
+      localStorage.getItem('offlineAdmin') === 'true' ? 'offline' : 'online'
+    );
   };
 
   useEffect(() => {
@@ -55,12 +57,12 @@ export function Logout() {
     if (!isElectron) {
       // ctx.logout();
       if (user) {
-        logout({ returnTo: window.origin });
+        logout({ returnTo: window.origin } as RedirectLoginOptions);
       } else {
         timer = setTimeout(() => {
           console.log(`timer fired path=${curPath.current}`);
           if (curPath.current === '/logout') {
-            logout({ returnTo: window.origin });
+            logout({ returnTo: window.origin } as RedirectLoginOptions);
           }
         }, 4000);
       }

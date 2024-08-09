@@ -115,7 +115,7 @@ export function Welcome(props: IProps) {
   const [hasOfflineProjects, setHasOfflineProjects] = useState(false);
   const [hasProjects, setHasProjects] = useState(false);
   const [, setOffline] = useGlobal('offline');
-  const checkOnline = useCheckOnline();
+  const checkOnline = useCheckOnline('Welcome');
 
   const recsFor = (recType: string, online: boolean) => {
     const recs = recOfType(recType);

@@ -19,7 +19,7 @@ export const useLoadProjectData = () => {
   const [, setBusy] = useGlobal('importexportBusy');
   const AddProjectLoaded = useProjectsLoaded();
   const { showMessage } = useSnackBar();
-  const checkOnline = useCheckOnline();
+  const checkOnline = useCheckOnline('LoadProjectData');
 
   return (projectId: string, cb?: () => void) => {
     if (projectsLoaded.includes(projectId) || offlineOnly) {

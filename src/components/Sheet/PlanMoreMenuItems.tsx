@@ -103,7 +103,7 @@ export const PlanMoreMenuItems: FC<
     const handleChangeFirstMovement = (rowIndex: number, e: any) => {
       e.persist();
       let value = e.target.value as number;
-      value = Math.floor(Math.max(1, value)); // whole numbers >= 1
+      value = Math.floor(Math.max(0, value)); // whole numbers >= 1
       setFM(value);
       onFirstMovement(rowIndex, value);
     };

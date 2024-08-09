@@ -59,12 +59,12 @@ import {
   useOrganizedBy,
 } from '../crud';
 import {
-  localSync,
   getParatextDataPath,
   useCheckOnline,
   integrationSlug,
   useDataChanges,
 } from '../utils';
+import { localSync } from '../business/localParatext/localSync';
 import { TokenContext } from '../context/TokenProvider';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import Memory from '@orbit/memory';
@@ -252,7 +252,7 @@ export function IntegrationPanel(props: IProps) {
   const [ptPath, setPtPath] = useState('');
   const syncing = React.useRef<boolean>(false);
   const setSyncing = (state: boolean) => (syncing.current = state);
-  const checkOnline = useCheckOnline();
+  const checkOnline = useCheckOnline('Integration');
   const [exportTypes, setExportTypes] = useState([
     ArtifactTypeSlug.Vernacular,
     ArtifactTypeSlug.WholeBackTranslation,
@@ -418,19 +418,19 @@ export function IntegrationPanel(props: IProps) {
     if (stopPlayer) stopPlayer();
     setSyncing(true);
     showMessage(t.syncPending);
-    var err = await localSync(
+    var err = await localSync({
       plan,
-      ptShortName,
+      ptProjName: ptShortName,
       mediafiles,
       passages,
       memory,
-      user,
+      userId: user,
       passage,
       exportNumbers,
       sectionArr,
-      getTypeId(exportType),
-      getTranscription
-    );
+      artifactId: getTypeId(exportType),
+      getTranscription,
+    });
     showMessage(translateParatextErr(err, ts) || t.syncComplete);
     resetCount();
     if (setStepComplete && currentstep && !err) {
@@ -454,13 +454,14 @@ export function IntegrationPanel(props: IProps) {
   };
   const findConnectedProject = () => {
     if (paratext_projects.length === 0) return;
-    const curInt = projectintegrations.filter(
+    let curInt = projectintegrations.filter(
       (pi) =>
         related(pi, 'integration') === paratextIntegration &&
         pi.attributes &&
         related(pi, 'project') === project
     ) as ProjectIntegration[];
-    let index = 0;
+    let index = -1;
+    if (!offline) curInt = curInt.filter((i) => Boolean(i?.keys?.remoteId));
     if (curInt.length > 0) {
       const settings = JSON.parse(curInt[0].attributes.settings);
       index = paratext_projects.findIndex((p) => {
@@ -473,23 +474,22 @@ export function IntegrationPanel(props: IProps) {
           Boolean(p.BaseProject) ===
           (exportType !== ArtifactTypeSlug.Vernacular)
       );
-      if (index >= 0 && !intSave.current) {
-        if (
-          intSave.current !== paratext_projects[index].ParatextId &&
-          paratextIntegration
-        ) {
-          intSave.current = paratext_projects[index].ParatextId;
-          const setting = {
-            Name: paratext_projects[index].Name,
-            ParatextId: paratext_projects[index].ParatextId,
-            LanguageTag: paratext_projects[index].LanguageTag,
-            LanguageName: paratext_projects[index].LanguageName,
-          };
-          const strSettings = JSON.stringify(setting);
-          if (curInt.length > 0) {
-            updateProjectIntegration(curInt[0].id as string, strSettings);
-          } else addProjectIntegration(paratextIntegration, strSettings);
-        }
+      if (
+        index >= 0 &&
+        intSave.current !== paratext_projects[index].ParatextId &&
+        paratextIntegration
+      ) {
+        intSave.current = paratext_projects[index].ParatextId;
+        const setting = {
+          Name: paratext_projects[index].Name,
+          ParatextId: paratext_projects[index].ParatextId,
+          LanguageTag: paratext_projects[index].LanguageTag,
+          LanguageName: paratext_projects[index].LanguageName,
+        };
+        const strSettings = JSON.stringify(setting);
+        if (curInt.length > 0) {
+          updateProjectIntegration(curInt[0].id as string, strSettings);
+        } else addProjectIntegration(paratextIntegration, strSettings);
       }
     }
     setPtProj(index);
@@ -508,7 +508,10 @@ export function IntegrationPanel(props: IProps) {
     const sectionId = related(passage, 'section');
     const sectionPassages = passages
       .filter(
-        (p) => related(p, 'section') === sectionId && !related(p, 'passagetype')
+        (p) =>
+          related(p, 'section') === sectionId &&
+          !related(p, 'passagetype') &&
+          Boolean(p?.attributes)
       )
       .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
     return (
@@ -582,7 +585,6 @@ export function IntegrationPanel(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafiles, plan, exportType]);
 
-  /* do this once */
   useEffect(() => {
     if (integrations.length > 0) {
       getParatextIntegration(integrationSlug(exportType, offlineOnly));

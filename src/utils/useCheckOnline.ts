@@ -27,7 +27,7 @@ export function Online(doCheck: boolean, cb: (result: boolean) => void) {
       cb(reason.response !== undefined);
     });
 }
-export const useCheckOnline = () => {
+export const useCheckOnline = (label: string) => {
   const dispatch = useDispatch();
   const resetOrbitError = actions.resetOrbitError;
   const [connected, setConnected] = useGlobal('connected');
@@ -43,6 +43,7 @@ export const useCheckOnline = () => {
     if (!forceCheck && offline) {
       localStorage.setItem(LocalKey.connected, 'false');
     }
+    //console.log('Checking online status for ' + label);
     Online(forceCheck || !offline, (result) => {
       if (connected !== result) {
         localStorage.setItem(LocalKey.connected, `${result && !offline}`);

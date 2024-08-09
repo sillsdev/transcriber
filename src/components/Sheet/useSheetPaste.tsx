@@ -9,7 +9,7 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import { currentDateTime } from '../../utils/currentDateTime';
 import { parseInt } from 'lodash';
 import { useOrganizedBy } from '../../crud/useOrganizedBy';
-import { PublishLevelEnum } from '../../crud';
+import { PublishLevelEnum } from '../../crud/usePublishLevel';
 
 interface MySheet extends ISheet {
   [key: string]: any;
@@ -27,7 +27,7 @@ interface IProps {
 }
 
 export const useWfPaste = (props: IProps) => {
-  const { secNumCol, passNumCol, flat, t, shared } = props;
+  const { secNumCol, passNumCol, flat, t, shared, scripture } = props;
   const { colNames, findBook } = props;
   const { showMessage } = useSnackBar();
   const { getOrganizedBy } = useOrganizedBy();
@@ -53,6 +53,31 @@ export const useWfPaste = (props: IProps) => {
           .replace('{1}', colNames.length.toString())
       );
       return false;
+    }
+
+    if (scripture) {
+      const bookCol = colNames.indexOf('book');
+      const invalidBooks = new Set<string>();
+      rows.forEach((row, rowIndex) => {
+        if (
+          rowIndex > 0 &&
+          (passNumCol < 0 || row[passNumCol]) &&
+          !findBook(row[bookCol])
+        ) {
+          invalidBooks.add(row[bookCol]);
+        }
+      });
+      if (invalidBooks.size > 0) {
+        showMessage(
+          <span>
+            {t.pasteInvalidBooks.replace(
+              '{0}',
+              Array.from(invalidBooks).join(', ')
+            )}
+          </span>
+        );
+        return false;
+      }
     }
 
     let invalidSec = rows

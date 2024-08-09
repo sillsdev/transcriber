@@ -9,8 +9,8 @@ import {
 } from '@orbit/records';
 import { Dict } from '@orbit/utils';
 import Memory from '@orbit/memory';
-import { related } from '../crud';
-import { currentDateTime } from '../utils';
+import { related } from '../crud/related';
+import { currentDateTime } from '../utils/currentDateTime';
 
 export interface BaseModel extends UninitializedRecord {
   attributes: {

@@ -160,13 +160,11 @@ export default function ResourceOverview(props: IProps) {
   React.useEffect(() => {
     if (canSetOrgDefault) {
       const allKw = getOrgDefault(orgDefaultResKw) as string | undefined;
-      if (allKw || keywords) {
-        const allList = allKw ? allKw?.split('|') : [];
-        const kwList = keywords ? keywords.split('|') : [];
-        const allSet = new Set(allList.concat(kwList));
-        const newList = Array.from(allSet).sort().join('|');
-        if (newList !== allKw) setOrgDefault(orgDefaultResKw, newList);
-      }
+      const allList = allKw?.split('|') || [];
+      const kwList = keywords?.split('|') || [];
+      const allSet = new Set(allList.concat(kwList));
+      const newList = Array.from(allSet).sort().join('|');
+      if (newList !== allKw) setOrgDefault(orgDefaultResKw, newList);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keywords, canSetOrgDefault]);

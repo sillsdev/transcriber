@@ -19,5 +19,5 @@ export const lookupBook = (props: IProps): string => {
     );
     if (proposed.length >= 1) return proposed[0].code;
   }
-  return bookUc;
+  return bookMap[bookUc] ? bookUc : '';
 };

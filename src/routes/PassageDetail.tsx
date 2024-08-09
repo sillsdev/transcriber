@@ -33,27 +33,26 @@ import TeamCheckReference from '../components/PassageDetail/TeamCheckReference';
 import PassageDetailPlayer from '../components/PassageDetail/PassageDetailPlayer';
 import PassageDetailRecord from '../components/PassageDetail/PassageDetailRecord';
 import PassageDetailItem from '../components/PassageDetail/PassageDetailItem';
+import PassageDetailMarkVerses from '../components/PassageDetail/PassageDetailMarkVerses';
 import PassageDetailTranscribe from '../components/PassageDetail/PassageDetailTranscribe';
 import PassageDetailChooser from '../components/PassageDetail/PassageDetailChooser';
 import ConsultantCheck from '../components/PassageDetail/ConsultantCheck';
-import IntegrationTab from '../components/Integration';
 import TranscriptionTab from '../components/TranscriptionTab';
 import {
   ArtifactTypeSlug,
   remoteIdGuid,
   ToolSlug,
-  useArtifactType,
   useProjectType,
   useStepTool,
   useUrlContext,
 } from '../crud';
 import { Plan, IToolStrings } from '../model';
 import { NamedRegions } from '../utils';
-import { memory } from '../schema';
 import { useSelector, shallowEqual } from 'react-redux';
 import { toolSelector } from '../selector';
 import Busy from '../components/Busy';
 import { RecordKeyMap } from '@orbit/records';
+import PassageDetailParatextIntegration from '../components/PassageDetail/PassageDetailParatextIntegration';
 
 const KeyTerms = React.lazy(
   () => import('../components/PassageDetail/Keyterms/KeyTerms')
@@ -140,6 +139,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   //const [myPlayerSize, setMyPlayerSize] = useState(INIT_PLAYER_HEIGHT);
 
   const [topFilter, setTopFilter] = useState(false);
+  const [memory] = useGlobal('memory');
   const ctx = useContext(PassageDetailContext);
   const {
     currentstep,
@@ -150,15 +150,13 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
     setPlayerSize,
     orgWorkflowSteps,
     mediafileId,
-    setStepComplete,
-    gotoNextStep,
     sectionArr,
   } = ctx.state;
   const minWidthRef = React.useRef(800);
   const { tool, settings } = useStepTool(currentstep);
-  const { slugFromId } = useArtifactType();
   const [horizSize, setHorizSize] = useState(window.innerWidth - 450);
   const discussionSizeRef = React.useRef(discussionSize);
+  const t = useSelector(toolSelector, shallowEqual) as IToolStrings;
 
   useEffect(() => {
     discussionSizeRef.current = discussionSize;
@@ -178,12 +176,8 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
         );
     }
     return null;
-  }, [settings]);
-
-  const artifactSlug = useMemo(() => {
-    return artifactId ? slugFromId(artifactId) : ArtifactTypeSlug.Vernacular;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [artifactId]);
+  }, [settings]);
 
   const [communitySlugs] = useState([
     ArtifactTypeSlug.Retell,
@@ -195,7 +189,6 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   const [wholeBackTranslationSlugs] = useState([
     ArtifactTypeSlug.WholeBackTranslation,
   ]);
-  const t = useSelector(toolSelector, shallowEqual) as IToolStrings;
 
   const handleVertSplitSize = debounce((e: number) => {
     setHorizSize(e);
@@ -204,11 +197,6 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
       height: discussionSize.height,
     });
   }, 50);
-
-  const handleSyncComplete = async (step: string, complete: boolean) => {
-    await setStepComplete(step, complete);
-    if (complete) gotoNextStep();
-  };
 
   const handleHorzSplitSize = debounce((e: number) => {
     setPlayerSize(e);
@@ -278,6 +266,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   const plans = useMemo(() => {
     const plans = memory.cache.query((q) => q.findRecords('plan')) as Plan[];
     return plans.filter((p) => p.id === plan);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plan]);
 
   return (
@@ -321,19 +310,13 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
         {tool === ToolSlug.Paratext && (
           <Stack>
             <PassageDetailChooser width={width - 24} sx={{ pl: 2 }} />
-            <IntegrationTab
-              artifactType={artifactSlug as ArtifactTypeSlug}
-              passage={ctx.state.passage}
-              setStepComplete={handleSyncComplete}
-              currentstep={currentstep}
-              sectionArr={sectionArr}
-              gotoNextStep={gotoNextStep}
-            />
+            <PassageDetailParatextIntegration />
           </Stack>
         )}
         {(tool === ToolSlug.Discuss ||
           tool === ToolSlug.TeamCheck ||
           tool === ToolSlug.Record ||
+          tool === ToolSlug.Verses ||
           tool === ToolSlug.Transcribe ||
           tool === ToolSlug.ConsultantCheck ||
           tool === ToolSlug.KeyTerm) && (
@@ -351,6 +334,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
               >
                 <Pane>
                   {tool !== ToolSlug.Transcribe &&
+                  tool !== ToolSlug.Verses &&
                   tool !== ToolSlug.Record &&
                   tool !== ToolSlug.ConsultantCheck ? (
                     <SplitPane
@@ -383,6 +367,11 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                       <PassageDetailChooser
                         width={width - discussionSize.width - 16}
                       />
+                      {tool === ToolSlug.Verses && (
+                        <PassageDetailMarkVerses
+                          width={width - discussionSize.width - 16}
+                        />
+                      )}
                       {tool === ToolSlug.Transcribe && (
                         <PassageDetailTranscribe
                           width={width - discussionSize.width - 16}
@@ -403,7 +392,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                     </Grid>
                   )}
                 </Pane>
-                {!topFilter && (
+                {!topFilter && Boolean(mediafileId) && (
                   <Pane>
                     <Grid item xs={12} sm container>
                       <Grid item container direction="column">

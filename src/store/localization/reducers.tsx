@@ -56,6 +56,7 @@ const initialState = {
 			"activity": "Activity",
 			"biblestory": "Bible Story",
 			"bookintro": "Book Introduction",
+			"chapter": "Chapter Number",
 			"scripture": "Scripture",
 			"translationresource": "Translation Resource",
 			"uncategorized": "Uncategorized",
@@ -63,6 +64,7 @@ const initialState = {
 			"grammar": "Grammar",
 			"graphic": "Graphic",
 			"qanda": "Question and Answer",
+			"title": "Title",
 		}
 	}),
 	"artifactType": new LocalizedStrings({
@@ -238,9 +240,12 @@ const initialState = {
 	"community": new LocalizedStrings({
 		"en": {
 			"addSpeaker": "Add '{0}'",
+			"backTranslationComplete": "Version {0}: Back translation: {1}",
 			"deleteItem": "Delete Item",
+			"finished": "finished",
 			"later": "Do later",
 			"loading": "Loading:",
+			"none": "none",
 			"playTest": "Play Test",
 			"provideRights": "Provide Rights",
 			"record": "Record",
@@ -248,6 +253,8 @@ const initialState = {
 			"rights": "Rights",
 			"saveFirst": "Save or Clear your recording before uploading.",
 			"segment": "Segment",
+			"segmentsChanged": "Changing segments will invalidate some recordings since they are linked to the segment start and end.",
+			"segmentsComplete": "Version {0}: Segments complete ({2}): {1}",
 			"speaker": "Speaker",
 			"topic": "Topic",
 			"transcribe": "Transcribe",
@@ -595,12 +602,14 @@ const initialState = {
 		"en": {
 			"about": "About",
 			"admin": "Admin",
+			"akuo": "Access Akuo Site",
 			"apiError": "API Error:",
 			"cancel": "Cancel",
 			"cantCopy": "Unable to copy to clipboard",
 			"clearCache": "Clear cache",
 			"clearLogout": "Log Out and Force Data Reload",
 			"continue": "Continue",
+			"course": "Access Accredited Course",
 			"continueCurrentUser": "Continue as current user",
 			"copyClipboard": "Copy Version to Clipboard",
 			"crashMessage": "Something went wrong. The developers need to address this issue.",
@@ -612,6 +621,7 @@ const initialState = {
 			"flatSample": "Scripture flat sample spreadsheet",
 			"genFlatSample": "General flat sample spreadsheet",
 			"genHierarchicalSample": "General hierarchical sample spreadsheet",
+			"googleSamples": "Sample Google spreadsheets",
 			"helpCenter": "Help Center",
 			"helpSpreadsheet": "View spreadsheet convention",
 			"hierarchicalSample": "Scripture hierarchical sample spreadsheet",
@@ -621,9 +631,12 @@ const initialState = {
 			"loadingTable": "Busy...please wait.",
 			"loadingTranscriber": "Loading {0}",
 			"logout": "Log Out",
+			"logos": "Access Logos Resources",
 			"media": "Audio",
 			"myAccount": "My Account",
 			"NoLoadOffline": "Unable to load audio project data offline.",
+			"openNotes": "Access Translator's Notes",
+			"openContent": "Access Open Content",
 			"passages": "Passages",
 			"privacy": "Privacy Policy",
 			"project": "Audio Project",
@@ -631,7 +644,8 @@ const initialState = {
 			"reliesOn": "{0} relies on other works",
 			"reportIssue": "Report an Issue",
 			"reports": "Reports",
-			"reportWhenOnline": "You must be online to report an problem.",
+			"reportWhenOnline": "You must be online to use this menu item.",
+			"resources": "Access UBS Resources",
 			"saveFirst": "Do you want to save before leaving this page?",
 			"saving": "Saving...",
 			"sessionExpireTask": "Your session will expire in {0} seconds. Would you like to continue?",
@@ -646,6 +660,8 @@ const initialState = {
 			"UnsavedData": "Unsaved Data",
 			"updateAvailable": "Update available: Version {0} was released {1}",
 			"version": "Version: {0} - {1}",
+			"videos": "Access Training Videos",
+			"walkThru": "Access Walk Through",
 		}
 	}),
 	"mediaActions": new LocalizedStrings({
@@ -678,7 +694,7 @@ const initialState = {
 			"delete": "Delete",
 			"deleteConfirm": "Delete {0}? Are you sure?",
 			"detach": "Detach",
-			"duration": "Length (s)",
+			"duration": "Duration",
 			"fileAttached": "File already attached",
 			"fileName": "File Name",
 			"filter": "Filter",
@@ -898,6 +914,7 @@ const initialState = {
 			"afterResource": "Play following context",
 			"back3Seconds": "Skip back 3 seconds",
 			"resourceStart": "Play from start",
+			"toEnd": "Jump to end",
 		}
 	}),
 	"permission": new LocalizedStrings({
@@ -1020,6 +1037,7 @@ const initialState = {
 			"save": "Save",
 			"sendDigest": "Receive Email Notifications and Digests",
 			"sharedContentCreator": "Allow user to create shared content projects.",
+			"syncFrequency": "Frequency of data sync in minutes.  0 to turn off sync.",
 			"timezone": "Time zone",
 			"userExists": "This offline user exists.",
 			"userProfile": "User profile",
@@ -1048,8 +1066,9 @@ const initialState = {
 	"publishLevel": new LocalizedStrings({
 		"en": {
 			"none": "Not Published - not visible in publishing app",
-			"beta": "Beta - only visible to users subscribed to app beta channel",
-			"public": "Public - visible to everyone using app",
+			"beta": "Beta - visible on the Akuo website when using the beta parameter (not available in the app)",
+			"betalink": "https://akuobible.org/?beta=true",
+			"public": "Public - visible to everyone using Akuo website or app",
 		}
 	}),
 	"resource": new LocalizedStrings({
@@ -1091,6 +1110,7 @@ const initialState = {
 			"installAudacity": "Install {Audacity} to use this feature.",
 			"loadingTable": "Loading data",
 			"passage": "Passage",
+			"pasteInvalidBooks": "Invalid book codes: {0}.",
 			"pasteInvalidColumns": "Invalid number of columns ({0}). Expecting {1} columns.",
 			"pasteInvalidPassageBeforeSection": "Invalid passage before {0}.",
 			"pasteInvalidSections": "Invalid {0} number(s):",
@@ -1180,6 +1200,7 @@ const initialState = {
 			"no": "No",
 			"noAudio": "No Audio Available!",
 			"NoSaveOffline": "Unable to save while offline.",
+			"notSupported": "This feature is not supported yet.",
 			"observer": "Observer",
 			"paratextchapterSpan": "Passage {0}.{1} {2}: Passage must not span chapters.",
 			"part": "Part {0}",
@@ -1312,6 +1333,7 @@ const initialState = {
 			"segment": "Segment",
 			"teamCheck": "Compare",
 			"transcribe": "Transcribe",
+			"verses": "Mark Verses",
 			"wholeBackTranslate": "Whole Back Translate",
 		}
 	}),
@@ -1460,6 +1482,25 @@ const initialState = {
 			"timezone": "Timezone",
 		}
 	}),
+	"verse": new LocalizedStrings({
+		"en": {
+			"badReferences": "ERROR: Markup contains bad references",
+			"btNotUpdated": "WARNING: Since back translation recordings already exist, back translation segments will not be updated to line up with verse changes.",
+			"canceling": "Canceling verse markup",
+			"clipboard": "clipboard",
+			"copyToClipboard": "Copy to clipboard",
+			"issues": "The verse markup has issues. Do you want to continue?",
+			"markVerses": "Mark Verses",
+			"missingReferences": "Warning: Verses in passage not included: ({0})",
+			"noReferences": "Warning: Some audio segments will not be included in verses",
+			"noSegments": "ERROR: Some verses have no segment: ({0})",
+			"outsideReferences": "ERROR: Some verses are outside passage: ({0})",
+			"pasteFormat": "Invalid number of columns on clipboard.",
+			"reference": "Reference",
+			"saveVerseMarkup": "Save Verse Markup",
+			"startStop": "Start --> Stop",
+		}
+	}),
 	"viewMode": new LocalizedStrings({
 		"en": {
 			"audioProject": "Audio Project Setup",
@@ -1572,6 +1613,7 @@ const initialState = {
 			"teamReview": "Term Review",
 			"transcribe": "Transcribe",
 			"unsaved": "Unsaved content",
+			"markVerses": "Mark Verses",
 			"wholeBackTranslate": "Whole Back Translate",
 			"wholeBackTranslation": "Whole Back Translate",
 			"wBTTranscribe": "Whole BT Transcribe",
@@ -1720,6 +1762,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"uploadProgress" : new LocalizedStrings(action.payload.data.uploadProgress),
 				"userListMode" : new LocalizedStrings(action.payload.data.userListMode),
 				"usertable" : new LocalizedStrings(action.payload.data.usertable),
+				"verse" : new LocalizedStrings(action.payload.data.verse),
 				"viewMode" : new LocalizedStrings(action.payload.data.viewMode),
 				"vProject" : new LocalizedStrings(action.payload.data.vProject),
 				"welcome" : new LocalizedStrings(action.payload.data.welcome),

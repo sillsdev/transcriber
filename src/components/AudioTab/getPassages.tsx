@@ -1,7 +1,9 @@
 import { MediaFile, BookName, PassageD, SectionD } from '../../model';
-import { related } from '../../crud';
-import { refMatch } from '../../utils';
-import { IPRow, isAttached, pad } from '.';
+import { related } from '../../crud/related';
+import { refMatch } from '../../utils/refMatch';
+import { IPRow } from './IPRow';
+import { isAttached } from './isAttached';
+import { pad } from './pad';
 import { GetReference } from './GetReference';
 import { getSection } from './getSection';
 
@@ -23,6 +25,9 @@ export const passageRow = (
 ) => {
   const { media, allBookData } = data;
   const refMat = refMatch(passage.attributes.reference);
+  const chap = refMat && refMat.length > 1 ? parseInt(refMat[1]) : -1;
+  const endIdx = refMat && refMat.length > 4 && refMat[4] ? 4 : 3;
+
   return {
     id: passage.id,
     sectionId: section.id,
@@ -37,9 +42,13 @@ export const passageRow = (
 
     // Used for Reference matching
     book: passage.attributes.book,
-    chap: (refMat && parseInt(refMat[1])) || -1,
+    chap,
     beg: (refMat && refMat.length > 2 && parseInt(refMat[2])) || -1,
-    end: (refMat && refMat.length > 3 && parseInt(refMat[3])) || -1,
+    endChap:
+      refMat && refMat.length > 4 && refMat[4]
+        ? parseInt(refMat[3]) || chap
+        : -1,
+    end: refMat ? parseInt(refMat[endIdx]) || -1 : -1,
     pasNum: passage.attributes.sequencenum,
     secNum: section.attributes.sequencenum,
   };

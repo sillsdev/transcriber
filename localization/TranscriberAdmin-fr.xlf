@@ -217,6 +217,12 @@
             <target>Introduction au livre</target>
          </segment>
       </unit>
+      <unit id="artifactCategory.chapter">
+         <segment>
+            <source>Chapter Number</source>
+            <target>Numéro de chapitre</target>
+         </segment>
+      </unit>
       <unit id="artifactCategory.scripture">
          <segment>
             <source>Scripture</source>
@@ -257,6 +263,12 @@
          <segment>
             <source>Question and Answer</source>
             <target>Questions et réponses</target>
+         </segment>
+      </unit>
+      <unit id="artifactCategory.title">
+         <segment>
+            <source>Title</source>
+            <target>Titre</target>
          </segment>
       </unit>
       <unit id="artifactType.backtranslation">
@@ -580,7 +592,13 @@
       <unit id="cards.bibleIdExplain">
          <segment>
             <source>Explain Bible Id</source>
-            <target/>
+            <target>Expliquer l'identifiant de la Bible</target>
+         </segment>
+      </unit>
+      <unit id="cards.biblename">
+         <segment>
+            <source>Name of Bible</source>
+            <target>Nom de la Bible</target>
          </segment>
       </unit>
       <unit id="cards.cancel">
@@ -753,7 +771,7 @@
       </unit>
       <unit id="cards.OBTs">
          <segment>
-            <source>Oral Bible Translation (Simple)</source>
+            <source>Oral Bible Translation (simple)</source>
             <target>Traduction orale de la Bible (simple)</target>
          </segment>
       </unit>
@@ -898,7 +916,7 @@
       <unit id="cards.workflowProgressionStep">
          <segment>
             <source>Next Step</source>
-            <target/>
+            <target>Étape suivante</target>
          </segment>
       </unit>
       <unit id="cards.yes">
@@ -976,7 +994,19 @@
       <unit id="category.resource">
          <segment>
             <source>Resource</source>
-            <target/>
+            <target>Ressources</target>
+         </segment>
+      </unit>
+      <unit id="category.notes">
+         <segment>
+            <source>audio note(s)</source>
+            <target>note(s) audio</target>
+         </segment>
+      </unit>
+      <unit id="category.resources">
+         <segment>
+            <source>resource(s)</source>
+            <target>ressource(s)</target>
          </segment>
       </unit>
       <unit id="commentCard.approve">
@@ -1051,10 +1081,22 @@
             <target>Ajouter '{0}'.</target>
          </segment>
       </unit>
+      <unit id="community.backTranslationComplete">
+         <segment>
+            <source>Version {0}: Back translation: {1}</source>
+            <target>Version {0} : Back translation : {1}</target>
+         </segment>
+      </unit>
       <unit id="community.deleteItem">
          <segment>
             <source>Delete Item</source>
             <target>Supprimer l'élément</target>
+         </segment>
+      </unit>
+      <unit id="community.finished">
+         <segment>
+            <source>finished</source>
+            <target>terminé</target>
          </segment>
       </unit>
       <unit id="community.later">
@@ -1067,6 +1109,12 @@
          <segment>
             <source>Loading:</source>
             <target>Chargement :</target>
+         </segment>
+      </unit>
+      <unit id="community.none">
+         <segment>
+            <source>none</source>
+            <target>aucun</target>
          </segment>
       </unit>
       <unit id="community.playTest">
@@ -1109,6 +1157,18 @@
          <segment>
             <source>Segment</source>
             <target>Segmenter</target>
+         </segment>
+      </unit>
+      <unit id="community.segmentsChanged">
+         <segment>
+            <source>Changing segments will invalidate some recordings since they are linked to the segment start and end.</source>
+            <target>Le changement de segment invalidera certains enregistrements puisqu'ils sont liés au début et à la fin du segment.</target>
+         </segment>
+      </unit>
+      <unit id="community.segmentsComplete">
+         <segment>
+            <source>Version {0}: Segments complete ({2}): {1}</source>
+            <target>Version {0} : Segments terminés ({2}) : {1}</target>
          </segment>
       </unit>
       <unit id="community.speaker">
@@ -2737,6 +2797,12 @@
             <target>Admin</target>
          </segment>
       </unit>
+      <unit id="main.akuo">
+         <segment>
+            <source>Access Akuo Site</source>
+            <target>Accéder au site d'Akuo</target>
+         </segment>
+      </unit>
       <unit id="main.apiError">
          <segment>
             <source>API Error:</source>
@@ -2771,6 +2837,12 @@
          <segment>
             <source>Continue</source>
             <target>Continuer</target>
+         </segment>
+      </unit>
+      <unit id="main.course">
+         <segment>
+            <source>Access Accredited Course</source>
+            <target>Accéder à un cours accrédité</target>
          </segment>
       </unit>
       <unit id="main.continueCurrentUser">
@@ -2839,6 +2911,12 @@
             <target>Exemple de tableur hiérarchique général</target>
          </segment>
       </unit>
+      <unit id="main.googleSamples">
+         <segment>
+            <source>Sample Google spreadsheets</source>
+            <target>Exemple de feuilles de calcul Google</target>
+         </segment>
+      </unit>
       <unit id="main.helpCenter">
          <segment>
             <source>Help Center</source>
@@ -2893,6 +2971,12 @@
             <target>Déconnexion</target>
          </segment>
       </unit>
+      <unit id="main.logos">
+         <segment>
+            <source>Access Logos Resources</source>
+            <target>Accès Ressources Logos</target>
+         </segment>
+      </unit>
       <unit id="main.media">
          <segment>
             <source>Audio</source>
@@ -2909,6 +2993,18 @@
          <segment>
             <source>Unable to load audio project data offline.</source>
             <target>Impossible de charger les données du projet audio hors ligne.</target>
+         </segment>
+      </unit>
+      <unit id="main.openNotes">
+         <segment>
+            <source>Access Translator's Notes</source>
+            <target>Accéder aux notes du traducteur</target>
+         </segment>
+      </unit>
+      <unit id="main.openContent">
+         <segment>
+            <source>Access Open Content</source>
+            <target>Accéder au contenu ouvert</target>
          </segment>
       </unit>
       <unit id="main.passages">
@@ -2955,8 +3051,14 @@
       </unit>
       <unit id="main.reportWhenOnline">
          <segment>
-            <source>You must be online to report an problem.</source>
-            <target>Vous devez être en ligne pour signaler un problème.</target>
+            <source>You must be online to use this menu item.</source>
+            <target>Vous devez être en ligne pour utiliser cet élément de menu.</target>
+         </segment>
+      </unit>
+      <unit id="main.resources">
+         <segment>
+            <source>Access UBS Resources</source>
+            <target>Accès aux ressources d'UBS</target>
          </segment>
       </unit>
       <unit id="main.saveFirst">
@@ -3041,6 +3143,18 @@
          <segment>
             <source>Version: {0} - {1}</source>
             <target>Version : {0} - {1}</target>
+         </segment>
+      </unit>
+      <unit id="main.videos">
+         <segment>
+            <source>Access Training Videos</source>
+            <target>Accéder aux vidéos de formation</target>
+         </segment>
+      </unit>
+      <unit id="main.walkThru">
+         <segment>
+            <source>Access Walk Through</source>
+            <target>Accès à la visite guidée</target>
          </segment>
       </unit>
       <unit id="mediaActions.attach">
@@ -3189,8 +3303,8 @@
       </unit>
       <unit id="mediaTab.duration">
          <segment>
-            <source>Length (s)</source>
-            <target>Durée (s)</target>
+            <source>Duration</source>
+            <target>Durée de la visite</target>
          </segment>
       </unit>
       <unit id="mediaTab.fileAttached">
@@ -3406,7 +3520,13 @@
       <unit id="mediaTitle.save">
          <segment>
             <source>Save Recording</source>
-            <target/>
+            <target>Sauvegarder l'enregistrement</target>
+         </segment>
+      </unit>
+      <unit id="mediaTitle.saving">
+         <segment>
+            <source>Saving...</source>
+            <target>Sauvegarder...</target>
          </segment>
       </unit>
       <unit id="mediaUpload.cancel">
@@ -4114,7 +4234,19 @@
       <unit id="passageType.MOVE">
          <segment>
             <source>Movement</source>
-            <target/>
+            <target>Mouvement</target>
+         </segment>
+      </unit>
+      <unit id="passageType.PASS">
+         <segment>
+            <source>Passage</source>
+            <target>Passage</target>
+         </segment>
+      </unit>
+      <unit id="passageType.NOTE">
+         <segment>
+            <source>Note</source>
+            <target>Remarque</target>
          </segment>
       </unit>
       <unit id="peer.peerDescription">
@@ -4199,6 +4331,12 @@
          <segment>
             <source>Play from start</source>
             <target>Lecture depuis le début</target>
+         </segment>
+      </unit>
+      <unit id="peerCheck.toEnd">
+         <segment>
+            <source>Jump to end</source>
+            <target>Aller à la fin</target>
          </segment>
       </unit>
       <unit id="permission.admin">
@@ -4432,7 +4570,13 @@
       <unit id="planSheet.movement">
          <segment>
             <source>Movement</source>
-            <target/>
+            <target>Mouvement</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.moveUp">
+         <segment>
+            <source>Move up</source>
+            <target>Avancer</target>
          </segment>
       </unit>
       <unit id="planSheet.nonNumber">
@@ -4807,6 +4951,12 @@
             <target>Autoriser l'utilisateur à créer des projets de contenu partagé.</target>
          </segment>
       </unit>
+      <unit id="profile.syncFrequency">
+         <segment>
+            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="profile.timezone">
          <segment>
             <source>Time zone</source>
@@ -4905,14 +5055,20 @@
       </unit>
       <unit id="publishLevel.beta">
          <segment>
-            <source>Beta - only visible to users subscribed to app beta channel</source>
-            <target>Bêta - visible uniquement par les utilisateurs abonnés au canal bêta de l'application</target>
+            <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>
+            <target>Bêta - visible sur le site web d'Akuo lors de l'utilisation du paramètre bêta (non disponible dans l'application).</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.betalink">
+         <segment>
+            <source>https://akuobible.org/?beta=true</source>
+            <target>https://akuobible.org/?beta=true</target>
          </segment>
       </unit>
       <unit id="publishLevel.public">
          <segment>
-            <source>Public - visible to everyone using app</source>
-            <target>Public - visible par tous les utilisateurs de l'application</target>
+            <source>Public - visible to everyone using Akuo website or app</source>
+            <target>Public - visible par tous ceux qui utilisent le site web ou l'application Akuo.</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -5111,6 +5267,12 @@
          <segment>
             <source>Passage</source>
             <target>Passage</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidBooks">
+         <segment>
+            <source>Invalid book codes: {0}.</source>
+            <target>Codes livres invalides : {0}.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidColumns">
@@ -5501,6 +5663,12 @@
          <segment>
             <source>Unable to save while offline.</source>
             <target>Impossible d'enregistrer en mode hors connexion.</target>
+         </segment>
+      </unit>
+      <unit id="shared.notSupported">
+         <segment>
+            <source>This feature is not supported yet.</source>
+            <target>Cette fonctionnalité n'est pas encore prise en charge.</target>
          </segment>
       </unit>
       <unit id="shared.observer">
@@ -6101,6 +6269,12 @@
          <segment>
             <source>Transcribe</source>
             <target>Transcrire</target>
+         </segment>
+      </unit>
+      <unit id="tool.verses">
+         <segment>
+            <source>Mark Verses</source>
+            <target>Versets de la marque</target>
          </segment>
       </unit>
       <unit id="tool.wholeBackTranslate">
@@ -6739,6 +6913,42 @@
             <target>Fuseau horaire</target>
          </segment>
       </unit>
+      <unit id="verse.badReferences">
+         <segment>
+            <source>ERROR: Markup contains bad references</source>
+            <target>ERREUR : Le balisage contient de mauvaises références</target>
+         </segment>
+      </unit>
+      <unit id="verse.btNotUpdated">
+         <segment>
+            <source>WARNING: Since back translation recordings already exist, back translation segments will not be updated to line up with verse changes.</source>
+            <target>AVERTISSEMENT : Puisque les enregistrements de rétro-traduction existent déjà, les segments de rétro-traduction ne seront pas mis à jour pour s'aligner sur les changements de versets.</target>
+         </segment>
+      </unit>
+      <unit id="verse.canceling">
+         <segment>
+            <source>Canceling verse markup</source>
+            <target>Annulation du balisage du couplet</target>
+         </segment>
+      </unit>
+      <unit id="verse.clipboard">
+         <segment>
+            <source>clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.copyToClipboard">
+         <segment>
+            <source>Copy to clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.issues">
+         <segment>
+            <source>The verse markup has issues. Do you want to continue?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="viewMode.audioProject">
          <segment>
             <source>Audio Project Setup</source>
@@ -6838,7 +7048,7 @@
       <unit id="vProject.extrasBook">
          <segment>
             <source>Akuo Extras Book Designation</source>
-            <target/>
+            <target>Désignation du livre d'Akuo Extras</target>
          </segment>
       </unit>
       <unit id="vProject.flat">
@@ -7325,6 +7535,12 @@
          <segment>
             <source>Unsaved content</source>
             <target>Contenu non sauvegardé</target>
+         </segment>
+      </unit>
+      <unit id="workflowSteps.markVerses">
+         <segment>
+            <source>Mark Verses</source>
+            <target>Marquer les versets</target>
          </segment>
       </unit>
       <unit id="workflowSteps.wholeBackTranslate">

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+
 import {
   IState,
   Section,
@@ -45,10 +46,10 @@ import {
   ToolSlug,
   remoteId,
   remoteIdGuid,
-  getStartChapter,
   findRecord,
   useGraphicUpdate,
   useGraphicFind,
+  useSharedResRead,
 } from '../../crud';
 import {
   lookupBook,
@@ -82,7 +83,7 @@ import AssignSection from '../AssignSection';
 import StickyRedirect from '../StickyRedirect';
 import Uploader from '../Uploader';
 import { useMediaAttach } from '../../crud/useMediaAttach';
-import { UpdateRecord, UpdateRelatedRecord } from '../../model/baseModel';
+import { UpdateRecord } from '../../model/baseModel';
 import { PlanContext } from '../../context/PlanContext';
 import stringReplace from 'react-string-replace';
 import BigDialog from '../../hoc/BigDialog';
@@ -121,6 +122,7 @@ import GraphicRights from '../GraphicRights';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 import { PublishLevelEnum, usePublishLevel } from '../../crud/usePublishLevel';
+import { getLastVerse } from '../../business/localParatext/getLastVerse';
 
 const SaveWait = 500;
 
@@ -246,7 +248,7 @@ export function ScriptureTable(props: IProps) {
   const localSave = useWfLocalSave({ setComplete });
   const onlineSave = useWfOnlineSave({ setComplete });
   const [detachPassage] = useMediaAttach();
-  const checkOnline = useCheckOnline();
+  const checkOnline = useCheckOnline('ScriptureTable');
   const [speaker, setSpeaker] = useState('');
   const getStepsBusy = useRef(false);
   const [orgSteps, setOrgSteps] = useState<OrgWorkflowStepD[]>([]);
@@ -257,6 +259,7 @@ export function ScriptureTable(props: IProps) {
     getLocalDefault,
     setLocalDefault,
   } = useProjectDefaults();
+  const readSharedResource = useSharedResRead();
   const getFilteredSteps = useFilteredSteps();
   const getDiscussionCount = useDiscussionCount({
     mediafiles,
@@ -579,7 +582,7 @@ export function ScriptureTable(props: IProps) {
       ...myWorkflow[index],
       level: flat && level ? level : SheetLevel.Passage,
       kind: flat ? IwsKind.SectionPassage : IwsKind.Passage,
-      book: firstBook,
+      book: scripture ? firstBook : '',
       reference: reference ?? ptype ?? '',
       mediaId: undefined,
       comment: title ?? '',
@@ -647,9 +650,8 @@ export function ScriptureTable(props: IProps) {
       passageSeq: 0,
       reference: '',
       published: PublishLevelEnum.None,
+      book: scripture ? firstBook : '',
     } as ISheet;
-    let prevRowIdx = i ? i - 1 : ws.length - 1;
-    if (prevRowIdx >= 0) newRow.book = ws[prevRowIdx].book;
     return newRow;
   };
   const addSection = (
@@ -937,30 +939,6 @@ export function ScriptureTable(props: IProps) {
         } as ISheet;
         setSheet(newsht);
         setChanged(true);
-        if (ws?.passage?.id) {
-          const mediaRec = findRecord(memory, 'mediafile', mediaId) as
-            | MediaFileD
-            | undefined;
-          if (mediaRec)
-            await memory.update((t) => [
-              ...UpdateRelatedRecord(
-                t,
-                mediaRec,
-                'passage',
-                'passage',
-                ws?.passage?.id as string,
-                user
-              ),
-              ...UpdateRelatedRecord(
-                t,
-                mediaRec,
-                'artifactType',
-                'artifacttype',
-                VernacularTag as any,
-                user
-              ),
-            ]);
-        }
       }
     }
     setUpdate(false);
@@ -1073,7 +1051,7 @@ export function ScriptureTable(props: IProps) {
   };
 
   const handleUploadGraphicVisible = (v: boolean) => {
-    setUploadType(undefined);
+    setUploadType(v ? UploadType.Graphic : undefined);
     setUploadGraphicVisible(v);
   };
 
@@ -1086,9 +1064,11 @@ export function ScriptureTable(props: IProps) {
       uploadItem.current = ws;
       setGraphicFullsizeUrl(ws?.graphicFullSizeUrl ?? '');
       setCurGraphicRights(ws?.graphicRights ?? '');
-      setUploadGraphicVisible(true);
     });
   };
+  useEffect(() => {
+    setUploadGraphicVisible(uploadType === UploadType.Graphic);
+  }, [uploadType]);
 
   const handleRightsChange = (graphicRights: string) => {
     const ws = uploadItem.current;
@@ -1364,14 +1344,14 @@ export function ScriptureTable(props: IProps) {
       !updateRef.current
     ) {
       setUpdate(true);
-      const newWorkflow = getSheet(
+      const newWorkflow = getSheet({
         plan,
         sections,
         passages,
         flat,
-        shared,
+        projectShared: shared,
         memory,
-        orgSteps,
+        orgWorkflowSteps: orgSteps,
         wfStr,
         filterState,
         minSection,
@@ -1379,8 +1359,9 @@ export function ScriptureTable(props: IProps) {
         doneStepId,
         getDiscussionCount,
         graphicFind,
-        getPublishLevel
-      );
+        getPublishLevel,
+        readSharedResource,
+      });
       setSheet(newWorkflow);
 
       getLastModified(plan);
@@ -1650,6 +1631,9 @@ export function ScriptureTable(props: IProps) {
       : false;
   };
 
+  const chapterNumberReference = (chapter: number) =>
+    PassageTypeEnum.CHAPTERNUMBER + ' ' + chapter.toString();
+
   const addChapterNumber = (newsht: ISheet[], chapter: number) => {
     if (chapter > 0) {
       const title = chapterNumberTitle(chapter);
@@ -1660,7 +1644,7 @@ export function ScriptureTable(props: IProps) {
         undefined,
         undefined,
         title,
-        PassageTypeEnum.CHAPTERNUMBER + ' ' + chapter.toString()
+        chapterNumberReference(chapter)
       );
     }
     return newsht;
@@ -1669,9 +1653,21 @@ export function ScriptureTable(props: IProps) {
   const doPublish = async () => {
     let currentChapter = 0;
 
-    const startChapter = (s: ISheet) =>
-      (s.passage && s.passage.attributes.startChapter) ??
-      getStartChapter(s.reference);
+    const startChapter = (s: ISheet) => {
+      var startchap = s.passage?.attributes?.startChapter ?? 0;
+      var endchap = s.passage?.attributes?.endChapter ?? 0;
+      if (startchap > 0 && startchap !== endchap) {
+        var lastverse = getLastVerse(s.book ?? '', startchap) ?? 0;
+        if (lastverse > 0) {
+          var startverse = s.passage?.attributes.startVerse ?? 0;
+          var endverse = s.passage?.attributes.endVerse ?? 0;
+          if (endverse > lastverse - startverse + 1) {
+            return endchap;
+          }
+        }
+      }
+      return startchap;
+    };
 
     const chapterChanged = (s: ISheet) =>
       s.passageType === PassageTypeEnum.PASSAGE &&
@@ -1679,6 +1675,24 @@ export function ScriptureTable(props: IProps) {
       startChapter(s) > 0 &&
       startChapter(s) !== currentChapter;
 
+    const haveChapterNumber = (
+      sht: ISheet[],
+      nextchap: number,
+      startcheck: number,
+      endcheck: number
+    ) => {
+      var gotit = false;
+
+      while (startcheck++ < endcheck) {
+        if (
+          isKind(startcheck, PassageTypeEnum.CHAPTERNUMBER) &&
+          sht[startcheck].reference === chapterNumberReference(nextchap)
+        ) {
+          gotit = true;
+        }
+      }
+      return gotit;
+    };
     let newworkflow: ISheet[] = [];
     if (savingRef.current || updateRef.current) {
       showMessage(t.saving);
@@ -1709,22 +1723,14 @@ export function ScriptureTable(props: IProps) {
             r.sectionSeq === s.sectionSeq &&
             r.passageSeq > 0
         );
+
         if (vernpsg > 0 && chapterChanged(sht[vernpsg])) {
-          var check = index;
-          var gotit = false;
-          while (check++ < vernpsg) {
-            if (isKind(check, PassageTypeEnum.CHAPTERNUMBER)) {
-              gotit = true;
-            }
-          }
-          if (!gotit) {
-            newworkflow = addChapterNumber(
-              newworkflow,
-              startChapter(sht[vernpsg])
-            );
+          var nextchap = startChapter(sht[vernpsg]);
+          if (!haveChapterNumber(sht, nextchap, index, vernpsg)) {
+            newworkflow = addChapterNumber(newworkflow, nextchap);
             nextpsg += 0.01;
           }
-          currentChapter = startChapter(sht[vernpsg]);
+          currentChapter = nextchap;
         }
       } //just a passage
       else {
@@ -1732,10 +1738,7 @@ export function ScriptureTable(props: IProps) {
         var prevrow = index - 1;
         while (sht[prevrow].deleted) prevrow--;
         if (!isSectionRow(sht[prevrow]) && !s.deleted && chapterChanged(s)) {
-          if (
-            !isKind(index - 1, PassageTypeEnum.CHAPTERNUMBER) &&
-            !isKind(index - 2, PassageTypeEnum.CHAPTERNUMBER)
-          ) {
+          if (!haveChapterNumber(sht, startChapter(s), index - 2, index)) {
             newworkflow = addChapterNumber(newworkflow, startChapter(s));
             nextpsg += 0.01;
           }

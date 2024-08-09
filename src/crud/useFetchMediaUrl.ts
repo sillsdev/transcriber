@@ -1,12 +1,11 @@
-import { useEffect, useReducer, useContext } from 'react';
+import { useEffect, useReducer } from 'react';
 import { useGlobal } from 'reactn';
-import Axios from 'axios';
-import { API_CONFIG, isElectron } from '../api-variable';
-import { TokenContext } from '../context/TokenProvider';
+import { isElectron } from '../api-variable';
 import { remoteIdGuid, remoteId } from '../crud';
 import { dataPath, PathType } from '../utils/dataPath';
 import { MediaFile } from '../model';
 import { infoMsg, logError, Severity } from '../utils';
+import { useFetchUrlNow } from './useFetchUrlNow';
 import { RecordKeyMap } from '@orbit/records';
 const ipc = (window as any)?.electron;
 // See: https://www.smashingmagazine.com/2020/07/custom-react-hook-fetch-cache-data/
@@ -70,7 +69,7 @@ const stateReducer = (state: IMediaState, action: Action): IMediaState => {
   }
 };
 
-interface IProps {
+export interface IFetchMediaProps {
   id: string;
 }
 
@@ -78,8 +77,16 @@ export const useFetchMediaUrl = (reporter?: any) => {
   const [state, dispatch] = useReducer(stateReducer, mediaClean);
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
-  const { accessToken } = useContext(TokenContext).state;
 
+  const fetchUrl = useFetchUrlNow();
+  const safeURL = async (path: string) => {
+    if (!path.startsWith('http')) {
+      const start = (await ipc?.isWindows()) ? 8 : 7;
+      const url = new URL(`file://${path}`).toString().slice(start);
+      return `transcribe-safe://${url}`;
+    }
+    return path;
+  };
   const guidId = (id: string) => {
     return !isNaN(Number(id))
       ? (remoteIdGuid('mediafile', id, memory.keyMap as RecordKeyMap) as string)
@@ -90,15 +97,6 @@ export const useFetchMediaUrl = (reporter?: any) => {
     return isNaN(Number(id))
       ? (remoteId('mediafile', id, memory.keyMap as RecordKeyMap) as string)
       : id;
-  };
-
-  const safeURL = async (path: string) => {
-    if (!path.startsWith('http')) {
-      const start = (await ipc?.isWindows()) ? 8 : 7;
-      const url = new URL(`file://${path}`).toString().slice(start);
-      return `transcribe-safe://${url}`;
-    }
-    return path;
   };
 
   useEffect(() => {
@@ -131,8 +129,8 @@ export const useFetchMediaUrl = (reporter?: any) => {
               mediarec.attributes.audioUrl ??
               mediarec.attributes.s3file ??
               mediarec.attributes.originalFile;
-            const path = await dataPath(audioUrl, PathType.MEDIA, local);
-            const foundLocal = local.localname === path;
+            let path = await dataPath(audioUrl, PathType.MEDIA, local);
+            let foundLocal = local.localname === path;
             if (foundLocal || offline) {
               if (!path.startsWith('http')) {
                 if (cancelled()) return;
@@ -158,21 +156,27 @@ export const useFetchMediaUrl = (reporter?: any) => {
         }
       }
       if (cancelled()) return;
-      Axios.get(`${API_CONFIG.host}/api/mediafiles/${state.remoteId}/fileurl`, {
-        headers: {
-          Authorization: 'Bearer ' + accessToken,
-        },
-      })
-        .then((strings) => {
-          const attr: any = strings.data.data.attributes;
-          if (cancelled()) return;
-          dispatch({ payload: attr['audio-url'], type: MediaSt.FETCHED });
-        })
-        .catch((e) => {
-          if (cancelled()) return;
-          logError(Severity.error, reporter, infoMsg(e, 'media fetch failure'));
-          dispatch({ payload: e.message, type: MediaSt.ERROR });
+      try {
+        fetchUrl({ id: state.remoteId, cancelled }).then((url) => {
+          if (url)
+            safeURL(url).then((path) => {
+              dispatch({
+                payload: path,
+                type: MediaSt.FETCHED,
+              });
+            });
+          else if (cancelled()) return;
+          else
+            dispatch({
+              payload: 'no url',
+              type: MediaSt.ERROR,
+            });
         });
+      } catch (e: any) {
+        if (cancelled()) return;
+        logError(Severity.error, reporter, infoMsg(e, 'media fetch failure'));
+        dispatch({ payload: e.message, type: MediaSt.ERROR });
+      }
     };
 
     fetchData();
@@ -183,7 +187,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.id]);
 
-  const fetchMediaUrl = (props: IProps) => {
+  const fetchMediaUrl = (props: IFetchMediaProps) => {
     let { id } = props;
     if (!id) {
       dispatch({ payload: undefined, type: MediaSt.IDLE });

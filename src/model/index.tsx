@@ -63,3 +63,4 @@ export * from './organizationBible';
 export * from './paratextProject';
 export * from './intellectualProperty';
 export * from './vwchecksum';
+export * from './IExecResult';

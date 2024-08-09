@@ -31,13 +31,13 @@ import { pendingStatus, errStatus, errorStatus } from '../AxiosStatus';
 import { findRecord, getMediaInPlans, related } from '../../crud';
 import {
   fileJson,
-  getLocalParatextText,
   infoMsg,
   logError,
   Severity,
   refMatch,
   axiosError,
 } from '../../utils';
+import { getLocalParatextText } from '../../business/localParatext';
 import MemorySource from '@orbit/memory';
 const ipc = (window as any)?.electron;
 

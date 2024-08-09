@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { TokenContext } from '../context/TokenProvider';
 import { useDispatch } from 'react-redux';
 import { doDataChanges } from '../hoc/DataChanges';
-import { useOfflnProjRead } from '../crud';
+import { useFetchUrlNow, useOfflnProjRead } from '../crud';
 import * as actions from '../store';
 import { useGlobal } from 'reactn';
 
@@ -17,7 +17,7 @@ export const useDataChanges = () => {
   const dispatch = useDispatch();
   const setLanguage = (lang: string) => dispatch(actions.setLanguage(lang));
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
-
+  const fetchUrl = useFetchUrlNow();
   return () => {
     doDataChanges(
       accessToken || '',
@@ -28,7 +28,8 @@ export const useDataChanges = () => {
       errorReporter,
       user,
       setLanguage,
-      setDataChangeCount
+      setDataChangeCount,
+      fetchUrl
     );
   };
 };

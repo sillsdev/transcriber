@@ -254,6 +254,13 @@
                <context context-type="sourcefile">artifactCategory.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="artifactCategory.chapter">
+            <source>Chapter Number</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="artifactCategory.scripture">
             <source>Scripture</source>
             <target/>
@@ -298,6 +305,13 @@
       	</trans-unit>
          <trans-unit id="artifactCategory.qanda">
             <source>Question and Answer</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">artifactCategory.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="artifactCategory.title">
+            <source>Title</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">artifactCategory.tsx</context>
@@ -1249,11 +1263,25 @@
       			<context context-type="sourcefile">SpeakerName.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="community.backTranslationComplete">
+            <source>Version {0}: Back translation: {1}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailItem.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="community.deleteItem">
             <source>Delete Item</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="community.finished">
+            <source>finished</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailItem.tsx</context>
             </context-group>
          </trans-unit>
       	<trans-unit id="community.later">
@@ -1270,6 +1298,13 @@
       			<context context-type="sourcefile">SpeakerName.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="community.none">
+            <source>none</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">SpeakerName.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="community.playTest">
             <source>Play Test</source>
             <target/>
@@ -1314,6 +1349,20 @@
          </trans-unit>
          <trans-unit id="community.segment">
             <source>Segment</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="community.segmentsChanged">
+            <source>Changing segments will invalidate some recordings since they are linked to the segment start and end.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Community.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="community.segmentsComplete">
+            <source>Version {0}: Segments complete ({2}): {1}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
@@ -3217,6 +3266,13 @@
                <context context-type="sourcefile">drawer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="main.akuo">
+            <source>Access Akuo Site</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="main.apiError">
             <source>API Error:</source>
             <target/>
@@ -3254,6 +3310,13 @@
          </trans-unit>
          <trans-unit id="main.continue">
             <source>Continue</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TokenProvider.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="main.course">
+            <source>Access Accredited Course</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TokenProvider.tsx</context>
@@ -3336,6 +3399,13 @@
                <context context-type="sourcefile">HelpMenu.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="main.googleSamples">
+            <source>Sample Google spreadsheets</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="main.helpCenter">
             <source>Help Center</source>
             <target/>
@@ -3399,6 +3469,13 @@
                <context context-type="sourcefile">UserMenu.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="main.logos">
+            <source>Access Logos Resources</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="main.media">
             <source>Audio</source>
             <target/>
@@ -3418,6 +3495,20 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">drawer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="main.openNotes">
+            <source>Access Translator's Notes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="main.openContent">
+            <source>Access Open Content</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="main.passages">
@@ -3470,7 +3561,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="main.reportWhenOnline">
-            <source>You must be online to report an problem.</source>
+            <source>You must be online to use this menu item.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="main.resources">
+            <source>Access UBS Resources</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">HelpMenu.tsx</context>
@@ -3572,6 +3670,20 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">AboutDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="main.videos">
+            <source>Access Training Videos</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="main.walkThru">
+            <source>Access Walk Through</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="mediaActions.attach">
@@ -3743,7 +3855,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="mediaTab.duration">
-            <source>Length (s)</source>
+            <source>Duration</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaTab.tsx</context>
@@ -4946,6 +5058,13 @@
       			<context context-type="sourcefile">TeamCheckReference.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="peerCheck.toEnd">
+            <source>Jump to end</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TeamCheckReference.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="permission.admin">
       		<source>Admin</source>
       		<target/>
@@ -5660,6 +5779,13 @@
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="profile.syncFrequency">
+            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Profile.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="profile.timezone">
             <source>Time zone</source>
             <target/>
@@ -5773,14 +5899,21 @@
             </context-group>
          </trans-unit>
          <trans-unit id="publishLevel.beta">
-            <source>Beta - only visible to users subscribed to app beta channel</source>
+            <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="publishLevel.betalink">
+            <source>https://akuobible.org/?beta=true</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="publishLevel.public">
-            <source>Public - visible to everyone using app</source>
+            <source>Public - visible to everyone using Akuo website or app</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
@@ -6012,6 +6145,13 @@
          </trans-unit>
          <trans-unit id="scriptureTable.passage">
             <source>Passage</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ScriptureTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="scriptureTable.pasteInvalidBooks">
+            <source>Invalid book codes: {0}.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -6470,6 +6610,13 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.notSupported">
+            <source>This feature is not supported yet.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailParatextIntegration.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="shared.observer">
@@ -7168,6 +7315,13 @@
          </trans-unit>
          <trans-unit id="tool.transcribe">
             <source>Transcribe</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">useTools.ts</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="tool.verses">
+            <source>Mark Verses</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">useTools.ts</context>
@@ -7916,6 +8070,111 @@
                <context context-type="sourcefile">UserTable.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="verse.badReferences">
+            <source>ERROR: Markup contains bad references</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.btNotUpdated">
+            <source>WARNING: Since back translation recordings already exist, back translation segments will not be updated to line up with verse changes.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.canceling">
+            <source>Canceling verse markup</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.clipboard">
+            <source>clipboard</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.copyToClipboard">
+            <source>Copy to clipboard</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.issues">
+            <source>The verse markup has issues. Do you want to continue?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.markVerses">
+            <source>Mark Verses</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.missingReferences">
+            <source>Warning: Verses in passage not included: ({0})</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.noReferences">
+            <source>Warning: Some audio segments will not be included in verses</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.noSegments">
+            <source>ERROR: Some verses have no segment: ({0})</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.outsideReferences">
+            <source>ERROR: Some verses are outside passage: ({0})</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.pasteFormat">
+            <source>Invalid number of columns on clipboard.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.reference">
+            <source>Reference</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.saveVerseMarkup">
+            <source>Save Verse Markup</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="verse.startStop">
+            <source>Start --> Stop</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageDetailMarkVerse.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="viewMode.audioProject">
             <source>Audio Project Setup</source>
             <target/>
@@ -8598,6 +8857,13 @@
          </trans-unit>
          <trans-unit id="workflowSteps.unsaved">
             <source>Unsaved content</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetail.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="workflowSteps.markVerses">
+            <source>Mark Verses</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageDetail.tsx</context>

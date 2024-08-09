@@ -307,7 +307,7 @@ export const ProjectCard = (props: IProps) => {
     const labels = ['BOOK', 'ALTBK'];
     labels.forEach((label) => {
       var books = rows.filter((s) =>
-        s.attributes.state.startsWith(label)
+        s.attributes?.state?.startsWith(label)
       ) as SectionD[];
       books.forEach((row) => {
         if (book) {

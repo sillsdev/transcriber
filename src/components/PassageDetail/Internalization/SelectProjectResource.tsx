@@ -15,7 +15,12 @@ import {
   ListItemButton,
 } from '@mui/material';
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
-import { useArtifactCategory, related, mediaFileName } from '../../../crud';
+import {
+  useArtifactCategory,
+  related,
+  mediaFileName,
+  useRole,
+} from '../../../crud';
 import {
   sharedSelector,
   passageDetailArtifactsSelector,
@@ -39,6 +44,7 @@ export const SelectProjectResource = (props: IProps) => {
   const [complete, setComplete] = useGlobal('progress');
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const { userIsAdmin } = useRole();
   const [resource, setResouce] = useState<MediaFileD[]>([]);
   const ctx = useContext(PassageDetailContext);
   const { getProjectResources } = ctx.state;
@@ -132,7 +138,7 @@ export const SelectProjectResource = (props: IProps) => {
                 )}
                 <IconButton
                   onClick={handleDelete(r)}
-                  disabled={isOffline && !offlineOnly}
+                  disabled={isOffline && !offlineOnly && !userIsAdmin}
                 >
                   <DeleteIcon />
                 </IconButton>

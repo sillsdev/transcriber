@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { passageTypeFromRef } from '../../control/RefRender';
 import { PassageTypeEnum } from '../../model/passageType';
-import { refMatch } from '../../utils';
+import { refMatch } from '../../utils/refMatch';
 import { PlanContext } from '../../context/PlanContext';
 
 export const useRefErrTest = () => {

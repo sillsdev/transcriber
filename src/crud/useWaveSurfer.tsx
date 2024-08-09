@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useGlobal } from 'reactn';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
-import { logError, Severity, waitForIt } from '../utils';
+import { logError, Severity } from '../utils/logErrorService';
+import { waitForIt } from '../utils/waitForIt';
 import {
   IRegion,
   IRegions,
@@ -36,7 +37,9 @@ export function useWaveSurfer(
   singleRegionOnly: boolean = false,
   timelineContainer?: any,
   currentSegmentIndex?: number,
-  onCurrentRegion?: (currentRegion: IRegion | undefined) => void
+  onCurrentRegion?: (currentRegion: IRegion | undefined) => void,
+  onStartRegion?: (start: number) => void,
+  verses?: string
 ) {
   //const isMounted = useMounted('wavesurfer');
   const [globalStore] = useGlobal();
@@ -149,7 +152,9 @@ export function useWaveSurfer(
     wsGoto,
     progress,
     setPlaying,
-    onCurrentRegion
+    onCurrentRegion,
+    onStartRegion,
+    verses
   );
 
   const wavesurfer = () =>

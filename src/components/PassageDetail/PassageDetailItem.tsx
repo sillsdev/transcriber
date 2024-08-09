@@ -1,5 +1,5 @@
 import { shallowEqual } from 'react-redux';
-import { ICommunityStrings, ISharedStrings, MediaFile } from '../../model';
+import { ICommunityStrings, ISharedStrings, MediaFileD } from '../../model';
 import {
   Button,
   debounce,
@@ -26,7 +26,6 @@ import {
 } from 'react';
 import {
   ArtifactTypeSlug,
-  findRecord,
   IRegionParams,
   related,
   useArtifactType,
@@ -36,8 +35,8 @@ import {
 } from '../../crud';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import Memory from '@orbit/memory';
-import { useSnackBar } from '../../hoc/SnackBar';
-import { NamedRegions } from '../../utils';
+import { AlertSeverity, useSnackBar } from '../../hoc/SnackBar';
+import { getSegments, NamedRegions } from '../../utils/namedSegments';
 import styledHtml from 'styled-components';
 import {
   default as SplitPaneBar,
@@ -60,6 +59,14 @@ import { useSelector } from 'react-redux';
 import { communitySelector, sharedSelector } from '../../selector';
 import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import PassageDetailChooser from './PassageDetailChooser';
+import ArtifactStatus from '../ArtifactStatus';
+import { useOrbitData } from '../../hoc/useOrbitData';
+
+export const btDefaultSegParams = {
+  silenceThreshold: 0.004,
+  timeThreshold: 0.12,
+  segLenThreshold: 4.5,
+};
 
 const PlayerRow = styled('div')(() => ({
   width: '100%',
@@ -155,6 +162,7 @@ interface IProps {
 
 export function PassageDetailItem(props: IProps) {
   const { width, slugs, segments, showTopic } = props;
+  const mediafiles = useOrbitData<MediaFileD[]>('mediafile');
   const oneTryOnly = slugs.includes(ArtifactTypeSlug.WholeBackTranslation);
   const t: ICommunityStrings = useSelector(communitySelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
@@ -204,13 +212,9 @@ export function PassageDetailItem(props: IProps) {
   const { showMessage } = useSnackBar();
   const [recordType, setRecordType] = useState<ArtifactTypeSlug>(slugs[0]);
   const [currentVersion, setCurrentVersion] = useState(1);
-
+  const [segString, setSegString] = useState('{}');
+  const [verses, setVerses] = useState('');
   const cancelled = useRef(false);
-  const btDefaultSegParams = {
-    silenceThreshold: 0.004,
-    timeThreshold: 0.12,
-    segLenThreshold: 4.5,
-  };
   const { getOrgDefault, setOrgDefault, canSetOrgDefault } = useOrgDefaults();
   const [segParams, setSegParams] = useState<IRegionParams>(btDefaultSegParams);
   const toolId = 'RecordArtifactTool';
@@ -247,10 +251,37 @@ export function PassageDetailItem(props: IProps) {
 
   useEffect(() => {
     if (mediafileId !== mediaState.id) fetchMediaUrl({ id: mediafileId });
-    var mediaRec = findRecord(memory, 'mediafile', mediafileId) as MediaFile;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mediafileId, mediaState.id]);
+
+  const hasBtRecordings = useMemo(() => {
+    const mediaRec = mediafiles.find((m) => m.id === mediafileId);
+    const btType = localizedArtifactType(
+      ArtifactTypeSlug.PhraseBackTranslation
+    );
+    const version = mediaRec?.attributes.versionNumber;
+    return rowData.some(
+      (r) => r.artifactType === btType && r.sourceVersion === version
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowData, mediafileId, mediafiles]);
+
+  useEffect(() => {
+    const mediaRec = mediafiles.find((m) => m.id === mediafileId);
+    const defaultSegments = mediaRec?.attributes?.segments ?? '{}';
+    const newSegString = getSegments(
+      NamedRegions.BackTranslation,
+      defaultSegments
+    );
+    if (segString !== newSegString) {
+      setSegString(newSegString);
+      if (hasBtRecordings)
+        showMessage(t.segmentsChanged, AlertSeverity.Warning);
+    }
+    setVerses(getSegments(NamedRegions.Verse, defaultSegments));
     setCurrentVersion(mediaRec?.attributes?.versionNumber || 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mediafileId]);
+  }, [mediafileId, mediafiles, hasBtRecordings]);
 
   const recordTypeId = useMemo(
     () => getTypeId(recordType),
@@ -405,6 +436,8 @@ export function PassageDetailItem(props: IProps) {
                           : undefined
                       }
                       defaultSegParams={segParams}
+                      suggestedSegments={segString}
+                      verses={verses}
                       canSetDefaultParams={canSetOrgDefault}
                       onSegmentParamChange={onSegmentParamChange}
                       chooserReduce={chooserSize}
@@ -413,6 +446,14 @@ export function PassageDetailItem(props: IProps) {
                   {currentVersion !== 0 ? (
                     <Pane>
                       <Paper sx={paperProps}>
+                        <Box sx={rowProp}>
+                          <ArtifactStatus
+                            recordType={recordType}
+                            currentVersion={currentVersion}
+                            rowData={rowData}
+                            segments={segString}
+                          />
+                        </Box>
                         <Box sx={rowProp}>
                           <Button
                             sx={buttonProp}

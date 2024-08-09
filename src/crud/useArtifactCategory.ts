@@ -10,13 +10,15 @@ import {
 import { RecordTransformBuilder } from '@orbit/records';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
-import { related, findRecord } from '.';
+import { related } from './related';
+import { findRecord } from './tryFindRecord';
 import {
   AddRecord,
   ReplaceRelatedRecord,
   UpdateRecord,
 } from '../model/baseModel';
-import { cleanFileName, useWaitForRemoteQueue } from '../utils';
+import { cleanFileName } from '../utils/cleanFileName';
+import { useWaitForRemoteQueue } from '../utils/useWaitForRemoteQueue';
 
 interface ISwitches {
   [key: string]: any;
@@ -28,6 +30,7 @@ export interface IArtifactCategory {
   id: string;
   titleMediaId: string;
   color: string;
+  specialuse: string;
 }
 export enum ArtifactCategoryType {
   Resource = 'resource',
@@ -46,7 +49,7 @@ export const useArtifactCategory = (teamId?: string) => {
   const waitForRemoteQueue = useWaitForRemoteQueue();
   const t: IArtifactCategoryStrings = useSelector(stringSelector, shallowEqual);
   const [fromLocal] = useState<ISwitches>({});
-
+  const specialNoteCategories = ['chapter', 'title'];
   const localizedArtifactCategory = (val: string) => {
     return (t as ISwitches)[val] || val;
   };
@@ -72,6 +75,33 @@ export const useArtifactCategory = (teamId?: string) => {
     return cleanFileName(orgRec?.attributes?.slug + 'cat' + name) ?? '';
   };
 
+  const AddOrgNoteCategories = async (orgId?: string) => {
+    if (offlineOnly) return;
+    // Add default note categories
+
+    specialNoteCategories.forEach(async (category) => {
+      let noteCategory: ArtifactCategoryD = {
+        type: 'artifactcategory',
+        attributes: {
+          specialuse: category,
+          categoryname: localizedArtifactCategory(category),
+          discussion: false,
+          resource: false,
+          note: true,
+        },
+      } as ArtifactCategoryD;
+      await memory.update((t) => [
+        ...AddRecord(t, noteCategory, user, memory),
+        ...ReplaceRelatedRecord(
+          t,
+          noteCategory,
+          'organization',
+          'organization',
+          orgId ?? curOrg
+        ),
+      ]);
+    });
+  };
   const getArtifactCategorys = async (type: ArtifactCategoryType) => {
     const categorys: IArtifactCategory[] = [];
     /* wait for new categories remote id to fill in */
@@ -87,6 +117,31 @@ export const useArtifactCategory = (teamId?: string) => {
           related(r, 'organization') === null) &&
         Boolean(r.keys?.remoteId) !== offlineOnly
     );
+    if (!offlineOnly && type === ArtifactCategoryType.Note) {
+      if (
+        orgrecs.filter(
+          (r) =>
+            r.attributes.note &&
+            r.attributes.specialuse === specialNoteCategories[0]
+        ).length === 0
+      ) {
+        //double check online
+        var special = (await memory.query((q) =>
+          q.findRecords('artifactcategory').filter({
+            attribute: 'specialuse',
+            value: specialNoteCategories[0],
+          })
+        )) as ArtifactCategoryD[];
+        if (
+          special.filter((r) => related(r, 'organization') === curOrg)
+            .length === 0
+        ) {
+          await AddOrgNoteCategories(curOrg);
+          await waitForRemoteQueue('category add special');
+        }
+      }
+    }
+
     if (type === ArtifactCategoryType.Resource)
       orgrecs = orgrecs.filter((r) => r.attributes.resource);
     else if (type === ArtifactCategoryType.Discussion)
@@ -102,6 +157,7 @@ export const useArtifactCategory = (teamId?: string) => {
         id: r.id,
         titleMediaId: related(r, 'titleMediafile') ?? '',
         color: r.attributes?.color ?? '',
+        specialuse: r.attributes?.specialuse ?? '',
       })
     );
     return categorys;
@@ -234,5 +290,6 @@ export const useArtifactCategory = (teamId?: string) => {
     scriptureTypeCategory,
     slugFromId,
     defaultMediaName,
+    AddOrgNoteCategories,
   };
 };

@@ -1,3 +1,4 @@
+import { IExecResult } from '../model';
 import { fileJson, getRegVal } from '../utils';
 const path = require('path-browserify');
 const ipc = (window as any)?.electron;
@@ -49,7 +50,9 @@ export const getReadWriteProg = async () => {
       (await getRegVal(regKey, progVal9)) ||
       (await getRegVal(regKey, progVal8));
     return async (args: string[]) => {
-      return JSON.parse(await ipc?.exec(path.join(progPath, 'rdwrtp8'), args));
+      return JSON.parse(
+        await ipc?.exec(path.join(progPath, 'rdwrtp8'), args)
+      ) as IExecResult;
     };
   } else {
     return async (args: string[]) => {
@@ -57,7 +60,7 @@ export const getReadWriteProg = async () => {
         await ipc?.exec('/usr/bin/paratext9', ['--rdwrtp8'].concat(args), {
           env: { ...{ ...process }.env, DISPLAY: ':0' },
         })
-      );
+      ) as IExecResult;
     };
   }
 };

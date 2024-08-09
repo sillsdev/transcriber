@@ -35,7 +35,10 @@ import {
 
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
 import { IMarker, useWaveSurfer } from '../crud/useWaveSurfer';
-import { Duration, GrowingSpacer, LightTooltip, IosSlider } from '../control';
+import { Duration } from '../control/Duration';
+import { GrowingSpacer } from '../control/GrowingSpacer';
+import { LightTooltip } from '../control/LightTooltip';
+import { IosSlider } from '../control/IosSlider';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
 import WSAudioPlayerZoom from './WSAudioPlayerZoom';
@@ -48,7 +51,7 @@ import {
 } from '../crud/useWavesurferRegions';
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 import Confirm from './AlertDialog';
-import { NamedRegions } from '../utils';
+import { NamedRegions } from '../utils/namedSegments';
 import { wsAudioPlayerSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 
@@ -86,6 +89,7 @@ interface IProps {
   oneTryOnly?: boolean;
   size: number;
   segments: string;
+  verses?: string;
   currentSegmentIndex?: number;
   markers?: IMarker[];
   metaData?: JSX.Element;
@@ -104,6 +108,7 @@ interface IProps {
   onProgress?: (progress: number) => void;
   onSegmentChange?: (segments: string) => void;
   onSegmentParamChange?: (params: IRegionParams, teamDefault: boolean) => void;
+  onStartRegion?: (position: number) => void;
   onBlobReady?: (blob: Blob | undefined) => void;
   setBlobReady?: (ready: boolean) => void;
   setChanged?: (changed: boolean) => void;
@@ -147,6 +152,7 @@ function WSAudioPlayer(props: IProps) {
     oneTryOnly,
     size,
     segments,
+    verses,
     currentSegmentIndex,
     markers,
     metaData,
@@ -164,6 +170,7 @@ function WSAudioPlayer(props: IProps) {
     onProgress,
     onSegmentChange,
     onSegmentParamChange,
+    onStartRegion,
     onPlayStatus,
     onBlobReady,
     setBlobReady,
@@ -264,7 +271,9 @@ function WSAudioPlayer(props: IProps) {
     allowRecord,
     timelineRef.current,
     currentSegmentIndex,
-    onCurrentSegment
+    onCurrentSegment,
+    onStartRegion,
+    verses
   );
   //because we have to call hooks consistently, call this even if we aren't going to record
   const { startRecording, stopRecording, acceptedMimes } = useMediaRecorder(
@@ -360,6 +369,15 @@ function WSAudioPlayer(props: IProps) {
     recordingRef.current = value;
     setRecordingx(value);
     if (onRecording) onRecording(value);
+  };
+
+  const handleClearRegions = () => {
+    wsClearRegions();
+    if (verses) {
+      segmentsRef.current = verses;
+      loadRegions();
+      onSegmentChange && onSegmentChange(verses);
+    }
   };
   //#endregion
 
@@ -569,7 +587,7 @@ function WSAudioPlayer(props: IProps) {
     if (isPlaying !== undefined && playingRef.current !== isPlaying)
       handlePlayStatus();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPlaying]);
+  }, [isPlaying, duration]);
 
   function onRecordStart() {}
 
@@ -792,7 +810,7 @@ function WSAudioPlayer(props: IProps) {
                   <Grid item>
                     <WSAudioPlayerZoom
                       // startBig={allowRecord || false}
-                      ready={ready}
+                      ready={ready && !recording}
                       wsZoom={wsZoom}
                       wsPctWidth={wsPctWidth}
                     ></WSAudioPlayerZoom>
@@ -913,7 +931,7 @@ function WSAudioPlayer(props: IProps) {
                   wsAutoSegment={allowAutoSegment ? wsAutoSegment : undefined}
                   wsRemoveSplitRegion={wsRemoveSplitRegion}
                   wsAddOrRemoveRegion={wsAddOrRemoveRegion}
-                  wsClearRegions={wsClearRegions}
+                  wsClearRegions={handleClearRegions}
                   setBusy={setBusy}
                 />
               )}

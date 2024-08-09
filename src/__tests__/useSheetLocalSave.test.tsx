@@ -8,10 +8,11 @@ import {
   SectionD,
   PassageD,
 } from '../model';
-import { useWfLocalSave } from '../components/Sheet';
+import { useWfLocalSave } from '../components/Sheet/useSheetLocalSave';
 import { memory } from '../schema';
 import { PassageTypeEnum } from '../model/passageType';
 import DataProvider from '../hoc/DataProvider';
+import { PublishLevelEnum } from '../crud/usePublishLevel';
 
 const defaultSheet: ISheet = {
   level: SheetLevel.Section,
@@ -27,7 +28,7 @@ const defaultSheet: ISheet = {
   passageType: PassageTypeEnum.PASSAGE,
   filtered: false,
   discussionCount: 0,
-  published: false,
+  published: PublishLevelEnum.None,
 };
 
 // see https://jestjs.io/docs/mock-functions#mocking-modules
@@ -107,9 +108,23 @@ test('save one section and one passage', async () => {
   const updateCalls = (memory.update as jest.Mock).mock.calls;
   expect(updateCalls.length).toBe(2);
   expect(updateCalls[0][0].length).toBe(4);
-  expect(updateCalls[1][0].length).toBe(13);
   // console.log(JSON.stringify(updateCalls[1][0], null, 2));
+  expect(updateCalls[1][0].length).toBe(4);
 });
+
+interface TagValue {
+  [key: string]: TagValue | string;
+}
+
+const expectTagValue = (ob: TagValue, tag: string, value: string) => {
+  for (const key in ob) {
+    if (key === tag) {
+      expect(ob[key]).toBe(value);
+    } else if (typeof ob[key] === 'object') {
+      expectTagValue(ob[key] as TagValue, tag, value);
+    }
+  }
+};
 
 test('delete one section and one passage', async () => {
   const globals = {
@@ -148,10 +163,10 @@ test('delete one section and one passage', async () => {
   expect(setComplete).toHaveBeenCalled();
   const updateCalls = (memory.update as jest.Mock).mock.calls;
   expect(updateCalls.length).toBe(2);
-  expect(updateCalls[0][0].op).toBe('removeRecord');
-  expect(updateCalls[0][0].record.id).toBe('s1');
-  expect(updateCalls[1][0].record.id).toBe('pa1');
-  // console.log(JSON.stringify(updateCalls, null, 2));
+  // console.log(JSON.stringify(updateCalls[0][0], null, 2));
+  expectTagValue(updateCalls[0][0], 'op', 'removeRecord');
+  expectTagValue(updateCalls[0][0], 'id', 's1');
+  expectTagValue(updateCalls[1][0], 'id', 'pa1');
 });
 
 test('update section and passage', async () => {
@@ -184,7 +199,7 @@ test('update section and passage', async () => {
     },
   ];
 
-  const sections: SectionD[] = [
+  const sections = [
     {
       type: 'section',
       id: 's1',
@@ -198,7 +213,7 @@ test('update section and passage', async () => {
         dateUpdated: '2021-09-21',
         lastModifiedBy: 1,
       },
-    },
+    } as SectionD,
   ];
 
   const passages: PassageD[] = [
@@ -226,10 +241,10 @@ test('update section and passage', async () => {
 
   expect(setComplete).toHaveBeenCalled();
   const updateCalls = (memory.update as jest.Mock).mock.calls;
-  // console.log(JSON.stringify(updateCalls, null, 2));
   expect(updateCalls.length).toBe(2);
-  expect(updateCalls[0][0].length).toBe(3);
-  expect(updateCalls[1][0].length).toBe(5);
+  expect(updateCalls[0][0].length).toBe(6);
+  // console.log(JSON.stringify(updateCalls[1][0], null, 2));
+  expect(updateCalls[1][0].length).toBe(10);
 });
 
 test('no update if same date', async () => {
@@ -262,7 +277,7 @@ test('no update if same date', async () => {
     },
   ];
 
-  const sections: SectionD[] = [
+  const sections = [
     {
       type: 'section',
       id: 's1',
@@ -276,7 +291,7 @@ test('no update if same date', async () => {
         dateUpdated: '2021-09-21',
         lastModifiedBy: 1,
       },
-    },
+    } as SectionD,
   ];
 
   const passages: PassageD[] = [

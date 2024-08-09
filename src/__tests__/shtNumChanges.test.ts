@@ -1,9 +1,9 @@
-import { ISheet, IwsKind, IMediaShare } from '../model';
-import { shtNumChanges } from '../components/Sheet';
+import { ISheet, IwsKind, IMediaShare, SheetLevel, PassageD } from '../model';
+import { shtNumChanges } from '../components/Sheet/shtNumChanges';
 
-const sheet: ISheet[] = [
+const sheet = [
   {
-    level: 0,
+    level: SheetLevel.Section,
     kind: IwsKind.Section,
     sectionSeq: 1,
     title: 'Intro',
@@ -16,7 +16,7 @@ const sheet: ISheet[] = [
     mediaShared: IMediaShare.NotPublic,
   },
   {
-    level: 1,
+    level: SheetLevel.Passage,
     kind: IwsKind.Passage,
     sectionSeq: 1,
     passageSeq: 1,
@@ -24,12 +24,12 @@ const sheet: ISheet[] = [
     reference: '1:1-4',
     comment: 'salutation',
     passageUpdated: '2021-09-15',
-    passageId: { type: 'passage', id: 'pa1' },
+    passage: { type: 'passage', id: 'pa1' } as PassageD,
     deleted: false,
     mediaShared: IMediaShare.NotPublic,
   },
   {
-    level: 1,
+    level: SheetLevel.Passage,
     kind: IwsKind.Passage,
     sectionSeq: 1,
     passageSeq: 2,
@@ -37,12 +37,12 @@ const sheet: ISheet[] = [
     reference: '1:5-7',
     comment: 'introducing John',
     passageUpdated: '2021-09-16',
-    passageId: { type: 'passage', id: 'pa2' },
+    passage: { type: 'passage', id: 'pa2' } as PassageD,
     deleted: false,
     mediaShared: IMediaShare.NotPublic,
   },
   {
-    level: 1,
+    level: SheetLevel.Passage,
     kind: IwsKind.Passage,
     sectionSeq: 1,
     passageSeq: 3,
@@ -50,12 +50,12 @@ const sheet: ISheet[] = [
     reference: '1:8-10',
     comment: "John's call",
     passageUpdated: '2021-09-15',
-    passageId: { type: 'passage', id: 'pa3' },
+    passage: { type: 'passage', id: 'pa3' } as PassageD,
     deleted: false,
     mediaShared: IMediaShare.NotPublic,
   },
   {
-    level: 0,
+    level: SheetLevel.Section,
     kind: IwsKind.Section,
     sectionSeq: 2,
     passageSeq: 0,
@@ -68,7 +68,7 @@ const sheet: ISheet[] = [
     mediaShared: IMediaShare.NotPublic,
   },
   {
-    level: 1,
+    level: SheetLevel.Passage,
     kind: IwsKind.Passage,
     sectionSeq: 2,
     passageSeq: 1,
@@ -76,11 +76,11 @@ const sheet: ISheet[] = [
     reference: '1:11-14',
     comment: 'Zechariah at the temple',
     passageUpdated: '2021-09-15',
-    passageId: { type: 'passage', id: 'pa4' },
+    passage: { type: 'passage', id: 'pa4' } as PassageD,
     deleted: false,
     mediaShared: IMediaShare.NotPublic,
   },
-];
+] as ISheet[];
 
 test('empty sheet has no changes', () => {
   expect(shtNumChanges([], undefined)).toBe(0);
@@ -95,9 +95,9 @@ test('count of sections and passages with newer date', () => {
 });
 
 test('section and passages count separately in flat', () => {
-  const sheet: ISheet[] = [
+  const sheet = [
     {
-      level: 0,
+      level: SheetLevel.Section,
       kind: IwsKind.SectionPassage,
       sectionSeq: 1,
       title: 'Intro',
@@ -107,14 +107,14 @@ test('section and passages count separately in flat', () => {
       comment: 'salutation',
       sectionId: { type: 'section', id: 's1' },
       sectionUpdated: '2021-09-15',
-      passageId: { type: 'passage', id: 'pa1' },
+      passage: { type: 'passage', id: 'pa1' } as PassageD,
       passageUpdated: '2021-09-15',
       transcriber: undefined,
       editor: undefined,
       deleted: false,
       mediaShared: IMediaShare.NotPublic,
     },
-  ];
+  ] as ISheet[];
 
   expect(shtNumChanges(sheet, '2021-09-14')).toBe(2);
 });

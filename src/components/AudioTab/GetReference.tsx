@@ -1,5 +1,5 @@
 import { Passage, BookName } from '../../model';
-import { PassageReference } from '../../crud';
+import { PassageReference } from '../../crud/PassageReference';
 import { FC } from 'react';
 
 interface IProps {

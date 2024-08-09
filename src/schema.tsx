@@ -9,9 +9,11 @@ import { MemorySource } from '@orbit/memory';
 import IndexedDBSource from '@orbit/indexeddb';
 import Coordinator from '@orbit/coordinator';
 import { isElectron } from './api-variable';
-import { LocalKey, getFingerprint } from './utils';
+import { LocalKey } from './utils/localUserKey';
+import { getFingerprint } from './utils/getFingerprint';
 import { waitForIt } from './utils/waitForIt';
-import { offlineProjectCreate, related } from './crud';
+import { offlineProjectCreate } from './crud/offlineProjectCreate';
+import { related } from './crud/related';
 import { MediaFileD, OrganizationD, PassageD, ProjectD } from './model';
 
 const schemaDefinition: RecordSchemaSettings = {
@@ -589,6 +591,7 @@ if (requestedSchema > 3 && schemaDefinition.models) {
       resource: { type: 'boolean' },
       note: { type: 'boolean' },
       color: { type: 'string' },
+      specialuse: { type: 'string' },
       dateCreated: { type: 'string' }, // datetime
       dateUpdated: { type: 'string' }, // datetime
       lastModifiedBy: { type: 'number' }, //bkwd compat only
@@ -1061,7 +1064,10 @@ const MoveTranscriptionState = async (
       );
     if (meds.length > 0) {
       const mediafile = meds[0];
-      if (mediafile?.attributes?.transcriptionstate !== r.attributes.state) {
+      if (
+        Boolean(r?.attributes?.state) &&
+        mediafile?.attributes?.transcriptionstate !== r.attributes.state
+      ) {
         mediafile.attributes = {
           ...mediafile.attributes,
           transcriptionstate: r.attributes.state,
@@ -1187,29 +1193,34 @@ if (backup.cache) {
     migrating--;
   };
 }
-waitForIt(
-  'backup open',
-  () => backup.cache.isDBOpen,
-  () => false,
-  1000
-).then(() => {
-  backup
-    .upgrade()
-    .catch((e) => {
-      console.log('upgrade error', e);
-    })
-    .finally(() =>
-      waitForIt(
-        'migration',
-        () => !migrating,
-        () => false,
-        1000
-      ).then(() => {
-        console.log('upgrade complete');
-        localStorage.setItem(LocalKey.migration, schema.version.toString());
+if (process.env.NODE_ENV === 'test') {
+  console.log('upgrade skipped for test');
+  localStorage.setItem(LocalKey.migration, schema.version.toString());
+} else {
+  waitForIt(
+    'backup open',
+    () => backup.cache.isDBOpen,
+    () => false,
+    1000
+  ).then(() => {
+    backup
+      ?.upgrade()
+      .catch((e) => {
+        console.log('upgrade error', e);
       })
-    );
-});
+      .finally(() =>
+        waitForIt(
+          'migration',
+          () => !migrating,
+          () => false,
+          1000
+        ).then(() => {
+          console.log('upgrade complete');
+          localStorage.setItem(LocalKey.migration, schema.version.toString());
+        })
+      );
+  });
+}
 
 export const coordinator = new Coordinator();
 coordinator.addSource(memory);

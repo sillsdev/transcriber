@@ -13,7 +13,13 @@ import {
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { getMediaInPlans, orgDefaultDiscussionFilter, related, useRole, VernacularTag } from '../../crud';
+import {
+  getMediaInPlans,
+  orgDefaultDiscussionFilter,
+  related,
+  useRole,
+  VernacularTag,
+} from '../../crud';
 import {
   Discussion,
   DiscussionD,
@@ -40,7 +46,7 @@ import { discussionListSelector } from '../../selector';
 import { useOrbitData } from '../../hoc/useOrbitData';
 
 const StyledPaper = styled(Paper)<PaperProps>(({ theme }) => ({
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.secondary.light,
   marginBottom: theme.spacing(1),
   '& .MuiPaper-rounded': {
     borderRadius: '8px',
@@ -392,14 +398,14 @@ export function DiscussionList() {
 
   const handleSaveFirstConfirmed = () => {
     var myIds = displayDiscussions.map((d) => d.id);
-    myIds.push(NewDiscussionToolId);
+    if (adding) myIds.push(NewDiscussionToolId);
     myIds.forEach((id) => startSave(id));
     waitSaveOrClear();
   };
 
   const handleSaveFirstRefused = () => {
     var myIds = displayDiscussions.map((d) => d.id);
-    myIds.push(NewDiscussionToolId);
+    if (adding) myIds.push(NewDiscussionToolId);
     myIds.forEach((id) => startClear(id));
     waitSaveOrClear();
   };

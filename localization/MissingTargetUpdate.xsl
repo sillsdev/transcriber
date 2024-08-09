@@ -6,7 +6,7 @@
 	<!-- After it runs, reformat with CTRL-SHIFT-P but then you have to combine lines that shouldn't have been split -->
 	<!-- Find: \n\s+([^\<\s]) and Replace: a space and $1. -->
 	<xsl:variable name="cng"
-		select="document('file:/C:/Users/gtrih/git/transcriber/localization/changes.xml')"/>
+		select="document('file:/C:/Users/gtrih/git/transcriber/localization/string-with-id.xml')"/>
 
 	<xsl:template match="node() |@*">
 		<xsl:choose>

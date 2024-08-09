@@ -107,3 +107,4 @@ export * from './useNotes';
 export * from './usePassageUpdate';
 export * from './useGraphicFind';
 export * from './usePublishLevel';
+export * from './useFetchUrlNow';

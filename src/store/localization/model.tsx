@@ -47,6 +47,7 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
     "activity": string;
     "biblestory": string;
     "bookintro": string;
+    "chapter": string;
     "scripture": string;
     "translationresource": string;
     "uncategorized": string;
@@ -54,6 +55,7 @@ export interface IArtifactCategoryStrings extends Localize.LocalizedStringsMetho
     "grammar": string;
     "graphic": string;
     "qanda": string;
+    "title": string;
 };
 
 export interface IArtifactTypeStrings extends Localize.LocalizedStringsMethods {
@@ -219,9 +221,12 @@ export interface ICommentEditorStrings extends Localize.LocalizedStringsMethods 
 
 export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
     "addSpeaker": string;
+    "backTranslationComplete": string;
     "deleteItem": string;
+    "finished": string;
     "later": string;
     "loading": string;
+    "none": string;
     "playTest": string;
     "provideRights": string;
     "record": string;
@@ -229,6 +234,8 @@ export interface ICommunityStrings extends Localize.LocalizedStringsMethods {
     "rights": string;
     "saveFirst": string;
     "segment": string;
+    "segmentsChanged": string;
+    "segmentsComplete": string;
     "speaker": string;
     "topic": string;
     "transcribe": string;
@@ -557,12 +564,14 @@ export interface ILanguagePickerStrings extends Localize.LocalizedStringsMethods
 export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "about": string;
     "admin": string;
+    "akuo": string;
     "apiError": string;
     "cancel": string;
     "cantCopy": string;
     "clearCache": string;
     "clearLogout": string;
     "continue": string;
+    "course": string;
     "continueCurrentUser": string;
     "copyClipboard": string;
     "crashMessage": string;
@@ -574,6 +583,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "flatSample": string;
     "genFlatSample": string;
     "genHierarchicalSample": string;
+    "googleSamples": string;
     "helpCenter": string;
     "helpSpreadsheet": string;
     "hierarchicalSample": string;
@@ -583,9 +593,12 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "loadingTable": string;
     "loadingTranscriber": string;
     "logout": string;
+    "logos": string;
     "media": string;
     "myAccount": string;
     "NoLoadOffline": string;
+    "openNotes": string;
+    "openContent": string;
     "passages": string;
     "privacy": string;
     "project": string;
@@ -594,6 +607,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "reportIssue": string;
     "reports": string;
     "reportWhenOnline": string;
+    "resources": string;
     "saveFirst": string;
     "saving": string;
     "sessionExpireTask": string;
@@ -608,6 +622,8 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "UnsavedData": string;
     "updateAvailable": string;
     "version": string;
+    "videos": string;
+    "walkThru": string;
 };
 
 export interface IMediaActionsStrings extends Localize.LocalizedStringsMethods {
@@ -846,6 +862,7 @@ export interface IPeerCheckStrings extends Localize.LocalizedStringsMethods {
     "afterResource": string;
     "back3Seconds": string;
     "resourceStart": string;
+    "toEnd": string;
 };
 
 export interface IPermissionStrings extends Localize.LocalizedStringsMethods {
@@ -963,6 +980,7 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "sendDigest": string;
     "sharedContentCreator": string;
+    "syncFrequency": string;
     "timezone": string;
     "userExists": string;
     "userProfile": string;
@@ -989,6 +1007,7 @@ export interface IProjectDownloadStrings extends Localize.LocalizedStringsMethod
 export interface IPublishLevelStrings extends Localize.LocalizedStringsMethods {
     "none": string;
     "beta": string;
+    "betalink": string;
     "public": string;
 };
 
@@ -1029,6 +1048,7 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "installAudacity": string;
     "loadingTable": string;
     "passage": string;
+    "pasteInvalidBooks": string;
     "pasteInvalidColumns": string;
     "pasteInvalidPassageBeforeSection": string;
     "pasteInvalidSections": string;
@@ -1112,6 +1132,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "no": string;
     "noAudio": string;
     "NoSaveOffline": string;
+    "notSupported": string;
     "observer": string;
     "paratextchapterSpan": string;
     "part": string;
@@ -1236,6 +1257,7 @@ export interface IToolStrings extends Localize.LocalizedStringsMethods {
     "segment": string;
     "teamCheck": string;
     "transcribe": string;
+    "verses": string;
     "wholeBackTranslate": string;
 };
 
@@ -1374,6 +1396,24 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "timezone": string;
 };
 
+export interface IVerseStrings extends Localize.LocalizedStringsMethods {
+    "badReferences": string;
+    "btNotUpdated": string;
+    "canceling": string;
+    "clipboard": string;
+    "copyToClipboard": string;
+    "issues": string;
+    "markVerses": string;
+    "missingReferences": string;
+    "noReferences": string;
+    "noSegments": string;
+    "outsideReferences": string;
+    "pasteFormat": string;
+    "reference": string;
+    "saveVerseMarkup": string;
+    "startStop": string;
+};
+
 export interface IViewModeStrings extends Localize.LocalizedStringsMethods {
     "audioProject": string;
     "home": string;
@@ -1482,6 +1522,7 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
     "teamReview": string;
     "transcribe": string;
     "unsaved": string;
+    "markVerses": string;
     "wholeBackTranslate": string;
     "wholeBackTranslation": string;
     "wBTTranscribe": string;
@@ -1622,6 +1663,7 @@ export interface ILocalizedStrings {
 	uploadProgress: IUploadProgressStrings;
 	userListMode: IUserListModeStrings;
 	usertable: IUsertableStrings;
+	verse: IVerseStrings;
 	viewMode: IViewModeStrings;
 	vProject: IVProjectStrings;
 	welcome: IWelcomeStrings;

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React, { useRef } from 'react';
-import { User, useAuth0 } from '@auth0/auth0-react';
+import { User, useAuth0, RedirectLoginOptions } from '@auth0/auth0-react';
 import { IToken } from '../model';
 import Busy from '../components/Busy';
 import TokenDialog from '../components/TokenDialog';
@@ -56,7 +56,9 @@ function TokenProvider(props: IProps) {
   const updateOrbitToken = useUpdateOrbitToken();
   const view = React.useRef<any>('');
   const { getLocalDefault } = useProjectDefaults();
-  const options = {returnTo: getLocalDefault(LocalKey.deeplink)}
+  const options = {
+    returnTo: getLocalDefault(LocalKey.deeplink),
+  } as RedirectLoginOptions;
   const [state, setState] = React.useState({
     ...initState,
   });

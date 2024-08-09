@@ -47,7 +47,7 @@ const KeyTerms = () => {
   } = useKeyTerms();
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   parseRef(passage);
-  const { startChapter, startVerse, endVerse } = passage.attributes;
+  const { startChapter, startVerse, endChapter, endVerse } = passage.attributes;
   const [term, setTerm] = useState<IKeyTerm & ILocalTerm>();
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
 
@@ -134,6 +134,7 @@ const KeyTerms = () => {
           book,
           startChapter ?? 1,
           startVerse ?? 1,
+          endChapter ?? startChapter ?? 1,
           endVerse,
           sortBy
         ).map(

@@ -1,5 +1,10 @@
 import { useContext, useMemo, useState } from 'react';
-import { ActivityStates, ISharedStrings, MediaFile } from '../../model';
+import {
+  ActivityStates,
+  ISharedStrings,
+  MediaFile,
+  MediaFileD,
+} from '../../model';
 import { Grid, Typography, Box, BoxProps, styled } from '@mui/material';
 import { TranscriberProvider } from '../../context/TranscriberContext';
 import Transcriber from '../../components/Transcriber';
@@ -8,9 +13,12 @@ import { sharedSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import TaskTable, { TaskTableWidth } from '../TaskTable';
 import { ToolSlug } from '../../crud';
+import { findRecord } from '../../crud/tryFindRecord';
 import { JSONParse, waitForIt } from '../../utils';
 import { useGlobal } from 'reactn';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
+import { useArtifactType } from '../../crud/useArtifactType';
+import { ArtifactTypeSlug } from '../../crud/artifactTypeSlug';
 
 interface TableContainerProps extends BoxProps {
   topFilter?: boolean;
@@ -49,10 +57,13 @@ export function PassageDetailTranscribe({
     orgWorkflowSteps,
     setStepComplete,
     setCurrentStep,
+    gotoNextStep,
+    rowData,
   } = usePassageDetailContext();
   const { setState } = useContext(PassageDetailContext);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [topFilter, setTopFilter] = useState(false);
+  const { localizedArtifactType } = useArtifactType();
   const [globals] = useGlobal();
 
   const parsedSteps = useMemo(() => {
@@ -137,10 +148,8 @@ export function PassageDetailTranscribe({
       200
     ).then(async () => {
       await setStepComplete(currentstep, complete);
-      //is this what users want if they have next passage set?
-      //do they want to transcribe the next passage...probably?
-      //change this to gotoNextStep()?
-      if (complete) setCurrentStep(nextStep || '');
+      //if we're now complete, go to the next step or passage
+      if (complete) gotoNextStep();
     });
   };
 
@@ -176,7 +185,24 @@ export function PassageDetailTranscribe({
     onFilter && onFilter(top);
   };
 
-  return Boolean(mediafileId) ? (
+  const media = useMemo(
+    () => findRecord(globals.memory, 'mediafile', mediafileId) as MediaFileD,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mediafileId]
+  );
+
+  const hasBtRecordings = useMemo(() => {
+    const btType = localizedArtifactType(
+      ArtifactTypeSlug.PhraseBackTranslation
+    );
+    const version = media.attributes.versionNumber;
+    return rowData.some(
+      (r) => r.artifactType === btType && r.sourceVersion === version
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowData]);
+
+  return Boolean(mediafileId) && hasBtRecordings ? (
     <TranscriberProvider artifactTypeId={artifactTypeId} curRole={curRole}>
       <Grid container direction="column">
         {artifactTypeId && (

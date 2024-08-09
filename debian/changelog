@@ -1,3 +1,45 @@
+audio-project-manager (3.2.0.0)  experimental; urgency=high
+
+ * TT-5940 No Discussion without audio
+ * TT-5936 Indicate publish level (#1632)
+ * TT-5928 No Mark Verses in General Project (#1631)
+ * TT-5924 Offline Workflow with Mark Verses (#1633)
+ * TT-5923 Insert verse markup in transcription (#1629)
+ * TT-5914 Calculate version number for chapter numbers (#1639)
+ * TT-5894 And TT-4804 Download offline files (#1642)
+ * TT-5888 Move version column to left (#1634)
+ * TT-5880 Only Admin Delete General Resource
+ * TT-5870 System Note Categories (#1621)
+ * TT-5870 Add special use note categories title and chapter. Sort to bottom
+ * TT-5868 Add logos to help menu
+ * TT-5867 Allow for movement 0
+ * TT-5865 Handle empty book
+ * TT-5865 Fix book lookup for invalid code
+ * TT-5865 Check book codes when pasting
+ * TT-5864 Add training and Akuo
+ * TT-5864 Add links for open resource content
+ * TT-5861 Additional cross chapter posting cases
+ * TT-5860 Fix book name conversion
+ * TT-5858 Terms for cross chapter refs (#1650)
+ * TT-5856 Cross Chapter Shared Refs (#1651)
+ * TT-5850 Allow zoom in recorder (#1626)
+ * TT-5686 No ref for book filter
+ * TT-5388 Add Verse Marking tool (#1623)
+ * TT-5056 Pulling cross chapter content from Paratext (#1619)
+ * TT-5056 Post to chapter with biggest content (#1618)
+ * TT-5056 Accept cross chapter references
+ * TT-4790 Warn about extra segments
+ * UBS Resources
+ * The Next Segment button (or hotkey) inserts verse markup if not present
+ * Remove note description from team publishing options
+ * Make the Title Edit know about passages for chapter numbers (#1644)
+ * Initial verse markup inserted if transcription empty
+ * Handle verses with letters when validating references
+ * Download file needed for audacity
+ * Download any new files created by others
+
+ -- Greg Trihus <greg_trihus@sil.org>  Fri, 9 Aug 2024 22:23:00 -0600
+
 audio-project-manager (3.1.1.0)  experimental; urgency=high
 
  * fix loading crashes reported by a few users
