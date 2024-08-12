@@ -192,6 +192,7 @@ export function PassageDetailTranscribe({
   );
 
   const hasBtRecordings = useMemo(() => {
+    if (!artifactTypeId) return true; // we're not transcribing back translations
     const btType = localizedArtifactType(
       ArtifactTypeSlug.PhraseBackTranslation
     );

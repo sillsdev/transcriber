@@ -18,6 +18,7 @@ import {
   Box,
   Paper,
   PaperProps,
+  SxProps,
   Typography,
   debounce,
   styled,
@@ -53,9 +54,14 @@ import { refMatch } from '../../utils/refMatch';
 import Confirm from '../AlertDialog';
 import { useArtifactType } from '../../crud/useArtifactType';
 import { ArtifactTypeSlug } from '../../crud/artifactTypeSlug';
+import { PassageTypeEnum } from '../../model/passageType';
+import { usePlanType } from '../../crud';
+import { passageTypeFromRef } from '../../control/RefRender';
 
 const NotTable = 490;
 const verseToolId = 'VerseTool';
+
+const paperProps = { p: 2, m: 'auto', width: `calc(100% - 32px)` } as SxProps;
 
 type IVrs = [string, number[]];
 
@@ -157,6 +163,18 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   } = useContext(UnsavedContext).state;
   const projectSegmentSave = useProjectSegmentSave();
   const { showMessage } = useSnackBar();
+  const [plan] = useGlobal('plan');
+  const planType = usePlanType();
+
+  const isFlat = useMemo(() => {
+    return planType(plan)?.flat;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plan]);
+
+  const passType = useMemo(
+    () => passageTypeFromRef(passage?.attributes?.reference, isFlat),
+    [passage, isFlat]
+  );
 
   const readOnlys = [true, false];
   const widths = [200, 150];
@@ -584,7 +602,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     }
   };
 
-  return Boolean(mediafileId) ? (
+  return Boolean(mediafileId) && passType !== PassageTypeEnum.NOTE ? (
     <Box>
       <PassageDetailPlayer
         data-testid="player"
@@ -639,10 +657,18 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
         />
       )}
     </Box>
+  ) : passType === PassageTypeEnum.NOTE ? (
+    <Paper sx={paperProps}>
+      <Typography variant="h2" align="center">
+        {ts.notSupported}
+      </Typography>
+    </Paper>
   ) : (
-    <Typography variant="h2" align="center">
-      {ts.noAudio}
-    </Typography>
+    <Paper sx={paperProps}>
+      <Typography variant="h2" align="center">
+        {ts.noAudio}
+      </Typography>
+    </Paper>
   );
 }
 
