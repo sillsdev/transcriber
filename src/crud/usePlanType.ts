@@ -1,6 +1,7 @@
 import { Plan, PlanType } from '../model';
 import { useGlobal } from 'reactn';
-import { related, usePlan } from '.';
+import { usePlan } from './usePlan';
+import { related } from './related';
 
 export const usePlanType = () => {
   const [memory] = useGlobal('memory');

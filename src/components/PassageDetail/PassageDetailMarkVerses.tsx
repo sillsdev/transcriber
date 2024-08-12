@@ -55,7 +55,7 @@ import Confirm from '../AlertDialog';
 import { useArtifactType } from '../../crud/useArtifactType';
 import { ArtifactTypeSlug } from '../../crud/artifactTypeSlug';
 import { PassageTypeEnum } from '../../model/passageType';
-import { usePlanType } from '../../crud';
+import { usePlanType } from '../../crud/usePlanType';
 import { passageTypeFromRef } from '../../control/RefRender';
 
 const NotTable = 490;
