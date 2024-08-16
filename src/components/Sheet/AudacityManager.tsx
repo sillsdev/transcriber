@@ -109,7 +109,7 @@ function AudacityManager(props: IProps) {
     shallowEqual
   );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const fetchUrl = useFetchUrlNow(ts.expiredToken);
+  const fetchUrl = useFetchUrlNow();
 
   const handleClose = () => {
     onClose();
@@ -157,6 +157,7 @@ function AudacityManager(props: IProps) {
         })) ?? '';
       if (mediaName === ts.expiredToken) {
         showMessage(ts.expiredToken);
+        return;
       }
       if (mediaName.startsWith('http')) {
         showMessage(t.checkDownload);
