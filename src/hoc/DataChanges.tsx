@@ -47,7 +47,6 @@ import {
   ExportType,
   Invitation,
   InvitationD,
-  ISharedStrings,
   MediaFileD,
   OfflineProject,
   PassageStateChangeD,
@@ -62,10 +61,9 @@ import { UnsavedContext } from '../context/UnsavedContext';
 import { ReplaceRelatedRecord } from '../model/baseModel';
 import { useSanityCheck } from '../crud/useSanityCheck';
 import { useBibleMedia } from '../crud/useBibleMedia';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { pullRemoteToMemory } from '../crud/syncToMemory';
 import { useOrbitData } from './useOrbitData';
-import { sharedSelector } from '../selector';
 
 export const processDataChanges = async (pdc: {
   token: string | null;
@@ -516,8 +514,7 @@ export function DataChanges(props: PropsWithChildren) {
   const saving = useMemo(() => anySaving(), [toolsChanged]);
   const doSanityCheck = useSanityCheck(setLanguage);
   const { getBibleMediaProject, getBibleMediaPlan } = useBibleMedia();
-  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const fetchUrl = useFetchUrlNow(ts.expiredToken);
+  const fetchUrl = useFetchUrlNow();
   const users = useOrbitData<UserD[]>('user');
   const defaultDataDelayInMinutes = 2;
   const [userDataDelay, setUserDataDelay] = useState(defaultDataDelayInMinutes);

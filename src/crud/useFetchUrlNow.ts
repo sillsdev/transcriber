@@ -5,14 +5,18 @@ import { API_CONFIG, isElectron } from '../api-variable';
 import { TokenContext } from '../context/TokenProvider';
 
 import { useDownloadMedia } from '../utils';
+import { useSelector, shallowEqual } from 'react-redux';
+import { ISharedStrings } from '../model';
+import { sharedSelector } from '../selector';
 
 export interface IFetchNowProps {
   id: string;
   cancelled: () => boolean;
 }
-export const useFetchUrlNow = (tokenError: string) => {
+export const useFetchUrlNow = () => {
   const { accessToken } = useContext(TokenContext).state;
   const { tryDownload } = useDownloadMedia();
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const fetchUrl = async (props: IFetchNowProps) => {
     let { id, cancelled } = props;
@@ -32,7 +36,7 @@ export const useFetchUrlNow = (tokenError: string) => {
         return await tryDownload(audioUrl, true);
       } else return audioUrl;
     } catch (error: any) {
-      if (error.errStatus === 401) return tokenError;
+      if (error.errStatus === 401) return ts.expiredToken;
       throw error;
     }
   };

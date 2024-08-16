@@ -81,7 +81,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
   const [offline] = useGlobal('offline');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
-  const fetchUrl = useFetchUrlNow(ts.expiredToken);
+  const fetchUrl = useFetchUrlNow();
   const safeURL = async (path: string) => {
     if (!path.startsWith('http')) {
       const start = (await ipc?.isWindows()) ? 8 : 7;
