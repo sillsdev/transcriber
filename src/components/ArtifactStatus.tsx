@@ -42,6 +42,11 @@ export default function ArtifactStatus({
       (r) => related(r.mediafile, 'artifactType') === recordTypeId
     );
     const curVer = mediaRec.filter((r) => r.sourceVersion === currentVersion);
+    if (segs.length === 0 && curVer.length === 1) {
+      validSegs.add(
+        prettySegment(curVer[0]?.mediafile?.attributes?.sourceSegments).trim()
+      ); // add the segment to the set if no segments defined
+    }
     if (curVer.length !== curVersionCount) setCurVersionCount(curVer.length);
     const newSegsset = new Set(
       curVer
