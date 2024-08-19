@@ -1,3 +1,11 @@
+audio-project-manager (3.2.2.0)  experimental; urgency=high
+
+ * Fix crash on PBT and WBT
+ * allow transcription of WBT
+ * show report of WBT to consultant
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 19 Aug 2024 12:03:00 -0600
+
 audio-project-manager (3.2.0.0)  experimental; urgency=high
 
  * TT-5940 No Discussion without audio
