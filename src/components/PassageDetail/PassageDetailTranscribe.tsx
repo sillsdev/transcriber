@@ -18,7 +18,6 @@ import { JSONParse, waitForIt } from '../../utils';
 import { useGlobal } from 'reactn';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { useArtifactType } from '../../crud/useArtifactType';
-import { ArtifactTypeSlug } from '../../crud/artifactTypeSlug';
 
 interface TableContainerProps extends BoxProps {
   topFilter?: boolean;
@@ -63,7 +62,7 @@ export function PassageDetailTranscribe({
   const { setState } = useContext(PassageDetailContext);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [topFilter, setTopFilter] = useState(false);
-  const { localizedArtifactType } = useArtifactType();
+  const { localizedArtifactTypeFromId } = useArtifactType();
   const [globals] = useGlobal();
 
   const parsedSteps = useMemo(() => {
@@ -193,10 +192,8 @@ export function PassageDetailTranscribe({
 
   const hasBtRecordings = useMemo(() => {
     if (!artifactTypeId) return true; // we're not transcribing back translations
-    const btType = localizedArtifactType(
-      ArtifactTypeSlug.PhraseBackTranslation
-    );
-    const version = media.attributes.versionNumber;
+    const btType = localizedArtifactTypeFromId(artifactTypeId);
+    const version = media?.attributes?.versionNumber ?? 1;
     return rowData.some(
       (r) => r.artifactType === btType && r.sourceVersion === version
     );

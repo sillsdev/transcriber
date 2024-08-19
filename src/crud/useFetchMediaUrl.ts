@@ -3,10 +3,12 @@ import { useGlobal } from 'reactn';
 import { isElectron } from '../api-variable';
 import { remoteIdGuid, remoteId } from '../crud';
 import { dataPath, PathType } from '../utils/dataPath';
-import { MediaFile } from '../model';
+import { ISharedStrings, MediaFile } from '../model';
 import { infoMsg, logError, Severity } from '../utils';
 import { useFetchUrlNow } from './useFetchUrlNow';
 import { RecordKeyMap } from '@orbit/records';
+import { shallowEqual, useSelector } from 'react-redux';
+import { sharedSelector } from '../selector';
 const ipc = (window as any)?.electron;
 // See: https://www.smashingmagazine.com/2020/07/custom-react-hook-fetch-cache-data/
 
@@ -77,6 +79,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
   const [state, dispatch] = useReducer(stateReducer, mediaClean);
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const fetchUrl = useFetchUrlNow();
   const safeURL = async (path: string) => {
@@ -158,6 +161,13 @@ export const useFetchMediaUrl = (reporter?: any) => {
       if (cancelled()) return;
       try {
         fetchUrl({ id: state.remoteId, cancelled }).then((url) => {
+          if (url === ts.expiredToken) {
+            dispatch({
+              payload: ts.expiredToken,
+              type: MediaSt.ERROR,
+            });
+            return;
+          }
           if (url)
             safeURL(url).then((path) => {
               dispatch({

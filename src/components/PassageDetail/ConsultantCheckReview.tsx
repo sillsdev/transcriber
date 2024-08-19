@@ -113,7 +113,10 @@ export default function ConsultantCheckReview({
       )}
       {allMedia.length > 0 && (
         <>
-          {item === ArtifactTypeSlug.PhraseBackTranslation && (
+          {[
+            ArtifactTypeSlug.PhraseBackTranslation,
+            ArtifactTypeSlug.WholeBackTranslation,
+          ].includes(item) && (
             <ArtifactStatus
               recordType={item}
               currentVersion={rowData[0].mediafile.attributes?.versionNumber}

@@ -2,7 +2,12 @@ import React from 'react';
 import { useGlobal } from 'reactn';
 import moment from 'moment';
 import { shallowEqual, useSelector } from 'react-redux';
-import { IAudacityManagerStrings, IState, MediaFile } from '../../model';
+import {
+  IAudacityManagerStrings,
+  ISharedStrings,
+  IState,
+  MediaFile,
+} from '../../model';
 import {
   Button,
   Dialog,
@@ -43,7 +48,7 @@ import {
 
 import { extensions, mimes } from '.';
 import SpeakerName from '../SpeakerName';
-import { audacityManagerSelector } from '../../selector';
+import { audacityManagerSelector, sharedSelector } from '../../selector';
 import { GrowingSpacer } from '../StepEditor';
 import { ContextHelp } from '../ContextHelp';
 
@@ -103,6 +108,7 @@ function AudacityManager(props: IProps) {
     audacityManagerSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const fetchUrl = useFetchUrlNow();
 
   const handleClose = () => {
@@ -149,6 +155,10 @@ function AudacityManager(props: IProps) {
             remoteId('mediafile', mediaId, memory.keyMap as RecordKeyMap) ?? '',
           cancelled: () => false,
         })) ?? '';
+      if (mediaName === ts.expiredToken) {
+        showMessage(ts.expiredToken);
+        return;
+      }
       if (mediaName.startsWith('http')) {
         showMessage(t.checkDownload);
         return;
