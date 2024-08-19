@@ -408,42 +408,43 @@ export function PassageDetailItem(props: IProps) {
     <div>
       <Paper sx={paperProps}>
         <div>
-          <Wrapper>
-            <SplitPane
-              defaultSize={width - discussionSize.width}
-              style={{ position: 'static' }}
-              split="vertical"
-              onChange={handleSplitSize}
-            >
-              <Pane>
-                <SplitPane
-                  split="horizontal"
-                  defaultSize={playerSize}
-                  minSize={150}
-                  style={{ position: 'static' }}
-                  onChange={handleHorizonalSplitSize}
-                >
-                  <Pane>
-                    <PassageDetailChooser
-                      width={width - discussionSize.width - 16}
-                    />
-                    <PassageDetailPlayer
-                      allowSegment={segments}
-                      allowAutoSegment={segments !== undefined}
-                      saveSegments={
-                        segments !== undefined
-                          ? SaveSegments.showSaveButton
-                          : undefined
-                      }
-                      defaultSegParams={segParams}
-                      suggestedSegments={segString}
-                      verses={verses}
-                      canSetDefaultParams={canSetOrgDefault}
-                      onSegmentParamChange={onSegmentParamChange}
-                      chooserReduce={chooserSize}
-                    />
-                  </Pane>
-                  {currentVersion !== 0 ? (
+          {currentVersion !== 0 ? (
+            <Wrapper>
+              <SplitPane
+                defaultSize={width - discussionSize.width}
+                style={{ position: 'static' }}
+                split="vertical"
+                onChange={handleSplitSize}
+              >
+                <Pane>
+                  <SplitPane
+                    split="horizontal"
+                    defaultSize={playerSize}
+                    minSize={150}
+                    style={{ position: 'static' }}
+                    onChange={handleHorizonalSplitSize}
+                  >
+                    <Pane>
+                      <PassageDetailChooser
+                        width={width - discussionSize.width - 16}
+                      />
+                      <PassageDetailPlayer
+                        allowSegment={segments}
+                        allowAutoSegment={segments !== undefined}
+                        saveSegments={
+                          segments !== undefined
+                            ? SaveSegments.showSaveButton
+                            : undefined
+                        }
+                        defaultSegParams={segParams}
+                        suggestedSegments={segString}
+                        verses={verses}
+                        canSetDefaultParams={canSetOrgDefault}
+                        onSegmentParamChange={onSegmentParamChange}
+                        chooserReduce={chooserSize}
+                      />
+                    </Pane>
+
                     <Pane>
                       <Paper sx={paperProps}>
                         <Box sx={rowProp}>
@@ -588,26 +589,26 @@ export function PassageDetailItem(props: IProps) {
                         </Box>
                       </Paper>
                     </Pane>
-                  ) : (
-                    <Pane>
-                      <Paper sx={paperProps}>
-                        <Typography variant="h2" align="center">
-                          {ts.noAudio}
-                        </Typography>
-                      </Paper>
-                    </Pane>
-                  )}
-                </SplitPane>
-              </Pane>
-              <Pane>
-                <Grid item xs={12} sm container>
-                  <Grid item container direction="column">
-                    <DiscussionList />
+                  </SplitPane>
+                </Pane>
+                <Pane>
+                  <Grid item xs={12} sm container>
+                    <Grid item container direction="column">
+                      <DiscussionList />
+                    </Grid>
                   </Grid>
-                </Grid>
-              </Pane>
-            </SplitPane>
-          </Wrapper>
+                </Pane>
+              </SplitPane>
+            </Wrapper>
+          ) : (
+            <Pane>
+              <Paper sx={paperProps}>
+                <Typography variant="h2" align="center">
+                  {ts.noAudio}
+                </Typography>
+              </Paper>
+            </Pane>
+          )}
           {confirm && (
             <Confirm
               text={t.deleteItem}
