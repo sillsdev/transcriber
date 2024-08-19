@@ -1,9 +1,10 @@
-audio-project-manager (3.2.3.0)  experimental; urgency=high
+audio-project-manager (3.2.2.0)  experimental; urgency=high
 
- * TT-6045 Handle Audacity 3.6.x (#1710)
- * TT-5995 Fix Audacity creation date
+ * Fix crash on PBT and WBT
+ * allow transcription of WBT
+ * show report of WBT to consultant
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 6 Sep 2024 19:30:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 19 Aug 2024 12:03:00 -0600
 
 audio-project-manager (3.2.0.0)  experimental; urgency=high
 
