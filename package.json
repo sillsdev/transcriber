@@ -21,6 +21,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@hello-pangea/dnd": "^16.6.0",
     "@mui/icons-material": "^5.14.16",
     "@mui/material": "^5.14.17",
     "@mui/x-data-grid": "^6.18.4",
@@ -70,7 +71,6 @@
     "react-router-dom": "^6.4.3",
     "react-scripts": "^5.0.1",
     "react-select": "^5.8.0",
-    "react-sortable-hoc": "^2.0.0",
     "react-split-pane": "^0.1.92",
     "react-string-replace": "^1.1.1",
     "reactn": "^2.2.7",
@@ -238,5 +238,7 @@
   "engines": {
     "npm": ">=8.0.0 <9.0.0",
     "node": ">=16.0.0 <17.0.0"
-  }
+  },
+  "main": "public/electron.js",
+  "homepage": "./"
 }
