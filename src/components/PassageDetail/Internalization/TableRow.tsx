@@ -1,5 +1,5 @@
 import { CSSProperties, useEffect, useState } from 'react';
-import { ListItem, Tooltip, Box } from '@mui/material';
+import { Tooltip, Box, Stack } from '@mui/material';
 import { IRow } from '../../../context/PassageDetailContext';
 import { DragHandle } from '.';
 import { IPassageDetailArtifactsStrings } from '../../../model';
@@ -27,7 +27,7 @@ export const TableRow = ({ value, header }: IProps) => {
   }, [header]);
 
   return (
-    <ListItem>
+    <Stack direction="row">
       {userIsAdmin && (
         <span style={headHide}>
           <DragHandle />
@@ -63,6 +63,6 @@ export const TableRow = ({ value, header }: IProps) => {
           {value.editAction}
         </Box>
       )}
-    </ListItem>
+    </Stack>
   );
 };

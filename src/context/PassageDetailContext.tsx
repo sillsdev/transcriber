@@ -197,8 +197,9 @@ const initState = {
   highlightDiscussion: undefined as number | undefined,
   refresh: 0,
   prjId: '',
-  forceRefresh: () => {},
+  forceRefresh: (rowData?: IRow[]) => {},
   sectionArr: [] as [number, string][],
+  toggleDone: (id: string) => {},
 };
 
 export type ICtxState = typeof initState;
@@ -314,10 +315,14 @@ const PassageDetailProvider = (props: IProps) => {
     }
     segmentsCb.current = undefined;
   };
-  const forceRefresh = () => {
+  const forceRefresh = (rowData?: IRow[]) => {
     refreshRef.current = refreshRef.current + 1;
     setState((state: ICtxState) => {
-      return { ...state, refresh: refreshRef.current };
+      return {
+        ...state,
+        refresh: refreshRef.current,
+        rowData: rowData ?? state.rowData,
+      };
     });
   };
 
@@ -792,6 +797,13 @@ const PassageDetailProvider = (props: IProps) => {
     return currentSegmentRef.current;
   };
 
+  const toggleDone = (id: string) => {
+    const newRows = state.rowData.map((r) =>
+      r.id === id ? { ...r, done: !r.done } : r
+    );
+    setState((state: ICtxState) => ({ ...state, rowData: newRows }));
+  };
+
   const stepCmp = (a: StepComplete, b: StepComplete) =>
     a.stepid > b.stepid ? 1 : -1;
 
@@ -1042,6 +1054,7 @@ const PassageDetailProvider = (props: IProps) => {
           setRecording,
           setCommentRecording,
           setMediaSelected,
+          toggleDone,
           handleItemPlayEnd,
           handleItemTogglePlay,
           handleCommentPlayEnd,
