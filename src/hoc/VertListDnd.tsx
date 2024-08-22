@@ -12,13 +12,6 @@ export interface DropProp {
   content: ReactNode;
 }
 
-// fake data generator
-const getItems = (count: number) =>
-  Array.from({ length: count }, (_v, k) => k).map((k) => ({
-    id: `${k}`,
-    content: `item ${k}`,
-  }));
-
 // convert children to ItemProps
 const cvtChildren = (children?: ReactNode): DropProp[] | undefined => {
   if (Array.isArray(children)) {
@@ -51,7 +44,7 @@ export const VertListDnd = ({
   children,
 }: VertListDndProps) => {
   const [items, setItems] = useState<DropProp[]>(
-    data ?? cvtChildren(children) ?? getItems(10)
+    data ?? cvtChildren(children) ?? []
   );
 
   // a little function to help us with reordering the result
@@ -82,8 +75,6 @@ export const VertListDnd = ({
     }
   };
 
-  // Normally you would want to split things out into separate components.
-  // But in this example everything is just done in one place for simplicity
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="droppable">
