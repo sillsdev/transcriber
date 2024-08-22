@@ -10,7 +10,7 @@ import { Button, Box } from '@mui/material';
 import localStrings from '../../selector/localize';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { useGlobal } from 'reactn';
-import { StepItem, StepList } from '.';
+import { StepItem } from '.';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { CheckedChoice as ShowAll } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -33,6 +33,7 @@ import { TranscribeStepSettings } from './TranscribeStepSettings';
 import { ParatextStepSettings } from './ParatextStepSettings';
 import { workflowStepsSelector } from '../../selector';
 import { RecordKeyMap } from '@orbit/records';
+import { VertListDnd } from '../../hoc/VertListDnd';
 
 export interface IStepRow {
   id: string;
@@ -58,6 +59,7 @@ export const stepEditorSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'stepEditor' });
 
 export const StepEditor = ({ process, org }: IProps) => {
+  const [sortKey, setSortKey] = useState(0);
   const [rows, setRows] = useState<IStepRow[]>([]);
   const [showAll, setShowAll] = useState(false);
   const se: IStepEditorStrings = useSelector(stepEditorSelector, shallowEqual);
@@ -152,6 +154,7 @@ export const StepEditor = ({ process, org }: IProps) => {
     setRows(rows.map((r, i) => (i === index ? { ...r, name } : r)));
     toolChanged(toolId, true);
   };
+
   const setToolSettingsOpen = (open: boolean) => {
     if (!open) setToolSettingsRow(-1);
     if (toolRef.current) {
@@ -191,6 +194,7 @@ export const StepEditor = ({ process, org }: IProps) => {
       toolRef.current = undefined;
     }
   };
+
   const handleSettingsChange = (settings: string) => {
     setRows(
       rows.map((r, i) =>
@@ -201,6 +205,7 @@ export const StepEditor = ({ process, org }: IProps) => {
     );
     toolChanged(toolId, true);
   };
+
   const handleToolChange = (tool: string, index: number) => {
     if (settingsTools.includes(tool as ToolSlug)) toolRef.current = index;
     setToolSettingsRow(index); //bring up Settings editor
@@ -226,18 +231,21 @@ export const StepEditor = ({ process, org }: IProps) => {
   const handleSettings = (index: number) => {
     setToolSettingsRow(index);
   };
+
   const handleHide = (index: number) => {
     if (visible === 1) {
       showMessage(se.lastStep);
       return;
     }
-    setRows(rows.map((r, i) => (i === index ? { ...r, seq: -1 } : r)));
+    setRows((rows) =>
+      rows.map((r, i) => (i === index ? { ...r, seq: -1 } : r))
+    );
     showMessage(se.oneHidden);
     toolChanged(toolId, true);
   };
 
   const handleVisible = async (index: number) => {
-    setRows(
+    setRows((rows) =>
       rows
         .map((r, i) => (i === index ? { ...r, seq: mxSeq + 1 } : r))
         .sort((i, j) => i.seq - j.seq)
@@ -383,6 +391,10 @@ export const StepEditor = ({ process, org }: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
 
+  useEffect(() => {
+    setSortKey((sortKey) => sortKey + 1);
+  }, [rows, showAll]);
+
   const prettySettings = (tool: string, settings: string) => {
     var json = settings ? JSON.parse(settings) : undefined;
     switch (tool as ToolSlug) {
@@ -401,6 +413,7 @@ export const StepEditor = ({ process, org }: IProps) => {
         return '';
     }
   };
+
   return (
     <div>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -416,7 +429,7 @@ export const StepEditor = ({ process, org }: IProps) => {
           />
         </div>
       </Box>
-      <StepList onSortEnd={handleSortEnd} useDragHandle>
+      <VertListDnd key={`sort-${sortKey}`} onDrop={handleSortEnd} dragHandle>
         {rows
           .map((r, i) => ({ ...r, rIdx: i }))
           .filter((r) => r.seq >= 0 || showAll)
@@ -437,7 +450,7 @@ export const StepEditor = ({ process, org }: IProps) => {
               settingsTitle={r.prettySettings}
             />
           ))}
-      </StepList>
+      </VertListDnd>
       {toolSettingsRow > -1 && (
         <BigDialog
           title={localizedTool(rows[toolSettingsRow].tool)}

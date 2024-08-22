@@ -1,11 +1,4 @@
-import {
-  useState,
-  useContext,
-  useMemo,
-  useRef,
-  useEffect,
-  useCallback,
-} from 'react';
+import { useState, useContext, useMemo, useRef, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import {
   IPassageDetailArtifactsStrings,
@@ -19,16 +12,13 @@ import {
   SheetLevel,
 } from '../../../model';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
-import {
-  PassageDetailContext,
-  PlayInPlayer,
-} from '../../../context/PassageDetailContext';
+import { PlayInPlayer } from '../../../context/PassageDetailContext';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import Uploader from '../../Uploader';
 import AddResource from './AddResource';
 import SortableHeader from './SortableHeader';
 import { IRow } from '../../../context/PassageDetailContext';
-import { SortableList, SortableItem } from '.';
+import { SortableItem } from '.';
 import {
   remoteIdGuid,
   useSecResCreate,
@@ -78,6 +68,8 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { passageDetailArtifactsSelector } from '../../../selector';
 import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
+import { VertListDnd } from '../../../hoc/VertListDnd';
+import usePassageDetailContext from '../../../context/usePassageDetailContext';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -99,11 +91,12 @@ export function PassageDetailArtifacts() {
   const sectionResources = useOrbitData<SectionResourceD[]>('sectionresource');
   const mediafiles = useOrbitData<MediaFile[]>('mediafile');
   const artifactTypes = useOrbitData<ArtifactType[]>('artifacttype');
+  const [globals] = useGlobal();
   const [memory] = useGlobal('memory');
+  const [, setBusy] = useGlobal('importexportBusy');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [complete, setComplete] = useGlobal('progress');
-  const ctx = useContext(PassageDetailContext);
   const {
     rowData,
     section,
@@ -115,9 +108,11 @@ export function PassageDetailArtifacts() {
     itemPlaying,
     setItemPlaying,
     currentstep,
+    toggleDone,
+    forceRefresh,
     handleItemPlayEnd,
     handleItemTogglePlay,
-  } = ctx.state;
+  } = usePassageDetailContext();
   const { getOrganizedBy } = useOrganizedBy();
   const AddSectionResource = useSecResCreate(section);
   const AddSectionResourceUser = useSecResUserCreate();
@@ -130,6 +125,7 @@ export function PassageDetailArtifacts() {
   const catRef = useRef<IArtifactCategory[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [visual, setVisual] = useState(false);
+  const [sortKey, setSortKey] = useState(0);
   const cancelled = useRef(false);
   const [displayId, setDisplayId] = useState('');
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
@@ -237,22 +233,24 @@ export function PassageDetailArtifacts() {
     } else {
       await AddSectionResourceUser(res);
     }
-    ctx.setState((state) => ({
-      ...state,
-      rowData: (rowData as any).map((r: IRow) =>
-        r?.id === id ? { ...r, done: !r.done } : r
-      ),
-    }));
+    toggleDone(id);
+    setTimeout(() => {
+      setBusy(true);
+      forceRefresh();
+      setTimeout(() => setBusy(false), 500);
+    }, 500);
   };
 
   const handleDelete = (id: string) => setConfirm(id);
   const handleDeleteRefused = () => setConfirm('');
   const handleDeleteConfirmed = () => {
+    setBusy(true);
     const secRes = sectionResources.find(
       (r) => related(r, 'mediafile') === confirm
     );
     secRes && DeleteSectionResource(secRes);
     setConfirm('');
+    setBusy(false);
   };
   const handleUploadVisible = (v: boolean) => {
     setUploadVisible(v);
@@ -405,13 +403,21 @@ export function PassageDetailArtifacts() {
     [passage]
   );
 
-  const listFilter = useCallback(
-    (r: IRow) =>
-      r?.isResource &&
-      (allResources || r.passageId === '' || r.passageId === passage.id),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [allResources, passage]
+  const listFilter = (r: IRow) =>
+    r?.isResource &&
+    (allResources || r.passageId === '' || r.passageId === passage.id);
+
+  const [selectedRows, setSelectedRows] = useState<IRow[]>(
+    rowData.filter(listFilter)
   );
+
+  useEffect(() => {
+    if (!globals.importexportBusy && !globals.remoteBusy) {
+      setSelectedRows(rowData.filter(listFilter));
+      setSortKey((sortKey) => sortKey + 1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowData, globals.importexportBusy, globals.remoteBusy]);
 
   const onSortEnd = ({
     oldIndex,
@@ -439,9 +445,7 @@ export function PassageDetailArtifacts() {
     const newRows = rowData
       .map((r, i) => (listFilter(r) ? rowData[newIndexes[i]] : r))
       .filter((r) => r !== undefined);
-    ctx.setState((state) => {
-      return { ...state, rowData: newRows };
-    });
+    forceRefresh(newRows);
   };
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
@@ -510,7 +514,7 @@ export function PassageDetailArtifacts() {
     });
     return results;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sectionResources]);
+  }, [sectionResources, rowData]);
 
   useEffect(() => {
     getArtifactCategorys(ArtifactCategoryType.Resource).then(
@@ -659,27 +663,22 @@ export function PassageDetailArtifacts() {
         )}
       </Box>
       <SortableHeader />
-      <SortableList onSortEnd={onSortEnd} useDragHandle>
-        {rowData
-          .filter((r) => listFilter(r))
-          .map((value, index) => (
-            <SortableItem
-              key={`item-${index}`}
-              index={index}
-              value={value as any}
-              isPlaying={playItem === value.id && itemPlaying}
-              onPlay={handlePlay}
-              onView={handleDisplayId}
-              onDone={handleDone}
-              onDelete={handleDelete}
-              onEdit={
-                userIsAdmin && (!offline || offlineOnly)
-                  ? handleEdit
-                  : undefined
-              }
-            />
-          ))}
-      </SortableList>
+      <VertListDnd key={`sort-${sortKey}`} onDrop={onSortEnd} dragHandle>
+        {selectedRows.map((value, index) => (
+          <SortableItem
+            key={`item-${index}`}
+            value={value as any}
+            isPlaying={playItem === value.id && itemPlaying}
+            onPlay={handlePlay}
+            onView={handleDisplayId}
+            onDone={handleDone}
+            onDelete={handleDelete}
+            onEdit={
+              userIsAdmin && (!offline || offlineOnly) ? handleEdit : undefined
+            }
+          />
+        ))}
+      </VertListDnd>
       <Uploader
         recordAudio={false}
         isOpen={uploadVisible}

@@ -1,9 +1,7 @@
-import { SortableElement, SortableElementProps } from 'react-sortable-hoc';
 import { IRow } from '../../../context/PassageDetailContext';
 import { TableRow, PlayButton, DoneButton, ResourceEditAction } from '.';
 import { SectionResourceD } from '../../../model';
 import { ViewButton } from './ViewButton';
-import { PropsWithChildren } from 'react';
 
 interface IProps {
   value: IRow;
@@ -15,9 +13,15 @@ interface IProps {
   onDelete?: (id: string) => void;
 }
 
-export const SortableItem = SortableElement<
-  IProps & SortableElementProps & PropsWithChildren
->(({ value, isPlaying, onPlay, onView, onDone, onEdit, onDelete }: IProps) => (
+export const SortableItem = ({
+  value,
+  isPlaying,
+  onPlay,
+  onView,
+  onDone,
+  onEdit,
+  onDelete,
+}: IProps) => (
   <TableRow
     value={
       {
@@ -45,4 +49,4 @@ export const SortableItem = SortableElement<
       } as any
     }
   />
-));
+);
