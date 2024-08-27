@@ -1654,6 +1654,204 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.aiDesc">
+         <segment>
+            <source>Copy the query contents and paste it into one or more of the AI chat tools:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.bibleBrain">
+         <segment>
+            <source>{0} Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.bibleProjectLang">
+         <segment>
+            <source>Book Overviews</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.biblicalBook">
+         <segment>
+            <source>the biblical book of {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.book">
+         <segment>
+            <source>book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.chapter">
+         <segment>
+            <source>chapter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.clipboard">
+         <segment>
+            <source>clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.clipboardCopy">
+         <segment>
+            <source>Copy to clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.convert">
+         <segment>
+            <source>Convert text to audio resource file</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.createResource">
+         <segment>
+            <source>Create AI Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.findResource">
+         <segment>
+            <source>Find Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.image">
+         <segment>
+            <source>image</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.imageTpl">
+         <segment>
+            <source>Please provide an image for {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.meaning">
+         <segment>
+            <source>meaning</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.meaningTpl">
+         <segment>
+            <source>Please draft a story to illustrate the meaning of {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.movement">
+         <segment>
+            <source>movement</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.oralVersion">
+         <segment>
+            <source>oral-version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.oralVersionTpl">
+         <segment>
+            <source>Please provide an oral translation of {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.passage">
+         <segment>
+            <source>passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.query">
+         <segment>
+            <source>Query</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.queryBuilder">
+         <segment>
+            <source>AI Query Builder</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.reset">
+         <segment>
+            <source>Reset</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.scope">
+         <segment>
+            <source>Scope</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.script">
+         <segment>
+            <source>script</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.scriptTpl">
+         <segment>
+            <source>Please provide a script for {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.section">
+         <segment>
+            <source>section</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.summary">
+         <segment>
+            <source>summary</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.summaryTpl">
+         <segment>
+            <source>Please provide a summary of {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.type">
+         <segment>
+            <source>Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.unavailable">
+         <segment>
+            <source>unavailable</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.video">
+         <segment>
+            <source>video</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.videoTpl">
+         <segment>
+            <source>Please provide a video for {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.whatsAppHelp">
+         <segment>
+            <source>Install the What's App app on your phone and join the group for your language. You can also install What's App on Windows and link to your phone App. Use Meta AI</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="grid.all">
          <segment>
             <source>All</source>
@@ -3859,6 +4057,24 @@
       <unit id="passageDetailArtifacts.editResource">
          <segment>
             <source>Edit Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.find">
+         <segment>
+            <source>Find</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.findResource">
+         <segment>
+            <source>Find Resource for {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.findResourceDesc">
+         <segment>
+            <source>These controls can be used to find or create (using artificial intelligence -- AI) resources for internalizing the passage, section, chapter, or book.</source>
             <target/>
          </segment>
       </unit>

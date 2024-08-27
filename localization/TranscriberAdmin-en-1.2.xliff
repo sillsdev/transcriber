@@ -1929,6 +1929,237 @@
                <context context-type="sourcefile">filterMenu.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="findResource.aiDesc">
+            <source>Copy the query contents and paste it into one or more of the AI chat tools:</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.bibleBrain">
+            <source>{0} Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.bibleProjectLang">
+            <source>Book Overviews</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.biblicalBook">
+            <source>the biblical book of {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.book">
+            <source>book</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.chapter">
+            <source>chapter</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.clipboard">
+            <source>clipboard</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.clipboardCopy">
+            <source>Copy to clipboard</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.convert">
+            <source>Convert text to audio resource file</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.createResource">
+            <source>Create AI Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.findResource">
+            <source>Find Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.image">
+            <source>image</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.imageTpl">
+            <source>Please provide an image for {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.meaning">
+            <source>meaning</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.meaningTpl">
+            <source>Please draft a story to illustrate the meaning of {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.movement">
+            <source>movement</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.oralVersion">
+            <source>oral-version</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.oralVersionTpl">
+            <source>Please provide an oral translation of {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.passage">
+            <source>passage</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.query">
+            <source>Query</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.queryBuilder">
+            <source>AI Query Builder</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.reset">
+            <source>Reset</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.scope">
+            <source>Scope</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.script">
+            <source>script</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.scriptTpl">
+            <source>Please provide a script for {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.section">
+            <source>section</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.summary">
+            <source>summary</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.summaryTpl">
+            <source>Please provide a summary of {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.type">
+            <source>Type</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.unavailable">
+            <source>unavailable</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.video">
+            <source>video</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.videoTpl">
+            <source>Please provide a video for {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.whatsAppHelp">
+            <source>Install the What's App app on your phone and join the group for your language. You can also install What's App on Windows and link to your phone App. Use Meta AI</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="grid.all">
             <source>All</source>
             <target/>
@@ -4500,6 +4731,27 @@
       	</trans-unit>
          <trans-unit id="passageDetailArtifacts.editResource">
             <source>Edit Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageDetailArtifacts.find">
+            <source>Find</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageDetailArtifacts.findResource">
+            <source>Find Resource for {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageDetailArtifacts.findResourceDesc">
+            <source>These controls can be used to find or create (using artificial intelligence -- AI) resources for internalizing the passage, section, chapter, or book.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageMedia.tsx</context>

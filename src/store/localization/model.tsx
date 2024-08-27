@@ -345,6 +345,42 @@ export interface IFilterMenuStrings extends Localize.LocalizedStringsMethods {
     "saveFilter": string;
 };
 
+export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
+    "aiDesc": string;
+    "bibleBrain": string;
+    "bibleProjectLang": string;
+    "biblicalBook": string;
+    "book": string;
+    "chapter": string;
+    "clipboard": string;
+    "clipboardCopy": string;
+    "convert": string;
+    "createResource": string;
+    "findResource": string;
+    "image": string;
+    "imageTpl": string;
+    "meaning": string;
+    "meaningTpl": string;
+    "movement": string;
+    "oralVersion": string;
+    "oralVersionTpl": string;
+    "passage": string;
+    "query": string;
+    "queryBuilder": string;
+    "reset": string;
+    "scope": string;
+    "script": string;
+    "scriptTpl": string;
+    "section": string;
+    "summary": string;
+    "summaryTpl": string;
+    "type": string;
+    "unavailable": string;
+    "video": string;
+    "videoTpl": string;
+    "whatsAppHelp": string;
+};
+
 export interface IGridStrings extends Localize.LocalizedStringsMethods {
     "all": string;
     "avg": string;
@@ -762,6 +798,9 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "deleteConfirm": string;
     "description": string;
     "editResource": string;
+    "find": string;
+    "findResource": string;
+    "findResourceDesc": string;
     "generalResources": string;
     "keywords": string;
     "language": string;
@@ -1604,6 +1643,7 @@ export interface ILocalizedStrings {
 	electronImport: IElectronImportStrings;
 	emailUnverified: IEmailUnverifiedStrings;
 	filterMenu: IFilterMenuStrings;
+	findResource: IFindResourceStrings;
 	grid: IGridStrings;
 	groupTabs: IGroupTabsStrings;
 	hotKey: IHotKeyStrings;

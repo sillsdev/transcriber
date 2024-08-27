@@ -18,7 +18,7 @@ import Uploader from '../../Uploader';
 import AddResource from './AddResource';
 import SortableHeader from './SortableHeader';
 import { IRow } from '../../../context/PassageDetailContext';
-import { SortableItem } from '.';
+import { PriButton, SortableItem } from '.';
 import {
   remoteIdGuid,
   useSecResCreate,
@@ -36,6 +36,7 @@ import {
   IArtifactCategory,
   ArtifactCategoryType,
   mediaFileName,
+  passageRefText,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
@@ -45,7 +46,7 @@ import SelectSections from './SelectSections';
 import ResourceData from './ResourceData';
 import { UploadType } from '../../MediaUpload';
 import LimitedMediaPlayer from '../../LimitedMediaPlayer';
-import { Box, BoxProps, styled } from '@mui/material';
+import { Box, BoxProps, Grid, Stack, styled, Typography } from '@mui/material';
 import { ReplaceRelatedRecord } from '../../../model/baseModel';
 import { PassageResourceButton } from './PassageResourceButton';
 import ProjectResourceConfigure from './ProjectResourceConfigure';
@@ -70,6 +71,7 @@ import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
 import { VertListDnd } from '../../../hoc/VertListDnd';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
+import { FindResource } from './FindResource';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -124,6 +126,7 @@ export function PassageDetailArtifacts() {
   const { getArtifactCategorys } = useArtifactCategory();
   const catRef = useRef<IArtifactCategory[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
+  const [findOpen, setFindOpen] = useState(false);
   const [visual, setVisual] = useState(false);
   const [sortKey, setSortKey] = useState(0);
   const cancelled = useRef(false);
@@ -254,6 +257,10 @@ export function PassageDetailArtifacts() {
   };
   const handleUploadVisible = (v: boolean) => {
     setUploadVisible(v);
+  };
+
+  const handleFindVisible = (v: boolean) => {
+    setFindOpen(v);
   };
 
   const handleSharedResourceVisible = (v: boolean) => {
@@ -527,13 +534,13 @@ export function PassageDetailArtifacts() {
     let cnt = rowData.length;
     for (const r of res) {
       const catRec = catRef.current.find(
-        (c) => c.slug === r.attributes.categoryName
+        (c) => c.slug === r?.attributes?.categoryName
       );
       const newMediaRec = await AddMediaFileResource(r, catRec?.id || '');
       cnt += 1;
       await AddSectionResource(
         cnt,
-        r.attributes.title || r.attributes.reference,
+        r?.attributes?.title || r?.attributes?.reference,
         newMediaRec,
         isPassageResource() ? passage.id : null
       );
@@ -637,10 +644,19 @@ export function PassageDetailArtifacts() {
 
   return (
     <>
-      <Box sx={{ display: 'flex', flexDirection: 'row', flexGrow: 1, pr: 2 }}>
-        {userIsAdmin && (!offline || offlineOnly) && (
-          <AddResource action={handleAction} />
-        )}
+      <Stack sx={{ width: '100%' }} direction="row" spacing={1}>
+        <Grid container spacing={1}>
+          {userIsAdmin && (!offline || offlineOnly) && (
+            <Grid item>
+              <AddResource action={handleAction} />
+            </Grid>
+          )}
+          <Grid item>
+            <PriButton onClick={() => handleFindVisible(true)}>
+              {t.find}
+            </PriButton>
+          </Grid>
+        </Grid>
         <MediaContainer>
           {playItem !== '' && (
             <LimitedMediaPlayer
@@ -661,7 +677,7 @@ export function PassageDetailArtifacts() {
             cb={handleAllResources}
           />
         )}
-      </Box>
+      </Stack>
       <SortableHeader />
       <VertListDnd key={`sort-${sortKey}`} onDrop={onSortEnd} dragHandle>
         {selectedRows.map((value, index) => (
@@ -705,6 +721,15 @@ export function PassageDetailArtifacts() {
           />
         }
       />
+      <BigDialog
+        title={t.findResource.replace('{0}', passageRefText(passage))}
+        description=<Typography>{t.findResourceDesc}</Typography>
+        isOpen={findOpen}
+        onOpen={handleFindVisible}
+        bp={BigDialogBp.sm}
+      >
+        <FindResource />
+      </BigDialog>
       <BigDialog
         title={t.sharedResource.replace(
           '{0}',
