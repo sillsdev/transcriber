@@ -80,7 +80,7 @@ function Invite(props: IProps) {
   };
   const handleAdd = async () => {
     const strings = {
-      SILOrg: t.sil,
+      SILOrg: require('../../package.json').author.name,
       App: API_CONFIG.productName,
       Invitation: t.invitation,
       Instructions: t.instructions,

@@ -2874,13 +2874,6 @@
                <context context-type="sourcefile">Invite.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="invite.sil">
-            <source>SIL International</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Invite.tsx</context>
-            </context-group>
-         </trans-unit>
       	<trans-unit id="keyTerms.addTargetWord">
       		<source>Add Translation</source>
       		<target/>

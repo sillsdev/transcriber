@@ -534,7 +534,6 @@ const initialState = {
 			"save": "Save",
 			"selectTeamRole": "Select team role.",
 			"send": "Send",
-			"sil": "SIL International",
 		}
 	}),
 	"keyTerms": new LocalizedStrings({
