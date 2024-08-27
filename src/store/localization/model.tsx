@@ -499,7 +499,6 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "selectTeamRole": string;
     "send": string;
-    "sil": string;
 };
 
 export interface IKeyTermsStrings extends Localize.LocalizedStringsMethods {

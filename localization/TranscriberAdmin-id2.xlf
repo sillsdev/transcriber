@@ -1,8 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0"
-       srcLang="en"
-       trgLang="en"
-       version="1.0">
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="id" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
       <unit id="access.availableUsers">
          <segment>
@@ -223,7 +220,7 @@
       <unit id="artifactCategory.chapter">
          <segment>
             <source>Chapter Number</source>
-            <target/>
+            <target>Nomor Bab</target>
          </segment>
       </unit>
       <unit id="artifactCategory.scripture">
@@ -259,7 +256,7 @@
       <unit id="artifactCategory.graphic">
          <segment>
             <source>Graphic</source>
-            <target/>
+            <target>Grafis</target>
          </segment>
       </unit>
       <unit id="artifactCategory.qanda">
@@ -271,13 +268,13 @@
       <unit id="artifactCategory.title">
          <segment>
             <source>Title</source>
-            <target/>
+            <target>Judul</target>
          </segment>
       </unit>
       <unit id="artifactType.backtranslation">
          <segment>
             <source>Phrase Back Translation</source>
-            <target/>
+            <target>Terjemahan Balik Hentian Singkat</target>
          </segment>
       </unit>
       <unit id="artifactType.comment">
@@ -289,7 +286,7 @@
       <unit id="artifactType.graphic">
          <segment>
             <source>Graphic</source>
-            <target/>
+            <target>Grafis</target>
          </segment>
       </unit>
       <unit id="artifactType.projectresource">
@@ -301,7 +298,7 @@
       <unit id="artifactType.qanda">
          <segment>
             <source>Community Test Question and Answer</source>
-            <target/>
+            <target>Tanya Jawab Masyarakat</target>
          </segment>
       </unit>
       <unit id="artifactType.resource">
@@ -313,7 +310,7 @@
       <unit id="artifactType.retell">
          <segment>
             <source>Community Test Retell</source>
-            <target/>
+            <target>Cerita Ulang Masyarakat</target>
          </segment>
       </unit>
       <unit id="artifactType.sharedresource">
@@ -331,7 +328,7 @@
       <unit id="artifactType.title">
          <segment>
             <source>Title</source>
-            <target/>
+            <target>Judul</target>
          </segment>
       </unit>
       <unit id="artifactType.vernacular">
@@ -343,7 +340,7 @@
       <unit id="artifactType.wholebacktranslation">
          <segment>
             <source>Whole Back Translation</source>
-            <target/>
+            <target>Terjemahan Balik Utuh</target>
          </segment>
       </unit>
       <unit id="assignmentTable.assignSec">
@@ -463,7 +460,7 @@
       <unit id="audacityManager.checkDownload">
          <segment>
             <source>Return to the team screen, mark the project for offline use and change modes to let the project be downloaded. That will put the media files into a local folder where Audacity can get them.</source>
-            <target/>
+            <target>Kembali ke layar tim, tandai proyek untuk penggunaan offline dan ubah mode agar proyek dapat diunduh. Hal ini akan menempatkan file media ke dalam folder lokal di mana Audacity dapat memperolehnya.</target>
          </segment>
       </unit>
       <unit id="audacityManager.close">
@@ -571,7 +568,7 @@
       <unit id="cards.bibleid">
          <segment>
             <source>Bible Id</source>
-            <target/>
+            <target>Id Alkitab</target>
          </segment>
       </unit>
       <unit id="cards.bibleidexists">
@@ -613,7 +610,7 @@
       <unit id="cards.closeNoSave">
          <segment>
             <source>Close without Saving?</source>
-            <target/>
+            <target>Menutup tanpa Menyimpan?</target>
          </segment>
       </unit>
       <unit id="cards.connectParatext">
@@ -637,7 +634,7 @@
       <unit id="cards.copyright">
          <segment>
             <source>Copyright</source>
-            <target/>
+            <target>Hak Cipta</target>
          </segment>
       </unit>
       <unit id="cards.copySame">
@@ -655,19 +652,19 @@
       <unit id="cards.creatorAdd">
          <segment>
             <source>Add Shared Content Creator</source>
-            <target/>
+            <target>Tambahkan Pembuat Konten Bersama</target>
          </segment>
       </unit>
       <unit id="cards.creatorEmail">
          <segment>
             <source>Email</source>
-            <target/>
+            <target>Email</target>
          </segment>
       </unit>
       <unit id="cards.creatorOK">
          <segment>
             <source>User has been given Creator permission.</source>
-            <target/>
+            <target>Pengguna telah diberi izin Pencipta.</target>
          </segment>
       </unit>
       <unit id="cards.delete">
@@ -685,7 +682,7 @@
       <unit id="cards.description">
          <segment>
             <source>Description</source>
-            <target/>
+            <target>Deskripsi</target>
          </segment>
       </unit>
       <unit id="cards.draft">
@@ -709,7 +706,7 @@
       <unit id="cards.explainPublishing">
          <segment>
             <source>Information to use when publishing audio created by this team.</source>
-            <target/>
+            <target>Informasi untuk digunakan saat menerbitkan audio yang dibuat oleh tim ini.</target>
          </segment>
       </unit>
       <unit id="cards.explainTeamDelete">
@@ -757,7 +754,7 @@
       <unit id="cards.notesLabel">
          <segment>
             <source>Introductory Notes Title</source>
-            <target/>
+            <target>Catatan Pengantar Judul</target>
          </segment>
       </unit>
       <unit id="cards.OBS">
@@ -769,7 +766,7 @@
       <unit id="cards.OBT">
          <segment>
             <source>Oral Bible Translation (complete)</source>
-            <target/>
+            <target>Terjemahan Alkitab Lisan (lengkap)</target>
          </segment>
       </unit>
       <unit id="cards.OBTs">
@@ -781,13 +778,13 @@
       <unit id="cards.OBTr">
          <segment>
             <source>Oral Bible Translation (like Render)</source>
-            <target/>
+            <target>Terjemahan Alkitab Lisan (seperti Render)</target>
          </segment>
       </unit>
       <unit id="cards.OBTo">
          <segment>
             <source>Oral Bible Translation (oral only)</source>
-            <target/>
+            <target>Terjemahan Alkitab Lisan (hanya lisan)</target>
          </segment>
       </unit>
       <unit id="cards.offline">
@@ -829,19 +826,19 @@
       <unit id="cards.projectRequired">
          <segment>
             <source>A project must be added before recordings are allowed</source>
-            <target/>
+            <target>Sebuah proyek harus ditambahkan sebelum rekaman diizinkan</target>
          </segment>
       </unit>
       <unit id="cards.Render">
          <segment>
             <source>Render to Paratext</source>
-            <target/>
+            <target>Render sampai Paratext</target>
          </segment>
       </unit>
       <unit id="cards.publishing">
          <segment>
             <source>Publishing</source>
-            <target/>
+            <target>Penerbitan</target>
          </segment>
       </unit>
       <unit id="cards.save">
@@ -907,7 +904,7 @@
       <unit id="cards.workflowProgression">
          <segment>
             <source>Workflow Progression</source>
-            <target/>
+            <target>Perkembangan Alur Kerja</target>
          </segment>
       </unit>
       <unit id="cards.workflowProgressionPassage">
@@ -925,7 +922,7 @@
       <unit id="cards.yes">
          <segment>
             <source>Yes</source>
-            <target/>
+            <target>Ya</target>
          </segment>
       </unit>
       <unit id="category.builtIn">
@@ -943,7 +940,7 @@
       <unit id="category.close">
          <segment>
             <source>Close</source>
-            <target/>
+            <target>Tutup</target>
          </segment>
       </unit>
       <unit id="category.duplicate">
@@ -961,13 +958,13 @@
       <unit id="category.ignoreInvalid">
          <segment>
             <source>Ignoring invalid category change '{0}'.</source>
-            <target/>
+            <target>Mengabaikan perubahan kategori yang tidak valid '{0}'</target>
          </segment>
       </unit>
       <unit id="category.inUseBy">
          <segment>
             <source>In use by {0} {1}</source>
-            <target/>
+            <target>Digunakan oleh {0} {1}</target>
          </segment>
       </unit>
       <unit id="category.note">
@@ -1015,13 +1012,13 @@
       <unit id="commentCard.approve">
          <segment>
             <source>Approve</source>
-            <target/>
+            <target>Menyetujui</target>
          </segment>
       </unit>
       <unit id="commentCard.approved">
          <segment>
             <source>Approved</source>
-            <target/>
+            <target>Disetujui</target>
          </segment>
       </unit>
       <unit id="commentCard.confirmDelete">
@@ -1033,25 +1030,25 @@
       <unit id="commentCard.playOrStop">
          <segment>
             <source>Play / Stop</source>
-            <target/>
+            <target>Mainkan / Hentikan</target>
          </segment>
       </unit>
       <unit id="commentCard.previousVersion">
          <segment>
             <source>Previous Version</source>
-            <target/>
+            <target>Versi Sebelumnya</target>
          </segment>
       </unit>
       <unit id="commentCard.unapproved">
          <segment>
             <source>Unapproved</source>
-            <target/>
+            <target>Tidak disetujui</target>
          </segment>
       </unit>
       <unit id="commentEditor.comment">
          <segment>
             <source>Comment</source>
-            <target/>
+            <target>Komentar</target>
          </segment>
       </unit>
       <unit id="commentEditor.record">
@@ -1081,13 +1078,13 @@
       <unit id="community.addSpeaker">
          <segment>
             <source>Add '{0}'</source>
-            <target/>
+            <target>Tambahkan '{0}'</target>
          </segment>
       </unit>
       <unit id="community.backTranslationComplete">
          <segment>
             <source>Version {0}: Back translation: {1}</source>
-            <target/>
+            <target>Versi {0}: Terjemahan kembali: {1}</target>
          </segment>
       </unit>
       <unit id="community.deleteItem">
@@ -1099,25 +1096,25 @@
       <unit id="community.finished">
          <segment>
             <source>finished</source>
-            <target/>
+            <target>selesai</target>
          </segment>
       </unit>
       <unit id="community.later">
          <segment>
             <source>Do later</source>
-            <target/>
+            <target>Lakukan nanti</target>
          </segment>
       </unit>
       <unit id="community.loading">
          <segment>
             <source>Loading:</source>
-            <target/>
+            <target>Memuat:</target>
          </segment>
       </unit>
       <unit id="community.none">
          <segment>
             <source>none</source>
-            <target/>
+            <target>tidak ada</target>
          </segment>
       </unit>
       <unit id="community.playTest">
@@ -1129,7 +1126,7 @@
       <unit id="community.provideRights">
          <segment>
             <source>Provide Rights</source>
-            <target/>
+            <target>Memberikan Hak</target>
          </segment>
       </unit>
       <unit id="community.record">
@@ -1141,13 +1138,13 @@
       <unit id="community.releaseRights">
          <segment>
             <source>Upload or record a statement releasing the rights to publish material recorded by this speaker.</source>
-            <target/>
+            <target>Unggah atau rekam pernyataan yang melepaskan hak untuk mempublikasikan materi yang direkam oleh pembicara ini.</target>
          </segment>
       </unit>
       <unit id="community.rights">
          <segment>
             <source>Rights</source>
-            <target/>
+            <target>Hak</target>
          </segment>
       </unit>
       <unit id="community.saveFirst">
@@ -1165,13 +1162,13 @@
       <unit id="community.segmentsChanged">
          <segment>
             <source>Changing segments will invalidate some recordings since they are linked to the segment start and end.</source>
-            <target/>
+            <target>Mengubah segmen akan membatalkan beberapa rekaman karena rekaman tersebut terkait dengan awal dan akhir segmen.</target>
          </segment>
       </unit>
       <unit id="community.segmentsComplete">
          <segment>
             <source>Version {0}: Segments complete ({2}): {1}</source>
-            <target/>
+            <target>Versi {0}: Segmen selesai ({2}): {1}</target>
          </segment>
       </unit>
       <unit id="community.speaker">
@@ -1225,13 +1222,13 @@
       <unit id="consultantCheck.furtherReview">
          <segment>
             <source>Review More</source>
-            <target/>
+            <target>Tinjau Lebih Lanjut</target>
          </segment>
       </unit>
       <unit id="consultantCheck.noMedia">
          <segment>
             <source>No Media Available</source>
-            <target/>
+            <target>Tidak Ada Media yang Tersedia</target>
          </segment>
       </unit>
       <unit id="consultantCheck.noTranscription">
@@ -1249,7 +1246,7 @@
       <unit id="control.book">
          <segment>
             <source>Book</source>
-            <target/>
+            <target>Buku</target>
          </segment>
       </unit>
       <unit id="control.normal">
@@ -1291,37 +1288,37 @@
       <unit id="discussionCard.addComment">
          <segment>
             <source>Add</source>
-            <target/>
+            <target>Tambahkan</target>
          </segment>
       </unit>
       <unit id="discussionCard.assign">
          <segment>
             <source>Assign to a Group or Team Member</source>
-            <target/>
+            <target>Menetapkan ke Grup atau Anggota Tim</target>
          </segment>
       </unit>
       <unit id="discussionCard.earlierVersion">
          <segment>
             <source>From an earlier version</source>
-            <target/>
+            <target>Dari versi sebelumnya</target>
          </segment>
       </unit>
       <unit id="discussionCard.groupuser">
          <segment>
             <source>Group/Team Member</source>
-            <target/>
+            <target>Anggota Grup/Tim</target>
          </segment>
       </unit>
       <unit id="discussionCard.assignGroup">
          <segment>
             <source>Assign to a Group</source>
-            <target/>
+            <target>Tetapkan ke Grup</target>
          </segment>
       </unit>
       <unit id="discussionCard.assignUser">
          <segment>
             <source>Assign to a Team Member</source>
-            <target/>
+            <target>Menetapkan ke Pengguna</target>
          </segment>
       </unit>
       <unit id="discussionCard.category">
@@ -1333,7 +1330,7 @@
       <unit id="discussionCard.changeAssignment">
          <segment>
             <source>Change Assignment</source>
-            <target/>
+            <target>Ubah Penugasan</target>
          </segment>
       </unit>
       <unit id="discussionCard.collapse">
@@ -1363,7 +1360,7 @@
       <unit id="discussionCard.move">
          <segment>
             <source>Select step for discussion</source>
-            <target/>
+            <target>Pilih langkah untuk diskusi</target>
          </segment>
       </unit>
       <unit id="discussionCard.or">
@@ -1453,7 +1450,7 @@
       <unit id="discussionMenu.move">
          <segment>
             <source>Move</source>
-            <target/>
+            <target>Pindah</target>
          </segment>
       </unit>
       <unit id="discussionMenu.reopen">
@@ -1651,7 +1648,7 @@
       <unit id="filterMenu.saveFilter">
          <segment>
             <source>Save as team default</source>
-            <target/>
+            <target>Simpan sebagai default tim</target>
          </segment>
       </unit>
       <unit id="grid.all">
@@ -1801,7 +1798,7 @@
       <unit id="groupTabs.peerGroups">
          <segment>
             <source>Peer Groups</source>
-            <target/>
+            <target>Grup Baru</target>
          </segment>
       </unit>
       <unit id="groupTabs.roles">
@@ -2113,13 +2110,13 @@
       <unit id="integration.exportSectionNumbers">
          <segment>
             <source>Sync {0} Numbers</source>
-            <target/>
+            <target>Menyinkronkan Angka {0}</target>
          </segment>
       </unit>
       <unit id="integration.invalidReferences">
          <segment>
             <source>{0} passage(s) have invalid book or reference.</source>
-            <target/>
+            <target>Bagian {0} memiliki buku atau referensi yang tidak valid.</target>
          </segment>
       </unit>
       <unit id="integration.no">
@@ -2335,7 +2332,7 @@
       <unit id="invite.addInvite">
          <segment>
             <source>Invite Person</source>
-            <target/>
+            <target>Undang Orang</target>
          </segment>
       </unit>
       <unit id="invite.allUsersProjects">
@@ -2413,13 +2410,13 @@
       <unit id="invite.newInviteTask">
          <segment>
             <source>Enter the email address of the person to invite.</source>
-            <target/>
+            <target>Masukkan alamat email orang yang akan diundang.</target>
          </segment>
       </unit>
       <unit id="invite.noProjects">
          <segment>
             <source>This team has no audio projects.</source>
-            <target/>
+            <target>Tim ini tidak memiliki proyek audio.</target>
          </segment>
       </unit>
       <unit id="invite.organization">
@@ -2467,7 +2464,7 @@
       <unit id="keyTerms.addTargetWord">
          <segment>
             <source>Add Translation</source>
-            <target/>
+            <target>Tambahkan Terjemahan</target>
          </segment>
       </unit>
       <unit id="keyTerms.all">
@@ -2497,7 +2494,7 @@
       <unit id="keyTerms.cancel">
          <segment>
             <source>Cancel Translation</source>
-            <target/>
+            <target>Batalkan Terjemahan</target>
          </segment>
       </unit>
       <unit id="keyTerms.category">
@@ -2509,13 +2506,13 @@
       <unit id="keyTerms.chipDelete">
          <segment>
             <source>Delete {0} from {1}? Are you sure?</source>
-            <target/>
+            <target>Menghapus {0} dari {1}? Apakah Anda yakin?</target>
          </segment>
       </unit>
       <unit id="keyTerms.chipDeleteNoLabel">
          <segment>
             <source>Delete translation from {0}? Are you sure?</source>
-            <target/>
+            <target>Menghapus terjemahan dari {0}? Apakah Anda yakin?</target>
          </segment>
       </unit>
       <unit id="keyTerms.definition">
@@ -2569,7 +2566,7 @@
       <unit id="keyTerms.hide">
          <segment>
             <source>Hide</source>
-            <target/>
+            <target>Sembunyikan</target>
          </segment>
       </unit>
       <unit id="keyTerms.index">
@@ -2587,7 +2584,7 @@
       <unit id="keyTerms.link">
          <segment>
             <source>Link</source>
-            <target/>
+            <target>Tautan</target>
          </segment>
       </unit>
       <unit id="keyTerms.misc">
@@ -2605,25 +2602,25 @@
       <unit id="keyTerms.play">
          <segment>
             <source>Play Translation</source>
-            <target/>
+            <target>Putar Terjemahan</target>
          </segment>
       </unit>
       <unit id="keyTerms.realia">
          <segment>
             <source>Realia</source>
-            <target/>
+            <target>Realia</target>
          </segment>
       </unit>
       <unit id="keyTerms.record">
          <segment>
             <source>Record Translation</source>
-            <target/>
+            <target>Rekam Terjemahan</target>
          </segment>
       </unit>
       <unit id="keyTerms.recording">
          <segment>
             <source>Recording in progress.</source>
-            <target/>
+            <target>Perekaman sedang berlangsung.</target>
          </segment>
       </unit>
       <unit id="keyTerms.ritual">
@@ -2635,7 +2632,7 @@
       <unit id="keyTerms.save">
          <segment>
             <source>Save Translation</source>
-            <target/>
+            <target>Simpan Terjemahan</target>
          </segment>
       </unit>
       <unit id="keyTerms.saving">
@@ -2647,7 +2644,7 @@
       <unit id="keyTerms.settingLanguage">
          <segment>
             <source>Set Langauge</source>
-            <target/>
+            <target>Tetapkan Bahasa</target>
          </segment>
       </unit>
       <unit id="keyTerms.sortShow">
@@ -2749,7 +2746,7 @@
       <unit id="languagePicker.noFonts">
          <segment>
             <source>No recommended font</source>
-            <target/>
+            <target>Tidak ada font yang direkomendasikan</target>
          </segment>
       </unit>
       <unit id="languagePicker.phonetic">
@@ -2797,7 +2794,7 @@
       <unit id="main.akuo">
          <segment>
             <source>Access Akuo Site</source>
-            <target/>
+            <target>Akses Situs Akuo</target>
          </segment>
       </unit>
       <unit id="main.apiError">
@@ -2839,7 +2836,7 @@
       <unit id="main.course">
          <segment>
             <source>Access Accredited Course</source>
-            <target/>
+            <target>Akses Kursus Terakreditasi</target>
          </segment>
       </unit>
       <unit id="main.continueCurrentUser">
@@ -2911,7 +2908,7 @@
       <unit id="main.googleSamples">
          <segment>
             <source>Sample Google spreadsheets</source>
-            <target/>
+            <target>Contoh spreadsheet Google</target>
          </segment>
       </unit>
       <unit id="main.helpCenter">
@@ -2971,7 +2968,7 @@
       <unit id="main.logos">
          <segment>
             <source>Access Logos Resources</source>
-            <target/>
+            <target>Akses Sumber Daya Logo</target>
          </segment>
       </unit>
       <unit id="main.media">
@@ -2995,13 +2992,13 @@
       <unit id="main.openNotes">
          <segment>
             <source>Access Translator's Notes</source>
-            <target/>
+            <target>Akses Catatan Penerjemah</target>
          </segment>
       </unit>
       <unit id="main.openContent">
          <segment>
             <source>Access Open Content</source>
-            <target/>
+            <target>Akses Konten Terbuka</target>
          </segment>
       </unit>
       <unit id="main.passages">
@@ -3049,13 +3046,13 @@
       <unit id="main.reportWhenOnline">
          <segment>
             <source>You must be online to use this menu item.</source>
-            <target/>
+            <target>Anda harus online untuk menggunakan item menu ini.</target>
          </segment>
       </unit>
       <unit id="main.resources">
          <segment>
             <source>Access UBS Resources</source>
-            <target/>
+            <target>Mengakses Sumber Daya UBS</target>
          </segment>
       </unit>
       <unit id="main.saveFirst">
@@ -3145,13 +3142,13 @@
       <unit id="main.videos">
          <segment>
             <source>Access Training Videos</source>
-            <target/>
+            <target>Mengakses Video Pelatihan</target>
          </segment>
       </unit>
       <unit id="main.walkThru">
          <segment>
             <source>Access Walk Through</source>
-            <target/>
+            <target>Akses Jalan-jalan</target>
          </segment>
       </unit>
       <unit id="mediaActions.attach">
@@ -3259,7 +3256,7 @@
       <unit id="mediaTab.cancelling">
          <segment>
             <source>Cancelling with {0} of {1} completed.</source>
-            <target/>
+            <target>Pembatalan dengan {0} dari {1} selesai.</target>
          </segment>
       </unit>
       <unit id="mediaTab.choosePassage">
@@ -3301,7 +3298,7 @@
       <unit id="mediaTab.duration">
          <segment>
             <source>Duration</source>
-            <target/>
+            <target>Durasi</target>
          </segment>
       </unit>
       <unit id="mediaTab.fileAttached">
@@ -3325,7 +3322,7 @@
       <unit id="mediaTab.graphicRightsAdd">
          <segment>
             <source>Add {0}</source>
-            <target/>
+            <target>Tambahkan {0}</target>
          </segment>
       </unit>
       <unit id="mediaTab.graphicRightsTitle">
@@ -3337,7 +3334,7 @@
       <unit id="mediaTab.latestVersion">
          <segment>
             <source>Latest Version</source>
-            <target/>
+            <target>Versi Terbaru</target>
          </segment>
       </unit>
       <unit id="mediaTab.loadingTable">
@@ -3397,7 +3394,7 @@
       <unit id="mediaTab.published">
          <segment>
             <source>Published</source>
-            <target/>
+            <target>Diterbitkan</target>
          </segment>
       </unit>
       <unit id="mediaTab.readyToShare">
@@ -3451,7 +3448,7 @@
       <unit id="mediaTab.toobig">
          <segment>
             <source>File {0} is too large {1}. File Limit is {2}MB</source>
-            <target/>
+            <target>Berkas {0} terlalu besar {1}. Batas Berkas adalah {2}MB</target>
          </segment>
       </unit>
       <unit id="mediaTab.unsupported">
@@ -3469,7 +3466,7 @@
       <unit id="mediaTab.user">
          <segment>
             <source>User</source>
-            <target/>
+            <target>Pengguna</target>
          </segment>
       </unit>
       <unit id="mediaTab.version">
@@ -3493,7 +3490,7 @@
       <unit id="mediaTitle.cancel">
          <segment>
             <source>Cancel Recording</source>
-            <target/>
+            <target>Membatalkan Perekaman</target>
          </segment>
       </unit>
       <unit id="mediaTitle.playPause">
@@ -3547,7 +3544,7 @@
       <unit id="mediaUpload.graphicTask">
          <segment>
             <source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
-            <target/>
+            <target>Seret dan jatuhkan berkas di sini, atau klik di sini untuk mencari berkas. Format yang diterima adalah .png, .jpg (atau .jpeg) dan .webp.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.graphicTitle">
@@ -3559,13 +3556,13 @@
       <unit id="mediaUpload.intellectualPropertyTask">
          <segment>
             <source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
-            <target/>
+            <target>Unggah rilis kekayaan intelektual untuk {0} dalam format audio atau visual. Format audio yang diterima adalah .mp3, .m4a, .wav atau .ogg. Format visual yang diterima adalah .pdf, .png, atau .jpg.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.intellectualPropertyTitle">
          <segment>
             <source>Upload Intellectual Property Release</source>
-            <target/>
+            <target>Unggah Rilis Kekayaan Intelektual</target>
          </segment>
       </unit>
       <unit id="mediaUpload.invalidFile">
@@ -3613,7 +3610,7 @@
       <unit id="mediaUpload.resourceTitle">
          <segment>
             <source>Upload Resources</source>
-            <target/>
+            <target>Sumber Daya Unggah</target>
          </segment>
       </unit>
       <unit id="mediaUpload.task">
@@ -3631,7 +3628,7 @@
       <unit id="mediaUpload.toobig">
          <segment>
             <source>Too large: {0}. File Limit is {1}MB</source>
-            <target/>
+            <target>Terlalu besar: {0}. Batas Berkas adalah {1}MB</target>
          </segment>
       </unit>
       <unit id="mediaUpload.upload">
@@ -3649,25 +3646,25 @@
       <unit id="newProject.blank">
          <segment>
             <source>Audio Project</source>
-            <target/>
+            <target>Proyek Audio</target>
          </segment>
       </unit>
       <unit id="newProject.blankFactor1">
          <segment>
             <source>you want to set up a project with multiple passages</source>
-            <target/>
+            <target>Anda ingin menyiapkan proyek dengan beberapa bagian</target>
          </segment>
       </unit>
       <unit id="newProject.blankFactor2">
          <segment>
             <source>you plan to record each passage as part of the workflow</source>
-            <target/>
+            <target>Anda berencana untuk merekam setiap bagian sebagai bagian dari alur kerja</target>
          </segment>
       </unit>
       <unit id="newProject.blankTip">
          <segment>
             <source>Set up an empty project.</source>
-            <target/>
+            <target>Siapkan proyek kosong.</target>
          </segment>
       </unit>
       <unit id="newProject.configure">
@@ -3679,43 +3676,43 @@
       <unit id="newProject.general">
          <segment>
             <source>Quick Start</source>
-            <target/>
+            <target>Mulai Cepat</target>
          </segment>
       </unit>
       <unit id="newProject.generalFactor1">
          <segment>
             <source>you have one or a few prerecorded audio files for passages</source>
-            <target/>
+            <target>Anda memiliki satu atau beberapa file audio yang telah direkam sebelumnya untuk bagian-bagian</target>
          </segment>
       </unit>
       <unit id="newProject.generalFactor2">
          <segment>
             <source>you just want to try out the program before you set up an actual project</source>
-            <target/>
+            <target>Anda hanya ingin mencoba program ini sebelum membuat proyek yang sebenarnya</target>
          </segment>
       </unit>
       <unit id="newProject.generalTip">
          <segment>
             <source>Create a project with one or a few audio files.</source>
-            <target/>
+            <target>Membuat proyek dengan satu atau beberapa file audio.</target>
          </segment>
       </unit>
       <unit id="newProject.keyFactors">
          <segment>
             <source>Best option if...</source>
-            <target/>
+            <target>Pilihan terbaik jika...</target>
          </segment>
       </unit>
       <unit id="newProject.likeTemplate">
          <segment>
             <source>Here are optional ways to get started. Later, you can use the Edit Audio Project Settings dialog box to change any of your initial settings.</source>
-            <target/>
+            <target>Berikut ini adalah cara opsional untuk memulai. Kemudian, Anda dapat menggunakan kotak dialog Edit Pengaturan Proyek Audio untuk mengubah pengaturan awal Anda.</target>
          </segment>
       </unit>
       <unit id="newProject.newProject">
          <segment>
             <source>Create New Audio Project</source>
-            <target/>
+            <target>Membuat Proyek Audio Baru</target>
          </segment>
       </unit>
       <unit id="newProject.startRecording">
@@ -3733,7 +3730,7 @@
       <unit id="newProject.uploadAudio">
          <segment>
             <source>Bulk Upload</source>
-            <target/>
+            <target>Unggah Massal</target>
          </segment>
       </unit>
       <unit id="passageChooser.passages">
@@ -3745,7 +3742,7 @@
       <unit id="passageDetailArtifacts.accept">
          <segment>
             <source>Accept</source>
-            <target/>
+            <target>Menerima</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.action">
@@ -3769,7 +3766,7 @@
       <unit id="passageDetailArtifacts.allLevel">
          <segment>
             <source>All {0}</source>
-            <target/>
+            <target>Semua {0}</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.allResources">
@@ -3781,13 +3778,13 @@
       <unit id="passageDetailArtifacts.bookLevel">
          <segment>
             <source>{0} for the Book</source>
-            <target/>
+            <target>{0} untuk Buku</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.bookResource">
          <segment>
             <source>Book</source>
-            <target/>
+            <target>Buku</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.canceling">
@@ -3805,13 +3802,13 @@
       <unit id="passageDetailArtifacts.chapterLevel">
          <segment>
             <source>{0} for the Chapter</source>
-            <target/>
+            <target>{0} untuk Bab</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.chooseLevel">
          <segment>
             <source>Resource Reference Filter Level</source>
-            <target/>
+            <target>Tingkat Filter Referensi Sumber Daya</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.clipboard">
@@ -3871,13 +3868,13 @@
       <unit id="passageDetailArtifacts.keywords">
          <segment>
             <source>Keywords</source>
-            <target/>
+            <target>Kata kunci</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.language">
          <segment>
             <source>Language</source>
-            <target/>
+            <target>Bahasa</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.link">
@@ -3889,25 +3886,25 @@
       <unit id="passageDetailArtifacts.movementResource">
          <segment>
             <source>Movement</source>
-            <target/>
+            <target>Gerakan</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.no">
          <segment>
             <source>No</source>
-            <target/>
+            <target>Tidak</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.noteResource">
          <segment>
             <source>Note</source>
-            <target/>
+            <target>Catatan</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.notes">
          <segment>
             <source>Notes</source>
-            <target/>
+            <target>Catatan</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.passageResource">
@@ -3925,7 +3922,7 @@
       <unit id="passageDetailArtifacts.pasteError">
          <segment>
             <source>Unable to parse {0} segment boundaries. {1} segment boundaries were adjusted.</source>
-            <target/>
+            <target>Tidak dapat mengurai {0} batas segmen. {1} batas segmen telah disesuaikan.</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.pasteNoChange">
@@ -3967,7 +3964,7 @@
       <unit id="passageDetailArtifacts.resources">
          <segment>
             <source>Resources</source>
-            <target/>
+            <target>Sumber-sumber</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.resourcesDeleted">
@@ -3979,25 +3976,25 @@
       <unit id="passageDetailArtifacts.selectBook">
          <segment>
             <source>Select Book</source>
-            <target/>
+            <target>Pilih Buku</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.selectOne">
          <segment>
             <source>Only the first selected note is used</source>
-            <target/>
+            <target>Hanya not yang dipilih pertama yang digunakan</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
             <source>Link Shared {0} Resource</source>
-            <target/>
+            <target>Tautan Dibagikan {0} Sumber Daya</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.source">
          <segment>
             <source>Source</source>
-            <target/>
+            <target>Sumber</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.startStop">
@@ -4021,19 +4018,19 @@
       <unit id="passageDetailArtifacts.termsOfUse">
          <segment>
             <source>Terms of Use</source>
-            <target/>
+            <target>Ketentuan Penggunaan</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.termsReview">
          <segment>
             <source>Review the Terms of Use</source>
-            <target/>
+            <target>Tinjau Ketentuan Penggunaan</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.title">
          <segment>
             <source>Title</source>
-            <target/>
+            <target>Judul</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.type">
@@ -4081,7 +4078,7 @@
       <unit id="passageDetailArtifacts.verseLevel">
          <segment>
             <source>{0} for verses in this passage</source>
-            <target/>
+            <target>{0} untuk ayat-ayat dalam bagian ini</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.version">
@@ -4093,7 +4090,7 @@
       <unit id="passageDetailArtifacts.yes">
          <segment>
             <source>Yes</source>
-            <target/>
+            <target>Ya</target>
          </segment>
       </unit>
       <unit id="passageDetailStepComplete.incomplete">
@@ -4159,7 +4156,7 @@
       <unit id="passageRecord.loadlatest">
          <segment>
             <source>Load Latest Audio</source>
-            <target/>
+            <target>Muat Audio Terbaru</target>
          </segment>
       </unit>
       <unit id="passageRecord.loading">
@@ -4189,13 +4186,13 @@
       <unit id="passageRecord.toobig">
          <segment>
             <source>File is too large. File Limit is {1}MB</source>
-            <target/>
+            <target>File terlalu besar. Batas Berkas adalah {1}MB</target>
          </segment>
       </unit>
       <unit id="passageRecord.toobigwarn">
          <segment>
             <source>File is near size limit {1}MB</source>
-            <target/>
+            <target>File mendekati batas ukuran {1}MB</target>
          </segment>
       </unit>
       <unit id="passageRecord.uncompressed">
@@ -4207,7 +4204,7 @@
       <unit id="passageType.BOOK">
          <segment>
             <source>Book</source>
-            <target/>
+            <target>Buku</target>
          </segment>
       </unit>
       <unit id="passageType.ALTBK">
@@ -4255,7 +4252,7 @@
       <unit id="peer.editPeerGroup">
          <segment>
             <source>Edit Peer Group</source>
-            <target/>
+            <target>Pengeditan Grup Baru</target>
          </segment>
       </unit>
       <unit id="peer.inUse">
@@ -4267,31 +4264,31 @@
       <unit id="peer.permissions">
          <segment>
             <source>Special permission</source>
-            <target/>
+            <target>Izin khusus</target>
          </segment>
       </unit>
       <unit id="peer.noSpecialPermission">
          <segment>
             <source>No special permission</source>
-            <target/>
+            <target>Tidak ada izin khusus</target>
          </segment>
       </unit>
       <unit id="peer.member">
          <segment>
             <source>Member</source>
-            <target/>
+            <target>Anggota</target>
          </segment>
       </unit>
       <unit id="peer.name">
          <segment>
             <source>Peer Group Name</source>
-            <target/>
+            <target>Nama Grup Rekan</target>
          </segment>
       </unit>
       <unit id="peer.newPeerGroup">
          <segment>
             <source>New Peer Group</source>
-            <target/>
+            <target>Grup Baru</target>
          </segment>
       </unit>
       <unit id="peer.peerGroup">
@@ -4303,7 +4300,7 @@
       <unit id="peer.remove">
          <segment>
             <source>Remove</source>
-            <target/>
+            <target>Hapus</target>
          </segment>
       </unit>
       <unit id="peer.removeConfirm">
@@ -4333,13 +4330,13 @@
       <unit id="peerCheck.toEnd">
          <segment>
             <source>Jump to end</source>
-            <target/>
+            <target>Lompat ke akhir</target>
          </segment>
       </unit>
       <unit id="permission.admin">
          <segment>
             <source>Admin</source>
-            <target/>
+            <target>Admin</target>
          </segment>
       </unit>
       <unit id="permission.adminTip">
@@ -4351,7 +4348,7 @@
       <unit id="permission.consultant">
          <segment>
             <source>Consultant</source>
-            <target/>
+            <target>Konsultan </target>
          </segment>
       </unit>
       <unit id="permission.consultantTip">
@@ -4363,25 +4360,25 @@
       <unit id="permission.consultantInTraining">
          <segment>
             <source>Consultant In Training</source>
-            <target/>
+            <target>Konsultan Dalam Pelatihan</target>
          </segment>
       </unit>
       <unit id="permission.consultantInTrainingTip">
          <segment>
             <source>CITs comments will only be visible to Mentors until a mentor approves the comment.</source>
-            <target/>
+            <target>Komentar CIT hanya akan terlihat oleh Mentor sampai mentor menyetujui komentar tersebut.</target>
          </segment>
       </unit>
       <unit id="permission.nsp">
          <segment>
             <source>General</source>
-            <target/>
+            <target>Umum</target>
          </segment>
       </unit>
       <unit id="permission.mentor">
          <segment>
             <source>Mentor</source>
-            <target/>
+            <target>Mentor</target>
          </segment>
       </unit>
       <unit id="permission.mentorTip">
@@ -4399,7 +4396,7 @@
       <unit id="planActions.addNote">
          <segment>
             <source>Add Note</source>
-            <target/>
+            <target>Tambahkan Catatan</target>
          </segment>
       </unit>
       <unit id="planActions.assign">
@@ -4417,7 +4414,7 @@
       <unit id="planActions.noteDetails">
          <segment>
             <source>Note Details</source>
-            <target/>
+            <target>Detail Catatan</target>
          </segment>
       </unit>
       <unit id="planActions.passageDetail">
@@ -4441,7 +4438,7 @@
       <unit id="planActions.resourceEdit">
          <segment>
             <source>Resource Edit</source>
-            <target/>
+            <target>Sunting Sumber Daya</target>
          </segment>
       </unit>
       <unit id="planActions.resources">
@@ -4471,7 +4468,7 @@
       <unit id="planSheet.addNote">
          <segment>
             <source>Add Note</source>
-            <target/>
+            <target>Tambahkan Catatan</target>
          </segment>
       </unit>
       <unit id="planSheet.addPassage">
@@ -4483,7 +4480,7 @@
       <unit id="planSheet.addPublishing">
          <segment>
             <source>Update Publishing Rows</source>
-            <target/>
+            <target>Memperbarui Baris Penerbitan</target>
          </segment>
       </unit>
       <unit id="planSheet.addSection">
@@ -4519,13 +4516,13 @@
       <unit id="planSheet.confirmPublish">
          <segment>
             <source>Publish {0}</source>
-            <target/>
+            <target>Publikasikan {0}</target>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishMovement">
          <segment>
             <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this Movement will be marked as published. If you have previously published and now choose 'Not Published', the {0} and passages and notes will be marked as not published.</source>
-            <target/>
+            <target>Jika Anda memilih untuk mempublikasikan, {0} dan versi terbaru dari semua bagian dan catatan di semua {0} dalam Gerakan ini akan ditandai sebagai dipublikasikan. Jika sebelumnya Anda telah menerbitkan dan sekarang memilih 'Tidak Diterbitkan', {0} dan bagian serta catatan akan ditandai sebagai tidak diterbitkan.</target>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishSection">
@@ -4537,13 +4534,13 @@
       <unit id="planSheet.filtered">
          <segment>
             <source>Disable filter to add rows.</source>
-            <target/>
+            <target>Nonaktifkan filter untuk menambahkan baris.</target>
          </segment>
       </unit>
       <unit id="planSheet.firstMovement">
          <segment>
             <source>Start At</source>
-            <target/>
+            <target>Mulai dari</target>
          </segment>
       </unit>
       <unit id="planSheet.graphic">
@@ -4585,7 +4582,7 @@
       <unit id="planSheet.noPublishDelete">
          <segment>
             <source>Do not delete published items.</source>
-            <target/>
+            <target>Jangan hapus item yang telah diterbitkan.</target>
          </segment>
       </unit>
       <unit id="planSheet.insertFirstPassage">
@@ -4597,7 +4594,7 @@
       <unit id="planSheet.paratextRequired">
          <segment>
             <source>You must be a Paratext user with access to FOBAI resources to use this feature.</source>
-            <target/>
+            <target>Anda harus menjadi pengguna Paratext dengan akses ke sumber daya FOBAI untuk menggunakan fitur ini.</target>
          </segment>
       </unit>
       <unit id="planSheet.passageBelow">
@@ -4609,19 +4606,19 @@
       <unit id="planSheet.passageEnd">
          <segment>
             <source>Add Passage to End</source>
-            <target/>
+            <target>Tambahkan Bagian ke Akhir</target>
          </segment>
       </unit>
       <unit id="planSheet.passageToPrevSection">
          <segment>
             <source>Move {pt} {0} Up</source>
-            <target/>
+            <target>Pindahkan {pt} {0} ke atas</target>
          </segment>
       </unit>
       <unit id="planSheet.passageToNextSection">
          <segment>
             <source>Move {pt} {0} Down</source>
-            <target/>
+            <target>Pindahkan {pt} {0} ke bawah</target>
          </segment>
       </unit>
       <unit id="planSheet.pasting">
@@ -4633,7 +4630,7 @@
       <unit id="planSheet.publish">
          <segment>
             <source>Publish {0} {1}</source>
-            <target/>
+            <target>Terbitkan {0} {1}</target>
          </segment>
       </unit>
       <unit id="planSheet.refErr">
@@ -4663,7 +4660,7 @@
       <unit id="planSheet.showPublishing">
          <segment>
             <source>Show Publishing Information</source>
-            <target/>
+            <target>Tampilkan Informasi Penerbitan</target>
          </segment>
       </unit>
       <unit id="planSheet.movementAbove">
@@ -4681,7 +4678,7 @@
       <unit id="planSheet.sectionEnd">
          <segment>
             <source>Add {0} to End</source>
-            <target/>
+            <target>Tambahkan {0} ke Akhir</target>
          </segment>
       </unit>
       <unit id="planSheet.step">
@@ -4699,7 +4696,7 @@
       <unit id="planSheet.changepublish">
          <segment>
             <source>Update {0} {1} published status.</source>
-            <target/>
+            <target>Perbarui {0} {1} status yang telah diterbitkan.</target>
          </segment>
       </unit>
       <unit id="planSheet.useCtrlV">
@@ -4945,7 +4942,7 @@
       <unit id="profile.sharedContentCreator">
          <segment>
             <source>Allow user to create shared content projects.</source>
-            <target/>
+            <target>Memungkinkan pengguna untuk membuat proyek konten bersama.</target>
          </segment>
       </unit>
       <unit id="profile.syncFrequency">
@@ -5047,103 +5044,103 @@
       <unit id="publishLevel.none">
          <segment>
             <source>Not Published - not visible in publishing app</source>
-            <target/>
+            <target>Tidak Diterbitkan - tidak terlihat di aplikasi penerbitan</target>
          </segment>
       </unit>
       <unit id="publishLevel.beta">
          <segment>
             <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>
-            <target/>
+            <target>Beta - terlihat di situs web Akuo ketika menggunakan parameter beta (tidak tersedia di aplikasi)</target>
          </segment>
       </unit>
       <unit id="publishLevel.betalink">
          <segment>
             <source>https://akuobible.org/?beta=true</source>
-            <target/>
+            <target>https://akuobible.org/?beta=true</target>
          </segment>
       </unit>
       <unit id="publishLevel.public">
          <segment>
             <source>Public - visible to everyone using Akuo website or app</source>
-            <target/>
+            <target>Publik - dapat dilihat oleh semua orang yang menggunakan situs web atau aplikasi Akuo</target>
          </segment>
       </unit>
       <unit id="resource.action">
          <segment>
             <source>Action</source>
-            <target/>
+            <target>Tindakan</target>
          </segment>
       </unit>
       <unit id="resource.add">
          <segment>
             <source>Add</source>
-            <target/>
+            <target>Menambahkan</target>
          </segment>
       </unit>
       <unit id="resource.book">
          <segment>
             <source>Book</source>
-            <target/>
+            <target>Buku</target>
          </segment>
       </unit>
       <unit id="resource.bookSelect">
          <segment>
             <source>Select Book</source>
-            <target/>
+            <target>Pilih Buku</target>
          </segment>
       </unit>
       <unit id="resource.byWord">
          <segment>
             <source>By Word</source>
-            <target/>
+            <target>Dengan Word</target>
          </segment>
       </unit>
       <unit id="resource.changes">
          <segment>
             <source>Changes made will affect source and all shared locations.</source>
-            <target/>
+            <target>Perubahan yang dibuat akan mempengaruhi sumber dan semua lokasi yang dibagikan.</target>
          </segment>
       </unit>
       <unit id="resource.delete">
          <segment>
             <source>Delete</source>
-            <target/>
+            <target>Menghapus</target>
          </segment>
       </unit>
       <unit id="resource.deleteConfirm">
          <segment>
             <source>Delete {0}</source>
-            <target/>
+            <target>Menghapus {0}</target>
          </segment>
       </unit>
       <unit id="resource.description">
          <segment>
             <source>Description</source>
-            <target/>
+            <target>Deskripsi</target>
          </segment>
       </unit>
       <unit id="resource.errorData">
          <segment>
             <source>Do you want to save and discard data with errors?</source>
-            <target/>
+            <target>Apakah Anda ingin menyimpan dan membuang data yang mengalami kesalahan?</target>
          </segment>
       </unit>
       <unit id="resource.findNote">
          <segment>
             <source>Find existing note</source>
-            <target/>
+            <target>Menemukan catatan yang ada</target>
          </segment>
       </unit>
       <unit id="resource.keywords">
          <segment>
             <source>Keywords</source>
-            <target/>
+            <target>Kata kunci</target>
          </segment>
       </unit>
       <unit id="resource.link">
          <segment>
             <source>Link</source>
-            <target/>
+            <target>Tautan</target>
          </segment>
       </unit>
       <unit id="resource.linkError">
@@ -5161,61 +5158,61 @@
       <unit id="resource.overview">
          <segment>
             <source>Overview</source>
-            <target/>
+            <target>Ikhtisar</target>
          </segment>
       </unit>
       <unit id="resource.references">
          <segment>
             <source>References</source>
-            <target/>
+            <target>Referensi</target>
          </segment>
       </unit>
       <unit id="resource.resourceEdit">
          <segment>
             <source>Resource Edit</source>
-            <target/>
+            <target>Sunting Sumber Daya</target>
          </segment>
       </unit>
       <unit id="resource.rowsSaved">
          <segment>
             <source>{0} rows saved.</source>
-            <target/>
+            <target>Baris {0} disimpan.</target>
          </segment>
       </unit>
       <unit id="resource.saving">
          <segment>
             <source>Saving...</source>
-            <target/>
+            <target>Menyimpan</target>
          </segment>
       </unit>
       <unit id="resource.source">
          <segment>
             <source>Linked Note Source: </source>
-            <target/>
+            <target>Sumber Catatan yang ditautkan: </target>
          </segment>
       </unit>
       <unit id="resource.terms">
          <segment>
             <source>Terms of use</source>
-            <target/>
+            <target>Ketentuan penggunaan</target>
          </segment>
       </unit>
       <unit id="resource.title">
          <segment>
             <source>Title</source>
-            <target/>
+            <target>Judul</target>
          </segment>
       </unit>
       <unit id="resource.versions">
          <segment>
             <source>Versions</source>
-            <target/>
+            <target>Versi</target>
          </segment>
       </unit>
       <unit id="scriptureTable.alternateName">
          <segment>
             <source>{0} Alternate Name</source>
-            <target/>
+            <target>{0} Nama Alternatif</target>
          </segment>
       </unit>
       <unit id="scriptureTable.book">
@@ -5227,7 +5224,7 @@
       <unit id="scriptureTable.chapter">
          <segment>
             <source>Chapter {0}</source>
-            <target/>
+            <target>Bab {0}</target>
          </segment>
       </unit>
       <unit id="scriptureTable.confirmPublish">
@@ -5269,19 +5266,19 @@
       <unit id="scriptureTable.pasteInvalidBooks">
          <segment>
             <source>Invalid book codes: {0}.</source>
-            <target/>
+            <target>Kode buku tidak valid: {0}.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidColumns">
          <segment>
             <source>Invalid number of columns ({0}). Expecting {1} columns.</source>
-            <target/>
+            <target>Jumlah kolom tidak valid ({0}). Mengharapkan {1} kolom.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidPassageBeforeSection">
          <segment>
             <source>Invalid passage before {0}.</source>
-            <target/>
+            <target>Bagian yang tidak valid sebelum {0}.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidSections">
@@ -5299,7 +5296,7 @@
       <unit id="scriptureTable.publishingWarning">
          <segment>
             <source>Once publishing rows are added, there is no automated way to remove them. Publishing projects cannot be made flat projects.</source>
-            <target/>
+            <target>Setelah baris penerbitan ditambahkan, tidak ada cara otomatis untuk menghapusnya. Proyek penerbitan tidak dapat dijadikan proyek datar.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.reference">
@@ -5329,7 +5326,7 @@
       <unit id="scriptureTableFilter.apply">
          <segment>
             <source>Apply</source>
-            <target/>
+            <target>Berlaku</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.assignedToMe">
@@ -5341,7 +5338,7 @@
       <unit id="scriptureTableFilter.clear">
          <segment>
             <source>Clear</source>
-            <target/>
+            <target>Jernih</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.disable">
@@ -5353,13 +5350,13 @@
       <unit id="scriptureTableFilter.hideDone">
          <segment>
             <source>Hide Done rows</source>
-            <target/>
+            <target>Sembunyikan langkah 'Selesai'.</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.hidePublishing">
          <segment>
             <source>Hide Publishing Rows</source>
-            <target/>
+            <target>Sembunyikan Baris Penerbitan</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.invalidSection">
@@ -5371,25 +5368,25 @@
       <unit id="scriptureTableFilter.step">
          <segment>
             <source>Workflow Step</source>
-            <target/>
+            <target>Langkah alur kerja</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.minimum">
          <segment>
             <source>Minimum</source>
-            <target/>
+            <target>Minimum</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.maximum">
          <segment>
             <source>Maximum</source>
-            <target/>
+            <target>Maksimum</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.saveFilter">
          <segment>
             <source>Save as project default</source>
-            <target/>
+            <target>Simpan sebagai default proyek</target>
          </segment>
       </unit>
       <unit id="sectionResources.close">
@@ -5539,7 +5536,7 @@
       <unit id="shared.close">
          <segment>
             <source>Close</source>
-            <target/>
+            <target>Tutup</target>
          </segment>
       </unit>
       <unit id="shared.consultant">
@@ -5617,7 +5614,7 @@
       <unit id="shared.loading">
          <segment>
             <source>Loading...</source>
-            <target/>
+            <target>Memuat...</target>
          </segment>
       </unit>
       <unit id="shared.mediaAttached">
@@ -5665,7 +5662,7 @@
       <unit id="shared.notSupported">
          <segment>
             <source>This feature is not supported yet.</source>
-            <target/>
+            <target>Fitur ini belum didukung.</target>
          </segment>
       </unit>
       <unit id="shared.observer">
@@ -5701,7 +5698,7 @@
       <unit id="shared.bookNotFound">
          <segment>
             <source>Paratext project does not contain book.</source>
-            <target/>
+            <target>Proyek parateks tidak berisi buku.</target>
          </segment>
       </unit>
       <unit id="shared.referenceNotFound">
@@ -5725,7 +5722,7 @@
       <unit id="shared.saving">
          <segment>
             <source>Saving...</source>
-            <target/>
+            <target>Menyimpan...</target>
          </segment>
       </unit>
       <unit id="shared.select">
@@ -5767,13 +5764,13 @@
       <unit id="shared.uploadRights">
          <segment>
             <source>Upload Rights File</source>
-            <target/>
+            <target>Unggah File Hak</target>
          </segment>
       </unit>
       <unit id="shared.user">
          <segment>
             <source>Team Member</source>
-            <target/>
+            <target>Anggota Tim</target>
          </segment>
       </unit>
       <unit id="shared.versionHistory">
@@ -5875,7 +5872,7 @@
       <unit id="stepEditor.backtranslation">
          <segment>
             <source>Phrase BT</source>
-            <target/>
+            <target>Frasa BT</target>
          </segment>
       </unit>
       <unit id="stepEditor.changes">
@@ -5929,13 +5926,13 @@
       <unit id="stepEditor.qanda">
          <segment>
             <source>Q and A</source>
-            <target/>
+            <target>Tanya Jawab</target>
          </segment>
       </unit>
       <unit id="stepEditor.retell">
          <segment>
             <source>Retell</source>
-            <target/>
+            <target>Ceritakan kembali</target>
          </segment>
       </unit>
       <unit id="stepEditor.saving">
@@ -5977,7 +5974,7 @@
       <unit id="stepEditor.wholebacktranslation">
          <segment>
             <source>Whole BT</source>
-            <target/>
+            <target>Seluruh BT</target>
          </segment>
       </unit>
       <unit id="taskItem.assign">
@@ -6019,7 +6016,7 @@
       <unit id="template.autoMatchTemplate">
          <segment>
             <source>Auto Match Template</source>
-            <target/>
+            <target>Templat Pencocokan Otomatis</target>
          </segment>
       </unit>
       <unit id="template.beginning">
@@ -6073,7 +6070,7 @@
       <unit id="template.renderExportTemplate">
          <segment>
             <source>The {SECT} template works for files exported from Render.</source>
-            <target/>
+            <target>Templat {SECT} berfungsi untuk file yang diekspor dari Render.</target>
          </segment>
       </unit>
       <unit id="template.templateCodes">
@@ -6151,7 +6148,7 @@
       <unit id="toDoTable.speaker">
          <segment>
             <source>Speaker</source>
-            <target/>
+            <target>Pembicara</target>
          </segment>
       </unit>
       <unit id="toDoTable.state">
@@ -6175,7 +6172,7 @@
       <unit id="toDoTable.topic">
          <segment>
             <source>Topic</source>
-            <target/>
+            <target>Topik</target>
          </segment>
       </unit>
       <unit id="toDoTable.transcriber">
@@ -6223,7 +6220,7 @@
       <unit id="tool.keyterm">
          <segment>
             <source>Term Verify</source>
-            <target/>
+            <target>Verifikasi Istilah</target>
          </segment>
       </unit>
       <unit id="tool.paratext">
@@ -6235,7 +6232,7 @@
       <unit id="tool.phraseBackTranslate">
          <segment>
             <source>Phrase Back Translate</source>
-            <target/>
+            <target>Terjemahan Balik Hentian Singkat</target>
          </segment>
       </unit>
       <unit id="tool.record">
@@ -6259,7 +6256,7 @@
       <unit id="tool.teamCheck">
          <segment>
             <source>Compare</source>
-            <target/>
+            <target>Bandingkan</target>
          </segment>
       </unit>
       <unit id="tool.transcribe">
@@ -6271,13 +6268,13 @@
       <unit id="tool.verses">
          <segment>
             <source>Mark Verses</source>
-            <target/>
+            <target>Tandai Ayat</target>
          </segment>
       </unit>
       <unit id="tool.wholeBackTranslate">
          <segment>
             <source>Whole Back Translate</source>
-            <target/>
+            <target>Terjemahan Balik Utuh</target>
          </segment>
       </unit>
       <unit id="transcribe.openTranscriber">
@@ -6421,7 +6418,7 @@
       <unit id="transcriber.saveReviewTip">
          <segment>
             <source>Save transcript, position and segments</source>
-            <target/>
+            <target>Menyimpan transkrip, posisi, dan segmen</target>
          </segment>
       </unit>
       <unit id="transcriber.saveTip">
@@ -6553,7 +6550,7 @@
       <unit id="transcriptionTab.download">
          <segment>
             <source>Download Vernacular Audio</source>
-            <target/>
+            <target>Unduh Audio Vernakular</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.cancel">
@@ -6583,7 +6580,7 @@
       <unit id="transcriptionTab.creatingDownloadFile">
          <segment>
             <source>Creating File...{0}%</source>
-            <target/>
+            <target>Membuat File... {0}%.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.writingDownloadFile">
@@ -6835,7 +6832,7 @@
       <unit id="usertable.addNewUser">
          <segment>
             <source>Add New Member</source>
-            <target/>
+            <target>Tambah Anggota Baru</target>
          </segment>
       </unit>
       <unit id="usertable.cancel">
@@ -6913,19 +6910,19 @@
       <unit id="verse.badReferences">
          <segment>
             <source>ERROR: Markup contains bad references</source>
-            <target/>
+            <target>KESALAHAN: Markah mengandung referensi yang buruk</target>
          </segment>
       </unit>
       <unit id="verse.btNotUpdated">
          <segment>
             <source>WARNING: Since back translation recordings already exist, back translation segments will not be updated to line up with verse changes.</source>
-            <target/>
+            <target>PERINGATAN: Karena rekaman terjemahan belakang sudah ada, segmen terjemahan belakang tidak akan diperbarui untuk menyesuaikan dengan perubahan ayat.</target>
          </segment>
       </unit>
       <unit id="verse.canceling">
          <segment>
             <source>Canceling verse markup</source>
-            <target/>
+            <target>Membatalkan markup ayat</target>
          </segment>
       </unit>
       <unit id="verse.clipboard">
@@ -6952,76 +6949,28 @@
             <target/>
          </segment>
       </unit>
-      <unit id="verse.missingReferences">
-         <segment>
-            <source>Warning: Verses in passage not included: ({0})</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="verse.noReferences">
-         <segment>
-            <source>Warning: Some audio segments will not be included in verses</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="verse.noSegments">
-         <segment>
-            <source>ERROR: Some verses have no segment: ({0})</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="verse.outsideReferences">
-         <segment>
-            <source>ERROR: Some verses are outside passage: ({0})</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="verse.pasteFormat">
-         <segment>
-            <source>Invalid number of columns on clipboard.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="verse.reference">
-         <segment>
-            <source>Reference</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="verse.saveVerseMarkup">
-         <segment>
-            <source>Save Verse Markup</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="verse.startStop">
-         <segment>
-            <source>Start --&gt; Stop</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="viewMode.audioProject">
          <segment>
             <source>Audio Project Setup</source>
-            <target/>
+            <target>Pengaturan Proyek Audio</target>
          </segment>
       </unit>
       <unit id="viewMode.home">
          <segment>
             <source>Home</source>
-            <target/>
+            <target>Awal</target>
          </segment>
       </unit>
       <unit id="viewMode.work">
          <segment>
             <source>Work</source>
-            <target/>
+            <target>Kerja</target>
          </segment>
       </unit>
       <unit id="viewMode.gotowork">
          <segment>
             <source>Go to Work</source>
-            <target/>
+            <target>Pergi bekerja</target>
          </segment>
       </unit>
       <unit id="vProject.add">
@@ -7057,7 +7006,7 @@
       <unit id="vProject.cannotChangeLayout">
          <segment>
             <source>Publishing projects cannot be made flat.</source>
-            <target/>
+            <target>Proyek penerbitan tidak dapat dibuat datar.</target>
          </segment>
       </unit>
       <unit id="vProject.correctformat">
@@ -7087,7 +7036,7 @@
       <unit id="vProject.errExtrasBookLen">
          <segment>
             <source>Book must be 3 characters</source>
-            <target/>
+            <target>Buku harus terdiri dari 3 karakter</target>
          </segment>
       </unit>
       <unit id="vProject.errExtrasBookNonScripture">
@@ -7135,7 +7084,7 @@
       <unit id="vProject.howToPublic">
          <segment>
             <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
-            <target/>
+            <target>Hubungi Nathan Payne (nathan_payne@sil.org) untuk akses membuat konten bersama.</target>
          </segment>
       </unit>
       <unit id="vProject.language">
@@ -7153,7 +7102,7 @@
       <unit id="vProject.movement">
          <segment>
             <source>Movement</source>
-            <target/>
+            <target>Gerakan</target>
          </segment>
       </unit>
       <unit id="vProject.movements">
@@ -7399,7 +7348,7 @@
       <unit id="workflowSteps.addingStep">
          <segment>
             <source>Adding Workflow Step:</source>
-            <target/>
+            <target>Menambahkan Langkah Alur Kerja:</target>
          </segment>
       </unit>
       <unit id="workflowSteps.backTranslation">
@@ -7435,19 +7384,19 @@
       <unit id="workflowSteps.consultantCheck1">
          <segment>
             <source>First Consultant Check</source>
-            <target/>
+            <target>Pemeriksaan Konsultan Pertama</target>
          </segment>
       </unit>
       <unit id="workflowSteps.consultantCheck2">
          <segment>
             <source>Second Consultant Check</source>
-            <target/>
+            <target>Pemeriksaan Konsultan Kedua</target>
          </segment>
       </unit>
       <unit id="workflowSteps.done">
          <segment>
             <source>Done</source>
-            <target/>
+            <target>Selesai</target>
          </segment>
       </unit>
       <unit id="workflowSteps.export">
@@ -7459,19 +7408,19 @@
       <unit id="workflowSteps.finalRecording">
          <segment>
             <source>Studio Record</source>
-            <target/>
+            <target>Rekaman Studio</target>
          </segment>
       </unit>
       <unit id="workflowSteps.finalReview">
          <segment>
             <source>Final Audio Review</source>
-            <target/>
+            <target>Tinjauan Audio Akhir</target>
          </segment>
       </unit>
       <unit id="workflowSteps.finalReviewText">
          <segment>
             <source>Final Text Review</source>
-            <target/>
+            <target>Tinjauan Teks Akhir</target>
          </segment>
       </unit>
       <unit id="workflowSteps.internalize">
@@ -7507,19 +7456,19 @@
       <unit id="workflowSteps.phraseBackTranslation">
          <segment>
             <source>Phrase Back Translate</source>
-            <target/>
+            <target>Terjemahan Balik Hentian Singkat</target>
          </segment>
       </unit>
       <unit id="workflowSteps.pBTTranscribe">
          <segment>
             <source>Phrase BT Transcribe</source>
-            <target/>
+            <target>Terjemahan Balik Hentian Singkat</target>
          </segment>
       </unit>
       <unit id="workflowSteps.pBTParatextSync">
          <segment>
             <source>Phrase BT Paratext</source>
-            <target/>
+            <target>Terjemahan Balik Hentian Singkat</target>
          </segment>
       </unit>
       <unit id="workflowSteps.preliminaryApproval">
@@ -7537,19 +7486,19 @@
       <unit id="workflowSteps.retellBackTranslation">
          <segment>
             <source>Retell Back Translation</source>
-            <target/>
+            <target>Ceritakan Kembali Terjemahan</target>
          </segment>
       </unit>
       <unit id="workflowSteps.retellBTTranscribe">
          <segment>
             <source>Retell BT Transcribe</source>
-            <target/>
+            <target>Ceritakan Kembali Transkrip BT</target>
          </segment>
       </unit>
       <unit id="workflowSteps.review">
          <segment>
             <source>Review Transcription</source>
-            <target/>
+            <target>Tinjau Transkripsi</target>
          </segment>
       </unit>
       <unit id="workflowSteps.saveFirst">
@@ -7561,25 +7510,25 @@
       <unit id="workflowSteps.teamCheck">
          <segment>
             <source>Compare</source>
-            <target/>
+            <target>Bandingkan</target>
          </segment>
       </unit>
       <unit id="workflowSteps.termVerify">
          <segment>
             <source>Term Verify</source>
-            <target/>
+            <target>Verifikasi Istilah</target>
          </segment>
       </unit>
       <unit id="workflowSteps.teamReview">
          <segment>
             <source>Term Review</source>
-            <target/>
+            <target>Tinjauan Istilah</target>
          </segment>
       </unit>
       <unit id="workflowSteps.transcribe">
          <segment>
             <source>Transcribe</source>
-            <target/>
+            <target>menuliskan</target>
          </segment>
       </unit>
       <unit id="workflowSteps.unsaved">
@@ -7591,31 +7540,31 @@
       <unit id="workflowSteps.markVerses">
          <segment>
             <source>Mark Verses</source>
-            <target/>
+            <target>Tandai Ayat</target>
          </segment>
       </unit>
       <unit id="workflowSteps.wholeBackTranslate">
          <segment>
             <source>Whole Back Translate</source>
-            <target/>
+            <target>Terjemahan Balik Utuh</target>
          </segment>
       </unit>
       <unit id="workflowSteps.wholeBackTranslation">
          <segment>
             <source>Whole Back Translate</source>
-            <target/>
+            <target>Terjemahan Balik Utuh</target>
          </segment>
       </unit>
       <unit id="workflowSteps.wBTTranscribe">
          <segment>
             <source>Whole BT Transcribe</source>
-            <target/>
+            <target>Terjemahan Balik Utuh menuliskan</target>
          </segment>
       </unit>
       <unit id="workflowSteps.wBTParatextSync">
          <segment>
             <source>Whole BT Paratext</source>
-            <target/>
+            <target>Terjemahan Balik Utuh menyinkronkan</target>
          </segment>
       </unit>
       <unit id="workflowSteps.none">
@@ -7753,7 +7702,7 @@
       <unit id="wsAudioPlayer.stopTip">
          <segment>
             <source>Stop [{0}]</source>
-            <target/>
+            <target>Hentikan [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.timerTip">
@@ -7843,7 +7792,7 @@
       <unit id="wsAudioPlayerSegment.teamDefault">
          <segment>
             <source>Save as team default</source>
-            <target/>
+            <target>Simpan sebagai default tim</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayerZoom.fitToWidth">

@@ -1,8 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0"
-       srcLang="en"
-       trgLang="en"
-       version="1.0">
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="en" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
       <unit id="access.availableUsers">
          <segment>
@@ -223,7 +220,7 @@
       <unit id="artifactCategory.chapter">
          <segment>
             <source>Chapter Number</source>
-            <target/>
+            <target>章节编号</target>
          </segment>
       </unit>
       <unit id="artifactCategory.scripture">
@@ -259,7 +256,7 @@
       <unit id="artifactCategory.graphic">
          <segment>
             <source>Graphic</source>
-            <target/>
+            <target>图形</target>
          </segment>
       </unit>
       <unit id="artifactCategory.qanda">
@@ -271,7 +268,7 @@
       <unit id="artifactCategory.title">
          <segment>
             <source>Title</source>
-            <target/>
+            <target>标题</target>
          </segment>
       </unit>
       <unit id="artifactType.backtranslation">
@@ -289,7 +286,7 @@
       <unit id="artifactType.graphic">
          <segment>
             <source>Graphic</source>
-            <target/>
+            <target>图形</target>
          </segment>
       </unit>
       <unit id="artifactType.projectresource">
@@ -331,7 +328,7 @@
       <unit id="artifactType.title">
          <segment>
             <source>Title</source>
-            <target/>
+            <target>标题</target>
          </segment>
       </unit>
       <unit id="artifactType.vernacular">
@@ -571,37 +568,37 @@
       <unit id="cards.bibleid">
          <segment>
             <source>Bible Id</source>
-            <target/>
+            <target>圣经 ID</target>
          </segment>
       </unit>
       <unit id="cards.bibleidexists">
          <segment>
             <source>Bible Id already exists. Please contact support if you need to work on this Bible.</source>
-            <target/>
+            <target>圣经 Id 已经存在。如果您需要使用该圣经，请联系技术支持。</target>
          </segment>
       </unit>
       <unit id="cards.bibleidformat">
          <segment>
             <source>Bible Id must begin with the language code and version (six letters).</source>
-            <target/>
+            <target>圣经 ID 必须以语言代码和版本（六个字母）开头。</target>
          </segment>
       </unit>
       <unit id="cards.bibleidiso">
          <segment>
             <source>Bible Id should begin with the language code.</source>
-            <target/>
+            <target>圣经同上应从语言代码开始。</target>
          </segment>
       </unit>
       <unit id="cards.bibleIdExplain">
          <segment>
             <source>Explain Bible Id</source>
-            <target/>
+            <target>解释圣经编号</target>
          </segment>
       </unit>
       <unit id="cards.biblename">
          <segment>
             <source>Name of Bible</source>
-            <target/>
+            <target>圣经名称</target>
          </segment>
       </unit>
       <unit id="cards.cancel">
@@ -613,7 +610,7 @@
       <unit id="cards.closeNoSave">
          <segment>
             <source>Close without Saving?</source>
-            <target/>
+            <target>关闭而不保存？</target>
          </segment>
       </unit>
       <unit id="cards.connectParatext">
@@ -637,7 +634,7 @@
       <unit id="cards.copyright">
          <segment>
             <source>Copyright</source>
-            <target/>
+            <target>版权</target>
          </segment>
       </unit>
       <unit id="cards.copySame">
@@ -685,7 +682,7 @@
       <unit id="cards.description">
          <segment>
             <source>Description</source>
-            <target/>
+            <target>说明</target>
          </segment>
       </unit>
       <unit id="cards.draft">
@@ -709,7 +706,7 @@
       <unit id="cards.explainPublishing">
          <segment>
             <source>Information to use when publishing audio created by this team.</source>
-            <target/>
+            <target>发布本团队创建的音频时使用的信息。</target>
          </segment>
       </unit>
       <unit id="cards.explainTeamDelete">
@@ -757,7 +754,7 @@
       <unit id="cards.notesLabel">
          <segment>
             <source>Introductory Notes Title</source>
-            <target/>
+            <target>介绍性说明 标题</target>
          </segment>
       </unit>
       <unit id="cards.OBS">
@@ -775,7 +772,7 @@
       <unit id="cards.OBTs">
          <segment>
             <source>Oral Bible Translation (simple)</source>
-            <target/>
+            <target>口译圣经（简单）</target>
          </segment>
       </unit>
       <unit id="cards.OBTr">
@@ -829,7 +826,7 @@
       <unit id="cards.projectRequired">
          <segment>
             <source>A project must be added before recordings are allowed</source>
-            <target/>
+            <target>在允许录音之前必须添加一个项目</target>
          </segment>
       </unit>
       <unit id="cards.Render">
@@ -841,7 +838,7 @@
       <unit id="cards.publishing">
          <segment>
             <source>Publishing</source>
-            <target/>
+            <target>发布</target>
          </segment>
       </unit>
       <unit id="cards.save">
@@ -907,25 +904,25 @@
       <unit id="cards.workflowProgression">
          <segment>
             <source>Workflow Progression</source>
-            <target/>
+            <target>工作流程进展</target>
          </segment>
       </unit>
       <unit id="cards.workflowProgressionPassage">
          <segment>
             <source>Next Passage</source>
-            <target/>
+            <target>下一段经文</target>
          </segment>
       </unit>
       <unit id="cards.workflowProgressionStep">
          <segment>
             <source>Next Step</source>
-            <target/>
+            <target>下一步</target>
          </segment>
       </unit>
       <unit id="cards.yes">
          <segment>
             <source>Yes</source>
-            <target/>
+            <target>是</target>
          </segment>
       </unit>
       <unit id="category.builtIn">
@@ -943,13 +940,13 @@
       <unit id="category.close">
          <segment>
             <source>Close</source>
-            <target/>
+            <target>关闭</target>
          </segment>
       </unit>
       <unit id="category.duplicate">
          <segment>
             <source>Duplicate Category</source>
-            <target/>
+            <target>重复类别</target>
          </segment>
       </unit>
       <unit id="category.discussions">
@@ -1087,7 +1084,7 @@
       <unit id="community.backTranslationComplete">
          <segment>
             <source>Version {0}: Back translation: {1}</source>
-            <target/>
+            <target>版本{0}： 回译： {1}</target>
          </segment>
       </unit>
       <unit id="community.deleteItem">
@@ -1099,7 +1096,7 @@
       <unit id="community.finished">
          <segment>
             <source>finished</source>
-            <target/>
+            <target>完成</target>
          </segment>
       </unit>
       <unit id="community.later">
@@ -1117,7 +1114,7 @@
       <unit id="community.none">
          <segment>
             <source>none</source>
-            <target/>
+            <target>无</target>
          </segment>
       </unit>
       <unit id="community.playTest">
@@ -1165,13 +1162,13 @@
       <unit id="community.segmentsChanged">
          <segment>
             <source>Changing segments will invalidate some recordings since they are linked to the segment start and end.</source>
-            <target/>
+            <target>更改片段会使某些记录失效，因为它们与片段的开始和结束相关联。</target>
          </segment>
       </unit>
       <unit id="community.segmentsComplete">
          <segment>
             <source>Version {0}: Segments complete ({2}): {1}</source>
-            <target/>
+            <target>版本 {0}： 分段完成 ({2})： {1}</target>
          </segment>
       </unit>
       <unit id="community.speaker">
@@ -2113,13 +2110,13 @@
       <unit id="integration.exportSectionNumbers">
          <segment>
             <source>Sync {0} Numbers</source>
-            <target/>
+            <target>同步 {0} 数字</target>
          </segment>
       </unit>
       <unit id="integration.invalidReferences">
          <segment>
             <source>{0} passage(s) have invalid book or reference.</source>
-            <target/>
+            <target>{0}段落的书籍或参考文献无效。</target>
          </segment>
       </unit>
       <unit id="integration.no">
@@ -2749,7 +2746,7 @@
       <unit id="languagePicker.noFonts">
          <segment>
             <source>No recommended font</source>
-            <target/>
+            <target>没有推荐字体</target>
          </segment>
       </unit>
       <unit id="languagePicker.phonetic">
@@ -2797,7 +2794,7 @@
       <unit id="main.akuo">
          <segment>
             <source>Access Akuo Site</source>
-            <target/>
+            <target>访问 Akuo 网站</target>
          </segment>
       </unit>
       <unit id="main.apiError">
@@ -2839,7 +2836,7 @@
       <unit id="main.course">
          <segment>
             <source>Access Accredited Course</source>
-            <target/>
+            <target>访问认证课程</target>
          </segment>
       </unit>
       <unit id="main.continueCurrentUser">
@@ -2911,7 +2908,7 @@
       <unit id="main.googleSamples">
          <segment>
             <source>Sample Google spreadsheets</source>
-            <target/>
+            <target>谷歌电子表格示例</target>
          </segment>
       </unit>
       <unit id="main.helpCenter">
@@ -2971,7 +2968,7 @@
       <unit id="main.logos">
          <segment>
             <source>Access Logos Resources</source>
-            <target/>
+            <target>访问徽标资源</target>
          </segment>
       </unit>
       <unit id="main.media">
@@ -2995,13 +2992,13 @@
       <unit id="main.openNotes">
          <segment>
             <source>Access Translator's Notes</source>
-            <target/>
+            <target>访问翻译笔记</target>
          </segment>
       </unit>
       <unit id="main.openContent">
          <segment>
             <source>Access Open Content</source>
-            <target/>
+            <target>访问开放内容</target>
          </segment>
       </unit>
       <unit id="main.passages">
@@ -3049,13 +3046,13 @@
       <unit id="main.reportWhenOnline">
          <segment>
             <source>You must be online to use this menu item.</source>
-            <target/>
+            <target>您必须在线才能使用此菜单项。</target>
          </segment>
       </unit>
       <unit id="main.resources">
          <segment>
             <source>Access UBS Resources</source>
-            <target/>
+            <target>访问 UBS 资源</target>
          </segment>
       </unit>
       <unit id="main.saveFirst">
@@ -3145,13 +3142,13 @@
       <unit id="main.videos">
          <segment>
             <source>Access Training Videos</source>
-            <target/>
+            <target>访问培训视频</target>
          </segment>
       </unit>
       <unit id="main.walkThru">
          <segment>
             <source>Access Walk Through</source>
-            <target/>
+            <target>Access 演示</target>
          </segment>
       </unit>
       <unit id="mediaActions.attach">
@@ -3301,7 +3298,7 @@
       <unit id="mediaTab.duration">
          <segment>
             <source>Duration</source>
-            <target/>
+            <target>持续时间</target>
          </segment>
       </unit>
       <unit id="mediaTab.fileAttached">
@@ -3325,13 +3322,13 @@
       <unit id="mediaTab.graphicRightsAdd">
          <segment>
             <source>Add {0}</source>
-            <target/>
+            <target>添加 {0}</target>
          </segment>
       </unit>
       <unit id="mediaTab.graphicRightsTitle">
          <segment>
             <source>Graphics Rights holder</source>
-            <target/>
+            <target>图形 权利持有人</target>
          </segment>
       </unit>
       <unit id="mediaTab.latestVersion">
@@ -3397,7 +3394,7 @@
       <unit id="mediaTab.published">
          <segment>
             <source>Published</source>
-            <target/>
+            <target>已出版</target>
          </segment>
       </unit>
       <unit id="mediaTab.readyToShare">
@@ -3469,7 +3466,7 @@
       <unit id="mediaTab.user">
          <segment>
             <source>User</source>
-            <target/>
+            <target>用户</target>
          </segment>
       </unit>
       <unit id="mediaTab.version">
@@ -3493,37 +3490,37 @@
       <unit id="mediaTitle.cancel">
          <segment>
             <source>Cancel Recording</source>
-            <target/>
+            <target>取消录音</target>
          </segment>
       </unit>
       <unit id="mediaTitle.playPause">
          <segment>
             <source>Play / Pause</source>
-            <target/>
+            <target>播放/暂停</target>
          </segment>
       </unit>
       <unit id="mediaTitle.record">
          <segment>
             <source>Record</source>
-            <target/>
+            <target>记录</target>
          </segment>
       </unit>
       <unit id="mediaTitle.recording">
          <segment>
             <source>Recording...</source>
-            <target/>
+            <target>记录...</target>
          </segment>
       </unit>
       <unit id="mediaTitle.save">
          <segment>
             <source>Save Recording</source>
-            <target/>
+            <target>保存录音</target>
          </segment>
       </unit>
       <unit id="mediaTitle.saving">
          <segment>
             <source>Saving...</source>
-            <target/>
+            <target>保存...</target>
          </segment>
       </unit>
       <unit id="mediaUpload.cancel">
@@ -3547,13 +3544,13 @@
       <unit id="mediaUpload.graphicTask">
          <segment>
             <source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
-            <target/>
+            <target>将文件拖放到此处，或点击此处浏览文件。可接受的格式有 .png、.jpg（或 .jpeg）和 .webp。</target>
          </segment>
       </unit>
       <unit id="mediaUpload.graphicTitle">
          <segment>
             <source>Upload Graphic</source>
-            <target/>
+            <target>上传图片</target>
          </segment>
       </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
@@ -3769,7 +3766,7 @@
       <unit id="passageDetailArtifacts.allLevel">
          <segment>
             <source>All {0}</source>
-            <target/>
+            <target>所有 {0}</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.allResources">
@@ -3781,13 +3778,13 @@
       <unit id="passageDetailArtifacts.bookLevel">
          <segment>
             <source>{0} for the Book</source>
-            <target/>
+            <target>{0}为书</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.bookResource">
          <segment>
             <source>Book</source>
-            <target/>
+            <target>书籍</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.canceling">
@@ -3805,7 +3802,7 @@
       <unit id="passageDetailArtifacts.chapterLevel">
          <segment>
             <source>{0} for the Chapter</source>
-            <target/>
+            <target>章节 {0}</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.chooseLevel">
@@ -3889,7 +3886,7 @@
       <unit id="passageDetailArtifacts.movementResource">
          <segment>
             <source>Movement</source>
-            <target/>
+            <target>运动</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.no">
@@ -3901,13 +3898,13 @@
       <unit id="passageDetailArtifacts.noteResource">
          <segment>
             <source>Note</source>
-            <target/>
+            <target>注意事项</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.notes">
          <segment>
             <source>Notes</source>
-            <target/>
+            <target>注释</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.passageResource">
@@ -3967,7 +3964,7 @@
       <unit id="passageDetailArtifacts.resources">
          <segment>
             <source>Resources</source>
-            <target/>
+            <target>资源</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.resourcesDeleted">
@@ -3985,7 +3982,7 @@
       <unit id="passageDetailArtifacts.selectOne">
          <segment>
             <source>Only the first selected note is used</source>
-            <target/>
+            <target>只使用第一个选定的音符</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.sharedResource">
@@ -4081,7 +4078,7 @@
       <unit id="passageDetailArtifacts.verseLevel">
          <segment>
             <source>{0} for verses in this passage</source>
-            <target/>
+            <target>{0}为本段落的经文</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.version">
@@ -4207,43 +4204,43 @@
       <unit id="passageType.BOOK">
          <segment>
             <source>Book</source>
-            <target/>
+            <target>书籍</target>
          </segment>
       </unit>
       <unit id="passageType.ALTBK">
          <segment>
             <source>Friendly Book</source>
-            <target/>
+            <target>友好图书</target>
          </segment>
       </unit>
       <unit id="passageType.CHNUM">
          <segment>
             <source>Chapter number</source>
-            <target/>
+            <target>章节编号</target>
          </segment>
       </unit>
       <unit id="passageType.TITLE">
          <segment>
             <source>Title</source>
-            <target/>
+            <target>标题</target>
          </segment>
       </unit>
       <unit id="passageType.MOVE">
          <segment>
             <source>Movement</source>
-            <target/>
+            <target>移动</target>
          </segment>
       </unit>
       <unit id="passageType.PASS">
          <segment>
             <source>Passage</source>
-            <target/>
+            <target>通道</target>
          </segment>
       </unit>
       <unit id="passageType.NOTE">
          <segment>
             <source>Note</source>
-            <target/>
+            <target>备注</target>
          </segment>
       </unit>
       <unit id="peer.peerDescription">
@@ -4333,7 +4330,7 @@
       <unit id="peerCheck.toEnd">
          <segment>
             <source>Jump to end</source>
-            <target/>
+            <target>跳转至结束</target>
          </segment>
       </unit>
       <unit id="permission.admin">
@@ -4399,7 +4396,7 @@
       <unit id="planActions.addNote">
          <segment>
             <source>Add Note</source>
-            <target/>
+            <target>添加注释</target>
          </segment>
       </unit>
       <unit id="planActions.assign">
@@ -4417,7 +4414,7 @@
       <unit id="planActions.noteDetails">
          <segment>
             <source>Note Details</source>
-            <target/>
+            <target>笔记详细信息</target>
          </segment>
       </unit>
       <unit id="planActions.passageDetail">
@@ -4471,7 +4468,7 @@
       <unit id="planSheet.addNote">
          <segment>
             <source>Add Note</source>
-            <target/>
+            <target>添加注释</target>
          </segment>
       </unit>
       <unit id="planSheet.addPassage">
@@ -4483,7 +4480,7 @@
       <unit id="planSheet.addPublishing">
          <segment>
             <source>Update Publishing Rows</source>
-            <target/>
+            <target>更新发布行</target>
          </segment>
       </unit>
       <unit id="planSheet.addSection">
@@ -4519,19 +4516,19 @@
       <unit id="planSheet.confirmPublish">
          <segment>
             <source>Publish {0}</source>
-            <target/>
+            <target>发布 {0}</target>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishMovement">
          <segment>
             <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this Movement will be marked as published. If you have previously published and now choose 'Not Published', the {0} and passages and notes will be marked as not published.</source>
-            <target/>
+            <target>如果您选择 "发表"，本乐章中的{0}以及所有{0}中的所有经文和注释的最新版本将被标记为 "已发表"。如果之前已发表，现在选择 "未发表"，则{0}和段落及注释将被标记为未发表。</target>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishSection">
          <segment>
             <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes be marked as not published.</source>
-            <target/>
+            <target>如果您选择发布，{0} 以及该{0} 中所有段落和注释的最新版本都将标记为已发布。如果您之前已发布，现在选择 “未发布”，则段落和注释将被标记为未发布。</target>
          </segment>
       </unit>
       <unit id="planSheet.filtered">
@@ -4543,37 +4540,37 @@
       <unit id="planSheet.firstMovement">
          <segment>
             <source>Start At</source>
-            <target/>
+            <target>开始于</target>
          </segment>
       </unit>
       <unit id="planSheet.graphic">
          <segment>
             <source>Graphic</source>
-            <target/>
+            <target>图形</target>
          </segment>
       </unit>
       <unit id="planSheet.hidePublishing">
          <segment>
             <source>Hide Publishing Information</source>
-            <target/>
+            <target>隐藏出版信息</target>
          </segment>
       </unit>
       <unit id="planSheet.moveDown">
          <segment>
             <source>Move down</source>
-            <target/>
+            <target>下移</target>
          </segment>
       </unit>
       <unit id="planSheet.movement">
          <segment>
             <source>Movement</source>
-            <target/>
+            <target>移动</target>
          </segment>
       </unit>
       <unit id="planSheet.moveUp">
          <segment>
             <source>Move up</source>
-            <target/>
+            <target>上移</target>
          </segment>
       </unit>
       <unit id="planSheet.nonNumber">
@@ -4585,7 +4582,7 @@
       <unit id="planSheet.noPublishDelete">
          <segment>
             <source>Do not delete published items.</source>
-            <target/>
+            <target>不删除已发布的项目。</target>
          </segment>
       </unit>
       <unit id="planSheet.insertFirstPassage">
@@ -4597,7 +4594,7 @@
       <unit id="planSheet.paratextRequired">
          <segment>
             <source>You must be a Paratext user with access to FOBAI resources to use this feature.</source>
-            <target/>
+            <target>您必须是可以访问 FOBAI 资源的 Paratext 用户，才能使用此功能。</target>
          </segment>
       </unit>
       <unit id="planSheet.passageBelow">
@@ -4615,13 +4612,13 @@
       <unit id="planSheet.passageToPrevSection">
          <segment>
             <source>Move {pt} {0} Up</source>
-            <target/>
+            <target>将 {pt} {0} 上移</target>
          </segment>
       </unit>
       <unit id="planSheet.passageToNextSection">
          <segment>
             <source>Move {pt} {0} Down</source>
-            <target/>
+            <target>下移 {pt} {0} 行</target>
          </segment>
       </unit>
       <unit id="planSheet.pasting">
@@ -4633,7 +4630,7 @@
       <unit id="planSheet.publish">
          <segment>
             <source>Publish {0} {1}</source>
-            <target/>
+            <target>发布 {0} {1}</target>
          </segment>
       </unit>
       <unit id="planSheet.refErr">
@@ -4663,13 +4660,13 @@
       <unit id="planSheet.showPublishing">
          <segment>
             <source>Show Publishing Information</source>
-            <target/>
+            <target>显示发布信息</target>
          </segment>
       </unit>
       <unit id="planSheet.movementAbove">
          <segment>
             <source>Add Movement above {0} {1}</source>
-            <target/>
+            <target>在 {0} {1} 上添加运动</target>
          </segment>
       </unit>
       <unit id="planSheet.sectionAbove">
@@ -4699,7 +4696,7 @@
       <unit id="planSheet.changepublish">
          <segment>
             <source>Update {0} {1} published status.</source>
-            <target/>
+            <target>更新 {0} {1} 已发布状态。</target>
          </segment>
       </unit>
       <unit id="planSheet.useCtrlV">
@@ -5047,25 +5044,25 @@
       <unit id="publishLevel.none">
          <segment>
             <source>Not Published - not visible in publishing app</source>
-            <target/>
+            <target>未发布 - 在发布应用程序中不可见</target>
          </segment>
       </unit>
       <unit id="publishLevel.beta">
          <segment>
             <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>
-            <target/>
+            <target>测试版 - 使用测试版参数时在 Akuo 网站上可见（应用程序中不可用）</target>
          </segment>
       </unit>
       <unit id="publishLevel.betalink">
          <segment>
             <source>https://akuobible.org/?beta=true</source>
-            <target/>
+            <target>https://akuobible.org/?beta=true</target>
          </segment>
       </unit>
       <unit id="publishLevel.public">
          <segment>
             <source>Public - visible to everyone using Akuo website or app</source>
-            <target/>
+            <target>公开--使用阿库乌网站或应用程序的所有人都可看到</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -5101,7 +5098,7 @@
       <unit id="resource.changes">
          <segment>
             <source>Changes made will affect source and all shared locations.</source>
-            <target/>
+            <target>所做更改将影响源和所有共享位置。</target>
          </segment>
       </unit>
       <unit id="resource.delete">
@@ -5131,7 +5128,7 @@
       <unit id="resource.findNote">
          <segment>
             <source>Find existing note</source>
-            <target/>
+            <target>查找现有注释</target>
          </segment>
       </unit>
       <unit id="resource.keywords">
@@ -5143,19 +5140,19 @@
       <unit id="resource.link">
          <segment>
             <source>Link</source>
-            <target/>
+            <target>链接</target>
          </segment>
       </unit>
       <unit id="resource.linkError">
          <segment>
             <source>Link is not a correctly formatted URL</source>
-            <target/>
+            <target>链接不是格式正确的 URL</target>
          </segment>
       </unit>
       <unit id="resource.noteDetails">
          <segment>
             <source>Note Details</source>
-            <target/>
+            <target>注释详情</target>
          </segment>
       </unit>
       <unit id="resource.overview">
@@ -5191,7 +5188,7 @@
       <unit id="resource.source">
          <segment>
             <source>Linked Note Source: </source>
-            <target/>
+            <target>链接注释源： </target>
          </segment>
       </unit>
       <unit id="resource.terms">
@@ -5215,7 +5212,7 @@
       <unit id="scriptureTable.alternateName">
          <segment>
             <source>{0} Alternate Name</source>
-            <target/>
+            <target>{0} 替代名称</target>
          </segment>
       </unit>
       <unit id="scriptureTable.book">
@@ -5227,13 +5224,13 @@
       <unit id="scriptureTable.chapter">
          <segment>
             <source>Chapter {0}</source>
-            <target/>
+            <target>第 {0} 章</target>
          </segment>
       </unit>
       <unit id="scriptureTable.confirmPublish">
          <segment>
             <source>Are you sure you want to add publishing rows?</source>
-            <target/>
+            <target>您确定要添加发布行吗？</target>
          </segment>
       </unit>
       <unit id="scriptureTable.description">
@@ -5269,7 +5266,7 @@
       <unit id="scriptureTable.pasteInvalidBooks">
          <segment>
             <source>Invalid book codes: {0}.</source>
-            <target/>
+            <target>无效书籍代码： {0}.</target>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidColumns">
@@ -5281,7 +5278,7 @@
       <unit id="scriptureTable.pasteInvalidPassageBeforeSection">
          <segment>
             <source>Invalid passage before {0}.</source>
-            <target/>
+            <target>{0}之前的段落无效。</target>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidSections">
@@ -5299,7 +5296,7 @@
       <unit id="scriptureTable.publishingWarning">
          <segment>
             <source>Once publishing rows are added, there is no automated way to remove them. Publishing projects cannot be made flat projects.</source>
-            <target/>
+            <target>一旦添加了出版行，就无法自动删除它们。出版项目不能成为平面项目。</target>
          </segment>
       </unit>
       <unit id="scriptureTable.reference">
@@ -5359,13 +5356,13 @@
       <unit id="scriptureTableFilter.hidePublishing">
          <segment>
             <source>Hide Publishing Rows</source>
-            <target/>
+            <target>隐藏发布行</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.invalidSection">
          <segment>
             <source>Invalid {0}</source>
-            <target/>
+            <target>无效 {0}</target>
          </segment>
       </unit>
       <unit id="scriptureTableFilter.step">
@@ -5539,7 +5536,7 @@
       <unit id="shared.close">
          <segment>
             <source>Close</source>
-            <target/>
+            <target>关闭</target>
          </segment>
       </unit>
       <unit id="shared.consultant">
@@ -5665,7 +5662,7 @@
       <unit id="shared.notSupported">
          <segment>
             <source>This feature is not supported yet.</source>
-            <target/>
+            <target>暂不支持此功能。</target>
          </segment>
       </unit>
       <unit id="shared.observer">
@@ -5911,7 +5908,7 @@
       <unit id="stepEditor.nextStep">
          <segment>
             <source>Next Step</source>
-            <target/>
+            <target>下一步</target>
          </segment>
       </unit>
       <unit id="stepEditor.oneHidden">
@@ -6271,7 +6268,7 @@
       <unit id="tool.verses">
          <segment>
             <source>Mark Verses</source>
-            <target/>
+            <target>标记诗句</target>
          </segment>
       </unit>
       <unit id="tool.wholeBackTranslate">
@@ -6421,7 +6418,7 @@
       <unit id="transcriber.saveReviewTip">
          <segment>
             <source>Save transcript, position and segments</source>
-            <target/>
+            <target>保存文本、位置和片段</target>
          </segment>
       </unit>
       <unit id="transcriber.saveTip">
@@ -6913,19 +6910,19 @@
       <unit id="verse.badReferences">
          <segment>
             <source>ERROR: Markup contains bad references</source>
-            <target/>
+            <target>错误： 标记包含错误引用</target>
          </segment>
       </unit>
       <unit id="verse.btNotUpdated">
          <segment>
             <source>WARNING: Since back translation recordings already exist, back translation segments will not be updated to line up with verse changes.</source>
-            <target/>
+            <target>警告：由于背译录音已经存在，背译片段将不会更新以与诗句变化保持一致。</target>
          </segment>
       </unit>
       <unit id="verse.canceling">
          <segment>
             <source>Canceling verse markup</source>
-            <target/>
+            <target>取消诗句标记</target>
          </segment>
       </unit>
       <unit id="verse.clipboard">
@@ -6949,54 +6946,6 @@
       <unit id="verse.markVerses">
          <segment>
             <source>Mark Verses</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="verse.missingReferences">
-         <segment>
-            <source>Warning: Verses in passage not included: ({0})</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="verse.noReferences">
-         <segment>
-            <source>Warning: Some audio segments will not be included in verses</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="verse.noSegments">
-         <segment>
-            <source>ERROR: Some verses have no segment: ({0})</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="verse.outsideReferences">
-         <segment>
-            <source>ERROR: Some verses are outside passage: ({0})</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="verse.pasteFormat">
-         <segment>
-            <source>Invalid number of columns on clipboard.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="verse.reference">
-         <segment>
-            <source>Reference</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="verse.saveVerseMarkup">
-         <segment>
-            <source>Save Verse Markup</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="verse.startStop">
-         <segment>
-            <source>Start --&gt; Stop</source>
             <target/>
          </segment>
       </unit>
@@ -7057,7 +7006,7 @@
       <unit id="vProject.cannotChangeLayout">
          <segment>
             <source>Publishing projects cannot be made flat.</source>
-            <target/>
+            <target>发布项目不能做成平面。</target>
          </segment>
       </unit>
       <unit id="vProject.correctformat">
@@ -7087,19 +7036,19 @@
       <unit id="vProject.errExtrasBookLen">
          <segment>
             <source>Book must be 3 characters</source>
-            <target/>
+            <target>书籍必须为 3 个字符</target>
          </segment>
       </unit>
       <unit id="vProject.errExtrasBookNonScripture">
          <segment>
             <source>Book Designation must not be a Scripture book code.</source>
-            <target/>
+            <target>书籍名称不得为经文书籍代码。</target>
          </segment>
       </unit>
       <unit id="vProject.extrasBook">
          <segment>
             <source>Akuo Extras Book Designation</source>
-            <target/>
+            <target>Akuo Extras 书籍名称</target>
          </segment>
       </unit>
       <unit id="vProject.flat">
@@ -7153,13 +7102,13 @@
       <unit id="vProject.movement">
          <segment>
             <source>Movement</source>
-            <target/>
+            <target>移动</target>
          </segment>
       </unit>
       <unit id="vProject.movements">
          <segment>
             <source>Movements</source>
-            <target/>
+            <target>移动</target>
          </segment>
       </unit>
       <unit id="vProject.nameInUse">
@@ -7591,7 +7540,7 @@
       <unit id="workflowSteps.markVerses">
          <segment>
             <source>Mark Verses</source>
-            <target/>
+            <target>标记诗句</target>
          </segment>
       </unit>
       <unit id="workflowSteps.wholeBackTranslate">
