@@ -1985,6 +1985,13 @@
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="findResource.convert">
+            <source>Convert text to audio resource file</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="findResource.image">
             <source>image</source>
             <target/>

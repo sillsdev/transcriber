@@ -1657,6 +1657,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.bibleBrain">
+         <segment>
+            <source>{0} Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="grid.all">
          <segment>
             <source>All</source>
@@ -3868,6 +3874,12 @@
       <unit id="passageDetailArtifacts.find">
          <segment>
             <source>Find</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.findResource">
+         <segment>
+            <source>Find Resource for {0}</source>
             <target/>
          </segment>
       </unit>
@@ -6958,6 +6970,12 @@
       <unit id="verse.markVerses">
          <segment>
             <source>Mark Verses</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.missingReferences">
+         <segment>
+            <source>Warning: Verses in passage not included: ({0})</source>
             <target/>
          </segment>
       </unit>

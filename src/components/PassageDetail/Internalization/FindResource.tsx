@@ -71,7 +71,6 @@ const ResourceItem = ({
       .replace('{2}', pad3(passage?.attributes?.startVerse ?? 1))
       .replace('{3}', pad3(passage?.attributes?.endChapter ?? 1))
       .replace('{4}', pad3(passage?.attributes?.endVerse ?? 1));
-    // console.log(`launching ${href}`);
     if (isElectron) launch(href, !isOffline);
     else onLink?.(href);
   };
@@ -85,6 +84,7 @@ const ResourceItem = ({
     <Grid key={resource.name} item>
       {resource?.href ? (
         <AltButton
+          key={`resource-${resource.name}`}
           onClick={handleClick(resource.name, resource.href)}
           title={resource.help ? t.getString(resource.help) : undefined}
           variant="outlined"
@@ -98,6 +98,7 @@ const ResourceItem = ({
         </AltButton>
       ) : (
         <AltButton
+          key={`resource-${resource.name}`}
           title={resource.help ? t.getString(resource.help) : undefined}
           variant="outlined"
           sx={{ m: 1 }}
@@ -316,7 +317,6 @@ export const FindResource = () => {
       endVerse ?? startVerse ?? 1,
       SortBy.Gloss
     ).map((t) => t['G'].toLowerCase());
-    console.log(terms);
     setTerms(terms);
     setScopeOpts(scopeOptions.concat(terms).map(optVal));
   };
@@ -371,7 +371,6 @@ export const FindResource = () => {
   const handleChange =
     (kind: string) =>
     (_event: React.SyntheticEvent, newValue: OptionProps | null) => {
-      console.log(newValue);
       const book = passage?.attributes?.book;
       let link = newValue?.value ?? '';
       if (hrefTpls[kind]) {
@@ -532,6 +531,13 @@ export const FindResource = () => {
               .map((resource) => (
                 <ResourceItem resource={resource} onLink={doLink} />
               ))}
+          </Grid>
+          <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
+            <Grid item>
+              <AltButton onClick={() => doLink('https://freetts.com/')}>
+                {t.convert}
+              </AltButton>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

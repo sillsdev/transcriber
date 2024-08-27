@@ -1702,6 +1702,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.convert">
+         <segment>
+            <source>Convert text to audio resource file</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="findResource.image">
          <segment>
             <source>image</source>

@@ -354,6 +354,7 @@ export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "chapter": string;
     "clipboard": string;
     "clipboardCopy": string;
+    "convert": string;
     "image": string;
     "imageTpl": string;
     "meaning": string;

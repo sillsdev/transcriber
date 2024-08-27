@@ -383,6 +383,7 @@ const initialState = {
 			"chapter": "chapter",
 			"clipboard": "clipboard",
 			"clipboardCopy": "Copy to clipboard",
+			"convert": "Convert text to audio resource file",
 			"image": "image",
 			"imageTpl": "Please provide an image for {0}",
 			"meaning": "meaning",
