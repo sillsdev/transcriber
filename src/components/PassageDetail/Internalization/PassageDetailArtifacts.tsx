@@ -652,7 +652,9 @@ export function PassageDetailArtifacts() {
             </Grid>
           )}
           <Grid item>
-            <PriButton onClick={() => handleFindVisible(true)}>Find</PriButton>
+            <PriButton onClick={() => handleFindVisible(true)}>
+              {t.find}
+            </PriButton>
           </Grid>
         </Grid>
         <MediaContainer>
@@ -720,12 +722,8 @@ export function PassageDetailArtifacts() {
         }
       />
       <BigDialog
-        title={'Find Resource for {0}'.replace('{0}', passageRefText(passage))}
-        description=<Typography>
-          Each of these links can be used to find or create (using artificial
-          intelligence -- AI) resources for internalizing the passage, section,
-          chapter, or book.
-        </Typography>
+        title={t.findResource.replace('{0}', passageRefText(passage))}
+        description=<Typography>{t.findResourceDesc}</Typography>
         isOpen={findOpen}
         onOpen={handleFindVisible}
         bp={BigDialogBp.sm}

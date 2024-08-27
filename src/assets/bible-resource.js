@@ -33,7 +33,7 @@ export default [
   },
   {
     name: "What's App",
-    help: "Install the What's App app on your phone and join the group for your language. You can also install What's App on Windows and link to your phone App. Use Meta AI",
+    help: 'whatsAppHelp',
     ai: true,
   },
 ];

@@ -1651,6 +1651,12 @@
             <target>Сохранить по умолчанию для команды</target>
          </segment>
       </unit>
+      <unit id="findResource.aiDesc">
+         <segment>
+            <source>Copy query contents and paste them into one of an AI chat tools:</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="grid.all">
          <segment>
             <source>All</source>
@@ -2458,12 +2464,6 @@
       <unit id="invite.send">
          <segment>
             <source>Send</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="invite.sil">
-         <segment>
-            <source>SIL International</source>
             <target/>
          </segment>
       </unit>
@@ -3863,6 +3863,12 @@
          <segment>
             <source>Edit Resource</source>
             <target>Редактирование ресурса</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.find">
+         <segment>
+            <source>Find</source>
+            <target/>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.generalResources">
@@ -6946,6 +6952,12 @@
       <unit id="verse.issues">
          <segment>
             <source>The verse markup has issues. Do you want to continue?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.markVerses">
+         <segment>
+            <source>Mark Verses</source>
             <target/>
          </segment>
       </unit>

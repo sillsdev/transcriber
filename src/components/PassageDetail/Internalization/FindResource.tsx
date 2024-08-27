@@ -20,61 +20,23 @@ import { AltButton } from '../../StepEditor';
 import { parseRef, related } from '../../../crud';
 import { pad3 } from '../../../utils/pad3';
 import { useSnackBar } from '../../../hoc/SnackBar';
-import { useSelector } from 'react-redux';
-import { BookName, IState, PassageD, SectionD } from '../../../model';
+import { shallowEqual, useSelector } from 'react-redux';
+import {
+  BookName,
+  IFindResourceStrings,
+  IState,
+  PassageD,
+  SectionD,
+} from '../../../model';
 import { useOrbitData } from '../../../hoc/useOrbitData';
 import { isElectron } from '../../../api-variable';
 import { SortBy, useKeyTerms } from '../Keyterms/useKeyTerms';
+import { findResourceSelector } from '../../../selector/selectors';
 
 interface OptionProps {
   label: string;
   value: string;
 }
-
-const scopeOptions = [
-  'passage',
-  'section',
-  'chapter',
-  'movement',
-  'book',
-  'clipboard',
-];
-
-const typeOptions = [
-  'oral version',
-  'summary',
-  'meaning',
-  'script',
-  'image',
-  'video',
-];
-
-const aiQueries = [
-  {
-    type: 'oral-version',
-    template: 'Please provide an oral translation of {0}',
-  },
-  {
-    type: 'summary',
-    template: 'Please provide a summary of {0}',
-  },
-  {
-    type: 'meaning',
-    template: 'Please draft a story to illustrate the meaning of {0}',
-  },
-  {
-    type: 'script',
-    template: 'Please provide a script for {0}',
-  },
-  {
-    type: 'image',
-    template: 'Please provide an image for {0}',
-  },
-  {
-    type: 'video',
-    template: 'Please provide a video for {0}',
-  },
-];
 
 interface Tpl {
   [key: string]: string | undefined;
@@ -95,6 +57,10 @@ const ResourceItem = ({
   const { showMessage } = useSnackBar();
   const [open, setOpen] = useState(false);
   const [isOffline] = useGlobal('offline');
+  const t: IFindResourceStrings = useSelector(
+    findResourceSelector,
+    shallowEqual
+  );
 
   const handleClick = (_kind: string, hrefTpl: string) => () => {
     const book = passage?.attributes?.book;
@@ -105,13 +71,13 @@ const ResourceItem = ({
       .replace('{2}', pad3(passage?.attributes?.startVerse ?? 1))
       .replace('{3}', pad3(passage?.attributes?.endChapter ?? 1))
       .replace('{4}', pad3(passage?.attributes?.endVerse ?? 1));
-    console.log(`launching ${href}`);
+    // console.log(`launching ${href}`);
     if (isElectron) launch(href, !isOffline);
     else onLink?.(href);
   };
 
   const handleHelp = (resource?: BibleResource) => () => {
-    showMessage(resource?.help && !open ? resource.help : '');
+    showMessage(resource?.help && !open ? t.getString(resource.help) : '');
     setOpen(!open);
   };
 
@@ -120,7 +86,7 @@ const ResourceItem = ({
       {resource?.href ? (
         <AltButton
           onClick={handleClick(resource.name, resource.href)}
-          title={resource.help}
+          title={resource.help ? t.getString(resource.help) : undefined}
           variant="outlined"
           sx={{ m: 1 }}
         >
@@ -132,7 +98,7 @@ const ResourceItem = ({
         </AltButton>
       ) : (
         <AltButton
-          title={resource.help}
+          title={resource.help ? t.getString(resource.help) : undefined}
           variant="outlined"
           sx={{ m: 1 }}
           onClick={handleHelp(resource)}
@@ -160,8 +126,8 @@ export const FindResource = () => {
   const [planId] = useGlobal('plan');
   const [query, setQuery] = useState('');
   const [userEdited, setUserEdited] = useState(false);
-  const [scope, setScope] = useState<string>('passage');
-  const [type, setType] = useState('oral version');
+  const [scope, setScope] = useState<string>('');
+  const [type, setType] = useState('');
   const linkRef = useRef<HTMLAnchorElement>(null);
   const { verseTerms } = useKeyTerms();
   const [terms, setTerms] = useState<string[]>([]);
@@ -170,6 +136,55 @@ export const FindResource = () => {
   const allBookData: BookName[] = useSelector(
     (state: IState) => state.books.bookData
   );
+  const t: IFindResourceStrings = useSelector(
+    findResourceSelector,
+    shallowEqual
+  );
+
+  enum scopeI {
+    passage,
+    section,
+    chapter,
+    movement,
+    book,
+    clipboard,
+  }
+
+  const scopeOptions = [
+    t.passage,
+    t.section,
+    t.chapter,
+    t.movement,
+    t.book,
+    t.clipboard,
+  ];
+
+  const aiQueries = [
+    {
+      type: t.oralVersion,
+      template: t.oralVersionTpl,
+    },
+    {
+      type: t.summary,
+      template: t.summaryTpl,
+    },
+    {
+      type: t.meaning,
+      template: t.meaningTpl,
+    },
+    {
+      type: t.script,
+      template: t.scriptTpl,
+    },
+    {
+      type: t.image,
+      template: t.imageTpl,
+    },
+    {
+      type: t.video,
+      template: t.videoTpl,
+    },
+  ];
 
   const computeMovementRef = () => {
     const sectionId = related(passage, 'section');
@@ -260,25 +275,26 @@ export const FindResource = () => {
   };
 
   const computeQuery = async (type: string, scope: string) => {
+    // the localized name Matthew should never be used b/c book data will have it.
     const book =
       allBookData.find((b) => b.code === passage?.attributes?.book ?? 'MAT')
         ?.short ?? 'Matthew';
     let ref = `${book} ${passage?.attributes?.reference ?? '1:1'}`;
-    if (scope === 'section') {
+    if (scope === scopeOptions[scopeI.section]) {
       ref = `${book} ${computeSectionRef()}`;
-    } else if (scope === 'chapter') {
+    } else if (scope === scopeOptions[scopeI.chapter]) {
       const chapter = parseInt(passage?.attributes?.reference ?? '1');
       ref = `${book} ${chapter}`;
-    } else if (scope === 'movement') {
+    } else if (scope === scopeOptions[scopeI.movement]) {
       ref = `${book} ${computeMovementRef()}`;
-    } else if (scope === 'book') {
-      ref = `the biblical book of {0}`.replace('{0}', book);
-    } else if (scope === 'clipboard') {
+    } else if (scope === scopeOptions[scopeI.book]) {
+      ref = t.biblicalBook.replace('{0}', book);
+    } else if (scope === scopeOptions[scopeI.clipboard]) {
       try {
         ref = `"${await navigator.clipboard.readText()}"`;
       } catch (e) {
         console.log(e);
-        ref = 'unavailable';
+        ref = t.unavailable;
       }
     } else if (terms.includes(scope)) {
       ref = camel2Title(scope);
@@ -327,14 +343,17 @@ export const FindResource = () => {
     import('../../../assets/bible-resource.js').then((module) => {
       setResources(module.default);
     });
-    setTypeOpts(typeOptions.map(optVal));
+    setTypeOpts(aiQueries.map((q) => q.type.replace('-', ' ')).map(optVal));
+    setScope(scopeOptions[0]);
+    setType(aiQueries[0].type.replace('-', ' '));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (userEdited) {
       return;
     }
-    computeQuery(type, scope || 'passage');
+    computeQuery(type, scope);
     computeTerms();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passage, scope, type, allBookData, userEdited]);
@@ -393,7 +412,7 @@ export const FindResource = () => {
 
   const handleRefresh = () => {
     setUserEdited(false);
-    computeQuery(type, scope || 'passage');
+    computeQuery(type, scope);
   };
 
   return (
@@ -418,7 +437,10 @@ export const FindResource = () => {
                 onChange={handleChange('bibleBrain')}
                 sx={{ width: 300 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Bible Brain Resource" />
+                  <TextField
+                    {...params}
+                    label={t.bibleBrain.replace('{0}', 'Bible Brain')}
+                  />
                 )}
               />
             </Stack>
@@ -432,7 +454,7 @@ export const FindResource = () => {
                 onChange={handleChange('bibleProject')}
                 sx={{ width: 300 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Bible Project Language" />
+                  <TextField {...params} label={t.bibleProjectLang} />
                 )}
               />
             </Stack>
@@ -457,7 +479,9 @@ export const FindResource = () => {
                 value={typeOpts.find((item) => item.value === type) ?? null}
                 onChange={handleTypeChange}
                 sx={{ width: 180 }}
-                renderInput={(params) => <TextField {...params} label="Type" />}
+                renderInput={(params) => (
+                  <TextField {...params} label={t.type} />
+                )}
               />
             </Grid>
             <Grid item>
@@ -469,7 +493,7 @@ export const FindResource = () => {
                 onChange={handleScopeChange}
                 sx={{ width: 300 }}
                 renderInput={(params) => (
-                  <TextField {...params} label="Scope" />
+                  <TextField {...params} label={t.scope} />
                 )}
               />
             </Grid>
@@ -482,17 +506,17 @@ export const FindResource = () => {
               <TextField
                 multiline
                 minRows={2}
-                label="Query"
+                label={t.query}
                 value={query}
                 onChange={handleQueryChange}
                 sx={{ flexGrow: 1 }}
               />
               <Stack>
-                <IconButton onClick={handleCopy} title="Copy to clipboard">
+                <IconButton onClick={handleCopy} title={t.clipboardCopy}>
                   <ContentCopyIcon />
                 </IconButton>
                 {userEdited && (
-                  <IconButton onClick={handleRefresh} title="Reset">
+                  <IconButton onClick={handleRefresh} title={t.reset}>
                     <RefreshIcon />
                   </IconButton>
                 )}
@@ -500,9 +524,7 @@ export const FindResource = () => {
             </Stack>
           </Grid>
           <Grid item xs={12}>
-            <Typography>
-              Copy query contents and paste them into one of an AI chat tools:
-            </Typography>
+            <Typography>{t.aiDesc}</Typography>
           </Grid>
           <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
             {resources

@@ -1651,6 +1651,12 @@
             <target>Enregistrer en tant qu'équipe par défaut</target>
          </segment>
       </unit>
+      <unit id="findResource.aiDesc">
+         <segment>
+            <source>Copy query contents and paste them into one of an AI chat tools:</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="grid.all">
          <segment>
             <source>All</source>
@@ -2459,12 +2465,6 @@
          <segment>
             <source>Send</source>
             <target>Envoyer</target>
-         </segment>
-      </unit>
-      <unit id="invite.sil">
-         <segment>
-            <source>SIL International</source>
-            <target>SIL International</target>
          </segment>
       </unit>
       <unit id="keyTerms.addTargetWord">
@@ -3863,6 +3863,12 @@
          <segment>
             <source>Edit Resource</source>
             <target>Changer de ressource</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.find">
+         <segment>
+            <source>Find</source>
+            <target/>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.generalResources">
@@ -6946,6 +6952,12 @@
       <unit id="verse.issues">
          <segment>
             <source>The verse markup has issues. Do you want to continue?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.markVerses">
+         <segment>
+            <source>Mark Verses</source>
             <target/>
          </segment>
       </unit>

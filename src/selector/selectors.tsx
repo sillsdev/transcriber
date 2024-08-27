@@ -70,6 +70,9 @@ export const emailUnverifiedSelector = (state: IState) =>
 export const filterMenuSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'filterMenu' });
 
+export const findResourceSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'findResource' });
+
 export const gridSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'grid' });
 
