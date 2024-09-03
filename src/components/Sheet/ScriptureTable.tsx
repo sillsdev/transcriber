@@ -328,10 +328,9 @@ export function ScriptureTable(props: IProps) {
   const setSheet = (ws: ISheet[]) => {
     sheetRef.current = ws;
     setSheetx(ws);
-    var anyPublishing =
-      !shared && !offline
-        ? Boolean(ws.find((s) => isPublishingTitle(s.reference ?? '', flat)))
-        : false;
+    var anyPublishing = !offline
+      ? Boolean(ws.find((s) => isPublishingTitle(s.reference ?? '', flat)))
+      : false;
     if (canHidePublishing !== anyPublishing) setCanPublish(anyPublishing);
   };
   const passNumCol = React.useMemo(() => {
