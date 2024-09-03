@@ -250,7 +250,6 @@ export function PlanSheet(props: IProps) {
     projButtonStr,
     connected,
     readonly,
-    shared,
     sectionArr,
   } = ctx.state;
 
@@ -972,7 +971,6 @@ export function PlanSheet(props: IProps) {
 
             <GrowingSpacer />
             {data.length > 1 &&
-              !shared &&
               !offline &&
               !inlinePassages &&
               !readonly &&
