@@ -27,7 +27,7 @@ export const TableRow = ({ value, header }: IProps) => {
   }, [header]);
 
   return (
-    <Stack direction="row">
+    <Stack direction="row" sx={{ alignItems: 'center' }}>
       {userIsAdmin && (
         <span style={headHide}>
           <DragHandle />

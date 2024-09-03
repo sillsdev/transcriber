@@ -2,12 +2,15 @@ import { IRow } from '../../../context/PassageDetailContext';
 import { TableRow, PlayButton, DoneButton, ResourceEditAction } from '.';
 import { SectionResourceD } from '../../../model';
 import { ViewButton } from './ViewButton';
+import { MarkDownType, UriLinkType } from '../../MediaUpload';
 
 interface IProps {
   value: IRow;
   isPlaying: boolean;
   onPlay: (id: string) => void;
   onView: (id: string) => void;
+  onLink: (id: string) => void;
+  onMarkDown: (id: string) => void;
   onDone: (id: string, res: SectionResourceD | null) => void;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
@@ -18,6 +21,8 @@ export const SortableItem = ({
   isPlaying,
   onPlay,
   onView,
+  onLink,
+  onMarkDown,
   onDone,
   onEdit,
   onDelete,
@@ -28,6 +33,10 @@ export const SortableItem = ({
         ...value,
         playItem: value.isText ? (
           <ViewButton id={value.id} cb={onView} />
+        ) : value.mediafile.attributes.contentType === UriLinkType ? (
+          <ViewButton id={value.id} cb={onLink} />
+        ) : value.mediafile.attributes.contentType === MarkDownType ? (
+          <ViewButton id={value.id} cb={onMarkDown} />
         ) : (
           <PlayButton value={!isPlaying} id={value.id} cb={onPlay} />
         ),

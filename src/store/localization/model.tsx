@@ -743,6 +743,10 @@ export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
     "invalidFile": string;
     "ITFtask": string;
     "ITFtitle": string;
+    "linkTask": string;
+    "linkTitle": string;
+    "markdownTask": string;
+    "markdownTitle": string;
     "projectResourceTask": string;
     "PTFtask": string;
     "PTFtitle": string;
@@ -805,6 +809,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "keywords": string;
     "language": string;
     "link": string;
+    "linkResource": string;
     "movementResource": string;
     "no": string;
     "noteResource": string;
@@ -816,6 +821,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "projectResourcePassage": string;
     "projectResourceSheet": string;
     "projectResourceConfigure": string;
+    "recordResource": string;
     "reference": string;
     "resource": string;
     "resources": string;
@@ -829,6 +835,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
     "suffixTip": string;
     "termsOfUse": string;
     "termsReview": string;
+    "textResource": string;
     "title": string;
     "type": string;
     "tip1a": string;

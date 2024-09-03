@@ -1669,6 +1669,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.biblicalBook">
+         <segment>
+            <source>the biblical book of {0}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="grid.all">
          <segment>
             <source>All</source>
@@ -3601,6 +3607,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.linkTask">
+         <segment>
+            <source>Enter a URI link for a resource.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.projectResourceTask">
          <segment>
             <source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
@@ -3919,6 +3931,12 @@
             <target>Ссылка</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.linkResource">
+         <segment>
+            <source>Link (URI)</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.movementResource">
          <segment>
             <source>Movement</source>
@@ -3985,6 +4003,12 @@
             <target>Разделение на ресурсы</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.recordResource">
+         <segment>
+            <source>Record</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.reference">
          <segment>
             <source>Reference</source>
@@ -4023,8 +4047,8 @@
       </unit>
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
-            <source>Link Shared {0} Resource</source>
-            <target>Ссылка Общий {0} ресурс</target>
+            <source>Link Shared</source>
+            <target/>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.source">
@@ -4063,6 +4087,12 @@
             <target>Ознакомьтесь с условиями использования</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.textResource">
+         <segment>
+            <source>Text Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.title">
          <segment>
             <source>Title</source>
@@ -4083,8 +4113,8 @@
       </unit>
       <unit id="passageDetailArtifacts.tip1b">
          <segment>
-            <source>Link a shared resource to this {0}.</source>
-            <target>Свяжите общий ресурс с этим {0}.</target>
+            <source>Link to a shared resource.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.tip2b">
@@ -4101,8 +4131,8 @@
       </unit>
       <unit id="passageDetailArtifacts.upload">
          <segment>
-            <source>Upload Resources</source>
-            <target>Загрузка ресурсов</target>
+            <source>Uploads</source>
+            <target/>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.uploadProject">
@@ -6994,6 +7024,12 @@
       <unit id="verse.noReferences">
          <segment>
             <source>Warning: Some audio segments will not be included in verses</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.noSegments">
+         <segment>
+            <source>ERROR: Some verses have no segment: ({0})</source>
             <target/>
          </segment>
       </unit>
