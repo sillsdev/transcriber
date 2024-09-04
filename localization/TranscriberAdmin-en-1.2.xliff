@@ -4414,6 +4414,34 @@
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="mediaUpload.linkTask">
+            <source>Enter a URI link for a resource.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaUpload.linkTitle">
+            <source>Link Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaUpload.markdownTask">
+            <source>Enter text to be used as a resource. (Mark down formatting is allowed.)</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaUpload.markdownTitle">
+            <source>Enter Text</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="mediaUpload.projectResourceTask">
       		<source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
       		<target/>
@@ -4785,6 +4813,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.linkResource">
+            <source>Link (URI)</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="passageDetailArtifacts.movementResource">
             <source>Movement</source>
             <target/>
@@ -4862,6 +4897,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.recordResource">
+            <source>Record</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="passageDetailArtifacts.reference">
       		<source>Reference</source>
       		<target/>
@@ -4905,7 +4947,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.sharedResource">
-      		<source>Link Shared {0} Resource</source>
+      		<source>Link Shared</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>
@@ -4953,6 +4995,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.textResource">
+            <source>Text Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="passageDetailArtifacts.title">
       		<source>Title</source>
       		<target/>
@@ -4975,7 +5024,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.tip1b">
-      		<source>Link a shared resource to this {0}.</source>
+      		<source>Link to a shared resource.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>
@@ -4996,7 +5045,7 @@
       		</context-group>
       	</trans-unit>
          <trans-unit id="passageDetailArtifacts.upload">
-            <source>Upload Resources</source>
+            <source>Uploads</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageMedia.tsx</context>

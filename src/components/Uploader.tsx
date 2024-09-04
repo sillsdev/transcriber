@@ -258,33 +258,38 @@ export const Uploader = (props: IProps) => {
       return;
     }
     if (!noBusy) setBusy(true);
-    let name =
-      uploadType === UploadType.IntellectualProperty
-        ? 'Project'
-        : files[0]?.name.split('.')[0];
-    if (createProject) planIdRef.current = await createProject(name);
-    var suffix = passageDefaultSuffix(planIdRef.current, memory, offline);
-
-    while (
-      files.findIndex(
-        (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
-      ) > -1
+    if (
+      uploadType &&
+      ![UploadType.Link, UploadType.MarkDown].includes(uploadType)
     ) {
-      var ix = files.findIndex(
-        (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
-      );
-      files.splice(
-        ix,
-        1,
-        new File(
-          [files[ix]],
-          path.basename(files[ix].name, path.extname(files[ix].name)) +
-            suffix +
-            path.extname(files[ix].name)
-        )
-      );
+      let name =
+        uploadType === UploadType.IntellectualProperty
+          ? 'Project'
+          : files[0]?.name.split('.')[0];
+      if (createProject) planIdRef.current = await createProject(name);
+      var suffix = passageDefaultSuffix(planIdRef.current, memory, offline);
+
+      while (
+        files.findIndex(
+          (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
+        ) > -1
+      ) {
+        var ix = files.findIndex(
+          (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
+        );
+        files.splice(
+          ix,
+          1,
+          new File(
+            [files[ix]],
+            path.basename(files[ix].name, path.extname(files[ix].name)) +
+              suffix +
+              path.extname(files[ix].name)
+          )
+        );
+      }
+      uploadFiles(files);
     }
-    uploadFiles(files);
     fileList.current = files;
     mediaIdRef.current = new Array<string>();
     artifactTypeRef.current = artifactTypeId || '';
@@ -345,7 +350,7 @@ export const Uploader = (props: IProps) => {
   }, [plan, passageId, memory]);
 
   return (
-    <div>
+    <>
       {recordAudio && ready && !importList && (
         <PassageRecordDlg
           visible={isOpen}
@@ -384,7 +389,7 @@ export const Uploader = (props: IProps) => {
           team={team}
         />
       )}
-    </div>
+    </>
   );
 };
 
