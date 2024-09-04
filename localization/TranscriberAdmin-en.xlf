@@ -3784,6 +3784,30 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.linkTask">
+         <segment>
+            <source>Enter a URI link for a resource.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.linkTitle">
+         <segment>
+            <source>Link Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.markdownTask">
+         <segment>
+            <source>Enter text to be used as a resource. (Mark down formatting is allowed.)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.markdownTitle">
+         <segment>
+            <source>Enter Text</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.projectResourceTask">
          <segment>
             <source>Upload audio files in .mp3, .m4a, .wav or .ogg format or visual content in .pdf format.</source>
@@ -4102,6 +4126,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.linkResource">
+         <segment>
+            <source>Link (URI)</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.movementResource">
          <segment>
             <source>Movement</source>
@@ -4168,6 +4198,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.recordResource">
+         <segment>
+            <source>Record</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.reference">
          <segment>
             <source>Reference</source>
@@ -4206,7 +4242,7 @@
       </unit>
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
-            <source>Link Shared {0} Resource</source>
+            <source>Link Shared</source>
             <target/>
          </segment>
       </unit>
@@ -4246,6 +4282,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.textResource">
+         <segment>
+            <source>Text Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.title">
          <segment>
             <source>Title</source>
@@ -4266,7 +4308,7 @@
       </unit>
       <unit id="passageDetailArtifacts.tip1b">
          <segment>
-            <source>Link a shared resource to this {0}.</source>
+            <source>Link to a shared resource.</source>
             <target/>
          </segment>
       </unit>
@@ -4284,7 +4326,7 @@
       </unit>
       <unit id="passageDetailArtifacts.upload">
          <segment>
-            <source>Upload Resources</source>
+            <source>Uploads</source>
             <target/>
          </segment>
       </unit>
