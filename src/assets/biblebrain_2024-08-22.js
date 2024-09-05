@@ -1,5 +1,4 @@
-/* eslint-disable import/no-anonymous-default-export */
-export default [
+const data = [
   {
     iso: 'kjo',
     lang_name: 'Kinnauri, Paharia',
@@ -10,6 +9,8 @@ export default [
     video_date: '2022-04-19',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pio',
@@ -21,6 +22,8 @@ export default [
     video_date: '2022-04-19',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ahr',
@@ -32,6 +35,8 @@ export default [
     video_date: '2022-04-13',
     audio_date: '2021-07-13',
     text_date: '2021-06-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bfy',
@@ -43,6 +48,8 @@ export default [
     video_date: '2022-04-13',
     audio_date: '2022-02-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ory',
@@ -54,6 +61,8 @@ export default [
     video_date: '2022-04-13',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tcs',
@@ -65,6 +74,8 @@ export default [
     video_date: '2022-04-11',
     audio_date: '2022-03-31',
     text_date: '2021-06-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tsw',
@@ -76,6 +87,8 @@ export default [
     video_date: '2022-04-11',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mad',
@@ -87,6 +100,8 @@ export default [
     video_date: '2022-04-05',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sun',
@@ -98,6 +113,8 @@ export default [
     video_date: '2022-04-05',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cja',
@@ -109,6 +126,8 @@ export default [
     video_date: '2022-04-01',
     audio_date: '2022-03-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ayo',
@@ -120,6 +139,8 @@ export default [
     video_date: '2022-03-30',
     audio_date: '2021-12-07',
     text_date: '2021-06-23',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kfp',
@@ -131,6 +152,8 @@ export default [
     video_date: '2022-03-29',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kvw',
@@ -142,6 +165,8 @@ export default [
     video_date: '2022-03-28',
     audio_date: '2022-02-09',
     text_date: '2022-01-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bgw',
@@ -153,6 +178,8 @@ export default [
     video_date: '2022-03-14',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mie',
@@ -164,6 +191,8 @@ export default [
     video_date: '2022-03-10',
     audio_date: '2022-02-09',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mym',
@@ -175,6 +204,8 @@ export default [
     video_date: '2022-03-08',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spy',
@@ -186,6 +217,8 @@ export default [
     video_date: '2022-03-08',
     audio_date: '2022-03-02',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kat',
@@ -197,6 +230,8 @@ export default [
     video_date: '2022-03-08',
     audio_date: '2022-03-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'grc',
@@ -208,6 +243,8 @@ export default [
     video_date: '2022-03-07',
     audio_date: '2021-12-10',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'vag',
@@ -219,6 +256,8 @@ export default [
     video_date: '2022-03-07',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cat',
@@ -230,6 +269,8 @@ export default [
     video_date: '2022-03-04',
     audio_date: '2021-10-29',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ilb',
@@ -241,6 +282,8 @@ export default [
     video_date: '2022-03-04',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tzj',
@@ -252,6 +295,8 @@ export default [
     video_date: '2022-03-03',
     audio_date: '2022-02-10',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kdl',
@@ -263,6 +308,8 @@ export default [
     video_date: '2022-03-03',
     audio_date: '2022-03-16',
     text_date: '2022-03-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tzm',
@@ -274,6 +321,8 @@ export default [
     video_date: '2022-03-03',
     audio_date: '2022-02-01',
     text_date: '2021-06-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'acr',
@@ -285,6 +334,8 @@ export default [
     video_date: '2022-03-02',
     audio_date: '2021-04-15',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zav',
@@ -296,6 +347,8 @@ export default [
     video_date: '2022-03-02',
     audio_date: '2022-02-10',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'acr',
@@ -307,6 +360,8 @@ export default [
     video_date: '2022-03-02',
     audio_date: '2021-04-22',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bcc',
@@ -318,6 +373,8 @@ export default [
     video_date: '2022-03-01',
     audio_date: '2021-05-28',
     text_date: '2019-10-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'slu',
@@ -329,6 +386,8 @@ export default [
     video_date: '2022-03-01',
     audio_date: '2021-10-29',
     text_date: '2022-03-29',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nlk',
@@ -340,6 +399,8 @@ export default [
     video_date: '2022-02-24',
     audio_date: '2022-03-01',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bzi',
@@ -351,6 +412,8 @@ export default [
     video_date: '2022-02-24',
     audio_date: '2022-02-07',
     text_date: '2021-09-01',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cwa',
@@ -362,6 +425,8 @@ export default [
     video_date: '2022-02-24',
     audio_date: '2022-02-22',
     text_date: '2022-03-01',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'min',
@@ -373,6 +438,8 @@ export default [
     video_date: '2022-02-24',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'crt',
@@ -384,6 +451,8 @@ export default [
     video_date: '2022-02-22',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kfw',
@@ -395,6 +464,8 @@ export default [
     video_date: '2022-02-21',
     audio_date: '2022-02-22',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ztq',
@@ -406,6 +477,8 @@ export default [
     video_date: '2022-02-21',
     audio_date: '2022-02-10',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nan',
@@ -417,6 +490,8 @@ export default [
     video_date: '2022-02-21',
     audio_date: '2022-02-22',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'elm',
@@ -428,6 +503,8 @@ export default [
     video_date: '2022-02-18',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sck',
@@ -439,6 +516,8 @@ export default [
     video_date: '2022-02-17',
     audio_date: '2021-11-04',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mfz',
@@ -450,6 +529,8 @@ export default [
     video_date: '2022-02-17',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kay',
@@ -461,6 +542,8 @@ export default [
     video_date: '2022-02-17',
     audio_date: '2022-02-08',
     text_date: '2020-09-02',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xnj',
@@ -472,6 +555,8 @@ export default [
     video_date: '2022-02-16',
     audio_date: '2022-02-16',
     text_date: '2022-02-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gum',
@@ -483,6 +568,8 @@ export default [
     video_date: '2022-02-16',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'maq',
@@ -494,6 +581,8 @@ export default [
     video_date: '2022-02-15',
     audio_date: '2021-06-30',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qxn',
@@ -505,6 +594,8 @@ export default [
     video_date: '2022-02-14',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tao',
@@ -516,6 +607,8 @@ export default [
     video_date: '2022-02-11',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aoz',
@@ -527,6 +620,8 @@ export default [
     video_date: '2022-02-09',
     audio_date: '2021-04-23',
     text_date: '2022-01-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pbs',
@@ -538,6 +633,8 @@ export default [
     video_date: '2022-02-08',
     audio_date: '2021-12-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sur',
@@ -549,6 +646,8 @@ export default [
     video_date: '2022-02-08',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sho',
@@ -560,6 +659,8 @@ export default [
     video_date: '2022-02-08',
     audio_date: '2022-03-02',
     text_date: '2022-02-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kbd',
@@ -571,6 +672,8 @@ export default [
     video_date: '2022-02-07',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ann',
@@ -582,6 +685,8 @@ export default [
     video_date: '2022-02-07',
     audio_date: '2021-04-22',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bvc',
@@ -593,6 +698,8 @@ export default [
     video_date: '2022-02-07',
     audio_date: '2021-05-30',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kru',
@@ -604,6 +711,8 @@ export default [
     video_date: '2022-02-07',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bqc',
@@ -615,6 +724,8 @@ export default [
     video_date: '2022-02-02',
     audio_date: '2021-05-30',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'smo',
@@ -626,6 +737,8 @@ export default [
     video_date: '2022-02-01',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aca',
@@ -637,6 +750,8 @@ export default [
     video_date: '2022-01-31',
     audio_date: '2021-04-15',
     text_date: '2019-01-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rai',
@@ -648,6 +763,8 @@ export default [
     video_date: '2022-01-31',
     audio_date: '2021-11-30',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ntk',
@@ -659,6 +776,8 @@ export default [
     video_date: '2022-01-26',
     audio_date: '2022-01-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xmm',
@@ -670,6 +789,8 @@ export default [
     video_date: '2022-01-26',
     audio_date: '2021-07-09',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nga',
@@ -681,6 +802,8 @@ export default [
     video_date: '2022-01-26',
     audio_date: '2022-03-01',
     text_date: '2021-06-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sne',
@@ -692,6 +815,8 @@ export default [
     video_date: '2022-01-26',
     audio_date: '2022-03-02',
     text_date: '2020-01-29',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nnw',
@@ -703,6 +828,8 @@ export default [
     video_date: '2022-01-25',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nfr',
@@ -714,6 +841,8 @@ export default [
     video_date: '2022-01-25',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kpq',
@@ -725,6 +854,8 @@ export default [
     video_date: '2022-01-25',
     audio_date: '2022-03-01',
     text_date: '2018-12-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sza',
@@ -736,6 +867,8 @@ export default [
     video_date: '2022-01-25',
     audio_date: '2022-01-25',
     text_date: '2021-12-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tsz',
@@ -747,6 +880,8 @@ export default [
     video_date: '2022-01-25',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sag',
@@ -758,6 +893,8 @@ export default [
     video_date: '2022-01-25',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'hoy',
@@ -769,6 +906,8 @@ export default [
     video_date: '2022-01-25',
     audio_date: '2021-07-13',
     text_date: '2021-12-09',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mmy',
@@ -780,6 +919,8 @@ export default [
     video_date: '2022-01-25',
     audio_date: '2022-03-16',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ter',
@@ -791,6 +932,8 @@ export default [
     video_date: '2022-01-25',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'kxf',
@@ -802,6 +945,8 @@ export default [
     video_date: '2022-01-25',
     audio_date: '2021-12-10',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gbp',
@@ -814,6 +959,8 @@ export default [
     video_date: '2022-01-25',
     audio_date: '2022-02-17',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bnp',
@@ -825,6 +972,8 @@ export default [
     video_date: '2022-01-25',
     audio_date: '2022-01-26',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tnp',
@@ -836,6 +985,8 @@ export default [
     video_date: '2022-01-25',
     audio_date: '2022-02-01',
     text_date: '2021-12-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pxm',
@@ -847,6 +998,8 @@ export default [
     video_date: '2022-01-24',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'gso',
@@ -858,6 +1011,8 @@ export default [
     video_date: '2022-01-24',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'enx',
@@ -869,6 +1024,8 @@ export default [
     video_date: '2022-01-24',
     audio_date: '2018-04-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dtp',
@@ -880,6 +1037,8 @@ export default [
     video_date: '2022-01-24',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'arq',
@@ -891,6 +1050,8 @@ export default [
     video_date: '2022-01-05',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bgg',
@@ -902,6 +1063,8 @@ export default [
     video_date: '2022-01-04',
     audio_date: '2022-03-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kab',
@@ -913,6 +1076,8 @@ export default [
     video_date: '2022-01-04',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lcp',
@@ -924,6 +1089,8 @@ export default [
     video_date: '2022-01-04',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cuk',
@@ -935,6 +1102,8 @@ export default [
     video_date: '2022-01-04',
     audio_date: '2021-05-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zab',
@@ -946,6 +1115,8 @@ export default [
     video_date: '2022-01-04',
     audio_date: '2018-02-13',
     text_date: '2022-02-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mza',
@@ -957,6 +1128,8 @@ export default [
     video_date: '2022-01-03',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'miy',
@@ -968,6 +1141,8 @@ export default [
     video_date: '2022-01-03',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'mxv',
@@ -979,6 +1154,8 @@ export default [
     video_date: '2021-12-23',
     audio_date: '2022-02-09',
     text_date: '2018-11-28',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kck',
@@ -990,6 +1167,8 @@ export default [
     video_date: '2021-12-23',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'xtm',
@@ -1001,6 +1180,8 @@ export default [
     video_date: '2021-12-23',
     audio_date: '2022-03-03',
     text_date: '2019-01-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mam',
@@ -1012,6 +1193,8 @@ export default [
     video_date: '2021-12-23',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mbz',
@@ -1023,6 +1206,8 @@ export default [
     video_date: '2021-12-23',
     audio_date: '2021-07-01',
     text_date: '2019-01-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pny',
@@ -1034,6 +1219,8 @@ export default [
     video_date: '2021-12-20',
     audio_date: '2022-03-02',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xon',
@@ -1045,6 +1232,8 @@ export default [
     video_date: '2021-12-20',
     audio_date: '2022-03-03',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tye',
@@ -1056,6 +1245,8 @@ export default [
     video_date: '2021-12-13',
     audio_date: '2022-03-02',
     text_date: '2019-04-25',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tnt',
@@ -1067,6 +1258,8 @@ export default [
     video_date: '2021-12-13',
     audio_date: '2022-03-02',
     text_date: '2021-06-25',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hui',
@@ -1078,6 +1271,8 @@ export default [
     video_date: '2021-12-10',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'mhu',
@@ -1089,6 +1284,8 @@ export default [
     video_date: '2021-12-10',
     audio_date: '2022-02-09',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'txo',
@@ -1100,6 +1297,8 @@ export default [
     video_date: '2021-12-08',
     audio_date: '2021-11-16',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rif',
@@ -1111,14 +1310,13 @@ export default [
     video_date: '2021-12-08',
     audio_date: '2021-12-08',
     text_date: '2021-10-20',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
-    iso: 'mbu',
-    lang_name: 'Mbula',
-    bible_name: 'Wycliffe Bible Translators, Inc. and',
-  },
-  {
-    iso: 'The Nigeria Bible Translation Trust 2016,MBUNBT,100000,Nigeria,2021-12-08,2021-11-30,2022-03-08',
+    iso: '',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zai',
@@ -1130,6 +1328,8 @@ export default [
     video_date: '2021-12-06',
     audio_date: '2022-03-03',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pbt',
@@ -1141,6 +1341,8 @@ export default [
     video_date: '2021-12-06',
     audio_date: '2021-11-22',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sba',
@@ -1152,6 +1354,8 @@ export default [
     video_date: '2021-12-06',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kby',
@@ -1163,6 +1367,8 @@ export default [
     video_date: '2021-12-06',
     audio_date: '2022-02-08',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kdn',
@@ -1174,6 +1380,8 @@ export default [
     video_date: '2021-12-06',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'apc',
@@ -1185,6 +1393,8 @@ export default [
     video_date: '2021-12-03',
     audio_date: '2021-09-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hif',
@@ -1196,6 +1406,8 @@ export default [
     video_date: '2021-12-03',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qvs',
@@ -1207,6 +1419,8 @@ export default [
     video_date: '2021-12-01',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'arn',
@@ -1218,6 +1432,8 @@ export default [
     video_date: '2021-12-01',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gil',
@@ -1229,6 +1445,8 @@ export default [
     video_date: '2021-11-30',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'ace',
@@ -1240,6 +1458,8 @@ export default [
     video_date: '2021-11-30',
     audio_date: '2021-04-15',
     text_date: '2018-09-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'idu',
@@ -1251,6 +1471,8 @@ export default [
     video_date: '2021-11-30',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gxx',
@@ -1262,6 +1484,8 @@ export default [
     video_date: '2021-11-30',
     audio_date: '2021-10-29',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ben',
@@ -1273,6 +1497,8 @@ export default [
     video_date: '2021-11-24',
     audio_date: '2021-05-04',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nyu',
@@ -1284,6 +1510,8 @@ export default [
     video_date: '2021-11-24',
     audio_date: '2021-07-26',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cag',
@@ -1295,6 +1523,8 @@ export default [
     video_date: '2021-11-22',
     audio_date: '2021-05-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'enl',
@@ -1306,6 +1536,8 @@ export default [
     video_date: '2021-11-22',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pib',
@@ -1317,6 +1549,8 @@ export default [
     video_date: '2021-11-19',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mzb',
@@ -1328,6 +1562,8 @@ export default [
     video_date: '2021-11-17',
     audio_date: '2022-02-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dhn',
@@ -1339,6 +1575,8 @@ export default [
     video_date: '2021-11-17',
     audio_date: '2021-07-13',
     text_date: '2021-12-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hag',
@@ -1350,6 +1588,8 @@ export default [
     video_date: '2021-11-17',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'stn',
@@ -1361,6 +1601,8 @@ export default [
     video_date: '2021-11-16',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rhg',
@@ -1372,6 +1614,8 @@ export default [
     video_date: '2021-11-16',
     audio_date: '2021-06-17',
     text_date: '2021-06-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bvd',
@@ -1383,6 +1627,8 @@ export default [
     video_date: '2021-11-16',
     audio_date: '2021-11-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gde',
@@ -1394,6 +1640,8 @@ export default [
     video_date: '2021-11-16',
     audio_date: '2018-12-12',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'def',
@@ -1405,6 +1653,8 @@ export default [
     video_date: '2021-11-16',
     audio_date: '2021-10-15',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ncu',
@@ -1416,6 +1666,8 @@ export default [
     video_date: '2021-11-10',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xua',
@@ -1427,6 +1679,8 @@ export default [
     video_date: '2021-11-05',
     audio_date: '2021-10-29',
     text_date: '2021-09-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wlo',
@@ -1438,6 +1692,8 @@ export default [
     video_date: '2021-11-05',
     audio_date: '2021-09-24',
     text_date: '2022-01-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gri',
@@ -1449,6 +1705,8 @@ export default [
     video_date: '2021-11-05',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sah',
@@ -1460,6 +1718,8 @@ export default [
     video_date: '2021-11-02',
     audio_date: '2021-10-14',
     text_date: '2022-03-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tmf',
@@ -1471,6 +1731,8 @@ export default [
     video_date: '2021-10-29',
     audio_date: '2022-03-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bxh',
@@ -1482,6 +1744,8 @@ export default [
     video_date: '2021-10-27',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sev',
@@ -1493,6 +1757,8 @@ export default [
     video_date: '2021-10-27',
     audio_date: '2021-10-29',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tuo',
@@ -1504,6 +1770,8 @@ export default [
     video_date: '2021-10-27',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bem',
@@ -1515,6 +1783,8 @@ export default [
     video_date: '2021-10-27',
     audio_date: '2021-04-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ndv',
@@ -1526,6 +1796,8 @@ export default [
     video_date: '2021-10-27',
     audio_date: '2022-03-01',
     text_date: '2021-06-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ury',
@@ -1537,6 +1809,8 @@ export default [
     video_date: '2021-10-26',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tly',
@@ -1548,6 +1822,8 @@ export default [
     video_date: '2021-10-26',
     audio_date: '2021-10-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nod',
@@ -1559,6 +1835,8 @@ export default [
     video_date: '2021-10-26',
     audio_date: '2021-10-20',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'grt',
@@ -1570,6 +1848,8 @@ export default [
     video_date: '2021-10-22',
     audio_date: '2021-10-27',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'suc',
@@ -1581,6 +1861,8 @@ export default [
     video_date: '2021-10-21',
     audio_date: '2021-10-14',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bwu',
@@ -1592,6 +1874,8 @@ export default [
     video_date: '2021-10-21',
     audio_date: '2021-05-30',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kac',
@@ -1603,6 +1887,8 @@ export default [
     video_date: '2021-10-20',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nbw',
@@ -1614,6 +1900,8 @@ export default [
     video_date: '2021-10-18',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bim',
@@ -1625,6 +1913,8 @@ export default [
     video_date: '2021-10-18',
     audio_date: '2021-04-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cld',
@@ -1636,6 +1926,8 @@ export default [
     video_date: '2021-10-15',
     audio_date: '2022-01-25',
     text_date: '2022-01-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bud',
@@ -1647,6 +1939,8 @@ export default [
     video_date: '2021-10-15',
     audio_date: '2021-05-30',
     text_date: '2022-04-12',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qvh',
@@ -1658,6 +1952,8 @@ export default [
     video_date: '2021-10-15',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tur',
@@ -1669,6 +1965,8 @@ export default [
     video_date: '2021-10-15',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lir',
@@ -1680,6 +1978,8 @@ export default [
     video_date: '2021-10-14',
     audio_date: '2022-01-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dgd',
@@ -1692,6 +1992,8 @@ export default [
     video_date: '2021-10-14',
     audio_date: '2021-12-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kpz',
@@ -1703,6 +2005,8 @@ export default [
     video_date: '2021-10-14',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'myx',
@@ -1714,6 +2018,8 @@ export default [
     video_date: '2021-10-14',
     audio_date: '2022-03-07',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ayl',
@@ -1725,6 +2031,8 @@ export default [
     video_date: '2021-10-13',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ind',
@@ -1736,6 +2044,8 @@ export default [
     video_date: '2021-10-13',
     audio_date: '2021-05-25',
     text_date: '2021-06-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hat',
@@ -1747,6 +2057,8 @@ export default [
     video_date: '2021-10-13',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nst',
@@ -1758,6 +2070,8 @@ export default [
     video_date: '2021-10-12',
     audio_date: '2021-07-28',
     text_date: '2021-09-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ebu',
@@ -1769,6 +2083,8 @@ export default [
     video_date: '2021-10-12',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lnl',
@@ -1780,6 +2096,8 @@ export default [
     video_date: '2021-10-12',
     audio_date: '2021-11-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mlk',
@@ -1791,6 +2109,8 @@ export default [
     video_date: '2021-10-12',
     audio_date: '2021-09-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rmy',
@@ -1802,6 +2122,8 @@ export default [
     video_date: '2021-10-12',
     audio_date: '2021-09-24',
     text_date: '2021-12-09',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ksp',
@@ -1813,6 +2135,8 @@ export default [
     video_date: '2021-10-12',
     audio_date: '2021-11-10',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rop',
@@ -1824,6 +2148,8 @@ export default [
     video_date: '2021-10-05',
     audio_date: '2021-09-23',
     text_date: '2021-09-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'loq',
@@ -1835,6 +2161,8 @@ export default [
     video_date: '2021-10-05',
     audio_date: '2021-07-26',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'luy',
@@ -1846,6 +2174,8 @@ export default [
     video_date: '2021-10-05',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kde',
@@ -1857,6 +2187,8 @@ export default [
     video_date: '2021-09-30',
     audio_date: 'NULL',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ade',
@@ -1868,6 +2200,8 @@ export default [
     video_date: '2021-09-29',
     audio_date: '2021-04-22',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bgc',
@@ -1879,6 +2213,8 @@ export default [
     video_date: '2021-09-29',
     audio_date: '2021-09-29',
     text_date: '2022-02-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'arl',
@@ -1890,6 +2226,8 @@ export default [
     video_date: '2021-09-28',
     audio_date: '2021-04-22',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hlt',
@@ -1901,6 +2239,8 @@ export default [
     video_date: '2021-09-28',
     audio_date: '2021-09-15',
     text_date: '2021-09-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lug',
@@ -1912,6 +2252,8 @@ export default [
     video_date: '2021-09-28',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'jvn',
@@ -1923,6 +2265,8 @@ export default [
     video_date: '2021-09-27',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lef',
@@ -1934,6 +2278,8 @@ export default [
     video_date: '2021-09-27',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hrv',
@@ -1945,6 +2291,8 @@ export default [
     video_date: '2021-09-27',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'akb',
@@ -1956,6 +2304,8 @@ export default [
     video_date: '2021-09-27',
     audio_date: '2021-04-22',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mfe',
@@ -1967,6 +2317,8 @@ export default [
     video_date: '2021-09-27',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'nya',
@@ -1979,6 +2331,8 @@ export default [
     video_date: '2021-09-24',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nor',
@@ -1990,6 +2344,8 @@ export default [
     video_date: '2021-09-24',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hin',
@@ -2001,6 +2357,8 @@ export default [
     video_date: '2021-09-24',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ces',
@@ -2012,6 +2370,8 @@ export default [
     video_date: '2021-09-24',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tel',
@@ -2023,6 +2383,8 @@ export default [
     video_date: '2021-09-23',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eng',
@@ -2034,6 +2396,8 @@ export default [
     video_date: '2021-09-23',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hin',
@@ -2045,6 +2409,8 @@ export default [
     video_date: '2021-09-23',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'npi',
@@ -2056,6 +2422,8 @@ export default [
     video_date: '2021-09-23',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bng',
@@ -2067,6 +2435,8 @@ export default [
     video_date: '2021-09-23',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'srp',
@@ -2078,6 +2448,8 @@ export default [
     video_date: '2021-09-23',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mal',
@@ -2089,6 +2461,8 @@ export default [
     video_date: '2021-09-23',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bng',
@@ -2100,6 +2474,8 @@ export default [
     video_date: '2021-09-23',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mal',
@@ -2112,6 +2488,8 @@ export default [
     video_date: '2021-09-23',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tel',
@@ -2123,6 +2501,8 @@ export default [
     video_date: '2021-09-23',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eng',
@@ -2134,6 +2514,8 @@ export default [
     video_date: '2021-09-23',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'set',
@@ -2145,6 +2527,8 @@ export default [
     video_date: '2021-09-23',
     audio_date: '2021-05-04',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pmf',
@@ -2156,6 +2540,8 @@ export default [
     video_date: '2021-09-22',
     audio_date: '2021-10-26',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pcf',
@@ -2167,6 +2553,8 @@ export default [
     video_date: '2021-09-21',
     audio_date: '2021-07-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'noi',
@@ -2178,6 +2566,8 @@ export default [
     video_date: '2021-09-21',
     audio_date: '2021-07-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nlx',
@@ -2189,6 +2579,8 @@ export default [
     video_date: '2021-09-20',
     audio_date: '2021-07-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'udg',
@@ -2200,6 +2592,8 @@ export default [
     video_date: '2021-09-20',
     audio_date: '2021-08-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tam',
@@ -2211,6 +2605,8 @@ export default [
     video_date: '2021-09-17',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lua',
@@ -2222,6 +2618,8 @@ export default [
     video_date: '2021-09-17',
     audio_date: '2021-07-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tam',
@@ -2233,6 +2631,8 @@ export default [
     video_date: '2021-09-17',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ngp',
@@ -2244,6 +2644,8 @@ export default [
     video_date: '2021-09-16',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'buu',
@@ -2255,6 +2657,8 @@ export default [
     video_date: '2021-09-16',
     audio_date: '2021-09-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lbm',
@@ -2266,6 +2670,8 @@ export default [
     video_date: '2021-09-15',
     audio_date: '2021-10-28',
     text_date: '2021-12-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bgd',
@@ -2277,6 +2683,8 @@ export default [
     video_date: '2021-09-15',
     audio_date: '2021-07-21',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nnq',
@@ -2288,6 +2696,8 @@ export default [
     video_date: '2021-09-15',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lik',
@@ -2299,6 +2709,8 @@ export default [
     video_date: '2021-09-15',
     audio_date: '2021-09-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lbm',
@@ -2310,6 +2722,8 @@ export default [
     video_date: '2021-09-15',
     audio_date: '2021-07-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'krs',
@@ -2321,6 +2735,8 @@ export default [
     video_date: '2021-09-14',
     audio_date: '2022-03-01',
     text_date: '2020-01-29',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dga',
@@ -2332,6 +2748,8 @@ export default [
     video_date: '2021-09-14',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kwi',
@@ -2343,6 +2761,8 @@ export default [
     video_date: '2021-09-14',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tap',
@@ -2354,6 +2774,8 @@ export default [
     video_date: '2021-09-14',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tdn',
@@ -2365,6 +2787,8 @@ export default [
     video_date: '2021-09-08',
     audio_date: '2021-09-16',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'jah',
@@ -2376,6 +2800,8 @@ export default [
     video_date: '2021-09-08',
     audio_date: '2021-08-17',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xpe',
@@ -2387,6 +2813,8 @@ export default [
     video_date: '2021-09-03',
     audio_date: '2022-03-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kwf',
@@ -2398,6 +2826,8 @@ export default [
     video_date: '2021-09-03',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pss',
@@ -2409,6 +2839,8 @@ export default [
     video_date: '2021-09-03',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xon',
@@ -2420,6 +2852,8 @@ export default [
     video_date: '2021-09-02',
     audio_date: '2021-10-28',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cak',
@@ -2431,6 +2865,8 @@ export default [
     video_date: '2021-09-02',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'txs',
@@ -2442,6 +2878,8 @@ export default [
     video_date: '2021-08-31',
     audio_date: '2021-09-16',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lrc',
@@ -2453,6 +2891,8 @@ export default [
     video_date: '2021-08-30',
     audio_date: '2021-08-19',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mee',
@@ -2464,6 +2904,8 @@ export default [
     video_date: '2021-08-30',
     audio_date: '2021-11-08',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xdn',
@@ -2476,6 +2918,8 @@ export default [
     video_date: '2021-08-30',
     audio_date: '2022-03-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bom',
@@ -2487,6 +2931,8 @@ export default [
     video_date: '2021-08-30',
     audio_date: '2021-10-28',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'arb',
@@ -2498,6 +2944,8 @@ export default [
     video_date: '2021-08-27',
     audio_date: '2021-08-27',
     text_date: '2021-08-27',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'glk',
@@ -2509,6 +2957,8 @@ export default [
     video_date: '2021-08-26',
     audio_date: '2021-06-28',
     text_date: '2021-06-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ibg',
@@ -2520,6 +2970,8 @@ export default [
     video_date: '2021-08-25',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mgd',
@@ -2531,6 +2983,8 @@ export default [
     video_date: '2021-08-25',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'diq',
@@ -2542,6 +2996,8 @@ export default [
     video_date: '2021-08-25',
     audio_date: '2022-03-02',
     text_date: '2021-01-21',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'jmd',
@@ -2553,6 +3009,8 @@ export default [
     video_date: '2021-08-25',
     audio_date: '2021-07-28',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'jac',
@@ -2564,6 +3022,8 @@ export default [
     video_date: '2021-08-25',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hwc',
@@ -2575,6 +3035,8 @@ export default [
     video_date: '2021-08-23',
     audio_date: '2022-01-24',
     text_date: '2021-09-20',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'myl',
@@ -2586,6 +3048,8 @@ export default [
     video_date: '2021-08-23',
     audio_date: '2021-11-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ctu',
@@ -2597,6 +3061,8 @@ export default [
     video_date: '2021-08-23',
     audio_date: '2021-05-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'inb',
@@ -2608,6 +3074,8 @@ export default [
     video_date: '2021-08-23',
     audio_date: '2021-05-25',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ksz',
@@ -2619,6 +3087,8 @@ export default [
     video_date: '2021-08-20',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'quc',
@@ -2630,6 +3100,8 @@ export default [
     video_date: '2021-08-20',
     audio_date: '2022-03-02',
     text_date: '2021-11-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ses',
@@ -2641,6 +3113,8 @@ export default [
     video_date: '2021-08-20',
     audio_date: '2022-02-09',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ayz',
@@ -2652,6 +3126,8 @@ export default [
     video_date: '2021-08-20',
     audio_date: '2021-04-23',
     text_date: '2021-06-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kik',
@@ -2663,6 +3139,8 @@ export default [
     video_date: '2021-08-18',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'poe',
@@ -2674,6 +3152,8 @@ export default [
     video_date: '2021-08-17',
     audio_date: '2022-03-02',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'byr',
@@ -2685,6 +3165,8 @@ export default [
     video_date: '2021-08-17',
     audio_date: '2021-10-22',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'emp',
@@ -2696,6 +3178,8 @@ export default [
     video_date: '2021-08-17',
     audio_date: '2022-03-02',
     text_date: '2021-11-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lip',
@@ -2707,6 +3191,8 @@ export default [
     video_date: '2021-08-16',
     audio_date: '2021-07-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'hig',
@@ -2718,6 +3204,8 @@ export default [
     video_date: '2021-08-16',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'stb',
@@ -2730,6 +3218,8 @@ export default [
     video_date: '2021-08-13',
     audio_date: '2021-08-31',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'frd',
@@ -2741,6 +3231,8 @@ export default [
     video_date: '2021-08-13',
     audio_date: '2021-11-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'trq',
@@ -2752,6 +3244,8 @@ export default [
     video_date: '2021-08-13',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lbw',
@@ -2763,6 +3257,8 @@ export default [
     video_date: '2021-08-13',
     audio_date: '2022-02-09',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'arb',
@@ -2774,6 +3270,8 @@ export default [
     video_date: '2021-08-13',
     audio_date: '2022-01-09',
     text_date: '2021-08-26',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cmn',
@@ -2785,6 +3283,8 @@ export default [
     video_date: '2021-08-11',
     audio_date: '2021-05-31',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'klw',
@@ -2796,6 +3296,8 @@ export default [
     video_date: '2021-08-10',
     audio_date: '2021-07-07',
     text_date: '2022-03-29',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ksr',
@@ -2807,6 +3309,8 @@ export default [
     video_date: '2021-08-10',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mey',
@@ -2818,6 +3322,8 @@ export default [
     video_date: '2021-08-10',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nxl',
@@ -2829,6 +3335,8 @@ export default [
     video_date: '2021-08-10',
     audio_date: '2021-11-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dts',
@@ -2840,6 +3348,8 @@ export default [
     video_date: '2021-08-06',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xdy',
@@ -2851,6 +3361,8 @@ export default [
     video_date: '2021-08-06',
     audio_date: '2021-11-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wbi',
@@ -2862,6 +3374,8 @@ export default [
     video_date: '2021-08-05',
     audio_date: '2022-02-10',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'guj',
@@ -2873,6 +3387,8 @@ export default [
     video_date: '2021-08-05',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'max',
@@ -2884,6 +3400,8 @@ export default [
     video_date: '2021-08-05',
     audio_date: '2021-09-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pkr',
@@ -2895,6 +3413,8 @@ export default [
     video_date: '2021-08-05',
     audio_date: '2021-06-07',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'srr',
@@ -2906,6 +3426,8 @@ export default [
     video_date: '2021-08-02',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sya',
@@ -2917,6 +3439,8 @@ export default [
     video_date: '2021-08-02',
     audio_date: '2021-07-07',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sbp',
@@ -2928,6 +3452,8 @@ export default [
     video_date: '2021-07-30',
     audio_date: '2021-12-07',
     text_date: '2021-06-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fuc',
@@ -2939,6 +3465,8 @@ export default [
     video_date: '2021-07-30',
     audio_date: '2018-12-12',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kbq',
@@ -2950,6 +3478,8 @@ export default [
     video_date: '2021-07-30',
     audio_date: '2021-11-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nxq',
@@ -2961,6 +3491,8 @@ export default [
     video_date: '2021-07-30',
     audio_date: '2021-06-04',
     text_date: '2021-06-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mar',
@@ -2972,6 +3504,8 @@ export default [
     video_date: '2021-07-29',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bmv',
@@ -2984,6 +3518,8 @@ export default [
     video_date: '2021-07-28',
     audio_date: '2021-05-04',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'omi',
@@ -2995,6 +3531,8 @@ export default [
     video_date: '2021-07-28',
     audio_date: '2021-08-06',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nsk',
@@ -3006,6 +3544,8 @@ export default [
     video_date: '2021-07-27',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'uig',
@@ -3017,6 +3557,8 @@ export default [
     video_date: '2021-07-26',
     audio_date: '2022-02-10',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yat',
@@ -3028,6 +3570,8 @@ export default [
     video_date: '2021-07-26',
     audio_date: '2022-03-03',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zmz',
@@ -3039,6 +3583,8 @@ export default [
     video_date: '2021-07-23',
     audio_date: '2022-01-27',
     text_date: '2021-12-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mgq',
@@ -3050,6 +3596,8 @@ export default [
     video_date: '2021-07-23',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yas',
@@ -3061,6 +3609,8 @@ export default [
     video_date: '2021-07-23',
     audio_date: '2022-03-03',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lns',
@@ -3073,6 +3623,8 @@ export default [
     video_date: '2021-07-22',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kpy',
@@ -3084,6 +3636,8 @@ export default [
     video_date: '2021-07-19',
     audio_date: '2022-02-09',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'btt',
@@ -3095,6 +3649,8 @@ export default [
     video_date: '2021-07-19',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'teo',
@@ -3106,6 +3662,8 @@ export default [
     video_date: '2021-07-19',
     audio_date: '2021-05-05',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pcc',
@@ -3117,6 +3675,8 @@ export default [
     video_date: '2021-07-19',
     audio_date: 'NULL',
     text_date: '2022-01-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hne',
@@ -3128,6 +3688,8 @@ export default [
     video_date: '2021-07-15',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'trn',
@@ -3139,6 +3701,8 @@ export default [
     video_date: '2021-07-15',
     audio_date: '2022-02-10',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fij',
@@ -3150,6 +3714,8 @@ export default [
     video_date: '2021-07-15',
     audio_date: '2018-04-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'evn',
@@ -3161,6 +3727,8 @@ export default [
     video_date: '2021-07-15',
     audio_date: '2022-02-08',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mfq',
@@ -3172,6 +3740,8 @@ export default [
     video_date: '2021-07-13',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'mge',
@@ -3183,6 +3753,8 @@ export default [
     video_date: '2021-07-13',
     audio_date: '2022-03-01',
     text_date: '2020-08-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'div',
@@ -3194,6 +3766,8 @@ export default [
     video_date: '2021-07-13',
     audio_date: '2021-11-05',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'buu',
@@ -3205,6 +3779,8 @@ export default [
     video_date: '2021-07-13',
     audio_date: '2021-10-14',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gej',
@@ -3216,6 +3792,8 @@ export default [
     video_date: '2021-07-13',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kbp',
@@ -3227,6 +3805,8 @@ export default [
     video_date: '2021-07-09',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'quw',
@@ -3238,6 +3818,8 @@ export default [
     video_date: '2021-07-09',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tnn',
@@ -3249,6 +3831,8 @@ export default [
     video_date: '2021-07-07',
     audio_date: '2022-02-10',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'quh',
@@ -3260,6 +3844,8 @@ export default [
     video_date: '2021-07-06',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'had',
@@ -3271,6 +3857,8 @@ export default [
     video_date: '2021-07-02',
     audio_date: '2022-03-02',
     text_date: '2021-02-23',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kue',
@@ -3282,6 +3870,8 @@ export default [
     video_date: '2021-07-01',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'jow',
@@ -3293,6 +3883,8 @@ export default [
     video_date: '2021-07-01',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'jav',
@@ -3304,6 +3896,8 @@ export default [
     video_date: '2021-07-01',
     audio_date: '2018-04-16',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tuv',
@@ -3315,6 +3909,8 @@ export default [
     video_date: '2021-07-01',
     audio_date: '2021-07-12',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kqr',
@@ -3326,6 +3922,8 @@ export default [
     video_date: '2021-07-01',
     audio_date: '2022-03-01',
     text_date: '2021-11-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kmw',
@@ -3337,6 +3935,8 @@ export default [
     video_date: '2021-06-30',
     audio_date: '2021-09-29',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'saq',
@@ -3348,6 +3948,8 @@ export default [
     video_date: '2021-06-30',
     audio_date: '2021-08-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qxq',
@@ -3359,6 +3961,8 @@ export default [
     video_date: '2021-06-30',
     audio_date: '2021-10-18',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'itl',
@@ -3370,6 +3974,8 @@ export default [
     video_date: '2021-06-30',
     audio_date: '2021-05-25',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'vid',
@@ -3381,6 +3987,8 @@ export default [
     video_date: '2021-06-29',
     audio_date: 'NULL',
     text_date: '2022-01-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pis',
@@ -3393,6 +4001,8 @@ export default [
     video_date: '2021-06-29',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aka',
@@ -3404,6 +4014,8 @@ export default [
     video_date: '2021-06-23',
     audio_date: '2021-04-22',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'igl',
@@ -3415,6 +4027,8 @@ export default [
     video_date: '2021-06-22',
     audio_date: '2021-05-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'als',
@@ -3426,6 +4040,8 @@ export default [
     video_date: '2021-06-21',
     audio_date: '2021-04-22',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'boj',
@@ -3437,6 +4053,8 @@ export default [
     video_date: '2021-06-18',
     audio_date: '2021-06-29',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'qug',
@@ -3448,6 +4066,8 @@ export default [
     video_date: '2021-06-18',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pae',
@@ -3459,6 +4079,8 @@ export default [
     video_date: '2021-06-18',
     audio_date: '2021-06-10',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mqj',
@@ -3470,6 +4092,8 @@ export default [
     video_date: '2021-06-18',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mxb',
@@ -3481,6 +4105,8 @@ export default [
     video_date: '2021-06-18',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mif',
@@ -3492,6 +4118,8 @@ export default [
     video_date: '2021-06-17',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gbo',
@@ -3503,6 +4131,8 @@ export default [
     video_date: '2021-06-17',
     audio_date: '2022-02-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bcw',
@@ -3514,6 +4144,8 @@ export default [
     video_date: '2021-06-17',
     audio_date: '2021-04-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ziw',
@@ -3525,6 +4157,8 @@ export default [
     video_date: '2021-06-16',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rub',
@@ -3536,6 +4170,8 @@ export default [
     video_date: '2021-06-16',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ruf',
@@ -3547,6 +4183,8 @@ export default [
     video_date: '2021-06-09',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rus',
@@ -3559,6 +4197,8 @@ export default [
     video_date: '2021-06-09',
     audio_date: '2021-12-08',
     text_date: '2021-06-10',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'blx',
@@ -3570,6 +4210,8 @@ export default [
     video_date: '2021-06-08',
     audio_date: '2021-06-07',
     text_date: '2021-06-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mcu',
@@ -3581,6 +4223,8 @@ export default [
     video_date: '2021-06-08',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zar',
@@ -3592,6 +4236,8 @@ export default [
     video_date: '2021-06-08',
     audio_date: '2022-03-03',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ttq',
@@ -3603,6 +4249,8 @@ export default [
     video_date: '2021-06-07',
     audio_date: '2022-02-10',
     text_date: '2019-08-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mnh',
@@ -3614,6 +4262,8 @@ export default [
     video_date: '2021-06-04',
     audio_date: '2021-05-28',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'vai',
@@ -3625,6 +4275,8 @@ export default [
     video_date: '2021-06-04',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'blh',
@@ -3636,6 +4288,8 @@ export default [
     video_date: '2021-06-04',
     audio_date: '2021-06-29',
     text_date: '2019-06-12',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mas',
@@ -3647,6 +4301,8 @@ export default [
     video_date: '2021-06-04',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ttq',
@@ -3658,6 +4314,8 @@ export default [
     video_date: '2021-06-02',
     audio_date: '2022-02-10',
     text_date: '2019-11-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mxq',
@@ -3669,6 +4327,8 @@ export default [
     video_date: '2021-06-01',
     audio_date: '2022-02-09',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bqp',
@@ -3680,6 +4340,8 @@ export default [
     video_date: '2021-06-01',
     audio_date: '2021-05-18',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bzd',
@@ -3691,6 +4353,8 @@ export default [
     video_date: '2021-05-28',
     audio_date: '2021-05-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'men',
@@ -3702,6 +4366,8 @@ export default [
     video_date: '2021-05-28',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'adj',
@@ -3713,6 +4379,8 @@ export default [
     video_date: '2021-05-28',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'kfb',
@@ -3724,6 +4392,8 @@ export default [
     video_date: '2021-05-28',
     audio_date: '2021-07-01',
     text_date: '2021-02-23',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dgi',
@@ -3735,6 +4405,8 @@ export default [
     video_date: '2021-05-28',
     audio_date: '2021-10-26',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ayr',
@@ -3746,6 +4418,8 @@ export default [
     video_date: '2021-05-26',
     audio_date: '2021-04-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lje',
@@ -3757,6 +4431,8 @@ export default [
     video_date: '2021-05-24',
     audio_date: '2022-03-01',
     text_date: '2019-11-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hus',
@@ -3768,6 +4444,8 @@ export default [
     video_date: '2021-05-21',
     audio_date: '2021-11-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rjs',
@@ -3779,6 +4457,8 @@ export default [
     video_date: '2021-05-20',
     audio_date: '2022-02-09',
     text_date: '2018-08-09',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fuq',
@@ -3790,6 +4470,8 @@ export default [
     video_date: '2021-05-17',
     audio_date: '2018-12-12',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'izr',
@@ -3801,6 +4483,8 @@ export default [
     video_date: '2021-05-14',
     audio_date: '2021-05-25',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'shk',
@@ -3812,6 +4496,8 @@ export default [
     video_date: '2021-05-14',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cwe',
@@ -3823,6 +4509,8 @@ export default [
     video_date: '2021-05-13',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cap',
@@ -3834,6 +4522,8 @@ export default [
     video_date: '2021-05-10',
     audio_date: '2021-05-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bqc',
@@ -3845,6 +4535,8 @@ export default [
     video_date: '2021-05-07',
     audio_date: '2021-11-03',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dnj',
@@ -3856,6 +4548,8 @@ export default [
     video_date: '2021-05-07',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qxo',
@@ -3867,6 +4561,8 @@ export default [
     video_date: '2021-05-07',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bbo',
@@ -3878,6 +4574,8 @@ export default [
     video_date: '2021-05-07',
     audio_date: '2021-05-27',
     text_date: '2020-06-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yuz',
@@ -3889,6 +4587,8 @@ export default [
     video_date: '2021-05-05',
     audio_date: '2022-02-10',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sld',
@@ -3900,6 +4600,8 @@ export default [
     video_date: '2021-05-05',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dnj',
@@ -3911,6 +4613,8 @@ export default [
     video_date: '2021-05-05',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bus',
@@ -3922,6 +4626,8 @@ export default [
     video_date: '2021-05-05',
     audio_date: '2021-05-30',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'moz',
@@ -3933,6 +4639,8 @@ export default [
     video_date: '2021-05-05',
     audio_date: '2022-03-01',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mzj',
@@ -3944,6 +4652,8 @@ export default [
     video_date: '2021-05-04',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'neb',
@@ -3955,6 +4665,8 @@ export default [
     video_date: '2021-05-04',
     audio_date: '2022-03-01',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'xrb',
@@ -3966,6 +4678,8 @@ export default [
     video_date: '2021-05-04',
     audio_date: '2022-03-03',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'udu',
@@ -3977,6 +4691,8 @@ export default [
     video_date: '2021-05-04',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kvn',
@@ -3988,6 +4704,8 @@ export default [
     video_date: '2021-04-29',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gug',
@@ -3999,6 +4717,8 @@ export default [
     video_date: '2021-04-27',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fra',
@@ -4010,6 +4730,8 @@ export default [
     video_date: '2021-04-27',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tes',
@@ -4021,6 +4743,8 @@ export default [
     video_date: '2021-04-26',
     audio_date: '2021-12-06',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'klv',
@@ -4032,6 +4756,8 @@ export default [
     video_date: '2021-04-26',
     audio_date: '2022-02-09',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mjv',
@@ -4043,6 +4769,8 @@ export default [
     video_date: '2021-04-23',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'apb',
@@ -4054,6 +4782,8 @@ export default [
     video_date: '2021-04-23',
     audio_date: '2021-07-30',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aoz',
@@ -4065,6 +4795,8 @@ export default [
     video_date: '2021-04-23',
     audio_date: '2021-10-26',
     text_date: '2022-01-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'upv',
@@ -4076,6 +4808,8 @@ export default [
     video_date: '2021-04-23',
     audio_date: '2022-02-10',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tgl',
@@ -4087,6 +4821,8 @@ export default [
     video_date: '2021-04-22',
     audio_date: '2021-11-03',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'peg',
@@ -4098,6 +4834,8 @@ export default [
     video_date: '2021-04-20',
     audio_date: '2022-02-09',
     text_date: '2021-06-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rus',
@@ -4109,6 +4847,8 @@ export default [
     video_date: '2021-04-20',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'kcg',
@@ -4120,6 +4860,8 @@ export default [
     video_date: '2021-04-20',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'tdj',
@@ -4131,6 +4873,8 @@ export default [
     video_date: '2021-04-20',
     audio_date: '2021-11-02',
     text_date: '2021-06-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'njo',
@@ -4142,6 +4886,8 @@ export default [
     video_date: '2021-04-20',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zne',
@@ -4153,6 +4899,8 @@ export default [
     video_date: '2021-04-19',
     audio_date: '2022-03-03',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'jpn',
@@ -4164,6 +4912,8 @@ export default [
     video_date: '2021-04-16',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zlm',
@@ -4175,6 +4925,8 @@ export default [
     video_date: '2021-04-16',
     audio_date: '2022-03-03',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hil',
@@ -4186,6 +4938,8 @@ export default [
     video_date: '2021-04-15',
     audio_date: '2022-03-02',
     text_date: '2019-01-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mkl',
@@ -4197,6 +4951,8 @@ export default [
     video_date: '2021-04-15',
     audio_date: '2022-03-01',
     text_date: '2018-09-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'llg',
@@ -4208,6 +4964,8 @@ export default [
     video_date: '2021-04-15',
     audio_date: '2022-02-09',
     text_date: '2022-01-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bdv',
@@ -4219,6 +4977,8 @@ export default [
     video_date: '2021-04-15',
     audio_date: '2021-04-23',
     text_date: '2021-06-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mzw',
@@ -4230,6 +4990,8 @@ export default [
     video_date: '2021-04-13',
     audio_date: '2022-02-09',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bsc',
@@ -4241,6 +5003,8 @@ export default [
     video_date: '2021-04-13',
     audio_date: '2021-05-18',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mpd',
@@ -4252,6 +5016,8 @@ export default [
     video_date: '2021-04-13',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'knf',
@@ -4263,6 +5029,8 @@ export default [
     video_date: '2021-04-13',
     audio_date: '2021-11-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'agu',
@@ -4274,6 +5042,8 @@ export default [
     video_date: '2021-04-13',
     audio_date: '2021-04-22',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'guw',
@@ -4285,6 +5055,8 @@ export default [
     video_date: '2021-04-13',
     audio_date: '2022-02-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hin',
@@ -4296,6 +5068,8 @@ export default [
     video_date: '2021-04-13',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eza',
@@ -4308,6 +5082,8 @@ export default [
     video_date: '2021-04-13',
     audio_date: '2018-05-21',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'knk',
@@ -4319,6 +5095,8 @@ export default [
     video_date: '2021-04-13',
     audio_date: '2021-07-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fin',
@@ -4330,6 +5108,8 @@ export default [
     video_date: '2021-04-13',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ify',
@@ -4341,6 +5121,8 @@ export default [
     video_date: '2021-04-09',
     audio_date: '2021-05-25',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'yor',
@@ -4352,6 +5134,8 @@ export default [
     video_date: '2021-04-09',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bsq',
@@ -4363,6 +5147,8 @@ export default [
     video_date: '2021-04-09',
     audio_date: '2021-05-18',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ibo',
@@ -4374,6 +5160,8 @@ export default [
     video_date: '2021-04-09',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kyo',
@@ -4385,6 +5173,8 @@ export default [
     video_date: '2021-04-08',
     audio_date: '2021-04-07',
     text_date: '2022-01-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'juy',
@@ -4396,6 +5186,8 @@ export default [
     video_date: '2021-04-08',
     audio_date: '2021-04-12',
     text_date: '2021-03-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'syl',
@@ -4407,6 +5199,8 @@ export default [
     video_date: '2021-04-08',
     audio_date: 'NULL',
     text_date: '2021-06-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nfa',
@@ -4418,6 +5212,8 @@ export default [
     video_date: '2021-04-08',
     audio_date: '2021-04-06',
     text_date: '2022-01-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kln',
@@ -4429,6 +5225,8 @@ export default [
     video_date: '2021-04-08',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'obo',
@@ -4440,6 +5238,8 @@ export default [
     video_date: '2021-04-07',
     audio_date: '2022-02-09',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'shi',
@@ -4451,6 +5251,8 @@ export default [
     video_date: '2021-03-31',
     audio_date: '2022-02-09',
     text_date: '2021-09-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bel',
@@ -4462,6 +5264,8 @@ export default [
     video_date: '2021-03-31',
     audio_date: '2021-04-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hvn',
@@ -4473,6 +5277,8 @@ export default [
     video_date: '2021-03-30',
     audio_date: '2021-04-13',
     text_date: '2022-01-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ubl',
@@ -4485,6 +5291,8 @@ export default [
     video_date: '2021-03-30',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'twe',
@@ -4496,6 +5304,8 @@ export default [
     video_date: '2021-03-30',
     audio_date: '2022-02-10',
     text_date: '2022-01-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rgu',
@@ -4507,6 +5317,8 @@ export default [
     video_date: '2021-03-29',
     audio_date: '2021-04-07',
     text_date: '2022-01-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mkn',
@@ -4518,6 +5330,8 @@ export default [
     video_date: '2021-03-29',
     audio_date: '2022-02-09',
     text_date: '2022-01-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bza',
@@ -4529,6 +5343,8 @@ export default [
     video_date: '2021-03-29',
     audio_date: '2021-05-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'toc',
@@ -4540,6 +5356,8 @@ export default [
     video_date: '2021-03-26',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'oss',
@@ -4551,6 +5369,8 @@ export default [
     video_date: '2021-03-26',
     audio_date: '2022-03-01',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'krw',
@@ -4562,6 +5382,8 @@ export default [
     video_date: '2021-03-26',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fuh',
@@ -4573,6 +5395,8 @@ export default [
     video_date: '2021-03-23',
     audio_date: '2018-02-13',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qva',
@@ -4584,6 +5408,8 @@ export default [
     video_date: '2021-03-22',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ind',
@@ -4595,6 +5421,8 @@ export default [
     video_date: '2021-03-22',
     audio_date: '2021-05-25',
     text_date: '2022-02-21',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cas',
@@ -4606,6 +5434,8 @@ export default [
     video_date: '2021-03-17',
     audio_date: '2021-11-02',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kff',
@@ -4617,6 +5447,8 @@ export default [
     video_date: '2021-03-16',
     audio_date: '2022-02-08',
     text_date: '2021-03-09',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ycl',
@@ -4628,6 +5460,8 @@ export default [
     video_date: '2021-03-15',
     audio_date: '2022-03-03',
     text_date: '2018-11-29',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'des',
@@ -4639,6 +5473,8 @@ export default [
     video_date: '2021-03-15',
     audio_date: '2021-05-30',
     text_date: '2019-08-30',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sea',
@@ -4650,6 +5486,8 @@ export default [
     video_date: '2021-03-15',
     audio_date: '2022-03-02',
     text_date: '2021-08-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tkr',
@@ -4661,6 +5499,8 @@ export default [
     video_date: '2021-03-15',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nch',
@@ -4672,6 +5512,8 @@ export default [
     video_date: '2021-03-12',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mtd',
@@ -4683,6 +5525,8 @@ export default [
     video_date: '2021-03-12',
     audio_date: '2022-02-09',
     text_date: '2022-01-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xtn',
@@ -4694,6 +5538,8 @@ export default [
     video_date: '2021-03-11',
     audio_date: '2022-02-10',
     text_date: '2021-06-25',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qvc',
@@ -4705,6 +5551,8 @@ export default [
     video_date: '2021-03-11',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wap',
@@ -4716,6 +5564,8 @@ export default [
     video_date: '2021-03-11',
     audio_date: '2022-02-10',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ijn',
@@ -4727,6 +5577,8 @@ export default [
     video_date: '2021-03-11',
     audio_date: '2021-05-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mzl',
@@ -4738,6 +5590,8 @@ export default [
     video_date: '2021-03-11',
     audio_date: '2021-06-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tsv',
@@ -4749,6 +5603,8 @@ export default [
     video_date: '2021-03-09',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rag',
@@ -4760,6 +5616,8 @@ export default [
     video_date: '2021-03-09',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nhe',
@@ -4771,6 +5629,8 @@ export default [
     video_date: '2021-03-09',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gnw',
@@ -4782,6 +5642,8 @@ export default [
     video_date: '2021-03-09',
     audio_date: '2022-03-02',
     text_date: '2021-02-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mxt',
@@ -4793,6 +5655,8 @@ export default [
     video_date: '2021-03-09',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'puu',
@@ -4804,6 +5668,8 @@ export default [
     video_date: '2021-03-09',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ncj',
@@ -4815,6 +5681,8 @@ export default [
     video_date: '2021-03-08',
     audio_date: '2021-05-23',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'lsm',
@@ -4826,6 +5694,8 @@ export default [
     video_date: '2021-03-08',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'otn',
@@ -4837,6 +5707,8 @@ export default [
     video_date: '2021-03-08',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'noa',
@@ -4848,6 +5720,8 @@ export default [
     video_date: '2021-03-08',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pir',
@@ -4859,6 +5733,8 @@ export default [
     video_date: '2021-03-05',
     audio_date: '2021-06-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cpb',
@@ -4870,6 +5746,8 @@ export default [
     video_date: '2021-03-05',
     audio_date: '2021-06-29',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'qvn',
@@ -4881,6 +5759,8 @@ export default [
     video_date: '2021-03-05',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'wba',
@@ -4892,6 +5772,8 @@ export default [
     video_date: '2021-02-25',
     audio_date: '2021-06-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bam',
@@ -4903,6 +5785,8 @@ export default [
     video_date: '2021-02-23',
     audio_date: '2021-05-27',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sxn',
@@ -4914,6 +5798,8 @@ export default [
     video_date: '2021-02-23',
     audio_date: '2021-11-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bxk',
@@ -4925,6 +5811,8 @@ export default [
     video_date: '2021-02-23',
     audio_date: '2021-05-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lai',
@@ -4936,6 +5824,8 @@ export default [
     video_date: '2021-02-23',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tob',
@@ -4947,6 +5837,8 @@ export default [
     video_date: '2021-02-22',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tee',
@@ -4958,6 +5850,8 @@ export default [
     video_date: '2021-02-22',
     audio_date: '2022-02-09',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nuz',
@@ -4969,6 +5863,8 @@ export default [
     video_date: '2021-02-22',
     audio_date: '2022-02-09',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zpq',
@@ -4980,6 +5876,8 @@ export default [
     video_date: '2021-02-22',
     audio_date: '2022-03-03',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lbe',
@@ -4991,6 +5889,8 @@ export default [
     video_date: '2021-02-22',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yaz',
@@ -5002,6 +5902,8 @@ export default [
     video_date: '2021-02-18',
     audio_date: '2022-02-10',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nzb',
@@ -5013,6 +5915,8 @@ export default [
     video_date: '2021-02-18',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'vmy',
@@ -5024,6 +5928,8 @@ export default [
     video_date: '2021-02-18',
     audio_date: '2022-02-10',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'muy',
@@ -5035,6 +5941,8 @@ export default [
     video_date: '2021-02-16',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'myx',
@@ -5046,6 +5954,8 @@ export default [
     video_date: '2021-02-16',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'unr',
@@ -5057,6 +5967,8 @@ export default [
     video_date: '2021-02-16',
     audio_date: '2022-02-10',
     text_date: '2021-06-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'moa',
@@ -5068,6 +5980,8 @@ export default [
     video_date: '2021-02-16',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'quf',
@@ -5079,6 +5993,8 @@ export default [
     video_date: '2021-02-16',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kxc',
@@ -5090,6 +6006,8 @@ export default [
     video_date: '2021-02-16',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mqb',
@@ -5101,6 +6019,8 @@ export default [
     video_date: '2021-02-16',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'bao',
@@ -5112,6 +6032,8 @@ export default [
     video_date: '2021-02-16',
     audio_date: '2021-04-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zaq',
@@ -5123,6 +6045,8 @@ export default [
     video_date: '2021-02-11',
     audio_date: '2022-03-03',
     text_date: '2020-01-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lem',
@@ -5134,6 +6058,8 @@ export default [
     video_date: '2021-02-10',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'kxv',
@@ -5145,6 +6071,8 @@ export default [
     video_date: '2021-02-10',
     audio_date: '2022-02-09',
     text_date: '2021-03-09',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'azz',
@@ -5156,6 +6084,8 @@ export default [
     video_date: '2021-02-10',
     audio_date: '2021-04-23',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mit',
@@ -5167,6 +6097,8 @@ export default [
     video_date: '2021-02-10',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'mdy',
@@ -5178,6 +6110,8 @@ export default [
     video_date: '2021-02-09',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'klu',
@@ -5189,6 +6123,8 @@ export default [
     video_date: '2021-02-09',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mzk',
@@ -5200,6 +6136,8 @@ export default [
     video_date: '2021-02-09',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mto',
@@ -5211,6 +6149,8 @@ export default [
     video_date: '2021-02-09',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mzm',
@@ -5222,6 +6162,8 @@ export default [
     video_date: '2021-02-09',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cak',
@@ -5233,6 +6175,8 @@ export default [
     video_date: '2021-02-09',
     audio_date: '2021-05-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cni',
@@ -5244,6 +6188,8 @@ export default [
     video_date: '2021-02-04',
     audio_date: '2021-05-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dso',
@@ -5255,6 +6201,8 @@ export default [
     video_date: '2021-02-04',
     audio_date: '2022-02-08',
     text_date: '2021-03-09',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qve',
@@ -5266,6 +6214,8 @@ export default [
     video_date: '2021-02-04',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'sch',
@@ -5277,6 +6227,8 @@ export default [
     video_date: '2021-02-02',
     audio_date: '2022-03-02',
     text_date: '2021-04-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xtd',
@@ -5288,6 +6240,8 @@ export default [
     video_date: '2021-02-02',
     audio_date: '2021-07-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lac',
@@ -5299,6 +6253,8 @@ export default [
     video_date: '2021-02-02',
     audio_date: '2022-02-09',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bmr',
@@ -5310,6 +6266,8 @@ export default [
     video_date: '2021-02-02',
     audio_date: '2021-05-04',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zyb',
@@ -5321,6 +6279,8 @@ export default [
     video_date: '2021-01-29',
     audio_date: '2022-02-10',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lon',
@@ -5332,6 +6292,8 @@ export default [
     video_date: '2021-01-28',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mdv',
@@ -5343,6 +6305,8 @@ export default [
     video_date: '2021-01-28',
     audio_date: '2022-02-09',
     text_date: '2020-03-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ada',
@@ -5354,6 +6318,8 @@ export default [
     video_date: '2021-01-28',
     audio_date: '2021-05-27',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ndp',
@@ -5365,6 +6331,8 @@ export default [
     video_date: '2021-01-27',
     audio_date: '2022-03-01',
     text_date: '2021-06-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'muh',
@@ -5376,6 +6344,8 @@ export default [
     video_date: '2021-01-27',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'mev',
@@ -5387,6 +6357,8 @@ export default [
     video_date: '2021-01-27',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'soy',
@@ -5398,6 +6370,8 @@ export default [
     video_date: '2021-01-27',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'aka',
@@ -5409,6 +6383,8 @@ export default [
     video_date: '2021-01-27',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ngu',
@@ -5420,6 +6396,8 @@ export default [
     video_date: '2021-01-27',
     audio_date: '2021-07-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'meq',
@@ -5431,6 +6409,8 @@ export default [
     video_date: '2021-01-27',
     audio_date: '2021-09-09',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'guo',
@@ -5442,6 +6422,8 @@ export default [
     video_date: '2021-01-27',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gaa',
@@ -5453,6 +6435,8 @@ export default [
     video_date: '2021-01-26',
     audio_date: '2018-04-14',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qvz',
@@ -5464,6 +6448,8 @@ export default [
     video_date: '2021-01-26',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'cbr',
@@ -5475,6 +6461,8 @@ export default [
     video_date: '2021-01-26',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'stp',
@@ -5486,6 +6474,8 @@ export default [
     video_date: '2021-01-26',
     audio_date: '2022-02-09',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cco',
@@ -5497,6 +6487,8 @@ export default [
     video_date: '2021-01-21',
     audio_date: '2021-05-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gaq',
@@ -5508,6 +6500,8 @@ export default [
     video_date: '2021-01-21',
     audio_date: '2021-10-29',
     text_date: '2021-03-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zty',
@@ -5519,6 +6513,8 @@ export default [
     video_date: '2021-01-21',
     audio_date: '2022-02-10',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cok',
@@ -5530,6 +6526,8 @@ export default [
     video_date: '2021-01-21',
     audio_date: '2021-06-29',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'cak',
@@ -5541,6 +6539,8 @@ export default [
     video_date: '2021-01-21',
     audio_date: '2021-10-26',
     text_date: '2021-10-26',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cnl',
@@ -5552,6 +6552,8 @@ export default [
     video_date: '2021-01-21',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'agn',
@@ -5563,6 +6565,8 @@ export default [
     video_date: '2021-01-21',
     audio_date: '2021-05-24',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'ndy',
@@ -5574,6 +6578,8 @@ export default [
     video_date: '2021-01-18',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gag',
@@ -5585,6 +6591,8 @@ export default [
     video_date: '2021-01-18',
     audio_date: '2022-02-11',
     text_date: '2021-06-25',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nwi',
@@ -5596,6 +6604,8 @@ export default [
     video_date: '2021-01-14',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ogo',
@@ -5607,6 +6617,8 @@ export default [
     video_date: '2021-01-14',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ndz',
@@ -5618,6 +6630,8 @@ export default [
     video_date: '2021-01-13',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mbb',
@@ -5629,6 +6643,8 @@ export default [
     video_date: '2021-01-13',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kbr',
@@ -5640,6 +6656,8 @@ export default [
     video_date: '2021-01-13',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'jic',
@@ -5651,6 +6669,8 @@ export default [
     video_date: '2021-01-13',
     audio_date: '2022-03-01',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'urh',
@@ -5662,6 +6682,8 @@ export default [
     video_date: '2021-01-13',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kfc',
@@ -5673,6 +6695,8 @@ export default [
     video_date: '2021-01-08',
     audio_date: '2021-10-26',
     text_date: '2021-10-26',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kak',
@@ -5684,6 +6708,8 @@ export default [
     video_date: '2021-01-08',
     audio_date: '2022-03-01',
     text_date: '2021-02-25',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mda',
@@ -5695,6 +6721,8 @@ export default [
     video_date: '2021-01-08',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mio',
@@ -5706,6 +6734,8 @@ export default [
     video_date: '2021-01-08',
     audio_date: '2021-07-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ttc',
@@ -5717,6 +6747,8 @@ export default [
     video_date: '2021-01-07',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mca',
@@ -5728,6 +6760,8 @@ export default [
     video_date: '2021-01-07',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nwb',
@@ -5739,6 +6773,8 @@ export default [
     video_date: '2021-01-07',
     audio_date: '2021-06-30',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'acu',
@@ -5750,6 +6786,8 @@ export default [
     video_date: '2021-01-05',
     audio_date: '2021-04-22',
     text_date: '2022-03-29',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lom',
@@ -5761,6 +6799,8 @@ export default [
     video_date: '2021-01-05',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hyw',
@@ -5773,6 +6813,8 @@ export default [
     video_date: '2021-01-05',
     audio_date: '2021-11-16',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hau',
@@ -5784,6 +6826,8 @@ export default [
     video_date: '2021-01-04',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'maz',
@@ -5795,6 +6839,8 @@ export default [
     video_date: '2020-12-31',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nhx',
@@ -5806,6 +6852,8 @@ export default [
     video_date: '2020-12-31',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cjo',
@@ -5817,6 +6865,8 @@ export default [
     video_date: '2020-12-31',
     audio_date: '2021-07-20',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'acd',
@@ -5828,6 +6878,8 @@ export default [
     video_date: '2020-12-31',
     audio_date: '2021-04-22',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tvw',
@@ -5839,6 +6891,8 @@ export default [
     video_date: '2020-12-31',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'prt',
@@ -5850,6 +6904,8 @@ export default [
     video_date: '2020-12-29',
     audio_date: '2022-03-02',
     text_date: '2021-06-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'twu',
@@ -5861,6 +6917,8 @@ export default [
     video_date: '2020-12-29',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'hto',
@@ -5872,6 +6930,8 @@ export default [
     video_date: '2020-12-29',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'orc',
@@ -5883,6 +6943,8 @@ export default [
     video_date: '2020-12-29',
     audio_date: '2022-03-01',
     text_date: '2021-05-14',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bdh',
@@ -5894,6 +6956,8 @@ export default [
     video_date: '2020-12-29',
     audio_date: '2021-04-23',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'huv',
@@ -5905,6 +6969,8 @@ export default [
     video_date: '2020-12-28',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'amf',
@@ -5916,6 +6982,8 @@ export default [
     video_date: '2020-12-22',
     audio_date: '2021-06-29',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'kub',
@@ -5927,6 +6995,8 @@ export default [
     video_date: '2020-12-22',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'boa',
@@ -5938,6 +7008,8 @@ export default [
     video_date: '2020-12-22',
     audio_date: '2021-05-04',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'far',
@@ -5949,6 +7021,8 @@ export default [
     video_date: '2020-12-22',
     audio_date: '2022-02-08',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tav',
@@ -5960,6 +7034,8 @@ export default [
     video_date: '2020-12-15',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'sey',
@@ -5971,6 +7047,8 @@ export default [
     video_date: '2020-12-15',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'kdi',
@@ -5982,6 +7060,8 @@ export default [
     video_date: '2020-12-15',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'poi',
@@ -5993,6 +7073,8 @@ export default [
     video_date: '2020-12-14',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dar',
@@ -6004,6 +7086,8 @@ export default [
     video_date: '2020-12-14',
     audio_date: '2021-05-30',
     text_date: '2021-12-09',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sbl',
@@ -6015,6 +7099,8 @@ export default [
     video_date: '2020-12-14',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kdj',
@@ -6026,6 +7112,8 @@ export default [
     video_date: '2020-12-14',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tpt',
@@ -6037,6 +7125,8 @@ export default [
     video_date: '2020-12-14',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ura',
@@ -6048,6 +7138,8 @@ export default [
     video_date: '2020-12-14',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bzh',
@@ -6059,6 +7151,8 @@ export default [
     video_date: '2020-12-14',
     audio_date: '2021-05-30',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cou',
@@ -6070,6 +7164,8 @@ export default [
     video_date: '2020-12-14',
     audio_date: '2022-02-07',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'anv',
@@ -6081,6 +7177,8 @@ export default [
     video_date: '2020-12-14',
     audio_date: '2021-05-23',
     text_date: '2018-09-17',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'shp',
@@ -6092,6 +7190,8 @@ export default [
     video_date: '2020-12-14',
     audio_date: '2022-03-02',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'ijc',
@@ -6103,6 +7203,8 @@ export default [
     video_date: '2020-12-14',
     audio_date: '2021-05-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rug',
@@ -6114,6 +7216,8 @@ export default [
     video_date: '2020-12-11',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'nyd',
@@ -6125,6 +7229,8 @@ export default [
     video_date: '2020-12-11',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'npl',
@@ -6136,6 +7242,8 @@ export default [
     video_date: '2020-12-11',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'etu',
@@ -6147,6 +7255,8 @@ export default [
     video_date: '2020-12-10',
     audio_date: '2018-12-11',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nlc',
@@ -6158,6 +7268,8 @@ export default [
     video_date: '2020-12-10',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'bjw',
@@ -6169,6 +7281,8 @@ export default [
     video_date: '2020-12-10',
     audio_date: '2021-04-24',
     text_date: '2021-06-23',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dip',
@@ -6180,6 +7294,8 @@ export default [
     video_date: '2020-12-10',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bno',
@@ -6191,6 +7307,8 @@ export default [
     video_date: '2020-12-10',
     audio_date: '2022-02-07',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'lln',
@@ -6202,6 +7320,8 @@ export default [
     video_date: '2020-12-10',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nhx',
@@ -6213,6 +7333,8 @@ export default [
     video_date: '2020-12-10',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kma',
@@ -6224,6 +7346,8 @@ export default [
     video_date: '2020-12-10',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kdc',
@@ -6235,6 +7359,8 @@ export default [
     video_date: '2020-12-10',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'tha',
@@ -6246,6 +7372,8 @@ export default [
     video_date: '2020-12-09',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ikk',
@@ -6257,6 +7385,8 @@ export default [
     video_date: '2020-12-03',
     audio_date: '2021-05-25',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mye',
@@ -6268,6 +7398,8 @@ export default [
     video_date: '2020-12-03',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pbi',
@@ -6279,6 +7411,8 @@ export default [
     video_date: '2020-12-03',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'npy',
@@ -6290,6 +7424,8 @@ export default [
     video_date: '2020-12-03',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'cuc',
@@ -6301,6 +7437,8 @@ export default [
     video_date: '2020-12-03',
     audio_date: '2021-05-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'guq',
@@ -6312,6 +7450,8 @@ export default [
     video_date: '2020-12-03',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'maw',
@@ -6323,6 +7463,8 @@ export default [
     video_date: '2020-12-03',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mop',
@@ -6334,6 +7476,8 @@ export default [
     video_date: '2020-12-03',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zpl',
@@ -6345,6 +7489,8 @@ export default [
     video_date: '2020-12-03',
     audio_date: '2022-02-10',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xsb',
@@ -6356,6 +7502,8 @@ export default [
     video_date: '2020-12-03',
     audio_date: '2022-03-03',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'med',
@@ -6367,6 +7515,8 @@ export default [
     video_date: '2020-12-03',
     audio_date: '2022-03-01',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ddn',
@@ -6378,6 +7528,8 @@ export default [
     video_date: '2020-12-03',
     audio_date: '2021-05-30',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gau',
@@ -6389,6 +7541,8 @@ export default [
     video_date: '2020-12-03',
     audio_date: '2022-02-08',
     text_date: '2021-03-23',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qvm',
@@ -6400,6 +7554,8 @@ export default [
     video_date: '2020-12-03',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pko',
@@ -6411,6 +7567,8 @@ export default [
     video_date: '2020-12-03',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'otq',
@@ -6422,6 +7580,8 @@ export default [
     video_date: '2020-12-02',
     audio_date: '2022-02-09',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'iou',
@@ -6433,6 +7593,8 @@ export default [
     video_date: '2020-12-02',
     audio_date: '2021-05-25',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'azg',
@@ -6444,6 +7606,8 @@ export default [
     video_date: '2020-11-30',
     audio_date: '2021-04-23',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hdy',
@@ -6455,6 +7619,8 @@ export default [
     video_date: '2020-11-25',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ida',
@@ -6466,6 +7632,8 @@ export default [
     video_date: '2020-11-13',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mer',
@@ -6477,6 +7645,8 @@ export default [
     video_date: '2020-11-13',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ewe',
@@ -6488,6 +7658,8 @@ export default [
     video_date: '2020-11-13',
     audio_date: '2021-06-29',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kwd',
@@ -6499,6 +7671,8 @@ export default [
     video_date: '2020-11-13',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bkd',
@@ -6510,6 +7684,8 @@ export default [
     video_date: '2020-11-13',
     audio_date: '2021-04-24',
     text_date: '2019-02-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mnf',
@@ -6521,6 +7697,8 @@ export default [
     video_date: '2020-11-13',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sri',
@@ -6532,6 +7710,8 @@ export default [
     video_date: '2020-11-13',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'ifu',
@@ -6543,6 +7723,8 @@ export default [
     video_date: '2020-11-12',
     audio_date: '2021-05-25',
     text_date: '2018-12-06',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'hoc',
@@ -6554,6 +7736,8 @@ export default [
     video_date: '2020-11-11',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kan',
@@ -6565,6 +7749,8 @@ export default [
     video_date: '2020-11-11',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dtp',
@@ -6576,6 +7762,8 @@ export default [
     video_date: '2020-11-11',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pce',
@@ -6587,6 +7775,8 @@ export default [
     video_date: '2020-11-11',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'guz',
@@ -6598,6 +7788,8 @@ export default [
     video_date: '2020-11-11',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mnw',
@@ -6609,6 +7801,8 @@ export default [
     video_date: '2020-11-11',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tbl',
@@ -6620,6 +7814,8 @@ export default [
     video_date: '2020-11-11',
     audio_date: '2022-03-02',
     text_date: '2021-07-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cso',
@@ -6631,6 +7827,8 @@ export default [
     video_date: '2020-11-11',
     audio_date: '2021-05-25',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'saj',
@@ -6642,6 +7840,8 @@ export default [
     video_date: '2020-11-10',
     audio_date: '2022-02-09',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wob',
@@ -6653,6 +7853,8 @@ export default [
     video_date: '2020-11-10',
     audio_date: '2022-03-03',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dyo',
@@ -6664,6 +7866,8 @@ export default [
     video_date: '2020-11-03',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'djk',
@@ -6675,6 +7879,8 @@ export default [
     video_date: '2020-11-02',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aaz',
@@ -6686,6 +7892,8 @@ export default [
     video_date: '2020-11-02',
     audio_date: '2021-04-15',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mah',
@@ -6697,6 +7905,8 @@ export default [
     video_date: '2020-10-30',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zae',
@@ -6708,6 +7918,8 @@ export default [
     video_date: '2020-10-30',
     audio_date: '2018-04-16',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tnr',
@@ -6719,6 +7931,8 @@ export default [
     video_date: '2020-10-30',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nij',
@@ -6730,6 +7944,8 @@ export default [
     video_date: '2020-10-30',
     audio_date: '2021-06-30',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'gnd',
@@ -6741,6 +7957,8 @@ export default [
     video_date: '2020-10-30',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sgb',
@@ -6752,6 +7970,8 @@ export default [
     video_date: '2020-10-27',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'sja',
@@ -6763,6 +7983,8 @@ export default [
     video_date: '2020-10-23',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qxr',
@@ -6774,6 +7996,8 @@ export default [
     video_date: '2020-10-22',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tlb',
@@ -6785,6 +8009,8 @@ export default [
     video_date: '2020-10-22',
     audio_date: '2022-02-10',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'sna',
@@ -6796,6 +8022,8 @@ export default [
     video_date: '2020-10-22',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'deu',
@@ -6807,6 +8035,8 @@ export default [
     video_date: '2020-10-22',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lia',
@@ -6818,6 +8048,8 @@ export default [
     video_date: '2020-10-22',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'khq',
@@ -6829,6 +8061,8 @@ export default [
     video_date: '2020-10-22',
     audio_date: '2022-02-09',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yli',
@@ -6840,6 +8074,8 @@ export default [
     video_date: '2020-10-15',
     audio_date: '2021-07-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'dig',
@@ -6851,6 +8087,8 @@ export default [
     video_date: '2020-10-14',
     audio_date: '2022-02-08',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'krj',
@@ -6862,6 +8100,8 @@ export default [
     video_date: '2020-10-14',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'lhu',
@@ -6873,6 +8113,8 @@ export default [
     video_date: '2020-10-14',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dzo',
@@ -6884,6 +8126,8 @@ export default [
     video_date: '2020-10-14',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lok',
@@ -6895,6 +8139,8 @@ export default [
     video_date: '2020-10-14',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dgk',
@@ -6906,6 +8152,8 @@ export default [
     video_date: '2020-10-14',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'txq',
@@ -6917,6 +8165,8 @@ export default [
     video_date: '2020-10-13',
     audio_date: '2022-02-10',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kno',
@@ -6928,6 +8178,8 @@ export default [
     video_date: '2020-10-13',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bfd',
@@ -6939,6 +8191,8 @@ export default [
     video_date: '2020-10-12',
     audio_date: '2021-04-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ntj',
@@ -6950,6 +8204,8 @@ export default [
     video_date: '2020-10-12',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'adh',
@@ -6961,6 +8217,8 @@ export default [
     video_date: '2020-10-12',
     audio_date: '2021-04-22',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dbq',
@@ -6972,6 +8230,8 @@ export default [
     video_date: '2020-10-06',
     audio_date: '2021-05-30',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'abp',
@@ -6983,6 +8243,8 @@ export default [
     video_date: '2020-10-06',
     audio_date: '2021-05-27',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kqe',
@@ -6994,6 +8256,8 @@ export default [
     video_date: '2020-10-06',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kng',
@@ -7005,6 +8269,8 @@ export default [
     video_date: '2020-10-05',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fan',
@@ -7016,6 +8282,8 @@ export default [
     video_date: '2020-10-05',
     audio_date: '2018-02-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gym',
@@ -7027,6 +8295,8 @@ export default [
     video_date: '2020-10-01',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'keo',
@@ -7038,6 +8308,8 @@ export default [
     video_date: '2020-10-01',
     audio_date: '2021-10-20',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'dag',
@@ -7049,6 +8321,8 @@ export default [
     video_date: '2020-10-01',
     audio_date: '2021-05-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mfi',
@@ -7060,6 +8334,8 @@ export default [
     video_date: '2020-09-30',
     audio_date: '2022-03-02',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'con',
@@ -7071,6 +8347,8 @@ export default [
     video_date: '2020-09-30',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nia',
@@ -7082,6 +8360,8 @@ export default [
     video_date: '2020-09-30',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sfw',
@@ -7093,6 +8373,8 @@ export default [
     video_date: '2020-09-30',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kzf',
@@ -7104,6 +8386,8 @@ export default [
     video_date: '2020-09-29',
     audio_date: '2021-07-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'blz',
@@ -7115,6 +8399,8 @@ export default [
     video_date: '2020-09-29',
     audio_date: '2021-05-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'kor',
@@ -7126,6 +8412,8 @@ export default [
     video_date: '2020-09-25',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tik',
@@ -7137,6 +8425,8 @@ export default [
     video_date: '2020-09-25',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'coe',
@@ -7148,6 +8438,8 @@ export default [
     video_date: '2020-09-25',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bep',
@@ -7159,6 +8451,8 @@ export default [
     video_date: '2020-09-21',
     audio_date: '2021-04-23',
     text_date: '2021-07-01',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ptu',
@@ -7170,6 +8464,8 @@ export default [
     video_date: '2020-09-18',
     audio_date: '2022-03-02',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'ppk',
@@ -7181,6 +8477,8 @@ export default [
     video_date: '2020-09-18',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'bod',
@@ -7192,6 +8490,8 @@ export default [
     video_date: '2020-09-18',
     audio_date: '2022-02-02',
     text_date: '2021-01-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yea',
@@ -7203,6 +8503,8 @@ export default [
     video_date: '2020-09-17',
     audio_date: '2022-03-03',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tca',
@@ -7214,6 +8516,8 @@ export default [
     video_date: '2020-09-17',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kmr',
@@ -7225,6 +8529,8 @@ export default [
     video_date: '2020-09-17',
     audio_date: '2022-03-01',
     text_date: '2018-09-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'huu',
@@ -7236,6 +8542,8 @@ export default [
     video_date: '2020-09-17',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'myy',
@@ -7247,6 +8555,8 @@ export default [
     video_date: '2020-09-17',
     audio_date: '2022-02-09',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bzj',
@@ -7258,6 +8568,8 @@ export default [
     video_date: '2020-09-17',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'kkj',
@@ -7269,6 +8581,8 @@ export default [
     video_date: '2020-09-17',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kbo',
@@ -7280,6 +8594,8 @@ export default [
     video_date: '2020-09-17',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xed',
@@ -7291,6 +8607,8 @@ export default [
     video_date: '2020-09-16',
     audio_date: '2022-02-10',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'kmr',
@@ -7302,6 +8620,8 @@ export default [
     video_date: '2020-09-16',
     audio_date: '2022-03-01',
     text_date: '2018-09-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ceg',
@@ -7313,6 +8633,8 @@ export default [
     video_date: '2020-09-16',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hub',
@@ -7324,6 +8646,8 @@ export default [
     video_date: '2020-09-09',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yao',
@@ -7335,6 +8659,8 @@ export default [
     video_date: '2020-09-09',
     audio_date: '2022-03-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cjs',
@@ -7346,6 +8672,8 @@ export default [
     video_date: '2020-09-09',
     audio_date: '2021-07-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gvc',
@@ -7357,6 +8685,8 @@ export default [
     video_date: '2020-09-09',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wal',
@@ -7368,6 +8698,8 @@ export default [
     video_date: '2020-09-09',
     audio_date: '2022-03-03',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dnw',
@@ -7379,6 +8711,8 @@ export default [
     video_date: '2020-09-09',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cpu',
@@ -7390,6 +8724,8 @@ export default [
     video_date: '2020-09-09',
     audio_date: '2022-03-02',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'tat',
@@ -7401,6 +8737,8 @@ export default [
     video_date: '2020-09-03',
     audio_date: '2022-02-09',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cme',
@@ -7412,6 +8750,8 @@ export default [
     video_date: '2020-09-03',
     audio_date: '2021-05-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tby',
@@ -7423,6 +8763,8 @@ export default [
     video_date: '2020-08-31',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'bky',
@@ -7435,6 +8777,8 @@ export default [
     video_date: '2020-08-31',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kdt',
@@ -7446,6 +8790,8 @@ export default [
     video_date: '2020-08-31',
     audio_date: '2022-03-01',
     text_date: '2021-01-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lex',
@@ -7457,6 +8803,8 @@ export default [
     video_date: '2020-08-31',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'rif',
@@ -7468,6 +8816,8 @@ export default [
     video_date: '2020-08-31',
     audio_date: '2021-05-04',
     text_date: '2021-01-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mhr',
@@ -7479,6 +8829,8 @@ export default [
     video_date: '2020-08-31',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wal',
@@ -7490,6 +8842,8 @@ export default [
     video_date: '2020-08-31',
     audio_date: '2022-03-03',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'njh',
@@ -7501,6 +8855,8 @@ export default [
     video_date: '2020-08-24',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kaq',
@@ -7512,6 +8868,8 @@ export default [
     video_date: '2020-08-24',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ifb',
@@ -7523,6 +8881,8 @@ export default [
     video_date: '2020-08-21',
     audio_date: '2021-05-25',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'mhy',
@@ -7534,6 +8894,8 @@ export default [
     video_date: '2020-08-21',
     audio_date: '2022-03-01',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'kje',
@@ -7545,6 +8907,8 @@ export default [
     video_date: '2020-08-19',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tem',
@@ -7556,6 +8920,8 @@ export default [
     video_date: '2020-08-17',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kpz',
@@ -7567,6 +8933,8 @@ export default [
     video_date: '2020-08-17',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ben',
@@ -7578,6 +8946,8 @@ export default [
     video_date: '2020-08-17',
     audio_date: '2021-05-04',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sid',
@@ -7589,6 +8959,8 @@ export default [
     video_date: '2020-08-17',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'atq',
@@ -7600,6 +8972,8 @@ export default [
     video_date: '2020-08-14',
     audio_date: '2021-04-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'biu',
@@ -7611,6 +8985,8 @@ export default [
     video_date: '2020-08-14',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mvp',
@@ -7622,6 +8998,8 @@ export default [
     video_date: '2020-08-14',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'log',
@@ -7633,6 +9011,8 @@ export default [
     video_date: '2020-08-14',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cbs',
@@ -7644,6 +9024,8 @@ export default [
     video_date: '2020-08-07',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tna',
@@ -7655,6 +9037,8 @@ export default [
     video_date: '2020-08-07',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lid',
@@ -7666,6 +9050,8 @@ export default [
     video_date: '2020-08-07',
     audio_date: '2022-02-09',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'laj',
@@ -7677,6 +9063,8 @@ export default [
     video_date: '2020-08-05',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'niy',
@@ -7688,6 +9076,8 @@ export default [
     video_date: '2020-08-05',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'saq',
@@ -7699,6 +9089,8 @@ export default [
     video_date: '2020-08-04',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'suz',
@@ -7710,6 +9102,8 @@ export default [
     video_date: '2020-08-03',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pil',
@@ -7721,6 +9115,8 @@ export default [
     video_date: '2020-08-03',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bdu',
@@ -7732,6 +9128,8 @@ export default [
     video_date: '2020-07-31',
     audio_date: '2021-05-25',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ktb',
@@ -7743,6 +9141,8 @@ export default [
     video_date: '2020-07-30',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bha',
@@ -7754,6 +9154,8 @@ export default [
     video_date: '2020-07-30',
     audio_date: '2021-04-23',
     text_date: '2020-07-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bng',
@@ -7765,6 +9167,8 @@ export default [
     video_date: '2020-07-30',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bhz',
@@ -7776,6 +9180,8 @@ export default [
     video_date: '2020-07-30',
     audio_date: '2021-04-23',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'snp',
@@ -7787,6 +9193,8 @@ export default [
     video_date: '2020-07-30',
     audio_date: '2022-03-02',
     text_date: '2021-03-26',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kha',
@@ -7798,6 +9206,8 @@ export default [
     video_date: '2020-07-27',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'thl',
@@ -7809,6 +9219,8 @@ export default [
     video_date: '2020-07-27',
     audio_date: '2022-03-02',
     text_date: '2018-07-30',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hae',
@@ -7820,6 +9232,8 @@ export default [
     video_date: '2020-07-24',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'ayp',
@@ -7831,6 +9245,8 @@ export default [
     video_date: '2020-07-22',
     audio_date: '2021-04-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pbc',
@@ -7842,6 +9258,8 @@ export default [
     video_date: '2020-07-22',
     audio_date: '2021-06-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'trp',
@@ -7853,6 +9271,8 @@ export default [
     video_date: '2020-07-22',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'uzn',
@@ -7864,6 +9284,8 @@ export default [
     video_date: '2020-07-16',
     audio_date: '2022-02-10',
     text_date: '2020-12-31',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'brx',
@@ -7875,6 +9297,8 @@ export default [
     video_date: '2020-07-16',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mdm',
@@ -7886,6 +9310,8 @@ export default [
     video_date: '2020-07-15',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nsm',
@@ -7897,6 +9323,8 @@ export default [
     video_date: '2020-07-08',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nld',
@@ -7908,6 +9336,8 @@ export default [
     video_date: '2020-07-07',
     audio_date: '2022-02-09',
     text_date: '2019-12-03',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gvs',
@@ -7919,6 +9349,8 @@ export default [
     video_date: '2020-07-07',
     audio_date: '2021-11-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mwv',
@@ -7930,6 +9362,8 @@ export default [
     video_date: '2020-07-07',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'gqr',
@@ -7941,6 +9375,8 @@ export default [
     video_date: '2020-07-07',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'kqy',
@@ -7952,6 +9388,8 @@ export default [
     video_date: '2020-07-07',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cac',
@@ -7963,6 +9401,8 @@ export default [
     video_date: '2020-07-07',
     audio_date: '2021-05-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fon',
@@ -7974,6 +9414,8 @@ export default [
     video_date: '2020-07-02',
     audio_date: '2022-02-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zyp',
@@ -7985,6 +9427,8 @@ export default [
     video_date: '2020-07-02',
     audio_date: '2022-03-03',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tfr',
@@ -7996,6 +9440,8 @@ export default [
     video_date: '2020-07-02',
     audio_date: '2021-06-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lzz',
@@ -8007,6 +9453,8 @@ export default [
     video_date: '2020-06-18',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kyu',
@@ -8018,6 +9466,8 @@ export default [
     video_date: '2020-06-18',
     audio_date: '2022-03-01',
     text_date: '2020-09-01',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zao',
@@ -8029,6 +9479,8 @@ export default [
     video_date: '2020-06-18',
     audio_date: '2022-02-10',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'btx',
@@ -8040,6 +9492,8 @@ export default [
     video_date: '2020-06-17',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'ycn',
@@ -8051,6 +9505,8 @@ export default [
     video_date: '2020-06-17',
     audio_date: '2021-07-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'btd',
@@ -8062,6 +9518,8 @@ export default [
     video_date: '2020-06-16',
     audio_date: '2021-05-30',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nyo',
@@ -8073,6 +9531,8 @@ export default [
     video_date: '2020-06-16',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'bbc',
@@ -8084,6 +9544,8 @@ export default [
     video_date: '2020-06-16',
     audio_date: '2021-04-23',
     text_date: '2021-11-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bts',
@@ -8095,6 +9557,8 @@ export default [
     video_date: '2020-06-16',
     audio_date: '2021-05-30',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'mrw',
@@ -8106,6 +9570,8 @@ export default [
     video_date: '2020-06-16',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cek',
@@ -8118,6 +9584,8 @@ export default [
     video_date: '2020-06-16',
     audio_date: '2021-05-24',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'arb',
@@ -8129,6 +9597,8 @@ export default [
     video_date: '2020-06-16',
     audio_date: '2021-04-22',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zpz',
@@ -8140,6 +9610,8 @@ export default [
     video_date: '2020-06-10',
     audio_date: '2021-07-12',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'tso',
@@ -8151,6 +9623,8 @@ export default [
     video_date: '2020-06-10',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'idd',
@@ -8162,6 +9636,8 @@ export default [
     video_date: '2020-06-10',
     audio_date: '2021-11-03',
     text_date: '2020-07-28',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'knb',
@@ -8174,6 +9650,8 @@ export default [
     video_date: '2020-03-18',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bod',
@@ -8185,6 +9663,8 @@ export default [
     video_date: '2020-03-16',
     audio_date: '2021-10-29',
     text_date: '2020-07-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kyb',
@@ -8196,6 +9676,8 @@ export default [
     video_date: '2020-03-16',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bto',
@@ -8208,6 +9690,8 @@ export default [
     video_date: '2020-03-16',
     audio_date: '2021-05-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cle',
@@ -8219,6 +9703,8 @@ export default [
     video_date: '2020-03-16',
     audio_date: '2021-05-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kcl',
@@ -8230,6 +9716,8 @@ export default [
     video_date: '2020-03-16',
     audio_date: '2022-02-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sda',
@@ -8241,6 +9729,8 @@ export default [
     video_date: '2020-03-16',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'kmd',
@@ -8253,6 +9743,8 @@ export default [
     video_date: '2020-03-10',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tuk',
@@ -8264,6 +9756,8 @@ export default [
     video_date: '2020-03-10',
     audio_date: '2021-11-01',
     text_date: '2020-03-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gor',
@@ -8275,6 +9769,8 @@ export default [
     video_date: '2020-03-10',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'snx',
@@ -8286,6 +9782,8 @@ export default [
     video_date: '2020-03-04',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'grg',
@@ -8297,6 +9795,8 @@ export default [
     video_date: '2020-03-04',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bgq',
@@ -8308,6 +9808,8 @@ export default [
     video_date: '2020-02-27',
     audio_date: '2021-04-23',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lus',
@@ -8319,6 +9821,8 @@ export default [
     video_date: '2020-02-27',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ktu',
@@ -8330,6 +9834,8 @@ export default [
     video_date: '2020-02-27',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'vie',
@@ -8341,6 +9847,8 @@ export default [
     video_date: '2020-02-27',
     audio_date: '2022-03-31',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bqi',
@@ -8352,6 +9860,8 @@ export default [
     video_date: '2020-02-20',
     audio_date: '2021-05-30',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'azj',
@@ -8363,6 +9873,8 @@ export default [
     video_date: '2020-02-20',
     audio_date: '2022-03-02',
     text_date: '2019-03-28',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'avn',
@@ -8374,6 +9886,8 @@ export default [
     video_date: '2020-02-20',
     audio_date: '2021-04-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nuj',
@@ -8386,6 +9900,8 @@ export default [
     video_date: '2020-02-20',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cmo',
@@ -8397,6 +9913,8 @@ export default [
     video_date: '2020-02-19',
     audio_date: '2021-05-19',
     text_date: '2018-12-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ake',
@@ -8408,6 +9926,8 @@ export default [
     video_date: '2020-02-17',
     audio_date: '2021-04-22',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mog',
@@ -8419,6 +9939,8 @@ export default [
     video_date: '2020-02-17',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'acf',
@@ -8430,6 +9952,8 @@ export default [
     video_date: '2020-02-17',
     audio_date: '2021-05-27',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pez',
@@ -8441,6 +9965,8 @@ export default [
     video_date: '2020-02-12',
     audio_date: '2022-03-02',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pwg',
@@ -8452,6 +9978,8 @@ export default [
     video_date: '2020-02-12',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bxg',
@@ -8463,6 +9991,8 @@ export default [
     video_date: '2020-02-07',
     audio_date: '2021-05-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sas',
@@ -8474,6 +10004,8 @@ export default [
     video_date: '2020-02-07',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mak',
@@ -8485,6 +10017,8 @@ export default [
     video_date: '2020-02-07',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'led',
@@ -8496,6 +10030,8 @@ export default [
     video_date: '2020-02-07',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'uig',
@@ -8507,6 +10043,8 @@ export default [
     video_date: '2020-01-31',
     audio_date: '2022-02-10',
     text_date: '2019-04-25',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pww',
@@ -8518,6 +10056,8 @@ export default [
     video_date: '2020-01-31',
     audio_date: '2021-06-24',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'flr',
@@ -8529,6 +10069,8 @@ export default [
     video_date: '2020-01-29',
     audio_date: '2022-02-08',
     text_date: '2021-06-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mpp',
@@ -8540,6 +10082,8 @@ export default [
     video_date: '2020-01-24',
     audio_date: '2022-02-09',
     text_date: '2019-12-23',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'vif',
@@ -8551,6 +10095,8 @@ export default [
     video_date: '2020-01-24',
     audio_date: '2022-03-03',
     text_date: '2021-08-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ore',
@@ -8562,6 +10108,8 @@ export default [
     video_date: '2020-01-21',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xuo',
@@ -8573,6 +10121,8 @@ export default [
     video_date: '2020-01-21',
     audio_date: '2021-07-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'nhw',
@@ -8584,6 +10134,8 @@ export default [
     video_date: '2020-01-21',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sig',
@@ -8595,6 +10147,8 @@ export default [
     video_date: '2020-01-21',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aeu',
@@ -8606,6 +10160,8 @@ export default [
     video_date: '2020-01-20',
     audio_date: '2021-04-22',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hak',
@@ -8617,6 +10173,8 @@ export default [
     video_date: '2020-01-20',
     audio_date: '2022-04-13',
     text_date: '2019-01-11',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'jun',
@@ -8628,6 +10186,8 @@ export default [
     video_date: '2020-01-20',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kor',
@@ -8639,6 +10199,8 @@ export default [
     video_date: '2020-01-13',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'urk',
@@ -8650,6 +10212,8 @@ export default [
     video_date: '2020-01-13',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ukr',
@@ -8661,6 +10225,8 @@ export default [
     video_date: '2020-01-13',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'car',
@@ -8672,6 +10238,8 @@ export default [
     video_date: '2020-01-13',
     audio_date: '2021-05-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yam',
@@ -8683,6 +10251,8 @@ export default [
     video_date: '2020-01-10',
     audio_date: '2022-03-03',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dug',
@@ -8694,6 +10264,8 @@ export default [
     video_date: '2020-01-10',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'mib',
@@ -8705,6 +10277,8 @@ export default [
     video_date: '2020-01-10',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rkt',
@@ -8716,6 +10290,8 @@ export default [
     video_date: '2020-01-10',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rel',
@@ -8727,6 +10303,8 @@ export default [
     video_date: '2020-01-06',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ndc',
@@ -8738,6 +10316,8 @@ export default [
     video_date: '2020-01-02',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ngb',
@@ -8749,6 +10329,8 @@ export default [
     video_date: '2020-01-02',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lol',
@@ -8760,6 +10342,8 @@ export default [
     video_date: '2019-12-27',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mkw',
@@ -8771,6 +10355,8 @@ export default [
     video_date: '2019-12-27',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tll',
@@ -8782,6 +10368,8 @@ export default [
     video_date: '2019-12-27',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'onb',
@@ -8793,6 +10381,8 @@ export default [
     video_date: '2019-12-20',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'agr',
@@ -8804,6 +10394,8 @@ export default [
     video_date: '2019-12-20',
     audio_date: '2021-05-23',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'mbj',
@@ -8815,6 +10407,8 @@ export default [
     video_date: '2019-12-20',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'lub',
@@ -8826,6 +10420,8 @@ export default [
     video_date: '2019-12-20',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rmo',
@@ -8837,6 +10433,8 @@ export default [
     video_date: '2019-12-17',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'beq',
@@ -8848,6 +10446,8 @@ export default [
     video_date: '2019-12-17',
     audio_date: '2021-04-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ldi',
@@ -8859,6 +10459,8 @@ export default [
     video_date: '2019-12-17',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ktj',
@@ -8870,6 +10472,8 @@ export default [
     video_date: '2019-12-17',
     audio_date: '2021-07-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kia',
@@ -8881,6 +10485,8 @@ export default [
     video_date: '2019-12-12',
     audio_date: '2022-03-01',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sxb',
@@ -8892,6 +10498,8 @@ export default [
     video_date: '2019-12-12',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'isl',
@@ -8903,6 +10511,8 @@ export default [
     video_date: '2019-12-12',
     audio_date: '2021-05-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tpm',
@@ -8914,6 +10524,8 @@ export default [
     video_date: '2019-12-06',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kml',
@@ -8925,6 +10537,8 @@ export default [
     video_date: '2019-12-06',
     audio_date: '2022-03-01',
     text_date: '2020-01-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tuo',
@@ -8936,6 +10550,8 @@ export default [
     video_date: '2019-12-06',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zim',
@@ -8947,6 +10563,8 @@ export default [
     video_date: '2019-12-03',
     audio_date: '2022-03-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sgw',
@@ -8958,6 +10576,8 @@ export default [
     video_date: '2019-12-02',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nan',
@@ -8969,6 +10589,8 @@ export default [
     video_date: '2019-12-02',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tiv',
@@ -8980,6 +10602,8 @@ export default [
     video_date: '2019-12-02',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tng',
@@ -8991,6 +10615,8 @@ export default [
     video_date: '2019-12-02',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kri',
@@ -9002,6 +10628,8 @@ export default [
     video_date: '2019-12-02',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'myb',
@@ -9013,6 +10641,8 @@ export default [
     video_date: '2019-12-02',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gbm',
@@ -9024,6 +10654,8 @@ export default [
     video_date: '2019-11-21',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hau',
@@ -9035,6 +10667,8 @@ export default [
     video_date: '2019-11-20',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dav',
@@ -9046,6 +10680,8 @@ export default [
     video_date: '2019-11-19',
     audio_date: '2021-05-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'miz',
@@ -9057,6 +10693,8 @@ export default [
     video_date: '2019-11-15',
     audio_date: '2022-02-09',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mrt',
@@ -9068,6 +10706,8 @@ export default [
     video_date: '2019-11-15',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bzw',
@@ -9079,6 +10719,8 @@ export default [
     video_date: '2019-11-15',
     audio_date: '2021-05-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bdg',
@@ -9090,6 +10732,8 @@ export default [
     video_date: '2019-11-15',
     audio_date: '2021-04-23',
     text_date: '2019-01-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tih',
@@ -9101,6 +10745,8 @@ export default [
     video_date: '2019-11-15',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gvl',
@@ -9112,6 +10758,8 @@ export default [
     video_date: '2019-11-15',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'frd',
@@ -9123,6 +10771,8 @@ export default [
     video_date: '2019-11-15',
     audio_date: '2018-12-12',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kij',
@@ -9134,6 +10784,8 @@ export default [
     video_date: '2019-11-15',
     audio_date: '2021-07-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'lew',
@@ -9145,6 +10797,8 @@ export default [
     video_date: '2019-11-15',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'yba',
@@ -9156,6 +10810,8 @@ export default [
     video_date: '2019-11-15',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mup',
@@ -9167,6 +10823,8 @@ export default [
     video_date: '2019-11-15',
     audio_date: '2022-03-01',
     text_date: '2018-11-14',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nlg',
@@ -9178,6 +10836,8 @@ export default [
     video_date: '2019-11-15',
     audio_date: '2022-03-01',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'arb',
@@ -9189,6 +10849,8 @@ export default [
     video_date: '2019-11-15',
     audio_date: '2021-04-15',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zpt',
@@ -9200,6 +10862,8 @@ export default [
     video_date: '2019-11-15',
     audio_date: '2022-02-10',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yao',
@@ -9211,6 +10875,8 @@ export default [
     video_date: '2019-11-15',
     audio_date: '2021-10-29',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mya',
@@ -9222,6 +10888,8 @@ export default [
     video_date: '2019-11-05',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pap',
@@ -9233,6 +10901,8 @@ export default [
     video_date: '2019-11-01',
     audio_date: '2021-11-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rng',
@@ -9244,6 +10914,8 @@ export default [
     video_date: '2019-11-01',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dsh',
@@ -9255,6 +10927,8 @@ export default [
     video_date: '2019-11-01',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'mfy',
@@ -9266,6 +10940,8 @@ export default [
     video_date: '2019-11-01',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'apd',
@@ -9277,6 +10953,8 @@ export default [
     video_date: '2019-10-31',
     audio_date: '2021-04-22',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'udi',
@@ -9288,6 +10966,8 @@ export default [
     video_date: '2019-10-31',
     audio_date: '2021-08-31',
     text_date: '2020-01-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nhi',
@@ -9299,6 +10979,8 @@ export default [
     video_date: '2019-10-31',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yal',
@@ -9310,6 +10992,8 @@ export default [
     video_date: '2019-10-31',
     audio_date: '2022-03-03',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tsc',
@@ -9321,6 +11005,8 @@ export default [
     video_date: '2019-10-31',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cko',
@@ -9332,6 +11018,8 @@ export default [
     video_date: '2019-10-21',
     audio_date: '2021-05-24',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cce',
@@ -9343,6 +11031,8 @@ export default [
     video_date: '2019-10-21',
     audio_date: '2021-05-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ngl',
@@ -9354,6 +11044,8 @@ export default [
     video_date: '2019-10-18',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'seh',
@@ -9365,6 +11057,8 @@ export default [
     video_date: '2019-10-18',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'toh',
@@ -9376,6 +11070,8 @@ export default [
     video_date: '2019-10-18',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gaz',
@@ -9387,6 +11083,8 @@ export default [
     video_date: '2019-10-18',
     audio_date: '2022-03-31',
     text_date: '2021-06-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dah',
@@ -9398,6 +11096,8 @@ export default [
     video_date: '2019-10-15',
     audio_date: '2021-05-30',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'acr',
@@ -9409,6 +11109,8 @@ export default [
     video_date: '2019-10-15',
     audio_date: '2021-04-22',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tir',
@@ -9420,6 +11122,8 @@ export default [
     video_date: '2019-10-15',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pes',
@@ -9431,6 +11135,8 @@ export default [
     video_date: '2019-10-11',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nhy',
@@ -9442,6 +11148,8 @@ export default [
     video_date: '2019-10-11',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pps',
@@ -9453,6 +11161,8 @@ export default [
     video_date: '2019-10-11',
     audio_date: '2022-03-02',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rnl',
@@ -9464,6 +11174,8 @@ export default [
     video_date: '2019-10-11',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'khk',
@@ -9475,6 +11187,8 @@ export default [
     video_date: '2019-10-11',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tnk',
@@ -9486,6 +11200,8 @@ export default [
     video_date: '2019-10-04',
     audio_date: '2022-02-10',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kmr',
@@ -9497,6 +11213,8 @@ export default [
     video_date: '2019-10-04',
     audio_date: '2021-11-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kqn',
@@ -9508,6 +11226,8 @@ export default [
     video_date: '2019-10-04',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rap',
@@ -9519,6 +11239,8 @@ export default [
     video_date: '2019-10-04',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ifk',
@@ -9530,6 +11252,8 @@ export default [
     video_date: '2019-10-04',
     audio_date: '2021-05-25',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xal',
@@ -9541,6 +11265,8 @@ export default [
     video_date: '2019-10-03',
     audio_date: '2022-03-03',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cmr',
@@ -9552,6 +11278,8 @@ export default [
     video_date: '2019-10-03',
     audio_date: '2021-05-24',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'quz',
@@ -9563,6 +11291,8 @@ export default [
     video_date: '2019-09-30',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kpv',
@@ -9574,6 +11304,8 @@ export default [
     video_date: '2019-09-30',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bfo',
@@ -9585,6 +11317,8 @@ export default [
     video_date: '2019-09-30',
     audio_date: '2021-04-23',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dyu',
@@ -9596,6 +11330,8 @@ export default [
     video_date: '2019-09-25',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'apf',
@@ -9607,6 +11343,8 @@ export default [
     video_date: '2019-09-25',
     audio_date: '2021-07-20',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'kor',
@@ -9618,6 +11356,8 @@ export default [
     video_date: '2019-09-23',
     audio_date: '2022-03-01',
     text_date: '2018-09-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sml',
@@ -9629,6 +11369,8 @@ export default [
     video_date: '2019-09-23',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'quy',
@@ -9640,6 +11382,8 @@ export default [
     video_date: '2019-09-23',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ron',
@@ -9651,6 +11395,8 @@ export default [
     video_date: '2019-09-23',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qwh',
@@ -9662,6 +11408,8 @@ export default [
     video_date: '2019-09-18',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gof',
@@ -9673,6 +11421,8 @@ export default [
     video_date: '2019-09-18',
     audio_date: '2022-03-02',
     text_date: '2019-04-30',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'skn',
@@ -9684,6 +11434,8 @@ export default [
     video_date: '2019-09-16',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'csk',
@@ -9695,6 +11447,8 @@ export default [
     video_date: '2019-09-16',
     audio_date: '2021-05-25',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tbz',
@@ -9706,6 +11460,8 @@ export default [
     video_date: '2019-09-16',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'did',
@@ -9717,6 +11473,8 @@ export default [
     video_date: '2019-09-16',
     audio_date: '2022-03-02',
     text_date: '2019-02-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mmg',
@@ -9728,6 +11486,8 @@ export default [
     video_date: '2019-09-16',
     audio_date: '2022-02-09',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bru',
@@ -9739,6 +11499,8 @@ export default [
     video_date: '2019-09-16',
     audio_date: '2021-05-18',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ifa',
@@ -9750,6 +11512,8 @@ export default [
     video_date: '2019-09-12',
     audio_date: '2021-06-29',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'tlj',
@@ -9761,6 +11525,8 @@ export default [
     video_date: '2019-09-12',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gwr',
@@ -9772,6 +11538,8 @@ export default [
     video_date: '2019-09-12',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lwo',
@@ -9783,6 +11551,8 @@ export default [
     video_date: '2019-09-12',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'eng',
@@ -9794,6 +11564,8 @@ export default [
     video_date: '2019-09-10',
     audio_date: 'NULL',
     text_date: '2019-09-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dop',
@@ -9805,6 +11577,8 @@ export default [
     video_date: '2019-09-09',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bba',
@@ -9816,6 +11590,8 @@ export default [
     video_date: '2019-09-06',
     audio_date: '2021-05-28',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mnb',
@@ -9827,6 +11603,8 @@ export default [
     video_date: '2019-09-06',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'cpa',
@@ -9838,6 +11616,8 @@ export default [
     video_date: '2019-09-06',
     audio_date: '2021-05-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rej',
@@ -9849,6 +11629,8 @@ export default [
     video_date: '2019-09-06',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zaa',
@@ -9860,6 +11642,8 @@ export default [
     video_date: '2019-08-30',
     audio_date: '2021-07-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'txa',
@@ -9871,6 +11655,8 @@ export default [
     video_date: '2019-08-28',
     audio_date: '2021-10-27',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bpr',
@@ -9882,6 +11668,8 @@ export default [
     video_date: '2019-08-28',
     audio_date: '2021-05-04',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hye',
@@ -9893,6 +11681,8 @@ export default [
     video_date: '2019-08-28',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gag',
@@ -9904,6 +11694,8 @@ export default [
     video_date: '2019-08-28',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'krl',
@@ -9915,6 +11707,8 @@ export default [
     video_date: '2019-08-28',
     audio_date: '2022-02-09',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tpp',
@@ -9926,6 +11720,8 @@ export default [
     video_date: '2019-08-28',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'zpu',
@@ -9937,6 +11733,8 @@ export default [
     video_date: '2019-08-22',
     audio_date: '2022-03-03',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tly',
@@ -9948,6 +11746,8 @@ export default [
     video_date: '2019-08-20',
     audio_date: '2022-03-02',
     text_date: '2021-06-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fuv',
@@ -9959,6 +11759,8 @@ export default [
     video_date: '2019-08-19',
     audio_date: '2021-11-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'myk',
@@ -9970,6 +11772,8 @@ export default [
     video_date: '2019-08-19',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mfh',
@@ -9981,6 +11785,8 @@ export default [
     video_date: '2019-08-19',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'ote',
@@ -9992,6 +11798,8 @@ export default [
     video_date: '2019-08-19',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fuv',
@@ -10003,6 +11811,8 @@ export default [
     video_date: '2019-08-19',
     audio_date: '2018-12-12',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lvs',
@@ -10014,6 +11824,8 @@ export default [
     video_date: '2019-08-19',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'amh',
@@ -10025,6 +11837,8 @@ export default [
     video_date: '2019-08-16',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'urd',
@@ -10036,6 +11850,8 @@ export default [
     video_date: '2019-08-09',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pag',
@@ -10047,6 +11863,8 @@ export default [
     video_date: '2019-08-09',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'iqw',
@@ -10059,6 +11877,8 @@ export default [
     video_date: '2019-08-09',
     audio_date: '2021-10-29',
     text_date: '2022-04-12',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tex',
@@ -10070,6 +11890,8 @@ export default [
     video_date: '2019-08-08',
     audio_date: '2022-03-02',
     text_date: '2020-03-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'loz',
@@ -10081,6 +11903,8 @@ export default [
     video_date: '2019-08-08',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nde',
@@ -10092,6 +11916,8 @@ export default [
     video_date: '2019-08-08',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'muv',
@@ -10103,6 +11929,8 @@ export default [
     video_date: '2019-08-08',
     audio_date: '2022-03-01',
     text_date: '2022-04-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'war',
@@ -10114,6 +11942,8 @@ export default [
     video_date: '2019-08-08',
     audio_date: '2022-03-03',
     text_date: '2018-09-17',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'ilo',
@@ -10125,6 +11955,8 @@ export default [
     video_date: '2019-08-07',
     audio_date: '2021-05-25',
     text_date: '2018-12-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ozm',
@@ -10136,6 +11968,8 @@ export default [
     video_date: '2019-08-07',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bcl',
@@ -10147,6 +11981,8 @@ export default [
     video_date: '2019-08-07',
     audio_date: '2021-04-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nhu',
@@ -10158,6 +11994,8 @@ export default [
     video_date: '2019-08-02',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'xog',
@@ -10169,6 +12007,8 @@ export default [
     video_date: '2019-08-02',
     audio_date: '2022-03-03',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'pls',
@@ -10180,6 +12020,8 @@ export default [
     video_date: '2019-08-01',
     audio_date: '2022-03-02',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mwm',
@@ -10191,6 +12033,8 @@ export default [
     video_date: '2019-08-01',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yue',
@@ -10202,6 +12046,8 @@ export default [
     video_date: '2019-08-01',
     audio_date: '2022-03-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nld',
@@ -10213,6 +12059,8 @@ export default [
     video_date: '2019-08-01',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ljp',
@@ -10224,6 +12072,8 @@ export default [
     video_date: '2019-08-01',
     audio_date: '2021-07-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'alp',
@@ -10236,6 +12086,8 @@ export default [
     video_date: '2019-08-01',
     audio_date: '2021-06-29',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'wsg',
@@ -10247,6 +12099,8 @@ export default [
     video_date: '2019-08-01',
     audio_date: '2022-03-03',
     text_date: '2022-04-19',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spa',
@@ -10258,6 +12112,8 @@ export default [
     video_date: '2019-07-31',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bss',
@@ -10269,6 +12125,8 @@ export default [
     video_date: '2019-07-30',
     audio_date: '2021-05-18',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pol',
@@ -10280,6 +12138,8 @@ export default [
     video_date: '2019-07-29',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yka',
@@ -10291,6 +12151,8 @@ export default [
     video_date: '2019-07-29',
     audio_date: '2022-03-03',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spa',
@@ -10302,6 +12164,8 @@ export default [
     video_date: '2019-07-29',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'swh',
@@ -10313,6 +12177,8 @@ export default [
     video_date: '2019-07-29',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mpg',
@@ -10324,6 +12190,8 @@ export default [
     video_date: '2019-07-29',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'vmw',
@@ -10335,6 +12203,8 @@ export default [
     video_date: '2019-07-26',
     audio_date: '2021-11-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mgr',
@@ -10346,6 +12216,8 @@ export default [
     video_date: '2019-07-26',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lun',
@@ -10357,6 +12229,8 @@ export default [
     video_date: '2019-07-26',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pdt',
@@ -10368,6 +12242,8 @@ export default [
     video_date: '2019-07-26',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'plt',
@@ -10379,6 +12255,8 @@ export default [
     video_date: '2019-07-24',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hun',
@@ -10390,6 +12268,8 @@ export default [
     video_date: '2019-07-24',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zpg',
@@ -10401,6 +12281,8 @@ export default [
     video_date: '2019-07-19',
     audio_date: '2022-03-03',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eng',
@@ -10412,6 +12294,8 @@ export default [
     video_date: '2019-07-19',
     audio_date: '2022-02-09',
     text_date: '2022-02-16',
+    ot_timing: 'true',
+    nt_timing: 'true',
   },
   {
     iso: 'cmo',
@@ -10423,6 +12307,8 @@ export default [
     video_date: '2019-07-19',
     audio_date: '2021-05-24',
     text_date: '2018-11-14',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'npi',
@@ -10434,6 +12320,8 @@ export default [
     video_date: '2019-07-18',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'naw',
@@ -10445,6 +12333,8 @@ export default [
     video_date: '2019-07-18',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ach',
@@ -10456,6 +12346,8 @@ export default [
     video_date: '2019-07-18',
     audio_date: '2021-04-22',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pam',
@@ -10467,6 +12359,8 @@ export default [
     video_date: '2019-07-18',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lam',
@@ -10478,6 +12372,8 @@ export default [
     video_date: '2019-07-18',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lee',
@@ -10489,6 +12385,8 @@ export default [
     video_date: '2019-07-18',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bqj',
@@ -10500,6 +12398,8 @@ export default [
     video_date: '2019-07-15',
     audio_date: '2021-06-29',
     text_date: '2019-01-11',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'hns',
@@ -10511,6 +12411,8 @@ export default [
     video_date: '2019-07-15',
     audio_date: '2022-03-02',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kne',
@@ -10522,6 +12424,8 @@ export default [
     video_date: '2019-07-15',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'plw',
@@ -10533,6 +12437,8 @@ export default [
     video_date: '2019-06-13',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ken',
@@ -10544,6 +12450,8 @@ export default [
     video_date: '2019-06-13',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nnb',
@@ -10555,6 +12463,8 @@ export default [
     video_date: '2019-06-10',
     audio_date: '2021-07-01',
     text_date: '2021-06-10',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'swc',
@@ -10566,6 +12476,8 @@ export default [
     video_date: '2019-06-10',
     audio_date: '2021-11-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'azj',
@@ -10577,6 +12489,8 @@ export default [
     video_date: '2019-06-10',
     audio_date: '2021-04-23',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rmc',
@@ -10588,6 +12502,8 @@ export default [
     video_date: '2019-06-07',
     audio_date: '2022-02-09',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'taq',
@@ -10599,6 +12515,8 @@ export default [
     video_date: '2019-06-07',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bng',
@@ -10610,6 +12528,8 @@ export default [
     video_date: '2019-06-07',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bwq',
@@ -10621,6 +12541,8 @@ export default [
     video_date: '2019-06-07',
     audio_date: '2021-05-30',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'chz',
@@ -10632,6 +12554,8 @@ export default [
     video_date: '2019-06-07',
     audio_date: '2021-05-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'toi',
@@ -10643,6 +12567,8 @@ export default [
     video_date: '2019-06-07',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bib',
@@ -10654,6 +12580,8 @@ export default [
     video_date: '2019-06-07',
     audio_date: '2021-04-23',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ker',
@@ -10665,6 +12593,8 @@ export default [
     video_date: '2019-06-07',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'sgj',
@@ -10676,6 +12606,8 @@ export default [
     video_date: '2019-06-05',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yre',
@@ -10687,6 +12619,8 @@ export default [
     video_date: '2019-06-05',
     audio_date: '2022-01-27',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mqn',
@@ -10698,6 +12632,8 @@ export default [
     video_date: '2019-06-05',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tmc',
@@ -10709,6 +12645,8 @@ export default [
     video_date: '2019-06-05',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kqp',
@@ -10720,6 +12658,8 @@ export default [
     video_date: '2019-06-05',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kaa',
@@ -10731,6 +12671,8 @@ export default [
     video_date: '2019-06-05',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nst',
@@ -10742,6 +12684,8 @@ export default [
     video_date: '2019-06-05',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tpi',
@@ -10753,6 +12697,8 @@ export default [
     video_date: '2019-06-05',
     audio_date: '2022-03-02',
     text_date: '2018-12-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ntm',
@@ -10764,6 +12710,8 @@ export default [
     video_date: '2019-06-05',
     audio_date: '2022-03-01',
     text_date: '2022-04-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eka',
@@ -10775,6 +12723,8 @@ export default [
     video_date: '2019-06-05',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'kyq',
@@ -10786,6 +12736,8 @@ export default [
     video_date: '2019-05-30',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ava',
@@ -10797,6 +12749,8 @@ export default [
     video_date: '2019-05-30',
     audio_date: '2022-02-10',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'myv',
@@ -10808,6 +12762,8 @@ export default [
     video_date: '2019-05-29',
     audio_date: '2022-02-10',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cwt',
@@ -10819,6 +12775,8 @@ export default [
     video_date: '2019-05-28',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bav',
@@ -10830,6 +12788,8 @@ export default [
     video_date: '2019-05-28',
     audio_date: '2021-04-23',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bex',
@@ -10841,6 +12801,8 @@ export default [
     video_date: '2019-05-28',
     audio_date: '2021-04-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nyf',
@@ -10852,6 +12814,8 @@ export default [
     video_date: '2019-05-24',
     audio_date: '2021-06-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mal',
@@ -10863,6 +12827,8 @@ export default [
     video_date: '2019-05-24',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nin',
@@ -10875,6 +12841,8 @@ export default [
     video_date: '2019-05-24',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sbd',
@@ -10886,6 +12854,8 @@ export default [
     video_date: '2019-05-21',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tam',
@@ -10897,6 +12867,8 @@ export default [
     video_date: '2019-05-21',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mur',
@@ -10908,6 +12880,8 @@ export default [
     video_date: '2019-05-21',
     audio_date: '2021-06-30',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tyv',
@@ -10919,6 +12893,8 @@ export default [
     video_date: '2019-05-21',
     audio_date: '2022-03-02',
     text_date: '2022-04-14',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xsm',
@@ -10930,6 +12906,8 @@ export default [
     video_date: '2019-05-21',
     audio_date: '2022-03-03',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tuk',
@@ -10941,6 +12919,8 @@ export default [
     video_date: '2019-05-21',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tbt',
@@ -10952,6 +12932,8 @@ export default [
     video_date: '2019-05-16',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ife',
@@ -10963,6 +12945,8 @@ export default [
     video_date: '2019-05-13',
     audio_date: '2021-06-29',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'nzi',
@@ -10974,6 +12958,8 @@ export default [
     video_date: '2019-05-04',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rro',
@@ -10985,6 +12971,8 @@ export default [
     video_date: '2019-05-04',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kum',
@@ -10996,6 +12984,8 @@ export default [
     video_date: '2019-05-04',
     audio_date: '2021-07-01',
     text_date: '2022-02-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mhi',
@@ -11007,6 +12997,8 @@ export default [
     video_date: '2019-05-04',
     audio_date: '2018-04-14',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lug',
@@ -11018,6 +13010,8 @@ export default [
     video_date: '2019-05-04',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nyn',
@@ -11029,6 +13023,8 @@ export default [
     video_date: '2019-05-04',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'mos',
@@ -11040,6 +13036,8 @@ export default [
     video_date: '2019-05-04',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lgg',
@@ -11051,6 +13049,8 @@ export default [
     video_date: '2019-05-04',
     audio_date: '2022-03-01',
     text_date: '2021-06-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mbt',
@@ -11062,6 +13062,8 @@ export default [
     video_date: '2019-05-04',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'vie',
@@ -11073,6 +13075,8 @@ export default [
     video_date: '2019-04-29',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ahk',
@@ -11084,6 +13088,8 @@ export default [
     video_date: '2019-04-29',
     audio_date: '2021-04-22',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dos',
@@ -11095,6 +13101,8 @@ export default [
     video_date: '2019-04-29',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dgi',
@@ -11106,6 +13114,8 @@ export default [
     video_date: '2019-04-26',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'snw',
@@ -11117,6 +13127,8 @@ export default [
     video_date: '2019-04-24',
     audio_date: '2021-06-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'atg',
@@ -11128,6 +13140,8 @@ export default [
     video_date: '2019-04-19',
     audio_date: '2021-04-23',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tel',
@@ -11139,6 +13153,8 @@ export default [
     video_date: '2019-04-15',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zul',
@@ -11150,6 +13166,8 @@ export default [
     video_date: '2019-04-12',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kjh',
@@ -11161,6 +13179,8 @@ export default [
     video_date: '2019-04-09',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gux',
@@ -11172,6 +13192,8 @@ export default [
     video_date: '2019-04-09',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ita',
@@ -11183,6 +13205,8 @@ export default [
     video_date: '2019-04-09',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bkv',
@@ -11194,6 +13218,8 @@ export default [
     video_date: '2019-04-05',
     audio_date: '2021-05-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'nog',
@@ -11205,6 +13231,8 @@ export default [
     video_date: '2019-04-05',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cgc',
@@ -11216,6 +13244,8 @@ export default [
     video_date: '2019-04-03',
     audio_date: '2021-06-29',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'mua',
@@ -11227,6 +13257,8 @@ export default [
     video_date: '2019-04-03',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ceb',
@@ -11238,6 +13270,8 @@ export default [
     video_date: '2019-04-03',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'izz',
@@ -11250,6 +13284,8 @@ export default [
     video_date: '2019-04-03',
     audio_date: '2022-02-08',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kir',
@@ -11261,6 +13297,8 @@ export default [
     video_date: '2019-04-03',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pui',
@@ -11272,6 +13310,8 @@ export default [
     video_date: '2019-04-03',
     audio_date: '2022-03-02',
     text_date: '2022-04-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'prs',
@@ -11283,6 +13323,8 @@ export default [
     video_date: '2019-04-03',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mos',
@@ -11294,6 +13336,8 @@ export default [
     video_date: '2019-04-03',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kao',
@@ -11305,6 +13349,8 @@ export default [
     video_date: '2019-04-03',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mnk',
@@ -11316,6 +13362,8 @@ export default [
     video_date: '2019-04-03',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'beh',
@@ -11327,6 +13375,8 @@ export default [
     video_date: '2019-04-02',
     audio_date: '2021-10-27',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'blt',
@@ -11338,6 +13388,8 @@ export default [
     video_date: '2019-04-02',
     audio_date: '2021-04-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'abi',
@@ -11349,6 +13401,8 @@ export default [
     video_date: '2019-04-02',
     audio_date: '2021-04-15',
     text_date: '2022-03-27',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bst',
@@ -11360,6 +13414,8 @@ export default [
     video_date: '2019-04-02',
     audio_date: '2021-05-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bjv',
@@ -11371,6 +13427,8 @@ export default [
     video_date: '2019-04-02',
     audio_date: '2021-05-23',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'bps',
@@ -11382,6 +13440,8 @@ export default [
     video_date: '2019-04-02',
     audio_date: '2021-05-23',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'udm',
@@ -11393,6 +13453,8 @@ export default [
     video_date: '2019-03-29',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tgk',
@@ -11404,6 +13466,8 @@ export default [
     video_date: '2019-03-29',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wlx',
@@ -11415,6 +13479,8 @@ export default [
     video_date: '2019-03-29',
     audio_date: '2022-03-03',
     text_date: '2021-10-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yrk',
@@ -11426,6 +13492,8 @@ export default [
     video_date: '2019-03-29',
     audio_date: '2022-02-10',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zaw',
@@ -11437,6 +13505,8 @@ export default [
     video_date: '2019-03-29',
     audio_date: '2018-02-13',
     text_date: '2019-10-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'teo',
@@ -11448,6 +13518,8 @@ export default [
     video_date: '2019-03-28',
     audio_date: '2022-03-02',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'aia',
@@ -11459,6 +13531,8 @@ export default [
     video_date: '2019-03-28',
     audio_date: '2021-06-29',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ntr',
@@ -11470,6 +13544,8 @@ export default [
     video_date: '2019-03-26',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kaz',
@@ -11481,6 +13557,8 @@ export default [
     video_date: '2019-03-21',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sus',
@@ -11492,6 +13570,8 @@ export default [
     video_date: '2019-03-20',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'alz',
@@ -11503,6 +13583,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2021-05-23',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'lnd',
@@ -11514,6 +13596,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'bmq',
@@ -11525,6 +13609,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2021-05-04',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'crh',
@@ -11536,6 +13622,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kxm',
@@ -11547,6 +13635,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ary',
@@ -11558,6 +13648,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fuf',
@@ -11569,6 +13661,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'dyu',
@@ -11580,6 +13674,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'alt',
@@ -11591,6 +13687,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2021-04-22',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bak',
@@ -11602,6 +13700,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2022-02-10',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'maa',
@@ -11613,6 +13713,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mgo',
@@ -11624,6 +13726,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'che',
@@ -11635,6 +13739,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2021-05-31',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aka',
@@ -11646,6 +13752,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2021-07-20',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'chv',
@@ -11657,6 +13765,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2021-05-24',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mcp',
@@ -11668,6 +13778,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'awb',
@@ -11679,6 +13791,8 @@ export default [
     video_date: '2019-03-16',
     audio_date: '2021-04-23',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'maa',
@@ -11690,6 +13804,8 @@ export default [
     video_date: '2019-03-14',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'dyi',
@@ -11701,6 +13817,8 @@ export default [
     video_date: '2019-03-12',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'nnc',
@@ -11712,6 +13830,8 @@ export default [
     video_date: '2019-03-12',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'akp',
@@ -11723,6 +13843,8 @@ export default [
     video_date: '2019-03-07',
     audio_date: '2021-06-29',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'cbt',
@@ -11734,6 +13856,8 @@ export default [
     video_date: '2019-03-07',
     audio_date: '2021-05-24',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pbb',
@@ -11745,6 +13869,8 @@ export default [
     video_date: '2019-03-06',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nus',
@@ -11756,6 +13882,8 @@ export default [
     video_date: '2019-03-06',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'new',
@@ -11767,6 +13895,8 @@ export default [
     video_date: '2019-03-05',
     audio_date: '2022-03-01',
     text_date: '2022-04-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qvw',
@@ -11778,6 +13908,8 @@ export default [
     video_date: '2019-03-05',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qub',
@@ -11789,6 +13921,8 @@ export default [
     video_date: '2019-03-05',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pkb',
@@ -11800,6 +13934,8 @@ export default [
     video_date: '2019-03-05',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kia',
@@ -11811,6 +13947,8 @@ export default [
     video_date: '2019-03-05',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lob',
@@ -11822,6 +13960,8 @@ export default [
     video_date: '2019-03-05',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'taj',
@@ -11833,6 +13973,8 @@ export default [
     video_date: '2019-03-04',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rav',
@@ -11844,6 +13986,8 @@ export default [
     video_date: '2019-03-04',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zca',
@@ -11855,6 +13999,8 @@ export default [
     video_date: '2019-03-01',
     audio_date: '2022-03-03',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zas',
@@ -11866,6 +14012,8 @@ export default [
     video_date: '2019-03-01',
     audio_date: '2022-03-03',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'thk',
@@ -11877,6 +14025,8 @@ export default [
     video_date: '2019-03-01',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'tue',
@@ -11888,6 +14038,8 @@ export default [
     video_date: '2019-02-28',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'met',
@@ -11899,6 +14051,8 @@ export default [
     video_date: '2019-02-28',
     audio_date: '2022-03-01',
     text_date: '2022-04-12',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kle',
@@ -11910,6 +14064,8 @@ export default [
     video_date: '2019-02-28',
     audio_date: '2022-03-01',
     text_date: '2018-11-28',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'srn',
@@ -11921,6 +14077,8 @@ export default [
     video_date: '2019-02-27',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lis',
@@ -11932,6 +14090,8 @@ export default [
     video_date: '2019-02-27',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spa',
@@ -11943,6 +14103,8 @@ export default [
     video_date: '2019-02-27',
     audio_date: '2022-02-07',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tgo',
@@ -11954,6 +14116,8 @@ export default [
     video_date: '2019-02-27',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'jam',
@@ -11965,6 +14129,8 @@ export default [
     video_date: '2019-02-26',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'lif',
@@ -11976,6 +14142,8 @@ export default [
     video_date: '2019-02-13',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'iba',
@@ -11987,6 +14155,8 @@ export default [
     video_date: '2019-02-12',
     audio_date: '2021-06-01',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'any',
@@ -11998,6 +14168,8 @@ export default [
     video_date: '2019-01-26',
     audio_date: '2021-04-22',
     text_date: '2019-05-23',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cnt',
@@ -12009,6 +14181,8 @@ export default [
     video_date: '2019-01-26',
     audio_date: '2021-05-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dwr',
@@ -12020,6 +14194,8 @@ export default [
     video_date: '2019-01-26',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mcq',
@@ -12031,6 +14207,8 @@ export default [
     video_date: '2019-01-26',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tte',
@@ -12042,6 +14220,8 @@ export default [
     video_date: '2019-01-26',
     audio_date: '2022-02-10',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'biv',
@@ -12053,6 +14233,8 @@ export default [
     video_date: '2019-01-26',
     audio_date: '2021-04-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bwq',
@@ -12064,6 +14246,8 @@ export default [
     video_date: '2019-01-25',
     audio_date: '2021-05-30',
     text_date: '2021-06-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cak',
@@ -12075,6 +14259,8 @@ export default [
     video_date: '2019-01-25',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'shu',
@@ -12086,6 +14272,8 @@ export default [
     video_date: '2019-01-24',
     audio_date: '2021-06-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bfa',
@@ -12097,6 +14285,8 @@ export default [
     video_date: '2019-01-24',
     audio_date: '2021-06-29',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'rol',
@@ -12108,6 +14298,8 @@ export default [
     video_date: '2019-01-04',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'por',
@@ -12119,6 +14311,8 @@ export default [
     video_date: '2018-12-20',
     audio_date: '2022-01-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bul',
@@ -12130,6 +14324,8 @@ export default [
     video_date: '2018-12-19',
     audio_date: '2021-05-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eng',
@@ -12141,6 +14337,8 @@ export default [
     video_date: '2018-12-19',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'true',
+    nt_timing: 'true',
   },
   {
     iso: 'cmn',
@@ -12152,6 +14350,8 @@ export default [
     video_date: '2018-12-19',
     audio_date: '2021-05-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'afr',
@@ -12163,6 +14363,8 @@ export default [
     video_date: '2018-12-19',
     audio_date: 'NULL',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gur',
@@ -12174,6 +14376,8 @@ export default [
     video_date: '2018-12-03',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bov',
@@ -12185,6 +14389,8 @@ export default [
     video_date: '2018-10-01',
     audio_date: '2021-06-29',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'zad',
@@ -12196,6 +14402,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-03',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wmw',
@@ -12207,6 +14415,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2021-07-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'iri',
@@ -12219,6 +14429,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2021-06-29',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'ffm',
@@ -12230,6 +14442,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-02-08',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gng',
@@ -12241,6 +14455,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2021-06-29',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'zpi',
@@ -12252,6 +14468,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-03',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spp',
@@ -12263,6 +14481,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'snf',
@@ -12274,6 +14494,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2021-06-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kyf',
@@ -12285,6 +14507,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'daa',
@@ -12296,6 +14520,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'gna',
@@ -12307,6 +14533,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nmz',
@@ -12318,6 +14546,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wwa',
@@ -12329,6 +14559,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2021-07-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'icr',
@@ -12340,6 +14572,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'fal',
@@ -12351,6 +14585,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2018-12-12',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nsu',
@@ -12362,6 +14598,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eus',
@@ -12374,6 +14612,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2021-06-29',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nko',
@@ -12385,6 +14625,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'box',
@@ -12396,6 +14638,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2021-05-04',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dik',
@@ -12407,6 +14651,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'qxh',
@@ -12418,6 +14664,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gmv',
@@ -12429,6 +14677,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-02',
     text_date: '2022-04-12',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gof',
@@ -12440,6 +14690,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-02',
     text_date: '2019-05-02',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pcm',
@@ -12451,6 +14703,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2021-06-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'enb',
@@ -12462,6 +14716,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'maj',
@@ -12473,6 +14729,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-03-01',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'xsr',
@@ -12484,6 +14742,8 @@ export default [
     video_date: '2018-09-25',
     audio_date: '2022-01-27',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'agu',
@@ -12495,6 +14755,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-22',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'poy',
@@ -12506,6 +14768,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ss1',
@@ -12517,6 +14781,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-12-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kca',
@@ -12528,6 +14794,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pan',
@@ -12539,6 +14807,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-01-26',
     text_date: '2021-10-26',
+    ot_timing: 'true',
+    nt_timing: 'true',
   },
   {
     iso: 'itv',
@@ -12550,6 +14820,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-25',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'umb',
@@ -12561,6 +14833,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ckt',
@@ -12572,6 +14846,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2022-02-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ibo',
@@ -12583,6 +14859,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mlh',
@@ -12594,6 +14872,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lme',
@@ -12605,6 +14885,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2019-01-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ggu',
@@ -12616,6 +14898,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ayr',
@@ -12627,6 +14911,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cax',
@@ -12638,6 +14924,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gwi',
@@ -12649,6 +14937,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tix',
@@ -12660,6 +14950,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kyz',
@@ -12671,6 +14963,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fai',
@@ -12682,6 +14976,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mva',
@@ -12693,6 +14989,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spa',
@@ -12704,6 +15002,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-27',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bel',
@@ -12715,6 +15015,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tam',
@@ -12726,6 +15028,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-27',
     text_date: '2021-10-28',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kqw',
@@ -12737,6 +15041,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ppo',
@@ -12748,6 +15054,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bmh',
@@ -12759,6 +15067,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kmg',
@@ -12770,6 +15080,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lmk',
@@ -12781,6 +15093,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wol',
@@ -12792,6 +15106,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-10',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dna',
@@ -12803,6 +15119,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-03-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'quc',
@@ -12814,6 +15132,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'khk',
@@ -12825,6 +15145,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fra',
@@ -12836,6 +15158,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-04-16',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bpe',
@@ -12847,6 +15171,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-15',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cof',
@@ -12858,6 +15184,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-29',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'ces',
@@ -12869,6 +15197,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ton',
@@ -12880,6 +15210,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zos',
@@ -12891,6 +15223,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kri',
@@ -12902,6 +15236,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bhl',
@@ -12913,6 +15249,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-06-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'guh',
@@ -12924,6 +15262,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mcr',
@@ -12935,6 +15275,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eng',
@@ -12946,6 +15288,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rus',
@@ -12957,6 +15301,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sun',
@@ -12968,6 +15314,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kog',
@@ -12979,6 +15327,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dln',
@@ -12990,6 +15340,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xon',
@@ -13001,6 +15353,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-10',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pck',
@@ -13012,6 +15366,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nss',
@@ -13023,6 +15379,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tel',
@@ -13034,6 +15392,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2021-06-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aon',
@@ -13045,6 +15405,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'khz',
@@ -13056,6 +15418,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cul',
@@ -13067,6 +15431,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-07-20',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'qvo',
@@ -13078,6 +15444,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mta',
@@ -13089,6 +15457,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ubu',
@@ -13100,6 +15470,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cje',
@@ -13111,6 +15483,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'trc',
@@ -13122,6 +15496,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-10',
     text_date: '2019-01-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zpv',
@@ -13133,6 +15509,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: '2018-05-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ksb',
@@ -13144,6 +15522,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'guu',
@@ -13155,6 +15535,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tgw',
@@ -13166,6 +15548,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kwj',
@@ -13177,6 +15561,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yut',
@@ -13188,6 +15574,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eng',
@@ -13199,6 +15587,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sny',
@@ -13210,6 +15600,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bci',
@@ -13221,6 +15613,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mal',
@@ -13232,6 +15626,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'swk',
@@ -13243,6 +15639,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xta',
@@ -13254,6 +15652,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-07-02',
     text_date: '2018-08-09',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'smt',
@@ -13265,6 +15665,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sef',
@@ -13276,6 +15678,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'atd',
@@ -13287,6 +15691,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-12-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'key',
@@ -13298,6 +15704,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bku',
@@ -13309,6 +15717,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'way',
@@ -13320,6 +15730,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nkf',
@@ -13331,6 +15743,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spa',
@@ -13342,6 +15756,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wba',
@@ -13354,6 +15770,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mta',
@@ -13365,6 +15783,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-31',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ess',
@@ -13376,6 +15796,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hak',
@@ -13387,6 +15809,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-01-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tzj',
@@ -13398,6 +15822,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cnh',
@@ -13409,6 +15835,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-29',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'tur',
@@ -13420,6 +15848,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hau',
@@ -13431,6 +15861,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lvs',
@@ -13442,6 +15874,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fra',
@@ -13453,6 +15887,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wim',
@@ -13464,6 +15900,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-06-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ksf',
@@ -13475,6 +15913,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ell',
@@ -13486,6 +15926,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dtb',
@@ -13497,6 +15939,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'onr',
@@ -13508,6 +15952,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sim',
@@ -13519,6 +15965,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ayo',
@@ -13530,6 +15978,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: '2018-12-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'luc',
@@ -13541,6 +15991,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dgz',
@@ -13552,6 +16004,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mux',
@@ -13563,6 +16017,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nor',
@@ -13574,6 +16030,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'amp',
@@ -13585,6 +16043,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kez',
@@ -13596,6 +16056,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-12-06',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'ctd',
@@ -13607,6 +16069,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'vic',
@@ -13618,6 +16082,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ctp',
@@ -13629,6 +16095,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nhe',
@@ -13640,6 +16108,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aec',
@@ -13651,6 +16121,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-22',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zaj',
@@ -13662,6 +16134,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ind',
@@ -13674,6 +16148,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-12-10',
     text_date: '2022-01-26',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'vun',
@@ -13685,6 +16161,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'for',
@@ -13696,6 +16174,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'por',
@@ -13707,6 +16187,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nab',
@@ -13718,6 +16200,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spa',
@@ -13729,6 +16213,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-07',
     text_date: '2019-01-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'krr',
@@ -13740,6 +16226,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-03-29',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kmh',
@@ -13751,6 +16239,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gbk',
@@ -13762,6 +16252,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-01-03',
     text_date: '2022-03-01',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'iws',
@@ -13773,6 +16265,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'urb',
@@ -13784,6 +16278,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'mjx',
@@ -13795,6 +16291,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-12-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cly',
@@ -13806,6 +16304,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mmo',
@@ -13817,6 +16317,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-04-25',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'abt',
@@ -13828,10 +16330,12 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'poh',
-    lang_name: 'Pocomchí, Oriental',
+    lang_name: 'Pokomchi, Eastern',
     bible_name: 'Catholic Version',
     bible_id: 'POHPOC',
     population: 'NULL',
@@ -13839,6 +16343,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cbi',
@@ -13850,6 +16356,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spa',
@@ -13861,6 +16369,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-27',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ggb',
@@ -13872,6 +16382,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-01-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bum',
@@ -13883,6 +16395,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'krc',
@@ -13894,6 +16408,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bsq',
@@ -13905,6 +16421,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'auy',
@@ -13916,6 +16434,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'srm',
@@ -13927,6 +16447,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kmr',
@@ -13938,6 +16460,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'deu',
@@ -13949,6 +16473,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wnu',
@@ -13960,6 +16486,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-10-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mpt',
@@ -13971,6 +16499,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nnh',
@@ -13982,6 +16512,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'neq',
@@ -13993,6 +16525,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lmk',
@@ -14004,6 +16538,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-29',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mfx',
@@ -14015,6 +16551,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'uni',
@@ -14026,6 +16564,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-15',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'imo',
@@ -14037,6 +16577,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mpx',
@@ -14048,6 +16590,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hmo',
@@ -14059,6 +16603,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mim',
@@ -14070,6 +16616,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2021-06-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tpa',
@@ -14081,6 +16629,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bhw',
@@ -14092,6 +16642,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-01-25',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'guj',
@@ -14103,6 +16655,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tew',
@@ -14114,6 +16668,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2018-11-14',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kup',
@@ -14125,6 +16681,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yss',
@@ -14136,6 +16694,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-10-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pab',
@@ -14147,6 +16707,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'snc',
@@ -14158,6 +16720,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'maf',
@@ -14169,6 +16733,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kor',
@@ -14180,6 +16746,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ntp',
@@ -14191,6 +16759,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kbm',
@@ -14202,6 +16772,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mbt',
@@ -14213,6 +16785,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-09-28',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'iry',
@@ -14224,6 +16798,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cjp',
@@ -14235,6 +16811,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hun',
@@ -14247,6 +16825,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mks',
@@ -14258,6 +16838,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-07-02',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gdn',
@@ -14269,6 +16851,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zsr',
@@ -14280,6 +16864,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-03-03',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ami',
@@ -14291,6 +16877,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-22',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cak',
@@ -14302,6 +16890,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tha',
@@ -14313,6 +16903,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eus',
@@ -14324,6 +16916,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eng',
@@ -14335,6 +16929,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'som',
@@ -14346,6 +16942,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-28',
     text_date: '2021-09-21',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bcq',
@@ -14357,6 +16955,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mri',
@@ -14368,6 +16968,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kqc',
@@ -14379,6 +16981,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nya',
@@ -14390,6 +16994,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sei',
@@ -14401,6 +17007,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kki',
@@ -14412,6 +17020,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wed',
@@ -14423,6 +17033,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-06-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kto',
@@ -14434,6 +17046,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ram',
@@ -14445,6 +17059,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'swe',
@@ -14456,6 +17072,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yup',
@@ -14468,6 +17086,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-29',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gug',
@@ -14479,6 +17099,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hin',
@@ -14490,6 +17112,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-30',
     text_date: 'NULL',
+    ot_timing: 'true',
+    nt_timing: 'false',
   },
   {
     iso: 'guh',
@@ -14501,6 +17125,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-01-26',
     text_date: '2022-03-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nbq',
@@ -14513,6 +17139,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'jbu',
@@ -14524,6 +17152,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hlt',
@@ -14535,6 +17165,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ige',
@@ -14546,6 +17178,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mor',
@@ -14557,6 +17191,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-12-13',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tur',
@@ -14568,6 +17204,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-10',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'iwk',
@@ -14579,6 +17217,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cdf',
@@ -14590,6 +17230,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mhl',
@@ -14601,6 +17243,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lbb',
@@ -14612,6 +17256,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fub',
@@ -14623,6 +17269,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-10',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zai',
@@ -14634,6 +17282,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bxr',
@@ -14645,6 +17295,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gub',
@@ -14656,6 +17308,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-09-17',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'mcd',
@@ -14667,6 +17321,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kss',
@@ -14678,6 +17334,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'emi',
@@ -14689,6 +17347,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yml',
@@ -14700,6 +17360,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hin',
@@ -14711,6 +17373,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'blk',
@@ -14722,6 +17386,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-30',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'azb',
@@ -14733,6 +17399,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'stp',
@@ -14744,6 +17412,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'knj',
@@ -14755,6 +17425,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xbi',
@@ -14766,6 +17438,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-10-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kfc',
@@ -14777,6 +17451,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'vie',
@@ -14788,6 +17464,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-10',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eng',
@@ -14799,6 +17477,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'agd',
@@ -14810,6 +17490,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-07-30',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pol',
@@ -14821,6 +17503,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2018-07-31',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sxn',
@@ -14832,6 +17516,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lgl',
@@ -14843,6 +17529,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-07-28',
     text_date: '2018-12-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'jnj',
@@ -14854,6 +17542,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kpm',
@@ -14865,6 +17555,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xsi',
@@ -14876,6 +17568,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-10-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nii',
@@ -14887,6 +17581,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nup',
@@ -14898,6 +17594,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tuz',
@@ -14909,6 +17607,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-09-30',
     text_date: '2021-04-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'apr',
@@ -14920,6 +17620,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-27',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bjr',
@@ -14931,6 +17633,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-12-07',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kam',
@@ -14942,6 +17646,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cym',
@@ -14953,6 +17659,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'waj',
@@ -14964,6 +17672,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dga',
@@ -14975,6 +17685,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nif',
@@ -14986,6 +17698,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'prk',
@@ -14997,6 +17711,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'guk',
@@ -15008,6 +17724,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: '2022-03-30',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aak',
@@ -15019,6 +17737,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hnj',
@@ -15030,6 +17750,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'jit',
@@ -15041,6 +17763,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ixl',
@@ -15052,6 +17776,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-29',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'urd',
@@ -15063,6 +17789,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-27',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mna',
@@ -15074,6 +17802,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tui',
@@ -15085,6 +17815,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gkp',
@@ -15096,6 +17828,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'amu',
@@ -15107,6 +17841,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'urd',
@@ -15118,6 +17854,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-07',
     text_date: '2020-10-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fin',
@@ -15129,6 +17867,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-04-13',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zam',
@@ -15140,6 +17880,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-10',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kmh',
@@ -15151,6 +17893,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'shg',
@@ -15162,6 +17906,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-01-26',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ben',
@@ -15173,6 +17919,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-04',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mbh',
@@ -15184,6 +17932,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spa',
@@ -15195,6 +17945,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'okv',
@@ -15206,6 +17958,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'shn',
@@ -15217,6 +17971,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mam',
@@ -15228,6 +17984,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-10',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'crx',
@@ -15239,6 +17997,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-04-12',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'avt',
@@ -15250,6 +18010,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bmu',
@@ -15261,6 +18023,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-04',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'deu',
@@ -15272,6 +18036,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wos',
@@ -15283,6 +18049,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-02-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lus',
@@ -15294,6 +18062,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kek',
@@ -15305,6 +18075,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'crn',
@@ -15316,6 +18088,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'usp',
@@ -15327,6 +18101,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dww',
@@ -15338,6 +18114,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'quh',
@@ -15349,6 +18127,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pmf',
@@ -15360,6 +18140,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'uhn',
@@ -15371,6 +18153,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fuh',
@@ -15382,6 +18166,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-04-11',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kan',
@@ -15393,6 +18179,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'arb',
@@ -15404,6 +18192,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-22',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cox',
@@ -15415,6 +18205,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: '2022-04-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tzh',
@@ -15426,6 +18218,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'chf',
@@ -15437,6 +18231,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hnn',
@@ -15448,6 +18244,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'gam',
@@ -15459,6 +18257,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zpm',
@@ -15470,6 +18270,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sho',
@@ -15481,6 +18283,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'big',
@@ -15492,6 +18296,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-06-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gun',
@@ -15503,6 +18309,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kvj',
@@ -15514,6 +18322,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'enq',
@@ -15525,6 +18335,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yua',
@@ -15536,6 +18348,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tzo',
@@ -15547,6 +18361,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'goj',
@@ -15558,6 +18374,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-07-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sck',
@@ -15569,6 +18387,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pjt',
@@ -15580,6 +18400,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ita',
@@ -15591,6 +18413,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cjv',
@@ -15602,6 +18426,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'plt',
@@ -15614,6 +18440,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'trs',
@@ -15625,6 +18453,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lit',
@@ -15636,6 +18466,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'geb',
@@ -15647,6 +18479,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-05-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mar',
@@ -15658,6 +18492,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tab',
@@ -15669,6 +18505,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kqf',
@@ -15680,6 +18518,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dur',
@@ -15691,6 +18531,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'yaa',
@@ -15702,6 +18544,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yle',
@@ -15713,6 +18557,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dgs',
@@ -15724,6 +18570,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-26',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cnh',
@@ -15735,6 +18583,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aso',
@@ -15746,6 +18596,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wer',
@@ -15757,6 +18609,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-10-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'leu',
@@ -15768,6 +18622,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nld',
@@ -15779,6 +18635,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'raw',
@@ -15790,6 +18648,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bor',
@@ -15801,6 +18661,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-04',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'alj',
@@ -15812,6 +18674,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-22',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tiy',
@@ -15823,6 +18687,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-04-06',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lez',
@@ -15834,6 +18700,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pbs',
@@ -15845,6 +18713,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'jiv',
@@ -15856,6 +18726,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'ign',
@@ -15867,6 +18739,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-25',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mox',
@@ -15878,6 +18752,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tvk',
@@ -15889,6 +18765,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-08-09',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'heh',
@@ -15900,6 +18778,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'mhx',
@@ -15911,6 +18791,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tod',
@@ -15922,6 +18804,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lcm',
@@ -15933,6 +18817,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aer',
@@ -15944,10 +18830,12 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-07-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bgr',
-    lang_name: 'Bawm Chin',
+    lang_name: 'Bawm',
     bible_name: '2006 Bangladesh Bible Society',
     bible_id: 'BGRBBS',
     population: '4440',
@@ -15955,6 +18843,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'byv',
@@ -15966,6 +18856,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gud',
@@ -15977,6 +18869,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mco',
@@ -15988,6 +18882,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ena',
@@ -15999,6 +18895,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yor',
@@ -16010,6 +18908,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'oss',
@@ -16021,6 +18921,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sll',
@@ -16032,6 +18934,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mqf',
@@ -16043,6 +18947,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sue',
@@ -16054,6 +18960,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'naf',
@@ -16065,6 +18973,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rwo',
@@ -16076,6 +18986,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aoj',
@@ -16087,6 +18999,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kgf',
@@ -16098,6 +19012,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'vie',
@@ -16109,6 +19025,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bdd',
@@ -16120,6 +19038,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-06-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'agm',
@@ -16131,6 +19051,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'por',
@@ -16142,6 +19064,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-01',
     text_date: '2019-12-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'shu',
@@ -16153,6 +19077,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bin',
@@ -16164,6 +19090,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cab',
@@ -16175,6 +19103,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tgl',
@@ -16186,6 +19116,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ese',
@@ -16197,6 +19129,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-12-11',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yue',
@@ -16208,6 +19142,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'agx',
@@ -16219,6 +19155,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-22',
     text_date: '2019-04-29',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'snp',
@@ -16230,6 +19168,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bjz',
@@ -16241,6 +19181,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-04',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bbj',
@@ -16252,6 +19194,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'maj',
@@ -16263,6 +19207,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xsm',
@@ -16274,6 +19220,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rmq',
@@ -16285,6 +19233,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-21',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'apz',
@@ -16296,6 +19246,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kgr',
@@ -16307,6 +19259,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nim',
@@ -16318,6 +19272,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qxl',
@@ -16329,6 +19285,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mch',
@@ -16341,6 +19299,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hlb',
@@ -16353,6 +19313,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-29',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aka',
@@ -16364,6 +19326,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-22',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nav',
@@ -16375,6 +19339,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pse',
@@ -16386,6 +19352,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'por',
@@ -16397,6 +19365,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cla',
@@ -16408,6 +19378,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-31',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gax',
@@ -16419,6 +19391,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-04-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cmn',
@@ -16430,6 +19404,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-24',
     text_date: '2018-12-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tum',
@@ -16441,6 +19417,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yue',
@@ -16452,6 +19430,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cbu',
@@ -16463,6 +19443,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2020-06-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zaq',
@@ -16474,6 +19456,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'abt',
@@ -16485,6 +19469,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bev',
@@ -16496,6 +19482,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gog',
@@ -16507,6 +19495,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mbk',
@@ -16518,6 +19508,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tbg',
@@ -16529,6 +19521,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ego',
@@ -16540,6 +19534,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yby',
@@ -16551,6 +19547,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-10-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'omw',
@@ -16562,6 +19560,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'awa',
@@ -16573,6 +19573,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ssg',
@@ -16584,6 +19586,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2021-11-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'knc',
@@ -16595,6 +19599,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wsk',
@@ -16606,6 +19612,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ron',
@@ -16617,6 +19625,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bcc',
@@ -16628,6 +19638,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-17',
     text_date: '2019-10-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'amk',
@@ -16639,6 +19651,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-05',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'uzn',
@@ -16650,6 +19664,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ngl',
@@ -16661,6 +19677,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mxx',
@@ -16672,6 +19690,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2021-06-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eip',
@@ -16683,6 +19703,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-12-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kap',
@@ -16694,6 +19716,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ind',
@@ -16705,6 +19729,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-29',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'msc',
@@ -16716,6 +19742,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tzo',
@@ -16727,6 +19755,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hot',
@@ -16738,6 +19768,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mir',
@@ -16749,6 +19781,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gax',
@@ -16760,6 +19794,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-04-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pow',
@@ -16771,6 +19807,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ltz',
@@ -16782,6 +19820,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rmc',
@@ -16793,6 +19833,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2021-12-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'quc',
@@ -16804,6 +19846,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'its',
@@ -16815,6 +19859,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ukr',
@@ -16826,6 +19872,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hvn',
@@ -16837,6 +19885,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'plt',
@@ -16849,6 +19899,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gfk',
@@ -16860,6 +19912,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'faa',
@@ -16871,6 +19925,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zac',
@@ -16882,6 +19938,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-10',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ian',
@@ -16893,6 +19951,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bef',
@@ -16904,6 +19964,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bul',
@@ -16915,6 +19977,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kza',
@@ -16926,6 +19990,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kmb',
@@ -16937,6 +20003,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ded',
@@ -16948,6 +20016,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-30',
     text_date: '2020-06-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rim',
@@ -16959,6 +20029,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'crq',
@@ -16970,6 +20042,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spp',
@@ -16981,6 +20055,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'quc',
@@ -16993,6 +20069,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kfi',
@@ -17004,6 +20082,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-04',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'acn',
@@ -17015,6 +20095,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-07-09',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'bpe',
@@ -17026,10 +20108,12 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-15',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gai',
-    lang_name: 'Mborena Kam',
+    lang_name: 'Borei',
     bible_name: 'Pioneer Bible Translators',
     bible_id: 'GAIPBT',
     population: '2090',
@@ -17037,6 +20121,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'meh',
@@ -17048,6 +20134,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-16',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mpm',
@@ -17059,6 +20147,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ces',
@@ -17070,6 +20160,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pdc',
@@ -17081,6 +20173,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-07-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bgz',
@@ -17092,6 +20186,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eng',
@@ -17103,6 +20199,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yrb',
@@ -17114,6 +20212,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nor',
@@ -17125,6 +20225,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pci',
@@ -17136,6 +20238,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-07-07',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sua',
@@ -17147,6 +20251,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'knv',
@@ -17158,6 +20264,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ndj',
@@ -17169,6 +20277,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nsn',
@@ -17180,6 +20290,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aom',
@@ -17191,6 +20303,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'khm',
@@ -17202,6 +20316,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'viv',
@@ -17213,6 +20329,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ipi',
@@ -17224,6 +20342,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-25',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ded',
@@ -17235,6 +20355,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ojb',
@@ -17246,6 +20368,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tqo',
@@ -17257,6 +20381,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gbi',
@@ -17268,6 +20394,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'cac',
@@ -17279,6 +20407,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gur',
@@ -17290,6 +20420,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mek',
@@ -17301,6 +20433,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tgp',
@@ -17312,6 +20446,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'etr',
@@ -17323,6 +20459,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yuj',
@@ -17334,6 +20472,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eng',
@@ -17345,6 +20485,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pao',
@@ -17356,6 +20498,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fra',
@@ -17367,6 +20511,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bch',
@@ -17378,6 +20524,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kpx',
@@ -17389,6 +20537,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xsu',
@@ -17400,6 +20550,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-07-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ubu',
@@ -17411,6 +20563,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wat',
@@ -17422,6 +20576,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-12-23',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'arb',
@@ -17433,6 +20589,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-22',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bkm',
@@ -17444,6 +20602,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kjg',
@@ -17455,6 +20615,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'waw',
@@ -17466,6 +20628,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spa',
@@ -17477,6 +20641,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-27',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pui',
@@ -17489,6 +20655,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-29',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ptp',
@@ -17500,6 +20668,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bco',
@@ -17511,6 +20681,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-06-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rus',
@@ -17522,6 +20694,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kvy',
@@ -17533,6 +20707,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-31',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'jae',
@@ -17544,6 +20720,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lat',
@@ -17555,6 +20733,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'plt',
@@ -17566,6 +20746,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tbo',
@@ -17577,6 +20759,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ksd',
@@ -17588,6 +20772,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'grc',
@@ -17599,6 +20785,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ydd',
@@ -17610,6 +20798,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-10',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'onr',
@@ -17621,6 +20811,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sil',
@@ -17632,6 +20824,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tha',
@@ -17643,6 +20837,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'awx',
@@ -17654,6 +20850,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-06-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ssx',
@@ -17665,6 +20863,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dgr',
@@ -17676,6 +20876,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: '2019-01-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pes',
@@ -17687,6 +20889,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nop',
@@ -17698,6 +20902,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'roo',
@@ -17709,6 +20915,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'khg',
@@ -17720,6 +20928,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-01',
     text_date: '2020-06-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'amn',
@@ -17731,6 +20941,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kew',
@@ -17742,6 +20954,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ctd',
@@ -17753,6 +20967,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ctd',
@@ -17764,6 +20980,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'quz',
@@ -17775,6 +20993,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'adz',
@@ -17786,6 +21006,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'myw',
@@ -17797,10 +21019,12 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'poh',
-    lang_name: 'Pokomchi, Eastern',
+    lang_name: 'Pocomchí, Oriental',
     bible_name: '2009 Bible Society of Guatemala',
     bible_id: 'POHBSG',
     population: 'NULL',
@@ -17808,6 +21032,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xer',
@@ -17819,6 +21045,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: '2018-12-03',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rah',
@@ -17830,6 +21058,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-12-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kat',
@@ -17841,6 +21071,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'msy',
@@ -17852,6 +21084,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ubr',
@@ -17863,6 +21097,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hla',
@@ -17874,6 +21110,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-02-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nhy',
@@ -17885,6 +21123,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'por',
@@ -17896,6 +21136,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mzz',
@@ -17907,6 +21149,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tb1',
@@ -17918,6 +21162,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-12-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ahk',
@@ -17929,6 +21175,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kan',
@@ -17940,6 +21188,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-30',
     text_date: '2022-03-29',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'bfz',
@@ -17951,6 +21201,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-01-04',
     text_date: '2022-02-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pob',
@@ -17962,6 +21214,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tam',
@@ -17973,6 +21227,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-01-03',
     text_date: '2021-10-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ium',
@@ -17984,6 +21240,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mam',
@@ -17995,6 +21253,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mlp',
@@ -18006,6 +21266,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lmp',
@@ -18017,6 +21279,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gid',
@@ -18028,6 +21292,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nym',
@@ -18039,6 +21305,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bqc',
@@ -18050,6 +21318,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cbc',
@@ -18061,6 +21331,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gya',
@@ -18072,6 +21344,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-29',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mfk',
@@ -18083,6 +21357,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kze',
@@ -18094,6 +21370,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ong',
@@ -18105,6 +21383,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pes',
@@ -18116,6 +21396,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-07-31',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spa',
@@ -18127,6 +21409,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bul',
@@ -18138,6 +21422,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mbb',
@@ -18149,6 +21435,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2019-04-29',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yan',
@@ -18160,6 +21448,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wiu',
@@ -18171,6 +21461,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-10-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sgz',
@@ -18182,6 +21474,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'arp',
@@ -18193,6 +21487,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aui',
@@ -18204,6 +21500,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bmk',
@@ -18215,6 +21513,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kmo',
@@ -18226,6 +21526,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'deu',
@@ -18237,6 +21539,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wnc',
@@ -18248,6 +21552,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-10-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rml',
@@ -18259,6 +21565,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ame',
@@ -18270,6 +21578,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-22',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kik',
@@ -18281,6 +21591,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-04',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aka',
@@ -18292,6 +21604,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-04-19',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'suo',
@@ -18303,6 +21617,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-15',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zin',
@@ -18314,6 +21630,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-10',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mps',
@@ -18325,6 +21643,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'txu',
@@ -18336,6 +21656,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cfm',
@@ -18347,6 +21669,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-27',
     text_date: '2018-09-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hin',
@@ -18358,6 +21682,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-01',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mil',
@@ -18369,6 +21695,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tos',
@@ -18380,6 +21708,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zpc',
@@ -18391,6 +21721,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'guo',
@@ -18402,6 +21734,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-18',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bho',
@@ -18413,6 +21747,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gui',
@@ -18424,6 +21760,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ban',
@@ -18435,6 +21773,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kor',
@@ -18446,6 +21786,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-09',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nou',
@@ -18457,6 +21799,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'luc',
@@ -18468,6 +21812,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2021-06-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aoz',
@@ -18479,6 +21825,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-09-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'irk',
@@ -18490,6 +21838,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-25',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mtj',
@@ -18501,6 +21851,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'ubu',
@@ -18512,6 +21864,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'alt',
@@ -18523,6 +21877,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-09-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tri',
@@ -18534,6 +21890,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lin',
@@ -18545,6 +21903,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tha',
@@ -18556,6 +21916,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yuw',
@@ -18567,6 +21929,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pau',
@@ -18578,6 +21942,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'som',
@@ -18589,6 +21955,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-01',
     text_date: '2021-09-21',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mam',
@@ -18600,6 +21968,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-10',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'swp',
@@ -18611,6 +21981,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dua',
@@ -18622,6 +21994,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'top',
@@ -18633,6 +22007,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mnx',
@@ -18644,6 +22020,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kkc',
@@ -18655,6 +22033,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dan',
@@ -18666,6 +22046,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kmu',
@@ -18677,6 +22059,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-15',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spa',
@@ -18688,6 +22072,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'esi',
@@ -18699,6 +22085,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'akh',
@@ -18710,6 +22098,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ncl',
@@ -18721,6 +22111,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-30',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fra',
@@ -18732,6 +22124,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-01-26',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eng',
@@ -18743,6 +22137,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: '2019-05-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dnt',
@@ -18754,6 +22150,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-04-13',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'crj',
@@ -18766,6 +22164,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-01-05',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'asa',
@@ -18777,6 +22177,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'row',
@@ -18788,6 +22190,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-29',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'igb',
@@ -18799,6 +22203,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tur',
@@ -18810,6 +22216,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ccp',
@@ -18821,6 +22229,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hay',
@@ -18832,6 +22242,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fub',
@@ -18843,6 +22255,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mcb',
@@ -18854,6 +22268,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2020-07-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'opm',
@@ -18865,6 +22281,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bon',
@@ -18876,6 +22294,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sto',
@@ -18887,6 +22307,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'knj',
@@ -18898,6 +22320,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xav',
@@ -18909,6 +22333,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'oku',
@@ -18920,6 +22346,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'not',
@@ -18931,6 +22359,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'amr',
@@ -18942,6 +22372,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cto',
@@ -18953,6 +22385,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aey',
@@ -18964,6 +22398,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-01-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pol',
@@ -18975,6 +22411,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'urt',
@@ -18986,6 +22424,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kbh',
@@ -18997,6 +22437,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mag',
@@ -19008,6 +22450,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kpg',
@@ -19019,6 +22463,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cya',
@@ -19030,6 +22476,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'vut',
@@ -19041,6 +22489,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hun',
@@ -19052,6 +22502,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-12-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'por',
@@ -19063,6 +22515,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ahl',
@@ -19074,6 +22528,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-22',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nak',
@@ -19085,6 +22541,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'prf',
@@ -19096,6 +22554,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mwe',
@@ -19107,6 +22567,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aai',
@@ -19118,6 +22580,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gld',
@@ -19129,6 +22593,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-01-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ixl',
@@ -19140,6 +22606,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mwc',
@@ -19151,6 +22619,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'urd',
@@ -19162,6 +22632,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mmx',
@@ -19173,6 +22645,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tuf',
@@ -19184,6 +22658,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'giz',
@@ -19195,6 +22671,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'amh',
@@ -19206,17 +22684,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
-  },
-  {
-    iso: 'poh',
-    lang_name: 'Pokomchi, Eastern',
-    bible_name: 'Catholic Version',
-    bible_id: 'POHPOC',
-    population: 'NULL',
-    country: 'Guatemala',
-    video_date: 'NULL',
-    audio_date: '2022-03-02',
-    text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'urd',
@@ -19228,6 +22697,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-07',
     text_date: '2020-10-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gyr',
@@ -19239,6 +22710,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tlf',
@@ -19250,6 +22723,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zak',
@@ -19261,6 +22736,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'arb',
@@ -19272,6 +22749,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-22',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spl',
@@ -19283,6 +22762,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'inn',
@@ -19294,6 +22775,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-28',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mbc',
@@ -19305,6 +22788,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tat',
@@ -19316,6 +22801,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yaq',
@@ -19327,6 +22814,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-07-02',
     text_date: '2019-02-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tzj',
@@ -19338,6 +22827,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'okr',
@@ -19349,6 +22840,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rmy',
@@ -19360,6 +22853,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xte',
@@ -19371,6 +22866,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'amh',
@@ -19382,6 +22879,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-22',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kek',
@@ -19393,6 +22892,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'crk',
@@ -19404,6 +22905,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'usa',
@@ -19415,6 +22918,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cbl',
@@ -19426,6 +22931,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'new',
@@ -19437,6 +22944,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mkd',
@@ -19448,6 +22957,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fao',
@@ -19459,6 +22970,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-30',
     text_date: '2022-03-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kaj',
@@ -19470,6 +22983,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cot',
@@ -19481,6 +22996,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'csy',
@@ -19492,6 +23009,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hne',
@@ -19503,6 +23022,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gah',
@@ -19514,6 +23035,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kus',
@@ -19525,6 +23048,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eng',
@@ -19536,6 +23061,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yss',
@@ -19547,6 +23074,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-10-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pad',
@@ -19558,6 +23087,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'snd',
@@ -19569,6 +23100,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bax',
@@ -19580,6 +23113,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kbp',
@@ -19591,6 +23126,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mip',
@@ -19602,6 +23139,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-11-28',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'iso',
@@ -19613,6 +23152,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mug',
@@ -19624,6 +23165,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cjs',
@@ -19635,6 +23178,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hus',
@@ -19646,6 +23191,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gdr',
@@ -19657,6 +23204,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'vie',
@@ -19668,6 +23217,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-09-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'meu',
@@ -19679,6 +23230,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kyc',
@@ -19690,6 +23243,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yva',
@@ -19701,6 +23256,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-07-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ghs',
@@ -19712,6 +23269,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'soq',
@@ -19723,6 +23282,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sxn',
@@ -19734,6 +23295,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-24',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'duo',
@@ -19745,6 +23308,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spa',
@@ -19756,6 +23321,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'urd',
@@ -19767,6 +23334,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-07',
     text_date: '2020-01-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'asg',
@@ -19778,6 +23347,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dbj',
@@ -19789,6 +23360,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-30',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wed',
@@ -19800,6 +23373,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kud',
@@ -19811,6 +23386,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nld',
@@ -19822,6 +23399,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mni',
@@ -19833,6 +23412,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ald',
@@ -19844,6 +23425,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-22',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'quy',
@@ -19855,6 +23438,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-04-04',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ybb',
@@ -19866,6 +23451,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nuf',
@@ -19877,6 +23464,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hap',
@@ -19888,6 +23477,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2021-04-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ceb',
@@ -19899,6 +23490,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'heb',
@@ -19910,6 +23503,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-07-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zia',
@@ -19921,6 +23516,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-10-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cfm',
@@ -19932,6 +23529,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-04-25',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'adx',
@@ -19943,17 +23542,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-17',
     text_date: '2020-07-17',
-  },
-  {
-    iso: 'bgr',
-    lang_name: 'Bawm',
-    bible_name: '2006 Bangladesh Bible Society',
-    bible_id: 'BGRBBS',
-    population: '4440',
-    country: 'India',
-    video_date: 'NULL',
-    audio_date: '2021-04-23',
-    text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'guc',
@@ -19965,6 +23555,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mcn',
@@ -19976,6 +23568,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tcc',
@@ -19987,6 +23581,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ksw',
@@ -19998,6 +23594,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yon',
@@ -20009,6 +23607,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'law',
@@ -20020,6 +23620,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ory',
@@ -20031,6 +23633,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-27',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'slk',
@@ -20042,6 +23646,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'byr',
@@ -20053,6 +23659,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'luo',
@@ -20064,6 +23672,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xbi',
@@ -20075,6 +23685,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-10-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'quy',
@@ -20086,6 +23698,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'run',
@@ -20097,6 +23711,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'crs',
@@ -20108,6 +23724,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-25',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kff',
@@ -20119,6 +23737,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cub',
@@ -20130,6 +23750,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nho',
@@ -20141,6 +23763,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'agg',
@@ -20152,6 +23776,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-22',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mzi',
@@ -20163,6 +23789,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pol',
@@ -20174,6 +23802,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ctg',
@@ -20185,6 +23815,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2018-07-31',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pbu',
@@ -20196,6 +23828,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-01-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pah',
@@ -20207,6 +23841,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'snn',
@@ -20218,6 +23854,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bbb',
@@ -20229,6 +23867,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: '2021-05-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bsp',
@@ -20240,6 +23880,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-17',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mai',
@@ -20251,6 +23893,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'svc',
@@ -20262,6 +23906,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kpr',
@@ -20273,6 +23919,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dow',
@@ -20284,6 +23932,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'por',
@@ -20295,6 +23945,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sbe',
@@ -20306,6 +23958,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'snm',
@@ -20317,6 +23971,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2019-12-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aps',
@@ -20328,6 +23984,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-22',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kin',
@@ -20339,6 +23997,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'czt',
@@ -20350,6 +24010,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dob',
@@ -20361,6 +24023,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kpc',
@@ -20373,6 +24037,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nas',
@@ -20384,6 +24050,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'bul',
@@ -20395,6 +24063,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-04-05',
     text_date: '2021-02-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'atb',
@@ -20406,6 +24076,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-31',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aau',
@@ -20417,6 +24089,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'acr',
@@ -20428,6 +24102,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-15',
     text_date: '2018-12-03',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kdh',
@@ -20439,6 +24115,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-01-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'jen',
@@ -20450,6 +24128,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ixl',
@@ -20461,6 +24141,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-25',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mwq',
@@ -20472,6 +24154,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-12-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cmn',
@@ -20483,6 +24167,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-26',
     text_date: '2019-01-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'due',
@@ -20494,6 +24180,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'swe',
@@ -20505,6 +24193,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mgc',
@@ -20516,6 +24206,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'las',
@@ -20527,6 +24219,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fmu',
@@ -20538,6 +24232,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sps',
@@ -20549,6 +24245,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hio',
@@ -20560,6 +24258,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-01-26',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bng',
@@ -20571,6 +24271,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-04',
     text_date: '2022-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bvz',
@@ -20582,6 +24284,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-30',
     text_date: '2022-04-12',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tbc',
@@ -20593,6 +24297,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'efi',
@@ -20604,6 +24310,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ted',
@@ -20615,6 +24323,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'old',
@@ -20626,6 +24336,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tbk',
@@ -20637,6 +24349,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-30',
     text_date: '2021-06-10',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'avu',
@@ -20648,6 +24362,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bnj',
@@ -20659,6 +24375,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lsi',
@@ -20670,6 +24388,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'ssd',
@@ -20681,6 +24401,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kms',
@@ -20692,6 +24414,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'deu',
@@ -20703,6 +24427,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-10-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wrs',
@@ -20714,6 +24440,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-10-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mti',
@@ -20725,6 +24453,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ron',
@@ -20736,6 +24466,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ind',
@@ -20747,6 +24479,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-01-13',
     text_date: '2021-06-10',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'amh',
@@ -20758,6 +24492,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cro',
@@ -20769,6 +24505,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'uvl',
@@ -20780,6 +24518,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'als',
@@ -20791,6 +24531,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'qul',
@@ -20802,6 +24544,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pob',
@@ -20813,6 +24557,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2019-11-21',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bul',
@@ -20824,6 +24570,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-30',
     text_date: '2021-02-24',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ind',
@@ -20835,6 +24583,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tzh',
@@ -20846,6 +24596,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mtg',
@@ -20857,6 +24609,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-08-23',
     text_date: '2022-03-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'miq',
@@ -20868,6 +24622,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gaw',
@@ -20879,6 +24635,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zpo',
@@ -20890,6 +24648,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-10',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'caa',
@@ -20901,6 +24661,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-19',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tam',
@@ -20912,6 +24674,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-03-02',
+    ot_timing: 'true',
+    nt_timing: 'true',
   },
   {
     iso: 'lww',
@@ -20923,6 +24687,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rom',
@@ -20934,6 +24700,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2021-12-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mam',
@@ -20945,6 +24713,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ukr',
@@ -20956,6 +24726,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kdq',
@@ -20967,6 +24739,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-09-16',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'plt',
@@ -20978,6 +24752,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gvf',
@@ -20989,6 +24765,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kyg',
@@ -21000,6 +24778,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-09-30',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ewo',
@@ -21011,6 +24791,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ixl',
@@ -21022,6 +24804,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-29',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bdq',
@@ -21033,6 +24817,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'buk',
@@ -21044,6 +24830,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tac',
@@ -21055,6 +24843,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dwr',
@@ -21066,6 +24856,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yad',
@@ -21077,6 +24869,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'por',
@@ -21088,6 +24882,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nyy',
@@ -21099,6 +24895,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ata',
@@ -21110,6 +24908,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-29',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wes',
@@ -21121,6 +24921,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tye',
@@ -21132,6 +24934,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'rwo',
@@ -21143,6 +24947,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mih',
@@ -21154,6 +24960,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2022-04-08',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ndi',
@@ -21165,6 +24973,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'quc',
@@ -21176,6 +24986,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'crk',
@@ -21187,6 +24999,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-30',
     text_date: '2021-02-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kxf',
@@ -21198,17 +25012,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-01',
     text_date: 'NULL',
-  },
-  {
-    iso: 'gai',
-    lang_name: 'Borei',
-    bible_name: 'Pioneer Bible Translators',
-    bible_id: 'GAIPBT',
-    population: '2090',
-    country: 'Papua New Guinea',
-    video_date: 'NULL',
-    audio_date: '2022-02-08',
-    text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'spa',
@@ -21220,6 +25025,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-31',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'jmc',
@@ -21231,6 +25038,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cnw',
@@ -21242,6 +25051,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'twb',
@@ -21253,6 +25064,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zlm',
@@ -21264,6 +25077,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-14',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gvn',
@@ -21275,6 +25090,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-07-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bgt',
@@ -21286,6 +25103,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-28',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'byx',
@@ -21297,6 +25116,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'gug',
@@ -21308,6 +25129,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tel',
@@ -21319,6 +25142,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-28',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yor',
@@ -21330,6 +25155,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'slv',
@@ -21341,6 +25168,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mya',
@@ -21352,6 +25181,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2020-03-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'suk',
@@ -21363,6 +25194,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'knp',
@@ -21374,6 +25207,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dje',
@@ -21385,6 +25220,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'xla',
@@ -21396,6 +25233,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ood',
@@ -21407,6 +25246,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-05',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sab',
@@ -21418,6 +25259,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aoj',
@@ -21429,6 +25272,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'khm',
@@ -21440,6 +25285,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cui',
@@ -21451,6 +25298,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-29',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'vie',
@@ -21462,6 +25311,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'atb',
@@ -21473,6 +25324,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'plu',
@@ -21484,6 +25337,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2021-03-09',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pov',
@@ -21495,6 +25350,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hrv',
@@ -21506,6 +25363,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tpz',
@@ -21517,6 +25376,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bis',
@@ -21528,6 +25389,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-04-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mej',
@@ -21539,6 +25402,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2022-04-07',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'esk',
@@ -21550,6 +25415,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2018-02-13',
     text_date: '2018-05-16',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'yue',
@@ -21561,6 +25428,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'chr',
@@ -21572,6 +25441,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pan',
@@ -21583,6 +25454,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bbr',
@@ -21594,6 +25467,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'swe',
@@ -21605,6 +25480,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-09-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kpw',
@@ -21616,6 +25493,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nvm',
@@ -21627,6 +25506,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'pma',
@@ -21638,6 +25519,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2021-06-18',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bkl',
@@ -21649,6 +25532,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kjb',
@@ -21660,6 +25545,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'dad',
@@ -21671,6 +25558,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kpf',
@@ -21682,6 +25571,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'car',
@@ -21694,6 +25585,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tom',
@@ -21705,6 +25598,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'nca',
@@ -21716,6 +25611,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-10-28',
     text_date: '2018-03-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'eng',
@@ -21727,6 +25624,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-31',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'aby',
@@ -21738,6 +25637,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fra',
@@ -21749,6 +25650,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-11-23',
     text_date: '2018-09-18',
+    ot_timing: 'false',
+    nt_timing: 'true',
   },
   {
     iso: 'hat',
@@ -21760,6 +25663,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-04-05',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'urw',
@@ -21771,6 +25676,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tsu',
@@ -21782,6 +25689,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-09-22',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ape',
@@ -21793,6 +25702,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2020-01-15',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cbv',
@@ -21804,6 +25715,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'hat',
@@ -21815,6 +25728,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-08',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mgh',
@@ -21826,6 +25741,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tnc',
@@ -21837,6 +25754,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2019-01-11',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'lao',
@@ -21848,6 +25767,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'fra',
@@ -21859,6 +25780,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'bwr',
@@ -21870,6 +25793,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tim',
@@ -21881,6 +25806,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'onr',
@@ -21892,6 +25819,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-01',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'sso',
@@ -21903,6 +25832,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'wuv',
@@ -21914,6 +25845,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mam',
@@ -21925,6 +25858,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ron',
@@ -21936,6 +25871,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2019-12-23',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'amm',
@@ -21947,6 +25884,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'cak',
@@ -21958,6 +25897,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ngu',
@@ -21969,6 +25910,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-06-30',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'quy',
@@ -21980,6 +25923,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-02-09',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ady',
@@ -21991,17 +25936,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-27',
     text_date: '2018-03-22',
-  },
-  {
-    iso: 'poh',
-    lang_name: 'Pocomchí, Oriental',
-    bible_name: '2009 Bible Society of Guatemala',
-    bible_id: 'POHBSG',
-    population: 'NULL',
-    country: 'Guatemala',
-    video_date: 'NULL',
-    audio_date: '2022-03-02',
-    text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'zga',
@@ -22013,6 +25949,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-03',
     text_date: '2022-04-06',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'kps',
@@ -22024,6 +25962,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2022-02-22',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ino',
@@ -22035,6 +25975,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'msm',
@@ -22046,6 +25988,8 @@ export default [
     video_date: 'NULL',
     audio_date: 'NULL',
     text_date: '2018-04-13',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'tzj',
@@ -22057,6 +26001,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2022-03-02',
     text_date: '2018-04-04',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'mrj',
@@ -22068,6 +26014,8 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-08-23',
     text_date: 'NULL',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
   {
     iso: 'ojb',
@@ -22079,8 +26027,9 @@ export default [
     video_date: 'NULL',
     audio_date: '2021-05-24',
     text_date: '2018-04-04',
-  },
-  {
-    iso: '',
+    ot_timing: 'false',
+    nt_timing: 'false',
   },
 ];
+
+module.exports = data;

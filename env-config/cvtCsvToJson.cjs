@@ -46,7 +46,7 @@ const readFileSync = require("fs").readFileSync;
 const writeFile = require("write");
 
 var argName =
-  process.argv.length > 2 ? process.argv[2] : "biblebrain_2021-08-22";
+  process.argv.length > 2 ? process.argv[2] : "biblebrain_2024-08-22";
 
 const data = readFileSync(__dirname + `/../src/assets/${argName}.csv`, "utf8");
 
