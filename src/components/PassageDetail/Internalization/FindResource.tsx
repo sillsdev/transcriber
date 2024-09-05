@@ -326,7 +326,7 @@ export const FindResource = () => {
   const optVal = (item: string) => ({ value: item, label: camel2Title(item) });
 
   useEffect(() => {
-    import('../../../assets/biblebrain_2021-08-22.js').then((module) => {
+    import('../../../assets/biblebrain_2024-08-22.js').then((module) => {
       setOptions(
         module.default.map((item: BibleBrainItem) => ({
           label: `${item.lang_name} (${item.iso}) - [${item.bible_id}] ${item.bible_name}`,
