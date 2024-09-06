@@ -135,7 +135,7 @@ function AudacityManager(props: IProps) {
       const mediaRec = memory.cache.query((q) =>
         q.findRecord({ type: 'mediafile', id: mediaId })
       ) as MediaFile;
-      mediaUpdated = mediaRec?.attributes?.dateUpdated || '';
+      mediaUpdated = mediaRec?.attributes?.dateUpdated + 'z' || '';
     }
     return mediaUpdated;
   };
@@ -177,7 +177,7 @@ function AudacityManager(props: IProps) {
           if (!(await ipc?.exists(mp3FullName))) {
             showMessage(t.loadingAudio);
             await ipc?.copyFile(mediaName, mp3FullName);
-            const updated = new Date(getMediaUpdated(mediaId));
+            const updated = new Date(getMediaUpdated(mediaId)).getTime() / 1000;
             await ipc?.times(mp3FullName, updated, updated);
           }
         }

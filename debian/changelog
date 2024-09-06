@@ -1,3 +1,10 @@
+audio-project-manager (3.2.3.0)  experimental; urgency=high
+
+ * TT-6045 Handle Audacity 3.6.x (#1710)
+ * TT-5995 Fix Audacity creation date
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 6 Sep 2024 19:30:00 -0600
+
 audio-project-manager (3.2.0.0)  experimental; urgency=high
 
  * TT-5940 No Discussion without audio
