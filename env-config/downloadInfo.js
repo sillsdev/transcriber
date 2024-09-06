@@ -31,7 +31,11 @@ async function makeInfo(path) {
           edition: '',
           platform: isWin ? 'win' : 'linux',
           platform_version:
-            isWin & !is32 ? '10' : isWin & is32 ? '7' : ext.toUpperCase(),
+            isWin & !is32
+              ? '11 (or 10)'
+              : isWin & is32
+              ? '7'
+              : ext.toUpperCase(),
           architecture: isWin & is32 ? 'x86_32' : 'x86_64',
           stability: 'stable',
           nature: 'ver2',
