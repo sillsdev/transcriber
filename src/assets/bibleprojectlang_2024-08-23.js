@@ -1,5 +1,4 @@
-/* eslint-disable import/no-anonymous-default-export */
-export default [
+const data = [
   {
     href: 'https://bibleproject.com/Afrikaans/',
     item: 'Afrikaans',
@@ -281,3 +280,5 @@ export default [
     local: 'Tiếng Việt',
   },
 ];
+
+module.exports = data;

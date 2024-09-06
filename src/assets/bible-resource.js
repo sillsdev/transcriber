@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-anonymous-default-export
-export default [
+const data = [
   {
     name: 'FaithBridge',
     href: 'https://faithbridge.multilingualai.com/',
@@ -37,3 +36,5 @@ export default [
     ai: true,
   },
 ];
+
+module.exports = data;

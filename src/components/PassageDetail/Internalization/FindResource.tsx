@@ -432,7 +432,11 @@ export const FindResource = () => {
             {resources
               .filter((r) => r.featured)
               .map((resource) => (
-                <ResourceItem resource={resource} onLink={doLink} />
+                <ResourceItem
+                  key={resource.name}
+                  resource={resource}
+                  onLink={doLink}
+                />
               ))}
             <Grid item>
               <Stack direction={'row'} sx={{ m: 1 }}>
@@ -471,7 +475,11 @@ export const FindResource = () => {
             {resources
               .filter((r) => !r.featured && !r.ai)
               .map((resource) => (
-                <ResourceItem resource={resource} onLink={doLink} />
+                <ResourceItem
+                  key={resource.name}
+                  resource={resource}
+                  onLink={doLink}
+                />
               ))}
           </Grid>
         </FormControl>
@@ -558,7 +566,11 @@ export const FindResource = () => {
                 {resources
                   .filter((r) => !r.featured && r.ai)
                   .map((resource) => (
-                    <ResourceItem resource={resource} onLink={doLink} />
+                    <ResourceItem
+                      key={resource.name}
+                      resource={resource}
+                      onLink={doLink}
+                    />
                   ))}
               </Grid>
             </FormControl>
