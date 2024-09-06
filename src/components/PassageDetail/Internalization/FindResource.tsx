@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Autocomplete,
   Badge,
@@ -34,6 +34,7 @@ import { useOrbitData } from '../../../hoc/useOrbitData';
 import { isElectron } from '../../../api-variable';
 import { SortBy, useKeyTerms } from '../Keyterms/useKeyTerms';
 import { findResourceSelector } from '../../../selector/selectors';
+import { LaunchLink } from '../../../control/LaunchLink';
 
 interface OptionProps {
   label: string;
@@ -83,10 +84,9 @@ const ResourceItem = ({
   };
 
   return (
-    <Grid key={resource.name} item>
+    <Grid item>
       {resource?.href ? (
         <AltButton
-          key={`resource-${resource.name}`}
           onClick={handleClick(resource.name, resource.href)}
           title={resource.help ? t.getString(resource.help) : undefined}
           variant="outlined"
@@ -100,7 +100,6 @@ const ResourceItem = ({
         </AltButton>
       ) : (
         <AltButton
-          key={`resource-${resource.name}`}
           title={resource.help ? t.getString(resource.help) : undefined}
           variant="outlined"
           sx={{ m: 1 }}
@@ -125,13 +124,12 @@ export const FindResource = () => {
   const [bibleProjectLangs, setBibleProjectLangs] = useState<OptionProps[]>([]);
   const [links, setLinks] = useState<Tpl>({});
   const [resources, setResources] = useState<BibleResource[]>([]);
-  const [isOffline] = useGlobal('offline');
   const [planId] = useGlobal('plan');
   const [query, setQuery] = useState('');
   const [userEdited, setUserEdited] = useState(false);
   const [scope, setScope] = useState<string>('');
   const [type, setType] = useState('');
-  const linkRef = useRef<HTMLAnchorElement>(null);
+  const [link, setLink] = useState<string>();
   const { verseTerms } = useKeyTerms();
   const [terms, setTerms] = useState<string[]>([]);
   const [typeOpts, setTypeOpts] = useState<OptionProps[]>([]);
@@ -360,16 +358,6 @@ export const FindResource = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passage, scope, type, allBookData, userEdited]);
 
-  const doLink = (link: string | undefined) => {
-    if (!link) return;
-    if (isElectron) {
-      launch(link, !isOffline);
-    } else {
-      linkRef.current?.setAttribute('href', link);
-      linkRef.current?.click();
-    }
-  };
-
   const handleChange =
     (kind: string) =>
     (_event: React.SyntheticEvent, newValue: OptionProps | null) => {
@@ -385,7 +373,7 @@ export const FindResource = () => {
           : '';
         setLinks({ ...links, [kind]: link });
       }
-      doLink(link);
+      setLink(link);
     };
 
   const handleTypeChange = (
@@ -435,7 +423,7 @@ export const FindResource = () => {
                 <ResourceItem
                   key={resource.name}
                   resource={resource}
-                  onLink={doLink}
+                  onLink={setLink}
                 />
               ))}
             <Grid item>
@@ -478,7 +466,7 @@ export const FindResource = () => {
                 <ResourceItem
                   key={resource.name}
                   resource={resource}
-                  onLink={doLink}
+                  onLink={setLink}
                 />
               ))}
           </Grid>
@@ -569,14 +557,14 @@ export const FindResource = () => {
                     <ResourceItem
                       key={resource.name}
                       resource={resource}
-                      onLink={doLink}
+                      onLink={setLink}
                     />
                   ))}
               </Grid>
             </FormControl>
             <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
               <Grid item>
-                <AltButton onClick={() => doLink('https://ttsmp3.com//')}>
+                <AltButton onClick={() => setLink('https://ttsmp3.com//')}>
                   {t.convert}
                 </AltButton>
               </Grid>
@@ -584,8 +572,7 @@ export const FindResource = () => {
           </Grid>
         </FormControl>
       </Grid>
-      {/* eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/anchor-is-valid */}
-      <a ref={linkRef} href="#" target="_blank" rel="noopener noreferrer"></a>
+      <LaunchLink url={link} />
     </Grid>
   );
 };

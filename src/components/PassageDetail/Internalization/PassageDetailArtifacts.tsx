@@ -67,7 +67,6 @@ import {
   NamedRegions,
   removeExtension,
   isVisual,
-  launch,
 } from '../../../utils';
 import { useOrbitData } from '../../../hoc/useOrbitData';
 import {
@@ -83,9 +82,9 @@ import { VertListDnd } from '../../../hoc/VertListDnd';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { FindResource } from './FindResource';
 import Close from '@mui/icons-material/Close';
-import { isElectron } from '../../../api-variable';
 import MarkDown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { LaunchLink } from '../../../control/LaunchLink';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -146,7 +145,7 @@ export function PassageDetailArtifacts() {
   const [sortKey, setSortKey] = useState(0);
   const cancelled = useRef(false);
   const [displayId, setDisplayId] = useState('');
-  const linkRef = useRef<HTMLAnchorElement>(null);
+  const [link, setLink] = useState<string>();
   const [markDown, setMarkDoan] = useState('');
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
   const [projectResourceVisible, setProjectResourceVisible] = useState(false);
@@ -247,18 +246,8 @@ export function PassageDetailArtifacts() {
     setDisplayId('');
   };
 
-  const doLink = (link: string | undefined) => {
-    if (!link) return;
-    if (isElectron) {
-      launch(link, !offline);
-    } else {
-      linkRef.current?.setAttribute('href', link);
-      linkRef.current?.click();
-    }
-  };
-
   const handleLinkId = (id: string) => {
-    doLink(
+    setLink(
       rowData.find((r) => r.id === id)?.mediafile?.attributes?.originalFile
     );
   };
@@ -918,8 +907,7 @@ export function PassageDetailArtifacts() {
           <MarkDown remarkPlugins={[remarkGfm]}>{markDown}</MarkDown>
         </BigDialog>
       )}
-      {/* eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/anchor-is-valid */}
-      <a ref={linkRef} href="#" target="_blank" rel="noopener noreferrer"></a>
+      <LaunchLink url={link} />
     </>
   );
 }

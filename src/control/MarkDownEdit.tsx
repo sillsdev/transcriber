@@ -10,13 +10,12 @@ import InfoIcon from '@mui/icons-material/Info';
 import { LightTooltip } from './LightTooltip';
 import MarkDown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { isElectron } from '../api-variable';
-import { useRef, useState } from 'react';
-import { launch } from '../utils';
+import { useState } from 'react';
 import { useGlobal } from 'reactn';
 import { IMediaUploadStrings } from '../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { mediaUploadSelector } from '../selector';
+import { LaunchLink } from './LaunchLink';
 
 const gfmSyntax =
   'https://docs.github.com/{0}/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax';
@@ -28,8 +27,7 @@ interface MarkDownEditProps {
 
 export const MarkDownEdit = ({ inValue, onValue }: MarkDownEditProps) => {
   const [value, setValue] = useState<string>(inValue || '');
-  const linkRef = useRef<HTMLAnchorElement>(null);
-  const [isOffline] = useGlobal('offline');
+  const [link, setLink] = useState<string>();
   const [lang] = useGlobal('lang');
   const t: IMediaUploadStrings = useSelector(mediaUploadSelector, shallowEqual);
 
@@ -37,16 +35,6 @@ export const MarkDownEdit = ({ inValue, onValue }: MarkDownEditProps) => {
     const newValue = e.target.value;
     setValue(newValue);
     onValue && onValue(newValue);
-  };
-
-  const doLink = (link: string | undefined) => {
-    if (!link) return;
-    if (isElectron) {
-      launch(link, !isOffline);
-    } else {
-      linkRef.current?.setAttribute('href', link);
-      linkRef.current?.click();
-    }
   };
 
   return (
@@ -72,14 +60,13 @@ export const MarkDownEdit = ({ inValue, onValue }: MarkDownEditProps) => {
       )}
       <LightTooltip title="Github markdown syntax supported">
         <IconButton
-          onClick={() => doLink(gfmSyntax.replace('{0}', lang))}
+          onClick={() => setLink(gfmSyntax.replace('{0}', lang))}
           sx={{ alignSelf: 'flex-start', p: '2px' }}
         >
           <InfoIcon fontSize="small" color="secondary" />
         </IconButton>
       </LightTooltip>
-      {/* eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/anchor-is-valid */}
-      <a ref={linkRef} href="#" target="_blank" rel="noopener noreferrer"></a>
+      <LaunchLink url={link} />
     </Stack>
   );
 };
