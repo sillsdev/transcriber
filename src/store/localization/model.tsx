@@ -355,10 +355,15 @@ export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "clipboard": string;
     "clipboardCopy": string;
     "convert": string;
+    "create": string;
+    "createItems": string;
     "createResource": string;
+    "findBibleBrain": string;
+    "findOther": string;
     "findResource": string;
     "image": string;
     "imageTpl": string;
+    "launch": string;
     "meaning": string;
     "meaningTpl": string;
     "movement": string;
@@ -379,6 +384,7 @@ export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "video": string;
     "videoTpl": string;
     "whatsAppHelp": string;
+    "withTiming": string;
 };
 
 export interface IGridStrings extends Localize.LocalizedStringsMethods {

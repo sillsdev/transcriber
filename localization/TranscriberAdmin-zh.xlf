@@ -1675,6 +1675,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.book">
+         <segment>
+            <source>book</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="grid.all">
          <segment>
             <source>All</source>
@@ -3610,6 +3616,12 @@
       <unit id="mediaUpload.linkTask">
          <segment>
             <source>Enter a URI link for a resource.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.linkTitle">
+         <segment>
+            <source>Link Resource</source>
             <target/>
          </segment>
       </unit>
@@ -7030,6 +7042,12 @@
       <unit id="verse.noSegments">
          <segment>
             <source>ERROR: Some verses have no segment: ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.outsideReferences">
+         <segment>
+            <source>ERROR: Some verses are outside passage: ({0})</source>
             <target/>
          </segment>
       </unit>

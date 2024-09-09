@@ -1708,9 +1708,33 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.create">
+         <segment>
+            <source>Create</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.createItems">
+         <segment>
+            <source>Create Items</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="findResource.createResource">
          <segment>
             <source>Create AI Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.findBibleBrain">
+         <segment>
+            <source>Find: Bible Brain</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.findOther">
+         <segment>
+            <source>Find: Other</source>
             <target/>
          </segment>
       </unit>
@@ -1729,6 +1753,12 @@
       <unit id="findResource.imageTpl">
          <segment>
             <source>Please provide an image for {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.launch">
+         <segment>
+            <source>Launch</source>
             <target/>
          </segment>
       </unit>
@@ -1849,6 +1879,12 @@
       <unit id="findResource.whatsAppHelp">
          <segment>
             <source>Install the What's App app on your phone and join the group for your language. You can also install What's App on Windows and link to your phone App. Use Meta AI</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.withTiming">
+         <segment>
+            <source>Audio Bible with verse timing</source>
             <target/>
          </segment>
       </unit>

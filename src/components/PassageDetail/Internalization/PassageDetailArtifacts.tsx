@@ -80,11 +80,11 @@ import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
 import { VertListDnd } from '../../../hoc/VertListDnd';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
-import { FindResource } from './FindResource';
 import Close from '@mui/icons-material/Close';
 import MarkDown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { LaunchLink } from '../../../control/LaunchLink';
+import FindTabs from './FindTabs';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -800,7 +800,7 @@ export function PassageDetailArtifacts() {
         onOpen={handleFindVisible}
         bp={BigDialogBp.sm}
       >
-        <FindResource />
+        <FindTabs />
       </BigDialog>
       <BigDialog
         title={t.sharedResource.replace(
