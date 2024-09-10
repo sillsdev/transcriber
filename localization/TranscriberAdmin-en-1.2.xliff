@@ -1936,7 +1936,7 @@
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="findResource.bibleBrain">
+                  <trans-unit id="findResource.bibleBrain">
             <source>{0} Resource</source>
             <target/>
             <context-group>
@@ -1992,8 +1992,36 @@
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="findResource.create">
+            <source>Create</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.createItems">
+            <source>Create Items</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="findResource.createResource">
             <source>Create AI Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.findBibleBrain">
+            <source>Find: Bible Brain</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.findOther">
+            <source>Find: Other</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
@@ -2015,6 +2043,13 @@
          </trans-unit>
          <trans-unit id="findResource.imageTpl">
             <source>Please provide an image for {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.launch">
+            <source>Launch</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
@@ -2155,6 +2190,13 @@
          </trans-unit>
          <trans-unit id="findResource.whatsAppHelp">
             <source>Install the What's App app on your phone and join the group for your language. You can also install What's App on Windows and link to your phone App. Use Meta AI</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.withTiming">
+            <source>Audio Bible with verse timing</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>

@@ -384,10 +384,15 @@ const initialState = {
 			"clipboard": "clipboard",
 			"clipboardCopy": "Copy to clipboard",
 			"convert": "Convert text to audio resource file",
+			"create": "Create",
+			"createItems": "Create Items",
 			"createResource": "Create AI Resource",
+			"findBibleBrain": "Find: Bible Brain",
+			"findOther": "Find: Other",
 			"findResource": "Find Resource",
 			"image": "image",
 			"imageTpl": "Please provide an image for {0}",
+			"launch": "Launch",
 			"meaning": "meaning",
 			"meaningTpl": "Please draft a story to illustrate the meaning of {0}",
 			"movement": "movement",
@@ -408,6 +413,7 @@ const initialState = {
 			"video": "video",
 			"videoTpl": "Please provide a video for {0}",
 			"whatsAppHelp": "Install the What's App app on your phone and join the group for your language. You can also install What's App on Windows and link to your phone App. Use Meta AI",
+			"withTiming": "Audio Bible with verse timing",
 		}
 	}),
 	"grid": new LocalizedStrings({

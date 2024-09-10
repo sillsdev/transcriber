@@ -6,6 +6,7 @@ export const ActionRow = ({ children, ...rest }: BoxProps) => (
       pb: 1,
       display: 'flex',
       flexDirection: 'row',
+      flexGrow: 1,
       justifyContent: 'flex-end',
     }}
     {...rest}
