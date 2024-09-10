@@ -79,11 +79,18 @@ function a11yProps(index: number) {
 interface IProps {
   passId: string;
   ws: ISheet | undefined;
+  hasPublishing: boolean;
   onOpen: () => void;
   onUpdRef?: (id: string, val: string) => void;
 }
 
-export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
+export function ResourceTabs({
+  passId,
+  ws,
+  hasPublishing,
+  onOpen,
+  onUpdRef,
+}: IProps) {
   const sharedResources = useOrbitData<SharedResource[]>('sharedresource');
   const graphics = useOrbitData<GraphicD[]>('graphic');
   const [value, setValue] = React.useState(0);
@@ -375,6 +382,8 @@ export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
       <TabPanel value={value} index={2}>
         <VersionDlg
           passId={sharedResRec ? related(sharedResRec, 'passage') : passId}
+          canSetDestination={true}
+          hasPublishing={hasPublishing}
         />
       </TabPanel>
     </Box>

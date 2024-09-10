@@ -3628,6 +3628,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.publish">
+         <segment>
+            <source>Publish Media</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.published">
          <segment>
             <source>Published</source>
@@ -5340,7 +5346,7 @@
       </unit>
       <unit id="publishLevel.none">
          <segment>
-            <source>Not Published - not visible in publishing app</source>
+            <source>Not Published - not visible outside this project</source>
             <target/>
          </segment>
       </unit>
@@ -5350,15 +5356,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="publishLevel.betalink">
-         <segment>
-            <source>https://akuobible.org/?beta=true</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="publishLevel.public">
          <segment>
             <source>Public - visible to everyone using Akuo website or app</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="publishTo.Internalization">
+         <segment>
+            <source>Internalization Resources for other projects</source>
             <target/>
          </segment>
       </unit>

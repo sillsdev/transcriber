@@ -14,8 +14,7 @@ import {
   remoteIdNum,
   remoteIdGuid,
   findRecord,
-  usePublishLevel,
-  PublishLevelEnum,
+  usePublishDestination,
 } from '../../crud';
 import {
   isSectionRow,
@@ -57,7 +56,7 @@ export const useWfOnlineSave = (props: IProps) => {
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [plan] = useGlobal('plan');
   const { getPassageTypeRec, checkIt } = usePassageType();
-  const { setPublishLevel } = usePublishLevel();
+  const { setPublishTo, isPublished } = usePublishDestination();
 
   const getRemoteId = async (table: string, localid: string) => {
     await waitForIt(
@@ -84,8 +83,8 @@ export const useWfOnlineSave = (props: IProps) => {
         let rec = {
           issection: true,
           level: w.level,
-          published: w.published !== PublishLevelEnum.None,
-          publishTo: setPublishLevel(w.published),
+          published: isPublished(w.published),
+          publishTo: setPublishTo(w.published),
           titlemediafile:
             (w?.titleMediaId?.id &&
               (await getRemoteId('mediafile', w?.titleMediaId?.id))) ||

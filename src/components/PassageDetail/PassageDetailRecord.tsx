@@ -125,8 +125,8 @@ export function PassageDetailRecord(props: IProps) {
   useEffect(() => {
     setHasExistingVersion(
       Boolean(mediafileId) &&
-      recorderState?.status === MediaSt.FETCHED &&
-      recorderState?.id === mediafileId
+        recorderState?.status === MediaSt.FETCHED &&
+        recorderState?.id === mediafileId
     );
   }, [mediafileId, recorderState]);
 
@@ -286,7 +286,11 @@ export function PassageDetailRecord(props: IProps) {
         isOpen={versionVisible}
         onOpen={handleVerHistClose}
       >
-        <VersionDlg passId={passageId} />
+        <VersionDlg
+          passId={passageId}
+          canSetDestination={false}
+          hasPublishing={false}
+        />
       </BigDialog>
     </Stack>
   );

@@ -36,6 +36,7 @@ export const useOfflnMediafileCreate = () => {
         languagebcp47: data.languagebcp47 || '',
         link: data.link || false,
         readyToShare: false,
+        publishTo: '{}',
         performedBy: data.performedBy || '',
         sourceSegments: data.sourceSegments || '{}',
         sourceMediaOfflineId: '',

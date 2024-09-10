@@ -17,6 +17,7 @@ export interface IRow {
   version: string;
   date: string;
   readyToShare: boolean;
+  publishTo: string;
   user: string;
   actions: typeof MediaActions;
 }

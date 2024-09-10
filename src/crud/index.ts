@@ -108,3 +108,4 @@ export * from './usePassageUpdate';
 export * from './useGraphicFind';
 export * from './usePublishLevel';
 export * from './useFetchUrlNow';
+export * from './usePublishDestination';
