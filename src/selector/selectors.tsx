@@ -162,6 +162,9 @@ export const projectDownloadSelector = (state: IState) =>
 export const publishLevelSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'publishLevel' });
 
+export const publishToSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'publishTo' });
+
 export const resourceSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'passageDetailArtifacts' });
 

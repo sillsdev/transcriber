@@ -4190,6 +4190,13 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="mediaTab.publish">
+            <source>Publish Media</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="mediaTab.published">
             <source>Published</source>
             <target/>
@@ -6186,7 +6193,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="publishLevel.none">
-            <source>Not Published - not visible in publishing app</source>
+            <source>Not Published - not visible outside this project</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
@@ -6208,6 +6215,34 @@
          </trans-unit>
          <trans-unit id="publishLevel.public">
             <source>Public - visible to everyone using Akuo website or app</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="publishTo.Akuo">
+            <source>Akuo</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="publishTo.Aquifer">
+            <source>Aquifer</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="publishTo.Internalization">
+            <source>Internalization Resources for other projects</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="publishTo.OBTHelps">
+            <source>OBT Helps website</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>

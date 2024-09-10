@@ -705,6 +705,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "passageAttached": string;
     "planName": string;
     "proposed": string;
+    "publish": string;
     "published": string;
     "readyToShare": string;
     "reference": string;
@@ -1054,6 +1055,13 @@ export interface IPublishLevelStrings extends Localize.LocalizedStringsMethods {
     "beta": string;
     "betalink": string;
     "public": string;
+};
+
+export interface IPublishToStrings extends Localize.LocalizedStringsMethods {
+    "Akuo": string;
+    "Aquifer": string;
+    "Internalization": string;
+    "OBTHelps": string;
 };
 
 export interface IResourceStrings extends Localize.LocalizedStringsMethods {
@@ -1683,6 +1691,7 @@ export interface ILocalizedStrings {
 	projButtons: IProjButtonsStrings;
 	projectDownload: IProjectDownloadStrings;
 	publishLevel: IPublishLevelStrings;
+	publishTo: IPublishToStrings;
 	resource: IResourceStrings;
 	scriptureTable: IScriptureTableStrings;
 	scriptureTableFilter: IScriptureTableFilterStrings;

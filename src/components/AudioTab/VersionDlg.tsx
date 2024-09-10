@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
+
 import { useGlobal } from 'reactn';
 import {
   MediaFile,
@@ -8,15 +9,8 @@ import {
   Plan,
   BookName,
   IState,
-  ProjectD,
 } from '../../model';
-import {
-  findRecord,
-  related,
-  useArtifactType,
-  usePlan,
-  useRole,
-} from '../../crud';
+import { related, useArtifactType, usePlan, useRole } from '../../crud';
 import { IRow, IGetMedia } from '.';
 import { getMedia } from './getMedia';
 import AudioTable from './AudioTable';
@@ -25,11 +19,7 @@ import SelectLatest from './SelectLatest';
 import { UpdateRecord } from '../../model/baseModel';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
-
-import {
-  projDefSectionMap,
-  useProjectDefaults,
-} from '../../crud/useProjectDefaults';
+import { PlanContext } from '../../context/PlanContext';
 
 interface IProps {
   passId: string;
@@ -41,18 +31,14 @@ export const VersionDlg = (props: IProps) => {
   const passages = useOrbitData<Passage[]>('passage');
 
   const [plan] = useGlobal('plan');
-  const [project] = useGlobal('project');
   const [memory] = useGlobal('memory');
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
   const { getPlan } = usePlan();
   const [user] = useGlobal('user');
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [playItem, setPlayItem] = useState('');
   const [data, setData] = useState<IRow[]>([]);
-  const [sectionArr, setSectionArr] = useState<[number, string][]>([]);
+  //const [sectionArr, setSectionArr] = useState<[number, string][]>([]);
   const [sectionMap, setSectionMap] = useState(new Map<number, string>());
-  const [shared, setShared] = useState(false);
   const [versions, setVersions] = useState<number[]>([]);
   const [refresh, setRefresh] = useState(0);
   const { IsVernacularMedia } = useArtifactType();
@@ -60,9 +46,8 @@ export const VersionDlg = (props: IProps) => {
   const allBookData: BookName[] = useSelector(
     (state: IState) => state.books.bookData
   );
-  const { getProjectDefault } = useProjectDefaults();
-  const { userIsAdmin } = useRole();
-  const [readonly] = useState((offline && !offlineOnly) || !userIsAdmin);
+
+  const { sectionArr } = useContext(PlanContext).state;
 
   const handleLatest = (version: number) => {
     const id = data.find((d) => parseInt(d.version) === version)?.id;
@@ -78,16 +63,9 @@ export const VersionDlg = (props: IProps) => {
     }
   };
   useEffect(() => {
-    let projRec = findRecord(memory, 'project', project) as ProjectD;
-    let projSectionArr: undefined | [number, string][] = [];
-    if (projRec) {
-      setShared(projRec?.attributes?.isPublic || false);
-      projSectionArr = getProjectDefault(projDefSectionMap, projRec);
-    }
-    setSectionArr(projSectionArr || []);
-    setSectionMap(new Map(projSectionArr || []));
+    setSectionMap(new Map(sectionArr || []));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [project]);
+  }, [sectionArr]);
 
   useEffect(() => {
     const playChange = data[0]?.playIcon !== playItem;
@@ -119,9 +97,6 @@ export const VersionDlg = (props: IProps) => {
         setRefresh={handleRefresh}
         playItem={playItem}
         setPlayItem={setPlayItem}
-        readonly={readonly}
-        sectionArr={sectionArr}
-        shared={shared}
       />
       <ActionRow>
         <GrowingDiv />

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
@@ -18,7 +18,13 @@ import MediaPlayer from '../MediaPlayer';
 import MediaActions from './MediaActions';
 import MediaActions2 from './MediaActions2';
 import Confirm from '../AlertDialog';
-import { findRecord, remoteId, useOrganizedBy } from '../../crud';
+import {
+  findRecord,
+  PublishDestinationEnum,
+  remoteId,
+  useOrganizedBy,
+  usePublishDestination,
+} from '../../crud';
 import { numCompare, dateCompare, dateOrTime } from '../../utils';
 import { IRow } from '.';
 import { Sorting } from '@devexpress/dx-react-grid';
@@ -26,21 +32,19 @@ import { UpdateRecord } from '../../model/baseModel';
 import { mediaTabSelector, sharedSelector } from '../../selector';
 import { RecordKeyMap } from '@orbit/records';
 import UserAvatar from '../UserAvatar';
+import ConfirmPublishDialog from '../ConfirmPublishDialog';
+import { PlanContext } from '../../context/PlanContext';
 
 interface IProps {
   data: IRow[];
   setRefresh: () => void;
   playItem: string;
-  readonly: boolean;
-  shared: boolean;
-  sectionArr: [number, string][];
   setPlayItem: (item: string) => void;
   onAttach?: (checks: number[], attach: boolean) => void;
 }
 export const AudioTable = (props: IProps) => {
   const { data, setRefresh } = props;
-  const { playItem, setPlayItem, onAttach, readonly, shared, sectionArr } =
-    props;
+  const { playItem, setPlayItem, onAttach } = props;
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const lang = useSelector((state: IState) => state.strings.lang);
@@ -55,6 +59,9 @@ export const AudioTable = (props: IProps) => {
   const [deleteItem, setDeleteItem] = useState(-1);
   const [showId, setShowId] = useState('');
   const [mediaPlaying, setMediaPlaying] = useState(false);
+  const [publishItem, setPublishItem] = useState(-1);
+  const { sectionArr, shared, readonly, canHidePublishing } =
+    useContext(PlanContext).state;
   const columnDefs =
     shared || sectionArr.length > 0
       ? [
@@ -145,6 +152,7 @@ export const AudioTable = (props: IProps) => {
   const [hiddenColumnNames] = useState<string[]>(['planName']);
   const [verHist, setVerHist] = useState('');
   const [verValue, setVerValue] = useState<number>();
+  const { getPublishTo, setPublishTo, isPublished } = usePublishDestination();
 
   const handleShowTranscription = (id: string) => () => {
     const row = data.find((r) => r.id === id);
@@ -152,14 +160,27 @@ export const AudioTable = (props: IProps) => {
     if (rowVer) setVerValue(parseInt(rowVer));
     setShowId(id);
   };
-  const handleChangeReadyToShare = (id: string) => () => {
-    const mediaRec = memory.cache.query((q) =>
+  const updateMediaRec = (id: string, publishTo: PublishDestinationEnum[]) => {
+    var mediaRec = memory.cache.query((q) =>
       q.findRecord({ type: 'mediafile', id: id })
     ) as MediaFileD;
-    mediaRec.attributes.readyToShare = !mediaRec.attributes.readyToShare;
+    mediaRec.attributes.publishTo = setPublishTo(publishTo);
+    mediaRec.attributes.readyToShare = isPublished(publishTo);
     memory.update((t) => UpdateRecord(t, mediaRec, user));
     setRefresh();
   };
+  const publishConfirm = (destinations: PublishDestinationEnum[]) => {
+    updateMediaRec(data[publishItem].id, destinations);
+    setPublishItem(-1);
+  };
+  const publishRefused = () => {
+    setPublishItem(-1);
+  };
+
+  const handleChangeReadyToShare = (i: number) => () => {
+    setPublishItem(i);
+  };
+
   const handleCloseTranscription = () => {
     setShowId('');
   };
@@ -291,7 +312,7 @@ export const AudioTable = (props: IProps) => {
           <Checkbox
             id="checkbox-rts"
             checked={value as any as boolean}
-            onChange={handleChangeReadyToShare(row.id)}
+            onChange={handleChangeReadyToShare(row.index)}
             disabled={(row.passId || '') === ''}
           />
         }
@@ -369,7 +390,21 @@ export const AudioTable = (props: IProps) => {
           <VersionDlg passId={verHist} />
         </BigDialog>
       )}
-
+      {publishItem !== -1 && (
+        <ConfirmPublishDialog
+          title={t.publish}
+          description={''}
+          yesResponse={publishConfirm}
+          noResponse={publishRefused}
+          current={getPublishTo(
+            data[publishItem].publishTo,
+            canHidePublishing,
+            shared
+          )}
+          sharedProject={shared}
+          hasPublishing={canHidePublishing}
+        />
+      )}
       {showId !== '' && (
         <TranscriptionShow
           id={showId}

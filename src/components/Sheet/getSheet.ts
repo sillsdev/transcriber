@@ -22,7 +22,7 @@ import { ISTFilterState } from './filterMenu';
 import { PassageTypeEnum } from '../../model/passageType';
 import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
 import { InitializedRecord } from '@orbit/records';
-import { PublishLevelEnum } from '../../crud/usePublishLevel';
+import { PublishDestinationEnum } from '../../crud';
 
 const shtSectionUpdate = (item: ISheet, rec: ISheet) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -149,6 +149,7 @@ export interface GetSheetProps {
   wfStr: IWorkflowStepsStrings;
   filterState: ISTFilterState;
   minSection: number;
+  hasPublishing: boolean;
   hidePublishing: boolean;
   doneStepId: string;
   getDiscussionCount: (passageId: string, stepId: string) => number;
@@ -156,7 +157,11 @@ export interface GetSheetProps {
     rec: InitializedRecord,
     ref?: string
   ) => { uri?: string; rights?: string; url?: string; color?: string };
-  getPublishLevel: (publishTo: string) => PublishLevelEnum;
+  getPublishTo: (
+    publishTo: string,
+    hasPublishing: boolean,
+    shared: boolean
+  ) => PublishDestinationEnum[];
   readSharedResource: (passId: string) => SharedResourceD | undefined;
   current?: ISheet[];
 }
@@ -172,11 +177,12 @@ export const getSheet = ({
   wfStr,
   filterState,
   minSection,
+  hasPublishing,
   hidePublishing,
   doneStepId,
   getDiscussionCount,
   graphicFind,
-  getPublishLevel,
+  getPublishTo,
   readSharedResource,
   current,
 }: GetSheetProps) => {
@@ -230,7 +236,11 @@ export const getSheet = ({
         item.reference
       );
       item.filtered = sectionfiltered;
-      item.published = getPublishLevel(section.attributes.publishTo);
+      item.published = getPublishTo(
+        section.attributes.publishTo,
+        hasPublishing,
+        projectShared
+      );
       curSectionPublished = section.attributes.published;
       const gr = graphicFind(section);
       item.graphicUri = gr?.uri;

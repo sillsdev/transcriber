@@ -9,7 +9,7 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import { currentDateTime } from '../../utils/currentDateTime';
 import { parseInt } from 'lodash';
 import { useOrganizedBy } from '../../crud/useOrganizedBy';
-import { PublishLevelEnum } from '../../crud/usePublishLevel';
+import { PublishDestinationEnum } from '../../crud';
 
 interface MySheet extends ISheet {
   [key: string]: any;
@@ -194,7 +194,7 @@ export const useWfPaste = (props: IProps) => {
           } else {
             ws.level = SheetLevel.Section;
             ws.kind = flat ? IwsKind.SectionPassage : IwsKind.Section;
-            ws.published = PublishLevelEnum.None;
+            ws.published = [] as PublishDestinationEnum[];
             if (ws.passageSeq === undefined) {
               ws.passageSeq = 1;
               ws.passageUpdated = updatedAt;

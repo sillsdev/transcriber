@@ -50,6 +50,8 @@ import {
   useGraphicUpdate,
   useGraphicFind,
   useSharedResRead,
+  PublishDestinationEnum,
+  usePublishDestination,
 } from '../../crud';
 import {
   lookupBook,
@@ -121,7 +123,6 @@ import { getDefaultName } from './getDefaultName';
 import GraphicRights from '../GraphicRights';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity, RecordKeyMap } from '@orbit/records';
-import { PublishLevelEnum, usePublishLevel } from '../../crud/usePublishLevel';
 import { getLastVerse } from '../../business/localParatext/getLastVerse';
 
 const SaveWait = 500;
@@ -266,7 +267,7 @@ export function ScriptureTable(props: IProps) {
     discussions,
     groupmemberships,
   });
-  const { getPublishLevel } = usePublishLevel();
+  const { getPublishTo } = usePublishDestination();
   const [defaultFilterState, setDefaultFilterState] = useState<ISTFilterState>({
     minStep: '', //orgworkflow step to show this step or after
     maxStep: '', //orgworkflow step to show this step or before
@@ -648,7 +649,7 @@ export function ScriptureTable(props: IProps) {
       sectionSeq: nextSecSequence(ws, i, type),
       passageSeq: 0,
       reference: '',
-      published: PublishLevelEnum.None,
+      published: [] as PublishDestinationEnum[],
       book: scripture ? firstBook : '',
     } as ISheet;
     return newRow;
@@ -1354,11 +1355,12 @@ export function ScriptureTable(props: IProps) {
         wfStr,
         filterState,
         minSection,
+        hasPublishing: canHidePublishing,
         hidePublishing,
         doneStepId,
         getDiscussionCount,
         graphicFind,
-        getPublishLevel,
+        getPublishTo,
         readSharedResource,
       });
       setSheet(newWorkflow);
@@ -1495,7 +1497,7 @@ export function ScriptureTable(props: IProps) {
 
   const setSectionPublish = async (
     index: number,
-    publishLevel: PublishLevelEnum
+    destinations: PublishDestinationEnum[]
   ) => {
     await waitForRemoteQueue(t.publishingWarning);
     if (savingRef.current || updateRef.current) {
@@ -1508,18 +1510,18 @@ export function ScriptureTable(props: IProps) {
       const newsht = [...sheetRef.current];
       newsht[index] = {
         ...ws,
-        published: publishLevel,
+        published: destinations,
         sectionUpdated: currentDateTime(),
       };
       //if this is a movement...publish all the sections below it
-      if (ws.published !== publishLevel && ws.level === SheetLevel.Movement) {
+      if (ws.published !== destinations && ws.level === SheetLevel.Movement) {
         let i = index + 1;
         while (i < newsht.length) {
           if (newsht[i].level === SheetLevel.Movement) break;
-          if (isSectionRow(newsht[i]) && newsht[i].published !== publishLevel) {
+          if (isSectionRow(newsht[i]) && newsht[i].published !== destinations) {
             newsht[i] = {
               ...newsht[i],
-              published: publishLevel,
+              published: destinations,
               sectionUpdated: currentDateTime(),
             };
           }

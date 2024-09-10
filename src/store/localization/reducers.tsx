@@ -746,6 +746,7 @@ const initialState = {
 			"passageAttached": "Passage already attached",
 			"planName": "Plan",
 			"proposed": "Proposed",
+			"publish": "Publish Media",
 			"published": "Published",
 			"readyToShare": "Ready to Share",
 			"reference": "Reference",
@@ -1111,10 +1112,18 @@ const initialState = {
 	}),
 	"publishLevel": new LocalizedStrings({
 		"en": {
-			"none": "Not Published - not visible in publishing app",
+			"none": "Not Published - not visible outside this project",
 			"beta": "Beta - visible on the Akuo website when using the beta parameter (not available in the app)",
 			"betalink": "https://akuobible.org/?beta=true",
 			"public": "Public - visible to everyone using Akuo website or app",
+		}
+	}),
+	"publishTo": new LocalizedStrings({
+		"en": {
+			"Akuo": "Akuo",
+			"Aquifer": "Aquifer",
+			"Internalization": "Internalization Resources for other projects",
+			"OBTHelps": "OBT Helps website",
 		}
 	}),
 	"resource": new LocalizedStrings({
@@ -1783,6 +1792,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"projButtons" : new LocalizedStrings(action.payload.data.projButtons),
 				"projectDownload" : new LocalizedStrings(action.payload.data.projectDownload),
 				"publishLevel" : new LocalizedStrings(action.payload.data.publishLevel),
+				"publishTo" : new LocalizedStrings(action.payload.data.publishTo),
 				"resource" : new LocalizedStrings(action.payload.data.resource),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
 				"scriptureTableFilter" : new LocalizedStrings(action.payload.data.scriptureTableFilter),
