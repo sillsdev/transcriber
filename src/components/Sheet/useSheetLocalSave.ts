@@ -27,7 +27,7 @@ import {
   isSectionUpdated,
 } from './isSectionPassageUpdated';
 import { usePassageType } from '../../crud/usePassageType';
-import { usePublishDestination } from '../../crud';
+import { usePublishDestination } from '../../crud/usePublishDestination';
 
 interface IProps {
   setComplete: (val: number) => void;

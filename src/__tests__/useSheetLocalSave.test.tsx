@@ -12,7 +12,7 @@ import { useWfLocalSave } from '../components/Sheet/useSheetLocalSave';
 import { memory } from '../schema';
 import { PassageTypeEnum } from '../model/passageType';
 import DataProvider from '../hoc/DataProvider';
-import { PublishDestinationEnum } from '../crud';
+import { PublishDestinationEnum } from '../crud/usePublishDestination';
 
 const defaultSheet: ISheet = {
   level: SheetLevel.Section,
