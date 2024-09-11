@@ -12,9 +12,9 @@ import {
 import Memory from '@orbit/memory';
 import { getSheet } from '../components/Sheet/getSheet';
 import { InitializedRecord } from '@orbit/records';
-import { PublishLevelEnum } from '../crud/usePublishLevel';
 import { ISTFilterState } from '../components/Sheet/filterMenu';
 import { PassageTypeEnum } from '../model/passageType';
+import { PublishDestinationEnum } from '../crud';
 
 var mockMemory = {} as Memory;
 
@@ -300,8 +300,8 @@ var defaultFilterState: ISTFilterState = {
   disabled: false,
   canHideDone: false,
 };
-var getPublishLevel = (publishTo: string): PublishLevelEnum =>
-  PublishLevelEnum.None;
+var getPublishTo = (publishTo: string): PublishDestinationEnum[] =>
+  [] as PublishDestinationEnum[];
 interface FindResult {
   uri?: string;
   rights?: string;
@@ -324,11 +324,12 @@ var gsDefaults = {
   wfStr,
   filterState: defaultFilterState,
   minSection: -1,
+  hasPublishing: false,
   hidePublishing: false,
   doneStepId: 'done-1',
   getDiscussionCount,
   graphicFind,
-  getPublishLevel,
+  getPublishTo,
   readSharedResource,
   current: curSheet,
 };
@@ -341,7 +342,7 @@ var secResult = {
   passageType: PassageTypeEnum.PASSAGE,
   deleted: false,
   filtered: false,
-  published: PublishLevelEnum.None,
+  published: [] as PublishDestinationEnum[],
   editor: undefined,
   graphicUri: undefined,
   graphicFullSizeUrl: undefined,
@@ -371,7 +372,7 @@ var flatResult = {
   passageType: PassageTypeEnum.PASSAGE,
   deleted: false,
   filtered: false,
-  published: PublishLevelEnum.None,
+  published: [] as PublishDestinationEnum[],
   mediaShared: IMediaShare.NotPublic,
   mediaId: undefined,
   editor: undefined,

@@ -412,6 +412,8 @@ const schemaDefinition: RecordSchemaSettings = {
         recordedbyUserId: { type: 'number' },
         recordedByUserId: { type: 'number' },
         sourceMediaId: { type: 'number' },
+        publishedAs: { type: 'string' },
+        publishTo: { type: 'string' },
       },
       relationships: {
         artifactType: { kind: 'hasOne', type: 'artifacttype' },

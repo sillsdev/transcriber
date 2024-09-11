@@ -29,6 +29,8 @@ export interface MediaFile extends BaseModel {
     sourceMediaOfflineId: string;
     transcriptionstate: string;
     topic: string;
+    publishedAs: string;
+    publishTo: string;
   };
   relationships?: {
     passage: RecordRelationship;

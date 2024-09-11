@@ -108,8 +108,7 @@ const PlanProvider = (props: IProps) => {
       const shared = projRec?.attributes?.isPublic || false;
       const hidePublishing =
         (getProjectDefault(projDefHidePublishing) ?? true) ||
-        (isOffline && !isDeveloper) ||
-        shared;
+        (isOffline && !isDeveloper);
 
       if (
         shared !== state.shared ||

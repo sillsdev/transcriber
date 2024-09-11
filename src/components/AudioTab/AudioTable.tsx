@@ -18,7 +18,13 @@ import MediaPlayer from '../MediaPlayer';
 import MediaActions from './MediaActions';
 import MediaActions2 from './MediaActions2';
 import Confirm from '../AlertDialog';
-import { findRecord, remoteId, useOrganizedBy } from '../../crud';
+import {
+  findRecord,
+  PublishDestinationEnum,
+  remoteId,
+  useOrganizedBy,
+  usePublishDestination,
+} from '../../crud';
 import { numCompare, dateCompare, dateOrTime } from '../../utils';
 import { IRow } from '.';
 import { Sorting } from '@devexpress/dx-react-grid';
@@ -26,6 +32,7 @@ import { UpdateRecord } from '../../model/baseModel';
 import { mediaTabSelector, sharedSelector } from '../../selector';
 import { RecordKeyMap } from '@orbit/records';
 import UserAvatar from '../UserAvatar';
+import ConfirmPublishDialog from '../ConfirmPublishDialog';
 
 interface IProps {
   data: IRow[];
@@ -33,14 +40,24 @@ interface IProps {
   playItem: string;
   readonly: boolean;
   shared: boolean;
+  canSetDestination: boolean;
+  hasPublishing: boolean;
   sectionArr: [number, string][];
   setPlayItem: (item: string) => void;
   onAttach?: (checks: number[], attach: boolean) => void;
 }
 export const AudioTable = (props: IProps) => {
   const { data, setRefresh } = props;
-  const { playItem, setPlayItem, onAttach, readonly, shared, sectionArr } =
-    props;
+  const {
+    playItem,
+    setPlayItem,
+    onAttach,
+    readonly,
+    shared,
+    canSetDestination,
+    hasPublishing,
+    sectionArr,
+  } = props;
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const lang = useSelector((state: IState) => state.strings.lang);
@@ -55,6 +72,7 @@ export const AudioTable = (props: IProps) => {
   const [deleteItem, setDeleteItem] = useState(-1);
   const [showId, setShowId] = useState('');
   const [mediaPlaying, setMediaPlaying] = useState(false);
+  const [publishItem, setPublishItem] = useState(-1);
   const columnDefs =
     shared || sectionArr.length > 0
       ? [
@@ -145,6 +163,7 @@ export const AudioTable = (props: IProps) => {
   const [hiddenColumnNames] = useState<string[]>(['planName']);
   const [verHist, setVerHist] = useState('');
   const [verValue, setVerValue] = useState<number>();
+  const { getPublishTo, setPublishTo, isPublished } = usePublishDestination();
 
   const handleShowTranscription = (id: string) => () => {
     const row = data.find((r) => r.id === id);
@@ -152,14 +171,27 @@ export const AudioTable = (props: IProps) => {
     if (rowVer) setVerValue(parseInt(rowVer));
     setShowId(id);
   };
-  const handleChangeReadyToShare = (id: string) => () => {
-    const mediaRec = memory.cache.query((q) =>
+  const updateMediaRec = (id: string, publishTo: PublishDestinationEnum[]) => {
+    var mediaRec = memory.cache.query((q) =>
       q.findRecord({ type: 'mediafile', id: id })
     ) as MediaFileD;
-    mediaRec.attributes.readyToShare = !mediaRec.attributes.readyToShare;
+    mediaRec.attributes.publishTo = setPublishTo(publishTo);
+    mediaRec.attributes.readyToShare = isPublished(publishTo);
     memory.update((t) => UpdateRecord(t, mediaRec, user));
     setRefresh();
   };
+  const publishConfirm = (destinations: PublishDestinationEnum[]) => {
+    updateMediaRec(data[publishItem].id, destinations);
+    setPublishItem(-1);
+  };
+  const publishRefused = () => {
+    setPublishItem(-1);
+  };
+
+  const handleChangeReadyToShare = (i: number) => () => {
+    setPublishItem(i);
+  };
+
   const handleCloseTranscription = () => {
     setShowId('');
   };
@@ -291,8 +323,8 @@ export const AudioTable = (props: IProps) => {
           <Checkbox
             id="checkbox-rts"
             checked={value as any as boolean}
-            onChange={handleChangeReadyToShare(row.id)}
-            disabled={(row.passId || '') === ''}
+            onChange={handleChangeReadyToShare(row.index)}
+            disabled={(row.passId || '') === '' || !canSetDestination}
           />
         }
         label=""
@@ -366,10 +398,28 @@ export const AudioTable = (props: IProps) => {
           isOpen={Boolean(verHist)}
           onOpen={handleVerHistClose}
         >
-          <VersionDlg passId={verHist} />
+          <VersionDlg
+            passId={verHist}
+            canSetDestination={canSetDestination}
+            hasPublishing={hasPublishing}
+          />
         </BigDialog>
       )}
-
+      {publishItem !== -1 && (
+        <ConfirmPublishDialog
+          title={t.publish}
+          description={''}
+          yesResponse={publishConfirm}
+          noResponse={publishRefused}
+          current={getPublishTo(
+            data[publishItem].publishTo,
+            hasPublishing,
+            shared
+          )}
+          sharedProject={shared}
+          hasPublishing={hasPublishing}
+        />
+      )}
       {showId !== '' && (
         <TranscriptionShow
           id={showId}
