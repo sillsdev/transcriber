@@ -37,6 +37,7 @@ const StyledIconButton = styled(IconButton, {
 interface IProps {
   rowIndex: number;
   isPassage: boolean;
+  publishStatus?: string;
   isNote: boolean;
   mediaId: string;
   mediaShared: IMediaShare;
@@ -57,6 +58,7 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
   const {
     rowIndex,
     isPassage,
+    publishStatus,
     isNote,
     mediaShared,
     onHistory,
@@ -87,7 +89,9 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
           disabled={!canEdit}
           onClick={onHistory(rowIndex)}
         >
-          {isNote ? (
+          {publishStatus ? (
+            <>{publishStatus}</>
+          ) : isNote ? (
             <EditIcon />
           ) : mediaShared === IMediaShare.NotPublic ? (
             <VersionsIcon />

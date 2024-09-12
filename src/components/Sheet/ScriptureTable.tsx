@@ -267,7 +267,7 @@ export function ScriptureTable(props: IProps) {
     discussions,
     groupmemberships,
   });
-  const { getPublishTo } = usePublishDestination();
+  const { getPublishTo, publishStatus } = usePublishDestination();
   const [defaultFilterState, setDefaultFilterState] = useState<ISTFilterState>({
     minStep: '', //orgworkflow step to show this step or after
     maxStep: '', //orgworkflow step to show this step or before
@@ -1361,6 +1361,7 @@ export function ScriptureTable(props: IProps) {
         getDiscussionCount,
         graphicFind,
         getPublishTo,
+        publishStatus,
         readSharedResource,
       });
       setSheet(newWorkflow);

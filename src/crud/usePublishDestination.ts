@@ -75,5 +75,35 @@ export const usePublishDestination = () => {
     return JSON.stringify(json);
   };
 
-  return { getPublishTo, setPublishTo, getDefaults, isPublished };
+  const publishStatus = (destinations: PublishDestinationEnum[]) => {
+    let value = 0;
+    if (
+      destinations.includes(PublishDestinationEnum.AkuoPublic) ||
+      destinations.includes(PublishDestinationEnum.AkuoBeta)
+    ) {
+      value += 1;
+    }
+    if (destinations.includes(PublishDestinationEnum.Aquifer)) {
+      value += 2;
+    }
+    if (destinations.includes(PublishDestinationEnum.Internalization)) {
+      value += 4;
+    }
+    if (destinations.includes(PublishDestinationEnum.OBTHelps)) {
+      value += 8;
+    }
+    const codes = [
+      0x2b1a, 0x2b61, 0x2b62, 0x2b67, 0x2b63, 0x2b65, 0x2b68, 0x2b17, 0x2b60,
+      0x2b66, 0x2b64, 0x2b12, 0x2b69, 0x2b16, 0x2b13, 0x2b24,
+    ];
+    return String.fromCodePoint(codes[value]);
+  };
+
+  return {
+    getPublishTo,
+    setPublishTo,
+    getDefaults,
+    isPublished,
+    publishStatus,
+  };
 };

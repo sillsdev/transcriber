@@ -42,6 +42,7 @@ export interface ISheet {
   passageUpdated?: string;
   mediaId?: RecordIdentity;
   mediaShared: IMediaShare;
+  publishStatus?: string;
   step?: string;
   stepId?: string;
   deleted: boolean;
