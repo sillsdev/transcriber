@@ -29,7 +29,7 @@ export const LinkEdit = ({ inValue, onValue }: LinkEditProps) => {
         label={t.linkTitle}
         value={value}
         onChange={handleValue}
-        sx={{ flexGrow: 1, my: 2 }}
+        sx={{ flexGrow: 1, my: 2, minWidth: 400 }}
       />
       {value && (
         <IconButton id="launchLink" onClick={() => setLink(value)}>

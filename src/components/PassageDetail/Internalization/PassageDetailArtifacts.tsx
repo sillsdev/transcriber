@@ -45,7 +45,7 @@ import SelectSharedResource from './SelectSharedResource';
 import SelectProjectResource from './SelectProjectResource';
 import SelectSections from './SelectSections';
 import ResourceData from './ResourceData';
-import { UploadType } from '../../MediaUpload';
+import { MarkDownType, UploadType, UriLinkType } from '../../MediaUpload';
 import LimitedMediaPlayer from '../../LimitedMediaPlayer';
 import {
   Box,
@@ -336,6 +336,13 @@ export function PassageDetailArtifacts() {
     const mf = mediafiles.find((m) => m.id === related(secRes, 'mediafile'));
     catIdRef.current = mf ? related(mf, 'artifactCategory') : undefined;
     mediaRef.current = mf as MediaFileD;
+    setUploadType(
+      mf?.attributes.contentType === MarkDownType
+        ? UploadType.MarkDown
+        : mf?.attributes.contentType === UriLinkType
+        ? UploadType.Link
+        : UploadType.Resource
+    );
   };
   const resetEdit = () => {
     setEditResource(undefined);
@@ -779,6 +786,7 @@ export function PassageDetailArtifacts() {
         ready={() => true}
         metaData={
           <ResourceData
+            uploadType={uploadType}
             catAllowNew={true} //if they can upload they can add cat
             initCategory=""
             onCategoryChange={handleCategory}
@@ -873,6 +881,7 @@ export function PassageDetailArtifacts() {
       >
         <ResourceData
           media={mediaRef.current}
+          uploadType={uploadType}
           catAllowNew={true}
           initCategory={catIdRef.current || ''}
           onCategoryChange={handleCategory}
