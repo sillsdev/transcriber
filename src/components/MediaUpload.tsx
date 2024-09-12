@@ -17,6 +17,7 @@ import { mediaUploadSelector } from '../selector';
 import { API_CONFIG } from '../api-variable';
 import { LinkEdit } from '../control/LinkEdit';
 import { MarkDownEdit } from '../control/MarkDownEdit';
+import { isUrl } from '../utils';
 
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('react-file-drop').FileDrop : <></>;
@@ -377,7 +378,11 @@ function MediaUpload(props: IProps) {
             variant="contained"
             color="primary"
             disabled={
-              (ready && !ready()) || !files || files.length === 0 || !hasRights
+              (ready && !ready()) ||
+              !files ||
+              files.length === 0 ||
+              !hasRights ||
+              (uploadType === UploadType.Link && !isUrl(files[0].name))
             }
           >
             {t.upload}

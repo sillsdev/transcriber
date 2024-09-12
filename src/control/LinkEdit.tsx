@@ -5,6 +5,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { mediaUploadSelector } from '../selector';
 import { IMediaUploadStrings } from '../model';
 import { LaunchLink } from './LaunchLink';
+import { isUrl } from '../utils';
 
 interface LinkEditProps {
   inValue?: string;
@@ -28,10 +29,11 @@ export const LinkEdit = ({ inValue, onValue }: LinkEditProps) => {
         id="link"
         label={t.linkTitle}
         value={value}
+        color={!value || isUrl(value) ? 'primary' : 'error'}
         onChange={handleValue}
         sx={{ flexGrow: 1, my: 2 }}
       />
-      {value && (
+      {isUrl(value) && (
         <IconButton id="launchLink" onClick={() => setLink(value)}>
           <LinkIcon />
         </IconButton>
