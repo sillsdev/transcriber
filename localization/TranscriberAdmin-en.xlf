@@ -1654,9 +1654,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="findResource.aiDesc">
          <segment>
             <source>Copy the query contents and paste it into one or more of the AI chat tools:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.aquiferLang">
+         <segment>
+            <source>Aquifer Language</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.aquiferSearchTip">
+         <segment>
+            <source>The keyword to search on. Currently only searches against content names (not inside content). Non-English names are supported. Must be at least 3 characters in length.</source>
             <target/>
          </segment>
       </unit>
@@ -1744,6 +1762,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.group">
+         <segment>
+            <source>Group</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="findResource.image">
          <segment>
             <source>image</source>
@@ -1753,6 +1777,12 @@
       <unit id="findResource.imageTpl">
          <segment>
             <source>Please provide an image for {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.language">
+         <segment>
+            <source>Language</source>
             <target/>
          </segment>
       </unit>
@@ -1774,9 +1804,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.mediaType">
+         <segment>
+            <source>Media</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="findResource.movement">
          <segment>
             <source>movement</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.name">
+         <segment>
+            <source>Name</source>
             <target/>
          </segment>
       </unit>
@@ -1795,6 +1837,12 @@
       <unit id="findResource.passage">
          <segment>
             <source>Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.preview">
+         <segment>
+            <source>Preview</source>
             <target/>
          </segment>
       </unit>
@@ -1831,6 +1879,18 @@
       <unit id="findResource.scriptTpl">
          <segment>
             <source>Please provide a script for {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.section">
+         <segment>
+            <source>section</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.source">
+         <segment>
+            <source>Source</source>
             <target/>
          </segment>
       </unit>

@@ -42,16 +42,6 @@ export default function FindOther({ resources, handleLink }: FindOtherProps) {
         spacing={2}
         sx={{ alignItems: 'center', justifyContent: 'center' }}
       >
-        {resources
-          .filter((r) => r.featured)
-          .map((resource) => (
-            <ResourceItem
-              key={resource.name}
-              resource={resource}
-              onLink={setLink}
-            />
-          ))}
-
         <Grid item>
           <Stack direction={'row'} sx={{ m: 1 }}>
             <Autocomplete
