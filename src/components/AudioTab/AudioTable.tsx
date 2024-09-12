@@ -8,7 +8,7 @@ import {
   UserD,
   ISharedStrings,
 } from '../../model';
-import { Button, Checkbox, FormControlLabel } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from './VersionDlg';
@@ -80,7 +80,7 @@ export const AudioTable = (props: IProps) => {
           { name: 'actions', title: '\u00A0' },
           { name: 'version', title: t.version },
           {
-            name: 'readyToShare',
+            name: 'publishTo',
             title: shared ? t.readyToShare : t.published,
           },
           { name: 'fileName', title: t.fileName },
@@ -111,7 +111,7 @@ export const AudioTable = (props: IProps) => {
           { columnName: 'planName', width: 150 },
           { columnName: 'actions', width: onAttach ? 120 : 70 },
           { columnName: 'version', width: 100 },
-          { columnName: 'readyToShare', width: 100 },
+          { columnName: 'publishTo', width: 100 },
           { columnName: 'fileName', width: 220 },
           { columnName: 'sectionDesc', width: 150 },
           { columnName: 'reference', width: 150 },
@@ -163,7 +163,8 @@ export const AudioTable = (props: IProps) => {
   const [hiddenColumnNames] = useState<string[]>(['planName']);
   const [verHist, setVerHist] = useState('');
   const [verValue, setVerValue] = useState<number>();
-  const { getPublishTo, setPublishTo, isPublished } = usePublishDestination();
+  const { getPublishTo, setPublishTo, isPublished, publishStatus } =
+    usePublishDestination();
 
   const handleShowTranscription = (id: string) => () => {
     const row = data.find((r) => r.id === id);
@@ -318,17 +319,12 @@ export const AudioTable = (props: IProps) => {
   );
   const ReadyToShareCell = ({ row, value, ...props }: ICell) => (
     <Table.Cell row {...props} value>
-      <FormControlLabel
-        control={
-          <Checkbox
-            id="checkbox-rts"
-            checked={value as any as boolean}
-            onChange={handleChangeReadyToShare(row.index)}
-            disabled={(row.passId || '') === '' || !canSetDestination}
-          />
-        }
-        label=""
-      />
+      <IconButton
+        onClick={handleChangeReadyToShare(row.index)}
+        disabled={(row.passId || '') === '' || !canSetDestination}
+      >
+        {publishStatus(getPublishTo(value, hasPublishing, shared))}
+      </IconButton>
     </Table.Cell>
   );
   const getUser = (id: string) => {
@@ -363,7 +359,7 @@ export const AudioTable = (props: IProps) => {
     if (column.name === 'date') {
       return <DateCell {...props} />;
     }
-    if (column.name === 'readyToShare') {
+    if (column.name === 'publishTo') {
       return <ReadyToShareCell {...props} />;
     }
     if (column.name === 'user') {

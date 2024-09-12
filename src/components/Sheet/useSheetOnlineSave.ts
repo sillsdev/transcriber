@@ -83,8 +83,8 @@ export const useWfOnlineSave = (props: IProps) => {
         let rec = {
           issection: true,
           level: w.level,
-          published: isPublished(w.published),
-          publishTo: setPublishTo(w.published),
+          published: isPublished(w.published || []),
+          publishTo: setPublishTo(w.published || []),
           titlemediafile:
             (w?.titleMediaId?.id &&
               (await getRemoteId('mediafile', w?.titleMediaId?.id))) ||

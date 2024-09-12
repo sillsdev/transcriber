@@ -162,6 +162,7 @@ export interface GetSheetProps {
     hasPublishing: boolean,
     shared: boolean
   ) => PublishDestinationEnum[];
+  publishStatus: (destinations: PublishDestinationEnum[]) => string;
   readSharedResource: (passId: string) => SharedResourceD | undefined;
   current?: ISheet[];
 }
@@ -183,6 +184,7 @@ export const getSheet = ({
   getDiscussionCount,
   graphicFind,
   getPublishTo,
+  publishStatus,
   readSharedResource,
   current,
 }: GetSheetProps) => {
@@ -298,6 +300,14 @@ export const getSheet = ({
           projectShared || (curSectionPublished && !hidePublishing)
             ? getMediaShared(related(mediaRec, 'passage'), memory)
             : IMediaShare.NotPublic;
+
+        item.publishStatus = publishStatus(
+          getPublishTo(
+            mediaRec?.attributes.publishTo ?? '{}',
+            hasPublishing,
+            projectShared
+          )
+        );
 
         const stepId = getNextStep({
           psgCompleted: getStepComplete(passage),

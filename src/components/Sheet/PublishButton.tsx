@@ -34,7 +34,7 @@ export const PublishButton = (props: IProps) => {
           PublishDestinationEnum.AkuoPublic
         )
           ? 'green'
-          : alpha('#8f9a27', 0.6),
+          : alpha('#8f9a27', 0.6), // lime green
       }}
       id="unpublish"
       onClick={() => onAction(rowIndex, ExtraIcon.Publish)}

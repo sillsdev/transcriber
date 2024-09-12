@@ -320,6 +320,7 @@ export const usePlanSheetFill = ({
       <PlanAudioActions
         rowIndex={rowIndex}
         isPassage={passage}
+        publishStatus={rowInfo[rowIndex].publishStatus || ''}
         isNote={rowInfo[rowIndex].passageType === PassageTypeEnum.NOTE}
         mediaId={rowInfo[rowIndex].mediaId?.id || ''}
         mediaShared={rowInfo[rowIndex].mediaShared}
