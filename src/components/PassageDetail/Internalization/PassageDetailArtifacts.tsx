@@ -67,6 +67,7 @@ import {
   NamedRegions,
   removeExtension,
   isVisual,
+  isUrl,
 } from '../../../utils';
 import { useOrbitData } from '../../../hoc/useOrbitData';
 import {
@@ -155,6 +156,7 @@ export function PassageDetailArtifacts() {
   const [editResource, setEditResource] = useState<
     SectionResourceD | undefined
   >();
+  const [allowEditSave, setAllowEditSave] = useState(false);
   const [artifactTypeId, setArtifactTypeId] = useState<string>();
   const [uploadType, setUploadType] = useState<UploadType>(UploadType.Resource);
   const [recordAudio, setRecordAudio] = useState<boolean>(false);
@@ -329,6 +331,7 @@ export function PassageDetailArtifacts() {
       (r) => related(r, 'mediafile') === id
     ) as SectionResourceD;
     setEditResource(secRes);
+    setAllowEditSave(true);
     resourceTypeRef.current = Boolean(related(secRes, 'passage'))
       ? ResourceTypeEnum.passageResource
       : ResourceTypeEnum.sectionResource;
@@ -867,7 +870,7 @@ export function PassageDetailArtifacts() {
         title={t.editResource}
         isOpen={Boolean(editResource)}
         onOpen={handleEditResourceVisible}
-        onSave={handleEditSave}
+        onSave={allowEditSave ? handleEditSave : undefined}
         onCancel={handleEditCancel}
         bp={BigDialogBp.sm}
       >
@@ -882,7 +885,11 @@ export function PassageDetailArtifacts() {
           initPassRes={Boolean(resourceTypeRef.current)}
           onPassResChange={handlePassRes}
           allowProject={false}
-          onTextChange={(text) => (textRef.current = text)}
+          onTextChange={(text) => {
+            textRef.current = text;
+            const validUrl = isUrl(text);
+            if (allowEditSave !== validUrl) setAllowEditSave(validUrl);
+          }}
           sectDesc={sectDesc}
           passDesc={passDesc}
         />
