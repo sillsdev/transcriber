@@ -24,12 +24,13 @@ import SelectArtifactCategory, {
   ScriptureEnum,
 } from '../../Sheet/SelectArtifactCategory';
 import { ResourceTypeEnum } from './PassageDetailArtifacts';
-import { MarkDownType, UriLinkType } from '../../MediaUpload';
+import { MarkDownType, UploadType, UriLinkType } from '../../MediaUpload';
 import { LinkEdit } from '../../../control/LinkEdit';
 import { MarkDownEdit } from '../../../control/MarkDownEdit';
 
 interface IProps {
   media?: MediaFileD;
+  uploadType?: UploadType;
   initCategory: string;
   initDescription: string;
   initPassRes: boolean;
@@ -57,6 +58,7 @@ export function ResourceData(props: IProps) {
     sectDesc,
     passDesc,
     media,
+    uploadType,
     onTextChange,
   } = props;
   const [description, setDescription] = useState(initDescription);
@@ -137,16 +139,19 @@ export function ResourceData(props: IProps) {
               control={<Radio />}
               label={passDesc ?? t.passageResource}
             />
-            {allowProject && (
-              <FormControlLabel
-                value={'general'}
-                control={<Radio />}
-                label={t.uploadProject.replace(
-                  '{0}',
-                  getOrganizedBy(false).toLocaleLowerCase()
-                )}
-              />
-            )}
+            {allowProject &&
+              ![UploadType.Link, UploadType.MarkDown].includes(
+                uploadType ?? UploadType.Resource
+              ) && (
+                <FormControlLabel
+                  value={'general'}
+                  control={<Radio />}
+                  label={t.uploadProject.replace(
+                    '{0}',
+                    getOrganizedBy(false).toLocaleLowerCase()
+                  )}
+                />
+              )}
           </RadioGroup>
         </FormControl>
       )}

@@ -31,7 +31,7 @@ export const LinkEdit = ({ inValue, onValue }: LinkEditProps) => {
         value={value}
         color={!value || isUrl(value) ? 'primary' : 'error'}
         onChange={handleValue}
-        sx={{ flexGrow: 1, my: 2 }}
+        sx={{ flexGrow: 1, my: 2, minWidth: 400 }}
       />
       {isUrl(value) && (
         <IconButton id="launchLink" onClick={() => setLink(value)}>

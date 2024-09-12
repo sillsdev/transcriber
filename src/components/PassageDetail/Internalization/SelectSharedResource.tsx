@@ -91,7 +91,7 @@ export const SelectSharedResource = (props: IProps) => {
     } else if (scope === ResourceTypeEnum.sectionResource) {
       const secRefs: string[] = [];
       const passages = related(section, 'passages') as PassageD[];
-      passages.forEach((recId) => {
+      passages?.forEach((recId) => {
         const passRec = findRecord(memory, 'passage', recId.id) as Passage;
         const passType = passageTypeFromRef(
           passRec.attributes.reference,
