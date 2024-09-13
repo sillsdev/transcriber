@@ -110,11 +110,11 @@ export const Header = styled(Box, {
   alignItems: 'center',
   ...(filter
     ? {
-      width: 'auto',
-    }
+        width: 'auto',
+      }
     : {
-      width: `${TaskItemWidth - 30}px`,
-    }),
+        width: `${TaskItemWidth - 30}px`,
+      }),
 }));
 
 interface IRow {
@@ -140,8 +140,9 @@ interface IProps {
 }
 
 export function TaskTable(props: IProps) {
-  const { onFilter,
-    // isDetail 
+  const {
+    onFilter,
+    // isDetail
   } = props;
   const {
     rowData,
@@ -434,6 +435,7 @@ export function TaskTable(props: IProps) {
   }, [playItem]);
 
   interface ICell {
+    key: string;
     value: any;
     style?: CSSProperties;
     mediaId?: string;
@@ -469,7 +471,7 @@ export function TaskTable(props: IProps) {
   const noSelBacking: CSSProperties = { background: 'transparent' };
 
   const Cell = (props: ICell) => {
-    const { row, column, value } = props;
+    const { row, column, value, key } = props;
     if (!filter) {
       if (column.name === 'composite') {
         let curId = '';
@@ -478,6 +480,7 @@ export function TaskTable(props: IProps) {
             curId = rowData[value.props.item]?.mediafile.id;
         return (
           <TableCell
+            key={key}
             ref={curId === playerMediafile?.id ? selectedRef : notSelectedRef}
             style={curId === playerMediafile?.id ? selBacking : noSelBacking}
           >
@@ -488,7 +491,7 @@ export function TaskTable(props: IProps) {
       return <td>{'\u200B'}</td>; // Zero width space
     } else {
       if (column.name === 'composite') {
-        return <td>{'\u00a0'}</td>;
+        return <td key={key}>{'\u00a0'}</td>;
       } else if (column.name === 'play') {
         // if there is no audio file to play put nothing in the play column
         return filter && row.mediaId ? (

@@ -23,12 +23,7 @@ import {
   OfflineProject,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
-import {
-  Button,
-  IconButton,
-  Box,
-  Alert,
-} from '@mui/material';
+import { Button, IconButton, Box, Alert } from '@mui/material';
 // import CopyIcon from '@mui/icons-material/FileCopy';
 import ViewIcon from '@mui/icons-material/RemoveRedEye';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
@@ -279,8 +274,8 @@ export function TranscriptionTab(props: IProps) {
     const onlyTypeId = [ExportType.DBL, ExportType.BURRITO].includes(exportType)
       ? VernacularTag
       : [ExportType.AUDIO, ExportType.ELAN].includes(exportType)
-        ? getTypeId(artifactType)
-        : undefined;
+      ? getTypeId(artifactType)
+      : undefined;
     const onlyLatest = onlyTypeId !== undefined;
     let media = getMediaInPlans(
       projectplans.map((p) => p.id) as string[],
@@ -587,6 +582,7 @@ export function TranscriptionTab(props: IProps) {
   ]);
 
   interface ICell {
+    key: string;
     value: string;
     style?: React.CSSProperties;
     mediaId: string;
