@@ -1,4 +1,4 @@
-import { memo, FC } from 'react';
+import { memo, FC, useContext } from 'react';
 import { IPlanActionsStrings, IMediaShare } from '../../model';
 import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
 import PauseIcon from '@mui/icons-material/Pause';
@@ -9,6 +9,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { IconButton, Box, IconButtonProps, styled, alpha } from '@mui/material';
 import { planActionsSelector } from '../../selector';
 import EditIcon from '@mui/icons-material/EditOutlined';
+import { PlanContext } from '../../context/PlanContext';
 
 // see: https://mui.com/material-ui/customization/how-to-customize/
 interface StyledIconButtonProps extends IconButtonProps {
@@ -51,6 +52,7 @@ interface IProps {
 interface FcProps extends IProps {
   canPlay: boolean;
   canEdit: boolean;
+  shared: boolean;
   t: IPlanActionsStrings;
 }
 
@@ -61,6 +63,7 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
     publishStatus,
     isNote,
     mediaShared,
+    shared,
     onHistory,
     onPlayStatus,
     mediaId,
@@ -89,7 +92,7 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
           disabled={!canEdit}
           onClick={onHistory(rowIndex)}
         >
-          {publishStatus ? (
+          {shared && publishStatus ? (
             <>{publishStatus}</>
           ) : isNote ? (
             <EditIcon />
@@ -117,7 +120,8 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
 });
 
 export function PlanAudioActions(props: IProps) {
+  const { shared, hidePublishing } = useContext(PlanContext).state;
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
-  return <Actions {...props} t={t} />;
+  return <Actions {...props} t={t} shared={shared || !hidePublishing} />;
 }
 export default PlanAudioActions;

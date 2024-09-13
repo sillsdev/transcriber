@@ -31,10 +31,13 @@ export const usePublishDestination = () => {
   const getPublishTo = (
     publishTo: string,
     hasPublishing: boolean,
-    shared: boolean
+    shared: boolean,
+    noDefault?: boolean
   ) => {
     var destinations: PublishDestinationEnum[] = [];
-    if ((publishTo || '{}') === '{}') return getDefaults(hasPublishing, shared);
+    if ((publishTo || '{}') === '{}') {
+      return noDefault ? destinations : getDefaults(hasPublishing, shared);
+    }
     var json = JSON.parse(publishTo);
     if (json['Beta'] === 'true')
       destinations.push(PublishDestinationEnum.AkuoBeta);

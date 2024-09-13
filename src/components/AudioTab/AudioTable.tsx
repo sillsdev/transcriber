@@ -323,7 +323,7 @@ export const AudioTable = (props: IProps) => {
         onClick={handleChangeReadyToShare(row.index)}
         disabled={(row.passId || '') === '' || !canSetDestination}
       >
-        {publishStatus(getPublishTo(value, hasPublishing, shared))}
+        {publishStatus(getPublishTo(value, hasPublishing, shared, true))}
       </IconButton>
     </Table.Cell>
   );
