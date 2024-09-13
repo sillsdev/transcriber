@@ -1,5 +1,5 @@
-import { memo, FC } from 'react';
-import { IPlanActionsStrings, IMediaShare } from '../../model';
+import { memo, FC, useEffect, useState, useContext } from 'react';
+import { IPlanActionsStrings, IMediaShare, ProjectD } from '../../model';
 import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
 import PauseIcon from '@mui/icons-material/Pause';
 import SharedCheckbox from '@mui/icons-material/CheckBoxOutlined';
@@ -9,6 +9,9 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { IconButton, Box, IconButtonProps, styled, alpha } from '@mui/material';
 import { planActionsSelector } from '../../selector';
 import EditIcon from '@mui/icons-material/EditOutlined';
+import { useGlobal } from 'reactn';
+import { findRecord } from '../../crud/tryFindRecord';
+import { PlanContext } from '../../context/PlanContext';
 
 // see: https://mui.com/material-ui/customization/how-to-customize/
 interface StyledIconButtonProps extends IconButtonProps {
@@ -51,6 +54,7 @@ interface IProps {
 interface FcProps extends IProps {
   canPlay: boolean;
   canEdit: boolean;
+  shared: boolean;
   t: IPlanActionsStrings;
 }
 
@@ -61,6 +65,7 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
     publishStatus,
     isNote,
     mediaShared,
+    shared,
     onHistory,
     onPlayStatus,
     mediaId,
@@ -89,7 +94,7 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
           disabled={!canEdit}
           onClick={onHistory(rowIndex)}
         >
-          {publishStatus ? (
+          {shared && publishStatus ? (
             <>{publishStatus}</>
           ) : isNote ? (
             <EditIcon />
@@ -117,7 +122,20 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
 });
 
 export function PlanAudioActions(props: IProps) {
+  const [projectId] = useGlobal('project');
+  const [memory] = useGlobal('memory');
+  const [shared, setShared] = useState(false);
+  const { hidePublishing } = useContext(PlanContext).state;
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
-  return <Actions {...props} t={t} />;
+
+  useEffect(() => {
+    const projRec = findRecord(memory, 'project', projectId) as ProjectD;
+    if (projRec) {
+      setShared(projRec?.attributes?.isPublic);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectId]);
+
+  return <Actions {...props} t={t} shared={shared || !hidePublishing} />;
 }
 export default PlanAudioActions;

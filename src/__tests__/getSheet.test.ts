@@ -364,6 +364,7 @@ var pasResult = {
   deleted: false,
   filtered: false,
   mediaShared: IMediaShare.NotPublic,
+  published: [] as PublishDestinationEnum[],
   mediaId: undefined,
   publishStatus: '',
   sharedResource: undefined,
