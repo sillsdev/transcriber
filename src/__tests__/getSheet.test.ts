@@ -14,7 +14,7 @@ import { getSheet } from '../components/Sheet/getSheet';
 import { InitializedRecord } from '@orbit/records';
 import { ISTFilterState } from '../components/Sheet/filterMenu';
 import { PassageTypeEnum } from '../model/passageType';
-import { PublishDestinationEnum } from '../crud';
+import { PublishDestinationEnum } from '../crud/usePublishDestination';
 
 var mockMemory = {} as Memory;
 
@@ -313,6 +313,8 @@ var readSharedResource = (passageId: string) => undefined;
 
 var curSheet: ISheet[] | undefined = undefined;
 
+var publishStatus = (destinations: PublishDestinationEnum[]) => '';
+
 var gsDefaults = {
   plan: '',
   sections: [] as SectionD[],
@@ -330,6 +332,7 @@ var gsDefaults = {
   getDiscussionCount,
   graphicFind,
   getPublishTo,
+  publishStatus,
   readSharedResource,
   current: curSheet,
 };
@@ -362,6 +365,8 @@ var pasResult = {
   filtered: false,
   mediaShared: IMediaShare.NotPublic,
   mediaId: undefined,
+  publishStatus: '',
+  sharedResource: undefined,
 };
 
 var flatResult = {
@@ -382,6 +387,8 @@ var flatResult = {
   reference: '',
   titleMediaId: undefined,
   transcriber: undefined,
+  publishStatus: '',
+  sharedResource: undefined,
 };
 
 afterEach(cleanup);
