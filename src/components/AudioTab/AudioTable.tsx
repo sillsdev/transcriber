@@ -79,10 +79,7 @@ export const AudioTable = (props: IProps) => {
           { name: 'planName', title: t.planName },
           { name: 'actions', title: '\u00A0' },
           { name: 'version', title: t.version },
-          {
-            name: 'publishTo',
-            title: shared ? t.readyToShare : t.published,
-          },
+          { name: 'publishTo', title: t.published },
           { name: 'fileName', title: t.fileName },
           { name: 'sectionDesc', title: organizedBy },
           { name: 'reference', title: t.reference },
@@ -410,10 +407,12 @@ export const AudioTable = (props: IProps) => {
           current={getPublishTo(
             data[publishItem].publishTo,
             hasPublishing,
-            shared
+            shared,
+            true
           )}
           sharedProject={shared}
           hasPublishing={hasPublishing}
+          noDefaults={true}
         />
       )}
       {showId !== '' && (

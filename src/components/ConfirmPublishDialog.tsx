@@ -38,6 +38,7 @@ interface IProps {
   current: PublishDestinationEnum[];
   sharedProject: boolean;
   hasPublishing: boolean;
+  noDefaults?: boolean;
   noResponse: () => void;
   yesResponse: (destinations: PublishDestinationEnum[]) => void;
 }
@@ -51,6 +52,7 @@ function ConfirmPublishDialog(props: IProps) {
     yesResponse,
     noResponse,
     current,
+    noDefaults,
   } = props;
 
   const t: IAlertStrings = useSelector(alertSelector, shallowEqual);
@@ -63,7 +65,9 @@ function ConfirmPublishDialog(props: IProps) {
   const p: IPublishToStrings = useSelector(publishToSelector, shallowEqual);
   const [open, setOpen] = useState(true);
   const [value, setValuex] = useState(
-    current.length === 0 ? getDefaults(hasPublishing, sharedProject) : current
+    current.length === 0 && !noDefaults
+      ? getDefaults(hasPublishing, sharedProject)
+      : current
   );
 
   const calcAkuoValue = (val: PublishDestinationEnum[]) => {
@@ -255,7 +259,7 @@ function ConfirmPublishDialog(props: IProps) {
                       value="OBTHelps"
                     />
                   }
-                  label='obthelps.org'
+                  label="obthelps.org"
                 />
               </>
             )}
