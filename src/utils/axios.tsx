@@ -20,7 +20,8 @@ export const axiosPost = async (api: string, data: any, token?: string) => {
       ? {
           Authorization: 'Bearer ' + token,
           'X-FP': fp,
+          'Content-Type': 'application/json',
         }
-      : { 'X-FP': fp },
+      : { 'X-FP': fp, 'Content-Type': 'application/json' },
   });
 };
