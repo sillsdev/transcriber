@@ -24,6 +24,7 @@ import { parseRef } from '../../../crud/passage';
 import { SortBy, useKeyTerms } from '../Keyterms/useKeyTerms';
 import { useComputeRef } from './useComputeRef';
 import { scopeI } from './FindTabs';
+import { useOrganizedBy } from '../../../crud/useOrganizedBy';
 
 interface CreateAiResProps {
   resources: BibleResource[];
@@ -44,6 +45,8 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
   const allBookData: BookName[] = useSelector(
     (state: IState) => state.books.bookData
   );
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(getOrganizedBy(true));
   const t: IFindResourceStrings = useSelector(
     findResourceSelector,
     shallowEqual
@@ -51,10 +54,10 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
 
   const scopeOptions = [
     t.passage,
-    t.section,
-    t.movement,
+    organizedBy,
     t.book,
     t.chapter,
+    t.movement,
     t.clipboard,
   ];
 

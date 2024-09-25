@@ -1680,13 +1680,13 @@
       </unit>
       <unit id="findResource.book">
          <segment>
-            <source>book</source>
+            <source>Book</source>
             <target/>
          </segment>
       </unit>
       <unit id="findResource.chapter">
          <segment>
-            <source>chapter</source>
+            <source>Chapter</source>
             <target/>
          </segment>
       </unit>
@@ -1794,7 +1794,7 @@
       </unit>
       <unit id="findResource.passage">
          <segment>
-            <source>passage</source>
+            <source>Passage</source>
             <target/>
          </segment>
       </unit>
@@ -1831,12 +1831,6 @@
       <unit id="findResource.scriptTpl">
          <segment>
             <source>Please provide a script for {0}</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="findResource.section">
-         <segment>
-            <source>section</source>
             <target/>
          </segment>
       </unit>
