@@ -19,7 +19,7 @@ import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { camel2Title, launch } from '../../../utils';
 import { useGlobal } from 'reactn';
 import { AltButton } from '../../StepEditor';
-import { parseRef, related } from '../../../crud';
+import { parseRef, related, useOrganizedBy } from '../../../crud';
 import { pad3 } from '../../../utils/pad3';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -137,6 +137,8 @@ export const FindResource = () => {
   const allBookData: BookName[] = useSelector(
     (state: IState) => state.books.bookData
   );
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(getOrganizedBy(true));
   const t: IFindResourceStrings = useSelector(
     findResourceSelector,
     shallowEqual
@@ -153,7 +155,7 @@ export const FindResource = () => {
 
   const scopeOptions = [
     t.passage,
-    t.section,
+    organizedBy,
     t.chapter,
     t.movement,
     t.book,

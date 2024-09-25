@@ -20,6 +20,7 @@ import { BibleBrainItem } from '../../../model/bible-brain-item';
 import { useBookN } from '../../../utils';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { ActionRow, AltButton, PriButton } from '../../StepEditor';
+import { useOrganizedBy } from '../../../crud/useOrganizedBy';
 
 interface FindBibleBrainProps {
   handleLink: (
@@ -36,13 +37,15 @@ export default function FindBibleBrain({ handleLink }: FindBibleBrainProps) {
   const [createSections, setCreateSections] = useState<boolean>(false);
   const [creationScope, setCreationScope] = useState<scopeI>(scopeI.passage);
   const { passage } = usePassageDetailContext();
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(getOrganizedBy(true));
   const bookN = useBookN();
   const t: IFindResourceStrings = useSelector(
     findResourceSelector,
     shallowEqual
   );
 
-  const scopeOptions = [t.passage, t.section, t.movement, t.book];
+  const scopeOptions = [t.passage, organizedBy, t.chapter, t.book];
 
   useEffect(() => {
     import('../../../assets/biblebrain_2024-08-22.js').then((module) => {
@@ -136,7 +139,7 @@ export default function FindBibleBrain({ handleLink }: FindBibleBrainProps) {
                 onChange={(_e, checked) => setCreateSections(checked)}
               />
             }
-            label={t.bibleBrain.replace('{0}', t.section)}
+            label={t.bibleBrain.replace('{0}', organizedBy)}
           />
         </FormControl>
         <FormControl

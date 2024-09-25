@@ -376,7 +376,6 @@ export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "scope": string;
     "script": string;
     "scriptTpl": string;
-    "section": string;
     "summary": string;
     "summaryTpl": string;
     "type": string;

@@ -1958,14 +1958,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="findResource.book">
-            <source>book</source>
+            <source>Book</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="findResource.chapter">
-            <source>chapter</source>
+            <source>Chapter</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
@@ -2091,7 +2091,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="findResource.passage">
-            <source>passage</source>
+            <source>Passage</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
@@ -2134,13 +2134,6 @@
          </trans-unit>
          <trans-unit id="findResource.scriptTpl">
             <source>Please provide a script for {0}</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">findResource.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="findResource.section">
-            <source>section</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
