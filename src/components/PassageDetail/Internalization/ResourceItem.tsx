@@ -1,17 +1,17 @@
 import { useState } from 'react';
-import { useGlobal } from 'reactn';
 import { BibleResource } from '../../../model/bible-resource';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { useSnackBar } from '../../../hoc/SnackBar';
-import { IFindResourceStrings } from '../../../model';
+import { IFindResourceStrings, ISharedStrings } from '../../../model';
 import { shallowEqual, useSelector } from 'react-redux';
-import { findResourceSelector } from '../../../selector';
+import { findResourceSelector, sharedSelector } from '../../../selector';
 import { Badge, Grid } from '@mui/material';
 import { AltButton } from '../../../control';
 import { parseRef } from '../../../crud/passage';
 import { pad3 } from '../../../utils/pad3';
 import { isElectron } from '../../../api-variable';
 import launch from '../../../utils/launch';
+import { Online } from '../../../utils/useCheckOnline';
 
 export default function ResourceItem({
   resource,
@@ -23,11 +23,11 @@ export default function ResourceItem({
   const { passage } = usePassageDetailContext();
   const { showMessage } = useSnackBar();
   const [open, setOpen] = useState(false);
-  const [isOffline] = useGlobal('offline');
   const t: IFindResourceStrings = useSelector(
     findResourceSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const handleClick = (_kind: string, hrefTpl: string) => () => {
     const book = passage?.attributes?.book;
@@ -38,8 +38,14 @@ export default function ResourceItem({
       .replace('{2}', pad3(passage?.attributes?.startVerse ?? 1))
       .replace('{3}', pad3(passage?.attributes?.endChapter ?? 1))
       .replace('{4}', pad3(passage?.attributes?.endVerse ?? 1));
-    if (isElectron) launch(href, !isOffline);
-    else onLink?.(href);
+    Online(true, (isOnline) => {
+      if (!isOnline) {
+        showMessage(ts.mustBeOnline);
+        return;
+      }
+      if (isElectron) launch(href, isOnline);
+      else onLink?.(href);
+    });
   };
 
   const handleHelp = (resource?: BibleResource) => () => {

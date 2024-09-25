@@ -1183,6 +1183,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "mediaDetached": string;
     "mediaError": string;
     "member": string;
+    "mustBeOnline": string;
     "no": string;
     "noAudio": string;
     "NoSaveOffline": string;

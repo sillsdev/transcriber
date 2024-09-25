@@ -574,7 +574,7 @@ export const FindResource = () => {
           </Grid>
         </FormControl>
       </Grid>
-      <LaunchLink url={link} />
+      <LaunchLink url={link} reset={() => setLink('')} />
     </Grid>
   );
 };

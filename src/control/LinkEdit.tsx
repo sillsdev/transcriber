@@ -38,7 +38,7 @@ export const LinkEdit = ({ inValue, onValue }: LinkEditProps) => {
           <LinkIcon />
         </IconButton>
       )}
-      <LaunchLink url={link} />
+      <LaunchLink url={link} reset={() => setLink('')} />
     </Stack>
   );
 };

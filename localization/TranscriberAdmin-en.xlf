@@ -5938,6 +5938,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.mustBeOnline">
+         <segment>
+            <source>You must be online to use this feature</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.no">
          <segment>
             <source>No</source>

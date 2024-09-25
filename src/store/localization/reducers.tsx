@@ -1253,6 +1253,7 @@ const initialState = {
 			"mediaDetached": "Audio Detached",
 			"mediaError": "Media is missing or has an unaccepted format.",
 			"member": "Member",
+			"mustBeOnline": "You must be online to use this feature",
 			"no": "No",
 			"noAudio": "No Audio Available!",
 			"NoSaveOffline": "Unable to save while offline.",

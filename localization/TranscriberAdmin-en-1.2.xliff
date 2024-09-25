@@ -6927,6 +6927,13 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shared.mustBeOnline">
+            <source>You must be online to use this feature</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">launchLink.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.no">
             <source>No</source>
             <target/>
