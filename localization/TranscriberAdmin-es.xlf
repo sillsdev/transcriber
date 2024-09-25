@@ -1651,9 +1651,21 @@
             <target>Guardar como predeterminado del equipo</target>
          </segment>
       </unit>
+      <unit id="findResource.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="findResource.aiDesc">
          <segment>
             <source>Copy the query contents and paste it into one or more of the AI chat tools:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.aquiferLang">
+         <segment>
+            <source>Aquifer Language</source>
             <target/>
          </segment>
       </unit>
@@ -1678,6 +1690,12 @@
       <unit id="findResource.book">
          <segment>
             <source>book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.chapter">
+         <segment>
+            <source>chapter</source>
             <target/>
          </segment>
       </unit>
@@ -3421,6 +3439,12 @@
             <target>Propuesta</target>
          </segment>
       </unit>
+      <unit id="mediaTab.publish">
+         <segment>
+            <source>Publish Media</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.published">
          <segment>
             <source>Published</source>
@@ -3622,6 +3646,12 @@
       <unit id="mediaUpload.linkTitle">
          <segment>
             <source>Link Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.markdownTask">
+         <segment>
+            <source>Enter text to be used as a resource. (Mark down formatting is allowed.)</source>
             <target/>
          </segment>
       </unit>
@@ -4605,8 +4635,8 @@
       </unit>
       <unit id="planSheet.confirmPublishSection">
          <segment>
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes be marked as not published.</source>
-            <target>Si elige publicar, el {0} y la última versión de todos los pasajes y notas en este {0} se marcarán como publicados. Si ha publicado previamente y ahora elige «No publicado», los pasajes y notas se marcarán como no publicados.</target>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes will be marked as not published.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planSheet.filtered">
@@ -5121,8 +5151,8 @@
       </unit>
       <unit id="publishLevel.none">
          <segment>
-            <source>Not Published - not visible in publishing app</source>
-            <target>No publicado - no visible en la aplicación de publicación</target>
+            <source>Not Published - not visible outside this project</source>
+            <target/>
          </segment>
       </unit>
       <unit id="publishLevel.beta">
@@ -5131,16 +5161,16 @@
             <target>Beta - visible en la web de Akuo cuando se utiliza el parámetro beta (no disponible en la app)</target>
          </segment>
       </unit>
-      <unit id="publishLevel.betalink">
-         <segment>
-            <source>https://akuobible.org/?beta=true</source>
-            <target>https://akuobible.org/?beta=true</target>
-         </segment>
-      </unit>
       <unit id="publishLevel.public">
          <segment>
             <source>Public - visible to everyone using Akuo website or app</source>
             <target>Público - visible para todo el mundo que use la web o la app de Akuo</target>
+         </segment>
+      </unit>
+      <unit id="publishTo.Internalization">
+         <segment>
+            <source>Internalization Resources for other projects</source>
+            <target/>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -7048,6 +7078,12 @@
       <unit id="verse.outsideReferences">
          <segment>
             <source>ERROR: Some verses are outside passage: ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.pasteFormat">
+         <segment>
+            <source>Invalid number of columns on clipboard.</source>
             <target/>
          </segment>
       </unit>

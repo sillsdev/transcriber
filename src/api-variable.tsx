@@ -55,6 +55,9 @@ export const API_CONFIG = {
   googleSamples: process.env.REACT_APP_GOOGLE_SAMPLES
     ? process.env.REACT_APP_GOOGLE_SAMPLES
     : '',
+  aquiferUrl: process.env.REACT_APP_AQUIFER_URL
+    ? process.env.REACT_APP_AQUIFER_URL
+    : '',
   sizeLimit: process.env.REACT_APP_SIZELIMIT
     ? process.env.REACT_APP_SIZELIMIT
     : '20',
