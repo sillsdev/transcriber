@@ -13,12 +13,10 @@ import ClearIcon from '@mui/icons-material/Clear';
 import PreviewIcon from '@mui/icons-material/Visibility';
 import NoPreview from '@mui/icons-material/VisibilityOff';
 import LinkIcon from '@mui/icons-material/Link';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useContext, useEffect, useState } from 'react';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { parseRef } from '../../../crud';
 import DataTable from '../../DataTable';
-import { API_CONFIG } from '../../../api-variable';
 import { shallowEqual, useSelector } from 'react-redux';
 import { findResourceSelector } from '../../../selector';
 import { IFindResourceStrings } from '../../../model';
@@ -27,7 +25,8 @@ import { LightTooltip, PriButton } from '../../StepEditor';
 import { OptionProps } from './FindTabs';
 import Markdown from 'react-markdown';
 import { LaunchLink } from '../../../control/LaunchLink';
-const { aquiferUrl } = API_CONFIG;
+import { axiosGet, axiosPost } from '../../../utils/axios';
+import { TokenContext } from '../../../context/TokenProvider';
 
 interface AquiferSearch {
   id: number;
@@ -117,6 +116,9 @@ export default function FindAquifer() {
     findResourceSelector,
     shallowEqual
   );
+  const token = useContext(TokenContext).state.accessToken ?? '';
+  const [limit, setLimit] = useState(100);
+  const [offset, setOffset] = useState(0);
   const columnDefs = [
     { name: 'name', title: t.name },
     { name: 'mediaType', title: t.mediaType },
@@ -137,16 +139,12 @@ export default function FindAquifer() {
   const sorting: Sorting[] = [{ columnName: 'name', direction: 'asc' }];
 
   useEffect(() => {
-    const params = {
-      method: 'GET',
-      url: `${aquiferUrl}/languages`,
-      timeout: 5000,
-    };
-    axios(params).then((response) => {
-      // console.log(response);
-      setLanguages(response.data);
-    });
-  }, []);
+    if ((token ?? '') !== '')
+      axiosGet('aquifer/languages', undefined, token ?? '').then((response) => {
+        // console.log(response);
+        setLanguages(response.data);
+      });
+  }, [token]);
 
   useEffect(() => {
     // console.log(languages);
@@ -163,30 +161,27 @@ export default function FindAquifer() {
   }, [languages]);
 
   useEffect(() => {
+    if (lang === null) return;
     parseRef(passage);
     const { book, startChapter, startVerse, endChapter, endVerse } =
       passage.attributes;
     const paramArr = [
       ['bookCode', book || 'MAT'],
-      ['startChapter', startChapter?.toString() || '1'],
-      ['startVerse', startVerse?.toString() || '1'],
-      ['endChapter', endChapter?.toString() || startChapter?.toString() || '1'],
-      ['endVerse', endVerse?.toString() || startVerse?.toString() || '1'],
       ['languageCode', lang?.value || 'eng'],
-      ['limit', '100'],
-      ['offset', '0'],
+      ['limit', limit.toString()],
+      ['offset', offset.toString()],
     ];
+    if (startChapter) paramArr.push(['startChapter', startChapter.toString()]);
+    if (startVerse) paramArr.push(['startVerse', startVerse.toString()]);
+    if (endChapter) paramArr.push(['endChapter', endChapter.toString()]);
+    if (endVerse) paramArr.push(['endVerse', endVerse.toString()]);
+
     if (query) {
       paramArr.push(['query', query]);
     }
     const searchParams = new URLSearchParams(paramArr);
-    const params = {
-      method: 'GET',
-      url: `${aquiferUrl}/aquifer-search`,
-      params: searchParams,
-      timeout: 5000,
-    };
-    axios(params).then((response) => {
+
+    axiosGet('aquifer/aquifer-search', searchParams, token).then((response) => {
       // console.log(response);
       setCount(response.data.totalItemCount);
       setResult(response.data.items);
@@ -217,18 +212,16 @@ export default function FindAquifer() {
         ],
       ];
       const searchParams = new URLSearchParams(paramArr);
-      const params = {
-        method: 'GET',
-        url: `${aquiferUrl}/content`,
-        params: searchParams,
-        timeout: 5000,
-      };
-      axios(params).then((response) => {
+      axiosGet(
+        `aquifer/content/${previewItem.id.toString()}`,
+        searchParams,
+        token
+      ).then((response) => {
         console.log(response);
         setContent(response.data);
       });
     }
-  }, [previewItem, preview]);
+  }, [previewItem, preview, token]);
 
   const handleCheck = (chks: Array<number>) => {
     const newItem = chks.filter((c) => !checks.includes(c));
@@ -242,7 +235,23 @@ export default function FindAquifer() {
   };
 
   const handleAdd = () => {
-    console.log(checks);
+    var add: { ContentId: string; ContentType: string }[] = [];
+    checks.forEach((c) => {
+      var item = data.find((d) => d.id === c);
+      if (item) {
+        add.push({
+          ContentId: item.id.toString(),
+          ContentType:
+            item.mediaType.toLowerCase() === 'text' ? 'Markdown' : '0',
+        });
+      }
+    });
+    /*var bodyFormData = new FormData();
+    bodyFormData.append('content', add); */
+    console.log(checks, add);
+    axiosPost('aquifer', add, token).then((response) => {
+      console.log(response);
+    });
   };
 
   return (
