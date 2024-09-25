@@ -679,10 +679,16 @@ export function PassageDetailArtifacts() {
 
   const handlePassRes = (newValue: ResourceTypeEnum) => {
     resourceTypeRef.current = newValue;
-    setArtifactTypeId(isProjectResource() ? projResourceType : resourceType);
-    setUploadType(
-      isProjectResource() ? UploadType.ProjectResource : UploadType.Resource
-    );
+    if (isProjectResource()) {
+      setArtifactTypeId(projResourceType);
+      setUploadType(UploadType.ProjectResource);
+    } else if (
+      artifactTypeId === projResourceType ||
+      uploadType === UploadType.ProjectResource
+    ) {
+      setArtifactTypeId(resourceType);
+      setUploadType(UploadType.Resource);
+    }
   };
 
   const handleEnded = () => {
