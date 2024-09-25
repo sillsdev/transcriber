@@ -923,7 +923,7 @@ export function PassageDetailArtifacts() {
           <MarkDown remarkPlugins={[remarkGfm]}>{markDown}</MarkDown>
         </BigDialog>
       )}
-      <LaunchLink url={link} />
+      <LaunchLink url={link} reset={() => setLink('')} />
     </>
   );
 }

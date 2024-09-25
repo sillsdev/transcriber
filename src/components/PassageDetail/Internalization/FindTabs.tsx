@@ -129,7 +129,7 @@ export default function FindTabs() {
       <CustomTabPanel value={value} index={2}>
         <CreateAiRes resources={resources} />
       </CustomTabPanel>
-      <LaunchLink url={link} />
+      <LaunchLink url={link} reset={() => setLink('')} />
     </Box>
   );
 }

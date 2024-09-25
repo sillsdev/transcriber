@@ -79,7 +79,7 @@ export default function FindOther({ resources, handleLink }: FindOtherProps) {
             />
           ))}
       </Grid>
-      <LaunchLink url={link} />
+      <LaunchLink url={link} reset={() => setLink('')} />
     </>
   );
 }

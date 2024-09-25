@@ -66,7 +66,7 @@ export const MarkDownEdit = ({ inValue, onValue }: MarkDownEditProps) => {
           <InfoIcon fontSize="small" color="secondary" />
         </IconButton>
       </LightTooltip>
-      <LaunchLink url={link} />
+      <LaunchLink url={link} reset={() => setLink('')} />
     </Stack>
   );
 };

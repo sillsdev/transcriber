@@ -263,7 +263,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
           </AltButton>
         </Grid>
       </Grid>
-      <LaunchLink url={link} />
+      <LaunchLink url={link} reset={() => setLink('')} />
     </Grid>
   );
 }

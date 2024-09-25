@@ -1,23 +1,37 @@
 import { useEffect, useRef } from 'react';
 import { isElectron } from '../api-variable';
-import { useGlobal } from 'reactn';
 import { launch } from '../utils';
+import { ISharedStrings } from '../model';
+import { useSelector, shallowEqual } from 'react-redux';
+import { sharedSelector } from '../selector';
+import { useSnackBar } from '../hoc/SnackBar';
+import { Online } from '../utils/useCheckOnline';
 
 interface DoLinkProps {
   url: string | undefined;
+  reset?: () => void;
 }
-export const LaunchLink = ({ url }: DoLinkProps) => {
+export const LaunchLink = ({ url, reset }: DoLinkProps) => {
   const linkRef = useRef<HTMLAnchorElement>(null);
-  const [isOffline] = useGlobal('offline');
+  const { showMessage } = useSnackBar();
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const doLink = (link: string | undefined) => {
     if (!link) return;
-    if (isElectron) {
-      launch(link, !isOffline);
-    } else {
-      linkRef.current?.setAttribute('href', link);
-      linkRef.current?.click();
-    }
+    Online(true, (isOnline) => {
+      if (!isOnline) {
+        showMessage(ts.mustBeOnline);
+        reset && reset();
+        return;
+      }
+      if (isElectron) {
+        launch(link, isOnline).then(() => reset && reset());
+      } else {
+        linkRef.current?.setAttribute('href', link);
+        linkRef.current?.click();
+        reset && setTimeout(() => reset(), 1000);
+      }
+    });
   };
 
   useEffect(() => {
