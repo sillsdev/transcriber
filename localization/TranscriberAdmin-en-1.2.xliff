@@ -2140,7 +2140,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="findResource.passage">
-            <source>Passage</source>
+            <source>passage</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.preview">
+            <source>Preview</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
@@ -2193,6 +2200,20 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.section">
+            <source>section</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.source">
+            <source>Source</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FindAquifer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="findResource.summary">

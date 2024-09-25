@@ -1836,7 +1836,13 @@
       </unit>
       <unit id="findResource.passage">
          <segment>
-            <source>Passage</source>
+            <source>passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.preview">
+         <segment>
+            <source>Preview</source>
             <target/>
          </segment>
       </unit>
