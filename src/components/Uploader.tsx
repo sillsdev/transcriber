@@ -284,7 +284,8 @@ export const Uploader = (props: IProps) => {
             [files[ix]],
             path.basename(files[ix].name, path.extname(files[ix].name)) +
               suffix +
-              path.extname(files[ix].name)
+              path.extname(files[ix].name),
+            { type: files[ix].type }
           )
         );
       }
