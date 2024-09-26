@@ -11,7 +11,6 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import PreviewIcon from '@mui/icons-material/Visibility';
-import NoPreview from '@mui/icons-material/VisibilityOff';
 import LinkIcon from '@mui/icons-material/Link';
 import { useContext, useEffect, useState } from 'react';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
@@ -30,6 +29,7 @@ import { TokenContext } from '../../../context/TokenProvider';
 import { useGlobal } from 'reactn';
 import { RecordKeyMap } from '@orbit/records';
 import { useDataChanges } from '../../../utils';
+import BigDialog from '../../../hoc/BigDialog';
 
 interface AquiferSearch {
   id: number;
@@ -113,10 +113,10 @@ export default function FindAquifer() {
   const [lang, setLang] = useState<OptionProps | null>(null);
   const [query, setQuery] = useState('');
   const [refresh, setRefresh] = useState(0);
-  const [preview, setPreview] = useState(false);
   const [previewItem, setPreviewItem] = useState<DataRow | null>(null);
   const [content, setContent] = useState<AquiferContent | null>(null);
   const [link, setLink] = useState<string>();
+  const [previewOpen, setPreviewOpen] = useState(false);
   const t: IFindResourceStrings = useSelector(
     findResourceSelector,
     shallowEqual
@@ -125,17 +125,31 @@ export default function FindAquifer() {
   const [limit] = useState(100); //TODO? - grid pages but expects them all to be loaded
   const [offset] = useState(0); //TODO?
   const forceDataChanges = useDataChanges();
+  const handlePreviewClick = (row: DataRow) => {
+    setPreviewItem(row);
+  };
+
   const columnDefs = [
     { name: 'name', title: t.name },
     { name: 'mediaType', title: t.mediaType },
     { name: 'group', title: t.group },
     { name: 'source', title: t.source },
+    {
+      name: 'preview',
+      title: t.preview,
+      renderCell: (params: any) => (
+        <IconButton onClick={() => handlePreviewClick(params.row)}>
+          <PreviewIcon />
+        </IconButton>
+      ),
+    },
   ];
   const columnWidths = [
     { columnName: 'name', width: 200 },
     { columnName: 'mediaType', width: 100 },
     { columnName: 'group', width: 120 },
     { columnName: 'source', width: 200 },
+    { columnName: 'preview', width: 100 },
   ];
   const columnFormatting = [
     { columnName: 'name', wordWrapEnabled: true },
@@ -147,13 +161,11 @@ export default function FindAquifer() {
   useEffect(() => {
     if ((token ?? '') !== '')
       axiosGet('aquifer/languages', undefined, token ?? '').then((response) => {
-        // console.log(response);
         setLanguages(response.data);
       });
   }, [token]);
 
   useEffect(() => {
-    // console.log(languages);
     const langOptions = languages.map((item: AquiferLanguage) => ({
       value: item.code,
       label:
@@ -188,7 +200,6 @@ export default function FindAquifer() {
     const searchParams = new URLSearchParams(paramArr);
 
     axiosGet('aquifer/aquifer-search', searchParams, token).then((response) => {
-      // console.log(response);
       setCount(response.data.totalItemCount);
       setResult(response.data.items);
     });
@@ -208,8 +219,7 @@ export default function FindAquifer() {
   }, [result]);
 
   useEffect(() => {
-    if (previewItem && preview) {
-      // console.log(previewItem);
+    if (previewItem) {
       const paramArr = [
         ['contentId', previewItem.id.toString()],
         [
@@ -223,20 +233,13 @@ export default function FindAquifer() {
         searchParams,
         token
       ).then((response) => {
-        console.log(response);
         setContent(response.data);
+        setPreviewOpen(true);
       });
     }
-  }, [previewItem, preview, token]);
+  }, [previewItem, token]);
 
   const handleCheck = (chks: Array<number>) => {
-    const newItem = chks.filter((c) => !checks.includes(c));
-    if (newItem.length > 0) {
-      const item = data.find((d) => d.id === newItem[0]);
-      setPreviewItem(item ?? null);
-    } else {
-      setPreviewItem(null);
-    }
     setChecks(chks);
   };
 
@@ -338,35 +341,48 @@ export default function FindAquifer() {
             </LightTooltip>
           </Grid>
           <Grid item>
-            <LightTooltip title={t.preview}>
-              <IconButton onClick={() => setPreview(!preview)}>
-                {preview ? <PreviewIcon /> : <NoPreview />}
-              </IconButton>
-            </LightTooltip>
-          </Grid>
-          <Grid item>
             <PriButton onClick={handleAdd} disabled={checks.length === 0}>
               {t.add}
             </PriButton>
           </Grid>
         </Grid>
-        {preview &&
-          content &&
-          (previewItem?.mediaType.toLowerCase() === 'text' ? (
-            <Markdown>{(content.content as string[])[0]}</Markdown>
-          ) : previewItem?.mediaType.toLowerCase() === 'image' ? (
-            <img src={(content.content as any)?.url} alt={previewItem.name} />
-          ) : previewItem?.mediaType.toLowerCase() === 'audio' ? (
-            <IconButton
-              onClick={() => setLink((content.content as any)?.mp3.url)}
-            >
-              <LinkIcon />
-            </IconButton>
-          ) : (
-            <IconButton onClick={() => setLink((content.content as any)?.url)}>
-              <LinkIcon />
-            </IconButton>
-          ))}
+        {content && (
+          <BigDialog
+            title={t.preview}
+            description={
+              <Typography sx={{ pb: 2 }}>{previewItem?.name}</Typography>
+            }
+            isOpen={previewOpen}
+            onOpen={(isOpen: boolean) => {
+              setPreviewOpen(isOpen);
+              if (!isOpen) setPreviewItem(null);
+            }}
+          >
+            <>
+              {previewItem?.mediaType.toLowerCase() === 'text' ? (
+                <Markdown>{(content.content as string[])[0]}</Markdown>
+              ) : previewItem?.mediaType.toLowerCase() === 'image' ? (
+                <img
+                  src={(content.content as any)?.url}
+                  alt={previewItem?.name}
+                />
+              ) : previewItem?.mediaType.toLowerCase() === 'audio' ? (
+                <IconButton
+                  onClick={() => setLink((content.content as any)?.mp3.url)}
+                >
+                  <LinkIcon />
+                </IconButton>
+              ) : (
+                <IconButton
+                  onClick={() => setLink((content.content as any)?.url)}
+                >
+                  <LinkIcon />
+                </IconButton>
+              )}
+            </>
+          </BigDialog>
+        )}
+
         {count > 100 && (
           <Typography variant="h6" component="h6">{`${Math.min(
             count,
