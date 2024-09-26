@@ -67,7 +67,8 @@ export const SelectArtifactCategory = (props: IProps) => {
     artifactCategorySelector,
     shallowEqual
   );
-  const { getArtifactCategorys, scriptureTypeCategory } = useArtifactCategory(org);
+  const { getArtifactCategorys, scriptureTypeCategory } =
+    useArtifactCategory(org);
   const [artifactCategorys, setArtifactCategorys] = useState<
     IArtifactCategory[]
   >([]);
@@ -154,6 +155,7 @@ export const SelectArtifactCategory = (props: IProps) => {
           .concat(
             // if not populated yet
             initCategory !== '' &&
+              artifactCategorys.length > 0 &&
               artifactCategorys.findIndex(
                 (v: IArtifactCategory) => v.id === initCategory
               ) === -1 ? (
