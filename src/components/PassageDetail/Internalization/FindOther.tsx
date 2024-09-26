@@ -51,7 +51,10 @@ export default function FindOther({ resources, handleLink }: FindOtherProps) {
               onChange={handleLink('bibleProject')}
               sx={{ width: 300 }}
               renderInput={(params) => (
-                <TextField {...params} label={t.bibleProjectLang} />
+                <TextField
+                  {...params}
+                  label={`${t.bibleProjectLang} (bibleproject.com)`}
+                />
               )}
             />
           </Stack>

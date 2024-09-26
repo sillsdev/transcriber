@@ -15,7 +15,7 @@ import NoPreview from '@mui/icons-material/VisibilityOff';
 import LinkIcon from '@mui/icons-material/Link';
 import { useContext, useEffect, useState } from 'react';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
-import { parseRef } from '../../../crud';
+import { parseRef, remoteIdNum, useSecResCreate } from '../../../crud';
 import DataTable from '../../DataTable';
 import { shallowEqual, useSelector } from 'react-redux';
 import { findResourceSelector } from '../../../selector';
@@ -27,6 +27,9 @@ import Markdown from 'react-markdown';
 import { LaunchLink } from '../../../control/LaunchLink';
 import { axiosGet, axiosPost } from '../../../utils/axios';
 import { TokenContext } from '../../../context/TokenProvider';
+import { useGlobal } from 'reactn';
+import { RecordKeyMap } from '@orbit/records';
+import { useDataChanges } from '../../../utils';
 
 interface AquiferSearch {
   id: number;
@@ -98,7 +101,9 @@ interface DataRow {
 }
 
 export default function FindAquifer() {
-  const { passage } = usePassageDetailContext();
+  const { passage, section } = usePassageDetailContext();
+  const { InternalizationStep } = useSecResCreate(section);
+  const [memory] = useGlobal('memory');
   const [result, setResult] = useState<AquiferSearch[]>([]);
   const [data, setData] = useState<DataRow[]>([]);
   const [checks, setChecks] = useState<number[]>([]);
@@ -117,8 +122,9 @@ export default function FindAquifer() {
     shallowEqual
   );
   const token = useContext(TokenContext).state.accessToken ?? '';
-  const [limit, setLimit] = useState(100);
-  const [offset, setOffset] = useState(0);
+  const [limit] = useState(100); //TODO? - grid pages but expects them all to be loaded
+  const [offset] = useState(0); //TODO?
+  const forceDataChanges = useDataChanges();
   const columnDefs = [
     { name: 'name', title: t.name },
     { name: 'mediaType', title: t.mediaType },
@@ -246,11 +252,32 @@ export default function FindAquifer() {
         });
       }
     });
-    /*var bodyFormData = new FormData();
-    bodyFormData.append('content', add); */
-    console.log(checks, add);
-    axiosPost('aquifer', add, token).then((response) => {
-      console.log(response);
+    var postdata: {
+      PassageId?: number;
+      SectionId?: number;
+      OrgWorkflowStep: number;
+      Items: { ContentId: string; ContentType: string }[];
+    } = {
+      PassageId: remoteIdNum(
+        'passage',
+        passage.id,
+        memory.keyMap as RecordKeyMap
+      ),
+      SectionId: remoteIdNum(
+        'section',
+        section.id,
+        memory.keyMap as RecordKeyMap
+      ),
+      OrgWorkflowStep: remoteIdNum(
+        'orgworkflowstep',
+        InternalizationStep()?.id ?? '',
+        memory.keyMap as RecordKeyMap
+      ),
+      Items: add,
+    };
+    axiosPost('aquifer', postdata, token).then((response) => {
+      //could process response as ChangeList but this is easier
+      forceDataChanges();
     });
   };
 
