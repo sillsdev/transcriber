@@ -1846,12 +1846,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="findResource.preview">
-         <segment>
-            <source>Preview</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="findResource.query">
          <segment>
             <source>Query</source>

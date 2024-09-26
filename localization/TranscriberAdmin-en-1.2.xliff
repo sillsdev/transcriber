@@ -2153,13 +2153,6 @@
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="findResource.preview">
-            <source>Preview</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">findResource.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="findResource.query">
             <source>Query</source>
             <target/>
