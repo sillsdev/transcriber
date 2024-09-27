@@ -14,7 +14,7 @@ import PreviewIcon from '@mui/icons-material/Visibility';
 import LinkIcon from '@mui/icons-material/Link';
 import { useContext, useEffect, useState } from 'react';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
-import { parseRef, remoteIdNum, useSecResCreate } from '../../../crud';
+import { parseRef, remoteIdNum, useRole, useSecResCreate } from '../../../crud';
 import DataTable from '../../DataTable';
 import { shallowEqual, useSelector } from 'react-redux';
 import { findResourceSelector } from '../../../selector';
@@ -28,7 +28,7 @@ import { axiosGet, axiosPost } from '../../../utils/axios';
 import { TokenContext } from '../../../context/TokenProvider';
 import { useGlobal } from 'reactn';
 import { RecordKeyMap } from '@orbit/records';
-import { useDataChanges } from '../../../utils';
+import { useDataChanges, useWaitForRemoteQueue } from '../../../utils';
 import BigDialog from '../../../hoc/BigDialog';
 
 interface AquiferSearch {
@@ -100,9 +100,14 @@ interface DataRow {
   source: string;
 }
 
-export default function FindAquifer() {
+interface IProps {
+  onClose?: () => void;
+}
+
+export default function FindAquifer({ onClose }: IProps) {
   const { passage, section } = usePassageDetailContext();
   const { InternalizationStep } = useSecResCreate(section);
+  const [isOffline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
   const [result, setResult] = useState<AquiferSearch[]>([]);
   const [data, setData] = useState<DataRow[]>([]);
@@ -125,6 +130,8 @@ export default function FindAquifer() {
   const [limit] = useState(100); //TODO? - grid pages but expects them all to be loaded
   const [offset] = useState(0); //TODO?
   const forceDataChanges = useDataChanges();
+  const waitForRemoteQueue = useWaitForRemoteQueue();
+  const { userIsAdmin } = useRole();
   const handlePreviewClick = (row: DataRow) => {
     setPreviewItem(row);
   };
@@ -280,7 +287,14 @@ export default function FindAquifer() {
     };
     axiosPost('aquifer', postdata, token).then((response) => {
       //could process response as ChangeList but this is easier
-      forceDataChanges();
+      setTimeout(() => {
+        forceDataChanges();
+        setTimeout(() => {
+          waitForRemoteQueue('aquifer resource added').then(() => {
+            onClose && onClose();
+          });
+        }, 200);
+      }, 1500);
     });
   };
 
@@ -340,11 +354,13 @@ export default function FindAquifer() {
               />
             </LightTooltip>
           </Grid>
-          <Grid item>
-            <PriButton onClick={handleAdd} disabled={checks.length === 0}>
-              {t.add}
-            </PriButton>
-          </Grid>
+          {userIsAdmin && !isOffline && (
+            <Grid item>
+              <PriButton onClick={handleAdd} disabled={checks.length === 0}>
+                {t.add}
+              </PriButton>
+            </Grid>
+          )}
         </Grid>
         {content && (
           <BigDialog

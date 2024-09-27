@@ -66,7 +66,11 @@ function a11yProps(index: number) {
   };
 }
 
-export default function FindTabs() {
+interface FindTabsProps {
+  onClose?: () => void;
+}
+
+export default function FindTabs({ onClose }: FindTabsProps) {
   const [value, setValue] = useState(0);
   const { passage } = usePassageDetailContext();
   const [resources, setResources] = useState<BibleResource[]>([]);
@@ -126,7 +130,7 @@ export default function FindTabs() {
         <FindBibleBrain handleLink={handleLink} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <FindAquifer />
+        <FindAquifer onClose={onClose} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         <FindOther handleLink={handleLink} resources={resources} />
