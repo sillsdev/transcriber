@@ -131,7 +131,7 @@ export function PassageDetailArtifacts() {
     getProjectResources,
   } = usePassageDetailContext();
   const { getOrganizedBy } = useOrganizedBy();
-  const AddSectionResource = useSecResCreate(section);
+  const { AddSectionResource } = useSecResCreate(section);
   const AddSectionResourceUser = useSecResUserCreate();
   const ReadSectionResourceUser = useSecResUserRead();
   const RemoveSectionResourceUser = useSecResUserDelete();

@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import {
-  Column,
   FilteringState,
   Filter,
   SummaryItem,
@@ -15,9 +14,13 @@ import { TableBandHeader } from '@devexpress/dx-react-grid-material-ui';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { esES, frFR, ptBR, ruRU, zhCN } from '@mui/x-data-grid';
 import { useGlobal } from 'reactn';
-
+interface MyColumn {
+  name: string;
+  title: string;
+  renderCell?: (params: any) => JSX.Element;
+}
 interface IProps {
-  columns: Array<Column>;
+  columns: Array<MyColumn>;
   columnWidths?: Array<TableColumnWidthInfo>;
   columnFormatting?: Array<GridColumnExtension>;
   columnSorting?: Array<IntegratedSorting.ColumnExtension>;
@@ -81,16 +84,17 @@ function DataTable(props: IProps) {
       selection.length === 0
         ? []
         : selection.map((s) =>
-          typeof s === 'string' ? rows.findIndex((r) => r.id === s) : s
-        );
+            typeof s === 'string' ? rows.findIndex((r) => r.id === s) : s
+          );
     select && select(numSelection);
-  }
+  };
 
   const colSpec = React.useMemo(() => {
     const colSpec: GridColDef[] = columns.map((c) => {
       const col = {
         field: c.name,
         headerName: c.title ?? c.name,
+        renderCell: c.renderCell,
       } as GridColDef;
       if (columnWidths) {
         const cw = columnWidths.find((w) => w.columnName === c.name);

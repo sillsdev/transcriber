@@ -43,7 +43,7 @@ interface IProps {
 export const useProjectResourceSave = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const AddSectionResource = useSecResCreate({} as RecordIdentity);
+  const { AddSectionResource } = useSecResCreate({} as RecordIdentity);
   const { getTypeId } = useArtifactType();
   const fullReference = useFullReference();
 

@@ -13,6 +13,7 @@ import { BibleResource } from '../../../model/bible-resource';
 import { IFindResourceStrings } from '../../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { findResourceSelector } from '../../../selector';
+import FindAquifer from './FindAquifer';
 
 export enum scopeI {
   passage,
@@ -113,10 +114,11 @@ export default function FindTabs() {
           aria-label="basic tabs example"
         >
           <Tab label={t.findBibleBrain} {...a11yProps(0)} />
-          <Tab label={t.findOther} {...a11yProps(1)} />
+          <Tab label={'Find: Aquifer'} {...a11yProps(1)} />
+          <Tab label={t.findOther} {...a11yProps(2)} />
           <Tab
             label={<Badge badgeContent="AI">{t.create}</Badge>}
-            {...a11yProps(2)}
+            {...a11yProps(3)}
           />
         </Tabs>
       </Box>
@@ -124,9 +126,12 @@ export default function FindTabs() {
         <FindBibleBrain handleLink={handleLink} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <FindOther handleLink={handleLink} resources={resources} />
+        <FindAquifer />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
+        <FindOther handleLink={handleLink} resources={resources} />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={3}>
         <CreateAiRes resources={resources} />
       </CustomTabPanel>
       <LaunchLink url={link} reset={() => setLink('')} />

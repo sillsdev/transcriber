@@ -346,7 +346,10 @@ export interface IFilterMenuStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
+    "add": string;
     "aiDesc": string;
+    "aquiferLang": string;
+    "aquiferSearchTip": string;
     "bibleBrain": string;
     "bibleProjectLang": string;
     "biblicalBook": string;
@@ -361,21 +364,28 @@ export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "findBibleBrain": string;
     "findOther": string;
     "findResource": string;
+    "group": string;
     "image": string;
     "imageTpl": string;
+    "language": string;
     "launch": string;
     "meaning": string;
     "meaningTpl": string;
+    "mediaType": string;
     "movement": string;
+    "name": string;
     "oralVersion": string;
     "oralVersionTpl": string;
     "passage": string;
+    "preview": string;
     "query": string;
     "queryBuilder": string;
     "reset": string;
     "scope": string;
     "script": string;
     "scriptTpl": string;
+    "section": string;
+    "source": string;
     "summary": string;
     "summaryTpl": string;
     "type": string;

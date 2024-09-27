@@ -1929,6 +1929,13 @@
                <context context-type="sourcefile">filterMenu.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="findResource.add">
+            <source>Add</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="findResource.aiDesc">
             <source>Copy the query contents and paste it into one or more of the AI chat tools:</source>
             <target/>
@@ -1936,7 +1943,21 @@
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
          </trans-unit>
-                  <trans-unit id="findResource.bibleBrain">
+         <trans-unit id="findResource.aquiferLang">
+            <source>Aquifer Language</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.aquiferSearchTip">
+            <source>The keyword to search on. Currently only searches against content names (not inside content). Non-English names are supported. Must be at least 3 characters in length.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.bibleBrain">
             <source>{0} Resource</source>
             <target/>
             <context-group>
@@ -2034,6 +2055,13 @@
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="findResource.group">
+            <source>Group</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FindAquifer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="findResource.image">
             <source>image</source>
             <target/>
@@ -2046,6 +2074,13 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.language">
+            <source>Language</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FindAquifer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="findResource.launch">
@@ -2069,11 +2104,25 @@
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="findResource.mediaType">
+            <source>Media</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FindAquifer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="findResource.movement">
             <source>movement</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.name">
+            <source>Name</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FindAquifer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="findResource.oralVersion">
@@ -2091,7 +2140,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="findResource.passage">
-            <source>Passage</source>
+            <source>passage</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.preview">
+            <source>Preview</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
@@ -2137,6 +2193,20 @@
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.section">
+            <source>section</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.source">
+            <source>Source</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FindAquifer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="findResource.summary">

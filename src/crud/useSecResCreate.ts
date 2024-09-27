@@ -10,7 +10,8 @@ export const useSecResCreate = (section: RecordIdentity) => {
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const internalization = useMemo(() => {
+
+  const InternalizationStep = () => {
     const workflowsteps = memory.cache.query((q) =>
       q.findRecords('orgworkflowstep')
     ) as OrgWorkflowStep[];
@@ -22,9 +23,14 @@ export const useSecResCreate = (section: RecordIdentity) => {
           Boolean(s?.keys?.remoteId) === !offlineOnly
       );
     return internalizationStep;
-  }, [memory.cache, organization, offlineOnly]);
+  };
 
-  return async (
+  const internalization = useMemo(() => {
+    return InternalizationStep();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [organization, offlineOnly]);
+
+  const AddSectionResource = async (
     seq: number,
     desc: string | null,
     mediafile: RecordIdentity,
@@ -76,4 +82,5 @@ export const useSecResCreate = (section: RecordIdentity) => {
     }
     await memory.update(ops);
   };
+  return { AddSectionResource, InternalizationStep };
 };
