@@ -413,6 +413,7 @@ export function PassageDetailArtifacts() {
     resetEdit();
   };
   const handleAction = (what: string) => {
+    setArtifactTypeId(resourceType);
     if (what === 'upload') {
       setUploadType(UploadType.Resource);
       setRecordAudio(false);
