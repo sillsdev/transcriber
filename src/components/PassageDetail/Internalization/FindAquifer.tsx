@@ -401,7 +401,7 @@ export default function FindAquifer() {
           expandedGroups={[]} // shuts off toolbar row
         />
       </Stack>
-      <LaunchLink url={link} />
+      <LaunchLink url={link} reset={() => setLink('')} />
     </Grid>
   );
 }

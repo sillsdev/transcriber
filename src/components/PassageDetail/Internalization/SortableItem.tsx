@@ -31,15 +31,16 @@ export const SortableItem = ({
     value={
       {
         ...value,
-        playItem: value.isText ? (
-          <ViewButton id={value.id} cb={onView} />
-        ) : value.mediafile.attributes.contentType === UriLinkType ? (
-          <ViewButton id={value.id} cb={onLink} />
-        ) : value.mediafile.attributes.contentType === MarkDownType ? (
-          <ViewButton id={value.id} cb={onMarkDown} />
-        ) : (
-          <PlayButton value={!isPlaying} id={value.id} cb={onPlay} />
-        ),
+        playItem:
+          value.mediafile.attributes.contentType === UriLinkType ? (
+            <ViewButton id={value.id} cb={onLink} />
+          ) : value.mediafile.attributes.contentType === MarkDownType ? (
+            <ViewButton id={value.id} cb={onMarkDown} />
+          ) : value.isText ? (
+            <ViewButton id={value.id} cb={onView} />
+          ) : (
+            <PlayButton value={!isPlaying} id={value.id} cb={onPlay} />
+          ),
         done: (
           <DoneButton
             value={value.done}
