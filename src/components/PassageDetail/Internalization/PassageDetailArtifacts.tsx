@@ -818,7 +818,7 @@ export function PassageDetailArtifacts() {
         onOpen={handleFindVisible}
         bp={BigDialogBp.sm}
       >
-        <FindTabs />
+        <FindTabs onClose={() => handleFindVisible(false)} />
       </BigDialog>
       <BigDialog
         title={t.sharedResource.replace(
