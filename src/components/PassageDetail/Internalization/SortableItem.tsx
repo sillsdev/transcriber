@@ -36,7 +36,7 @@ export const SortableItem = ({
             <ViewButton id={value.id} cb={onLink} />
           ) : value.mediafile.attributes.contentType === MarkDownType ? (
             <ViewButton id={value.id} cb={onMarkDown} />
-          ) : value.isText ? (
+          ) : !/^audio/.test(value.mediafile.attributes.contentType) ? (
             <ViewButton id={value.id} cb={onView} />
           ) : (
             <PlayButton value={!isPlaying} id={value.id} cb={onPlay} />
