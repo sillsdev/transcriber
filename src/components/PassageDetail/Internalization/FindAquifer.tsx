@@ -17,8 +17,8 @@ import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { parseRef, remoteIdNum, useRole, useSecResCreate } from '../../../crud';
 import DataTable from '../../DataTable';
 import { shallowEqual, useSelector } from 'react-redux';
-import { findResourceSelector } from '../../../selector';
-import { IFindResourceStrings } from '../../../model';
+import { findResourceSelector, gridSelector } from '../../../selector';
+import { IFindResourceStrings, IGridStrings } from '../../../model';
 import { Sorting } from '@devexpress/dx-react-grid';
 import { LightTooltip, PriButton } from '../../StepEditor';
 import { OptionProps } from './FindTabs';
@@ -126,6 +126,7 @@ export default function FindAquifer({ onClose }: IProps) {
     findResourceSelector,
     shallowEqual
   );
+  const tg: IGridStrings = useSelector(gridSelector, shallowEqual);
   const token = useContext(TokenContext).state.accessToken ?? '';
   const [limit] = useState(100); //TODO? - grid pages but expects them all to be loaded
   const [offset] = useState(0); //TODO?
@@ -403,17 +404,28 @@ export default function FindAquifer({ onClose }: IProps) {
             100
           )} of ${count} aquifer results`}</Typography>
         )}
-        <DataTable
-          columns={columnDefs}
-          columnWidths={columnWidths}
-          columnFormatting={columnFormatting}
-          sorting={sorting}
-          rows={data}
-          select={handleCheck}
-          checks={checks}
-          shaping={true}
-          expandedGroups={[]} // shuts off toolbar row
-        />
+        {data.length > 0 ? (
+          <DataTable
+            columns={columnDefs}
+            columnWidths={columnWidths}
+            columnFormatting={columnFormatting}
+            sorting={sorting}
+            rows={data}
+            select={handleCheck}
+            checks={checks}
+            shaping={true}
+            expandedGroups={[]} // shuts off toolbar row
+          />
+        ) : (
+          <Grid
+            container
+            sx={{ my: 1, alignItems: 'center', justifyContent: 'center' }}
+          >
+            <Grid item>
+              <Typography variant="h6">{tg.noData}</Typography>
+            </Grid>
+          </Grid>
+        )}
       </Stack>
       <LaunchLink url={link} reset={() => setLink('')} />
     </Grid>
