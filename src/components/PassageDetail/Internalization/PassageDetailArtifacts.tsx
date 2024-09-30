@@ -488,6 +488,7 @@ export function PassageDetailArtifacts() {
     oldIndex: number;
     newIndex: number;
   }) => {
+    if (oldIndex === newIndex) return;
     const indexes = Array<number>();
     rowData.forEach((r, i) => {
       if (listFilter(r)) indexes.push(i);
