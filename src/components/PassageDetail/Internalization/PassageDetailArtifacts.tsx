@@ -417,6 +417,7 @@ export function PassageDetailArtifacts() {
   };
   const handleAction = (what: string) => {
     artifactState.id = resourceType;
+    resourceTypeRef.current = ResourceTypeEnum.sectionResource;
     if (what === 'upload') {
       setUploadType(UploadType.Resource);
       setRecordAudio(false);
