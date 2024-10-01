@@ -94,6 +94,8 @@ export function ProvideRights(props: IProps) {
     [recordType, getTypeId]
   );
 
+  const artifactState = useMemo(() => ({ id: recordTypeId }), [recordTypeId]);
+
   useEffect(() => {
     setDefaultFileName(cleanFileName(`${speaker}_ip`));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -261,7 +263,7 @@ export function ProvideRights(props: IProps) {
         multiple={false}
         finish={afterUpload}
         cancelled={cancelled}
-        artifactTypeId={recordTypeId}
+        artifactState={artifactState}
         performedBy={speaker}
         createProject={createProject}
         uploadType={UploadType.IntellectualProperty}

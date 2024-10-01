@@ -288,6 +288,8 @@ export function PassageDetailItem(props: IProps) {
     [recordType, getTypeId]
   );
 
+  const artifactState = useMemo(() => ({ id: recordTypeId }), [recordTypeId]);
+
   useEffect(() => {
     var mediaRec = rowData.filter(
       (r) => related(r.mediafile, 'artifactType') === recordTypeId
@@ -631,7 +633,7 @@ export function PassageDetailItem(props: IProps) {
         passageId={related(sharedResource, 'passage') ?? passage.id}
         sourceSegments={JSON.stringify(getCurrentSegment())}
         sourceMediaId={mediafileId}
-        artifactTypeId={recordTypeId}
+        artifactState={artifactState}
         performedBy={speaker}
         topic={topic}
       />

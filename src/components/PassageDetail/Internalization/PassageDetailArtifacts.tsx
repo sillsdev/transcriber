@@ -157,7 +157,8 @@ export function PassageDetailArtifacts() {
     SectionResourceD | undefined
   >();
   const [allowEditSave, setAllowEditSave] = useState(false);
-  const [artifactTypeId, setArtifactTypeId] = useState<string>();
+  const [artifactState] = useState<{ id?: string | null }>({});
+  // const [artifactTypeId, setArtifactTypeId] = useState<string>();
   const [uploadType, setUploadType] = useState<UploadType>(UploadType.Resource);
   const [recordAudio, setRecordAudio] = useState<boolean>(false);
   const mediaRef = useRef<MediaFileD>();
@@ -189,8 +190,10 @@ export function PassageDetailArtifacts() {
         t.attributes?.typename === 'resource' &&
         Boolean(t?.keys?.remoteId) === !offlineOnly
     );
-    setArtifactTypeId(resourceType?.id);
+    // setArtifactTypeId(resourceType?.id);
+    artifactState.id = resourceType?.id || null;
     return resourceType?.id;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [artifactTypes, offlineOnly]);
 
   const otherResourcesAvailable = useMemo(
@@ -413,7 +416,8 @@ export function PassageDetailArtifacts() {
     resetEdit();
   };
   const handleAction = (what: string) => {
-    setArtifactTypeId(resourceType);
+    artifactState.id = resourceType;
+    resourceTypeRef.current = ResourceTypeEnum.sectionResource;
     if (what === 'upload') {
       setUploadType(UploadType.Resource);
       setRecordAudio(false);
@@ -681,13 +685,13 @@ export function PassageDetailArtifacts() {
   const handlePassRes = (newValue: ResourceTypeEnum) => {
     resourceTypeRef.current = newValue;
     if (isProjectResource()) {
-      setArtifactTypeId(projResourceType);
+      artifactState.id = projResourceType;
       setUploadType(UploadType.ProjectResource);
     } else if (
-      artifactTypeId === projResourceType ||
+      artifactState.id === projResourceType ||
       uploadType === UploadType.ProjectResource
     ) {
-      setArtifactTypeId(resourceType);
+      artifactState.id = resourceType;
       setUploadType(UploadType.Resource);
     }
   };
@@ -791,7 +795,7 @@ export function PassageDetailArtifacts() {
         multiple={true}
         finish={afterUpload}
         cancelled={cancelled}
-        artifactTypeId={artifactTypeId}
+        artifactState={artifactState}
         uploadType={uploadType}
         ready={() => true}
         metaData={
