@@ -9,7 +9,6 @@ import { tryParseJSON } from '../utils/tryParseJson';
 export const projDefExportNumbers = 'exportNumbers';
 export const projDefSectionMap = 'sectionMap';
 export const projDefBook = 'book';
-export const projDefHidePublishing = 'hidePublishing';
 export const projDefFirstMovement = 'firstMovement';
 export const projDefFilterParam = 'ProjectFilter';
 

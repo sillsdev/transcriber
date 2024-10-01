@@ -12,13 +12,13 @@ import {
 } from '../model';
 import { findRecord, usePlanType, useRole } from '../crud';
 import {
-  projDefHidePublishing,
   projDefSectionMap,
   useProjectDefaults,
 } from '../crud/useProjectDefaults';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import { projButtonsSelector } from '../selector';
+import { LocalKey, localUserKey } from '../utils';
 
 export interface IRowData {}
 
@@ -106,19 +106,24 @@ const PlanProvider = (props: IProps) => {
     let projRec = findRecord(memory, 'project', project) as ProjectD;
     if (projRec) {
       const shared = projRec?.attributes?.isPublic || false;
+      const hidePublish =
+        localStorage.getItem(localUserKey(LocalKey.hidePublishing)) || 'true';
       const hidePublishing =
-        (getProjectDefault(projDefHidePublishing) ?? true) ||
-        (isOffline && !isDeveloper);
+        hidePublish === 'true' || (isOffline && !isDeveloper);
 
       if (
         shared !== state.shared ||
-        hidePublishing !== state[projDefHidePublishing]
+        hidePublishing !== state[LocalKey.hidePublishing]
       ) {
         setState((state) => ({
           ...state,
           shared,
           hidePublishing,
         }));
+        localStorage.setItem(
+          localUserKey(LocalKey.hidePublishing),
+          hidePublishing.toString()
+        );
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -130,7 +135,10 @@ const PlanProvider = (props: IProps) => {
 
   const togglePublishing = () => {
     const { hidePublishing } = state;
-    setProjectDefault(projDefHidePublishing, !hidePublishing);
+    localStorage.setItem(
+      localUserKey(LocalKey.hidePublishing),
+      (!hidePublishing).toString()
+    );
     setState((state) => ({ ...state, hidePublishing: !hidePublishing }));
   };
 
