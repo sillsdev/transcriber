@@ -133,7 +133,8 @@ export default function FindAquifer({ onClose }: IProps) {
   const forceDataChanges = useDataChanges();
   const waitForRemoteQueue = useWaitForRemoteQueue();
   const { userIsAdmin } = useRole();
-  const handlePreviewClick = (row: DataRow) => {
+  const handlePreviewClick = (e: React.MouseEvent, row: DataRow) => {
+    e.stopPropagation();
     setPreviewItem(row);
   };
 
@@ -146,7 +147,7 @@ export default function FindAquifer({ onClose }: IProps) {
       name: 'preview',
       title: t.preview,
       renderCell: (params: any) => (
-        <IconButton onClick={() => handlePreviewClick(params.row)}>
+        <IconButton onClick={(e) => handlePreviewClick(e, params.row)}>
           <PreviewIcon />
         </IconButton>
       ),
