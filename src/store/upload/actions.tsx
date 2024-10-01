@@ -178,6 +178,9 @@ export const nextUpload =
         if (cb) cb(n, false);
       }
       return;
+    } else if (offline) {
+      if (cb) cb(n, true, { ...record });
+      return;
     }
     const completeCB = (
       success: boolean,
