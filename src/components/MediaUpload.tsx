@@ -3,11 +3,9 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { IMediaUploadStrings } from '../model';
 import {
   Button,
-  Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
   styled,
 } from '@mui/material';
 import path from 'path-browserify';
@@ -18,6 +16,7 @@ import { API_CONFIG } from '../api-variable';
 import { LinkEdit } from '../control/LinkEdit';
 import { MarkDownEdit } from '../control/MarkDownEdit';
 import { isUrl } from '../utils';
+import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
 
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('react-file-drop').FileDrop : <></>;
@@ -175,7 +174,6 @@ function MediaUpload(props: IProps) {
   const [acceptextension, setAcceptExtension] = useState('');
   const [sizeLimit, setSizeLimit] = useState(0);
   const [acceptmime, setAcceptMime] = useState('');
-  const linkRef = useRef<HTMLAnchorElement>(null);
   const [hasRights, setHasRight] = useState(!onSpeaker || Boolean(speaker));
   const t: IMediaUploadStrings = useSelector(mediaUploadSelector, shallowEqual);
   const title = [
@@ -321,14 +319,13 @@ function MediaUpload(props: IProps) {
   }, [uploadType]);
 
   return (
-    <>
-      <Dialog
-        open={visible}
-        onClose={handleCancel}
-        aria-labelledby="audUploadDlg"
-        disableEnforceFocus
-      >
-        <DialogTitle id="audUploadDlg">{title[uploadType]}</DialogTitle>
+    <BigDialog
+      isOpen={visible}
+      onOpen={handleCancel}
+      title={title[uploadType]}
+      bp={BigDialogBp.sm}
+    >
+      <>
         <DialogContent>
           <DialogContentText>
             {text[uploadType].replace('{0}', speaker || '')}
@@ -388,10 +385,8 @@ function MediaUpload(props: IProps) {
             {t.upload}
           </Button>
         </DialogActions>
-      </Dialog>
-      {/* eslint-disable-next-line jsx-a11y/anchor-has-content, jsx-a11y/anchor-is-valid */}
-      <a ref={linkRef} href="#" target="_blank" rel="noopener noreferrer"></a>
-    </>
+      </>
+    </BigDialog>
   );
 }
 

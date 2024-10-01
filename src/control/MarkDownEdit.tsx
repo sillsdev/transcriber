@@ -45,7 +45,7 @@ export const MarkDownEdit = ({ inValue, onValue }: MarkDownEditProps) => {
         label={t.markdownTitle}
         value={value}
         onChange={handleValue}
-        sx={{ flexGrow: 1, mr: 1 }}
+        sx={{ flexGrow: 1, mr: 1, minWidth: '40%' }}
       />
       {value && (
         <FormControl
