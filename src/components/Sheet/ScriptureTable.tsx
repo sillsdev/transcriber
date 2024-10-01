@@ -330,7 +330,7 @@ export function ScriptureTable(props: IProps) {
     sheetRef.current = ws;
     setSheetx(ws);
     var anyPublishing = !offline
-      ? Boolean(ws.find((s) => isPublishingTitle(s.reference ?? '', flat)))
+      ? ws.some((s) => isPublishingTitle(s.reference ?? '', flat))
       : false;
     if (canHidePublishing !== anyPublishing) setCanPublish(anyPublishing);
   };
