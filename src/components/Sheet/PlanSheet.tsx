@@ -768,7 +768,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const handlePublishToggle: MouseEventHandler<HTMLButtonElement> = () => {
-    if (!canPublish && hidePublishing) {
+    if (!canPublish) {
       showMessage(t.paratextRequired);
       return;
     }

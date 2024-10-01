@@ -108,8 +108,9 @@ const PlanProvider = (props: IProps) => {
       const shared = projRec?.attributes?.isPublic || false;
       const hidePublish =
         localStorage.getItem(localUserKey(LocalKey.hidePublishing)) || 'true';
-      const hidePublishing =
-        hidePublish === 'true' || (isOffline && !isDeveloper);
+      const hidePublishing = Boolean(
+        hidePublish === 'true' || (isOffline && !isDeveloper)
+      );
 
       if (
         shared !== state.shared ||
@@ -137,7 +138,7 @@ const PlanProvider = (props: IProps) => {
     const { hidePublishing } = state;
     localStorage.setItem(
       localUserKey(LocalKey.hidePublishing),
-      (!hidePublishing).toString()
+      (!Boolean(hidePublishing)).toString()
     );
     setState((state) => ({ ...state, hidePublishing: !hidePublishing }));
   };
