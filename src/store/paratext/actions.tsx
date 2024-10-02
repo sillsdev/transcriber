@@ -39,6 +39,8 @@ import {
 } from '../../utils';
 import { getLocalParatextText } from '../../business/localParatext';
 import MemorySource from '@orbit/memory';
+import { passageTypeFromRef } from '../../control/RefRender';
+import { PassageTypeEnum } from '../../model/passageType';
 const ipc = (window as any)?.electron;
 
 export const resetUserName = () => (dispatch: any) => {
@@ -379,6 +381,17 @@ export const getLocalCount =
     if (passageId)
       ready = ready.filter((m) => related(m, 'passage') === passageId);
 
+    // remove those that are notes
+    ready = ready.filter((m) => {
+      const passage = findRecord(
+        memory,
+        'passage',
+        related(m, 'passage')
+      ) as Passage;
+      const ref = passage?.attributes?.reference ?? 'Err';
+      return passageTypeFromRef(ref, false) !== PassageTypeEnum.NOTE;
+    });
+
     const refMissing = ready.filter((m) => {
       const passage = findRecord(
         memory,
@@ -386,12 +399,7 @@ export const getLocalCount =
         related(m, 'passage')
       ) as Passage;
       const ref = passage?.attributes?.reference ?? 'Err';
-      return (
-        !(
-          // TODO: /^NOTE/.test(ref) ||
-          refMatch(ref)
-        ) || !passage?.attributes?.book
-      );
+      return !refMatch(ref) || !passage?.attributes?.book;
     });
     if (refMissing.length > 0) {
       const err = errorStatus(
