@@ -26,6 +26,10 @@ import { useComputeRef } from './useComputeRef';
 import { scopeI } from './FindTabs';
 import { useOrganizedBy } from '../../../crud/useOrganizedBy';
 import ClearIcon from '@mui/icons-material/Clear';
+import { PassageTypeEnum } from '../../../model/passageType';
+import { passageTypeFromRef } from '../../../control/RefRender';
+import { useGlobal } from 'reactn';
+import { usePlanType, useSharedResRead } from '../../../crud';
 
 interface CreateAiResProps {
   resources: BibleResource[];
@@ -34,6 +38,8 @@ interface CreateAiResProps {
 export default function CreateAiRes({ resources }: CreateAiResProps) {
   const [typeOpts, setTypeOpts] = useState<OptionProps[]>([]);
   const [scopeOpts, setScopeOpts] = useState<OptionProps[]>([]);
+  const [plan] = useGlobal('plan');
+  const { flat } = usePlanType()(plan);
   const [query, setQuery] = useState('');
   const [userEdited, setUserEdited] = useState(false);
   const [scope, setScope] = useState<string>('');
@@ -43,6 +49,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
   const { computeMovementRef, computeSectionRef } = useComputeRef();
   const { verseTerms } = useKeyTerms();
   const [link, setLink] = useState<string>();
+  const readSharedResource = useSharedResRead();
   const allBookData: BookName[] = useSelector(
     (state: IState) => state.books.bookData
   );
@@ -54,12 +61,12 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
   );
 
   const scopeOptions = [
-    t.passage,
-    organizedBy,
-    t.book,
-    t.chapter,
-    t.movement,
-    t.clipboard,
+    t.passage.toLowerCase(),
+    organizedBy.toLowerCase(),
+    t.movement.toLowerCase(),
+    t.book.toLowerCase(),
+    t.chapter.toLowerCase(),
+    t.clipboard.toLowerCase(),
   ];
 
   const aiQueries = [
@@ -104,10 +111,21 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
       allBookData.find((b) => b.code === passage?.attributes?.book ?? 'MAT')
         ?.short ?? 'Matthew';
     let ref = `${book} ${passage?.attributes?.reference ?? '1:1'}`;
+    if (
+      passageTypeFromRef(passage?.attributes?.reference, flat) ===
+      PassageTypeEnum.NOTE
+    ) {
+      const sharedResource = readSharedResource(passage?.id ?? '');
+      if (sharedResource) {
+        ref = `${sharedResource.attributes.title} (${book} ${computeSectionRef(
+          passage
+        )})`;
+      }
+    }
     if (scope === scopeOptions[scopeI.section]) {
       ref = `${book} ${computeSectionRef(passage)}`;
     } else if (scope === scopeOptions[scopeI.chapter]) {
-      const chapter = parseInt(passage?.attributes?.reference ?? '1');
+      const chapter = parseInt(computeSectionRef(passage) ?? '1');
       ref = `${book} ${chapter}`;
     } else if (scope === scopeOptions[scopeI.movement]) {
       ref = `${book} ${computeMovementRef(passage)}`;
@@ -115,7 +133,10 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
       ref = t.biblicalBook.replace('{0}', book);
     } else if (scope === scopeOptions[scopeI.clipboard]) {
       try {
-        ref = `"${await navigator.clipboard.readText()}"`;
+        let value = await navigator.clipboard.readText();
+        if (typeof value !== 'string' || value === 'undefined')
+          value = t.unavailable;
+        ref = `"${value}"`;
       } catch (e) {
         console.log(e);
         ref = t.unavailable;
@@ -230,7 +251,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
               label={t.query}
               value={query}
               onChange={handleQueryChange}
-              sx={{ flexGrow: 1, pl: 2 }}
+              sx={{ flexGrow: 1, ml: 2 }}
             />
             <Stack>
               <IconButton onClick={handleCopy} title={t.clipboardCopy}>
