@@ -49,10 +49,10 @@ export const useOfflnMediafileCreate = () => {
     } as MediaFile;
     //check new comment version
     if (
-      path.basename(data.audioUrl) !== data.originalFile &&
+      path.basename(data.audioUrl || '') !== data.originalFile &&
       /^audio/.test(data.contentType)
     ) {
-      newMediaRec.attributes.originalFile = path.basename(data.audioUrl);
+      newMediaRec.attributes.originalFile = path.basename(data.audioUrl || '');
     }
     const t = new RecordTransformBuilder();
     const ops: RecordOperation[] = [];
