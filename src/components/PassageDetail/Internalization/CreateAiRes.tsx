@@ -66,7 +66,6 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
     t.movement.toLowerCase(),
     t.book.toLowerCase(),
     t.chapter.toLowerCase(),
-    t.clipboard.toLowerCase(),
   ];
 
   const aiQueries = [
@@ -131,16 +130,6 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
       ref = `${book} ${computeMovementRef(passage)}`;
     } else if (scope === scopeOptions[scopeI.book]) {
       ref = t.biblicalBook.replace('{0}', book);
-    } else if (scope === scopeOptions[scopeI.clipboard]) {
-      try {
-        let value = await navigator.clipboard.readText();
-        if (typeof value !== 'string' || value === 'undefined')
-          value = t.unavailable;
-        ref = `"${value}"`;
-      } catch (e) {
-        console.log(e);
-        ref = t.unavailable;
-      }
     } else if (terms.includes(scope)) {
       ref = camel2Title(scope);
     }
