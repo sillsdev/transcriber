@@ -1992,6 +1992,13 @@
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="findResource.clearQuery">
+            <source>Clear query</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="findResource.clipboard">
             <source>clipboard</source>
             <target/>

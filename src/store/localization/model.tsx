@@ -355,6 +355,7 @@ export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "biblicalBook": string;
     "book": string;
     "chapter": string;
+    "clearQuery": string;
     "clipboard": string;
     "clipboardCopy": string;
     "convert": string;

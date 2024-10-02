@@ -384,6 +384,7 @@ const initialState = {
 			"biblicalBook": "the biblical book of {0}",
 			"book": "Book",
 			"chapter": "Chapter",
+			"clearQuery": "Clear query",
 			"clipboard": "clipboard",
 			"clipboardCopy": "Copy to clipboard",
 			"convert": "Convert text to audio resource file",

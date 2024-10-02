@@ -1708,6 +1708,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.clearQuery">
+         <segment>
+            <source>Clear query</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="findResource.clipboard">
          <segment>
             <source>clipboard</source>

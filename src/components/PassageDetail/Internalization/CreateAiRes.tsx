@@ -25,6 +25,7 @@ import { SortBy, useKeyTerms } from '../Keyterms/useKeyTerms';
 import { useComputeRef } from './useComputeRef';
 import { scopeI } from './FindTabs';
 import { useOrganizedBy } from '../../../crud/useOrganizedBy';
+import ClearIcon from '@mui/icons-material/Clear';
 
 interface CreateAiResProps {
   resources: BibleResource[];
@@ -175,6 +176,11 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
     navigator.clipboard.writeText(query);
   };
 
+  const handleClear = () => {
+    setQuery('');
+    setUserEdited(true);
+  };
+
   const handleRefresh = () => {
     setUserEdited(false);
     computeQuery(type, scope);
@@ -229,6 +235,9 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
             <Stack>
               <IconButton onClick={handleCopy} title={t.clipboardCopy}>
                 <ContentCopyIcon />
+              </IconButton>
+              <IconButton onClick={handleClear} title={t.clearQuery}>
+                <ClearIcon />
               </IconButton>
               {userEdited && (
                 <IconButton onClick={handleRefresh} title={t.reset}>
