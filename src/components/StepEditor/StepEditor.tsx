@@ -70,6 +70,7 @@ export const StepEditor = ({ process, org }: IProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const {
+    isChanged,
     toolChanged,
     toolsChanged,
     saveRequested,
@@ -153,7 +154,7 @@ export const StepEditor = ({ process, org }: IProps) => {
 
   const handleNameChange = (name: string, index: number) => {
     setRows(rows.map((r, i) => (i === index ? { ...r, name } : r)));
-    toolChanged(toolId, true);
+    if (!isChanged(toolId)) toolChanged(toolId, true);
   };
 
   const setToolSettingsOpen = (open: boolean) => {

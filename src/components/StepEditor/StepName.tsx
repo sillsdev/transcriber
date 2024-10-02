@@ -26,6 +26,7 @@ export const StepName = ({ name, onChange }: IProps) => {
 
   return (
     <TextField
+      autoFocus
       id="stepName"
       label={t.name}
       value={response}
