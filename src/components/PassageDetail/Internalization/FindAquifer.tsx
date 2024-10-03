@@ -12,7 +12,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import PreviewIcon from '@mui/icons-material/Visibility';
 import LinkIcon from '@mui/icons-material/Link';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { parseRef, remoteIdNum, useRole, useSecResCreate } from '../../../crud';
 import DataTable from '../../DataTable';
@@ -122,6 +122,7 @@ export default function FindAquifer({ onClose }: IProps) {
   const [content, setContent] = useState<AquiferContent | null>(null);
   const [link, setLink] = useState<string>();
   const [previewOpen, setPreviewOpen] = useState(false);
+  const adding = useRef(false);
   const t: IFindResourceStrings = useSelector(
     findResourceSelector,
     shallowEqual
@@ -253,6 +254,8 @@ export default function FindAquifer({ onClose }: IProps) {
   };
 
   const handleAdd = () => {
+    if (adding.current) return;
+    adding.current = true;
     var add: { ContentId: string; ContentType: string }[] = [];
     checks.forEach((c) => {
       var item = data.find((d) => d.id === c);
@@ -292,6 +295,7 @@ export default function FindAquifer({ onClose }: IProps) {
       forceDataChanges();
       setTimeout(() => {
         waitForRemoteQueue('aquifer resource added').then(() => {
+          adding.current = false;
           onClose && onClose();
         });
       }, 200);
