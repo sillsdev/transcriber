@@ -378,6 +378,7 @@ function MediaUpload(props: IProps) {
               (ready && !ready()) ||
               !files ||
               files.length === 0 ||
+              files[0].name.trim() === '' ||
               !hasRights ||
               (uploadType === UploadType.Link && !isUrl(files[0].name))
             }
