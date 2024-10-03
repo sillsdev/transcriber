@@ -803,6 +803,7 @@ const initialState = {
 			"invalidFile": "Not valid for this operation: {0} ",
 			"ITFtask": "Upload an Incremental Transcriber File (itf file) exported from the Desktop app.",
 			"ITFtitle": "Upload Change Data from Desktop app.",
+			"launchLink": "Show Link Content",
 			"linkTask": "Enter a URI link for a resource.",
 			"linkTitle": "Link Resource",
 			"markdownTask": "Enter text to be used as a resource. (Mark down formatting is allowed.)",

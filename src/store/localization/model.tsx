@@ -760,6 +760,7 @@ export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
     "invalidFile": string;
     "ITFtask": string;
     "ITFtitle": string;
+    "launchLink": string;
     "linkTask": string;
     "linkTitle": string;
     "markdownTask": string;

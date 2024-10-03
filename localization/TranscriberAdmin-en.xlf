@@ -3886,6 +3886,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.launchLink">
+         <segment>
+            <source>Show Link Content</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.linkTask">
          <segment>
             <source>Enter a URI link for a resource.</source>

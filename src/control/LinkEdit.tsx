@@ -6,6 +6,7 @@ import { mediaUploadSelector } from '../selector';
 import { IMediaUploadStrings } from '../model';
 import { LaunchLink } from './LaunchLink';
 import { isUrl } from '../utils';
+import { LightTooltip } from './LightTooltip';
 
 interface LinkEditProps {
   inValue?: string;
@@ -34,9 +35,11 @@ export const LinkEdit = ({ inValue, onValue }: LinkEditProps) => {
         sx={{ flexGrow: 1, my: 2, minWidth: 400 }}
       />
       {isUrl(value) && (
-        <IconButton id="launchLink" onClick={() => setLink(value)}>
-          <LinkIcon />
-        </IconButton>
+        <LightTooltip title={t.launchLink}>
+          <IconButton id="launchLink" onClick={() => setLink(value)}>
+            <LinkIcon />
+          </IconButton>
+        </LightTooltip>
       )}
       <LaunchLink url={link} reset={() => setLink('')} />
     </Stack>

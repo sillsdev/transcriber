@@ -4533,6 +4533,13 @@
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="mediaUpload.launchLink">
+            <source>Show Link Content</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="mediaUpload.linkTask">
             <source>Enter a URI link for a resource.</source>
             <target/>
