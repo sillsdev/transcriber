@@ -483,7 +483,7 @@ export function PassageDetailArtifacts() {
       setSortKey((sortKey) => sortKey + 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, globals.importexportBusy, globals.remoteBusy]);
+  }, [rowData, allResources, globals.importexportBusy, globals.remoteBusy]);
 
   const onSortEnd = ({
     oldIndex,
