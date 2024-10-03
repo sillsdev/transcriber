@@ -438,7 +438,7 @@ export function useWaveSurfer(
 
     if (startposition === 0 && (originalBuffer?.length | 0) === 0) {
       loadDecoded(newBuffer);
-      return newBuffer.length / newBuffer.sampleRate;
+      return newBuffer ? newBuffer.length / newBuffer.sampleRate : 0;
     }
     var start_offset = (startposition * originalBuffer.sampleRate) >> 0;
     var after_offset = (endposition * originalBuffer.sampleRate) >> 0;
