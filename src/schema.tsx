@@ -970,6 +970,30 @@ if (requestedSchema > 7 && schemaDefinition.models) {
 
   schemaDefinition.version = 8;
 }
+if (requestedSchema > 8 && schemaDefinition.models) {
+  schemaDefinition.models.vwbiblebrainlanguage = {
+    keys: { remoteId: {} },
+    attributes: {
+      iso: { type: 'string' },
+      languageName: { type: 'string' },
+      nt: { type: 'bool' },
+      ot: { type: 'bool' },
+      timing: { type: 'bool' },
+    },
+  };
+  schemaDefinition.models.vwbiblebrainbible = {
+    keys: { remoteId: {} },
+    attributes: {
+      iso: { type: 'string' },
+      bibleid: { type: 'string' },
+      nt: { type: 'bool' },
+      ot: { type: 'bool' },
+      timing: { type: 'bool' },
+      pubdate: { type: 'string' },
+    },
+  };
+  schemaDefinition.version = 7;
+}
 
 export const schema = new RecordSchema(schemaDefinition);
 
