@@ -3,7 +3,8 @@ import { Grid, GridProps, styled } from '@mui/material';
 import SelectMyResource from './Internalization/SelectMyResource';
 import { LimitedMediaPlayer } from '../LimitedMediaPlayer';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
-import { getSegments, LocalKey, localUserKey, NamedRegions } from '../../utils';
+import { getSegments, NamedRegions } from '../../utils';
+import { storedCompareKey } from '../../utils/storedCompareKey';
 
 const StyledGrid = styled(Grid)<GridProps>(({ theme }) => ({
   margin: theme.spacing(2),
@@ -34,29 +35,17 @@ export function TeamCheckReference() {
   const [mediaEnd, setMediaEnd] = useState<number | undefined>();
   const [resource, setResource] = useState('');
   const [resetCount, setResetCount] = useState(0);
-
-  const storeKey = (keyType?: string) =>
-    `${localUserKey(LocalKey.compare)}_${
-      keyType ?? passage.attributes.sequencenum
-    }`;
-
-  const SecSlug = 'secId';
+  const { removeStoredKeys, saveKey, storeKey, SecSlug } = storedCompareKey(
+    passage,
+    section
+  );
 
   const handleResource = (id: string) => {
     const row = rowData.find((r) => r.id === id);
     if (row) {
-      const secId = localStorage.getItem(storeKey(SecSlug));
-      if (secId !== section.id) {
-        localStorage.setItem(storeKey(SecSlug), section.id);
-        let n = 1;
-        while (true) {
-          const res = localStorage.getItem(storeKey(n.toString()));
-          if (!res) break;
-          localStorage.removeItem(storeKey(n.toString()));
-          n += 1;
-        }
-      }
-      localStorage.setItem(storeKey(), id);
+      removeStoredKeys();
+      saveKey(id);
+
       const segs = getSegments(
         NamedRegions.ProjectResource,
         row.mediafile.attributes.segments

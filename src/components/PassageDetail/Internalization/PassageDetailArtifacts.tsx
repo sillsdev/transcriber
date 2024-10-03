@@ -86,6 +86,7 @@ import MarkDown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { LaunchLink } from '../../../control/LaunchLink';
 import FindTabs from './FindTabs';
+import { storedCompareKey } from '../../../utils/storedCompareKey';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -178,6 +179,7 @@ export function PassageDetailArtifacts() {
   const [mediaStart, setMediaStart] = useState<number | undefined>();
   const [mediaEnd, setMediaEnd] = useState<number | undefined>();
   const projectResourceSave = useProjectResourceSave();
+  const { removeKey } = storedCompareKey(passage, section);
   const { userIsAdmin } = useRole();
   const t: IPassageDetailArtifactsStrings = useSelector(
     passageDetailArtifactsSelector,
@@ -287,7 +289,10 @@ export function PassageDetailArtifacts() {
     const secRes = sectionResources.find(
       (r) => related(r, 'mediafile') === confirm
     );
-    secRes && DeleteSectionResource(secRes);
+    if (secRes) {
+      removeKey(related(secRes, 'mediafile'));
+      DeleteSectionResource(secRes);
+    }
     setConfirm('');
     setBusy(false);
   };
