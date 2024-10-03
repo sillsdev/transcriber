@@ -337,6 +337,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
   };
 
   const loadPastedSegments = (newData: ICell[][]) => {
+    var duration = media?.attributes.duration || 0;
     var psgIndexes = items.map((r) => r.type === 'passage');
     var segBoundaries = newData
       .filter((r, i) => i > 0 && psgIndexes[i - 1])
@@ -355,7 +356,10 @@ export const ProjectResourceConfigure = (props: IProps) => {
           };
         return { start: 0, end: 0 };
       })
-      .filter((r) => r.end > 0);
+      .filter(
+        (r) =>
+          r.end > 0 && (duration === 0 || r.end < duration) && r.start < r.end
+      );
     if (media?.attributes.duration) {
       regs = regs.filter((r) => r.start <= media.attributes.duration);
     }
