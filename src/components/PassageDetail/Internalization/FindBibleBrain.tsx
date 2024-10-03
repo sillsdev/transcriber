@@ -169,7 +169,10 @@ export default function FindBibleBrain({ handleLink }: FindBibleBrainProps) {
       <Grid container direction={'row'} spacing={2} sx={{ my: 1 }}>
         <Divider sx={{ width: '100%' }} />
         <ActionRow>
-          <AltButton onClick={(e) => handleLink('bibleBrain')(e, bibleOpt)}>
+          <AltButton
+            disabled={!bibleOpt}
+            onClick={(e) => handleLink('bibleBrain')(e, bibleOpt)}
+          >
             {t.launch}
           </AltButton>
           <PriButton
