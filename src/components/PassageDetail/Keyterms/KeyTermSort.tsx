@@ -46,6 +46,7 @@ export default function BasicSelect({ initSort, onChange }: IProps) {
           value={sort}
           label={t.sortShow}
           onChange={handleChange}
+          sx={{ minWidth: '120px', maxWidth: '160px' }}
         >
           <MenuItem value={SortBy.Word}>{t.word}</MenuItem>
           <MenuItem value={SortBy.Gloss}>{t.gloss}</MenuItem>
