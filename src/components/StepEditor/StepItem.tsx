@@ -14,6 +14,7 @@ const ToolSpan = styled('span')(() => ({ minWidth: 250 }));
 interface IProps {
   value: IStepRow;
   index: number;
+  isFocused: boolean;
   onNameChange: (name: string, index: number) => void;
   onToolChange: (tool: string, index: number) => void;
   onDelete: (index: number) => void;
@@ -24,6 +25,7 @@ interface IProps {
 
 export const StepItem = ({
   value,
+  isFocused,
   onNameChange,
   onToolChange,
   onDelete,
@@ -51,7 +53,11 @@ export const StepItem = ({
     <Stack direction="row">
       <DragHandle />
       <StepSpan>
-        <StepName name={value.name} onChange={handleNameChange} />
+        <StepName
+          name={value.name}
+          isFocused={isFocused}
+          onChange={handleNameChange}
+        />
       </StepSpan>
       <ToolSpan>
         <ToolChoice tool={value.tool} onChange={handleToolChange} />

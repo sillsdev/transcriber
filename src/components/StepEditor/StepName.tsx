@@ -6,10 +6,11 @@ import { stepEditorSelector } from './StepEditor';
 
 interface IProps {
   name: string;
+  isFocused: boolean;
   onChange: (name: string) => void;
 }
 
-export const StepName = ({ name, onChange }: IProps) => {
+export const StepName = ({ name, isFocused, onChange }: IProps) => {
   const [response, setResponse] = useState(name);
   const t: IStepEditorStrings = useSelector(stepEditorSelector, shallowEqual);
 
@@ -26,7 +27,7 @@ export const StepName = ({ name, onChange }: IProps) => {
 
   return (
     <TextField
-      autoFocus
+      autoFocus={isFocused}
       id="stepName"
       label={t.name}
       value={response}

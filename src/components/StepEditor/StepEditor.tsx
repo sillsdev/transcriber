@@ -86,6 +86,7 @@ export const StepEditor = ({ process, org }: IProps) => {
   const { localizedArtifactTypeFromId, slugFromId } = useArtifactType();
   const [toolSettingsRow, setToolSettingsRow] = useState(-1);
   const toolRef = useRef<number>();
+  const focusIndex = useRef<number>(0);
   const settingsTools = [ToolSlug.Transcribe, ToolSlug.Paratext];
   const mxSeq = useMemo(() => {
     let max = 0;
@@ -153,6 +154,7 @@ export const StepEditor = ({ process, org }: IProps) => {
   };
 
   const handleNameChange = (name: string, index: number) => {
+    focusIndex.current = index;
     setRows(rows.map((r, i) => (i === index ? { ...r, name } : r)));
     if (!isChanged(toolId)) toolChanged(toolId, true);
   };
@@ -440,6 +442,7 @@ export const StepEditor = ({ process, org }: IProps) => {
               key={`si-${r.rIdx}`}
               index={r.rIdx}
               value={r}
+              isFocused={focusIndex.current === r.rIdx}
               onNameChange={handleNameChange}
               onToolChange={handleToolChange}
               onDelete={handleHide}
