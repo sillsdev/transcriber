@@ -199,9 +199,7 @@ export function PassageDetailArtifacts() {
   }, [artifactTypes, offlineOnly]);
 
   const otherResourcesAvailable = useMemo(
-    () =>
-      rowData.filter((r) => r.passageId && r.passageId !== passage.id).length >
-      0,
+    () => rowData.some((r) => r.passageId && r.passageId !== passage.id),
     [passage, rowData]
   );
 

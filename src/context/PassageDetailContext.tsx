@@ -945,9 +945,7 @@ const PassageDetailProvider = (props: IProps) => {
           res,
           user,
           ...localize,
-        }).sort((i, j) =>
-          i.done === j.done ? i.sequenceNum - j.sequenceNum : i.done ? 1 : -1
-        )
+        }).sort((i, j) => i.sequenceNum - j.sequenceNum)
       );
 
       const mediafileId =
