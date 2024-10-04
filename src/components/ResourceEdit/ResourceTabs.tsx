@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Tabs, Tab, Typography, Box } from '@mui/material';
-import VersionDlg from '../AudioTab/VersionDlg';
 import ResourceOverview, { IResourceDialog } from './ResourceOverview';
 import ResourceRefs from './ResourceRefs';
 import {
@@ -344,7 +343,6 @@ export function ResourceTabs({
             {...a11yProps(1)}
             disabled={!sharedResRec?.id}
           />
-          <Tab label={t.versions} {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -377,13 +375,6 @@ export function ResourceTabs({
           }
           res={sharedResRec}
           onOpen={handleOverOpen}
-        />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <VersionDlg
-          passId={sharedResRec ? related(sharedResRec, 'passage') : passId}
-          canSetDestination={true}
-          hasPublishing={hasPublishing}
         />
       </TabPanel>
     </Box>

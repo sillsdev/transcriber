@@ -18,6 +18,7 @@ import {
 import { rowTypes } from './rowTypes';
 import { StageReport } from '../../control';
 import { Avatar, Badge } from '@mui/material';
+import PlanPublishActions from './PlanPublishActions';
 import PlanAudioActions from './PlanAudioActions';
 import {
   RefRender,
@@ -69,6 +70,7 @@ interface IProps {
   filtered: boolean;
   onPassageDetail: (rowIndex: number) => void;
   onPlayStatus: (mediaId: string) => void;
+  onEdit: (rowIndex: number) => () => void;
   onHistory: (rowIndex: number) => () => void;
   onSetPreventSave: (val: boolean) => void;
   onDelete: (rowIndex: number) => () => void;
@@ -100,6 +102,7 @@ interface IProps {
  * @param {Array} props.canHidePublishing - True if publishing rows can be hidden.
  * @param {Function} props.onPassageDetail - A callback function for handling passage detail.
  * @param {Function} props.onPlayStatus - A callback function for handling play status.
+ * @param {Function} props.onEdit - A callback function for handling Note metadata edit.
  * @param {Function} props.onHistory - A callback function for handling history.
  * @param {Function} props.onSetPreventSave - A callback function for setting prevent save.
  * @param {Function} props.onDelete - A callback function for handling delete.
@@ -129,6 +132,7 @@ export const usePlanSheetFill = ({
   filtered,
   onPassageDetail,
   onPlayStatus,
+  onEdit,
   onHistory,
   onSetPreventSave,
   onDelete,
@@ -146,7 +150,7 @@ export const usePlanSheetFill = ({
   onRecording,
 }: IProps) => {
   const ctx = useContext(PlanContext);
-  const { readonly, sectionArr, setSectionArr } = ctx.state;
+  const { readonly, sectionArr, setSectionArr, shared } = ctx.state;
   const sectionMap = new Map<number, string>(sectionArr);
   const [planId] = useGlobal('plan');
   const [offline] = useGlobal('offline');
@@ -220,9 +224,14 @@ export const usePlanSheetFill = ({
         readOnly: true,
       } as ICell,
       {
+        value: !hidePublishing ? t.published : t.versions,
+        readOnly: true,
+        width: 20,
+      } as ICell,
+      {
         value: t.action,
         readOnly: true,
-        width: userIsAdmin ? 50 : 20,
+        width: 50,
       } as ICell,
     ];
     if (!hidePublishing && canHidePublishing)
@@ -286,6 +295,43 @@ export const usePlanSheetFill = ({
       className: calcClassName,
     } as ICell);
 
+  interface PublishedValueProps {
+    passage: boolean;
+    rowIndex: number;
+    canEdit: boolean;
+  }
+
+  const publishedValue = ({
+    passage,
+    rowIndex,
+    canEdit,
+  }: PublishedValueProps) => {
+    const isShowIcon = showIcon(filtered, offline && !offlineOnly, rowIndex);
+    if (isShowIcon(ExtraIcon.Publish)) {
+      return (
+        <PublishButton
+          sectionMap={sectionMap}
+          rowInfo={rowInfo}
+          rowIndex={rowIndex}
+          organizedBy={organizedBy}
+          onAction={onAction}
+        />
+      );
+    }
+    if (!passage) return <></>;
+    return (
+      <PlanPublishActions
+        rowIndex={rowIndex}
+        isPassage={passage}
+        publishStatus={rowInfo[rowIndex].publishStatus || ''}
+        mediaId={rowInfo[rowIndex].mediaId?.id || ''}
+        mediaShared={rowInfo[rowIndex].mediaShared}
+        canEdit={canEdit}
+        onHistory={onHistory}
+      />
+    );
+  };
+
   interface ActionValueProps {
     passage: boolean;
     rowIndex: number;
@@ -303,35 +349,45 @@ export const usePlanSheetFill = ({
     canPlay,
     canEdit,
   }: ActionValueProps) => {
-    const isShowIcon = showIcon(filtered, offline && !offlineOnly, rowIndex);
-    if (isShowIcon(ExtraIcon.Publish)) {
-      return (
-        <PublishButton
-          sectionMap={sectionMap}
-          rowInfo={rowInfo}
-          rowIndex={rowIndex}
-          organizedBy={organizedBy}
-          onAction={onAction}
-        />
-      );
-    }
     if (!passage) return <></>;
     return (
       <PlanAudioActions
         rowIndex={rowIndex}
         isPassage={passage}
-        publishStatus={rowInfo[rowIndex].publishStatus || ''}
         isNote={rowInfo[rowIndex].passageType === PassageTypeEnum.NOTE}
         mediaId={rowInfo[rowIndex].mediaId?.id || ''}
-        mediaShared={rowInfo[rowIndex].mediaShared}
         canPlay={canPlay}
         canEdit={canEdit}
         onPlayStatus={onPlayStatus}
-        onHistory={onHistory}
+        onEdit={
+          rowInfo[rowIndex].passageType === PassageTypeEnum.NOTE || shared
+            ? onEdit
+            : undefined
+        }
         isPlaying={srcMediaId === rowInfo[rowIndex].mediaId?.id && mediaPlaying}
       />
     );
   };
+
+  interface PublishedCellProps extends PublishedValueProps {
+    calcClassName: string;
+  }
+
+  const publishedCell = ({
+    passage,
+    rowIndex,
+    calcClassName,
+    canEdit,
+  }: PublishedCellProps) =>
+    ({
+      value: publishedValue({
+        passage,
+        rowIndex,
+        canEdit,
+      }),
+      readOnly: true,
+      className: calcClassName,
+    } as ICell);
 
   interface ActionCellProps extends ActionValueProps {
     calcClassName: string;
@@ -743,6 +799,13 @@ export const usePlanSheetFill = ({
           readonly: anyRecording || (sharedRes && offline),
         }),
         assignmentCell(rowIndex, calcClassName),
+        publishedCell({
+          passage,
+          rowIndex,
+          calcClassName:
+            calcClassName + (beta && !hidePublishing ? ' beta' : ''),
+          canEdit: !anyRecording && !(sharedRes && offline),
+        }),
         actionCell({
           passage,
           rowIndex,

@@ -49,6 +49,7 @@ export const PublishButton = (props: IProps) => {
       title={t.publish
         .replace('{0}', description)
         .replace('{1}', sectionSequenceNumber)}
+      sx={{ p: '2px' }}
     >
       <RadioButtonUnchecked color="primary" />
     </IconButton>
