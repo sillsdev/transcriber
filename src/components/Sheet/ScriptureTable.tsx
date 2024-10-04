@@ -236,6 +236,7 @@ export function ScriptureTable(props: IProps) {
   const [importList, setImportList] = useState<File[]>();
   const cancelled = useRef(false);
   const uploadItem = useRef<ISheet>();
+  const [editRow, setEditRow] = useState<ISheet>();
   const [versionRow, setVersionRow] = useState<ISheet>();
   const [isNote, setIsNote] = useState(false);
   const [defaultFilename, setDefaultFilename] = useState('');
@@ -1040,6 +1041,16 @@ export function ScriptureTable(props: IProps) {
     });
   };
 
+  const handleEdit = (i: number) => () => {
+    saveIfChanged(() => {
+      waitForPassageId(i, () => {
+        const { ws } = getByIndex(sheetRef.current, i);
+        setEditRow(ws);
+        setIsNote(ws?.passageType === PassageTypeEnum.NOTE);
+      });
+    });
+  };
+
   const handleVersions = (i: number) => () => {
     saveIfChanged(() => {
       waitForPassageId(i, () => {
@@ -1118,6 +1129,10 @@ export function ScriptureTable(props: IProps) {
     saveIfChanged(() => {
       showUpload(i, true);
     });
+  };
+
+  const handleEditClose = () => {
+    setEditRow(undefined);
   };
 
   const handleVerHistClose = () => {
@@ -1859,6 +1874,7 @@ export function ScriptureTable(props: IProps) {
         onAssign={handleAssign}
         onUpload={handleUpload}
         onRecord={handleRecord}
+        onEdit={handleEdit}
         onHistory={handleVersions}
         onGraphic={handleGraphic}
         onFilterChange={onFilterChange}
@@ -1943,6 +1959,17 @@ export function ScriptureTable(props: IProps) {
         />
       )}
       <BigDialog
+        title={ts.versionHistory}
+        isOpen={versionRow !== undefined}
+        onOpen={handleVerHistClose}
+      >
+        <VersionDlg
+          passId={versionRow?.passage?.id || ''}
+          canSetDestination={true}
+          hasPublishing={canHidePublishing}
+        />
+      </BigDialog>
+      <BigDialog
         title={
           isNote
             ? resStr.noteDetails
@@ -1950,23 +1977,19 @@ export function ScriptureTable(props: IProps) {
             ? resStr.resourceEdit
             : ts.versionHistory
         }
-        isOpen={versionRow !== undefined}
-        onOpen={handleVerHistClose}
+        isOpen={editRow !== undefined}
+        onOpen={handleEditClose}
       >
         {shared || isNote ? (
           <ResourceTabs
-            passId={versionRow?.passage?.id || ''}
+            passId={editRow?.passage?.id || ''}
             ws={versionRow}
-            onOpen={handleVerHistClose}
+            onOpen={handleEditClose}
             onUpdRef={updatePassageRef}
             hasPublishing={canHidePublishing}
           />
         ) : (
-          <VersionDlg
-            passId={versionRow?.passage?.id || ''}
-            canSetDestination={true}
-            hasPublishing={canHidePublishing}
-          />
+          <></>
         )}
       </BigDialog>
       {confirmPublishingVisible && (

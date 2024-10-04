@@ -210,6 +210,7 @@ interface IProps {
   onAssign: (where: number[]) => () => void;
   onUpload: (i: number) => () => void;
   onRecord: (i: number) => void;
+  onEdit: (i: number) => () => void;
   onHistory: (i: number) => () => void;
   onGraphic: (i: number) => void;
   onFilterChange: (

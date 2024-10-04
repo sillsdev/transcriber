@@ -1041,6 +1041,7 @@ const initialState = {
 			"passageToNextSection": "Move {pt} {0} Down",
 			"pasting": "Pasting",
 			"publish": "Publish {0} {1}",
+			"published": "Publish",
 			"refErr": "This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)",
 			"resequence": "Resequence",
 			"save": "Save",
@@ -1053,6 +1054,7 @@ const initialState = {
 			"tablePaste": "Paste Spreadsheet",
 			"changepublish": "Update {0} {1} published status.",
 			"useCtrlV": "Select a column head and use CTRL-V to append table rows.",
+			"versions": "Versions",
 		}
 	}),
 	"planTabs": new LocalizedStrings({
