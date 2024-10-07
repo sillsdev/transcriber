@@ -546,12 +546,17 @@ export function PlanSheet(props: IProps) {
     if (recording) toolChanged(toolId);
   };
 
+  const PrefixedCols = 4;
+
   const handleCellsChanged = (changes: Array<ICellChange>) => {
     if (readonly) return; //readonly
     const colChanges = changes.map((c) => ({
       ...c,
       row: c.row - 1,
-      col: !hidePublishing && canHidePublishing ? c.col - 4 : c.col - 3,
+      col:
+        !hidePublishing && canHidePublishing
+          ? c.col - PrefixedCols - 1
+          : c.col - PrefixedCols,
     }));
     updateData(colChanges);
   };
