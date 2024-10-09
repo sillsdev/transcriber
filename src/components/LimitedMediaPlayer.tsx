@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
-import { IPeerCheckStrings } from '../model';
-import { peerCheckSelector } from '../selector';
+import { IPeerCheckStrings, ISharedStrings } from '../model';
+import { peerCheckSelector, sharedSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
   Chip,
@@ -21,6 +21,7 @@ import PlayArrow from '@mui/icons-material/PlayArrow';
 import { Duration } from '../control/Duration';
 import HiddenPlayer from './HiddenPlayer';
 import { BlobStatus, useFetchMediaBlob } from '../crud/useFetchMediaBlob';
+import CloseIcon from '@mui/icons-material/Close';
 
 const StyledDiv = styled('div')({
   '& #hiddenplayer': {
@@ -80,11 +81,12 @@ export function LimitedMediaPlayer(props: IProps) {
   const [blobState, fetchBlob] = useFetchMediaBlob();
   const [duration, setDurationx] = useState(0);
   const durationRef = useRef(0);
-  const timeTracker = useRef<number>(0);
+  const valueTracker = useRef<number>(0);
   const stop = useRef<number>(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [startPos, setStartPos] = useState(0);
   const t: IPeerCheckStrings = useSelector(peerCheckSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const setDuration = (value: number) => {
     setDurationx(value);
@@ -94,9 +96,6 @@ export function LimitedMediaPlayer(props: IProps) {
   const setPlaying = (play: boolean) => {
     setPlayingx(play);
     playingRef.current = play;
-    if (!play && value === 0) {
-      ended();
-    }
   };
 
   const startPlay = () => {
@@ -109,11 +108,16 @@ export function LimitedMediaPlayer(props: IProps) {
     setPlaying(false);
   };
 
+  const setPosition = (position: number | undefined) => {
+    if (position !== undefined && position !== currentTime) {
+      setCurrentTime(position);
+      setStartPos(position);
+    }
+  };
+
   const resetPlay = () => {
     stopPlay();
-    setCurrentTime(limits?.start ?? 0);
-    setStartPos(limits?.start ?? 0);
-    timeTracker.current = 0;
+    setPosition(limits?.start ?? 0);
     setValue(0);
   };
 
@@ -150,13 +154,6 @@ export function LimitedMediaPlayer(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, requestPlay]);
 
-  const setPosition = (position: number | undefined) => {
-    if (position !== undefined && position !== currentTime) {
-      setCurrentTime(position);
-      setStartPos(position);
-    }
-  };
-
   useEffect(() => {
     setPosition(limits.start);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -189,8 +186,8 @@ export function LimitedMediaPlayer(props: IProps) {
     const current = Math.round(
       ((time - start) / ((limits.end ?? durValue ?? 0) - start)) * 100
     );
-    if (timeTracker.current !== current && playingRef.current) {
-      timeTracker.current = current;
+    if (valueTracker.current !== current && playingRef.current) {
+      valueTracker.current = current;
       setValue(current);
       setCurrentTime(time);
     }
@@ -235,9 +232,7 @@ export function LimitedMediaPlayer(props: IProps) {
     const start = limits.start ?? 0;
     const duration = (limits.end || durationRef.current) - start;
     const time = duration * percent + start;
-    setCurrentTime(time);
-    setStartPos(time);
-    timeTracker.current = time;
+    setPosition(time);
     setValue(curValue);
   };
 
@@ -296,8 +291,8 @@ export function LimitedMediaPlayer(props: IProps) {
             </Stack>
           }
           deleteIcon={
-            duration && (limits.end ?? 0) < duration ? (
-              <>
+            <>
+              {duration && (limits.end ?? 0) < duration && (
                 <StyledTip
                   title={Boolean(limits.end) ? t.afterResource : t.toEnd}
                 >
@@ -309,10 +304,19 @@ export function LimitedMediaPlayer(props: IProps) {
                     <SkipNext fontSize="small" />
                   </IconButton>
                 </StyledTip>
-              </>
-            ) : (
-              <></>
-            )
+              )}
+              {
+                <StyledTip title={ts.close}>
+                  <IconButton
+                    data-testid="close"
+                    sx={{ alignSelf: 'center' }}
+                    onClick={ended}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </StyledTip>
+              }
+            </>
           }
           onDelete={handleSkipNext}
           sx={{ ...sx, width: '100%' }}

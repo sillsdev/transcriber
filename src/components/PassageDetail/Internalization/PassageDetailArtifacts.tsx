@@ -47,15 +47,7 @@ import SelectSections from './SelectSections';
 import ResourceData from './ResourceData';
 import { MarkDownType, UploadType, UriLinkType } from '../../MediaUpload';
 import LimitedMediaPlayer from '../../LimitedMediaPlayer';
-import {
-  Box,
-  BoxProps,
-  Grid,
-  IconButton,
-  Stack,
-  styled,
-  Typography,
-} from '@mui/material';
+import { Box, BoxProps, Grid, Stack, styled, Typography } from '@mui/material';
 import { ReplaceRelatedRecord } from '../../../model/baseModel';
 import { PassageResourceButton } from './PassageResourceButton';
 import ProjectResourceConfigure from './ProjectResourceConfigure';
@@ -81,7 +73,6 @@ import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
 import { VertListDnd } from '../../../hoc/VertListDnd';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
-import Close from '@mui/icons-material/Close';
 import MarkDown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { LaunchLink } from '../../../control/LaunchLink';
@@ -721,7 +712,7 @@ export function PassageDetailArtifacts() {
   return (
     <>
       <Stack sx={{ width: '100%' }} direction="row" spacing={1}>
-        <Grid container>
+        <Grid container sx={{ display: 'flex', alignItems: 'center' }}>
           <Grid item>
             <AltButton onClick={() => handleFindVisible(true)}>
               {t.find}
@@ -743,22 +734,17 @@ export function PassageDetailArtifacts() {
           )}
           {playItem !== '' && (
             <Grid item sx={{ flexGrow: 1 }}>
-              <Stack direction="row">
-                <MediaContainer>
-                  <LimitedMediaPlayer
-                    srcMediaId={playItem}
-                    requestPlay={itemPlaying}
-                    onEnded={handleEnded}
-                    onLoaded={handleLoaded}
-                    onTogglePlay={handleItemTogglePlay}
-                    controls={playItem !== ''}
-                    limits={{ start: mediaStart, end: mediaEnd }}
-                  />
-                </MediaContainer>
-                <IconButton onClick={handleEnded} sx={{ mr: 2 }}>
-                  <Close />
-                </IconButton>
-              </Stack>
+              <MediaContainer>
+                <LimitedMediaPlayer
+                  srcMediaId={playItem}
+                  requestPlay={itemPlaying}
+                  onEnded={handleEnded}
+                  onLoaded={handleLoaded}
+                  onTogglePlay={handleItemTogglePlay}
+                  controls={playItem !== ''}
+                  limits={{ start: mediaStart, end: mediaEnd }}
+                />
+              </MediaContainer>
             </Grid>
           )}
           {otherResourcesAvailable && (
