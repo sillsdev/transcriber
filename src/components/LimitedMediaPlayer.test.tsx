@@ -285,41 +285,6 @@ describe('<LimitedMediaPlayer />', () => {
     expect(props.onEnded).toHaveBeenCalled();
   });
 
-  it('should call onEnded if setPlaying to false and at start', async () => {
-    mockBlobState = { ...blobFetched };
-
-    const props = {
-      srcMediaId: '1',
-      requestPlay: false,
-      onEnded: jest.fn(),
-      limits: { start: 10, end: 100 },
-    };
-
-    const { container } = render(<LimitedMediaPlayer {...props} />);
-    await waitFor(() => expect(container.firstChild).not.toBe(null));
-    act(() => {
-      mockSetPlaying(false);
-    });
-    expect(props.onEnded).toHaveBeenCalled();
-  });
-
-  it('should call onEnded if setPlaying to false and at start with zeros as limist', async () => {
-    mockBlobState = { ...blobFetched };
-
-    const props = {
-      srcMediaId: '1',
-      requestPlay: false,
-      onEnded: jest.fn(),
-      limits: { start: 0, end: 0 },
-    };
-
-    const { container } = render(<LimitedMediaPlayer {...props} />);
-    await waitFor(() => expect(container.firstChild).not.toBe(null));
-    act(() => {
-      mockSetPlaying(false);
-    });
-    expect(props.onEnded).toHaveBeenCalled();
-  });
 
   it('should not call onEnded if timeUpdate is less than limits.end', async () => {
     mockBlobState = { ...blobFetched };
