@@ -12,7 +12,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import PreviewIcon from '@mui/icons-material/Visibility';
 import LinkIcon from '@mui/icons-material/Link';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { parseRef, remoteIdNum, useRole, useSecResCreate } from '../../../crud';
 import DataTable from '../../DataTable';
@@ -122,7 +122,8 @@ export default function FindAquifer({ onClose }: IProps) {
   const [content, setContent] = useState<AquiferContent | null>(null);
   const [link, setLink] = useState<string>();
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [adding, setAdding] = useState(false);
+  const [adding, setAddingx] = useState(false);
+  const addingRef = useRef(false);
   const t: IFindResourceStrings = useSelector(
     findResourceSelector,
     shallowEqual
@@ -167,6 +168,11 @@ export default function FindAquifer({ onClose }: IProps) {
     { columnName: 'source', wordWrapEnabled: true },
   ];
   const sorting: Sorting[] = [{ columnName: 'name', direction: 'asc' }];
+
+  const setAdding = (adding: boolean) => {
+    setAddingx(adding);
+    addingRef.current = adding;
+  }
 
   useEffect(() => {
     if ((token ?? '') !== '')
@@ -254,7 +260,7 @@ export default function FindAquifer({ onClose }: IProps) {
   };
 
   const handleAdd = () => {
-    if (adding) return;
+    if (addingRef.current) return;
     setAdding(true);
     var add: { ContentId: string; ContentType: string }[] = [];
     checks.forEach((c) => {
@@ -324,7 +330,7 @@ export default function FindAquifer({ onClose }: IProps) {
               onChange={(_event, value) => setLang(value)}
               sx={{ width: 300 }}
               renderInput={(params) => (
-                <TextField {...params} label={t.aquiferLang} />
+                <TextField {...params} label={t.language.replace('{0}', 'Aquifer')} />
               )}
             />
           </Grid>

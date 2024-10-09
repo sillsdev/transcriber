@@ -8,5 +8,5 @@ export const useBookN = () => {
     setBookCodes(new Map(codeNum as any));
   }, []);
 
-  return (book: string) => (bookCodes ? bookCodes.get(book) ?? 0 : 0);
+  return (book: string) => (bookCodes ?? new Map(codeNum as any)).get(book) ?? 0;
 };

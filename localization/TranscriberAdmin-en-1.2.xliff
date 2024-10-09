@@ -1943,13 +1943,6 @@
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="findResource.aquiferLang">
-            <source>Aquifer Language</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">findResource.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="findResource.aquiferSearchTip">
             <source>The keyword to search on. Currently only searches against content names (not inside content). Non-English names are supported. Must be at least 3 characters in length.</source>
             <target/>
@@ -1957,8 +1950,15 @@
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="findResource.bibleBrain">
+         <trans-unit id="findResource.resource">
             <source>{0} Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.Lang">
+            <source>{0} Language</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
@@ -2062,6 +2062,13 @@
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="findResource.generalresource">
+            <source>Create a General Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>         
          <trans-unit id="findResource.group">
             <source>Group</source>
             <target/>
@@ -2147,7 +2154,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="findResource.passage">
-            <source>passage</source>
+            <source>Passage</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
@@ -2162,6 +2169,13 @@
          </trans-unit>
          <trans-unit id="findResource.query">
             <source>Query</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.querying">
+            <source>Querying...</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>

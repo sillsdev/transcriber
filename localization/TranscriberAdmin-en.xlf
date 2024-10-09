@@ -1666,21 +1666,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="findResource.aquiferLang">
-         <segment>
-            <source>Aquifer Language</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="findResource.aquiferSearchTip">
          <segment>
             <source>The keyword to search on. Currently only searches against content names (not inside content). Non-English names are supported. Must be at least 3 characters in length.</source>
             <target/>
          </segment>
       </unit>
-      <unit id="findResource.bibleBrain">
+      <unit id="findResource.resource">
          <segment>
             <source>{0} Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.Lang">
+         <segment>
+            <source>{0} Language</source>
             <target/>
          </segment>
       </unit>
@@ -1768,6 +1768,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.generalresource">
+         <segment>
+            <source>Create a General Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="findResource.group">
          <segment>
             <source>Group</source>
@@ -1842,7 +1848,7 @@
       </unit>
       <unit id="findResource.passage">
          <segment>
-            <source>passage</source>
+            <source>Passage</source>
             <target/>
          </segment>
       </unit>
@@ -1855,6 +1861,12 @@
       <unit id="findResource.query">
          <segment>
             <source>Query</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.querying">
+         <segment>
+            <source>Querying...</source>
             <target/>
          </segment>
       </unit>
