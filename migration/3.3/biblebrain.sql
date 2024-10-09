@@ -1,4 +1,4 @@
-drop table biblebrainbibles;
+--drop table biblebrainbibles;
 create table biblebrainbibles (
 	id serial,
     iso text,
@@ -18,9 +18,9 @@ create table biblebrainbibles (
     	CONSTRAINT biblebrainbibles_pk1 PRIMARY KEY (id)
 );
 grant all on biblebrainbibles to transcriber;
-grant all on biblebrainbibles_id_seq1 to transcriber;
+grant all on biblebrainbibles_id_seq to transcriber;
 
-drop table biblebrainfilesets;
+--drop table biblebrainfilesets;
 create table biblebrainfilesets (
 	id serial,
 	bibleid text,
@@ -42,7 +42,7 @@ create table biblebrainfilesets (
 	grant all on biblebrainfilesets_id_seq to transcriber;
 	CREATE UNIQUE INDEX biblebrainfilesets_filesetid_idx ON public.biblebrainfilesets (filesetid);
 
-drop view vwbiblebrainlanguages;
+--drop view vwbiblebrainlanguages;
 -- public.vwbiblebrainlanguages source
 
 CREATE OR REPLACE VIEW public.vwbiblebrainlanguages
@@ -90,12 +90,12 @@ WITH filesets AS (
    	FROM biblebrainbibles b
    ) select *, 
     row_number() OVER (ORDER BY iso DESC) AS id
-    from languages
+    from languages;
 
 grant all on vwbiblebrainlanguages to transcriber;
 --select * from vwbiblebrainlanguages where iso = 'eng';
 	
-drop view vwbiblebrainbibles;
+--drop view vwbiblebrainbibles;
 -- public.vwbiblebrainbibles source
 
 CREATE OR REPLACE VIEW public.vwbiblebrainbibles AS 
