@@ -18,12 +18,19 @@ import FindAquifer from './FindAquifer';
 export enum scopeI {
   passage,
   section,
-  movement,
   book,
   chapter,
-  clipboard,
+  movement
 }
+export namespace scopeI {
+  export function asString(scope: scopeI): string {
+    return scopeI[scope];
+  }
 
+  export function fromString(scope: string): scopeI {
+    return (scopeI as any)[scope];
+  }
+}
 interface Tpl {
   [key: string]: string | undefined;
 }
@@ -93,21 +100,21 @@ export default function FindTabs({ onClose }: FindTabsProps) {
 
   const handleLink =
     (kind: string) =>
-    (_event: SyntheticEvent, newValue: OptionProps | null) => {
-      const book = passage?.attributes?.book;
-      let link = newValue?.value ?? '';
-      if (hrefTpls[kind]) {
-        const chapter = parseInt(passage?.attributes?.reference ?? '1');
-        link = newValue?.value
-          ? hrefTpls[kind]
+      (_event: SyntheticEvent, newValue: OptionProps | null) => {
+        const book = passage?.attributes?.book;
+        let link = newValue?.value ?? '';
+        if (hrefTpls[kind]) {
+          const chapter = parseInt(passage?.attributes?.reference ?? '1');
+          link = newValue?.value
+            ? hrefTpls[kind]
               ?.replace('{0}', newValue?.value ?? '')
               ?.replace('{1}', book ?? 'MAT')
               ?.replace('{2}', chapter.toString()) ?? ''
-          : '';
-        setLinks({ ...links, [kind]: link });
-      }
-      setLink(link);
-    };
+            : '';
+          setLinks({ ...links, [kind]: link });
+        }
+        setLink(link);
+      };
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -127,7 +134,7 @@ export default function FindTabs({ onClose }: FindTabsProps) {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <FindBibleBrain handleLink={handleLink} />
+        <FindBibleBrain handleLink={handleLink} onClose={onClose} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <FindAquifer onClose={onClose} />

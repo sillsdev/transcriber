@@ -11,45 +11,56 @@ import {
   Stack,
   TextField,
 } from '@mui/material';
-import { SyntheticEvent, useContext, useEffect, useState } from 'react';
+import { SyntheticEvent, useContext, useEffect, useRef, useState } from 'react';
 import { OptionProps, scopeI } from './FindTabs';
 import { shallowEqual, useSelector } from 'react-redux';
 import { findResourceSelector } from '../../../selector';
 import { IFindResourceStrings } from '../../../model';
-import { BibleBrainItem } from '../../../model/bible-brain-item';
-import { useBookN } from '../../../utils';
+import { useBookN, useDataChanges, useWaitForRemoteQueue } from '../../../utils';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { ActionRow, AltButton, PriButton } from '../../StepEditor';
 import { useOrganizedBy } from '../../../crud/useOrganizedBy';
 import { TokenContext } from '../../../context/TokenProvider';
 import VwBiblebrainlanguage from '../../../model/vwbiblebrainlanguage';
-import JSONAPISource from '@orbit/jsonapi';
-import { useGlobal } from 'reactn';
 import { useBibleBrain } from '../../../crud/useBibleBrain';
+import VwBiblebrainbible from '../../../model/vwbiblebrainbible';
+import { axiosGet, axiosPost } from '../../../utils/axios';
+import { useSecResCreate } from '../../../crud/useSecResCreate';
+import remoteIdNum from '../../../crud/remoteId';
+import { useGlobal } from 'reactn';
+import { RecordKeyMap } from '@orbit/records';
 
 interface FindBibleBrainProps {
+  onClose?: () => void;
   handleLink: (
     kind: string
   ) => (_event: SyntheticEvent, newValue: OptionProps | null) => void;
 }
 
-export default function FindBibleBrain({ handleLink }: FindBibleBrainProps) {
-  const [data, setData] = useState<BibleBrainItem[]>([]);
+export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainProps) {
+  const forceDataChanges = useDataChanges();
+  const waitForRemoteQueue = useWaitForRemoteQueue();
+  const [memory] = useGlobal('memory');
   const [options, setOptions] = useState<OptionProps[]>([]);
   const [Nt, setNt] = useState<boolean>(true);
   const [languages, setLanguages] = useState<VwBiblebrainlanguage[]>([]);
+  const [bibles, setBibles] = useState<VwBiblebrainbible[]>([]);
   const [langOpts, setLangOpts] = useState<OptionProps[]>([]);
   const [lang, setLang] = useState<OptionProps | null>(null);
   const [timing, setTiming] = useState<boolean>(true);
   const [bibleOpt, setBibleOpt] = useState<OptionProps | null>(null);
-  const [createPassages, setCreatePassages] = useState<boolean>(false);
-  const [createSections, setCreateSections] = useState<boolean>(false);
-  const [creationScope, setCreationScope] = useState<scopeI>(scopeI.passage);
-  const [limit, setLimit] = useState(100);
-  const [offset, setOffset] = useState(0);
-  const { passage } = usePassageDetailContext();
+  const [copyright, setCopyright] = useState('');
+  const [createPassages, setCreatePassages] = useState<boolean>(true);
+  const [createSections, setCreateSectionsx] = useState<boolean>(true);
+  const [creationScope, setCreationScope] = useState<scopeI>(scopeI.section);
+  const { passage, section } = usePassageDetailContext();
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
+  const [adding, setAddingx] = useState(false);
+  const addingRef = useRef(false);
+  const { InternalizationStep } = useSecResCreate(section);
+  const [queryLang, setQueryLang] = useState(true);
+  const [queryBible, setQueryBible] = useState(true);
   const bookN = useBookN();
   const token = useContext(TokenContext).state.accessToken ?? '';
   const t: IFindResourceStrings = useSelector(
@@ -60,48 +71,115 @@ export default function FindBibleBrain({ handleLink }: FindBibleBrainProps) {
 
   const scopeOptions = [t.passage, organizedBy, t.chapter, t.book];
 
+  const setAdding = (adding: boolean) => {
+    setAddingx(adding);
+    addingRef.current = adding;
+  }
+  const setCreateSections = (createsections: boolean) => {
+    setCreateSectionsx(createsections);
+    if (createsections && creationScope == scopeI.passage)
+      setCreationScope(scopeI.section)
+  }
   useEffect(() => {
     // console.log(languages);
-    const langOptions = languages.map((item: BibleBrainLanguage) => ({
-      value: item.iso,
-      label: `${item.name ?? item.autonym} (${item.iso})`,
+    const langOptions = languages.map((item: VwBiblebrainlanguage) => ({
+      value: item.attributes.iso,
+      label: `${item.attributes.languageName} (${item.attributes.iso})`,
     }));
     setLangOpts(langOptions);
+    setQueryLang(false);
     setLang(langOptions.find((o) => o.value === 'eng') ?? null);
   }, [languages]);
 
   useEffect(() => {
     if (lang === null) return;
-    const paramArr = [
-      ['lang', lang?.value || 'eng'],
-      ['limit', limit.toString()],
-      ['offset', offset.toString()],
-    ];
-    const searchParams = new URLSearchParams(paramArr);
-
-    axiosGet('biblebrain/bibles', searchParams, token).then((response) => {
-      console.log(response);
-      //setCount(response.meta.total);
-      //setResult(response.data.items);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lang, limit, offset]);
-
-  useEffect(() => {}, [lang]);
-
-  const itemOpt = (item: BibleBrainItem) => ({
-    label: `${item.lang_name} (${item.iso}) - [${item.bible_id}] ${item.bible_name}`,
-    value: item.bible_id,
-  });
+    var l = languages.find(v => v.attributes.iso === lang.value);
+    if (l) {
+      setQueryBible(true);
+      getBibles(lang.value, l.attributes.languageName, Nt, timing).then((bibles) => {
+        setBibles(bibles);
+      })
+    }
+  }, [lang]);
 
   useEffect(() => {
+    const bibleOptions = bibles.map((item: VwBiblebrainbible) => ({
+      value: item.attributes.bibleid,
+      label: item.attributes.pubdate == '' ? `${item.attributes.bibleName}` : `${item.attributes.bibleName} (${item.attributes.pubdate})`
+    }));
+    setQueryBible(false);
+    setOptions(bibleOptions);
+  }, [bibles])
+
+  useEffect(() => {
+    if (bibleOpt) {
+      var size = Nt ? 'NT' : 'OT';
+      axiosGet(`biblebrain/${bibleOpt.value}/${size}/${timing}/copyright`, undefined, token ?? '').then((response) => {
+        setCopyright(response.data);
+      });
+    } else {
+      setCopyright('')
+    }
+  }, [bibleOpt, Nt, timing]);
+
+  useEffect(() => {
+    var ind = bookN(passage?.attributes.book || 'MAT');
+    console.log('index', ind)
     const isNt = bookN(passage?.attributes?.book || 'MAT') > 39;
     setNt(isNt);
+    setQueryLang(true);
     getLanguages(isNt, timing).then((langs) => setLanguages(langs));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timing, data, passage]);
+  }, [timing, passage]);
+  const handleAdd = () => {
+    if (addingRef.current) return;
+    setAdding(true);
 
-  useEffect(() => {}, [iso]);
+    var postdata:
+      {
+        PassageId: number
+        SectionId: number;
+        OrgWorkflowStep: number;
+        Bibleid: string;
+        Timing: boolean;
+        NT: boolean;
+        Sections: boolean;
+        Passages: boolean;
+        Scope: string;
+      } = {
+      PassageId: remoteIdNum(
+        'passage',
+        passage.id,
+        memory.keyMap as RecordKeyMap
+      ),
+      SectionId: remoteIdNum(
+        'section',
+        section.id,
+        memory.keyMap as RecordKeyMap
+      ),
+      OrgWorkflowStep: remoteIdNum(
+        'orgworkflowstep',
+        InternalizationStep()?.id ?? '',
+        memory.keyMap as RecordKeyMap
+      ),
+      Bibleid: bibleOpt?.value ?? "",
+      Timing: timing,
+      NT: Nt,
+      Sections: createSections,
+      Passages: createPassages,
+      Scope: scopeI.asString(creationScope)
+    };
+    axiosPost('biblebrain', postdata, token).then((response) => {
+      //could process response as ChangeList but this is easier
+      forceDataChanges();
+      setTimeout(() => {
+        waitForRemoteQueue('aquifer resource added').then(() => {
+          setAdding(false);
+          onClose && onClose();
+        });
+      }, 200);
+    });
+  };
   return (
     <Grid
       container
@@ -109,19 +187,6 @@ export default function FindBibleBrain({ handleLink }: FindBibleBrainProps) {
       direction="row"
       sx={{ justifyContent: 'center', mb: '150px' }}
     >
-      <Grid item>
-        <Autocomplete
-          disablePortal
-          id="bb-lang"
-          options={langOpts}
-          value={lang}
-          onChange={(_event, value) => setLang(value)}
-          sx={{ width: 300 }}
-          renderInput={(params) => (
-            <TextField {...params} label={t.aquiferLang} />
-          )}
-        />
-      </Grid>
       <Grid item>
         <Stack sx={{ m: 1 }} spacing={2}>
           <FormControlLabel
@@ -133,6 +198,19 @@ export default function FindBibleBrain({ handleLink }: FindBibleBrainProps) {
             }
             label={t.withTiming}
           />
+          <Grid item>
+            <Autocomplete
+              disablePortal
+              id="bb-lang"
+              options={langOpts}
+              value={lang}
+              onChange={(_event, value) => setLang(value)}
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label={queryLang ? t.querying : t.language.replace('{0}', 'Bible Brain')} />
+              )}
+            />
+          </Grid>
           <Autocomplete
             disablePortal
             id="bible-brain-resource"
@@ -143,10 +221,11 @@ export default function FindBibleBrain({ handleLink }: FindBibleBrainProps) {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label={t.bibleBrain.replace('{0}', 'Bible Brain') + '*'}
+                label={queryBible ? t.querying : t.resource.replace('{0}', 'Bible Brain') + '*'}
               />
             )}
           />
+
         </Stack>
       </Grid>
       <Grid item>
@@ -162,7 +241,7 @@ export default function FindBibleBrain({ handleLink }: FindBibleBrainProps) {
                 onChange={(_e, checked) => setCreatePassages(checked)}
               />
             }
-            label={t.bibleBrain.replace('{0}', t.passage)}
+            label={t.resource.replace('{0}', t.passage)}
           />
           <FormControlLabel
             control={
@@ -171,7 +250,7 @@ export default function FindBibleBrain({ handleLink }: FindBibleBrainProps) {
                 onChange={(_e, checked) => setCreateSections(checked)}
               />
             }
-            label={t.bibleBrain.replace('{0}', organizedBy)}
+            label={t.resource.replace('{0}', organizedBy)}
           />
         </FormControl>
         <FormControl
@@ -181,7 +260,7 @@ export default function FindBibleBrain({ handleLink }: FindBibleBrainProps) {
           <FormLabel component="legend">{t.scope}</FormLabel>
           <RadioGroup
             aria-labelledby="creation-scope-radio-buttons-label"
-            value={(creationScope ?? scopeI.passage).toString()}
+            value={(creationScope ?? scopeI.section).toString()}
             onChange={(_e, value) =>
               setCreationScope(parseInt(value) as scopeI)
             }
@@ -197,7 +276,14 @@ export default function FindBibleBrain({ handleLink }: FindBibleBrainProps) {
             ))}
           </RadioGroup>
         </FormControl>
+
       </Grid>
+      <FormControlLabel
+        key='copyright'
+        value={copyright}
+        control={<label />}
+        label={copyright}
+      />
       <Grid container direction={'row'} spacing={2} sx={{ my: 1 }}>
         <Divider sx={{ width: '100%' }} />
         <ActionRow>
@@ -211,18 +297,11 @@ export default function FindBibleBrain({ handleLink }: FindBibleBrainProps) {
             disabled={
               !bibleOpt ||
               !timing ||
+              adding ||
               (!createPassages && !createSections) ||
               (creationScope === scopeI.passage && createSections)
             }
-            onClick={() =>
-              console.log(
-                `Use ${bibleOpt?.value} to create: ${
-                  createPassages ? 'passages' : ''
-                } ${createSections ? 'sections' : ''} For current: ${
-                  scopeOptions[creationScope]
-                }`
-              )
-            }
+            onClick={() => handleAdd()}
           >
             {t.create}
           </PriButton>

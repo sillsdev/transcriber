@@ -348,9 +348,9 @@ export interface IFilterMenuStrings extends Localize.LocalizedStringsMethods {
 export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "add": string;
     "aiDesc": string;
-    "aquiferLang": string;
     "aquiferSearchTip": string;
-    "bibleBrain": string;
+    "resource": string;
+    "Lang": string;
     "bibleProjectLang": string;
     "biblicalBook": string;
     "book": string;
@@ -380,6 +380,7 @@ export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "passage": string;
     "preview": string;
     "query": string;
+    "querying": string;
     "queryBuilder": string;
     "reset": string;
     "scope": string;

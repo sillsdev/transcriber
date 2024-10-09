@@ -107,7 +107,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
   const computeQuery = async (type: string, scope: string) => {
     // the localized name Matthew should never be used b/c book data will have it.
     const book =
-      allBookData.find((b) => b.code === passage?.attributes?.book ?? 'MAT')
+      allBookData.find((b) => b.code === (passage?.attributes?.book ?? 'MAT'))
         ?.short ?? 'Matthew';
     let ref = `${book} ${passage?.attributes?.reference ?? '1:1'}`;
     if (

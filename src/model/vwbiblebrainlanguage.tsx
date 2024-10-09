@@ -3,10 +3,11 @@ import { UninitializedRecord } from '@orbit/records';
 export interface VwBiblebrainlanguage extends UninitializedRecord {
   attributes: {
     iso: string;
-    languagename: string;
-    timing: boolean;
+    languageName: string;
     nt: boolean;
     ot: boolean;
+    ntTiming: boolean;
+    otTiming: boolean;
   };
 }
 export default VwBiblebrainlanguage;

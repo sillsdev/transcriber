@@ -3,12 +3,13 @@ import { UninitializedRecord } from '@orbit/records';
 export interface VwBiblebrainbible extends UninitializedRecord {
   attributes: {
     bibleid: string;
-    biblename: string;
+    bibleName: string;
     pubdate: string;
     iso: string;
-    timing: boolean;
     nt: boolean;
     ot: boolean;
+    ntTiming: boolean;
+    otTiming: boolean;
   };
 }
 export default VwBiblebrainbible;

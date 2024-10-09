@@ -280,7 +280,7 @@ export const FindResource = () => {
   const computeQuery = async (type: string, scope: string) => {
     // the localized name Matthew should never be used b/c book data will have it.
     const book =
-      allBookData.find((b) => b.code === passage?.attributes?.book ?? 'MAT')
+      allBookData.find((b) => b.code === (passage?.attributes?.book ?? 'MAT'))
         ?.short ?? 'Matthew';
     let ref = `${book} ${passage?.attributes?.reference ?? '1:1'}`;
     if (scope === scopeOptions[scopeI.section]) {
@@ -362,21 +362,21 @@ export const FindResource = () => {
 
   const handleChange =
     (kind: string) =>
-    (_event: React.SyntheticEvent, newValue: OptionProps | null) => {
-      const book = passage?.attributes?.book;
-      let link = newValue?.value ?? '';
-      if (hrefTpls[kind]) {
-        const chapter = parseInt(passage?.attributes?.reference ?? '1');
-        link = newValue?.value
-          ? hrefTpls[kind]
+      (_event: React.SyntheticEvent, newValue: OptionProps | null) => {
+        const book = passage?.attributes?.book;
+        let link = newValue?.value ?? '';
+        if (hrefTpls[kind]) {
+          const chapter = parseInt(passage?.attributes?.reference ?? '1');
+          link = newValue?.value
+            ? hrefTpls[kind]
               ?.replace('{0}', newValue?.value ?? '')
               ?.replace('{1}', book ?? 'MAT')
               ?.replace('{2}', chapter.toString()) ?? ''
-          : '';
-        setLinks({ ...links, [kind]: link });
-      }
-      setLink(link);
-    };
+            : '';
+          setLinks({ ...links, [kind]: link });
+        }
+        setLink(link);
+      };
 
   const handleTypeChange = (
     _event: React.SyntheticEvent,
@@ -439,7 +439,7 @@ export const FindResource = () => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label={t.bibleBrain.replace('{0}', 'Bible Brain')}
+                      label={t.resource.replace('{0}', 'Bible Brain')}
                     />
                   )}
                 />

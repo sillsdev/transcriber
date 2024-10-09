@@ -39,7 +39,12 @@ export function getSegments(name: string, segments: string) {
   var json = tryParseJSON(segments);
   if (Array.isArray(json)) {
     var thisone = json.find((j) => j['name'] === name) as INamedRegion;
-    if (thisone?.regionInfo) return thisone.regionInfo.toString();
+    if (thisone?.regionInfo) {
+      var ri = thisone?.regionInfo;
+      if (typeof ri === 'object')
+        return JSON.stringify(ri);
+      return thisone.regionInfo.toString();
+    }
     return '{}';
   }
   //old style
