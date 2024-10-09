@@ -365,6 +365,7 @@ export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "findBibleBrain": string;
     "findOther": string;
     "findResource": string;
+    "generalresource": string;
     "group": string;
     "image": string;
     "imageTpl": string;

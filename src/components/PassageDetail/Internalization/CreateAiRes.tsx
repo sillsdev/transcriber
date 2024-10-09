@@ -63,9 +63,9 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
   const scopeOptions = [
     t.passage.toLowerCase(),
     organizedBy.toLowerCase(),
-    t.movement.toLowerCase(),
-    t.book.toLowerCase(),
     t.chapter.toLowerCase(),
+    t.book.toLowerCase(),
+    t.movement.toLowerCase(),
   ];
 
   const aiQueries = [

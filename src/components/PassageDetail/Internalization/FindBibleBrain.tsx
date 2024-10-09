@@ -10,6 +10,7 @@ import {
   RadioGroup,
   Stack,
   TextField,
+  Typography,
 } from '@mui/material';
 import { SyntheticEvent, useContext, useEffect, useRef, useState } from 'react';
 import { OptionProps, scopeI } from './FindTabs';
@@ -92,6 +93,7 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
   }, [languages]);
 
   useEffect(() => {
+    setBibleOpt(null);
     if (lang === null) return;
     var l = languages.find(v => v.attributes.iso === lang.value);
     if (l) {
@@ -128,9 +130,21 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
     const isNt = bookN(passage?.attributes?.book || 'MAT') > 39;
     setNt(isNt);
     setQueryLang(true);
+    setQueryBible(true);
     getLanguages(isNt, timing).then((langs) => setLanguages(langs));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timing, passage]);
+
+  const handleTimingChange = (checked: boolean) => {
+    setTiming(checked);
+    setLang(null);
+    setBibleOpt(null);
+    setCreatePassages(checked);
+    setCreateSections(checked);
+    if (!checked) {
+      setCreationScope(scopeI.chapter);
+    }
+  }
   const handleAdd = () => {
     if (addingRef.current) return;
     setAdding(true);
@@ -177,7 +191,7 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
           setAdding(false);
           onClose && onClose();
         });
-      }, 200);
+      }, 500);
     });
   };
   return (
@@ -193,11 +207,14 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
             control={
               <Checkbox
                 checked={timing}
-                onChange={(_e, checked) => setTiming(checked)}
+                onChange={(_e, checked) => handleTimingChange(checked)}
               />
             }
             label={t.withTiming}
           />
+          {!timing && <Typography variant="subtitle2">
+            {t.generalresource}
+          </Typography>}
           <Grid item>
             <Autocomplete
               disablePortal
@@ -209,6 +226,7 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
               renderInput={(params) => (
                 <TextField {...params} label={queryLang ? t.querying : t.language.replace('{0}', 'Bible Brain')} />
               )}
+              disabled={queryLang}
             />
           </Grid>
           <Autocomplete
@@ -224,6 +242,7 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
                 label={queryBible ? t.querying : t.resource.replace('{0}', 'Bible Brain') + '*'}
               />
             )}
+            disabled={queryBible}
           />
 
         </Stack>
@@ -239,6 +258,7 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
               <Checkbox
                 checked={createPassages}
                 onChange={(_e, checked) => setCreatePassages(checked)}
+                disabled={!timing}
               />
             }
             label={t.resource.replace('{0}', t.passage)}
@@ -248,6 +268,7 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
               <Checkbox
                 checked={createSections}
                 onChange={(_e, checked) => setCreateSections(checked)}
+                disabled={!timing}
               />
             }
             label={t.resource.replace('{0}', organizedBy)}
@@ -272,18 +293,16 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
                 value={i as scopeI}
                 control={<Radio />}
                 label={o}
+                disabled={!timing && i < 2}
               />
             ))}
           </RadioGroup>
         </FormControl>
 
       </Grid>
-      <FormControlLabel
-        key='copyright'
-        value={copyright}
-        control={<label />}
-        label={copyright}
-      />
+      <Typography variant="body1" >
+        {copyright}
+      </Typography>
       <Grid container direction={'row'} spacing={2} sx={{ my: 1 }}>
         <Divider sx={{ width: '100%' }} />
         <ActionRow>
@@ -296,9 +315,8 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
           <PriButton
             disabled={
               !bibleOpt ||
-              !timing ||
               adding ||
-              (!createPassages && !createSections) ||
+              (!createPassages && !createSections && timing) ||
               (creationScope === scopeI.passage && createSections)
             }
             onClick={() => handleAdd()}

@@ -13,12 +13,10 @@ export const useBibleBrain = () => {
         q.findRecords('vwbiblebrainlanguage')
       )) as VwBiblebrainlanguage[];
       if (nt) {
-        recs = recs.filter((rec) => rec.attributes.nt === true);
-        if (timing) recs = recs.filter((rec) => rec.attributes.ntTiming === true);
+        recs = recs.filter((rec) => rec.attributes.nt === true && rec.attributes.ntTiming == timing);
       }
       else {
-        recs = recs.filter((rec) => rec.attributes.ot === true);
-        if (timing) recs = recs.filter((rec) => rec.attributes.otTiming === true);
+        recs = recs.filter((rec) => rec.attributes.ot === true && rec.attributes.otTiming == timing);
       }
       if (recs.filter(r => r.attributes.languageName === undefined).length > 0) console.log("no lang name")
       return recs.sort((a, b) => (a.attributes.languageName ?? a.attributes.iso).localeCompare(b.attributes.languageName ?? b.attributes.iso));
@@ -32,10 +30,10 @@ export const useBibleBrain = () => {
           .filter({ attribute: 'iso', value: iso })
           .filter({ attribute: 'languageName', value: lang })
       )) as VwBiblebrainbible[];
-      recs = recs.filter((rec) => nt ? rec.attributes.nt === true : rec.attributes.ot = true);
-      console.log(recs.length);
-      if (timing) recs = recs.filter((rec) => nt ? rec.attributes.ntTiming === true : rec.attributes.otTiming === true);
-      console.log(recs.length);
+      if (nt)
+        recs = recs.filter((rec) => rec.attributes.nt === true && rec.attributes.ntTiming == timing);
+      else
+        recs = recs.filter((rec) => rec.attributes.ot === true && rec.attributes.otTiming == timing);
       if (recs.filter(r => r.attributes.bibleName === undefined).length > 0) console.log("nobiblename")
 
       return recs.sort((a, b) => (a.attributes.bibleName ?? a.attributes.bibleid).localeCompare(b.attributes.bibleName));

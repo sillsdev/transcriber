@@ -2062,6 +2062,13 @@
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="findResource.generalresource">
+            <source>Create a General Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>         
          <trans-unit id="findResource.group">
             <source>Group</source>
             <target/>

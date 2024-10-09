@@ -18,8 +18,8 @@ import FindAquifer from './FindAquifer';
 export enum scopeI {
   passage,
   section,
-  book,
   chapter,
+  book,
   movement
 }
 export namespace scopeI {

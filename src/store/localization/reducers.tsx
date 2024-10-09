@@ -394,6 +394,7 @@ const initialState = {
 			"findBibleBrain": "Find: Bible Brain",
 			"findOther": "Find: Other",
 			"findResource": "Find Resource",
+			"generalresource": "Create a General Resource",
 			"group": "Group",
 			"image": "image",
 			"imageTpl": "Please provide an image for {0}",

@@ -183,12 +183,12 @@ export const ProjectResourceConfigure = (props: IProps) => {
   const rowCells = (row: string[], first = false) =>
     row.map(
       (v, i) =>
-        ({
-          value: v,
-          width: widths[i],
-          readOnly: first || readOnlys[i],
-          className: first ? 'cTitle' : cClass[i],
-        } as ICell)
+      ({
+        value: v,
+        width: widths[i],
+        readOnly: first || readOnlys[i],
+        className: first ? 'cTitle' : cClass[i],
+      } as ICell)
     );
 
   const emptyTable = () => [
@@ -247,14 +247,14 @@ export const ProjectResourceConfigure = (props: IProps) => {
             row = d[ix];
           }
           const limitValue = row[ColName.Limits].value;
-          let topic = row[ColName.Desc].value;
           let refValue = row[ColName.Ref].value;
+          let topic = `${(media.attributes.topic ? media.attributes.topic + " -" : "")}${(row[ColName.Desc].value ? row[ColName.Desc].value : refValue)} ${suffix}`;
           if (limitValue && refValue) {
             await projectResourceSave({
               t,
               media,
               i,
-              topicIn: topic ? topic : `${refValue} ${suffix}`,
+              topicIn: topic,
               limitValue,
               mediafiles,
               sectionResources,
@@ -317,8 +317,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
       .filter((v, i) => i > 0)
       .forEach((row) => {
         config.push(
-          `${row[ColName.Limits].value}\t${row[ColName.Ref].value}\t${
-            row[ColName.Desc].value
+          `${row[ColName.Limits].value}\t${row[ColName.Ref].value}\t${row[ColName.Desc].value
           }`
         );
       });

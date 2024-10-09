@@ -1768,6 +1768,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.generalresource">
+         <segment>
+            <source>Create a General Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="findResource.group">
          <segment>
             <source>Group</source>
