@@ -1,3 +1,9 @@
+audio-project-manager (3.2.4.0)  experimental; urgency=high
+
+ * TT-6038 Internalization player glitches
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 9 Oct 2024 16:49:00 -0600
+
 audio-project-manager (3.2.3.0)  experimental; urgency=high
 
  * TT-6045 Handle Audacity 3.6.x (#1710)

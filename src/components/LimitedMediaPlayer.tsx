@@ -83,6 +83,7 @@ export function LimitedMediaPlayer(props: IProps) {
   const timeTracker = useRef<number>(0);
   const stop = useRef<number>(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [startPos, setStartPos] = useState(0);
   const t: IPeerCheckStrings = useSelector(peerCheckSelector, shallowEqual);
 
   const setDuration = (value: number) => {
@@ -111,6 +112,7 @@ export function LimitedMediaPlayer(props: IProps) {
   const resetPlay = () => {
     stopPlay();
     setCurrentTime(limits?.start ?? 0);
+    setStartPos(limits?.start ?? 0);
     timeTracker.current = 0;
     setValue(0);
   };
@@ -151,6 +153,7 @@ export function LimitedMediaPlayer(props: IProps) {
   const setPosition = (position: number | undefined) => {
     if (position !== undefined && position !== currentTime) {
       setCurrentTime(position);
+      setStartPos(position);
     }
   };
 
@@ -233,6 +236,7 @@ export function LimitedMediaPlayer(props: IProps) {
     const duration = (limits.end || durationRef.current) - start;
     const time = duration * percent + start;
     setCurrentTime(time);
+    setStartPos(time);
     timeTracker.current = time;
     setValue(curValue);
   };
@@ -317,7 +321,7 @@ export function LimitedMediaPlayer(props: IProps) {
       <HiddenPlayer
         onProgress={timeUpdate}
         onDuration={durationChange}
-        position={currentTime}
+        position={startPos}
         loading={blobState.blobStat === BlobStatus.PENDING}
         audioBlob={blobState.blob}
         playing={playing}
