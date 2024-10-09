@@ -13,13 +13,12 @@ export const useBibleBrain = () => {
         q.findRecords('vwbiblebrainlanguage')
       )) as VwBiblebrainlanguage[];
       if (nt) {
-        recs = recs.filter((rec) => rec.attributes.nt === true && rec.attributes.ntTiming == timing);
+        recs = recs.filter((rec) => rec.attributes.nt === true && rec.attributes.ntTiming === timing);
       }
       else {
-        recs = recs.filter((rec) => rec.attributes.ot === true && rec.attributes.otTiming == timing);
+        recs = recs.filter((rec) => rec.attributes.ot === true && rec.attributes.otTiming === timing);
       }
-      if (recs.filter(r => r.attributes.languageName === undefined).length > 0) console.log("no lang name")
-      return recs.sort((a, b) => (a.attributes.languageName ?? a.attributes.iso).localeCompare(b.attributes.languageName ?? b.attributes.iso));
+      return recs.sort((a, b) => (a.attributes.languageName).localeCompare(b.attributes.languageName));
     } else return [] as VwBiblebrainlanguage[];
   };
   const getBibles = async (iso: string, lang: string, nt: boolean, timing: boolean) => {
@@ -31,12 +30,11 @@ export const useBibleBrain = () => {
           .filter({ attribute: 'languageName', value: lang })
       )) as VwBiblebrainbible[];
       if (nt)
-        recs = recs.filter((rec) => rec.attributes.nt === true && rec.attributes.ntTiming == timing);
+        recs = recs.filter((rec) => rec.attributes.nt === true && rec.attributes.ntTiming === timing);
       else
-        recs = recs.filter((rec) => rec.attributes.ot === true && rec.attributes.otTiming == timing);
-      if (recs.filter(r => r.attributes.bibleName === undefined).length > 0) console.log("nobiblename")
+        recs = recs.filter((rec) => rec.attributes.ot === true && rec.attributes.otTiming === timing);
 
-      return recs.sort((a, b) => (a.attributes.bibleName ?? a.attributes.bibleid).localeCompare(b.attributes.bibleName));
+      return recs.sort((a, b) => (a.attributes.bibleName).localeCompare(b.attributes.bibleName));
     } else return [] as VwBiblebrainbible[];
   };
   return { getLanguages, getBibles };

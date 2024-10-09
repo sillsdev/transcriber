@@ -78,7 +78,7 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
   }
   const setCreateSections = (createsections: boolean) => {
     setCreateSectionsx(createsections);
-    if (createsections && creationScope == scopeI.passage)
+    if (createsections && creationScope === scopeI.passage)
       setCreationScope(scopeI.section)
   }
   useEffect(() => {
@@ -102,12 +102,13 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
         setBibles(bibles);
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
 
   useEffect(() => {
     const bibleOptions = bibles.map((item: VwBiblebrainbible) => ({
       value: item.attributes.bibleid,
-      label: item.attributes.pubdate == '' ? `${item.attributes.bibleName}` : `${item.attributes.bibleName} (${item.attributes.pubdate})`
+      label: item.attributes.pubdate === '' ? `${item.attributes.bibleName}` : `${item.attributes.bibleName} (${item.attributes.pubdate})`
     }));
     setQueryBible(false);
     setOptions(bibleOptions);
@@ -122,6 +123,7 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
     } else {
       setCopyright('')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bibleOpt, Nt, timing]);
 
   useEffect(() => {
@@ -187,7 +189,7 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
       //could process response as ChangeList but this is easier
       forceDataChanges();
       setTimeout(() => {
-        waitForRemoteQueue('aquifer resource added').then(() => {
+        waitForRemoteQueue('bible brain resource added').then(() => {
           setAdding(false);
           onClose && onClose();
         });

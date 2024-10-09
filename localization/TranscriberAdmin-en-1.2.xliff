@@ -1963,7 +1963,7 @@
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
-         </trans-unit>         
+         </trans-unit>
          <trans-unit id="findResource.bibleProjectLang">
             <source>Book Overviews</source>
             <target/>
