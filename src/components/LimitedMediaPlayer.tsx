@@ -206,7 +206,11 @@ export function LimitedMediaPlayer(props: IProps) {
   };
 
   const handleSegmentStart = () => {
-    setPosition(limits.start ?? 0);
+    const start = limits.start ?? 0;
+    if (start === startPos) {
+      setPosition(start + 0.01);
+      setTimeout(() => setPosition(start), 100);
+    } else setPosition(start);
     stop.current = limits.end ? limits.end + 0.25 : durationRef.current ?? 0;
     setValue(0);
   };
