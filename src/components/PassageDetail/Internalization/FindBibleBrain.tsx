@@ -187,13 +187,12 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
     };
     axiosPost('biblebrain', postdata, token).then((response) => {
       //could process response as ChangeList but this is easier
-      forceDataChanges();
-      setTimeout(() => {
+      forceDataChanges().then(() => {
         waitForRemoteQueue('bible brain resource added').then(() => {
           setAdding(false);
           onClose && onClose();
         });
-      }, 500);
+      });
     });
   };
   return (

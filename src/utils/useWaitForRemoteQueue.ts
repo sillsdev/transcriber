@@ -25,7 +25,7 @@ export const useWaitForRemoteQueue = () => {
       }
       return !remote || !online || remote.requestQueue.length === 0;
     };
-    waitForIt(
+    await waitForIt(
       label,
       () => checkIt(),
       () => offline && !offlineOnly,

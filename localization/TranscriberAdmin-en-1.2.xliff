@@ -1958,7 +1958,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="findResource.Lang">
-            <source>{0} Language</source>
+            <source>{0} Language*</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>

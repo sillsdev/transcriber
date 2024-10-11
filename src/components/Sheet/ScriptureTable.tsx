@@ -1297,6 +1297,13 @@ export function ScriptureTable(props: IProps) {
       setBusy(false);
     };
     const setSaving = (value: boolean) => (savingRef.current = value);
+    const doneSaving = () => {
+      setSaving(false);
+      setLastSaved(currentDateTime()); //force refresh the sheet
+      saveCompleted(toolId);
+      setComplete(100);
+      setUpdate(false);
+    }
     const save = () => {
       if (!savingRef.current && !updateRef.current) {
         setSaving(true);
@@ -1305,14 +1312,13 @@ export function ScriptureTable(props: IProps) {
         prevSave = lastSaved || '';
         showMessage(t.saving);
         handleSave().then(() => {
-          setSaving(false);
-          setLastSaved(currentDateTime()); //force refresh the sheet
-          saveCompleted(toolId);
-          setComplete(100);
-          setUpdate(false);
           if (doForceDataChanges.current) {
-            forceDataChanges();
+            waitForRemoteQueue(t.publishingWarning).then(() => {
+                forceDataChanges().then(() => doneSaving());
+            })
             doForceDataChanges.current = false;
+          } else {
+            doneSaving();
           }
         });
       }

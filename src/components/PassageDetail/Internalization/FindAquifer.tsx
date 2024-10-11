@@ -298,13 +298,12 @@ export default function FindAquifer({ onClose }: IProps) {
     };
     axiosPost('aquifer', postdata, token).then((response) => {
       //could process response as ChangeList but this is easier
-      forceDataChanges();
-      setTimeout(() => {
+      forceDataChanges().then(() => {
         waitForRemoteQueue('aquifer resource added').then(() => {
           setAdding(false);
           onClose && onClose();
         });
-      }, 200);
+      });
     });
   };
 
