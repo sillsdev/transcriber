@@ -681,9 +681,11 @@ export function ImportTab(props: IProps) {
             chdata.length > 0 ? t.onlineChangeReport : t.importComplete
           );
           importComplete();
-          if (remote) forceDataChanges();
-          else SetUserLanguage(memory, user, setLanguage);
-          setImporting(false);
+          if (remote) forceDataChanges().then(() => setImporting(false));
+          else {
+            SetUserLanguage(memory, user, setLanguage);
+            setImporting(false);
+          }
         }
       }
     } else {

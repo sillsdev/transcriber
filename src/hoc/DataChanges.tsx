@@ -95,7 +95,7 @@ export const processDataChanges = async (pdc: {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('datachanges') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
-  const reloadOrgs = async (localId: string) => {
+  const reloadOrgs = async (localId: string, reloadAll: boolean) => {
     const orgmem = findRecord(memory, 'organizationmembership', localId);
     if (orgmem) {
       if (related(orgmem, 'user') === user) {
@@ -107,12 +107,16 @@ export const processDataChanges = async (pdc: {
           await pullRemoteToMemory({ table, memory, remote });
         }
       }
-    } else
-      await pullRemoteToMemory({
+    } else {
+      if (reloadAll)
+        await pullRemoteToMemory({
         table: 'organizationmembership',
         memory,
         remote,
       });
+      return true;
+    }
+    return false;
   };
 
   const reloadProjects = async (localId: string) => {
@@ -192,7 +196,7 @@ export const processDataChanges = async (pdc: {
       );
       await backup.sync((t) => ops);
       await memory.sync((t) => ops);
-
+      var reloadAllOrgs = false;
       for (const o of myOps) {
         if (o.op === 'updateRecord') {
           upRec = o as UpdateRecordOperation;
@@ -267,7 +271,7 @@ export const processDataChanges = async (pdc: {
                 AcceptInvitation(remote, upRec.record as InvitationD);
               break;
             case 'organizationmembership':
-              reloadOrgs(upRec.record.id);
+              reloadAllOrgs = reloadAllOrgs || await reloadOrgs(upRec.record.id, false);
               break;
             case 'groupmembership':
               reloadProjects(upRec.record.id);
@@ -275,6 +279,8 @@ export const processDataChanges = async (pdc: {
           }
         }
       }
+      if (reloadAllOrgs)
+        reloadOrgs('x', true);
       if (localOps.length > 0) {
         await backup.sync((t) => localOps);
         await memory.sync((t) => localOps);
@@ -325,7 +331,7 @@ export const processDataChanges = async (pdc: {
         if (localId) {
           switch (table.type) {
             case 'organizationmembership':
-              reloadOrgs(localId);
+              reloadOrgs(localId, true);
               break;
             case 'groupmembership':
               reloadProjects(localId);
@@ -579,7 +585,7 @@ export function DataChanges(props: PropsWithChildren) {
         user,
         setLanguage,
         setDataChangeCount,
-        fetchUrl
+        isElectron ? fetchUrl : undefined
       );
       if (check) {
         //make sure we have a bible media project and plan downloaded

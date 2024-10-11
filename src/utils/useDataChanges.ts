@@ -5,6 +5,7 @@ import { doDataChanges } from '../hoc/DataChanges';
 import { useFetchUrlNow, useOfflnProjRead } from '../crud';
 import * as actions from '../store';
 import { useGlobal } from 'reactn';
+import { isElectron } from '../api-variable';
 
 export const useDataChanges = () => {
   const { accessToken } = useContext(TokenContext).state;
@@ -18,8 +19,8 @@ export const useDataChanges = () => {
   const setLanguage = (lang: string) => dispatch(actions.setLanguage(lang));
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const fetchUrl = useFetchUrlNow();
-  return () => {
-    doDataChanges(
+  return async () => {
+    await doDataChanges(
       accessToken || '',
       coordinator,
       fingerprint,
@@ -29,7 +30,7 @@ export const useDataChanges = () => {
       user,
       setLanguage,
       setDataChangeCount,
-      fetchUrl
+      isElectron ? fetchUrl : undefined
     );
   };
 };
