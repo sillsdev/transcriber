@@ -1852,7 +1852,6 @@ export function ScriptureTable(props: IProps) {
       setGraphicFullsizeUrl(URL.createObjectURL(files[0]));
     } else setGraphicFullsizeUrl('');
   };
-
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <PlanSheet
@@ -1989,7 +1988,7 @@ export function ScriptureTable(props: IProps) {
         {shared || isNote ? (
           <ResourceTabs
             passId={editRow?.passage?.id || ''}
-            ws={versionRow}
+            ws={editRow}
             onOpen={handleEditClose}
             onUpdRef={updatePassageRef}
             hasPublishing={publishingOn}
