@@ -255,7 +255,7 @@ export function PlanSheet(props: IProps) {
   const ctx = useContext(PlanContext);
   const {
     hidePublishing,
-    canHidePublishing,
+    publishingOn,
     projButtonStr,
     connected,
     readonly,
@@ -554,7 +554,7 @@ export function PlanSheet(props: IProps) {
       ...c,
       row: c.row - 1,
       col:
-        !hidePublishing && canHidePublishing
+        !hidePublishing && publishingOn
           ? c.col - PrefixedCols - 1
           : c.col - PrefixedCols,
     }));
@@ -636,7 +636,7 @@ export function PlanSheet(props: IProps) {
     onPassageDetail,
     onAction,
     hidePublishing,
-    canHidePublishing,
+    publishingOn,
     firstMovement,
     filtered,
     onAudacity: handleAudacity,
@@ -989,10 +989,10 @@ export function PlanSheet(props: IProps) {
               !anyRecording && (
                 <LightTooltip
                   sx={{ backgroundColor: 'transparent' }}
-                  title={hidePublishing ? t.showPublishing : t.hidePublishing}
+                  title={!publishingOn || hidePublishing ? t.showPublishing : t.hidePublishing}
                 >
                   <IconButton onClick={handlePublishToggle}>
-                    {hidePublishing ? (
+                    {!publishingOn || hidePublishing ? (
                       <PublishOnIcon sx={{ color: 'primary.light' }} />
                     ) : (
                       <PublishOffIcon sx={{ color: 'primary.light' }} />
@@ -1068,7 +1068,7 @@ export function PlanSheet(props: IProps) {
               noResponse={publishRefused}
               current={currentRowPublishLevel}
               sharedProject={shared}
-              hasPublishing={canHidePublishing}
+              hasPublishing={publishingOn}
             />
           )}
           <MediaPlayer
