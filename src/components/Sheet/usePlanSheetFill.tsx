@@ -65,7 +65,7 @@ interface IProps {
   inlinePassages: boolean;
   bookSuggestions?: OptionType[];
   hidePublishing: boolean;
-  canHidePublishing: boolean;
+  publishingOn: boolean;
   firstMovement: number;
   filtered: boolean;
   onPassageDetail: (rowIndex: number) => void;
@@ -99,7 +99,7 @@ interface IProps {
  * @param {Array} props.inlinePassages - True if section and passage on the same line.
  * @param {Array} props.bookSuggestions - An array of book suggestions for the book select input.
  * @param {Array} props.hidePublishing - True if publishing rows hidden.
- * @param {Array} props.canHidePublishing - True if publishing rows can be hidden.
+ * @param {Array} props.publishingOn - True if publishing rows can be hidden.
  * @param {Function} props.onPassageDetail - A callback function for handling passage detail.
  * @param {Function} props.onPlayStatus - A callback function for handling play status.
  * @param {Function} props.onEdit - A callback function for handling Note metadata edit.
@@ -127,7 +127,7 @@ export const usePlanSheetFill = ({
   inlinePassages,
   bookSuggestions,
   hidePublishing,
-  canHidePublishing,
+  publishingOn,
   firstMovement,
   filtered,
   onPassageDetail,
@@ -162,7 +162,7 @@ export const usePlanSheetFill = ({
     readonly,
     rowInfo,
     inlinePassages,
-    hidePublishing,
+    hidePublishing: !publishingOn || hidePublishing,
   });
   const {
     isPassageType,
@@ -224,7 +224,7 @@ export const usePlanSheetFill = ({
         readOnly: true,
       } as ICell,
       {
-        value: shared || !hidePublishing ? t.published : t.versions,
+        value: shared || (publishingOn && !hidePublishing) ? t.published : t.versions,
         readOnly: true,
         width: 20,
       } as ICell,
@@ -234,7 +234,7 @@ export const usePlanSheetFill = ({
         width: 50,
       } as ICell,
     ];
-    if (!hidePublishing && canHidePublishing)
+    if (!hidePublishing && publishingOn)
       titles.push({
         value: localizedArtifactType(ArtifactTypeSlug.Graphic),
         readOnly: true,
@@ -575,7 +575,7 @@ export const usePlanSheetFill = ({
         cellIndex === titleCol &&
         !passage &&
         !hidePublishing &&
-        canHidePublishing
+        publishingOn
       ) {
         return {
           value: e,
@@ -588,7 +588,7 @@ export const usePlanSheetFill = ({
       if (
         /CHNUM/.test(rowData[rowIndex][refCol] as string) &&
         !hidePublishing &&
-        canHidePublishing
+        publishingOn
       ) {
         if (cellIndex === titleCol) {
           return {
@@ -614,7 +614,7 @@ export const usePlanSheetFill = ({
       if (
         /NOTE/.test(rowData[rowIndex][refCol] as string) &&
         !hidePublishing &&
-        canHidePublishing &&
+        publishingOn &&
         cellIndex === titleCol
       ) {
         return {
@@ -818,7 +818,7 @@ export const usePlanSheetFill = ({
           canEdit: !anyRecording && !(sharedRes && offline),
         }),
       ];
-      if (!hidePublishing && canHidePublishing)
+      if (!hidePublishing && publishingOn)
         sheetRow.push(
           graphicCell(
             rowIndex,

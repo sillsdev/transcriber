@@ -191,7 +191,7 @@ export function ScriptureTable(props: IProps) {
     scripture,
     shared,
     hidePublishing,
-    canHidePublishing,
+    publishingOn,
     setSectionArr,
     setCanPublish,
     togglePublishing,
@@ -333,7 +333,7 @@ export function ScriptureTable(props: IProps) {
     var anyPublishing = !offline
       ? ws.some((s) => isPublishingTitle(s.reference ?? '', flat))
       : false;
-    if (canHidePublishing !== anyPublishing) setCanPublish(anyPublishing);
+    if (publishingOn !== anyPublishing) setCanPublish(anyPublishing);
   };
   const passNumCol = React.useMemo(() => {
     return colNames.indexOf('passageSeq');
@@ -1376,7 +1376,7 @@ export function ScriptureTable(props: IProps) {
         wfStr,
         filterState,
         minSection,
-        hasPublishing: canHidePublishing,
+        hasPublishing: publishingOn,
         hidePublishing,
         doneStepId,
         getDiscussionCount,
@@ -1561,7 +1561,7 @@ export function ScriptureTable(props: IProps) {
     if (update) await doPublish();
     else if (!hidePublishing) togglePublishing(); //turn it off
     //if we're going to show now and we don't already have some rows...ask
-    else if (!canHidePublishing) setConfirmPublishingVisible(true);
+    else if (!publishingOn) setConfirmPublishingVisible(true);
     else togglePublishing(); //turn it on - no update
   };
   const onPublishingReject = () => {
@@ -1972,7 +1972,7 @@ export function ScriptureTable(props: IProps) {
         <VersionDlg
           passId={versionRow?.passage?.id || ''}
           canSetDestination={true}
-          hasPublishing={canHidePublishing}
+          hasPublishing={publishingOn}
         />
       </BigDialog>
       <BigDialog
@@ -1992,7 +1992,7 @@ export function ScriptureTable(props: IProps) {
             ws={versionRow}
             onOpen={handleEditClose}
             onUpdRef={updatePassageRef}
-            hasPublishing={canHidePublishing}
+            hasPublishing={publishingOn}
           />
         ) : (
           <></>

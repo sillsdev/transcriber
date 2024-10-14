@@ -73,7 +73,7 @@ export function AudioTab() {
   const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
-  const { sectionArr, shared, canHidePublishing, readonly } =
+  const { sectionArr, shared, publishingOn, readonly } =
     useContext(PlanContext).state;
   const sectionMap = new Map<number, string>(sectionArr);
   const [attachVisible, setAttachVisible] = useState(false);
@@ -390,7 +390,7 @@ export function AudioTab() {
               sectionArr={sectionArr}
               shared={shared}
               canSetDestination={true}
-              hasPublishing={canHidePublishing}
+              hasPublishing={publishingOn}
             />
             {attachVisible && (
               <BigDialog

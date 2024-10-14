@@ -33,7 +33,7 @@ const initState = {
   scripture: false,
   flat: false,
   shared: false,
-  canHidePublishing: true,
+  publishingOn: true,
   hidePublishing: true,
   sectionArr: [] as [number, string][],
   setSectionArr: (sectionArr: [number, string][]) => {},
@@ -130,8 +130,8 @@ const PlanProvider = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
 
-  const setCanPublish = (canHidePublishing: boolean) => {
-    setState((state) => ({ ...state, canHidePublishing }));
+  const setCanPublish = (publishingOn: boolean) => {
+    setState((state) => ({ ...state, publishingOn }));
   };
 
   const togglePublishing = () => {

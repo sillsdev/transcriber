@@ -74,7 +74,7 @@ export const AudioTable = (props: IProps) => {
   const [mediaPlaying, setMediaPlaying] = useState(false);
   const [publishItem, setPublishItem] = useState(-1);
   const columnDefs =
-    shared || sectionArr.length > 0
+    shared || hasPublishing
       ? [
           { name: 'planName', title: t.planName },
           { name: 'actions', title: '\u00A0' },
