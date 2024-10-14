@@ -224,7 +224,7 @@ export const usePlanSheetFill = ({
         readOnly: true,
       } as ICell,
       {
-        value: !hidePublishing ? t.published : t.versions,
+        value: shared || !hidePublishing ? t.published : t.versions,
         readOnly: true,
         width: 20,
       } as ICell,
