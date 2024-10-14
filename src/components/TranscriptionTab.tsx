@@ -511,11 +511,13 @@ export function TranscriptionTab(props: IProps) {
         .filter((s) => related(s, 'plan') === planRec.id && s.attributes)
         .sort(sectionCompare)
         .forEach((section) => {
+          var sectionIndex = 0;
+          var psgCount = 0;
           const sectionpassages = passages
             .filter((ps) => related(ps, 'section') === section.id)
             .sort(passageCompare);
           if (sectionpassages.length > 0) {
-            rowData.push({
+            sectionIndex = rowData.push({
               id: section.id as string,
               name: getSection([section], sectionMap),
               state: '',
@@ -527,10 +529,11 @@ export function TranscriptionTab(props: IProps) {
               action: '',
               parentId: '',
               sort: (section.attributes.sequencenum || 0).toFixed(2).toString(),
-            });
+            })-1;
             sectionpassages.forEach((passage: Passage) => {
               const state = activityState.getString(getPassageState(passage));
               if (!isPublishingTitle(passage?.attributes?.reference, flat)) {
+                psgCount++;
                 rowData.push({
                   id: passage.id,
                   name: (
@@ -551,6 +554,7 @@ export function TranscriptionTab(props: IProps) {
                 } as IRow);
               }
             });
+            rowData[sectionIndex].passages = psgCount.toString();
           }
         });
     });
