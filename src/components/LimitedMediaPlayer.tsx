@@ -116,15 +116,15 @@ export function LimitedMediaPlayer(props: IProps) {
   };
 
   const resetPlay = () => {
-    stopPlay();
+    if (playingRef.current) stopPlay();
     setPosition(limits?.start ?? 0);
     setValue(0);
+    durationRef.current = 0;
   };
 
   useEffect(() => {
-    if (playingRef.current) {
-      resetPlay();
-    }
+    resetPlay();
+   
     if (srcMediaId !== blobState?.id) {
       if (ready) setReady(false);
       fetchBlob(srcMediaId);
@@ -175,17 +175,11 @@ export function LimitedMediaPlayer(props: IProps) {
 
   const timeUpdate = (progress: number) => {
     const time = Math.round(progress * 1000) / 1000;
-    const durValue = durationRef.current;
-    if (
-      (stop.current !== 0 && time >= stop.current) ||
-      (time === 0 && limits.start !== 0)
-    ) {
+    if (stop.current !== 0 && time >= stop.current) 
+    {
       ended();
     }
-    const start = limits.start ?? 0;
-    const current = Math.round(
-      ((time - start) / ((limits.end ?? durValue ?? 0) - start)) * 100
-    );
+    const current = Math.ceil(progress-(limits.start ?? 0));
     if (valueTracker.current !== current && playingRef.current) {
       valueTracker.current = current;
       setValue(current);
@@ -232,11 +226,8 @@ export function LimitedMediaPlayer(props: IProps) {
 
   const handleSliderChange = (e: Event, value: number | number[]) => {
     const curValue = Array.isArray(value) ? value[0] : value;
-    const percent = curValue / 100;
     const start = limits.start ?? 0;
-    const duration = (limits.end || durationRef.current) - start;
-    const time = duration * percent + start;
-    setPosition(time);
+    setPosition(curValue+start);
     setValue(curValue);
   };
 
@@ -291,6 +282,8 @@ export function LimitedMediaPlayer(props: IProps) {
                 onChange={handleSliderChange}
                 size="small"
                 sx={{ color: 'text.secondary' }}
+                min={0}
+                max={Math.ceil((limits.end || duration) - (limits.start ?? 0))}
               />
             </Stack>
           }

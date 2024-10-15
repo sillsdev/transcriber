@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode, useState } from 'react';
+import { PropsWithChildren, ReactNode, useEffect, useState } from 'react';
 import {
   DragDropContext,
   Droppable,
@@ -47,6 +47,10 @@ export const VertListDnd = ({
     data ?? cvtChildren(children) ?? []
   );
 
+  useEffect(() => {
+      setItems(data ?? cvtChildren(children) ?? []);
+  }, [data, children]);
+  
   // a little function to help us with reordering the result
   const reorder = (list: DropProp[], startIndex: number, endIndex: number) => {
     const result = Array.from(list);
