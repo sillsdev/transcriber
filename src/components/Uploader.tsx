@@ -51,6 +51,7 @@ interface IProps {
   topic?: string;
   uploadType?: UploadType;
   team?: string; // used when adding a card to check speakers
+  onNonAudio?: (nonAudio: boolean) => void;
 }
 
 export const Uploader = (props: IProps) => {
@@ -75,6 +76,7 @@ export const Uploader = (props: IProps) => {
     topic,
     uploadType,
     team,
+    onNonAudio,
   } = props;
   const { finish } = props;
   const { metaData, ready } = props;
@@ -388,6 +390,7 @@ export const Uploader = (props: IProps) => {
           }
           createProject={createProject}
           team={team}
+          onNonAudio={onNonAudio}
         />
       )}
     </>

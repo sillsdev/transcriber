@@ -148,6 +148,7 @@ interface IProps {
   team?: string; // used to check for speakers when adding a card
   onFiles?: (files: File[]) => void;
   onValue?: (value: string) => void;
+  onNonAudio?: (nonAudio: boolean) => void;
 }
 
 function MediaUpload(props: IProps) {
@@ -166,6 +167,7 @@ function MediaUpload(props: IProps) {
     team,
     onFiles,
     onValue,
+    onNonAudio,
   } = props;
   const [name, setName] = useState('');
   const [files, setFilesx] = useState<File[]>([]);
@@ -264,6 +266,8 @@ function MediaUpload(props: IProps) {
           )
         );
       }
+      const nonAudio = goodFiles.some((f) => !f.type.includes('audio'));
+      if (onNonAudio) onNonAudio(nonAudio);
       goodFiles = checkSizes(goodFiles, sizeLimit);
       setName(fileName(goodFiles));
       setFiles(goodFiles);

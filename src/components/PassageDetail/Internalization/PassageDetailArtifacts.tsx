@@ -140,6 +140,7 @@ export function PassageDetailArtifacts() {
   const [displayId, setDisplayId] = useState('');
   const [link, setLink] = useState<string>();
   const [markDown, setMarkDoan] = useState('');
+  const [nonAudio, setNonAudio] = useState(false);
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
   const [projectResourceVisible, setProjectResourceVisible] = useState(false);
   const [projResPassageVisible, setProjResPassageVisible] = useState(false);
@@ -193,6 +194,8 @@ export function PassageDetailArtifacts() {
     () => rowData.some((r) => r.passageId && r.passageId !== passage.id),
     [passage, rowData]
   );
+
+  const handleNonAudio = (value: boolean) => setNonAudio(value);
 
   const isPassageResource = () =>
     resourceTypeRef.current === ResourceTypeEnum.passageResource;
@@ -788,6 +791,7 @@ export function PassageDetailArtifacts() {
         artifactState={artifactState}
         uploadType={uploadType}
         ready={() => true}
+        onNonAudio={handleNonAudio}
         metaData={
           <ResourceData
             uploadType={uploadType}
@@ -799,7 +803,7 @@ export function PassageDetailArtifacts() {
             catRequired={false}
             initPassRes={isPassageResource()}
             onPassResChange={handlePassRes}
-            allowProject={true}
+            allowProject={!nonAudio}
             sectDesc={sectDesc}
             passDesc={passDesc}
           />
