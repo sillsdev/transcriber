@@ -30,11 +30,6 @@ const data = [
     href: 'https://app.well.bible/view-content/-/{0}{1}{2}-{3}{4}',
     featured: true,
   },
-  {
-    name: "What's App",
-    help: 'whatsAppHelp',
-    ai: true,
-  },
 ];
 
 module.exports = data;
