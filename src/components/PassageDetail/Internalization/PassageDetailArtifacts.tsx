@@ -560,7 +560,7 @@ export function PassageDetailArtifacts() {
           projRes.push(findRecord(memory, 'mediafile', id) as MediaFileD);
         }
       }
-      if (projRes.length) setProjResSetup(projRes);
+      if (projRes.length === 1) setProjResSetup(projRes);
       resetEdit();
     }
   };
