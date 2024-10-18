@@ -110,6 +110,7 @@ import {
   RecordKeyMap,
 } from '@orbit/records';
 import { useDispatch } from 'react-redux';
+import { PassageTypeEnum } from '../model/passageType';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -1164,7 +1165,9 @@ export function Transcriber(props: IProps) {
                     {role === 'transcriber' &&
                       hasParatextName &&
                       paratextProject &&
-                      !noParatext && (
+                      !noParatext &&
+                      passage?.attributes?.reference !==
+                        PassageTypeEnum.NOTE && (
                         <Grid item>
                           <LightTooltip title={t.pullParatextTip}>
                             <span>
