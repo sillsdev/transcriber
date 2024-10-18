@@ -170,7 +170,29 @@ export const SelectRecording = (props: IProps) => {
                 {rowData
                   .filter((r) => localTags.includes(r.artifactType))
                   .sort((i, j) =>
-                    i.artifactType < j.artifactType
+                    parseFloat(
+                      prettySegment(
+                        i?.mediafile?.attributes?.sourceSegments ?? '{}'
+                      )
+                    ) <
+                    parseFloat(
+                      prettySegment(
+                        j?.mediafile?.attributes?.sourceSegments ?? '{}'
+                      )
+                    )
+                      ? -1
+                      : parseFloat(
+                          prettySegment(
+                            i?.mediafile?.attributes?.sourceSegments ?? '{}'
+                          )
+                        ) >
+                        parseFloat(
+                          prettySegment(
+                            j?.mediafile?.attributes?.sourceSegments ?? '{}'
+                          )
+                        )
+                      ? 1
+                      : i.artifactType < j.artifactType
                       ? -1
                       : i.artifactType > j.artifactType
                       ? 1

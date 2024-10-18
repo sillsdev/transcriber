@@ -1,15 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { IPassageChooserStrings, PassageD } from '../../model';
-import {
-  Typography,
-  Box,
-  BoxProps,
-  styled,
-  Tabs,
-  Tab,
-  SxProps,
-} from '@mui/material';
+import { Typography, Tabs, Tab, SxProps } from '@mui/material';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { related, passageRefText, remoteId } from '../../crud';
 import { rememberCurrentPassage } from '../../utils';
@@ -23,18 +15,7 @@ import {
   RefRender,
 } from '../../control/RefRender';
 import { RecordKeyMap } from '@orbit/records';
-
-interface StyledBoxProps extends BoxProps {
-  width?: number;
-}
-const StyledBox = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'width',
-})<StyledBoxProps>(({ width, theme }) => ({
-  padding: `${theme.spacing(2)}px ${theme.spacing(6)}px`,
-  display: 'flex',
-  flexDirection: 'row',
-  width: `${width}px`,
-}));
+import { StyledBox } from '../../control/StyledBox';
 
 interface Mark {
   value: number;

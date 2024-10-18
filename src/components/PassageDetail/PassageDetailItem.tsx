@@ -455,6 +455,7 @@ export function PassageDetailItem(props: IProps) {
                             currentVersion={currentVersion}
                             rowData={rowData}
                             segments={segString}
+                            width={width - discussionSize.width - 16}
                           />
                         </Box>
                         <Box sx={rowProp}>
