@@ -62,7 +62,7 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
       {isPassage && (shared || isNote) && onEdit && (
         <IconButton
           id="noteEdit"
-          title={t.noteDetails}
+          title={isNote ? t.noteDetails : t.resourceEdit}
           disabled={!canEdit}
           onClick={onEdit(rowIndex)}
         >
