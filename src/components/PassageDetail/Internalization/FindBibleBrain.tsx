@@ -17,7 +17,11 @@ import { OptionProps, scopeI } from './FindTabs';
 import { shallowEqual, useSelector } from 'react-redux';
 import { findResourceSelector } from '../../../selector';
 import { IFindResourceStrings } from '../../../model';
-import { useBookN, useDataChanges, useWaitForRemoteQueue } from '../../../utils';
+import {
+  useBookN,
+  useDataChanges,
+  useWaitForRemoteQueue,
+} from '../../../utils';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { ActionRow, AltButton, PriButton } from '../../StepEditor';
 import { useOrganizedBy } from '../../../crud/useOrganizedBy';
@@ -38,12 +42,16 @@ interface FindBibleBrainProps {
   ) => (_event: SyntheticEvent, newValue: OptionProps | null) => void;
 }
 
-export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainProps) {
+export default function FindBibleBrain({
+  handleLink,
+  onClose,
+}: FindBibleBrainProps) {
   const forceDataChanges = useDataChanges();
   const waitForRemoteQueue = useWaitForRemoteQueue();
   const [memory] = useGlobal('memory');
   const [options, setOptions] = useState<OptionProps[]>([]);
   const [Nt, setNt] = useState<boolean>(true);
+  const [Ot, setOt] = useState<boolean>(false);
   const [languages, setLanguages] = useState<VwBiblebrainlanguage[]>([]);
   const [bibles, setBibles] = useState<VwBiblebrainbible[]>([]);
   const [langOpts, setLangOpts] = useState<OptionProps[]>([]);
@@ -75,12 +83,12 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
   const setAdding = (adding: boolean) => {
     setAddingx(adding);
     addingRef.current = adding;
-  }
+  };
   const setCreateSections = (createsections: boolean) => {
     setCreateSectionsx(createsections);
     if (createsections && creationScope === scopeI.passage)
-      setCreationScope(scopeI.section)
-  }
+      setCreationScope(scopeI.section);
+  };
   useEffect(() => {
     // console.log(languages);
     const langOptions = languages.map((item: VwBiblebrainlanguage) => ({
@@ -95,12 +103,14 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
   useEffect(() => {
     setBibleOpt(null);
     if (lang === null) return;
-    var l = languages.find(v => v.attributes.iso === lang.value);
+    var l = languages.find((v) => v.attributes.iso === lang.value);
     if (l) {
       setQueryBible(true);
-      getBibles(lang.value, l.attributes.languageName, Nt, timing).then((bibles) => {
-        setBibles(bibles);
-      })
+      getBibles(lang.value, l.attributes.languageName, Nt, Ot, timing).then(
+        (bibles) => {
+          setBibles(bibles);
+        }
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
@@ -108,32 +118,42 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
   useEffect(() => {
     const bibleOptions = bibles.map((item: VwBiblebrainbible) => ({
       value: item.attributes.bibleid,
-      label: item.attributes.pubdate === '' ? `${item.attributes.bibleName}` : `${item.attributes.bibleName} (${item.attributes.pubdate})`
+      label:
+        item.attributes.pubdate === ''
+          ? `${item.attributes.bibleName}`
+          : `${item.attributes.bibleName} (${item.attributes.pubdate})`,
     }));
     setQueryBible(false);
     setOptions(bibleOptions);
-  }, [bibles])
+  }, [bibles]);
 
   useEffect(() => {
     if (bibleOpt) {
       var size = Nt ? 'NT' : 'OT';
-      axiosGet(`biblebrain/${bibleOpt.value}/${size}/${timing}/copyright`, undefined, token ?? '').then((response) => {
+      axiosGet(
+        `biblebrain/${bibleOpt.value}/${size}/${timing}/copyright`,
+        undefined,
+        token ?? ''
+      ).then((response) => {
         setCopyright(response.data);
       });
     } else {
-      setCopyright('')
+      setCopyright('');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bibleOpt, Nt, timing]);
 
   useEffect(() => {
     var ind = bookN(passage?.attributes.book || 'MAT');
-    console.log('index', ind)
-    const isNt = bookN(passage?.attributes?.book || 'MAT') > 39;
+    console.log('index', ind);
+    const bookCd = bookN(passage?.attributes?.book || 'MAT');
+    const isNt = bookCd > 39 && bookCd < 67;
+    const isOt = bookCd < 40;
     setNt(isNt);
+    setOt(isOt);
     setQueryLang(true);
     setQueryBible(true);
-    getLanguages(isNt, timing).then((langs) => setLanguages(langs));
+    getLanguages(isNt, isOt, timing).then((langs) => setLanguages(langs));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timing, passage]);
 
@@ -146,23 +166,22 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
     if (!checked) {
       setCreationScope(scopeI.chapter);
     }
-  }
+  };
   const handleAdd = () => {
     if (addingRef.current) return;
     setAdding(true);
 
-    var postdata:
-      {
-        PassageId: number
-        SectionId: number;
-        OrgWorkflowStep: number;
-        Bibleid: string;
-        Timing: boolean;
-        NT: boolean;
-        Sections: boolean;
-        Passages: boolean;
-        Scope: string;
-      } = {
+    var postdata: {
+      PassageId: number;
+      SectionId: number;
+      OrgWorkflowStep: number;
+      Bibleid: string;
+      Timing: boolean;
+      NT: boolean;
+      Sections: boolean;
+      Passages: boolean;
+      Scope: string;
+    } = {
       PassageId: remoteIdNum(
         'passage',
         passage.id,
@@ -178,12 +197,12 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
         InternalizationStep()?.id ?? '',
         memory.keyMap as RecordKeyMap
       ),
-      Bibleid: bibleOpt?.value ?? "",
+      Bibleid: bibleOpt?.value ?? '',
       Timing: timing,
       NT: Nt,
       Sections: createSections,
       Passages: createPassages,
-      Scope: scopeI.asString(creationScope)
+      Scope: scopeI.asString(creationScope),
     };
     axiosPost('biblebrain', postdata, token).then((response) => {
       //could process response as ChangeList but this is easier
@@ -213,9 +232,9 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
             }
             label={t.withTiming}
           />
-          {!timing && <Typography variant="subtitle2">
-            {t.generalresource}
-          </Typography>}
+          {!timing && (
+            <Typography variant="subtitle2">{t.generalresource}</Typography>
+          )}
           <Grid item>
             <Autocomplete
               disablePortal
@@ -225,7 +244,14 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
               onChange={(_event, value) => setLang(value)}
               sx={{ width: 300 }}
               renderInput={(params) => (
-                <TextField {...params} label={queryLang ? t.querying : t.language.replace('{0}', 'Bible Brain')} />
+                <TextField
+                  {...params}
+                  label={
+                    queryLang
+                      ? t.querying
+                      : t.language.replace('{0}', 'Bible Brain')
+                  }
+                />
               )}
               disabled={queryLang}
             />
@@ -240,12 +266,15 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
             renderInput={(params) => (
               <TextField
                 {...params}
-                label={queryBible ? t.querying : t.resource.replace('{0}', 'Bible Brain') + '*'}
+                label={
+                  queryBible
+                    ? t.querying
+                    : t.resource.replace('{0}', 'Bible Brain') + '*'
+                }
               />
             )}
             disabled={queryBible}
           />
-
         </Stack>
       </Grid>
       <Grid item>
@@ -299,11 +328,8 @@ export default function FindBibleBrain({ handleLink, onClose }: FindBibleBrainPr
             ))}
           </RadioGroup>
         </FormControl>
-
       </Grid>
-      <Typography variant="body1" >
-        {copyright}
-      </Typography>
+      <Typography variant="body1">{copyright}</Typography>
       <Grid container direction={'row'} spacing={2} sx={{ my: 1 }}>
         <Divider sx={{ width: '100%' }} />
         <ActionRow>

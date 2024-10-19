@@ -7,22 +7,35 @@ export const useBibleBrain = () => {
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
 
-  const getLanguages = async (nt: boolean, timing: boolean) => {
-    if (remote) {
+  const getLanguages = async (nt: boolean, ot: boolean, timing: boolean) => {
+    if (remote && (nt || ot)) {
       var recs = (await remote.query((q) =>
         q.findRecords('vwbiblebrainlanguage')
       )) as VwBiblebrainlanguage[];
       if (nt) {
-        recs = recs.filter((rec) => rec.attributes.nt === true && rec.attributes.ntTiming === timing);
+        recs = recs.filter(
+          (rec) =>
+            rec.attributes.nt === true && rec.attributes.ntTiming === timing
+        );
+      } else {
+        recs = recs.filter(
+          (rec) =>
+            rec.attributes.ot === true && rec.attributes.otTiming === timing
+        );
       }
-      else {
-        recs = recs.filter((rec) => rec.attributes.ot === true && rec.attributes.otTiming === timing);
-      }
-      return recs.sort((a, b) => (a.attributes.languageName).localeCompare(b.attributes.languageName));
+      return recs.sort((a, b) =>
+        a.attributes.languageName.localeCompare(b.attributes.languageName)
+      );
     } else return [] as VwBiblebrainlanguage[];
   };
-  const getBibles = async (iso: string, lang: string, nt: boolean, timing: boolean) => {
-    if (remote) {
+  const getBibles = async (
+    iso: string,
+    lang: string,
+    nt: boolean,
+    ot: boolean,
+    timing: boolean
+  ) => {
+    if (remote && (nt || ot)) {
       var recs = (await remote.query((q) =>
         q
           .findRecords('vwbiblebrainbible')
@@ -30,11 +43,19 @@ export const useBibleBrain = () => {
           .filter({ attribute: 'languageName', value: lang })
       )) as VwBiblebrainbible[];
       if (nt)
-        recs = recs.filter((rec) => rec.attributes.nt === true && rec.attributes.ntTiming === timing);
+        recs = recs.filter(
+          (rec) =>
+            rec.attributes.nt === true && rec.attributes.ntTiming === timing
+        );
       else
-        recs = recs.filter((rec) => rec.attributes.ot === true && rec.attributes.otTiming === timing);
+        recs = recs.filter(
+          (rec) =>
+            rec.attributes.ot === true && rec.attributes.otTiming === timing
+        );
 
-      return recs.sort((a, b) => (a.attributes.bibleName).localeCompare(b.attributes.bibleName));
+      return recs.sort((a, b) =>
+        a.attributes.bibleName.localeCompare(b.attributes.bibleName)
+      );
     } else return [] as VwBiblebrainbible[];
   };
   return { getLanguages, getBibles };
