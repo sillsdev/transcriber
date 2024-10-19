@@ -106,8 +106,9 @@ const PlanProvider = (props: IProps) => {
     let projRec = findRecord(memory, 'project', project) as ProjectD;
     if (projRec) {
       const shared = projRec?.attributes?.isPublic || false;
+      const hideId = LocalKey.hidePublishing + project;
       const hidePublish =
-        localStorage.getItem(localUserKey(LocalKey.hidePublishing)) || 'true';
+        localStorage.getItem(localUserKey(hideId as LocalKey)) || 'true';
       const hidePublishing = Boolean(
         hidePublish === 'true' || (isOffline && !isDeveloper)
       );
@@ -122,7 +123,7 @@ const PlanProvider = (props: IProps) => {
           hidePublishing,
         }));
         localStorage.setItem(
-          localUserKey(LocalKey.hidePublishing),
+          localUserKey(hideId as LocalKey),
           hidePublishing.toString()
         );
       }
@@ -136,8 +137,9 @@ const PlanProvider = (props: IProps) => {
 
   const togglePublishing = () => {
     const { hidePublishing } = state;
+    const hideId = LocalKey.hidePublishing + project;
     localStorage.setItem(
-      localUserKey(LocalKey.hidePublishing),
+      localUserKey(hideId as LocalKey),
       (!Boolean(hidePublishing)).toString()
     );
     setState((state) => ({ ...state, hidePublishing: !hidePublishing }));
