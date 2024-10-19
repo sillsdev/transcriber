@@ -38,6 +38,7 @@ import {
   ArtifactCategoryType,
   mediaFileName,
   passageRefText,
+  usePlanType,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
@@ -173,6 +174,8 @@ export function PassageDetailArtifacts() {
   const projectResourceSave = useProjectResourceSave();
   const { removeKey } = storedCompareKey(passage, section);
   const { userIsAdmin } = useRole();
+  const [plan] = useGlobal('plan');
+  const planType = usePlanType();
   const t: IPassageDetailArtifactsStrings = useSelector(
     passageDetailArtifactsSelector,
     shallowEqual
@@ -712,15 +715,23 @@ export function PassageDetailArtifacts() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediafiles]);
 
+  const isScripture = useMemo(
+    () => planType(plan)?.scripture,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [plan]
+  );
+
   return (
     <>
       <Stack sx={{ width: '100%' }} direction="row" spacing={1}>
         <Grid container sx={{ display: 'flex', alignItems: 'center' }}>
-          <Grid item>
-            <AltButton onClick={() => handleFindVisible(true)}>
-              {t.find}
-            </AltButton>
-          </Grid>
+          {isScripture && (
+            <Grid item>
+              <AltButton onClick={() => handleFindVisible(true)}>
+                {t.find}
+              </AltButton>
+            </Grid>
+          )}
           {userIsAdmin && (!offline || offlineOnly) && (
             <>
               <Grid item>
