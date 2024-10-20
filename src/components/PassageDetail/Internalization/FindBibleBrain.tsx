@@ -296,16 +296,18 @@ export default function FindBibleBrain({
           sx={{ border: '1px solid grey', mr: 1, px: 2 }}
         >
           <FormLabel component="legend">{t.createItems}</FormLabel>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={createPassages}
-                onChange={(_e, checked) => setCreatePassages(checked)}
-                disabled={!timing}
-              />
-            }
-            label={t.resource.replace('{0}', t.passage)}
-          />
+          {!isFlat && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={createPassages}
+                  onChange={(_e, checked) => setCreatePassages(checked)}
+                  disabled={!timing}
+                />
+              }
+              label={t.resource.replace('{0}', t.passage)}
+            />
+          )}
           <FormControlLabel
             control={
               <Checkbox
