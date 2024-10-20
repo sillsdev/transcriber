@@ -12,7 +12,14 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { SyntheticEvent, useContext, useEffect, useRef, useState } from 'react';
+import {
+  SyntheticEvent,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { OptionProps, scopeI } from './FindTabs';
 import { shallowEqual, useSelector } from 'react-redux';
 import { findResourceSelector } from '../../../selector';
@@ -34,6 +41,7 @@ import { useSecResCreate } from '../../../crud/useSecResCreate';
 import remoteIdNum from '../../../crud/remoteId';
 import { useGlobal } from 'reactn';
 import { RecordKeyMap } from '@orbit/records';
+import { usePlanType } from '../../../crud';
 
 interface FindBibleBrainProps {
   onClose?: () => void;
@@ -71,6 +79,8 @@ export default function FindBibleBrain({
   const [queryLang, setQueryLang] = useState(true);
   const [queryBible, setQueryBible] = useState(true);
   const bookN = useBookN();
+  const [plan] = useGlobal('plan');
+  const planType = usePlanType();
   const token = useContext(TokenContext).state.accessToken ?? '';
   const t: IFindResourceStrings = useSelector(
     findResourceSelector,
@@ -89,6 +99,9 @@ export default function FindBibleBrain({
     if (createsections && creationScope === scopeI.passage)
       setCreationScope(scopeI.section);
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const isFlat = useMemo(() => planType(plan)?.flat, [plan]);
+
   useEffect(() => {
     // console.log(languages);
     const langOptions = languages.map((item: VwBiblebrainlanguage) => ({
@@ -283,16 +296,18 @@ export default function FindBibleBrain({
           sx={{ border: '1px solid grey', mr: 1, px: 2 }}
         >
           <FormLabel component="legend">{t.createItems}</FormLabel>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={createPassages}
-                onChange={(_e, checked) => setCreatePassages(checked)}
-                disabled={!timing}
-              />
-            }
-            label={t.resource.replace('{0}', t.passage)}
-          />
+          {!isFlat && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={createPassages}
+                  onChange={(_e, checked) => setCreatePassages(checked)}
+                  disabled={!timing}
+                />
+              }
+              label={t.resource.replace('{0}', t.passage)}
+            />
+          )}
           <FormControlLabel
             control={
               <Checkbox
@@ -317,15 +332,17 @@ export default function FindBibleBrain({
             }
             name="creation-scope-radio-buttons"
           >
-            {scopeOptions.map((o, i) => (
-              <FormControlLabel
-                key={o}
-                value={i as scopeI}
-                control={<Radio />}
-                label={o}
-                disabled={!timing && i < 2}
-              />
-            ))}
+            {scopeOptions
+              .filter((o) => !isFlat || o !== t.passage)
+              .map((o, i) => (
+                <FormControlLabel
+                  key={o}
+                  value={i as scopeI}
+                  control={<Radio />}
+                  label={o}
+                  disabled={!timing && i < 2}
+                />
+              ))}
           </RadioGroup>
         </FormControl>
       </Grid>
