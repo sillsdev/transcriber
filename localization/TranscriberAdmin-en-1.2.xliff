@@ -815,6 +815,13 @@
       			<context context-type="sourcefile">TeamDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="cards.editPersonalCategory">
+            <source>Edit Personal Projects Categories</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TeamDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.editWorkflow">
             <source>Edit Workflow {0}</source>
             <target/>

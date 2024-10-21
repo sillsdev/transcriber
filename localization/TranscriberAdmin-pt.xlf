@@ -697,6 +697,12 @@
             <target>Editar categorias da equipe</target>
          </segment>
       </unit>
+      <unit id="cards.editPersonalCategory">
+         <segment>
+            <source>Edit Personal Projects Categories</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.editWorkflow">
          <segment>
             <source>Edit Workflow {0}</source>
@@ -1663,15 +1669,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="findResource.aquiferLang">
+      <unit id="findResource.aquiferSearchTip">
          <segment>
-            <source>Aquifer Language</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="findResource.bibleBrain">
-         <segment>
-            <source>{0} Resource</source>
+            <source>The keyword to search on. Currently only searches against content names (not inside content). Non-English names are supported. Must be at least 3 characters in length.</source>
             <target/>
          </segment>
       </unit>
@@ -1689,13 +1689,19 @@
       </unit>
       <unit id="findResource.book">
          <segment>
-            <source>book</source>
+            <source>Book</source>
             <target/>
          </segment>
       </unit>
       <unit id="findResource.chapter">
          <segment>
-            <source>chapter</source>
+            <source>Chapter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.clearQuery">
+         <segment>
+            <source>Clear query</source>
             <target/>
          </segment>
       </unit>
@@ -3637,6 +3643,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.launchLink">
+         <segment>
+            <source>Show Link Content</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.linkTask">
          <segment>
             <source>Enter a URI link for a resource.</source>
@@ -3652,6 +3664,12 @@
       <unit id="mediaUpload.markdownTask">
          <segment>
             <source>Enter text to be used as a resource. (Mark down formatting is allowed.)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.markdownTitle">
+         <segment>
+            <source>Enter Text</source>
             <target/>
          </segment>
       </unit>
@@ -4741,6 +4759,12 @@
             <target>Publicar {0} {1}</target>
          </segment>
       </unit>
+      <unit id="planSheet.published">
+         <segment>
+            <source>Publish</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.refErr">
          <segment>
             <source>This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
@@ -4810,6 +4834,12 @@
       <unit id="planSheet.useCtrlV">
          <segment>
             <source>Select a column head and use CTRL-V to append table rows.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.versions">
+         <segment>
+            <source>Versions</source>
             <target/>
          </segment>
       </unit>
@@ -5746,6 +5776,12 @@
       <unit id="shared.member">
          <segment>
             <source>Member</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.mustBeOnline">
+         <segment>
+            <source>You must be online to use this feature</source>
             <target/>
          </segment>
       </unit>
@@ -7084,6 +7120,12 @@
       <unit id="verse.pasteFormat">
          <segment>
             <source>Invalid number of columns on clipboard.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.reference">
+         <segment>
+            <source>Reference</source>
             <target/>
          </segment>
       </unit>

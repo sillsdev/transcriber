@@ -12,7 +12,6 @@ import {
 } from '../../../model';
 import {
   Box,
-  IconButton,
   Paper,
   PaperProps,
   Stack,
@@ -20,7 +19,6 @@ import {
   debounce,
   styled,
 } from '@mui/material';
-import SkipIcon from '@mui/icons-material/NotInterested';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import { PassageDetailPlayer } from '../PassageDetailPlayer';
@@ -183,12 +181,12 @@ export const ProjectResourceConfigure = (props: IProps) => {
   const rowCells = (row: string[], first = false) =>
     row.map(
       (v, i) =>
-      ({
-        value: v,
-        width: widths[i],
-        readOnly: first || readOnlys[i],
-        className: first ? 'cTitle' : cClass[i],
-      } as ICell)
+        ({
+          value: v,
+          width: widths[i],
+          readOnly: first || readOnlys[i],
+          className: first ? 'cTitle' : cClass[i],
+        } as ICell)
     );
 
   const emptyTable = () => [
@@ -248,7 +246,11 @@ export const ProjectResourceConfigure = (props: IProps) => {
           }
           const limitValue = row[ColName.Limits].value;
           let refValue = row[ColName.Ref].value;
-          let topic = `${(media.attributes.topic ? media.attributes.topic + " -" : "")}${(row[ColName.Desc].value ? row[ColName.Desc].value : refValue)} ${suffix}`;
+          let topic = `${
+            media.attributes.topic ? media.attributes.topic + ' -' : ''
+          }${
+            row[ColName.Desc].value ? row[ColName.Desc].value : refValue
+          } ${suffix}`;
           if (limitValue && refValue) {
             await projectResourceSave({
               t,
@@ -317,7 +319,8 @@ export const ProjectResourceConfigure = (props: IProps) => {
       .filter((v, i) => i > 0)
       .forEach((row) => {
         config.push(
-          `${row[ColName.Limits].value}\t${row[ColName.Ref].value}\t${row[ColName.Desc].value
+          `${row[ColName.Limits].value}\t${row[ColName.Ref].value}\t${
+            row[ColName.Desc].value
           }`
         );
       });
@@ -518,18 +521,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     setSuffix(e.target.value);
   };
 
-  const handleSkip = (v: string) => () => {
-    console.log(`skip ${v}`);
-  };
-
-  const handleValueRenderer = (cell: ICell) =>
-    cell.className === 'act' ? (
-      <IconButton onClick={handleSkip(cell.value)}>
-        <SkipIcon fontSize="small" />
-      </IconButton>
-    ) : (
-      cell.value
-    );
+  const handleValueRenderer = (cell: ICell) => cell.value;
 
   return (
     <Box>

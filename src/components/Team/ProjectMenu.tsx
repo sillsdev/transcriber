@@ -33,6 +33,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 interface IProps {
   inProject?: boolean;
   isAdmin: boolean;
+  isPersonal?: boolean;
   project: string | VProject;
   justFilter?: boolean;
   action?: (what: string) => void;
@@ -40,7 +41,15 @@ interface IProps {
 }
 
 export function ProjectMenu(props: IProps) {
-  const { inProject, isAdmin, action, project, justFilter, stopPlayer } = props;
+  const {
+    inProject,
+    isAdmin,
+    isPersonal,
+    action,
+    project,
+    justFilter,
+    stopPlayer,
+  } = props;
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { pathname } = useLocation();
@@ -159,7 +168,9 @@ export function ProjectMenu(props: IProps) {
             <ListItemIcon>
               <EditIcon />
             </ListItemIcon>
-            <ListItemText primary={t.editCategory} />
+            <ListItemText
+              primary={!isPersonal ? t.editCategory : t.editPersonalCategory}
+            />
           </StyledMenuItem>
         )}
         {!justFilter && isAdmin && !inProject && (

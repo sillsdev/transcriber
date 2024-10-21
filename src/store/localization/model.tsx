@@ -145,6 +145,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "description": string;
     "draft": string;
     "editCategory": string;
+    "editPersonalCategory": string;
     "editWorkflow": string;
     "explainPublishing": string;
     "explainTeamDelete": string;
