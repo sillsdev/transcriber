@@ -39,6 +39,7 @@ export interface IStepRow {
   id: string;
   seq: number;
   name: string;
+  pos: number;
   tool: string;
   settings: string;
   prettySettings: string;
@@ -153,9 +154,9 @@ export const StepEditor = ({ process, org }: IProps) => {
     toolChanged(toolId, true);
   };
 
-  const handleNameChange = (name: string, index: number) => {
+  const handleNameChange = (name: string, pos: number, index: number) => {
     focusIndex.current = index;
-    setRows(rows.map((r, i) => (i === index ? { ...r, name } : r)));
+    setRows(rows.map((r, i) => (i === index ? { ...r, name, pos } : r)));
     if (!isChanged(toolId)) toolChanged(toolId, true);
   };
 
@@ -270,6 +271,7 @@ export const StepEditor = ({ process, org }: IProps) => {
       {
         id: '',
         name,
+        pos: 0,
         tool,
         settings: '',
         prettySettings: prettySettings(tool, ''),
@@ -383,6 +385,7 @@ export const StepEditor = ({ process, org }: IProps) => {
             id: s.id,
             seq: s.attributes?.sequencenum,
             name: localizedWorkStep(s.attributes?.name),
+            pos: 0,
             tool: toCamel(tool),
             settings: settings,
             prettySettings: prettySettings(tool, settings),

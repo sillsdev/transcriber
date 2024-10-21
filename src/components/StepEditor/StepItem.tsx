@@ -15,7 +15,7 @@ interface IProps {
   value: IStepRow;
   index: number;
   isFocused: boolean;
-  onNameChange: (name: string, index: number) => void;
+  onNameChange: (name: string, pos: number, index: number) => void;
   onToolChange: (tool: string, index: number) => void;
   onDelete: (index: number) => void;
   onRestore: (index: number) => void;
@@ -35,8 +35,8 @@ export const StepItem = ({
 }: IProps) => {
   const se: IStepEditorStrings = useSelector(stepEditorSelector, shallowEqual);
 
-  const handleNameChange = (name: string) => {
-    onNameChange(name, value.rIdx);
+  const handleNameChange = (name: string, pos: number) => {
+    onNameChange(name, pos, value.rIdx);
   };
   const handleToolChange = (tool: string) => {
     onToolChange(tool, value.rIdx);
@@ -55,6 +55,7 @@ export const StepItem = ({
       <StepSpan>
         <StepName
           name={value.name}
+          pos={value.pos}
           isFocused={isFocused}
           onChange={handleNameChange}
         />
