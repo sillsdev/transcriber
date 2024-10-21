@@ -124,7 +124,7 @@ export function LimitedMediaPlayer(props: IProps) {
 
   useEffect(() => {
     resetPlay();
-   
+
     if (srcMediaId !== blobState?.id) {
       if (ready) setReady(false);
       fetchBlob(srcMediaId);
@@ -175,11 +175,10 @@ export function LimitedMediaPlayer(props: IProps) {
 
   const timeUpdate = (progress: number) => {
     const time = Math.round(progress * 1000) / 1000;
-    if (stop.current !== 0 && time >= stop.current) 
-    {
+    if (stop.current !== 0 && time >= stop.current) {
       ended();
     }
-    const current = Math.ceil(progress-(limits.start ?? 0));
+    const current = Math.ceil(progress - (limits.start ?? 0));
     if (valueTracker.current !== current && playingRef.current) {
       valueTracker.current = current;
       setValue(current);
@@ -221,13 +220,13 @@ export function LimitedMediaPlayer(props: IProps) {
   const handleSkipNext = () => {
     setPosition(limits.end || durationRef.current);
     stop.current = 0;
-    setValue(100);
+    setValue(durationRef.current ?? 100);
   };
 
   const handleSliderChange = (e: Event, value: number | number[]) => {
     const curValue = Array.isArray(value) ? value[0] : value;
     const start = limits.start ?? 0;
-    setPosition(curValue+start);
+    setPosition(curValue + start);
     setValue(curValue);
   };
 
