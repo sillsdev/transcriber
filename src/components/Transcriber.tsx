@@ -1166,8 +1166,9 @@ export function Transcriber(props: IProps) {
                       hasParatextName &&
                       paratextProject &&
                       !noParatext &&
-                      passage?.attributes?.reference !==
-                        PassageTypeEnum.NOTE && (
+                      !passage?.attributes?.reference.startsWith(
+                        PassageTypeEnum.NOTE
+                      ) && (
                         <Grid item>
                           <LightTooltip title={t.pullParatextTip}>
                             <span>
