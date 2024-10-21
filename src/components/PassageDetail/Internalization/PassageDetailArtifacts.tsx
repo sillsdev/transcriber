@@ -171,6 +171,7 @@ export function PassageDetailArtifacts() {
   const { waitForSave } = useContext(UnsavedContext).state;
   const [mediaStart, setMediaStart] = useState<number | undefined>();
   const [mediaEnd, setMediaEnd] = useState<number | undefined>();
+  const [performedBy, setPerformedBy] = useState('');
   const projectResourceSave = useProjectResourceSave();
   const { removeKey } = storedCompareKey(passage, section);
   const { userIsAdmin } = useRole();
@@ -803,6 +804,8 @@ export function PassageDetailArtifacts() {
         uploadType={uploadType}
         ready={() => true}
         onNonAudio={handleNonAudio}
+        performedBy={performedBy}
+        onSpeakerChange={(value) => setPerformedBy(value)}
         metaData={
           <ResourceData
             uploadType={uploadType}
