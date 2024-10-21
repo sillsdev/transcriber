@@ -102,6 +102,8 @@ export default function FindBibleBrain({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const isFlat = useMemo(() => planType(plan)?.flat, [plan]);
 
+  useEffect(() => setCreatePassages(!isFlat), [isFlat]);
+
   useEffect(() => {
     // console.log(languages);
     const langOptions = languages.map((item: VwBiblebrainlanguage) => ({
