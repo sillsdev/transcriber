@@ -383,6 +383,7 @@ export const ProjectCard = (props: IProps) => {
               project={project}
               inProject={false}
               isAdmin={isAdmin}
+              isPersonal={personalProjects.includes(project)}
             />
           </FirstLineDiv>
           <Typography sx={{ mb: 2 }}>{projectDescription(project)}</Typography>
@@ -450,7 +451,11 @@ export const ProjectCard = (props: IProps) => {
         <Visualize selectedPlan={project.id} />
       </BigDialog>
       <BigDialog
-        title={tpb.categoryTitle}
+        title={
+          !personalProjects.includes(project)
+            ? t.editCategory
+            : t.editPersonalCategory
+        }
         isOpen={openCategory}
         onOpen={setOpenCategory}
       >
