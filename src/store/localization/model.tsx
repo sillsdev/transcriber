@@ -1074,6 +1074,7 @@ export interface IProjectDownloadStrings extends Localize.LocalizedStringsMethod
 
 export interface IPublishLevelStrings extends Localize.LocalizedStringsMethods {
     "none": string;
+    "bibleRequired": string;
     "beta": string;
     "public": string;
 };
