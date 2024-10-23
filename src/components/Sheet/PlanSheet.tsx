@@ -49,6 +49,7 @@ import {
 import {
   PublishDestinationEnum,
   remoteIdGuid,
+  useBible,
   useOrganizedBy,
   usePublishDestination,
   useRole,
@@ -331,6 +332,16 @@ export function PlanSheet(props: IProps) {
   const moveUp = true;
   const moveDown = false;
   const moveToNewSection = true;
+  const [org] = useGlobal('organization');
+  const [hasBible, setHasBible] = useState(false);
+  const { getOrgBible } = useBible();
+  useEffect(() => {
+    if (org) {
+      var bible = getOrgBible(org);
+      setHasBible(bible !== undefined);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [org]);
 
   const handleSave = () => {
     startSave();
@@ -1069,6 +1080,8 @@ export function PlanSheet(props: IProps) {
               current={currentRowPublishLevel}
               sharedProject={shared}
               hasPublishing={publishingOn}
+              hasBible={hasBible}
+              
             />
           )}
           <MediaPlayer

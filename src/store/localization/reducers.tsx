@@ -1135,6 +1135,7 @@ const initialState = {
 	"publishLevel": new LocalizedStrings({
 		"en": {
 			"none": "Not Published - not visible outside this project",
+			"bibleRequired": "You must have set up a Bible Id and Name in the Team Settings to publish to Akuo.",
 			"beta": "Beta - visible on the Akuo website when using the beta parameter (not available in the app)",
 			"public": "Public - visible to everyone using Akuo website or app",
 		}

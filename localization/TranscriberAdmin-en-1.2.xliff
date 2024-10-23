@@ -6353,6 +6353,13 @@
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="publishLevel.bibleRequired">
+            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="publishLevel.beta">
             <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>
             <target/>

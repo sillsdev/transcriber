@@ -5446,6 +5446,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="publishLevel.bibleRequired">
+         <segment>
+            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="publishLevel.beta">
          <segment>
             <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>

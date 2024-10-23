@@ -38,6 +38,7 @@ interface IProps {
   current: PublishDestinationEnum[];
   sharedProject: boolean;
   hasPublishing: boolean;
+  hasBible: boolean;
   noDefaults?: boolean;
   noResponse: () => void;
   yesResponse: (destinations: PublishDestinationEnum[]) => void;
@@ -49,6 +50,7 @@ function ConfirmPublishDialog(props: IProps) {
     description,
     sharedProject,
     hasPublishing,
+    hasBible,
     yesResponse,
     noResponse,
     current,
@@ -154,7 +156,7 @@ function ConfirmPublishDialog(props: IProps) {
       );
     }
   };
-  const AkuoRadioGroup = (showNotPublished: boolean) => (
+  const AkuoRadioGroup = (showNotPublished: boolean, hasBible: boolean) => (
     <Box sx={{ p: 2, marginLeft: '30px', border: '2px grey' }}>
       <RadioGroup
         aria-labelledby="Section Publish"
@@ -166,6 +168,7 @@ function ConfirmPublishDialog(props: IProps) {
           value={PublishLevelEnum.Beta}
           control={<Radio />}
           label={l.beta}
+          disabled={!hasBible}
         />
         <FormHelperText sx={{ textAlign: 'center' }}>
           <ShowLink link="https://akuobible.org/?beta=true" />
@@ -174,6 +177,7 @@ function ConfirmPublishDialog(props: IProps) {
           value={PublishLevelEnum.Public}
           control={<Radio />}
           label={l.public}
+          disabled={!hasBible}
         />
         {showNotPublished && (
           <FormControlLabel
@@ -197,6 +201,8 @@ function ConfirmPublishDialog(props: IProps) {
       <DialogTitle id="alertDlg">{title}</DialogTitle>
       <DialogContent>
         <DialogContent id="alertJsx">
+          {hasPublishing && !hasBible && (
+            <Typography variant = "h6" id="bible">{l.bibleRequired}</Typography>)}
           {hasPublishing && (
             <Typography id="alertDesc">{description}</Typography>
           )}
@@ -214,10 +220,10 @@ function ConfirmPublishDialog(props: IProps) {
                   }
                   label="Akuo"
                 />
-                {akuoValue !== PublishLevelEnum.None && AkuoRadioGroup(false)}
+                {akuoValue !== PublishLevelEnum.None && AkuoRadioGroup(false, hasBible)}
               </>
             )}
-            {!sharedProject && AkuoRadioGroup(true)}
+            {!sharedProject && AkuoRadioGroup(true, hasBible)}
             {sharedProject && (
               <>
                 <FormControlLabel

@@ -22,6 +22,7 @@ import {
   findRecord,
   PublishDestinationEnum,
   remoteId,
+  useBible,
   useOrganizedBy,
   usePublishDestination,
 } from '../../crud';
@@ -63,6 +64,7 @@ export const AudioTable = (props: IProps) => {
   const lang = useSelector((state: IState) => state.strings.lang);
   const [offline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
+  const [org] = useGlobal('organization');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setBusy] = useGlobal('remoteBusy');
@@ -73,6 +75,8 @@ export const AudioTable = (props: IProps) => {
   const [showId, setShowId] = useState('');
   const [mediaPlaying, setMediaPlaying] = useState(false);
   const [publishItem, setPublishItem] = useState(-1);
+  const [hasBible, setHasBible] = useState(false);
+  const { getOrgBible } = useBible();
   const columnDefs =
     shared || hasPublishing
       ? [
@@ -231,6 +235,14 @@ export const AudioTable = (props: IProps) => {
       setPlayItem(id);
     }
   };
+  useEffect(() => {
+    if (org) {
+      var bible = getOrgBible(org);
+      setHasBible(bible !== undefined);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [org]);
+  
   useEffect(() => {
     //if I set playing when I set the mediaId, it plays a bit of the old
     if (playItem) setMediaPlaying(true);
@@ -412,6 +424,7 @@ export const AudioTable = (props: IProps) => {
           )}
           sharedProject={shared}
           hasPublishing={hasPublishing}
+          hasBible={hasBible}
           noDefaults={true}
         />
       )}
