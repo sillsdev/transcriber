@@ -5422,6 +5422,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectDownload.amount">
+         <segment>
+            <source>Amount to download</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.confirm">
+         <segment>
+            <source>Download Now</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="projectDownload.download">
          <segment>
             <source>Download?</source>
@@ -5436,7 +5448,79 @@
       </unit>
       <unit id="projectDownload.downloadMb">
          <segment>
-            <source>Download {0}MB of offline audio project files?</source>
+            <source>Download {0}MB of offline audio project files? (It may take {1} to download on a fast Internet connection or {2} on a slow broadband connection.)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filter">
+         <segment>
+            <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filteredFiles">
+         <segment>
+            <source>Filtered Files</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filters">
+         <segment>
+            <source>Filters</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filtered">
+         <segment>
+            <source>Filtered MB</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.max">
+         <segment>
+            <source>Max {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.min">
+         <segment>
+            <source>Min {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.missing">
+         <segment>
+            <source>Missing MB</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.missingFiles">
+         <segment>
+            <source>Missing Files</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.projects">
+         <segment>
+            <source>Projects</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.project">
+         <segment>
+            <source>Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.team">
+         <segment>
+            <source>Team</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.total">
+         <segment>
+            <source>Total MB</source>
             <target/>
          </segment>
       </unit>

@@ -43,8 +43,8 @@ export const useProjectDefaults = () => {
     () => orgRole === RoleNames.Admin && (offlineOnly || !offline),
     [offline, offlineOnly, orgRole]
   );
-  const getLocalDefault = (label: string) => {
-    var str = localStorage.getItem(label + project);
+  const getLocalDefault = (label: string, projId?: string) => {
+    var str = localStorage.getItem(label + (projId ?? project));
     if (str) {
       var ret = tryParseJSON(str);
       if (ret !== false) return ret;
