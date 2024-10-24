@@ -1067,9 +1067,23 @@ export interface IProjButtonsStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IProjectDownloadStrings extends Localize.LocalizedStringsMethods {
+    "amount": string;
+    "confirm": string;
     "download": string;
     "downloadLater": string;
     "downloadMb": string;
+    "filter": string;
+    "filteredFiles": string;
+    "filters": string;
+    "filtered": string;
+    "max": string;
+    "min": string;
+    "missing": string;
+    "missingFiles": string;
+    "projects": string;
+    "project": string;
+    "team": string;
+    "total": string;
 };
 
 export interface IPublishLevelStrings extends Localize.LocalizedStringsMethods {

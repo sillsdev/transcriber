@@ -6325,6 +6325,20 @@
                <context context-type="sourcefile">ProjButtons.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="projectDownload.amount">
+            <source>Amount to download</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.confirm">
+            <source>Download Now</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="projectDownload.download">
             <source>Download?</source>
             <target/>
@@ -6340,7 +6354,91 @@
             </context-group>
          </trans-unit>
          <trans-unit id="projectDownload.downloadMb">
-            <source>Download {0}MB of offline audio project files?</source>
+            <source>Download {0}MB of offline audio project files? (It may take {1} to download on a fast Internet connection or {2} on a slow broadband connection.)</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.filter">
+            <source>Filter</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.filteredFiles">
+            <source>Filtered Files</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.filters">
+            <source>Filters</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.filtered">
+            <source>Filtered MB</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.max">
+            <source>Max {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.min">
+            <source>Min {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.missing">
+            <source>Missing MB</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.missingFiles">
+            <source>Missing Files</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.projects">
+            <source>Projects</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.project">
+            <source>Project</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.team">
+            <source>Team</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.total">
+            <source>Total MB</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>

@@ -209,8 +209,9 @@ export const AppHead = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenCtx.state]);
 
-  const downDone = () => {
+  const downDone = (cancel?: boolean) => {
     setDownloadAlert(false);
+    if (cancel) return;
     if (localStorage.getItem('user-id')) exitApp();
     else setView('Logout');
   };

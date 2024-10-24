@@ -1127,9 +1127,23 @@ const initialState = {
 	}),
 	"projectDownload": new LocalizedStrings({
 		"en": {
+			"amount": "Amount to download",
+			"confirm": "Download Now",
 			"download": "Download?",
 			"downloadLater": "Download Later",
-			"downloadMb": "Download {0}MB of offline audio project files?",
+			"downloadMb": "Download {0}MB of offline audio project files? (It may take {1} to download on a fast Internet connection or {2} on a slow broadband connection.)",
+			"filter": "Filter",
+			"filteredFiles": "Filtered Files",
+			"filters": "Filters",
+			"filtered": "Filtered MB",
+			"max": "Max {0}",
+			"min": "Min {0}",
+			"missing": "Missing MB",
+			"missingFiles": "Missing Files",
+			"projects": "Projects",
+			"project": "Project",
+			"team": "Team",
+			"total": "Total MB",
 		}
 	}),
 	"publishLevel": new LocalizedStrings({
