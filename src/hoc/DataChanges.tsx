@@ -103,6 +103,7 @@ export const processDataChanges = async (pdc: {
           'organization',
           'orgworkflowstep',
           'organizationmembership',
+          'organizationbible'
         ]) {
           await pullRemoteToMemory({ table, memory, remote });
         }
@@ -119,7 +120,7 @@ export const processDataChanges = async (pdc: {
     return false;
   };
 
-  const reloadProjects = async (localId: string) => {
+  const reloadProjects = async (localId: string, reloadAll: boolean) => {
     const grpmem = findRecord(memory, 'groupmembership', localId);
     if (grpmem) {
       if (related(grpmem, 'user') === user) {
@@ -127,8 +128,13 @@ export const processDataChanges = async (pdc: {
           await pullRemoteToMemory({ table, memory, remote });
         }
       }
-    } else
-      await pullRemoteToMemory({ table: 'groupmembership', memory, remote });
+    } else 
+    {
+      if (reloadAll)
+        await pullRemoteToMemory({ table: 'groupmembership', memory, remote });
+      return true;
+    }
+    return false;
   };
   const processTableChanges = async (
     transforms: RecordTransform[],
@@ -197,6 +203,7 @@ export const processDataChanges = async (pdc: {
       await backup.sync((t) => ops);
       await memory.sync((t) => ops);
       var reloadAllOrgs = false;
+      var reloadAllProjects = false;
       for (const o of myOps) {
         if (o.op === 'updateRecord') {
           upRec = o as UpdateRecordOperation;
@@ -271,16 +278,18 @@ export const processDataChanges = async (pdc: {
                 AcceptInvitation(remote, upRec.record as InvitationD);
               break;
             case 'organizationmembership':
-              reloadAllOrgs = reloadAllOrgs || await reloadOrgs(upRec.record.id, false);
+              reloadAllOrgs = await reloadOrgs(upRec.record.id, false) || reloadAllOrgs;
               break;
             case 'groupmembership':
-              reloadProjects(upRec.record.id);
+              reloadAllProjects = await reloadProjects(upRec.record.id, false) || reloadAllProjects;
               break;
           }
         }
       }
       if (reloadAllOrgs)
         reloadOrgs('x', true);
+      if (reloadAllProjects)
+        reloadProjects('x', true);
       if (localOps.length > 0) {
         await backup.sync((t) => localOps);
         await memory.sync((t) => localOps);
@@ -334,7 +343,7 @@ export const processDataChanges = async (pdc: {
               reloadOrgs(localId, true);
               break;
             case 'groupmembership':
-              reloadProjects(localId);
+              reloadProjects(localId, true);
               break;
           }
           operations.push(
