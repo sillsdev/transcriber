@@ -9,6 +9,7 @@ import {
   OrganizationD,
   SectionD,
   PassageD,
+  ISharedStrings,
 } from '../model';
 import ProjectDownload from './ProjectDownload';
 import { dataPath, PathType } from '../utils';
@@ -24,7 +25,7 @@ import {
 } from '../crud';
 import { isElectron } from '../api-variable';
 import { useOrbitData } from '../hoc/useOrbitData';
-import { projectDownloadSelector } from '../selector';
+import { projectDownloadSelector, sharedSelector } from '../selector';
 import { useGlobal } from 'reactn';
 import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
 import {
@@ -38,8 +39,10 @@ import {
   FormControlLabel,
   FormLabel,
   Grid,
+  LinearProgress,
   Radio,
   RadioGroup,
+  Stack,
   Typography,
 } from '@mui/material';
 import { AltButton, formatTime, PriButton } from '../control';
@@ -71,6 +74,7 @@ interface IProps {
 export const ProjectDownloadAlert = (props: IProps) => {
   const { cb } = props;
   const t: IProjectDownloadStrings = useSelector(projectDownloadSelector);
+  const ts: ISharedStrings = useSelector(sharedSelector);
   const offlineProjects = useOrbitData<OfflineProject[]>('offlineproject');
   const organizations = useOrbitData<OrganizationD[]>('organization');
   const projects = useOrbitData<ProjectD[]>('project');
@@ -79,6 +83,10 @@ export const ProjectDownloadAlert = (props: IProps) => {
   const tokenCtx = useContext(TokenContext);
   const [alert, setAlert] = React.useState(false);
   const [downloadSize, setDownloadSize] = React.useState(0);
+  const downloadingRef = React.useRef(false);
+  const [downloading, setDownloadingx] = React.useState(false);
+  const [progress, setProgress] = React.useState(0);
+  const cancelRef = React.useRef(false);
   const [needyIds, setNeedyIds] = React.useState<string[]>([]);
   const [missingIds, setMissingIds] = React.useState<string[]>([]);
   const [filteredIds, setFilteredIds] = React.useState<string[]>([]);
@@ -93,6 +101,11 @@ export const ProjectDownloadAlert = (props: IProps) => {
   const [downAmt, setDownAmt] = React.useState('project');
   const projectPlans = useProjectPlans();
   const fetchUrl = useFetchUrlNow();
+
+  const setDownloading = (val: boolean) => {
+    setDownloadingx(val);
+    downloadingRef.current = val;
+  };
 
   const getFilterState = (proj?: ProjectD): ISTFilterState =>
     proj
@@ -116,6 +129,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
   };
 
   const getNeedyRemoteIds = async () => {
+    if (downloadingRef.current) return [];
     const ops = offlineProjects.filter(
       (op) => op?.attributes?.offlineAvailable
     );
@@ -169,7 +183,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
           needyProject.add(proj);
           missingSize += fileSize;
           if (limit) limit.missing += fileSize;
-          newMissingIds.push(m.media.id);
+          newMissingIds.push(m.media?.keys?.remoteId || m.media.id);
           if (!organizedBy) setOrganizedBy(getOrganizedBy(true, m.plan));
           const artSlug = slugFromId(
             related(m.media, 'artifactType')
@@ -217,24 +231,45 @@ export const ProjectDownloadAlert = (props: IProps) => {
     return Array.from(needyProject);
   };
 
+  const handleClose = (cancel?: boolean) => () => {
+    setAlert(false);
+    setDownloading(false);
+    setProgress(0);
+    cb(cancel);
+  };
+
+  const handleCancel = () => {
+    cancelRef.current = true;
+    handleClose(true)();
+  };
+
   const handleDownload = async () => {
+    setDownloading(true);
     if (downAmt === 'project') {
       setDownloadOpen(true);
     } else if (downAmt === 'filtered') {
+      let n = 0;
       for (let id of filteredIds) {
+        if (cancelRef.current) break;
         await fetchUrl({ id, cancelled: () => false });
+        n++;
+        setProgress((n / filteredIds.length) * 100);
       }
-      handleClose();
+      handleClose()();
     } else if (downAmt === 'missing') {
+      let n = 0;
       for (let id of missingIds) {
+        if (cancelRef.current) break;
         await fetchUrl({ id, cancelled: () => false });
+        n++;
+        setProgress((n / missingIds.length) * 100);
       }
-      handleClose();
+      handleClose()();
     }
   };
 
   React.useEffect(() => {
-    if (isElectron && tokenCtx.state.accessToken) {
+    if (isElectron && tokenCtx.state.accessToken && !downloadingRef.current) {
       getNeedyRemoteIds().then((projRemIds) => {
         if (projRemIds.length > 0) {
           setNeedyIds(projRemIds);
@@ -244,11 +279,6 @@ export const ProjectDownloadAlert = (props: IProps) => {
     } else cb();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [offlineProjects, projects, mediafiles]);
-
-  const handleClose = (cancel?: boolean) => () => {
-    setAlert(false);
-    cb(cancel);
-  };
 
   const mb = (bytes: number) =>
     bytes > 0 ? Math.ceil(bytes / 1024 / 1024 + 0.5) : 0;
@@ -264,6 +294,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
   };
 
   const handleChangeAmt = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (downloadingRef.current) return;
     const value = e.target.value;
     setDownAmt(value);
     const size = needyIds.reduce((p, c) => p + szOfVal(c, value), 0);
@@ -281,6 +312,21 @@ export const ProjectDownloadAlert = (props: IProps) => {
         >
           <Box>
             <DialogContent>
+              {progress > 0 && (
+                <Stack
+                  sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
+                  direction="row"
+                >
+                  <LinearProgress
+                    variant="determinate"
+                    value={progress}
+                    sx={{ flexGrow: 1 }}
+                  />
+                  <AltButton onClick={handleCancel} sx={{ ml: 1, p: 0 }}>
+                    {ts.cancel}
+                  </AltButton>
+                </Stack>
+              )}
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography>{t.filters}</Typography>
@@ -377,14 +423,18 @@ export const ProjectDownloadAlert = (props: IProps) => {
                 </Grid>
                 <Grid item md={6}>
                   {t.downloadMb
-                    .replace('{0}', sizeMb.toString())
+                    .replace('{0}', sizeMb > 0 ? `~${sizeMb}` : '0')
                     .replace(
                       '{1}',
-                      formatTime(sizeMb > 0 ? sizeMb * 0.3 + 12 : 0)
+                      sizeMb > 0
+                        ? `~${formatTime(sizeMb * 0.367 + 20)}`
+                        : '0:00'
                     )
                     .replace(
                       '{2}',
-                      formatTime(sizeMb > 0 ? sizeMb * 0.9 + 12 : 0)
+                      sizeMb > 0
+                        ? `~${formatTime(sizeMb * 0.42 + 65.3)}`
+                        : `0:00`
                     )}
                 </Grid>
               </Grid>
@@ -392,8 +442,12 @@ export const ProjectDownloadAlert = (props: IProps) => {
             <DialogActions
               sx={{ display: 'flex', justifyContent: 'space-between' }}
             >
-              <AltButton onClick={handleClose()}>{t.downloadLater}</AltButton>
-              <PriButton onClick={handleDownload}>{t.confirm}</PriButton>
+              <AltButton onClick={handleClose()} disabled={downloading}>
+                {t.downloadLater}
+              </AltButton>
+              <PriButton onClick={handleDownload} disabled={downloading}>
+                {t.confirm}
+              </PriButton>
             </DialogActions>
           </Box>
         </BigDialog>
