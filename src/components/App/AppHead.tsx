@@ -1,7 +1,12 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation, useParams } from 'react-router-dom';
-import { IState, IMainStrings, IViewModeStrings } from '../../model';
+import {
+  IState,
+  IMainStrings,
+  IViewModeStrings,
+  ISharedStrings,
+} from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
   AppBar,
@@ -36,6 +41,7 @@ import {
   exitApp,
   useMyNavigate,
   useWaitForRemoteQueue,
+  Online,
 } from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
 import {
@@ -54,7 +60,7 @@ import moment from 'moment';
 import { useSnackBar, AlertSeverity } from '../../hoc/SnackBar';
 import PolicyDialog from '../PolicyDialog';
 import JSONAPISource from '@orbit/jsonapi';
-import { mainSelector, viewModeSelector } from '../../selector';
+import { mainSelector, sharedSelector, viewModeSelector } from '../../selector';
 import { useHome } from '../../utils/useHome';
 const ipc = (window as any)?.electron;
 
@@ -120,6 +126,7 @@ export const AppHead = (props: IProps) => {
   const orbitStatus = useSelector((state: IState) => state.orbit.status);
   const orbitErrorMsg = useSelector((state: IState) => state.orbit.message);
   const t: IMainStrings = useSelector(mainSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { pathname } = useLocation();
   const navigate = useMyNavigate();
   const [home] = useGlobal('home');
@@ -131,7 +138,7 @@ export const AppHead = (props: IProps) => {
   const [plan, setPlan] = useGlobal('plan');
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [isOffline] = useGlobal('offline');
-  const [connected] = useGlobal('connected');
+  const [connected, setConnected] = useGlobal('connected');
   const tokenCtx = useContext(TokenContext);
   const ctx = useContext(UnsavedContext);
   const { checkSavedFn, startSave, toolsChanged, anySaving } = ctx.state;
@@ -234,19 +241,35 @@ export const AppHead = (props: IProps) => {
     handleMenu('Logout');
   };
 
+  const handleSetOnline = (cb?: () => void) => {
+    Online(true, (isConnected) => {
+      if (connected !== isConnected) {
+        localStorage.setItem(LocalKey.connected, isConnected.toString());
+        setConnected(isConnected);
+      }
+      if (!isConnected) {
+        showMessage(ts.mustBeOnline);
+        return;
+      }
+      cb && cb();
+    });
+  };
+
   const handleCloud = () => {
-    const planRec = getPlan(plan);
-    if (!planRec) return;
-    const offlineProject = offlineProjectRead(vProject(planRec));
-    if (offlineProject?.attributes?.offlineAvailable) {
-      cloudAction();
-    } else {
-      LoadData(project, () => {
-        offlineAvailToggle(project).then(() => {
-          cloudAction();
+    handleSetOnline(() => {
+      const planRec = getPlan(plan);
+      if (!planRec) return;
+      const offlineProject = offlineProjectRead(vProject(planRec));
+      if (offlineProject?.attributes?.offlineAvailable) {
+        cloudAction();
+      } else {
+        LoadData(project, () => {
+          offlineAvailToggle(project).then(() => {
+            cloudAction();
+          });
         });
-      });
-    }
+      }
+    });
   };
 
   useEffect(() => {
@@ -432,22 +455,25 @@ export const AppHead = (props: IProps) => {
             </>
           )}
           {'\u00A0'}
-          {localStorage.getItem(LocalKey.userId) && (
-            <Button
-              onClick={handleCloud}
-              startIcon={
-                isOffline || orbitStatus !== undefined || !connected ? (
-                  <CloudOffIcon color="action" />
-                ) : (
-                  <CloudOnIcon color="secondary" />
-                )
-              }
-            >
-              {isOffline || orbitStatus !== undefined || !connected
-                ? 'Go Online'
-                : 'Go Offline'}
-            </Button>
-          )}
+          {localStorage.getItem(LocalKey.userId) &&
+            (orbitStatus !== undefined || !connected ? (
+              <IconButton onClick={() => handleSetOnline()}>
+                <CloudOffIcon color="action" />
+              </IconButton>
+            ) : (
+              <Button
+                onClick={handleCloud}
+                startIcon={
+                  isOffline ? (
+                    <CloudOffIcon color="action" />
+                  ) : (
+                    <CloudOnIcon color="secondary" />
+                  )
+                }
+              >
+                {isOffline ? 'Go Online' : 'Go Offline'}
+              </Button>
+            ))}
           {latestVersion !== '' &&
             isElectron &&
             latestVersion.split(' ')[0] !== version && (
