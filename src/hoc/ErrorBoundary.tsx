@@ -2,7 +2,7 @@ import React from 'react';
 import { IMainStrings, IState } from '../model';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
-import { logError, Severity } from '../utils';
+import { LocalKey, logError, Severity } from '../utils';
 import { withBucket } from './withBucket';
 import { ModalMessage } from '../components/ErrorPage';
 
@@ -61,7 +61,7 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
     const { t, orbitStatus, orbitMessage, orbitDetails, errorReporter } =
       this.props;
 
-    if (this.state.errCount && localStorage.getItem('isLoggedIn')) {
+    if (this.state.errCount && localStorage.getItem(LocalKey.loggedIn)) {
       return (
         <ModalMessage
           message={this.state?.error || 'Error count > 0'}

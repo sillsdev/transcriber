@@ -7,15 +7,16 @@ import AppHead from '../components/App/AppHead';
 import { TeamProvider } from '../context/TeamContext';
 import { TeamProjects } from '../components/Team';
 import StickyRedirect from '../components/StickyRedirect';
-import { remoteId } from '../crud';
+import { findRecord, related, remoteId } from '../crud';
 import TeamActions from '../components/Team/TeamActions';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { RecordKeyMap } from '@orbit/records';
+import { PlanD } from '../model';
 
 export const TeamScreen = () => {
   const { pathname } = useLocation();
   const [isOffline] = useGlobal('offline');
-  const [project] = useGlobal('project');
+  const [project, setProject] = useGlobal('project');
   const [projType] = useGlobal('projType');
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
@@ -37,9 +38,24 @@ export const TeamScreen = () => {
 
   useEffect(() => {
     if (loaded.current) {
-      if (project !== '' && plan && !home) {
-        const remProjId = remoteId('plan', plan, memory.keyMap as RecordKeyMap);
-        const loc = `/plan/${remProjId || plan}/0`;
+      let selectedPlan = localStorage.getItem('selected-plan');
+      let selectedProject = project;
+      if (selectedPlan) {
+        if (!selectedProject) {
+          const planRec = findRecord(memory, 'plan', selectedPlan) as PlanD;
+          selectedProject = related(planRec, 'project') as string;
+          setProject(selectedProject);
+        }
+      } else {
+        selectedPlan = plan;
+      }
+      if (selectedProject !== '' && selectedPlan && !home) {
+        const remProjId = remoteId(
+          'plan',
+          selectedPlan,
+          memory.keyMap as RecordKeyMap
+        );
+        const loc = `/plan/${remProjId || selectedPlan}/0`;
         if (loc !== localStorage.getItem(localUserKey(LocalKey.url))) {
           setView(loc);
         } else {

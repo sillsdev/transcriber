@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { isElectron } from '../api-variable';
 import { TokenContext } from '../context/TokenProvider';
+import { LocalKey } from './localUserKey';
 
 export const useLogoutResets = () => {
   const [, setUser] = useGlobal('user');
@@ -11,8 +12,8 @@ export const useLogoutResets = () => {
   const ctx = useContext(TokenContext).state;
 
   return async () => {
-    if (ctx.accessToken && localStorage.getItem('isLoggedIn')) {
-      localStorage.removeItem('isLoggedIn');
+    if (ctx.accessToken && localStorage.getItem(LocalKey.loggedIn)) {
+      localStorage.removeItem(LocalKey.loggedIn);
       if (isElectron) {
         setIsOffline(isElectron);
         if (coordinator?.sourceNames.includes('remote')) {

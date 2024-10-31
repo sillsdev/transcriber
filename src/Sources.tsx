@@ -155,9 +155,9 @@ export const Sources = async (
   const memory = coordinator.getSource('memory') as Memory;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const tokData = tokenCtx.state.profile || { sub: '' };
-  const userToken = localStorage.getItem('auth-id');
+  const userToken = localStorage.getItem(LocalKey.authId);
   if (tokData.sub !== '') {
-    localStorage.setItem('auth-id', tokData.sub || '');
+    localStorage.setItem(LocalKey.authId, tokData.sub || '');
   }
 
   const bucket: Bucket = new IndexedDBBucket({
@@ -395,15 +395,15 @@ export const Sources = async (
     const user = uRecs[0];
     const locale = user?.attributes?.locale || 'en';
     setLang(locale);
-    localStorage.setItem('user-id', user.id);
-    localStorage.setItem('online-user-id', user.id);
+    localStorage.setItem(LocalKey.userId, user.id);
+    localStorage.setItem(LocalKey.onlineUserId, user.id);
     if (
       globalStore.errorReporter &&
       localStorage.getItem(LocalKey.connected) !== 'false'
     )
       Bugsnag.setUser(user.keys?.remoteId ?? user.id);
   }
-  var user = localStorage.getItem('user-id') as string;
+  var user = localStorage.getItem(LocalKey.userId) as string;
   setUser(user);
   if (requestedSchema > 4) {
     await updateBackTranslationType(

@@ -1070,11 +1070,11 @@ export interface IProjectDownloadStrings extends Localize.LocalizedStringsMethod
     "amount": string;
     "confirm": string;
     "download": string;
+    "downloadDescription": string;
     "downloadLater": string;
     "downloadMb": string;
     "filter": string;
     "filteredFiles": string;
-    "filters": string;
     "filtered": string;
     "max": string;
     "min": string;
@@ -1082,6 +1082,7 @@ export interface IProjectDownloadStrings extends Localize.LocalizedStringsMethod
     "missingFiles": string;
     "projects": string;
     "project": string;
+    "projectDetails": string;
     "team": string;
     "total": string;
 };

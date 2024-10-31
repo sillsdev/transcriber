@@ -9,7 +9,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { TokenContext } from '../context/TokenProvider';
 import { isElectron } from '../api-variable';
-import { localeDefault, useMyNavigate } from '../utils';
+import { localeDefault, LocalKey, useMyNavigate } from '../utils';
 import { useGlobal } from 'reactn';
 import { GrowingSpacer } from '../control';
 import { useLogoutResets } from '../utils/useLogoutResets';
@@ -40,9 +40,11 @@ export function Logout() {
     } else {
       logout({ returnTo: window.origin } as RedirectLoginOptions);
     }
-    if (wasOfflineOnly) localStorage.setItem('offlineAdmin', 'true');
+    if (wasOfflineOnly) localStorage.setItem(LocalKey.offlineAdmin, 'true');
     setView(
-      localStorage.getItem('offlineAdmin') === 'true' ? 'offline' : 'online'
+      localStorage.getItem(LocalKey.offlineAdmin) === 'true'
+        ? 'offline'
+        : 'online'
     );
   };
 
