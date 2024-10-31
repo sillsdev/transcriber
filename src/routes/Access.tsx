@@ -28,6 +28,7 @@ import {
   waitForIt,
   useHome,
   useMyNavigate,
+  LocalKey,
 } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup, ListEnum } from '../crud';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -86,14 +87,14 @@ const CurrentUser = ({ curUser, action, goOnline, show }: ICurrentUser) => {
 
 export const goOnline = (email?: string) => {
   const lastTime = localStorage.getItem('electron-lastTime');
-  localStorage.removeItem('auth-id');
-  localStorage.setItem('isLoggedIn', 'true');
+  localStorage.removeItem(LocalKey.authId);
+  localStorage.setItem(LocalKey.loggedIn, 'true');
   const hasUsed = lastTime !== null;
   ipc?.login(hasUsed, email);
   ipc?.closeApp();
 };
 export const doLogout = async () => {
-  localStorage.removeItem('online-user-id');
+  localStorage.removeItem(LocalKey.onlineUserId);
   forceLogin();
   await ipc?.logout();
 };
@@ -130,7 +131,7 @@ export function Access() {
   const [view, setView] = useState('');
   const [curUser, setCurUser] = useState<UserD>();
   const [whichUsers, setWhichUsers] = useState(
-    pathname.substring('/access/'.length)
+    localStorage.getItem('mode') ?? pathname.substring('/access/'.length)
   );
   const [selectedUser, setSelectedUser] = useState('');
   const offlineProjRead = useOfflnProjRead();
@@ -153,7 +154,7 @@ export function Access() {
       if (selected[0]?.keys?.remoteId === undefined) setOfflineOnly(true);
       setOffline(true);
       logout();
-      localStorage.setItem('user-id', selected[0].id);
+      localStorage.setItem(LocalKey.userId, selected[0].id);
       setSelectedUser(uId);
     }
   };
@@ -265,15 +266,15 @@ export function Access() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('user-id');
+    localStorage.removeItem(LocalKey.userId);
     doLogout();
     setView('Logout');
   };
 
   const handleBack = () => {
     //localStorage.removeItem('offlineAdmin');
-    localStorage.setItem('offlineAdmin', 'choose');
-    localStorage.removeItem('isLoggedIn');
+    localStorage.setItem(LocalKey.offlineAdmin, 'choose');
+    localStorage.removeItem(LocalKey.loggedIn);
     setWhichUsers('');
   };
 
@@ -297,7 +298,7 @@ export function Access() {
       }
     }
     if (user && expiresAt !== -1) {
-      if (localStorage.getItem('isLoggedIn') !== 'true') {
+      if (localStorage.getItem(LocalKey.loggedIn) !== 'true') {
         handleSelect(user); //set by Quick Transcribe
       } else {
         waitForIt(
@@ -322,7 +323,7 @@ export function Access() {
         if (result) {
           // Even tho async, this executes first b/c users takes time to load
           ipc?.getToken().then((accessToken: any) => {
-            const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            const loggedIn = localStorage.getItem(LocalKey.loggedIn) === 'true';
             if (loggedIn) {
               if (offline) setOffline(false);
               tokenCtx.state.setAuthSession(result, accessToken);
@@ -333,9 +334,9 @@ export function Access() {
       });
     }
     const userId = localStorage.getItem(
-      localStorage.getItem('offlineAdmin') !== 'true'
-        ? 'online-user-id'
-        : 'user-id'
+      localStorage.getItem(LocalKey.offlineAdmin) !== 'true'
+        ? LocalKey.onlineUserId
+        : LocalKey.userId
     );
 
     if (isElectron) {
@@ -348,15 +349,26 @@ export function Access() {
           setLanguage(thisUser[0]?.attributes?.locale || 'en');
         }
       } else if (!userId && whichUsers.startsWith('online-cloud')) {
-        localStorage.setItem('online-user-id', 'unknown');
+        localStorage.setItem(LocalKey.onlineUserId, 'unknown');
         handleGoOnline();
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [users]);
 
+  useEffect(() => {
+    const mode = localStorage.getItem('mode');
+    if (mode === 'online-local') {
+      handleSelect(curUser?.id || '');
+    } else if (mode === 'online-cloud') {
+      localStorage.removeItem('mode');
+      handleGoOnline();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [curUser]);
+
   if (tokenCtx.state.accessToken && !tokenCtx.state.email_verified) {
-    if (localStorage.getItem('isLoggedIn') === 'true')
+    if (localStorage.getItem(LocalKey.loggedIn) === 'true')
       navigate('/emailunverified');
     else doLogout();
   } else if (

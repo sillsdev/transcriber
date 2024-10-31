@@ -3967,7 +3967,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="main.switchUser">
-            <source>Switch Mode or User</source>
+            <source>Switch User</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TokenProvider.tsx</context>
@@ -6346,6 +6346,13 @@
                <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="projectDownload.downloadDescription">
+            <source>If the estimated time for download is too long for you, use the 'x' in the upper corner to close this dialog and add a minimum and or maximum section to the filters. The filter icon is shaped like ▼ (a downward pointing triangle) and is located on the third line in the upper right of the project plan sheet. After setting the section filter, choose the filtered option on this dialog to see how much time will be needed for the filtered sections.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="projectDownload.downloadLater">
             <source>Download Later</source>
             <target/>
@@ -6369,13 +6376,6 @@
          </trans-unit>
          <trans-unit id="projectDownload.filteredFiles">
             <source>Filtered Files</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="projectDownload.filters">
-            <source>Filters</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
@@ -6425,6 +6425,13 @@
          </trans-unit>
          <trans-unit id="projectDownload.project">
             <source>Project</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.projectDetails">
+            <source>Project Details</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>

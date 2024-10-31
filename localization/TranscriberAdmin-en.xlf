@@ -3402,7 +3402,7 @@
       </unit>
       <unit id="main.switchUser">
          <segment>
-            <source>Switch Mode or User</source>
+            <source>Switch User</source>
             <target/>
          </segment>
       </unit>
@@ -5440,6 +5440,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectDownload.downloadDescription">
+         <segment>
+            <source>If the estimated time for download is too long for you, use the 'x' in the upper corner to close this dialog and add a minimum and or maximum section to the filters. The filter icon is shaped like ▼ (a downward pointing triangle) and is located on the third line in the upper right of the project plan sheet. After setting the section filter, choose the filtered option on this dialog to see how much time will be needed for the filtered sections.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="projectDownload.downloadLater">
          <segment>
             <source>Download Later</source>
@@ -5461,12 +5467,6 @@
       <unit id="projectDownload.filteredFiles">
          <segment>
             <source>Filtered Files</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectDownload.filters">
-         <segment>
-            <source>Filters</source>
             <target/>
          </segment>
       </unit>
@@ -5509,6 +5509,12 @@
       <unit id="projectDownload.project">
          <segment>
             <source>Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.projectDetails">
+         <segment>
+            <source>Project Details</source>
             <target/>
          </segment>
       </unit>

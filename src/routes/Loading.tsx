@@ -176,7 +176,6 @@ export function Loading() {
     }
   };
   useEffect(() => {
-    // console.clear();
     if (mounted.current > 0) return;
     mounted.current += 1;
     if (!offline && !authenticated()) return;

@@ -309,6 +309,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
           isOpen={alert}
           onOpen={handleClose(true)}
           bp={BigDialogBp.sm}
+          description={<Typography>{t.downloadDescription}</Typography>}
         >
           <Box>
             <DialogContent>
@@ -329,7 +330,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
               )}
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>{t.filters}</Typography>
+                  <Typography>{t.projectDetails}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                   <DataGrid

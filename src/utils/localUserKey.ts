@@ -27,6 +27,8 @@ export enum LocalKey {
   staticTables = 'static-tables', // last static table version
   lastProj = 'lastProj', // most recent project used
   migration = 'migration', // last migration version
+  plan = 'selected-plan', // last plan selected
+  mode = 'mode', // last mode (online-cloud or online-local)
 }
 
 export const localUserKey = (id: LocalKey) => {
