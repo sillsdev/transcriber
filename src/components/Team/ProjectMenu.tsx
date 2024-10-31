@@ -52,6 +52,7 @@ export function ProjectMenu(props: IProps) {
   } = props;
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const [isDeveloper] = useGlobal('developer');
   const { pathname } = useLocation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const offlineProjectRead = useOfflnProjRead();
@@ -131,7 +132,7 @@ export function ProjectMenu(props: IProps) {
             <ListItemText primary={t.copyNew} />
           </StyledMenuItem>
         )}
-        {isElectron && !isOffline && !justFilter && (
+        {isElectron && !isOffline && !justFilter && isDeveloper && (
           <StyledMenuItem id="projMenuOl" onClick={handle('offlineAvail')}>
             <ListItemIcon>
               {offlineProject?.attributes?.offlineAvailable ? (
