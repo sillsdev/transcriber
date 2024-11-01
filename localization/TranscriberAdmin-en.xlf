@@ -3220,6 +3220,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.goOffline">
+         <segment>
+            <source>Go Offline</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.goOnline">
+         <segment>
+            <source>Go Online</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.googleSamples">
          <segment>
             <source>Sample Google spreadsheets</source>

@@ -156,7 +156,10 @@ export const ProjectDownloadAlert = (props: IProps) => {
       if (related(m.media, 'artifactType') || related(m.media, 'passage')) {
         var local = { localname: '' };
         var path = await dataPath(
-          m.media.attributes.audioUrl,
+          m.media.attributes?.audioUrl ||
+            m.media.attributes?.s3file ||
+            m.media.attributes?.originalFile ||
+            '',
           PathType.MEDIA,
           local
         );
@@ -170,7 +173,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
         const arr = getSectionArr(proj);
         if (!limits.has(proj)) {
           limits.set(proj, {
-            minSec: getSectNum(filterState.minSection || 1, arr),
+            minSec: getSectNum(filterState.minSection || 0, arr),
             maxSec: getSectNum(filterState.maxSection || -1, arr),
             filtered: 0,
             missing: 0,

@@ -6,6 +6,7 @@ import {
   IMainStrings,
   IViewModeStrings,
   ISharedStrings,
+  OfflineProject,
 } from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
@@ -62,6 +63,7 @@ import PolicyDialog from '../PolicyDialog';
 import JSONAPISource from '@orbit/jsonapi';
 import { mainSelector, sharedSelector, viewModeSelector } from '../../selector';
 import { useHome } from '../../utils/useHome';
+import { useOrbitData } from '../../hoc/useOrbitData';
 const ipc = (window as any)?.electron;
 
 const twoIcon = { minWidth: `calc(${48 * 2}px)` } as React.CSSProperties;
@@ -129,6 +131,8 @@ export const AppHead = (props: IProps) => {
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { pathname } = useLocation();
   const navigate = useMyNavigate();
+  const offlineProjects = useOrbitData<OfflineProject[]>('offlineproject');
+  const [hasOfflineProjects, setHasOfflineProjects] = useState(false);
   const [home] = useGlobal('home');
   const [orgRole] = useGlobal('orgRole');
   const [errorReporter] = useGlobal('errorReporter');
@@ -255,10 +259,19 @@ export const AppHead = (props: IProps) => {
     });
   };
 
+  useEffect(() => {
+    const value = offlineProjects.some((p) => p?.attributes?.offlineAvailable);
+    if (value !== hasOfflineProjects) setHasOfflineProjects(value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offlineProjects]);
+
   const handleCloud = () => {
     handleSetOnline(() => {
       const planRec = getPlan(plan);
-      if (!planRec) return;
+      if (!planRec) {
+        if (hasOfflineProjects) cloudAction();
+        return;
+      }
       const offlineProject = offlineProjectRead(vProject(planRec));
       if (offlineProject?.attributes?.offlineAvailable) {
         cloudAction();
@@ -322,6 +335,9 @@ export const AppHead = (props: IProps) => {
         setView('Access');
       }
     }
+    setHasOfflineProjects(
+      offlineProjects.some((p) => p?.attributes?.offlineAvailable)
+    );
     return () => {
       window.removeEventListener('beforeunload', handleUnload);
     };
@@ -456,6 +472,7 @@ export const AppHead = (props: IProps) => {
           )}
           {'\u00A0'}
           {localStorage.getItem(LocalKey.userId) &&
+            (plan || hasOfflineProjects) &&
             (orbitStatus !== undefined || !connected ? (
               <IconButton onClick={() => handleSetOnline()}>
                 <CloudOffIcon color="action" />
@@ -471,7 +488,7 @@ export const AppHead = (props: IProps) => {
                   )
                 }
               >
-                {isOffline ? 'Go Online' : 'Go Offline'}
+                {isOffline ? t.goOnline : t.goOffline}
               </Button>
             ))}
           {latestVersion !== '' &&

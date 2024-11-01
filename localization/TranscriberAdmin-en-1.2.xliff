@@ -3756,6 +3756,20 @@
                <context context-type="sourcefile">HelpMenu.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="main.goOffline">
+            <source>Go Offline</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="main.goOnline">
+            <source>Go Online</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="main.googleSamples">
             <source>Sample Google spreadsheets</source>
             <target/>
