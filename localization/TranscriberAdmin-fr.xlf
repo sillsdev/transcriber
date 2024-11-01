@@ -1675,6 +1675,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.resource">
+         <segment>
+            <source>{0} Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="findResource.bibleProjectLang">
          <segment>
             <source>Book Overviews</source>
@@ -1702,6 +1708,12 @@
       <unit id="findResource.clearQuery">
          <segment>
             <source>Clear query</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.clipboard">
+         <segment>
+            <source>clipboard</source>
             <target/>
          </segment>
       </unit>
@@ -2959,6 +2971,12 @@
             <target>Exemple de tableur hiérarchique général</target>
          </segment>
       </unit>
+      <unit id="main.goOffline">
+         <segment>
+            <source>Go Offline</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.googleSamples">
          <segment>
             <source>Sample Google spreadsheets</source>
@@ -3141,8 +3159,8 @@
       </unit>
       <unit id="main.switchUser">
          <segment>
-            <source>Switch Mode or User</source>
-            <target>Changement de mode ou d'utilisateur</target>
+            <source>Switch User</source>
+            <target/>
          </segment>
       </unit>
       <unit id="main.tasks">
@@ -5161,10 +5179,22 @@
             <target>Rapports de {0}</target>
          </segment>
       </unit>
+      <unit id="projectDownload.amount">
+         <segment>
+            <source>Amount to download</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="projectDownload.download">
          <segment>
             <source>Download?</source>
             <target>Télécharger ?</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.downloadDescription">
+         <segment>
+            <source>If the estimated time for download is too long for you, use the 'x' in the upper corner to close this dialog and add a minimum and or maximum section to the filters. The filter icon is shaped like ▼ (a downward pointing triangle) and is located on the third line in the upper right of the project plan sheet. After setting the section filter, choose the filtered option on this dialog to see how much time will be needed for the filtered sections.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="projectDownload.downloadLater">
@@ -5175,13 +5205,25 @@
       </unit>
       <unit id="projectDownload.downloadMb">
          <segment>
-            <source>Download {0}MB of offline audio project files?</source>
-            <target>Télécharger {0}MB de fichiers de projets audio hors ligne ?</target>
+            <source>Download {0}MB of offline audio project files? (It may take {1} to download on a fast Internet connection or {2} on a slow broadband connection.)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filter">
+         <segment>
+            <source>Filter</source>
+            <target/>
          </segment>
       </unit>
       <unit id="publishLevel.none">
          <segment>
             <source>Not Published - not visible outside this project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="publishLevel.bibleRequired">
+         <segment>
+            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo.</source>
             <target/>
          </segment>
       </unit>
@@ -7126,6 +7168,12 @@
       <unit id="verse.reference">
          <segment>
             <source>Reference</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.saveVerseMarkup">
+         <segment>
+            <source>Save Verse Markup</source>
             <target/>
          </segment>
       </unit>
