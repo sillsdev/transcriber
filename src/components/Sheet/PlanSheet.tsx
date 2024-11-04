@@ -340,7 +340,7 @@ export function PlanSheet(props: IProps) {
       var bible = getOrgBible(org);
       setHasBible(bible !== undefined);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
 
   const handleSave = () => {
@@ -785,7 +785,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const handlePublishToggle: MouseEventHandler<HTMLButtonElement> = () => {
-    if (!canPublish) {
+    if (!canPublish && !publishingOn) {
       showMessage(t.paratextRequired);
       return;
     }
@@ -1000,7 +1000,11 @@ export function PlanSheet(props: IProps) {
               !anyRecording && (
                 <LightTooltip
                   sx={{ backgroundColor: 'transparent' }}
-                  title={!publishingOn || hidePublishing ? t.showPublishing : t.hidePublishing}
+                  title={
+                    !publishingOn || hidePublishing
+                      ? t.showPublishing
+                      : t.hidePublishing
+                  }
                 >
                   <IconButton onClick={handlePublishToggle}>
                     {!publishingOn || hidePublishing ? (
@@ -1081,7 +1085,6 @@ export function PlanSheet(props: IProps) {
               sharedProject={shared}
               hasPublishing={publishingOn}
               hasBible={hasBible}
-              
             />
           )}
           <MediaPlayer
