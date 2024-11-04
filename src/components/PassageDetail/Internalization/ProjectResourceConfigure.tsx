@@ -360,7 +360,9 @@ export const ProjectResourceConfigure = (props: IProps) => {
       })
       .filter(
         (r) =>
-          r.end > 0 && (duration === 0 || r.end < duration) && r.start < r.end
+          r.end > 0 &&
+          (duration === 0 || r.end < duration + 1) &&
+          r.start < r.end
       );
     if (media?.attributes.duration) {
       regs = regs.filter((r) => r.start <= media.attributes.duration);
