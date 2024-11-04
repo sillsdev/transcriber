@@ -14,13 +14,16 @@ import { IFindResourceStrings } from '../../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { findResourceSelector } from '../../../selector';
 import FindAquifer from './FindAquifer';
+import { usePassageType } from '../../../crud/usePassageType';
+import { related } from '../../../crud';
+import { PassageTypeEnum } from '../../../model/passageType';
 
 export enum scopeI {
   passage,
   section,
   chapter,
   book,
-  movement
+  movement,
 }
 export namespace scopeI {
   export function asString(scope: scopeI): string {
@@ -80,6 +83,8 @@ interface FindTabsProps {
 export default function FindTabs({ onClose }: FindTabsProps) {
   const [value, setValue] = useState(0);
   const { passage } = usePassageDetailContext();
+  const { getPassageTypeFromId } = usePassageType();
+  const [start, setStart] = useState(0);
   const [resources, setResources] = useState<BibleResource[]>([]);
   const [links, setLinks] = useState<Tpl>({});
   const [link, setLink] = useState<string>();
@@ -94,27 +99,33 @@ export default function FindTabs({ onClose }: FindTabsProps) {
     });
   }, []);
 
+  useEffect(() => {
+    const pt = getPassageTypeFromId(related(passage, 'passagetype'));
+    setStart(pt === PassageTypeEnum.PASSAGE ? 0 : 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [passage]);
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
   const handleLink =
     (kind: string) =>
-      (_event: SyntheticEvent, newValue: OptionProps | null) => {
-        const book = passage?.attributes?.book;
-        let link = newValue?.value ?? '';
-        if (hrefTpls[kind]) {
-          const chapter = parseInt(passage?.attributes?.reference ?? '1');
-          link = newValue?.value
-            ? hrefTpls[kind]
+    (_event: SyntheticEvent, newValue: OptionProps | null) => {
+      const book = passage?.attributes?.book;
+      let link = newValue?.value ?? '';
+      if (hrefTpls[kind]) {
+        const chapter = parseInt(passage?.attributes?.reference ?? '1');
+        link = newValue?.value
+          ? hrefTpls[kind]
               ?.replace('{0}', newValue?.value ?? '')
               ?.replace('{1}', book ?? 'MAT')
               ?.replace('{2}', chapter.toString()) ?? ''
-            : '';
-          setLinks({ ...links, [kind]: link });
-        }
-        setLink(link);
-      };
+          : '';
+        setLinks({ ...links, [kind]: link });
+      }
+      setLink(link);
+    };
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -124,25 +135,27 @@ export default function FindTabs({ onClose }: FindTabsProps) {
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          <Tab label={t.findBibleBrain} {...a11yProps(0)} />
-          <Tab label={'Find: Aquifer'} {...a11yProps(1)} />
-          <Tab label={t.findOther} {...a11yProps(2)} />
+          {start === 0 && <Tab label={t.findBibleBrain} {...a11yProps(0)} />}
+          <Tab label={'Find: Aquifer'} {...a11yProps(1 - start)} />
+          <Tab label={t.findOther} {...a11yProps(2 - start)} />
           <Tab
             label={<Badge badgeContent="AI">{t.create}</Badge>}
-            {...a11yProps(3)}
+            {...a11yProps(3 - start)}
           />
         </Tabs>
       </Box>
-      <CustomTabPanel value={value} index={0}>
-        <FindBibleBrain handleLink={handleLink} onClose={onClose} />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
+      {start === 0 && (
+        <CustomTabPanel value={value} index={0}>
+          <FindBibleBrain handleLink={handleLink} onClose={onClose} />
+        </CustomTabPanel>
+      )}
+      <CustomTabPanel value={value} index={1 - start}>
         <FindAquifer onClose={onClose} />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
+      <CustomTabPanel value={value} index={2 - start}>
         <FindOther handleLink={handleLink} resources={resources} />
       </CustomTabPanel>
-      <CustomTabPanel value={value} index={3}>
+      <CustomTabPanel value={value} index={3 - start}>
         <CreateAiRes resources={resources} />
       </CustomTabPanel>
       <LaunchLink url={link} reset={() => setLink('')} />
