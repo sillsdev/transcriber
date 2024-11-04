@@ -471,7 +471,8 @@ export const AppHead = (props: IProps) => {
             </>
           )}
           {'\u00A0'}
-          {localStorage.getItem(LocalKey.userId) &&
+          {isElectron &&
+            localStorage.getItem(LocalKey.userId) &&
             (plan || hasOfflineProjects) &&
             (orbitStatus !== undefined || !connected ? (
               <IconButton onClick={() => handleSetOnline()}>
