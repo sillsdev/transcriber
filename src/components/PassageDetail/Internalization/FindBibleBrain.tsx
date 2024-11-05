@@ -1,5 +1,6 @@
 import {
   Autocomplete,
+  Box,
   Checkbox,
   Divider,
   FormControl,
@@ -42,7 +43,8 @@ import remoteIdNum from '../../../crud/remoteId';
 import { useGlobal } from 'reactn';
 import { RecordKeyMap } from '@orbit/records';
 import { usePlanType } from '../../../crud';
-
+import { HttpStatusCode } from 'axios';
+import LinearProgress from '@mui/material/LinearProgress';
 interface FindBibleBrainProps {
   onClose?: () => void;
   handleLink: (
@@ -81,6 +83,8 @@ export default function FindBibleBrain({
   const bookN = useBookN();
   const [plan] = useGlobal('plan');
   const planType = usePlanType();
+  const [progress, setProgress] = useState(0);
+  const [count, setCount] = useState(0);
   const token = useContext(TokenContext).state.accessToken ?? '';
   const t: IFindResourceStrings = useSelector(
     findResourceSelector,
@@ -182,10 +186,7 @@ export default function FindBibleBrain({
       setCreationScope(scopeI.chapter);
     }
   };
-  const handleAdd = () => {
-    if (addingRef.current) return;
-    setAdding(true);
-
+  const AddResources = async () => {
     var postdata: {
       PassageId: number;
       SectionId: number;
@@ -219,8 +220,38 @@ export default function FindBibleBrain({
       Passages: createPassages,
       Scope: scopeI.asString(creationScope),
     };
-    axiosPost('biblebrain', postdata, token).then((response) => {
-      //could process response as ChangeList but this is easier
+    var response = await axiosPost('biblebrain', postdata, token);
+    if (response.status === HttpStatusCode.Ok)
+    {
+      const getCount = async (resolve: (value?: unknown) => void, intervalId: NodeJS.Timeout) => {
+        var cntresp = await axiosGet('biblebrain/count', undefined, token);
+          if (cntresp.data === 0) {
+            console.log('done');
+            setProgress(0);
+            clearInterval(intervalId);
+            resolve(0);
+          }
+          else {
+            var p = ((total-cntresp.data)/total)*100;
+            setProgress(p);
+            setCount(cntresp.data);
+          }
+      }
+      var total = response.data;
+      if (total > 0)
+        await new Promise((resolve) => {
+          const intervalId:any = setInterval(() => getCount(resolve, intervalId), 2000); // Call the function every 2 second
+          });
+      return total;   
+    }
+  }
+
+  const handleAdd = () => {
+    if (addingRef.current) return;
+    setAdding(true);
+
+    AddResources().then(() => {
+      console.log('force data changes')
       forceDataChanges().then(() => {
         waitForRemoteQueue('bible brain resource added').then(() => {
           setAdding(false);
@@ -349,6 +380,10 @@ export default function FindBibleBrain({
         </FormControl>
       </Grid>
       <Typography variant="body1">{copyright}</Typography>
+      {progress > 0 && (<Box sx={{ width: '100%' }}>
+        <LinearProgress variant="determinate" value={progress} />
+        <Typography>{count}</Typography>
+      </Box>)}
       <Grid container direction={'row'} spacing={2} sx={{ my: 1 }}>
         <Divider sx={{ width: '100%' }} />
         <ActionRow>
