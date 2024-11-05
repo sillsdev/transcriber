@@ -213,9 +213,10 @@ function ConfirmPublishDialog(props: IProps) {
                   sx={{ m: 1 }}
                   control={
                     <Checkbox
-                      checked={akuoValue !== PublishLevelEnum.None}
+                      checked={hasBible && akuoValue !== PublishLevelEnum.None}
                       onChange={handleAkuoChange}
                       value="Akuo"
+                      disabled={!hasBible}
                     />
                   }
                   label="Akuo"
