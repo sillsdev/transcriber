@@ -378,7 +378,8 @@ export const doDataChanges = async (
   user: string,
   setLanguage: typeof actions.setLanguage,
   setDataChangeCount: (value: number) => void,
-  fetchUrl?: (props: IFetchNowProps) => Promise<string | undefined>
+  fetchUrl?: (props: IFetchNowProps) => Promise<string | undefined>,
+  notPastTime?: string
 ) => {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource; //to check busy
@@ -388,6 +389,7 @@ export const doDataChanges = async (
   if (!remote || !remote.activated) return;
   let startNext = 0;
   let lastTime = localStorage.getItem(userLastTimeKey) || currentDateTime(); // should not happen
+  if (notPastTime && Date.parse(lastTime) > Date.parse(notPastTime)) lastTime = notPastTime;
   let nextTime = currentDateTime();
 
   const updateSnapshotDate = async (

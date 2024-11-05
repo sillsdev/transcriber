@@ -26,6 +26,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { findResourceSelector } from '../../../selector';
 import { IFindResourceStrings } from '../../../model';
 import {
+  currentDateTime,
   useBookN,
   useDataChanges,
   useWaitForRemoteQueue,
@@ -71,7 +72,7 @@ export default function FindBibleBrain({
   const [copyright, setCopyright] = useState('');
   const [createPassages, setCreatePassages] = useState<boolean>(true);
   const [createSections, setCreateSectionsx] = useState<boolean>(true);
-  const [creationScope, setCreationScope] = useState<scopeI>(scopeI.section);
+  const [creationScope, setCreationScopex] = useState<scopeI>(scopeI.section);
   const { passage, section } = usePassageDetailContext();
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
@@ -98,6 +99,11 @@ export default function FindBibleBrain({
     setAddingx(adding);
     addingRef.current = adding;
   };
+  const setCreationScope = (scope: scopeI) => {
+    if (scope === scopeI.passage)
+      setCreateSections(false);
+    setCreationScopex(scope);
+  }
   const setCreateSections = (createsections: boolean) => {
     setCreateSectionsx(createsections);
     if (createsections && creationScope === scopeI.passage)
@@ -163,8 +169,6 @@ export default function FindBibleBrain({
   }, [bibleOpt, Nt, timing]);
 
   useEffect(() => {
-    var ind = bookN(passage?.attributes.book || 'MAT');
-    console.log('index', ind);
     const bookCd = bookN(passage?.attributes?.book || 'MAT');
     const isNt = bookCd > 39 && bookCd < 67;
     const isOt = bookCd < 40;
@@ -226,7 +230,6 @@ export default function FindBibleBrain({
       const getCount = async (resolve: (value?: unknown) => void, intervalId: NodeJS.Timeout) => {
         var cntresp = await axiosGet('biblebrain/count', undefined, token);
           if (cntresp.data === 0) {
-            console.log('done');
             setProgress(0);
             clearInterval(intervalId);
             resolve(0);
@@ -249,10 +252,9 @@ export default function FindBibleBrain({
   const handleAdd = () => {
     if (addingRef.current) return;
     setAdding(true);
-
+    let startTime = currentDateTime();
     AddResources().then(() => {
-      console.log('force data changes')
-      forceDataChanges().then(() => {
+      forceDataChanges(startTime).then(() => {
         waitForRemoteQueue('bible brain resource added').then(() => {
           setAdding(false);
           onClose && onClose();

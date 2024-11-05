@@ -19,7 +19,7 @@ export const useDataChanges = () => {
   const setLanguage = (lang: string) => dispatch(actions.setLanguage(lang));
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const fetchUrl = useFetchUrlNow();
-  return async () => {
+  return async (notPastTime?:string) => {
     await doDataChanges(
       accessToken || '',
       coordinator,
@@ -30,7 +30,8 @@ export const useDataChanges = () => {
       user,
       setLanguage,
       setDataChangeCount,
-      isElectron ? fetchUrl : undefined
+      isElectron ? fetchUrl : undefined,
+      notPastTime
     );
   };
 };
