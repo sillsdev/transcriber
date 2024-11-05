@@ -413,7 +413,7 @@ export function PassageDetailItem(props: IProps) {
           {currentVersion !== 0 ? (
             <Wrapper>
               <SplitPane
-                defaultSize={width - discussionSize.width}
+                defaultSize={width - discussionSize.width + 24}
                 style={{ position: 'static' }}
                 split="vertical"
                 onChange={handleSplitSize}
