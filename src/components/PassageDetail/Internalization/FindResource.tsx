@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { BibleBrainItem } from '../../../model/bible-brain-item';
 import { BibleProjectLang } from '../../../model/bible-project-lang';
 import { BibleResource } from '../../../model/bible-resource';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
@@ -120,7 +119,6 @@ export const FindResource = () => {
   const { passage } = usePassageDetailContext();
   const passages = useOrbitData<PassageD[]>('passage');
   const sections = useOrbitData<SectionD[]>('section');
-  const [options, setOptions] = useState<OptionProps[]>([]);
   const [bibleProjectLangs, setBibleProjectLangs] = useState<OptionProps[]>([]);
   const [links, setLinks] = useState<Tpl>({});
   const [resources, setResources] = useState<BibleResource[]>([]);
@@ -326,14 +324,6 @@ export const FindResource = () => {
   const optVal = (item: string) => ({ value: item, label: camel2Title(item) });
 
   useEffect(() => {
-    import('../../../assets/biblebrain_2024-08-22.js').then((module) => {
-      setOptions(
-        module.default.map((item: BibleBrainItem) => ({
-          label: `${item.lang_name} (${item.iso}) - [${item.bible_id}] ${item.bible_name}`,
-          value: item.bible_id,
-        }))
-      );
-    });
     import('../../../assets/bibleprojectlang_2024-08-23.js').then((module) => {
       setBibleProjectLangs(
         module.default.map((item: BibleProjectLang) => ({
@@ -428,23 +418,6 @@ export const FindResource = () => {
                   onLink={setLink}
                 />
               ))}
-            <Grid item>
-              <Stack direction={'row'} sx={{ m: 1 }}>
-                <Autocomplete
-                  disablePortal
-                  id="bible-brain-resource"
-                  options={options}
-                  onChange={handleChange('bibleBrain')}
-                  sx={{ width: 300 }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label={t.resource.replace('{0}', 'Bible Brain')}
-                    />
-                  )}
-                />
-              </Stack>
-            </Grid>
             <Grid item>
               <Stack direction={'row'} sx={{ m: 1 }}>
                 <Autocomplete
