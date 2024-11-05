@@ -142,6 +142,7 @@ export const AppHead = (props: IProps) => {
   const [plan, setPlan] = useGlobal('plan');
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [isOffline] = useGlobal('offline');
+  const [isOfflineOnly] = useGlobal('offlineOnly');
   const [connected, setConnected] = useGlobal('connected');
   const tokenCtx = useContext(TokenContext);
   const ctx = useContext(UnsavedContext);
@@ -472,6 +473,7 @@ export const AppHead = (props: IProps) => {
           )}
           {'\u00A0'}
           {isElectron &&
+            !isOfflineOnly &&
             localStorage.getItem(LocalKey.userId) &&
             (plan || hasOfflineProjects) &&
             (orbitStatus !== undefined || !connected ? (
