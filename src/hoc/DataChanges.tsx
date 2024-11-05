@@ -103,7 +103,7 @@ export const processDataChanges = async (pdc: {
           'organization',
           'orgworkflowstep',
           'organizationmembership',
-          'organizationbible'
+          'organizationbible',
         ]) {
           await pullRemoteToMemory({ table, memory, remote });
         }
@@ -111,10 +111,10 @@ export const processDataChanges = async (pdc: {
     } else {
       if (reloadAll)
         await pullRemoteToMemory({
-        table: 'organizationmembership',
-        memory,
-        remote,
-      });
+          table: 'organizationmembership',
+          memory,
+          remote,
+        });
       return true;
     }
     return false;
@@ -128,8 +128,7 @@ export const processDataChanges = async (pdc: {
           await pullRemoteToMemory({ table, memory, remote });
         }
       }
-    } else 
-    {
+    } else {
       if (reloadAll)
         await pullRemoteToMemory({ table: 'groupmembership', memory, remote });
       return true;
@@ -278,18 +277,19 @@ export const processDataChanges = async (pdc: {
                 AcceptInvitation(remote, upRec.record as InvitationD);
               break;
             case 'organizationmembership':
-              reloadAllOrgs = await reloadOrgs(upRec.record.id, false) || reloadAllOrgs;
+              reloadAllOrgs =
+                (await reloadOrgs(upRec.record.id, false)) || reloadAllOrgs;
               break;
             case 'groupmembership':
-              reloadAllProjects = await reloadProjects(upRec.record.id, false) || reloadAllProjects;
+              reloadAllProjects =
+                (await reloadProjects(upRec.record.id, false)) ||
+                reloadAllProjects;
               break;
           }
         }
       }
-      if (reloadAllOrgs)
-        reloadOrgs('x', true);
-      if (reloadAllProjects)
-        reloadProjects('x', true);
+      if (reloadAllOrgs) reloadOrgs('x', true);
+      if (reloadAllProjects) reloadProjects('x', true);
       if (localOps.length > 0) {
         await backup.sync((t) => localOps);
         await memory.sync((t) => localOps);
@@ -389,7 +389,8 @@ export const doDataChanges = async (
   if (!remote || !remote.activated) return;
   let startNext = 0;
   let lastTime = localStorage.getItem(userLastTimeKey) || currentDateTime(); // should not happen
-  if (notPastTime && Date.parse(lastTime) > Date.parse(notPastTime)) lastTime = notPastTime;
+  if (notPastTime && Date.parse(lastTime) > Date.parse(notPastTime))
+    lastTime = notPastTime;
   let nextTime = currentDateTime();
 
   const updateSnapshotDate = async (

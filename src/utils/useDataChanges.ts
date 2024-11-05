@@ -19,7 +19,7 @@ export const useDataChanges = () => {
   const setLanguage = (lang: string) => dispatch(actions.setLanguage(lang));
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
   const fetchUrl = useFetchUrlNow();
-  return async (notPastTime?:string) => {
+  return async (notPastTime?: string) => {
     await doDataChanges(
       accessToken || '',
       coordinator,

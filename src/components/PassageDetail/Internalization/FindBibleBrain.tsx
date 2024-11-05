@@ -100,10 +100,9 @@ export default function FindBibleBrain({
     addingRef.current = adding;
   };
   const setCreationScope = (scope: scopeI) => {
-    if (scope === scopeI.passage)
-      setCreateSections(false);
+    if (scope === scopeI.passage) setCreateSections(false);
     setCreationScopex(scope);
-  }
+  };
   const setCreateSections = (createsections: boolean) => {
     setCreateSectionsx(createsections);
     if (createsections && creationScope === scopeI.passage)
@@ -225,29 +224,33 @@ export default function FindBibleBrain({
       Scope: scopeI.asString(creationScope),
     };
     var response = await axiosPost('biblebrain', postdata, token);
-    if (response.status === HttpStatusCode.Ok)
-    {
-      const getCount = async (resolve: (value?: unknown) => void, intervalId: NodeJS.Timeout) => {
+    if (response.status === HttpStatusCode.Ok) {
+      const getCount = async (
+        resolve: (value?: unknown) => void,
+        intervalId: NodeJS.Timeout
+      ) => {
         var cntresp = await axiosGet('biblebrain/count', undefined, token);
-          if (cntresp.data === 0) {
-            setProgress(0);
-            clearInterval(intervalId);
-            resolve(0);
-          }
-          else {
-            var p = ((total-cntresp.data)/total)*100;
-            setProgress(p);
-            setCount(cntresp.data);
-          }
-      }
+        if (cntresp.data === 0) {
+          setProgress(0);
+          clearInterval(intervalId);
+          resolve(0);
+        } else {
+          var p = ((total - cntresp.data) / total) * 100;
+          setProgress(p);
+          setCount(cntresp.data);
+        }
+      };
       var total = response.data;
       if (total > 0)
         await new Promise((resolve) => {
-          const intervalId:any = setInterval(() => getCount(resolve, intervalId), 2000); // Call the function every 2 second
-          });
-      return total;   
+          const intervalId: any = setInterval(
+            () => getCount(resolve, intervalId),
+            2000
+          ); // Call the function every 2 second
+        });
+      return total;
     }
-  }
+  };
 
   const handleAdd = () => {
     if (addingRef.current) return;
@@ -382,10 +385,12 @@ export default function FindBibleBrain({
         </FormControl>
       </Grid>
       <Typography variant="body1">{copyright}</Typography>
-      {progress > 0 && (<Box sx={{ width: '100%' }}>
-        <LinearProgress variant="determinate" value={progress} />
-        <Typography>{count}</Typography>
-      </Box>)}
+      {progress > 0 && (
+        <Box sx={{ width: '100%' }}>
+          <LinearProgress variant="determinate" value={progress} />
+          <Typography>{count}</Typography>
+        </Box>
+      )}
       <Grid container direction={'row'} spacing={2} sx={{ my: 1 }}>
         <Divider sx={{ width: '100%' }} />
         <ActionRow>
