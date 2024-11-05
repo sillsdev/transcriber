@@ -531,8 +531,8 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
-            <target/>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <target>Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur BROWSE. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CREATE.</target>
          </segment>
       </unit>
       <unit id="audacityManager.title">
@@ -700,7 +700,7 @@
       <unit id="cards.editPersonalCategory">
          <segment>
             <source>Edit Personal Projects Categories</source>
-            <target/>
+            <target>Modifier les catégories de projets personnels</target>
          </segment>
       </unit>
       <unit id="cards.editWorkflow">
@@ -1503,7 +1503,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
             <target/>
          </segment>
       </unit>
@@ -1545,8 +1545,8 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
-            <target/>
+            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
+            <target>Ce fichier a été exporté avec une version plus récente du programme. Vous devriez télécharger la dernière version avant de l'importer ! Si vous continuez, certaines données risquent de ne pas être importées correctement.</target>
          </segment>
       </unit>
       <unit id="electronImport.project">
@@ -1593,7 +1593,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified!  Carry on!</source>
+            <source>I'm verified! Carry on!</source>
             <target/>
          </segment>
       </unit>
@@ -1660,61 +1660,61 @@
       <unit id="findResource.add">
          <segment>
             <source>Add</source>
-            <target/>
+            <target>Ajouter</target>
          </segment>
       </unit>
       <unit id="findResource.aiDesc">
          <segment>
             <source>Copy the query contents and paste it into one or more of the AI chat tools:</source>
-            <target/>
+            <target>Copier le contenu de la requête et le coller dans un ou plusieurs outils de chat AI :</target>
          </segment>
       </unit>
       <unit id="findResource.aquiferSearchTip">
          <segment>
             <source>The keyword to search on. Currently only searches against content names (not inside content). Non-English names are supported. Must be at least 3 characters in length.</source>
-            <target/>
+            <target>Le mot-clé sur lequel la recherche doit porter. Actuellement, la recherche ne porte que sur les noms de contenu (et non sur le contenu lui-même). Les noms non anglais sont pris en charge. Doit comporter au moins 3 caractères.</target>
          </segment>
       </unit>
       <unit id="findResource.resource">
          <segment>
             <source>{0} Resource</source>
-            <target/>
+            <target>{0} Ressource</target>
          </segment>
       </unit>
       <unit id="findResource.bibleProjectLang">
          <segment>
             <source>Book Overviews</source>
-            <target/>
+            <target>Aperçus de livres</target>
          </segment>
       </unit>
       <unit id="findResource.biblicalBook">
          <segment>
             <source>the biblical book of {0}</source>
-            <target/>
+            <target>le livre biblique de {0}</target>
          </segment>
       </unit>
       <unit id="findResource.book">
          <segment>
             <source>Book</source>
-            <target/>
+            <target>Livre</target>
          </segment>
       </unit>
       <unit id="findResource.chapter">
          <segment>
             <source>Chapter</source>
-            <target/>
+            <target>Chapitre</target>
          </segment>
       </unit>
       <unit id="findResource.clearQuery">
          <segment>
             <source>Clear query</source>
-            <target/>
+            <target>Effacer la requête</target>
          </segment>
       </unit>
       <unit id="findResource.clipboard">
          <segment>
             <source>clipboard</source>
-            <target/>
+            <target>presse-papiers</target>
          </segment>
       </unit>
       <unit id="grid.all">
@@ -2037,8 +2037,8 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
-            <target/>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
+            <target>Si cette erreur s'est produite lors de l'importation de modifications hors ligne, veuillez fermer l'application immédiatement et la rouvrir. Si l'erreur persiste, contactez l'assistance. Si vous continuez à utiliser l'application, vous perdrez les modifications hors ligne.</target>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -2103,8 +2103,8 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
-            <target/>
+            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
+            <target>ITF ne contient pas le projet audio actuel. Il contient le projet audio {0}.</target>
          </segment>
       </unit>
       <unit id="import.showHideFilter">
@@ -2974,7 +2974,7 @@
       <unit id="main.goOffline">
          <segment>
             <source>Go Offline</source>
-            <target/>
+            <target>Passer hors ligne</target>
          </segment>
       </unit>
       <unit id="main.googleSamples">
@@ -3015,8 +3015,8 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
-            <target/>
+            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
+            <target>Invitation non acceptée. Vous devez vous connecter avec l'email auquel l'invitation a été envoyée.</target>
          </segment>
       </unit>
       <unit id="main.loadingTable">
@@ -3160,7 +3160,7 @@
       <unit id="main.switchUser">
          <segment>
             <source>Switch User</source>
-            <target/>
+            <target>Changer d'utilisateur</target>
          </segment>
       </unit>
       <unit id="main.tasks">
@@ -3466,7 +3466,7 @@
       <unit id="mediaTab.publish">
          <segment>
             <source>Publish Media</source>
-            <target/>
+            <target>Publier un média</target>
          </segment>
       </unit>
       <unit id="mediaTab.published">
@@ -3664,31 +3664,31 @@
       <unit id="mediaUpload.launchLink">
          <segment>
             <source>Show Link Content</source>
-            <target/>
+            <target>Afficher le contenu du lien</target>
          </segment>
       </unit>
       <unit id="mediaUpload.linkTask">
          <segment>
             <source>Enter a URI link for a resource.</source>
-            <target/>
+            <target>Entrez un lien URI pour une ressource.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.linkTitle">
          <segment>
             <source>Link Resource</source>
-            <target/>
+            <target>Lien de la ressource</target>
          </segment>
       </unit>
       <unit id="mediaUpload.markdownTask">
          <segment>
             <source>Enter text to be used as a resource. (Mark down formatting is allowed.)</source>
-            <target/>
+            <target>Saisissez le texte à utiliser comme ressource. (La mise en forme par annotation est autorisée).</target>
          </segment>
       </unit>
       <unit id="mediaUpload.markdownTitle">
          <segment>
             <source>Enter Text</source>
-            <target/>
+            <target>Saisir le texte</target>
          </segment>
       </unit>
       <unit id="mediaUpload.projectResourceTask">
@@ -3970,19 +3970,19 @@
       <unit id="passageDetailArtifacts.find">
          <segment>
             <source>Find</source>
-            <target/>
+            <target>Rechercher</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.findResource">
          <segment>
             <source>Find Resource for {0}</source>
-            <target/>
+            <target>Trouver une ressource pour {0}</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.findResourceDesc">
          <segment>
             <source>These controls can be used to find or create (using artificial intelligence -- AI) resources for internalizing the passage, section, chapter, or book.</source>
-            <target/>
+            <target>Ces commandes peuvent être utilisées pour trouver ou créer (à l'aide de l'intelligence artificielle - IA) des ressources pour l'internalisation du passage, de la section, du chapitre ou du livre.</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.generalResources">
@@ -4012,7 +4012,7 @@
       <unit id="passageDetailArtifacts.linkResource">
          <segment>
             <source>Link (URI)</source>
-            <target/>
+            <target>Lien (URI)</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.movementResource">
@@ -4084,7 +4084,7 @@
       <unit id="passageDetailArtifacts.recordResource">
          <segment>
             <source>Record</source>
-            <target/>
+            <target>Enregistrer</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.reference">
@@ -4126,7 +4126,7 @@
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
             <source>Link Shared</source>
-            <target/>
+            <target>Lien partagé</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.source">
@@ -4168,7 +4168,7 @@
       <unit id="passageDetailArtifacts.textResource">
          <segment>
             <source>Text Resource</source>
-            <target/>
+            <target>Texte Ressource</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.title">
@@ -4192,7 +4192,7 @@
       <unit id="passageDetailArtifacts.tip1b">
          <segment>
             <source>Link to a shared resource.</source>
-            <target/>
+            <target>Lien vers une ressource partagée.</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.tip2b">
@@ -4210,7 +4210,7 @@
       <unit id="passageDetailArtifacts.upload">
          <segment>
             <source>Uploads</source>
-            <target/>
+            <target>Téléchargements</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.uploadProject">
@@ -4485,8 +4485,8 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target/>
+            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <target>Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur de l'équipe ? Les membres de ce groupe pourront effectuer n'importe quelle étape, même si elle est assignée à un groupe dont ils ne font pas partie.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4497,8 +4497,8 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
-            <target/>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
+            <target>Nous ne sommes pas sûrs d'avoir besoin de cette autorisation non plus, car on ne sait pas très bien ce que les consultants font de particulier dans ce logiciel. Les commentaires du consultant indépendant seront visibles par tous les membres de l'équipe.</target>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4527,14 +4527,14 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-            <target/>
+            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <target>Les commentaires du mentor ne seront visibles que par les CIT. Les mentors peuvent approuver les commentaires des CIT pour les rendre visibles au reste de l'équipe.</target>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
-            <target/>
+            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
+            <target>Groupe de pairs général sans autorisations spéciales. Permet d'attribuer des discussions à des groupes d'équipe.</target>
          </segment>
       </unit>
       <unit id="planActions.addNote">
@@ -4672,7 +4672,7 @@
       <unit id="planSheet.confirmPublishSection">
          <segment>
             <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes will be marked as not published.</source>
-            <target/>
+            <target>Si vous choisissez de publier, le {0} et la dernière version de tous les passages et notes de ce {0} seront marqués comme publiés. Si vous avez déjà publié et que vous choisissez maintenant « Non publié », les passages et les notes seront marqués comme non publiés.</target>
          </segment>
       </unit>
       <unit id="planSheet.filtered">
@@ -4780,7 +4780,7 @@
       <unit id="planSheet.published">
          <segment>
             <source>Publish</source>
-            <target/>
+            <target>Publier</target>
          </segment>
       </unit>
       <unit id="planSheet.refErr">
@@ -4858,7 +4858,7 @@
       <unit id="planSheet.versions">
          <segment>
             <source>Versions</source>
-            <target/>
+            <target>Versions</target>
          </segment>
       </unit>
       <unit id="planTabs.assignments">
@@ -5103,8 +5103,8 @@
       </unit>
       <unit id="profile.syncFrequency">
          <segment>
-            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
-            <target/>
+            <source>Frequency of data sync in minutes. 0 to turn off sync.</source>
+            <target>Fréquence de synchronisation des données en minutes. 0 pour désactiver la synchronisation.</target>
          </segment>
       </unit>
       <unit id="profile.timezone">
@@ -5182,7 +5182,7 @@
       <unit id="projectDownload.amount">
          <segment>
             <source>Amount to download</source>
-            <target/>
+            <target>Quantité à télécharger</target>
          </segment>
       </unit>
       <unit id="projectDownload.download">
@@ -5194,7 +5194,7 @@
       <unit id="projectDownload.downloadDescription">
          <segment>
             <source>If the estimated time for download is too long for you, use the 'x' in the upper corner to close this dialog and add a minimum and or maximum section to the filters. The filter icon is shaped like ▼ (a downward pointing triangle) and is located on the third line in the upper right of the project plan sheet. After setting the section filter, choose the filtered option on this dialog to see how much time will be needed for the filtered sections.</source>
-            <target/>
+            <target>Si le temps estimé pour le téléchargement est trop long pour vous, utilisez le « x » dans le coin supérieur pour fermer cette boîte de dialogue et ajouter une section minimale ou maximale aux filtres. L'icône du filtre a la forme d'un ▼ (un triangle pointant vers le bas) et se trouve sur la troisième ligne en haut à droite de la feuille de plan du projet. Après avoir défini le filtre de section, choisissez l'option filtrée dans cette boîte de dialogue pour voir combien de temps sera nécessaire pour les sections filtrées.</target>
          </segment>
       </unit>
       <unit id="projectDownload.downloadLater">
@@ -5206,25 +5206,25 @@
       <unit id="projectDownload.downloadMb">
          <segment>
             <source>Download {0}MB of offline audio project files? (It may take {1} to download on a fast Internet connection or {2} on a slow broadband connection.)</source>
-            <target/>
+            <target>Télécharger {0}Mo de fichiers de projet audio hors ligne (le téléchargement peut prendre {1} sur une connexion Internet rapide ou {2} sur une connexion à large bande lente).</target>
          </segment>
       </unit>
       <unit id="projectDownload.filter">
          <segment>
             <source>Filter</source>
-            <target/>
+            <target>Filtre</target>
          </segment>
       </unit>
       <unit id="publishLevel.none">
          <segment>
             <source>Not Published - not visible outside this project</source>
-            <target/>
+            <target>Non publié - non visible en dehors de ce projet</target>
          </segment>
       </unit>
       <unit id="publishLevel.bibleRequired">
          <segment>
             <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo.</source>
-            <target/>
+            <target>Vous devez avoir configuré un nom et une identité bibliques dans les paramètres de l'équipe pour publier sur Akuo.</target>
          </segment>
       </unit>
       <unit id="publishLevel.beta">
@@ -5242,7 +5242,7 @@
       <unit id="publishTo.Internalization">
          <segment>
             <source>Internalization Resources for other projects</source>
-            <target/>
+            <target>Ressources d'internalisation pour d'autres projets</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -5745,14 +5745,14 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
+            <source>Your paratext login has expired and can't be automatically renewed. Please log out and login again.</source>
+            <target>Votre login paratext a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
+            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
+            <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
          </segment>
       </unit>
       <unit id="shared.fileNotFound">
@@ -5824,7 +5824,7 @@
       <unit id="shared.mustBeOnline">
          <segment>
             <source>You must be online to use this feature</source>
-            <target/>
+            <target>Vous devez être en ligne pour utiliser cette fonction</target>
          </segment>
       </unit>
       <unit id="shared.no">
@@ -6645,8 +6645,8 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
-            <target/>
+            <source>Transcription updated by {0}. Keep their changes? {1}</source>
+            <target>Transcription mise à jour par {0}. Conserver les modifications ? {1}</target>
          </segment>
       </unit>
       <unit id="transcribeReject.cancel">
@@ -6861,8 +6861,8 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported.  The export file is too large.</source>
-            <target/>
+            <source>The audio project cannot be exported. The export file is too large.</source>
+            <target>Le projet audio ne peut pas être exporté. Le fichier d'exportation est trop volumineux.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportType">
@@ -6903,8 +6903,8 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
-            <target/>
+            <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
+            <target>Vous avez localement de nouvelles modifications qui n'ont pas été incluses dans l'exportation ptf. Veuillez également exporter un fichier itf pour capturer toutes les modifications.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
@@ -7114,67 +7114,67 @@
       <unit id="verse.clipboard">
          <segment>
             <source>clipboard</source>
-            <target/>
+            <target>presse-papiers</target>
          </segment>
       </unit>
       <unit id="verse.copyToClipboard">
          <segment>
             <source>Copy to clipboard</source>
-            <target/>
+            <target>Copier dans le presse-papiers</target>
          </segment>
       </unit>
       <unit id="verse.issues">
          <segment>
             <source>The verse markup has issues. Do you want to continue?</source>
-            <target/>
+            <target>Le balisage du verset présente des problèmes. Voulez-vous continuer ?</target>
          </segment>
       </unit>
       <unit id="verse.markVerses">
          <segment>
             <source>Mark Verses</source>
-            <target/>
+            <target>Marquer les versets</target>
          </segment>
       </unit>
       <unit id="verse.missingReferences">
          <segment>
             <source>Warning: Verses in passage not included: ({0})</source>
-            <target/>
+            <target>Avertissement : Les versets du passage ne sont pas inclus : ({0})</target>
          </segment>
       </unit>
       <unit id="verse.noReferences">
          <segment>
             <source>Warning: Some audio segments will not be included in verses</source>
-            <target/>
+            <target>Avertissement : Certains segments audio ne seront pas inclus dans les versets.</target>
          </segment>
       </unit>
       <unit id="verse.noSegments">
          <segment>
             <source>ERROR: Some verses have no segment: ({0})</source>
-            <target/>
+            <target>ERREUR : Certains versets n'ont pas de segment : ({0})</target>
          </segment>
       </unit>
       <unit id="verse.outsideReferences">
          <segment>
             <source>ERROR: Some verses are outside passage: ({0})</source>
-            <target/>
+            <target>ERREUR : Certains versets sont en dehors du passage : ({0})</target>
          </segment>
       </unit>
       <unit id="verse.pasteFormat">
          <segment>
             <source>Invalid number of columns on clipboard.</source>
-            <target/>
+            <target>Le nombre de colonnes dans le presse-papiers n'est pas valide.</target>
          </segment>
       </unit>
       <unit id="verse.reference">
          <segment>
             <source>Reference</source>
-            <target/>
+            <target>Référence</target>
          </segment>
       </unit>
       <unit id="verse.saveVerseMarkup">
          <segment>
             <source>Save Verse Markup</source>
-            <target/>
+            <target>Sauvegarder le balisage des versets</target>
          </segment>
       </unit>
       <unit id="viewMode.audioProject">
@@ -7545,8 +7545,8 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-            <target/>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <target>Configurer le projet audio, en divisant le travail en passages qui peuvent être assignés à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
          </segment>
       </unit>
       <unit id="welcome.team">
@@ -7563,8 +7563,8 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
-            <target/>
+            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <target>Un projet audio a été créé en ligne. Les transcripteurs et les éditeurs peuvent travailler en ligne, hors ligne en sélectionnant l'option Disponible hors ligne dans le menu de la carte de projet audio, ou hors ligne en l'important.</target>
          </segment>
       </unit>
       <unit id="welcome.title">

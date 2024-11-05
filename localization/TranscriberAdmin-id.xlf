@@ -531,7 +531,7 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
             <target/>
          </segment>
       </unit>
@@ -700,7 +700,7 @@
       <unit id="cards.editPersonalCategory">
          <segment>
             <source>Edit Personal Projects Categories</source>
-            <target/>
+            <target>Edit Kategori Proyek Pribadi</target>
          </segment>
       </unit>
       <unit id="cards.editWorkflow">
@@ -1503,7 +1503,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
             <target/>
          </segment>
       </unit>
@@ -1545,7 +1545,7 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
+            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
             <target/>
          </segment>
       </unit>
@@ -1593,7 +1593,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified!  Carry on!</source>
+            <source>I'm verified! Carry on!</source>
             <target/>
          </segment>
       </unit>
@@ -1678,7 +1678,7 @@
       <unit id="findResource.resource">
          <segment>
             <source>{0} Resource</source>
-            <target/>
+            <target>{0} Sumber daya</target>
          </segment>
       </unit>
       <unit id="findResource.bibleProjectLang">
@@ -1696,19 +1696,19 @@
       <unit id="findResource.book">
          <segment>
             <source>Book</source>
-            <target/>
+            <target>Buku</target>
          </segment>
       </unit>
       <unit id="findResource.chapter">
          <segment>
             <source>Chapter</source>
-            <target/>
+            <target>Bab</target>
          </segment>
       </unit>
       <unit id="findResource.clearQuery">
          <segment>
             <source>Clear query</source>
-            <target/>
+            <target>Hapus kueri</target>
          </segment>
       </unit>
       <unit id="findResource.clipboard">
@@ -2037,7 +2037,7 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
             <target/>
          </segment>
       </unit>
@@ -2103,7 +2103,7 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
+            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -2974,7 +2974,7 @@
       <unit id="main.goOffline">
          <segment>
             <source>Go Offline</source>
-            <target/>
+            <target>Pergi Offline</target>
          </segment>
       </unit>
       <unit id="main.googleSamples">
@@ -3015,7 +3015,7 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
             <target/>
          </segment>
       </unit>
@@ -3160,7 +3160,7 @@
       <unit id="main.switchUser">
          <segment>
             <source>Switch User</source>
-            <target/>
+            <target>Ganti Pengguna</target>
          </segment>
       </unit>
       <unit id="main.tasks">
@@ -3664,7 +3664,7 @@
       <unit id="mediaUpload.launchLink">
          <segment>
             <source>Show Link Content</source>
-            <target/>
+            <target>Tampilkan Konten Tautan</target>
          </segment>
       </unit>
       <unit id="mediaUpload.linkTask">
@@ -4485,8 +4485,8 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target/>
+            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <target>Apakah kita memerlukan grup ini? Atau hanya menggunakan admin tim? Orang-orang di grup ini akan dapat melakukan langkah apa pun, bahkan jika ditugaskan ke grup yang bukan grup mereka.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4497,8 +4497,8 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
-            <target/>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
+            <target>Kami juga tidak yakin apakah kami memerlukan izin ini, karena tidak jelas apa yang dilakukan oleh konsultan di perangkat lunak ini. Komentar Konsultan Independen akan dapat dilihat oleh semua anggota tim.</target>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4527,13 +4527,13 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
             <target/>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
+            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
             <target/>
          </segment>
       </unit>
@@ -4780,7 +4780,7 @@
       <unit id="planSheet.published">
          <segment>
             <source>Publish</source>
-            <target/>
+            <target>Publikasikan</target>
          </segment>
       </unit>
       <unit id="planSheet.refErr">
@@ -4858,7 +4858,7 @@
       <unit id="planSheet.versions">
          <segment>
             <source>Versions</source>
-            <target/>
+            <target>Versi</target>
          </segment>
       </unit>
       <unit id="planTabs.assignments">
@@ -5103,7 +5103,7 @@
       </unit>
       <unit id="profile.syncFrequency">
          <segment>
-            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
+            <source>Frequency of data sync in minutes. 0 to turn off sync.</source>
             <target/>
          </segment>
       </unit>
@@ -5182,7 +5182,7 @@
       <unit id="projectDownload.amount">
          <segment>
             <source>Amount to download</source>
-            <target/>
+            <target>Jumlah yang harus diunduh</target>
          </segment>
       </unit>
       <unit id="projectDownload.download">
@@ -5194,7 +5194,7 @@
       <unit id="projectDownload.downloadDescription">
          <segment>
             <source>If the estimated time for download is too long for you, use the 'x' in the upper corner to close this dialog and add a minimum and or maximum section to the filters. The filter icon is shaped like ▼ (a downward pointing triangle) and is located on the third line in the upper right of the project plan sheet. After setting the section filter, choose the filtered option on this dialog to see how much time will be needed for the filtered sections.</source>
-            <target/>
+            <target>Jika estimasi waktu pengunduhan terlalu lama bagi Anda, gunakan tanda 'x' di sudut atas untuk menutup dialog ini dan tambahkan bagian minimum dan atau maksimum pada filter. Ikon filter berbentuk seperti ▼ (segitiga yang mengarah ke bawah) dan terletak pada baris ketiga di kanan atas lembar rencana proyek. Setelah mengatur filter bagian, pilih opsi yang difilter pada dialog ini untuk melihat berapa banyak waktu yang diperlukan untuk bagian yang difilter.</target>
          </segment>
       </unit>
       <unit id="projectDownload.downloadLater">
@@ -5206,13 +5206,13 @@
       <unit id="projectDownload.downloadMb">
          <segment>
             <source>Download {0}MB of offline audio project files? (It may take {1} to download on a fast Internet connection or {2} on a slow broadband connection.)</source>
-            <target/>
+            <target>Unduh {0}MB file proyek audio offline? (Mungkin diperlukan waktu {1} untuk mengunduh pada koneksi Internet yang cepat atau {2} pada koneksi broadband yang lambat).</target>
          </segment>
       </unit>
       <unit id="projectDownload.filter">
          <segment>
             <source>Filter</source>
-            <target/>
+            <target>Menyaring</target>
          </segment>
       </unit>
       <unit id="publishLevel.none">
@@ -5224,7 +5224,7 @@
       <unit id="publishLevel.bibleRequired">
          <segment>
             <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo.</source>
-            <target/>
+            <target>Anda harus sudah menyiapkan Id dan Nama Alkitab di Pengaturan Tim untuk mempublikasikan ke Akuo.</target>
          </segment>
       </unit>
       <unit id="publishLevel.beta">
@@ -5745,13 +5745,13 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Your paratext login has expired and can't be automatically renewed. Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -5824,7 +5824,7 @@
       <unit id="shared.mustBeOnline">
          <segment>
             <source>You must be online to use this feature</source>
-            <target/>
+            <target>Anda harus online untuk menggunakan fitur ini</target>
          </segment>
       </unit>
       <unit id="shared.no">
@@ -6645,7 +6645,7 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
+            <source>Transcription updated by {0}. Keep their changes? {1}</source>
             <target/>
          </segment>
       </unit>
@@ -6861,7 +6861,7 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported.  The export file is too large.</source>
+            <source>The audio project cannot be exported. The export file is too large.</source>
             <target/>
          </segment>
       </unit>
@@ -6903,7 +6903,7 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
+            <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
             <target/>
          </segment>
       </unit>
@@ -7545,7 +7545,7 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
             <target/>
          </segment>
       </unit>
@@ -7563,7 +7563,7 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
             <target/>
          </segment>
       </unit>
