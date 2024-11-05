@@ -16,6 +16,7 @@ import {
 import * as actions from '../../store';
 import ScriptureIcon from '@mui/icons-material/MenuBook';
 import { BsPencilSquare } from 'react-icons/bs';
+import ShareIcon from '@mui/icons-material/OfflineShare';
 import moment from 'moment';
 import {
   DialogMode,
@@ -375,6 +376,7 @@ export const ProjectCard = (props: IProps) => {
               ) : (
                 <BsPencilSquare />
               )}
+              {(project.attributes.isPublic && <ShareIcon />)}
               {'\u00A0 '}
               {project?.attributes?.name}
             </Typography>
