@@ -103,6 +103,7 @@ function AudacityManager(props: IProps) {
   const nameRef = React.useRef('');
   const [memory] = useGlobal('memory');
   const [changed] = useGlobal('changed');
+  const [isOffline] = useGlobal('offline');
   const { showMessage } = useSnackBar();
   const { tryDownload } = useDownloadMedia();
   const getProjName = useAudProjName();
@@ -167,7 +168,7 @@ function AudacityManager(props: IProps) {
     if ((mediaId || '') !== '') {
       const remId =
         remoteId('mediafile', mediaId, memory.keyMap as RecordKeyMap) ?? '';
-      if (remId !== '') {
+      if (remId !== '' && !isOffline) {
         mediaName =
           (await fetchUrl({
             id: remId,

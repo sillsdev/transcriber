@@ -9,7 +9,10 @@ import {
 } from '../model';
 import { useRecOfType, related } from '.';
 
-export enum ListEnum  {organization, project}
+export enum ListEnum {
+  organization,
+  project,
+}
 
 export const useOfflineList = () => {
   const recOfType = useRecOfType();
@@ -24,22 +27,22 @@ export const useOfflineList = () => {
       }
     });
     if (lType === ListEnum.project) {
-      const members = recOfType(
-        'groupmembership'
-      ) as GroupMembership[];
+      const members = recOfType('groupmembership') as GroupMembership[];
       const groups = new Set<string>();
       members.forEach((m) => {
         if (related(m, 'user') === u.id) groups.add(related(m, 'group'));
       });
       const grpIds = Array.from(groups);
       const projName = Array<string>();
-      Array.from(projs).forEach((id) => {
-        const projRec = memory.cache.query((q) =>
-          q.findRecord({ type: 'project', id })
-        ) as ProjectD;
-        if (grpIds.includes(related(projRec, 'group')))
-          projName.push(projRec.attributes.name);
-      });
+      Array.from(projs)
+        .filter((id) => Boolean(id))
+        .forEach((id) => {
+          const projRec = memory.cache.query((q) =>
+            q.findRecord({ type: 'project', id })
+          ) as ProjectD;
+          if (grpIds.includes(related(projRec, 'group')))
+            projName.push(projRec.attributes.name);
+        });
       return projName.sort().join(', ');
     }
     const members = recOfType(
