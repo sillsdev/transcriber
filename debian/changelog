@@ -1,3 +1,14 @@
+audio-project-manager (3.3.0.0)  experimental; urgency=high
+
+ * TT-5572 Add option to download just latest audio
+ * TT-4046 Phrase Back Translation Recording and review
+ * TT-5907 Use FCBH timing files to set up resources
+ * TT-4868 Bible brain resources
+ * TT-5157 Shared resource checkbox in its own column labeled “Publish”
+ * TT-6038 Internalization play back
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 9 Oct 2024 16:49:00 -0600
+
 audio-project-manager (3.2.4.0)  experimental; urgency=high
 
  * TT-6038 Internalization player glitches
