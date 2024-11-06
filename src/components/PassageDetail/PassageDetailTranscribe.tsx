@@ -165,14 +165,21 @@ export function PassageDetailTranscribe({
   const handleReject = async (reason: string) => {
     uncompletedSteps();
     if (reason === ActivityStates.NeedsNewRecording) {
-      const recordStep = parsedSteps.find((s) => s.tool === ToolSlug.Record);
-      if (recordStep) {
-        await setStepComplete(recordStep.id, false);
-        setCurrentStep(recordStep.id);
-        return;
+      const curStep = parsedSteps.find((s) => s.id === currentstep);
+      if (curStep?.settings === '{}') {
+        // only for vernacular
+        const recordStep = parsedSteps.find((s) => s.tool === ToolSlug.Record);
+        if (recordStep) {
+          await setStepComplete(recordStep.id, false);
+          setCurrentStep(recordStep.id);
+          return;
+        }
       }
     }
-    setCurrentStep(curRole === 'editor' ? prevStep || '' : '');
+    if (curRole === 'editor' && prevStep) {
+      await setStepComplete(prevStep, false);
+      setCurrentStep(prevStep);
+    }
   };
 
   const handleReloadPlayer = (playerMediafile: MediaFile) => {
