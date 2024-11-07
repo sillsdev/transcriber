@@ -103,10 +103,10 @@ export function PublishExpansion(props: IProps) {
   };
   useEffect(() => {
     getBibleMediaPlan().then((plan) => {
-      setMediaplan(plan.id);
+      setMediaplan(plan?.id);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [getBibleMediaPlan]);
 
   useEffect(() => {
     if (bible) {
