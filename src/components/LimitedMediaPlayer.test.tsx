@@ -285,7 +285,6 @@ describe('<LimitedMediaPlayer />', () => {
     expect(props.onEnded).toHaveBeenCalled();
   });
 
-
   it('should not call onEnded if timeUpdate is less than limits.end', async () => {
     mockBlobState = { ...blobFetched };
 
@@ -454,7 +453,7 @@ describe('<LimitedMediaPlayer />', () => {
       mockOnProgress(50);
     });
     await screen.findByText('0:50');
-    user.click(screen.getByTestId('skip-back'));
+    await user.click(screen.getByTestId('skip-back'));
     await waitFor(() => expect(mockPosition).toBe(47));
   });
 
