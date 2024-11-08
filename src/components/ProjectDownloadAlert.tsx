@@ -183,6 +183,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
         const limit = limits.get(proj);
         if (limit) limit.total += fileSize;
         if (path !== local.localname) {
+          console.log('Needing download:', path, local.localname);
           needyProject.add(proj);
           missingSize += fileSize;
           if (limit) limit.missing += fileSize;
