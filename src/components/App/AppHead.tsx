@@ -85,7 +85,7 @@ const ProjectName = ({ setView, switchTo }: INameProps) => {
   const t: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
 
   const handleHome = () => {
-    localStorage.removeItem('selected-plan');
+    localStorage.removeItem(LocalKey.plan);
     localStorage.removeItem('mode');
     goHome();
   };
@@ -231,7 +231,7 @@ export const AppHead = (props: IProps) => {
 
   const handleUserMenu = (what: string) => {
     localStorage.removeItem('mode');
-    localStorage.removeItem('selected-plan');
+    localStorage.removeItem(LocalKey.plan);
     handleMenu(what);
   };
 
@@ -242,7 +242,7 @@ export const AppHead = (props: IProps) => {
         ? 'online-cloud'
         : 'online-local'
     );
-    localStorage.setItem('selected-plan', plan);
+    localStorage.setItem(LocalKey.plan, plan);
     handleMenu('Logout');
   };
 

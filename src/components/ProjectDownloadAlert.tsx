@@ -12,7 +12,7 @@ import {
   ISharedStrings,
 } from '../model';
 import ProjectDownload from './ProjectDownload';
-import { dataPath, PathType } from '../utils';
+import { dataPath, LocalKey, PathType } from '../utils';
 import {
   related,
   useProjectPlans,
@@ -81,6 +81,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
   const mediafiles = useOrbitData<MediaFileD[]>('mediafile');
   const { slugFromId } = useArtifactType();
   const tokenCtx = useContext(TokenContext);
+  const [hasSectionFilter, setHasSectionFilter] = React.useState(false);
   const [alert, setAlert] = React.useState(false);
   const [downloadSize, setDownloadSize] = React.useState(0);
   const downloadingRef = React.useRef(false);
@@ -135,13 +136,16 @@ export const ProjectDownloadAlert = (props: IProps) => {
     );
     let planIds = Array<string>();
     const planProject: PlanProject = {};
+    const selectedPlan = localStorage.getItem(LocalKey.plan);
     ops.forEach((offlineProjRec) => {
       var projectId = related(offlineProjRec, 'project') as string;
       const project = projects.find((pr) => pr.id === projectId);
       if (project?.keys?.remoteId) {
         projectPlans(projectId).forEach((pl) => {
-          planIds.push(pl.id as string);
-          planProject[pl.id as string] = projectId;
+          if (!selectedPlan || pl.id === selectedPlan) {
+            planIds.push(pl.id as string);
+            planProject[pl.id as string] = projectId;
+          }
         });
       }
     });
@@ -170,6 +174,11 @@ export const ProjectDownloadAlert = (props: IProps) => {
         const proj = planProject[m.plan];
         const projRec = projects.find((p) => p.id === proj);
         const filterState = getFilterState(projRec);
+        const newHasSectionFilter =
+          (filterState.minSection || filterState.maxSection) !== undefined;
+        if (hasSectionFilter !== newHasSectionFilter) {
+          setHasSectionFilter(newHasSectionFilter);
+        }
         const arr = getSectionArr(proj);
         if (!limits.has(proj)) {
           limits.set(proj, {
@@ -412,6 +421,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
                         value="filtered"
                         control={<Radio />}
                         label={t.filteredFiles}
+                        disabled={!hasSectionFilter}
                       />
                       <FormControlLabel
                         value="missing"
