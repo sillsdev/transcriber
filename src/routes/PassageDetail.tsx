@@ -357,7 +357,9 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                         {tool === ToolSlug.TeamCheck && <TeamCheckReference />}
                         {tool === ToolSlug.KeyTerm && (
                           <Suspense fallback={<Busy />}>
-                            <KeyTerms />
+                            <KeyTerms
+                              width={width - discussionSize.width - 16}
+                            />
                           </Suspense>
                         )}
                       </Pane>
