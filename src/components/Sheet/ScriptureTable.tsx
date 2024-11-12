@@ -193,7 +193,7 @@ export function ScriptureTable(props: IProps) {
     hidePublishing,
     publishingOn,
     setSectionArr,
-    setCanPublish,
+    setPublishingOn,
     togglePublishing,
   } = ctx.state;
   const { getOrganizedBy } = useOrganizedBy();
@@ -333,7 +333,7 @@ export function ScriptureTable(props: IProps) {
     var anyPublishing = !offline
       ? ws.some((s) => isPublishingTitle(s.reference ?? '', flat))
       : false;
-    if (publishingOn !== anyPublishing) setCanPublish(anyPublishing);
+    if (publishingOn !== anyPublishing) setPublishingOn(anyPublishing);
   };
   const passNumCol = React.useMemo(() => {
     return colNames.indexOf('passageSeq');

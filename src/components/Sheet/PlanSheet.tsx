@@ -957,6 +957,7 @@ export function PlanSheet(props: IProps) {
                     currentRow - 1
                   )}
                   onAction={(what: ExtraIcon) => onAction(currentRow - 1, what)}
+                  canPublish={publishingOn && !hidePublishing}
                 />
                 <AltButton
                   id="planSheetImp"

@@ -39,6 +39,7 @@ const initState = {
   setSectionArr: (sectionArr: [number, string][]) => {},
   togglePublishing: () => {},
   setCanPublish: (canPublish: boolean) => {},
+  setPublishingOn: (publishingOn: boolean) => {}
 };
 
 export type ICtxState = typeof initState;
@@ -131,7 +132,10 @@ const PlanProvider = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
 
-  const setCanPublish = (publishingOn: boolean) => {
+  const setCanPublish = (canPublish: boolean) => {
+    setState((state) => ({ ...state, canPublish }));
+  };
+  const setPublishingOn = (publishingOn: boolean) => {
     setState((state) => ({ ...state, publishingOn }));
   };
 
@@ -169,6 +173,7 @@ const PlanProvider = (props: IProps) => {
           readonly,
           togglePublishing,
           setCanPublish,
+          setPublishingOn,
         },
         setState,
       }}

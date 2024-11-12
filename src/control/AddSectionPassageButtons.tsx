@@ -22,7 +22,6 @@ import {
   SectionEndIcon,
 } from './PlanIcons';
 import { ExtraIcon } from '../components/Sheet';
-import { useCanPublish } from '../utils';
 
 const StyledMenuIcon = styled(ListItemIcon)<ListItemIconProps>(({ theme }) => ({
   paddingRight: theme.spacing(2),
@@ -43,6 +42,7 @@ interface IProps {
   onDisableFilter?: () => void;
   isSection: boolean;
   isPassage: boolean;
+  canPublish: boolean;
   handleNoContextMenu: () => void;
   showIcon: (icon: ExtraIcon) => boolean;
   onAction: (what: ExtraIcon) => void;
@@ -61,11 +61,11 @@ export const AddSectionPassageButtons = (props: IProps) => {
     handleNoContextMenu,
     showIcon,
     onAction,
+    canPublish
   } = props;
   const [actionMenuItem, setActionMenuItem] = React.useState<any>(undefined);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
-  const { canPublish } = useCanPublish();
   const t: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
 
   const handleMenu = (e: any) => {
