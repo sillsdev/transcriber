@@ -365,6 +365,7 @@ export const usePlanSheetFill = ({
             : undefined
         }
         isPlaying={srcMediaId === rowInfo[rowIndex].mediaId?.id && mediaPlaying}
+        sharedResource={rowInfo[rowIndex].sharedResource}
       />
     );
   };

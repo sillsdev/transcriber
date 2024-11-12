@@ -27,6 +27,7 @@ import {
   PassageD,
   OrgWorkflowStepD,
   ProjectD,
+  SharedResourceD,
 } from '../../model';
 import * as actions from '../../store';
 import Memory from '@orbit/memory';
@@ -140,6 +141,7 @@ export function ScriptureTable(props: IProps) {
   const { colNames } = props;
   const passages = useOrbitData<PassageD[]>('passage');
   const sections = useOrbitData<SectionD[]>('section');
+  const sharedresources = useOrbitData<SharedResourceD[]>('sharedresource');
   const plans = useOrbitData<PlanD[]>('plan');
   const projects = useOrbitData<ProjectD[]>('project');
   const mediafiles = useOrbitData<MediaFile[]>('mediafile');
@@ -1398,6 +1400,7 @@ export function ScriptureTable(props: IProps) {
     passages,
     mediafiles,
     graphics,
+    sharedresources,
     flat,
     shared,
     orgSteps,
