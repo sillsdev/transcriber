@@ -1,5 +1,5 @@
 import { memo, FC, useContext } from 'react';
-import { IPlanActionsStrings } from '../../model';
+import { IPlanActionsStrings, SharedResourceD } from '../../model';
 import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
 import PauseIcon from '@mui/icons-material/Pause';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -17,6 +17,7 @@ interface IProps {
   isPlaying: boolean;
   canPlay: boolean;
   canEdit: boolean;
+  sharedResource?: SharedResourceD;
   onPlayStatus: (mediaId: string) => void;
   onEdit?: (i: number) => () => void;
 }
@@ -41,6 +42,7 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
     canEdit,
     canPlay,
     t,
+    sharedResource
   } = props;
 
   const handlePlayStatus = () => () => {
@@ -66,7 +68,7 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
           disabled={!canEdit}
           onClick={onEdit(rowIndex)}
         >
-          <EditIcon />
+          <EditIcon  color={sharedResource ? 'primary': 'warning'}/>
         </IconButton>
       )}
     </Box>

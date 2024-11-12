@@ -6,7 +6,7 @@ import { getDefaultName } from '../Sheet/getDefaultName';
 import { IResourceStrings } from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedResourceSelector } from '../../selector';
-import { useNotes } from '../../crud';
+import { related, useNotes } from '../../crud';
 import { Typography } from '@mui/material';
 
 export const NoteTitle = (props: IResourceState) => {
@@ -28,7 +28,7 @@ export const NoteTitle = (props: IResourceState) => {
   }, [state]);
 
   useEffect(() => {
-    if (ws?.sharedResource) {
+    if (ws?.sharedResource && related(ws.sharedResource, 'passage') !== (ws.passage?.id)) {
       setSource(noteSource(ws.sharedResource));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
