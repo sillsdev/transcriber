@@ -268,7 +268,7 @@ export const AppHead = (props: IProps) => {
 
   const handleCloud = () => {
     handleSetOnline(() => {
-      const planRec = getPlan(plan);
+      const planRec = plan ? getPlan(plan) : undefined;
       if (!planRec) {
         if (hasOfflineProjects) cloudAction();
         return;
