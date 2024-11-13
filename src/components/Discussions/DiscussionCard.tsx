@@ -32,13 +32,20 @@ import {
   Passage,
   GroupD,
   UserD,
+  OrganizationD,
 } from '../../model';
 import ResolveIcon from '@mui/icons-material/Check';
 import HideIcon from '@mui/icons-material/ArrowDropUp';
 import ShowIcon from '@mui/icons-material/ArrowDropDown';
 import LocationIcon from '@mui/icons-material/LocationSearching';
 import { shallowEqual } from 'react-redux';
-import { PermissionName, related, usePermissions, useRole } from '../../crud';
+import {
+  isPersonalTeam,
+  PermissionName,
+  related,
+  usePermissions,
+  useRole,
+} from '../../crud';
 import CommentCard from './CommentCard';
 import ReplyCard from './ReplyCard';
 import UserAvatar from '../UserAvatar';
@@ -157,7 +164,7 @@ const titleProps = {
   flexGrow: 1,
   flexWrap: 'unset',
 } as SxProps;
-const tilteCtrlProps = { display: 'flex', flexDirection: 'row' } as SxProps;
+const titleCtrlProps = { display: 'flex', flexDirection: 'row' } as SxProps;
 const cardFlowProps = {
   px: 2,
   bgColor: 'background.paper',
@@ -203,6 +210,7 @@ export const DiscussionCard = (props: IProps) => {
     useOrbitData<ArtifactCategory[]>('artifactcategory');
   const users = useOrbitData<UserD[]>('user');
   const groups = useOrbitData<GroupD[]>('group');
+  const teams = useOrbitData<OrganizationD[]>('organization');
   const t: IDiscussionCardStrings = useSelector(
     discussionCardSelector,
     shallowEqual
@@ -230,6 +238,7 @@ export const DiscussionCard = (props: IProps) => {
     startClear,
   } = useContext(UnsavedContext).state;
   const [user] = useGlobal('user');
+  const [team] = useGlobal('organization');
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -323,6 +332,9 @@ export const DiscussionCard = (props: IProps) => {
     commentText.current = '';
     setMoveTo(undefined);
   };
+
+  const isPersonal = useMemo(() => isPersonalTeam(team, teams), [teams, team]);
+
   useEffect(() => {
     if (canSaveRecording) {
       setChanged(true);
@@ -901,30 +913,32 @@ export const DiscussionCard = (props: IProps) => {
                   required
                   fullWidth
                 />
-                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                  <SelectGroup
-                    id={`group-${discussion.id}`}
-                    org={false}
-                    initGroup={assignedGroup?.id || ''}
-                    onChange={handleGroupChange}
-                    required={false}
-                    label={t.assignGroup}
-                  />
-                  <Typography
-                    variant="h6"
-                    component="h2"
-                    sx={{ m: 1, mt: 3, color: 'primary.dark' }}
-                  >
-                    {t.or}
-                  </Typography>
-                  <SelectUser
-                    id={`user-${discussion.id}`}
-                    initUser={assignedUser?.id || ''}
-                    onChange={handleUserChange}
-                    required={false}
-                    label={t.assignUser}
-                  />
-                </Box>
+                {!isPersonal && (
+                  <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                    <SelectGroup
+                      id={`group-${discussion.id}`}
+                      org={false}
+                      initGroup={assignedGroup?.id || ''}
+                      onChange={handleGroupChange}
+                      required={false}
+                      label={t.assignGroup}
+                    />
+                    <Typography
+                      variant="h6"
+                      component="h2"
+                      sx={{ m: 1, mt: 3, color: 'primary.dark' }}
+                    >
+                      {t.or}
+                    </Typography>
+                    <SelectUser
+                      id={`user-${discussion.id}`}
+                      initUser={assignedUser?.id || ''}
+                      onChange={handleUserChange}
+                      required={false}
+                      label={t.assignUser}
+                    />
+                  </Box>
+                )}
                 <SelectArtifactCategory
                   id={`category-${discussion.id}`}
                   initCategory={editCategory}
@@ -1003,8 +1017,8 @@ export const DiscussionCard = (props: IProps) => {
                     {discussion.attributes?.subject}
                   </Typography>
                 </Grid>
-                <Grid item sx={tilteCtrlProps}>
-                  {assignedGroup && (
+                <Grid item sx={titleCtrlProps}>
+                  {!isPersonal && assignedGroup && (
                     <LightTooltip title={t.changeAssignment}>
                       <IconButton
                         onClick={handleAssignedClick}
@@ -1014,7 +1028,7 @@ export const DiscussionCard = (props: IProps) => {
                       </IconButton>
                     </LightTooltip>
                   )}
-                  {assignedUser && (
+                  {!isPersonal && assignedUser && (
                     <LightTooltip title={t.changeAssignment}>
                       <IconButton
                         onClick={handleAssignedClick}
@@ -1024,7 +1038,7 @@ export const DiscussionCard = (props: IProps) => {
                       </IconButton>
                     </LightTooltip>
                   )}
-                  {changeAssignment && (
+                  {!isPersonal && changeAssignment && (
                     <SelectDiscussionAssignment
                       id={`group-${discussion.id}`}
                       org={false}
