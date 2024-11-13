@@ -66,14 +66,14 @@ export function FilterMenu(props: IProps) {
   const { sectionArr } = useContext(PlanContext).state;
   const sectionMap = new Map<number, string>(sectionArr);
   const [mapMin, setMapMin] = useState(
-    !hidePublishing ? sectionMap.get(localState.minSection) : ''
+    !hidePublishing ? sectionMap.get(localState.minSection) : undefined
   );
   const [mapMax, setMapMax] = useState(
     !hidePublishing
       ? sectionMap.get(
-        localState.maxSection > 0 ? localState.maxSection : maximumSection
-      )
-      : ''
+          localState.maxSection > 0 ? localState.maxSection : maximumSection
+        )
+      : undefined
   );
   const [minHelp, setMinHelp] = useState('');
   const [maxHelp, setMaxHelp] = useState('');
@@ -110,8 +110,8 @@ export function FilterMenu(props: IProps) {
     apply(localState, defaultRef.current);
   };
   const handleClear = () => {
-    setMapMin(!hidePublishing ? sectionMap.get(minimumSection) : '');
-    setMapMax(!hidePublishing ? sectionMap.get(-1) : '');
+    setMapMin(!hidePublishing ? sectionMap.get(minimumSection) : undefined);
+    setMapMax(!hidePublishing ? sectionMap.get(-1) : undefined);
     setMinHelp('');
     setMaxHelp('');
     apply(undefined, defaultRef.current);
