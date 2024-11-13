@@ -46,6 +46,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   const [refresh, setRefresh] = React.useState(0);
   const [offlineOnly] = useGlobal('offlineOnly');
   const [categories, setCategories] = useState<IArtifactCategory[]>([]);
+  const [typeCategories, setTypeCategories] = useState<IArtifactCategory[]>([]);
   const [edited, setEdited] = useState<Map<string, IArtifactCategory>>(
     new Map()
   );
@@ -102,8 +103,15 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
     setDeleted((deleted) => deleted.concat(c.id));
   };
 
-  const hasDuplicates = () => {
-    const recs = Array.from(edited.values());
+  useEffect(() => {
+    getArtifactCategorys(type).then((cats) => {
+      setTypeCategories(cats);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type, refresh]);
+
+  const hasDuplicates = async () => {
+    const recs = typeCategories.concat(Array.from(edited.values()));
     const items = new Set<string>(recs.map((r) => r.category));
     if (items.size < recs.length) {
       showMessage(t.duplicate);
@@ -125,7 +133,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
       edited.delete(d);
     });
     const recs = Array.from(edited.values());
-    if (hasDuplicates()) return;
+    if (await hasDuplicates()) return;
     const t = new RecordTransformBuilder();
     const ops: RecordOperation[] = [];
     for (const r of recs) {
@@ -157,31 +165,28 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   };
 
   React.useEffect(() => {
-    getArtifactCategorys(type).then((cats) => {
-      setCategories(cats.filter((c) => c.org !== '').sort(sortCats));
-      setBuiltIn(cats.filter((c) => c.org === '').sort(sortCats));
-      const inUseMap = new Map<string, number>();
+    setCategories(typeCategories.filter((c) => c.org !== '').sort(sortCats));
+    setBuiltIn(typeCategories.filter((c) => c.org === '').sort(sortCats));
+    const inUseMap = new Map<string, number>();
 
-      cats.forEach((c) => {
-        let count = 0;
-        if (type === ArtifactCategoryType.Resource)
-          count = media.filter(
-            (m) => related(m, 'artifactCategory') === c.id
-          ).length;
-        else if (type === ArtifactCategoryType.Discussion)
-          count = discussions.filter(
-            (d) => related(d, 'artifactCategory') === c.id
-          ).length;
-        else
-          count = sharedResources.filter(
-            (d) => related(d, 'artifactCategory') === c.id
-          ).length;
-        inUseMap.set(c.id, count);
-      });
+    typeCategories.forEach((c) => {
+      let count = 0;
+      if (type === ArtifactCategoryType.Resource)
+        count = media.filter(
+          (m) => related(m, 'artifactCategory') === c.id
+        ).length;
+      else if (type === ArtifactCategoryType.Discussion)
+        count = discussions.filter(
+          (d) => related(d, 'artifactCategory') === c.id
+        ).length;
+      else
+        count = sharedResources.filter(
+          (d) => related(d, 'artifactCategory') === c.id
+        ).length;
+      inUseMap.set(c.id, count);
       setInUse(Array.from(inUseMap));
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type, refresh, media, discussions, sharedResources]);
+  }, [refresh, typeCategories, media, discussions, sharedResources, type]);
 
   const sortCats = (i: IArtifactCategory, j: IArtifactCategory) =>
     i.specialuse < j.specialuse
