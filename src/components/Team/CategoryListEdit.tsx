@@ -102,8 +102,9 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
     setDeleted((deleted) => deleted.concat(c.id));
   };
 
-  const hasDuplicates = () => {
-    const recs = Array.from(edited.values());
+  const hasDuplicates = async () => {
+    const cats = await getArtifactCategorys(type);
+    const recs = cats.concat(Array.from(edited.values()));
     const items = new Set<string>(recs.map((r) => r.category));
     if (items.size < recs.length) {
       showMessage(t.duplicate);
@@ -125,7 +126,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
       edited.delete(d);
     });
     const recs = Array.from(edited.values());
-    if (hasDuplicates()) return;
+    if (await hasDuplicates()) return;
     const t = new RecordTransformBuilder();
     const ops: RecordOperation[] = [];
     for (const r of recs) {
