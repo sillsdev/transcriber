@@ -1305,7 +1305,7 @@ export function ScriptureTable(props: IProps) {
       saveCompleted(toolId);
       setComplete(100);
       setUpdate(false);
-    }
+    };
     const save = () => {
       if (!savingRef.current && !updateRef.current) {
         setSaving(true);
@@ -1316,8 +1316,8 @@ export function ScriptureTable(props: IProps) {
         handleSave().then(() => {
           if (doForceDataChanges.current) {
             waitForRemoteQueue(t.publishingWarning).then(() => {
-                forceDataChanges().then(() => doneSaving());
-            })
+              forceDataChanges().then(() => doneSaving());
+            });
             doForceDataChanges.current = false;
           } else {
             doneSaving();
@@ -1788,18 +1788,26 @@ export function ScriptureTable(props: IProps) {
 
   const rowinfo = useMemo(() => {
     var totalSections = new Set(
-      sheet.filter((s) => !s.deleted).map((s) => s.sectionSeq)
-    ).size;
-    var regularSections = new Set(
       sheet
         .filter(
           (s) =>
             !s.deleted &&
-            s.sectionSeq > 0 &&
-            Math.trunc(s.sectionSeq) === s.sectionSeq
+            ((publishingOn && !hidePublishing) ||
+              (s.sectionSeq > 0 && Math.trunc(s.sectionSeq) === s.sectionSeq))
         )
         .map((s) => s.sectionSeq)
     ).size;
+    const specialSections =
+      !publishingOn || hidePublishing
+        ? 0
+        : new Set(
+            sheet
+              .filter(
+                (s) =>
+                  s.sectionSeq < 0 || Math.trunc(s.sectionSeq) !== s.sectionSeq
+              )
+              .map((s) => s.sectionSeq)
+          ).size;
     var filtered = sheet.filter((s) => !s.deleted && !s.filtered);
     var showingSections = new Set(filtered.map((s) => s.sectionSeq)).size;
     if (showingSections < totalSections) {
@@ -1814,15 +1822,17 @@ export function ScriptureTable(props: IProps) {
           }}
         >
           {organizedBy +
-            (showingSections < regularSections
-              ? ' (' + showingSections + '/' + regularSections + ')'
-              : '')}
+            ' (' +
+            (showingSections - specialSections) +
+            '/' +
+            (totalSections - specialSections) +
+            ')'}
         </Badge>
       );
     }
     return filtered;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sheet, width, colNames, flat]);
+  }, [sheet, width, colNames, flat, publishingOn, organizedBy]);
 
   const rowdata = useMemo(
     () => workSheet(rowinfo, colNames, sheet),
