@@ -7193,6 +7193,20 @@
       			<context context-type="sourcefile">Access.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="shared.noiseRemoval">
+            <source>Remove Noise</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>      
+         <trans-unit id="shared.noiseRemovalFailed">
+            <source>Noise Removal Failed</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>                
          <trans-unit id="shared.NoSaveOffline">
             <source>Unable to save while offline.</source>
             <target/>

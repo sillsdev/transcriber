@@ -1221,6 +1221,8 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "mustBeOnline": string;
     "no": string;
     "noAudio": string;
+    "noiseRemoval": string;
+    "noiseRemovalFailed": string;
     "NoSaveOffline": string;
     "notSupported": string;
     "observer": string;

@@ -37,7 +37,7 @@ export default function SelectLatest({ versions, onChange }: IProps) {
         <Select
           labelId="select-latest-label"
           id="select-latest"
-          value={versions.includes(latest) ? `${latest}` : ''}
+          value={versions.sort((a,b) => a-b).includes(latest) ? `${latest}` : ''}
           label={t.latestVersion}
           onChange={handleChange}
         >
