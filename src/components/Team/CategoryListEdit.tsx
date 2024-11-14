@@ -24,7 +24,7 @@ import {
 } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { categorySelector, sharedSelector } from '../../selector';
-import { useEffect, useGlobal, useMemo, useState } from 'reactn';
+import { useEffect, useGlobal, useState } from 'reactn';
 import {
   RecordKeyMap,
   RecordOperation,
@@ -51,6 +51,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
     new Map()
   );
   const editRef = React.useRef<Map<string, IArtifactCategory>>(new Map());
+  const [canSave, setCanSave] = useState(false);
   const [deleted, setDeleted] = useState<string[]>([]);
   const [builtIn, setBuiltIn] = useState<IArtifactCategory[]>([]);
   const [inUse, setInUse] = useState<[string, number][]>([]);
@@ -93,14 +94,16 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   //without useCallback edited was always empty
   //even after useCallback edited was always one behind the ref value.
   //so I took it back out and just used the ref
-  const handleChange = (c: IArtifactCategory) => {
+  const handleChange = async (c: IArtifactCategory) => {
     editRef.current.set(c.id, { ...c });
     const editMap = new Map<string, IArtifactCategory>(editRef.current);
     setEdited(editMap);
+    setCanSave(!(await hasDuplicates()));
   };
 
-  const handleDelete = (c: IArtifactCategory) => () => {
+  const handleDelete = (c: IArtifactCategory) => async () => {
     setDeleted((deleted) => deleted.concat(c.id));
+    setCanSave(!(await hasDuplicates()));
   };
 
   useEffect(() => {
@@ -111,20 +114,11 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   }, [type, refresh]);
 
   const hasDuplicates = async () => {
-    const recs = typeCategories.concat(Array.from(edited.values()));
+    const unedited = typeCategories.filter((c) => !edited.has(c.id));
+    const recs = unedited.concat(Array.from(edited.values()));
     const items = new Set<string>(recs.map((r) => r.category));
-    if (items.size < recs.length) {
-      showMessage(t.duplicate);
-      return true;
-    }
-    return false;
+    return items.size < recs.length;
   };
-
-  const canSave = useMemo(
-    () => edited.size + deleted.length > 0 && !hasDuplicates(),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [edited, deleted]
-  );
 
   const handleClose = () => onClose && onClose();
 
@@ -133,7 +127,10 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
       edited.delete(d);
     });
     const recs = Array.from(edited.values());
-    if (await hasDuplicates()) return;
+    if (await hasDuplicates()) {
+      showMessage(tc.duplicate);
+      return;
+    }
     const t = new RecordTransformBuilder();
     const ops: RecordOperation[] = [];
     for (const r of recs) {
@@ -153,6 +150,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
     await memory.update(ops);
     onClose && onClose();
   };
+
   const categoryAdded = (newId: string) => {
     if (offlineOnly) setRefresh(refresh + 1);
     else
