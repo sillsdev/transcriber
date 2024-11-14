@@ -531,7 +531,7 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
             <target/>
          </segment>
       </unit>
@@ -1503,7 +1503,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
             <target/>
          </segment>
       </unit>
@@ -1545,7 +1545,7 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
+            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
             <target/>
          </segment>
       </unit>
@@ -1593,7 +1593,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified! Carry on!</source>
+            <source>I'm verified!  Carry on!</source>
             <target/>
          </segment>
       </unit>
@@ -1681,6 +1681,12 @@
             <target>{0} Ресурс</target>
          </segment>
       </unit>
+      <unit id="findResource.Lang">
+         <segment>
+            <source>{0} Language*</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="findResource.bibleProjectLang">
          <segment>
             <source>Book Overviews</source>
@@ -1715,6 +1721,12 @@
          <segment>
             <source>clipboard</source>
             <target>буфер обмена</target>
+         </segment>
+      </unit>
+      <unit id="findResource.clipboardCopy">
+         <segment>
+            <source>Copy to clipboard</source>
+            <target/>
          </segment>
       </unit>
       <unit id="grid.all">
@@ -2037,8 +2049,8 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
-            <target>Если эта ошибка возникла при импорте изменений в автономном режиме, немедленно закройте приложение и откройте его снова. Если ошибка не исчезла, обратитесь в службу поддержки. Если вы продолжите использовать приложение, вы потеряете изменения, сделанные в автономном режиме.</target>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -2103,7 +2115,7 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
+            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -2977,6 +2989,12 @@
             <target>Перейти в автономный режим</target>
          </segment>
       </unit>
+      <unit id="main.goOnline">
+         <segment>
+            <source>Go Online</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.googleSamples">
          <segment>
             <source>Sample Google spreadsheets</source>
@@ -3015,7 +3033,7 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
+            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
             <target/>
          </segment>
       </unit>
@@ -4485,8 +4503,8 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target>Нужна ли нам эта группа? Или просто использовать командного администратора? Люди в этой группе смогут выполнять любой шаг, даже если он назначен группе, в которой они не состоят.</target>
+            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4497,8 +4515,8 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
-            <target>Не уверен, что нам нужно это разрешение, потому что неясно, что особенного делают консультанты в этой программе. Комментарии независимого консультанта будут видны всем членам команды.</target>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4527,14 +4545,14 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-            <target>Комментарии наставника будут видны только CIT. Наставники могут одобрить комментарии CIT, чтобы они стали видны остальным членам команды.</target>
+            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
-            <target>Общая группа сверстников без особых прав. Используется для распределения обсуждений по группам.</target>
+            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planActions.addNote">
@@ -5103,8 +5121,8 @@
       </unit>
       <unit id="profile.syncFrequency">
          <segment>
-            <source>Frequency of data sync in minutes. 0 to turn off sync.</source>
-            <target>Частота синхронизации данных в минутах. 0 - отключить синхронизацию.</target>
+            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.timezone">
@@ -5185,6 +5203,12 @@
             <target>Сумма для загрузки</target>
          </segment>
       </unit>
+      <unit id="projectDownload.confirm">
+         <segment>
+            <source>Download Now</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="projectDownload.download">
          <segment>
             <source>Download?</source>
@@ -5193,8 +5217,8 @@
       </unit>
       <unit id="projectDownload.downloadDescription">
          <segment>
-            <source>If the estimated time for download is too long for you, use the 'x' in the upper corner to close this dialog and add a minimum and or maximum section to the filters. The filter icon is shaped like ▼ (a downward pointing triangle) and is located on the third line in the upper right of the project plan sheet. After setting the section filter, choose the filtered option on this dialog to see how much time will be needed for the filtered sections.</source>
-            <target>Если предполагаемое время загрузки слишком велико для вас, используйте кнопку «x» в верхнем углу, чтобы закрыть этот диалог и добавить минимальный или максимальный раздел в фильтры. Значок фильтра имеет форму ▼ (треугольник, направленный вниз) и расположен на третьей строке в правом верхнем углу листа плана проекта. После установки фильтра разделов выберите опцию фильтрации в этом диалоговом окне, чтобы узнать, сколько времени потребуется для отфильтрованных разделов.</target>
+            <source>If the estimated time for download is too long for you, use the 'x' in the upper corner to close this dialog box. Then add a minimum and / or maximum {1} to the filter. The filter icon is {0} (a downward pointing dashed triangle) and is located before the {3} button on the {4} &amp; PASSAGES tab. After setting the {1} filter, choose the filtered option on this dialog box to see how much time will be needed for the filtered {2}.</source>
+            <target>Если предполагаемое время загрузки слишком велико для вас, воспользуйтесь кнопкой «x» в верхнем углу, чтобы закрыть это диалоговое окно. Затем добавьте минимальное и/или максимальное значение {1} к фильтру. Значок фильтра - {0} (пунктирный треугольник, направленный вниз) - находится перед кнопкой {3} на вкладке {4} &amp; PASSAGES. После установки фильтра {1} выберите опцию фильтрации в этом диалоговом окне, чтобы узнать, сколько времени потребуется для отфильтрованного {2}.</target>
          </segment>
       </unit>
       <unit id="projectDownload.downloadLater">
@@ -5213,6 +5237,12 @@
          <segment>
             <source>Filter</source>
             <target>Фильтр</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filteredFiles">
+         <segment>
+            <source>Filtered Files</source>
+            <target/>
          </segment>
       </unit>
       <unit id="publishLevel.none">
@@ -5745,13 +5775,13 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed. Please log out and login again.</source>
+            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -6645,8 +6675,8 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}. Keep their changes? {1}</source>
-            <target>Транскрипция обновлена {0}. Сохранять их изменения? {1}</target>
+            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcribeReject.cancel">
@@ -6861,7 +6891,7 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported. The export file is too large.</source>
+            <source>The audio project cannot be exported.  The export file is too large.</source>
             <target/>
          </segment>
       </unit>
@@ -6903,8 +6933,8 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
-            <target>У вас есть новые локальные изменения, которые не были включены в экспорт ptf. Пожалуйста, экспортируйте также файл itf, чтобы зафиксировать все изменения.</target>
+            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
@@ -7175,6 +7205,12 @@
          <segment>
             <source>Save Verse Markup</source>
             <target>Сохранить разметку стиха</target>
+         </segment>
+      </unit>
+      <unit id="verse.startStop">
+         <segment>
+            <source>Start --&gt; Stop</source>
+            <target/>
          </segment>
       </unit>
       <unit id="viewMode.audioProject">
@@ -7545,7 +7581,7 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
             <target/>
          </segment>
       </unit>
@@ -7563,7 +7599,7 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
             <target/>
          </segment>
       </unit>

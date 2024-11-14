@@ -38,6 +38,7 @@ export const StyledDialog = styled(Dialog, {
   '& .MuiDialogTitle-root': {
     paddingBottom: 0,
   },
+  '& #bigClose': { alignSelf: 'flex-start' },
   ...(bp === BigDialogBp.sm
     ? {
         '& .MuiDialog-paper': {
