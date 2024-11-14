@@ -1132,7 +1132,7 @@ const initialState = {
 			"amount": "Amount to download",
 			"confirm": "Download Now",
 			"download": "Download?",
-			"downloadDescription": "If the estimated time for download is too long for you, use the 'x' in the upper corner to close this dialog and add a minimum and or maximum section to the filters. The filter icon is shaped like ▼ (a downward pointing triangle) and is located on the third line in the upper right of the project plan sheet. After setting the section filter, choose the filtered option on this dialog to see how much time will be needed for the filtered sections.",
+			"downloadDescription": "If the estimated time for download is too long for you, use the 'x' in the upper corner to close this dialog box. Then add a minimum and / or maximum {1} to the filter. The filter icon is {0} (a downward pointing dashed triangle) and is located before the {3} button on the {4} & PASSAGES tab. After setting the {1} filter, choose the filtered option on this dialog box to see how much time will be needed for the filtered {2}.",
 			"downloadLater": "Download Later",
 			"downloadMb": "Download {0}MB of offline audio project files? (It may take {1} to download on a fast Internet connection or {2} on a slow broadband connection.)",
 			"filter": "Filter",

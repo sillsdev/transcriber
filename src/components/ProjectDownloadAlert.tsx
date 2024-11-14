@@ -27,6 +27,7 @@ import { isElectron } from '../api-variable';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { projectDownloadSelector, sharedSelector } from '../selector';
 import { useGlobal } from 'reactn';
+import FilterIcon from '@mui/icons-material/FilterList';
 import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
 import {
   Accordion,
@@ -54,6 +55,7 @@ import {
   projDefSectionMap,
 } from '../crud/useProjectDefaults';
 import { ISTFilterState } from './Sheet/filterMenu';
+import stringReplace from 'react-string-replace';
 
 interface PlanProject {
   [planId: string]: string;
@@ -99,6 +101,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
   const { getLocalDefault, getProjectDefault } = useProjectDefaults();
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy, setOrganizedBy] = React.useState('');
+  const [organizedByPl, setOrganizedByPl] = React.useState('');
   const [downAmt, setDownAmt] = React.useState('project');
   const projectPlans = useProjectPlans();
   const fetchUrl = useFetchUrlNow();
@@ -198,6 +201,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
           if (limit) limit.missing += fileSize;
           newMissingIds.push(m.media?.keys?.remoteId || m.media.id);
           if (!organizedBy) setOrganizedBy(getOrganizedBy(true, m.plan));
+          if (!organizedByPl) setOrganizedByPl(getOrganizedBy(false, m.plan));
           const artSlug = slugFromId(
             related(m.media, 'artifactType')
           ) as ArtifactTypeSlug;
@@ -322,7 +326,23 @@ export const ProjectDownloadAlert = (props: IProps) => {
           isOpen={alert}
           onOpen={handleClose(true)}
           bp={BigDialogBp.sm}
-          description={<Typography>{t.downloadDescription}</Typography>}
+          description={
+            <Typography sx={{ fontSize: 'small' }}>
+              {stringReplace(
+                t.downloadDescription
+                  .replace(/\{1}/g, organizedBy)
+                  .replace(/\{2}/g, organizedByPl)
+                  .replace(/\{3}/g, ts.save.toUpperCase())
+                  .replace(/\{4}/g, organizedByPl.toUpperCase()),
+                '{0}',
+                () => (
+                  <FilterIcon
+                    sx={{ color: 'secondary.light', fontSize: 'medium' }}
+                  />
+                )
+              )}
+            </Typography>
+          }
         >
           <Box>
             <DialogContent>
