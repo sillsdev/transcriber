@@ -113,7 +113,7 @@ function appMenu() {
         {
           label: 'Web Site',
           click: () => {
-            shell.openExternal('https://software.sil.org/siltranscriber');
+            shell.openExternal('https://software.sil.org/audioprojectmanager');
           },
         },
       ],
