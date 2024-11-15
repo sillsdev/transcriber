@@ -1729,6 +1729,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.convert">
+         <segment>
+            <source>Convert text to audio resource file</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="grid.all">
          <segment>
             <source>All</source>
@@ -5245,6 +5251,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectDownload.filtered">
+         <segment>
+            <source>Filtered MB</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="publishLevel.none">
          <segment>
             <source>Not Published - not visible outside this project</source>
@@ -5867,6 +5879,18 @@
          <segment>
             <source>No Audio Available!</source>
             <target>Аудио отсутствует!</target>
+         </segment>
+      </unit>
+      <unit id="shared.noiseRemoval">
+         <segment>
+            <source>Remove Noise</source>
+            <target>Удаление шума</target>
+         </segment>
+      </unit>
+      <unit id="shared.noiseRemovalFailed">
+         <segment>
+            <source>Noise Removal Failed</source>
+            <target>Устранение шума не удалось</target>
          </segment>
       </unit>
       <unit id="shared.NoSaveOffline">

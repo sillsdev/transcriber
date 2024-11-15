@@ -6166,6 +6166,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.noiseRemoval">
+         <segment>
+            <source>Remove Noise</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.noiseRemovalFailed">
+         <segment>
+            <source>Noise Removal Failed</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.NoSaveOffline">
          <segment>
             <source>Unable to save while offline.</source>

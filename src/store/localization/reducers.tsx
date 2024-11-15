@@ -1291,6 +1291,8 @@ const initialState = {
 			"mustBeOnline": "You must be online to use this feature",
 			"no": "No",
 			"noAudio": "No Audio Available!",
+			"noiseRemoval": "Remove Noise",
+			"noiseRemovalFailed": "Noise Removal Failed",
 			"NoSaveOffline": "Unable to save while offline.",
 			"notSupported": "This feature is not supported yet.",
 			"observer": "Observer",

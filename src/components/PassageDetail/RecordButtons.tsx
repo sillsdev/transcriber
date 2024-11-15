@@ -2,7 +2,7 @@ import { ButtonGroup, ButtonGroupProps, styled } from '@mui/material';
 import AddIcon from '@mui/icons-material/LibraryAddOutlined';
 import VersionsIcon from '@mui/icons-material/List';
 import AudioFileIcon from '@mui/icons-material/AudioFileOutlined';
-import { AltButton, AudacityLogo } from '../../control';
+import { AltButton, AudacityLogo, RemoveNoiseIcon } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
 import { passageRecordSelector, sharedSelector } from '../../selector';
 import { IPassageRecordStrings, ISharedStrings } from '../../model';
@@ -18,6 +18,8 @@ interface IProps {
   onReload?: () => void;
   onUpload: () => void;
   onAudacity?: () => void;
+  onNoiseRemoval?: () => void;
+  noiseRemoveInProgress: boolean;
 }
 
 export const RecordButtons = ({
@@ -25,6 +27,8 @@ export const RecordButtons = ({
   onUpload,
   onReload,
   onAudacity,
+  onNoiseRemoval,
+  noiseRemoveInProgress,
 }: IProps) => {
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const t: IPassageRecordStrings = useSelector(
@@ -71,6 +75,18 @@ export const RecordButtons = ({
           startIcon={<AudacityLogo sx={IconSize} />}
         >
           {ts.launchAudacity}
+        </AltButton>
+      )}
+      {onNoiseRemoval && (
+        <AltButton
+          id="noiseremoval"
+          onClick={onNoiseRemoval}
+          title={ts.noiseRemoval}
+          startIcon={<RemoveNoiseIcon width="14pt" height="14pt" />}
+          disabled={noiseRemoveInProgress}
+          color={noiseRemoveInProgress ? 'warning' : 'primary'}
+        >
+          {ts.noiseRemoval}
         </AltButton>
       )}
     </StyledButtonGroup>
