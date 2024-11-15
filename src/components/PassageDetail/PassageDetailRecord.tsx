@@ -208,7 +208,6 @@ export function PassageDetailRecord(props: IProps) {
   const handleTrackRecorder = (state: IMediaState) => setRecorderState(state);
 
   const noiseRemovalComplete = (newId: string) => {
-    console.log('noiseremovealcomplete!', newId);
     if (newId) {
       setSelected(newId, PlayInPlayer.no);
       handleReload();
