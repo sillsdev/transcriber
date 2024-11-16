@@ -6,12 +6,10 @@ import {
   findRecord,
   IMediaState,
   MediaSt,
-  pullTableList,
   related,
   remoteIdNum,
   useFetchMediaUrl,
   VernacularTag,
-  waitForLocalId,
 } from '../../crud';
 import { useGlobal } from 'reactn';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
@@ -32,8 +30,6 @@ import { RecordButtons } from './RecordButtons';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 import { useNoiseRemoval } from '../../utils/useNoiseRemoval';
-import JSONAPISource from '@orbit/jsonapi';
-import IndexedDBSource from '@orbit/indexeddb';
 import { PlayInPlayer } from '../../context/PassageDetailContext';
 
 interface IProps {
@@ -66,12 +62,15 @@ export function PassageDetailRecord(props: IProps) {
   const [coordinator] = useGlobal('coordinator');
   const [offline] = useGlobal('offline');
   const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
-  const { passage, sharedResource, mediafileId, chooserSize, setRecording, setSelected } =
-    usePassageDetailContext();
-  const [taskId, setTaskIdx] = useState("");
-  const taskIdRef = useRef<string>("");
+  const {
+    passage,
+    sharedResource,
+    mediafileId,
+    chooserSize,
+    setRecording,
+    setSelected,
+  } = usePassageDetailContext();
+  const [taskId, setTaskId] = useState('');
   const { showMessage } = useSnackBar();
   const toolId = 'RecordTool';
   const onSaving = () => {
@@ -91,13 +90,7 @@ export function PassageDetailRecord(props: IProps) {
   const [resetMedia, setResetMedia] = useState(false);
   const [speaker, setSpeaker] = useState('');
   const [hasRights, setHasRight] = useState(false);
-  const {startTask, checkTask} = useNoiseRemoval();
-  const taskTimer = useRef<NodeJS.Timeout>();
-
-  const setTaskId = (task: string) => {
-    setTaskIdx(task);
-    taskIdRef.current = task;
-  }
+  const requestNoiseRemoval = useNoiseRemoval();
 
   useEffect(() => {
     toolChanged(toolId, canSave);
@@ -213,60 +206,23 @@ export function PassageDetailRecord(props: IProps) {
   const handleRights = (hasRights: boolean) => setHasRight(hasRights);
   const handleReload = () => setPreload(preload + 1);
   const handleTrackRecorder = (state: IMediaState) => setRecorderState(state);
+
+  const noiseRemovalComplete = (newId: string) => {
+    console.log('noiseremovealcomplete!', newId);
+    if (newId) {
+      setSelected(newId, PlayInPlayer.no);
+      handleReload();
+    } else {
+      showMessage(ts.noiseRemovalFailed);
+    }
+    setTaskId('');
+  };
   const handleNoiseRemoval = () => {
     //send the id and get a taskid
-    startTask(remoteIdNum('mediafile', mediafileId, memory.keyMap as RecordKeyMap)).then((task) => {
-      setTaskId(task);
-      if (task) 
-        launchTimer(); 
-      else 
-        showMessage(ts.noiseRemovalFailed);
-    })
-  }
-
-  const cleanupTimer = () => {
-    if (taskTimer.current) {
-      try {
-        clearInterval(taskTimer.current);
-      } catch (error) {
-        console.log(error);
-      }
-      taskTimer.current = undefined;
-    }
-  };
-
-  const checkNoiseRemovalTask = async () => {
-    if (!taskIdRef.current) return;
-    try {
-      var currentId = remoteIdNum('mediafile', mediafileId, memory.keyMap as RecordKeyMap);
-      var mediaId = await checkTask(currentId, taskIdRef.current);
-      if (mediaId && mediaId !== currentId.toString())
-      {
-        cleanupTimer();
-        setTaskId("");
-        await pullTableList(
-          'mediafile',
-          Array(mediaId),
-          memory,
-          remote,
-          backup,
-          reporter
-        );
-        var locaId = await waitForLocalId('mediafile', mediaId, memory.keyMap as RecordKeyMap);
-        setSelected(locaId, PlayInPlayer.no);
-        handleReload();
-      } 
-    } catch (error) {
-      console.log(error);
-      showMessage(ts.noiseRemovalFailed);
-      setTaskId("");
-      cleanupTimer();
-    }
-  }
-  const launchTimer = () => {
-    taskTimer.current = setInterval(() => {
-      checkNoiseRemovalTask();
-    }, 3000);
+    requestNoiseRemoval(
+      remoteIdNum('mediafile', mediafileId, memory.keyMap as RecordKeyMap),
+      noiseRemovalComplete
+    ).then((task) => setTaskId(task ?? ''));
   };
 
   return (
@@ -276,8 +232,12 @@ export function PassageDetailRecord(props: IProps) {
         onReload={hasExistingVersion ? handleReload : undefined}
         onUpload={handleUpload}
         onAudacity={isElectron ? handleAudacity : undefined}
-        onNoiseRemoval={!offline && hasExistingVersion && !canSave  ? handleNoiseRemoval : undefined}
-        noiseRemoveInProgress={taskId !== ""}
+        onNoiseRemoval={
+          !offline && hasExistingVersion && !canSave
+            ? handleNoiseRemoval
+            : undefined
+        }
+        noiseRemoveInProgress={taskId !== ''}
       />
       <Box sx={{ py: 1 }}>
         <SpeakerName
