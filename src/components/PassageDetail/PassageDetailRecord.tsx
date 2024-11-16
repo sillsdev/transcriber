@@ -62,9 +62,15 @@ export function PassageDetailRecord(props: IProps) {
   const [coordinator] = useGlobal('coordinator');
   const [offline] = useGlobal('offline');
   const memory = coordinator.getSource('memory') as Memory;
-  const { passage, sharedResource, mediafileId, chooserSize, setRecording, setSelected } =
-    usePassageDetailContext();
-  const [taskId, setTaskId] = useState("");
+  const {
+    passage,
+    sharedResource,
+    mediafileId,
+    chooserSize,
+    setRecording,
+    setSelected,
+  } = usePassageDetailContext();
+  const [taskId, setTaskId] = useState('');
   const { showMessage } = useSnackBar();
   const toolId = 'RecordTool';
   const onSaving = () => {
@@ -200,25 +206,24 @@ export function PassageDetailRecord(props: IProps) {
   const handleRights = (hasRights: boolean) => setHasRight(hasRights);
   const handleReload = () => setPreload(preload + 1);
   const handleTrackRecorder = (state: IMediaState) => setRecorderState(state);
-  
+
   const noiseRemovalComplete = (newId: string) => {
     console.log('noiseremovealcomplete!', newId);
-    if (newId)
-    {
+    if (newId) {
       setSelected(newId, PlayInPlayer.no);
       handleReload();
-    }
-    else 
-    {  
+    } else {
       showMessage(ts.noiseRemovalFailed);
     }
-    setTaskId("");
-  }
+    setTaskId('');
+  };
   const handleNoiseRemoval = () => {
     //send the id and get a taskid
-    requestNoiseRemoval(remoteIdNum('mediafile', mediafileId, memory.keyMap as RecordKeyMap), 
-              noiseRemovalComplete).then((task) => setTaskId(task??""));
-  }
+    requestNoiseRemoval(
+      remoteIdNum('mediafile', mediafileId, memory.keyMap as RecordKeyMap),
+      noiseRemovalComplete
+    ).then((task) => setTaskId(task ?? ''));
+  };
 
   return (
     <Stack sx={{ width: props.width }}>
@@ -227,8 +232,12 @@ export function PassageDetailRecord(props: IProps) {
         onReload={hasExistingVersion ? handleReload : undefined}
         onUpload={handleUpload}
         onAudacity={isElectron ? handleAudacity : undefined}
-        onNoiseRemoval={!offline && hasExistingVersion && !canSave  ? handleNoiseRemoval : undefined}
-        noiseRemoveInProgress={taskId !== ""}
+        onNoiseRemoval={
+          !offline && hasExistingVersion && !canSave
+            ? handleNoiseRemoval
+            : undefined
+        }
+        noiseRemoveInProgress={taskId !== ''}
       />
       <Box sx={{ py: 1 }}>
         <SpeakerName
