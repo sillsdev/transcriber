@@ -10,6 +10,7 @@ export function createWaveSurfer(container, height, timelineContainer) {
     waveColor: '#A8DBA8',
     progressColor: '#3B8686',
     height: height,
+    normalize: true,
     plugins: [
       timelineContainer &&
         WaveSurferTimeline.create({
