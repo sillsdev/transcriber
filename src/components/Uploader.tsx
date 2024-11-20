@@ -25,6 +25,7 @@ import { IndexedDBSource } from '@orbit/indexeddb';
 import path from 'path-browserify';
 import { RecordKeyMap } from '@orbit/records';
 import { AlertSeverity } from '../hoc/SnackBar';
+import { getContentType } from '../utils/contentType';
 
 interface IProps {
   noBusy?: boolean;
@@ -227,7 +228,10 @@ export const Uploader = (props: IProps) => {
       planId: getPlanId(),
       versionNumber: 1,
       originalFile: uploadList[currentlyLoading].name,
-      contentType: uploadList[currentlyLoading].type,
+      contentType: getContentType(
+        uploadList[currentlyLoading].type,
+        uploadList[currentlyLoading].name
+      ),
       artifactTypeId: getArtifactTypeId(),
       passageId: getPassageId(),
       userId: getUserId(),

@@ -9,6 +9,7 @@ import { PassageDetailContext } from '../context/PassageDetailContext';
 import { IndexedDBSource } from '@orbit/indexeddb';
 import { UploadType } from '../components/MediaUpload';
 import { RecordKeyMap } from '@orbit/records';
+import { getContentType } from '../utils/contentType';
 
 interface IProps {
   artifactId: string;
@@ -90,7 +91,7 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
       planId: getPlanId(),
       versionNumber: 1,
       originalFile: files[0].name,
-      contentType: files[0].type,
+      contentType: getContentType(files[0].type, files[0].name),
       artifactTypeId: getArtifactId(),
       passageId: getPassageId(),
       recordedbyUserId: getUserId(),

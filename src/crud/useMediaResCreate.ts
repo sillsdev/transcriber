@@ -3,6 +3,7 @@ import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
 import { Resource, MediaFile, MediaFileD } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { ArtifactTypeSlug, useArtifactType } from '.';
+import { getContentType } from '../utils/contentType';
 
 export const useMediaResCreate = (passage: RecordIdentity, stepId: string) => {
   const [memory] = useGlobal('memory');
@@ -18,7 +19,7 @@ export const useMediaResCreate = (passage: RecordIdentity, stepId: string) => {
         versionNumber: attr.versionNumber,
         eafUrl: null,
         duration: attr.duration,
-        contentType: attr.contentType,
+        contentType: getContentType(attr.contentType, attr.originalFile),
         audioQuality: null,
         textQuality: null,
         transcription: attr.transcription,
