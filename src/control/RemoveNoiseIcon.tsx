@@ -4,10 +4,12 @@ interface IProps {
   sx?: SxProps;
   width?: string;
   height?: string;
+  disabled: boolean;
 }
 
-export const RemoveNoiseIcon = ({ width, height }: IProps) => {
+export const RemoveNoiseIcon = ({ width, height, disabled }: IProps) => {
   const theme = useTheme();
+
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -18,9 +20,9 @@ export const RemoveNoiseIcon = ({ width, height }: IProps) => {
     >
       <g
         id="no-honk-icon"
-        stroke={theme.palette.primary.light}
+        stroke={theme.palette.grey[400]}
         stroke-width="1"
-        fill={theme.palette.primary.light}
+        fill={disabled ? theme.palette.grey[400] : theme.palette.grey[700]}
         fill-rule="evenodd"
       >
         <path d="M 2979.628906 2046.960938 C 2994.441406 2055.929688 3420.789063 1903.421875 3580.671875 1782.300781 C 3675.421875 1700.070313 3622.121094 1607.371094 3503.691406 1649.230469 C 3318.640625 1731.46875 2963.351563 2037.988281 2979.628906 2046.960938 " />
