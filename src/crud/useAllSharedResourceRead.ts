@@ -1,6 +1,7 @@
 import JSONAPISource from '@orbit/jsonapi';
 import { Resource } from '../model';
 import { useGlobal } from 'reactn';
+import { PassageTypeEnum } from '../model/passageType';
 
 export const useAllSharedResourceRead = () => {
   const [coordinator] = useGlobal('coordinator');
@@ -8,9 +9,12 @@ export const useAllSharedResourceRead = () => {
 
   return async () => {
     if (remote)
-      return (await remote.query((q) =>
-        q.findRecords('resource')
-      )) as Resource[];
+      return (
+        (await remote.query((q) => q.findRecords('resource'))) as Resource[]
+      ).filter(
+        (r) =>
+          !r?.attributes.passageDesc.includes(PassageTypeEnum.CHAPTERNUMBER)
+      );
     else return [] as Resource[];
   };
 };

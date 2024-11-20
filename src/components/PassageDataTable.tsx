@@ -82,7 +82,7 @@ interface IProps {
   levelIn?: RefLevel;
 }
 
-export const SelectSharedResource = (props: IProps) => {
+export const PassageDataTable = (props: IProps) => {
   const {
     isNote,
     data,
@@ -216,7 +216,6 @@ export const SelectSharedResource = (props: IProps) => {
           }
         }
       }
-
       if (noTermsList.length > 0) {
         setChecks((isNote ? [] : checks).concat(noTermsList).sort(numSort));
       }
@@ -399,4 +398,4 @@ export const SelectSharedResource = (props: IProps) => {
   );
 };
 
-export default SelectSharedResource;
+export default PassageDataTable;
