@@ -29,7 +29,6 @@ import AudioFileIcon from '@mui/icons-material/AudioFileOutlined';
 import { useSelector } from 'react-redux';
 import { passageRecordSelector } from '../selector';
 import { useDispatch } from 'react-redux';
-
 const controlProps = { m: 1 } as SxProps;
 
 interface IProps {
@@ -431,6 +430,7 @@ function MediaRecord(props: IProps) {
         doReset={doReset}
         autoStart={autoStart}
         segments={segments}
+        reload={gotTheBlob}
       />
       {warning && (
         <Typography sx={{ m: 2, color: 'warning.dark' }} id="warning">

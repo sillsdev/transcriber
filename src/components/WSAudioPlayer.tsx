@@ -2,10 +2,8 @@ import {
   Paper,
   IconButton,
   Typography,
-  InputLabel,
   Divider,
   DividerProps,
-  Input,
   Grid,
   ToggleButton,
   Box,
@@ -20,11 +18,10 @@ import PlayIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import LoopIcon from '@mui/icons-material/Loop';
 import DeleteIcon from '@mui/icons-material/Delete';
-import SilenceIcon from '@mui/icons-material/SpaceBar';
 import TimerIcon from '@mui/icons-material/AccessTime';
 import NextSegmentIcon from '@mui/icons-material/ArrowRightAlt';
 import UndoIcon from '@mui/icons-material/Undo';
-import { IWsAudioPlayerStrings } from '../model';
+import { ISharedStrings, IWsAudioPlayerStrings } from '../model';
 import {
   FaHandScissors,
   FaAngleDoubleUp,
@@ -52,8 +49,12 @@ import {
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 import Confirm from './AlertDialog';
 import { NamedRegions } from '../utils/namedSegments';
-import { wsAudioPlayerSelector } from '../selector';
+import { sharedSelector, wsAudioPlayerSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import { WSAudioPlayerSilence } from './WSAudioPlayerSilence';
+import { RemoveNoiseIcon } from '../control';
+import { useNoiseRemoval } from '../utils/useNoiseRemoval';
+import { Exception } from '@orbit/core';
 
 const VertDivider = (prop: DividerProps) => (
   <Divider orientation="vertical" flexItem sx={{ ml: '5px' }} {...prop} />
@@ -65,14 +66,6 @@ const toolbarProp = {
   justifyItems: 'flex-start',
   display: 'flex',
 } as SxProps;
-
-const labeledControlProp = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-};
-
-const smallLabel = { fontSize: 'small' } as SxProps;
 
 interface IProps {
   id?: string;
@@ -118,6 +111,7 @@ interface IProps {
   onRecording?: (r: boolean) => void;
   onCurrentSegment?: (currentSegment: IRegion | undefined) => void;
   onMarkerClick?: (time: number) => void;
+  reload?: (blob: Blob) => void;
 }
 function valuetext(value: number) {
   return `${Math.floor(value)}%`;
@@ -181,6 +175,7 @@ function WSAudioPlayer(props: IProps) {
     onRecording,
     onCurrentSegment,
     onMarkerClick,
+    reload,
   } = props;
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
@@ -199,9 +194,9 @@ function WSAudioPlayer(props: IProps) {
   const recordOverwritePosition = useRef<number | undefined>(undefined);
   const recordingRef = useRef(false);
   const [recording, setRecordingx] = useState(false);
+  const [waitingForAI, setWaitingForAI] = useState(false);
   const readyRef = useRef(false);
   const [ready, setReadyx] = useState(false);
-  const [silence, setSilence] = useState(0.5);
   const [progress, setProgress] = useState(0);
   const durationRef = useRef(0);
   const initialPosRef = useRef(initialposition);
@@ -216,13 +211,14 @@ function WSAudioPlayer(props: IProps) {
     wsAudioPlayerSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [style, setStyle] = useState({
     cursor: busy || loading ? 'progress' : 'default',
   });
   const autostartTimer = useRef<NodeJS.Timeout>();
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
   const [oneShotUsed, setOneShotUsed] = useState(false);
-
+  const { requestFileNoiseRemoval } = useNoiseRemoval();
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
   const {
@@ -231,6 +227,7 @@ function WSAudioPlayer(props: IProps) {
     wsTogglePlay,
     wsPlayRegion,
     wsBlob,
+    wsRegionBlob,
     wsPause,
     wsDuration,
     wsPosition,
@@ -243,6 +240,7 @@ function WSAudioPlayer(props: IProps) {
     wsGetRegions,
     wsLoopRegion,
     wsRegionDelete,
+    wsRegionReplace,
     wsUndo,
     wsInsertAudio,
     wsInsertSilence,
@@ -719,15 +717,34 @@ function WSAudioPlayer(props: IProps) {
     wsUndo();
     handleChanged();
   };
-  const handleAddSilence = () => () => {
-    wsInsertSilence(silence, wsPosition());
-    handleChanged();
-  };
-
-  const handleChangeSilence = (e: any) => {
-    //check if its a number
-    e.persist();
-    setSilence(e.target.value);
+  const handleNoiseRemoval = () => {
+    if (!reload) throw new Exception('need reload defined.');
+    if (setBusy) setBusy(true);
+    setWaitingForAI(true);
+    wsRegionBlob().then((blob) => {
+      if (blob)
+        requestFileNoiseRemoval(
+          new File([blob], 'file.wav', { type: 'audio/wav' }),
+          (file: File | Error) => {
+            if (file instanceof File) {
+              console.log('put the file back now');
+              var regionblob = new Blob([file], { type: file.type });
+              if (regionblob) {
+                wsRegionReplace(regionblob).then((newblob) => {
+                  console.log('wsRegionReplace complete', newblob);
+                  if (newblob) reload(newblob);
+                });
+              }
+            }
+            setBusy && setBusy(false);
+            setWaitingForAI(false);
+          }
+        );
+      else {
+        setBusy && setBusy(false);
+        setWaitingForAI(false);
+      }
+    });
   };
   const onSplit = (split: IRegionChange) => {};
   return (
@@ -761,7 +778,9 @@ function WSAudioPlayer(props: IProps) {
                             id="wsAudioRecord"
                             sx={{ color: 'red' }}
                             onClick={handleRecorder}
-                            disabled={playing || processingRecording}
+                            disabled={
+                              playing || processingRecording || waitingForAI
+                            }
                           >
                             {recording ? <FaStopCircle /> : <FaDotCircle />}
                           </IconButton>
@@ -788,7 +807,7 @@ function WSAudioPlayer(props: IProps) {
                         <IconButton
                           id="wsAudioPlay"
                           onClick={handlePlayStatus}
-                          disabled={duration === 0 || recording}
+                          disabled={duration === 0 || recording || waitingForAI}
                         >
                           <>{playing ? <PauseIcon /> : <PlayIcon />}</>
                         </IconButton>
@@ -822,52 +841,19 @@ function WSAudioPlayer(props: IProps) {
                 <>
                   {allowSilence && (
                     <>
-                      <Box sx={labeledControlProp}>
-                        <>
-                          <InputLabel
-                            id="wsAudioAddSilenceLabel"
-                            sx={smallLabel}
-                          >
-                            {t.silence}
-                          </InputLabel>
-                          <LightTooltip
-                            id="wsAudioAddSilenceTip"
-                            title={t.silence}
-                          >
-                            <span>
-                              <IconButton
-                                id="wsAudioAddSilence"
-                                sx={{ mx: 1 }}
-                                onClick={handleAddSilence()}
-                                disabled={
-                                  !ready ||
-                                  recording ||
-                                  playing ||
-                                  processingRecording
-                                }
-                              >
-                                <SilenceIcon />
-                              </IconButton>
-                            </span>
-                          </LightTooltip>
-                        </>
-                      </Box>
-                      <Box sx={labeledControlProp}>
-                        <>
-                          <InputLabel id="wsAudioSilenceLabel" sx={smallLabel}>
-                            {t.seconds}
-                          </InputLabel>
-                          <Input
-                            id="wsAudioSilence"
-                            sx={{ m: 1, maxWidth: 50 }}
-                            type="number"
-                            inputProps={{ min: '0.1', step: '0.1' }}
-                            value={silence}
-                            onChange={handleChangeSilence}
-                          />
-                        </>
-                      </Box>
-                      <VertDivider id="wsAudioDiv4" />{' '}
+                      <WSAudioPlayerSilence
+                        disabled={
+                          !ready ||
+                          recording ||
+                          playing ||
+                          processingRecording ||
+                          waitingForAI
+                        }
+                        wsInsertSilence={wsInsertSilence}
+                        wsPosition={wsPosition}
+                        handleChanged={handleChanged}
+                      />
+                      <VertDivider id="wsAudioDiv4" />
                     </>
                   )}
                   {hasRegion !== 0 && !oneShotUsed && (
@@ -879,9 +865,36 @@ function WSAudioPlayer(props: IProps) {
                         <IconButton
                           id="wsAudioDeleteRegion"
                           onClick={handleDeleteRegion}
-                          disabled={recording}
+                          disabled={recording || waitingForAI}
                         >
                           <FaHandScissors />
+                        </IconButton>
+                      </span>
+                    </LightTooltip>
+                  )}
+                  {allowRecord && (
+                    <LightTooltip id="noiseRemovalTim" title={ts.noiseRemoval}>
+                      <span>
+                        <IconButton
+                          id="noiseRemoval"
+                          onClick={handleNoiseRemoval}
+                          disabled={
+                            !ready ||
+                            recording ||
+                            duration === 0 ||
+                            waitingForAI
+                          }
+                        >
+                          <RemoveNoiseIcon
+                            width="18pt"
+                            height="18pt"
+                            disabled={
+                              !ready ||
+                              recording ||
+                              duration === 0 ||
+                              waitingForAI
+                            }
+                          />
                         </IconButton>
                       </span>
                     </LightTooltip>
@@ -892,7 +905,7 @@ function WSAudioPlayer(props: IProps) {
                         <IconButton
                           id="wsUndo"
                           onClick={handleUndo}
-                          disabled={recording}
+                          disabled={recording || waitingForAI}
                         >
                           <UndoIcon />
                         </IconButton>
@@ -908,7 +921,7 @@ function WSAudioPlayer(props: IProps) {
                         <IconButton
                           id="wsAudioDelete"
                           onClick={handleDelete}
-                          disabled={recording || duration === 0}
+                          disabled={recording || duration === 0 || waitingForAI}
                         >
                           <DeleteIcon />
                         </IconButton>
@@ -953,7 +966,7 @@ function WSAudioPlayer(props: IProps) {
                           value="loop"
                           selected={looping}
                           onChange={handleToggleLoop}
-                          disabled={!hasRegion}
+                          disabled={!hasRegion || waitingForAI}
                         >
                           <LoopIcon />
                         </ToggleButton>
@@ -971,7 +984,7 @@ function WSAudioPlayer(props: IProps) {
                       >
                         <span>
                           <IconButton
-                            disabled={!hasRegion}
+                            disabled={!hasRegion || waitingForAI}
                             id="wsNext"
                             onClick={handlePrevRegion}
                           >
@@ -990,7 +1003,7 @@ function WSAudioPlayer(props: IProps) {
                       >
                         <span>
                           <IconButton
-                            disabled={!hasRegion}
+                            disabled={!hasRegion || waitingForAI}
                             id="wsNext"
                             onClick={handleNextRegion}
                           >
