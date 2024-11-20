@@ -791,6 +791,7 @@ const PassageDetailProvider = (props: IProps) => {
   //set the player segment to the specified segment??
   const setPlayerSegments = (segments: string) => {
     if (segmentsCb.current) segmentsCb.current(segments);
+    settingSegmentRef.current = false;
   };
 
   const getCurrentSegment = () => {
