@@ -27,6 +27,7 @@ import { ResourceTypeEnum } from './PassageDetailArtifacts';
 import { MarkDownType, UploadType, UriLinkType } from '../../MediaUpload';
 import { LinkEdit } from '../../../control/LinkEdit';
 import { MarkDownEdit } from '../../../control/MarkDownEdit';
+import { mediaContentType } from '../../../utils/contentType';
 
 interface IProps {
   media?: MediaFileD;
@@ -96,10 +97,10 @@ export function ResourceData(props: IProps) {
 
   return (
     <Stack spacing={2}>
-      {media && media.attributes.contentType === UriLinkType && (
+      {mediaContentType(media) === UriLinkType && (
         <LinkEdit inValue={text} onValue={handleTextChange} />
       )}
-      {media && media.attributes.contentType === MarkDownType && (
+      {mediaContentType(media) === MarkDownType && (
         <MarkDownEdit inValue={text} onValue={handleTextChange} />
       )}
       <Box sx={{ pt: 1 }}>

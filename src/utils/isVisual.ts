@@ -1,4 +1,5 @@
 import { MediaFile } from '../model';
+import { mediaContentType } from './contentType';
 
 export const isVisual = (m: MediaFile | undefined) =>
-  !/^audio/i.test(m?.attributes?.contentType || '');
+  !/^audio/i.test(mediaContentType(m));

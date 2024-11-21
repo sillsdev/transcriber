@@ -31,6 +31,7 @@ import moment from 'moment';
 import eaf from '../utils/transcriptionEaf';
 import path from 'path-browserify';
 import { passageDefaultFilename } from '../utils/passageDefaultFilename';
+import { mediaContentType } from '../utils/contentType';
 
 const vernSort = (m: MediaFile) => (!related(m, 'artifactType') ? 0 : 1);
 
@@ -187,7 +188,7 @@ export const getMediaEaf = (
     ? Math.round(durationNum * 1000).toString()
     : '0';
   const lang = getMediaLang(mediaRec, memory, reporter);
-  const mime = (mediaAttr && mediaAttr.contentType) || '';
+  const mime = mediaContentType(mediaRec);
   const ext = /mpeg/.test(mime)
     ? '.mp3'
     : /m4a/.test(mime)

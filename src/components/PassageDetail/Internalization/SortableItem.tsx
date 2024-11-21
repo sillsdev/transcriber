@@ -6,6 +6,7 @@ import { MarkDownType, UriLinkType } from '../../MediaUpload';
 
 interface IProps {
   value: IRow;
+  contentType: string;
   isPlaying: boolean;
   onPlay: (id: string) => void;
   onView: (id: string) => void;
@@ -18,6 +19,7 @@ interface IProps {
 
 export const SortableItem = ({
   value,
+  contentType,
   isPlaying,
   onPlay,
   onView,
@@ -32,11 +34,11 @@ export const SortableItem = ({
       {
         ...value,
         playItem:
-          value.mediafile.attributes.contentType === UriLinkType ? (
+          contentType === UriLinkType ? (
             <ViewButton id={value.id} cb={onLink} />
-          ) : value.mediafile.attributes.contentType === MarkDownType ? (
+          ) : contentType === MarkDownType ? (
             <ViewButton id={value.id} cb={onMarkDown} />
-          ) : !/^audio/.test(value.mediafile.attributes.contentType) ? (
+          ) : !/^audio/.test(contentType) ? (
             <ViewButton id={value.id} cb={onView} />
           ) : (
             <PlayButton value={!isPlaying} id={value.id} cb={onPlay} />

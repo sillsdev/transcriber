@@ -79,6 +79,7 @@ import remarkGfm from 'remark-gfm';
 import { LaunchLink } from '../../../control/LaunchLink';
 import FindTabs from './FindTabs';
 import { storedCompareKey } from '../../../utils/storedCompareKey';
+import { mediaContentType } from '../../../utils/contentType';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -343,10 +344,11 @@ export function PassageDetailArtifacts() {
     const mf = mediafiles.find((m) => m.id === related(secRes, 'mediafile'));
     catIdRef.current = mf ? related(mf, 'artifactCategory') : undefined;
     mediaRef.current = mf as MediaFileD;
+    var ct = mediaContentType(mf);
     setUploadType(
-      mf?.attributes.contentType === MarkDownType
+      ct === MarkDownType
         ? UploadType.MarkDown
-        : mf?.attributes.contentType === UriLinkType
+        : ct === UriLinkType
         ? UploadType.Link
         : UploadType.Resource
     );
@@ -779,6 +781,7 @@ export function PassageDetailArtifacts() {
           <SortableItem
             key={`item-${index}`}
             value={value as any}
+            contentType={mediaContentType(value.mediafile)}
             isPlaying={playItem === value.id && itemPlaying}
             onPlay={handlePlay}
             onView={handleDisplayId}
