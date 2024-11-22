@@ -735,7 +735,7 @@ function WSAudioPlayer(props: IProps) {
                   if (newblob) reload(newblob);
                 });
               }
-            }
+            } else showMessage(ts.noiseRemovalFailed);
             setBusy && setBusy(false);
             setWaitingForAI(false);
           }
@@ -838,6 +838,27 @@ function WSAudioPlayer(props: IProps) {
                 </>
               )}
               {allowRecord && (
+                <LightTooltip id="noiseRemovalTim" title={ts.noiseRemoval}>
+                  <span>
+                    <IconButton
+                      id="noiseRemoval"
+                      onClick={handleNoiseRemoval}
+                      disabled={
+                        !ready || recording || duration === 0 || waitingForAI
+                      }
+                    >
+                      <RemoveNoiseIcon
+                        width="18pt"
+                        height="18pt"
+                        disabled={
+                          !ready || recording || duration === 0 || waitingForAI
+                        }
+                      />
+                    </IconButton>
+                  </span>
+                </LightTooltip>
+              )}
+              {allowRecord && (
                 <>
                   {allowSilence && (
                     <>
@@ -868,33 +889,6 @@ function WSAudioPlayer(props: IProps) {
                           disabled={recording || waitingForAI}
                         >
                           <FaHandScissors />
-                        </IconButton>
-                      </span>
-                    </LightTooltip>
-                  )}
-                  {allowRecord && (
-                    <LightTooltip id="noiseRemovalTim" title={ts.noiseRemoval}>
-                      <span>
-                        <IconButton
-                          id="noiseRemoval"
-                          onClick={handleNoiseRemoval}
-                          disabled={
-                            !ready ||
-                            recording ||
-                            duration === 0 ||
-                            waitingForAI
-                          }
-                        >
-                          <RemoveNoiseIcon
-                            width="18pt"
-                            height="18pt"
-                            disabled={
-                              !ready ||
-                              recording ||
-                              duration === 0 ||
-                              waitingForAI
-                            }
-                          />
                         </IconButton>
                       </span>
                     </LightTooltip>

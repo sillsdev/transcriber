@@ -11,7 +11,9 @@ export const axiosGetStream = async (
   //couldn't get axios to return a stream so use fetch
   const response = await fetch(api);
   if (response.status === HttpStatusCode.Ok) return response;
-  else return undefined;
+  if (response.status === HttpStatusCode.InternalServerError)
+    throw new Error(response.statusText);
+  return undefined;
 };
 
 export const axiosGet = async (api: string, params?: any, token?: string) => {
