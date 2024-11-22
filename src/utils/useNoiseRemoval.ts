@@ -7,6 +7,7 @@ import Memory from '@orbit/memory';
 import { pullTableList, waitForLocalId } from '../crud';
 import logError, { Severity } from './logErrorService';
 import { axiosGet, axiosGetStream, axiosPostFile } from './axios';
+import { HttpStatusCode } from 'axios';
 
 interface job {
   taskId: string;
@@ -60,11 +61,13 @@ export const useNoiseRemoval = () => {
     if (offline) return '';
 
     var response = await axiosPostFile(`aero/noiseremoval`, file);
-    var taskId = response.data ?? '';
-    console.log('requested', taskId, response.data);
-    fileList.push({ taskId, cb, tries: waitTime / timerDelay });
-    if (!taskTimer.current) launchTimer();
-    return taskId;
+    if (response.status === HttpStatusCode.Ok) {
+      var taskId = response.data ?? '';
+      console.log('requested', taskId, response.data);
+      fileList.push({ taskId, cb, tries: waitTime / timerDelay });
+      if (!taskTimer.current) launchTimer();
+      return taskId;
+    } else cb(new Error(response.statusText));
   };
   const checkJob = async (id: number, taskId: string) => {
     var response = await axiosGet(`mediafiles/${id}/noiseremoval/${taskId}`);
