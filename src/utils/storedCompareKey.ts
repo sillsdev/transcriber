@@ -4,7 +4,7 @@ import { LocalKey, localUserKey } from './localUserKey';
 export const storedCompareKey = (passage: PassageD, section: SectionD) => {
   const storeKey = (keyType?: string) =>
     `${localUserKey(LocalKey.compare)}_${
-      keyType ?? passage.attributes.sequencenum
+      keyType ?? passage?.attributes?.sequencenum ?? 0
     }`;
 
   const SecSlug = 'secId';
