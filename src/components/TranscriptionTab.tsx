@@ -21,6 +21,7 @@ import {
   OrgWorkflowStep,
   VProject,
   OfflineProject,
+  OrgWorkflowStepD,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { Button, IconButton, Box, Alert } from '@mui/material';
@@ -60,6 +61,8 @@ import {
   VernacularTag,
   usePlanType,
   PassageReference,
+  afterStep,
+  getStepComplete,
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -103,13 +106,21 @@ interface IProps {
   planColumn?: boolean;
   floatTop?: boolean;
   step?: string;
-  orgSteps?: OrgWorkflowStep[];
+  passRec?: Passage;
+  orgSteps?: OrgWorkflowStepD[];
   sectionArr: [number, string][];
 }
 
 export function TranscriptionTab(props: IProps) {
-  const { projectPlans, planColumn, floatTop, step, orgSteps, sectionArr } =
-    props;
+  const {
+    projectPlans,
+    planColumn,
+    floatTop,
+    step,
+    passRec,
+    orgSteps,
+    sectionArr,
+  } = props;
   const t: ITranscriptionTabStrings = useSelector(transcriptionTabSelector);
   const ts: ISharedStrings = useSelector(sharedSelector);
   const activityState = useSelector(activitySelector);
@@ -430,6 +441,22 @@ export function TranscriptionTab(props: IProps) {
     setDataName(name + '.eaf');
   };
 
+  const ready = useMemo(
+    () =>
+      Boolean(
+        step
+          ? orgSteps &&
+              passRec &&
+              afterStep({
+                psgCompleted: getStepComplete(passRec),
+                target: step,
+                orgWorkflowSteps: orgSteps,
+              })
+          : true
+      ),
+    [passRec, step, orgSteps]
+  );
+
   useEffect(() => {
     if (dataUrl && dataName !== '') {
       if (eafAnchor && eafAnchor.current) {
@@ -517,19 +544,22 @@ export function TranscriptionTab(props: IProps) {
             .filter((ps) => related(ps, 'section') === section.id)
             .sort(passageCompare);
           if (sectionpassages.length > 0) {
-            sectionIndex = rowData.push({
-              id: section.id as string,
-              name: getSection([section], sectionMap),
-              state: '',
-              planName: planRec.attributes.name,
-              editor: sectionEditorName(section, users),
-              transcriber: sectionTranscriberName(section, users),
-              passages: sectionpassages.length.toString(),
-              updated: dateOrTime(section?.attributes?.dateUpdated, lang),
-              action: '',
-              parentId: '',
-              sort: (section.attributes.sequencenum || 0).toFixed(2).toString(),
-            })-1;
+            sectionIndex =
+              rowData.push({
+                id: section.id as string,
+                name: getSection([section], sectionMap),
+                state: '',
+                planName: planRec.attributes.name,
+                editor: sectionEditorName(section, users),
+                transcriber: sectionTranscriberName(section, users),
+                passages: sectionpassages.length.toString(),
+                updated: dateOrTime(section?.attributes?.dateUpdated, lang),
+                action: '',
+                parentId: '',
+                sort: (section.attributes.sequencenum || 0)
+                  .toFixed(2)
+                  .toString(),
+              }) - 1;
             sectionpassages.forEach((passage: Passage) => {
               const state = activityState.getString(getPassageState(passage));
               if (!isPublishingTitle(passage?.attributes?.reference, flat)) {
@@ -703,6 +733,7 @@ export function TranscriptionTab(props: IProps) {
                 action={handleAudioExportMenu}
                 localizedArtifact={localizedArtifact}
                 isScripture={isScripture}
+                disabled={!ready}
               />
             )}
             {planColumn && offline && projects.length > 1 && (
