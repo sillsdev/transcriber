@@ -21,7 +21,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import TimerIcon from '@mui/icons-material/AccessTime';
 import NextSegmentIcon from '@mui/icons-material/ArrowRightAlt';
 import UndoIcon from '@mui/icons-material/Undo';
-import { ISharedStrings, IWsAudioPlayerStrings } from '../model';
+import { IMainStrings, ISharedStrings, IWsAudioPlayerStrings } from '../model';
 import {
   FaHandScissors,
   FaAngleDoubleUp,
@@ -49,7 +49,11 @@ import {
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 import Confirm from './AlertDialog';
 import { NamedRegions } from '../utils/namedSegments';
-import { sharedSelector, wsAudioPlayerSelector } from '../selector';
+import {
+  mainSelector,
+  sharedSelector,
+  wsAudioPlayerSelector,
+} from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { WSAudioPlayerSilence } from './WSAudioPlayerSilence';
 import { RemoveNoiseIcon } from '../control';
@@ -211,6 +215,7 @@ function WSAudioPlayer(props: IProps) {
     wsAudioPlayerSelector,
     shallowEqual
   );
+  const tm: IMainStrings = useSelector(mainSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [style, setStyle] = useState({
     cursor: busy || loading ? 'progress' : 'default',
@@ -721,10 +726,11 @@ function WSAudioPlayer(props: IProps) {
     if (!reload) throw new Exception('need reload defined.');
     if (setBusy) setBusy(true);
     setWaitingForAI(true);
+    const filename = `${Date.now()}nr.wav`;
     wsRegionBlob().then((blob) => {
       if (blob)
         requestFileNoiseRemoval(
-          new File([blob], 'file.wav', { type: 'audio/wav' }),
+          new File([blob], filename, { type: 'audio/wav' }),
           (file: File | Error) => {
             if (file instanceof File) {
               console.log('put the file back now');
@@ -944,8 +950,13 @@ function WSAudioPlayer(props: IProps) {
                 />
               )}
             </Grid>
-            <div id="wsAudioTimeline" ref={timelineRef} />
-            <div id="wsAudioWaveform" ref={waveformRef} />
+            {waitingForAI || (
+              <>
+                <div id="wsAudioTimeline" ref={timelineRef} />
+                <div id="wsAudioWaveform" ref={waveformRef} />
+              </>
+            )}
+            {waitingForAI && <Typography>{tm.loadingTable}</Typography>}
             {justPlayButton || (
               <Grid container sx={toolbarProp}>
                 <Grid item>

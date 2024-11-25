@@ -70,7 +70,7 @@ export const writeFileLocal = async (file: File, remoteName?: string) => {
   return path.join(PathType.MEDIA, writeName.split(path.sep).pop());
 };
 const isTextContent = (content: string) => /^text/.test(content);
-const uploadFile = (
+export const uploadFile = (
   data: any,
   file: File,
   errorReporter: any,
