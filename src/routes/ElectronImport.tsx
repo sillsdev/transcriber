@@ -145,13 +145,13 @@ export const useElectronImport = () => {
       ret.warnMsg = t.newerVersion;
     }
     var userInProject = false;
-    var users: Array<string> = [];
+    var users = new Set<string>();
     var importUsers = JSON.parse(
       await ipc?.zipStreamEntryText(zip, 'data/A_users.json')
     );
     if (importUsers && Array.isArray(importUsers.data)) {
       importUsers.data.forEach((u: any) => {
-        users.push(u.attributes.name);
+        users.add(u.attributes.name);
         if (
           user === '' ||
           remoteIdGuid('user', u.id, memory.keyMap as RecordKeyMap) ||
@@ -182,7 +182,7 @@ export const useElectronImport = () => {
           {t.project}: {ret.projectName}
         </b>
         <br />
-        {t.members}: {users.join(',')}
+        {t.members}: {Array.from(users).sort().join(', ')}
         <br />
         <b>
           {userInProject ? (
