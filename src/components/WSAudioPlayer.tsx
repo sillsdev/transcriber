@@ -55,6 +55,7 @@ import { WSAudioPlayerSilence } from './WSAudioPlayerSilence';
 import { RemoveNoiseIcon } from '../control';
 import { useNoiseRemoval } from '../utils/useNoiseRemoval';
 import { Exception } from '@orbit/core';
+import { useGlobal } from 'reactn';
 
 const VertDivider = (prop: DividerProps) => (
   <Divider orientation="vertical" flexItem sx={{ ml: '5px' }} {...prop} />
@@ -180,6 +181,7 @@ function WSAudioPlayer(props: IProps) {
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
 
+  const [isDeveloper] = useGlobal('developer');
   const [confirmAction, setConfirmAction] = useState<string | JSX.Element>('');
   const [jump] = useState(2);
   const playbackRef = useRef(1);
@@ -856,28 +858,33 @@ function WSAudioPlayer(props: IProps) {
                       <VertDivider id="wsAudioDiv4" />
                     </>
                   )}
-                  <LightTooltip id="noiseRemovalTim" title={ts.noiseRemoval}>
-                    <span>
-                      <IconButton
-                        id="noiseRemoval"
-                        onClick={handleNoiseRemoval}
-                        disabled={
-                          !ready || recording || duration === 0 || waitingForAI
-                        }
-                      >
-                        <RemoveNoiseIcon
-                          width="18pt"
-                          height="18pt"
+                  {isDeveloper && (
+                    <LightTooltip id="noiseRemovalTim" title={ts.noiseRemoval}>
+                      <span>
+                        <IconButton
+                          id="noiseRemoval"
+                          onClick={handleNoiseRemoval}
                           disabled={
                             !ready ||
                             recording ||
                             duration === 0 ||
                             waitingForAI
                           }
-                        />
-                      </IconButton>
-                    </span>
-                  </LightTooltip>
+                        >
+                          <RemoveNoiseIcon
+                            width="18pt"
+                            height="18pt"
+                            disabled={
+                              !ready ||
+                              recording ||
+                              duration === 0 ||
+                              waitingForAI
+                            }
+                          />
+                        </IconButton>
+                      </span>
+                    </LightTooltip>
+                  )}
                   {hasRegion !== 0 && !oneShotUsed && (
                     <LightTooltip
                       id="wsAudioDeleteRegionTip"
