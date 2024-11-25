@@ -34,7 +34,7 @@ const KeyTerms = ({ width }: IProps) => {
   const [org] = useGlobal('organization');
   const [memory] = useGlobal('memory');
   const { passage } = usePassageDetailContext();
-  const { book } = passage.attributes;
+  const book = passage?.attributes?.book;
   const {
     verseTerms,
     ktDisplay,
@@ -52,7 +52,8 @@ const KeyTerms = ({ width }: IProps) => {
   } = useKeyTerms();
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   parseRef(passage);
-  const { startChapter, startVerse, endChapter, endVerse } = passage.attributes;
+  const { startChapter, startVerse, endChapter, endVerse } =
+    passage?.attributes ?? {};
   const [term, setTerm] = useState<IKeyTerm & ILocalTerm>();
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
 
@@ -151,12 +152,12 @@ const KeyTerms = ({ width }: IProps) => {
                 target: keyTermTargets
                   .filter(
                     (t) =>
-                      t.attributes.termIndex === to.I &&
+                      t?.attributes?.termIndex === to.I &&
                       related(t, 'organization') === org
                   )
                   .map((t) => ({
                     id: t.id,
-                    label: t.attributes.target,
+                    label: t?.attributes?.target,
                     mediaId: related(t, 'mediafile'),
                   })),
                 index: to.I,
