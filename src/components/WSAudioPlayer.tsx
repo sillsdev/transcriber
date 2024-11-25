@@ -733,11 +733,9 @@ function WSAudioPlayer(props: IProps) {
           new File([blob], filename, { type: 'audio/wav' }),
           (file: File | Error) => {
             if (file instanceof File) {
-              console.log('put the file back now');
               var regionblob = new Blob([file], { type: file.type });
               if (regionblob) {
                 wsRegionReplace(regionblob).then((newblob) => {
-                  console.log('wsRegionReplace complete', newblob);
                   if (newblob) reload(newblob);
                 });
               }
