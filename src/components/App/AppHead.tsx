@@ -472,15 +472,15 @@ export const AppHead = (props: IProps) => {
             </>
           )}
           {'\u00A0'}
-          {isElectron &&
+          {orbitStatus !== undefined || !connected ? (
+            <IconButton onClick={() => handleSetOnline()}>
+              <CloudOffIcon color="action" />
+            </IconButton>
+          ) : (
+            isElectron &&
             !isOfflineOnly &&
             localStorage.getItem(LocalKey.userId) &&
-            (plan || hasOfflineProjects) &&
-            (orbitStatus !== undefined || !connected ? (
-              <IconButton onClick={() => handleSetOnline()}>
-                <CloudOffIcon color="action" />
-              </IconButton>
-            ) : (
+            (plan || hasOfflineProjects) && (
               <Button
                 onClick={handleCloud}
                 startIcon={
@@ -493,7 +493,8 @@ export const AppHead = (props: IProps) => {
               >
                 {isOffline ? t.goOnline : t.goOffline}
               </Button>
-            ))}
+            )
+          )}
           {latestVersion !== '' &&
             isElectron &&
             latestVersion.split(' ')[0] !== version && (
