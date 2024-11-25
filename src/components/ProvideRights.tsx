@@ -107,7 +107,11 @@ export function ProvideRights(props: IProps) {
       clearCompleted(toolId);
     }
 
-    return () => clearCompleted(toolId);
+    return () => {
+      if (!saveRequested(toolId)) {
+        clearCompleted(toolId);
+      }
+    };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, canSave]);
