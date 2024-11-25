@@ -6,8 +6,16 @@ import IndexedDBSource from '@orbit/indexeddb';
 import Memory from '@orbit/memory';
 import { pullTableList, waitForLocalId } from '../crud';
 import logError, { Severity } from './logErrorService';
-import { axiosGet, axiosGetStream, axiosPostFile } from './axios';
+import {
+  axiosDelete,
+  axiosGet,
+  axiosGetStream,
+  axiosSendSignedUrl,
+} from './axios';
 import { HttpStatusCode } from 'axios';
+import { uploadFile } from '../store/upload/actions';
+import { useContext } from 'react';
+import { TokenContext } from '../context/TokenProvider';
 
 interface job {
   taskId: string;
@@ -34,7 +42,7 @@ export const useNoiseRemoval = () => {
   const jobList: job[] = [];
   const fileList: fileTask[] = [];
   const taskTimer = useRef<NodeJS.Timeout>();
-
+  const token = useContext(TokenContext).state.accessToken ?? '';
   const requestNoiseRemoval = async (
     mediafileid: number,
     cb: (mediafileid: string) => void
@@ -59,15 +67,35 @@ export const useNoiseRemoval = () => {
     cb: (file: File | Error) => void
   ) => {
     if (offline) return '';
-
-    var response = await axiosPostFile(`aero/noiseremoval`, file);
-    if (response.status === HttpStatusCode.Ok) {
-      var taskId = response.data ?? '';
-      console.log('requested', taskId, response.data);
-      fileList.push({ taskId, cb, tries: waitTime / timerDelay });
-      if (!taskTimer.current) launchTimer();
-      return taskId;
-    } else cb(new Error(response.statusText));
+    var response = await axiosGet(
+      `S3Files/put/AI/${file.name}/wav`,
+      undefined,
+      token
+    );
+    uploadFile(
+      { id: 0, audioUrl: response.data, contentType: 'audio/wav' },
+      file,
+      reporter,
+      token,
+      (success: boolean, data: any, statusNum: number, statusText: string) => {
+        if (success)
+          axiosGet(`S3Files/get/AI/${file.name}/wav`, undefined, token).then(
+            (response) => {
+              axiosSendSignedUrl(
+                'aero/noiseremoval/fromfile',
+                response.data
+              ).then((nrresponse) => {
+                if (nrresponse.status === HttpStatusCode.Ok) {
+                  var taskId = nrresponse.data ?? '';
+                  fileList.push({ taskId, cb, tries: waitTime / timerDelay });
+                  if (!taskTimer.current) launchTimer();
+                } else cb(new Error(response.statusText));
+                axiosDelete(`S3Files/AI/${file.name}`, token);
+              });
+            }
+          );
+      }
+    );
   };
   const checkJob = async (id: number, taskId: string) => {
     var response = await axiosGet(`mediafiles/${id}/noiseremoval/${taskId}`);

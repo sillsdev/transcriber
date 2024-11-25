@@ -16,6 +16,16 @@ export const axiosGetStream = async (
   return undefined;
 };
 
+export const axiosDelete = async (api: string, token?: string) => {
+  api = API_CONFIG.host + '/api/' + api;
+  return await Axios.delete(api, {
+    headers: token
+      ? {
+          Authorization: 'Bearer ' + token,
+        }
+      : {},
+  });
+};
 export const axiosGet = async (api: string, params?: any, token?: string) => {
   api = API_CONFIG.host + '/api/' + api;
   return await Axios.get(api, {
@@ -38,6 +48,25 @@ export const axiosPost = async (api: string, data: any, token?: string) => {
         }
       : { 'X-FP': fp, 'Content-Type': 'application/json' },
   });
+};
+export const axiosSendSignedUrl = async (
+  api: string,
+  signedUrl: string,
+  token?: string
+) => {
+  return await Axios.post(
+    API_CONFIG.host + '/api/' + api,
+    {
+      fileUrl: signedUrl,
+    },
+    {
+      headers: token
+        ? {
+            Authorization: 'Bearer ' + token,
+          }
+        : {},
+    }
+  );
 };
 
 export const axiosPostFile = async (
