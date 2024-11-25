@@ -224,7 +224,10 @@ export const usePlanSheetFill = ({
         readOnly: true,
       } as ICell,
       {
-        value: shared || (publishingOn && !hidePublishing) ? t.published : t.versions,
+        value:
+          shared || (publishingOn && !hidePublishing)
+            ? t.published
+            : t.versions,
         readOnly: true,
         width: 20,
       } as ICell,
@@ -360,7 +363,9 @@ export const usePlanSheetFill = ({
         canEdit={canEdit}
         onPlayStatus={onPlayStatus}
         onEdit={
-          rowInfo[rowIndex].passageType === PassageTypeEnum.NOTE || shared
+          rowInfo[rowIndex].passageType === PassageTypeEnum.NOTE ||
+          (shared &&
+            rowInfo[rowIndex].passageType !== PassageTypeEnum.CHAPTERNUMBER)
             ? onEdit
             : undefined
         }
