@@ -82,6 +82,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { getSection } from './AudioTab/getSection';
 import { WhichExportDlg } from './WhichExportDlg';
+import { useParams } from 'react-router-dom';
 
 interface IRow {
   id: string;
@@ -106,21 +107,14 @@ interface IProps {
   planColumn?: boolean;
   floatTop?: boolean;
   step?: string;
-  passRec?: Passage;
   orgSteps?: OrgWorkflowStepD[];
   sectionArr: [number, string][];
 }
 
 export function TranscriptionTab(props: IProps) {
-  const {
-    projectPlans,
-    planColumn,
-    floatTop,
-    step,
-    passRec,
-    orgSteps,
-    sectionArr,
-  } = props;
+  const { projectPlans, planColumn, floatTop, step, orgSteps, sectionArr } =
+    props;
+  const { pasId } = useParams();
   const t: ITranscriptionTabStrings = useSelector(transcriptionTabSelector);
   const ts: ISharedStrings = useSelector(sharedSelector);
   const activityState = useSelector(activitySelector);
@@ -441,21 +435,22 @@ export function TranscriptionTab(props: IProps) {
     setDataName(name + '.eaf');
   };
 
-  const ready = useMemo(
-    () =>
-      Boolean(
-        step
-          ? orgSteps &&
-              passRec &&
-              afterStep({
-                psgCompleted: getStepComplete(passRec),
-                target: step,
-                orgWorkflowSteps: orgSteps,
-              })
-          : true
-      ),
-    [passRec, step, orgSteps]
-  );
+  const ready = useMemo(() => {
+    const passRec = passages.find(
+      (p) => p.keys?.remoteId === pasId || p.id === pasId
+    );
+    return Boolean(
+      step
+        ? orgSteps &&
+            passRec &&
+            afterStep({
+              psgCompleted: getStepComplete(passRec),
+              target: step,
+              orgWorkflowSteps: orgSteps,
+            })
+        : true
+    );
+  }, [passages, step, orgSteps, pasId]);
 
   useEffect(() => {
     if (dataUrl && dataName !== '') {

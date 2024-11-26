@@ -143,7 +143,6 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   const ctx = useContext(PassageDetailContext);
   const {
     currentstep,
-    passage,
     discussionSize,
     setDiscussionSize,
     playerSize,
@@ -442,7 +441,6 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                   projectPlans={plans}
                   floatTop
                   step={currentstep}
-                  passRec={passage}
                   orgSteps={orgWorkflowSteps}
                   sectionArr={sectionArr}
                 />
