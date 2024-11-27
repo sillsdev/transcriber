@@ -2651,7 +2651,21 @@
             </context-group>
          </trans-unit>
          <trans-unit id="import.importSync">
+            <source>Syncing changes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">electronImport.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="import.importSyncUp">
             <source>Syncing offline changes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">electronImport.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="import.importSyncDown">
+            <source>Syncing online changes</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">electronImport.tsx</context>

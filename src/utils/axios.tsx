@@ -26,16 +26,42 @@ export const axiosDelete = async (api: string, token?: string) => {
       : {},
   });
 };
-export const axiosGet = async (api: string, params?: any, token?: string) => {
-  api = API_CONFIG.host + '/api/' + api;
-  return await Axios.get(api, {
-    params: params,
-    headers: token
-      ? {
-          Authorization: 'Bearer ' + token,
-        }
-      : {},
-  });
+const fetchWithRetry = async (
+  api: string,
+  params?: any,
+  token?: string | null,
+  retries = 3,
+  backoff = 300
+) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await Axios.get(api, {
+        params: params,
+        headers: token
+          ? {
+              Authorization: 'Bearer ' + token,
+            }
+          : {},
+      });
+      return response.data;
+    } catch (error) {
+      if (i < retries - 1) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, backoff * Math.pow(2, i))
+        );
+      } else {
+        throw error;
+      }
+    }
+  }
+};
+export const axiosGet = async (
+  api: string,
+  params?: any,
+  token?: string | null
+) => {
+  if (!api.startsWith(API_CONFIG.host)) api = API_CONFIG.host + '/api/' + api;
+  return await fetchWithRetry(api, params, token);
 };
 export const axiosPost = async (api: string, data: any, token?: string) => {
   var fp = await getFingerprint();

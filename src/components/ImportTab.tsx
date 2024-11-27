@@ -235,6 +235,7 @@ export function ImportTab(props: IProps) {
   const setImporting = (importing: boolean) => {
     importingRef.current = importing;
     setBusy(importing);
+    if (!importing) setImportTitle(t.importComplete);
   };
   const handleActionConfirmed = () => {
     setImporting(true);
@@ -270,6 +271,7 @@ export function ImportTab(props: IProps) {
     setUploadVisible(false);
   };
   const uploadSyncITF = (buffer: Buffer, fileName: string) => {
+    setImportTitle(t.importSyncUp);
     setImporting(true);
     importSyncFromElectron({
       filename: fileName,
@@ -678,7 +680,7 @@ export function ImportTab(props: IProps) {
           chdata = getChangeData(importStatus.errMsg);
           setChangeData([...changeData].concat(chdata));
           setImportTitle(
-            chdata.length > 0 ? t.onlineChangeReport : t.importComplete
+            chdata.length > 0 ? t.onlineChangeReport : t.importSyncDown
           );
           importComplete();
           if (remote) forceDataChanges().then(() => setImporting(false));
