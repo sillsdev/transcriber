@@ -9,7 +9,6 @@ import {
 import { useGlobal } from 'reactn';
 import { infoMsg, logError, Severity, useCheckOnline } from '../utils';
 import { useInterval } from '../utils/useInterval';
-import Axios from 'axios';
 import {
   RecordTransform,
   RecordTransformBuilder,
@@ -64,6 +63,7 @@ import { useBibleMedia } from '../crud/useBibleMedia';
 import { useDispatch } from 'react-redux';
 import { pullRemoteToMemory } from '../crud/syncToMemory';
 import { useOrbitData } from './useOrbitData';
+import { axiosGet } from '../utils/axios';
 
 export const processDataChanges = async (pdc: {
   token: string | null;
@@ -245,7 +245,7 @@ export const processDataChanges = async (pdc: {
                   );
               }
               if (fetchUrl && upRec.record?.keys?.remoteId)
-                fetchUrl({
+                await fetchUrl({
                   id: upRec.record.keys.remoteId,
                   cancelled: () => false,
                 }); //downloads the file
@@ -299,13 +299,8 @@ export const processDataChanges = async (pdc: {
   };
 
   try {
-    const response = await Axios.get(api, {
-      params: params,
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    });
-    const data = response.data?.data as DataChange | null;
+    const response = await axiosGet(api, params, token);
+    const data = response?.data as DataChange | null;
     if (data === null) return started;
     const changes = data?.attributes?.changes;
     const deletes = data?.attributes?.deleted;

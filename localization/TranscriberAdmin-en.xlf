@@ -2274,7 +2274,19 @@
       </unit>
       <unit id="import.importSync">
          <segment>
+            <source>Syncing changes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.importSyncUp">
+         <segment>
             <source>Syncing offline changes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.importSyncDown">
+         <segment>
+            <source>Syncing online changes</source>
             <target/>
          </segment>
       </unit>
