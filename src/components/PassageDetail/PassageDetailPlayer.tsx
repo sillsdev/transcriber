@@ -197,13 +197,13 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
       setDefaultSegments(segments);
       onSegment && onSegment(segments, true);
     }
-    if (!playingRef.current) {
-      var segs = parseRegions(segments);
-      if (segs.regions.length > 0) {
-        setInitialPosition(segs.regions[0].start);
-        setRequestPlay({ play: true, regionOnly: true });
-      }
+    //TT 6149 but I wonder why this was here? if (!playingRef.current) {
+    var segs = parseRegions(segments);
+    if (segs.regions.length > 0) {
+      setInitialPosition(segs.regions[0].start);
+      setRequestPlay({ play: true, regionOnly: true });
     }
+    //}
   };
 
   const onSegmentChange = (segments: string) => {
