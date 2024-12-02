@@ -162,7 +162,7 @@ export default function FindBibleBrain({
         undefined,
         token ?? ''
       ).then((response) => {
-        setCopyright(response.data);
+        setCopyright(response);
       });
     } else {
       setCopyright('');

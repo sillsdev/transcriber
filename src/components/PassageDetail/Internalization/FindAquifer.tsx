@@ -177,7 +177,7 @@ export default function FindAquifer({ onClose }: IProps) {
   useEffect(() => {
     if ((token ?? '') !== '')
       axiosGet('aquifer/languages', undefined, token).then((response) => {
-        setLanguages(response.data);
+        setLanguages(response);
       });
   }, [token]);
 
@@ -218,8 +218,8 @@ export default function FindAquifer({ onClose }: IProps) {
     const searchParams = new URLSearchParams(paramArr);
 
     axiosGet('aquifer/aquifer-search', searchParams, token).then((response) => {
-      setCount(response.data.totalItemCount);
-      setResult(response.data.items);
+      setCount(response.totalItemCount);
+      setResult(response.items);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passage, lang, refresh]);
@@ -251,7 +251,7 @@ export default function FindAquifer({ onClose }: IProps) {
         searchParams,
         token
       ).then((response) => {
-        setContent(response.data);
+        setContent(response);
         setPreviewOpen(true);
       });
     }

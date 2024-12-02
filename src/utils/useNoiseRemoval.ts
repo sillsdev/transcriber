@@ -57,7 +57,7 @@ export const useNoiseRemoval = () => {
       opts
     );
     //taskid is in textquality
-    var taskId = response.data.data.attributes['text-quality'] ?? '';
+    var taskId = response.data.attributes['text-quality'] ?? '';
     jobList.push({ taskId, mediafileid, cb, tries: waitTime / timerDelay });
     if (!taskTimer.current) launchTimer();
     return taskId;
@@ -73,7 +73,7 @@ export const useNoiseRemoval = () => {
       token
     );
     uploadFile(
-      { id: 0, audioUrl: response.data, contentType: 'audio/wav' },
+      { id: 0, audioUrl: response, contentType: 'audio/wav' },
       file,
       reporter,
       token,
@@ -81,17 +81,16 @@ export const useNoiseRemoval = () => {
         if (success)
           axiosGet(`S3Files/get/AI/${file.name}/wav`, undefined, token).then(
             (response) => {
-              axiosSendSignedUrl(
-                'aero/noiseremoval/fromfile',
-                response.data
-              ).then((nrresponse) => {
-                if (nrresponse.status === HttpStatusCode.Ok) {
-                  var taskId = nrresponse.data ?? '';
-                  fileList.push({ taskId, cb, tries: waitTime / timerDelay });
-                  if (!taskTimer.current) launchTimer();
-                } else cb(new Error(response.statusText));
-                axiosDelete(`S3Files/AI/${file.name}`, token);
-              });
+              axiosSendSignedUrl('aero/noiseremoval/fromfile', response).then(
+                (nrresponse) => {
+                  if (nrresponse.status === HttpStatusCode.Ok) {
+                    var taskId = nrresponse.data ?? '';
+                    fileList.push({ taskId, cb, tries: waitTime / timerDelay });
+                    if (!taskTimer.current) launchTimer();
+                  } else cb(new Error(response.statusText));
+                  axiosDelete(`S3Files/AI/${file.name}`, token);
+                }
+              );
             }
           );
       }
@@ -100,7 +99,7 @@ export const useNoiseRemoval = () => {
   const checkJob = async (id: number, taskId: string) => {
     var response = await axiosGet(`mediafiles/${id}/noiseremoval/${taskId}`);
     //will be a new id if completed
-    return response.data.data.id as string;
+    return response.data.id as string;
   };
   const checkFile = async (taskId: string) => {
     var response = await axiosGetStream(`aero/noiseremoval/${taskId}`);
