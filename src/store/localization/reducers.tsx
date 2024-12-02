@@ -923,6 +923,7 @@ const initialState = {
 	"passageDetailStepComplete": new LocalizedStrings({
 		"en": {
 			"incomplete": "Step Incomplete",
+			"setNext": "Set this and all previous steps complete",
 			"title": "Step Complete",
 		}
 	}),

@@ -4510,6 +4510,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailStepComplete.setNext">
+         <segment>
+            <source>Set this and all previous steps complete</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailStepComplete.title">
          <segment>
             <source>Step Complete</source>

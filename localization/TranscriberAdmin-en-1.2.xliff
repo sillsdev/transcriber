@@ -5261,6 +5261,13 @@
                <context context-type="sourcefile">passageDetailStepComplete.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="passageDetailStepComplete.setNext">
+            <source>Set this and all previous steps complete</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetailStepComplete.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="passageDetailStepComplete.title">
             <source>Step Complete</source>
             <target/>
@@ -5268,6 +5275,7 @@
                <context context-type="sourcefile">passageDetailStepComplete.tsx</context>
             </context-group>
          </trans-unit>
+         
          <trans-unit id="passageDetailToolbar.add">
             <source>Passage Detail Toolbar</source>
             <target/>
