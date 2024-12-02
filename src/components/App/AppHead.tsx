@@ -168,6 +168,7 @@ export const AppHead = (props: IProps) => {
   const [updateTipOpen, setUpdateTipOpen] = useState(false);
   const [showTerms, setShowTerms] = useState('');
   const waitForRemoteQueue = useWaitForRemoteQueue();
+  const waitForDataChangesQueue = useWaitForRemoteQueue('datachanges');
   const offlineProjectRead = useOfflnProjRead();
   const LoadData = useLoadProjectData();
   const offlineAvailToggle = useOfflineAvailToggle();
@@ -198,8 +199,10 @@ export const AppHead = (props: IProps) => {
       localStorage.removeItem(LocalKey.userId);
       checkSavedFn(() => {
         waitForRemoteQueue('logout on electron...').then(() => {
-          if (isOffline) downDone();
-          else setDownloadAlert(true);
+          waitForDataChangesQueue('logout on electron').then(() => {
+            if (isOffline) downDone();
+            else setDownloadAlert(true);
+          });
         });
       });
       return;
@@ -215,7 +218,11 @@ export const AppHead = (props: IProps) => {
         if (resetRequests) resetRequests().then(() => setView(what));
       } else if (/Logout/i.test(what)) {
         checkSavedFn(() => {
-          waitForRemoteQueue('logout on web...').then(() => setView('Logout'));
+          waitForRemoteQueue('logout on web...').then(() =>
+            waitForDataChangesQueue('logout on electron').then(() =>
+              setView('Logout')
+            )
+          );
         });
       } else checkSavedFn(() => setView(what));
     }

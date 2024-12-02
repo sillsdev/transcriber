@@ -2,10 +2,10 @@ import { useGlobal } from 'reactn';
 import { waitForIt } from './waitForIt';
 import { useCheckOnline } from './useCheckOnline';
 
-export const useWaitForRemoteQueue = () => {
+export const useWaitForRemoteQueue = (source?: string) => {
   const [connected] = useGlobal('connected');
   const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote');
+  const remote = coordinator.getSource(source ?? 'remote');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const checkOnline = useCheckOnline(

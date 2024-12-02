@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { PriButton, AltButton, GrowingSpacer } from '../control';
+import { useSnackBar } from './SnackBar';
 
 export enum BigDialogBp {
   'sm',
@@ -90,6 +91,7 @@ interface IProps {
   onCancel?: () => void;
   onSave?: () => void;
   bp?: BigDialogBp;
+  setCloseRequested?: (close: boolean) => void;
 }
 
 export function BigDialog({
@@ -101,15 +103,25 @@ export function BigDialog({
   onCancel,
   onSave,
   bp,
+  setCloseRequested,
 }: IProps) {
   const [isExportBusy] = useGlobal('importexportBusy');
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const { showMessage } = useSnackBar();
 
-  const handleClose = () => {
+  const handleClose = (
+    event?: {},
+    reason?: 'backdropClick' | 'escapeKeyDown'
+  ) => {
+    if (isExportBusy) {
+      showMessage(ts.wait);
+      return;
+    }
+    setCloseRequested && setCloseRequested(true);
     if (enableOffsite) setEnableOffsite(false);
-    if (!isExportBusy) onOpen && onOpen(false);
-    if (onCancel) onCancel();
+    onOpen && onOpen(false);
+    onCancel && onCancel();
   };
 
   return (

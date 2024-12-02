@@ -48,6 +48,7 @@ import { HttpStatusCode } from 'axios';
 import LinearProgress from '@mui/material/LinearProgress';
 interface FindBibleBrainProps {
   onClose?: () => void;
+  closeRequested: boolean;
   handleLink: (
     kind: string
   ) => (_event: SyntheticEvent, newValue: OptionProps | null) => void;
@@ -56,9 +57,10 @@ interface FindBibleBrainProps {
 export default function FindBibleBrain({
   handleLink,
   onClose,
+  closeRequested,
 }: FindBibleBrainProps) {
   const forceDataChanges = useDataChanges();
-  const waitForRemoteQueue = useWaitForRemoteQueue();
+  const waitForDataChangesQueue = useWaitForRemoteQueue('datachanges');
   const [memory] = useGlobal('memory');
   const [options, setOptions] = useState<OptionProps[]>([]);
   const [Nt, setNt] = useState<boolean>(true);
@@ -92,6 +94,7 @@ export default function FindBibleBrain({
     shallowEqual
   );
   const { getLanguages, getBibles } = useBibleBrain();
+  const IntervalIdRef = useRef<NodeJS.Timeout>();
 
   const scopeOptions = [t.passage, organizedBy, t.chapter, t.book];
 
@@ -224,29 +227,25 @@ export default function FindBibleBrain({
       Scope: scopeI.asString(creationScope),
     };
     var response = await axiosPost('biblebrain', postdata, token);
+
     if (response.status === HttpStatusCode.Ok) {
-      const getCount = async (
-        resolve: (value?: unknown) => void,
-        intervalId: NodeJS.Timeout
-      ) => {
+      const getCount = async (resolve: (value?: unknown) => void) => {
         var cntresp = await axiosGet('biblebrain/count', undefined, token);
-        if (cntresp.data === 0) {
+        if (cntresp === 0) {
           setProgress(0);
-          clearInterval(intervalId);
+          clearInterval(IntervalIdRef.current);
+          IntervalIdRef.current = undefined;
           resolve(0);
         } else {
-          var p = ((total - cntresp.data) / total) * 100;
+          var p = ((total - cntresp) / total) * 100;
           setProgress(p);
-          setCount(cntresp.data);
+          setCount(cntresp);
         }
       };
       var total = response.data;
       if (total > 0)
         await new Promise((resolve) => {
-          const intervalId: any = setInterval(
-            () => getCount(resolve, intervalId),
-            2000
-          ); // Call the function every 2 second
+          IntervalIdRef.current = setInterval(() => getCount(resolve), 2000); // Call the function every 2 second
         });
       return total;
     }
@@ -258,13 +257,19 @@ export default function FindBibleBrain({
     let startTime = currentDateTime();
     AddResources().then(() => {
       forceDataChanges(startTime).then(() => {
-        waitForRemoteQueue('bible brain resource added').then(() => {
+        waitForDataChangesQueue('bible brain resource added').then(() => {
           setAdding(false);
           onClose && onClose();
         });
       });
     });
   };
+  useEffect(() => {
+    if (closeRequested && IntervalIdRef.current) {
+      clearInterval(IntervalIdRef.current);
+    }
+  }, [closeRequested]);
+
   return (
     <Grid
       container
