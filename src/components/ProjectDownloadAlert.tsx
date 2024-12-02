@@ -337,6 +337,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
                 '{0}',
                 () => (
                   <FilterIcon
+                    key={'filterIcon1'}
                     sx={{ color: 'secondary.light', fontSize: 'medium' }}
                   />
                 )
@@ -477,7 +478,10 @@ export const ProjectDownloadAlert = (props: IProps) => {
             <DialogActions
               sx={{ display: 'flex', justifyContent: 'space-between' }}
             >
-              <AltButton onClick={handleClose()} disabled={downloading}>
+              <AltButton
+                onClick={() => handleClose(true)()}
+                disabled={downloading}
+              >
                 {t.downloadLater}
               </AltButton>
               <PriButton onClick={handleDownload} disabled={downloading}>

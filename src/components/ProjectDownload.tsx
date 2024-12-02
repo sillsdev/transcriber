@@ -42,7 +42,7 @@ enum Steps {
 interface IProps {
   open: boolean;
   projectIds: string[];
-  finish: () => void;
+  finish: (cancel?: boolean) => void;
 }
 
 export const ProjectDownload = (props: IProps) => {
@@ -63,8 +63,11 @@ export const ProjectDownload = (props: IProps) => {
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const [busy, setBusy] = useGlobal('importexportBusy');
   const { showMessage, showTitledMessage } = useSnackBar();
+  const cancelRef = React.useRef(false);
+  const isCancelled = () => cancelRef.current;
   const doProjectExport = useProjectExport({
     message: t.creatingDownloadFile,
+    isCancelled,
   });
   const [progress, setProgress] = React.useState<Steps>(Steps.Prepare);
   const [steps, setSteps] = React.useState<string[]>([]);
@@ -80,6 +83,17 @@ export const ProjectDownload = (props: IProps) => {
     return err.errMsg;
   };
 
+  const progressAction = (choice: string) => {
+    const cancelling = ['Cancel', 'Close'].includes(choice);
+    if (!cancelling) {
+      finish();
+      return;
+    }
+    cancelRef.current = true;
+    setBusy(false);
+    finish(true);
+  };
+
   React.useEffect(() => {
     const updateLocalOnly = async () => {
       await backup.sync((t) => offlineUpdates);
@@ -93,6 +107,7 @@ export const ProjectDownload = (props: IProps) => {
           if (projRec) newSteps = newSteps.concat(projRec.attributes.name);
         });
         setSteps(newSteps);
+        cancelRef.current = false;
         doProjectExport(ExportType.PTF, projectIds[currentStep]);
       } else if (busy) {
         setBusy(false);
@@ -236,10 +251,8 @@ export const ProjectDownload = (props: IProps) => {
         progress={percent(progress, Steps.Import)}
         steps={steps}
         currentStep={currentStep}
-        action={() => {
-          finish();
-        }}
-        allowCancel={false}
+        action={progressAction}
+        allowCancel={true}
       />
     </div>
   );
