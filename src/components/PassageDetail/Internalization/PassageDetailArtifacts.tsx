@@ -182,6 +182,7 @@ export function PassageDetailArtifacts() {
     passageDetailArtifactsSelector,
     shallowEqual
   );
+  const [findTabsClose, setFindTabsClose] = useState(false);
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
@@ -832,8 +833,12 @@ export function PassageDetailArtifacts() {
         isOpen={findOpen}
         onOpen={handleFindVisible}
         bp={BigDialogBp.sm}
+        setCloseRequested={setFindTabsClose}
       >
-        <FindTabs onClose={() => handleFindVisible(false)} />
+        <FindTabs
+          onClose={() => handleFindVisible(false)}
+          closeRequested={findTabsClose}
+        />
       </BigDialog>
       <BigDialog
         title={t.sharedResource.replace(

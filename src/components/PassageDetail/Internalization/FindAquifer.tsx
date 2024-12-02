@@ -133,7 +133,7 @@ export default function FindAquifer({ onClose }: IProps) {
   const [limit] = useState(100); //TODO? - grid pages but expects them all to be loaded
   const [offset] = useState(0); //TODO?
   const forceDataChanges = useDataChanges();
-  const waitForRemoteQueue = useWaitForRemoteQueue();
+  const waitForDataChangesQueue = useWaitForRemoteQueue('datachanges');
   const { userIsAdmin } = useRole();
   const handlePreviewClick = (e: React.MouseEvent, row: DataRow) => {
     e.stopPropagation();
@@ -176,7 +176,7 @@ export default function FindAquifer({ onClose }: IProps) {
 
   useEffect(() => {
     if ((token ?? '') !== '')
-      axiosGet('aquifer/languages', undefined, token ?? '').then((response) => {
+      axiosGet('aquifer/languages', undefined, token).then((response) => {
         setLanguages(response.data);
       });
   }, [token]);
@@ -301,7 +301,7 @@ export default function FindAquifer({ onClose }: IProps) {
     axiosPost('aquifer', postdata, token).then((response) => {
       //could process response as ChangeList but this is easier
       forceDataChanges().then(() => {
-        waitForRemoteQueue('aquifer resource added').then(() => {
+        waitForDataChangesQueue('aquifer resource added').then(() => {
           setAdding(false);
           onClose && onClose();
         });
