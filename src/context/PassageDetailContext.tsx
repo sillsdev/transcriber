@@ -164,6 +164,7 @@ const initState = {
   workflow: Array<SimpleWf>(),
   psgCompleted: [] as StepComplete[],
   setStepComplete: async (stepId: string, complete: boolean) => {},
+  setNextStep: async (stepId: string) => {},
   gotoNextStep: () => {},
   stepComplete: (stepId: string) => {
     return false;
@@ -593,7 +594,54 @@ const PassageDetailProvider = (props: IProps) => {
     await memory.update(ops);
     setState((state: ICtxState) => ({ ...state, psgCompleted: completed }));
   };
-
+  const setNextStep = async (stepid: string) => {
+    if (stepid === '') return;
+    var completed: StepComplete[] = [];
+    var steps = state.orgWorkflowSteps.sort(
+      (a, b) => a.attributes.sequencenum - b.attributes.sequencenum
+    );
+    var rec;
+    for (const step of steps) {
+      var remId =
+        remoteId('orgworkflowstep', step.id, memory.keyMap as RecordKeyMap) ||
+        '';
+      rec = findRecord(memory, 'orgworkflowstep', step.id) as OrgWorkflowStep;
+      completed.push({
+        stepid: remId,
+        complete: true,
+        name: rec.attributes.name,
+      });
+      if (step.id === stepid) break;
+    }
+    const recId = {
+      type: 'passage',
+      id:
+        remoteIdGuid('passage', pasId ?? '', memory.keyMap as RecordKeyMap) ||
+        pasId ||
+        '',
+    };
+    var tb = new RecordTransformBuilder();
+    var ops = [] as RecordOperation[];
+    ops.push(
+      tb
+        .replaceAttribute(recId, 'stepComplete', JSON.stringify({ completed }))
+        .toOperation()
+    );
+    ops.push(...UpdateLastModifiedBy(tb, recId, user));
+    AddPassageStateChangeToOps(
+      tb,
+      ops,
+      recId.id,
+      '',
+      `${stepCompleteStr.title} : ${localizedWorkStep(
+        rec?.attributes?.name ?? ''
+      )}`,
+      user,
+      memory
+    );
+    await memory.update(ops);
+    setState((state: ICtxState) => ({ ...state, psgCompleted: completed }));
+  };
   const getProjectResources = async () => {
     const typeId = getTypeId(ArtifactTypeSlug.ProjectResource);
     return mediafiles.filter(
@@ -1049,6 +1097,7 @@ const PassageDetailProvider = (props: IProps) => {
           setupLocate,
           stepComplete,
           setStepComplete,
+          setNextStep,
           gotoNextStep,
           setRecording,
           setCommentRecording,

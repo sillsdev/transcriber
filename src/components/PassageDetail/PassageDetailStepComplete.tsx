@@ -3,6 +3,7 @@ import { useGlobal } from 'reactn';
 import { IconButton } from '@mui/material';
 import CompleteIcon from '@mui/icons-material/CheckBoxOutlined';
 import NotCompleteIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import ChecklistIcon from '@mui/icons-material/Checklist';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { IPassageDetailStepCompleteStrings } from '../../model';
 import { usePassageNavigate } from './usePassageNavigate';
@@ -16,6 +17,7 @@ export const PassageDetailStepComplete = () => {
     setCurrentStep,
     stepComplete,
     setStepComplete,
+    setNextStep,
     gotoNextStep,
     psgCompleted,
     section,
@@ -47,6 +49,9 @@ export const PassageDetailStepComplete = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [complete, currentstep, passage, section]);
 
+  const handleSetNext = async () => {
+    setNextStep(currentstep);
+  };
   useEffect(() => {
     if (!busy && !importexportBusy && view) {
       if (pathname !== view) {
@@ -76,6 +81,15 @@ export const PassageDetailStepComplete = () => {
         ) : (
           <NotCompleteIcon id="step-no" />
         )}
+      </IconButton>
+      <IconButton
+        id="complete"
+        sx={{ color: 'primary.light' }}
+        title={t.title}
+        onClick={handleSetNext}
+        disabled={view !== ''}
+      >
+        <ChecklistIcon id="step-next" />
       </IconButton>
     </div>
   );
