@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { useGlobal } from 'reactn';
-import Memory from '@orbit/memory';
 import * as actions from '../store';
 import {
   IState,
@@ -18,9 +17,6 @@ import {
   Project,
   ISharedStrings,
   ExportType,
-  OrgWorkflowStep,
-  VProject,
-  OfflineProject,
   OrgWorkflowStepD,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
@@ -126,46 +122,8 @@ export function TranscriptionTab(props: IProps) {
   );
   const allBookData = useSelector((state: IState) => state.books.bookData);
   const dispatch = useDispatch();
-  const exportProject = (
-    exportType: ExportType,
-    artifactType: string | null | undefined,
-    memory: Memory,
-    backup: IndexedDBSource,
-    projectid: number | string,
-    userid: number | string,
-    numberOfMedia: number,
-    token: string | null,
-    errorReporter: any, //global errorReporter
-    pendingmsg: string,
-    nodatamsg: string,
-    writingmsg: string,
-    localizedArtifact: string,
-    getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
-    importedDate?: Moment,
-    target?: string,
-    orgWorkflowSteps?: OrgWorkflowStep[]
-  ) =>
-    dispatch(
-      actions.exportProject(
-        exportType,
-        artifactType,
-        memory,
-        backup,
-        projectid,
-        userid,
-        numberOfMedia,
-        token,
-        errorReporter,
-        pendingmsg,
-        nodatamsg,
-        writingmsg,
-        localizedArtifact,
-        getOfflineProject,
-        importedDate,
-        target,
-        orgWorkflowSteps
-      )
-    );
+  const exportProject = (props: actions.ExPrjProps) =>
+    dispatch(actions.exportProject(props));
   const exportComplete = () => dispatch(actions.exportComplete());
   const projects = useOrbitData<Project[]>('project');
   const passages = useOrbitData<Passage[]>('passage');
@@ -288,30 +246,30 @@ export function TranscriptionTab(props: IProps) {
       onlyTypeId,
       onlyLatest
     );
-    exportProject(
+    exportProject({
       exportType,
-      onlyTypeId,
+      artifactType: onlyTypeId,
       memory,
       backup,
-      project,
-      user,
-      media.length,
+      projectid: project,
+      userid: user,
+      numberOfMedia: media.length,
       token,
       errorReporter,
-      t.creatingDownloadFile,
-      t.noData.replace(
+      pendingmsg: t.creatingDownloadFile,
+      nodatamsg: t.noData.replace(
         '{0}',
         onlyTypeId !== undefined
           ? localizedArtifactType(artifactType)
           : t.changed
       ),
-      t.writingDownloadFile,
+      writingmsg: t.writingDownloadFile,
       localizedArtifact,
       getOfflineProject,
       importedDate,
-      step,
-      orgSteps
-    );
+      target: step,
+      orgWorkflowSteps: orgSteps,
+    });
   };
   const handleProjectExport = () => {
     setAlertOpen(false);

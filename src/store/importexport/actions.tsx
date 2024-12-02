@@ -77,26 +77,48 @@ export const exportComplete = () => (dispatch: any) => {
   });
 };
 
+export interface ExPrjProps {
+  exportType: ExportType;
+  artifactType: string | null | undefined;
+  memory: Memory;
+  backup: IndexedDBSource;
+  projectid: number | string;
+  userid: number | string;
+  numberOfMedia: number;
+  token: string | null;
+  errorReporter: any; //global errorReporter
+  pendingmsg: string;
+  nodatamsg: string;
+  writingmsg: string;
+  localizedArtifact: string;
+  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject;
+  importedDate?: Moment;
+  target?: string;
+  orgWorkflowSteps?: OrgWorkflowStep[];
+  isCancelled?: () => boolean;
+}
+
 export const exportProject =
-  (
-    exportType: ExportType,
-    artifactType: string | null | undefined,
-    memory: Memory,
-    backup: IndexedDBSource,
-    projectid: number | string,
-    userid: number | string,
-    numberOfMedia: number,
-    token: string | null,
-    errorReporter: any, //global errorReporter
-    pendingmsg: string,
-    nodatamsg: string,
-    writingmsg: string,
-    localizedArtifact: string,
-    getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
-    importedDate?: Moment,
-    target?: string,
-    orgWorkflowSteps?: OrgWorkflowStep[]
-  ) =>
+  ({
+    exportType,
+    artifactType,
+    memory,
+    backup,
+    projectid,
+    userid,
+    numberOfMedia,
+    token,
+    errorReporter,
+    pendingmsg,
+    nodatamsg,
+    writingmsg,
+    localizedArtifact,
+    getOfflineProject,
+    importedDate,
+    target,
+    orgWorkflowSteps,
+    isCancelled,
+  }: ExPrjProps) =>
   async (dispatch: any) => {
     const sendProgress = (pct: number | string) => {
       var msg = pendingmsg.replace(
@@ -165,6 +187,13 @@ export const exportProject =
       let laststart = 0;
       let laststartCount = 0;
       do {
+        if (isCancelled && isCancelled()) {
+          dispatch({
+            payload: errorStatus(-1, 'Export Cancelled'),
+            type: EXPORT_ERROR,
+          });
+          return;
+        }
         var projRec = getProjRec(projectid);
         var bodyFormData = new FormData();
         if (artifactType !== undefined) {
