@@ -10,7 +10,6 @@ import { usePassageNavigate } from './usePassageNavigate';
 import { passageDetailStepCompleteSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { LightTooltip } from '../../control/LightTooltip';
 
 export const PassageDetailStepComplete = () => {
   const {
@@ -83,16 +82,15 @@ export const PassageDetailStepComplete = () => {
           <NotCompleteIcon id="step-no" />
         )}
       </IconButton>
-      <LightTooltip title={t.setNext} sx={{ color: 'primary.light' }}>
-        <IconButton
-          id="complete"
-          title={t.title}
-          onClick={handleSetNext}
-          disabled={view !== ''}
-        >
-          <ChecklistIcon id="step-next" />
-        </IconButton>
-      </LightTooltip>{' '}
+      <IconButton
+        id="setnetxt"
+        sx={{ color: 'primary.light' }}
+        title={t.setNext}
+        onClick={handleSetNext}
+        disabled={view !== ''}
+      >
+        <ChecklistIcon id="step-next" />
+      </IconButton>
     </div>
   );
 };
