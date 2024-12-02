@@ -172,7 +172,7 @@ export default function FindAquifer({ onClose }: IProps) {
   const setAdding = (adding: boolean) => {
     setAddingx(adding);
     addingRef.current = adding;
-  }
+  };
 
   useEffect(() => {
     if ((token ?? '') !== '')
@@ -182,16 +182,18 @@ export default function FindAquifer({ onClose }: IProps) {
   }, [token]);
 
   useEffect(() => {
-    const langOptions = languages.map((item: AquiferLanguage) => ({
-      value: item.code,
-      label:
-        `${item.localizedDisplay}` +
-        (item.localizedDisplay !== item.englishDisplay
-          ? ` (${item.englishDisplay})`
-          : ''),
-    }));
-    setLangOpts(langOptions);
-    setLang(langOptions.find((o) => o.value === 'eng') ?? null);
+    if (languages) {
+      const langOptions = languages.map((item: AquiferLanguage) => ({
+        value: item.code,
+        label:
+          `${item.localizedDisplay}` +
+          (item.localizedDisplay !== item.englishDisplay
+            ? ` (${item.englishDisplay})`
+            : ''),
+      }));
+      setLangOpts(langOptions);
+      setLang(langOptions.find((o) => o.value === 'eng') ?? null);
+    }
   }, [languages]);
 
   useEffect(() => {
@@ -329,7 +331,10 @@ export default function FindAquifer({ onClose }: IProps) {
               onChange={(_event, value) => setLang(value)}
               sx={{ width: 300 }}
               renderInput={(params) => (
-                <TextField {...params} label={t.language.replace('{0}', 'Aquifer')} />
+                <TextField
+                  {...params}
+                  label={t.language.replace('{0}', 'Aquifer')}
+                />
               )}
             />
           </Grid>
