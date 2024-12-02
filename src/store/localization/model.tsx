@@ -876,6 +876,7 @@ export interface IPassageDetailArtifactsStrings extends Localize.LocalizedString
 
 export interface IPassageDetailStepCompleteStrings extends Localize.LocalizedStringsMethods {
     "incomplete": string;
+    "setNext": string;
     "title": string;
 };
 
