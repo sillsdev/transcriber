@@ -26,7 +26,13 @@ import {
   useOrganizedBy,
   usePublishDestination,
 } from '../../crud';
-import { numCompare, dateCompare, dateOrTime } from '../../utils';
+import {
+  numCompare,
+  dateCompare,
+  dateOrTime,
+  useDataChanges,
+  useWaitForRemoteQueue,
+} from '../../utils';
 import { IRow } from '.';
 import { Sorting } from '@devexpress/dx-react-grid';
 import { UpdateRecord } from '../../model/baseModel';
@@ -166,6 +172,8 @@ export const AudioTable = (props: IProps) => {
   const [verValue, setVerValue] = useState<number>();
   const { getPublishTo, setPublishTo, isPublished, publishStatus } =
     usePublishDestination();
+  const forceDataChanges = useDataChanges();
+  const waitForRemoteQueue = useWaitForRemoteQueue();
 
   const handleShowTranscription = (id: string) => () => {
     const row = data.find((r) => r.id === id);
@@ -179,8 +187,14 @@ export const AudioTable = (props: IProps) => {
     ) as MediaFileD;
     mediaRec.attributes.publishTo = setPublishTo(publishTo);
     mediaRec.attributes.readyToShare = isPublished(publishTo);
-    memory.update((t) => UpdateRecord(t, mediaRec, user));
-    setRefresh();
+    memory
+      .update((t) => UpdateRecord(t, mediaRec, user))
+      .then(() => {
+        waitForRemoteQueue('publishTo').then(() => {
+          forceDataChanges();
+        });
+        setRefresh();
+      });
   };
   const publishConfirm = (destinations: PublishDestinationEnum[]) => {
     updateMediaRec(data[publishItem].id, destinations);
@@ -240,9 +254,9 @@ export const AudioTable = (props: IProps) => {
       var bible = getOrgBible(org);
       setHasBible(bible !== undefined);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
-  
+
   useEffect(() => {
     //if I set playing when I set the mediaId, it plays a bit of the old
     if (playItem) setMediaPlaying(true);
