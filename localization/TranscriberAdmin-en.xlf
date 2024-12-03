@@ -8230,6 +8230,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.AIInProgress">
+         <segment>
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.AIGiveUp">
+         <segment>
+            <source>Stop Waiting...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.pauseRecord">
          <segment>
             <source>Pause</source>

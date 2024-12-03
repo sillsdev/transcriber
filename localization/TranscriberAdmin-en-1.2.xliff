@@ -9605,6 +9605,20 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="wsAudioPlayer.AIInProgress">
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.AIGiveUp">
+            <source>Stop Waiting...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>         
          <trans-unit id="wsAudioPlayer.pauseRecord">
             <source>Pause</source>
             <target/>

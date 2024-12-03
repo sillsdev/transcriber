@@ -26,7 +26,7 @@ interface job {
 interface fileTask {
   taskId: string;
   cb: (file: File | Error) => void;
-  tries: number;
+  cancelRef: React.MutableRefObject<boolean>;
 }
 const timerDelay = 3000;
 const waitTime = 1000 * 60 * 10; //10 minutes good?
@@ -63,6 +63,7 @@ export const useNoiseRemoval = () => {
     return taskId;
   };
   const requestFileNoiseRemoval = async (
+    cancelRef: React.MutableRefObject<boolean>,
     file: File,
     cb: (file: File | Error) => void
   ) => {
@@ -85,7 +86,11 @@ export const useNoiseRemoval = () => {
                 (nrresponse) => {
                   if (nrresponse.status === HttpStatusCode.Ok) {
                     var taskId = nrresponse.data ?? '';
-                    fileList.push({ taskId, cb, tries: waitTime / timerDelay });
+                    fileList.push({
+                      taskId,
+                      cb,
+                      cancelRef,
+                    });
                     if (!taskTimer.current) launchTimer();
                   } else cb(new Error(response.statusText));
                   axiosDelete(`S3Files/AI/${file.name}`, token);
@@ -176,18 +181,16 @@ export const useNoiseRemoval = () => {
     });
     fileList.forEach(async (filetask) => {
       try {
-        var stream = await checkFile(filetask.taskId);
-        console.log('returns stream?', typeof stream);
-        if (stream) {
-          cleanupFile(filetask);
-          var file = await streamToFile(stream, filetask.taskId);
-          filetask.cb(file);
-        } else {
-          filetask.tries--;
-          if (filetask.tries === 0) {
-            filetask.cb(new Error('timeout'));
+        if (!filetask.cancelRef.current) {
+          var stream = await checkFile(filetask.taskId);
+          if (stream) {
             cleanupFile(filetask);
+            var file = await streamToFile(stream, filetask.taskId);
+            filetask.cb(file);
           }
+        } else {
+          filetask.cb(new Error('canceled'));
+          cleanupFile(filetask);
         }
       } catch (error: any) {
         logError(Severity.error, errorReporter, error as Error);

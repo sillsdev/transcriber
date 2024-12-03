@@ -21,7 +21,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import TimerIcon from '@mui/icons-material/AccessTime';
 import NextSegmentIcon from '@mui/icons-material/ArrowRightAlt';
 import UndoIcon from '@mui/icons-material/Undo';
-import { IMainStrings, ISharedStrings, IWsAudioPlayerStrings } from '../model';
+import { ISharedStrings, IWsAudioPlayerStrings } from '../model';
 import {
   FaHandScissors,
   FaAngleDoubleUp,
@@ -49,16 +49,13 @@ import {
 import WSAudioPlayerSegment from './WSAudioPlayerSegment';
 import Confirm from './AlertDialog';
 import { NamedRegions } from '../utils/namedSegments';
-import {
-  mainSelector,
-  sharedSelector,
-  wsAudioPlayerSelector,
-} from '../selector';
+import { sharedSelector, wsAudioPlayerSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { WSAudioPlayerSilence } from './WSAudioPlayerSilence';
-import { RemoveNoiseIcon } from '../control';
+import { AltButton, RemoveNoiseIcon } from '../control';
 import { useNoiseRemoval } from '../utils/useNoiseRemoval';
 import { Exception } from '@orbit/core';
+import { useGlobal } from 'reactn';
 
 const VertDivider = (prop: DividerProps) => (
   <Divider orientation="vertical" flexItem sx={{ ml: '5px' }} {...prop} />
@@ -183,7 +180,7 @@ function WSAudioPlayer(props: IProps) {
   } = props;
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
-
+  const [offline] = useGlobal('offline');
   const [confirmAction, setConfirmAction] = useState<string | JSX.Element>('');
   const [jump] = useState(2);
   const playbackRef = useRef(1);
@@ -215,7 +212,6 @@ function WSAudioPlayer(props: IProps) {
     wsAudioPlayerSelector,
     shallowEqual
   );
-  const tm: IMainStrings = useSelector(mainSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [style, setStyle] = useState({
     cursor: busy || loading ? 'progress' : 'default',
@@ -223,6 +219,7 @@ function WSAudioPlayer(props: IProps) {
   const autostartTimer = useRef<NodeJS.Timeout>();
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
   const [oneShotUsed, setOneShotUsed] = useState(false);
+  const cancelAIRef = useRef(false);
   const { requestFileNoiseRemoval } = useNoiseRemoval();
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
@@ -490,8 +487,8 @@ function WSAudioPlayer(props: IProps) {
   }, [autoStart]);
 
   useEffect(() => {
-    wsSetHeight(allowZoom ? size - 120 : size - 106); //does this need to be smarter?
-  }, [size, wsSetHeight, allowZoom]);
+    wsSetHeight(waitingForAI ? 0 : allowZoom ? size - 120 : size - 106); //does this need to be smarter?
+  }, [size, wsSetHeight, allowZoom, waitingForAI]);
 
   useEffect(() => {
     if (
@@ -724,12 +721,14 @@ function WSAudioPlayer(props: IProps) {
   };
   const handleNoiseRemoval = () => {
     if (!reload) throw new Exception('need reload defined.');
-    if (setBusy) setBusy(true);
+    setBusy && setBusy(true);
+    setBlobReady && setBlobReady(false);
     setWaitingForAI(true);
     const filename = `${Date.now()}nr.wav`;
     wsRegionBlob().then((blob) => {
       if (blob)
         requestFileNoiseRemoval(
+          cancelAIRef,
           new File([blob], filename, { type: 'audio/wav' }),
           (file: File | Error) => {
             if (file instanceof File) {
@@ -739,9 +738,13 @@ function WSAudioPlayer(props: IProps) {
                   if (newblob) reload(newblob);
                 });
               }
-            } else showMessage(ts.noiseRemovalFailed);
-            setBusy && setBusy(false);
+            } else {
+              if ((file as Error).message !== 'canceled')
+                showMessage(ts.noiseRemovalFailed);
+            }
             setWaitingForAI(false);
+            setBusy && setBusy(false);
+            setBlobReady && setBlobReady(true);
           }
         );
       else {
@@ -860,28 +863,33 @@ function WSAudioPlayer(props: IProps) {
                       <VertDivider id="wsAudioDiv4" />
                     </>
                   )}
-                  <LightTooltip id="noiseRemovalTim" title={ts.noiseRemoval}>
-                    <span>
-                      <IconButton
-                        id="noiseRemoval"
-                        onClick={handleNoiseRemoval}
-                        disabled={
-                          !ready || recording || duration === 0 || waitingForAI
-                        }
-                      >
-                        <RemoveNoiseIcon
-                          width="18pt"
-                          height="18pt"
+                  {!offline && (
+                    <LightTooltip id="noiseRemovalTim" title={ts.noiseRemoval}>
+                      <span>
+                        <IconButton
+                          id="noiseRemoval"
+                          onClick={handleNoiseRemoval}
                           disabled={
                             !ready ||
                             recording ||
                             duration === 0 ||
                             waitingForAI
                           }
-                        />
-                      </IconButton>
-                    </span>
-                  </LightTooltip>
+                        >
+                          <RemoveNoiseIcon
+                            width="18pt"
+                            height="18pt"
+                            disabled={
+                              !ready ||
+                              recording ||
+                              duration === 0 ||
+                              waitingForAI
+                            }
+                          />
+                        </IconButton>
+                      </span>
+                    </LightTooltip>
+                  )}
                   {hasRegion !== 0 && !oneShotUsed && (
                     <LightTooltip
                       id="wsAudioDeleteRegionTip"
@@ -947,14 +955,29 @@ function WSAudioPlayer(props: IProps) {
                   setBusy={setBusy}
                 />
               )}
+              {waitingForAI && (
+                <>
+                  <Grid item xs={10}>
+                    <Typography sx={{ whiteSpace: 'normal' }}>
+                      {t.AIInProgress}
+                    </Typography>
+                  </Grid>
+                  <Grid xs={2}>
+                    <AltButton
+                      id="ai-cancel"
+                      onClick={() => {
+                        cancelAIRef.current = true;
+                      }}
+                    >
+                      {ts.cancel}
+                    </AltButton>
+                  </Grid>
+                </>
+              )}
             </Grid>
-            {waitingForAI || (
-              <>
-                <div id="wsAudioTimeline" ref={timelineRef} />
-                <div id="wsAudioWaveform" ref={waveformRef} />
-              </>
-            )}
-            {waitingForAI && <Typography>{tm.loadingTable}</Typography>}
+            <div id="wsAudioTimeline" ref={timelineRef} />
+            <div id="wsAudioWaveform" ref={waveformRef} />
+
             {justPlayButton || (
               <Grid container sx={toolbarProp}>
                 <Grid item>
