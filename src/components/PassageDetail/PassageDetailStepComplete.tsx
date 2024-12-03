@@ -17,7 +17,7 @@ export const PassageDetailStepComplete = () => {
     setCurrentStep,
     stepComplete,
     setStepComplete,
-    setNextStep,
+    setStepCompleteTo,
     gotoNextStep,
     psgCompleted,
     section,
@@ -49,8 +49,8 @@ export const PassageDetailStepComplete = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [complete, currentstep, passage, section]);
 
-  const handleSetNext = async () => {
-    setNextStep(currentstep);
+  const handleSetCompleteTo = async () => {
+    setStepCompleteTo(currentstep);
   };
   useEffect(() => {
     if (!busy && !importexportBusy && view) {
@@ -86,7 +86,7 @@ export const PassageDetailStepComplete = () => {
         id="setnetxt"
         sx={{ color: 'primary.light' }}
         title={t.setNext}
-        onClick={handleSetNext}
+        onClick={handleSetCompleteTo}
         disabled={view !== ''}
       >
         <ChecklistIcon id="step-next" />
