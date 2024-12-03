@@ -995,6 +995,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "publish": string;
     "published": string;
     "refErr": string;
+    "removeFilter": string;
     "resequence": string;
     "save": string;
     "saving": string;
