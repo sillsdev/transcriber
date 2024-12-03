@@ -1051,6 +1051,7 @@ const initialState = {
 			"publish": "Publish {0} {1}",
 			"published": "Publish",
 			"refErr": "This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)",
+			"removeFilter": "Filter must be cleared to enable publishing.",
 			"resequence": "Resequence",
 			"save": "Save",
 			"saving": "Saving...",

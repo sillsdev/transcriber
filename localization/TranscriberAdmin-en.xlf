@@ -5062,6 +5062,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.removeFilter">
+         <segment>
+            <source>Filter must be cleared to enable publishing.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.resequence">
          <segment>
             <source>Resequence</source>

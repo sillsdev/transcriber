@@ -5906,6 +5906,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="planSheet.removeFilter">
+            <source>Filter must be cleared to enable publishing.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planSheet.resequence">
             <source>Resequence</source>
             <target/>

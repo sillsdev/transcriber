@@ -789,6 +789,10 @@ export function PlanSheet(props: IProps) {
       showMessage(t.paratextRequired);
       return;
     }
+    if (filtered && !publishingOn) {
+      showMessage(t.removeFilter);
+      return;
+    }
     onPublishing(false);
   };
 
