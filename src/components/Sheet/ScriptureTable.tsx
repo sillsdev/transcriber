@@ -1983,7 +1983,7 @@ export function ScriptureTable(props: IProps) {
       >
         <VersionDlg
           passId={versionRow?.passage?.id || ''}
-          canSetDestination={true}
+          canSetDestination={!offline}
           hasPublishing={publishingOn}
         />
       </BigDialog>
