@@ -1732,6 +1732,8 @@ const initialState = {
 			"loopoff": "Loop Off",
 			"loopon": "Loop On",
 			"nextRegion": "Next Segment [{0}]",
+			"aiInProgress": "AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.",
+			"aiGiveUp": "Stop Waiting...",
 			"pauseRecord": "Pause",
 			"pauseTip": "Pause [{0}]",
 			"playTip": "Play [{0}]",

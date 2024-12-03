@@ -2075,7 +2075,7 @@
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
-         </trans-unit>         
+         </trans-unit>
          <trans-unit id="findResource.group">
             <source>Group</source>
             <target/>
@@ -5275,7 +5275,7 @@
                <context context-type="sourcefile">passageDetailStepComplete.tsx</context>
             </context-group>
          </trans-unit>
-         
+
          <trans-unit id="passageDetailToolbar.add">
             <source>Passage Detail Toolbar</source>
             <target/>
@@ -7228,14 +7228,14 @@
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
-         </trans-unit>      
+         </trans-unit>
          <trans-unit id="shared.noiseRemovalFailed">
             <source>Noise Removal Failed</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
-         </trans-unit>                
+         </trans-unit>
          <trans-unit id="shared.NoSaveOffline">
             <source>Unable to save while offline.</source>
             <target/>
@@ -9607,6 +9607,20 @@
          </trans-unit>
          <trans-unit id="wsAudioPlayer.nextRegion">
             <source>Next Segment [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.aiInProgress">
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.aiGiveUp">
+            <source>Stop Waiting...</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>

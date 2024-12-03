@@ -1747,6 +1747,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.createResource">
+         <segment>
+            <source>Create AI Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="grid.all">
          <segment>
             <source>All</source>
@@ -5305,6 +5311,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectDownload.missing">
+         <segment>
+            <source>Missing MB</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="publishLevel.none">
          <segment>
             <source>Not Published - not visible outside this project</source>
@@ -7973,6 +7985,18 @@
          <segment>
             <source>Next Segment [{0}]</source>
             <target>Siguiente segmento [{0}]</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aiInProgress">
+         <segment>
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target>Servicio AI en curso...  Este es un servicio remoto que puede tardar mucho tiempo si la grabación es grande, o si hay otras solicitudes por delante de la suya.</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aiGiveUp">
+         <segment>
+            <source>Stop Waiting...</source>
+            <target>Deja de esperar...</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.pauseRecord">

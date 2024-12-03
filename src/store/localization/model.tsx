@@ -1638,6 +1638,8 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "loopoff": string;
     "loopon": string;
     "nextRegion": string;
+    "aiInProgress": string;
+    "aiGiveUp": string;
     "pauseRecord": string;
     "pauseTip": string;
     "playTip": string;
