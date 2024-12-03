@@ -164,7 +164,7 @@ const initState = {
   workflow: Array<SimpleWf>(),
   psgCompleted: [] as StepComplete[],
   setStepComplete: async (stepId: string, complete: boolean) => {},
-  setNextStep: async (stepId: string) => {},
+  setStepCompleteTo: async (stepId: string) => {},
   gotoNextStep: () => {},
   stepComplete: (stepId: string) => {
     return false;
@@ -594,7 +594,7 @@ const PassageDetailProvider = (props: IProps) => {
     await memory.update(ops);
     setState((state: ICtxState) => ({ ...state, psgCompleted: completed }));
   };
-  const setNextStep = async (stepid: string) => {
+  const setStepCompleteTo = async (stepid: string) => {
     if (stepid === '') return;
     var completed: StepComplete[] = [];
     var steps = state.orgWorkflowSteps.sort(
@@ -604,7 +604,7 @@ const PassageDetailProvider = (props: IProps) => {
     for (const step of steps) {
       var remId =
         remoteId('orgworkflowstep', step.id, memory.keyMap as RecordKeyMap) ||
-        '';
+        step.id;
       rec = findRecord(memory, 'orgworkflowstep', step.id) as OrgWorkflowStep;
       completed.push({
         stepid: remId,
@@ -1097,7 +1097,7 @@ const PassageDetailProvider = (props: IProps) => {
           setupLocate,
           stepComplete,
           setStepComplete,
-          setNextStep,
+          setStepCompleteTo,
           gotoNextStep,
           setRecording,
           setCommentRecording,
