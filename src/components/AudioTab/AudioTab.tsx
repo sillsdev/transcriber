@@ -389,7 +389,7 @@ export function AudioTab() {
               readonly={readonly}
               sectionArr={sectionArr}
               shared={shared}
-              canSetDestination={true}
+              canSetDestination={!isOffline}
               hasPublishing={publishingOn}
             />
             {attachVisible && (
