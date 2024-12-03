@@ -10,7 +10,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import { LightTooltip } from './LightTooltip';
 import MarkDown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { IMediaUploadStrings } from '../model';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -30,6 +30,11 @@ export const MarkDownEdit = ({ inValue, onValue }: MarkDownEditProps) => {
   const [link, setLink] = useState<string>();
   const [lang] = useGlobal('lang');
   const t: IMediaUploadStrings = useSelector(mediaUploadSelector, shallowEqual);
+
+  useEffect(() => {
+    setValue(inValue || '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inValue]);
 
   const handleValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
