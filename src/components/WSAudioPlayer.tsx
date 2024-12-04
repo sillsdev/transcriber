@@ -39,6 +39,7 @@ import { IosSlider } from '../control/IosSlider';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
 import WSAudioPlayerZoom from './WSAudioPlayerZoom';
+import { logError, Severity } from '../utils';
 import {
   IRegion,
   IRegionChange,
@@ -208,6 +209,7 @@ function WSAudioPlayer(props: IProps) {
   const [processingRecording, setProcessingRecordingx] = useState(false);
   const processRecordRef = useRef(false);
   const { showMessage } = useSnackBar();
+  const [errorReporter] = useGlobal('errorReporter');
   const t: IWsAudioPlayerStrings = useSelector(
     wsAudioPlayerSelector,
     shallowEqual
@@ -719,39 +721,46 @@ function WSAudioPlayer(props: IProps) {
     wsUndo();
     handleChanged();
   };
+  const doingAI = (inprogress: boolean) => {
+    setWaitingForAI(inprogress);
+    setBusy && setBusy(inprogress);
+    setBlobReady && setBlobReady(!inprogress);
+  };
   const handleNoiseRemoval = () => {
     if (!reload) throw new Exception('need reload defined.');
-    setBusy && setBusy(true);
-    setBlobReady && setBlobReady(false);
-    setWaitingForAI(true);
-    const filename = `${Date.now()}nr.wav`;
-    wsRegionBlob().then((blob) => {
-      if (blob)
-        requestFileNoiseRemoval(
-          cancelAIRef,
-          new File([blob], filename, { type: 'audio/wav' }),
-          (file: File | Error) => {
-            if (file instanceof File) {
-              var regionblob = new Blob([file], { type: file.type });
-              if (regionblob) {
-                wsRegionReplace(regionblob).then((newblob) => {
-                  if (newblob) reload(newblob);
-                });
+    try {
+      doingAI(true);
+      const filename = `${Date.now()}nr.wav`;
+      wsRegionBlob().then((blob) => {
+        if (blob)
+          requestFileNoiseRemoval(
+            cancelAIRef,
+            new File([blob], filename, { type: 'audio/wav' }),
+            (file: File | Error) => {
+              if (file instanceof File) {
+                var regionblob = new Blob([file], { type: file.type });
+                if (regionblob) {
+                  wsRegionReplace(regionblob).then((newblob) => {
+                    if (newblob) reload(newblob);
+                    setChanged && setChanged(true);
+                  });
+                }
+              } else {
+                if ((file as Error).message !== 'canceled')
+                  showMessage(ts.noiseRemovalFailed);
               }
-            } else {
-              if ((file as Error).message !== 'canceled')
-                showMessage(ts.noiseRemovalFailed);
+              doingAI(false);
             }
-            setWaitingForAI(false);
-            setBusy && setBusy(false);
-            setBlobReady && setBlobReady(true);
-          }
-        );
-      else {
-        setBusy && setBusy(false);
-        setWaitingForAI(false);
-      }
-    });
+          );
+        else {
+          doingAI(false);
+        }
+      });
+    } catch (error: any) {
+      logError(Severity.error, errorReporter, error.message);
+      showMessage(ts.noiseRemovalFailed);
+      doingAI(false);
+    }
   };
   const onSplit = (split: IRegionChange) => {};
   return (

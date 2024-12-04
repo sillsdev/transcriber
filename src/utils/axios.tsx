@@ -93,26 +93,37 @@ export const axiosSendSignedUrl = async (
     }
   );
 };
-
+const toBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+};
 export const axiosPostFile = async (
   api: string,
   file: File,
   token?: string
 ) => {
-  // Create a FormData object
-  const formData = new FormData();
+  const base64String = await toBase64(file);
 
-  // Append the file to the FormData object
-  formData.append('file', file);
+  // Prepare the payload
+  const payload = {
+    fileName: file.name,
+    contentType: file.type,
+    data: base64String.split(',')[1], // Remove the data URL prefix
+  };
+
   // Send the POST request with axios
-  return await Axios.post(API_CONFIG.host + '/api/' + api, formData, {
+  return await Axios.post(API_CONFIG.host + '/api/' + api, payload, {
     headers: token
       ? {
           Authorization: 'Bearer ' + token,
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
         }
       : {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
         },
   });
 };
