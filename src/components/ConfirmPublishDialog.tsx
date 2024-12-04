@@ -31,6 +31,7 @@ import {
 import { PublishLevelEnum, usePublishDestination } from '../crud';
 import ShowLink from '../control/ShowLink';
 import { PublishDestinationEnum } from '../crud';
+import { PassageTypeEnum } from '../model/passageType';
 
 interface IProps {
   title: string;
@@ -40,6 +41,7 @@ interface IProps {
   hasPublishing: boolean;
   hasBible: boolean;
   noDefaults?: boolean;
+  passageType?: PassageTypeEnum;
   noResponse: () => void;
   yesResponse: (destinations: PublishDestinationEnum[]) => void;
 }
@@ -55,6 +57,7 @@ function ConfirmPublishDialog(props: IProps) {
     noResponse,
     current,
     noDefaults,
+    passageType,
   } = props;
 
   const t: IAlertStrings = useSelector(alertSelector, shallowEqual);
@@ -202,7 +205,10 @@ function ConfirmPublishDialog(props: IProps) {
       <DialogContent>
         <DialogContent id="alertJsx">
           {hasPublishing && !hasBible && (
-            <Typography variant = "h6" id="bible">{l.bibleRequired}</Typography>)}
+            <Typography variant="h6" id="bible">
+              {l.bibleRequired}
+            </Typography>
+          )}
           {hasPublishing && (
             <Typography id="alertDesc">{description}</Typography>
           )}
@@ -221,7 +227,8 @@ function ConfirmPublishDialog(props: IProps) {
                   }
                   label="Akuo"
                 />
-                {akuoValue !== PublishLevelEnum.None && AkuoRadioGroup(false, hasBible)}
+                {akuoValue !== PublishLevelEnum.None &&
+                  AkuoRadioGroup(false, hasBible)}
               </>
             )}
             {!sharedProject && AkuoRadioGroup(true, hasBible)}
@@ -254,6 +261,7 @@ function ConfirmPublishDialog(props: IProps) {
                     />
                   }
                   label={p.Internalization}
+                  disabled={passageType === PassageTypeEnum.CHAPTERNUMBER}
                 />
                 <FormControlLabel
                   sx={{ m: 1 }}

@@ -440,6 +440,7 @@ export const AudioTable = (props: IProps) => {
           hasPublishing={hasPublishing}
           hasBible={hasBible}
           noDefaults={true}
+          passageType={data[publishItem]?.passageType}
         />
       )}
       {showId !== '' && (
