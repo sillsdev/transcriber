@@ -500,6 +500,7 @@ export const StepEditor = ({ process, org }: IProps) => {
           <DiscussStepSettings
             toolSettings={rows[toolSettingsRow].settings}
             onChange={handleSettingsChange}
+            onClose={() => setToolSettingsOpen(false)}
           />
         </BigDialog>
       )}
