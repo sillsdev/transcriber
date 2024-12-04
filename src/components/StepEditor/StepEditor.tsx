@@ -34,6 +34,7 @@ import { ParatextStepSettings } from './ParatextStepSettings';
 import { workflowStepsSelector } from '../../selector';
 import { RecordKeyMap } from '@orbit/records';
 import { VertListDnd } from '../../hoc/VertListDnd';
+import { DiscussStepSettings } from './DiscussStepSettings';
 
 export interface IStepRow {
   id: string;
@@ -88,7 +89,11 @@ export const StepEditor = ({ process, org }: IProps) => {
   const [toolSettingsRow, setToolSettingsRow] = useState(-1);
   const toolRef = useRef<number>();
   const focusIndex = useRef<number>(0);
-  const settingsTools = [ToolSlug.Transcribe, ToolSlug.Paratext];
+  const settingsTools = [
+    ToolSlug.Transcribe,
+    ToolSlug.Paratext,
+    ToolSlug.Discuss,
+  ];
   const mxSeq = useMemo(() => {
     let max = 0;
     rows.forEach((r) => {
@@ -480,6 +485,19 @@ export const StepEditor = ({ process, org }: IProps) => {
           bp={BigDialogBp.sm}
         >
           <ParatextStepSettings
+            toolSettings={rows[toolSettingsRow].settings}
+            onChange={handleSettingsChange}
+          />
+        </BigDialog>
+      )}
+      {toolSettingsRow > -1 && (
+        <BigDialog
+          title={localizedTool(rows[toolSettingsRow].tool)}
+          isOpen={rows[toolSettingsRow].tool === ToolSlug.Discuss}
+          onOpen={setToolSettingsOpen}
+          bp={BigDialogBp.sm}
+        >
+          <DiscussStepSettings
             toolSettings={rows[toolSettingsRow].settings}
             onChange={handleSettingsChange}
           />
