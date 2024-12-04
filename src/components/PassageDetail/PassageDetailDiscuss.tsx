@@ -16,8 +16,8 @@ export const PassageDetailDiscuss = ({ width, currentStep }: IProps) => {
   useEffect(() => {
     const step = orgSteps?.find((s) => s.id === currentStep);
     if (step) {
-      var json = JSON.parse(step.attributes.tool);
-      setValue(JSON.parse(json.settings).markDown);
+      var json = JSON.parse(step?.attributes?.tool || '{}');
+      setValue(JSON.parse(json?.settings || '{}')?.markDown ?? '');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgSteps]);
