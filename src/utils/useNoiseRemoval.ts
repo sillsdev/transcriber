@@ -10,6 +10,7 @@ import {
   axiosDelete,
   axiosGet,
   axiosGetStream,
+  axiosPostFile,
   axiosSendSignedUrl,
 } from './axios';
 import { HttpStatusCode } from 'axios';
@@ -62,7 +63,27 @@ export const useNoiseRemoval = () => {
     if (!taskTimer.current) launchTimer();
     return taskId;
   };
+
   const requestFileNoiseRemoval = async (
+    cancelRef: React.MutableRefObject<boolean>,
+    file: File,
+    cb: (file: File | Error) => void
+  ) => {
+    if (offline) return '';
+    axiosPostFile('aero/noiseremoval', file).then((nrresponse) => {
+      if (nrresponse.status === HttpStatusCode.Ok) {
+        var taskId = nrresponse.data ?? '';
+        fileList.push({
+          taskId,
+          cb,
+          cancelRef,
+        });
+        if (!taskTimer.current) launchTimer();
+      } else cb(new Error(nrresponse.statusText));
+    });
+  };
+
+  const s3requestFileNoiseRemoval = async (
     cancelRef: React.MutableRefObject<boolean>,
     file: File,
     cb: (file: File | Error) => void
@@ -108,8 +129,9 @@ export const useNoiseRemoval = () => {
   };
   const checkFile = async (taskId: string) => {
     var response = await axiosGetStream(`aero/noiseremoval/${taskId}`);
-    //will be a stream if completed
-    return response?.body;
+    const data = await response?.json();
+    if (data) return base64ToFile(data.data, data.fileName ?? taskId);
+    return undefined;
   };
   const cleanupTimer = () => {
     if (taskTimer.current) {
@@ -122,6 +144,25 @@ export const useNoiseRemoval = () => {
     }
   };
 
+  const base64ToFile = (base64Data: string, fileName: string) => {
+    try {
+      const binaryString = atob(base64Data);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+
+      const blob = new Blob([bytes], { type: 'audio/wav' });
+      // Create a File object from the Blob
+      const file = new File([blob], fileName, { type: blob.type });
+      return file;
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+  /*
   const streamToFile = async (
     readableStream: ReadableStream,
     fileName: string
@@ -145,7 +186,7 @@ export const useNoiseRemoval = () => {
     const file = new File([blob], fileName, { type: blob.type });
     return file;
   };
-
+*/
   const checkNoiseRemovalTasks = async () => {
     jobList.forEach(async (job) => {
       try {
@@ -182,10 +223,9 @@ export const useNoiseRemoval = () => {
     fileList.forEach(async (filetask) => {
       try {
         if (!filetask.cancelRef.current) {
-          var stream = await checkFile(filetask.taskId);
-          if (stream) {
+          var file = await checkFile(filetask.taskId);
+          if (file) {
             cleanupFile(filetask);
-            var file = await streamToFile(stream, filetask.taskId);
             filetask.cb(file);
           }
         } else {
