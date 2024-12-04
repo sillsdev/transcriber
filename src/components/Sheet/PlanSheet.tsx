@@ -1089,6 +1089,7 @@ export function PlanSheet(props: IProps) {
               sharedProject={shared}
               hasPublishing={publishingOn}
               hasBible={hasBible}
+              passageType={rowInfo[currentRowRef.current - 1]?.passageType}
             />
           )}
           <MediaPlayer
