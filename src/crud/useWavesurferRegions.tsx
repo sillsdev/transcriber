@@ -639,7 +639,9 @@ export function useWaveSurferRegions(
   function roundToTenths(n: number) {
     return Math.round(n * 10) / 10;
   }
-
+  function resetPlayingRegion() {
+    playRegionRef.current = false;
+  }
   function justPlayRegion(progress: number) {
     if (
       currentRegion() &&
@@ -688,6 +690,7 @@ export function useWaveSurferRegions(
     clearRegions,
     loadRegions,
     justPlayRegion,
+    resetPlayingRegion,
     onRegionSeek,
     onRegionProgress,
     onRegionGoTo,

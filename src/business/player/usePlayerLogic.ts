@@ -4,6 +4,11 @@ import { JSONParse } from '../../utils/jsonParse';
 import { IRegion, parseRegions } from '../../crud/useWavesurferRegions';
 import { MediaFile } from '../../model';
 
+export interface RequestPlay {
+  play: boolean | undefined;
+  regionOnly: boolean;
+  request: Date;
+}
 interface PlayerLogicProps {
   allowSegment?: string;
   suggestedSegments?: string;
@@ -12,10 +17,7 @@ interface PlayerLogicProps {
   setPlaying?: (playing: boolean) => void;
   setCurrentSegment?: (segment: IRegion | undefined, index: number) => void;
   setDefaultSegments: (segments: string) => void;
-  setRequestPlay: (request: {
-    play: boolean | undefined;
-    regionOnly: boolean;
-  }) => void;
+  setRequestPlay: (request: RequestPlay) => void;
   setInitialPosition: (position: number | undefined) => void;
   playerMediafile?: MediaFile;
   mediafileRef: React.MutableRefObject<MediaFile | undefined>;
@@ -107,14 +109,18 @@ export const usePlayerLogic = (props: PlayerLogicProps) => {
     if (playingRef.current !== newPlaying) {
       setPlaying && setPlaying(newPlaying);
       playingRef.current = newPlaying;
-      setRequestPlay({ play: undefined, regionOnly: false });
+      setRequestPlay({
+        play: undefined,
+        regionOnly: false,
+        request: new Date(),
+      });
       setInitialPosition(undefined);
     }
   };
 
   useEffect(() => {
     if (playing !== playingRef.current)
-      setRequestPlay({ play: playing, regionOnly: false });
+      setRequestPlay({ play: playing, regionOnly: false, request: new Date() });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playing]);
 
