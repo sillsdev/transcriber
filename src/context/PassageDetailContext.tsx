@@ -519,7 +519,7 @@ const PassageDetailProvider = (props: IProps) => {
       //force refresh if they've hit the same locate button again
       refreshRef.current = refreshRef.current + 1;
       setState((state: ICtxState) => {
-        return { ...state, refresh: refreshRef.current };
+        return { ...state, refresh: refreshRef.current, playing: false };
       });
     } else settingSegmentRef.current = false;
   };

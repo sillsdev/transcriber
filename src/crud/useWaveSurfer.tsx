@@ -65,6 +65,7 @@ export function useWaveSurfer(
     durationRef.current || wavesurfer()?.getDuration() || 0;
 
   const wsGoto = (position: number) => {
+    resetPlayingRegion();
     var duration = wsDuration();
     if (position > duration) position = duration;
     onRegionGoTo(position);
@@ -100,29 +101,29 @@ export function useWaveSurfer(
   const wsPlayRegion = () => setPlayingx(true, true);
   const setPlaying = (value: boolean) => setPlayingx(value, singleRegionOnly);
   const setPlayingx = (value: boolean, regionOnly: boolean) => {
-    if (value !== playingRef.current) {
-      playingRef.current = value;
-      try {
-        if (value) {
-          if (wavesurfer()?.isReady) {
-            //play region once if single region
-            if (!regionOnly || !justPlayRegion(progress())) {
-              //default play (which will loop region if looping is on)
-              wavesurfer()?.play(progress());
-            }
-          }
-        } else {
-          try {
-            if (wavesurferPlayingRef.current) wavesurfer()?.pause();
-          } catch {
-            //ignore
+    playingRef.current = value;
+    try {
+      if (value) {
+        if (wavesurfer()?.isReady) {
+          //play region once if single region
+          if (!regionOnly || !justPlayRegion(progress())) {
+            //default play (which will loop region if looping is on)
+            resetPlayingRegion();
+            wavesurfer()?.play(progress());
           }
         }
-        if (onPlayStatus) onPlayStatus(playingRef.current);
-      } catch (error: any) {
-        logError(Severity.error, globalStore.errorReporter, error);
+      } else {
+        try {
+          if (wavesurferPlayingRef.current) wavesurfer()?.pause();
+        } catch {
+          //ignore
+        }
       }
+      if (onPlayStatus) onPlayStatus(playingRef.current);
+    } catch (error: any) {
+      logError(Severity.error, globalStore.errorReporter, error);
     }
+    //}
   };
 
   const {
@@ -137,6 +138,7 @@ export function useWaveSurfer(
     wsGetRegions,
     wsLoopRegion,
     justPlayRegion,
+    resetPlayingRegion,
     onRegionSeek,
     onRegionProgress,
     onRegionGoTo,

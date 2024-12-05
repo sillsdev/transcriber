@@ -74,6 +74,7 @@ interface IProps {
   visible?: boolean;
   blob?: Blob;
   initialposition?: number;
+  setInitialPosition?: (position: number | undefined) => void;
   allowRecord?: boolean;
   allowZoom?: boolean;
   allowSegment?: NamedRegions | undefined;
@@ -90,6 +91,7 @@ interface IProps {
   metaData?: JSX.Element;
   isPlaying?: boolean;
   regionOnly?: boolean;
+  request?: Date;
   loading?: boolean;
   busy?: boolean;
   defaultRegionParams?: IRegionParams;
@@ -139,6 +141,7 @@ function WSAudioPlayer(props: IProps) {
   const {
     blob,
     initialposition,
+    setInitialPosition,
     allowRecord,
     allowZoom,
     allowSegment,
@@ -154,6 +157,7 @@ function WSAudioPlayer(props: IProps) {
     metaData,
     isPlaying,
     regionOnly,
+    request,
     loading,
     busy,
     defaultRegionParams,
@@ -387,7 +391,7 @@ function WSAudioPlayer(props: IProps) {
     {
       key: PLAY_PAUSE_KEY,
       cb: () => {
-        handlePlayStatus();
+        togglePlayStatus();
         return true;
       },
     },
@@ -415,7 +419,7 @@ function WSAudioPlayer(props: IProps) {
     {
       key: ALT_PLAY_PAUSE_KEY,
       cb: () => {
-        handlePlayStatus();
+        togglePlayStatus();
         return true;
       },
     },
@@ -493,13 +497,11 @@ function WSAudioPlayer(props: IProps) {
   }, [size, wsSetHeight, allowZoom, waitingForAI]);
 
   useEffect(() => {
-    if (
-      initialposition !== undefined &&
-      initialposition !== initialPosRef.current
-    ) {
+    if (initialposition !== undefined) {
       if (wsIsReady()) wsGoto(initialposition);
+      else initialPosRef.current = initialposition;
+      setInitialPosition && setInitialPosition(undefined);
     }
-    initialPosRef.current = initialposition;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialposition]);
 
@@ -568,10 +570,13 @@ function WSAudioPlayer(props: IProps) {
     });
   }, [busy, loading]);
 
-  const handlePlayStatus = () => {
+  const togglePlayStatus = () => {
+    handlePlayStatus(!playingRef.current);
+  };
+  const handlePlayStatus = (play: boolean) => {
     if (durationRef.current === 0 || recordingRef.current) return false;
-    var nowplaying = true;
-    if (regionOnly) {
+    var nowplaying = play;
+    if (play && regionOnly) {
       wsPlayRegion();
     } else nowplaying = wsTogglePlay();
     if (
@@ -586,10 +591,9 @@ function WSAudioPlayer(props: IProps) {
   };
 
   useEffect(() => {
-    if (isPlaying !== undefined && playingRef.current !== isPlaying)
-      handlePlayStatus();
+    if (isPlaying !== undefined) handlePlayStatus(isPlaying);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPlaying, duration]);
+  }, [isPlaying, request, duration]);
 
   function onRecordStart() {}
 
@@ -634,6 +638,7 @@ function WSAudioPlayer(props: IProps) {
 
     if (setBusy) setBusy(false);
     if (initialPosRef.current) wsGoto(initialPosRef.current);
+    initialPosRef.current = undefined;
   }
   function onWSProgress(progress: number) {
     setProgress(progress);
@@ -822,7 +827,7 @@ function WSAudioPlayer(props: IProps) {
                       <span>
                         <IconButton
                           id="wsAudioPlay"
-                          onClick={handlePlayStatus}
+                          onClick={togglePlayStatus}
                           disabled={duration === 0 || recording || waitingForAI}
                         >
                           <>{playing ? <PauseIcon /> : <PlayIcon />}</>
@@ -1100,7 +1105,7 @@ function WSAudioPlayer(props: IProps) {
                       <span>
                         <IconButton
                           id="wsAudioPlay"
-                          onClick={handlePlayStatus}
+                          onClick={togglePlayStatus}
                           disabled={duration === 0 || recording}
                         >
                           <>{playing ? <PauseIcon /> : <PlayIcon />}</>
