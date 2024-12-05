@@ -14,9 +14,10 @@ import {
   axiosSendSignedUrl,
 } from './axios';
 import { HttpStatusCode } from 'axios';
-import { uploadFile } from '../store/upload/actions';
+import { uploadFile } from '../store';
 import { useContext } from 'react';
 import { TokenContext } from '../context/TokenProvider';
+import { loadBlobAsync } from './loadBlob';
 
 interface job {
   taskId: string;
@@ -42,8 +43,9 @@ export const useNoiseRemoval = () => {
   const [errorReporter] = useGlobal('errorReporter');
   const jobList: job[] = [];
   const fileList: fileTask[] = [];
+  const returnAss3List: fileTask[] = [];
   const taskTimer = useRef<NodeJS.Timeout>();
-  const token = useContext(TokenContext).state.accessToken ?? '';
+  const token = useContext(TokenContext).state.accessToken;
   const requestNoiseRemoval = async (
     mediafileid: number,
     cb: (mediafileid: string) => void
@@ -63,24 +65,38 @@ export const useNoiseRemoval = () => {
     if (!taskTimer.current) launchTimer();
     return taskId;
   };
-
+  const cancelled = new Error('canceled');
   const requestFileNoiseRemoval = async (
     cancelRef: React.MutableRefObject<boolean>,
     file: File,
     cb: (file: File | Error) => void
   ) => {
     if (offline) return '';
-    axiosPostFile('aero/noiseremoval', file).then((nrresponse) => {
-      if (nrresponse.status === HttpStatusCode.Ok) {
-        var taskId = nrresponse.data ?? '';
-        fileList.push({
-          taskId,
-          cb,
-          cancelRef,
-        });
-        if (!taskTimer.current) launchTimer();
-      } else cb(new Error(nrresponse.statusText));
-    });
+    if (file.size > 10000000)
+      s3requestFileNoiseRemoval(cancelRef, file, cb).catch((err) =>
+        cb(err as Error)
+      );
+    else
+      axiosPostFile('aero/noiseremoval', file)
+        .then((nrresponse) => {
+          if (cancelRef.current) cb(cancelled);
+          else if (nrresponse.status === HttpStatusCode.Ok) {
+            var taskId = nrresponse.data ?? '';
+            fileList.push({
+              taskId,
+              cb,
+              cancelRef,
+            });
+            if (!taskTimer.current) launchTimer();
+          } else cb(new Error(nrresponse.statusText));
+        })
+        .catch((err) => cb(err as Error));
+  };
+  const deleteS3File = (filename: string) => {
+    if (token)
+      axiosDelete(`S3Files/AI/${filename}`, token).catch((err) =>
+        logError(Severity.error, errorReporter, err)
+      );
   };
 
   const s3requestFileNoiseRemoval = async (
@@ -88,7 +104,7 @@ export const useNoiseRemoval = () => {
     file: File,
     cb: (file: File | Error) => void
   ) => {
-    if (offline) return '';
+    if (offline || !token) return '';
     var response = await axiosGet(
       `S3Files/put/AI/${file.name}/wav`,
       undefined,
@@ -101,27 +117,39 @@ export const useNoiseRemoval = () => {
       token,
       (success: boolean, data: any, statusNum: number, statusText: string) => {
         if (success)
-          axiosGet(`S3Files/get/AI/${file.name}/wav`, undefined, token).then(
-            (response) => {
-              axiosSendSignedUrl('aero/noiseremoval/fromfile', response).then(
-                (nrresponse) => {
-                  if (nrresponse.status === HttpStatusCode.Ok) {
-                    var taskId = nrresponse.data ?? '';
-                    fileList.push({
-                      taskId,
-                      cb,
-                      cancelRef,
-                    });
-                    if (!taskTimer.current) launchTimer();
-                  } else cb(new Error(response.statusText));
-                  axiosDelete(`S3Files/AI/${file.name}`, token);
-                }
-              );
-            }
-          );
+          if (!cancelRef.current)
+            axiosGet(`S3Files/get/AI/${file.name}/wav`, undefined, token)
+              .then((response) => {
+                if (!cancelRef.current)
+                  axiosSendSignedUrl('aero/noiseremoval/fromfile', response)
+                    .then((nrresponse) => {
+                      if (nrresponse.status === HttpStatusCode.Ok) {
+                        var taskId = nrresponse.data ?? '';
+                        returnAss3List.push({
+                          taskId,
+                          cb,
+                          cancelRef,
+                        });
+                        if (!taskTimer.current) launchTimer();
+                      } else cb(new Error(response.statusText));
+                    })
+                    .catch((err) => {
+                      logError(Severity.error, errorReporter, err);
+                      cb(err as Error);
+                    })
+                    .finally(() => deleteS3File(file.name));
+                else cb(cancelled);
+              })
+              .catch((err) => {
+                logError(Severity.error, errorReporter, err);
+                cb(err as Error);
+                deleteS3File(file.name);
+              });
+          else deleteS3File(file.name);
       }
     );
   };
+
   const checkJob = async (id: number, taskId: string) => {
     var response = await axiosGet(`mediafiles/${id}/noiseremoval/${taskId}`);
     //will be a new id if completed
@@ -133,8 +161,27 @@ export const useNoiseRemoval = () => {
     if (data) return base64ToFile(data.data, data.fileName ?? taskId);
     return undefined;
   };
+  const checkAsS3 = async (taskId: string) => {
+    var url = await axiosGet(`aero/noiseremoval/s3/${taskId}`);
+    if (url?.message) {
+      var b = await loadBlobAsync(url?.message);
+      if (token) {
+        const audioBase = url.message.split('?')[0];
+        const filename = audioBase.split('/').pop();
+        deleteS3File(filename);
+      }
+      if (b) return new File([b], taskId + '.wav');
+      else throw new Error('bloberror');
+    }
+    return undefined;
+  };
   const cleanupTimer = () => {
-    if (taskTimer.current) {
+    if (
+      jobList.length === 0 &&
+      fileList.length === 0 &&
+      returnAss3List.length === 0 &&
+      taskTimer.current
+    ) {
       try {
         clearInterval(taskTimer.current);
       } catch (error) {
@@ -187,6 +234,7 @@ export const useNoiseRemoval = () => {
     return file;
   };
 */
+
   const checkNoiseRemovalTasks = async () => {
     jobList.forEach(async (job) => {
       try {
@@ -229,7 +277,7 @@ export const useNoiseRemoval = () => {
             filetask.cb(file);
           }
         } else {
-          filetask.cb(new Error('canceled'));
+          filetask.cb(cancelled);
           cleanupFile(filetask);
         }
       } catch (error: any) {
@@ -239,14 +287,37 @@ export const useNoiseRemoval = () => {
         cleanupFile(filetask);
       }
     });
+    returnAss3List.forEach(async (filetask) => {
+      try {
+        if (!filetask.cancelRef.current) {
+          var file = await checkAsS3(filetask.taskId);
+          if (file) {
+            cleanupS3(filetask);
+            filetask.cb(file);
+          }
+        } else {
+          filetask.cb(cancelled);
+          cleanupS3(filetask);
+        }
+      } catch (error: any) {
+        logError(Severity.error, errorReporter, error as Error);
+        console.log(error);
+        filetask.cb(error as Error);
+        cleanupS3(filetask);
+      }
+    });
   };
   const cleanupJob = (job: job) => {
     jobList.splice(jobList.indexOf(job), 1);
-    if (jobList.length === 0 && fileList.length === 0) cleanupTimer();
+    cleanupTimer();
   };
   const cleanupFile = (job: fileTask) => {
     fileList.splice(fileList.indexOf(job), 1);
-    if (jobList.length === 0 && fileList.length === 0) cleanupTimer();
+    cleanupTimer();
+  };
+  const cleanupS3 = (job: fileTask) => {
+    returnAss3List.splice(returnAss3List.indexOf(job), 1);
+    cleanupTimer();
   };
   const launchTimer = () => {
     taskTimer.current = setInterval(() => {
@@ -254,5 +325,8 @@ export const useNoiseRemoval = () => {
     }, timerDelay);
   };
 
-  return { requestNoiseRemoval, requestFileNoiseRemoval };
+  return {
+    requestNoiseRemoval,
+    requestFileNoiseRemoval,
+  };
 };

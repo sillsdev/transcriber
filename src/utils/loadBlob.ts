@@ -43,4 +43,16 @@ export const loadBlob = async (
     }
   }
 };
+export const loadBlobAsync = async (url: string) => {
+  if (!url) return;
+  if (url.startsWith('http')) {
+    var r = await fetch(url);
+    return await r.blob();
+  } else {
+    const source = await ipc?.read(
+      decodeURIComponent(url.replace(`transcribe-safe://`, ``))
+    );
+    return new Blob([source], { type: urlType(url) });
+  }
+};
 export default loadBlob;

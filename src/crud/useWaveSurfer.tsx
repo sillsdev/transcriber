@@ -702,10 +702,16 @@ export function useWaveSurfer(
       );
 
       // Copy the new audio data
-      combinedData.set(
-        newBuffer.getChannelData(channel),
-        start * originalBuffer.sampleRate
-      );
+      if (channel < newBuffer.numberOfChannels)
+        combinedData.set(
+          newBuffer.getChannelData(channel),
+          start * originalBuffer.sampleRate
+        );
+      else
+        combinedData.set(
+          newBuffer.getChannelData(0),
+          start * originalBuffer.sampleRate
+        );
 
       // Copy the original audio data after the end of the region
       combinedData.set(

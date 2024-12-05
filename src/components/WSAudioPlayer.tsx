@@ -57,6 +57,7 @@ import { AltButton, RemoveNoiseIcon } from '../control';
 import { useNoiseRemoval } from '../utils/useNoiseRemoval';
 import { Exception } from '@orbit/core';
 import { useGlobal } from 'reactn';
+import { AxiosError } from 'axios';
 
 const VertDivider = (prop: DividerProps) => (
   <Divider orientation="vertical" flexItem sx={{ ml: '5px' }} {...prop} />
@@ -733,11 +734,12 @@ function WSAudioPlayer(props: IProps) {
   };
   const handleNoiseRemoval = () => {
     if (!reload) throw new Exception('need reload defined.');
+    cancelAIRef.current = false;
     try {
       doingAI(true);
       const filename = `${Date.now()}nr.wav`;
       wsRegionBlob().then((blob) => {
-        if (blob)
+        if (blob) {
           requestFileNoiseRemoval(
             cancelAIRef,
             new File([blob], filename, { type: 'audio/wav' }),
@@ -752,12 +754,16 @@ function WSAudioPlayer(props: IProps) {
                 }
               } else {
                 if ((file as Error).message !== 'canceled')
-                  showMessage(ts.noiseRemovalFailed);
+                  showMessage(
+                    `${ts.noiseRemovalFailed} ${(file as Error).message} ${
+                      (file as AxiosError).response?.data
+                    }`
+                  );
               }
               doingAI(false);
             }
           );
-        else {
+        } else {
           doingAI(false);
         }
       });
@@ -976,11 +982,12 @@ function WSAudioPlayer(props: IProps) {
                       {t.aiInProgress}
                     </Typography>
                   </Grid>
-                  <Grid xs={2}>
+                  <Grid item xs={2}>
                     <AltButton
                       id="ai-cancel"
                       onClick={() => {
                         cancelAIRef.current = true;
+                        doingAI(false);
                       }}
                     >
                       {ts.cancel}
