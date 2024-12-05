@@ -960,6 +960,7 @@ export function Transcriber(props: IProps) {
             type: 'mediafile',
             id: mediaRef.current.id,
             attributes: {
+              ...mediaRef.current?.attributes,
               transcription: transcription,
               position: newPosition,
               segments: updateSegments(
