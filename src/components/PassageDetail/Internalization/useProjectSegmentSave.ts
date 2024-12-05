@@ -18,6 +18,7 @@ export const useProjectSegmentSave = () => {
           type: 'mediafile',
           id: media.id,
           attributes: {
+            ...media?.attributes,
             segments: segments,
           },
         } as any as MediaFileD,

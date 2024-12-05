@@ -141,6 +141,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
                 type: 'mediafile',
                 id: mediafile.id,
                 attributes: {
+                  ...mediafile?.attributes,
                   segments: updateSegments(
                     allowSegment ?? NamedRegions.BackTranslation,
                     mediafile.attributes?.segments || '{}',
