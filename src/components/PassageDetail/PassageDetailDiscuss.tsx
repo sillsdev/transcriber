@@ -3,6 +3,7 @@ import MarkDown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { OrgWorkflowStepD } from '../../model';
+import { Box } from '@mui/material';
 
 interface IProps {
   width: number;
@@ -22,5 +23,9 @@ export const PassageDetailDiscuss = ({ width, currentStep }: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgSteps]);
 
-  return <MarkDown remarkPlugins={[remarkGfm]}>{value}</MarkDown>;
+  return (
+    <Box sx={{ maxWidth: width, whiteSpace: 'normal', overflow: 'auto' }}>
+      <MarkDown remarkPlugins={[remarkGfm]}>{value}</MarkDown>
+    </Box>
+  );
 };
