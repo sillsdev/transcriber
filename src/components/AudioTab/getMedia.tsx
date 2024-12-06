@@ -4,6 +4,7 @@ import { IRow } from '.';
 import { GetReference } from './GetReference';
 import { getSection } from './getSection';
 import { formatTime } from '../../control/Duration';
+import { passageTypeFromRef } from '../../control/RefRender';
 
 export interface IGetMedia {
   planName: string;
@@ -47,6 +48,8 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
       : '',
     date: updateddt,
     readyToShare: f.attributes.readyToShare,
+    publishTo: f.attributes.publishTo,
+    passageType: passageTypeFromRef(passage[0].attributes.reference),
     user: related(f, 'recordedbyUser'),
   } as IRow;
 };

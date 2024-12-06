@@ -12,9 +12,9 @@ import {
 import Memory from '@orbit/memory';
 import { getSheet } from '../components/Sheet/getSheet';
 import { InitializedRecord } from '@orbit/records';
-import { PublishLevelEnum } from '../crud/usePublishLevel';
 import { ISTFilterState } from '../components/Sheet/filterMenu';
 import { PassageTypeEnum } from '../model/passageType';
+import { PublishDestinationEnum } from '../crud/usePublishDestination';
 
 var mockMemory = {} as Memory;
 
@@ -300,8 +300,8 @@ var defaultFilterState: ISTFilterState = {
   disabled: false,
   canHideDone: false,
 };
-var getPublishLevel = (publishTo: string): PublishLevelEnum =>
-  PublishLevelEnum.None;
+var getPublishTo = (publishTo: string): PublishDestinationEnum[] =>
+  [] as PublishDestinationEnum[];
 interface FindResult {
   uri?: string;
   rights?: string;
@@ -312,6 +312,8 @@ var graphicFind = (rec: InitializedRecord, ref?: string): FindResult => ({});
 var readSharedResource = (passageId: string) => undefined;
 
 var curSheet: ISheet[] | undefined = undefined;
+
+var publishStatus = (destinations: PublishDestinationEnum[]) => '';
 
 var gsDefaults = {
   plan: '',
@@ -324,11 +326,13 @@ var gsDefaults = {
   wfStr,
   filterState: defaultFilterState,
   minSection: -1,
+  hasPublishing: false,
   hidePublishing: false,
   doneStepId: 'done-1',
   getDiscussionCount,
   graphicFind,
-  getPublishLevel,
+  getPublishTo,
+  publishStatus,
   readSharedResource,
   current: curSheet,
 };
@@ -341,7 +345,7 @@ var secResult = {
   passageType: PassageTypeEnum.PASSAGE,
   deleted: false,
   filtered: false,
-  published: PublishLevelEnum.None,
+  published: [] as PublishDestinationEnum[],
   editor: undefined,
   graphicUri: undefined,
   graphicFullSizeUrl: undefined,
@@ -360,7 +364,10 @@ var pasResult = {
   deleted: false,
   filtered: false,
   mediaShared: IMediaShare.NotPublic,
+  published: [] as PublishDestinationEnum[],
   mediaId: undefined,
+  publishStatus: '',
+  sharedResource: undefined,
 };
 
 var flatResult = {
@@ -371,7 +378,7 @@ var flatResult = {
   passageType: PassageTypeEnum.PASSAGE,
   deleted: false,
   filtered: false,
-  published: PublishLevelEnum.None,
+  published: [] as PublishDestinationEnum[],
   mediaShared: IMediaShare.NotPublic,
   mediaId: undefined,
   editor: undefined,
@@ -381,6 +388,8 @@ var flatResult = {
   reference: '',
   titleMediaId: undefined,
   transcriber: undefined,
+  publishStatus: '',
+  sharedResource: undefined,
 };
 
 afterEach(cleanup);

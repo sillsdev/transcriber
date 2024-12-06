@@ -379,7 +379,8 @@ export function Profile(props: IProps) {
           () => false,
           100
         );
-        if (offlineOnly) localStorage.setItem('user-id', userRec.id as string);
+        if (offlineOnly)
+          localStorage.setItem(LocalKey.userId, userRec.id as string);
       }
       saveCompleted(toolId);
     }
@@ -415,7 +416,7 @@ export function Profile(props: IProps) {
     toolChanged(toolId, false);
     if (editId) {
       setEditId(null);
-      const userId = localStorage.getItem('user-id');
+      const userId = localStorage.getItem(LocalKey.userId);
       if (!userId && offlineOnly) {
         setView('Logout');
         return;
@@ -443,7 +444,7 @@ export function Profile(props: IProps) {
     } catch {
       //well we tried...
     }
-    localStorage.removeItem('user-id');
+    localStorage.removeItem(LocalKey.userId);
     setView('Logout');
   };
   const handleDeleteRefused = () => {

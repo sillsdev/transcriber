@@ -10,10 +10,12 @@ interface IProps {
   localizedArtifact: string;
   isScripture: boolean;
   stopPlayer?: () => void;
+  disabled?: boolean;
 }
 
 export function AudioExportMenu(props: IProps) {
-  const { action, localizedArtifact, isScripture, stopPlayer } = props;
+  const { action, localizedArtifact, isScripture, stopPlayer, disabled } =
+    props;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const t: ITranscriptionTabStrings = useSelector(
     transcriptionTabSelector,
@@ -42,6 +44,7 @@ export function AudioExportMenu(props: IProps) {
         aria-haspopup="true"
         aria-owns={anchorEl ? 'audio-export-menu' : undefined}
         onClick={handleClick}
+        disabled={disabled}
       >
         {t.audioExport}
       </AltButton>

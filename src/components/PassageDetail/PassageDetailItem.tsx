@@ -288,6 +288,8 @@ export function PassageDetailItem(props: IProps) {
     [recordType, getTypeId]
   );
 
+  const artifactState = useMemo(() => ({ id: recordTypeId }), [recordTypeId]);
+
   useEffect(() => {
     var mediaRec = rowData.filter(
       (r) => related(r.mediafile, 'artifactType') === recordTypeId
@@ -411,7 +413,7 @@ export function PassageDetailItem(props: IProps) {
           {currentVersion !== 0 ? (
             <Wrapper>
               <SplitPane
-                defaultSize={width - discussionSize.width}
+                defaultSize={width - discussionSize.width + 24}
                 style={{ position: 'static' }}
                 split="vertical"
                 onChange={handleSplitSize}
@@ -453,6 +455,7 @@ export function PassageDetailItem(props: IProps) {
                             currentVersion={currentVersion}
                             rowData={rowData}
                             segments={segString}
+                            width={width - discussionSize.width - 16}
                           />
                         </Box>
                         <Box sx={rowProp}>
@@ -631,7 +634,7 @@ export function PassageDetailItem(props: IProps) {
         passageId={related(sharedResource, 'passage') ?? passage.id}
         sourceSegments={JSON.stringify(getCurrentSegment())}
         sourceMediaId={mediafileId}
-        artifactTypeId={recordTypeId}
+        artifactState={artifactState}
         performedBy={speaker}
         topic={topic}
       />

@@ -4,7 +4,7 @@ import { IRegion } from '../crud/useWavesurferRegions';
 import WSAudioPlayer from './WSAudioPlayer';
 import { MediaFile } from '../model';
 import { NamedRegions } from '../utils/namedSegments';
-import { usePlayerLogic } from '../business/player/usePlayerLogic';
+import { RequestPlay, usePlayerLogic } from '../business/player/usePlayerLogic';
 
 export interface HiddenPlayerProps {
   allowSegment?: NamedRegions | undefined;
@@ -38,10 +38,11 @@ export function HiddenPlayer(props: HiddenPlayerProps) {
     playerMediafile,
   } = props;
 
-  const [requestPlay, setRequestPlay] = useState<{
-    play: boolean | undefined;
-    regionOnly: boolean;
-  }>({ play: undefined, regionOnly: false });
+  const [requestPlay, setRequestPlay] = useState<RequestPlay>({
+    play: undefined,
+    regionOnly: false,
+    request: new Date(),
+  });
   const [initialposition, setInitialPosition] = useState<number | undefined>(0);
 
   const [defaultSegments, setDefaultSegments] = useState('{}');
@@ -75,8 +76,10 @@ export function HiddenPlayer(props: HiddenPlayerProps) {
         size={150}
         blob={audioBlob}
         initialposition={initialposition}
+        setInitialPosition={setInitialPosition}
         isPlaying={requestPlay.play}
         regionOnly={requestPlay.regionOnly}
+        request={requestPlay.request}
         loading={loading}
         segments={defaultSegments}
         currentSegmentIndex={currentSegmentIndex}

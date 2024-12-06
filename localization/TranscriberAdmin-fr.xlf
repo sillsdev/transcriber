@@ -697,6 +697,12 @@
             <target>cards.editCategory Modifier les catégories de l'équipe</target>
          </segment>
       </unit>
+      <unit id="cards.editPersonalCategory">
+         <segment>
+            <source>Edit Personal Projects Categories</source>
+            <target>Modifier les catégories de projets personnels</target>
+         </segment>
+      </unit>
       <unit id="cards.editWorkflow">
          <segment>
             <source>Edit Workflow {0}</source>
@@ -1651,6 +1657,102 @@
             <target>Enregistrer en tant qu'équipe par défaut</target>
          </segment>
       </unit>
+      <unit id="findResource.add">
+         <segment>
+            <source>Add</source>
+            <target>Ajouter</target>
+         </segment>
+      </unit>
+      <unit id="findResource.aiDesc">
+         <segment>
+            <source>Copy the query contents and paste it into one or more of the AI chat tools:</source>
+            <target>Copier le contenu de la requête et le coller dans un ou plusieurs outils de chat AI :</target>
+         </segment>
+      </unit>
+      <unit id="findResource.aquiferSearchTip">
+         <segment>
+            <source>The keyword to search on. Currently only searches against content names (not inside content). Non-English names are supported. Must be at least 3 characters in length.</source>
+            <target>Le mot-clé sur lequel la recherche doit porter. Actuellement, la recherche ne porte que sur les noms de contenu (et non sur le contenu lui-même). Les noms non anglais sont pris en charge. Doit comporter au moins 3 caractères.</target>
+         </segment>
+      </unit>
+      <unit id="findResource.resource">
+         <segment>
+            <source>{0} Resource</source>
+            <target>{0} Ressource</target>
+         </segment>
+      </unit>
+      <unit id="findResource.Lang">
+         <segment>
+            <source>{0} Language*</source>
+            <target>{0} Langue*</target>
+         </segment>
+      </unit>
+      <unit id="findResource.bibleProjectLang">
+         <segment>
+            <source>Book Overviews</source>
+            <target>Aperçus de livres</target>
+         </segment>
+      </unit>
+      <unit id="findResource.biblicalBook">
+         <segment>
+            <source>the biblical book of {0}</source>
+            <target>le livre biblique de {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.book">
+         <segment>
+            <source>Book</source>
+            <target>Livre</target>
+         </segment>
+      </unit>
+      <unit id="findResource.chapter">
+         <segment>
+            <source>Chapter</source>
+            <target>Chapitre</target>
+         </segment>
+      </unit>
+      <unit id="findResource.clearQuery">
+         <segment>
+            <source>Clear query</source>
+            <target>Effacer la requête</target>
+         </segment>
+      </unit>
+      <unit id="findResource.clipboard">
+         <segment>
+            <source>clipboard</source>
+            <target>presse-papiers</target>
+         </segment>
+      </unit>
+      <unit id="findResource.clipboardCopy">
+         <segment>
+            <source>Copy to clipboard</source>
+            <target>Copier dans le presse-papiers</target>
+         </segment>
+      </unit>
+      <unit id="findResource.convert">
+         <segment>
+            <source>Convert text to audio resource file</source>
+            <target>Convertir un texte en fichier de ressources audio</target>
+         </segment>
+      </unit>
+      <unit id="findResource.create">
+         <segment>
+            <source>Create</source>
+            <target>Créer</target>
+         </segment>
+      </unit>
+      <unit id="findResource.createItems">
+         <segment>
+            <source>Create Items</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.createResource">
+         <segment>
+            <source>Create AI Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="grid.all">
          <segment>
             <source>All</source>
@@ -1959,8 +2061,20 @@
       </unit>
       <unit id="import.importSync">
          <segment>
+            <source>Syncing changes</source>
+            <target>Synchronisation des modifications</target>
+         </segment>
+      </unit>
+      <unit id="import.importSyncUp">
+         <segment>
             <source>Syncing offline changes</source>
-            <target>Synchroniser les modifications hors ligne</target>
+            <target>Synchronisation des modifications hors ligne</target>
+         </segment>
+      </unit>
+      <unit id="import.importSyncDown">
+         <segment>
+            <source>Syncing online changes</source>
+            <target/>
          </segment>
       </unit>
       <unit id="import.invalidITF">
@@ -2461,12 +2575,6 @@
             <target>Envoyer</target>
          </segment>
       </unit>
-      <unit id="invite.sil">
-         <segment>
-            <source>SIL International</source>
-            <target>SIL International</target>
-         </segment>
-      </unit>
       <unit id="keyTerms.addTargetWord">
          <segment>
             <source>Add Translation</source>
@@ -2911,6 +3019,18 @@
             <target>Exemple de tableur hiérarchique général</target>
          </segment>
       </unit>
+      <unit id="main.goOffline">
+         <segment>
+            <source>Go Offline</source>
+            <target>Passer hors ligne</target>
+         </segment>
+      </unit>
+      <unit id="main.goOnline">
+         <segment>
+            <source>Go Online</source>
+            <target>Aller en ligne</target>
+         </segment>
+      </unit>
       <unit id="main.googleSamples">
          <segment>
             <source>Sample Google spreadsheets</source>
@@ -3093,8 +3213,8 @@
       </unit>
       <unit id="main.switchUser">
          <segment>
-            <source>Switch Mode or User</source>
-            <target>Changement de mode ou d'utilisateur</target>
+            <source>Switch User</source>
+            <target>Changer d'utilisateur</target>
          </segment>
       </unit>
       <unit id="main.tasks">
@@ -3397,6 +3517,12 @@
             <target>Proposé</target>
          </segment>
       </unit>
+      <unit id="mediaTab.publish">
+         <segment>
+            <source>Publish Media</source>
+            <target>Publier un média</target>
+         </segment>
+      </unit>
       <unit id="mediaTab.published">
          <segment>
             <source>Published</source>
@@ -3587,6 +3713,36 @@
          <segment>
             <source>Upload Change Data from Desktop app.</source>
             <target>Téléchargez les données de modification à partir de l'application Desktop.</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.launchLink">
+         <segment>
+            <source>Show Link Content</source>
+            <target>Afficher le contenu du lien</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.linkTask">
+         <segment>
+            <source>Enter a URI link for a resource.</source>
+            <target>Entrez un lien URI pour une ressource.</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.linkTitle">
+         <segment>
+            <source>Link Resource</source>
+            <target>Lien de la ressource</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.markdownTask">
+         <segment>
+            <source>Enter text to be used as a resource. (Mark down formatting is allowed.)</source>
+            <target>Saisissez le texte à utiliser comme ressource. (La mise en forme par annotation est autorisée).</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.markdownTitle">
+         <segment>
+            <source>Enter Text</source>
+            <target>Saisir le texte</target>
          </segment>
       </unit>
       <unit id="mediaUpload.projectResourceTask">
@@ -3865,6 +4021,24 @@
             <target>Changer de ressource</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.find">
+         <segment>
+            <source>Find</source>
+            <target>Rechercher</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.findResource">
+         <segment>
+            <source>Find Resource for {0}</source>
+            <target>Trouver une ressource pour {0}</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.findResourceDesc">
+         <segment>
+            <source>These controls can be used to find or create (using artificial intelligence -- AI) resources for internalizing the passage, section, chapter, or book.</source>
+            <target>Ces commandes peuvent être utilisées pour trouver ou créer (à l'aide de l'intelligence artificielle - IA) des ressources pour l'internalisation du passage, de la section, du chapitre ou du livre.</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.generalResources">
          <segment>
             <source>General Resources</source>
@@ -3887,6 +4061,12 @@
          <segment>
             <source>Link</source>
             <target>Lien</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.linkResource">
+         <segment>
+            <source>Link (URI)</source>
+            <target>Lien (URI)</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.movementResource">
@@ -3955,6 +4135,12 @@
             <target>Découpage en ressources</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.recordResource">
+         <segment>
+            <source>Record</source>
+            <target>Enregistrer</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.reference">
          <segment>
             <source>Reference</source>
@@ -3993,8 +4179,8 @@
       </unit>
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
-            <source>Link Shared {0} Resource</source>
-            <target>Lien partagé {0} Ressource</target>
+            <source>Link Shared</source>
+            <target>Lien partagé</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.source">
@@ -4033,6 +4219,12 @@
             <target>Consulter les conditions d'utilisation</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.textResource">
+         <segment>
+            <source>Text Resource</source>
+            <target>Texte Ressource</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.title">
          <segment>
             <source>Title</source>
@@ -4053,8 +4245,8 @@
       </unit>
       <unit id="passageDetailArtifacts.tip1b">
          <segment>
-            <source>Link a shared resource to this {0}.</source>
-            <target>Lier une ressource partagée à ce {0}.</target>
+            <source>Link to a shared resource.</source>
+            <target>Lien vers une ressource partagée.</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.tip2b">
@@ -4071,8 +4263,8 @@
       </unit>
       <unit id="passageDetailArtifacts.upload">
          <segment>
-            <source>Upload Resources</source>
-            <target>Télécharger les ressources</target>
+            <source>Uploads</source>
+            <target>Téléchargements</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.uploadProject">
@@ -4103,6 +4295,12 @@
          <segment>
             <source>Step Incomplete</source>
             <target>Étape Incomplète</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailStepComplete.setNext">
+         <segment>
+            <source>Set this and all previous steps complete</source>
+            <target>Régler cette étape et toutes les étapes précédentes terminées</target>
          </segment>
       </unit>
       <unit id="passageDetailStepComplete.title">
@@ -4533,8 +4731,8 @@
       </unit>
       <unit id="planSheet.confirmPublishSection">
          <segment>
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes be marked as not published.</source>
-            <target>Si vous choisissez de publier, le {0} et la dernière version de tous les passages et notes dans ce {0} seront marqués comme publiés. Si vous avez déjà publié et que vous choisissez maintenant « Non publié », les passages et les notes seront marqués comme non publiés.</target>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes will be marked as not published.</source>
+            <target>Si vous choisissez de publier, le {0} et la dernière version de tous les passages et notes de ce {0} seront marqués comme publiés. Si vous avez déjà publié et que vous choisissez maintenant « Non publié », les passages et les notes seront marqués comme non publiés.</target>
          </segment>
       </unit>
       <unit id="planSheet.filtered">
@@ -4639,10 +4837,22 @@
             <target>Publier {0} {1}</target>
          </segment>
       </unit>
+      <unit id="planSheet.published">
+         <segment>
+            <source>Publish</source>
+            <target>Publier</target>
+         </segment>
+      </unit>
       <unit id="planSheet.refErr">
          <segment>
             <source>This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
             <target>Ce projet audio contient des références invalides et ne sera pas synchronisé correctement avec le Paratext. (Une référence valide serait 3:2-5 ou similaire).</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.removeFilter">
+         <segment>
+            <source>Filter must be cleared to enable publishing.</source>
+            <target>Le filtre doit être supprimé pour permettre la publication.</target>
          </segment>
       </unit>
       <unit id="planSheet.resequence">
@@ -4709,6 +4919,12 @@
          <segment>
             <source>Select a column head and use CTRL-V to append table rows.</source>
             <target>Sélectionnez un en-tête de colonne et utilisez CTRL-V pour ajouter des lignes au tableau.</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.versions">
+         <segment>
+            <source>Versions</source>
+            <target>Versions</target>
          </segment>
       </unit>
       <unit id="planTabs.assignments">
@@ -5029,10 +5245,28 @@
             <target>Rapports de {0}</target>
          </segment>
       </unit>
+      <unit id="projectDownload.amount">
+         <segment>
+            <source>Amount to download</source>
+            <target>Quantité à télécharger</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.confirm">
+         <segment>
+            <source>Download Now</source>
+            <target>Télécharger maintenant</target>
+         </segment>
+      </unit>
       <unit id="projectDownload.download">
          <segment>
             <source>Download?</source>
             <target>Télécharger ?</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.downloadDescription">
+         <segment>
+            <source>If the estimated time for download is too long for you, use the 'x' in the upper corner to close this dialog box. Then add a minimum and / or maximum {1} to the filter. The filter icon is {0} (a downward pointing dashed triangle) and is located before the {3} button on the {4} &amp; PASSAGES tab. After setting the {1} filter, choose the filtered option on this dialog box to see how much time will be needed for the filtered {2}.</source>
+            <target>Si le temps estimé pour le téléchargement est trop long pour vous, utilisez le 'x' dans le coin supérieur pour fermer cette boîte de dialogue. Ajoutez ensuite un minimum et/ou un maximum {1} au filtre. L'icône du filtre est {0} (un triangle pointillé vers le bas) et se trouve avant le bouton {3} dans l'onglet {4} &amp; PASSAGES. Après avoir défini le filtre {1}, choisissez l'option filtrée dans cette boîte de dialogue pour voir combien de temps sera nécessaire pour le filtre {2}.</target>
          </segment>
       </unit>
       <unit id="projectDownload.downloadLater">
@@ -5043,14 +5277,56 @@
       </unit>
       <unit id="projectDownload.downloadMb">
          <segment>
-            <source>Download {0}MB of offline audio project files?</source>
-            <target>Télécharger {0}MB de fichiers de projets audio hors ligne ?</target>
+            <source>Download {0}MB of offline audio project files? (It may take {1} to download on a fast Internet connection or {2} on a slow broadband connection.)</source>
+            <target>Télécharger {0}Mo de fichiers de projet audio hors ligne (le téléchargement peut prendre {1} sur une connexion Internet rapide ou {2} sur une connexion à large bande lente).</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filter">
+         <segment>
+            <source>Filter</source>
+            <target>Filtre</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filteredFiles">
+         <segment>
+            <source>Filtered Files</source>
+            <target>Fichiers filtrés</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filtered">
+         <segment>
+            <source>Filtered MB</source>
+            <target>MB filtrés</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.max">
+         <segment>
+            <source>Max {0}</source>
+            <target>Max {0}</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.min">
+         <segment>
+            <source>Min {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.missing">
+         <segment>
+            <source>Missing MB</source>
+            <target/>
          </segment>
       </unit>
       <unit id="publishLevel.none">
          <segment>
-            <source>Not Published - not visible in publishing app</source>
-            <target>Non publié - non visible dans l'application de publication</target>
+            <source>Not Published - not visible outside this project</source>
+            <target>Non publié - non visible en dehors de ce projet</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.bibleRequired">
+         <segment>
+            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo.</source>
+            <target>Vous devez avoir configuré un nom et une identité bibliques dans les paramètres de l'équipe pour publier sur Akuo.</target>
          </segment>
       </unit>
       <unit id="publishLevel.beta">
@@ -5059,16 +5335,16 @@
             <target>Bêta - visible sur le site web d'Akuo lors de l'utilisation du paramètre bêta (non disponible dans l'application).</target>
          </segment>
       </unit>
-      <unit id="publishLevel.betalink">
-         <segment>
-            <source>https://akuobible.org/?beta=true</source>
-            <target>https://akuobible.org/?beta=true</target>
-         </segment>
-      </unit>
       <unit id="publishLevel.public">
          <segment>
             <source>Public - visible to everyone using Akuo website or app</source>
             <target>Public - visible par tous ceux qui utilisent le site web ou l'application Akuo.</target>
+         </segment>
+      </unit>
+      <unit id="publishTo.Internalization">
+         <segment>
+            <source>Internalization Resources for other projects</source>
+            <target>Ressources d'internalisation pour d'autres projets</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -5647,6 +5923,12 @@
             <target>Membres</target>
          </segment>
       </unit>
+      <unit id="shared.mustBeOnline">
+         <segment>
+            <source>You must be online to use this feature</source>
+            <target>Vous devez être en ligne pour utiliser cette fonction</target>
+         </segment>
+      </unit>
       <unit id="shared.no">
          <segment>
             <source>No</source>
@@ -5657,6 +5939,18 @@
          <segment>
             <source>No Audio Available!</source>
             <target>Pas d'audio disponible !</target>
+         </segment>
+      </unit>
+      <unit id="shared.noiseRemoval">
+         <segment>
+            <source>Remove Noise</source>
+            <target>Suppression du bruit</target>
+         </segment>
+      </unit>
+      <unit id="shared.noiseRemovalFailed">
+         <segment>
+            <source>Noise Removal Failed</source>
+            <target>Échec de l'élimination du bruit</target>
          </segment>
       </unit>
       <unit id="shared.NoSaveOffline">
@@ -6934,19 +7228,73 @@
       <unit id="verse.clipboard">
          <segment>
             <source>clipboard</source>
-            <target/>
+            <target>presse-papiers</target>
          </segment>
       </unit>
       <unit id="verse.copyToClipboard">
          <segment>
             <source>Copy to clipboard</source>
-            <target/>
+            <target>Copier dans le presse-papiers</target>
          </segment>
       </unit>
       <unit id="verse.issues">
          <segment>
             <source>The verse markup has issues. Do you want to continue?</source>
-            <target/>
+            <target>Le balisage du verset présente des problèmes. Voulez-vous continuer ?</target>
+         </segment>
+      </unit>
+      <unit id="verse.markVerses">
+         <segment>
+            <source>Mark Verses</source>
+            <target>Marquer les versets</target>
+         </segment>
+      </unit>
+      <unit id="verse.missingReferences">
+         <segment>
+            <source>Warning: Verses in passage not included: ({0})</source>
+            <target>Avertissement : Les versets du passage ne sont pas inclus : ({0})</target>
+         </segment>
+      </unit>
+      <unit id="verse.noReferences">
+         <segment>
+            <source>Warning: Some audio segments will not be included in verses</source>
+            <target>Avertissement : Certains segments audio ne seront pas inclus dans les versets.</target>
+         </segment>
+      </unit>
+      <unit id="verse.noSegments">
+         <segment>
+            <source>ERROR: Some verses have no segment: ({0})</source>
+            <target>ERREUR : Certains versets n'ont pas de segment : ({0})</target>
+         </segment>
+      </unit>
+      <unit id="verse.outsideReferences">
+         <segment>
+            <source>ERROR: Some verses are outside passage: ({0})</source>
+            <target>ERREUR : Certains versets sont en dehors du passage : ({0})</target>
+         </segment>
+      </unit>
+      <unit id="verse.pasteFormat">
+         <segment>
+            <source>Invalid number of columns on clipboard.</source>
+            <target>Le nombre de colonnes dans le presse-papiers n'est pas valide.</target>
+         </segment>
+      </unit>
+      <unit id="verse.reference">
+         <segment>
+            <source>Reference</source>
+            <target>Référence</target>
+         </segment>
+      </unit>
+      <unit id="verse.saveVerseMarkup">
+         <segment>
+            <source>Save Verse Markup</source>
+            <target>Sauvegarder le balisage des versets</target>
+         </segment>
+      </unit>
+      <unit id="verse.startStop">
+         <segment>
+            <source>Start --&gt; Stop</source>
+            <target>Démarrer --&gt; Arrêter</target>
          </segment>
       </unit>
       <unit id="viewMode.audioProject">
@@ -7637,6 +7985,18 @@
          <segment>
             <source>Next Segment [{0}]</source>
             <target>Segment suivant [{0}]</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aiInProgress">
+         <segment>
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target>Service AI en cours...  Il s'agit d'un service à distance qui peut prendre beaucoup de temps si l'enregistrement est volumineux ou s'il y a d'autres demandes avant la vôtre.</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aiGiveUp">
+         <segment>
+            <source>Stop Waiting...</source>
+            <target>N'attendez plus...</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.pauseRecord">

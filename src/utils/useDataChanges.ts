@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { TokenContext } from '../context/TokenProvider';
 import { useDispatch } from 'react-redux';
 import { doDataChanges } from '../hoc/DataChanges';
-import { useFetchUrlNow, useOfflnProjRead } from '../crud';
+import { useOfflnProjRead } from '../crud';
 import * as actions from '../store';
 import { useGlobal } from 'reactn';
 
@@ -17,9 +17,9 @@ export const useDataChanges = () => {
   const dispatch = useDispatch();
   const setLanguage = (lang: string) => dispatch(actions.setLanguage(lang));
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
-  const fetchUrl = useFetchUrlNow();
-  return () => {
-    doDataChanges(
+
+  return async (notPastTime?: string) => {
+    await doDataChanges(
       accessToken || '',
       coordinator,
       fingerprint,
@@ -29,7 +29,8 @@ export const useDataChanges = () => {
       user,
       setLanguage,
       setDataChangeCount,
-      fetchUrl
+      undefined, //isElectron ? fetchUrl : undefined,
+      notPastTime
     );
   };
 };

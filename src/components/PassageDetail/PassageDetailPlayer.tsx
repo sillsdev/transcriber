@@ -13,7 +13,10 @@ import usePassageDetailContext from '../../context/usePassageDetailContext';
 import ViewIcon from '@mui/icons-material/RemoveRedEye';
 import TranscriptionShow from '../TranscriptionShow';
 import { related } from '../../crud/related';
-import { usePlayerLogic } from '../../business/player/usePlayerLogic';
+import {
+  RequestPlay,
+  usePlayerLogic,
+} from '../../business/player/usePlayerLogic';
 
 export enum SaveSegments {
   showSaveButton = 0,
@@ -74,10 +77,11 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
   } = useContext(UnsavedContext).state;
   const t: IWsAudioPlayerStrings = useSelector(playerSelector, shallowEqual);
   const toolId = 'ArtifactSegments';
-  const [requestPlay, setRequestPlay] = useState<{
-    play: boolean | undefined;
-    regionOnly: boolean;
-  }>({ play: undefined, regionOnly: false });
+  const [requestPlay, setRequestPlay] = useState<RequestPlay>({
+    play: undefined,
+    regionOnly: false,
+    request: new Date(),
+  });
   const [initialposition, setInitialPosition] = useState<number | undefined>(0);
   const {
     loading,
@@ -137,6 +141,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
                 type: 'mediafile',
                 id: mediafile.id,
                 attributes: {
+                  ...mediafile?.attributes,
                   segments: updateSegments(
                     allowSegment ?? NamedRegions.BackTranslation,
                     mediafile.attributes?.segments || '{}',
@@ -197,13 +202,17 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
       setDefaultSegments(segments);
       onSegment && onSegment(segments, true);
     }
-    if (!playingRef.current) {
-      var segs = parseRegions(segments);
-      if (segs.regions.length > 0) {
-        setInitialPosition(segs.regions[0].start);
-        setRequestPlay({ play: true, regionOnly: true });
-      }
+    //TT 6149 but I wonder why this was here? if (!playingRef.current) {
+    var segs = parseRegions(segments);
+    if (segs.regions.length > 0) {
+      setInitialPosition(segs.regions[0].start);
+      setRequestPlay({
+        play: true,
+        regionOnly: true,
+        request: new Date(),
+      });
     }
+    //}
   };
 
   const onSegmentChange = (segments: string) => {
@@ -257,8 +266,10 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
         size={playerSize - (chooserReduce ?? 0)}
         blob={audioBlob}
         initialposition={initialposition}
+        setInitialPosition={setInitialPosition}
         isPlaying={requestPlay.play}
         regionOnly={requestPlay.regionOnly}
+        request={requestPlay.request}
         loading={loading}
         busy={pdBusy}
         allowSegment={allowSegment}

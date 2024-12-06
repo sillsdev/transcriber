@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Tabs, Tab, Typography, Box } from '@mui/material';
-import VersionDlg from '../AudioTab/VersionDlg';
 import ResourceOverview, { IResourceDialog } from './ResourceOverview';
 import ResourceRefs from './ResourceRefs';
 import {
@@ -79,11 +78,18 @@ function a11yProps(index: number) {
 interface IProps {
   passId: string;
   ws: ISheet | undefined;
+  hasPublishing: boolean;
   onOpen: () => void;
   onUpdRef?: (id: string, val: string) => void;
 }
 
-export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
+export function ResourceTabs({
+  passId,
+  ws,
+  hasPublishing,
+  onOpen,
+  onUpdRef,
+}: IProps) {
   const sharedResources = useOrbitData<SharedResource[]>('sharedresource');
   const graphics = useOrbitData<GraphicD[]>('graphic');
   const [value, setValue] = React.useState(0);
@@ -337,7 +343,6 @@ export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
             {...a11yProps(1)}
             disabled={!sharedResRec?.id}
           />
-          <Tab label={t.versions} {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -370,11 +375,6 @@ export function ResourceTabs({ passId, ws, onOpen, onUpdRef }: IProps) {
           }
           res={sharedResRec}
           onOpen={handleOverOpen}
-        />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <VersionDlg
-          passId={sharedResRec ? related(sharedResRec, 'passage') : passId}
         />
       </TabPanel>
     </Box>

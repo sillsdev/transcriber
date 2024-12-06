@@ -46,7 +46,14 @@ import {
   positiveWholeOnly,
   useCanPublish,
 } from '../../utils';
-import { remoteIdGuid, useOrganizedBy, useRole } from '../../crud';
+import {
+  PublishDestinationEnum,
+  remoteIdGuid,
+  useBible,
+  useOrganizedBy,
+  usePublishDestination,
+  useRole,
+} from '../../crud';
 import MediaPlayer from '../MediaPlayer';
 import { PlanContext } from '../../context/PlanContext';
 import { TabAppBar } from '../../control';
@@ -66,7 +73,6 @@ import { ExtraIcon } from '.';
 import { usePlanSheetFill } from './usePlanSheetFill';
 import { useShowIcon } from './useShowIcon';
 import { RecordKeyMap } from '@orbit/records';
-import { PublishLevelEnum } from '../../crud/usePublishLevel';
 import ConfirmPublishDialog from '../ConfirmPublishDialog';
 
 const DOWN_ARROW = 'ARROWDOWN';
@@ -125,6 +131,9 @@ const ContentDiv = styled('div')(({ theme }) => ({
   },
   '& .data-grid-container .data-grid .cell.beta': {
     backgroundColor: '#fffbe3',
+  },
+  '& .data-grid-container .data-grid .cell.beta *': {
+    backgroundColor: 'unset',
   },
   '& .data-grid-container .data-grid .cell.empty': {
     paddingTop: theme.spacing(3),
@@ -192,7 +201,7 @@ interface IProps {
   movePassage: (i: number, before: boolean, section: boolean) => void;
   addSection: (level: SheetLevel, i?: number, ptype?: PassageTypeEnum) => void;
   moveSection: (i: number, before: boolean) => void;
-  setSectionPublish: (i: number, level: PublishLevelEnum) => void;
+  setSectionPublish: (i: number, dest: PublishDestinationEnum[]) => void;
   onPublishing: (doUpdate: boolean) => void;
   lookupBook: (book: string) => string;
   resequence: () => void;
@@ -202,6 +211,7 @@ interface IProps {
   onAssign: (where: number[]) => () => void;
   onUpload: (i: number) => () => void;
   onRecord: (i: number) => void;
+  onEdit: (i: number) => () => void;
   onHistory: (i: number) => () => void;
   onGraphic: (i: number) => void;
   onFilterChange: (
@@ -246,12 +256,12 @@ export function PlanSheet(props: IProps) {
   const ctx = useContext(PlanContext);
   const {
     hidePublishing,
-    canHidePublishing,
+    publishingOn,
     projButtonStr,
     connected,
     readonly,
-    shared,
     sectionArr,
+    shared,
   } = ctx.state;
 
   const [memory] = useGlobal('memory');
@@ -302,6 +312,7 @@ export function PlanSheet(props: IProps) {
   const { getOrganizedBy } = useOrganizedBy();
   const organizedBy = getOrganizedBy(true);
   const organizedByPlural = getOrganizedBy(false);
+  const { isPublished } = usePublishDestination();
   const showIcon = useShowIcon({
     readonly,
     rowInfo,
@@ -321,14 +332,24 @@ export function PlanSheet(props: IProps) {
   const moveUp = true;
   const moveDown = false;
   const moveToNewSection = true;
+  const [org] = useGlobal('organization');
+  const [hasBible, setHasBible] = useState(false);
+  const { getOrgBible } = useBible();
+  useEffect(() => {
+    if (org) {
+      var bible = getOrgBible(org);
+      setHasBible(bible !== undefined);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [org]);
 
   const handleSave = () => {
     startSave();
   };
 
-  const publishConfirm = (level: PublishLevelEnum) => {
+  const publishConfirm = (destinations: PublishDestinationEnum[]) => {
     setConfirmPublish(false);
-    setSectionPublish(currentRowRef.current - 1, level);
+    setSectionPublish(currentRowRef.current - 1, destinations);
   };
   const publishRefused = () => {
     setConfirmPublish(false);
@@ -488,11 +509,7 @@ export function PlanSheet(props: IProps) {
   const handleDataRender = (cell: ICell) => cell.value;
 
   const handleConfirmDelete = (rowIndex: number) => () => {
-    if (
-      [PublishLevelEnum.Public, PublishLevelEnum.Beta].includes(
-        rowInfo[rowIndex]?.published
-      )
-    ) {
+    if (isPublished(rowInfo[rowIndex]?.published)) {
       showMessage(t.noPublishDelete);
       return;
     }
@@ -540,12 +557,17 @@ export function PlanSheet(props: IProps) {
     if (recording) toolChanged(toolId);
   };
 
+  const PrefixedCols = 4;
+
   const handleCellsChanged = (changes: Array<ICellChange>) => {
     if (readonly) return; //readonly
     const colChanges = changes.map((c) => ({
       ...c,
       row: c.row - 1,
-      col: !hidePublishing && canHidePublishing ? c.col - 4 : c.col - 3,
+      col:
+        !hidePublishing && publishingOn
+          ? c.col - PrefixedCols - 1
+          : c.col - PrefixedCols,
     }));
     updateData(colChanges);
   };
@@ -625,7 +647,7 @@ export function PlanSheet(props: IProps) {
     onPassageDetail,
     onAction,
     hidePublishing,
-    canHidePublishing,
+    publishingOn,
     firstMovement,
     filtered,
     onAudacity: handleAudacity,
@@ -763,8 +785,12 @@ export function PlanSheet(props: IProps) {
   };
 
   const handlePublishToggle: MouseEventHandler<HTMLButtonElement> = () => {
-    if (!canPublish && hidePublishing) {
+    if (!canPublish && !publishingOn) {
       showMessage(t.paratextRequired);
+      return;
+    }
+    if (filtered && !publishingOn) {
+      showMessage(t.removeFilter);
       return;
     }
     onPublishing(false);
@@ -845,7 +871,7 @@ export function PlanSheet(props: IProps) {
   const currentRowPublishLevel = useMemo(
     () =>
       currentRowRef.current < 1 || !rowInfo[currentRowRef.current - 1]
-        ? PublishLevelEnum.None
+        ? []
         : rowInfo[currentRowRef.current - 1].published,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentRow, rowInfo]
@@ -972,17 +998,20 @@ export function PlanSheet(props: IProps) {
 
             <GrowingSpacer />
             {data.length > 1 &&
-              !shared &&
               !offline &&
               !inlinePassages &&
               !readonly &&
               !anyRecording && (
                 <LightTooltip
                   sx={{ backgroundColor: 'transparent' }}
-                  title={hidePublishing ? t.showPublishing : t.hidePublishing}
+                  title={
+                    !publishingOn || hidePublishing
+                      ? t.showPublishing
+                      : t.hidePublishing
+                  }
                 >
                   <IconButton onClick={handlePublishToggle}>
-                    {hidePublishing ? (
+                    {!publishingOn || hidePublishing ? (
                       <PublishOnIcon sx={{ color: 'primary.light' }} />
                     ) : (
                       <PublishOffIcon sx={{ color: 'primary.light' }} />
@@ -1057,6 +1086,10 @@ export function PlanSheet(props: IProps) {
               yesResponse={publishConfirm}
               noResponse={publishRefused}
               current={currentRowPublishLevel}
+              sharedProject={shared}
+              hasPublishing={publishingOn}
+              hasBible={hasBible}
+              passageType={rowInfo[currentRowRef.current - 1]?.passageType}
             />
           )}
           <MediaPlayer

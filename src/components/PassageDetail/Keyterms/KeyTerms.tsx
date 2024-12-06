@@ -23,13 +23,18 @@ import { useGlobal } from 'reactn';
 import KeyTermSetting from './KeyTermSetting';
 import { Box } from '@mui/material';
 import { useOrbitData } from '../../../hoc/useOrbitData';
+import { StyledBox } from '../../../control/StyledBox';
 
-const KeyTerms = () => {
+interface IProps {
+  width: number;
+}
+
+const KeyTerms = ({ width }: IProps) => {
   const keyTermTargets = useOrbitData<OrgKeytermTarget[]>('orgkeytermtarget');
   const [org] = useGlobal('organization');
   const [memory] = useGlobal('memory');
   const { passage } = usePassageDetailContext();
-  const { book } = passage.attributes;
+  const book = passage?.attributes?.book;
   const {
     verseTerms,
     ktDisplay,
@@ -47,7 +52,8 @@ const KeyTerms = () => {
   } = useKeyTerms();
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   parseRef(passage);
-  const { startChapter, startVerse, endChapter, endVerse } = passage.attributes;
+  const { startChapter, startVerse, endChapter, endVerse } =
+    passage?.attributes ?? {};
   const [term, setTerm] = useState<IKeyTerm & ILocalTerm>();
   const t: IKeyTermsStrings = useSelector(keyTermsSelector, shallowEqual);
 
@@ -129,37 +135,39 @@ const KeyTerms = () => {
         />
         <KeyTermSetting curCode={language} onChange={handleLang} />
       </Box>
-      <KeyTermTable
-        rows={verseTerms(
-          book,
-          startChapter ?? 1,
-          startVerse ?? 1,
-          endChapter ?? startChapter ?? 1,
-          endVerse,
-          sortBy
-        ).map(
-          (to) =>
-            ({
-              term: to.W,
-              source: ktDisplay(to.I),
-              target: keyTermTargets
-                .filter(
-                  (t) =>
-                    t.attributes.termIndex === to.I &&
-                    related(t, 'organization') === org
-                )
-                .map((t) => ({
-                  id: t.id,
-                  label: t.attributes.target,
-                  mediaId: related(t, 'mediafile'),
-                })),
-              index: to.I,
-              fileName: cleanFileName(to.W),
-            } as IKeyTermRow)
-        )}
-        termClick={handleTermClick}
-        targetDelete={handleTargetDelete}
-      />
+      <StyledBox width={width}>
+        <KeyTermTable
+          rows={verseTerms(
+            book,
+            startChapter ?? 1,
+            startVerse ?? 1,
+            endChapter ?? startChapter ?? 1,
+            endVerse,
+            sortBy
+          ).map(
+            (to) =>
+              ({
+                term: to.W,
+                source: ktDisplay(to.I),
+                target: keyTermTargets
+                  .filter(
+                    (t) =>
+                      t?.attributes?.termIndex === to.I &&
+                      related(t, 'organization') === org
+                  )
+                  .map((t) => ({
+                    id: t.id,
+                    label: t?.attributes?.target,
+                    mediaId: related(t, 'mediafile'),
+                  })),
+                index: to.I,
+                fileName: cleanFileName(to.W),
+              } as IKeyTermRow)
+          )}
+          termClick={handleTermClick}
+          targetDelete={handleTargetDelete}
+        />
+      </StyledBox>
       <BigDialog
         title={t.termDetail}
         isOpen={Boolean(term)}

@@ -77,7 +77,7 @@ function TokenProvider(props: IProps) {
       expiresAt: expiresAtRef.current,
       email_verified: profile?.email_verified,
     }));
-    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem(LocalKey.loggedIn, 'true');
   };
 
   React.useEffect(() => {
@@ -123,8 +123,8 @@ function TokenProvider(props: IProps) {
           setAuthSession(myUser, myToken);
         })
         .catch((e: Error) => {
-          localStorage.setItem('offlineAdmin', 'false');
-          localStorage.removeItem('user-id');
+          localStorage.setItem(LocalKey.offlineAdmin, 'false');
+          localStorage.removeItem(LocalKey.userId);
           handleLogOut();
           logError(Severity.error, errorReporter, e);
         });
@@ -144,7 +144,7 @@ function TokenProvider(props: IProps) {
 
   React.useEffect(() => {
     if (!offline) {
-      if (localStorage.getItem('isLoggedIn') === 'true') {
+      if (localStorage.getItem(LocalKey.loggedIn) === 'true') {
         resetExpiresAt();
       }
     }
@@ -154,7 +154,7 @@ function TokenProvider(props: IProps) {
   const handleLogOut = () => {
     setState((state) => ({ ...state, expiresAt: -1 }));
     view.current = 'loggedOut';
-    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem(LocalKey.loggedIn);
     if (modalOpen) setModalOpen(false);
   };
 

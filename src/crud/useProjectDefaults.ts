@@ -9,7 +9,6 @@ import { tryParseJSON } from '../utils/tryParseJson';
 export const projDefExportNumbers = 'exportNumbers';
 export const projDefSectionMap = 'sectionMap';
 export const projDefBook = 'book';
-export const projDefHidePublishing = 'hidePublishing';
 export const projDefFirstMovement = 'firstMovement';
 export const projDefFilterParam = 'ProjectFilter';
 
@@ -44,8 +43,8 @@ export const useProjectDefaults = () => {
     () => orgRole === RoleNames.Admin && (offlineOnly || !offline),
     [offline, offlineOnly, orgRole]
   );
-  const getLocalDefault = (label: string) => {
-    var str = localStorage.getItem(label + project);
+  const getLocalDefault = (label: string, projId?: string) => {
+    var str = localStorage.getItem(label + (projId ?? project));
     if (str) {
       var ret = tryParseJSON(str);
       if (ret !== false) return ret;

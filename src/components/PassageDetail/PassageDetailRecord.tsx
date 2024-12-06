@@ -125,8 +125,8 @@ export function PassageDetailRecord(props: IProps) {
   useEffect(() => {
     setHasExistingVersion(
       Boolean(mediafileId) &&
-      recorderState?.status === MediaSt.FETCHED &&
-      recorderState?.id === mediafileId
+        recorderState?.status === MediaSt.FETCHED &&
+        recorderState?.id === mediafileId
     );
   }, [mediafileId, recorderState]);
 
@@ -195,6 +195,7 @@ export function PassageDetailRecord(props: IProps) {
   const handleRights = (hasRights: boolean) => setHasRight(hasRights);
   const handleReload = () => setPreload(preload + 1);
   const handleTrackRecorder = (state: IMediaState) => setRecorderState(state);
+
   return (
     <Stack sx={{ width: props.width }}>
       <RecordButtons
@@ -286,7 +287,11 @@ export function PassageDetailRecord(props: IProps) {
         isOpen={versionVisible}
         onOpen={handleVerHistClose}
       >
-        <VersionDlg passId={passageId} />
+        <VersionDlg
+          passId={passageId}
+          canSetDestination={false}
+          hasPublishing={false}
+        />
       </BigDialog>
     </Stack>
   );

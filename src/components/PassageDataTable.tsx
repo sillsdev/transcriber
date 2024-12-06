@@ -18,11 +18,13 @@ import { passageDetailArtifactsSelector, sharedSelector } from '../selector';
 import BigDialog from '../hoc/BigDialog';
 import {
   Box,
+  FormControlLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
   SelectProps,
   Stack,
+  Switch,
   TextField,
   Typography,
   styled,
@@ -31,6 +33,7 @@ import BookSelect, { OptionType } from './BookSelect';
 import { useGlobal } from 'reactn';
 import { usePlanType } from '../crud';
 import usePassageDetailContext from '../context/usePassageDetailContext';
+import { ResourceTypeEnum } from './PassageDetail/Internalization/PassageDetailArtifacts';
 
 export enum RefLevel {
   All,
@@ -68,6 +71,8 @@ interface IProps {
   data: IRRow[];
   value?: number;
   bookOpt: OptionType | undefined;
+  scope?: ResourceTypeEnum;
+  onScope?: (val: ResourceTypeEnum) => void;
   termsOfUse: (i: number) => string | undefined;
   onOpen: (val: boolean) => void;
   onSelect?: (rows: number[]) => void;
@@ -77,11 +82,13 @@ interface IProps {
   levelIn?: RefLevel;
 }
 
-export const SelectSharedResource = (props: IProps) => {
+export const PassageDataTable = (props: IProps) => {
   const {
     isNote,
     data,
     value,
+    scope,
+    onScope,
     onOpen,
     onSelect,
     onBookCd,
@@ -209,7 +216,6 @@ export const SelectSharedResource = (props: IProps) => {
           }
         }
       }
-
       if (noTermsList.length > 0) {
         setChecks((isNote ? [] : checks).concat(noTermsList).sort(numSort));
       }
@@ -271,10 +277,30 @@ export const SelectSharedResource = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checks]);
 
+  const handleScopeToggle = () => {
+    onScope &&
+      onScope(
+        scope === ResourceTypeEnum.passageResource
+          ? ResourceTypeEnum.sectionResource
+          : ResourceTypeEnum.passageResource
+      );
+  };
+
   return (
     <div id="passage-data-table">
       {isScripture && (
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', my: 1 }}>
+          {onScope && (
+            <FormControlLabel
+              control={
+                <Switch
+                  value={scope === ResourceTypeEnum.passageResource}
+                  onClick={handleScopeToggle}
+                />
+              }
+              label={t.passageResource}
+            />
+          )}
           <GrowingSpacer />
           {refLevel !== RefLevel.All && (
             <>
@@ -372,4 +398,4 @@ export const SelectSharedResource = (props: IProps) => {
   );
 };
 
-export default SelectSharedResource;
+export default PassageDataTable;

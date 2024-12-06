@@ -10,7 +10,7 @@ import { Button, Box } from '@mui/material';
 import localStrings from '../../selector/localize';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
 import { useGlobal } from 'reactn';
-import { StepItem, StepList } from '.';
+import { StepItem } from '.';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { CheckedChoice as ShowAll } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -33,11 +33,14 @@ import { TranscribeStepSettings } from './TranscribeStepSettings';
 import { ParatextStepSettings } from './ParatextStepSettings';
 import { workflowStepsSelector } from '../../selector';
 import { RecordKeyMap } from '@orbit/records';
+import { VertListDnd } from '../../hoc/VertListDnd';
+import { DiscussStepSettings } from './DiscussStepSettings';
 
 export interface IStepRow {
   id: string;
   seq: number;
   name: string;
+  pos: number;
   tool: string;
   settings: string;
   prettySettings: string;
@@ -58,6 +61,7 @@ export const stepEditorSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'stepEditor' });
 
 export const StepEditor = ({ process, org }: IProps) => {
+  const [sortKey, setSortKey] = useState(0);
   const [rows, setRows] = useState<IStepRow[]>([]);
   const [showAll, setShowAll] = useState(false);
   const se: IStepEditorStrings = useSelector(stepEditorSelector, shallowEqual);
@@ -68,6 +72,7 @@ export const StepEditor = ({ process, org }: IProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const {
+    isChanged,
     toolChanged,
     toolsChanged,
     saveRequested,
@@ -83,7 +88,12 @@ export const StepEditor = ({ process, org }: IProps) => {
   const { localizedArtifactTypeFromId, slugFromId } = useArtifactType();
   const [toolSettingsRow, setToolSettingsRow] = useState(-1);
   const toolRef = useRef<number>();
-  const settingsTools = [ToolSlug.Transcribe, ToolSlug.Paratext];
+  const focusIndex = useRef<number>(0);
+  const settingsTools = [
+    ToolSlug.Transcribe,
+    ToolSlug.Paratext,
+    ToolSlug.Discuss,
+  ];
   const mxSeq = useMemo(() => {
     let max = 0;
     rows.forEach((r) => {
@@ -140,18 +150,28 @@ export const StepEditor = ({ process, org }: IProps) => {
   };
 
   const handleSortEnd = ({ oldIndex, newIndex }: SortEndProps) => {
+    if (oldIndex === newIndex) return;
     setToolSettingsRow(-1);
-    let newRows = arrayMove(rows, oldIndex, newIndex).map((r, i) =>
-      r.seq !== -1 && r.seq !== i ? { ...r, seq: i } : r
+    const filteredRows = rows.filter((r) => r.seq < 0);
+    const unFilteredRows = rows
+      .filter((r) => r.seq >= 0)
+      .map((r, i) => ({ ...r, seq: i }));
+    const bias = showAll ? filteredRows.length : 0;
+    const newRows = filteredRows.concat(
+      arrayMove(unFilteredRows, oldIndex - bias, newIndex - bias).map(
+        (r, i) => ({ ...r, seq: i })
+      )
     );
     setRows(newRows);
     toolChanged(toolId, true);
   };
 
-  const handleNameChange = (name: string, index: number) => {
-    setRows(rows.map((r, i) => (i === index ? { ...r, name } : r)));
-    toolChanged(toolId, true);
+  const handleNameChange = (name: string, pos: number, index: number) => {
+    focusIndex.current = index;
+    setRows(rows.map((r, i) => (i === index ? { ...r, name, pos } : r)));
+    if (!isChanged(toolId)) toolChanged(toolId, true);
   };
+
   const setToolSettingsOpen = (open: boolean) => {
     if (!open) setToolSettingsRow(-1);
     if (toolRef.current) {
@@ -191,6 +211,7 @@ export const StepEditor = ({ process, org }: IProps) => {
       toolRef.current = undefined;
     }
   };
+
   const handleSettingsChange = (settings: string) => {
     setRows(
       rows.map((r, i) =>
@@ -201,6 +222,7 @@ export const StepEditor = ({ process, org }: IProps) => {
     );
     toolChanged(toolId, true);
   };
+
   const handleToolChange = (tool: string, index: number) => {
     if (settingsTools.includes(tool as ToolSlug)) toolRef.current = index;
     setToolSettingsRow(index); //bring up Settings editor
@@ -226,18 +248,21 @@ export const StepEditor = ({ process, org }: IProps) => {
   const handleSettings = (index: number) => {
     setToolSettingsRow(index);
   };
+
   const handleHide = (index: number) => {
     if (visible === 1) {
       showMessage(se.lastStep);
       return;
     }
-    setRows(rows.map((r, i) => (i === index ? { ...r, seq: -1 } : r)));
+    setRows((rows) =>
+      rows.map((r, i) => (i === index ? { ...r, seq: -1 } : r))
+    );
     showMessage(se.oneHidden);
     toolChanged(toolId, true);
   };
 
   const handleVisible = async (index: number) => {
-    setRows(
+    setRows((rows) =>
       rows
         .map((r, i) => (i === index ? { ...r, seq: mxSeq + 1 } : r))
         .sort((i, j) => i.seq - j.seq)
@@ -258,6 +283,7 @@ export const StepEditor = ({ process, org }: IProps) => {
       {
         id: '',
         name,
+        pos: 0,
         tool,
         settings: '',
         prettySettings: prettySettings(tool, ''),
@@ -371,6 +397,7 @@ export const StepEditor = ({ process, org }: IProps) => {
             id: s.id,
             seq: s.attributes?.sequencenum,
             name: localizedWorkStep(s.attributes?.name),
+            pos: 0,
             tool: toCamel(tool),
             settings: settings,
             prettySettings: prettySettings(tool, settings),
@@ -382,6 +409,10 @@ export const StepEditor = ({ process, org }: IProps) => {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
+
+  useEffect(() => {
+    setSortKey((sortKey) => sortKey + 1);
+  }, [rows, showAll]);
 
   const prettySettings = (tool: string, settings: string) => {
     var json = settings ? JSON.parse(settings) : undefined;
@@ -401,6 +432,7 @@ export const StepEditor = ({ process, org }: IProps) => {
         return '';
     }
   };
+
   return (
     <div>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -416,7 +448,7 @@ export const StepEditor = ({ process, org }: IProps) => {
           />
         </div>
       </Box>
-      <StepList onSortEnd={handleSortEnd} useDragHandle>
+      <VertListDnd key={`sort-${sortKey}`} onDrop={handleSortEnd} dragHandle>
         {rows
           .map((r, i) => ({ ...r, rIdx: i }))
           .filter((r) => r.seq >= 0 || showAll)
@@ -425,6 +457,7 @@ export const StepEditor = ({ process, org }: IProps) => {
               key={`si-${r.rIdx}`}
               index={r.rIdx}
               value={r}
+              isFocused={focusIndex.current === r.rIdx}
               onNameChange={handleNameChange}
               onToolChange={handleToolChange}
               onDelete={handleHide}
@@ -437,7 +470,7 @@ export const StepEditor = ({ process, org }: IProps) => {
               settingsTitle={r.prettySettings}
             />
           ))}
-      </StepList>
+      </VertListDnd>
       {toolSettingsRow > -1 && (
         <BigDialog
           title={localizedTool(rows[toolSettingsRow].tool)}
@@ -461,6 +494,20 @@ export const StepEditor = ({ process, org }: IProps) => {
           <ParatextStepSettings
             toolSettings={rows[toolSettingsRow].settings}
             onChange={handleSettingsChange}
+          />
+        </BigDialog>
+      )}
+      {toolSettingsRow > -1 && (
+        <BigDialog
+          title={localizedTool(rows[toolSettingsRow].tool)}
+          isOpen={rows[toolSettingsRow].tool === ToolSlug.Discuss}
+          onOpen={setToolSettingsOpen}
+          bp={BigDialogBp.sm}
+        >
+          <DiscussStepSettings
+            toolSettings={rows[toolSettingsRow].settings}
+            onChange={handleSettingsChange}
+            onClose={() => setToolSettingsOpen(false)}
           />
         </BigDialog>
       )}

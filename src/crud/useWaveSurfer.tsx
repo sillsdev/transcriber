@@ -65,6 +65,7 @@ export function useWaveSurfer(
     durationRef.current || wavesurfer()?.getDuration() || 0;
 
   const wsGoto = (position: number) => {
+    resetPlayingRegion();
     var duration = wsDuration();
     if (position > duration) position = duration;
     onRegionGoTo(position);
@@ -100,29 +101,29 @@ export function useWaveSurfer(
   const wsPlayRegion = () => setPlayingx(true, true);
   const setPlaying = (value: boolean) => setPlayingx(value, singleRegionOnly);
   const setPlayingx = (value: boolean, regionOnly: boolean) => {
-    if (value !== playingRef.current) {
-      playingRef.current = value;
-      try {
-        if (value) {
-          if (wavesurfer()?.isReady) {
-            //play region once if single region
-            if (!regionOnly || !justPlayRegion(progress())) {
-              //default play (which will loop region if looping is on)
-              wavesurfer()?.play(progress());
-            }
-          }
-        } else {
-          try {
-            if (wavesurferPlayingRef.current) wavesurfer()?.pause();
-          } catch {
-            //ignore
+    playingRef.current = value;
+    try {
+      if (value) {
+        if (wavesurfer()?.isReady) {
+          //play region once if single region
+          if (!regionOnly || !justPlayRegion(progress())) {
+            //default play (which will loop region if looping is on)
+            resetPlayingRegion();
+            wavesurfer()?.play(progress());
           }
         }
-        if (onPlayStatus) onPlayStatus(playingRef.current);
-      } catch (error: any) {
-        logError(Severity.error, globalStore.errorReporter, error);
+      } else {
+        try {
+          if (wavesurferPlayingRef.current) wavesurfer()?.pause();
+        } catch {
+          //ignore
+        }
       }
+      if (onPlayStatus) onPlayStatus(playingRef.current);
+    } catch (error: any) {
+      logError(Severity.error, globalStore.errorReporter, error);
     }
+    //}
   };
 
   const {
@@ -137,6 +138,7 @@ export function useWaveSurfer(
     wsGetRegions,
     wsLoopRegion,
     justPlayRegion,
+    resetPlayingRegion,
     onRegionSeek,
     onRegionProgress,
     onRegionGoTo,
@@ -392,6 +394,61 @@ export function useWaveSurfer(
     }
     return undefined;
   };
+  const wsRegionBlob = async () => {
+    if (!wavesurfer()) return;
+    if (!currentRegion()) return wsBlob();
+    var start = trimTo(currentRegion().start, 3);
+    var end = trimTo(currentRegion().end, 3);
+    var len = end - start;
+    if (!len) return wsBlob();
+
+    var backend = wavesurfer()?.backend as any;
+    var originalBuffer = backend.buffer;
+    // Get the original audio buffer
+    const audioContext = backend.ac;
+
+    // Calculate the number of frames for the region
+    const startFrame = Math.floor(start * originalBuffer.sampleRate);
+    const endFrame = Math.floor(end * originalBuffer.sampleRate);
+    const frameCount = endFrame - startFrame;
+
+    // Create a new buffer for the region
+    const regionBuffer = audioContext.createBuffer(
+      originalBuffer.numberOfChannels,
+      frameCount,
+      originalBuffer.sampleRate
+    );
+
+    // Copy the audio data for the region
+    for (
+      let channel = 0;
+      channel < originalBuffer.numberOfChannels;
+      channel++
+    ) {
+      const originalData = originalBuffer.getChannelData(channel);
+      const regionData = regionBuffer.getChannelData(channel);
+      regionData.set(originalData.subarray(startFrame, endFrame));
+    }
+    var channels = regionBuffer.numberOfChannels;
+    var data_left = regionBuffer.getChannelData(0);
+    var data_right = null;
+    if (channels === 2) {
+      data_right = regionBuffer.getChannelData(1);
+      if (!data_left && data_right) {
+        data_left = data_right;
+        data_right = null;
+        channels = 1;
+      }
+    }
+    // Convert the region buffer to a Blob
+    var wavblob = await convertToWav(data_left, data_right, {
+      isFloat: true, // floating point or 16-bit integer (WebAudio API decodes to Float32Array) ???
+      numChannels: channels,
+      sampleRate: originalBuffer.sampleRate,
+    });
+    return wavblob;
+  };
+
   const wsSkip = (amt: number) => {
     userInteractionRef.current = false;
     wavesurfer()?.skip(amt);
@@ -438,7 +495,7 @@ export function useWaveSurfer(
 
     if (startposition === 0 && (originalBuffer?.length | 0) === 0) {
       loadDecoded(newBuffer);
-      return newBuffer.length / newBuffer.sampleRate;
+      return newBuffer ? newBuffer.length / newBuffer.sampleRate : 0;
     }
     var start_offset = (startposition * originalBuffer.sampleRate) >> 0;
     var after_offset = (endposition * originalBuffer.sampleRate) >> 0;
@@ -496,6 +553,7 @@ export function useWaveSurfer(
   const wsStopRecord = () => {
     onCanUndo(true);
   };
+
   const wsInsertSilence = (seconds: number, position: number) => {
     if (!wavesurfer()) return;
     var backend = wavesurfer()?.backend as any;
@@ -577,10 +635,99 @@ export function useWaveSurfer(
     durationRef.current = wavesurfer()?.getDuration() || 0;
     return emptySegment;
   };
+  // Helper function to read a Blob as an ArrayBuffer
+  function readFileAsArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as ArrayBuffer);
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(blob);
+    });
+  }
+  // Helper function to decode audio data
+  function decodeAudioData(
+    audioContext: AudioContext,
+    arrayBuffer: ArrayBuffer
+  ): Promise<AudioBuffer> {
+    return new Promise((resolve, reject) => {
+      audioContext.decodeAudioData(arrayBuffer, resolve, reject);
+    });
+  }
+  const wsRegionReplace = async (blob: Blob) => {
+    if (!wavesurfer()) return;
+    setUndoBuffer(copyOriginal());
+    onCanUndo(true);
+
+    if (!currentRegion()) {
+      wsLoad(blob);
+      return blob;
+    }
+    var start = trimTo(currentRegion().start, 3);
+    var end = trimTo(currentRegion().end, 3);
+    var len = end - start;
+    if (!len) {
+      wsLoad(blob);
+      return blob;
+    }
+
+    var backend = wavesurfer()?.backend as any;
+    const audioContext = backend.ac;
+    var originalBuffer = backend.buffer;
+
+    // Load the new Blob and replace the region
+    const arrayBuffer = await readFileAsArrayBuffer(blob);
+    const newBuffer = await decodeAudioData(audioContext, arrayBuffer);
+
+    // Create a new buffer with the combined audio data
+    var newLength =
+      originalBuffer.length -
+      (end - start) * originalBuffer.sampleRate +
+      newBuffer.length;
+    var combinedBuffer = audioContext.createBuffer(
+      originalBuffer.numberOfChannels,
+      newLength,
+      originalBuffer.sampleRate
+    );
+    // Copy the original audio data up to the start of the region
+    for (
+      let channel = 0;
+      channel < originalBuffer.numberOfChannels;
+      channel++
+    ) {
+      const originalData = originalBuffer.getChannelData(channel);
+      const combinedData = combinedBuffer.getChannelData(channel);
+
+      combinedData.set(
+        originalData.subarray(0, start * originalBuffer.sampleRate)
+      );
+
+      // Copy the new audio data
+      if (channel < newBuffer.numberOfChannels)
+        combinedData.set(
+          newBuffer.getChannelData(channel),
+          start * originalBuffer.sampleRate
+        );
+      else
+        combinedData.set(
+          newBuffer.getChannelData(0),
+          start * originalBuffer.sampleRate
+        );
+
+      // Copy the original audio data after the end of the region
+      combinedData.set(
+        originalData.subarray(end * originalBuffer.sampleRate),
+        start * originalBuffer.sampleRate + newBuffer.length
+      );
+    }
+    // Load the new buffer into Wavesurfer
+    await wavesurfer()!.loadDecodedBuffer(combinedBuffer);
+    return await wsBlob();
+  };
 
   return {
     wsLoad,
     wsBlob,
+    wsRegionBlob,
     wsClear,
     wsIsReady,
     wsIsPlaying,
@@ -598,6 +745,7 @@ export function useWaveSurfer(
     wsClearRegions,
     wsLoopRegion,
     wsRegionDelete,
+    wsRegionReplace,
     wsUndo,
     wsInsertAudio,
     wsInsertSilence,

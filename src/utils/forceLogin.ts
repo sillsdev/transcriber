@@ -1,4 +1,6 @@
+import { LocalKey } from './localUserKey';
+
 export function forceLogin() {
-  localStorage.removeItem('auth-id');
-  localStorage.removeItem('user-id');
+  localStorage.removeItem(LocalKey.authId);
+  localStorage.removeItem(LocalKey.userId);
 }

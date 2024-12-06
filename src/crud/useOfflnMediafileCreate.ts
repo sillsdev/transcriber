@@ -3,6 +3,7 @@ import { useGlobal } from 'reactn';
 import { MediaFile, MediaFileD } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import path from 'path-browserify';
+import { getContentType } from '../utils/contentType';
 
 export const useOfflnMediafileCreate = () => {
   const [memory] = useGlobal('memory');
@@ -25,7 +26,7 @@ export const useOfflnMediafileCreate = () => {
         audioUrl: data.audioUrl || '',
         s3file: data.s3file || '',
         duration: data.duration || 0,
-        contentType: data.contentType || '',
+        contentType: getContentType(data.contentType,data.originalFile),
         audioQuality: data.audioQuality || '',
         textQuality: data.textQuality || '',
         transcription: '',
@@ -36,6 +37,7 @@ export const useOfflnMediafileCreate = () => {
         languagebcp47: data.languagebcp47 || '',
         link: data.link || false,
         readyToShare: false,
+        publishTo: '{}',
         performedBy: data.performedBy || '',
         sourceSegments: data.sourceSegments || '{}',
         sourceMediaOfflineId: '',
@@ -47,8 +49,11 @@ export const useOfflnMediafileCreate = () => {
       },
     } as MediaFile;
     //check new comment version
-    if (path.basename(data.audioUrl) !== data.originalFile) {
-      newMediaRec.attributes.originalFile = path.basename(data.audioUrl);
+    if (
+      path.basename(data.audioUrl || '') !== data.originalFile &&
+      /^audio/.test(getContentType(data.contentType,path.basename(data.audioUrl || '')))
+    ) {
+      newMediaRec.attributes.originalFile = path.basename(data.audioUrl || '');
     }
     const t = new RecordTransformBuilder();
     const ops: RecordOperation[] = [];

@@ -11,6 +11,7 @@ import {
 import { LanguagePicker, LangTag } from 'mui-language-picker';
 import { useSelector, shallowEqual } from 'react-redux';
 import { vProjectSelector, pickerSelector } from '../selector';
+import { fontFamilyName } from '../utils/fontFamilyName';
 
 export interface ILanguage {
   bcp47: string;
@@ -127,7 +128,7 @@ export const Language = (props: IProps) => {
                 id="language-font"
                 label={t.font}
                 sx={{ mx: 1 }}
-                value={font}
+                value={fontFamilyName(font)}
                 onClick={handleChangeFont}
                 onKeyDown={handleChangeFont}
                 margin="normal"

@@ -7,8 +7,8 @@ import {
   IMediaShare,
 } from '../model';
 import { useWfPaste } from '../components/Sheet/useSheetPaste';
-import { PublishLevelEnum } from '../crud/usePublishLevel';
 import { act } from 'react-dom/test-utils';
+import { PublishDestinationEnum } from '../crud';
 
 interface IPasteResult {
   valid: boolean;
@@ -37,7 +37,7 @@ const secDef = {
   book: 'LUK',
   comment: '',
   deleted: false,
-  published: PublishLevelEnum.None,
+  published: [] as PublishDestinationEnum[],
 };
 const pasDef = {
   level: SheetLevel.Passage,

@@ -9,7 +9,6 @@ import {
 import { useGlobal } from 'reactn';
 import { infoMsg, logError, Severity, useCheckOnline } from '../utils';
 import { useInterval } from '../utils/useInterval';
-import Axios from 'axios';
 import {
   RecordTransform,
   RecordTransformBuilder,
@@ -64,6 +63,7 @@ import { useBibleMedia } from '../crud/useBibleMedia';
 import { useDispatch } from 'react-redux';
 import { pullRemoteToMemory } from '../crud/syncToMemory';
 import { useOrbitData } from './useOrbitData';
+import { axiosGet } from '../utils/axios';
 
 export const processDataChanges = async (pdc: {
   token: string | null;
@@ -95,7 +95,7 @@ export const processDataChanges = async (pdc: {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('datachanges') as JSONAPISource;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
-  const reloadOrgs = async (localId: string) => {
+  const reloadOrgs = async (localId: string, reloadAll: boolean) => {
     const orgmem = findRecord(memory, 'organizationmembership', localId);
     if (orgmem) {
       if (related(orgmem, 'user') === user) {
@@ -103,19 +103,24 @@ export const processDataChanges = async (pdc: {
           'organization',
           'orgworkflowstep',
           'organizationmembership',
+          'organizationbible',
         ]) {
           await pullRemoteToMemory({ table, memory, remote });
         }
       }
-    } else
-      await pullRemoteToMemory({
-        table: 'organizationmembership',
-        memory,
-        remote,
-      });
+    } else {
+      if (reloadAll)
+        await pullRemoteToMemory({
+          table: 'organizationmembership',
+          memory,
+          remote,
+        });
+      return true;
+    }
+    return false;
   };
 
-  const reloadProjects = async (localId: string) => {
+  const reloadProjects = async (localId: string, reloadAll: boolean) => {
     const grpmem = findRecord(memory, 'groupmembership', localId);
     if (grpmem) {
       if (related(grpmem, 'user') === user) {
@@ -123,8 +128,12 @@ export const processDataChanges = async (pdc: {
           await pullRemoteToMemory({ table, memory, remote });
         }
       }
-    } else
-      await pullRemoteToMemory({ table: 'groupmembership', memory, remote });
+    } else {
+      if (reloadAll)
+        await pullRemoteToMemory({ table: 'groupmembership', memory, remote });
+      return true;
+    }
+    return false;
   };
   const processTableChanges = async (
     transforms: RecordTransform[],
@@ -192,7 +201,8 @@ export const processDataChanges = async (pdc: {
       );
       await backup.sync((t) => ops);
       await memory.sync((t) => ops);
-
+      var reloadAllOrgs = false;
+      var reloadAllProjects = false;
       for (const o of myOps) {
         if (o.op === 'updateRecord') {
           upRec = o as UpdateRecordOperation;
@@ -235,7 +245,7 @@ export const processDataChanges = async (pdc: {
                   );
               }
               if (fetchUrl && upRec.record?.keys?.remoteId)
-                fetchUrl({
+                await fetchUrl({
                   id: upRec.record.keys.remoteId,
                   cancelled: () => false,
                 }); //downloads the file
@@ -267,14 +277,19 @@ export const processDataChanges = async (pdc: {
                 AcceptInvitation(remote, upRec.record as InvitationD);
               break;
             case 'organizationmembership':
-              reloadOrgs(upRec.record.id);
+              reloadAllOrgs =
+                (await reloadOrgs(upRec.record.id, false)) || reloadAllOrgs;
               break;
             case 'groupmembership':
-              reloadProjects(upRec.record.id);
+              reloadAllProjects =
+                (await reloadProjects(upRec.record.id, false)) ||
+                reloadAllProjects;
               break;
           }
         }
       }
+      if (reloadAllOrgs) reloadOrgs('x', true);
+      if (reloadAllProjects) reloadProjects('x', true);
       if (localOps.length > 0) {
         await backup.sync((t) => localOps);
         await memory.sync((t) => localOps);
@@ -284,13 +299,8 @@ export const processDataChanges = async (pdc: {
   };
 
   try {
-    const response = await Axios.get(api, {
-      params: params,
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    });
-    const data = response.data?.data as DataChange | null;
+    const response = await axiosGet(api, params, token);
+    const data = response?.data as DataChange | null;
     if (data === null) return started;
     const changes = data?.attributes?.changes;
     const deletes = data?.attributes?.deleted;
@@ -325,10 +335,10 @@ export const processDataChanges = async (pdc: {
         if (localId) {
           switch (table.type) {
             case 'organizationmembership':
-              reloadOrgs(localId);
+              reloadOrgs(localId, true);
               break;
             case 'groupmembership':
-              reloadProjects(localId);
+              reloadProjects(localId, true);
               break;
           }
           operations.push(
@@ -363,7 +373,8 @@ export const doDataChanges = async (
   user: string,
   setLanguage: typeof actions.setLanguage,
   setDataChangeCount: (value: number) => void,
-  fetchUrl?: (props: IFetchNowProps) => Promise<string | undefined>
+  fetchUrl?: (props: IFetchNowProps) => Promise<string | undefined>,
+  notPastTime?: string
 ) => {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource; //to check busy
@@ -373,6 +384,8 @@ export const doDataChanges = async (
   if (!remote || !remote.activated) return;
   let startNext = 0;
   let lastTime = localStorage.getItem(userLastTimeKey) || currentDateTime(); // should not happen
+  if (notPastTime && Date.parse(lastTime) > Date.parse(notPastTime))
+    lastTime = notPastTime;
   let nextTime = currentDateTime();
 
   const updateSnapshotDate = async (
@@ -579,7 +592,7 @@ export function DataChanges(props: PropsWithChildren) {
         user,
         setLanguage,
         setDataChangeCount,
-        fetchUrl
+        isElectron ? fetchUrl : undefined
       );
       if (check) {
         //make sure we have a bible media project and plan downloaded

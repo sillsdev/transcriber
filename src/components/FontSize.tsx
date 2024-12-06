@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Typography, Slider, SliderProps, Box, styled } from '@mui/material';
+import { fontFamilyName } from '../utils/fontFamilyName';
 
 const Letter = styled('div')(({ theme }) => ({
   alignSelf: 'center',
@@ -34,7 +35,9 @@ interface IProps {
 export default function FontSize(props: IProps) {
   const { label, value, font, setSize, disabled } = props;
   const [position, setPosition] = useState(4);
-  const [fontName, setFontNamne] = useState(font ? font : 'Charis SIL');
+  const [fontName, setFontNamne] = useState(
+    font ? fontFamilyName(font) : 'Charis SIL'
+  );
 
   const valuetext = (pos: number) => {
     return fontSizes[pos];
@@ -46,7 +49,7 @@ export default function FontSize(props: IProps) {
   };
 
   useEffect(() => {
-    if (font) setFontNamne(font);
+    if (font) setFontNamne(fontFamilyName(font));
   }, [font]);
 
   useEffect(() => {

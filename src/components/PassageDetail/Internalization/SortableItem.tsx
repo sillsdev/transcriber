@@ -1,32 +1,48 @@
-import { SortableElement, SortableElementProps } from 'react-sortable-hoc';
 import { IRow } from '../../../context/PassageDetailContext';
 import { TableRow, PlayButton, DoneButton, ResourceEditAction } from '.';
 import { SectionResourceD } from '../../../model';
 import { ViewButton } from './ViewButton';
-import { PropsWithChildren } from 'react';
+import { MarkDownType, UriLinkType } from '../../MediaUpload';
 
 interface IProps {
   value: IRow;
+  contentType: string;
   isPlaying: boolean;
   onPlay: (id: string) => void;
   onView: (id: string) => void;
+  onLink: (id: string) => void;
+  onMarkDown: (id: string) => void;
   onDone: (id: string, res: SectionResourceD | null) => void;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
 }
 
-export const SortableItem = SortableElement<
-  IProps & SortableElementProps & PropsWithChildren
->(({ value, isPlaying, onPlay, onView, onDone, onEdit, onDelete }: IProps) => (
+export const SortableItem = ({
+  value,
+  contentType,
+  isPlaying,
+  onPlay,
+  onView,
+  onLink,
+  onMarkDown,
+  onDone,
+  onEdit,
+  onDelete,
+}: IProps) => (
   <TableRow
     value={
       {
         ...value,
-        playItem: value.isText ? (
-          <ViewButton id={value.id} cb={onView} />
-        ) : (
-          <PlayButton value={!isPlaying} id={value.id} cb={onPlay} />
-        ),
+        playItem:
+          contentType === UriLinkType ? (
+            <ViewButton id={value.id} cb={onLink} />
+          ) : contentType === MarkDownType ? (
+            <ViewButton id={value.id} cb={onMarkDown} />
+          ) : !/^audio/.test(contentType) ? (
+            <ViewButton id={value.id} cb={onView} />
+          ) : (
+            <PlayButton value={!isPlaying} id={value.id} cb={onPlay} />
+          ),
         done: (
           <DoneButton
             value={value.done}
@@ -45,4 +61,4 @@ export const SortableItem = SortableElement<
       } as any
     }
   />
-));
+);

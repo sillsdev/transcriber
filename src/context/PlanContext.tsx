@@ -12,13 +12,13 @@ import {
 } from '../model';
 import { findRecord, usePlanType, useRole } from '../crud';
 import {
-  projDefHidePublishing,
   projDefSectionMap,
   useProjectDefaults,
 } from '../crud/useProjectDefaults';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { useSelector } from 'react-redux';
 import { projButtonsSelector } from '../selector';
+import { LocalKey, localUserKey } from '../utils';
 
 export interface IRowData {}
 
@@ -33,7 +33,7 @@ const initState = {
   scripture: false,
   flat: false,
   shared: false,
-  canHidePublishing: true,
+  publishingOn: true,
   hidePublishing: true,
   sectionArr: [] as [number, string][],
   setSectionArr: (sectionArr: [number, string][]) => {},
@@ -106,32 +106,42 @@ const PlanProvider = (props: IProps) => {
     let projRec = findRecord(memory, 'project', project) as ProjectD;
     if (projRec) {
       const shared = projRec?.attributes?.isPublic || false;
-      const hidePublishing =
-        (getProjectDefault(projDefHidePublishing) ?? true) ||
-        (isOffline && !isDeveloper) ||
-        shared;
+      const hideId = LocalKey.hidePublishing + project;
+      const hidePublish =
+        localStorage.getItem(localUserKey(hideId as LocalKey)) || 'true';
+      const hidePublishing = Boolean(
+        hidePublish === 'true' || (isOffline && !isDeveloper)
+      );
 
       if (
         shared !== state.shared ||
-        hidePublishing !== state[projDefHidePublishing]
+        hidePublishing !== state[LocalKey.hidePublishing]
       ) {
         setState((state) => ({
           ...state,
           shared,
           hidePublishing,
         }));
+        localStorage.setItem(
+          localUserKey(hideId as LocalKey),
+          hidePublishing.toString()
+        );
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
 
-  const setCanPublish = (canHidePublishing: boolean) => {
-    setState((state) => ({ ...state, canHidePublishing }));
+  const setCanPublish = (publishingOn: boolean) => {
+    setState((state) => ({ ...state, publishingOn }));
   };
 
   const togglePublishing = () => {
     const { hidePublishing } = state;
-    setProjectDefault(projDefHidePublishing, !hidePublishing);
+    const hideId = LocalKey.hidePublishing + project;
+    localStorage.setItem(
+      localUserKey(hideId as LocalKey),
+      (!Boolean(hidePublishing)).toString()
+    );
     setState((state) => ({ ...state, hidePublishing: !hidePublishing }));
   };
 

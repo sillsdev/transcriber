@@ -104,7 +104,7 @@ export function DiscussionList() {
   }, [playerMediafile]);
 
   const [rootWidthStyle, setRootWidthStyle] = useState({
-    width: `${discussionSizeRef.current?.width - 30}px`, //leave room for scroll bar
+    width: `${discussionSizeRef.current?.width - 64}px`, //leave room for scroll bar
     maxHeight: `${discussionSizeRef.current?.height}px`,
   });
   const { userIsAdmin } = useRole();
@@ -157,7 +157,7 @@ export function DiscussionList() {
   useEffect(() => {
     discussionSizeRef.current = discussionSize;
     setRootWidthStyle({
-      width: `${discussionSizeRef.current?.width - 30}px`,
+      width: `${discussionSizeRef.current?.width - 64}px`, // space for scroll bar
       maxHeight: `${discussionSizeRef.current?.height}px`,
     });
   }, [discussionSize]);

@@ -697,6 +697,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.editPersonalCategory">
+         <segment>
+            <source>Edit Personal Projects Categories</source>
+            <target>Edit Kategori Proyek Pribadi</target>
+         </segment>
+      </unit>
       <unit id="cards.editWorkflow">
          <segment>
             <source>Edit Workflow {0}</source>
@@ -1651,6 +1657,102 @@
             <target>Simpan sebagai default tim</target>
          </segment>
       </unit>
+      <unit id="findResource.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.aiDesc">
+         <segment>
+            <source>Copy the query contents and paste it into one or more of the AI chat tools:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.aquiferSearchTip">
+         <segment>
+            <source>The keyword to search on. Currently only searches against content names (not inside content). Non-English names are supported. Must be at least 3 characters in length.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.resource">
+         <segment>
+            <source>{0} Resource</source>
+            <target>{0} Sumber daya</target>
+         </segment>
+      </unit>
+      <unit id="findResource.Lang">
+         <segment>
+            <source>{0} Language*</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.bibleProjectLang">
+         <segment>
+            <source>Book Overviews</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.biblicalBook">
+         <segment>
+            <source>the biblical book of {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.book">
+         <segment>
+            <source>Book</source>
+            <target>Buku</target>
+         </segment>
+      </unit>
+      <unit id="findResource.chapter">
+         <segment>
+            <source>Chapter</source>
+            <target>Bab</target>
+         </segment>
+      </unit>
+      <unit id="findResource.clearQuery">
+         <segment>
+            <source>Clear query</source>
+            <target>Hapus kueri</target>
+         </segment>
+      </unit>
+      <unit id="findResource.clipboard">
+         <segment>
+            <source>clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.clipboardCopy">
+         <segment>
+            <source>Copy to clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.convert">
+         <segment>
+            <source>Convert text to audio resource file</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.create">
+         <segment>
+            <source>Create</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.createItems">
+         <segment>
+            <source>Create Items</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.createResource">
+         <segment>
+            <source>Create AI Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="grid.all">
          <segment>
             <source>All</source>
@@ -1959,7 +2061,19 @@
       </unit>
       <unit id="import.importSync">
          <segment>
+            <source>Syncing changes</source>
+            <target>Menyinkronkan perubahan</target>
+         </segment>
+      </unit>
+      <unit id="import.importSyncUp">
+         <segment>
             <source>Syncing offline changes</source>
+            <target>Menyinkronkan perubahan offline</target>
+         </segment>
+      </unit>
+      <unit id="import.importSyncDown">
+         <segment>
+            <source>Syncing online changes</source>
             <target/>
          </segment>
       </unit>
@@ -2461,12 +2575,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.sil">
-         <segment>
-            <source>SIL International</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="keyTerms.addTargetWord">
          <segment>
             <source>Add Translation</source>
@@ -2911,6 +3019,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.goOffline">
+         <segment>
+            <source>Go Offline</source>
+            <target>Pergi Offline</target>
+         </segment>
+      </unit>
+      <unit id="main.goOnline">
+         <segment>
+            <source>Go Online</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.googleSamples">
          <segment>
             <source>Sample Google spreadsheets</source>
@@ -3093,8 +3213,8 @@
       </unit>
       <unit id="main.switchUser">
          <segment>
-            <source>Switch Mode or User</source>
-            <target/>
+            <source>Switch User</source>
+            <target>Ganti Pengguna</target>
          </segment>
       </unit>
       <unit id="main.tasks">
@@ -3397,6 +3517,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.publish">
+         <segment>
+            <source>Publish Media</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.published">
          <segment>
             <source>Published</source>
@@ -3586,6 +3712,36 @@
       <unit id="mediaUpload.ITFtitle">
          <segment>
             <source>Upload Change Data from Desktop app.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.launchLink">
+         <segment>
+            <source>Show Link Content</source>
+            <target>Tampilkan Konten Tautan</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.linkTask">
+         <segment>
+            <source>Enter a URI link for a resource.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.linkTitle">
+         <segment>
+            <source>Link Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.markdownTask">
+         <segment>
+            <source>Enter text to be used as a resource. (Mark down formatting is allowed.)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.markdownTitle">
+         <segment>
+            <source>Enter Text</source>
             <target/>
          </segment>
       </unit>
@@ -3865,6 +4021,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.find">
+         <segment>
+            <source>Find</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.findResource">
+         <segment>
+            <source>Find Resource for {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.findResourceDesc">
+         <segment>
+            <source>These controls can be used to find or create (using artificial intelligence -- AI) resources for internalizing the passage, section, chapter, or book.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.generalResources">
          <segment>
             <source>General Resources</source>
@@ -3886,6 +4060,12 @@
       <unit id="passageDetailArtifacts.link">
          <segment>
             <source>Link</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.linkResource">
+         <segment>
+            <source>Link (URI)</source>
             <target/>
          </segment>
       </unit>
@@ -3955,6 +4135,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.recordResource">
+         <segment>
+            <source>Record</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.reference">
          <segment>
             <source>Reference</source>
@@ -3993,8 +4179,8 @@
       </unit>
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
-            <source>Link Shared {0} Resource</source>
-            <target>Tautan Dibagikan {0} Sumber Daya</target>
+            <source>Link Shared</source>
+            <target/>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.source">
@@ -4033,6 +4219,12 @@
             <target>Tinjau Ketentuan Penggunaan</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.textResource">
+         <segment>
+            <source>Text Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.title">
          <segment>
             <source>Title</source>
@@ -4053,7 +4245,7 @@
       </unit>
       <unit id="passageDetailArtifacts.tip1b">
          <segment>
-            <source>Link a shared resource to this {0}.</source>
+            <source>Link to a shared resource.</source>
             <target/>
          </segment>
       </unit>
@@ -4071,7 +4263,7 @@
       </unit>
       <unit id="passageDetailArtifacts.upload">
          <segment>
-            <source>Upload Resources</source>
+            <source>Uploads</source>
             <target/>
          </segment>
       </unit>
@@ -4103,6 +4295,12 @@
          <segment>
             <source>Step Incomplete</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailStepComplete.setNext">
+         <segment>
+            <source>Set this and all previous steps complete</source>
+            <target>Atur ini dan semua langkah sebelumnya selesai</target>
          </segment>
       </unit>
       <unit id="passageDetailStepComplete.title">
@@ -4533,7 +4731,7 @@
       </unit>
       <unit id="planSheet.confirmPublishSection">
          <segment>
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes be marked as not published.</source>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes will be marked as not published.</source>
             <target/>
          </segment>
       </unit>
@@ -4639,10 +4837,22 @@
             <target>Terbitkan {0} {1}</target>
          </segment>
       </unit>
+      <unit id="planSheet.published">
+         <segment>
+            <source>Publish</source>
+            <target>Publikasikan</target>
+         </segment>
+      </unit>
       <unit id="planSheet.refErr">
          <segment>
             <source>This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.removeFilter">
+         <segment>
+            <source>Filter must be cleared to enable publishing.</source>
+            <target>Filter harus dibersihkan untuk memungkinkan penerbitan.</target>
          </segment>
       </unit>
       <unit id="planSheet.resequence">
@@ -4709,6 +4919,12 @@
          <segment>
             <source>Select a column head and use CTRL-V to append table rows.</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.versions">
+         <segment>
+            <source>Versions</source>
+            <target>Versi</target>
          </segment>
       </unit>
       <unit id="planTabs.assignments">
@@ -5029,10 +5245,28 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectDownload.amount">
+         <segment>
+            <source>Amount to download</source>
+            <target>Jumlah yang harus diunduh</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.confirm">
+         <segment>
+            <source>Download Now</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="projectDownload.download">
          <segment>
             <source>Download?</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.downloadDescription">
+         <segment>
+            <source>If the estimated time for download is too long for you, use the 'x' in the upper corner to close this dialog box. Then add a minimum and / or maximum {1} to the filter. The filter icon is {0} (a downward pointing dashed triangle) and is located before the {3} button on the {4} &amp; PASSAGES tab. After setting the {1} filter, choose the filtered option on this dialog box to see how much time will be needed for the filtered {2}.</source>
+            <target>Jika perkiraan waktu pengunduhan terlalu lama bagi Anda, gunakan 'x' di sudut atas untuk menutup kotak dialog ini. Kemudian tambahkan minimum dan/atau maksimum {1} ke filter. Ikon filter adalah {0} (segitiga putus-putus yang mengarah ke bawah) dan terletak sebelum tombol {3} pada tab {4} &amp; PASSAGES. Setelah mengatur filter {1}, pilih opsi yang difilter pada kotak dialog ini untuk melihat berapa banyak waktu yang diperlukan untuk {2} yang difilter.</target>
          </segment>
       </unit>
       <unit id="projectDownload.downloadLater">
@@ -5043,14 +5277,56 @@
       </unit>
       <unit id="projectDownload.downloadMb">
          <segment>
-            <source>Download {0}MB of offline audio project files?</source>
+            <source>Download {0}MB of offline audio project files? (It may take {1} to download on a fast Internet connection or {2} on a slow broadband connection.)</source>
+            <target>Unduh {0}MB file proyek audio offline? (Mungkin diperlukan waktu {1} untuk mengunduh pada koneksi Internet yang cepat atau {2} pada koneksi broadband yang lambat).</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filter">
+         <segment>
+            <source>Filter</source>
+            <target>Menyaring</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filteredFiles">
+         <segment>
+            <source>Filtered Files</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filtered">
+         <segment>
+            <source>Filtered MB</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.max">
+         <segment>
+            <source>Max {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.min">
+         <segment>
+            <source>Min {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.missing">
+         <segment>
+            <source>Missing MB</source>
             <target/>
          </segment>
       </unit>
       <unit id="publishLevel.none">
          <segment>
-            <source>Not Published - not visible in publishing app</source>
-            <target>Tidak Diterbitkan - tidak terlihat di aplikasi penerbitan</target>
+            <source>Not Published - not visible outside this project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="publishLevel.bibleRequired">
+         <segment>
+            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo.</source>
+            <target>Anda harus sudah menyiapkan Id dan Nama Alkitab di Pengaturan Tim untuk mempublikasikan ke Akuo.</target>
          </segment>
       </unit>
       <unit id="publishLevel.beta">
@@ -5059,16 +5335,16 @@
             <target>Beta - terlihat di situs web Akuo ketika menggunakan parameter beta (tidak tersedia di aplikasi)</target>
          </segment>
       </unit>
-      <unit id="publishLevel.betalink">
-         <segment>
-            <source>https://akuobible.org/?beta=true</source>
-            <target>https://akuobible.org/?beta=true</target>
-         </segment>
-      </unit>
       <unit id="publishLevel.public">
          <segment>
             <source>Public - visible to everyone using Akuo website or app</source>
             <target>Publik - dapat dilihat oleh semua orang yang menggunakan situs web atau aplikasi Akuo</target>
+         </segment>
+      </unit>
+      <unit id="publishTo.Internalization">
+         <segment>
+            <source>Internalization Resources for other projects</source>
+            <target/>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -5647,6 +5923,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.mustBeOnline">
+         <segment>
+            <source>You must be online to use this feature</source>
+            <target>Anda harus online untuk menggunakan fitur ini</target>
+         </segment>
+      </unit>
       <unit id="shared.no">
          <segment>
             <source>No</source>
@@ -5657,6 +5939,18 @@
          <segment>
             <source>No Audio Available!</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="shared.noiseRemoval">
+         <segment>
+            <source>Remove Noise</source>
+            <target>Penghapusan Kebisingan</target>
+         </segment>
+      </unit>
+      <unit id="shared.noiseRemovalFailed">
+         <segment>
+            <source>Noise Removal Failed</source>
+            <target>Penghapusan Kebisingan Gagal</target>
          </segment>
       </unit>
       <unit id="shared.NoSaveOffline">
@@ -6949,6 +7243,60 @@
             <target/>
          </segment>
       </unit>
+      <unit id="verse.markVerses">
+         <segment>
+            <source>Mark Verses</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.missingReferences">
+         <segment>
+            <source>Warning: Verses in passage not included: ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.noReferences">
+         <segment>
+            <source>Warning: Some audio segments will not be included in verses</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.noSegments">
+         <segment>
+            <source>ERROR: Some verses have no segment: ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.outsideReferences">
+         <segment>
+            <source>ERROR: Some verses are outside passage: ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.pasteFormat">
+         <segment>
+            <source>Invalid number of columns on clipboard.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.reference">
+         <segment>
+            <source>Reference</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.saveVerseMarkup">
+         <segment>
+            <source>Save Verse Markup</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="verse.startStop">
+         <segment>
+            <source>Start --&gt; Stop</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="viewMode.audioProject">
          <segment>
             <source>Audio Project Setup</source>
@@ -7637,6 +7985,18 @@
          <segment>
             <source>Next Segment [{0}]</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aiInProgress">
+         <segment>
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target>Layanan AI Sedang Berlangsung...  Ini adalah layanan jarak jauh yang mungkin memakan waktu lama jika rekamannya besar, atau jika ada permintaan lain yang mendahului permintaan Anda.</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aiGiveUp">
+         <segment>
+            <source>Stop Waiting...</source>
+            <target>Berhenti Menunggu...</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.pauseRecord">

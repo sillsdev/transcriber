@@ -12,7 +12,7 @@ import { useWfLocalSave } from '../components/Sheet/useSheetLocalSave';
 import { memory } from '../schema';
 import { PassageTypeEnum } from '../model/passageType';
 import DataProvider from '../hoc/DataProvider';
-import { PublishLevelEnum } from '../crud/usePublishLevel';
+import { PublishDestinationEnum } from '../crud/usePublishDestination';
 
 const defaultSheet: ISheet = {
   level: SheetLevel.Section,
@@ -28,7 +28,7 @@ const defaultSheet: ISheet = {
   passageType: PassageTypeEnum.PASSAGE,
   filtered: false,
   discussionCount: 0,
-  published: PublishLevelEnum.None,
+  published: [] as PublishDestinationEnum[],
 };
 
 // see https://jestjs.io/docs/mock-functions#mocking-modules

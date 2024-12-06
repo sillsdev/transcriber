@@ -176,7 +176,6 @@ export function Loading() {
     }
   };
   useEffect(() => {
-    // console.clear();
     if (mounted.current > 0) return;
     mounted.current += 1;
     if (!offline && !authenticated()) return;
@@ -240,6 +239,23 @@ export function Loading() {
     }
     return null;
   };
+  const loadDone = (
+    projectId: string,
+    planId: string,
+    fromUrl: string | null
+  ) => {
+    const projRec = memory.cache.query((q) =>
+      q.findRecord({ type: 'project', id: projectId })
+    );
+    if (projRec) {
+      setProject(projectId);
+      const orgId = related(projRec, 'organization') as string;
+      setOrganization(orgId);
+      setMyOrgRole(orgId);
+      setProjectType(projectId);
+      setPlan(planId);
+    }
+  };
   const LoadComplete = () => {
     setCompleted(100);
     setLoadComplete(true);
@@ -271,22 +287,18 @@ export function Loading() {
         if (offline) {
           const oProjRec = planRec && getOfflineProject(planRec);
           if (!oProjRec?.attributes?.offlineAvailable) fromUrl = null;
+          if (fromUrl) {
+            const projectId = related(planRec, 'project') as string | null;
+            if (projectId) {
+              loadDone(projectId, planId, fromUrl);
+            }
+          }
         } else {
           const projectId = related(planRec, 'project') as string | null;
           if (projectId) {
             waitToNavigate = true;
             LoadProjData(projectId, () => {
-              const projRec = memory.cache.query((q) =>
-                q.findRecord({ type: 'project', id: projectId })
-              );
-              if (projRec) {
-                setProject(projectId);
-                const orgId = related(projRec, 'organization') as string;
-                setOrganization(orgId);
-                setMyOrgRole(orgId);
-                setProjectType(projectId);
-                setPlan(planId);
-              }
+              loadDone(projectId, planId, fromUrl);
               navigate(fromUrl || '/team');
             });
           }

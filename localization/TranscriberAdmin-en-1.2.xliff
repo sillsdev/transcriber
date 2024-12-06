@@ -815,6 +815,13 @@
       			<context context-type="sourcefile">TeamDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="cards.editPersonalCategory">
+            <source>Edit Personal Projects Categories</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">TeamDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="cards.editWorkflow">
             <source>Edit Workflow {0}</source>
             <target/>
@@ -1929,6 +1936,363 @@
                <context context-type="sourcefile">filterMenu.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="findResource.add">
+            <source>Add</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.aiDesc">
+            <source>Copy the query contents and paste it into one or more of the AI chat tools:</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.aquiferSearchTip">
+            <source>The keyword to search on. Currently only searches against content names (not inside content). Non-English names are supported. Must be at least 3 characters in length.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.resource">
+            <source>{0} Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.Lang">
+            <source>{0} Language*</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.bibleProjectLang">
+            <source>Book Overviews</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.biblicalBook">
+            <source>the biblical book of {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.book">
+            <source>Book</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.chapter">
+            <source>Chapter</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.clearQuery">
+            <source>Clear query</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.clipboard">
+            <source>clipboard</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.clipboardCopy">
+            <source>Copy to clipboard</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.convert">
+            <source>Convert text to audio resource file</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.create">
+            <source>Create</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.createItems">
+            <source>Create Items</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.createResource">
+            <source>Create AI Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.findBibleBrain">
+            <source>Find: Bible Brain</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.findOther">
+            <source>Find: Other</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.findResource">
+            <source>Find Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.generalresource">
+            <source>Create a General Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.group">
+            <source>Group</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FindAquifer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.image">
+            <source>image</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.imageTpl">
+            <source>Please provide an image for {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.language">
+            <source>Language</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FindAquifer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.launch">
+            <source>Launch</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.meaning">
+            <source>meaning</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.meaningTpl">
+            <source>Please draft a story to illustrate the meaning of {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.mediaType">
+            <source>Media</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FindAquifer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.movement">
+            <source>movement</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.name">
+            <source>Name</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FindAquifer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.oralVersion">
+            <source>oral-version</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.oralVersionTpl">
+            <source>Please provide an oral translation of {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.passage">
+            <source>Passage</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.preview">
+            <source>Preview</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.query">
+            <source>Query</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.querying">
+            <source>Querying...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.queryBuilder">
+            <source>AI Query Builder</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.reset">
+            <source>Reset</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.scope">
+            <source>Scope</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.script">
+            <source>script</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.scriptTpl">
+            <source>Please provide a script for {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.section">
+            <source>section</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.source">
+            <source>Source</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">FindAquifer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.summary">
+            <source>summary</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.summaryTpl">
+            <source>Please provide a summary of {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.type">
+            <source>Type</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.unavailable">
+            <source>unavailable</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.video">
+            <source>video</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.videoTpl">
+            <source>Please provide a video for {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.whatsAppHelp">
+            <source>Install the What's App app on your phone and join the group for your language. You can also install What's App on Windows and link to your phone App. Use Meta AI</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="findResource.withTiming">
+            <source>Audio Bible with verse timing</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">findResource.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="grid.all">
             <source>All</source>
             <target/>
@@ -2287,7 +2651,21 @@
             </context-group>
          </trans-unit>
          <trans-unit id="import.importSync">
+            <source>Syncing changes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">electronImport.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="import.importSyncUp">
             <source>Syncing offline changes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">electronImport.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="import.importSyncDown">
+            <source>Syncing online changes</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">electronImport.tsx</context>
@@ -2874,13 +3252,6 @@
                <context context-type="sourcefile">Invite.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="invite.sil">
-            <source>SIL International</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Invite.tsx</context>
-            </context-group>
-         </trans-unit>
       	<trans-unit id="keyTerms.addTargetWord">
       		<source>Add Translation</source>
       		<target/>
@@ -3399,6 +3770,20 @@
                <context context-type="sourcefile">HelpMenu.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="main.goOffline">
+            <source>Go Offline</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="main.goOnline">
+            <source>Go Online</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">HelpMenu.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="main.googleSamples">
             <source>Sample Google spreadsheets</source>
             <target/>
@@ -3610,7 +3995,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="main.switchUser">
-            <source>Switch Mode or User</source>
+            <source>Switch User</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TokenProvider.tsx</context>
@@ -3966,6 +4351,13 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="mediaTab.publish">
+            <source>Publish Media</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="mediaTab.published">
             <source>Published</source>
             <target/>
@@ -4185,6 +4577,41 @@
          </trans-unit>
          <trans-unit id="mediaUpload.ITFtitle">
             <source>Upload Change Data from Desktop app.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaUpload.launchLink">
+            <source>Show Link Content</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaUpload.linkTask">
+            <source>Enter a URI link for a resource.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaUpload.linkTitle">
+            <source>Link Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaUpload.markdownTask">
+            <source>Enter text to be used as a resource. (Mark down formatting is allowed.)</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="mediaUpload.markdownTitle">
+            <source>Enter Text</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaUpload.tsx</context>
@@ -4512,6 +4939,27 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="passageDetailArtifacts.find">
+            <source>Find</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageDetailArtifacts.findResource">
+            <source>Find Resource for {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="passageDetailArtifacts.findResourceDesc">
+            <source>These controls can be used to find or create (using artificial intelligence -- AI) resources for internalizing the passage, section, chapter, or book.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="passageDetailArtifacts.generalResources">
       		<source>General Resources</source>
       		<target/>
@@ -4540,6 +4988,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.linkResource">
+            <source>Link (URI)</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="passageDetailArtifacts.movementResource">
             <source>Movement</source>
             <target/>
@@ -4617,6 +5072,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.recordResource">
+            <source>Record</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="passageDetailArtifacts.reference">
       		<source>Reference</source>
       		<target/>
@@ -4660,7 +5122,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.sharedResource">
-      		<source>Link Shared {0} Resource</source>
+      		<source>Link Shared</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>
@@ -4708,6 +5170,13 @@
       			<context context-type="sourcefile">AddResource.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="passageDetailArtifacts.textResource">
+            <source>Text Resource</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AddResource.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="passageDetailArtifacts.title">
       		<source>Title</source>
       		<target/>
@@ -4730,7 +5199,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="passageDetailArtifacts.tip1b">
-      		<source>Link a shared resource to this {0}.</source>
+      		<source>Link to a shared resource.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PassageMedia.tsx</context>
@@ -4751,7 +5220,7 @@
       		</context-group>
       	</trans-unit>
          <trans-unit id="passageDetailArtifacts.upload">
-            <source>Upload Resources</source>
+            <source>Uploads</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageMedia.tsx</context>
@@ -4792,6 +5261,13 @@
                <context context-type="sourcefile">passageDetailStepComplete.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="passageDetailStepComplete.setNext">
+            <source>Set this and all previous steps complete</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageDetailStepComplete.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="passageDetailStepComplete.title">
             <source>Step Complete</source>
             <target/>
@@ -4799,6 +5275,7 @@
                <context context-type="sourcefile">passageDetailStepComplete.tsx</context>
             </context-group>
          </trans-unit>
+
          <trans-unit id="passageDetailToolbar.add">
             <source>Passage Detail Toolbar</source>
             <target/>
@@ -5290,7 +5767,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.confirmPublishSection">
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes be marked as not published.</source>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes will be marked as not published.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
@@ -5415,8 +5892,22 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="planSheet.published">
+            <source>Publish</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planSheet.refErr">
             <source>This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.removeFilter">
+            <source>Filter must be cleared to enable publishing.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -5494,6 +5985,13 @@
          </trans-unit>
          <trans-unit id="planSheet.useCtrlV">
             <source>Select a column head and use CTRL-V to append table rows.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="planSheet.versions">
+            <source>Versions</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -5870,8 +6368,29 @@
                <context context-type="sourcefile">ProjButtons.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="projectDownload.amount">
+            <source>Amount to download</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.confirm">
+            <source>Download Now</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="projectDownload.download">
             <source>Download?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.downloadDescription">
+            <source>If the estimated time for download is too long for you, use the 'x' in the upper corner to close this dialog box. Then add a minimum and / or maximum {1} to the filter. The filter icon is {0} (a downward pointing dashed triangle) and is located before the {3} button on the {4} &amp; PASSAGES tab. After setting the {1} filter, choose the filtered option on this dialog box to see how much time will be needed for the filtered {2}.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
@@ -5885,14 +6404,105 @@
             </context-group>
          </trans-unit>
          <trans-unit id="projectDownload.downloadMb">
-            <source>Download {0}MB of offline audio project files?</source>
+            <source>Download {0}MB of offline audio project files? (It may take {1} to download on a fast Internet connection or {2} on a slow broadband connection.)</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.filter">
+            <source>Filter</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.filteredFiles">
+            <source>Filtered Files</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.filtered">
+            <source>Filtered MB</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.max">
+            <source>Max {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.min">
+            <source>Min {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.missing">
+            <source>Missing MB</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.missingFiles">
+            <source>Missing Files</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.projects">
+            <source>Projects</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.project">
+            <source>Project</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.projectDetails">
+            <source>Project Details</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.team">
+            <source>Team</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="projectDownload.total">
+            <source>Total MB</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjectDownloadAlert.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="publishLevel.none">
-            <source>Not Published - not visible in publishing app</source>
+            <source>Not Published - not visible outside this project</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="publishLevel.bibleRequired">
+            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
@@ -5905,15 +6515,15 @@
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="publishLevel.betalink">
-            <source>https://akuobible.org/?beta=true</source>
+         <trans-unit id="publishLevel.public">
+            <source>Public - visible to everyone using Akuo website or app</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="publishLevel.public">
-            <source>Public - visible to everyone using Akuo website or app</source>
+         <trans-unit id="publishTo.Internalization">
+            <source>Internalization Resources for other projects</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
@@ -6591,6 +7201,13 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shared.mustBeOnline">
+            <source>You must be online to use this feature</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">launchLink.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.no">
             <source>No</source>
             <target/>
@@ -6605,6 +7222,20 @@
       			<context context-type="sourcefile">Access.tsx</context>
       		</context-group>
       	</trans-unit>
+         <trans-unit id="shared.noiseRemoval">
+            <source>Remove Noise</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.noiseRemovalFailed">
+            <source>Noise Removal Failed</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.NoSaveOffline">
             <source>Unable to save while offline.</source>
             <target/>
@@ -8976,6 +9607,20 @@
          </trans-unit>
          <trans-unit id="wsAudioPlayer.nextRegion">
             <source>Next Segment [{0}]</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.aiInProgress">
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.aiGiveUp">
+            <source>Stop Waiting...</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>

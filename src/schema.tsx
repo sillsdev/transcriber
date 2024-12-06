@@ -412,6 +412,8 @@ const schemaDefinition: RecordSchemaSettings = {
         recordedbyUserId: { type: 'number' },
         recordedByUserId: { type: 'number' },
         sourceMediaId: { type: 'number' },
+        publishedAs: { type: 'string' },
+        publishTo: { type: 'string' },
       },
       relationships: {
         artifactType: { kind: 'hasOne', type: 'artifacttype' },
@@ -968,6 +970,34 @@ if (requestedSchema > 7 && schemaDefinition.models) {
 
   schemaDefinition.version = 8;
 }
+if (requestedSchema > 8 && schemaDefinition.models) {
+  schemaDefinition.models.vwbiblebrainlanguage = {
+    keys: { remoteId: {} },
+    attributes: {
+      iso: { type: 'string' },
+      languageName: { type: 'string' },
+      nt: { type: 'boolean' },
+      ot: { type: 'boolean' },
+      ntTiming: { type: 'boolean' },
+      otTiming: { type: 'boolean' },
+    },
+  };
+  schemaDefinition.models.vwbiblebrainbible = {
+    keys: { remoteId: {} },
+    attributes: {
+      iso: { type: 'string' },
+      languageName: { type: 'string' },
+      bibleid: { type: 'string' },
+      bibleName: { type: 'string' },
+      nt: { type: 'boolean' },
+      ot: { type: 'boolean' },
+      ntTiming: { type: 'boolean' },
+      otTiming: { type: 'boolean' },
+      pubdate: { type: 'string' },
+    },
+  };
+  schemaDefinition.version = 9;
+}
 
 export const schema = new RecordSchema(schemaDefinition);
 
@@ -1133,15 +1163,15 @@ const FixVersion8 = async (backup: IndexedDBSource, memory: MemorySource) => {
 };
 export const backup = window.indexedDB
   ? new IndexedDBSource({
-      schema,
-      keyMap,
-      name: 'backup',
-      namespace: 'transcriber',
-      defaultTransformOptions: {
-        useBuffer: true,
-      },
-      autoUpgrade: false,
-    })
+    schema,
+    keyMap,
+    name: 'backup',
+    namespace: 'transcriber',
+    defaultTransformOptions: {
+      useBuffer: true,
+    },
+    autoUpgrade: false,
+  })
   : ({} as IndexedDBSource);
 //LocalKey.migration throws an error here?!
 localStorage.setItem('migration', 'WAIT');

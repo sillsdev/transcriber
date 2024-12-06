@@ -1,14 +1,11 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { IPassageDetailArtifactsStrings, MediaFile } from '../../../model';
-import { ListItemText, Divider } from '@mui/material';
+import React, { useState } from 'react';
+import { IPassageDetailArtifactsStrings } from '../../../model';
+import { ListItemText } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
-import { LightTooltip } from '../../../control';
-import { related, useOrganizedBy, usePlanType } from '../../../crud';
+import { AltButton, LightTooltip } from '../../../control';
 import { resourceSelector } from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
-import { PassageDetailContext } from '../../../context/PassageDetailContext';
-import { PriButton, StyledMenu, StyledMenuItem } from '../../../control';
-import { useOrbitData } from '../../../hoc/useOrbitData';
+import { StyledMenu, StyledMenuItem } from '../../../control';
 import { useGlobal } from 'reactn';
 
 interface IProps {
@@ -18,30 +15,13 @@ interface IProps {
 
 export const AddResource = (props: IProps) => {
   const { action, stopPlayer } = props;
-  const mediafiles = useOrbitData<MediaFile[]>('mediafile');
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { getOrganizedBy } = useOrganizedBy();
-  const planType = usePlanType();
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const ctx = useContext(PassageDetailContext);
-  const { section, getProjectResources } = ctx.state;
   const t: IPassageDetailArtifactsStrings = useSelector(
     resourceSelector,
     shallowEqual
   );
-  const [hasProjRes, setHasProjRes] = useState(false);
-
-  const isFlat = useMemo(() => {
-    return planType(related(section, 'plan'))?.flat;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [section]);
-
-  useEffect(() => {
-    getProjectResources().then((res) => setHasProjRes(res.length > 0));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mediafiles]);
-
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
@@ -58,12 +38,14 @@ export const AddResource = (props: IProps) => {
 
   return (
     <div>
-      <PriButton id="add-resource" onClick={handleClick}>
+      <AltButton id="add-resource" onClick={handleClick}>
         {t.add}
-      </PriButton>
+      </AltButton>
       <StyledMenu
         id="customized-menu"
         anchorEl={anchorEl}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
@@ -74,63 +56,35 @@ export const AddResource = (props: IProps) => {
             {'\u00A0'}
           </ListItemText>
         </StyledMenuItem>
-        {!isFlat && !offline && !offlineOnly && (
-          <StyledMenuItem
-            id="referencePassageResource"
-            onClick={handle('ref-passage')}
-          >
-            <ListItemText>
-              {t.sharedResource.replace('{0}', t.passageResource)}
-              {'\u00A0'}
-              <LightTooltip
-                title={t.tip1b.replace(
-                  '{0}',
-                  t.passageResource.toLocaleLowerCase()
-                )}
-              >
-                <InfoIcon />
-              </LightTooltip>
-            </ListItemText>
-          </StyledMenuItem>
-        )}
-        {!offline && !offlineOnly && (
-          <StyledMenuItem
-            id="referenceSectionResource"
-            onClick={handle('ref-section')}
-          >
-            <ListItemText>
-              {t.sharedResource.replace('{0}', getOrganizedBy(true))}
-              {'\u00A0'}
-              <LightTooltip
-                title={t.tip1b.replace(
-                  '{0}',
-                  getOrganizedBy(true).toLocaleLowerCase()
-                )}
-              >
-                <InfoIcon />
-              </LightTooltip>
-            </ListItemText>
-          </StyledMenuItem>
-        )}
-        <Divider />
-        <StyledMenuItem
-          id="proj-res-config"
-          onClick={handle('wizard')}
-          disabled={!hasProjRes}
-        >
+        <StyledMenuItem id="linkResource" onClick={handle('link')}>
           <ListItemText>
-            {t.configure}
+            {t.linkResource}
             {'\u00A0'}
-            <LightTooltip
-              title={t.tip2b.replace(
-                '{0}',
-                getOrganizedBy(false).toLocaleLowerCase()
-              )}
-            >
-              <InfoIcon />
-            </LightTooltip>
           </ListItemText>
         </StyledMenuItem>
+        <StyledMenuItem id="recordResource" onClick={handle('record')}>
+          <ListItemText>
+            {t.recordResource}
+            {'\u00A0'}
+          </ListItemText>
+        </StyledMenuItem>
+        <StyledMenuItem id="textResource" onClick={handle('text')}>
+          <ListItemText>
+            {t.textResource}
+            {'\u00A0'}
+          </ListItemText>
+        </StyledMenuItem>
+        {!offline && !offlineOnly && (
+          <StyledMenuItem id="sharedResource" onClick={handle('shared')}>
+            <ListItemText>
+              {t.sharedResource}
+              {'\u00A0'}
+              <LightTooltip title={t.tip1b}>
+                <InfoIcon />
+              </LightTooltip>
+            </ListItemText>
+          </StyledMenuItem>
+        )}
       </StyledMenu>
     </div>
   );

@@ -1,0 +1,135 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`VertListDnd renders with children 1`] = `
+<div>
+  <ul
+    class="MuiList-root MuiList-padding css-134cfso-MuiList-root"
+    data-rfd-droppable-context-id=":ra:"
+    data-rfd-droppable-id="droppable"
+  >
+    <li
+      aria-describedby="rfd-hidden-text-:ra:-hidden-text-:rb:"
+      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-6leons-MuiListItem-root"
+      data-rfd-drag-handle-context-id=":ra:"
+      data-rfd-drag-handle-draggable-id="0"
+      data-rfd-draggable-context-id=":ra:"
+      data-rfd-draggable-id="0"
+      draggable="false"
+      role="button"
+      tabindex="0"
+    >
+      <div>
+        child 0
+      </div>
+    </li>
+    <li
+      aria-describedby="rfd-hidden-text-:ra:-hidden-text-:rb:"
+      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-6leons-MuiListItem-root"
+      data-rfd-drag-handle-context-id=":ra:"
+      data-rfd-drag-handle-draggable-id="1"
+      data-rfd-draggable-context-id=":ra:"
+      data-rfd-draggable-id="1"
+      draggable="false"
+      role="button"
+      tabindex="0"
+    >
+      <div>
+        child 1
+      </div>
+    </li>
+    <li
+      aria-describedby="rfd-hidden-text-:ra:-hidden-text-:rb:"
+      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-6leons-MuiListItem-root"
+      data-rfd-drag-handle-context-id=":ra:"
+      data-rfd-drag-handle-draggable-id="2"
+      data-rfd-draggable-context-id=":ra:"
+      data-rfd-draggable-id="2"
+      draggable="false"
+      role="button"
+      tabindex="0"
+    >
+      <div>
+        child 2
+      </div>
+    </li>
+    <li
+      aria-describedby="rfd-hidden-text-:ra:-hidden-text-:rb:"
+      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-6leons-MuiListItem-root"
+      data-rfd-drag-handle-context-id=":ra:"
+      data-rfd-drag-handle-draggable-id="3"
+      data-rfd-draggable-context-id=":ra:"
+      data-rfd-draggable-id="3"
+      draggable="false"
+      role="button"
+      tabindex="0"
+    >
+      <div>
+        child 3
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`VertListDnd renders with data 1`] = `
+<div>
+  <ul
+    class="MuiList-root MuiList-padding css-134cfso-MuiList-root"
+    data-rfd-droppable-context-id=":r3:"
+    data-rfd-droppable-id="droppable"
+  >
+    <li
+      aria-describedby="rfd-hidden-text-:r3:-hidden-text-:r4:"
+      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-6leons-MuiListItem-root"
+      data-rfd-drag-handle-context-id=":r3:"
+      data-rfd-drag-handle-draggable-id="0"
+      data-rfd-draggable-context-id=":r3:"
+      data-rfd-draggable-id="0"
+      draggable="false"
+      role="button"
+      tabindex="0"
+    >
+      item 0
+    </li>
+    <li
+      aria-describedby="rfd-hidden-text-:r3:-hidden-text-:r4:"
+      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-6leons-MuiListItem-root"
+      data-rfd-drag-handle-context-id=":r3:"
+      data-rfd-drag-handle-draggable-id="1"
+      data-rfd-draggable-context-id=":r3:"
+      data-rfd-draggable-id="1"
+      draggable="false"
+      role="button"
+      tabindex="0"
+    >
+      item 1
+    </li>
+    <li
+      aria-describedby="rfd-hidden-text-:r3:-hidden-text-:r4:"
+      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-6leons-MuiListItem-root"
+      data-rfd-drag-handle-context-id=":r3:"
+      data-rfd-drag-handle-draggable-id="2"
+      data-rfd-draggable-context-id=":r3:"
+      data-rfd-draggable-id="2"
+      draggable="false"
+      role="button"
+      tabindex="0"
+    >
+      item 2
+    </li>
+    <li
+      aria-describedby="rfd-hidden-text-:r3:-hidden-text-:r4:"
+      class="MuiListItem-root MuiListItem-gutters MuiListItem-padding css-6leons-MuiListItem-root"
+      data-rfd-drag-handle-context-id=":r3:"
+      data-rfd-drag-handle-draggable-id="3"
+      data-rfd-draggable-context-id=":r3:"
+      data-rfd-draggable-id="3"
+      draggable="false"
+      role="button"
+      tabindex="0"
+    >
+      item 3
+    </li>
+  </ul>
+</div>
+`;

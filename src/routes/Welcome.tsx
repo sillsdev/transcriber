@@ -6,7 +6,12 @@ import { IState, IWelcomeStrings, User, OfflineProject, UserD } from '../model';
 import { InitializedRecord, RecordTransformBuilder } from '@orbit/records';
 import * as action from '../store';
 import { Typography, Grid, Box, BoxProps, SxProps } from '@mui/material';
-import { useCheckOnline, localeDefault, useMyNavigate } from '../utils';
+import {
+  useCheckOnline,
+  localeDefault,
+  useMyNavigate,
+  LocalKey,
+} from '../utils';
 import { isElectron } from '../api-variable';
 import AppHead from '../components/App/AppHead';
 import MemorySource from '@orbit/memory';
@@ -155,7 +160,7 @@ export function Welcome(props: IProps) {
     setHasProjects(projects.length > 0);
 
     const { users, onlineUsers, offlineUsers } = userTypes();
-    const lastUserId = localStorage.getItem('user-id');
+    const lastUserId = localStorage.getItem(LocalKey.userId);
 
     if (lastUserId !== null) {
       const selected = users.filter((u) => u.id === lastUserId);
@@ -194,7 +199,7 @@ export function Welcome(props: IProps) {
     dispatch(setLanguage(localeDefault(isDeveloper)));
     dispatch(fetchLocalization());
     checkOnline((connected) => {});
-    const choice = localStorage.getItem('offlineAdmin');
+    const choice = localStorage.getItem(LocalKey.offlineAdmin);
 
     if (choice !== null) {
       if (choice === 'choose') checkUsers(false);
@@ -211,7 +216,7 @@ export function Welcome(props: IProps) {
       setBusy(false);
       const { onlineUsers } = userTypes();
       checkUsers(true, onlineUsers ? 'online-local' : 'offline');
-      localStorage.setItem('offlineAdmin', 'false');
+      localStorage.setItem(LocalKey.offlineAdmin, 'false');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [importStatus]);
@@ -219,7 +224,7 @@ export function Welcome(props: IProps) {
   const handleOfflineChange = (target: string) => {
     setWhichUsers(target);
     localStorage.setItem(
-      'offlineAdmin',
+      LocalKey.offlineAdmin,
       target === 'offline' ? 'true' : 'false'
     );
   };

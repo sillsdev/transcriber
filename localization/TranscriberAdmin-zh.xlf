@@ -697,6 +697,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.editPersonalCategory">
+         <segment>
+            <source>Edit Personal Projects Categories</source>
+            <target>编辑个人项目类别</target>
+         </segment>
+      </unit>
       <unit id="cards.editWorkflow">
          <segment>
             <source>Edit Workflow {0}</source>
@@ -1651,6 +1657,102 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.add">
+         <segment>
+            <source>Add</source>
+            <target>添加</target>
+         </segment>
+      </unit>
+      <unit id="findResource.aiDesc">
+         <segment>
+            <source>Copy the query contents and paste it into one or more of the AI chat tools:</source>
+            <target>复制查询内容并粘贴到一个或多个人工智能聊天工具中：</target>
+         </segment>
+      </unit>
+      <unit id="findResource.aquiferSearchTip">
+         <segment>
+            <source>The keyword to search on. Currently only searches against content names (not inside content). Non-English names are supported. Must be at least 3 characters in length.</source>
+            <target>要搜索的关键字。目前只针对内容名称（非内容内部）进行搜索。支持非英文名称。长度必须至少为 3 个字符。</target>
+         </segment>
+      </unit>
+      <unit id="findResource.resource">
+         <segment>
+            <source>{0} Resource</source>
+            <target>{0} 资源</target>
+         </segment>
+      </unit>
+      <unit id="findResource.Lang">
+         <segment>
+            <source>{0} Language*</source>
+            <target>{0} 语言*</target>
+         </segment>
+      </unit>
+      <unit id="findResource.bibleProjectLang">
+         <segment>
+            <source>Book Overviews</source>
+            <target>书籍概述</target>
+         </segment>
+      </unit>
+      <unit id="findResource.biblicalBook">
+         <segment>
+            <source>the biblical book of {0}</source>
+            <target>圣经》{0}一书</target>
+         </segment>
+      </unit>
+      <unit id="findResource.book">
+         <segment>
+            <source>Book</source>
+            <target>书籍</target>
+         </segment>
+      </unit>
+      <unit id="findResource.chapter">
+         <segment>
+            <source>Chapter</source>
+            <target>章节</target>
+         </segment>
+      </unit>
+      <unit id="findResource.clearQuery">
+         <segment>
+            <source>Clear query</source>
+            <target>清除查询</target>
+         </segment>
+      </unit>
+      <unit id="findResource.clipboard">
+         <segment>
+            <source>clipboard</source>
+            <target>剪贴板</target>
+         </segment>
+      </unit>
+      <unit id="findResource.clipboardCopy">
+         <segment>
+            <source>Copy to clipboard</source>
+            <target>复制到剪贴板</target>
+         </segment>
+      </unit>
+      <unit id="findResource.convert">
+         <segment>
+            <source>Convert text to audio resource file</source>
+            <target>将文本转换为音频资源文件</target>
+         </segment>
+      </unit>
+      <unit id="findResource.create">
+         <segment>
+            <source>Create</source>
+            <target>创建</target>
+         </segment>
+      </unit>
+      <unit id="findResource.createItems">
+         <segment>
+            <source>Create Items</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.createResource">
+         <segment>
+            <source>Create AI Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="grid.all">
          <segment>
             <source>All</source>
@@ -1959,7 +2061,19 @@
       </unit>
       <unit id="import.importSync">
          <segment>
+            <source>Syncing changes</source>
+            <target>同步更改</target>
+         </segment>
+      </unit>
+      <unit id="import.importSyncUp">
+         <segment>
             <source>Syncing offline changes</source>
+            <target>同步离线更改</target>
+         </segment>
+      </unit>
+      <unit id="import.importSyncDown">
+         <segment>
+            <source>Syncing online changes</source>
             <target/>
          </segment>
       </unit>
@@ -2461,12 +2575,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.sil">
-         <segment>
-            <source>SIL International</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="keyTerms.addTargetWord">
          <segment>
             <source>Add Translation</source>
@@ -2911,6 +3019,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.goOffline">
+         <segment>
+            <source>Go Offline</source>
+            <target>离线</target>
+         </segment>
+      </unit>
+      <unit id="main.goOnline">
+         <segment>
+            <source>Go Online</source>
+            <target>转到在线</target>
+         </segment>
+      </unit>
       <unit id="main.googleSamples">
          <segment>
             <source>Sample Google spreadsheets</source>
@@ -3093,8 +3213,8 @@
       </unit>
       <unit id="main.switchUser">
          <segment>
-            <source>Switch Mode or User</source>
-            <target/>
+            <source>Switch User</source>
+            <target>切换用户</target>
          </segment>
       </unit>
       <unit id="main.tasks">
@@ -3397,6 +3517,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.publish">
+         <segment>
+            <source>Publish Media</source>
+            <target>发布媒体</target>
+         </segment>
+      </unit>
       <unit id="mediaTab.published">
          <segment>
             <source>Published</source>
@@ -3587,6 +3713,36 @@
          <segment>
             <source>Upload Change Data from Desktop app.</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.launchLink">
+         <segment>
+            <source>Show Link Content</source>
+            <target>显示链接内容</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.linkTask">
+         <segment>
+            <source>Enter a URI link for a resource.</source>
+            <target>输入资源的 URI 链接。</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.linkTitle">
+         <segment>
+            <source>Link Resource</source>
+            <target>链接资源</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.markdownTask">
+         <segment>
+            <source>Enter text to be used as a resource. (Mark down formatting is allowed.)</source>
+            <target>输入用作资源的文本。(允许标记格式）。</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.markdownTitle">
+         <segment>
+            <source>Enter Text</source>
+            <target>输入文本</target>
          </segment>
       </unit>
       <unit id="mediaUpload.projectResourceTask">
@@ -3865,6 +4021,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.find">
+         <segment>
+            <source>Find</source>
+            <target>查找</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.findResource">
+         <segment>
+            <source>Find Resource for {0}</source>
+            <target>查找 {0} 的资源</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.findResourceDesc">
+         <segment>
+            <source>These controls can be used to find or create (using artificial intelligence -- AI) resources for internalizing the passage, section, chapter, or book.</source>
+            <target>这些控件可用于查找或创建（使用人工智能）用于内化段落、章节或书籍的资源。</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.generalResources">
          <segment>
             <source>General Resources</source>
@@ -3887,6 +4061,12 @@
          <segment>
             <source>Link</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.linkResource">
+         <segment>
+            <source>Link (URI)</source>
+            <target>链接（URI）</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.movementResource">
@@ -3955,6 +4135,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.recordResource">
+         <segment>
+            <source>Record</source>
+            <target>记录</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.reference">
          <segment>
             <source>Reference</source>
@@ -3993,8 +4179,8 @@
       </unit>
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
-            <source>Link Shared {0} Resource</source>
-            <target/>
+            <source>Link Shared</source>
+            <target>共享链接</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.source">
@@ -4033,6 +4219,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.textResource">
+         <segment>
+            <source>Text Resource</source>
+            <target>文本资源</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.title">
          <segment>
             <source>Title</source>
@@ -4053,8 +4245,8 @@
       </unit>
       <unit id="passageDetailArtifacts.tip1b">
          <segment>
-            <source>Link a shared resource to this {0}.</source>
-            <target/>
+            <source>Link to a shared resource.</source>
+            <target>链接到共享资源。</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.tip2b">
@@ -4071,8 +4263,8 @@
       </unit>
       <unit id="passageDetailArtifacts.upload">
          <segment>
-            <source>Upload Resources</source>
-            <target/>
+            <source>Uploads</source>
+            <target>上传</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.uploadProject">
@@ -4103,6 +4295,12 @@
          <segment>
             <source>Step Incomplete</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="passageDetailStepComplete.setNext">
+         <segment>
+            <source>Set this and all previous steps complete</source>
+            <target>设置此步骤和之前的所有步骤完成</target>
          </segment>
       </unit>
       <unit id="passageDetailStepComplete.title">
@@ -4533,8 +4731,8 @@
       </unit>
       <unit id="planSheet.confirmPublishSection">
          <segment>
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes be marked as not published.</source>
-            <target>如果您选择发布，{0} 以及该{0} 中所有段落和注释的最新版本都将标记为已发布。如果您之前已发布，现在选择 “未发布”，则段落和注释将被标记为未发布。</target>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes will be marked as not published.</source>
+            <target>如果您选择 “发表”，则该{0}以及该{0}中所有段落和注释的最新版本将被标记为 “已发表”。如果之前已发布，现在又选择 “未发布”，则段落和注释将被标记为未发布。</target>
          </segment>
       </unit>
       <unit id="planSheet.filtered">
@@ -4639,10 +4837,22 @@
             <target>发布 {0} {1}</target>
          </segment>
       </unit>
+      <unit id="planSheet.published">
+         <segment>
+            <source>Publish</source>
+            <target>发布</target>
+         </segment>
+      </unit>
       <unit id="planSheet.refErr">
          <segment>
             <source>This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.removeFilter">
+         <segment>
+            <source>Filter must be cleared to enable publishing.</source>
+            <target>必须清除筛选器才能启用发布。</target>
          </segment>
       </unit>
       <unit id="planSheet.resequence">
@@ -4709,6 +4919,12 @@
          <segment>
             <source>Select a column head and use CTRL-V to append table rows.</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.versions">
+         <segment>
+            <source>Versions</source>
+            <target>版本</target>
          </segment>
       </unit>
       <unit id="planTabs.assignments">
@@ -5029,10 +5245,28 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectDownload.amount">
+         <segment>
+            <source>Amount to download</source>
+            <target>下载量</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.confirm">
+         <segment>
+            <source>Download Now</source>
+            <target>立即下载</target>
+         </segment>
+      </unit>
       <unit id="projectDownload.download">
          <segment>
             <source>Download?</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.downloadDescription">
+         <segment>
+            <source>If the estimated time for download is too long for you, use the 'x' in the upper corner to close this dialog box. Then add a minimum and / or maximum {1} to the filter. The filter icon is {0} (a downward pointing dashed triangle) and is located before the {3} button on the {4} &amp; PASSAGES tab. After setting the {1} filter, choose the filtered option on this dialog box to see how much time will be needed for the filtered {2}.</source>
+            <target>如果预计下载时间过长，请使用上角的 “x ”关闭此对话框。然后为过滤器添加最小值和/或最大值{1}。过滤器图标为{0}（一个向下的虚线三角形），位于{4}&amp; PASSAGES选项卡上{3}按钮之前。设置{1}过滤器后，请在对话框中选择过滤选项，查看过滤后的{2}所需的时间。</target>
          </segment>
       </unit>
       <unit id="projectDownload.downloadLater">
@@ -5043,14 +5277,56 @@
       </unit>
       <unit id="projectDownload.downloadMb">
          <segment>
-            <source>Download {0}MB of offline audio project files?</source>
+            <source>Download {0}MB of offline audio project files? (It may take {1} to download on a fast Internet connection or {2} on a slow broadband connection.)</source>
+            <target>下载 {0}MB 的离线音频项目文件？（在快速互联网连接下可能需要 {1} 的下载时间，在慢速宽带连接下可能需要 {2} 的下载时间）。</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filter">
+         <segment>
+            <source>Filter</source>
+            <target>过滤</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filteredFiles">
+         <segment>
+            <source>Filtered Files</source>
+            <target>筛选文件</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filtered">
+         <segment>
+            <source>Filtered MB</source>
+            <target>已过滤 MB</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.max">
+         <segment>
+            <source>Max {0}</source>
+            <target>最大值 {0}</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.min">
+         <segment>
+            <source>Min {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.missing">
+         <segment>
+            <source>Missing MB</source>
             <target/>
          </segment>
       </unit>
       <unit id="publishLevel.none">
          <segment>
-            <source>Not Published - not visible in publishing app</source>
-            <target>未发布 - 在发布应用程序中不可见</target>
+            <source>Not Published - not visible outside this project</source>
+            <target>未发布 - 在本项目之外不可见</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.bibleRequired">
+         <segment>
+            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo.</source>
+            <target>您必须在 “团队设置 ”中设置圣经 ID 和名称，才能发布到 Akuo。</target>
          </segment>
       </unit>
       <unit id="publishLevel.beta">
@@ -5059,16 +5335,16 @@
             <target>测试版 - 使用测试版参数时在 Akuo 网站上可见（应用程序中不可用）</target>
          </segment>
       </unit>
-      <unit id="publishLevel.betalink">
-         <segment>
-            <source>https://akuobible.org/?beta=true</source>
-            <target>https://akuobible.org/?beta=true</target>
-         </segment>
-      </unit>
       <unit id="publishLevel.public">
          <segment>
             <source>Public - visible to everyone using Akuo website or app</source>
             <target>公开--使用阿库乌网站或应用程序的所有人都可看到</target>
+         </segment>
+      </unit>
+      <unit id="publishTo.Internalization">
+         <segment>
+            <source>Internalization Resources for other projects</source>
+            <target>其他项目的内部化资源</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -5647,6 +5923,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.mustBeOnline">
+         <segment>
+            <source>You must be online to use this feature</source>
+            <target>您必须在线才能使用此功能</target>
+         </segment>
+      </unit>
       <unit id="shared.no">
          <segment>
             <source>No</source>
@@ -5657,6 +5939,18 @@
          <segment>
             <source>No Audio Available!</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="shared.noiseRemoval">
+         <segment>
+            <source>Remove Noise</source>
+            <target>噪音消除</target>
+         </segment>
+      </unit>
+      <unit id="shared.noiseRemovalFailed">
+         <segment>
+            <source>Noise Removal Failed</source>
+            <target>噪音消除失败</target>
          </segment>
       </unit>
       <unit id="shared.NoSaveOffline">
@@ -6934,19 +7228,73 @@
       <unit id="verse.clipboard">
          <segment>
             <source>clipboard</source>
-            <target/>
+            <target>剪贴板</target>
          </segment>
       </unit>
       <unit id="verse.copyToClipboard">
          <segment>
             <source>Copy to clipboard</source>
-            <target/>
+            <target>复制到剪贴板</target>
          </segment>
       </unit>
       <unit id="verse.issues">
          <segment>
             <source>The verse markup has issues. Do you want to continue?</source>
-            <target/>
+            <target>诗句标记有问题。要继续吗？</target>
+         </segment>
+      </unit>
+      <unit id="verse.markVerses">
+         <segment>
+            <source>Mark Verses</source>
+            <target>标记诗句</target>
+         </segment>
+      </unit>
+      <unit id="verse.missingReferences">
+         <segment>
+            <source>Warning: Verses in passage not included: ({0})</source>
+            <target>警告： 未包含段落中的经文： ({0})</target>
+         </segment>
+      </unit>
+      <unit id="verse.noReferences">
+         <segment>
+            <source>Warning: Some audio segments will not be included in verses</source>
+            <target>警告： 某些音频片段不包含在诗句中</target>
+         </segment>
+      </unit>
+      <unit id="verse.noSegments">
+         <segment>
+            <source>ERROR: Some verses have no segment: ({0})</source>
+            <target>错误： 某些诗句没有片段：（{0})</target>
+         </segment>
+      </unit>
+      <unit id="verse.outsideReferences">
+         <segment>
+            <source>ERROR: Some verses are outside passage: ({0})</source>
+            <target>错误： 某些诗句不在段落中： ({0})</target>
+         </segment>
+      </unit>
+      <unit id="verse.pasteFormat">
+         <segment>
+            <source>Invalid number of columns on clipboard.</source>
+            <target>剪贴板上的列数无效。</target>
+         </segment>
+      </unit>
+      <unit id="verse.reference">
+         <segment>
+            <source>Reference</source>
+            <target>参考</target>
+         </segment>
+      </unit>
+      <unit id="verse.saveVerseMarkup">
+         <segment>
+            <source>Save Verse Markup</source>
+            <target>保存诗句标记</target>
+         </segment>
+      </unit>
+      <unit id="verse.startStop">
+         <segment>
+            <source>Start --&gt; Stop</source>
+            <target>开始 --&gt; 停止</target>
          </segment>
       </unit>
       <unit id="viewMode.audioProject">
@@ -7637,6 +7985,18 @@
          <segment>
             <source>Next Segment [{0}]</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aiInProgress">
+         <segment>
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target>人工智能服务进行中...  这是一项远程服务，如果录制的内容较多，或者在您的请求之前还有其他请求，则可能需要很长时间。</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aiGiveUp">
+         <segment>
+            <source>Stop Waiting...</source>
+            <target>停止等待...</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.pauseRecord">

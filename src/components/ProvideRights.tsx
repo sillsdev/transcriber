@@ -94,6 +94,8 @@ export function ProvideRights(props: IProps) {
     [recordType, getTypeId]
   );
 
+  const artifactState = useMemo(() => ({ id: recordTypeId }), [recordTypeId]);
+
   useEffect(() => {
     setDefaultFileName(cleanFileName(`${speaker}_ip`));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -104,6 +106,13 @@ export function ProvideRights(props: IProps) {
     else if (clearRequested(toolId)) {
       clearCompleted(toolId);
     }
+
+    return () => {
+      if (!saveRequested(toolId)) {
+        clearCompleted(toolId);
+      }
+    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged, canSave]);
 
@@ -261,7 +270,7 @@ export function ProvideRights(props: IProps) {
         multiple={false}
         finish={afterUpload}
         cancelled={cancelled}
-        artifactTypeId={recordTypeId}
+        artifactState={artifactState}
         performedBy={speaker}
         createProject={createProject}
         uploadType={UploadType.IntellectualProperty}

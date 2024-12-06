@@ -17,7 +17,6 @@ import {
   RecordIdentity,
   RecordTransformBuilder,
 } from '@orbit/records';
-import { usePublishLevel, PublishLevelEnum } from '../../crud/usePublishLevel';
 import { related } from '../../crud/related';
 import { UpdateRelatedPassageOps } from '../../crud/updatePassageState';
 import { isPassageRow, isSectionRow } from './isSectionPassage';
@@ -28,6 +27,7 @@ import {
   isSectionUpdated,
 } from './isSectionPassageUpdated';
 import { usePassageType } from '../../crud/usePassageType';
+import { usePublishDestination } from '../../crud/usePublishDestination';
 
 interface IProps {
   setComplete: (val: number) => void;
@@ -40,7 +40,7 @@ export const useWfLocalSave = (props: IProps) => {
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { getPassageTypeRec, checkIt } = usePassageType();
-  const { setPublishLevel } = usePublishLevel();
+  const { setPublishTo, isPublished } = usePublishDestination();
   return async (
     sheet: ISheet[],
     sections: SectionD[],
@@ -68,8 +68,8 @@ export const useWfLocalSave = (props: IProps) => {
                 sequencenum: item.sectionSeq,
                 name: item.title || '',
                 level: item.level,
-                published: item.published !== PublishLevelEnum.None,
-                publishTo: setPublishLevel(item.published),
+                published: isPublished(item.published),
+                publishTo: setPublishTo(item.published),
                 state: item.level < 3 ? item.reference ?? '' : '',
               },
             };
@@ -103,8 +103,8 @@ export const useWfLocalSave = (props: IProps) => {
                 name: item.title || '',
                 state: item.level < 3 ? item.reference : '',
                 level: item.level,
-                published: item.published !== PublishLevelEnum.None,
-                publishTo: setPublishLevel(item.published),
+                published: isPublished(item.published || []),
+                publishTo: setPublishTo(item.published || []),
               },
             } as any;
             const t = new RecordTransformBuilder();

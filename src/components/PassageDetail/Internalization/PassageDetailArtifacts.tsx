@@ -1,11 +1,4 @@
-import {
-  useState,
-  useContext,
-  useMemo,
-  useRef,
-  useEffect,
-  useCallback,
-} from 'react';
+import { useState, useContext, useMemo, useRef, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import {
   IPassageDetailArtifactsStrings,
@@ -19,16 +12,14 @@ import {
   SheetLevel,
 } from '../../../model';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
-import {
-  PassageDetailContext,
-  PlayInPlayer,
-} from '../../../context/PassageDetailContext';
+import { PlayInPlayer } from '../../../context/PassageDetailContext';
 import { useSnackBar } from '../../../hoc/SnackBar';
 import Uploader from '../../Uploader';
 import AddResource from './AddResource';
 import SortableHeader from './SortableHeader';
 import { IRow } from '../../../context/PassageDetailContext';
-import { SortableList, SortableItem } from '.';
+import { AltButton } from '../../../control';
+import { SortableItem } from '.';
 import {
   remoteIdGuid,
   useSecResCreate,
@@ -46,6 +37,8 @@ import {
   IArtifactCategory,
   ArtifactCategoryType,
   mediaFileName,
+  passageRefText,
+  usePlanType,
 } from '../../../crud';
 import BigDialog, { BigDialogBp } from '../../../hoc/BigDialog';
 import MediaDisplay from '../../MediaDisplay';
@@ -53,9 +46,9 @@ import SelectSharedResource from './SelectSharedResource';
 import SelectProjectResource from './SelectProjectResource';
 import SelectSections from './SelectSections';
 import ResourceData from './ResourceData';
-import { UploadType } from '../../MediaUpload';
+import { MarkDownType, UploadType, UriLinkType } from '../../MediaUpload';
 import LimitedMediaPlayer from '../../LimitedMediaPlayer';
-import { Box, BoxProps, styled } from '@mui/material';
+import { Box, BoxProps, Grid, Stack, styled, Typography } from '@mui/material';
 import { ReplaceRelatedRecord } from '../../../model/baseModel';
 import { PassageResourceButton } from './PassageResourceButton';
 import ProjectResourceConfigure from './ProjectResourceConfigure';
@@ -67,6 +60,7 @@ import {
   NamedRegions,
   removeExtension,
   isVisual,
+  isUrl,
 } from '../../../utils';
 import { useOrbitData } from '../../../hoc/useOrbitData';
 import {
@@ -78,6 +72,14 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { passageDetailArtifactsSelector } from '../../../selector';
 import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
+import { VertListDnd } from '../../../hoc/VertListDnd';
+import usePassageDetailContext from '../../../context/usePassageDetailContext';
+import MarkDown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { LaunchLink } from '../../../control/LaunchLink';
+import FindTabs from './FindTabs';
+import { storedCompareKey } from '../../../utils/storedCompareKey';
+import { mediaContentType } from '../../../utils/contentType';
 
 const MediaContainer = styled(Box)<BoxProps>(({ theme }) => ({
   marginRight: theme.spacing(2),
@@ -99,11 +101,12 @@ export function PassageDetailArtifacts() {
   const sectionResources = useOrbitData<SectionResourceD[]>('sectionresource');
   const mediafiles = useOrbitData<MediaFile[]>('mediafile');
   const artifactTypes = useOrbitData<ArtifactType[]>('artifacttype');
+  const [globals] = useGlobal();
   const [memory] = useGlobal('memory');
+  const [, setBusy] = useGlobal('importexportBusy');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [complete, setComplete] = useGlobal('progress');
-  const ctx = useContext(PassageDetailContext);
   const {
     rowData,
     section,
@@ -115,11 +118,14 @@ export function PassageDetailArtifacts() {
     itemPlaying,
     setItemPlaying,
     currentstep,
+    toggleDone,
+    forceRefresh,
     handleItemPlayEnd,
     handleItemTogglePlay,
-  } = ctx.state;
+    getProjectResources,
+  } = usePassageDetailContext();
   const { getOrganizedBy } = useOrganizedBy();
-  const AddSectionResource = useSecResCreate(section);
+  const { AddSectionResource } = useSecResCreate(section);
   const AddSectionResourceUser = useSecResUserCreate();
   const ReadSectionResourceUser = useSecResUserRead();
   const RemoveSectionResourceUser = useSecResUserDelete();
@@ -129,9 +135,14 @@ export function PassageDetailArtifacts() {
   const { getArtifactCategorys } = useArtifactCategory();
   const catRef = useRef<IArtifactCategory[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
+  const [findOpen, setFindOpen] = useState(false);
   const [visual, setVisual] = useState(false);
+  const [sortKey, setSortKey] = useState(0);
   const cancelled = useRef(false);
   const [displayId, setDisplayId] = useState('');
+  const [link, setLink] = useState<string>();
+  const [markDown, setMarkDoan] = useState('');
+  const [nonAudio, setNonAudio] = useState(false);
   const [sharedResourceVisible, setSharedResourceVisible] = useState(false);
   const [projectResourceVisible, setProjectResourceVisible] = useState(false);
   const [projResPassageVisible, setProjResPassageVisible] = useState(false);
@@ -140,9 +151,13 @@ export function PassageDetailArtifacts() {
   const [editResource, setEditResource] = useState<
     SectionResourceD | undefined
   >();
-  const [artifactTypeId, setArtifactTypeId] = useState<string>();
+  const [allowEditSave, setAllowEditSave] = useState(false);
+  const [artifactState] = useState<{ id?: string | null }>({});
+  // const [artifactTypeId, setArtifactTypeId] = useState<string>();
   const [uploadType, setUploadType] = useState<UploadType>(UploadType.Resource);
-
+  const [recordAudio, setRecordAudio] = useState<boolean>(false);
+  const mediaRef = useRef<MediaFileD>();
+  const textRef = useRef<string>();
   const catIdRef = useRef<string>();
   const descriptionRef = useRef<string>('');
 
@@ -157,12 +172,17 @@ export function PassageDetailArtifacts() {
   const { waitForSave } = useContext(UnsavedContext).state;
   const [mediaStart, setMediaStart] = useState<number | undefined>();
   const [mediaEnd, setMediaEnd] = useState<number | undefined>();
+  const [performedBy, setPerformedBy] = useState('');
   const projectResourceSave = useProjectResourceSave();
+  const { removeKey } = storedCompareKey(passage, section);
   const { userIsAdmin } = useRole();
+  const [plan] = useGlobal('plan');
+  const planType = usePlanType();
   const t: IPassageDetailArtifactsStrings = useSelector(
     passageDetailArtifactsSelector,
     shallowEqual
   );
+  const [findTabsClose, setFindTabsClose] = useState(false);
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
@@ -170,16 +190,18 @@ export function PassageDetailArtifacts() {
         t.attributes?.typename === 'resource' &&
         Boolean(t?.keys?.remoteId) === !offlineOnly
     );
-    setArtifactTypeId(resourceType?.id);
+    // setArtifactTypeId(resourceType?.id);
+    artifactState.id = resourceType?.id || null;
     return resourceType?.id;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [artifactTypes, offlineOnly]);
 
   const otherResourcesAvailable = useMemo(
-    () =>
-      rowData.filter((r) => r.passageId && r.passageId !== passage.id).length >
-      0,
+    () => rowData.some((r) => r.passageId && r.passageId !== passage.id),
     [passage, rowData]
   );
+
+  const handleNonAudio = (value: boolean) => setNonAudio(value);
 
   const isPassageResource = () =>
     resourceTypeRef.current === ResourceTypeEnum.passageResource;
@@ -229,6 +251,19 @@ export function PassageDetailArtifacts() {
     setDisplayId('');
   };
 
+  const handleLinkId = (id: string) => {
+    setLink(
+      rowData.find((r) => r.id === id)?.mediafile?.attributes?.originalFile
+    );
+  };
+
+  const handleMarkDownId = (id: string) => {
+    setMarkDoan(
+      rowData.find((r) => r.id === id)?.mediafile?.attributes?.originalFile ??
+        ''
+    );
+  };
+
   const handleDone = async (id: string, res: SectionResourceD | null) => {
     if (!res) return;
     const rec = await ReadSectionResourceUser(res);
@@ -237,25 +272,34 @@ export function PassageDetailArtifacts() {
     } else {
       await AddSectionResourceUser(res);
     }
-    ctx.setState((state) => ({
-      ...state,
-      rowData: (rowData as any).map((r: IRow) =>
-        r?.id === id ? { ...r, done: !r.done } : r
-      ),
-    }));
+    toggleDone(id);
+    setTimeout(() => {
+      setBusy(true);
+      forceRefresh();
+      setTimeout(() => setBusy(false), 500);
+    }, 500);
   };
 
   const handleDelete = (id: string) => setConfirm(id);
   const handleDeleteRefused = () => setConfirm('');
   const handleDeleteConfirmed = () => {
+    setBusy(true);
     const secRes = sectionResources.find(
       (r) => related(r, 'mediafile') === confirm
     );
-    secRes && DeleteSectionResource(secRes);
+    if (secRes) {
+      removeKey(related(secRes, 'mediafile'));
+      DeleteSectionResource(secRes);
+    }
     setConfirm('');
+    setBusy(false);
   };
   const handleUploadVisible = (v: boolean) => {
     setUploadVisible(v);
+  };
+
+  const handleFindVisible = (v: boolean) => {
+    setFindOpen(v);
   };
 
   const handleSharedResourceVisible = (v: boolean) => {
@@ -293,12 +337,22 @@ export function PassageDetailArtifacts() {
       (r) => related(r, 'mediafile') === id
     ) as SectionResourceD;
     setEditResource(secRes);
+    setAllowEditSave(true);
     resourceTypeRef.current = Boolean(related(secRes, 'passage'))
       ? ResourceTypeEnum.passageResource
       : ResourceTypeEnum.sectionResource;
     descriptionRef.current = secRes?.attributes.description || '';
     const mf = mediafiles.find((m) => m.id === related(secRes, 'mediafile'));
     catIdRef.current = mf ? related(mf, 'artifactCategory') : undefined;
+    mediaRef.current = mf as MediaFileD;
+    var ct = mediaContentType(mf);
+    setUploadType(
+      ct === MarkDownType
+        ? UploadType.MarkDown
+        : ct === UriLinkType
+        ? UploadType.Link
+        : UploadType.Resource
+    );
   };
   const resetEdit = () => {
     setEditResource(undefined);
@@ -332,6 +386,11 @@ export function PassageDetailArtifacts() {
       const mf = mediafiles.find(
         (m) => m.id === related(editResource, 'mediafile')
       ) as MediaFileD | undefined;
+      if (mf && textRef.current) {
+        await memory.update((t) => [
+          t.replaceAttribute(mf, 'originalFile', textRef.current),
+        ]);
+      }
       if (mf && catIdRef.current) {
         await memory.update((t) => [
           ...ReplaceRelatedRecord(
@@ -361,18 +420,27 @@ export function PassageDetailArtifacts() {
     resetEdit();
   };
   const handleAction = (what: string) => {
+    artifactState.id = resourceType;
+    resourceTypeRef.current = ResourceTypeEnum.sectionResource;
     if (what === 'upload') {
+      setUploadType(UploadType.Resource);
+      setRecordAudio(false);
       setUploadVisible(true);
-    } else if (what === 'ref-passage') {
-      resourceTypeRef.current = ResourceTypeEnum.passageResource;
-      setSharedResourceVisible(true);
-    } else if (what === 'ref-section') {
+    } else if (what === 'link') {
+      setUploadType(UploadType.Link);
+      setRecordAudio(false);
+      setUploadVisible(true);
+    } else if (what === 'record') {
+      setUploadType(UploadType.Resource);
+      setRecordAudio(true);
+      setUploadVisible(true);
+    } else if (what === 'text') {
+      setUploadType(UploadType.MarkDown);
+      setRecordAudio(false);
+      setUploadVisible(true);
+    } else if (what === 'shared') {
       resourceTypeRef.current = ResourceTypeEnum.sectionResource;
       setSharedResourceVisible(true);
-    } else if (what === 'activity') {
-    } else if (what === 'wizard') {
-      setProjectResourceVisible(true);
-    } else if (what === 'sheet') {
     }
   };
 
@@ -405,13 +473,21 @@ export function PassageDetailArtifacts() {
     [passage]
   );
 
-  const listFilter = useCallback(
-    (r: IRow) =>
-      r?.isResource &&
-      (allResources || r.passageId === '' || r.passageId === passage.id),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [allResources, passage]
+  const listFilter = (r: IRow) =>
+    r?.isResource &&
+    (allResources || r.passageId === '' || r.passageId === passage.id);
+
+  const [selectedRows, setSelectedRows] = useState<IRow[]>(
+    rowData.filter(listFilter)
   );
+
+  useEffect(() => {
+    if (!globals.importexportBusy && !globals.remoteBusy) {
+      setSelectedRows(rowData.filter(listFilter));
+      setSortKey((sortKey) => sortKey + 1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowData, allResources, globals.importexportBusy, globals.remoteBusy]);
 
   const onSortEnd = ({
     oldIndex,
@@ -420,6 +496,7 @@ export function PassageDetailArtifacts() {
     oldIndex: number;
     newIndex: number;
   }) => {
+    if (oldIndex === newIndex) return;
     const indexes = Array<number>();
     rowData.forEach((r, i) => {
       if (listFilter(r)) indexes.push(i);
@@ -439,9 +516,7 @@ export function PassageDetailArtifacts() {
     const newRows = rowData
       .map((r, i) => (listFilter(r) ? rowData[newIndexes[i]] : r))
       .filter((r) => r !== undefined);
-    ctx.setState((state) => {
-      return { ...state, rowData: newRows };
-    });
+    forceRefresh(newRows);
   };
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
@@ -492,7 +567,7 @@ export function PassageDetailArtifacts() {
           projRes.push(findRecord(memory, 'mediafile', id) as MediaFileD);
         }
       }
-      if (projRes.length) setProjResSetup(projRes);
+      if (projRes.length === 1) setProjResSetup(projRes);
       resetEdit();
     }
   };
@@ -510,7 +585,7 @@ export function PassageDetailArtifacts() {
     });
     return results;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sectionResources]);
+  }, [sectionResources, rowData]);
 
   useEffect(() => {
     getArtifactCategorys(ArtifactCategoryType.Resource).then(
@@ -523,13 +598,13 @@ export function PassageDetailArtifacts() {
     let cnt = rowData.length;
     for (const r of res) {
       const catRec = catRef.current.find(
-        (c) => c.slug === r.attributes.categoryName
+        (c) => c.slug === r?.attributes?.categoryName
       );
       const newMediaRec = await AddMediaFileResource(r, catRec?.id || '');
       cnt += 1;
       await AddSectionResource(
         cnt,
-        r.attributes.title || r.attributes.reference,
+        r?.attributes?.title || r?.attributes?.reference,
         newMediaRec,
         isPassageResource() ? passage.id : null
       );
@@ -614,10 +689,16 @@ export function PassageDetailArtifacts() {
 
   const handlePassRes = (newValue: ResourceTypeEnum) => {
     resourceTypeRef.current = newValue;
-    setArtifactTypeId(isProjectResource() ? projResourceType : resourceType);
-    setUploadType(
-      isProjectResource() ? UploadType.ProjectResource : UploadType.Resource
-    );
+    if (isProjectResource()) {
+      artifactState.id = projResourceType;
+      setUploadType(UploadType.ProjectResource);
+    } else if (
+      artifactState.id === projResourceType ||
+      uploadType === UploadType.ProjectResource
+    ) {
+      artifactState.id = resourceType;
+      setUploadType(UploadType.Resource);
+    }
   };
 
   const handleEnded = () => {
@@ -631,67 +712,107 @@ export function PassageDetailArtifacts() {
     }
   };
 
+  const [hasProjRes, setHasProjRes] = useState(false);
+
+  useEffect(() => {
+    getProjectResources().then((res) => setHasProjRes(res.length > 0));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mediafiles]);
+
+  const isScripture = useMemo(
+    () => planType(plan)?.scripture,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [plan]
+  );
+
   return (
     <>
-      <Box sx={{ display: 'flex', flexDirection: 'row', flexGrow: 1, pr: 2 }}>
-        {userIsAdmin && (!offline || offlineOnly) && (
-          <AddResource action={handleAction} />
-        )}
-        <MediaContainer>
-          {playItem !== '' && (
-            <LimitedMediaPlayer
-              srcMediaId={playItem}
-              requestPlay={itemPlaying}
-              onEnded={handleEnded}
-              onLoaded={handleLoaded}
-              onTogglePlay={handleItemTogglePlay}
-              controls={playItem !== ''}
-              limits={{ start: mediaStart, end: mediaEnd }}
-            />
+      <Stack sx={{ width: '100%' }} direction="row" spacing={1}>
+        <Grid container sx={{ display: 'flex', alignItems: 'center' }}>
+          {isScripture && (
+            <Grid item>
+              <AltButton onClick={() => handleFindVisible(true)}>
+                {t.find}
+              </AltButton>
+            </Grid>
           )}
-        </MediaContainer>
-        {otherResourcesAvailable && (
-          <PassageResourceButton
-            value={allResources}
-            label={t.allResources}
-            cb={handleAllResources}
-          />
-        )}
-      </Box>
+          {userIsAdmin && (!offline || offlineOnly) && (
+            <>
+              <Grid item>
+                <AddResource action={handleAction} />
+              </Grid>
+              {hasProjRes && (
+                <Grid item>
+                  <AltButton onClick={() => setProjectResourceVisible(true)}>
+                    {t.configure}
+                  </AltButton>
+                </Grid>
+              )}
+            </>
+          )}
+          {playItem !== '' && (
+            <Grid item sx={{ flexGrow: 1 }}>
+              <MediaContainer>
+                <LimitedMediaPlayer
+                  srcMediaId={playItem}
+                  requestPlay={itemPlaying}
+                  onEnded={handleEnded}
+                  onLoaded={handleLoaded}
+                  onTogglePlay={handleItemTogglePlay}
+                  controls={playItem !== ''}
+                  limits={{ start: mediaStart, end: mediaEnd }}
+                />
+              </MediaContainer>
+            </Grid>
+          )}
+          {otherResourcesAvailable && (
+            <Grid item>
+              <PassageResourceButton
+                value={allResources}
+                label={t.allResources}
+                cb={handleAllResources}
+              />
+            </Grid>
+          )}
+        </Grid>
+      </Stack>
       <SortableHeader />
-      <SortableList onSortEnd={onSortEnd} useDragHandle>
-        {rowData
-          .filter((r) => listFilter(r))
-          .map((value, index) => (
-            <SortableItem
-              key={`item-${index}`}
-              index={index}
-              value={value as any}
-              isPlaying={playItem === value.id && itemPlaying}
-              onPlay={handlePlay}
-              onView={handleDisplayId}
-              onDone={handleDone}
-              onDelete={handleDelete}
-              onEdit={
-                userIsAdmin && (!offline || offlineOnly)
-                  ? handleEdit
-                  : undefined
-              }
-            />
-          ))}
-      </SortableList>
+      <VertListDnd key={`sort-${sortKey}`} onDrop={onSortEnd} dragHandle>
+        {selectedRows.map((value, index) => (
+          <SortableItem
+            key={`item-${index}`}
+            value={value as any}
+            contentType={mediaContentType(value.mediafile)}
+            isPlaying={playItem === value.id && itemPlaying}
+            onPlay={handlePlay}
+            onView={handleDisplayId}
+            onLink={handleLinkId}
+            onMarkDown={handleMarkDownId}
+            onDone={handleDone}
+            onDelete={handleDelete}
+            onEdit={
+              userIsAdmin && (!offline || offlineOnly) ? handleEdit : undefined
+            }
+          />
+        ))}
+      </VertListDnd>
       <Uploader
-        recordAudio={false}
+        recordAudio={recordAudio}
         isOpen={uploadVisible}
         onOpen={handleUploadVisible}
         showMessage={showMessage}
         multiple={true}
         finish={afterUpload}
         cancelled={cancelled}
-        artifactTypeId={artifactTypeId}
+        artifactState={artifactState}
         uploadType={uploadType}
+        ready={() => true}
+        onNonAudio={handleNonAudio}
+        performedBy={performedBy}
+        onSpeakerChange={(value) => setPerformedBy(value)}
         metaData={
           <ResourceData
+            uploadType={uploadType}
             catAllowNew={true} //if they can upload they can add cat
             initCategory=""
             onCategoryChange={handleCategory}
@@ -700,12 +821,25 @@ export function PassageDetailArtifacts() {
             catRequired={false}
             initPassRes={isPassageResource()}
             onPassResChange={handlePassRes}
-            allowProject={true}
+            allowProject={!nonAudio}
             sectDesc={sectDesc}
             passDesc={passDesc}
           />
         }
       />
+      <BigDialog
+        title={t.findResource.replace('{0}', passageRefText(passage))}
+        description=<Typography>{t.findResourceDesc}</Typography>
+        isOpen={findOpen}
+        onOpen={handleFindVisible}
+        bp={BigDialogBp.sm}
+        setCloseRequested={setFindTabsClose}
+      >
+        <FindTabs
+          onClose={() => handleFindVisible(false)}
+          closeRequested={findTabsClose}
+        />
+      </BigDialog>
       <BigDialog
         title={t.sharedResource.replace(
           '{0}',
@@ -720,6 +854,7 @@ export function PassageDetailArtifacts() {
         <SelectSharedResource
           sourcePassages={resourceSourcePassages}
           scope={resourceTypeRef.current}
+          onScope={(val) => (resourceTypeRef.current = val)}
           onSelect={handleSelectShared}
           onOpen={handleSharedResourceVisible}
         />
@@ -770,11 +905,13 @@ export function PassageDetailArtifacts() {
         title={t.editResource}
         isOpen={Boolean(editResource)}
         onOpen={handleEditResourceVisible}
-        onSave={handleEditSave}
+        onSave={allowEditSave ? handleEditSave : undefined}
         onCancel={handleEditCancel}
         bp={BigDialogBp.sm}
       >
         <ResourceData
+          media={mediaRef.current}
+          uploadType={uploadType}
           catAllowNew={true}
           initCategory={catIdRef.current || ''}
           onCategoryChange={handleCategory}
@@ -784,6 +921,11 @@ export function PassageDetailArtifacts() {
           initPassRes={Boolean(resourceTypeRef.current)}
           onPassResChange={handlePassRes}
           allowProject={false}
+          onTextChange={(text) => {
+            textRef.current = text;
+            const validUrl = isUrl(text);
+            if (allowEditSave !== validUrl) setAllowEditSave(validUrl);
+          }}
           sectDesc={sectDesc}
           passDesc={passDesc}
         />
@@ -798,6 +940,17 @@ export function PassageDetailArtifacts() {
       {displayId && (
         <MediaDisplay srcMediaId={displayId} finish={handleFinish} />
       )}
+      {markDown && (
+        <BigDialog
+          title={t.textResource}
+          isOpen={Boolean(markDown)}
+          onOpen={(_open: boolean) => setMarkDoan('')}
+          bp={BigDialogBp.sm}
+        >
+          <MarkDown remarkPlugins={[remarkGfm]}>{markDown}</MarkDown>
+        </BigDialog>
+      )}
+      <LaunchLink url={link} reset={() => setLink('')} />
     </>
   );
 }

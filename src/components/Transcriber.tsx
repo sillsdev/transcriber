@@ -110,6 +110,7 @@ import {
   RecordKeyMap,
 } from '@orbit/records';
 import { useDispatch } from 'react-redux';
+import { PassageTypeEnum } from '../model/passageType';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -959,6 +960,7 @@ export function Transcriber(props: IProps) {
             type: 'mediafile',
             id: mediaRef.current.id,
             attributes: {
+              ...mediaRef.current?.attributes,
               transcription: transcription,
               position: newPosition,
               segments: updateSegments(
@@ -1164,7 +1166,10 @@ export function Transcriber(props: IProps) {
                     {role === 'transcriber' &&
                       hasParatextName &&
                       paratextProject &&
-                      !noParatext && (
+                      !noParatext &&
+                      !passage?.attributes?.reference.startsWith(
+                        PassageTypeEnum.NOTE
+                      ) && (
                         <Grid item>
                           <LightTooltip title={t.pullParatextTip}>
                             <span>

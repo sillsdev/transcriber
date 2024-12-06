@@ -164,6 +164,7 @@ const initState = {
   workflow: Array<SimpleWf>(),
   psgCompleted: [] as StepComplete[],
   setStepComplete: async (stepId: string, complete: boolean) => {},
+  setStepCompleteTo: async (stepId: string) => {},
   gotoNextStep: () => {},
   stepComplete: (stepId: string) => {
     return false;
@@ -197,8 +198,9 @@ const initState = {
   highlightDiscussion: undefined as number | undefined,
   refresh: 0,
   prjId: '',
-  forceRefresh: () => {},
+  forceRefresh: (rowData?: IRow[]) => {},
   sectionArr: [] as [number, string][],
+  toggleDone: (id: string) => {},
 };
 
 export type ICtxState = typeof initState;
@@ -314,10 +316,14 @@ const PassageDetailProvider = (props: IProps) => {
     }
     segmentsCb.current = undefined;
   };
-  const forceRefresh = () => {
+  const forceRefresh = (rowData?: IRow[]) => {
     refreshRef.current = refreshRef.current + 1;
     setState((state: ICtxState) => {
-      return { ...state, refresh: refreshRef.current };
+      return {
+        ...state,
+        refresh: refreshRef.current,
+        rowData: rowData ?? state.rowData,
+      };
     });
   };
 
@@ -513,7 +519,7 @@ const PassageDetailProvider = (props: IProps) => {
       //force refresh if they've hit the same locate button again
       refreshRef.current = refreshRef.current + 1;
       setState((state: ICtxState) => {
-        return { ...state, refresh: refreshRef.current };
+        return { ...state, refresh: refreshRef.current, playing: false };
       });
     } else settingSegmentRef.current = false;
   };
@@ -588,7 +594,54 @@ const PassageDetailProvider = (props: IProps) => {
     await memory.update(ops);
     setState((state: ICtxState) => ({ ...state, psgCompleted: completed }));
   };
-
+  const setStepCompleteTo = async (stepid: string) => {
+    if (stepid === '') return;
+    var completed: StepComplete[] = [];
+    var steps = state.orgWorkflowSteps.sort(
+      (a, b) => a.attributes.sequencenum - b.attributes.sequencenum
+    );
+    var rec;
+    for (const step of steps) {
+      var remId =
+        remoteId('orgworkflowstep', step.id, memory.keyMap as RecordKeyMap) ||
+        step.id;
+      rec = findRecord(memory, 'orgworkflowstep', step.id) as OrgWorkflowStep;
+      completed.push({
+        stepid: remId,
+        complete: true,
+        name: rec.attributes.name,
+      });
+      if (step.id === stepid) break;
+    }
+    const recId = {
+      type: 'passage',
+      id:
+        remoteIdGuid('passage', pasId ?? '', memory.keyMap as RecordKeyMap) ||
+        pasId ||
+        '',
+    };
+    var tb = new RecordTransformBuilder();
+    var ops = [] as RecordOperation[];
+    ops.push(
+      tb
+        .replaceAttribute(recId, 'stepComplete', JSON.stringify({ completed }))
+        .toOperation()
+    );
+    ops.push(...UpdateLastModifiedBy(tb, recId, user));
+    AddPassageStateChangeToOps(
+      tb,
+      ops,
+      recId.id,
+      '',
+      `${stepCompleteStr.title} : ${localizedWorkStep(
+        rec?.attributes?.name ?? ''
+      )}`,
+      user,
+      memory
+    );
+    await memory.update(ops);
+    setState((state: ICtxState) => ({ ...state, psgCompleted: completed }));
+  };
   const getProjectResources = async () => {
     const typeId = getTypeId(ArtifactTypeSlug.ProjectResource);
     return mediafiles.filter(
@@ -786,10 +839,18 @@ const PassageDetailProvider = (props: IProps) => {
   //set the player segment to the specified segment??
   const setPlayerSegments = (segments: string) => {
     if (segmentsCb.current) segmentsCb.current(segments);
+    settingSegmentRef.current = false;
   };
 
   const getCurrentSegment = () => {
     return currentSegmentRef.current;
+  };
+
+  const toggleDone = (id: string) => {
+    const newRows = state.rowData.map((r) =>
+      r.id === id ? { ...r, done: !r.done } : r
+    );
+    setState((state: ICtxState) => ({ ...state, rowData: newRows }));
   };
 
   const stepCmp = (a: StepComplete, b: StepComplete) =>
@@ -933,9 +994,7 @@ const PassageDetailProvider = (props: IProps) => {
           res,
           user,
           ...localize,
-        }).sort((i, j) =>
-          i.done === j.done ? i.sequenceNum - j.sequenceNum : i.done ? 1 : -1
-        )
+        }).sort((i, j) => i.sequenceNum - j.sequenceNum)
       );
 
       const mediafileId =
@@ -1038,10 +1097,12 @@ const PassageDetailProvider = (props: IProps) => {
           setupLocate,
           stepComplete,
           setStepComplete,
+          setStepCompleteTo,
           gotoNextStep,
           setRecording,
           setCommentRecording,
           setMediaSelected,
+          toggleDone,
           handleItemPlayEnd,
           handleItemTogglePlay,
           handleCommentPlayEnd,

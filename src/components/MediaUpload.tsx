@@ -3,11 +3,9 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { IMediaUploadStrings } from '../model';
 import {
   Button,
-  Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
   styled,
 } from '@mui/material';
 import path from 'path-browserify';
@@ -15,6 +13,10 @@ import { useSnackBar } from '../hoc/SnackBar';
 import SpeakerName from './SpeakerName';
 import { mediaUploadSelector } from '../selector';
 import { API_CONFIG } from '../api-variable';
+import { LinkEdit } from '../control/LinkEdit';
+import { MarkDownEdit } from '../control/MarkDownEdit';
+import { isUrl } from '../utils';
+import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
 
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('react-file-drop').FileDrop : <></>;
@@ -40,6 +42,9 @@ const HiddenInput = styled('input')(({ theme }) => ({
   display: 'none',
 }));
 
+export const UriLinkType = 'text/uri-list';
+export const MarkDownType = 'text/markdown';
+
 export enum UploadType {
   Media = 0,
   Resource = 1,
@@ -49,6 +54,8 @@ export enum UploadType {
   ProjectResource = 5,
   IntellectualProperty = 6,
   Graphic = 7,
+  Link = 8,
+  MarkDown = 9,
 }
 const PROJECTRESOURCE_SIZELIMIT = 50;
 const NO_SIZELIMIT = 10000;
@@ -140,6 +147,8 @@ interface IProps {
   createProject?: (name: string) => Promise<string>;
   team?: string; // used to check for speakers when adding a card
   onFiles?: (files: File[]) => void;
+  onValue?: (value: string) => void;
+  onNonAudio?: (nonAudio: boolean) => void;
 }
 
 function MediaUpload(props: IProps) {
@@ -157,6 +166,8 @@ function MediaUpload(props: IProps) {
     createProject,
     team,
     onFiles,
+    onValue,
+    onNonAudio,
   } = props;
   const [name, setName] = useState('');
   const [files, setFilesx] = useState<File[]>([]);
@@ -176,6 +187,8 @@ function MediaUpload(props: IProps) {
     t.resourceTitle,
     t.intellectualPropertyTitle,
     t.graphicTitle,
+    t.linkTitle,
+    t.markdownTitle,
   ];
   const text = [
     t.task,
@@ -186,6 +199,8 @@ function MediaUpload(props: IProps) {
     t.projectResourceTask,
     t.intellectualPropertyTask,
     t.graphicTask,
+    t.linkTask,
+    t.markdownTask,
   ];
 
   const handleAddOrSave = () => {
@@ -251,6 +266,8 @@ function MediaUpload(props: IProps) {
           )
         );
       }
+      const nonAudio = goodFiles.some((f) => !f.type.includes('audio'));
+      if (onNonAudio) onNonAudio(nonAudio);
       goodFiles = checkSizes(goodFiles, sizeLimit);
       setName(fileName(goodFiles));
       setFiles(goodFiles);
@@ -263,6 +280,11 @@ function MediaUpload(props: IProps) {
   const handleRights = (hasRights: boolean) => setHasRight(hasRights);
   const handleSpeaker = (speaker: string) => {
     onSpeaker && onSpeaker(speaker);
+  };
+  const handleValue = (newValue: string) => {
+    const type = uploadType === UploadType.Link ? UriLinkType : MarkDownType;
+    setFiles([{ name: newValue, size: newValue.length, type } as File]);
+    onValue && onValue(newValue);
   };
 
   useEffect(() => {
@@ -301,14 +323,13 @@ function MediaUpload(props: IProps) {
   }, [uploadType]);
 
   return (
-    <div>
-      <Dialog
-        open={visible}
-        onClose={handleCancel}
-        aria-labelledby="audUploadDlg"
-        disableEnforceFocus
-      >
-        <DialogTitle id="audUploadDlg">{title[uploadType]}</DialogTitle>
+    <BigDialog
+      isOpen={visible}
+      onOpen={handleCancel}
+      title={title[uploadType]}
+      bp={BigDialogBp.sm}
+    >
+      <>
         <DialogContent>
           <DialogContentText>
             {text[uploadType].replace('{0}', speaker || '')}
@@ -322,19 +343,25 @@ function MediaUpload(props: IProps) {
               team={team}
             />
           )}
-          <Drop>
-            {hasRights ? (
-              <DropTarget
-                name={name}
-                handleFiles={handleFiles}
-                acceptextension={acceptextension}
-                acceptmime={acceptmime}
-                multiple={multiple}
-              />
-            ) : (
-              <MyLabel>{'\u00A0'}</MyLabel>
-            )}
-          </Drop>
+          {![UploadType.Link, UploadType.MarkDown].includes(uploadType) ? (
+            <Drop>
+              {hasRights ? (
+                <DropTarget
+                  name={name}
+                  handleFiles={handleFiles}
+                  acceptextension={acceptextension}
+                  acceptmime={acceptmime}
+                  multiple={multiple}
+                />
+              ) : (
+                <MyLabel>{'\u00A0'}</MyLabel>
+              )}
+            </Drop>
+          ) : uploadType === UploadType.Link ? (
+            <LinkEdit onValue={handleValue} />
+          ) : (
+            <MarkDownEdit onValue={handleValue} />
+          )}
           {metaData}
         </DialogContent>
         <DialogActions>
@@ -352,14 +379,19 @@ function MediaUpload(props: IProps) {
             variant="contained"
             color="primary"
             disabled={
-              (ready && !ready()) || !files || files.length === 0 || !hasRights
+              (ready && !ready()) ||
+              !files ||
+              files.length === 0 ||
+              files[0].name.trim() === '' ||
+              !hasRights ||
+              (uploadType === UploadType.Link && !isUrl(files[0].name))
             }
           >
             {t.upload}
           </Button>
         </DialogActions>
-      </Dialog>
-    </div>
+      </>
+    </BigDialog>
   );
 }
 

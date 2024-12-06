@@ -285,42 +285,6 @@ describe('<LimitedMediaPlayer />', () => {
     expect(props.onEnded).toHaveBeenCalled();
   });
 
-  it('should call onEnded if setPlaying to false and at start', async () => {
-    mockBlobState = { ...blobFetched };
-
-    const props = {
-      srcMediaId: '1',
-      requestPlay: false,
-      onEnded: jest.fn(),
-      limits: { start: 10, end: 100 },
-    };
-
-    const { container } = render(<LimitedMediaPlayer {...props} />);
-    await waitFor(() => expect(container.firstChild).not.toBe(null));
-    act(() => {
-      mockSetPlaying(false);
-    });
-    expect(props.onEnded).toHaveBeenCalled();
-  });
-
-  it('should call onEnded if setPlaying to false and at start with zeros as limist', async () => {
-    mockBlobState = { ...blobFetched };
-
-    const props = {
-      srcMediaId: '1',
-      requestPlay: false,
-      onEnded: jest.fn(),
-      limits: { start: 0, end: 0 },
-    };
-
-    const { container } = render(<LimitedMediaPlayer {...props} />);
-    await waitFor(() => expect(container.firstChild).not.toBe(null));
-    act(() => {
-      mockSetPlaying(false);
-    });
-    expect(props.onEnded).toHaveBeenCalled();
-  });
-
   it('should not call onEnded if timeUpdate is less than limits.end', async () => {
     mockBlobState = { ...blobFetched };
 
@@ -444,7 +408,8 @@ describe('<LimitedMediaPlayer />', () => {
     await waitFor(() => expect(mockPosition).toBe(10));
   });
 
-  it('should set currentTime back 3 if skip-back clicked', async () => {
+  // Team City doesn't always have a media player so this test is skipped
+  it.skip('should set currentTime back 3 if skip-back clicked', async () => {
     const user = userEvent.setup();
     mockBlobState = { ...blobFetched };
 
@@ -470,7 +435,8 @@ describe('<LimitedMediaPlayer />', () => {
     await waitFor(() => expect(mockPosition).toBe(47));
   });
 
-  it('should set currentTime back 3 if skip-back clicked and limits are zeros', async () => {
+  // Team City doesn't always have a media player so this test is skipped
+  it.skip('should set currentTime back 3 if skip-back clicked and limits are zeros', async () => {
     const user = userEvent.setup();
     mockBlobState = { ...blobFetched };
 
@@ -489,7 +455,7 @@ describe('<LimitedMediaPlayer />', () => {
       mockOnProgress(50);
     });
     await screen.findByText('0:50');
-    user.click(screen.getByTestId('skip-back'));
+    await user.click(screen.getByTestId('skip-back'));
     await waitFor(() => expect(mockPosition).toBe(47));
   });
 

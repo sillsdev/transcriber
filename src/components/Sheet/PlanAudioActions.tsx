@@ -1,55 +1,31 @@
-import { memo, FC } from 'react';
-import { IPlanActionsStrings, IMediaShare } from '../../model';
+import { memo, FC, useContext } from 'react';
+import { IPlanActionsStrings, SharedResourceD } from '../../model';
 import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
 import PauseIcon from '@mui/icons-material/Pause';
-import SharedCheckbox from '@mui/icons-material/CheckBoxOutlined';
-import NotSharedCheckbox from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
-import VersionsIcon from '@mui/icons-material/List';
 import { shallowEqual, useSelector } from 'react-redux';
-import { IconButton, Box, IconButtonProps, styled, alpha } from '@mui/material';
+import { IconButton, Box } from '@mui/material';
 import { planActionsSelector } from '../../selector';
 import EditIcon from '@mui/icons-material/EditOutlined';
+import { PlanContext } from '../../context/PlanContext';
 
 // see: https://mui.com/material-ui/customization/how-to-customize/
-interface StyledIconButtonProps extends IconButtonProps {
-  shared?: IMediaShare;
-}
-const StyledIconButton = styled(IconButton, {
-  shouldForwardProp: (prop) => prop !== 'shared',
-})<StyledIconButtonProps>(({ shared, theme }) => ({
-  ...(shared === IMediaShare.OldVersionOnly
-    ? {
-        color: alpha('#8f9a27', 0.6),
-      }
-    : shared === IMediaShare.Latest
-    ? {
-        color: 'green',
-      }
-    : shared === IMediaShare.None
-    ? {
-        color: 'red',
-      }
-    : {
-        color: theme.palette.primary.light,
-      }),
-}));
-
 interface IProps {
   rowIndex: number;
   isPassage: boolean;
   isNote: boolean;
   mediaId: string;
-  mediaShared: IMediaShare;
   isPlaying: boolean;
   canPlay: boolean;
   canEdit: boolean;
+  sharedResource?: SharedResourceD;
   onPlayStatus: (mediaId: string) => void;
-  onHistory: (i: number) => () => void;
+  onEdit?: (i: number) => () => void;
 }
 
 interface FcProps extends IProps {
   canPlay: boolean;
   canEdit: boolean;
+  shared: boolean;
   t: IPlanActionsStrings;
 }
 
@@ -58,14 +34,15 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
     rowIndex,
     isPassage,
     isNote,
-    mediaShared,
-    onHistory,
+    onEdit,
+    shared,
     onPlayStatus,
     mediaId,
     isPlaying,
     canEdit,
     canPlay,
     t,
+    sharedResource
   } = props;
 
   const handlePlayStatus = () => () => {
@@ -74,46 +51,33 @@ const Actions: FC<FcProps> = memo((props: FcProps) => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       {isPassage && (
-        <StyledIconButton
-          id={isNote ? 'noteEdit' : 'passageShare'}
-          shared={mediaShared}
-          title={
-            isNote
-              ? t.noteDetails
-              : mediaShared !== IMediaShare.NotPublic
-              ? t.resourceEdit
-              : t.versions
-          }
-          disabled={!canEdit}
-          onClick={onHistory(rowIndex)}
-        >
-          {isNote ? (
-            <EditIcon />
-          ) : mediaShared === IMediaShare.NotPublic ? (
-            <VersionsIcon />
-          ) : mediaShared === IMediaShare.None ? (
-            <NotSharedCheckbox />
-          ) : (
-            <SharedCheckbox />
-          )}
-        </StyledIconButton>
-      )}
-      {isPassage && (
-        <StyledIconButton
+        <IconButton
           id="planAudPlayStop"
           title={t.playpause}
           disabled={!canPlay}
+          sx={{ color: 'primary.light' }}
           onClick={handlePlayStatus()}
         >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
-        </StyledIconButton>
+        </IconButton>
+      )}
+      {isPassage && (shared || isNote) && onEdit && (
+        <IconButton
+          id="noteEdit"
+          title={isNote ? t.noteDetails : t.resourceEdit}
+          disabled={!canEdit}
+          onClick={onEdit(rowIndex)}
+        >
+          <EditIcon  color={sharedResource ? 'primary': 'warning'}/>
+        </IconButton>
       )}
     </Box>
   );
 });
 
 export function PlanAudioActions(props: IProps) {
+  const { shared, hidePublishing } = useContext(PlanContext).state;
   const t: IPlanActionsStrings = useSelector(planActionsSelector, shallowEqual);
-  return <Actions {...props} t={t} />;
+  return <Actions {...props} t={t} shared={shared || !hidePublishing} />;
 }
 export default PlanAudioActions;

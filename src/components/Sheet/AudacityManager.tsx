@@ -44,6 +44,7 @@ import {
   audPrefsName,
   setAudacityPref,
   execFolder,
+  useDownloadMedia,
 } from '../../utils';
 
 import { extensions, mimes } from '.';
@@ -102,7 +103,9 @@ function AudacityManager(props: IProps) {
   const nameRef = React.useRef('');
   const [memory] = useGlobal('memory');
   const [changed] = useGlobal('changed');
+  const [isOffline] = useGlobal('offline');
   const { showMessage } = useSnackBar();
+  const { tryDownload } = useDownloadMedia();
   const getProjName = useAudProjName();
   const t: IAudacityManagerStrings = useSelector(
     audacityManagerSelector,
@@ -129,13 +132,27 @@ function AudacityManager(props: IProps) {
     });
   };
 
+  const getMediaUrl = (mediaId: string) => {
+    let mediaUrl = '';
+    if (mediaId !== '') {
+      const mediaRec = memory.cache.query((q) =>
+        q.findRecord({ type: 'mediafile', id: mediaId })
+      ) as MediaFile;
+      mediaUrl = mediaRec?.attributes?.audioUrl || '';
+    }
+    return mediaUrl;
+  };
+
   const getMediaUpdated = (mediaId: string) => {
     let mediaUpdated = '';
     if (mediaId !== '') {
       const mediaRec = memory.cache.query((q) =>
         q.findRecord({ type: 'mediafile', id: mediaId })
       ) as MediaFile;
-      mediaUpdated = mediaRec?.attributes?.dateUpdated + 'z' || '';
+      mediaUpdated = mediaRec?.attributes?.dateUpdated || '';
+      if (!mediaUpdated.toLowerCase().endsWith('z')) {
+        mediaUpdated += 'Z';
+      }
     }
     return mediaUpdated;
   };
@@ -149,15 +166,22 @@ function AudacityManager(props: IProps) {
 
     let mediaName = '';
     if ((mediaId || '') !== '') {
-      mediaName =
-        (await fetchUrl({
-          id:
-            remoteId('mediafile', mediaId, memory.keyMap as RecordKeyMap) ?? '',
-          cancelled: () => false,
-        })) ?? '';
-      if (mediaName === ts.expiredToken) {
-        showMessage(ts.expiredToken);
-        return;
+      const remId =
+        remoteId('mediafile', mediaId, memory.keyMap as RecordKeyMap) ?? '';
+      if (remId !== '' && !isOffline) {
+        mediaName =
+          (await fetchUrl({
+            id: remId,
+            cancelled: () => false,
+          })) ?? '';
+        if (mediaName === ts.expiredToken) {
+          showMessage(ts.expiredToken);
+          return;
+        }
+      } else {
+        const mediaRelativePath = getMediaUrl(mediaId);
+        // The next line adds the local path to the relative file name.
+        mediaName = await tryDownload(mediaRelativePath, false);
       }
       if (mediaName.startsWith('http')) {
         showMessage(t.checkDownload);

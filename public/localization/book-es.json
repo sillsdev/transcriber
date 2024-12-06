@@ -1,1 +1,304 @@
-[{"code":"FRT","short":"Páginas iniciales","long":"Páginas iniciales"},{"code":"INT","short":"Introducción","long":"Introducción"},{"code":"GEN","short":"Génesis","long":"Génesis"},{"code":"EXO","short":"Éxodo","long":"Éxodo"},{"code":"LEV","short":"Levítico","long":"Levítico"},{"code":"NUM","short":"Números","long":"Números"},{"code":"DEU","short":"Deuteronomio","long":"Deuteronomio"},{"code":"JOS","short":"Josué","long":"Josué"},{"code":"JDG","short":"Jueces","long":"Jueces"},{"code":"RUT","short":"Rut","long":"Rut"},{"code":"1SA","short":"1 Samuel","long":"1 Samuel"},{"code":"2SA","short":"2 Samuel","long":"2 Samuel"},{"code":"1KI","short":"1 Reyes","long":"1 Reyes"},{"code":"2KI","short":"2 Reyes","long":"2 Reyes"},{"code":"1CH","short":"1 Crónicas","long":"1 Crónicas"},{"code":"2CH","short":"2 Crónicas","long":"2 Crónicas"},{"code":"EZR","short":"Esdras","long":"Esdras"},{"code":"NEH","short":"Nehemías","long":"Nehemías"},{"code":"EST","short":"Ester","long":"Ester (hebreo)"},{"code":"JOB","short":"Job","long":"Job"},{"code":"PSA","short":"Salmos","long":"Salmos"},{"code":"PRO","short":"Proverbios","long":"Proverbios"},{"code":"ECC","short":"Eclesiastés","long":"Eclesiastés"},{"code":"SNG","short":"Cantar de los cantares","long":"Cantar de los cantares"},{"code":"ISA","short":"Isaías","long":"Isaías"},{"code":"JER","short":"Jeremías","long":"Jeremías"},{"code":"LAM","short":"Lamentaciones","long":"Lamentaciones"},{"code":"EZK","short":"Ezequiel","long":"Ezequiel"},{"code":"DAN","short":"Daniel","long":"Daniel (hebreo)"},{"code":"HOS","short":"Oseas","long":"Oseas"},{"code":"JOL","short":"Joel","long":"Joel"},{"code":"AMO","short":"Amós","long":"Amós"},{"code":"OBA","short":"Abdías","long":"Abdías"},{"code":"JON","short":"Jonás","long":"Jonás"},{"code":"MIC","short":"Miqueas","long":"Miqueas"},{"code":"NAM","short":"Nahúm","long":"Nahúm"},{"code":"HAB","short":"Habacuc","long":"Habacuc"},{"code":"ZEP","short":"Sofonías","long":"Sofonías"},{"code":"HAG","short":"Hageo","long":"Hageo"},{"code":"ZEC","short":"Zacarías","long":"Zacarías"},{"code":"MAL","short":"Malaquías","long":"Malaquías"},{"code":"TOB","short":"Tobías","long":"Tobías"},{"code":"JDT","short":"Judit","long":"Judit"},{"code":"ESG","short":"Ester","long":"Ester (griego)"},{"code":"WIS","short":"Sabiduría","long":"Sabiduría"},{"code":"SIR","short":"Sirach","long":"Sirach (Eclesiástico)"},{"code":"BAR","short":"Baruc","long":"Baruc"},{"code":"LJE","short":"Carta de Jeremías","long":"Carta de Jeremías"},{"code":"S3Y","short":"Canto de los tres jóvenes","long":"Canto de los tres jóvenes"},{"code":"SUS","short":"Susana","long":"Susana"},{"code":"BEL","short":"Bel y la Serpiente","long":"Bel y la Serpiente"},{"code":"1MA","short":"1 Macabeos","long":"1 Macabeos"},{"code":"2MA","short":"2 Macabeos","long":"2 Macabeos"},{"code":"1ES","short":"1 Esdras","long":"1 Esdras (griego)"},{"code":"MAN","short":"Oración de Manasés","long":"Oración de Manasés"},{"code":"PS2","short":"Salmo 151","long":"Salmo 151"},{"code":"ODA","short":"Odas","long":"Odas"},{"code":"3MA","short":"3 Macabeos","long":"3 Macabeos"},{"code":"2ES","short":"2 Esdras","long":"2 Esdras (Latin)"},{"code":"4MA","short":"4 Macabeos","long":"4 Macabeos"},{"code":"PSS","short":"Salmos de Salomón","long":"Salmos de Salomón"},{"code":"EZA","short":"Apocalipsis de Esdras","long":"Apocalipsis de Esdras"},{"code":"5EZ","short":"5 Esdras","long":"5 Esdras (Prólogo en Latín)"},{"code":"6EZ","short":"6 Esdras","long":"6 Esdras (Prólogo en Latín)"},{"code":"JUB","short":"Jubileos","long":"Jubileos"},{"code":"DAG","short":"Daniel griego","long":"Daniel griego"},{"code":"PS3","short":"Salmos 152-155","long":"Salmos 152-155"},{"code":"2BA","short":"2 Baruc","long":"2 Baruc (Apocalipsis)"},{"code":"LBA","short":"Carta de Baruch","long":"Carta de Baruch"},{"code":"JUB","short":"Jubileos","long":"Jubileos"},{"code":"ENO","short":"Enoc","long":"Enoc"},{"code":"1MQ","short":"1 Macabeos","long":"1 Macabeos (Etiópe)"},{"code":"2MQ","short":"2 Macabeos","long":"2 Macabeos (Etiópe)"},{"code":"3MQ","short":"3 Macabeos","long":"3 Macabeos (Etiópe)"},{"code":"REP","short":"Re-examinar","long":"Re-examinar (Proverbios 25-31)"},{"code":"4BA","short":"4 Baruc","long":"4 Baruc (El resto de Baruc)"},{"code":"LAO","short":"Laodicenos","long":"Laodicenos"},{"code":"MAT","short":"Mateo","long":"Mateo"},{"code":"MRK","short":"Marcos","long":"Marcos"},{"code":"LUK","short":"Lucas","long":"Lucas"},{"code":"JHN","short":"Juan","long":"Juan"},{"code":"ACT","short":"Hechos","long":"Hechos"},{"code":"ROM","short":"Romanos","long":"Romanos"},{"code":"1CO","short":"1 Corintios","long":"1 Corintios"},{"code":"2CO","short":"2 Corintios","long":"2 Corintios"},{"code":"GAL","short":"Gálatas","long":"Gálatas"},{"code":"EPH","short":"Efesios","long":"Efesios"},{"code":"PHP","short":"Filipenses","long":"Filipenses"},{"code":"COL","short":"Colosenses","long":"Colosenses"},{"code":"1TH","short":"1 Tesalonicenses","long":"1 Tesalonicenses"},{"code":"2TH","short":"2 Tesalonicenses","long":"2 Tesalonicenses"},{"code":"1TI","short":"1 Timoteo","long":"1 Timoteo"},{"code":"2TI","short":"2 Timoteo","long":"2 Timoteo"},{"code":"TIT","short":"Tito","long":"Tito"},{"code":"PHM","short":"Filemón","long":"Filemón"},{"code":"HEB","short":"Hebreos","long":"Hebreos"},{"code":"JAS","short":"Santiago","long":"Santiago"},{"code":"1PE","short":"1 Pedro","long":"1 Pedro"},{"code":"2PE","short":"2 Pedro","long":"2 Pedro"},{"code":"1JN","short":"1 Juan","long":"1 Juan"},{"code":"2JN","short":"2 Juan","long":"2 Juan"},{"code":"3JN","short":"3 Juan","long":"3 Juan"},{"code":"JUD","short":"Judas","long":"Judas"},{"code":"REV","short":"Apocalipsis","long":"Apocalipsis"},{"code":"XXA","short":"Extra A","long":"Extra A"},{"code":"XXB","short":"Extra B","long":"Extra B"},{"code":"XXC","short":"Extra C","long":"Extra C"},{"code":"XXD","short":"Extra D","long":"Extra D"},{"code":"XXE","short":"Extra E","long":"Extra E"},{"code":"XXF","short":"Extra F","long":"Extra F"},{"code":"XXG","short":"Extra G","long":"Extra G"},{"code":"BAK","short":"Páginas finales","long":"Páginas finales"},{"code":"OTH","short":"Otra materia","long":"Otra materia"},{"code":"CNC","short":"Concordancia","long":"Concordancia"},{"code":"GLO","short":"Glosario","long":"Glosario"},{"code":"TDX","short":"Índice de temas","long":"Índice de temas"},{"code":"NDX","short":"Índice de nombres","long":"Índice de nombres"}]
+[
+  {
+    "code": "FRT",
+    "abbr": "FRT",
+    "short": "Páginas iniciales",
+    "long": "Páginas iniciales"
+  },
+  {
+    "code": "INT",
+    "abbr": "INT",
+    "short": "Introducción",
+    "long": "Introducción"
+  },
+  { "code": "GEN", "abbr": "GEN", "short": "Génesis", "long": "Génesis" },
+  { "code": "EXO", "abbr": "EXO", "short": "Éxodo", "long": "Éxodo" },
+  { "code": "LEV", "abbr": "LEV", "short": "Levítico", "long": "Levítico" },
+  { "code": "NUM", "abbr": "NUM", "short": "Números", "long": "Números" },
+  {
+    "code": "DEU",
+    "abbr": "DEU",
+    "short": "Deuteronomio",
+    "long": "Deuteronomio"
+  },
+  { "code": "JOS", "abbr": "JOS", "short": "Josué", "long": "Josué" },
+  { "code": "JDG", "abbr": "JDG", "short": "Jueces", "long": "Jueces" },
+  { "code": "RUT", "abbr": "RUT", "short": "Rut", "long": "Rut" },
+  { "code": "1SA", "abbr": "1SA", "short": "1 Samuel", "long": "1 Samuel" },
+  { "code": "2SA", "abbr": "2SA", "short": "2 Samuel", "long": "2 Samuel" },
+  { "code": "1KI", "abbr": "1KI", "short": "1 Reyes", "long": "1 Reyes" },
+  { "code": "2KI", "abbr": "2KI", "short": "2 Reyes", "long": "2 Reyes" },
+  { "code": "1CH", "abbr": "1CH", "short": "1 Crónicas", "long": "1 Crónicas" },
+  { "code": "2CH", "abbr": "2CH", "short": "2 Crónicas", "long": "2 Crónicas" },
+  { "code": "EZR", "abbr": "EZR", "short": "Esdras", "long": "Esdras" },
+  { "code": "NEH", "abbr": "NEH", "short": "Nehemías", "long": "Nehemías" },
+  { "code": "EST", "abbr": "EST", "short": "Ester", "long": "Ester (hebreo)" },
+  { "code": "JOB", "abbr": "JOB", "short": "Job", "long": "Job" },
+  { "code": "PSA", "abbr": "PSA", "short": "Salmos", "long": "Salmos" },
+  { "code": "PRO", "abbr": "PRO", "short": "Proverbios", "long": "Proverbios" },
+  {
+    "code": "ECC",
+    "abbr": "ECC",
+    "short": "Eclesiastés",
+    "long": "Eclesiastés"
+  },
+  {
+    "code": "SNG",
+    "abbr": "SNG",
+    "short": "Cantar de los cantares",
+    "long": "Cantar de los cantares"
+  },
+  { "code": "ISA", "abbr": "ISA", "short": "Isaías", "long": "Isaías" },
+  { "code": "JER", "abbr": "JER", "short": "Jeremías", "long": "Jeremías" },
+  {
+    "code": "LAM",
+    "abbr": "LAM",
+    "short": "Lamentaciones",
+    "long": "Lamentaciones"
+  },
+  { "code": "EZK", "abbr": "EZK", "short": "Ezequiel", "long": "Ezequiel" },
+  {
+    "code": "DAN",
+    "abbr": "DAN",
+    "short": "Daniel",
+    "long": "Daniel (hebreo)"
+  },
+  { "code": "HOS", "abbr": "HOS", "short": "Oseas", "long": "Oseas" },
+  { "code": "JOL", "abbr": "JOL", "short": "Joel", "long": "Joel" },
+  { "code": "AMO", "abbr": "AMO", "short": "Amós", "long": "Amós" },
+  { "code": "OBA", "abbr": "OBA", "short": "Abdías", "long": "Abdías" },
+  { "code": "JON", "abbr": "JON", "short": "Jonás", "long": "Jonás" },
+  { "code": "MIC", "abbr": "MIC", "short": "Miqueas", "long": "Miqueas" },
+  { "code": "NAM", "abbr": "NAM", "short": "Nahúm", "long": "Nahúm" },
+  { "code": "HAB", "abbr": "HAB", "short": "Habacuc", "long": "Habacuc" },
+  { "code": "ZEP", "abbr": "ZEP", "short": "Sofonías", "long": "Sofonías" },
+  { "code": "HAG", "abbr": "HAG", "short": "Hageo", "long": "Hageo" },
+  { "code": "ZEC", "abbr": "ZEC", "short": "Zacarías", "long": "Zacarías" },
+  { "code": "MAL", "abbr": "MAL", "short": "Malaquías", "long": "Malaquías" },
+  { "code": "TOB", "abbr": "TOB", "short": "Tobías", "long": "Tobías" },
+  { "code": "JDT", "abbr": "JDT", "short": "Judit", "long": "Judit" },
+  { "code": "ESG", "abbr": "ESG", "short": "Ester", "long": "Ester (griego)" },
+  { "code": "WIS", "abbr": "WIS", "short": "Sabiduría", "long": "Sabiduría" },
+  {
+    "code": "SIR",
+    "abbr": "SIR",
+    "short": "Sirach",
+    "long": "Sirach (Eclesiástico)"
+  },
+  { "code": "BAR", "abbr": "BAR", "short": "Baruc", "long": "Baruc" },
+  {
+    "code": "LJE",
+    "abbr": "LJE",
+    "short": "Carta de Jeremías",
+    "long": "Carta de Jeremías"
+  },
+  {
+    "code": "S3Y",
+    "abbr": "S3Y",
+    "short": "Canto de los tres jóvenes",
+    "long": "Canto de los tres jóvenes"
+  },
+  { "code": "SUS", "abbr": "SUS", "short": "Susana", "long": "Susana" },
+  {
+    "code": "BEL",
+    "abbr": "BEL",
+    "short": "Bel y la Serpiente",
+    "long": "Bel y la Serpiente"
+  },
+  { "code": "1MA", "abbr": "1MA", "short": "1 Macabeos", "long": "1 Macabeos" },
+  { "code": "2MA", "abbr": "2MA", "short": "2 Macabeos", "long": "2 Macabeos" },
+  {
+    "code": "1ES",
+    "abbr": "1ES",
+    "short": "1 Esdras",
+    "long": "1 Esdras (griego)"
+  },
+  {
+    "code": "MAN",
+    "abbr": "MAN",
+    "short": "Oración de Manasés",
+    "long": "Oración de Manasés"
+  },
+  { "code": "PS2", "abbr": "PS2", "short": "Salmo 151", "long": "Salmo 151" },
+  { "code": "ODA", "abbr": "ODA", "short": "Odas", "long": "Odas" },
+  { "code": "3MA", "abbr": "3MA", "short": "3 Macabeos", "long": "3 Macabeos" },
+  {
+    "code": "2ES",
+    "abbr": "2ES",
+    "short": "2 Esdras",
+    "long": "2 Esdras (Latin)"
+  },
+  { "code": "4MA", "abbr": "4MA", "short": "4 Macabeos", "long": "4 Macabeos" },
+  {
+    "code": "PSS",
+    "abbr": "PSS",
+    "short": "Salmos de Salomón",
+    "long": "Salmos de Salomón"
+  },
+  {
+    "code": "EZA",
+    "abbr": "EZA",
+    "short": "Apocalipsis de Esdras",
+    "long": "Apocalipsis de Esdras"
+  },
+  {
+    "code": "5EZ",
+    "abbr": "5EZ",
+    "short": "5 Esdras",
+    "long": "5 Esdras (Prólogo en Latín)"
+  },
+  {
+    "code": "6EZ",
+    "abbr": "6EZ",
+    "short": "6 Esdras",
+    "long": "6 Esdras (Prólogo en Latín)"
+  },
+  { "code": "JUB", "abbr": "JUB", "short": "Jubileos", "long": "Jubileos" },
+  {
+    "code": "DAG",
+    "abbr": "DAG",
+    "short": "Daniel griego",
+    "long": "Daniel griego"
+  },
+  {
+    "code": "PS3",
+    "abbr": "PS3",
+    "short": "Salmos 152-155",
+    "long": "Salmos 152-155"
+  },
+  {
+    "code": "2BA",
+    "abbr": "2BA",
+    "short": "2 Baruc",
+    "long": "2 Baruc (Apocalipsis)"
+  },
+  {
+    "code": "LBA",
+    "abbr": "LBA",
+    "short": "Carta de Baruch",
+    "long": "Carta de Baruch"
+  },
+  { "code": "JUB", "abbr": "JUB", "short": "Jubileos", "long": "Jubileos" },
+  { "code": "ENO", "abbr": "ENO", "short": "Enoc", "long": "Enoc" },
+  {
+    "code": "1MQ",
+    "abbr": "1MQ",
+    "short": "1 Macabeos",
+    "long": "1 Macabeos (Etiópe)"
+  },
+  {
+    "code": "2MQ",
+    "abbr": "2MQ",
+    "short": "2 Macabeos",
+    "long": "2 Macabeos (Etiópe)"
+  },
+  {
+    "code": "3MQ",
+    "abbr": "3MQ",
+    "short": "3 Macabeos",
+    "long": "3 Macabeos (Etiópe)"
+  },
+  {
+    "code": "REP",
+    "abbr": "REP",
+    "short": "Re-examinar",
+    "long": "Re-examinar (Proverbios 25-31)"
+  },
+  {
+    "code": "4BA",
+    "abbr": "4BA",
+    "short": "4 Baruc",
+    "long": "4 Baruc (El resto de Baruc)"
+  },
+  { "code": "LAO", "abbr": "LAO", "short": "Laodicenos", "long": "Laodicenos" },
+  { "code": "MAT", "abbr": "MAT", "short": "Mateo", "long": "Mateo" },
+  { "code": "MRK", "abbr": "MRK", "short": "Marcos", "long": "Marcos" },
+  { "code": "LUK", "abbr": "LUK", "short": "Lucas", "long": "Lucas" },
+  { "code": "JHN", "abbr": "JHN", "short": "Juan", "long": "Juan" },
+  { "code": "ACT", "abbr": "ACT", "short": "Hechos", "long": "Hechos" },
+  { "code": "ROM", "abbr": "ROM", "short": "Romanos", "long": "Romanos" },
+  {
+    "code": "1CO",
+    "abbr": "1CO",
+    "short": "1 Corintios",
+    "long": "1 Corintios"
+  },
+  {
+    "code": "2CO",
+    "abbr": "2CO",
+    "short": "2 Corintios",
+    "long": "2 Corintios"
+  },
+  { "code": "GAL", "abbr": "GAL", "short": "Gálatas", "long": "Gálatas" },
+  { "code": "EPH", "abbr": "EPH", "short": "Efesios", "long": "Efesios" },
+  { "code": "PHP", "abbr": "PHP", "short": "Filipenses", "long": "Filipenses" },
+  { "code": "COL", "abbr": "COL", "short": "Colosenses", "long": "Colosenses" },
+  {
+    "code": "1TH",
+    "abbr": "1TH",
+    "short": "1 Tesalonicenses",
+    "long": "1 Tesalonicenses"
+  },
+  {
+    "code": "2TH",
+    "abbr": "2TH",
+    "short": "2 Tesalonicenses",
+    "long": "2 Tesalonicenses"
+  },
+  { "code": "1TI", "abbr": "1TI", "short": "1 Timoteo", "long": "1 Timoteo" },
+  { "code": "2TI", "abbr": "2TI", "short": "2 Timoteo", "long": "2 Timoteo" },
+  { "code": "TIT", "abbr": "TIT", "short": "Tito", "long": "Tito" },
+  { "code": "PHM", "abbr": "PHM", "short": "Filemón", "long": "Filemón" },
+  { "code": "HEB", "abbr": "HEB", "short": "Hebreos", "long": "Hebreos" },
+  { "code": "JAS", "abbr": "JAS", "short": "Santiago", "long": "Santiago" },
+  { "code": "1PE", "abbr": "1PE", "short": "1 Pedro", "long": "1 Pedro" },
+  { "code": "2PE", "abbr": "2PE", "short": "2 Pedro", "long": "2 Pedro" },
+  { "code": "1JN", "abbr": "1JN", "short": "1 Juan", "long": "1 Juan" },
+  { "code": "2JN", "abbr": "2JN", "short": "2 Juan", "long": "2 Juan" },
+  { "code": "3JN", "abbr": "3JN", "short": "3 Juan", "long": "3 Juan" },
+  { "code": "JUD", "abbr": "JUD", "short": "Judas", "long": "Judas" },
+  {
+    "code": "REV",
+    "abbr": "REV",
+    "short": "Apocalipsis",
+    "long": "Apocalipsis"
+  },
+  { "code": "XXA", "abbr": "XXA", "short": "Extra A", "long": "Extra A" },
+  { "code": "XXB", "abbr": "XXB", "short": "Extra B", "long": "Extra B" },
+  { "code": "XXC", "abbr": "XXC", "short": "Extra C", "long": "Extra C" },
+  { "code": "XXD", "abbr": "XXD", "short": "Extra D", "long": "Extra D" },
+  { "code": "XXE", "abbr": "XXE", "short": "Extra E", "long": "Extra E" },
+  { "code": "XXF", "abbr": "XXF", "short": "Extra F", "long": "Extra F" },
+  { "code": "XXG", "abbr": "XXG", "short": "Extra G", "long": "Extra G" },
+  {
+    "code": "BAK",
+    "abbr": "BAK",
+    "short": "Páginas finales",
+    "long": "Páginas finales"
+  },
+  {
+    "code": "OTH",
+    "abbr": "OTH",
+    "short": "Otra materia",
+    "long": "Otra materia"
+  },
+  {
+    "code": "CNC",
+    "abbr": "CNC",
+    "short": "Concordancia",
+    "long": "Concordancia"
+  },
+  { "code": "GLO", "abbr": "GLO", "short": "Glosario", "long": "Glosario" },
+  {
+    "code": "TDX",
+    "abbr": "TDX",
+    "short": "Índice de temas",
+    "long": "Índice de temas"
+  },
+  {
+    "code": "NDX",
+    "abbr": "NDX",
+    "short": "Índice de nombres",
+    "long": "Índice de nombres"
+  }
+]

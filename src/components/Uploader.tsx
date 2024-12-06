@@ -25,6 +25,7 @@ import { IndexedDBSource } from '@orbit/indexeddb';
 import path from 'path-browserify';
 import { RecordKeyMap } from '@orbit/records';
 import { AlertSeverity } from '../hoc/SnackBar';
+import { getContentType } from '../utils/contentType';
 
 interface IProps {
   noBusy?: boolean;
@@ -42,7 +43,7 @@ interface IProps {
   multiple?: boolean;
   mediaId?: string;
   importList?: File[];
-  artifactTypeId?: string | null;
+  artifactState?: { id?: string | null };
   passageId?: string;
   sourceMediaId?: string;
   sourceSegments?: string;
@@ -51,6 +52,7 @@ interface IProps {
   topic?: string;
   uploadType?: UploadType;
   team?: string; // used when adding a card to check speakers
+  onNonAudio?: (nonAudio: boolean) => void;
 }
 
 export const Uploader = (props: IProps) => {
@@ -66,7 +68,7 @@ export const Uploader = (props: IProps) => {
     cancelled,
     multiple,
     importList,
-    artifactTypeId,
+    artifactState,
     passageId,
     sourceMediaId,
     sourceSegments,
@@ -75,6 +77,7 @@ export const Uploader = (props: IProps) => {
     topic,
     uploadType,
     team,
+    onNonAudio,
   } = props;
   const { finish } = props;
   const { metaData, ready } = props;
@@ -136,13 +139,13 @@ export const Uploader = (props: IProps) => {
   };
 
   const getArtifactTypeId = () =>
-    artifactTypeId
+    artifactState?.id
       ? remoteIdNum(
           'artifacttype',
-          artifactTypeId,
+          artifactState.id,
           memory.keyMap as RecordKeyMap
-        ) || artifactTypeId
-      : artifactTypeId;
+        ) || artifactState.id
+      : artifactState?.id || '';
   const getPassageId = () =>
     remoteIdNum('passage', passageId || '', memory.keyMap as RecordKeyMap) ||
     passageId;
@@ -164,7 +167,7 @@ export const Uploader = (props: IProps) => {
       // offlineOnly
       var psgId = passageId || '';
       var num = 1;
-      if (psgId && !artifactTypeId) {
+      if (psgId && !artifactState?.id) {
         const mediaFiles = (
           memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
         )
@@ -187,7 +190,7 @@ export const Uploader = (props: IProps) => {
         num,
         uploadList[n].size,
         psgId,
-        artifactTypeId !== undefined ? artifactTypeId : '',
+        artifactState?.id || artifactTypeRef.current,
         sourceMediaId || '',
         user
       );
@@ -225,7 +228,10 @@ export const Uploader = (props: IProps) => {
       planId: getPlanId(),
       versionNumber: 1,
       originalFile: uploadList[currentlyLoading].name,
-      contentType: uploadList[currentlyLoading].type,
+      contentType: getContentType(
+        uploadList[currentlyLoading].type,
+        uploadList[currentlyLoading].name
+      ),
       artifactTypeId: getArtifactTypeId(),
       passageId: getPassageId(),
       userId: getUserId(),
@@ -234,9 +240,9 @@ export const Uploader = (props: IProps) => {
       sourceSegments: sourceSegments,
       performedBy: performedBy,
       topic: topic,
-      eafUrl: !artifactTypeId
+      eafUrl: !artifactState?.id
         ? ts.mediaAttached
-        : localizedArtifactTypeFromId(artifactTypeId), //put psc message here
+        : localizedArtifactTypeFromId(artifactState?.id), //put psc message here
     } as any;
 
     nextUpload({
@@ -258,36 +264,42 @@ export const Uploader = (props: IProps) => {
       return;
     }
     if (!noBusy) setBusy(true);
-    let name =
-      uploadType === UploadType.IntellectualProperty
-        ? 'Project'
-        : files[0]?.name.split('.')[0];
-    if (createProject) planIdRef.current = await createProject(name);
-    var suffix = passageDefaultSuffix(planIdRef.current, memory, offline);
-
-    while (
-      files.findIndex(
-        (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
-      ) > -1
+    if (
+      uploadType &&
+      ![UploadType.Link, UploadType.MarkDown].includes(uploadType)
     ) {
-      var ix = files.findIndex(
-        (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
-      );
-      files.splice(
-        ix,
-        1,
-        new File(
-          [files[ix]],
-          path.basename(files[ix].name, path.extname(files[ix].name)) +
-            suffix +
-            path.extname(files[ix].name)
-        )
-      );
+      let name =
+        uploadType === UploadType.IntellectualProperty
+          ? 'Project'
+          : files[0]?.name.split('.')[0];
+      if (createProject) planIdRef.current = await createProject(name);
+      var suffix = passageDefaultSuffix(planIdRef.current, memory, offline);
+
+      while (
+        files.findIndex(
+          (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
+        ) > -1
+      ) {
+        var ix = files.findIndex(
+          (f) => !path.basename(f.name, path.extname(f.name)).endsWith(suffix)
+        );
+        files.splice(
+          ix,
+          1,
+          new File(
+            [files[ix]],
+            path.basename(files[ix].name, path.extname(files[ix].name)) +
+              suffix +
+              path.extname(files[ix].name),
+            { type: files[ix].type }
+          )
+        );
+      }
+      uploadFiles(files);
     }
-    uploadFiles(files);
     fileList.current = files;
     mediaIdRef.current = new Array<string>();
-    artifactTypeRef.current = artifactTypeId || '';
+    artifactTypeRef.current = artifactState?.id || '';
     doUpload(0);
   };
 
@@ -345,7 +357,7 @@ export const Uploader = (props: IProps) => {
   }, [plan, passageId, memory]);
 
   return (
-    <div>
+    <>
       {recordAudio && ready && !importList && (
         <PassageRecordDlg
           visible={isOpen}
@@ -375,16 +387,17 @@ export const Uploader = (props: IProps) => {
           ready={ready}
           speaker={performedBy}
           onSpeaker={
-            !artifactTypeId &&
+            !artifactState?.id &&
             (uploadType || UploadType.Media) === UploadType.Media
               ? handleSpeakerChange
               : undefined
           }
           createProject={createProject}
           team={team}
+          onNonAudio={onNonAudio}
         />
       )}
-    </div>
+    </>
   );
 };
 

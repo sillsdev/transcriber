@@ -697,6 +697,12 @@
             <target>Редактирование категорий команды</target>
          </segment>
       </unit>
+      <unit id="cards.editPersonalCategory">
+         <segment>
+            <source>Edit Personal Projects Categories</source>
+            <target>Редактировать личные проекты Категории</target>
+         </segment>
+      </unit>
       <unit id="cards.editWorkflow">
          <segment>
             <source>Edit Workflow {0}</source>
@@ -1651,6 +1657,102 @@
             <target>Сохранить по умолчанию для команды</target>
          </segment>
       </unit>
+      <unit id="findResource.add">
+         <segment>
+            <source>Add</source>
+            <target>Добавить</target>
+         </segment>
+      </unit>
+      <unit id="findResource.aiDesc">
+         <segment>
+            <source>Copy the query contents and paste it into one or more of the AI chat tools:</source>
+            <target>Скопируйте содержимое запроса и вставьте его в один или несколько инструментов чата ИИ:</target>
+         </segment>
+      </unit>
+      <unit id="findResource.aquiferSearchTip">
+         <segment>
+            <source>The keyword to search on. Currently only searches against content names (not inside content). Non-English names are supported. Must be at least 3 characters in length.</source>
+            <target>Ключевое слово для поиска. В настоящее время поиск осуществляется только по названиям контента (не внутри контента). Поддерживаются неанглийские названия. Длина запроса должна быть не менее 3 символов.</target>
+         </segment>
+      </unit>
+      <unit id="findResource.resource">
+         <segment>
+            <source>{0} Resource</source>
+            <target>{0} Ресурс</target>
+         </segment>
+      </unit>
+      <unit id="findResource.Lang">
+         <segment>
+            <source>{0} Language*</source>
+            <target>{0} Язык*</target>
+         </segment>
+      </unit>
+      <unit id="findResource.bibleProjectLang">
+         <segment>
+            <source>Book Overviews</source>
+            <target>Аннотации к книгам</target>
+         </segment>
+      </unit>
+      <unit id="findResource.biblicalBook">
+         <segment>
+            <source>the biblical book of {0}</source>
+            <target>библейская книга о {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.book">
+         <segment>
+            <source>Book</source>
+            <target>Книга</target>
+         </segment>
+      </unit>
+      <unit id="findResource.chapter">
+         <segment>
+            <source>Chapter</source>
+            <target>Глава</target>
+         </segment>
+      </unit>
+      <unit id="findResource.clearQuery">
+         <segment>
+            <source>Clear query</source>
+            <target>Очистить запрос</target>
+         </segment>
+      </unit>
+      <unit id="findResource.clipboard">
+         <segment>
+            <source>clipboard</source>
+            <target>буфер обмена</target>
+         </segment>
+      </unit>
+      <unit id="findResource.clipboardCopy">
+         <segment>
+            <source>Copy to clipboard</source>
+            <target>Копировать в буфер обмена</target>
+         </segment>
+      </unit>
+      <unit id="findResource.convert">
+         <segment>
+            <source>Convert text to audio resource file</source>
+            <target>Преобразование текста в файл аудиоресурса</target>
+         </segment>
+      </unit>
+      <unit id="findResource.create">
+         <segment>
+            <source>Create</source>
+            <target>Создать</target>
+         </segment>
+      </unit>
+      <unit id="findResource.createItems">
+         <segment>
+            <source>Create Items</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.createResource">
+         <segment>
+            <source>Create AI Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="grid.all">
          <segment>
             <source>All</source>
@@ -1959,7 +2061,19 @@
       </unit>
       <unit id="import.importSync">
          <segment>
+            <source>Syncing changes</source>
+            <target>Синхронизация изменений</target>
+         </segment>
+      </unit>
+      <unit id="import.importSyncUp">
+         <segment>
             <source>Syncing offline changes</source>
+            <target>Синхронизация изменений в автономном режиме</target>
+         </segment>
+      </unit>
+      <unit id="import.importSyncDown">
+         <segment>
+            <source>Syncing online changes</source>
             <target/>
          </segment>
       </unit>
@@ -2461,12 +2575,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.sil">
-         <segment>
-            <source>SIL International</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="keyTerms.addTargetWord">
          <segment>
             <source>Add Translation</source>
@@ -2911,6 +3019,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.goOffline">
+         <segment>
+            <source>Go Offline</source>
+            <target>Перейти в автономный режим</target>
+         </segment>
+      </unit>
+      <unit id="main.goOnline">
+         <segment>
+            <source>Go Online</source>
+            <target>Перейти в режим онлайн</target>
+         </segment>
+      </unit>
       <unit id="main.googleSamples">
          <segment>
             <source>Sample Google spreadsheets</source>
@@ -3093,8 +3213,8 @@
       </unit>
       <unit id="main.switchUser">
          <segment>
-            <source>Switch Mode or User</source>
-            <target>Режим переключения или пользователь</target>
+            <source>Switch User</source>
+            <target>Переключить пользователя</target>
          </segment>
       </unit>
       <unit id="main.tasks">
@@ -3397,6 +3517,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.publish">
+         <segment>
+            <source>Publish Media</source>
+            <target>Опубликовать медиа</target>
+         </segment>
+      </unit>
       <unit id="mediaTab.published">
          <segment>
             <source>Published</source>
@@ -3587,6 +3713,36 @@
          <segment>
             <source>Upload Change Data from Desktop app.</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.launchLink">
+         <segment>
+            <source>Show Link Content</source>
+            <target>Показать содержимое ссылки</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.linkTask">
+         <segment>
+            <source>Enter a URI link for a resource.</source>
+            <target>Введите URI-ссылку для ресурса.</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.linkTitle">
+         <segment>
+            <source>Link Resource</source>
+            <target>Ссылка на ресурс</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.markdownTask">
+         <segment>
+            <source>Enter text to be used as a resource. (Mark down formatting is allowed.)</source>
+            <target>Введите текст, который будет использоваться в качестве ресурса. (Допускается форматирование пометками вниз).</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.markdownTitle">
+         <segment>
+            <source>Enter Text</source>
+            <target>Введите текст</target>
          </segment>
       </unit>
       <unit id="mediaUpload.projectResourceTask">
@@ -3865,6 +4021,24 @@
             <target>Редактирование ресурса</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.find">
+         <segment>
+            <source>Find</source>
+            <target>Найти</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.findResource">
+         <segment>
+            <source>Find Resource for {0}</source>
+            <target>Найти ресурс для {0}</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.findResourceDesc">
+         <segment>
+            <source>These controls can be used to find or create (using artificial intelligence -- AI) resources for internalizing the passage, section, chapter, or book.</source>
+            <target>Эти элементы управления можно использовать для поиска или создания (с помощью искусственного интеллекта - ИИ) ресурсов для изучения отрывка, раздела, главы или книги.</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.generalResources">
          <segment>
             <source>General Resources</source>
@@ -3887,6 +4061,12 @@
          <segment>
             <source>Link</source>
             <target>Ссылка</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.linkResource">
+         <segment>
+            <source>Link (URI)</source>
+            <target>Ссылка (URI)</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.movementResource">
@@ -3955,6 +4135,12 @@
             <target>Разделение на ресурсы</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.recordResource">
+         <segment>
+            <source>Record</source>
+            <target>Запись</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.reference">
          <segment>
             <source>Reference</source>
@@ -3993,8 +4179,8 @@
       </unit>
       <unit id="passageDetailArtifacts.sharedResource">
          <segment>
-            <source>Link Shared {0} Resource</source>
-            <target>Ссылка Общий {0} ресурс</target>
+            <source>Link Shared</source>
+            <target>Общая ссылка</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.source">
@@ -4033,6 +4219,12 @@
             <target>Ознакомьтесь с условиями использования</target>
          </segment>
       </unit>
+      <unit id="passageDetailArtifacts.textResource">
+         <segment>
+            <source>Text Resource</source>
+            <target>Текстовый ресурс</target>
+         </segment>
+      </unit>
       <unit id="passageDetailArtifacts.title">
          <segment>
             <source>Title</source>
@@ -4053,8 +4245,8 @@
       </unit>
       <unit id="passageDetailArtifacts.tip1b">
          <segment>
-            <source>Link a shared resource to this {0}.</source>
-            <target>Свяжите общий ресурс с этим {0}.</target>
+            <source>Link to a shared resource.</source>
+            <target>Ссылка на общий ресурс.</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.tip2b">
@@ -4071,8 +4263,8 @@
       </unit>
       <unit id="passageDetailArtifacts.upload">
          <segment>
-            <source>Upload Resources</source>
-            <target>Загрузка ресурсов</target>
+            <source>Uploads</source>
+            <target>Загрузка</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.uploadProject">
@@ -4103,6 +4295,12 @@
          <segment>
             <source>Step Incomplete</source>
             <target>Незавершенный шаг</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailStepComplete.setNext">
+         <segment>
+            <source>Set this and all previous steps complete</source>
+            <target>Выполните этот и все предыдущие шаги.</target>
          </segment>
       </unit>
       <unit id="passageDetailStepComplete.title">
@@ -4533,8 +4731,8 @@
       </unit>
       <unit id="planSheet.confirmPublishSection">
          <segment>
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes be marked as not published.</source>
-            <target>Если вы выберете "Опубликовать", {0} и последняя версия всех отрывков и примечаний в этом {0} будут отмечены как опубликованные. Если вы уже публиковали отрывки и заметки, а теперь выбрали "Не публиковать", они будут помечены как не опубликованные.</target>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes will be marked as not published.</source>
+            <target>При выборе публикации {0} и последняя версия всех отрывков и заметок в этой {0} будут помечены как опубликованные. Если вы ранее публиковали, а теперь выбрали «Не публиковать», отрывки и заметки будут помечены как не опубликованные.</target>
          </segment>
       </unit>
       <unit id="planSheet.filtered">
@@ -4639,10 +4837,22 @@
             <target>Опубликовать {0} {1}</target>
          </segment>
       </unit>
+      <unit id="planSheet.published">
+         <segment>
+            <source>Publish</source>
+            <target>Опубликовать</target>
+         </segment>
+      </unit>
       <unit id="planSheet.refErr">
          <segment>
             <source>This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.removeFilter">
+         <segment>
+            <source>Filter must be cleared to enable publishing.</source>
+            <target>Фильтр должен быть снят, чтобы разрешить публикацию.</target>
          </segment>
       </unit>
       <unit id="planSheet.resequence">
@@ -4709,6 +4919,12 @@
          <segment>
             <source>Select a column head and use CTRL-V to append table rows.</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.versions">
+         <segment>
+            <source>Versions</source>
+            <target>Версии</target>
          </segment>
       </unit>
       <unit id="planTabs.assignments">
@@ -5029,10 +5245,28 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectDownload.amount">
+         <segment>
+            <source>Amount to download</source>
+            <target>Сумма для загрузки</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.confirm">
+         <segment>
+            <source>Download Now</source>
+            <target>Скачать сейчас</target>
+         </segment>
+      </unit>
       <unit id="projectDownload.download">
          <segment>
             <source>Download?</source>
             <target>Загрузить?</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.downloadDescription">
+         <segment>
+            <source>If the estimated time for download is too long for you, use the 'x' in the upper corner to close this dialog box. Then add a minimum and / or maximum {1} to the filter. The filter icon is {0} (a downward pointing dashed triangle) and is located before the {3} button on the {4} &amp; PASSAGES tab. After setting the {1} filter, choose the filtered option on this dialog box to see how much time will be needed for the filtered {2}.</source>
+            <target>Если предполагаемое время загрузки слишком велико для вас, воспользуйтесь кнопкой «x» в верхнем углу, чтобы закрыть это диалоговое окно. Затем добавьте минимальное и/или максимальное значение {1} к фильтру. Значок фильтра - {0} (пунктирный треугольник, направленный вниз) - находится перед кнопкой {3} на вкладке {4} &amp; PASSAGES. После установки фильтра {1} выберите опцию фильтрации в этом диалоговом окне, чтобы узнать, сколько времени потребуется для отфильтрованного {2}.</target>
          </segment>
       </unit>
       <unit id="projectDownload.downloadLater">
@@ -5043,14 +5277,56 @@
       </unit>
       <unit id="projectDownload.downloadMb">
          <segment>
-            <source>Download {0}MB of offline audio project files?</source>
-            <target>Загрузить {0} МБ автономных файлов аудиопроекта?</target>
+            <source>Download {0}MB of offline audio project files? (It may take {1} to download on a fast Internet connection or {2} on a slow broadband connection.)</source>
+            <target>Загрузить {0} МБ автономных аудиофайлов проекта? (Загрузка может занять {1} при быстром подключении к Интернету или {2} при медленном широкополосном подключении).</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filter">
+         <segment>
+            <source>Filter</source>
+            <target>Фильтр</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filteredFiles">
+         <segment>
+            <source>Filtered Files</source>
+            <target>Отфильтрованные файлы</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.filtered">
+         <segment>
+            <source>Filtered MB</source>
+            <target>Отфильтрованные МБ</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.max">
+         <segment>
+            <source>Max {0}</source>
+            <target>Максимум {0}</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.min">
+         <segment>
+            <source>Min {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.missing">
+         <segment>
+            <source>Missing MB</source>
+            <target/>
          </segment>
       </unit>
       <unit id="publishLevel.none">
          <segment>
-            <source>Not Published - not visible in publishing app</source>
-            <target>Не опубликовано - не отображается в приложении для публикации</target>
+            <source>Not Published - not visible outside this project</source>
+            <target>Не опубликовано - не видно за пределами этого проекта</target>
+         </segment>
+      </unit>
+      <unit id="publishLevel.bibleRequired">
+         <segment>
+            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo.</source>
+            <target>Для публикации в Akuo вы должны установить идентификатор и имя Библии в Настройках команды.</target>
          </segment>
       </unit>
       <unit id="publishLevel.beta">
@@ -5059,16 +5335,16 @@
             <target>Бета-версия - видна на сайте Akuo при использовании параметра бета-версии (недоступна в приложении).</target>
          </segment>
       </unit>
-      <unit id="publishLevel.betalink">
-         <segment>
-            <source>https://akuobible.org/?beta=true</source>
-            <target>https://akuobible.org/?beta=true</target>
-         </segment>
-      </unit>
       <unit id="publishLevel.public">
          <segment>
             <source>Public - visible to everyone using Akuo website or app</source>
             <target>Публичный - виден всем, кто пользуется сайтом или приложением Akuo.</target>
+         </segment>
+      </unit>
+      <unit id="publishTo.Internalization">
+         <segment>
+            <source>Internalization Resources for other projects</source>
+            <target>Ресурсы интернализации для других проектов</target>
          </segment>
       </unit>
       <unit id="resource.action">
@@ -5647,6 +5923,12 @@
             <target>Membres</target>
          </segment>
       </unit>
+      <unit id="shared.mustBeOnline">
+         <segment>
+            <source>You must be online to use this feature</source>
+            <target>Вы должны быть онлайн, чтобы использовать эту функцию</target>
+         </segment>
+      </unit>
       <unit id="shared.no">
          <segment>
             <source>No</source>
@@ -5657,6 +5939,18 @@
          <segment>
             <source>No Audio Available!</source>
             <target>Аудио отсутствует!</target>
+         </segment>
+      </unit>
+      <unit id="shared.noiseRemoval">
+         <segment>
+            <source>Remove Noise</source>
+            <target>Удаление шума</target>
+         </segment>
+      </unit>
+      <unit id="shared.noiseRemovalFailed">
+         <segment>
+            <source>Noise Removal Failed</source>
+            <target>Устранение шума не удалось</target>
          </segment>
       </unit>
       <unit id="shared.NoSaveOffline">
@@ -6934,19 +7228,73 @@
       <unit id="verse.clipboard">
          <segment>
             <source>clipboard</source>
-            <target/>
+            <target>буфер обмена</target>
          </segment>
       </unit>
       <unit id="verse.copyToClipboard">
          <segment>
             <source>Copy to clipboard</source>
-            <target/>
+            <target>Скопировать в буфер обмена</target>
          </segment>
       </unit>
       <unit id="verse.issues">
          <segment>
             <source>The verse markup has issues. Do you want to continue?</source>
-            <target/>
+            <target>В разметке стиха есть проблемы. Вы хотите продолжить?</target>
+         </segment>
+      </unit>
+      <unit id="verse.markVerses">
+         <segment>
+            <source>Mark Verses</source>
+            <target>Разметка стихов</target>
+         </segment>
+      </unit>
+      <unit id="verse.missingReferences">
+         <segment>
+            <source>Warning: Verses in passage not included: ({0})</source>
+            <target>Внимание: Стихи в отрывке не включены: ({0})</target>
+         </segment>
+      </unit>
+      <unit id="verse.noReferences">
+         <segment>
+            <source>Warning: Some audio segments will not be included in verses</source>
+            <target>Предупреждение: Некоторые аудиосегменты не будут включены в стихи</target>
+         </segment>
+      </unit>
+      <unit id="verse.noSegments">
+         <segment>
+            <source>ERROR: Some verses have no segment: ({0})</source>
+            <target>ОШИБКА: В некоторых стихах нет сегмента: ({0})</target>
+         </segment>
+      </unit>
+      <unit id="verse.outsideReferences">
+         <segment>
+            <source>ERROR: Some verses are outside passage: ({0})</source>
+            <target>ОШИБКА: Некоторые стихи находятся за пределами отрывка: ({0})</target>
+         </segment>
+      </unit>
+      <unit id="verse.pasteFormat">
+         <segment>
+            <source>Invalid number of columns on clipboard.</source>
+            <target>Недопустимое количество колонок в буфере обмена.</target>
+         </segment>
+      </unit>
+      <unit id="verse.reference">
+         <segment>
+            <source>Reference</source>
+            <target>Ссылка</target>
+         </segment>
+      </unit>
+      <unit id="verse.saveVerseMarkup">
+         <segment>
+            <source>Save Verse Markup</source>
+            <target>Сохранить разметку стиха</target>
+         </segment>
+      </unit>
+      <unit id="verse.startStop">
+         <segment>
+            <source>Start --&gt; Stop</source>
+            <target>Начать --&gt; Остановить</target>
          </segment>
       </unit>
       <unit id="viewMode.audioProject">
@@ -7637,6 +7985,18 @@
          <segment>
             <source>Next Segment [{0}]</source>
             <target>Следующий сегмент [{0}]</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aiInProgress">
+         <segment>
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target>Служба искусственного интеллекта в процессе...  Это удаленная служба, которая может занять много времени, если запись большая или если есть другие запросы, опережающие ваш.</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aiGiveUp">
+         <segment>
+            <source>Stop Waiting...</source>
+            <target>Хватит ждать...</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.pauseRecord">

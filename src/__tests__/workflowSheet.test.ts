@@ -2,8 +2,8 @@ import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { ISheet, IwsKind, IMediaShare, SheetLevel, PassageD } from '../model';
 import { workSheet } from '../components/Sheet/workSheet';
-import { PublishLevelEnum } from '../crud/usePublishLevel';
 import { PassageTypeEnum } from '../model/passageType';
+import { PublishDestinationEnum } from '../crud';
 
 afterEach(cleanup);
 
@@ -63,7 +63,7 @@ test('section with passage', () => {
       passageType: PassageTypeEnum.PASSAGE,
       filtered: false,
       discussionCount: 0,
-      published: PublishLevelEnum.None,
+      published: [] as PublishDestinationEnum[],
     },
   ];
   expect(workSheet(sheet, flatCols, [])).toEqual([

@@ -69,7 +69,8 @@ export const writeFileLocal = async (file: File, remoteName?: string) => {
   }
   return path.join(PathType.MEDIA, writeName.split(path.sep).pop());
 };
-const uploadFile = (
+const isTextContent = (content: string) => /^text/.test(content);
+export const uploadFile = (
   data: any,
   file: File,
   errorReporter: any,
@@ -81,6 +82,10 @@ const uploadFile = (
     statusText: string
   ) => void
 ) => {
+  if (isTextContent(data.contentType)) {
+    if (cb) cb(true, data, 0, '');
+    return;
+  }
   const xhr = new XMLHttpRequest();
   xhr.open('PUT', data.audioUrl, true);
   xhr.setRequestHeader('Content-Type', data.contentType);
@@ -132,9 +137,10 @@ export const nextUpload =
   }: NextUploadProps) =>
   (dispatch: any) => {
     dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
+    const isText = isTextContent(files[n].type);
     const acceptExtPat =
       /\.wav$|\.mp3$|\.m4a$|\.ogg$|\.webm$|\.pdf$|\.png$|\.jpg$/i;
-    if (!acceptExtPat.test(record.originalFile)) {
+    if (!isText && !acceptExtPat.test(record.originalFile)) {
       dispatch({
         payload: {
           current: n,
@@ -158,7 +164,7 @@ export const nextUpload =
       if (cb) cb(n, false);
       return;
     }
-    if (offline) {
+    if (offline && !isText) {
       try {
         writeFileLocal(files[n]).then((filename: string) => {
           if (cb) cb(n, true, { ...record, audioUrl: filename });
@@ -171,6 +177,9 @@ export const nextUpload =
         );
         if (cb) cb(n, false);
       }
+      return;
+    } else if (offline) {
+      if (cb) cb(n, true, { ...record });
       return;
     }
     const completeCB = (

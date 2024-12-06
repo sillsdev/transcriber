@@ -8,7 +8,7 @@ import {
   UserD,
   ISharedStrings,
 } from '../../model';
-import { Button, Checkbox, FormControlLabel } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import BigDialog from '../../hoc/BigDialog';
 import VersionDlg from './VersionDlg';
@@ -18,14 +18,28 @@ import MediaPlayer from '../MediaPlayer';
 import MediaActions from './MediaActions';
 import MediaActions2 from './MediaActions2';
 import Confirm from '../AlertDialog';
-import { findRecord, remoteId, useOrganizedBy } from '../../crud';
-import { numCompare, dateCompare, dateOrTime } from '../../utils';
+import {
+  findRecord,
+  PublishDestinationEnum,
+  remoteId,
+  useBible,
+  useOrganizedBy,
+  usePublishDestination,
+} from '../../crud';
+import {
+  numCompare,
+  dateCompare,
+  dateOrTime,
+  useDataChanges,
+  useWaitForRemoteQueue,
+} from '../../utils';
 import { IRow } from '.';
 import { Sorting } from '@devexpress/dx-react-grid';
 import { UpdateRecord } from '../../model/baseModel';
 import { mediaTabSelector, sharedSelector } from '../../selector';
 import { RecordKeyMap } from '@orbit/records';
 import UserAvatar from '../UserAvatar';
+import ConfirmPublishDialog from '../ConfirmPublishDialog';
 
 interface IProps {
   data: IRow[];
@@ -33,19 +47,30 @@ interface IProps {
   playItem: string;
   readonly: boolean;
   shared: boolean;
+  canSetDestination: boolean;
+  hasPublishing: boolean;
   sectionArr: [number, string][];
   setPlayItem: (item: string) => void;
   onAttach?: (checks: number[], attach: boolean) => void;
 }
 export const AudioTable = (props: IProps) => {
   const { data, setRefresh } = props;
-  const { playItem, setPlayItem, onAttach, readonly, shared, sectionArr } =
-    props;
+  const {
+    playItem,
+    setPlayItem,
+    onAttach,
+    readonly,
+    shared,
+    canSetDestination,
+    hasPublishing,
+    sectionArr,
+  } = props;
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const lang = useSelector((state: IState) => state.strings.lang);
   const [offline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
+  const [org] = useGlobal('organization');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setBusy] = useGlobal('remoteBusy');
@@ -55,16 +80,16 @@ export const AudioTable = (props: IProps) => {
   const [deleteItem, setDeleteItem] = useState(-1);
   const [showId, setShowId] = useState('');
   const [mediaPlaying, setMediaPlaying] = useState(false);
+  const [publishItem, setPublishItem] = useState(-1);
+  const [hasBible, setHasBible] = useState(false);
+  const { getOrgBible } = useBible();
   const columnDefs =
-    shared || sectionArr.length > 0
+    shared || hasPublishing
       ? [
           { name: 'planName', title: t.planName },
           { name: 'actions', title: '\u00A0' },
           { name: 'version', title: t.version },
-          {
-            name: 'readyToShare',
-            title: shared ? t.readyToShare : t.published,
-          },
+          { name: 'publishTo', title: t.published },
           { name: 'fileName', title: t.fileName },
           { name: 'sectionDesc', title: organizedBy },
           { name: 'reference', title: t.reference },
@@ -93,7 +118,7 @@ export const AudioTable = (props: IProps) => {
           { columnName: 'planName', width: 150 },
           { columnName: 'actions', width: onAttach ? 120 : 70 },
           { columnName: 'version', width: 100 },
-          { columnName: 'readyToShare', width: 100 },
+          { columnName: 'publishTo', width: 100 },
           { columnName: 'fileName', width: 220 },
           { columnName: 'sectionDesc', width: 150 },
           { columnName: 'reference', width: 150 },
@@ -145,6 +170,10 @@ export const AudioTable = (props: IProps) => {
   const [hiddenColumnNames] = useState<string[]>(['planName']);
   const [verHist, setVerHist] = useState('');
   const [verValue, setVerValue] = useState<number>();
+  const { getPublishTo, setPublishTo, isPublished, publishStatus } =
+    usePublishDestination();
+  const forceDataChanges = useDataChanges();
+  const waitForRemoteQueue = useWaitForRemoteQueue();
 
   const handleShowTranscription = (id: string) => () => {
     const row = data.find((r) => r.id === id);
@@ -152,14 +181,33 @@ export const AudioTable = (props: IProps) => {
     if (rowVer) setVerValue(parseInt(rowVer));
     setShowId(id);
   };
-  const handleChangeReadyToShare = (id: string) => () => {
-    const mediaRec = memory.cache.query((q) =>
+  const updateMediaRec = (id: string, publishTo: PublishDestinationEnum[]) => {
+    var mediaRec = memory.cache.query((q) =>
       q.findRecord({ type: 'mediafile', id: id })
     ) as MediaFileD;
-    mediaRec.attributes.readyToShare = !mediaRec.attributes.readyToShare;
-    memory.update((t) => UpdateRecord(t, mediaRec, user));
-    setRefresh();
+    mediaRec.attributes.publishTo = setPublishTo(publishTo);
+    mediaRec.attributes.readyToShare = isPublished(publishTo);
+    memory
+      .update((t) => UpdateRecord(t, mediaRec, user))
+      .then(() => {
+        waitForRemoteQueue('publishTo').then(() => {
+          forceDataChanges();
+        });
+        setRefresh();
+      });
   };
+  const publishConfirm = (destinations: PublishDestinationEnum[]) => {
+    updateMediaRec(data[publishItem].id, destinations);
+    setPublishItem(-1);
+  };
+  const publishRefused = () => {
+    setPublishItem(-1);
+  };
+
+  const handleChangeReadyToShare = (i: number) => () => {
+    setPublishItem(i);
+  };
+
   const handleCloseTranscription = () => {
     setShowId('');
   };
@@ -201,6 +249,14 @@ export const AudioTable = (props: IProps) => {
       setPlayItem(id);
     }
   };
+  useEffect(() => {
+    if (org) {
+      var bible = getOrgBible(org);
+      setHasBible(bible !== undefined);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [org]);
+
   useEffect(() => {
     //if I set playing when I set the mediaId, it plays a bit of the old
     if (playItem) setMediaPlaying(true);
@@ -286,17 +342,12 @@ export const AudioTable = (props: IProps) => {
   );
   const ReadyToShareCell = ({ row, value, ...props }: ICell) => (
     <Table.Cell row {...props} value>
-      <FormControlLabel
-        control={
-          <Checkbox
-            id="checkbox-rts"
-            checked={value as any as boolean}
-            onChange={handleChangeReadyToShare(row.id)}
-            disabled={(row.passId || '') === ''}
-          />
-        }
-        label=""
-      />
+      <IconButton
+        onClick={handleChangeReadyToShare(row.index)}
+        disabled={(row.passId || '') === '' || !canSetDestination}
+      >
+        {publishStatus(getPublishTo(value, hasPublishing, shared, true))}
+      </IconButton>
     </Table.Cell>
   );
   const getUser = (id: string) => {
@@ -331,7 +382,7 @@ export const AudioTable = (props: IProps) => {
     if (column.name === 'date') {
       return <DateCell {...props} />;
     }
-    if (column.name === 'readyToShare') {
+    if (column.name === 'publishTo') {
       return <ReadyToShareCell {...props} />;
     }
     if (column.name === 'user') {
@@ -366,10 +417,32 @@ export const AudioTable = (props: IProps) => {
           isOpen={Boolean(verHist)}
           onOpen={handleVerHistClose}
         >
-          <VersionDlg passId={verHist} />
+          <VersionDlg
+            passId={verHist}
+            canSetDestination={canSetDestination}
+            hasPublishing={hasPublishing}
+          />
         </BigDialog>
       )}
-
+      {publishItem !== -1 && (
+        <ConfirmPublishDialog
+          title={t.publish}
+          description={''}
+          yesResponse={publishConfirm}
+          noResponse={publishRefused}
+          current={getPublishTo(
+            data[publishItem].publishTo,
+            hasPublishing,
+            shared,
+            true
+          )}
+          sharedProject={shared}
+          hasPublishing={hasPublishing}
+          hasBible={hasBible}
+          noDefaults={true}
+          passageType={data[publishItem]?.passageType}
+        />
+      )}
       {showId !== '' && (
         <TranscriptionShow
           id={showId}

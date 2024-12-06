@@ -1,7 +1,13 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation, useParams } from 'react-router-dom';
-import { IState, IMainStrings, IViewModeStrings } from '../../model';
+import {
+  IState,
+  IMainStrings,
+  IViewModeStrings,
+  ISharedStrings,
+  OfflineProject,
+} from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
   AppBar,
@@ -11,6 +17,7 @@ import {
   LinearProgress,
   Tooltip,
   Box,
+  Button,
 } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import SystemUpdateIcon from '@mui/icons-material/SystemUpdateAlt';
@@ -35,19 +42,28 @@ import {
   exitApp,
   useMyNavigate,
   useWaitForRemoteQueue,
+  Online,
 } from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
-import { usePlan } from '../../crud';
+import {
+  useLoadProjectData,
+  useOfflineAvailToggle,
+  useOfflnProjRead,
+  usePlan,
+  useVProjectRead,
+} from '../../crud';
 import Busy from '../Busy';
 import CloudOffIcon from '@mui/icons-material/CloudOff';
+import CloudOnIcon from '@mui/icons-material/Cloud';
 import ProjectDownloadAlert from '../ProjectDownloadAlert';
 import { axiosPost } from '../../utils/axios';
 import moment from 'moment';
 import { useSnackBar, AlertSeverity } from '../../hoc/SnackBar';
 import PolicyDialog from '../PolicyDialog';
 import JSONAPISource from '@orbit/jsonapi';
-import { mainSelector, viewModeSelector } from '../../selector';
+import { mainSelector, sharedSelector, viewModeSelector } from '../../selector';
 import { useHome } from '../../utils/useHome';
+import { useOrbitData } from '../../hoc/useOrbitData';
 const ipc = (window as any)?.electron;
 
 const twoIcon = { minWidth: `calc(${48 * 2}px)` } as React.CSSProperties;
@@ -69,6 +85,8 @@ const ProjectName = ({ setView, switchTo }: INameProps) => {
   const t: IViewModeStrings = useSelector(viewModeSelector, shallowEqual);
 
   const handleHome = () => {
+    localStorage.removeItem(LocalKey.plan);
+    localStorage.removeItem('mode');
     goHome();
   };
 
@@ -110,18 +128,22 @@ export const AppHead = (props: IProps) => {
   const orbitStatus = useSelector((state: IState) => state.orbit.status);
   const orbitErrorMsg = useSelector((state: IState) => state.orbit.message);
   const t: IMainStrings = useSelector(mainSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { pathname } = useLocation();
   const navigate = useMyNavigate();
+  const offlineProjects = useOrbitData<OfflineProject[]>('offlineproject');
+  const [hasOfflineProjects, setHasOfflineProjects] = useState(false);
   const [home] = useGlobal('home');
   const [orgRole] = useGlobal('orgRole');
   const [errorReporter] = useGlobal('errorReporter');
   const [coordinator] = useGlobal('coordinator');
   const [user] = useGlobal('user');
-  const [, setProject] = useGlobal('project');
-  const [, setPlan] = useGlobal('plan');
+  const [project, setProject] = useGlobal('project');
+  const [plan, setPlan] = useGlobal('plan');
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [isOffline] = useGlobal('offline');
-  const [connected] = useGlobal('connected');
+  const [isOfflineOnly] = useGlobal('offlineOnly');
+  const [connected, setConnected] = useGlobal('connected');
   const tokenCtx = useContext(TokenContext);
   const ctx = useContext(UnsavedContext);
   const { checkSavedFn, startSave, toolsChanged, anySaving } = ctx.state;
@@ -146,6 +168,12 @@ export const AppHead = (props: IProps) => {
   const [updateTipOpen, setUpdateTipOpen] = useState(false);
   const [showTerms, setShowTerms] = useState('');
   const waitForRemoteQueue = useWaitForRemoteQueue();
+  const waitForDataChangesQueue = useWaitForRemoteQueue('datachanges');
+  const offlineProjectRead = useOfflnProjRead();
+  const LoadData = useLoadProjectData();
+  const offlineAvailToggle = useOfflineAvailToggle();
+  const { getPlan } = usePlan();
+  const vProject = useVProjectRead();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const saving = useMemo(() => anySaving(), [toolsChanged]);
@@ -168,11 +196,13 @@ export const AppHead = (props: IProps) => {
     }
 
     if (isElectron && /Logout/i.test(what)) {
-      localStorage.removeItem('user-id');
+      localStorage.removeItem(LocalKey.userId);
       checkSavedFn(() => {
         waitForRemoteQueue('logout on electron...').then(() => {
-          if (isOffline) downDone();
-          else setDownloadAlert(true);
+          waitForDataChangesQueue('logout on electron').then(() => {
+            if (isOffline) downDone();
+            else setDownloadAlert(true);
+          });
         });
       });
       return;
@@ -188,13 +218,17 @@ export const AppHead = (props: IProps) => {
         if (resetRequests) resetRequests().then(() => setView(what));
       } else if (/Logout/i.test(what)) {
         checkSavedFn(() => {
-          waitForRemoteQueue('logout on web...').then(() => setView('Logout'));
+          waitForRemoteQueue('logout on web...').then(() =>
+            waitForDataChangesQueue('logout on electron').then(() =>
+              setView('Logout')
+            )
+          );
         });
       } else checkSavedFn(() => setView(what));
     }
   };
 
-  const handleUserMenu = (what: string) => {
+  const handleMenu = (what: string) => {
     if (/\/team/i.test(pathname)) {
       setProject('');
       setPlan('');
@@ -202,16 +236,78 @@ export const AppHead = (props: IProps) => {
     handleUserMenuAction(what, pathname, setView, resetRequests);
   };
 
+  const handleUserMenu = (what: string) => {
+    localStorage.removeItem('mode');
+    localStorage.removeItem(LocalKey.plan);
+    handleMenu(what);
+  };
+
+  const cloudAction = () => {
+    localStorage.setItem(
+      'mode',
+      isOffline || orbitStatus !== undefined || !connected
+        ? 'online-cloud'
+        : 'online-local'
+    );
+    localStorage.setItem(LocalKey.plan, plan);
+    handleMenu('Logout');
+  };
+
+  const handleSetOnline = (cb?: () => void) => {
+    Online(true, (isConnected) => {
+      if (connected !== isConnected) {
+        localStorage.setItem(LocalKey.connected, isConnected.toString());
+        setConnected(isConnected);
+      }
+      if (!isConnected) {
+        showMessage(ts.mustBeOnline);
+        return;
+      }
+      cb && cb();
+    });
+  };
+
+  useEffect(() => {
+    const value = offlineProjects.some((p) => p?.attributes?.offlineAvailable);
+    if (value !== hasOfflineProjects) setHasOfflineProjects(value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offlineProjects]);
+
+  const handleCloud = () => {
+    handleSetOnline(() => {
+      const planRec = plan ? getPlan(plan) : undefined;
+      if (!planRec) {
+        if (hasOfflineProjects) cloudAction();
+        return;
+      }
+      const offlineProject = offlineProjectRead(vProject(planRec));
+      if (offlineProject?.attributes?.offlineAvailable) {
+        cloudAction();
+      } else {
+        LoadData(project, () => {
+          offlineAvailToggle(project).then(() => {
+            cloudAction();
+          });
+        });
+      }
+    });
+  };
+
   useEffect(() => {
     if (tokenCtx.state.expiresAt === -1) {
-      handleUserMenu('Logout');
+      handleMenu('Logout');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenCtx.state]);
 
-  const downDone = () => {
+  const downDone = (cancel?: boolean) => {
     setDownloadAlert(false);
-    if (localStorage.getItem('user-id')) exitApp();
+    if (cancel) {
+      const userId = localStorage.getItem(LocalKey.onlineUserId);
+      if (userId) localStorage.setItem(LocalKey.userId, userId);
+      return;
+    }
+    if (localStorage.getItem(LocalKey.userId)) exitApp();
     else setView('Logout');
   };
 
@@ -244,10 +340,12 @@ export const AppHead = (props: IProps) => {
         pathname !== '/loading' &&
         pathname !== '/profile'
       ) {
-        console.log('pathname', pathname);
         setView('Access');
       }
     }
+    setHasOfflineProjects(
+      offlineProjects.some((p) => p?.attributes?.offlineAvailable)
+    );
     return () => {
       window.removeEventListener('beforeunload', handleUnload);
     };
@@ -381,8 +479,28 @@ export const AppHead = (props: IProps) => {
             </>
           )}
           {'\u00A0'}
-          {(isOffline || orbitStatus !== undefined || !connected) && (
-            <CloudOffIcon sx={{ p: '12pt' }} color="action" />
+          {orbitStatus !== undefined || !connected ? (
+            <IconButton onClick={() => handleSetOnline()}>
+              <CloudOffIcon color="action" />
+            </IconButton>
+          ) : (
+            isElectron &&
+            !isOfflineOnly &&
+            localStorage.getItem(LocalKey.userId) &&
+            (plan || hasOfflineProjects) && (
+              <Button
+                onClick={handleCloud}
+                startIcon={
+                  isOffline ? (
+                    <CloudOffIcon color="action" />
+                  ) : (
+                    <CloudOnIcon color="secondary" />
+                  )
+                }
+              >
+                {isOffline ? t.goOnline : t.goOffline}
+              </Button>
+            )
           )}
           {latestVersion !== '' &&
             isElectron &&

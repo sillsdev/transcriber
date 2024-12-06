@@ -9,12 +9,14 @@ import { communitySelector } from '../selector';
 import { ArtifactTypeSlug } from '../crud/artifactTypeSlug';
 import { getSortedRegions } from '../utils/namedSegments';
 import { IRow } from '../context/PassageDetailContext';
+import { StyledBox } from '../control/StyledBox';
 
 interface ArtifactStatusProps {
   recordType: ArtifactTypeSlug;
   currentVersion: number;
   rowData: IRow[];
   segments: string;
+  width?: number;
 }
 
 export default function ArtifactStatus({
@@ -22,6 +24,7 @@ export default function ArtifactStatus({
   currentVersion,
   rowData,
   segments,
+  width,
 }: ArtifactStatusProps) {
   const { getTypeId } = useArtifactType();
   const [segsComp, setSegsComp] = useState('');
@@ -67,12 +70,14 @@ export default function ArtifactStatus({
   }, [rowData, recordType, currentVersion, segments]);
 
   return recordType === ArtifactTypeSlug.PhraseBackTranslation ? (
-    <Typography>
-      {t.segmentsComplete
-        .replace('{0}', currentVersion.toString())
-        .replace('{1}', segsComp ? segsComp : t.none)
-        .replace('{2}', segProgress)}
-    </Typography>
+    <StyledBox width={width} sx={{ overflowX: 'auto' }}>
+      <Typography>
+        {t.segmentsComplete
+          .replace('{0}', currentVersion.toString())
+          .replace('{1}', segsComp ? segsComp : t.none)
+          .replace('{2}', segProgress)}
+      </Typography>
+    </StyledBox>
   ) : recordType === ArtifactTypeSlug.WholeBackTranslation ? (
     <Typography>
       {t.backTranslationComplete

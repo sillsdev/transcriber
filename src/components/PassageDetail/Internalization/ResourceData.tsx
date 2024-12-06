@@ -1,15 +1,21 @@
 import {
+  Box,
   FormControl,
   FormControlLabel,
   FormLabel,
   Radio,
   RadioGroup,
+  Stack,
   TextField,
 } from '@mui/material';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { ArtifactCategoryType, useOrganizedBy } from '../../../crud';
-import { IPassageDetailArtifactsStrings, ISharedStrings } from '../../../model';
+import {
+  IPassageDetailArtifactsStrings,
+  ISharedStrings,
+  MediaFileD,
+} from '../../../model';
 import {
   passageDetailArtifactsSelector,
   sharedSelector,
@@ -18,14 +24,21 @@ import SelectArtifactCategory, {
   ScriptureEnum,
 } from '../../Sheet/SelectArtifactCategory';
 import { ResourceTypeEnum } from './PassageDetailArtifacts';
+import { MarkDownType, UploadType, UriLinkType } from '../../MediaUpload';
+import { LinkEdit } from '../../../control/LinkEdit';
+import { MarkDownEdit } from '../../../control/MarkDownEdit';
+import { mediaContentType } from '../../../utils/contentType';
 
 interface IProps {
-  initCategory: string; //id
+  media?: MediaFileD;
+  uploadType?: UploadType;
+  initCategory: string;
   initDescription: string;
   initPassRes: boolean;
   onCategoryChange: (artifactCategoryId: string) => void;
   onDescriptionChange: (desc: string) => void;
   onPassResChange?: (value: ResourceTypeEnum) => void;
+  onTextChange?: (text: string) => void;
   allowProject: boolean;
   catRequired: boolean;
   catAllowNew?: boolean;
@@ -45,10 +58,14 @@ export function ResourceData(props: IProps) {
     allowProject,
     sectDesc,
     passDesc,
+    media,
+    uploadType,
+    onTextChange,
   } = props;
   const [description, setDescription] = useState(initDescription);
   const { getOrganizedBy } = useOrganizedBy();
   const [value, setValue] = useState(initPassRes ? 'passage' : 'section');
+  const [text, setText] = useState(media?.attributes?.originalFile ?? '');
   const t: IPassageDetailArtifactsStrings = useSelector(
     passageDetailArtifactsSelector,
     shallowEqual
@@ -73,17 +90,29 @@ export function ResourceData(props: IProps) {
     onDescriptionChange(e.target.value);
   };
 
+  const handleTextChange = (newText: string) => {
+    setText(newText);
+    onTextChange && onTextChange(newText);
+  };
+
   return (
-    <div>
-      <TextField
-        sx={{ m: 1 }}
-        id="filename"
-        label={ts.description}
-        value={description || ''}
-        onChange={handleChangeDescription}
-        required={false}
-        fullWidth={true}
-      />
+    <Stack spacing={2}>
+      {mediaContentType(media) === UriLinkType && (
+        <LinkEdit inValue={text} onValue={handleTextChange} />
+      )}
+      {mediaContentType(media) === MarkDownType && (
+        <MarkDownEdit inValue={text} onValue={handleTextChange} />
+      )}
+      <Box sx={{ pt: 1 }}>
+        <TextField
+          id="filename"
+          label={ts.description}
+          value={description || ''}
+          onChange={handleChangeDescription}
+          required={false}
+          fullWidth={true}
+        />
+      </Box>
       <SelectArtifactCategory
         allowNew={catAllowNew}
         initCategory={initCategory || ''}
@@ -93,26 +122,28 @@ export function ResourceData(props: IProps) {
         type={ArtifactCategoryType.Resource}
       />
       {onPassResChange && (
-        <div>
-          <FormControl>
-            <FormLabel id="resourcekind">{t.tip1a}</FormLabel>
-            <RadioGroup
-              aria-labelledby="resourcekind"
-              value={value}
-              onChange={handleChange}
-              name="radio-buttons-group"
-            >
-              <FormControlLabel
-                value={'section'}
-                control={<Radio />}
-                label={sectDesc ?? getOrganizedBy(true)}
-              />
-              <FormControlLabel
-                value={'passage'}
-                control={<Radio />}
-                label={passDesc ?? t.passageResource}
-              />
-              {allowProject && (
+        <FormControl>
+          <FormLabel id="resourcekind">{t.tip1a}</FormLabel>
+          <RadioGroup
+            aria-labelledby="resourcekind"
+            value={value}
+            onChange={handleChange}
+            name="radio-buttons-group"
+          >
+            <FormControlLabel
+              value={'section'}
+              control={<Radio />}
+              label={sectDesc ?? getOrganizedBy(true)}
+            />
+            <FormControlLabel
+              value={'passage'}
+              control={<Radio />}
+              label={passDesc ?? t.passageResource}
+            />
+            {allowProject &&
+              ![UploadType.Link, UploadType.MarkDown].includes(
+                uploadType ?? UploadType.Resource
+              ) && (
                 <FormControlLabel
                   value={'general'}
                   control={<Radio />}
@@ -122,11 +153,10 @@ export function ResourceData(props: IProps) {
                   )}
                 />
               )}
-            </RadioGroup>
-          </FormControl>
-        </div>
+          </RadioGroup>
+        </FormControl>
       )}
-    </div>
+    </Stack>
   );
 }
 export default ResourceData;

@@ -33,6 +33,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 interface IProps {
   inProject?: boolean;
   isAdmin: boolean;
+  isPersonal?: boolean;
   project: string | VProject;
   justFilter?: boolean;
   action?: (what: string) => void;
@@ -40,9 +41,18 @@ interface IProps {
 }
 
 export function ProjectMenu(props: IProps) {
-  const { inProject, isAdmin, action, project, justFilter, stopPlayer } = props;
+  const {
+    inProject,
+    isAdmin,
+    isPersonal,
+    action,
+    project,
+    justFilter,
+    stopPlayer,
+  } = props;
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const [isDeveloper] = useGlobal('developer');
   const { pathname } = useLocation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const offlineProjectRead = useOfflnProjRead();
@@ -122,7 +132,7 @@ export function ProjectMenu(props: IProps) {
             <ListItemText primary={t.copyNew} />
           </StyledMenuItem>
         )}
-        {isElectron && !isOffline && !justFilter && (
+        {isElectron && !isOffline && !justFilter && isDeveloper && (
           <StyledMenuItem id="projMenuOl" onClick={handle('offlineAvail')}>
             <ListItemIcon>
               {offlineProject?.attributes?.offlineAvailable ? (
@@ -159,7 +169,9 @@ export function ProjectMenu(props: IProps) {
             <ListItemIcon>
               <EditIcon />
             </ListItemIcon>
-            <ListItemText primary={t.editCategory} />
+            <ListItemText
+              primary={!isPersonal ? t.editCategory : t.editPersonalCategory}
+            />
           </StyledMenuItem>
         )}
         {!justFilter && isAdmin && !inProject && (

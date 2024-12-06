@@ -41,7 +41,6 @@ import {
 import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
-import NewProjectGrid from './NewProjectGrid';
 import { restoreScroll, useHome, useJsonParams } from '../../utils';
 import { RecordIdentity, RecordKeyMap } from '@orbit/records';
 import { projDefBook } from '../../crud/useProjectDefaults';
@@ -122,20 +121,14 @@ export const AddCard = (props: IProps) => {
   const cancelled = useRef(false);
   const [, setPlan] = useGlobal('plan');
   const [isDeveloper] = useGlobal('developer');
-  const [pickOpen, setPickOpen] = useState(false);
   const preventBoth = useRef(false);
   const [view, setView] = useState('');
-  const [recordAudio, setRecordAudio] = useState(false);
   const speakerRef = useRef<string>();
   const { getPlan } = usePlan();
   const getTypeId = useTypeId();
   const { setParam } = useJsonParams();
 
   useEffect(() => {
-    if (localStorage.getItem('autoaddProject') !== null && team === null) {
-      setPickOpen(true);
-      localStorage.removeItem('autoaddProject');
-    }
     const language = getOrgDefault(
       orgDefaultLangProps,
       team?.id
@@ -173,32 +166,13 @@ export const AddCard = (props: IProps) => {
       handleClickOpen(e);
       return;
     }
-    if (!preventBoth.current) setPickOpen(true);
+    if (!preventBoth.current) setOpen(true);
     preventBoth.current = false;
   };
 
-  const handleSolutionHide = () => {
-    setPickOpen(false);
+  const handleProject = () => {
+    setOpen(false);
     preventBoth.current = true;
-  };
-
-  const handleProject = (val: boolean) => {
-    setOpen(val);
-    handleSolutionHide();
-  };
-
-  const handleUpload = () => {
-    setType('other');
-    setRecordAudio(false);
-    setUploadVisible(true);
-    setInProgress(true);
-  };
-
-  const handleRecord = () => {
-    setType('other');
-    setRecordAudio(true);
-    setUploadVisible(true);
-    setInProgress(true);
   };
 
   const handleLanguageChange = (lang: ILanguage) => {
@@ -212,7 +186,6 @@ export const AddCard = (props: IProps) => {
 
   const handleClickOpen = (e: React.MouseEvent) => {
     setOpen(true);
-    setPickOpen(false);
     preventBoth.current = true;
     e.stopPropagation();
   };
@@ -418,13 +391,6 @@ export const AddCard = (props: IProps) => {
         <StyledCardContent>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
             <AddIcon fontSize="large" />
-            <NewProjectGrid
-              open={pickOpen && !open && !uploadVisible}
-              onOpen={handleSolutionHide}
-              doUpload={handleUpload}
-              doRecord={handleRecord}
-              doNewProj={handleClickOpen}
-            />
             <ProjectDialog
               mode={DialogMode.add}
               isOpen={open}
@@ -437,7 +403,7 @@ export const AddCard = (props: IProps) => {
         </StyledCardContent>
       </StyledCard>
       <Uploader
-        recordAudio={recordAudio}
+        recordAudio={false}
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
         showMessage={showMessage}

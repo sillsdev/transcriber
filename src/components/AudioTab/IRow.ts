@@ -1,5 +1,6 @@
 import React from 'react';
 import MediaActions from './MediaActions';
+import { PassageTypeEnum } from '../../model/passageType';
 
 export interface IRow {
   index: number;
@@ -17,6 +18,8 @@ export interface IRow {
   version: string;
   date: string;
   readyToShare: boolean;
+  publishTo: string;
+  passageType: PassageTypeEnum;
   user: string;
   actions: typeof MediaActions;
 }

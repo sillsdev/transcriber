@@ -7,6 +7,7 @@ export enum LocalKey {
   start = 'startNext', //in progress mediadownload
   passage = 'passage',
   compare = 'compare',
+  hidePublishing = 'hidePublishing',
   /* Documentation for localStorage keys */
   home = 'home', // set to home folder for dataPath (to avoid async)
   connected = 'connected', // true if we're connected (used for error reporting)
@@ -26,6 +27,8 @@ export enum LocalKey {
   staticTables = 'static-tables', // last static table version
   lastProj = 'lastProj', // most recent project used
   migration = 'migration', // last migration version
+  plan = 'selected-plan', // last plan selected
+  mode = 'mode', // last mode (online-cloud or online-local)
 }
 
 export const localUserKey = (id: LocalKey) => {

@@ -53,6 +53,7 @@ import { toolSelector } from '../selector';
 import Busy from '../components/Busy';
 import { RecordKeyMap } from '@orbit/records';
 import PassageDetailParatextIntegration from '../components/PassageDetail/PassageDetailParatextIntegration';
+import { PassageDetailDiscuss } from '../components/PassageDetail/PassageDetailDiscuss';
 
 const KeyTerms = React.lazy(
   () => import('../components/PassageDetail/Keyterms/KeyTerms')
@@ -357,8 +358,16 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                         {tool === ToolSlug.TeamCheck && <TeamCheckReference />}
                         {tool === ToolSlug.KeyTerm && (
                           <Suspense fallback={<Busy />}>
-                            <KeyTerms />
+                            <KeyTerms
+                              width={width - discussionSize.width - 16}
+                            />
                           </Suspense>
+                        )}
+                        {tool === ToolSlug.Discuss && (
+                          <PassageDetailDiscuss
+                            width={width - discussionSize.width - 16}
+                            currentStep={currentstep}
+                          />
                         )}
                       </Pane>
                     </SplitPane>

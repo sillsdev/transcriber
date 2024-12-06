@@ -12,7 +12,6 @@ import {
 } from '../../../model';
 import {
   Box,
-  IconButton,
   Paper,
   PaperProps,
   Stack,
@@ -20,7 +19,6 @@ import {
   debounce,
   styled,
 } from '@mui/material';
-import SkipIcon from '@mui/icons-material/NotInterested';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import { PassageDetailPlayer } from '../PassageDetailPlayer';
@@ -247,14 +245,18 @@ export const ProjectResourceConfigure = (props: IProps) => {
             row = d[ix];
           }
           const limitValue = row[ColName.Limits].value;
-          let topic = row[ColName.Desc].value;
           let refValue = row[ColName.Ref].value;
+          let topic = `${
+            media.attributes.topic ? media.attributes.topic + ' -' : ''
+          }${
+            row[ColName.Desc].value ? row[ColName.Desc].value : refValue
+          } ${suffix}`;
           if (limitValue && refValue) {
             await projectResourceSave({
               t,
               media,
               i,
-              topicIn: topic ? topic : `${refValue} ${suffix}`,
+              topicIn: topic,
               limitValue,
               mediafiles,
               sectionResources,
@@ -337,6 +339,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
   };
 
   const loadPastedSegments = (newData: ICell[][]) => {
+    var duration = media?.attributes.duration || 0;
     var psgIndexes = items.map((r) => r.type === 'passage');
     var segBoundaries = newData
       .filter((r, i) => i > 0 && psgIndexes[i - 1])
@@ -355,7 +358,12 @@ export const ProjectResourceConfigure = (props: IProps) => {
           };
         return { start: 0, end: 0 };
       })
-      .filter((r) => r.end > 0);
+      .filter(
+        (r) =>
+          r.end > 0 &&
+          (duration === 0 || r.end < duration + 1) &&
+          r.start < r.end
+      );
     if (media?.attributes.duration) {
       regs = regs.filter((r) => r.start <= media.attributes.duration);
     }
@@ -515,18 +523,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
     setSuffix(e.target.value);
   };
 
-  const handleSkip = (v: string) => () => {
-    console.log(`skip ${v}`);
-  };
-
-  const handleValueRenderer = (cell: ICell) =>
-    cell.className === 'act' ? (
-      <IconButton onClick={handleSkip(cell.value)}>
-        <SkipIcon fontSize="small" />
-      </IconButton>
-    ) : (
-      cell.value
-    );
+  const handleValueRenderer = (cell: ICell) => cell.value;
 
   return (
     <Box>

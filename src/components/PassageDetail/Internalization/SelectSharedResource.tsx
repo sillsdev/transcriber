@@ -29,12 +29,13 @@ import { PassageTypeEnum } from '../../../model/passageType';
 interface IProps {
   sourcePassages: number[];
   scope: ResourceTypeEnum;
+  onScope?: (val: ResourceTypeEnum) => void;
   onOpen: (val: boolean) => void;
   onSelect?: (resources: Resource[]) => Promise<void>;
 }
 
 export const SelectSharedResource = (props: IProps) => {
-  const { sourcePassages, scope, onOpen, onSelect } = props;
+  const { sourcePassages, scope, onScope, onOpen, onSelect } = props;
   const [refLevel, setRefLevel] = useState<RefLevel>(RefLevel.Verse);
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
@@ -90,7 +91,7 @@ export const SelectSharedResource = (props: IProps) => {
     } else if (scope === ResourceTypeEnum.sectionResource) {
       const secRefs: string[] = [];
       const passages = related(section, 'passages') as PassageD[];
-      passages.forEach((recId) => {
+      passages?.forEach((recId) => {
         const passRec = findRecord(memory, 'passage', recId.id) as Passage;
         const passType = passageTypeFromRef(
           passRec.attributes.reference,
@@ -221,6 +222,8 @@ export const SelectSharedResource = (props: IProps) => {
       onBookCd={setBookCd}
       onFindRef={setFindRef}
       onRefLevel={setRefLevel}
+      scope={scope}
+      onScope={onScope}
     />
   );
 };

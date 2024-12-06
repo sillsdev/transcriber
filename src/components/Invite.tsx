@@ -80,7 +80,7 @@ function Invite(props: IProps) {
   };
   const handleAdd = async () => {
     const strings = {
-      SILOrg: t.sil,
+      SILOrg: require('../../package.json').author.name,
       App: API_CONFIG.productName,
       Invitation: t.invitation,
       Instructions: t.instructions,
@@ -196,7 +196,8 @@ function Invite(props: IProps) {
     if (allusersgroup.length > 0) {
       var assocProjects = projects
         .filter((p) => related(p, 'group') === allusersgroup[0].id)
-        .map((p) => p.attributes.name);
+        .map((p) => p.attributes.name)
+        .sort();
       const newValue =
         assocProjects.length > 0 ? assocProjects.join(', ') : t.noProjects;
       if (newValue !== allUsersProjects) {

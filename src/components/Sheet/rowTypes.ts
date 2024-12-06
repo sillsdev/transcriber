@@ -1,4 +1,4 @@
-import { PublishLevelEnum } from '../../crud';
+import { PublishDestinationEnum } from '../../crud';
 import { ISheet, SheetLevel } from '../../model';
 import { PassageTypeEnum } from '../../model/passageType';
 import { isPassageRow, isSectionRow } from './isSectionPassage';
@@ -35,7 +35,9 @@ export const rowTypes = (rowInfo: ISheet[]) => {
   const isMovement = (i: number) =>
     i >= 0 && i < rowInfo.length && rowInfo[i].level === SheetLevel.Movement;
   const isBeta = (i: number) =>
-    i >= 0 && i < rowInfo.length && rowInfo[i].published === PublishLevelEnum.Beta;
+    i >= 0 &&
+    i < rowInfo.length &&
+    rowInfo[i].published?.includes(PublishDestinationEnum.AkuoBeta);
   const isFirstMovement = (i: number) => {
     if (!isMovement(i)) return false;
     while (--i >= 0) {

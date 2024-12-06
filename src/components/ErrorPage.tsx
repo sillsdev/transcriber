@@ -11,7 +11,13 @@ import {
   styled,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { logError, Severity, forceLogin, useMyNavigate } from '../utils';
+import {
+  logError,
+  Severity,
+  forceLogin,
+  useMyNavigate,
+  LocalKey,
+} from '../utils';
 import { PriButton } from '../control';
 import { TokenContext } from '../context/TokenProvider';
 import { mainSelector } from '../selector';
@@ -179,8 +185,8 @@ export const ErrorPage = () => {
       logoutRef.current?.click();
     }
     if (!wasOfflineOnly) {
-      localStorage.setItem('offlineAdmin', 'false');
-      localStorage.removeItem('user-id');
+      localStorage.setItem(LocalKey.offlineAdmin, 'false');
+      localStorage.removeItem(LocalKey.userId);
     }
     setView(wasOfflineOnly ? 'offline' : 'online');
   };
@@ -216,7 +222,7 @@ export const ErrorPage = () => {
 
   if (/online|offline/i.test(view)) navigate(`/access/${view}`);
 
-  if (state.errCount && localStorage.getItem('isLoggedIn')) {
+  if (state.errCount && localStorage.getItem(LocalKey.loggedIn)) {
     return (
       <ModalMessage
         message={state?.error || 'Error count > 0'}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { useGlobal } from 'reactn';
-import Memory from '@orbit/memory';
 import * as actions from '../store';
 import {
   IState,
@@ -18,17 +17,10 @@ import {
   Project,
   ISharedStrings,
   ExportType,
-  OrgWorkflowStep,
-  VProject,
-  OfflineProject,
+  OrgWorkflowStepD,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
-import {
-  Button,
-  IconButton,
-  Box,
-  Alert,
-} from '@mui/material';
+import { Button, IconButton, Box, Alert } from '@mui/material';
 // import CopyIcon from '@mui/icons-material/FileCopy';
 import ViewIcon from '@mui/icons-material/RemoveRedEye';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
@@ -65,6 +57,8 @@ import {
   VernacularTag,
   usePlanType,
   PassageReference,
+  afterStep,
+  getStepComplete,
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -84,6 +78,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { getSection } from './AudioTab/getSection';
 import { WhichExportDlg } from './WhichExportDlg';
+import { useParams } from 'react-router-dom';
 
 interface IRow {
   id: string;
@@ -108,13 +103,14 @@ interface IProps {
   planColumn?: boolean;
   floatTop?: boolean;
   step?: string;
-  orgSteps?: OrgWorkflowStep[];
+  orgSteps?: OrgWorkflowStepD[];
   sectionArr: [number, string][];
 }
 
 export function TranscriptionTab(props: IProps) {
   const { projectPlans, planColumn, floatTop, step, orgSteps, sectionArr } =
     props;
+  const { pasId } = useParams();
   const t: ITranscriptionTabStrings = useSelector(transcriptionTabSelector);
   const ts: ISharedStrings = useSelector(sharedSelector);
   const activityState = useSelector(activitySelector);
@@ -126,46 +122,8 @@ export function TranscriptionTab(props: IProps) {
   );
   const allBookData = useSelector((state: IState) => state.books.bookData);
   const dispatch = useDispatch();
-  const exportProject = (
-    exportType: ExportType,
-    artifactType: string | null | undefined,
-    memory: Memory,
-    backup: IndexedDBSource,
-    projectid: number | string,
-    userid: number | string,
-    numberOfMedia: number,
-    token: string | null,
-    errorReporter: any, //global errorReporter
-    pendingmsg: string,
-    nodatamsg: string,
-    writingmsg: string,
-    localizedArtifact: string,
-    getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
-    importedDate?: Moment,
-    target?: string,
-    orgWorkflowSteps?: OrgWorkflowStep[]
-  ) =>
-    dispatch(
-      actions.exportProject(
-        exportType,
-        artifactType,
-        memory,
-        backup,
-        projectid,
-        userid,
-        numberOfMedia,
-        token,
-        errorReporter,
-        pendingmsg,
-        nodatamsg,
-        writingmsg,
-        localizedArtifact,
-        getOfflineProject,
-        importedDate,
-        target,
-        orgWorkflowSteps
-      )
-    );
+  const exportProject = (props: actions.ExPrjProps) =>
+    dispatch(actions.exportProject(props));
   const exportComplete = () => dispatch(actions.exportComplete());
   const projects = useOrbitData<Project[]>('project');
   const passages = useOrbitData<Passage[]>('passage');
@@ -279,8 +237,8 @@ export function TranscriptionTab(props: IProps) {
     const onlyTypeId = [ExportType.DBL, ExportType.BURRITO].includes(exportType)
       ? VernacularTag
       : [ExportType.AUDIO, ExportType.ELAN].includes(exportType)
-        ? getTypeId(artifactType)
-        : undefined;
+      ? getTypeId(artifactType)
+      : undefined;
     const onlyLatest = onlyTypeId !== undefined;
     let media = getMediaInPlans(
       projectplans.map((p) => p.id) as string[],
@@ -288,30 +246,30 @@ export function TranscriptionTab(props: IProps) {
       onlyTypeId,
       onlyLatest
     );
-    exportProject(
+    exportProject({
       exportType,
-      onlyTypeId,
+      artifactType: onlyTypeId,
       memory,
       backup,
-      project,
-      user,
-      media.length,
+      projectid: project,
+      userid: user,
+      numberOfMedia: media.length,
       token,
       errorReporter,
-      t.creatingDownloadFile,
-      t.noData.replace(
+      pendingmsg: t.creatingDownloadFile,
+      nodatamsg: t.noData.replace(
         '{0}',
         onlyTypeId !== undefined
           ? localizedArtifactType(artifactType)
           : t.changed
       ),
-      t.writingDownloadFile,
+      writingmsg: t.writingDownloadFile,
       localizedArtifact,
       getOfflineProject,
       importedDate,
-      step,
-      orgSteps
-    );
+      target: step,
+      orgWorkflowSteps: orgSteps,
+    });
   };
   const handleProjectExport = () => {
     setAlertOpen(false);
@@ -435,6 +393,23 @@ export function TranscriptionTab(props: IProps) {
     setDataName(name + '.eaf');
   };
 
+  const ready = useMemo(() => {
+    const passRec = passages.find(
+      (p) => p.keys?.remoteId === pasId || p.id === pasId
+    );
+    return Boolean(
+      step
+        ? orgSteps &&
+            passRec &&
+            afterStep({
+              psgCompleted: getStepComplete(passRec),
+              target: step,
+              orgWorkflowSteps: orgSteps,
+            })
+        : true
+    );
+  }, [passages, step, orgSteps, pasId]);
+
   useEffect(() => {
     if (dataUrl && dataName !== '') {
       if (eafAnchor && eafAnchor.current) {
@@ -516,26 +491,32 @@ export function TranscriptionTab(props: IProps) {
         .filter((s) => related(s, 'plan') === planRec.id && s.attributes)
         .sort(sectionCompare)
         .forEach((section) => {
+          var sectionIndex = 0;
+          var psgCount = 0;
           const sectionpassages = passages
             .filter((ps) => related(ps, 'section') === section.id)
             .sort(passageCompare);
           if (sectionpassages.length > 0) {
-            rowData.push({
-              id: section.id as string,
-              name: getSection([section], sectionMap),
-              state: '',
-              planName: planRec.attributes.name,
-              editor: sectionEditorName(section, users),
-              transcriber: sectionTranscriberName(section, users),
-              passages: sectionpassages.length.toString(),
-              updated: dateOrTime(section?.attributes?.dateUpdated, lang),
-              action: '',
-              parentId: '',
-              sort: (section.attributes.sequencenum || 0).toFixed(2).toString(),
-            });
+            sectionIndex =
+              rowData.push({
+                id: section.id as string,
+                name: getSection([section], sectionMap),
+                state: '',
+                planName: planRec.attributes.name,
+                editor: sectionEditorName(section, users),
+                transcriber: sectionTranscriberName(section, users),
+                passages: sectionpassages.length.toString(),
+                updated: dateOrTime(section?.attributes?.dateUpdated, lang),
+                action: '',
+                parentId: '',
+                sort: (section.attributes.sequencenum || 0)
+                  .toFixed(2)
+                  .toString(),
+              }) - 1;
             sectionpassages.forEach((passage: Passage) => {
               const state = activityState.getString(getPassageState(passage));
               if (!isPublishingTitle(passage?.attributes?.reference, flat)) {
+                psgCount++;
                 rowData.push({
                   id: passage.id,
                   name: (
@@ -556,6 +537,7 @@ export function TranscriptionTab(props: IProps) {
                 } as IRow);
               }
             });
+            rowData[sectionIndex].passages = psgCount.toString();
           }
         });
     });
@@ -587,6 +569,7 @@ export function TranscriptionTab(props: IProps) {
   ]);
 
   interface ICell {
+    key: string;
     value: string;
     style?: React.CSSProperties;
     mediaId: string;
@@ -703,6 +686,7 @@ export function TranscriptionTab(props: IProps) {
                 action={handleAudioExportMenu}
                 localizedArtifact={localizedArtifact}
                 isScripture={isScripture}
+                disabled={!ready}
               />
             )}
             {planColumn && offline && projects.length > 1 && (
