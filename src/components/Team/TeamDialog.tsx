@@ -37,7 +37,10 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 import { useCanPublish, useJsonParams, waitForIt } from '../../utils';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity } from '@orbit/records';
-import { Options } from '../../control';
+import { GrowingSpacer, Options } from '../../control';
+import StickyRedirect from '../StickyRedirect';
+import { useLocation } from 'react-router-dom';
+import { isElectron } from '../../api-variable';
 
 export interface ITeamDialog {
   team: OrganizationD;
@@ -52,6 +55,7 @@ interface IProps extends IDialog<ITeamDialog> {
 }
 export function TeamDialog(props: IProps) {
   const { mode, values, isOpen, disabled, onOpen, onCommit, onDelete } = props;
+  const { pathname } = useLocation();
   const bibles = useOrbitData<BibleD[]>('bible');
   const organizations = useOrbitData<OrganizationD[]>('organization');
   const [name, setName] = React.useState('');
@@ -64,6 +68,7 @@ export function TeamDialog(props: IProps) {
   const [bibleName, setBibleName] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [defaultParams, setDefaultParams] = React.useState('');
+  const [view, setView] = useState('');
   const bibleMediafileRef = useRef('');
   const isoMediafileRef = useRef('');
   const [publishingData, setPublishingData] = React.useState('{}');
@@ -332,6 +337,10 @@ export function TeamDialog(props: IProps) {
     setChanged(true);
   };
 
+  if (view !== '' && view !== pathname) {
+    return <StickyRedirect to={view} />;
+  }
+
   return (
     <div>
       <Dialog
@@ -411,6 +420,15 @@ export function TeamDialog(props: IProps) {
           )}
         </DialogContent>
         <DialogActions>
+          {isElectron && (
+            <Button
+              id="burrito"
+              onClick={() => setView(`/burrito/${values?.team.id}`)}
+            >
+              Burrito
+            </Button>
+          )}
+          <GrowingSpacer />
           <Button
             id="teamCancel"
             onClick={handleClose}

@@ -10,6 +10,7 @@ import Loading from './Loading';
 import Profile from './Profile';
 import { default as Team } from './TeamScreen';
 import { default as Plan } from './PlanScreen';
+import { default as Burrito } from './BurritoScreen';
 import Buggy from './Buggy';
 import EmailUnverified from './EmailUnverified';
 import Access from './Access';
@@ -33,6 +34,7 @@ const routes = createRoutesFromElements([
     <Route path="/loading" element={<Auth el={<Loading />} />} />
     <Route path="/profile" element={<Auth el={<Profile />} />} />
     <Route path="/team" element={<Auth el={<Team />} />} />
+    <Route path="/burrito/:teamId" element={<Auth el={<Burrito />} />} />
     <Route path="/plan/:prjId/:tabNm" element={<Auth el={<Plan />} />} />
     <Route path="/work/:prjId/:pasId" element={<Auth el={<Team />} />} />
     <Route path="/work/:prjId" element={<Auth el={<Team />} />} />
