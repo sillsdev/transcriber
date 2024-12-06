@@ -152,13 +152,15 @@ export const StepEditor = ({ process, org }: IProps) => {
   const handleSortEnd = ({ oldIndex, newIndex }: SortEndProps) => {
     if (oldIndex === newIndex) return;
     setToolSettingsRow(-1);
-    const filteredRows = rows.filter((r) => r.seq < 0 && !showAll);
-    const unFilteredRows = rows.filter((r) => r.seq >= 0 || showAll);
-    let newRows = filteredRows.concat(
-      arrayMove(unFilteredRows, oldIndex, newIndex).map((r, i) => ({
-        ...r,
-        seq: i,
-      }))
+    const filteredRows = rows.filter((r) => r.seq < 0);
+    const unFilteredRows = rows
+      .filter((r) => r.seq >= 0)
+      .map((r, i) => ({ ...r, seq: i }));
+    const bias = showAll ? filteredRows.length : 0;
+    const newRows = filteredRows.concat(
+      arrayMove(unFilteredRows, oldIndex - bias, newIndex - bias).map(
+        (r, i) => ({ ...r, seq: i })
+      )
     );
     setRows(newRows);
     toolChanged(toolId, true);
@@ -450,7 +452,6 @@ export const StepEditor = ({ process, org }: IProps) => {
         {rows
           .map((r, i) => ({ ...r, rIdx: i }))
           .filter((r) => r.seq >= 0 || showAll)
-          .map((r, i) => ({ ...r, seq: i }))
           .map((r) => (
             <StepItem
               key={`si-${r.rIdx}`}
