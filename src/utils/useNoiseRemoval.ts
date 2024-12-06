@@ -30,7 +30,7 @@ interface fileTask {
   cb: (file: File | Error) => void;
   cancelRef: React.MutableRefObject<boolean>;
 }
-const timerDelay = 3000;
+const timerDelay = 10000; //10 seconds
 const waitTime = 1000 * 60 * 10; //10 minutes good?
 
 export const useNoiseRemoval = () => {
@@ -90,7 +90,13 @@ export const useNoiseRemoval = () => {
             if (!taskTimer.current) launchTimer();
           } else cb(new Error(nrresponse.statusText));
         })
-        .catch((err) => cb(err as Error));
+        .catch((err) => {
+          if (err.message.contains('413'))
+            return s3requestFileNoiseRemoval(cancelRef, file, cb).catch((err) =>
+              cb(err as Error)
+            );
+          else cb(err as Error);
+        });
   };
   const deleteS3File = (filename: string) => {
     if (token)
@@ -155,22 +161,26 @@ export const useNoiseRemoval = () => {
     //will be a new id if completed
     return response.data.id as string;
   };
-  const checkFile = async (taskId: string) => {
-    var response = await axiosGetStream(`aero/noiseremoval/${taskId}`);
+  const checkFile = async (task: fileTask) => {
+    var response = await axiosGetStream(`aero/noiseremoval/${task.taskId}`);
     const data = await response?.json();
-    if (data) return base64ToFile(data.data, data.fileName ?? taskId);
+    if (data) {
+      cleanupFile(task);
+      return base64ToFile(data.data, data.fileName ?? task.taskId);
+    }
     return undefined;
   };
-  const checkAsS3 = async (taskId: string) => {
-    var url = await axiosGet(`aero/noiseremoval/s3/${taskId}`);
+  const checkAsS3 = async (task: fileTask) => {
+    var url = await axiosGet(`aero/noiseremoval/s3/${task.taskId}`);
     if (url?.message) {
+      cleanupS3(task); //prevent from doing this again before we're done here
       var b = await loadBlobAsync(url?.message);
       if (token) {
         const audioBase = url.message.split('?')[0];
         const filename = audioBase.split('/').pop();
         deleteS3File(filename);
       }
-      if (b) return new File([b], taskId + '.wav');
+      if (b) return new File([b], task.taskId + '.wav');
       else throw new Error('bloberror');
     }
     return undefined;
@@ -271,9 +281,8 @@ export const useNoiseRemoval = () => {
     fileList.forEach(async (filetask) => {
       try {
         if (!filetask.cancelRef.current) {
-          var file = await checkFile(filetask.taskId);
+          var file = await checkFile(filetask);
           if (file) {
-            cleanupFile(filetask);
             filetask.cb(file);
           }
         } else {
@@ -290,9 +299,8 @@ export const useNoiseRemoval = () => {
     returnAss3List.forEach(async (filetask) => {
       try {
         if (!filetask.cancelRef.current) {
-          var file = await checkAsS3(filetask.taskId);
+          var file = await checkAsS3(filetask);
           if (file) {
-            cleanupS3(filetask);
             filetask.cb(file);
           }
         } else {

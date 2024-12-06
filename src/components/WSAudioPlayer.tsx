@@ -756,7 +756,7 @@ function WSAudioPlayer(props: IProps) {
                 if ((file as Error).message !== 'canceled')
                   showMessage(
                     `${ts.noiseRemovalFailed} ${(file as Error).message} ${
-                      (file as AxiosError).response?.data
+                      (file as AxiosError).response?.data ?? ''
                     }`
                   );
               }
