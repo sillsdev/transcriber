@@ -1,13 +1,118 @@
 audio-project-manager (3.3.0.0)  experimental; urgency=high
 
- * TT-5572 Add option to download just latest audio
- * TT-4046 Phrase Back Translation Recording and review
- * TT-5907 Use FCBH timing files to set up resources
- * TT-4868 Bible brain resources
- * TT-5157 Shared resource checkbox in its own column labeled “Publish”
+ * TT-6196 allow re-arranging workflow with hidden items (#1807)
+ * TT-6193 reset cancel before NR (#1805)
+ * TT-6187 make setcompleteTo work offline (#1795)
+ * TT-6186 don't publish offline (#1799)
+ * TT-6180 Diable internalize share chapter numbers (#1802)
+ * TT-6179 check if saving on abort (#1783)
+ * TT-6176 clear saving of rights on dialog cancel (#1782)
+ * TT-6175 sort project names on invitation dialog (#1781)
+ * TT-6174 disable export audio if current is not ready
+ * TT-6173 incorrect type - formdata is automatically set on post (#1792)
+ * TT-6171 cloud icon when offline (#1785)
+ * TT-6170 change hot key for skip ahead and back
+ * TT-6169 handle for missing sequence num
+ * TT-6165 add publishing without filters (#1796)
+ * TT-6164 get potential newly created shared resource after publish mediafile (#1798)
+ * TT-6163 Modifying categories
+ * TT-6160 check for no plan
+ * TT-6159 Allow cancelling download (#1793)
+ * TT-6158 create shared resource record when publish to internalization (#1766)
+ * TT-6157 Only download current project and no filter option if no file (#1767)
+ * TT-6156 Add noise removal (#1773)
+ * TT-6149  * TT-6192 Make the compass and playing/pausing behave (#1804)
+ * TT-6148 update download description message (#1771)
+ * TT-6141 All members can switch publishing views
+ * TT-6140 no Go Offline in web
+ * TT-6139 Transcriber keeps current content (#1806)
+ * TT-6138 Don't allow publish to akuo when no bible (#1761)
+ * TT-6137 Add Shared Icon to project card (#1762)
+ * TT-6133 add a button to set current step and all steps before to comp… (#1794)
+ * TT-6130 No Bible brain for notes
+ * TT-6129 use file extension of no contenttype.  Attempt to always populate contenttype in future (#1779)
+ * TT-6128 move the filter to the select (#1780)
+ * TT-6127 No Personal Project Discussion Assignment (#1770)
+ * TT-6126 View discussion scroll bar
+ * TT-6124 jump to end with duration
+ * TT-6123 No Appocripha in Bible Brain
+ * TT-6122 No find resources for General
+ * TT-6121 publishing settings by project and user (#1752)
+ * TT-6120 No flat passage resources (#1753)
+ * TT-6115 publish title on shared projects (#1741)
+ * TT-6113 allow for end segment to be within duration
+ * TT-6109 tool tip is resource edit if not a note
+ * TT-6106 Allow Sheet Editing
+ * TT-6105 handle link to note (#1743)
+ * TT-6102 Editing workflow steps
+ * TT-6101 display font using family name not id
+ * TT-6099 No Preview Propagate (#1735)
+ * TT-6097 Only respond to add Aquifer first time
+ * TT-6096 message if no aquifer results (#1731)
+ * TT-6095 Link not general
+ * TT-6092 Offline Images, Link and Text (#1736)
+ * TT-6090 maintain workflow step focus
+ * TT-6085 Change Category Edit Menu Item Name (#1754)
+ * TT-6083 launch Bible Brain after choosing
+ * TT-6078 Don't allow publish to akuo of no bibleid. (#1756)
+ * TT-6077 Report Publishing Status (#1715)
+ * TT-6070 Remove General as an option for Text and Link (#1716)
+ * TT-6069 Remove What's App button (#1747)
+ * TT-6067 Bible brain queue (#1760)
+ * TT-6066 Add clear for query
+ * TT-6065 Handle Note Query Create
+ * TT-6064 Add publishing destinations - Aquifer, OBT Helps, Internaliza… (#1713)
+ * TT-6063 aquifer (#1727)
+ * TT-6061 display text edit as 40%
+ * TT-6059 no empty text upload
+ * TT-6056 launch link tool tip
+ * TT-6055 Check for valid links (#1717)
+ * TT-6054 Fix Show All Resources
+ * TT-6053 Configure general recordings (#1725)
+ * TT-6052 track recording speaker
+ * TT-6050 Resource Type Change doesn't forget type (#1723)
+ * TT-6048 Chapter numbers not shared resources (#1750)
+ * TT-6045 Handle Audacity 3.6.x (#1710)
+ * TT-6041 don't close when go back to 0, make slider use num seconds for scale (#1746)
+ * TT-6039 TT-6041 don't click multiple times
  * TT-6038 Internalization play back
+ * TT-6037 handle minimal move (#1734)
+ * TT-6036 Handle many back translations (#1748)
+ * TT-6035 Change SIL International to SIL Global on About (#1722)
+ * TT-6034 TT-6057 handle offline links (#1721)
+ * TT-6033 Change to SIL Global
+ * TT-6030 Check for empty buffer when inserting silence
+ * TT-6029 refresh play/pause
+ * TT-6027 only count passages and notes (#1744)
+ * TT-6026 show done if chapter recorded (#1745)
+ * TT-6019 remember user publish setting (#1733)
+ * TT-6017 Sync even with notes ready to sync
+ * TT-6016 Spanish Abbreviations (#1728)
+ * TT-5995 Audacity Create after import
+ * TT-5994 No Paratext pull for Notes with categories
+ * TT-5991 Allow adding Note Category (#1726)
+ * TT-5977 After offline sync dialog takes a long time to go away (#1788)
+ * TT-5915 no auto configure on multiple upload
+ * TT-5878 Check edited cats against current list (#1769)
+ * TT-5777 Sorted unique user list in import confirm (#1784)
+ * TT-5641 Rejecting PBT not back to record step (#1763)
+ * TT-5634 Filter badge (#1768)
+ * TT-5572 Partial Downloads (#1757)
+ * TT-5525 Simplify new project
+ * TT-5227 bound Term Table within pane
+ * TT-5157 Add Publish/Versions column (#1738)
+ * TT-5054 Remove Compare item if deleted
+ * TT-4967 Add markdown text to discuss step (#1800)
+ * TT-4887 Show full sort label
+ * TT-4869 Find Resources (#1707)
+ * TT-4868 Use timing files available on Bible brain to autmate resource creation (#1711)
+ * TT-4737 No segments past duration
+ * TT-3997 don't sort Internalization resources by completed
+ * TT-3812 replace react-sortable-hoc witn  hello-pangea/dnd (#1706)
+ * TT-3164 When joining a team download the bible info (#1758)
+ * TT-3023 TT-3024 TT-4798 Add Link & Activity & Recorded Resource (#1709)
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 9 Oct 2024 16:49:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 6 Dec 2024 21:33:00 -0600
 
 audio-project-manager (3.2.4.0)  experimental; urgency=high
 
