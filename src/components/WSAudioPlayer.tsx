@@ -187,6 +187,7 @@ function WSAudioPlayer(props: IProps) {
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
   const [offline] = useGlobal('offline');
+  const [isDeveloper] = useGlobal('developer');
   const [confirmAction, setConfirmAction] = useState<string | JSX.Element>('');
   const [jump] = useState(2);
   const playbackRef = useRef(1);
@@ -883,7 +884,7 @@ function WSAudioPlayer(props: IProps) {
                       <VertDivider id="wsAudioDiv4" />
                     </>
                   )}
-                  {!offline && (
+                  {isDeveloper && !offline && (
                     <LightTooltip id="noiseRemovalTim" title={ts.noiseRemoval}>
                       <span>
                         <IconButton

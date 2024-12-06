@@ -1,6 +1,6 @@
 {
   "name": "audio-project-manager",
-  "version": "3.3.0-alpha.4",
+  "version": "3.3.0",
   "description": "Flexible audio-text orality solution",
   "private": true,
   "dependencies": {
