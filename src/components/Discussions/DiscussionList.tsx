@@ -35,7 +35,7 @@ import ShowIcon from '@mui/icons-material/ArrowDropDown';
 import DiscussionCard, { DiscussionRegion } from './DiscussionCard';
 import BigDialog from '../../hoc/BigDialog';
 import CategoryList, { CatData } from './CategoryList';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { useDiscussionOrg, useOrgDefaults } from '../../crud';
 import FilterMenu, { IFilterState, Resolved } from './FilterMenu';
 import Confirm from '../AlertDialog';

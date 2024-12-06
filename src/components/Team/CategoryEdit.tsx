@@ -20,7 +20,7 @@ import {
   apmGraphic,
 } from '../GraphicUploader';
 import GraphicRights from '../GraphicRights';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { GraphicD, ICategoryStrings } from '../../model';
 import { UploadType } from '../MediaUpload';
@@ -118,7 +118,7 @@ export default function CategoryEdit({
     var remoteId = remoteIdNum(
       'artifactcategory',
       category.id,
-      memory.keyMap as RecordKeyMap
+      memory?.keyMap as RecordKeyMap
     );
     setColor(category.color);
     setMediafile(category.titleMediaId ?? '');

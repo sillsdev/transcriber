@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
   Invitation,
@@ -166,7 +166,7 @@ function Invite(props: IProps) {
     setRole(e);
   };
   const hasInvite = (email: string) => {
-    const selectInvite: Invitation[] = memory.cache.query((q) =>
+    const selectInvite: Invitation[] = memory?.cache.query((q) =>
       q.findRecords('invitation').filter({ attribute: 'email', value: email })
     ) as any;
     const checkOrg =

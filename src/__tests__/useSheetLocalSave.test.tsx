@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { setGlobal } from 'reactn';
+import { GlobalProvider, GlobalState } from '../context/GlobalContext';
 import {
   ISheet,
   IwsKind,
@@ -42,7 +42,7 @@ jest.mock('../schema', () => {
       ...originalModule.memory,
       query: originalModule.memory.query,
       on: originalModule.memory.on,
-      cache: originalModule.memory.cache,
+      cache: originalModule.memory?.cache,
       schema: originalModule.memory.schema,
       update: jest.fn(),
     },
@@ -51,6 +51,7 @@ jest.mock('../schema', () => {
 
 // see: https://kentcdodds.com/blog/how-to-test-custom-react-hooks
 interface HookProps {
+  globals: GlobalState;
   setComplete: (val: number) => void;
 }
 function setup(props: HookProps) {
@@ -66,9 +67,11 @@ function setup(props: HookProps) {
     return null;
   };
   render(
-    <DataProvider dataStore={memory}>
-      <TestComponent />
-    </DataProvider>
+    <GlobalProvider init={props.globals}>
+      <DataProvider dataStore={memory}>
+        <TestComponent />
+      </DataProvider>
+    </GlobalProvider>
   );
   return returnVal;
 }
@@ -79,9 +82,7 @@ test('save one section and one passage', async () => {
     user: 'u1',
     offlineOnly: false,
     memory,
-  };
-
-  setGlobal(globals);
+  } as GlobalState;
 
   const setComplete = jest.fn((val: number) => {});
   const worksheet: ISheet[] = [
@@ -100,7 +101,7 @@ test('save one section and one passage', async () => {
     },
   ];
 
-  const localSave = setup({ setComplete });
+  const localSave = setup({ globals, setComplete });
 
   await localSave(worksheet, [], [], '2021-09-21');
 
@@ -132,9 +133,7 @@ test('delete one section and one passage', async () => {
     user: 'u1',
     offlineOnly: false,
     memory,
-  };
-
-  setGlobal(globals);
+  } as GlobalState;
 
   const setComplete = jest.fn((val: number) => {});
   const worksheet: ISheet[] = [
@@ -156,7 +155,7 @@ test('delete one section and one passage', async () => {
     },
   ];
 
-  const localSave = setup({ setComplete });
+  const localSave = setup({ globals, setComplete });
 
   await localSave(worksheet, [], [], '2021-09-21');
 
@@ -175,9 +174,7 @@ test('update section and passage', async () => {
     user: 'u1',
     offlineOnly: false,
     memory,
-  };
-
-  setGlobal(globals);
+  } as GlobalState;
 
   const setComplete = jest.fn((val: number) => {});
   const worksheet: ISheet[] = [
@@ -235,7 +232,7 @@ test('update section and passage', async () => {
     } as PassageD,
   ];
 
-  const localSave = setup({ setComplete });
+  const localSave = setup({ globals, setComplete });
 
   await localSave(worksheet, sections, passages, '2021-09-21');
 
@@ -253,9 +250,7 @@ test('no update if same date', async () => {
     user: 'u1',
     offlineOnly: false,
     memory,
-  };
-
-  setGlobal(globals);
+  } as GlobalState;
 
   const setComplete = jest.fn((val: number) => {});
   const worksheet: ISheet[] = [
@@ -313,7 +308,7 @@ test('no update if same date', async () => {
     } as PassageD,
   ];
 
-  const localSave = setup({ setComplete });
+  const localSave = setup({ globals, setComplete });
 
   await localSave(worksheet, sections, passages, '2021-09-22');
 

@@ -80,7 +80,7 @@ export const serializersSettings = () =>
 export function serializersFor(memory: MemorySource) {
   return buildJSONAPISerializerFor({
     serializerSettingsFor: serializersSettings(),
-    schema: memory.schema,
-    keyMap: memory.keyMap,
+    schema: memory?.schema,
+    keyMap: memory?.keyMap,
   });
 }

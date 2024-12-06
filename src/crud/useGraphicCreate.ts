@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import Graphic, { GraphicD } from '../model/graphic';
 import {
   RecordIdentity,
@@ -22,7 +22,7 @@ export const useGraphicCreate = () => {
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
   const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
 
   return async (attributes: GraphicAttributes, mediafileId?: string) => {
     const graphicRec = {
@@ -60,7 +60,7 @@ export const useGraphicCreate = () => {
         remoteId(
           'graphic',
           graphicRec.id as string,
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         ) !== undefined,
       () => false,
       100

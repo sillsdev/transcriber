@@ -1,5 +1,5 @@
 import React, { useRef, useContext, useEffect, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import * as actions from '../store';
 import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
 import MediaUpload, { SIZELIMIT, UploadType } from './MediaUpload';
@@ -91,9 +91,9 @@ export const Uploader = (props: IProps) => {
     dispatch(actions.nextUpload(props));
   const uploadComplete = () => dispatch(actions.uploadComplete());
   const [coordinator] = useGlobal('coordinator');
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const [errorReporter] = useGlobal('errorReporter');
   const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
@@ -143,20 +143,20 @@ export const Uploader = (props: IProps) => {
       ? remoteIdNum(
           'artifacttype',
           artifactState.id,
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         ) || artifactState.id
       : artifactState?.id || '';
   const getPassageId = () =>
-    remoteIdNum('passage', passageId || '', memory.keyMap as RecordKeyMap) ||
+    remoteIdNum('passage', passageId || '', memory?.keyMap as RecordKeyMap) ||
     passageId;
   const getSourceMediaId = () =>
     remoteIdNum(
       'mediafile',
       sourceMediaId || '',
-      memory.keyMap as RecordKeyMap
+      memory?.keyMap as RecordKeyMap
     ) || sourceMediaId;
   const getUserId = () =>
-    remoteIdNum('user', user || '', memory.keyMap as RecordKeyMap) || user;
+    remoteIdNum('user', user || '', memory?.keyMap as RecordKeyMap) || user;
 
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     if (success) successCount.current += 1;
@@ -218,7 +218,7 @@ export const Uploader = (props: IProps) => {
   };
 
   const getPlanId = () =>
-    remoteIdNum('plan', planIdRef.current, memory.keyMap as RecordKeyMap) ||
+    remoteIdNum('plan', planIdRef.current, memory?.keyMap as RecordKeyMap) ||
     planIdRef.current;
 
   const doUpload = (currentlyLoading: number) => {
@@ -229,7 +229,7 @@ export const Uploader = (props: IProps) => {
       versionNumber: 1,
       originalFile: uploadList[currentlyLoading].name,
       contentType: getContentType(
-        uploadList[currentlyLoading].type,
+        uploadList[currentlyLoading]?.type,
         uploadList[currentlyLoading].name
       ),
       artifactTypeId: getArtifactTypeId(),
@@ -291,7 +291,7 @@ export const Uploader = (props: IProps) => {
             path.basename(files[ix].name, path.extname(files[ix].name)) +
               suffix +
               path.extname(files[ix].name),
-            { type: files[ix].type }
+            { type: files[ix]?.type }
           )
         );
       }

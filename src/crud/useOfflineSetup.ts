@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   Role,
   ProjectType,
@@ -26,12 +26,14 @@ import { requestedSchema } from '../schema';
 export const useOfflineSetup = () => {
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const { getTypeId } = useArtifactType();
-  const rn = new StandardRecordNormalizer({ schema: memory.schema });
+  const rn = memory
+    ? new StandardRecordNormalizer({ schema: memory?.schema })
+    : null;
 
   const makeTypeRecs = async (kind: string) => {
-    const allTypeRecs = memory.cache.query((q) =>
+    const allTypeRecs = memory?.cache.query((q) =>
       q.findRecords(`${kind}type`)
     ) as unknown as ProjectTypeD[];
     const offlineTypeRecs = allTypeRecs.filter((r) => !r?.keys?.remoteId);
@@ -42,14 +44,14 @@ export const useOfflineSetup = () => {
           name: 'Scripture',
         },
       } as any;
-      scriptureRec = rn.normalizeRecord(scriptureRec) as ProjectTypeD;
+      scriptureRec = rn?.normalizeRecord(scriptureRec) as ProjectTypeD;
       let otherRec: ProjectType = {
         type: `${kind}type`,
         attributes: {
           name: kind === 'project' ? 'Generic' : 'Other',
         },
       } as any;
-      otherRec = rn.normalizeRecord(otherRec) as ProjectTypeD;
+      otherRec = rn?.normalizeRecord(otherRec) as ProjectTypeD;
       const transform = (t: RecordTransformBuilder) => [
         t.addRecord(scriptureRec),
         t.addRecord(otherRec),
@@ -60,7 +62,7 @@ export const useOfflineSetup = () => {
   };
 
   const makeIntegrationRecs = async () => {
-    const allRecs = memory.cache.query((q) =>
+    const allRecs = memory?.cache.query((q) =>
       q.findRecords('integration')
     ) as Integration[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
@@ -71,7 +73,7 @@ export const useOfflineSetup = () => {
           name: 'paratext',
         },
       } as Integration;
-      paratextRec = rn.normalizeRecord(paratextRec) as IntegrationD;
+      paratextRec = rn?.normalizeRecord(paratextRec) as IntegrationD;
       await backup.sync((t) => [t.addRecord(paratextRec)]);
       await memory.sync((t) => [t.addRecord(paratextRec)]);
     }
@@ -86,21 +88,21 @@ export const useOfflineSetup = () => {
           name: 'paratextwholebacktranslation',
         },
       } as Integration;
-      wbtRec = rn.normalizeRecord(wbtRec) as IntegrationD;
+      wbtRec = rn?.normalizeRecord(wbtRec) as IntegrationD;
       let pbtRec = {
         type: 'integration',
         attributes: {
           name: 'paratextbacktranslation',
         },
       } as Integration;
-      pbtRec = rn.normalizeRecord(pbtRec) as IntegrationD;
+      pbtRec = rn?.normalizeRecord(pbtRec) as IntegrationD;
       await backup.sync((t) => [t.addRecord(wbtRec), t.addRecord(pbtRec)]);
       await memory.sync((t) => [t.addRecord(wbtRec), t.addRecord(pbtRec)]);
     }
   };
 
   const makeRoleRecs = async () => {
-    const allRoleRecs = memory.cache.query((q) =>
+    const allRoleRecs = memory?.cache.query((q) =>
       q.findRecords('role')
     ) as Role[];
     const offlineRoleRecs = allRoleRecs.filter((r) => !r?.keys?.remoteId);
@@ -112,7 +114,7 @@ export const useOfflineSetup = () => {
           roleName: RoleNames.Admin,
         },
       } as Role;
-      adminRec = rn.normalizeRecord(adminRec) as RoleD;
+      adminRec = rn?.normalizeRecord(adminRec) as RoleD;
       let memberRec = {
         type: 'role',
         attributes: {
@@ -120,7 +122,7 @@ export const useOfflineSetup = () => {
           roleName: RoleNames.Member,
         },
       } as Role;
-      memberRec = rn.normalizeRecord(memberRec) as RoleD;
+      memberRec = rn?.normalizeRecord(memberRec) as RoleD;
       const transform = (t: RecordTransformBuilder) => [
         t.addRecord(adminRec),
         t.addRecord(memberRec),
@@ -152,7 +154,7 @@ export const useOfflineSetup = () => {
           permissions: '{}',
         },
       } as WorkflowStep;
-      rec = rn.normalizeRecord(rec) as WorkflowStepD;
+      rec = rn?.normalizeRecord(rec) as WorkflowStepD;
       return t.addRecord(rec);
     });
     await backup.sync((t) => ops);
@@ -289,7 +291,7 @@ export const useOfflineSetup = () => {
   };
 
   const makeArtifactCategoryRecs = async () => {
-    const allRecs = memory.cache.query((q) =>
+    const allRecs = memory?.cache.query((q) =>
       q.findRecords('artifactcategory')
     ) as WorkflowStep[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
@@ -310,7 +312,7 @@ export const useOfflineSetup = () => {
             categoryname: n,
           },
         } as ArtifactCategory;
-        rec = rn.normalizeRecord(rec) as ArtifactCategoryD;
+        rec = rn?.normalizeRecord(rec) as ArtifactCategoryD;
         return t.addRecord(rec);
       });
       await backup.sync((t) => ops);
@@ -319,7 +321,7 @@ export const useOfflineSetup = () => {
   };
 
   const makeArtifactTypeRecs = async () => {
-    const allRecs = memory.cache.query((q) =>
+    const allRecs = memory?.cache.query((q) =>
       q.findRecords('artifacttype')
     ) as WorkflowStep[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
@@ -341,7 +343,7 @@ export const useOfflineSetup = () => {
             typename: n,
           },
         } as ArtifactType;
-        rec = rn.normalizeRecord(rec) as ArtifactTypeD;
+        rec = rn?.normalizeRecord(rec) as ArtifactTypeD;
         return t.addRecord(rec);
       });
       await backup.sync((t) => ops);
@@ -356,7 +358,7 @@ export const useOfflineSetup = () => {
             typename: n,
           },
         } as ArtifactType;
-        rec = rn.normalizeRecord(rec) as ArtifactTypeD;
+        rec = rn?.normalizeRecord(rec) as ArtifactTypeD;
         return t.addRecord(rec);
       });
       await backup.sync((t) => ops);
@@ -365,7 +367,7 @@ export const useOfflineSetup = () => {
   };
 
   const makeMoreArtifactTypeRecs = async () => {
-    const allRecs = memory.cache.query((q) =>
+    const allRecs = memory?.cache.query((q) =>
       q.findRecords('artifacttype')
     ) as WorkflowStep[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
@@ -378,7 +380,7 @@ export const useOfflineSetup = () => {
             typename: n,
           },
         } as ArtifactType;
-        rec = rn.normalizeRecord(rec) as ArtifactTypeD;
+        rec = rn?.normalizeRecord(rec) as ArtifactTypeD;
         return t.addRecord(rec);
       });
       await backup.sync((t) => ops);
@@ -387,7 +389,7 @@ export const useOfflineSetup = () => {
   };
 
   const makeTitleArtifactTypeRec = async () => {
-    const allRecs = memory.cache.query((q) =>
+    const allRecs = memory?.cache.query((q) =>
       q.findRecords('artifacttype')
     ) as WorkflowStep[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
@@ -400,7 +402,7 @@ export const useOfflineSetup = () => {
             typename: n,
           },
         } as ArtifactType;
-        rec = rn.normalizeRecord(rec) as ArtifactTypeD;
+        rec = rn?.normalizeRecord(rec) as ArtifactTypeD;
         return t.addRecord(rec);
       });
       await backup.sync((t) => ops);
@@ -409,7 +411,7 @@ export const useOfflineSetup = () => {
   };
 
   const makePassageTypeRecs = async () => {
-    const allRecs = memory.cache.query((q) =>
+    const allRecs = memory?.cache.query((q) =>
       q.findRecords('passagetype')
     ) as PassageType[];
     const offlineRecs = allRecs.filter((r) => !r?.keys?.remoteId);
@@ -436,7 +438,7 @@ export const useOfflineSetup = () => {
           type: 'passagetype',
           attributes: { ...n },
         } as PassageType;
-        rec = rn.normalizeRecord(rec) as PassageTypeD;
+        rec = rn?.normalizeRecord(rec) as PassageTypeD;
         return t.addRecord(rec);
       });
       await backup.sync((t) => ops);

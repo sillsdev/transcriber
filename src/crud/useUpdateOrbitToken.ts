@@ -1,9 +1,9 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import JSONAPISource from '@orbit/jsonapi';
 
 export const useUpdateOrbitToken = () => {
   const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
 
   return (myToken: string) => {
     // Update the token in the orbit request processor

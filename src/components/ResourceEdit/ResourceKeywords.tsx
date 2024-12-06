@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { IResourceState } from '.';
 import Tags, { filteredOptions } from '../../control/Tags';
 import { orgDefaultResKw, useOrgDefaults } from '../../crud';

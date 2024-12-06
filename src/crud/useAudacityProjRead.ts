@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { AudacityProjectD } from '../model';
 import { related } from '.';
 
@@ -6,7 +6,7 @@ export const useAudacityProjRead = () => {
   const [memory] = useGlobal('memory');
 
   return (passageId: string) => {
-    const audacityProjectRecs = memory.cache.query((q) =>
+    const audacityProjectRecs = memory?.cache.query((q) =>
       q.findRecords('audacityproject')
     ) as AudacityProjectD[];
     const selected = audacityProjectRecs.filter(

@@ -1,5 +1,5 @@
 import { Plan, PlanType } from '../model';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { usePlan } from './usePlan';
 import { related } from './related';
 
@@ -13,7 +13,7 @@ export const usePlanType = () => {
     const typeId = planRec && related(planRec, 'plantype');
     let typeRec: PlanType | null = null;
     if (typeId)
-      typeRec = memory.cache.query((q) =>
+      typeRec = memory?.cache.query((q) =>
         q.findRecord({ type: 'plantype', id: typeId })
       ) as PlanType;
     const flat = planRec ? planRec?.attributes?.flat : false;

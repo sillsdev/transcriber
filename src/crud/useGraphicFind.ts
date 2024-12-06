@@ -13,7 +13,7 @@ export const useGraphicFind = () => {
   return (recId: InitializedRecord, ref?: string) => {
     let graphicRec = graphics.find(
       (g) =>
-        g.attributes.resourceType === recId.type &&
+        g.attributes.resourceType === recId?.type &&
         g.attributes.resourceId === parseInt(recId?.keys?.remoteId ?? '0')
     );
     let color = undefined;

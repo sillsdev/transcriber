@@ -8,7 +8,7 @@ export const offlineProjectFromProject = (
   memory: Memory,
   projectid: string
 ) => {
-  const orec = memory.cache.query((q) =>
+  const orec = memory?.cache.query((q) =>
     q.findRecords('offlineproject')
   ) as OfflineProject[];
   const oprecs = orec.filter((r) => related(r, 'project') === projectid);

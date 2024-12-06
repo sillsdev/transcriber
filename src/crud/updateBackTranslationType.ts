@@ -26,7 +26,7 @@ export const updateBackTranslationType = async (
     );
   } else {
     //offline
-    var artifacttypes = memory.cache.query((q) =>
+    var artifacttypes = memory?.cache.query((q) =>
       q.findRecords('artifacttype')
     ) as ArtifactType[];
     var bt = artifacttypes.find(
@@ -51,7 +51,7 @@ export const updateBackTranslationType = async (
       }
     }
 
-    var mediafiles = memory.cache.query((q) =>
+    var mediafiles = memory?.cache.query((q) =>
       q
         .findRecords('mediafile')
         .filter({ relation: 'artifactType', record: bt as RecordIdentity })

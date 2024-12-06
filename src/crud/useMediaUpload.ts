@@ -1,5 +1,5 @@
 import { useRef, useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { pullTableList, remoteIdNum, useOfflnMediafileCreate } from '.';
 import * as actions from '../store';
 import JSONAPISource from '@orbit/jsonapi';
@@ -25,8 +25,8 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
   const [reporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [offline] = useGlobal('offline');
@@ -75,15 +75,15 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
 
   return async (files: File[]) => {
     const getPlanId = () =>
-      remoteIdNum('plan', plan, memory.keyMap as RecordKeyMap) || plan;
+      remoteIdNum('plan', plan, memory?.keyMap as RecordKeyMap) || plan;
     const getArtifactId = () =>
-      remoteIdNum('artifacttype', artifactId, memory.keyMap as RecordKeyMap) ||
+      remoteIdNum('artifacttype', artifactId, memory?.keyMap as RecordKeyMap) ||
       artifactId;
     const getPassageId = () =>
-      remoteIdNum('passage', passage.id, memory.keyMap as RecordKeyMap) ||
+      remoteIdNum('passage', passage.id, memory?.keyMap as RecordKeyMap) ||
       passage.id;
     const getUserId = () =>
-      remoteIdNum('user', user, memory.keyMap as RecordKeyMap) || user;
+      remoteIdNum('user', user, memory?.keyMap as RecordKeyMap) || user;
 
     uploadFiles(files);
     fileList.current = files;
@@ -91,7 +91,7 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
       planId: getPlanId(),
       versionNumber: 1,
       originalFile: files[0].name,
-      contentType: getContentType(files[0].type, files[0].name),
+      contentType: getContentType(files[0]?.type, files[0].name),
       artifactTypeId: getArtifactId(),
       passageId: getPassageId(),
       recordedbyUserId: getUserId(),

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -176,8 +176,8 @@ export function ScriptureTable(props: IProps) {
   const [plan] = useGlobal('plan');
   const [coordinator] = useGlobal('coordinator');
   const [offline] = useGlobal('offline');
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
   const [org] = useGlobal('organization');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -315,13 +315,13 @@ export function ScriptureTable(props: IProps) {
           def.minStep = remoteId(
             'orgworkflowstep',
             filter.minStep,
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           ) as string;
         if (filter.maxStep)
           def.maxStep = remoteId(
             'orgworkflowstep',
             filter.maxStep,
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           ) as string;
       }
       setProjectDefault(projDefFilterParam, def);
@@ -970,7 +970,7 @@ export function ScriptureTable(props: IProps) {
         const { ws } = getByIndex(sheetRef.current, i);
         const id = ws?.passage?.id || '';
         const passageRemoteId =
-          remoteIdNum('passage', id, memory.keyMap as RecordKeyMap) || id;
+          remoteIdNum('passage', id, memory?.keyMap as RecordKeyMap) || id;
         setView(`/detail/${prjId}/${passageRemoteId}`);
       });
     });
@@ -1196,13 +1196,13 @@ export function ScriptureTable(props: IProps) {
       filter.minStep = remoteIdGuid(
         'orgworkflowstep',
         filter.minStep,
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       );
     if (filter.maxStep && !isNaN(Number(filter.maxStep)))
       filter.maxStep = remoteIdGuid(
         'orgworkflowstep',
         filter.maxStep,
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       );
     return filter;
   };

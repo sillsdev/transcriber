@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { MediaFile, IAudioDownloadStrings, ISharedStrings } from '../model';
 import { IconButton, IconButtonProps, styled } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/GetAppOutlined';
@@ -38,7 +38,7 @@ export const AudioDownload = (props: IProps) => {
 
   const handleDownload = () => {
     const id =
-      remoteIdGuid('mediafile', mediaId, memory.keyMap as RecordKeyMap) ||
+      remoteIdGuid('mediafile', mediaId, memory?.keyMap as RecordKeyMap) ||
       mediaId;
     const mediaRec = memory.cache.query((q) =>
       q.findRecord({ type: 'mediafile', id })
@@ -57,7 +57,7 @@ export const AudioDownload = (props: IProps) => {
     if (mediaState.status === MediaSt.FETCHED)
       loadBlob(mediaState.url, (url, b) => {
         //not sure what this intermediary file is, but causes console errors
-        if (b && b.type !== 'text/html') setBlobUrl(URL.createObjectURL(b));
+        if (b && b?.type !== 'text/html') setBlobUrl(URL.createObjectURL(b));
       });
     if (mediaState?.error?.startsWith('no offline file'))
       showMessage(ts.fileNotFound);

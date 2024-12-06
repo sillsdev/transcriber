@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { related } from '.';
 import {
   IWorkflowStepsStrings,
@@ -38,7 +38,7 @@ export const useOrgWorkflowSteps = () => {
   const [global] = useGlobal();
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
   const [errorReporter] = useGlobal('errorReporter');
   const [offline] = useGlobal('offline');
@@ -67,7 +67,7 @@ export const useOrgWorkflowSteps = () => {
   ) => {
     let myOrgId = org ?? global.organization;
     // NB: The remoteId was not updated even though this always gets created online
-    // let myOrgRemoteId = remoteId('organization', myOrgId, memory.keyMap as RecordKeyMap);
+    // let myOrgRemoteId = remoteId('organization', myOrgId, memory?.keyMap as RecordKeyMap);
     // if (!offline && !myOrgRemoteId) {
     //   console.error(`no org remoteId for ${myOrgId}`);
     //   return; // offline users won't have an org remoteId

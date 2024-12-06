@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import * as actions from '../store';
 import { ITranscriptionTabStrings, ExportType, PlanD } from '../model';
 import {
@@ -30,7 +30,7 @@ export const useProjectExport = (props: IProps) => {
     dispatch(actions.exportProject(props));
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const [userId] = useGlobal('user');
   const [, setBusy] = useGlobal('importexportBusy');
   const [errorReporter] = useGlobal('errorReporter');

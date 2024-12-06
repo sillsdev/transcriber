@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 import {
   PlanD,
@@ -22,7 +22,7 @@ export const useProjectDelete = () => {
   return async (projectid: string) => {
     await offlineDelete(projectid);
     const plans = (
-      memory.cache.query((q) =>
+      memory?.cache.query((q) =>
         q.findRecords('plan').filter({
           relation: 'project',
           record: { type: 'project', id: projectid },
@@ -36,43 +36,43 @@ export const useProjectDelete = () => {
     var t = new RecordTransformBuilder();
     if (offlineOnly) {
       const mediafiles = (
-        memory.cache.query((q) =>
+        memory?.cache.query((q) =>
           q
             .findRecords('mediafile')
             .filter({ relation: 'plan', record: { type: 'plan', id: planid } })
         ) as MediaFileD[]
       ).map((m) => m.id);
       const discussions = (
-        memory.cache.query((q) => q.findRecords('discussion')) as DiscussionD[]
+        memory?.cache.query((q) => q.findRecords('discussion')) as DiscussionD[]
       )
         .filter((d) => mediafiles.includes(related(d, 'mediafile')))
         .map((x) => x.id);
       const comments = (
-        memory.cache.query((q) => q.findRecords('comment')) as CommentD[]
+        memory?.cache.query((q) => q.findRecords('comment')) as CommentD[]
       )
         .filter((d) => discussions.includes(related(d, 'discussion')))
         .map((x) => x.id);
       const sections = (
-        memory.cache.query((q) =>
+        memory?.cache.query((q) =>
           q
             .findRecords('section')
             .filter({ relation: 'plan', record: { type: 'plan', id: planid } })
         ) as SectionD[]
       ).map((s) => s.id);
       const passages = (
-        memory.cache.query((q) => q.findRecords('passage')) as PassageD[]
+        memory?.cache.query((q) => q.findRecords('passage')) as PassageD[]
       )
         .filter((p) => sections.includes(related(p, 'section')))
         .map((p) => p.id);
       const psc = (
-        memory.cache.query((q) =>
+        memory?.cache.query((q) =>
           q.findRecords('passagestatechange')
         ) as PassageStateChangeD[]
       )
         .filter((p) => passages.includes(related(p, 'passage')))
         .map((p) => p.id);
       const sectionresources = (
-        memory.cache.query((q) =>
+        memory?.cache.query((q) =>
           q.findRecords('sectionresource')
         ) as SectionResourceD[]
       )

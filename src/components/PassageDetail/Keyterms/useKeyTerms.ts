@@ -5,7 +5,7 @@ import { IKeyTerm, ILocalTerm } from '../../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings } from '../../../model';
 import { keyTermsSelector } from '../../../selector';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 
 export const ktHide = 'HI';
 

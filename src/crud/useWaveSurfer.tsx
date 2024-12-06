@@ -1,6 +1,6 @@
 import _, { debounce } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
 import { logError, Severity } from '../utils/logErrorService';

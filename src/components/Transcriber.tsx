@@ -8,7 +8,7 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useParams } from 'react-router-dom';
 import {
   default as SplitPaneBar,
@@ -732,13 +732,13 @@ export function Transcriber(props: IProps) {
         remoteIdNum(
           'passage',
           passage.id as string,
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         ),
         artifactId &&
           (remoteId(
             'artifacttype',
             artifactId,
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           ) as string),
         errorReporter,
         t.pullParatextStart

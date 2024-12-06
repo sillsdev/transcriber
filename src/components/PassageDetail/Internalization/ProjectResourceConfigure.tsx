@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useContext, ChangeEvent } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 import {
   Section,
   IPassageDetailArtifactsStrings,
@@ -201,9 +201,9 @@ export const ProjectResourceConfigure = (props: IProps) => {
     if (items?.length > 0) {
       let newData: ICell[][] = emptyTable();
       const newInfo = items.map((v) => {
-        const rec = memory.cache.query((q) => q.findRecord(v));
+        const rec = memory?.cache.query((q) => q.findRecord(v));
         if (!rec) return {} as IInfo;
-        if (v.type === 'passage') {
+        if (v?.type === 'passage') {
           const section = findRecord(
             memory,
             'section',
@@ -340,7 +340,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
 
   const loadPastedSegments = (newData: ICell[][]) => {
     var duration = media?.attributes.duration || 0;
-    var psgIndexes = items.map((r) => r.type === 'passage');
+    var psgIndexes = items.map((r) => r?.type === 'passage');
     var segBoundaries = newData
       .filter((r, i) => i > 0 && psgIndexes[i - 1])
       .map((s) => s[ColName.Limits].value); //should be like "0.0-34.9"

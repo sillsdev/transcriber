@@ -29,7 +29,7 @@ const BookReducers = function (
   state = bookCleanState,
   action: BookNameMsgs | LocalizationMsgs
 ): IBookNameData {
-  switch (action.type) {
+  switch (action?.type) {
     case FETCH_BOOKS:
       return {
         ...state,

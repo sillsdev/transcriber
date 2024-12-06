@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { IProfileStrings, IState } from '../model';
 import * as action from '../store';
 import { TokenContext } from '../context/TokenProvider';
@@ -8,9 +8,9 @@ import { profileSelector } from '../selector';
 import { getParatextDataPath } from './paratextPath';
 
 export const useHasParatext = () => {
-    const [ptPath, setPtPath] = useState('');
-    const [hasParatext, setHasParatext] = useState(false);
-    const [isOffline] = useGlobal('offline');
+  const [ptPath, setPtPath] = useState('');
+  const [hasParatext, setHasParatext] = useState(false);
+  const [isOffline] = useGlobal('offline');
   const { accessToken } = useContext(TokenContext).state;
   const [errorReporter] = useGlobal('errorReporter');
   const paratext_username = useSelector(
@@ -36,10 +36,16 @@ export const useHasParatext = () => {
       }
       setHasParatext(paratext_username !== '');
     } else {
-        setHasParatext(ptPath !== '');
+      setHasParatext(ptPath !== '');
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accessToken, errorReporter, isOffline, paratext_username, paratext_usernameStatus]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    accessToken,
+    errorReporter,
+    isOffline,
+    paratext_username,
+    paratext_usernameStatus,
+  ]);
 
   return { hasParatext, ptPath };
 };

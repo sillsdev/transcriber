@@ -6,7 +6,7 @@ import {
   CSSProperties,
   useContext,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   IconButton,
   Typography,

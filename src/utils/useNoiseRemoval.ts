@@ -1,4 +1,4 @@
-import { useGlobal, useRef } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { RecordKeyMap } from '@orbit/records';
 
 import JSONAPISource from '@orbit/jsonapi';
@@ -14,8 +14,8 @@ import {
   axiosSendSignedUrl,
 } from './axios';
 import { HttpStatusCode } from 'axios';
-import { uploadFile } from '../store';
-import { useContext } from 'react';
+import { uploadFile } from '../store/upload/actions';
+import { useContext, useRef } from 'react';
 import { TokenContext } from '../context/TokenProvider';
 import { loadBlobAsync } from './loadBlob';
 
@@ -37,9 +37,9 @@ export const useNoiseRemoval = () => {
   const [reporter] = useGlobal('errorReporter');
   const [coordinator] = useGlobal('coordinator');
   const [offline] = useGlobal('offline');
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const [errorReporter] = useGlobal('errorReporter');
   const jobList: job[] = [];
   const fileList: fileTask[] = [];
@@ -240,7 +240,7 @@ export const useNoiseRemoval = () => {
     const blob = new Blob(chunks);
 
     // Create a File object from the Blob
-    const file = new File([blob], fileName, { type: blob.type });
+    const file = new File([blob], fileName, { type: blob?.type });
     return file;
   };
 */
@@ -262,7 +262,7 @@ export const useNoiseRemoval = () => {
           var localId = await waitForLocalId(
             'mediafile',
             mediaId,
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           );
           job.cb(localId);
         } else {

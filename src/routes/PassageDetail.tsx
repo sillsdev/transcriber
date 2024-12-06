@@ -6,7 +6,7 @@ import React, {
   PropsWithChildren,
   Suspense,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useLocation, useParams } from 'react-router-dom';
 import { Grid, debounce, Paper, Box, SxProps, Stack } from '@mui/material';
 
@@ -173,7 +173,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
       var id = JSON.parse(settings).artifactTypeId;
       if (id)
         return (
-          remoteIdGuid('artifacttype', id, memory.keyMap as RecordKeyMap) ?? id
+          remoteIdGuid('artifacttype', id, memory?.keyMap as RecordKeyMap) ?? id
         );
     }
     return null;
