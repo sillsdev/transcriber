@@ -1,3 +1,9 @@
+audio-project-manager (3.3.1.0)  experimental; urgency=high
+
+ * TT-6201 type error uploading and attaching audio
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 9 Dec 2024 14:21:00 -0600
+
 audio-project-manager (3.3.0.0)  experimental; urgency=high
 
  * TT-6196 allow re-arranging workflow with hidden items (#1807)

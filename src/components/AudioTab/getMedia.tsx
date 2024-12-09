@@ -1,5 +1,5 @@
 import { MediaFile, Passage, Section, BookName } from '../../model';
-import { mediaFileName, related } from '../../crud';
+import { mediaFileName, PublishLevelEnum, related } from '../../crud';
 import { IRow } from '.';
 import { GetReference } from './GetReference';
 import { getSection } from './getSection';
@@ -41,15 +41,14 @@ export const mediaRow = (f: MediaFile, data: IGetMedia) => {
     reference: (
       <GetReference passage={passage} bookData={allBookData} flat={false} />
     ),
-    duration: formatTime(f.attributes.duration),
-    size: Math.round((f.attributes.filesize / 1024 / 1024) * 10) / 10.0,
-    version: f.attributes.versionNumber
-      ? f.attributes.versionNumber.toString()
-      : '',
+    duration: formatTime(f?.attributes?.duration ?? 0),
+    size:
+      Math.round(((f?.attributes?.filesize ?? 0) / 1024 / 1024) * 10) / 10.0,
+    version: f?.attributes?.versionNumber?.toString() ?? '',
     date: updateddt,
-    readyToShare: f.attributes.readyToShare,
-    publishTo: f.attributes.publishTo,
-    passageType: passageTypeFromRef(passage[0].attributes.reference),
+    readyToShare: f?.attributes?.readyToShare ?? false,
+    publishTo: f?.attributes?.publishTo ?? PublishLevelEnum.None,
+    passageType: passageTypeFromRef(passage[0]?.attributes?.reference ?? ''),
     user: related(f, 'recordedbyUser'),
   } as IRow;
 };
