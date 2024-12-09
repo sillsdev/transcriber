@@ -33,7 +33,7 @@ import { PlanContext } from '../../context/PlanContext';
 import BookSelect from '../BookSelect';
 import { useRefErrTest } from './useRefErrTest';
 import { SectionSeqCol } from './PlanSheet';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { useShowIcon } from './useShowIcon';
 import { ExtraIcon } from '.';
 import { positiveWholeOnly, stringAvatar } from '../../utils';

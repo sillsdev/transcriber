@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, useRef } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 import {
   MediaFileD,
   SectionResourceD,
@@ -67,7 +67,7 @@ export const SelectProjectResource = (props: IProps) => {
   const handleDelete =
     (m: MediaFileD) => (event: React.MouseEvent<HTMLElement>) => {
       event.stopPropagation();
-      const mediafiles = memory.cache.query((q) =>
+      const mediafiles = memory?.cache.query((q) =>
         q.findRecords('mediafile')
       ) as MediaFileD[];
       const affected = mediafiles.filter(
@@ -83,7 +83,7 @@ export const SelectProjectResource = (props: IProps) => {
     if (confirm && media.current) {
       const total = media.current.length + 1;
       let n = 0;
-      const secResources = memory.cache.query((q) =>
+      const secResources = memory?.cache.query((q) =>
         q.findRecords('sectionresource')
       ) as SectionResourceD[];
       for (let m of media.current) {

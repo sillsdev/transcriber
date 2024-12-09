@@ -1,5 +1,5 @@
 import React, { useContext, useState, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { Grid } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import { Organization, DialogMode, OrganizationD } from '../../model';

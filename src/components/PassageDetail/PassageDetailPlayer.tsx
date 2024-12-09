@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { Button, IconButton } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { UnsavedContext } from '../../context/UnsavedContext';

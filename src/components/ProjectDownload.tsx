@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import * as actions from '../store';
 import path from 'path-browserify';
 import {
@@ -75,7 +75,7 @@ export const ProjectDownload = (props: IProps) => {
   const [exportName, setExportName] = React.useState('');
   const [exportUrl, setExportUrl] = React.useState('');
   const [offlineUpdates] = React.useState<RecordOperation[]>([]);
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
 
   const translateError = (err: IAxiosStatus): string => {
     if (err.errStatus === 401) return ts.expiredToken;

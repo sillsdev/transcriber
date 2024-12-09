@@ -6,7 +6,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { mediaTabSelector } from '../selector';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { Rights } from './GraphicUploader';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { related } from '../crud';
 import { JSONParse } from '../utils';
 

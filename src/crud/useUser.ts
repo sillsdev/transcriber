@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { UserD } from '../model';
 
 export const useUser = () => {
@@ -12,7 +12,7 @@ export const useUser = () => {
       return user;
     }
     try {
-      user = memory.cache.query((q) =>
+      user = memory?.cache.query((q) =>
         q.findRecord({ type: 'user', id })
       ) as UserD;
     } catch (error) {

@@ -142,7 +142,7 @@ export const exportProject =
           ? (remoteIdGuid(
               'project',
               projectid.toString(),
-              memory.keyMap as RecordKeyMap
+              memory?.keyMap as RecordKeyMap
             ) as string)
           : projectid
       ) as Project;
@@ -182,7 +182,7 @@ export const exportProject =
       const remProjectId =
         typeof projectid === 'number'
           ? projectid.toString()
-          : remoteId('project', projectid, memory.keyMap as RecordKeyMap);
+          : remoteId('project', projectid, memory?.keyMap as RecordKeyMap);
       let start = 0;
       let laststart = 0;
       let laststartCount = 0;
@@ -204,7 +204,7 @@ export const exportProject =
             target,
             orgWorkflowSteps,
           } as IExportArtifacts)?.map((m) =>
-            remoteId('mediafile', m.id, memory.keyMap as RecordKeyMap)
+            remoteId('mediafile', m.id, memory?.keyMap as RecordKeyMap)
           );
           if (mediaList && mediaList.length > 0) {
             if (artifactType)
@@ -586,8 +586,8 @@ export const importProjectToElectron =
     var tb = new RecordTransformBuilder();
     var oparray: RecordOperation[] = [];
 
-    const memory = coordinator.getSource('memory') as Memory;
-    const backup = coordinator.getSource('backup') as IndexedDBSource;
+    const memory = coordinator?.getSource('memory') as Memory;
+    const backup = coordinator?.getSource('backup') as IndexedDBSource;
 
     const importJson = async (
       ser: JSONAPIDocumentSerializer,
@@ -628,9 +628,9 @@ export const importProjectToElectron =
       var id = project.id;
       if (project.keys) {
         id = remoteIdGuid(
-          project.type,
+          project?.type,
           project.keys['remoteId'],
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         );
       }
       try {

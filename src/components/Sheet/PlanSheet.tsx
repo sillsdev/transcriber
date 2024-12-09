@@ -8,7 +8,7 @@ import {
   ReactElement,
   useCallback,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import {
   IPlanSheetStrings,
   ISharedStrings,
@@ -718,7 +718,7 @@ export function PlanSheet(props: IProps) {
         const pasGuid = remoteIdGuid(
           'passage',
           lastPasId,
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         );
         row = rowInfo.findIndex((r) => r.passage?.id === pasGuid);
       }

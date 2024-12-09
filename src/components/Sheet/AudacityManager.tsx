@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import moment from 'moment';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
@@ -167,7 +167,7 @@ function AudacityManager(props: IProps) {
     let mediaName = '';
     if ((mediaId || '') !== '') {
       const remId =
-        remoteId('mediafile', mediaId, memory.keyMap as RecordKeyMap) ?? '';
+        remoteId('mediafile', mediaId, memory?.keyMap as RecordKeyMap) ?? '';
       if (remId !== '' && !isOffline) {
         mediaName =
           (await fetchUrl({

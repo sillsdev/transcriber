@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import PassageTypeD, { PassageTypeEnum } from '../model/passageType';
 import { remoteId } from './remoteId';
 import { findRecord } from './tryFindRecord';
@@ -29,7 +29,7 @@ export const usePassageType = () => {
             remoteId(
               'passagetype',
               r.id as string,
-              memory.keyMap as RecordKeyMap
+              memory?.keyMap as RecordKeyMap
             )
           ) !== offlineOnly
       );

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import SettingsIcon from '@mui/icons-material/Settings';

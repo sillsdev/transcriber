@@ -13,7 +13,7 @@ import {
 import { TableBandHeader } from '@devexpress/dx-react-grid-material-ui';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { esES, frFR, ptBR, ruRU, zhCN } from '@mui/x-data-grid';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 interface MyColumn {
   name: string;
   title: string;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { UserD } from '../model';
 import { Avatar } from '@mui/material';
 import { makeAbbr } from '../utils';

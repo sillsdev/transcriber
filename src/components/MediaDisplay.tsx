@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useFetchMediaUrl, MediaSt } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { ISharedStrings } from '../model';

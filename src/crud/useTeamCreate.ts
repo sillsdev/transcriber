@@ -1,5 +1,5 @@
 import { useMemo, useRef } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   Organization,
   RoleNames,
@@ -44,7 +44,7 @@ export const useTeamCreate = () => {
   const { AddOrgNoteCategories } = useArtifactCategory();
 
   const memory = useMemo(
-    () => coordinator.getSource('memory') as Memory,
+    () => coordinator?.getSource('memory') as Memory,
     [coordinator]
   );
 

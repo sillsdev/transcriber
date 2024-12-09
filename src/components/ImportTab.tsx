@@ -39,7 +39,7 @@ import * as actions from '../store';
 import MediaUpload, { UploadType } from './MediaUpload';
 import { useSnackBar } from '../hoc/SnackBar';
 import { useElectronImport } from '../routes/ElectronImport';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   remoteIdNum,
   PassageDescription,
@@ -133,8 +133,8 @@ export function ImportTab(props: IProps) {
   const [_busy, setBusy] = useGlobal('importexportBusy');
   const importingRef = useRef(false);
   const [coordinator] = useGlobal('coordinator');
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
   const [errorReporter] = useGlobal('errorReporter');
   const [user] = useGlobal('user');
   const [isOffline] = useGlobal('offline');
@@ -259,7 +259,7 @@ export function ImportTab(props: IProps) {
           projectid: remoteIdNum(
             'project',
             project,
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           ),
           token,
           errorReporter,
@@ -324,7 +324,7 @@ export function ImportTab(props: IProps) {
             ? (remoteIdGuid(
                 'section',
                 sectionid.id,
-                memory.keyMap as RecordKeyMap
+                memory?.keyMap as RecordKeyMap
               ) as string)
             : sectionid.id,
         })
@@ -343,7 +343,7 @@ export function ImportTab(props: IProps) {
             ? (remoteIdGuid(
                 'plan',
                 planid.id,
-                memory.keyMap as RecordKeyMap
+                memory?.keyMap as RecordKeyMap
               ) as string)
             : planid.id,
         })
@@ -371,7 +371,7 @@ export function ImportTab(props: IProps) {
         var imported = '';
         var other = '';
         var plan = '';
-        switch (c.type) {
+        switch (c?.type) {
           case 'project':
             //expecting only deleted
             var project = c.imported.data as Project;
@@ -390,7 +390,7 @@ export function ImportTab(props: IProps) {
                   id: remoteIdGuid(
                     'passage',
                     passageid.id,
-                    memory.keyMap as RecordKeyMap
+                    memory?.keyMap as RecordKeyMap
                   ) as string,
                 })
               ) as Passage;
@@ -449,7 +449,7 @@ export function ImportTab(props: IProps) {
                             section?.relationships?.editor
                               .data as RecordIdentity
                           ).id,
-                          memory.keyMap as RecordKeyMap
+                          memory?.keyMap as RecordKeyMap
                         ) as string,
                       })
                     ) as User)
@@ -461,7 +461,7 @@ export function ImportTab(props: IProps) {
                       'user',
                       (oldsection?.relationships?.editor.data as RecordIdentity)
                         .id,
-                      memory.keyMap as RecordKeyMap
+                      memory?.keyMap as RecordKeyMap
                     ) as string,
                   })
                 ) as User;
@@ -491,7 +491,7 @@ export function ImportTab(props: IProps) {
                             section?.relationships?.transcriber
                               .data as RecordIdentity
                           ).id,
-                          memory.keyMap as RecordKeyMap
+                          memory?.keyMap as RecordKeyMap
                         ) as string,
                       })
                     ) as User)
@@ -505,7 +505,7 @@ export function ImportTab(props: IProps) {
                         oldsection?.relationships?.transcriber
                           .data as RecordIdentity
                       ).id,
-                      memory.keyMap as RecordKeyMap
+                      memory?.keyMap as RecordKeyMap
                     ) as string,
                   })
                 ) as User;
@@ -617,7 +617,7 @@ export function ImportTab(props: IProps) {
                 id: remoteIdGuid(
                   'group',
                   (gm?.relationships?.group.data as RecordIdentity).id,
-                  memory.keyMap as RecordKeyMap
+                  memory?.keyMap as RecordKeyMap
                 ) as string,
               })
             ) as Group;

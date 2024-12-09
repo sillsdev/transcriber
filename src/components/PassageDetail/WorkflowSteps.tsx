@@ -4,7 +4,7 @@ import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { toCamel } from '../../utils';
 import { useEffect, useState } from 'react';
 import { SimpleWf } from '../../context/PassageDetailContext';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../../selector';

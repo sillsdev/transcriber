@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { localizeRole, LocalKey, localUserKey, useMyNavigate } from '../utils';
 import { shallowEqual } from 'react-redux';
 import {

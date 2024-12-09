@@ -2,7 +2,7 @@ import { MenuItem, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { ISharedStrings, RoleD } from '../model';
 import { localizeRole } from '../utils';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../selector';
 import { useOrbitData } from '../hoc/useOrbitData';

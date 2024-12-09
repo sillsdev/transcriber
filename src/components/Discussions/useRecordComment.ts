@@ -1,5 +1,5 @@
 import { useMemo, useRef, useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import {
   findRecord,
   pullTableList,
@@ -37,8 +37,8 @@ export const useRecordComment = ({
   const [reporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [offline] = useGlobal('offline');
@@ -100,15 +100,15 @@ export const useRecordComment = ({
 
   const uploadMedia = async (files: File[]) => {
     const getPlanId = () =>
-      remoteIdNum('plan', plan, memory.keyMap as RecordKeyMap) || plan;
+      remoteIdNum('plan', plan, memory?.keyMap as RecordKeyMap) || plan;
     const getArtifactId = () =>
-      remoteIdNum('artifacttype', commentId, memory.keyMap as RecordKeyMap) ||
+      remoteIdNum('artifacttype', commentId, memory?.keyMap as RecordKeyMap) ||
       commentId;
     const getPassageId = () =>
-      remoteIdNum('passage', passageId, memory.keyMap as RecordKeyMap) ||
+      remoteIdNum('passage', passageId, memory?.keyMap as RecordKeyMap) ||
       passageId;
     const getUserId = () =>
-      remoteIdNum('user', user, memory.keyMap as RecordKeyMap) || user;
+      remoteIdNum('user', user, memory?.keyMap as RecordKeyMap) || user;
 
     uploadFiles(files);
     fileList.current = files;
@@ -116,7 +116,7 @@ export const useRecordComment = ({
       planId: getPlanId(),
       versionNumber: 1,
       originalFile: files[0].name,
-      contentType: files[0].type,
+      contentType: files[0]?.type,
       artifactTypeId: getArtifactId(),
       passageId: getPassageId(),
       recordedbyUserId: getUserId(),

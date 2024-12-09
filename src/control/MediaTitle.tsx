@@ -43,7 +43,7 @@ import {
   useOfflnMediafileCreate,
   VernacularTag,
 } from '../crud';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { TokenContext } from '../context/TokenProvider';
 import { UploadType } from '../components/MediaUpload';
 import { LangTag, LanguagePicker } from 'mui-language-picker';
@@ -244,8 +244,8 @@ export default function MediaTitle(props: IProps) {
   const [memory] = useGlobal('memory');
   const [reporter] = useGlobal('errorReporter');
   const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const [user] = useGlobal('user');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -301,14 +301,14 @@ export default function MediaTitle(props: IProps) {
   const getPlanId = () => {
     if (useplan)
       return (
-        remoteIdNum('plan', useplan, memory.keyMap as RecordKeyMap) || useplan
+        remoteIdNum('plan', useplan, memory?.keyMap as RecordKeyMap) || useplan
       );
-    return remoteIdNum('plan', plan, memory.keyMap as RecordKeyMap) || plan;
+    return remoteIdNum('plan', plan, memory?.keyMap as RecordKeyMap) || plan;
   };
 
   const TitleId = useMemo(() => {
     var id = getTypeId(ArtifactTypeSlug.Title) as string;
-    return remoteId('artifacttype', id, memory.keyMap as RecordKeyMap) || id;
+    return remoteId('artifacttype', id, memory?.keyMap as RecordKeyMap) || id;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offlineOnly]);
 
@@ -340,13 +340,13 @@ export default function MediaTitle(props: IProps) {
         'mediaId',
         () =>
           offlineOnly ||
-          remoteIdGuid('mediafile', mediaId, memory.keyMap as RecordKeyMap) !==
+          remoteIdGuid('mediafile', mediaId, memory?.keyMap as RecordKeyMap) !==
             undefined,
         () => false,
         100
       ).then(() => {
         onMediaIdChange(
-          remoteIdGuid('mediafile', mediaId, memory.keyMap as RecordKeyMap) ??
+          remoteIdGuid('mediafile', mediaId, memory?.keyMap as RecordKeyMap) ??
             mediaId
         );
         reset();
@@ -460,9 +460,9 @@ export default function MediaTitle(props: IProps) {
     reset();
   };
   const getUserId = () =>
-    remoteIdNum('user', user || '', memory.keyMap as RecordKeyMap) || user;
+    remoteIdNum('user', user || '', memory?.keyMap as RecordKeyMap) || user;
   const getPassageId = () =>
-    remoteIdNum('passage', passageId || '', memory.keyMap as RecordKeyMap) ||
+    remoteIdNum('passage', passageId || '', memory?.keyMap as RecordKeyMap) ||
     passageId;
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     const uploadList = fileList.current;
@@ -509,7 +509,7 @@ export default function MediaTitle(props: IProps) {
       planId: getPlanId(),
       versionNumber: 1,
       originalFile: files[0].name,
-      contentType: files[0].type,
+      contentType: files[0]?.type,
       artifactTypeId: passageId !== undefined ? VernacularTag : TitleId,
       recordedbyUserId: getUserId(),
       userId: getUserId(),

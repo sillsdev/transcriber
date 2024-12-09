@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { SectionD, PlanD, PassageD } from '../model';
 import { RecordIdentity, InitializedRecord } from '@orbit/records';
 import { related, usePlan } from '.';
@@ -16,7 +16,7 @@ const planSlug = (rec: PlanD | null) => {
 };
 
 const recSlug = (rec: InitializedRecord, seq: number) => {
-  return `-${pad2(seq)}${rec.type.slice(0, 1)}${
+  return `-${pad2(seq)}${rec?.type.slice(0, 1)}${
     rec?.keys?.remoteId || rec?.id.slice(0, 4)
   }`;
 };
@@ -26,11 +26,11 @@ export const useAudProjName = () => {
   const { getPlan } = usePlan();
 
   return async (passageId: RecordIdentity) => {
-    const passRec = memory.cache.query((q) =>
+    const passRec = memory?.cache.query((q) =>
       q.findRecord(passageId)
     ) as PassageD;
     const secId = related(passRec, 'section');
-    const secRec = memory.cache.query((q) =>
+    const secRec = memory?.cache.query((q) =>
       q.findRecord({ type: 'section', id: secId })
     ) as SectionD;
     const planRec = getPlan(related(secRec, 'plan'));

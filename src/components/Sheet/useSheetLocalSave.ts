@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import {
   SectionD,
   Passage,

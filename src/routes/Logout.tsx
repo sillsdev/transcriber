@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import { TokenContext } from '../context/TokenProvider';
 import { isElectron } from '../api-variable';
 import { localeDefault, LocalKey, useMyNavigate } from '../utils';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { GrowingSpacer } from '../control';
 import { useLogoutResets } from '../utils/useLogoutResets';
 const version = require('../../package.json').version;
@@ -54,7 +54,7 @@ export function Logout() {
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
-    setLanguage(localeDefault(isDeveloper));
+    setLanguage(localeDefault(isDeveloper === 'true'));
     fetchLocalization();
     if (!isElectron) {
       // ctx.logout();

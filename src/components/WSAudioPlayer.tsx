@@ -56,7 +56,7 @@ import { WSAudioPlayerSilence } from './WSAudioPlayerSilence';
 import { AltButton, RemoveNoiseIcon } from '../control';
 import { useNoiseRemoval } from '../utils/useNoiseRemoval';
 import { Exception } from '@orbit/core';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { AxiosError } from 'axios';
 
 const VertDivider = (prop: DividerProps) => (
@@ -627,7 +627,7 @@ function WSAudioPlayer(props: IProps) {
       blob,
       recordStartPosition.current,
       recordOverwritePosition.current || recordStartPosition.current,
-      e.type
+      e?.type
     );
     recordOverwritePosition.current = newPos;
     setDuration(wsDuration());

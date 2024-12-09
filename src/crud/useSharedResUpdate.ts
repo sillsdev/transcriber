@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { ArtifactCategory, SharedResourceD } from '../model';
 import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
 import { ReplaceRelatedRecord, UpdateRecord } from '../model/baseModel';

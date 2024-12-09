@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { User, GroupD, GroupMembership } from '../../model';
 import { PermissionName, related, useAllUserGroup, useUser } from '../../crud';
 import { useOrbitData } from '../../hoc/useOrbitData';

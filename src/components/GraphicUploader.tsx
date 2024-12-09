@@ -4,7 +4,7 @@ import MediaUpload, { SIZELIMIT, UploadType } from './MediaUpload';
 import { mediaTabSelector } from '../selector';
 import { GraphicD, IMediaTabStrings } from '../model';
 import imageCompression from 'browser-image-compression';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { logError, Severity } from '../utils';
 
 // Converting to/from Blob: https://stackoverflow.com/questions/68276368/javascript-convert-a-blob-object-to-a-string-and-back
@@ -135,7 +135,7 @@ export function GraphicUploader(props: IProps) {
         results.push({
           name: sizedName(defaultFilename || imageFile.name, dim, ext),
           content: (await blobToBase64(compressedFile)) as string,
-          type: imageFile.type,
+          type: imageFile?.type,
           dimension: dim,
         });
       } catch (error) {

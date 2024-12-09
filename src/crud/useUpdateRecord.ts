@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { BaseModel, UpdateRecord } from '../model/baseModel';
 import { InitializedRecord } from '@orbit/records';
 

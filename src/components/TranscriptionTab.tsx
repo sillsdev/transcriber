@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import * as actions from '../store';
 import {
   IState,
@@ -137,7 +137,7 @@ export function TranscriptionTab(props: IProps) {
   const [isScripture, setScripture] = useState(false);
   const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const [lang] = useGlobal('lang');
@@ -227,10 +227,10 @@ export function TranscriptionTab(props: IProps) {
   const doProjectExport = (exportType: ExportType, importedDate?: Moment) => {
     setBusy(true);
 
-    const mediaFiles = memory.cache.query((q) =>
+    const mediaFiles = memory?.cache.query((q) =>
       q.findRecords('mediafile')
     ) as MediaFileD[];
-    const plans = memory.cache.query((q) => q.findRecords('plan')) as Plan[];
+    const plans = memory?.cache.query((q) => q.findRecords('plan')) as Plan[];
 
     var projectplans = plans.filter((pl) => related(pl, 'project') === project);
     /* get correct count */
@@ -631,11 +631,11 @@ export function TranscriptionTab(props: IProps) {
     const { column, row } = props;
     if (column.name === 'action') {
       if (row.parentId) {
-        const passRec = memory.cache.query((q) =>
+        const passRec = memory?.cache.query((q) =>
           q.findRecord({ type: 'passage', id: row.id })
         ) as PassageD;
         const state = getPassageState(passRec);
-        const media = memory.cache.query((q) =>
+        const media = memory?.cache.query((q) =>
           q
             .findRecords('mediafile')
             .filter({ relation: 'passage', record: passRec })

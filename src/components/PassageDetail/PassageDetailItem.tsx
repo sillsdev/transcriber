@@ -49,7 +49,7 @@ import DiscussionList from '../Discussions/DiscussionList';
 import MediaPlayer from '../MediaPlayer';
 import MediaRecord from '../MediaRecord';
 import SelectRecording from './SelectRecording';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import Confirm from '../AlertDialog';
 import Uploader from '../Uploader';
@@ -175,7 +175,7 @@ export function PassageDetailItem(props: IProps) {
   const [defaultFilename, setDefaultFileName] = useState('');
   const [coordinator] = useGlobal('coordinator');
   const [offline] = useGlobal('offline');
-  const memory = coordinator.getSource('memory') as Memory;
+  const memory = coordinator?.getSource('memory') as Memory;
   const [speaker, setSpeaker] = useState('');
   const [topic, setTopic] = useState('');
   const [importList, setImportList] = useState<File[]>();

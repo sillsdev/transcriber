@@ -30,7 +30,7 @@ import {
   getVernacularMediaRec,
 } from '../../crud';
 import { useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { passageTypeFromRef } from '../../control/RefRender';
 import { PassageTypeEnum } from '../../model/passageType';
@@ -106,8 +106,8 @@ export function ResourceTabs({
   const graphicCreate = useGraphicCreate();
   const { userIsAdmin } = useRole();
   const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
@@ -268,7 +268,7 @@ export function ResourceTabs({
         var psgId = remoteIdNum(
           'passage',
           related(sr, 'passage'),
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         );
         const filter = [{ attribute: 'passage-id', value: psgId }];
         await remotePullAll({
@@ -289,12 +289,12 @@ export function ResourceTabs({
     const sourceId = remoteIdNum(
       'passage',
       related(sr, 'passage'),
-      memory.keyMap as RecordKeyMap
+      memory?.keyMap as RecordKeyMap
     );
     const resourceId = remoteIdNum(
       'passage',
       passage.id,
-      memory.keyMap as RecordKeyMap
+      memory?.keyMap as RecordKeyMap
     );
     const sourceGraphicRec = graphics.find(
       (g) =>

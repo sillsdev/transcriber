@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { User, GroupMembership, IUsertableStrings } from '../model';
 import {
   Button,
@@ -54,7 +54,7 @@ export function UserAdd(props: IProps) {
     const userRec = users.filter((u) => u?.id === userId);
     if (userRec.length === 0) return false;
     const groupId = allUsersRec(memory, organization)?.id;
-    const memberRecs = memory.cache.query((q) =>
+    const memberRecs = memory?.cache.query((q) =>
       q.findRecords('groupmembership')
     ) as GroupMembership[];
     const memberRec = memberRecs.filter(

@@ -17,7 +17,7 @@ import {
   Typography,
 } from '@mui/material';
 import UserAvatar from './UserAvatar';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import useTodo from '../context/useTodo';
@@ -79,7 +79,7 @@ export function PassageHistory(props: IProps) {
           id = remoteIdGuid(
             'user',
             psc.attributes.lastModifiedBy.toString(),
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           );
         }
         return getUserRec(id);

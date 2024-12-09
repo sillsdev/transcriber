@@ -19,7 +19,7 @@ import Memory from '@orbit/memory';
 import { useSnackBar } from '../hoc/SnackBar';
 import { cleanFileName } from '../utils';
 import MediaRecord from './MediaRecord';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { UnsavedContext } from '../context/UnsavedContext';
 import Uploader from './Uploader';
 import AddIcon from '@mui/icons-material/LibraryAddOutlined';
@@ -62,7 +62,7 @@ export function ProvideRights(props: IProps) {
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
   const [coordinator] = useGlobal('coordinator');
-  const memory = coordinator.getSource('memory') as Memory;
+  const memory = coordinator?.getSource('memory') as Memory;
   const [importList, setImportList] = useState<File[]>();
   const [uploadVisible, setUploadVisible] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
@@ -141,7 +141,7 @@ export function ProvideRights(props: IProps) {
           remoteIdGuid(
             'mediafile',
             mediaRemoteIds[0],
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           ) ?? mediaRemoteIds[0];
         const ip = {
           type: 'intellectualproperty',
