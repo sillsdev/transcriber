@@ -96,7 +96,11 @@ interface IProps {
   passage?: Passage;
   currentstep?: string;
   sectionArr?: [number, string][];
-  setStepComplete?: (stepId: string, complete: boolean) => Promise<void>;
+  setStepComplete?: (
+    stepId: string,
+    complete: boolean,
+    psgCompleted?: any[]
+  ) => Promise<void>;
   gotoNextStep?: () => void;
 }
 

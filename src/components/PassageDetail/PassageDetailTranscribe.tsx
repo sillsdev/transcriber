@@ -12,7 +12,7 @@ import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { sharedSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import TaskTable, { TaskTableWidth } from '../TaskTable';
-import { ToolSlug } from '../../crud';
+import { getStepComplete, ToolSlug } from '../../crud';
 import { findRecord } from '../../crud/tryFindRecord';
 import { JSONParse, waitForIt } from '../../utils';
 import { useGlobal } from 'reactn';
@@ -58,6 +58,7 @@ export function PassageDetailTranscribe({
     setCurrentStep,
     gotoNextStep,
     rowData,
+    passage,
   } = usePassageDetailContext();
   const { setState } = useContext(PassageDetailContext);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
@@ -146,15 +147,16 @@ export function PassageDetailTranscribe({
       () => false,
       200
     ).then(async () => {
-      await setStepComplete(currentstep, complete);
+      await setStepComplete(currentstep, complete, getStepComplete(passage));
       //if we're now complete, go to the next step or passage
       if (complete) gotoNextStep();
     });
   };
 
   const uncompletedSteps = async () => {
-    await setStepComplete(currentstep, false);
-    if (hasChecking && nextStep) await setStepComplete(nextStep, false);
+    await setStepComplete(currentstep, false, getStepComplete(passage));
+    if (hasChecking && nextStep)
+      await setStepComplete(nextStep, false, getStepComplete(passage));
     if (curRole === 'editor' && prevStep) setCurrentStep(prevStep || '');
   };
 
@@ -170,14 +172,14 @@ export function PassageDetailTranscribe({
         // only for vernacular
         const recordStep = parsedSteps.find((s) => s.tool === ToolSlug.Record);
         if (recordStep) {
-          await setStepComplete(recordStep.id, false);
+          await setStepComplete(recordStep.id, false, getStepComplete(passage));
           setCurrentStep(recordStep.id);
           return;
         }
       }
     }
     if (curRole === 'editor' && prevStep) {
-      await setStepComplete(prevStep, false);
+      await setStepComplete(prevStep, false, getStepComplete(passage));
       setCurrentStep(prevStep);
     }
   };
