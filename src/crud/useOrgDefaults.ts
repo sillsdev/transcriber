@@ -12,7 +12,8 @@ export const orgDefaultSortTag = 'ktSort';
 export const orgDefaultKtLang = 'ktLang';
 export const orgDefaultKtExcludeTag = 'ktExcl';
 export const orgDefaultResKw = 'ResKw';
-export const orgDefaultLangProps = 'langProps'
+export const orgDefaultLangProps = 'langProps';
+export const orgDefaultFeatures = 'features';
 
 export const useOrgDefaults = () => {
   const [organization] = useGlobal('organization');

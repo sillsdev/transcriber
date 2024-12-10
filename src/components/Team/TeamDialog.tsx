@@ -37,7 +37,7 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 import { useCanPublish, useJsonParams, waitForIt } from '../../utils';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity } from '@orbit/records';
-import { Options } from '../../control';
+import TeamSettings from './TeamSettings';
 
 export interface ITeamDialog {
   team: OrganizationD;
@@ -45,6 +45,9 @@ export interface ITeamDialog {
   process?: string;
   bibleMediafile: string;
   isoMediafile: string;
+  noNoise?: boolean;
+  deltaVoice?: boolean;
+  aiTranscribe?: boolean;
 }
 interface IProps extends IDialog<ITeamDialog> {
   onDelete?: (team: RecordIdentity) => void;
@@ -80,14 +83,16 @@ export function TeamDialog(props: IProps) {
   const recordingRef = useRef(false);
   const [recording, setRecordingx] = useState(false);
   const [confirm, setConfirm] = React.useState(false);
+  const [noNoise, setNoNoise] = useState(values?.noNoise ?? false);
+  const [deltaVoice, setDeltaVoice] = useState(values?.deltaVoice ?? false);
+  const [aiTranscribe, setAiTranscribe] = useState(
+    values?.aiTranscribe ?? false
+  );
   const { anySaving, toolsChanged, startSave, clearRequested } =
     useContext(UnsavedContext).state;
   const { getBible, getBibleOwner, getOrgBible } = useBible();
   const { canPublish } = useCanPublish();
-  const workflowOptions = [
-    t.workflowProgressionPassage,
-    t.workflowProgressionStep,
-  ];
+
   const [workflowProgression, setWorkflowProgression] = useState(
     t.workflowProgressionPassage
   );
@@ -105,6 +110,9 @@ export function TeamDialog(props: IProps) {
     setDescription('');
     setPublishingData('');
     setWorkflowProgression(t.workflowProgressionPassage);
+    setNoNoise(false);
+    setDeltaVoice(false);
+    setAiTranscribe(false);
     onOpen && onOpen(false);
     Object.keys(toolsChanged).forEach((t) => clearRequested(t));
   };
@@ -186,6 +194,9 @@ export function TeamDialog(props: IProps) {
             bibleMediafile: bibleMediafileRef.current,
             isoMediafile: isoMediafileRef.current,
             process: process || defaultWorkflow,
+            noNoise: noNoise ?? values?.noNoise ?? false,
+            deltaVoice: deltaVoice ?? values?.deltaVoice ?? false,
+            aiTranscribe: aiTranscribe ?? values?.aiTranscribe ?? false,
           },
           async (id: string) => {
             reset();
@@ -226,6 +237,18 @@ export function TeamDialog(props: IProps) {
       case pubDataLangProps:
         setDefaultParams(setParam(orgDefaultLangProps, value, defaultParams));
         setPublishingData(setParam(pubDataLangProps, value, publishingData));
+        break;
+      case 'workflowProgression':
+        setWorkflowProgression(value);
+        break;
+      case 'noNoise':
+        setNoNoise(value === 'true');
+        break;
+      case 'deltaVoice':
+        setDeltaVoice(value === 'true');
+        break;
+      case 'aiTranscribe':
+        setAiTranscribe(value === 'true');
         break;
       default:
         return;
@@ -327,11 +350,6 @@ export function TeamDialog(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bible]);
 
-  const onChange = (val: string) => {
-    setWorkflowProgression(val);
-    setChanged(true);
-  };
-
   return (
     <div>
       <Dialog
@@ -357,11 +375,14 @@ export function TeamDialog(props: IProps) {
             onChange={handleChange}
             fullWidth
           />
-          <Options
-            label={t.workflowProgression}
-            defaultValue={workflowProgression}
-            options={workflowOptions}
-            onChange={onChange}
+          <TeamSettings
+            team={values?.team}
+            values={{
+              noNoise: noNoise ?? values?.noNoise ?? false,
+              deltaVoice: deltaVoice ?? values?.deltaVoice ?? false,
+              aiTranscribe: aiTranscribe ?? values?.aiTranscribe ?? false,
+            }}
+            setValue={setValue}
           />
           {mode !== DialogMode.add && canPublish && (
             <PublishExpansion

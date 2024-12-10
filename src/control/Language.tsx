@@ -24,6 +24,7 @@ export interface ILanguage {
 
 interface IProps extends ILanguage {
   onChange: (state: ILanguage) => void;
+  filter?: (code: string) => boolean;
   hideSpelling?: boolean;
   hideFont?: boolean;
   disabled?: boolean;
@@ -32,8 +33,17 @@ interface IProps extends ILanguage {
 }
 
 export const Language = (props: IProps) => {
-  const { bcp47, languageName, font, rtl, spellCheck, required, sx, onChange } =
-    props;
+  const {
+    bcp47,
+    languageName,
+    font,
+    rtl,
+    spellCheck,
+    required,
+    sx,
+    onChange,
+    filter,
+  } = props;
   const [state, setState] = React.useState<ILanguage>({
     bcp47,
     languageName,
@@ -115,6 +125,7 @@ export const Language = (props: IProps) => {
               setFont={handleFont}
               setDir={handleDir}
               setInfo={handleInfo}
+              filter={filter}
               t={lt}
               disabled={props.disabled}
             />
