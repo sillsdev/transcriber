@@ -163,7 +163,11 @@ const initState = {
   getProjectResources: async () => [] as MediaFileD[],
   workflow: Array<SimpleWf>(),
   psgCompleted: [] as StepComplete[],
-  setStepComplete: async (stepId: string, complete: boolean) => {},
+  setStepComplete: async (
+    stepId: string,
+    complete: boolean,
+    psgCompleted?: any[]
+  ): Promise<void> => {},
   setStepCompleteTo: async (stepId: string) => {},
   gotoNextStep: () => {},
   stepComplete: (stepId: string) => {
@@ -542,9 +546,13 @@ const PassageDetailProvider = (props: IProps) => {
       passageNavigate(`/detail/${prjId}/${nextpsg}`);
     } else setCurrentStep(''); // setting to empty jumps to first uncompleted
   };
-  const setStepComplete = async (stepid: string, complete: boolean) => {
+  const setStepComplete = async (
+    stepid: string,
+    complete: boolean,
+    psgCompleted?: any[]
+  ) => {
     if (stepid === '') return;
-    var completed = [...state.psgCompleted];
+    var completed = psgCompleted ?? [...state.psgCompleted];
     var remId =
       remoteId('orgworkflowstep', stepid, memory.keyMap as RecordKeyMap) ||
       stepid;
