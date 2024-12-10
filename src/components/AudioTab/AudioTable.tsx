@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
   IState,
@@ -365,12 +365,12 @@ export const AudioTable = (props: IProps) => {
     const { column, row } = props;
     if (column.name === 'actions') {
       const mediaId =
-        remoteId('mediafile', row.id, memory.keyMap as RecordKeyMap) || row.id;
+        remoteId('mediafile', row.id, memory?.keyMap as RecordKeyMap) || row.id;
       return <PlayCell {...props} mediaId={mediaId} />;
     }
     if (column.name === 'detach') {
       const mediaId =
-        remoteId('mediafile', row.id, memory.keyMap as RecordKeyMap) || row.id;
+        remoteId('mediafile', row.id, memory?.keyMap as RecordKeyMap) || row.id;
       return <DetachCell {...props} mediaId={mediaId} />;
     }
     if (column.name === 'version' && onAttach) {

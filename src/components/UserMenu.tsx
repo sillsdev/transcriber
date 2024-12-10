@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { IMainStrings, ISharedStrings, User, UserD } from '../model';
 import {
   Button,

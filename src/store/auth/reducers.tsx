@@ -8,7 +8,7 @@ const AuthReducers = function (
   state = authCleanState,
   action: type.AuthMsgs
 ): type.IAuthState {
-  switch (action.type) {
+  switch (action?.type) {
     case type.SET_EXPIRE:
       return {
         ...state,

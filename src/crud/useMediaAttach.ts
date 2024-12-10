@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   ISharedStrings,
   ActivityStates,
@@ -46,7 +46,9 @@ export const useMediaAttach = () => {
       if (isVernacular && plan) {
         var media = getMediaInPlans(
           [plan],
-          memory.cache.query((q) => q.findRecords('mediafile')) as MediaFileD[],
+          memory?.cache.query((q) =>
+            q.findRecords('mediafile')
+          ) as MediaFileD[],
           VernacularTag,
           true
         ).filter((m) => related(m, 'passage') === passage);
@@ -94,7 +96,7 @@ export const useMediaAttach = () => {
     var tb = new RecordTransformBuilder();
     var ops: RecordOperation[] = [];
     const mediaRecId = { type: 'mediafile', id: mediaId };
-    const mediaRec = memory.cache.query((q) =>
+    const mediaRec = memory?.cache.query((q) =>
       q.findRecord(mediaRecId)
     ) as MediaFile;
 

@@ -19,7 +19,7 @@ export const pullTableList = async (
     const filter = [{ attribute: 'id-list', value: ids.join('|') }];
     await remotePullAll({ table, memory, remote, backup, filter });
     for (const id of ids) {
-      await waitForLocalId(table, id, memory.keyMap as RecordKeyMap);
+      await waitForLocalId(table, id, memory?.keyMap as RecordKeyMap);
     }
   } catch (err: any) {
     logError(Severity.error, errorReporter, err.message);

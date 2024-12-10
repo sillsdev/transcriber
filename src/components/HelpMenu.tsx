@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { IMainStrings, Plan } from '../model';
 import { IconButton, ListItemIcon, ListItemText, SxProps } from '@mui/material';
 import ReportIcon from '@mui/icons-material/Report';
@@ -92,7 +92,7 @@ export function HelpMenu(props: IProps) {
 
   const handleDeveloper = () => {
     localStorage.setItem('developer', !developer ? 'true' : 'false');
-    setDeveloper(!developer);
+    setDeveloper(!developer ? 'true' : 'false');
     setAnchorEl(null);
   };
 
@@ -116,7 +116,7 @@ export function HelpMenu(props: IProps) {
       const match = /\/plan\/([0-9a-f-]+)\/0/.exec(pathname);
       const planId =
         match &&
-        (remoteIdGuid('plan', match[1], memory.keyMap as RecordKeyMap) ||
+        (remoteIdGuid('plan', match[1], memory?.keyMap as RecordKeyMap) ||
           match[1]);
       return planId && getPlan(planId);
     },

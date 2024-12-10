@@ -27,7 +27,7 @@ const ImportExportReducers = function (
   state = exportCleanState,
   action: ExportMsgs | ImportMsgs | CopyMsgs
 ): IImportExportState {
-  switch (action.type) {
+  switch (action?.type) {
     case EXPORT_PENDING:
       return {
         ...state,

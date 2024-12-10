@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { Project } from '../model';
 import { RecordOperation } from '@orbit/records';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -12,7 +12,7 @@ export const useOfflnProjCreate = () => {
 
   return async (project: Project) => {
     // local update only, migrate offlineproject to include offlineAvailable
-    const backup = coordinator.getSource('backup') as IndexedDBSource;
+    const backup = coordinator?.getSource('backup') as IndexedDBSource;
     let ops: RecordOperation[] = [];
     offlineProjectCreate(
       project,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { IPassageChooserStrings, PassageD } from '../../model';
 import { Typography, Tabs, Tab, SxProps } from '@mui/material';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
@@ -51,7 +51,7 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
       if (newValue !== value) {
         const selId = marks.current[newValue]?.id;
         const pasId =
-          remoteId('passage', selId, memory.keyMap as RecordKeyMap) || selId;
+          remoteId('passage', selId, memory?.keyMap as RecordKeyMap) || selId;
         if (pasId) {
           rememberCurrentPassage(memory, pasId);
           setView(`/detail/${prjId}/${pasId}`);

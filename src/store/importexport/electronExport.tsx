@@ -101,7 +101,7 @@ export async function electronExport(
   const idStr = (kind: string, id: number | string) =>
     typeof id === 'number'
       ? id.toString()
-      : remoteId(kind, id, memory.keyMap as RecordKeyMap) || id.split('-')[0];
+      : remoteId(kind, id, memory?.keyMap as RecordKeyMap) || id.split('-')[0];
 
   const fileName = (
     projRec: ProjectD,
@@ -139,7 +139,7 @@ export async function electronExport(
         ? remoteIdGuid(
             'project',
             projectid.toString(),
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           ) ?? projectid.toString()
         : projectid
     ) as ProjectD;
@@ -221,7 +221,7 @@ export async function electronExport(
         ) {
           var dp = await dataPath(user.attributes.avatarUrl, PathType.AVATARS, {
             localname:
-              remoteId('user', user.id, memory.keyMap as RecordKeyMap) +
+              remoteId('user', user.id, memory?.keyMap as RecordKeyMap) +
               (user.attributes?.familyName || '') +
               '.png',
           });
@@ -484,7 +484,7 @@ export async function electronExport(
       if (remoteIds) {
         recs.forEach((r) => {
           if (
-            !remoteId(table, r.id, memory.keyMap as RecordKeyMap) &&
+            !remoteId(table, r.id, memory?.keyMap as RecordKeyMap) &&
             r.attributes
           )
             r.attributes.offlineId = r.id;
@@ -493,7 +493,7 @@ export async function electronExport(
             !remoteId(
               'mediafile',
               related(r, 'sourceMedia'),
-              memory.keyMap as RecordKeyMap
+              memory?.keyMap as RecordKeyMap
             )
           ) {
             (r as MediaFile).attributes.sourceMediaOfflineId = related(
@@ -518,7 +518,7 @@ export async function electronExport(
       if (remoteIds) {
         ds.forEach((d) => {
           if (
-            !remoteId('discussion', d.id, memory.keyMap as RecordKeyMap) &&
+            !remoteId('discussion', d.id, memory?.keyMap as RecordKeyMap) &&
             d.attributes
           )
             d.attributes.offlineId = d.id;
@@ -526,7 +526,7 @@ export async function electronExport(
             !remoteId(
               'mediafile',
               related(d, 'mediafile'),
-              memory.keyMap as RecordKeyMap
+              memory?.keyMap as RecordKeyMap
             )
           )
             d.attributes.offlineMediafileId = related(d, 'mediafile');
@@ -543,7 +543,7 @@ export async function electronExport(
             remoteId(
               'organization',
               related(r, 'organization'),
-              memory.keyMap as RecordKeyMap
+              memory?.keyMap as RecordKeyMap
             )
           ) === needsRemoteIds
       );
@@ -556,7 +556,7 @@ export async function electronExport(
       if (remoteIds) {
         kts.forEach((kt) => {
           if (
-            !remoteId('orgkeyterm', kt.id, memory.keyMap as RecordKeyMap) &&
+            !remoteId('orgkeyterm', kt.id, memory?.keyMap as RecordKeyMap) &&
             kt.attributes
           )
             kt.attributes.offlineid = kt.id;
@@ -579,7 +579,7 @@ export async function electronExport(
             remoteId(
               'organization',
               related(r, 'organization'),
-              memory.keyMap as RecordKeyMap
+              memory?.keyMap as RecordKeyMap
             )
           ) === needsRemoteIds
       );
@@ -595,7 +595,7 @@ export async function electronExport(
             !remoteId(
               'orgkeytermtarget',
               ktt.id,
-              memory.keyMap as RecordKeyMap
+              memory?.keyMap as RecordKeyMap
             ) &&
             ktt.attributes
           )
@@ -605,7 +605,7 @@ export async function electronExport(
             !remoteId(
               'mediafile',
               related(ktt, 'mediafile'),
-              memory.keyMap as RecordKeyMap
+              memory?.keyMap as RecordKeyMap
             )
           )
             ktt.attributes.offlineMediafileId = related(ktt, 'mediafile');
@@ -632,7 +632,7 @@ export async function electronExport(
             !remoteId(
               'intellectualproperty',
               ip.id,
-              memory.keyMap as RecordKeyMap
+              memory?.keyMap as RecordKeyMap
             )
           )
             ip.attributes.offlineId = ip.id;
@@ -640,7 +640,7 @@ export async function electronExport(
             !remoteId(
               'mediafile',
               related(ip, 'releaseMediafile'),
-              memory.keyMap as RecordKeyMap
+              memory?.keyMap as RecordKeyMap
             )
           )
             ip.attributes.offlineMediafileId = related(ip, 'releaseMediafile');
@@ -653,7 +653,7 @@ export async function electronExport(
       if (remoteIds) {
         media.forEach((m) => {
           if (
-            !remoteId('mediafile', m.id, memory.keyMap as RecordKeyMap) &&
+            !remoteId('mediafile', m.id, memory?.keyMap as RecordKeyMap) &&
             m.attributes
           ) {
             m.attributes.offlineId = m.id;
@@ -661,7 +661,7 @@ export async function electronExport(
           var src = related(m, 'sourceMedia');
           if (
             src &&
-            !remoteId('mediafile', src, memory.keyMap as RecordKeyMap) &&
+            !remoteId('mediafile', src, memory?.keyMap as RecordKeyMap) &&
             m.attributes
           ) {
             m.attributes.sourceMediaOfflineId = src;
@@ -691,7 +691,7 @@ export async function electronExport(
       if (remoteIds) {
         comments.forEach((c) => {
           if (
-            !remoteId('comment', c.id, memory.keyMap as RecordKeyMap) &&
+            !remoteId('comment', c.id, memory?.keyMap as RecordKeyMap) &&
             c.attributes
           ) {
             c.attributes.offlineId = c.id;
@@ -701,7 +701,7 @@ export async function electronExport(
             !remoteId(
               'mediafile',
               related(c, 'mediafile'),
-              memory.keyMap as RecordKeyMap
+              memory?.keyMap as RecordKeyMap
             ) &&
             c.attributes
           ) {
@@ -932,7 +932,7 @@ export async function electronExport(
         remoteIdGuid(
           'user',
           userid.toString(),
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         ) || userid.toString();
       const burritoMetaStr = await getBurritoMeta({
         memory,
@@ -1028,7 +1028,8 @@ export async function electronExport(
     } else {
       projects = projects.filter(
         (p) =>
-          remoteId('project', p.id, memory.keyMap as RecordKeyMap) !== undefined
+          remoteId('project', p.id, memory?.keyMap as RecordKeyMap) !==
+          undefined
       );
       exportType = ExportType.ITF;
     }

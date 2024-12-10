@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import Axios from 'axios';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { TokenContext } from '../context/TokenProvider';
 import { shallowEqual } from 'react-redux';
 import {
@@ -72,9 +72,9 @@ export function Loading() {
     dispatch(action.doOrbitError(error));
   const orbitComplete = () => dispatch(action.orbitComplete());
   const [coordinator] = useGlobal('coordinator');
-  const memory = coordinator.getSource('memory') as Memory;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
   const [offline] = useGlobal('offline');
   const [fingerprint] = useGlobal('fingerprint');
   const [user, setUser] = useGlobal('user');
@@ -183,7 +183,7 @@ export function Loading() {
       const decodedToken = jwtDecode(accessToken || '') as IToken;
       setExpireAt(decodedToken.exp);
     }
-    setLanguage(localeDefault(isDeveloper));
+    setLanguage(localeDefault(isDeveloper === 'true'));
     localStorage.removeItem('inviteError');
     fetchLocalization();
     fetchOrbitData({
@@ -282,7 +282,7 @@ export function Loading() {
       const m = /^\/[workplandetail]+\/([0-9a-f-]+)/.exec(fromUrl);
       if (m) {
         const planId =
-          remoteIdGuid('plan', m[1], memory.keyMap as RecordKeyMap) || m[1];
+          remoteIdGuid('plan', m[1], memory?.keyMap as RecordKeyMap) || m[1];
         const planRec = getPlan(planId);
         if (offline) {
           const oProjRec = planRec && getOfflineProject(planRec);

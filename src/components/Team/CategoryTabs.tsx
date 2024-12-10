@@ -7,7 +7,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { categorySelector } from '../../selector';
 import { ICategoryStrings } from '../../model';
 import { ArtifactCategoryType } from '../../crud';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 
 interface TabPanelProps {
   children?: React.ReactNode;

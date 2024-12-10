@@ -14,7 +14,7 @@ export const SortableHeader = () => {
           playItem: t.action,
           artifactName: t.resource,
           version: t.version,
-          artifactType: t.type,
+          artifactType: t?.type,
           artifactCategory: t.category,
           done: t.completed,
         } as any

@@ -9,7 +9,7 @@ import {
 import { Button, Box } from '@mui/material';
 import localStrings from '../../selector/localize';
 import { arrayMoveImmutable as arrayMove } from 'array-move';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { StepItem } from '.';
 import { useOrgWorkflowSteps } from '../../crud/useOrgWorkflowSteps';
 import { CheckedChoice as ShowAll } from '../../control';
@@ -182,7 +182,7 @@ export const StepEditor = ({ process, org }: IProps) => {
         remoteIdGuid(
           'artifacttype',
           settings?.artifactTypeId,
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         ) ?? settings?.artifactTypeId;
       const artSlug = slugFromId(artId);
       const artShortName = artId
@@ -424,7 +424,7 @@ export const StepEditor = ({ process, org }: IProps) => {
             remoteIdGuid(
               'artifacttype',
               json.artifactTypeId,
-              memory.keyMap as RecordKeyMap
+              memory?.keyMap as RecordKeyMap
             ) ?? json.artifactTypeId
           );
         return localizedArtifactTypeFromId(VernacularTag);

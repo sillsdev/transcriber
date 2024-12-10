@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { isElectron } from '../api-variable';
 import { remoteIdGuid, remoteId } from '../crud';
 import { dataPath, PathType } from '../utils/dataPath';
@@ -43,7 +43,7 @@ type Action =
   | { type: MediaSt.IDLE; payload: undefined };
 
 const stateReducer = (state: IMediaState, action: Action): IMediaState => {
-  switch (action.type) {
+  switch (action?.type) {
     case MediaSt.PENDING:
       return {
         ...mediaClean,
@@ -92,13 +92,17 @@ export const useFetchMediaUrl = (reporter?: any) => {
   };
   const guidId = (id: string) => {
     return !isNaN(Number(id))
-      ? (remoteIdGuid('mediafile', id, memory.keyMap as RecordKeyMap) as string)
+      ? (remoteIdGuid(
+          'mediafile',
+          id,
+          memory?.keyMap as RecordKeyMap
+        ) as string)
       : id;
   };
 
   const remId = (id: string) => {
     return isNaN(Number(id))
-      ? (remoteId('mediafile', id, memory.keyMap as RecordKeyMap) as string)
+      ? (remoteId('mediafile', id, memory?.keyMap as RecordKeyMap) as string)
       : id;
   };
 

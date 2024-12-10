@@ -13,7 +13,7 @@ import { Severity } from '../../utils';
 import { OfflineProject, Plan, VProject } from '../../model';
 import { ITokenContext } from '../../context/TokenProvider';
 import { AlertSeverity } from '../../hoc/SnackBar';
-import { State } from 'reactn/default';
+import { GlobalState } from '../../context/GlobalContext';
 
 export const orbitError = (ex: IApiError) => {
   return ex.response.status !== Severity.retry
@@ -58,7 +58,7 @@ export interface IFetchOrbitData {
   setProjectsLoaded: (value: string[]) => void;
   setOrbitRetries: (r: number) => void;
   setLang: (locale: string) => void;
-  global: State;
+  global: GlobalState;
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject;
   offlineSetup: () => Promise<void>;
   showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void;

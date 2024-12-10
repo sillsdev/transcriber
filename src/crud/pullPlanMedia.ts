@@ -10,7 +10,7 @@ export const pullPlanMedia = async (
   remote: JSONAPISource
 ) => {
   const getPlanId = () =>
-    remoteIdNum('plan', plan, memory.keyMap as RecordKeyMap) || plan;
+    remoteIdNum('plan', plan, memory?.keyMap as RecordKeyMap) || plan;
 
   const planId = getPlanId();
   if (planId !== undefined) {

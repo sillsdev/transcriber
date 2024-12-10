@@ -12,7 +12,7 @@ export const passageDefaultSuffix = (
   memory: Memory,
   offline: boolean
 ) => {
-  var planRec = memory.cache.query((q) =>
+  var planRec = memory?.cache.query((q) =>
     q.findRecord({ type: 'plan', id: planId })
   ) as Plan;
   return '_' + (offline ? 'l' : '') + planRec.attributes.slug;

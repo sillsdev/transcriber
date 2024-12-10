@@ -41,7 +41,7 @@ import VwBiblebrainbible from '../../../model/vwbiblebrainbible';
 import { axiosGet, axiosPost } from '../../../utils/axios';
 import { useSecResCreate } from '../../../crud/useSecResCreate';
 import remoteIdNum from '../../../crud/remoteId';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 import { RecordKeyMap } from '@orbit/records';
 import { usePlanType } from '../../../crud';
 import { HttpStatusCode } from 'axios';
@@ -207,17 +207,17 @@ export default function FindBibleBrain({
       PassageId: remoteIdNum(
         'passage',
         passage.id,
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       ),
       SectionId: remoteIdNum(
         'section',
         section.id,
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       ),
       OrgWorkflowStep: remoteIdNum(
         'orgworkflowstep',
         InternalizationStep()?.id ?? '',
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       ),
       Bibleid: bibleOpt?.value ?? '',
       Timing: timing,

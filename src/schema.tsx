@@ -1163,21 +1163,21 @@ const FixVersion8 = async (backup: IndexedDBSource, memory: MemorySource) => {
 };
 export const backup = window.indexedDB
   ? new IndexedDBSource({
-    schema,
-    keyMap,
-    name: 'backup',
-    namespace: 'transcriber',
-    defaultTransformOptions: {
-      useBuffer: true,
-    },
-    autoUpgrade: false,
-  })
+      schema,
+      keyMap,
+      name: 'backup',
+      namespace: 'transcriber',
+      defaultTransformOptions: {
+        useBuffer: true,
+      },
+      autoUpgrade: false,
+    })
   : ({} as IndexedDBSource);
 //LocalKey.migration throws an error here?!
 localStorage.setItem('migration', 'WAIT');
 var migrating = 0;
 
-if (backup.cache) {
+if (backup?.cache) {
   backup.cache.migrateDB = function (db, event) {
     migrating++; //add one right away so everyone waits
     console.log('migrateDb', event);
@@ -1229,7 +1229,7 @@ if (process.env.NODE_ENV === 'test') {
 } else {
   waitForIt(
     'backup open',
-    () => backup.cache.isDBOpen,
+    () => backup?.cache.isDBOpen,
     () => false,
     1000
   ).then(() => {

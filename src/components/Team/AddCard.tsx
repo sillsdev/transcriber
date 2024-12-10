@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import {
   Box,
   Card,
@@ -312,7 +312,7 @@ export const AddCard = (props: IProps) => {
     if (!offlineOnly)
       await waitForRemoteId(
         { type: 'plan', id: planRef.current },
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       );
     stepRef.current = 1;
     return planRef.current;
@@ -349,7 +349,7 @@ export const AddCard = (props: IProps) => {
       stepRef.current = 0;
       setView(
         `/plan/${
-          remoteId('plan', planId, memory.keyMap as RecordKeyMap) || planId
+          remoteId('plan', planId, memory?.keyMap as RecordKeyMap) || planId
         }/0`
       );
     }, 1000);

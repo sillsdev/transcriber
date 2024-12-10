@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
 import * as actions from '../store';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   IState,
   IIntegrationStrings,
@@ -247,7 +247,7 @@ export function IntegrationPanel(props: IProps) {
 
   const [paratextIntegration, setParatextIntegration] = useState('');
   const [coordinator] = useGlobal('coordinator');
-  const memory = coordinator.getSource('memory') as Memory;
+  const memory = coordinator?.getSource('memory') as Memory;
   const [plan] = useGlobal('plan');
 
   const [errorReporter] = useGlobal('errorReporter');
@@ -298,7 +298,7 @@ export function IntegrationPanel(props: IProps) {
         url: '',
       },
     };
-    const rn = new StandardRecordNormalizer({ schema: memory.schema });
+    const rn = new StandardRecordNormalizer({ schema: memory?.schema });
     let rec = rn.normalizeRecord(int);
     await memory.update((t) => t.addRecord(rec));
     return rec.id;
@@ -390,7 +390,7 @@ export function IntegrationPanel(props: IProps) {
       ? remoteIdNum(
           'artifacttype',
           getTypeId(exportType) || '',
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         )
       : 0;
     if (passage !== undefined) {
@@ -400,7 +400,7 @@ export function IntegrationPanel(props: IProps) {
         remoteIdNum(
           'passage',
           passage.id as string,
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         ),
         typeId,
         errorReporter,
@@ -410,7 +410,7 @@ export function IntegrationPanel(props: IProps) {
     } else {
       syncProject(
         accessToken || '',
-        remoteIdNum('project', project, memory.keyMap as RecordKeyMap),
+        remoteIdNum('project', project, memory?.keyMap as RecordKeyMap),
         typeId,
         errorReporter,
         t.syncPending,
@@ -647,7 +647,7 @@ export function IntegrationPanel(props: IProps) {
                 remoteId(
                   'project',
                   related(pi, 'project'),
-                  memory.keyMap as RecordKeyMap
+                  memory?.keyMap as RecordKeyMap
                 ) || related(pi, 'project'),
             };
           });

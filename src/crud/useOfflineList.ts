@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   User,
   OfflineProject,
@@ -37,7 +37,7 @@ export const useOfflineList = () => {
       Array.from(projs)
         .filter((id) => Boolean(id))
         .forEach((id) => {
-          const projRec = memory.cache.query((q) =>
+          const projRec = memory?.cache.query((q) =>
             q.findRecord({ type: 'project', id })
           ) as ProjectD;
           if (grpIds.includes(related(projRec, 'group')))
@@ -62,7 +62,7 @@ export const useOfflineList = () => {
     });
     const groupName = Array<string>();
     Array.from(offlineOrgs).forEach((id) => {
-      const orgRec = memory.cache.query((q) =>
+      const orgRec = memory?.cache.query((q) =>
         q.findRecord({ type: 'organization', id })
       ) as Organization;
       const name = orgRec.attributes.name;

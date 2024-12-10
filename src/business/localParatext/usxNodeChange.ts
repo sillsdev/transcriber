@@ -168,7 +168,7 @@ export const addSection = ({
   addNumbers = true,
   sectionArr = [],
 }: IaddSection) => {
-  var sections = memory.cache.query((q) =>
+  var sections = memory?.cache.query((q) =>
     q.findRecords('section')
   ) as Section[];
   /* get the section for this passage to get the plan */

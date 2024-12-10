@@ -1,7 +1,7 @@
 import { Link } from '@mui/material';
 import { isElectron } from '../api-variable';
 import { launch } from '../utils/launch';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 
 interface ShowLinkProps {
   link: string;

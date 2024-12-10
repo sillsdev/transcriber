@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import * as actions from '../store';
 import { IApiError, IMainStrings } from '../model';
 import { useSnackBar } from '../hoc/SnackBar';

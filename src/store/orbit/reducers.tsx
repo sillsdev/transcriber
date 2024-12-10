@@ -22,7 +22,7 @@ const OrbitReducers = function (
   state = orbitCleanState,
   action: OrbitMsgs
 ): IOrbitState {
-  switch (action.type) {
+  switch (action?.type) {
     case FETCH_ORBIT_DATA:
       return {
         ...state,

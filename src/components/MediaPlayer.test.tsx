@@ -88,7 +88,7 @@ jest.mock('react-redux', () => ({
   shallowEqual: jest.fn(),
 }));
 
-jest.mock('reactn', () => ({
+jest.mock('../context/GlobalContext', () => ({
   useGlobal: () => [jest.fn()],
 }));
 

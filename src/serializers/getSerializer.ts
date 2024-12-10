@@ -8,15 +8,15 @@ import { serializersFor } from './serializersFor';
 export const getSerializer = (memory: MemorySource) => {
   return new JSONAPIResourceSerializer({
     serializerFor: serializersFor(memory),
-    schema: memory.schema,
-    keyMap: memory.keyMap,
+    schema: memory?.schema,
+    keyMap: memory?.keyMap,
   });
 };
 
 export const getDocSerializer = (memory: MemorySource) => {
   return new JSONAPIDocumentSerializer({
     serializerFor: serializersFor(memory),
-    schema: memory.schema,
-    keyMap: memory.keyMap,
+    schema: memory?.schema,
+    keyMap: memory?.keyMap,
   });
 };

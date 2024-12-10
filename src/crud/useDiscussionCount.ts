@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { Discussion, GroupMembership, MediaFile } from '../model';
 import { related } from '../crud';
 

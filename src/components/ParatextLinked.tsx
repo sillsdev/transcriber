@@ -13,7 +13,7 @@ import ParatextIcon from '../control/ParatextLogo';
 import { useSelector } from 'react-redux';
 import { profileSelector } from '../selector';
 import { useHasParatext } from '../utils';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 
 interface StyledCaptionProps extends TypographyProps {
   isCaption?: boolean;
