@@ -1,3 +1,9 @@
+audio-project-manager (3.3.2.0)  experimental; urgency=high
+
+ * TT-6202 maintain complete steps after transcriber submit
+
+ -- Greg Trihus <greg_trihus@sil.org>  Tue, 10 Dec 2024 21:32:00 -0600
+
 audio-project-manager (3.3.1.0)  experimental; urgency=high
 
  * TT-6201 type error uploading and attaching audio
