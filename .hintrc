@@ -10,6 +10,7 @@
       }
     ],
     "compat-api/html": "off",
-    "no-inline-styles": "off"
+    "no-inline-styles": "off",
+    "compat-api/css": "off"
   }
 }
