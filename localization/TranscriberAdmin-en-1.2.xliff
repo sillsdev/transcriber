@@ -8904,14 +8904,14 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="vProject.errExtrasBookLen">
+         <trans-unit id="vProject.errgeneralBookLen">
             <source>Book must be 3 characters</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="vProject.errExtrasBookNonScripture">
+         <trans-unit id="vProject.errgeneralBookNonScripture">
             <source>Book Designation must not be a Scripture book code.</source>
             <target/>
             <context-group>
@@ -8919,13 +8919,20 @@
             </context-group>
          </trans-unit>
 
-         <trans-unit id="vProject.extrasBook">
-            <source>Akuo Extras Book Designation</source>
+         <trans-unit id="vProject.generalBook">
+            <source>Akuo Book Designation</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="vProject.generalStory">
+            <source>Show as Stories (not Extras) in Akuo</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">addCard.tsx</context>
+            </context-group>
+         </trans-unit>         
          <trans-unit id="vProject.flat">
             <source>Flat</source>
             <target/>
