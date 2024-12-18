@@ -7630,21 +7630,27 @@
             <target/>
          </segment>
       </unit>
-      <unit id="vProject.errExtrasBookLen">
+      <unit id="vProject.errgeneralBookLen">
          <segment>
             <source>Book must be 3 characters</source>
             <target/>
          </segment>
       </unit>
-      <unit id="vProject.errExtrasBookNonScripture">
+      <unit id="vProject.errgeneralBookNonScripture">
          <segment>
             <source>Book Designation must not be a Scripture book code.</source>
             <target/>
          </segment>
       </unit>
-      <unit id="vProject.extrasBook">
+      <unit id="vProject.generalBook">
          <segment>
-            <source>Akuo Extras Book Designation</source>
+            <source>Akuo Book Designation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.generalStory">
+         <segment>
+            <source>Show as Stories instead of Extras</source>
             <target/>
          </segment>
       </unit>

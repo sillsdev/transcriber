@@ -3775,13 +3775,13 @@
             <target/>
          </segment>
       </unit>
-      <unit id="vProject.errExtrasBookLen">
+      <unit id="vProject.errgeneralBookLen">
          <segment>
             <source>Book must be 3 characters</source>
             <target/>
          </segment>
       </unit>
-      <unit id="vProject.errExtrasBookNonScripture">
+      <unit id="vProject.errgeneralBookNonScripture">
          <segment>
             <source>Book Designation must not be a Scripture book code.</source>
             <target/>

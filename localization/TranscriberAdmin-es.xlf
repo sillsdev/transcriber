@@ -7381,19 +7381,19 @@
             <target>Configuración del editor</target>
          </segment>
       </unit>
-      <unit id="vProject.errExtrasBookLen">
+      <unit id="vProject.errgeneralBookLen">
          <segment>
             <source>Book must be 3 characters</source>
             <target>El libro debe tener 3 caracteres</target>
          </segment>
       </unit>
-      <unit id="vProject.errExtrasBookNonScripture">
+      <unit id="vProject.errgeneralBookNonScripture">
          <segment>
             <source>Book Designation must not be a Scripture book code.</source>
             <target>La designación del libro no debe ser un código de libro de las Escrituras.</target>
          </segment>
       </unit>
-      <unit id="vProject.extrasBook">
+      <unit id="vProject.generalBook">
          <segment>
             <source>Akuo Extras Book Designation</source>
             <target>Akuo Extras Designación del libro</target>
