@@ -1,6 +1,6 @@
 {
   "name": "audio-project-manager",
-  "version": "3.3.2",
+  "version": "4.0.0-alpha.0",
   "description": "Flexible audio-text orality solution",
   "private": true,
   "dependencies": {
@@ -155,8 +155,8 @@
     "caniuse-lite": "^1.0.30001614",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
-    "electron": "^22.3.27",
-    "electron-builder": "^22.14.13",
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3",
     "env-cmd": "^10.1.0",
     "isbinaryfile": "4.0.10",
     "md5-file": "^5.0.0",
