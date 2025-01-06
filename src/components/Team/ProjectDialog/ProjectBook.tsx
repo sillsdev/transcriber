@@ -1,5 +1,11 @@
-import React from 'react';
-import { FormLabel, TextField, Typography } from '@mui/material';
+import React, { ChangeEvent, useState } from 'react';
+import {
+  Checkbox,
+  FormControlLabel,
+  FormLabel,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { IProjectDialogState } from './ProjectDialog';
 import { shallowEqual, useSelector } from 'react-redux';
 import { vProjectSelector } from '../../../selector';
@@ -10,9 +16,10 @@ import BookSelect from '../../BookSelect';
 export const ProjectBook = (props: IProjectDialogState) => {
   const { state, setState, setBookErr } = props;
   const t = useSelector(vProjectSelector, shallowEqual);
-  const { book, type } = state;
-  const [newBook, setNewBook] = React.useState<string>(book);
-  const [errmsg, setErrmsgx] = React.useState<string>('');
+  const { book, story, type } = state;
+  const [newBook, setNewBook] = useState<string>(book);
+  const [errmsg, setErrmsgx] = useState<string>('');
+  const [newStory, setNewStory] = useState(story);
   const bookSuggestions = useSelector(
     (state: IState) => state.books.suggestions
   );
@@ -31,15 +38,22 @@ export const ProjectBook = (props: IProjectDialogState) => {
     var newbook = (e.target?.value || '').toString().toUpperCase();
     setNewBook(newbook);
     if (bookSuggestions.find((s) => s.value === newbook)) {
-      setErrmsg(t.errExtrasBookNonScripture);
+      setErrmsg(t.errgeneralBookNonScripture);
       setState((state) => ({ ...state, book: '' }));
     } else if (newbook.length > 0 && newbook.length < 3) {
-      setErrmsg(t.errExtrasBookLen);
+      setErrmsg(t.errgeneralBookLen);
       setState((state) => ({ ...state, book: '' }));
     } else {
       setState((state) => ({ ...state, book: newbook }));
       setErrmsg('');
     }
+  };
+  const handleCheckboxChange = (
+    event: ChangeEvent<HTMLInputElement>,
+    checked: boolean
+  ) => {
+    setNewStory(checked);
+    setState((state) => ({ ...state, story: checked }));
   };
   const handleSetPreventSave = (val: boolean) => {};
 
@@ -56,7 +70,9 @@ export const ProjectBook = (props: IProjectDialogState) => {
     <div>
       {type !== 'scripture' && (
         <>
-          <FormLabel sx={{ color: 'secondary.main' }}>{t.extrasBook}</FormLabel>
+          <FormLabel sx={{ color: 'secondary.main' }}>
+            {t.generalBook}
+          </FormLabel>
           {type === 'scripture' ? (
             <BookSelect
               onCommit={onCommit}
@@ -78,6 +94,16 @@ export const ProjectBook = (props: IProjectDialogState) => {
                 inputProps={{ maxLength: 3 }}
               />
               {errmsg && <Typography color="red">{errmsg}</Typography>}
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={newStory}
+                    onChange={handleCheckboxChange}
+                    value="story"
+                  />
+                }
+                label={t.generalStory}
+              />
             </>
           )}
         </>

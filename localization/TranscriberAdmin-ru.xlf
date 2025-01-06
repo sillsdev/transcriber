@@ -7381,22 +7381,22 @@
             <target/>
          </segment>
       </unit>
-      <unit id="vProject.errExtrasBookLen">
+      <unit id="vProject.errgeneralBookLen">
          <segment>
             <source>Book must be 3 characters</source>
             <target>Книга должна состоять из 3 символов</target>
          </segment>
       </unit>
-      <unit id="vProject.errExtrasBookNonScripture">
+      <unit id="vProject.errgeneralBookNonScripture">
          <segment>
             <source>Book Designation must not be a Scripture book code.</source>
             <target>Обозначение книги не должно быть кодом книги Священного Писания.</target>
          </segment>
       </unit>
-      <unit id="vProject.extrasBook">
+      <unit id="vProject.generalBook">
          <segment>
-            <source>Akuo Extras Book Designation</source>
-            <target>Akuo Extras Book Designation</target>
+            <source>Akuo Book Designation</source>
+            <target>Akuo Book Designation</target>
          </segment>
       </unit>
       <unit id="vProject.flat">

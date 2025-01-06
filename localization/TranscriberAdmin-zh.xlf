@@ -7381,22 +7381,22 @@
             <target/>
          </segment>
       </unit>
-      <unit id="vProject.errExtrasBookLen">
+      <unit id="vProject.errgeneralBookLen">
          <segment>
             <source>Book must be 3 characters</source>
             <target>书籍必须为 3 个字符</target>
          </segment>
       </unit>
-      <unit id="vProject.errExtrasBookNonScripture">
+      <unit id="vProject.errgeneralBookNonScripture">
          <segment>
             <source>Book Designation must not be a Scripture book code.</source>
             <target>书籍名称不得为经文书籍代码。</target>
          </segment>
       </unit>
-      <unit id="vProject.extrasBook">
+      <unit id="vProject.generalBook">
          <segment>
-            <source>Akuo Extras Book Designation</source>
-            <target>Akuo Extras 书籍名称</target>
+            <source>Akuo Book Designation</source>
+            <target>Akuo 书籍名称</target>
          </segment>
       </unit>
       <unit id="vProject.flat">

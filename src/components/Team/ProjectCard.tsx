@@ -55,6 +55,7 @@ import { RecordKeyMap } from '@orbit/records';
 import {
   projDefBook,
   projDefSectionMap,
+  projDefStory,
   useProjectDefaults,
 } from '../../crud/useProjectDefaults';
 import { useOrbitData } from '../../hoc/useOrbitData';
@@ -274,6 +275,7 @@ export const ProjectCard = (props: IProps) => {
       tags,
       organizedBy,
       book,
+      story,
     } = values;
     var oldBook = getParam(projDefBook, project?.attributes?.defaultParams);
     var defaultParams = setParam(
@@ -281,6 +283,7 @@ export const ProjectCard = (props: IProps) => {
       book,
       project?.attributes?.defaultParams
     );
+    defaultParams = setParam(projDefStory, story, defaultParams);
     projectUpdate({
       ...project,
       attributes: {
@@ -336,6 +339,8 @@ export const ProjectCard = (props: IProps) => {
       description: attr.description || '',
       type: attr.type,
       book: getProjectDefault(projDefBook, project as any as ProjectD) || '',
+      story:
+        getProjectDefault(projDefStory, project as any as ProjectD) || true,
       bcp47: attr.language,
       languageName: attr.languageName || '',
       isPublic: attr.isPublic,
@@ -376,7 +381,7 @@ export const ProjectCard = (props: IProps) => {
               ) : (
                 <BsPencilSquare />
               )}
-              {(project.attributes.isPublic && <ShareIcon />)}
+              {project.attributes.isPublic && <ShareIcon />}
               {'\u00A0 '}
               {project?.attributes?.name}
             </Typography>
