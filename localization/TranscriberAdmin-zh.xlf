@@ -7395,8 +7395,8 @@
       </unit>
       <unit id="vProject.generalBook">
          <segment>
-            <source>Akuo Extras Book Designation</source>
-            <target>Akuo Extras 书籍名称</target>
+            <source>Akuo Book Designation</source>
+            <target>Akuo 书籍名称</target>
          </segment>
       </unit>
       <unit id="vProject.flat">

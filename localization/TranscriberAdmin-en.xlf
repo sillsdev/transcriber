@@ -7650,7 +7650,7 @@
       </unit>
       <unit id="vProject.generalStory">
          <segment>
-            <source>Show as Stories instead of Extras</source>
+            <source>Show as Stories (not Extras) in Akuo</source>
             <target/>
          </segment>
       </unit>

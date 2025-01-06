@@ -1622,7 +1622,7 @@ const initialState = {
 			"errgeneralBookLen": "Book must be 3 characters",
 			"errgeneralBookNonScripture": "Book Designation must not be a Scripture book code.",
 			"generalBook": "Akuo Book Designation",
-			"generalStory": "Show as Stories instead of Extras",
+			"generalStory": "Show as Stories (not Extras) in Akuo",
 			"flat": "Flat",
 			"font": "Font",
 			"fontSize": "Font Size",
