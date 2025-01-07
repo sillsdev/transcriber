@@ -20,7 +20,7 @@ const UploadReducers = function (
   state = uploadCleanState,
   action: UploadMsgs
 ): IUploadState {
-  switch (action.type) {
+  switch (action?.type) {
     case UPLOAD_LIST:
       return {
         ...state,

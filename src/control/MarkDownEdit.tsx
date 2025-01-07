@@ -11,7 +11,7 @@ import { LightTooltip } from './LightTooltip';
 import MarkDown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useEffect, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { IMediaUploadStrings } from '../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { mediaUploadSelector } from '../selector';

@@ -4,7 +4,7 @@ import { dataPath, PathType } from '../utils/dataPath';
 import { remoteId } from '../crud';
 import { isElectron } from '../api-variable';
 import { RecordIdentity, RecordKeyMap } from '@orbit/records';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 const ipc = (window as any)?.electron;
 
 export const useAvatarSource = (name: string, rec: RecordIdentity) => {
@@ -16,7 +16,7 @@ export const useAvatarSource = (name: string, rec: RecordIdentity) => {
       const url = (rec as User)?.attributes?.avatarUrl;
       let src = await dataPath(url || name, PathType.AVATARS, {
         localname:
-          remoteId(rec.type, rec.id, memory.keyMap as RecordKeyMap) +
+          remoteId(rec?.type, rec.id, memory?.keyMap as RecordKeyMap) +
           name +
           '.png',
       });

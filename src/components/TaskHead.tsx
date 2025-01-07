@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import useTodo from '../context/useTodo';
 import {
   List,

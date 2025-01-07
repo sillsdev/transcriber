@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { RecordOperation, RecordIdentity } from '@orbit/records';
 import IndexedDBSource from '@orbit/indexeddb';
 import { audacityProjectCreate } from './audacityProjectCreate';
@@ -10,7 +10,7 @@ export const useAudacityProjCreate = () => {
 
   return async (passageRecId: RecordIdentity, audacityName: string) => {
     // local update only, migrate offlineproject to include offlineAvailable
-    const backup = coordinator.getSource('backup') as IndexedDBSource;
+    const backup = coordinator?.getSource('backup') as IndexedDBSource;
     let ops: RecordOperation[] = [];
     audacityProjectCreate(passageRecId, ops, user, memory, audacityName);
     await backup.sync((t) => ops);

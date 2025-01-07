@@ -30,7 +30,7 @@ export const offlineProjectCreate = (
       dateUpdated: currentDateTime(),
     },
   } as OfflineProject;
-  const rn = new StandardRecordNormalizer({ schema: memory.schema });
+  const rn = new StandardRecordNormalizer({ schema: memory?.schema });
   proj = rn.normalizeRecord(proj) as OfflineProjectD;
   ops.push(tb.addRecord(proj).toOperation());
   ops.push(

@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { VProject, Project, Plan, Group } from '../model';
 import { related, useTypeId, useOfflnProjCreate } from '.';
 import {
@@ -25,7 +25,7 @@ export const useVProjectCreate = () => {
   const getTypeId = useTypeId();
 
   const getGroupId = (teamId: string) => {
-    const grpRecs = memory.cache.query((q) =>
+    const grpRecs = memory?.cache.query((q) =>
       q.findRecords('group')
     ) as Group[];
     const selected = grpRecs.filter(
@@ -57,7 +57,7 @@ export const useVProjectCreate = () => {
       attributes: {
         name,
         description,
-        uilanguagebcp47: localeDefault(isDeveloper),
+        uilanguagebcp47: localeDefault(isDeveloper === 'true'),
         language,
         languageName,
         isPublic,
@@ -111,7 +111,7 @@ export const useVProjectCreate = () => {
     let slug = cleanFileName(name).substring(0, 6);
     if (offlineOnly) {
       //see if slug is unique
-      const plans = memory.cache.query((q) => q.findRecords('plan')) as Plan[];
+      const plans = memory?.cache.query((q) => q.findRecords('plan')) as Plan[];
       let tmp = '';
       let findit = (fnd: string) =>
         plans.findIndex((p) => p.attributes?.slug === fnd);
@@ -149,7 +149,7 @@ export const useVProjectCreate = () => {
     ]);
     //fetch the slug from the server
     if (!offlineOnly) {
-      const remote = coordinator.getSource('remote') as JSONAPISource;
+      const remote = coordinator?.getSource('remote') as JSONAPISource;
       await recToMemory({
         recId: { type: 'plan', id: plan.id as string },
         memory,

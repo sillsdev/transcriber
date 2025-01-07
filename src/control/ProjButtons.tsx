@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { IProjButtonsStrings } from '../model';
 import { Divider, Menu, MenuItem } from '@mui/material';
 import DropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -27,7 +27,7 @@ export const ProjButtons = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [project] = useGlobal('project');
   const [projType] = useGlobal('projType');
-  const {sectionArr} = React.useContext(PlanContext).state;
+  const { sectionArr } = React.useContext(PlanContext).state;
   const projectPlans = useProjectPlans();
   const [actionMenuItem, setActionMenuItem] = React.useState(null);
   const [openIntegration, setOpenIntegration] = React.useState(false);

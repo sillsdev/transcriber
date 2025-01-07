@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   User,
   UserD,
@@ -149,7 +149,9 @@ export function Profile(props: IProps) {
   const [timezone, setTimezone] = useState<string>(moment.tz.guess() || '');
   const [syncFreq, setSyncFreq] = useState(2);
   const [role, setRole] = useState('');
-  const [locale, setLocale] = useState<string>(localeDefault(isDeveloper));
+  const [locale, setLocale] = useState<string>(
+    localeDefault(isDeveloper === 'true')
+  );
   const [news, setNews] = useState<boolean | null>(null);
   const [sharedContent, setSharedContent] = useState(false);
   const [digest, setDigest] = useState<DigestPreference | null>(null);
@@ -488,7 +490,7 @@ export function Profile(props: IProps) {
       if (current.length === 1) {
         userRec = current[0];
         setCurrentUser(userRec as UserD);
-        const orgMbrRecs = memory.cache.query((q) =>
+        const orgMbrRecs = memory?.cache.query((q) =>
           q.findRecords('organizationmembership')
         ) as OrganizationMembership[];
         const mbrRec = orgMbrRecs.filter(
@@ -509,7 +511,9 @@ export function Profile(props: IProps) {
     setEmail(attr.email.toLowerCase());
     setPhone(attr.phone);
     setTimezone(attr.timezone || '');
-    setLocale(attr.locale ? attr.locale : localeDefault(isDeveloper));
+    setLocale(
+      attr.locale ? attr.locale : localeDefault(isDeveloper === 'true')
+    );
     setNews(attr.newsPreference);
     setSharedContent(attr.sharedContentCreator ?? false);
     setDigest(attr.digestPreference);

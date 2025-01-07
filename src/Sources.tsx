@@ -37,8 +37,8 @@ import { AlertSeverity } from './hoc/SnackBar';
 import { updateBackTranslationType } from './crud/updateBackTranslationType';
 import { updateConsultantWorkflowStep } from './crud/updateConsultantWorkflowStep';
 import { serializersSettings } from './serializers/serializersFor';
-import { State } from 'reactn/default';
 import { requestedSchema } from './schema';
+import { GlobalState } from './context/GlobalContext';
 type StategyError = (...args: unknown[]) => unknown;
 
 interface PullStratErrProps {
@@ -48,7 +48,7 @@ interface PullStratErrProps {
   showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void;
   memory: Memory;
   remote: JSONAPISource;
-  globalStore: State;
+  globalStore: GlobalState;
 }
 interface QueryStratErrProps {
   tokenCtx: ITokenContext;
@@ -147,13 +147,13 @@ export const Sources = async (
   orbitError: (ex: IApiError) => void,
   setOrbitRetries: (r: number) => void,
   setLang: (locale: string) => void,
-  globalStore: State,
+  globalStore: GlobalState,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
   offlineSetup: () => Promise<void>,
   showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void
 ) => {
-  const memory = coordinator.getSource('memory') as Memory;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const tokData = tokenCtx.state.profile || { sub: '' };
   const userToken = localStorage.getItem(LocalKey.authId);
   if (tokData.sub !== '') {
@@ -186,10 +186,10 @@ export const Sources = async (
 
   if (!offline) {
     remote = coordinator.sourceNames.includes('remote')
-      ? (coordinator.getSource('remote') as JSONAPISource)
+      ? (coordinator?.getSource('remote') as JSONAPISource)
       : new JSONAPISource({
-          schema: memory.schema,
-          keyMap: memory.keyMap,
+          schema: memory?.schema,
+          keyMap: memory?.keyMap,
           bucket,
           name: 'remote',
           namespace: 'api',
@@ -294,10 +294,10 @@ export const Sources = async (
       );
 
     datachangeremote = coordinator.sourceNames.includes('datachanges')
-      ? (coordinator.getSource('datachanges') as JSONAPISource)
+      ? (coordinator?.getSource('datachanges') as JSONAPISource)
       : new JSONAPISource({
-          schema: memory.schema,
-          keyMap: memory.keyMap,
+          schema: memory?.schema,
+          keyMap: memory?.keyMap,
           bucket: new IndexedDBBucket({
             namespace:
               'datachanges-' +
@@ -336,7 +336,7 @@ export const Sources = async (
     if (!isElectron) {
       //already did this if electron...
       setProjectsLoaded(await restoreBackup(coordinator));
-      const recs: Role[] = memory.cache.query((q) =>
+      const recs: Role[] = memory?.cache.query((q) =>
         q.findRecords('role')
       ) as any;
       if (recs.length === 0) {

@@ -64,7 +64,7 @@ jest.mock('../hoc/useOrbitData', () => ({
       ? mockSectionResource
       : [],
 }));
-jest.mock('reactn', () => ({
+jest.mock('../context/GlobalContext', () => ({
   useGlobal: (arg: string) =>
     arg === 'memory' ? [mockMemory, jest.fn()] : [{}, jest.fn()],
 }));

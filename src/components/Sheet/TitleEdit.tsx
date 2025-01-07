@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import MediaTitle from '../../control/MediaTitle';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { ISheet } from '../../model';
 import { getDefaultName } from './getDefaultName';
 

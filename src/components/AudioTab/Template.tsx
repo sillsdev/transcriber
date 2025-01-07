@@ -146,12 +146,12 @@ export function Template(props: ITemplateProps) {
         setTemplate(lastTemplate);
       } else {
         setTemplate('{SECT}');
-        // const planRecs = memory.cache.query((q) =>
+        // const planRecs = memory?.cache.query((q) =>
         //   q.findRecords('plan')
         // ) as Plan[];
         // const myPlan = planRecs.filter((p) => p.id === plan);
         // if (myPlan.length > 0) {
-        //   const planTypeRec = memory.cache.query((q) =>
+        //   const planTypeRec = memory?.cache.query((q) =>
         //     q.findRecord({
         //       type: 'plantype',
         //       id: related(myPlan[0], 'plantype'),

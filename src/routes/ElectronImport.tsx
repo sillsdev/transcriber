@@ -16,7 +16,7 @@ import {
 } from '../utils';
 import { isElectron } from '../api-variable';
 import { useContext, useRef } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -54,7 +54,7 @@ export const useElectronImport = () => {
   const AddProjectLoaded = useProjectsLoaded();
   const zipRef = useRef<string>();
   const t = useSelector(stringSelector, shallowEqual) as IElectronImportStrings;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const { getTypeId } = useArtifactType();
 
   const invalidReturn = {
@@ -154,7 +154,7 @@ export const useElectronImport = () => {
         users.add(u.attributes.name);
         if (
           user === '' ||
-          remoteIdGuid('user', u.id, memory.keyMap as RecordKeyMap) ||
+          remoteIdGuid('user', u.id, memory?.keyMap as RecordKeyMap) ||
           u.id === user
         )
           userInProject = true;
@@ -207,7 +207,7 @@ export const useElectronImport = () => {
       const proj = projectRecs.find(
         (pr) =>
           pr.id ===
-          (remoteIdGuid('project', id, memory.keyMap as RecordKeyMap) || id)
+          (remoteIdGuid('project', id, memory?.keyMap as RecordKeyMap) || id)
       );
 
       if (project !== '' && project !== proj?.id) {

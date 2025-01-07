@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { IProfileStrings, IState, User, UserD } from '../model';
 import * as action from '../store';
 import { TokenContext } from '../context/TokenProvider';

@@ -1,7 +1,7 @@
 import { MenuItem, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { ISharedStrings, OrganizationMembership, User } from '../model';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { related } from '../crud';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { sharedSelector } from '../selector';

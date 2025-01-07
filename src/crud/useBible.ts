@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { Bible, BibleD, OrganizationBibleD } from '../model';
 import { RecordTransformBuilder } from '@orbit/records';
 import {
@@ -21,14 +21,14 @@ export const useBible = () => {
 
   const getBible = (bibleId: string) => {
     let bibles = (
-      memory.cache.query((q: any) => q.findRecords('bible')) as BibleD[]
+      memory?.cache.query((q: any) => q.findRecords('bible')) as BibleD[]
     ).filter((b) => b.attributes.bibleId === bibleId);
     if (bibles.length > 0) return bibles[0];
     return undefined;
   };
   const getBibleOwner = (bibleid: string) => {
     let bibles = (
-      memory.cache.query((q: any) =>
+      memory?.cache.query((q: any) =>
         q.findRecords('organizationbible')
       ) as OrganizationBibleD[]
     ).filter((b) => related(b, 'bible') === bibleid && b.attributes.ownerorg);
@@ -44,7 +44,7 @@ export const useBible = () => {
   };
   const getOrgBibleRec = (orgId: string) => {
     let bibles = (
-      memory.cache.query((q: any) =>
+      memory?.cache.query((q: any) =>
         q.findRecords('organizationbible')
       ) as OrganizationBibleD[]
     ).filter((b) => related(b, 'organization') === orgId);

@@ -1,5 +1,5 @@
 import { useContext, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { Grid, GridProps, styled, Typography } from '@mui/material';
 import {
   passageRefText,

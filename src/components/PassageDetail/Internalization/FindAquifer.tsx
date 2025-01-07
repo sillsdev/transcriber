@@ -26,7 +26,7 @@ import Markdown from 'react-markdown';
 import { LaunchLink } from '../../../control/LaunchLink';
 import { axiosGet, axiosPost } from '../../../utils/axios';
 import { TokenContext } from '../../../context/TokenProvider';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 import { RecordKeyMap } from '@orbit/records';
 import { useDataChanges, useWaitForRemoteQueue } from '../../../utils';
 import BigDialog from '../../../hoc/BigDialog';
@@ -230,7 +230,7 @@ export default function FindAquifer({ onClose }: IProps) {
       select: false,
       name: item.localizedName,
       mediaType: item.mediaType,
-      group: item.grouping.type,
+      group: item.grouping?.type,
       source: item.grouping.name,
     }));
     setData(dataRows);
@@ -284,17 +284,17 @@ export default function FindAquifer({ onClose }: IProps) {
       PassageId: remoteIdNum(
         'passage',
         passage.id,
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       ),
       SectionId: remoteIdNum(
         'section',
         section.id,
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       ),
       OrgWorkflowStep: remoteIdNum(
         'orgworkflowstep',
         InternalizationStep()?.id ?? '',
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       ),
       Items: add,
     };

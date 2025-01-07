@@ -10,7 +10,6 @@ import ErrorBoundary from './hoc/ErrorBoundary';
 import { Provider } from 'react-redux';
 import { coordinator, memory, backup, schema } from './schema';
 import configureStore from './store';
-import { setGlobal } from 'reactn';
 import Bugsnag from '@bugsnag/js';
 import BugsnagReact from '@bugsnag/plugin-react';
 import {
@@ -39,6 +38,7 @@ import { backupToMemory } from './crud/syncToMemory';
 import Coordinator from '@orbit/coordinator';
 import MemorySource from '@orbit/memory';
 import IndexedDBSource from '@orbit/indexeddb';
+import { GlobalProvider } from './context/GlobalContext';
 const appVersion = require('../package.json').version;
 const { auth0Domain, webClientId, apiIdentifier } = envVariables;
 const ipc = (window as any)?.electron;
@@ -105,7 +105,7 @@ export async function restoreBackup(coordinator?: Coordinator) {
       });
     }
 
-    const ops = myMemory.cache.query((q: RecordQueryBuilder) =>
+    const ops = myMemory?.cache.query((q: RecordQueryBuilder) =>
       q.findRecords('offlineproject')
     ) as OfflineProject[];
     const loaded = ops.filter((o) => o.attributes?.snapshotDate);
@@ -203,18 +203,18 @@ const promises = [];
 promises.push(getFingerprintArray());
 if (isElectron) {
   console.log('restoring backup in electron in index');
-  promises.push(restoreBackup()); //.then(() => console.log('pull done'));
+  promises.push(restoreBackup(coordinator)); //.then(() => console.log('pull done'));
 }
 Promise.all(promises)
   .then((promResults) => {
-    setGlobal({
+    const state = {
       home: false,
       organization: '',
       orgRole: undefined,
       project: '',
       projType: '',
       plan: '',
-      tab: undefined,
+      tab: 0,
       group: '',
       user: '',
       lang: 'en',
@@ -243,13 +243,15 @@ Promise.all(promises)
       latestVersion: '',
       releaseDate: '',
       progress: 0,
-    });
+    };
     const root = ReactDOM.createRoot(
       document.getElementById('root') as HTMLElement
     );
     root.render(
       <React.StrictMode>
-        <Root />
+        <GlobalProvider init={state}>
+          <Root />
+        </GlobalProvider>
       </React.StrictMode>
     );
   })

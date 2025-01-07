@@ -31,6 +31,6 @@ const ldml: ILdml = { en, fr, ar, es, ha, id, ru, sw, pt, ta, zh };
 
 export const langName = (loc: string, opt: string): string => {
   return ldml[loc].ldml.localeDisplayNames.languages.language
-    .filter((d) => d.type === opt)
+    .filter((d) => d?.type === opt)
     .map((d) => d.content)[0];
 };

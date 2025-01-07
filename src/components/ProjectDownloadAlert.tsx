@@ -26,7 +26,7 @@ import {
 import { isElectron } from '../api-variable';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { projectDownloadSelector, sharedSelector } from '../selector';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import FilterIcon from '@mui/icons-material/FilterList';
 import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
 import {

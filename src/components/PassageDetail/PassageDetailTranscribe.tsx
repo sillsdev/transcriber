@@ -15,7 +15,7 @@ import TaskTable, { TaskTableWidth } from '../TaskTable';
 import { getStepComplete, ToolSlug } from '../../crud';
 import { findRecord } from '../../crud/tryFindRecord';
 import { JSONParse, waitForIt } from '../../utils';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { useArtifactType } from '../../crud/useArtifactType';
 

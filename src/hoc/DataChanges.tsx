@@ -6,7 +6,7 @@ import {
   useMemo,
   PropsWithChildren,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { infoMsg, logError, Severity, useCheckOnline } from '../utils';
 import { useInterval } from '../utils/useInterval';
 import {
@@ -92,9 +92,9 @@ export const processDataChanges = async (pdc: {
     cb,
   } = pdc;
 
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('datachanges') as JSONAPISource;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('datachanges') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const reloadOrgs = async (localId: string, reloadAll: boolean) => {
     const orgmem = findRecord(memory, 'organizationmembership', localId);
     if (orgmem) {
@@ -209,7 +209,7 @@ export const processDataChanges = async (pdc: {
           if (!upRec.record.relationships)
             //this is just an included record and wasn't changed
             continue;
-          switch (upRec.record.type) {
+          switch (upRec.record?.type) {
             case 'section':
               if (upRec.record.relationships?.transcriber === undefined)
                 resetRelated(localOps, tb, 'transcriber', upRec.record);
@@ -230,7 +230,7 @@ export const processDataChanges = async (pdc: {
               var localId = remoteIdGuid(
                 'mediafile',
                 upRec.record?.keys?.remoteId ?? '',
-                memory.keyMap as RecordKeyMap
+                memory?.keyMap as RecordKeyMap
               );
               if (localId) {
                 var mr = findRecord(memory, 'mediafile', localId) as MediaFileD;
@@ -330,7 +330,7 @@ export const processDataChanges = async (pdc: {
         const localId = remoteIdGuid(
           table.type,
           r.toString(),
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         );
         if (localId) {
           switch (table.type) {
@@ -376,9 +376,9 @@ export const doDataChanges = async (
   fetchUrl?: (props: IFetchNowProps) => Promise<string | undefined>,
   notPastTime?: string
 ) => {
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource; //to check busy
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('remote') as JSONAPISource; //to check busy
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const userLastTimeKey = localUserKey(LocalKey.time);
   const userNextStartKey = localUserKey(LocalKey.start);
   if (!remote || !remote.activated) return;
@@ -409,7 +409,7 @@ export const doDataChanges = async (
       const p = projectsLoaded[ix];
       const op = getOfflineProject(p);
       if (
-        !isNaN(remoteIdNum('project', p, memory.keyMap as RecordKeyMap)) &&
+        !isNaN(remoteIdNum('project', p, memory?.keyMap as RecordKeyMap)) &&
         op.attributes?.snapshotDate &&
         Date.parse(op.attributes.snapshotDate) < Date.parse(lastTime)
       ) {
@@ -424,7 +424,7 @@ export const doDataChanges = async (
               [
                 'projlist',
                 JSON.stringify({
-                  id: remoteId('project', p, memory.keyMap as RecordKeyMap),
+                  id: remoteId('project', p, memory?.keyMap as RecordKeyMap),
                   since: op.attributes.snapshotDate,
                 }),
               ],
@@ -484,7 +484,7 @@ export const doDataChanges = async (
         const tb = new RecordTransformBuilder();
         pscs.forEach((p) =>
           operations.push(
-            tb.removeRecord({ type: p.type, id: p.id }).toOperation()
+            tb.removeRecord({ type: p?.type, id: p.id }).toOperation()
           )
         );
         await backup.sync((t) => operations);
@@ -500,8 +500,8 @@ export function DataChanges(props: PropsWithChildren) {
   const setLanguage = (lang: string) => dispatch(actions.setLanguage(lang));
   const [isOffline] = useGlobal('offline');
   const [coordinator] = useGlobal('coordinator');
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource; //to check busy
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('remote') as JSONAPISource; //to check busy
   const [loadComplete] = useGlobal('loadComplete');
   const [busy, setBusy] = useGlobal('remoteBusy');
   const [bigBusy] = useGlobal('importexportBusy');

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useParams, useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
 import AppHead from '../components/App/AppHead';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { Organization, OrganizationD, User } from '../model';
 import { waitForIt } from '../utils';
 import { useTeamCreate, isPersonalTeam, remoteIdNum, defaultWorkflow } from '.';
@@ -32,8 +32,8 @@ export const useNewTeamId = () => {
       )
       .sort((a, b) =>
         Boolean(a.keys?.remoteId) && Boolean(b.keys?.remoteId)
-          ? remoteIdNum('organization', b.id, memory.keyMap as RecordKeyMap) -
-            remoteIdNum('organization', a.id, memory.keyMap as RecordKeyMap)
+          ? remoteIdNum('organization', b.id, memory?.keyMap as RecordKeyMap) -
+            remoteIdNum('organization', a.id, memory?.keyMap as RecordKeyMap)
           : b >= a
           ? 1
           : -1

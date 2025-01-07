@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   IState,
   IArtifactCategoryStrings,
@@ -107,7 +107,7 @@ export const useArtifactCategory = (teamId?: string) => {
     /* wait for new categories remote id to fill in */
     await waitForRemoteQueue('category update');
     var orgrecs: ArtifactCategoryD[] = (
-      memory.cache.query((q) =>
+      memory?.cache.query((q) =>
         q.findRecords('artifactcategory')
       ) as ArtifactCategoryD[]
     ).filter(
@@ -169,7 +169,7 @@ export const useArtifactCategory = (teamId?: string) => {
     id?: string
   ) => {
     //check for duplicate
-    const orgrecs: ArtifactCategory[] = memory.cache.query((q) =>
+    const orgrecs: ArtifactCategory[] = memory?.cache.query((q) =>
       q
         .findRecords('artifactcategory')
         .filter({ attribute: 'categoryname', value: newArtifactCategory })

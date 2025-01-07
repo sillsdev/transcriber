@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { isElectron, API_CONFIG } from '../api-variable';
 import { launch, launchCmd, execFolder } from '../utils';
 import path from 'path-browserify';

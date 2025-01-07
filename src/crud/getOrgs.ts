@@ -3,11 +3,11 @@ import { Organization, OrganizationMembership } from '../model';
 import { related } from '.';
 
 export function getOrgs(memory: Memory, currentUser: string): Organization[] {
-  let orgs: Organization[] = memory.cache.query((q) =>
+  let orgs: Organization[] = memory?.cache.query((q) =>
     q.findRecords('organization')
   ) as any;
   if (process.env.REACT_APP_MODE === 'electron') {
-    let oms: OrganizationMembership[] = memory.cache.query((q) =>
+    let oms: OrganizationMembership[] = memory?.cache.query((q) =>
       q.findRecords('organizationmembership')
     ) as any;
     orgs = orgs.filter((o) =>

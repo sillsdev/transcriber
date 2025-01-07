@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
@@ -230,7 +230,7 @@ export const ProjectCard = (props: IProps) => {
           projectid: remoteIdNum(
             'project',
             projectId,
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           ),
           sameorg: what === 'copysame',
           token: accessToken,
@@ -337,7 +337,7 @@ export const ProjectCard = (props: IProps) => {
     const value: IProjectDialog = {
       name: attr.name,
       description: attr.description || '',
-      type: attr.type,
+      type: attr?.type,
       book: getProjectDefault(projDefBook, project as any as ProjectD) || '',
       story:
         getProjectDefault(projDefStory, project as any as ProjectD) || true,

@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { doDataChanges } from '../hoc/DataChanges';
 import { useOfflnProjRead } from '../crud';
 import * as actions from '../store';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 
 export const useDataChanges = () => {
   const { accessToken } = useContext(TokenContext).state;

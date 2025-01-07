@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   MediaFile,
   ITranscriptionShowStrings,
@@ -87,7 +87,7 @@ function TranscriptionShow(props: IProps) {
   useEffect(() => {
     if (id) {
       let mediaRec = isMediaId
-        ? (memory.cache.query((q) =>
+        ? (memory?.cache.query((q) =>
             q.findRecord({ type: 'mediafile', id })
           ) as MediaFile)
         : null;

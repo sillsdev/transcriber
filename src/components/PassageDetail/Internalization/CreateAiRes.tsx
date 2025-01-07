@@ -28,7 +28,7 @@ import { useOrganizedBy } from '../../../crud/useOrganizedBy';
 import ClearIcon from '@mui/icons-material/Clear';
 import { PassageTypeEnum } from '../../../model/passageType';
 import { passageTypeFromRef } from '../../../control/RefRender';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 import { usePlanType, useSharedResRead } from '../../../crud';
 
 interface CreateAiResProps {
@@ -98,9 +98,9 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
   const optVal = (item: string) => ({ value: item, label: camel2Title(item) });
 
   useEffect(() => {
-    setTypeOpts(aiQueries.map((q) => q.type.replace('-', ' ')).map(optVal));
+    setTypeOpts(aiQueries.map((q) => q?.type.replace('-', ' ')).map(optVal));
     setScope(scopeOptions[0]);
-    setType(aiQueries[0].type.replace('-', ' '));
+    setType(aiQueries[0]?.type.replace('-', ' '));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -134,7 +134,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
       ref = camel2Title(scope);
     }
 
-    const aiQuery = aiQueries.find((q) => q.type === type.replace(' ', '-'));
+    const aiQuery = aiQueries.find((q) => q?.type === type.replace(' ', '-'));
     setQuery(aiQuery?.template.replace('{0}', ref) ?? '');
   };
 
@@ -212,7 +212,9 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
               value={typeOpts.find((item) => item.value === type) ?? null}
               onChange={handleTypeChange}
               sx={{ width: 180 }}
-              renderInput={(params) => <TextField {...params} label={t.type} />}
+              renderInput={(params) => (
+                <TextField {...params} label={t?.type} />
+              )}
             />
           </Grid>
           <Grid item>

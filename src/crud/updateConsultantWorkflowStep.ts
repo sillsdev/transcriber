@@ -18,7 +18,7 @@ async function getSteps(
     | WorkflowStepD[];
   return steps.filter(
     (s) =>
-      Boolean(remoteId(table, s.id, memory.keyMap as RecordKeyMap)) ===
+      Boolean(remoteId(table, s.id, memory?.keyMap as RecordKeyMap)) ===
         Boolean(token) &&
       /Consultant/i.test(s?.attributes?.name) &&
       /discuss/i.test(s?.attributes?.tool) &&

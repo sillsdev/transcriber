@@ -3,21 +3,13 @@ import React, {
   useState,
   useContext,
   useMemo,
-  PropsWithChildren,
   Suspense,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useLocation, useParams } from 'react-router-dom';
 import { Grid, debounce, Paper, Box, SxProps, Stack } from '@mui/material';
 
-import styled from 'styled-components';
 import AppHead from '../components/App/AppHead';
-import {
-  default as SplitPaneBar,
-  Pane as PaneBar,
-  PaneProps,
-  SplitPaneProps,
-} from 'react-split-pane';
 import { HeadHeight } from '../App';
 import {
   PassageDetailProvider,
@@ -54,6 +46,8 @@ import Busy from '../components/Busy';
 import { RecordKeyMap } from '@orbit/records';
 import PassageDetailParatextIntegration from '../components/PassageDetail/PassageDetailParatextIntegration';
 import { PassageDetailDiscuss } from '../components/PassageDetail/PassageDetailDiscuss';
+import { AllotmentWrapper } from '../control/AllotmentWrapper';
+import { Allotment } from 'allotment';
 
 const KeyTerms = React.lazy(
   () => import('../components/PassageDetail/Keyterms/KeyTerms')
@@ -61,70 +55,6 @@ const KeyTerms = React.lazy(
 
 const descProps = { overflow: 'hidden', textOverflow: 'ellipsis' } as SxProps;
 const rowProps = { alignItems: 'center', whiteSpace: 'nowrap' } as SxProps;
-
-const Wrapper = styled.div`
-  .Resizer {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    background: #000;
-    opacity: 0.2;
-    z-index: 1;
-    -moz-background-clip: padding;
-    -webkit-background-clip: padding;
-    background-clip: padding-box;
-  }
-
-  .Resizer:hover {
-    -webkit-transition: all 2s ease;
-    transition: all 2s ease;
-  }
-
-  .Resizer.horizontal {
-    height: 11px;
-    margin: -5px 0;
-    border-top: 5px solid rgba(255, 255, 255, 0);
-    border-bottom: 5px solid rgba(255, 255, 255, 0);
-    cursor: row-resize;
-    width: 100%;
-  }
-
-  .Resizer.horizontal:hover {
-    border-top: 5px solid rgba(0, 0, 0, 0.5);
-    border-bottom: 5px solid rgba(0, 0, 0, 0.5);
-  }
-
-  .Resizer.vertical {
-    width: 11px;
-    margin: 0 -5px;
-    border-left: 5px solid rgba(255, 255, 255, 0);
-    border-right: 5px solid rgba(255, 255, 255, 0);
-    cursor: col-resize;
-  }
-
-  .Resizer.vertical:hover {
-    border-left: 5px solid rgba(0, 0, 0, 0.5);
-    border-right: 5px solid rgba(0, 0, 0, 0.5);
-  }
-  .Pane1 {
-    // background-color: blue;
-    display: flex;
-    min-height: 0;
-  }
-  .Pane2 {
-    // background-color: red;
-    display: flex;
-    min-height: 0;
-  }
-`;
-
-const SplitPane = (props: SplitPaneProps & PropsWithChildren) => {
-  return <SplitPaneBar {...props} />;
-};
-
-const Pane = (props: PaneProps & PropsWithChildren) => {
-  return <PaneBar {...props} className={props.className || 'pane'} />;
-};
 
 interface PGProps {
   minWidth: number;
@@ -173,7 +103,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
       var id = JSON.parse(settings).artifactTypeId;
       if (id)
         return (
-          remoteIdGuid('artifacttype', id, memory.keyMap as RecordKeyMap) ?? id
+          remoteIdGuid('artifacttype', id, memory?.keyMap as RecordKeyMap) ?? id
         );
     }
     return null;
@@ -191,17 +121,17 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
     ArtifactTypeSlug.WholeBackTranslation,
   ]);
 
-  const handleVertSplitSize = debounce((e: number) => {
-    setHorizSize(e);
+  const handleVertSplitSize = debounce((e: number[]) => {
+    setHorizSize(e[0]);
     setDiscussionSize({
-      width: widthRef.current - e,
+      width: widthRef.current - e[0],
       height: discussionSize.height,
     });
-  }, 50);
+  }, 500);
 
-  const handleHorzSplitSize = debounce((e: number) => {
-    setPlayerSize(e);
-  }, 50);
+  const handleHorzSplitSize = debounce((e: number[]) => {
+    setPlayerSize(e[0]);
+  }, 500);
 
   const setDimensions = () => {
     const newWidth = Math.max(window.innerWidth, minWidthRef.current);
@@ -325,36 +255,39 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
             key={currentstep}
             sx={{ p: 0, margin: 'auto', width: `calc(100% - 32px)` }}
           >
-            <Wrapper>
-              <SplitPane
-                defaultSize={widthRef.current - discussionSize.width - 16}
-                style={{ position: 'static' }}
-                split="vertical"
-                size={horizSize}
+            <AllotmentWrapper
+              horiz={`${widthRef.current - 48}px`}
+              vert={`${playerSize + 500}px`}
+            >
+              <Allotment
+                defaultSizes={[
+                  widthRef.current - discussionSize.width - 16,
+                  discussionSize.width,
+                ]}
+                // size={horizSize}
                 onChange={handleVertSplitSize}
               >
-                <Pane>
+                <Allotment.Pane>
                   {tool !== ToolSlug.Transcribe &&
                   tool !== ToolSlug.Verses &&
                   tool !== ToolSlug.Record &&
                   tool !== ToolSlug.ConsultantCheck ? (
-                    <SplitPane
-                      defaultSize={playerSize}
-                      minSize={INIT_PLAYERPANE_HEIGHT + 48} // 48 for chooser
-                      maxSize={height - 280}
-                      style={{ position: 'static' }}
-                      split="horizontal"
+                    <Allotment
+                      vertical
+                      defaultSizes={[playerSize, height - 280]}
+                      // minSize={INIT_PLAYERPANE_HEIGHT + 48} // 48 for chooser
+                      // maxSize={height - 280}
                       onChange={handleHorzSplitSize}
                     >
-                      <Pane>
+                      <Allotment.Pane>
                         <PassageDetailChooser
                           width={widthRef.current - discussionSize.width - 16}
                         />
                         {(tool !== ToolSlug.KeyTerm || mediafileId) && (
                           <PassageDetailPlayer chooserReduce={chooserSize} />
                         )}
-                      </Pane>
-                      <Pane>
+                      </Allotment.Pane>
+                      <Allotment.Pane>
                         {tool === ToolSlug.TeamCheck && <TeamCheckReference />}
                         {tool === ToolSlug.KeyTerm && (
                           <Suspense fallback={<Busy />}>
@@ -369,8 +302,8 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                             currentStep={currentstep}
                           />
                         )}
-                      </Pane>
-                    </SplitPane>
+                      </Allotment.Pane>
+                    </Allotment>
                   ) : (
                     <Grid item sx={descProps} xs={12}>
                       <PassageDetailChooser
@@ -400,18 +333,18 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
                       )}
                     </Grid>
                   )}
-                </Pane>
+                </Allotment.Pane>
                 {!topFilter && Boolean(mediafileId) && (
-                  <Pane>
+                  <Allotment.Pane>
                     <Grid item xs={12} sm container>
                       <Grid item container direction="column">
                         <DiscussionList />
                       </Grid>
                     </Grid>
-                  </Pane>
+                  </Allotment.Pane>
                 )}
-              </SplitPane>
-            </Wrapper>
+              </Allotment>
+            </AllotmentWrapper>
           </Paper>
         )}
         {(tool === ToolSlug.Community ||

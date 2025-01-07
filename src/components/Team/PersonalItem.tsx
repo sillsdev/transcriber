@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { Grid } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import { TeamContext } from '../../context/TeamContext';

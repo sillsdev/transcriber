@@ -6,7 +6,7 @@ import React, {
   useRef,
   useContext,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { IState, IPassageRecordStrings } from '../model';
 import * as actions from '../store';
 import {

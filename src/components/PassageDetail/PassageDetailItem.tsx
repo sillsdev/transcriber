@@ -16,14 +16,7 @@ import {
   styled,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArtifactTypeSlug,
   IRegionParams,
@@ -37,19 +30,12 @@ import usePassageDetailContext from '../../context/usePassageDetailContext';
 import Memory from '@orbit/memory';
 import { AlertSeverity, useSnackBar } from '../../hoc/SnackBar';
 import { getSegments, NamedRegions } from '../../utils/namedSegments';
-import styledHtml from 'styled-components';
-import {
-  default as SplitPaneBar,
-  Pane as PaneBar,
-  PaneProps,
-  SplitPaneProps,
-} from 'react-split-pane';
 import PassageDetailPlayer, { SaveSegments } from './PassageDetailPlayer';
 import DiscussionList from '../Discussions/DiscussionList';
 import MediaPlayer from '../MediaPlayer';
 import MediaRecord from '../MediaRecord';
 import SelectRecording from './SelectRecording';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import Confirm from '../AlertDialog';
 import Uploader from '../Uploader';
@@ -61,6 +47,9 @@ import { passageDefaultFilename } from '../../utils/passageDefaultFilename';
 import PassageDetailChooser from './PassageDetailChooser';
 import ArtifactStatus from '../ArtifactStatus';
 import { useOrbitData } from '../../hoc/useOrbitData';
+import { AllotmentWrapper } from '../../control/AllotmentWrapper';
+import { Allotment } from 'allotment';
+import 'allotment/dist/style.css';
 
 export const btDefaultSegParams = {
   silenceThreshold: 0.004,
@@ -88,70 +77,6 @@ const statusProps = {
   gutterBottom: 'true',
 } as SxProps;
 
-const Wrapper = styledHtml.div`
-  .Resizer {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    background: #000;
-    opacity: 0.2;
-    z-index: 1;
-    -moz-background-clip: padding;
-    -webkit-background-clip: padding;
-    background-clip: padding-box;
-  }
-
-  .Resizer:hover {
-    -webkit-transition: all 2s ease;
-    transition: all 2s ease;
-  }
-
-  .Resizer.horizontal {
-    height: 11px;
-    margin: -5px 0;
-    border-top: 5px solid rgba(255, 255, 255, 0);
-    border-bottom: 5px solid rgba(255, 255, 255, 0);
-    cursor: row-resize;
-    width: 100%;
-  }
-
-  .Resizer.horizontal:hover {
-    border-top: 5px solid rgba(0, 0, 0, 0.5);
-    border-bottom: 5px solid rgba(0, 0, 0, 0.5);
-  }
-
-  .Resizer.vertical {
-    width: 11px;
-    margin: 0 -5px;
-    border-left: 5px solid rgba(255, 255, 255, 0);
-    border-right: 5px solid rgba(255, 255, 255, 0);
-    cursor: col-resize;
-  }
-
-  .Resizer.vertical:hover {
-    border-left: 5px solid rgba(0, 0, 0, 0.5);
-    border-right: 5px solid rgba(0, 0, 0, 0.5);
-  }
-  .Pane1 {
-    // background-color: blue;
-    display: flex;
-    min-height: 0;
-  }
-  .Pane2 {
-    // background-color: red;
-    display: flex;
-    min-height: 0;
-  }
-`;
-
-const SplitPane = (props: SplitPaneProps & PropsWithChildren) => {
-  return <SplitPaneBar {...props} />;
-};
-
-const Pane = (props: PaneProps & PropsWithChildren) => {
-  return <PaneBar {...props} className={props.className || 'pane'} />;
-};
-
 interface IProps {
   ready?: () => boolean;
   width: number;
@@ -175,7 +100,7 @@ export function PassageDetailItem(props: IProps) {
   const [defaultFilename, setDefaultFileName] = useState('');
   const [coordinator] = useGlobal('coordinator');
   const [offline] = useGlobal('offline');
-  const memory = coordinator.getSource('memory') as Memory;
+  const memory = coordinator?.getSource('memory') as Memory;
   const [speaker, setSpeaker] = useState('');
   const [topic, setTopic] = useState('');
   const [importList, setImportList] = useState<File[]>();
@@ -231,13 +156,13 @@ export function PassageDetailItem(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organization]);
 
-  const handleSplitSize = debounce((e: number) => {
-    setDiscussionSize({ width: width - e, height: discussionSize.height });
-  }, 50);
+  const handleSplitSize = debounce((e: number[]) => {
+    setDiscussionSize({ width: e[1], height: discussionSize.height });
+  }, 500);
 
-  const handleHorizonalSplitSize = debounce((e: number) => {
-    setPlayerSize(e + 20);
-  }, 50);
+  const handleHorizonalSplitSize = debounce((e: number[]) => {
+    setPlayerSize(e[0] + 20);
+  }, 500);
 
   useEffect(() => {
     if (!slugs.find((s) => s === recordType)) setRecordType(slugs[0]);
@@ -411,22 +336,28 @@ export function PassageDetailItem(props: IProps) {
       <Paper sx={paperProps}>
         <div>
           {currentVersion !== 0 ? (
-            <Wrapper>
-              <SplitPane
-                defaultSize={width - discussionSize.width + 24}
-                style={{ position: 'static' }}
-                split="vertical"
+            <AllotmentWrapper
+              horiz={`${width - 48}px`}
+              vert={`${playerSize + 500}px`}
+            >
+              <Allotment
+                defaultSizes={[
+                  width - discussionSize.width + 24,
+                  discussionSize.width - 24,
+                ]}
                 onChange={handleSplitSize}
               >
-                <Pane>
-                  <SplitPane
-                    split="horizontal"
-                    defaultSize={playerSize}
-                    minSize={150}
-                    style={{ position: 'static' }}
+                <Allotment.Pane>
+                  <Allotment
+                    vertical
+                    defaultSizes={[
+                      playerSize,
+                      discussionSize.height - playerSize,
+                    ]}
+                    // minSize={150}
                     onChange={handleHorizonalSplitSize}
                   >
-                    <Pane>
+                    <Allotment.Pane>
                       <PassageDetailChooser
                         width={width - discussionSize.width - 16}
                       />
@@ -445,9 +376,9 @@ export function PassageDetailItem(props: IProps) {
                         onSegmentParamChange={onSegmentParamChange}
                         chooserReduce={chooserSize}
                       />
-                    </Pane>
+                    </Allotment.Pane>
 
-                    <Pane>
+                    <Allotment.Pane>
                       <Paper sx={paperProps}>
                         <Box sx={rowProp}>
                           <ArtifactStatus
@@ -591,26 +522,26 @@ export function PassageDetailItem(props: IProps) {
                           </Paper>
                         </Box>
                       </Paper>
-                    </Pane>
-                  </SplitPane>
-                </Pane>
-                <Pane>
+                    </Allotment.Pane>
+                  </Allotment>
+                </Allotment.Pane>
+                <Allotment.Pane>
                   <Grid item xs={12} sm container>
                     <Grid item container direction="column">
                       <DiscussionList />
                     </Grid>
                   </Grid>
-                </Pane>
-              </SplitPane>
-            </Wrapper>
+                </Allotment.Pane>
+              </Allotment>
+            </AllotmentWrapper>
           ) : (
-            <Pane>
+            <Allotment.Pane>
               <Paper sx={paperProps}>
                 <Typography variant="h2" align="center">
                   {ts.noAudio}
                 </Typography>
               </Paper>
-            </Pane>
+            </Allotment.Pane>
           )}
           {confirm && (
             <Confirm

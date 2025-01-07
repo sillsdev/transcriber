@@ -37,7 +37,7 @@ import {
   VernacularTag,
   useRole,
 } from '../../crud';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import Memory from '@orbit/memory';
 import PassageChooser from './PassageChooser';
@@ -61,8 +61,8 @@ export function AudioTab() {
   const allBookData = useSelector((state: IState) => state.books.bookData);
   const [plan] = useGlobal('plan');
   const [coordinator] = useGlobal('coordinator');
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
   const requests = React.useRef(0);
   const { getPlan } = usePlan();
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
@@ -305,7 +305,7 @@ export function AudioTab() {
           remoteIdGuid(
             'mediafile',
             mediaRemoteIds[0],
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           ) || mediaRemoteIds[0]
         );
         setAttachVisible(true);

@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import {
   ISharedStrings,
   ITranscriptionTabStrings,

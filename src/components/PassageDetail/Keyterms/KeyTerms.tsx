@@ -19,7 +19,7 @@ import KeyTermTable, { IKeyTermRow } from './KeyTermTable';
 import { useSelector, shallowEqual } from 'react-redux';
 import { IKeyTermsStrings } from '../../../model';
 import { keyTermsSelector } from '../../../selector';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 import KeyTermSetting from './KeyTermSetting';
 import { Box } from '@mui/material';
 import { useOrbitData } from '../../../hoc/useOrbitData';

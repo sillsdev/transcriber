@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { LocalKey, localUserKey, useHome } from '../utils';
 import { Box } from '@mui/material';
 import AppHead from '../components/App/AppHead';
@@ -53,7 +53,7 @@ export const TeamScreen = () => {
         const remProjId = remoteId(
           'plan',
           selectedPlan,
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         );
         const loc = `/plan/${remProjId || selectedPlan}/0`;
         if (loc !== localStorage.getItem(localUserKey(LocalKey.url))) {

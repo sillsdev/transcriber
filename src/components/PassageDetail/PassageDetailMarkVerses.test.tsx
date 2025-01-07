@@ -109,7 +109,7 @@ jest.mock('./PassageDetailPlayer', () => ({ onSegment }: DetailPlayerProps) => {
 //   }),
 // }));
 jest.mock('../../utils/logErrorService', () => jest.fn());
-jest.mock('reactn', () => ({
+jest.mock('../../context/GlobalContext', () => ({
   useGlobal: (arg: string) =>
     arg === 'memory' ? [mockMemory, jest.fn()] : [{}, jest.fn()],
 }));
@@ -200,7 +200,7 @@ test('should prevent changes', async () => {
   const firstLimit = tbody.children[1].firstChild as HTMLTableCellElement;
 
   await user.dblClick(firstLimit);
-  await user.type(firstLimit?.firstChild as HTMLInputElement, 'Luke 1:2');
+  await user?.type(firstLimit?.firstChild as HTMLInputElement, 'Luke 1:2');
   await user.click(headerLimit);
 
   // Assert

@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 import related from '../../../crud/related';
 import { useOrbitData } from '../../../hoc/useOrbitData';
 import { PassageD, SectionD } from '../../../model';

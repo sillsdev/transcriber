@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
 import { Resource, MediaFile, MediaFileD } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';

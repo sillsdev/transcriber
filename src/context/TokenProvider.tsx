@@ -6,7 +6,7 @@ import Busy from '../components/Busy';
 import TokenDialog from '../components/TokenDialog';
 import moment from 'moment';
 import jwtDecode from 'jwt-decode';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useUpdateOrbitToken } from '../crud';
 import { LocalKey, logError, Severity, useInterval } from '../utils';
 import { isElectron } from '../api-variable';

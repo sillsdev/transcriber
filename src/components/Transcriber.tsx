@@ -4,19 +4,14 @@ import React, {
   useContext,
   useRef,
   CSSProperties,
-  PropsWithChildren,
   useMemo,
   useCallback,
+  useLayoutEffect,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useParams } from 'react-router-dom';
-import {
-  default as SplitPaneBar,
-  Pane as PaneBar,
-  PaneProps,
-  SplitPaneProps,
-} from 'react-split-pane';
-import styledComp from 'styled-components';
+import { Allotment } from 'allotment';
+import 'allotment/dist/style.css';
 import Confirm from './AlertDialog';
 import {
   MediaFile,
@@ -111,75 +106,12 @@ import {
 } from '@orbit/records';
 import { useDispatch } from 'react-redux';
 import { PassageTypeEnum } from '../model/passageType';
+import { AllotmentWrapper } from '../control/AllotmentWrapper';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
 const HISTORY_KEY = 'F7,CTRL+7';
 const INIT_PLAYER_HEIGHT = 180;
-
-const Wrapper = styledComp.div`
-  .Resizer {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    background: #000;
-    opacity: 0.2;
-    z-index: 1;
-    -moz-background-clip: padding;
-    -webkit-background-clip: padding;
-    background-clip: padding-box;
-  }
-
-  .Resizer:hover {
-    -webkit-transition: all 2s ease;
-    transition: all 2s ease;
-  }
-
-  .Resizer.horizontal {
-    height: 11px;
-    margin: -5px 0;
-    border-top: 5px solid rgba(255, 255, 255, 0);
-    border-bottom: 5px solid rgba(255, 255, 255, 0);
-    cursor: row-resize;
-    width: 100%;
-  }
-
-  .Resizer.horizontal:hover {
-    border-top: 5px solid rgba(0, 0, 0, 0.5);
-    border-bottom: 5px solid rgba(0, 0, 0, 0.5);
-  }
-
-  .Resizer.vertical {
-    width: 11px;
-    margin: 0 -5px;
-    border-left: 5px solid rgba(255, 255, 255, 0);
-    border-right: 5px solid rgba(255, 255, 255, 0);
-    cursor: col-resize;
-  }
-
-  .Resizer.vertical:hover {
-    border-left: 5px solid rgba(0, 0, 0, 0.5);
-    border-right: 5px solid rgba(0, 0, 0, 0.5);
-  }
-  .Pane1 {
-    // background-color: blue;
-    display: flex;
-    min-height: 0;
-  }
-  .Pane2 {
-    // background-color: red;
-    display: flex;
-    min-height: 0;
-  }
-`;
-
-const SplitPane = (props: SplitPaneProps & PropsWithChildren) => {
-  return <SplitPaneBar {...props} />;
-};
-
-const Pane = (props: PaneProps & PropsWithChildren) => {
-  return <PaneBar {...props} className={props.className || 'pane'} />;
-};
 
 interface IProps {
   defaultWidth: number;
@@ -523,9 +455,19 @@ export function Transcriber(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [toolsChanged]);
 
-  useEffect(() => {
-    const newBoxHeight = discussionSize.height - playerSize - chooserSize;
-    if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
+  const handleBoxHeight = useMemo(
+    () =>
+      debounce((size: number) => {
+        if (size !== boxHeight) {
+          // console.log('write_boxheight', size);
+          setBoxHeight(Math.floor(size));
+        }
+      }, 100),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+  useLayoutEffect(() => {
+    handleBoxHeight(discussionSize.height - playerSize - chooserSize + 20);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussionSize, playerSize]);
 
@@ -677,7 +619,7 @@ export function Transcriber(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project, projType, artifactTypeSlug]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const newAssigned = rowData[index]?.assigned;
     if (newAssigned !== assigned) setAssigned(newAssigned);
     stateRef.current = state;
@@ -732,13 +674,13 @@ export function Transcriber(props: IProps) {
         remoteIdNum(
           'passage',
           passage.id as string,
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         ),
         artifactId &&
           (remoteId(
             'artifacttype',
             artifactId,
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           ) as string),
         errorReporter,
         t.pullParatextStart
@@ -1103,10 +1045,18 @@ export function Transcriber(props: IProps) {
       setTextValue(textArea.value ?? '');
     }
   };
-  const handleSplitSize = debounce((e: any) => {
-    setPlayerSize(e);
-  }, 50);
-
+  const handleSplitSize = useMemo(
+    () =>
+      debounce((sizes: number[]) => {
+        const newSize = Math.floor(sizes[0]);
+        if (newSize !== playerSize) {
+          // console.log('write_playersize', newSize);
+          setPlayerSize(newSize);
+        }
+      }, 500),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
   useEffect(() => {
     setArtifactTypeSlug(
       slug
@@ -1148,16 +1098,16 @@ export function Transcriber(props: IProps) {
           <AllDone />
         ) : (
           <Grid container direction="column" style={style}>
-            <Wrapper>
-              <SplitPane
-                defaultSize={playerSize}
-                minSize={INIT_PLAYER_HEIGHT}
-                maxSize={discussionSize.height - 280 - chooserSize}
-                style={{ position: 'static' }}
-                split="horizontal"
+            <AllotmentWrapper vert={`${playerSize + boxHeight}px`}>
+              <Allotment
+                vertical
+                defaultSizes={[playerSize, boxHeight]}
                 onChange={handleSplitSize}
               >
-                <Pane>
+                <Allotment.Pane
+                // minSize={INIT_PLAYER_HEIGHT}
+                // maxSize={discussionSize.height - 200 - chooserSize}
+                >
                   <Grid
                     container
                     direction="row"
@@ -1218,8 +1168,8 @@ export function Transcriber(props: IProps) {
                       />
                     </Grid>
                   </Grid>
-                </Pane>
-                <Pane>
+                </Allotment.Pane>
+                <Allotment.Pane>
                   <Grid item xs={12} sm container>
                     <Grid
                       item
@@ -1250,9 +1200,9 @@ export function Transcriber(props: IProps) {
                       </Grid>
                     )}
                   </Grid>
-                </Pane>
-              </SplitPane>
-            </Wrapper>
+                </Allotment.Pane>
+              </Allotment>
+            </AllotmentWrapper>
 
             <Grid container direction="row" sx={{ pt: '12px' }}>
               <Grid item sx={{ display: 'flex', alignItems: 'center' }}>

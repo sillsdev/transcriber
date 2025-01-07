@@ -9,7 +9,7 @@ import Integration from '../Integration';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { useMemo } from 'react';
 import { RecordKeyMap } from '@orbit/records';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { passageTypeFromRef } from '../../control/RefRender';
 import { PassageTypeEnum } from '../../model/passageType';
 import { Paper, SxProps, Typography } from '@mui/material';
@@ -44,7 +44,7 @@ export default function PassageDetailParatextIntegration() {
       var id = JSON.parse(settings).artifactTypeId;
       if (id)
         return (
-          remoteIdGuid('artifacttype', id, memory.keyMap as RecordKeyMap) ?? id
+          remoteIdGuid('artifacttype', id, memory?.keyMap as RecordKeyMap) ?? id
         );
     }
     return null;

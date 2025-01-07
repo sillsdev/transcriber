@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { Snackbar, IconButton, styled, BoxProps, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
@@ -69,7 +69,7 @@ export const useSnackBar = () => {
     };
 
     useEffect(() => {
-      if ((message.type === 'span') !== open) {
+      if ((message?.type === 'span') !== open) {
         setOpen(!open);
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -9,11 +9,15 @@ import {
 import { useWfPaste } from '../components/Sheet/useSheetPaste';
 import { act } from 'react-dom/test-utils';
 import { PublishDestinationEnum } from '../crud';
+import { AlertSeverity } from '../hoc/SnackBar';
 
 interface IPasteResult {
   valid: boolean;
   addedWorkflow: ISheet[];
 }
+
+var mockSnackMessage = 'Snack Message';
+var mockSnackAlert: AlertSeverity | undefined = undefined;
 
 // see https://jestjs.io/docs/mock-functions#mocking-modules
 jest.mock('../crud/useOrganizedBy', () => {
@@ -28,6 +32,14 @@ jest.mock('../crud/useOrganizedBy', () => {
     }),
   };
 });
+jest.mock('../context/GlobalContext', () => ({
+  useGlobal: (arg: string) =>
+    arg === 'snackMessage'
+      ? [mockSnackMessage, jest.fn()]
+      : arg === 'snackAlert'
+      ? [mockSnackAlert, jest.fn()]
+      : [{}, jest.fn()],
+}));
 
 const secDef = {
   level: SheetLevel.Section,

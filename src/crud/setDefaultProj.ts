@@ -22,7 +22,7 @@ export const setDefaultProj = async (
       remoteIdGuid(
         'project',
         localStorage.getItem('lastProj') || '',
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       ) || '';
     var p = projs.find((p) => p.id === projKey) || projs[0];
     cb(p.id as string);

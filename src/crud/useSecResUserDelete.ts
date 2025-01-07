@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { SectionResourceD, SectionResourceUserD } from '../model';
 import { related } from '.';
 import { logError, Severity } from '../utils';
@@ -13,7 +13,7 @@ export const useSecResUserDelete = () => {
       memory.update((t) => t.removeRecord(resUser));
       return;
     }
-    const sectionResourceUsers = memory.cache.query((q) =>
+    const sectionResourceUsers = memory?.cache.query((q) =>
       q.findRecords('sectionresourceuser')
     ) as SectionResourceUserD[];
     const rec = sectionResourceUsers.filter(

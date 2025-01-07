@@ -1,5 +1,5 @@
 import { useState, useContext, useMemo, useRef, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 import {
   IPassageDetailArtifactsStrings,
   Passage,
@@ -526,7 +526,7 @@ export function PassageDetailArtifacts() {
       for (const remId of mediaRemoteIds) {
         cnt += 1;
         const id =
-          remoteIdGuid('mediafile', remId, memory.keyMap as RecordKeyMap) ||
+          remoteIdGuid('mediafile', remId, memory?.keyMap as RecordKeyMap) ||
           remId;
         const mediaRecId = { type: 'mediafile', id };
         if (descriptionRef.current) {
@@ -638,7 +638,7 @@ export function PassageDetailArtifacts() {
         projMediaRef.current?.attributes?.topic ||
         removeExtension(projMediaRef.current?.attributes?.originalFile || '')
           ?.name;
-      const passage = rec.type === 'passage' ? (rec as Passage) : undefined;
+      const passage = rec?.type === 'passage' ? (rec as Passage) : undefined;
       await projectResourceSave({
         t,
         media: projMediaRef.current as MediaFile,

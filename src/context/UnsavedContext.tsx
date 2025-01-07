@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { IMainStrings } from '../model';
 import { waitForIt } from '../utils/waitForIt';
 import { useSnackBar } from '../hoc/SnackBar';

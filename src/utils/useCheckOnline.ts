@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import * as actions from '../store';
 import Axios from 'axios';
 import JSONAPISource from '@orbit/jsonapi';
@@ -34,7 +34,7 @@ export const useCheckOnline = (label: string) => {
   const [orbitRetries, setOrbitRetries] = useGlobal('orbitRetries');
   const [coordinator] = useGlobal('coordinator');
   const [offline] = useGlobal('offline');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
 
   const checkOnline = (
     cb: (result: boolean) => void,

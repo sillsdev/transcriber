@@ -16,7 +16,7 @@ let mockCompare: string[] = [];
 var mockPassageStepComplete: string | null = null;
 var mockUpdateRecord = jest.fn();
 
-jest.mock('reactn', () => ({
+jest.mock('../../context/GlobalContext', () => ({
   useGlobal: (token: string) => {
     if (token === 'remoteBusy') return [false, jest.fn()];
     else return [null, jest.fn()];

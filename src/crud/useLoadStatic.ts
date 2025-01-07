@@ -1,11 +1,11 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import JSONAPISource from '@orbit/jsonapi';
 import { pullRemoteToMemory } from './syncToMemory';
 
 export const useLoadStatic = () => {
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
 
   const loadStatic = async () => {
     if (!remote) return false;

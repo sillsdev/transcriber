@@ -30,7 +30,7 @@ import {
   styled,
 } from '@mui/material';
 import BookSelect, { OptionType } from './BookSelect';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { usePlanType } from '../crud';
 import usePassageDetailContext from '../context/usePassageDetailContext';
 import { ResourceTypeEnum } from './PassageDetail/Internalization/PassageDetailArtifacts';

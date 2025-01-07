@@ -12,12 +12,12 @@ export function useOrbitData<S extends UninitializedRecord[]>(
 
   const isDev = useMemo(() => ReactIsInDevelomentMode(), []);
 
-  const liveQuery = memory.cache.liveQuery((q) => q.findRecords(model));
+  const liveQuery = memory?.cache.liveQuery((q) => q.findRecords(model));
 
   const unsubscribe = liveQuery.subscribe((update) => {
     update && update.query();
     setRecs(model, undefined);
-        setNewValue(newValue + 1);
+    setNewValue(newValue + 1);
   });
 
   // Only allow unsubscribe if actually unmounting

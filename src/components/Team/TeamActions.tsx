@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import Axios from 'axios';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import {
   Box,
   BoxProps,

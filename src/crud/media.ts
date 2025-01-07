@@ -45,7 +45,7 @@ export const getAllMediaRecs = (
     return [];
   }
   const mediaRecs = (
-    memory.cache.query((q) =>
+    memory?.cache.query((q) =>
       q.findRecords('mediafile').filter({
         relation: 'passage',
         record: { type: 'passage', id: passageId },
@@ -104,7 +104,7 @@ const getMediaPlanRec = (rec: MediaFile | null, memory: Memory) => {
   if (rec) {
     const planId = related(rec, 'plan') as string;
     if (planId)
-      planRec = memory.cache.query((q) =>
+      planRec = memory?.cache.query((q) =>
         q.findRecord({ type: 'plan', id: planId })
       ) as Plan;
   }
@@ -122,7 +122,7 @@ export const getMediaProjRec = (
     if (planRec) {
       const projId = related(planRec, 'project');
       if (projId)
-        projRec = memory.cache.query((q) =>
+        projRec = memory?.cache.query((q) =>
           q.findRecord({ type: 'project', id: projId })
         ) as Project;
     }
@@ -143,11 +143,11 @@ export const getMediaName = (
   let passageRec: Passage | undefined = undefined;
   const passageId = related(rec, 'passage');
   if (passageId)
-    passageRec = memory.cache.query((q) =>
+    passageRec = memory?.cache.query((q) =>
       q.findRecord({ type: 'passage', id: passageId })
     ) as Passage;
   const secId = related(passageRec, 'section');
-  const secRec = memory.cache.query((q) =>
+  const secRec = memory?.cache.query((q) =>
     q.findRecord({ type: 'section', id: secId })
   ) as Section;
   const secAttr = secRec && secRec.attributes;
@@ -330,7 +330,7 @@ export const mediaArtifacts = ({
   orgWorkflowSteps,
 }: IExportArtifacts) => {
   const plans = (related(projRec, 'plans') as PlanD[])?.map((p) => p.id);
-  const media = memory.cache.query((q) =>
+  const media = memory?.cache.query((q) =>
     q.findRecords('mediafile')
   ) as MediaFileD[];
   let planMedia: MediaFileD[] | undefined = undefined;
@@ -380,7 +380,7 @@ export const getBurritoMeta = async (props: IBurritoMeta) => {
   const userRec = findRecord(memory, 'user', userId) as User;
   const burritoMeta = burritoMetadata({ projRec, userRec });
   const ingredients = mediaArtifacts(props);
-  const scopes = burritoMeta.type.flavorType.currentScope;
+  const scopes = burritoMeta?.type.flavorType.currentScope;
   const formats = {} as FormatsType;
   if (ingredients) {
     for (const mf of ingredients) {

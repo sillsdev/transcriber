@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { Passage, ActivityStates, ISharedStrings, MediaFileD } from '../model';
 import { remoteIdGuid, saveNewSection, AddFlatPassage } from '.';
 import { RecordKeyMap } from '@orbit/records';
@@ -24,7 +24,7 @@ export const useFlatAdd = (ts: ISharedStrings) => {
         remoteIdGuid(
           'mediafile',
           mediaRemoteId,
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         ) || mediaRemoteId;
       const mediaRec = mediaRecs.filter((m) => m.id === mediaId);
       if (mediaRec.length > 0) {

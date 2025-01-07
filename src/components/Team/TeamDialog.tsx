@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import Confirm from '../AlertDialog';
 import {
   Button,
@@ -282,7 +282,7 @@ export function TeamDialog(props: IProps) {
     } else reset();
 
     if (isOpen && mode === DialogMode.add && processOptions.length === 0) {
-      const opts = memory.cache.query((q) =>
+      const opts = memory?.cache.query((q) =>
         q.findRecords('workflowstep')
       ) as WorkflowStep[];
       const newProcess = opts.reduce((prev, cur) => {

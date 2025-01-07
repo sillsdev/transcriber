@@ -9,7 +9,7 @@ export const remoteId = (
   table: string,
   localId: string,
   keyMap: RecordKeyMap
-) => keyMap.idToKey(table, 'remoteId', localId);
+) => keyMap?.idToKey(table, 'remoteId', localId);
 export const remoteIdNum = (
   table: string,
   localId: string,
@@ -21,7 +21,7 @@ export const waitForRemoteId = async (
 ): Promise<string> => {
   let maxTries = 5 * 60; // 300 tries for five minutes
   while (maxTries > 0) {
-    const val = remoteId(rec.type, rec.id, keyMap);
+    const val = remoteId(rec?.type, rec.id, keyMap);
     if (val !== undefined) return val;
     maxTries -= 1;
     await new Promise((resolve) => setTimeout(resolve, 1000));

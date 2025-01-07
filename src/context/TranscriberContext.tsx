@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, useContext } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useParams } from 'react-router-dom';
 import * as actions from '../store';
 import {
@@ -402,7 +402,7 @@ const TranscriberProvider = (props: IProps) => {
     const rowList: IRowData[] = [];
     if (pasId) {
       var psg =
-        remoteIdGuid('passage', pasId, memory.keyMap as RecordKeyMap) || pasId;
+        remoteIdGuid('passage', pasId, memory?.keyMap as RecordKeyMap) || pasId;
       passageMediaRef.current = planMediaRef.current.filter(
         (m) => related(m, 'passage') === psg
       );
@@ -431,7 +431,7 @@ const TranscriberProvider = (props: IProps) => {
             remoteIdGuid(
               'passage',
               pasId ?? '',
-              memory.keyMap as RecordKeyMap
+              memory?.keyMap as RecordKeyMap
             ) || pasId;
           const p = rowList.filter((r) => r.passage.id === psg);
           if (p.length > 0) mediaId = p[0].mediafile.id;
@@ -440,7 +440,7 @@ const TranscriberProvider = (props: IProps) => {
           remoteIdGuid(
             'mediafile',
             mediaId || '',
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           ) ||
           mediaId ||
           '';

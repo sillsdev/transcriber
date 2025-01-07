@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { Organization, OrganizationD, RoleNames } from '../model';
 import { UpdateRecord } from '../model/baseModel';
 import { findRecord } from './tryFindRecord';
@@ -12,7 +12,7 @@ export const orgDefaultSortTag = 'ktSort';
 export const orgDefaultKtLang = 'ktLang';
 export const orgDefaultKtExcludeTag = 'ktExcl';
 export const orgDefaultResKw = 'ResKw';
-export const orgDefaultLangProps = 'langProps'
+export const orgDefaultLangProps = 'langProps';
 
 export const useOrgDefaults = () => {
   const [organization] = useGlobal('organization');

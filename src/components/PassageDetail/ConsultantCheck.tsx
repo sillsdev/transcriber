@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import {
   Tabs,
   Tab,

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useParams } from 'react-router-dom';
 import {
   IPlanTabsStrings,

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { useLocation, useParams } from 'react-router-dom';
 import {
   IState,
@@ -140,7 +140,7 @@ export const AppHead = (props: IProps) => {
   const [user] = useGlobal('user');
   const [project, setProject] = useGlobal('project');
   const [plan, setPlan] = useGlobal('plan');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
   const [isOffline] = useGlobal('offline');
   const [isOfflineOnly] = useGlobal('offlineOnly');
   const [connected, setConnected] = useGlobal('connected');
@@ -384,7 +384,7 @@ export const AppHead = (props: IProps) => {
           lr = moment(lr).locale(lang).format('L');
           setLatestVersion(lv);
           setLatestRelease(lr);
-          if (isElectron && lv.split(' ')[0] !== version)
+          if (isElectron && lv?.split(' ')[0] !== version)
             showMessage(
               <span>
                 {t.updateAvailable.replace('{0}', lv).replace('{1}', lr)}
@@ -504,7 +504,7 @@ export const AppHead = (props: IProps) => {
           )}
           {latestVersion !== '' &&
             isElectron &&
-            latestVersion.split(' ')[0] !== version && (
+            latestVersion?.split(' ')[0] !== version && (
               <Tooltip
                 arrow
                 placement="bottom-end"
@@ -523,7 +523,7 @@ export const AppHead = (props: IProps) => {
           {latestVersion !== '' &&
             !isElectron &&
             latestVersion.split(' ')[0] !== version &&
-            latestVersion.split(' ').length > 1 && (
+            latestVersion?.split(' ').length > 1 && (
               <Tooltip
                 arrow
                 open={updateTipOpen}

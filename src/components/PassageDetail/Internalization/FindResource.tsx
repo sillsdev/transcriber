@@ -16,7 +16,7 @@ import { BibleProjectLang } from '../../../model/bible-project-lang';
 import { BibleResource } from '../../../model/bible-resource';
 import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { camel2Title, launch } from '../../../utils';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 import { AltButton } from '../../StepEditor';
 import { parseRef, related, useOrganizedBy } from '../../../crud';
 import { pad3 } from '../../../utils/pad3';
@@ -301,7 +301,7 @@ export const FindResource = () => {
       ref = camel2Title(scope);
     }
 
-    const aiQuery = aiQueries.find((q) => q.type === type.replace(' ', '-'));
+    const aiQuery = aiQueries.find((q) => q?.type === type.replace(' ', '-'));
     setQuery(aiQuery?.template.replace('{0}', ref) ?? '');
   };
 
@@ -335,9 +335,9 @@ export const FindResource = () => {
     import('../../../assets/bible-resource.js').then((module) => {
       setResources(module.default);
     });
-    setTypeOpts(aiQueries.map((q) => q.type.replace('-', ' ')).map(optVal));
+    setTypeOpts(aiQueries.map((q) => q?.type.replace('-', ' ')).map(optVal));
     setScope(scopeOptions[0]);
-    setType(aiQueries[0].type.replace('-', ' '));
+    setType(aiQueries[0]?.type.replace('-', ' '));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -352,21 +352,21 @@ export const FindResource = () => {
 
   const handleChange =
     (kind: string) =>
-      (_event: React.SyntheticEvent, newValue: OptionProps | null) => {
-        const book = passage?.attributes?.book;
-        let link = newValue?.value ?? '';
-        if (hrefTpls[kind]) {
-          const chapter = parseInt(passage?.attributes?.reference ?? '1');
-          link = newValue?.value
-            ? hrefTpls[kind]
+    (_event: React.SyntheticEvent, newValue: OptionProps | null) => {
+      const book = passage?.attributes?.book;
+      let link = newValue?.value ?? '';
+      if (hrefTpls[kind]) {
+        const chapter = parseInt(passage?.attributes?.reference ?? '1');
+        link = newValue?.value
+          ? hrefTpls[kind]
               ?.replace('{0}', newValue?.value ?? '')
               ?.replace('{1}', book ?? 'MAT')
               ?.replace('{2}', chapter.toString()) ?? ''
-            : '';
-          setLinks({ ...links, [kind]: link });
-        }
-        setLink(link);
-      };
+          : '';
+        setLinks({ ...links, [kind]: link });
+      }
+      setLink(link);
+    };
 
   const handleTypeChange = (
     _event: React.SyntheticEvent,
@@ -470,7 +470,7 @@ export const FindResource = () => {
                     onChange={handleTypeChange}
                     sx={{ width: 180 }}
                     renderInput={(params) => (
-                      <TextField {...params} label={t.type} />
+                      <TextField {...params} label={t?.type} />
                     )}
                   />
                 </Grid>

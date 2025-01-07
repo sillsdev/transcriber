@@ -27,7 +27,7 @@ import {
   ResourceTitle,
   ResourceLink,
 } from '.';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { orgDefaultResKw, useOrgDefaults } from '../../crud';
 import { NoteTitle } from './NoteTitle';
 import SearchIcon from '@mui/icons-material/Search';

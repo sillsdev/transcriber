@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { isElectron } from '../api-variable';
 import { launch } from '../utils';
 

@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { ActivityStates } from '../model';
 import { getVernacularMediaRec, getAllMediaRecs } from './media';
 import { VernacularTag } from './useArtifactType';

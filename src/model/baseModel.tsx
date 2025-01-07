@@ -43,7 +43,7 @@ export const AddRecord = (
   user: string,
   memory: Memory
 ): RecordOperation[] => {
-  const rn = new StandardRecordNormalizer({ schema: memory.schema });
+  const rn = new StandardRecordNormalizer({ schema: memory?.schema });
   rec = rn.normalizeRecord(rec);
   if (!rec.attributes) rec.attributes = {} as Dict<unknown>;
   (rec.attributes as Dict<unknown>).dateCreated = currentDateTime();

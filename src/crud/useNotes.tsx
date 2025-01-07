@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   IState,
   Passage,
@@ -67,7 +67,7 @@ export const useNotes = () => {
       related(passage, 'section') as string
     ) as SectionD;
     const secRefs: string[] = [];
-    const passages = memory.cache.query((q) =>
+    const passages = memory?.cache.query((q) =>
       q.findRelatedRecords(section, 'passages')
     ) as PassageD[];
     passages.sort(bySeq).forEach((recId) => {

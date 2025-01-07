@@ -21,7 +21,7 @@ const convertBlobReducers = function (
   state = convertBlobCleanState,
   action: ConvertBlobMsgs
 ): IConvertBlobState {
-  switch (action.type) {
+  switch (action?.type) {
     case CONVERT_BLOB_RESET:
       return { ...convertBlobCleanState };
 

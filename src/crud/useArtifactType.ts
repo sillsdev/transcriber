@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   IState,
   IArtifactTypeStrings,
@@ -70,7 +70,7 @@ export const useArtifactType = () => {
         type: localizedArtifactType(ArtifactTypeSlug.Vernacular),
         id: undefined,
       });
-    const artifacts: ArtifactTypeD[] = memory.cache.query((q) =>
+    const artifacts: ArtifactTypeD[] = memory?.cache.query((q) =>
       q.findRecords('artifacttype')
     ) as any;
     artifacts
@@ -94,7 +94,7 @@ export const useArtifactType = () => {
             type: localizedArtifactType(r.attributes.typename),
             id:
               remoteIds && !offlineOnly
-                ? remoteId('artifacttype', r.id, memory.keyMap as RecordKeyMap)
+                ? remoteId('artifacttype', r.id, memory?.keyMap as RecordKeyMap)
                 : r.id,
           });
       });
@@ -107,12 +107,12 @@ export const useArtifactType = () => {
 
   const getTypeId = (typeSlug: string, forceOffline: boolean = false) => {
     if (typeSlug === ArtifactTypeSlug.Vernacular) return null;
-    const types = memory.cache.query((q) =>
+    const types = memory?.cache.query((q) =>
       q
         .findRecords('artifacttype')
         .filter({ attribute: 'typename', value: typeSlug })
     ) as ArtifactType[];
-    const v = types.find(
+    const v = types?.find(
       (r) => Boolean(r?.keys?.remoteId) !== (forceOffline || offlineOnly)
     );
     return v?.id || '';
