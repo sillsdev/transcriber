@@ -1170,13 +1170,14 @@ export function Transcriber(props: IProps) {
                   </Grid>
                 </Allotment.Pane>
                 <Allotment.Pane>
-                  <Grid item xs={12} sm container>
+                  <Grid item xs={12} sm container sx={{ height: 'inherit' }}>
                     <Grid
                       item
                       ref={transcriptionRef}
                       xs={showHistory ? 6 : 12}
                       container
                       direction="column"
+                      sx={{ height: 'inherit' }}
                     >
                       <StyledTextAreaAudosize
                         autoFocus

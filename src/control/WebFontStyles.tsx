@@ -12,12 +12,13 @@ export interface StyledTextAreaAutosizeProps extends TextareaAutosizeProps {
 }
 
 export const StyledTextAreaAudosize = styled(TextareaAutosize, {
-  shouldForwardProp: (prop) => prop !== 'config',
+  shouldForwardProp: (prop) => prop !== 'family' && prop !== 'url',
 })<StyledTextAreaAutosizeProps>(({ family, url }) => ({
   '@font-face': {
     fontFamily: family,
     src: `url(${url})`,
   },
+  overflow: 'auto !important',
 }));
 
 export interface StyledTextFieldProps extends FilledTextFieldProps {
@@ -26,7 +27,7 @@ export interface StyledTextFieldProps extends FilledTextFieldProps {
 }
 
 export const StyledTextField = styled(TextField, {
-  shouldForwardProp: (prop) => prop !== 'config',
+  shouldForwardProp: (prop) => prop !== 'family' && prop !== 'url',
 })<StyledTextFieldProps>(({ family, url }) => ({
   '@font-face': {
     fontFamily: family,
