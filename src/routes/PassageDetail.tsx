@@ -85,7 +85,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   } = ctx.state;
   const minWidthRef = React.useRef(800);
   const { tool, settings } = useStepTool(currentstep);
-  const [horizSize, setHorizSize] = useState(window.innerWidth - 450);
+  const [, setHorizSize] = useState(window.innerWidth - 450);
   const discussionSizeRef = React.useRef(discussionSize);
   const t = useSelector(toolSelector, shallowEqual) as IToolStrings;
 
@@ -149,7 +149,15 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
         height: newDiscHeight,
       });
     setHorizSize(newWidth - newDiscWidth);
-    setPlayerSize(INIT_PLAYERPANE_HEIGHT);
+    if (
+      tool !== ToolSlug.Transcribe &&
+      tool !== ToolSlug.Verses &&
+      tool !== ToolSlug.Record &&
+      tool !== ToolSlug.ConsultantCheck
+    ) {
+      // context player size used by transcriber for other purposes
+      setPlayerSize(INIT_PLAYERPANE_HEIGHT);
+    }
     // setPaperStyle({ width: window.innerWidth - 10 });
   };
 
