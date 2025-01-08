@@ -264,6 +264,7 @@ export function Loading() {
     if (localStorage.getItem('inviteError')) {
       return;
     }
+    const user = localStorage.getItem(LocalKey.userId) as string;
     const userRec: User = GetUser(memory, user);
     if (
       !userRec?.attributes?.givenName ||
