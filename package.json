@@ -205,16 +205,6 @@
       ]
     },
     "mac": {
-      "sign": "env-config/notarize.js",
-      "notarize": false,
-      "target": {
-        "target": "default",
-        "arch": [
-          "arm64",
-          "x64"
-        ]
-      },
-      "type": "distribution",
       "category": "public.app-category.utilities",
       "icon": "public/icon.png",
       "hardenedRuntime": true,
@@ -223,19 +213,9 @@
       "gatekeeperAssess": false
     },
     "dmg": {
-      "contents": [
-        {
-          "x": 130,
-          "y": 220
-        },
-        {
-          "x": 410,
-          "y": 220,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
+      "sign": false
     },
+    "afterSign": "env-config/notarize.js",
     "directories": {
       "buildResources": "assets"
     },
@@ -281,7 +261,5 @@
   },
   "volta": {
     "node": "18.20.5"
-  },
-  "main": "public/electron.js",
-  "homepage": "./"
+  }
 }
