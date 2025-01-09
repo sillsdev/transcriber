@@ -277,6 +277,9 @@ export function Transcriber(props: IProps) {
   const [boxHeight, setBoxHeight] = useState(
     discussionSize.height - (playerSize + 200)
   );
+  const [maxPlayerSize, setMaxPlayerSize] = useState(
+    (discussionSize.height - chooserSize) / 2
+  );
   const [style, setStyle] = useState({
     cursor: 'default',
   });
@@ -470,6 +473,10 @@ export function Transcriber(props: IProps) {
     handleBoxHeight(discussionSize.height - playerSize - chooserSize + 20);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussionSize, playerSize]);
+
+  useLayoutEffect(() => {
+    setMaxPlayerSize((discussionSize.height - chooserSize) / 2);
+  }, [discussionSize, chooserSize]);
 
   //user changes selected...tell the task table
   useEffect(() => {
@@ -1104,10 +1111,7 @@ export function Transcriber(props: IProps) {
                 defaultSizes={[playerSize, boxHeight]}
                 onChange={handleSplitSize}
               >
-                <Allotment.Pane
-                // minSize={INIT_PLAYER_HEIGHT}
-                // maxSize={discussionSize.height - 200 - chooserSize}
-                >
+                <Allotment.Pane maxSize={maxPlayerSize}>
                   <Grid
                     container
                     direction="row"
