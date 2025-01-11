@@ -56,6 +56,7 @@ export const SelectMyResource = (props: IProps) => {
         display: 'flex',
         flexGrow: 1,
         textOverflow: 'ellipsis',
+        minWidth: '400px',
         ...(myWidth && {
           maxWidth: `${myWidth - 32}px`,
         }),
@@ -67,7 +68,6 @@ export const SelectMyResource = (props: IProps) => {
       onChange={handleUserChange}
       variant="filled"
       required={required}
-      fullWidth={true}
     >
       {rowData
         .filter(
