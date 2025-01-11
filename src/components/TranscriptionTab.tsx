@@ -156,7 +156,6 @@ export function TranscriptionTab(props: IProps) {
   const sectionMap = new Map<number, string>(sectionArr);
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
-  const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const { getOrganizedBy } = useOrganizedBy();
   const getOfflineProject = useOfflnProjRead();
   const [globalStore] = useGlobal();
@@ -448,7 +447,7 @@ export function TranscriptionTab(props: IProps) {
         exportComplete();
         setBusy(false);
       } else {
-        if (!enableOffsite) setEnableOffsite(true);
+        if (!globalStore.enableOffsite) globalStore.enableOffsite = true;
         if (exportStatus.statusMsg) {
           showMessage(exportStatus.statusMsg);
         }
