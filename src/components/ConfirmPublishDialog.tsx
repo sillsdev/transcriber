@@ -272,6 +272,7 @@ function ConfirmPublishDialog(props: IProps) {
                         PublishDestinationEnum.OBTHelps
                       )}
                       value="OBTHelps"
+                      disabled={!hasBible}
                     />
                   }
                   label="obthelps.org"

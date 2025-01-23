@@ -6502,7 +6502,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="publishLevel.bibleRequired">
-            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo.</source>
+            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo or Obthelps.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
