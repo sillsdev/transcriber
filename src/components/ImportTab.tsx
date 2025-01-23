@@ -671,9 +671,9 @@ export function ImportTab(props: IProps) {
         } else {
           msg = translateError(importStatus);
         }
+        setImporting(false);
         setImportTitle(msg);
         importComplete();
-        setImporting(false);
       } else {
         if (importStatus.complete) {
           //import completed ok but might have message
