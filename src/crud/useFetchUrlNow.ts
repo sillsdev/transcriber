@@ -9,6 +9,7 @@ import { ISharedStrings } from '../model';
 import { sharedSelector } from '../selector';
 import { errStatus } from '../store/AxiosStatus';
 import { axiosGet } from '../utils/axios';
+import { AxiosError } from 'axios';
 
 export interface IFetchNowProps {
   id: string;
@@ -35,6 +36,8 @@ export const useFetchUrlNow = () => {
       } else return audioUrl;
     } catch (error: any) {
       if (error.errStatus === 401) return ts.expiredToken;
+      var err = error as AxiosError;
+      if (err.status === 401) return ts.expiredToken;
       if (errStatus(error).errMsg.includes('transient')) {
         return await fetchUrl(props);
       } else throw error;
