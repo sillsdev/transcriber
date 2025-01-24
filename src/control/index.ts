@@ -37,4 +37,3 @@ export * from './GrowingDiv';
 export * from './ToolbarGrid';
 export * from './TeamPaper';
 export * from './FilterButton';
-export * from './RemoveNoiseIcon';

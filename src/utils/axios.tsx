@@ -77,13 +77,19 @@ export const axiosPost = async (api: string, data: any, token?: string) => {
 export const axiosSendSignedUrl = async (
   api: string,
   signedUrl: string,
+  targetVoice?: string,
   token?: string
 ) => {
   return await Axios.post(
     API_CONFIG.host + '/api/' + api,
-    {
-      fileUrl: signedUrl,
-    },
+    targetVoice
+      ? {
+          sourceUrl: signedUrl,
+          targetUrl: targetVoice,
+        }
+      : {
+          fileUrl: signedUrl,
+        },
     {
       headers: token
         ? {

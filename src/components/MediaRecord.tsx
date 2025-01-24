@@ -40,6 +40,7 @@ interface IProps {
   mediaId?: string;
   metaData?: JSX.Element;
   defaultFilename?: string;
+  allowDeltaVoice?: boolean;
   setCanSave: (canSave: boolean) => void;
   setCanCancel?: (canCancel: boolean) => void;
   setStatusText: (status: string) => void;
@@ -68,6 +69,7 @@ function MediaRecord(props: IProps) {
     onPlayStatus,
     mediaId,
     defaultFilename,
+    allowDeltaVoice,
     uploadMethod,
     setCanSave,
     setCanCancel,
@@ -419,6 +421,7 @@ function MediaRecord(props: IProps) {
         allowRecord={allowRecord !== false}
         allowSilence={allowWave}
         allowZoom={true}
+        allowDeltaVoice={allowDeltaVoice}
         oneTryOnly={oneTryOnly}
         size={size || 300}
         blob={originalBlob}

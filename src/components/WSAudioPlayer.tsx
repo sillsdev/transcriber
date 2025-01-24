@@ -53,11 +53,23 @@ import { NamedRegions } from '../utils/namedSegments';
 import { sharedSelector, wsAudioPlayerSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { WSAudioPlayerSilence } from './WSAudioPlayerSilence';
-import { AltButton, RemoveNoiseIcon } from '../control';
-import { useNoiseRemoval } from '../utils/useNoiseRemoval';
+import { ActionRow, AltButton, PriButton } from '../control';
+import { AudioAiFn, useAudioAi } from '../utils/useAudioAi';
 import { Exception } from '@orbit/core';
 import { useGlobal } from '../context/GlobalContext';
 import { AxiosError } from 'axios';
+import { IValues } from './Team/TeamSettings';
+import {
+  orgDefaultFeatures,
+  orgDefaultVoices,
+  useOrgDefaults,
+} from '../crud/useOrgDefaults';
+import NoChickenIcon from '../control/NoChickenIcon';
+import SplitButton from '../control/SplitButton';
+import VoiceConversionLogo from '../control/VoiceConversionLogo';
+import SpeakerName from './SpeakerName';
+import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
+import { useVoiceUrl } from '../crud/useVoiceUrl';
 
 const VertDivider = (prop: DividerProps) => (
   <Divider orientation="vertical" flexItem sx={{ ml: '5px' }} {...prop} />
@@ -82,6 +94,7 @@ interface IProps {
   allowAutoSegment?: boolean;
   allowSpeed?: boolean;
   allowSilence?: boolean;
+  allowDeltaVoice?: boolean;
   alternatePlayer?: boolean;
   oneTryOnly?: boolean;
   size: number;
@@ -149,6 +162,7 @@ function WSAudioPlayer(props: IProps) {
     allowAutoSegment,
     allowSpeed,
     allowSilence,
+    allowDeltaVoice,
     oneTryOnly,
     size,
     segments,
@@ -187,7 +201,16 @@ function WSAudioPlayer(props: IProps) {
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
   const [offline] = useGlobal('offline');
-  const [isDeveloper] = useGlobal('developer');
+  const [org] = useGlobal('organization');
+  const [features, setFeatures] = useState<IValues>();
+  enum VoiceChange {
+    'Apply' = 'Apply Voice Change',
+    'Settings' = 'Voice Change Settings',
+  }
+  const [voiceVisible, setVoiceVisible] = useState(false);
+  const [voice, setVoice] = useState('');
+  const voiceUrl = useVoiceUrl();
+  const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   const [confirmAction, setConfirmAction] = useState<string | JSX.Element>('');
   const [jump] = useState(2);
   const playbackRef = useRef(1);
@@ -228,7 +251,7 @@ function WSAudioPlayer(props: IProps) {
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
   const [oneShotUsed, setOneShotUsed] = useState(false);
   const cancelAIRef = useRef(false);
-  const { requestFileNoiseRemoval } = useNoiseRemoval();
+  const { requestAudioAi } = useAudioAi();
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
   const {
@@ -467,6 +490,13 @@ function WSAudioPlayer(props: IProps) {
     if (allowSpeed) speedKeys.forEach((k) => subscribe(k.key, k.cb));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowSpeed]);
+  useEffect(() => {
+    if (org) {
+      setFeatures(getOrgDefault(orgDefaultFeatures));
+      setVoice(getOrgDefault(orgDefaultVoices, org)?.voice);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [org]);
 
   const cleanupAutoStart = () => {
     if (autostartTimer.current) {
@@ -733,7 +763,10 @@ function WSAudioPlayer(props: IProps) {
     setBusy && setBusy(inprogress);
     setBlobReady && setBlobReady(!inprogress);
   };
-  const handleNoiseRemoval = () => {
+  const audioAiMsg = (fn: AudioAiFn, targetVoice?: string) => {
+    return ts.getString(`${fn}Failed`).replace('{0}', targetVoice ?? '');
+  };
+  const applyAudioAi = (fn: AudioAiFn, targetVoice?: string) => {
     if (!reload) throw new Exception('need reload defined.');
     cancelAIRef.current = false;
     try {
@@ -741,10 +774,12 @@ function WSAudioPlayer(props: IProps) {
       const filename = `${Date.now()}nr.wav`;
       wsRegionBlob().then((blob) => {
         if (blob) {
-          requestFileNoiseRemoval(
-            cancelAIRef,
-            new File([blob], filename, { type: 'audio/wav' }),
-            (file: File | Error) => {
+          requestAudioAi({
+            fn,
+            cancelRef: cancelAIRef,
+            file: new File([blob], filename, { type: 'audio/wav' }),
+            targetVoice,
+            cb: (file: File | Error) => {
               if (file instanceof File) {
                 var regionblob = new Blob([file], { type: file.type });
                 if (regionblob) {
@@ -756,23 +791,50 @@ function WSAudioPlayer(props: IProps) {
               } else {
                 if ((file as Error).message !== 'canceled')
                   showMessage(
-                    `${ts.noiseRemovalFailed} ${(file as Error).message} ${
-                      (file as AxiosError).response?.data ?? ''
-                    }`
+                    `${audioAiMsg(fn, targetVoice)} ${
+                      (file as Error).message
+                    } ${(file as AxiosError).response?.data ?? ''}`
                   );
               }
               doingAI(false);
-            }
-          );
+            },
+          });
         } else {
           doingAI(false);
         }
       });
     } catch (error: any) {
       logError(Severity.error, errorReporter, error.message);
-      showMessage(ts.noiseRemovalFailed);
+      showMessage(audioAiMsg(fn, targetVoice));
       doingAI(false);
     }
+  };
+  const handleNoiseRemoval = () => {
+    applyAudioAi(AudioAiFn.noiseRemoval);
+  };
+  const applyVoiceChange = async () => {
+    if (!voice) return;
+    const targetVoice = await voiceUrl(voice);
+    if (targetVoice) {
+      applyAudioAi(AudioAiFn.voiceConversion, targetVoice);
+    }
+  };
+  const handleVoiceChange = (option: string) => {
+    if (option === VoiceChange.Apply && Boolean(voice)) {
+      console.log('apply voice change');
+      applyVoiceChange();
+    } else {
+      console.log('voice change settings');
+      setVoiceVisible(true);
+    }
+  };
+  const handleCloseVoice = () => {
+    setVoiceVisible(false);
+  };
+  const handleSetVoice = (voice: string) => {
+    setVoice(voice);
+    const settings = getOrgDefault(orgDefaultVoices);
+    setOrgDefault(orgDefaultVoices, { ...settings, voice }, org);
   };
   const onSplit = (split: IRegionChange) => {};
   return (
@@ -884,8 +946,8 @@ function WSAudioPlayer(props: IProps) {
                       <VertDivider id="wsAudioDiv4" />
                     </>
                   )}
-                  {isDeveloper && !offline && (
-                    <LightTooltip id="noiseRemovalTim" title={ts.noiseRemoval}>
+                  {features?.noNoise && !offline && (
+                    <LightTooltip id="noiseRemovalTip" title={ts.noiseRemoval}>
                       <span>
                         <IconButton
                           id="noiseRemoval"
@@ -897,9 +959,8 @@ function WSAudioPlayer(props: IProps) {
                             waitingForAI
                           }
                         >
-                          <RemoveNoiseIcon
-                            width="18pt"
-                            height="18pt"
+                          <NoChickenIcon
+                            sx={{ width: '20pt', height: '20pt' }}
                             disabled={
                               !ready ||
                               recording ||
@@ -911,6 +972,38 @@ function WSAudioPlayer(props: IProps) {
                       </span>
                     </LightTooltip>
                   )}
+                  {features?.deltaVoice &&
+                    allowDeltaVoice !== false &&
+                    !offline && (
+                      <LightTooltip
+                        id="voiceChangeTip"
+                        title={'AI Voice Change'}
+                      >
+                        <span>
+                          <SplitButton
+                            id="voiceChange"
+                            options={[VoiceChange.Apply, VoiceChange.Settings]}
+                            onClick={handleVoiceChange}
+                            disabled={
+                              !ready ||
+                              recording ||
+                              duration === 0 ||
+                              waitingForAI
+                            }
+                          >
+                            <VoiceConversionLogo
+                              sx={{ width: '18pt', height: '18pt' }}
+                              disabled={
+                                !ready ||
+                                recording ||
+                                duration === 0 ||
+                                waitingForAI
+                              }
+                            />
+                          </SplitButton>
+                        </span>
+                      </LightTooltip>
+                    )}
                   {hasRegion !== 0 && !oneShotUsed && (
                     <LightTooltip
                       id="wsAudioDeleteRegionTip"
@@ -1263,6 +1356,33 @@ function WSAudioPlayer(props: IProps) {
                 noResponse={handleActionRefused}
               />
             )}
+            <BigDialog
+              title={'Select Voice'}
+              description={
+                <Typography>
+                  Enter the full name of the person whose voice will be used.
+                </Typography>
+              }
+              isOpen={voiceVisible}
+              onOpen={handleCloseVoice}
+              bp={BigDialogBp.sm}
+            >
+              <>
+                <SpeakerName
+                  name={voice ?? ''}
+                  onChange={handleSetVoice}
+                  team={org}
+                  recordingRequired
+                />
+                <Divider sx={{ m: 1 }} />
+                <ActionRow>
+                  <AltButton onClick={handleCloseVoice}>{'Cancel'}</AltButton>
+                  <PriButton onClick={applyVoiceChange} disabled={!voice}>
+                    {'Begin Conversion'}
+                  </PriButton>
+                </ActionRow>
+              </>
+            </BigDialog>
           </>
         </Box>
       </Paper>

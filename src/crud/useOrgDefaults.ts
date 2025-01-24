@@ -13,6 +13,9 @@ export const orgDefaultKtLang = 'ktLang';
 export const orgDefaultKtExcludeTag = 'ktExcl';
 export const orgDefaultResKw = 'ResKw';
 export const orgDefaultLangProps = 'langProps';
+export const orgDefaultFeatures = 'features';
+export const orgDefaultVoices = 'voices';
+export const orgDefaultAsr = 'asr';
 
 export const useOrgDefaults = () => {
   const [organization] = useGlobal('organization');
