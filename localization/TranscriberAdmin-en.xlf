@@ -5574,7 +5574,7 @@
       </unit>
       <unit id="publishLevel.bibleRequired">
          <segment>
-            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo.</source>
+            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo or Obthelps.</source>
             <target/>
          </segment>
       </unit>
