@@ -6192,7 +6192,7 @@
       </unit>
       <unit id="shared.noiseRemoval">
          <segment>
-            <source>Remove Noise</source>
+            <source>Reduce Noise</source>
             <target/>
          </segment>
       </unit>

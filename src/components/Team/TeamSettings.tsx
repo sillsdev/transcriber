@@ -115,7 +115,7 @@ export function TeamSettings(props: IProps) {
                       onChange={handleFeatures(FeatureSlug.NoNoise)}
                     />
                   }
-                  label={'Noise Cancellation'}
+                  label={'Noise Reduction'}
                 />
               </Stack>
               <Stack direction="row" spacing={1}>

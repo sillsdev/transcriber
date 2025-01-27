@@ -5943,8 +5943,8 @@
       </unit>
       <unit id="shared.noiseRemoval">
          <segment>
-            <source>Remove Noise</source>
-            <target>噪音消除</target>
+            <source>Reduce Noise</source>
+            <target></target>
          </segment>
       </unit>
       <unit id="shared.noiseRemovalFailed">

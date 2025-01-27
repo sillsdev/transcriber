@@ -7223,7 +7223,7 @@
       		</context-group>
       	</trans-unit>
          <trans-unit id="shared.noiseRemoval">
-            <source>Remove Noise</source>
+            <source>Reduce Noise</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -8932,7 +8932,7 @@
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
-         </trans-unit>         
+         </trans-unit>
          <trans-unit id="vProject.flat">
             <source>Flat</source>
             <target/>
