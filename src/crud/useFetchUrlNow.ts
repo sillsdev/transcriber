@@ -14,6 +14,7 @@ import { AxiosError } from 'axios';
 export interface IFetchNowProps {
   id: string;
   cancelled: () => boolean;
+  noDownload?: boolean;
 }
 export const useFetchUrlNow = () => {
   const { accessToken } = useContext(TokenContext).state;
@@ -21,7 +22,7 @@ export const useFetchUrlNow = () => {
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const fetchUrl = async (props: IFetchNowProps): Promise<string> => {
-    let { id, cancelled } = props;
+    let { id, cancelled, noDownload } = props;
     try {
       var strings = await axiosGet(
         `mediafiles/${id}/fileurl`,
@@ -31,7 +32,7 @@ export const useFetchUrlNow = () => {
       const attr: any = strings.data.attributes;
       if (!attr || cancelled()) return '';
       const audioUrl = attr['audio-url'] as string;
-      if (isElectron) {
+      if (isElectron && !noDownload) {
         return await tryDownload(audioUrl, true);
       } else return audioUrl;
     } catch (error: any) {

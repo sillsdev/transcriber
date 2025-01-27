@@ -138,14 +138,16 @@ export default function AsrProgress({
   React.useEffect(() => {
     const remId =
       remoteId('mediafile', mediaId, memory?.keyMap as RecordKeyMap) ?? mediaId;
-    fetchUrl({ id: remId, cancelled: () => false }).then((url) => {
-      if (url === ts.expiredToken) {
-        status(ts.expiredToken);
-        onClose && onClose();
-      } else if (url) {
-        handleTranscribe(url);
+    fetchUrl({ id: remId, cancelled: () => false, noDownload: true }).then(
+      (url) => {
+        if (url === ts.expiredToken) {
+          status(ts.expiredToken);
+          onClose && onClose();
+        } else if (url) {
+          handleTranscribe(url);
+        }
       }
-    });
+    );
 
     return () => {
       if (taskTimer.current) {
