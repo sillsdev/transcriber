@@ -85,7 +85,6 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   } = ctx.state;
   const minWidthRef = React.useRef(800);
   const { tool, settings } = useStepTool(currentstep);
-  const [, setHorizSize] = useState(window.innerWidth - 450);
   const discussionSizeRef = React.useRef(discussionSize);
   const t = useSelector(toolSelector, shallowEqual) as IToolStrings;
 
@@ -122,7 +121,6 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   ]);
 
   const handleVertSplitSize = debounce((e: number[]) => {
-    setHorizSize(e[0]);
     setDiscussionSize({
       width: widthRef.current - e[0],
       height: discussionSize.height,
@@ -148,7 +146,6 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
         width: newDiscWidth, //should we be smarter here?
         height: newDiscHeight,
       });
-    setHorizSize(newWidth - newDiscWidth);
     if (
       tool !== ToolSlug.Transcribe &&
       tool !== ToolSlug.Verses &&

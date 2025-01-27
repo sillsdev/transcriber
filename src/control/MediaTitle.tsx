@@ -392,7 +392,7 @@ export default function MediaTitle(props: IProps) {
     setStartRecord(true);
   };
   const setLanguageTitle = (lang: ILanguage) =>
-    setCurText(lang.bcp47 ? `${lang.languageName} (${lang.bcp47})` : '');
+    setCurText(lang?.bcp47 ? `${lang.languageName} (${lang?.bcp47})` : '');
 
   const setCode = (bcp47: string) => {
     if (langRef.current) {
@@ -623,7 +623,7 @@ export default function MediaTitle(props: IProps) {
             ref={langEl}
             control={
               <LanguagePicker
-                value={language.bcp47 || 'und'}
+                value={language?.bcp47 ?? 'und'}
                 name={language.languageName}
                 font={language.font}
                 setCode={setCode}

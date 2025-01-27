@@ -1,5 +1,5 @@
 import { useGlobal } from '../../context/GlobalContext';
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton, Typography } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { IRegionParams, parseRegions } from '../../crud/useWavesurferRegions';
@@ -17,6 +17,16 @@ import {
   RequestPlay,
   usePlayerLogic,
 } from '../../business/player/usePlayerLogic';
+import TranscriptionLogo from '../../control/TranscriptionLogo';
+import { useOrgDefaults, orgDefaultFeatures } from '../../crud/useOrgDefaults';
+import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
+import SelectAsrLanguage, {
+  AsrTarget,
+} from '../../business/asr/SelectAsrLanguage';
+import AsrButton from '../../control/SplitButton';
+import { IValues } from '../Team/TeamSettings';
+import AsrProgress from '../../business/asr/AsrProgress';
+import { useGetAsrSettings } from '../../crud/useGetAsrSettings';
 
 export enum SaveSegments {
   showSaveButton = 0,
@@ -36,6 +46,7 @@ export interface DetailPlayerProps {
   onProgress?: (progress: number) => void;
   onSaveProgress?: (progress: number) => void;
   onInteraction?: () => void;
+  onTranscription?: (transcription: string) => void;
   allowZoomAndSpeed?: boolean;
   position?: number;
   chooserReduce?: number;
@@ -57,6 +68,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     onProgress,
     onSaveProgress,
     onInteraction,
+    onTranscription,
     allowZoomAndSpeed,
     position,
     chooserReduce,
@@ -64,6 +76,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
   } = props;
 
   const [memory] = useGlobal('memory');
+  const [offline] = useGlobal('offline');
   const [user] = useGlobal('user');
   const {
     toolChanged,
@@ -109,6 +122,18 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
   const savingRef = useRef(false);
   const mediafileRef = useRef<MediaFile>();
   const durationRef = useRef(0);
+  const { getOrgDefault } = useOrgDefaults();
+  const [org] = useGlobal('organization');
+  const { getAsrSettings } = useGetAsrSettings();
+  const [asrLangVisible, setAsrLangVisible] = useState(false);
+  const [phonetic, setPhonetic] = useState(false);
+
+  const [features, setFeatures] = useState<IValues>();
+  enum AiOptions {
+    AutoTranscribe = 'Auto Transcribe',
+    AsrSettings = 'ASR Settings',
+  }
+  const [asrProgressVisble, setAsrProgressVisble] = useState(false);
 
   const { onPlayStatus, onCurrentSegment, setSegmentToWhole } = usePlayerLogic({
     allowSegment,
@@ -258,6 +283,48 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     setShowTranscriptionId('');
   };
 
+  const handleTranscribe = () => {
+    const asr = getAsrSettings();
+    if (asr?.mmsIso === undefined || asr?.mmsIso === 'und') {
+      setAsrLangVisible(true);
+      return;
+    }
+    setAsrLangVisible(false);
+    console.log('auto transcribe');
+    setAsrProgressVisble(true);
+    setPhonetic(asr?.target === AsrTarget.phonetic);
+  };
+
+  const handleAutoTranscribe = () => {
+    const asr = getAsrSettings();
+    if (!(asr?.mmsIso === undefined || asr?.mmsIso === 'und')) {
+      setAsrLangVisible(true);
+    } else {
+      handleTranscribe();
+    }
+  };
+
+  useEffect(() => {
+    if (org) {
+      setFeatures(getOrgDefault(orgDefaultFeatures));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [org]);
+
+  const handleAsrClick = (option: string) => {
+    if (option === AiOptions.AutoTranscribe) {
+      handleTranscribe();
+    } else if (option === AiOptions.AsrSettings) {
+      setAsrLangVisible(true);
+    } else {
+      handleAutoTranscribe();
+    }
+  };
+
+  const handleAsrProgressVisible = (v: boolean) => {
+    setAsrProgressVisble(v);
+  };
+
   return (
     <div id="detailplayer">
       <WSAudioPlayer
@@ -305,6 +372,15 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
             ) : (
               <></>
             )}
+            {features?.aiTranscribe && !offline && (
+              <AsrButton
+                options={[AiOptions.AutoTranscribe, AiOptions.AsrSettings]}
+                onClick={handleAsrClick}
+                title="AI Transcribe"
+              >
+                <TranscriptionLogo sx={{ height: 18, width: 18 }} />
+              </AsrButton>
+            )}
             {saveSegments === SaveSegments.showSaveButton ? (
               <Button
                 id="segment-save"
@@ -327,6 +403,37 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
           visible={showTranscriptionId !== ''}
           closeMethod={handleCloseTranscription}
         />
+      )}
+      {asrLangVisible && (
+        <BigDialog
+          title="Speech Recogniztion Settings"
+          description={
+            <Typography variant="body2" sx={{ maxWidth: 500 }}>
+              Choose the language to recognize. If the language is not
+              available, choose a closely related language with a similar
+              writing system.
+            </Typography>
+          }
+          isOpen={asrLangVisible}
+          onOpen={() => setAsrLangVisible(false)}
+        >
+          <SelectAsrLanguage onOpen={handleTranscribe} />
+        </BigDialog>
+      )}
+      {asrProgressVisble && (
+        <BigDialog
+          title={'Ai Transcription in Progress'}
+          isOpen={asrProgressVisble}
+          onOpen={handleAsrProgressVisible}
+          bp={BigDialogBp.sm}
+        >
+          <AsrProgress
+            mediaId={playerMediafile?.id ?? ''}
+            phonetic={phonetic}
+            setTranscription={onTranscription}
+            onClose={() => handleAsrProgressVisible(false)}
+          />
+        </BigDialog>
       )}
     </div>
   );

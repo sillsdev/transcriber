@@ -51,13 +51,13 @@ export const TranscribeStepSettings = ({ toolSettings, onChange }: IProps) => {
   };
 
   const handleLanguageChange = (val: ILanguage) => {
-    if (lgState.bcp47 !== val.bcp47 || lgState.font !== val.font) {
+    if (lgState?.bcp47 !== val?.bcp47 || lgState?.font !== val?.font) {
       setLgState((state) => ({ ...state, ...val, changed: true }));
       const json = JSONParse(toolSettings);
       onChange(
         JSON.stringify({
           ...json,
-          language: `${val.languageName}|${val.bcp47}`,
+          language: `${val?.languageName}|${val?.bcp47 ?? 'und'}`,
           font: val.font,
           rtl: val.rtl,
         })

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import keycode from 'keycode';
 import { shallowEqual, useSelector } from 'react-redux';
 import { IControlStrings } from '../model';
@@ -17,7 +17,7 @@ export interface IDecorations {
 }
 
 interface IProps {
-  label: string;
+  label: ReactNode;
   defaultValue?: string;
   options: string[];
   onChange: (option: string) => void;
@@ -83,7 +83,7 @@ const OptionCtrl = (props: IProps) => {
         {options.map((k, i) => {
           return (
             <FormControlLabel
-              key={i}
+              key={k}
               value={k}
               control={<Radio />}
               label={

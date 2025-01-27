@@ -23,6 +23,7 @@ import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
 import {
   defaultWorkflow,
+  orgDefaultFeatures,
   orgDefaultLangProps,
   orgDefaultWorkflowProgression,
   pubDataCopyright,
@@ -37,7 +38,11 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 import { useCanPublish, useJsonParams, waitForIt } from '../../utils';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity } from '@orbit/records';
-import { Options } from '../../control';
+import TeamSettings from './TeamSettings';
+
+interface IFeatures {
+  [key: string]: any;
+}
 
 export interface ITeamDialog {
   team: OrganizationD;
@@ -45,6 +50,9 @@ export interface ITeamDialog {
   process?: string;
   bibleMediafile: string;
   isoMediafile: string;
+  noNoise?: boolean;
+  deltaVoice?: boolean;
+  aiTranscribe?: boolean;
 }
 interface IProps extends IDialog<ITeamDialog> {
   onDelete?: (team: RecordIdentity) => void;
@@ -80,14 +88,12 @@ export function TeamDialog(props: IProps) {
   const recordingRef = useRef(false);
   const [recording, setRecordingx] = useState(false);
   const [confirm, setConfirm] = React.useState(false);
+  const [features, setFeatures] = useState<IFeatures>({});
   const { anySaving, toolsChanged, startSave, clearRequested } =
     useContext(UnsavedContext).state;
   const { getBible, getBibleOwner, getOrgBible } = useBible();
   const { canPublish } = useCanPublish();
-  const workflowOptions = [
-    t.workflowProgressionPassage,
-    t.workflowProgressionStep,
-  ];
+
   const [workflowProgression, setWorkflowProgression] = useState(
     t.workflowProgressionPassage
   );
@@ -105,6 +111,7 @@ export function TeamDialog(props: IProps) {
     setDescription('');
     setPublishingData('');
     setWorkflowProgression(t.workflowProgressionPassage);
+    setFeatures({});
     onOpen && onOpen(false);
     Object.keys(toolsChanged).forEach((t) => clearRequested(t));
   };
@@ -146,13 +153,14 @@ export function TeamDialog(props: IProps) {
           mode === DialogMode.edit && values
             ? values.team
             : ({ attributes: {} } as OrganizationD);
-        const df = setParam(
+        let df = setParam(
           orgDefaultWorkflowProgression,
           workflowProgression === t.workflowProgressionStep
             ? 'step'
             : 'passage',
-          defaultParams
+          current.attributes?.defaultParams ?? defaultParams
         );
+        df = setParam(orgDefaultFeatures, features, df);
         const team = {
           ...current,
           attributes: {
@@ -227,6 +235,16 @@ export function TeamDialog(props: IProps) {
         setDefaultParams(setParam(orgDefaultLangProps, value, defaultParams));
         setPublishingData(setParam(pubDataLangProps, value, publishingData));
         break;
+      case 'workflowProgression':
+        setWorkflowProgression(value);
+        break;
+      case 'noNoise':
+      case 'deltaVoice':
+      case 'aiTranscribe':
+        setFeatures({ ...features, [what]: value === 'true' });
+        break;
+      case 'refresh':
+        break;
       default:
         return;
     }
@@ -268,12 +286,13 @@ export function TeamDialog(props: IProps) {
 
         if (values) {
           if (values.team) {
-            var wfp = getDefault(orgDefaultWorkflowProgression, values?.team);
+            const wfp = getDefault(orgDefaultWorkflowProgression, values?.team);
             setWorkflowProgression(
               wfp === 'step'
                 ? t.workflowProgressionStep
                 : t.workflowProgressionPassage
             );
+            setFeatures(getDefault(orgDefaultFeatures, values?.team));
           }
           setName(values.team.attributes?.name || '');
           setBible(getOrgBible(values.team.id));
@@ -327,11 +346,6 @@ export function TeamDialog(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bible]);
 
-  const onChange = (val: string) => {
-    setWorkflowProgression(val);
-    setChanged(true);
-  };
-
   return (
     <div>
       <Dialog
@@ -357,11 +371,10 @@ export function TeamDialog(props: IProps) {
             onChange={handleChange}
             fullWidth
           />
-          <Options
-            label={t.workflowProgression}
-            defaultValue={workflowProgression}
-            options={workflowOptions}
-            onChange={onChange}
+          <TeamSettings
+            team={values?.team}
+            values={features}
+            setValue={setValue}
           />
           {mode !== DialogMode.add && canPublish && (
             <PublishExpansion

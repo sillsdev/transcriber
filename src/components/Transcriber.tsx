@@ -1042,6 +1042,14 @@ export function Transcriber(props: IProps) {
     if (teamDefault) setOrgDefault(NamedRegions.Transcription, params);
   };
 
+  const handleAutoTranscribe = (trans: string) => {
+    showTranscription({
+      transcription: trans.replace(/[0-9]+:[0-9]+.[0-9]+: /g, ''),
+      position: 0,
+    });
+    toolChanged(toolId, true);
+  };
+
   const onSaveProgress = (progress: number) => {
     if (transcriptionRef.current) {
       focusOnTranscription();
@@ -1163,6 +1171,7 @@ export function Transcriber(props: IProps) {
                         onSegment={onSegmentChange}
                         onSegmentParamChange={onSegmentParamChange}
                         onInteraction={onInteraction}
+                        onTranscription={handleAutoTranscribe}
                         parentToolId={toolId}
                         onSaveProgress={
                           !transSelected || role === 'view'

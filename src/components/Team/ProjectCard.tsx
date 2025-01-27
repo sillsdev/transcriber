@@ -291,7 +291,7 @@ export const ProjectCard = (props: IProps) => {
         name,
         description,
         type,
-        language: values.bcp47,
+        language: values?.bcp47 ?? 'und',
         languageName,
         isPublic,
         spellCheck,
