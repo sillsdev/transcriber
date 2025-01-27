@@ -406,7 +406,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
       )}
       {asrLangVisible && (
         <BigDialog
-          title="Speech Recogniztion Settings"
+          title="Speech Recognition Settings"
           description={
             <Typography variant="body2" sx={{ maxWidth: 500 }}>
               Choose the language to recognize. If the language is not
