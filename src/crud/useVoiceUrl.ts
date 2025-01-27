@@ -21,6 +21,10 @@ export const useVoiceUrl = () => {
     const mediaId = related(ipRec, 'releaseMediafile');
     const remId =
       remoteId('mediafile', mediaId, memory?.keyMap as RecordKeyMap) ?? mediaId;
-    return await fetchUrl({ id: remId, cancelled: () => false });
+    return await fetchUrl({
+      id: remId,
+      cancelled: () => false,
+      noDownload: true,
+    });
   };
 };

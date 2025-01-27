@@ -706,6 +706,7 @@ export function Profile(props: IProps) {
                   <FormControlLabel
                     control={
                       <input
+                        title={t.syncFrequency}
                         value={syncFreq}
                         onChange={handleSyncFreqChange}
                         type="number"
