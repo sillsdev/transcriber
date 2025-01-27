@@ -34,7 +34,7 @@ export function useGetAsrSettings() {
   const { getDefault, setDefault } = useOrgDefaults();
   const teamUpdate = useTeamUpdate();
   const ctx = React.useContext(PassageDetailContext);
-  const { currentstep } = ctx.state;
+  const currentstep = ctx?.state?.currentstep;
   const [artId, setArtId] = React.useState('');
   const [artState, setArtState] = React.useState<IAsrState>();
 
