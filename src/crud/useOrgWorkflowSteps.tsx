@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { related } from '.';
 import {
   IWorkflowStepsStrings,
@@ -35,7 +35,7 @@ export const useOrgWorkflowSteps = () => {
     shallowEqual
   );
 
-  const [global] = useGlobal();
+  const getGlobal = useGetGlobal();
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator?.getSource('remote') as JSONAPISource;
@@ -65,7 +65,7 @@ export const useOrgWorkflowSteps = () => {
     wf: WorkflowStepD,
     org?: string
   ) => {
-    let myOrgId = org ?? global.organization;
+    let myOrgId = org ?? getGlobal('organization');
     // NB: The remoteId was not updated even though this always gets created online
     // let myOrgRemoteId = remoteId('organization', myOrgId, memory?.keyMap as RecordKeyMap);
     // if (!offline && !myOrgRemoteId) {

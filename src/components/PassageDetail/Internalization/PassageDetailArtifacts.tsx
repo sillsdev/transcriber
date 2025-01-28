@@ -1,5 +1,5 @@
 import { useState, useContext, useMemo, useRef, useEffect } from 'react';
-import { useGlobal } from '../../../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../../../context/GlobalContext';
 import {
   IPassageDetailArtifactsStrings,
   Passage,
@@ -101,9 +101,10 @@ export function PassageDetailArtifacts() {
   const sectionResources = useOrbitData<SectionResourceD[]>('sectionresource');
   const mediafiles = useOrbitData<MediaFile[]>('mediafile');
   const artifactTypes = useOrbitData<ArtifactType[]>('artifacttype');
-  const [globals] = useGlobal();
+  const getGlobal = useGetGlobal();
   const [memory] = useGlobal('memory');
-  const [, setBusy] = useGlobal('importexportBusy');
+  const [busy, setBusy] = useGlobal('importexportBusy');
+  const [remoteBusy] = useGlobal('remoteBusy');
   const [offline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [complete, setComplete] = useGlobal('progress');
@@ -482,12 +483,12 @@ export function PassageDetailArtifacts() {
   );
 
   useEffect(() => {
-    if (!globals.importexportBusy && !globals.remoteBusy) {
+    if (!getGlobal('importexportBusy') && !getGlobal('remoteBusy')) {
       setSelectedRows(rowData.filter(listFilter));
       setSortKey((sortKey) => sortKey + 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, allResources, globals.importexportBusy, globals.remoteBusy]);
+  }, [rowData, allResources, busy, remoteBusy]);
 
   const onSortEnd = ({
     oldIndex,

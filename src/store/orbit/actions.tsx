@@ -13,7 +13,7 @@ import { Severity } from '../../utils';
 import { OfflineProject, Plan, VProject } from '../../model';
 import { ITokenContext } from '../../context/TokenProvider';
 import { AlertSeverity } from '../../hoc/SnackBar';
-import { GlobalState } from '../../context/GlobalContext';
+import { GetGlobalType } from '../../context/GlobalContext';
 
 export const orbitError = (ex: IApiError) => {
   return ex.response.status !== Severity.retry
@@ -58,7 +58,7 @@ export interface IFetchOrbitData {
   setProjectsLoaded: (value: string[]) => void;
   setOrbitRetries: (r: number) => void;
   setLang: (locale: string) => void;
-  global: GlobalState;
+  getGlobal: GetGlobalType;
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject;
   offlineSetup: () => Promise<void>;
   showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void;
@@ -73,7 +73,7 @@ export const fetchOrbitData =
     setProjectsLoaded,
     setOrbitRetries,
     setLang,
-    global,
+    getGlobal,
     getOfflineProject,
     offlineSetup,
     showMessage,
@@ -88,7 +88,7 @@ export const fetchOrbitData =
       (ex: IApiError) => dispatch(orbitError(ex)),
       setOrbitRetries,
       setLang,
-      global,
+      getGlobal,
       getOfflineProject,
       offlineSetup,
       showMessage

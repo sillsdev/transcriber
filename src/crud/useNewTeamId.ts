@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { Organization, OrganizationD, User } from '../model';
 import { waitForIt } from '../utils';
 import { useTeamCreate, isPersonalTeam, remoteIdNum, defaultWorkflow } from '.';
@@ -10,14 +10,14 @@ export const useNewTeamId = () => {
   const [memory] = useGlobal('memory');
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [globals] = useGlobal();
+  const getGlobal = useGetGlobal();
   const teamRef = React.useRef<string>();
   const orbitTeamCreate = useTeamCreate();
 
   const getPersonalId = async () => {
     await waitForIt(
       'have user for personal team',
-      () => Boolean(globals.user),
+      () => Boolean(getGlobal('user')),
       () => false,
       100
     );
@@ -28,7 +28,8 @@ export const useNewTeamId = () => {
     const orgRecs = orgs
       .filter(
         (o) =>
-          related(o, 'owner') === globals.user && isPersonalTeam(o.id, orgs)
+          related(o, 'owner') === getGlobal('user') &&
+          isPersonalTeam(o.id, orgs)
       )
       .sort((a, b) =>
         Boolean(a.keys?.remoteId) && Boolean(b.keys?.remoteId)
@@ -46,11 +47,11 @@ export const useNewTeamId = () => {
   };
 
   const newPersonal = async () => {
-    if (!globals.user) return;
+    if (!getGlobal('user')) return;
     teamRef.current = await getPersonalId();
     if (!teamRef.current) {
       const userRec = memory.cache.query((q) =>
-        q.findRecord({ type: 'user', id: globals.user })
+        q.findRecord({ type: 'user', id: getGlobal('user') })
       ) as User;
       const userName = userRec?.attributes?.name ?? 'user';
       const personalOrg = `>${userName} Personal<`;
