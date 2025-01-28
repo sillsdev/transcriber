@@ -8,6 +8,7 @@ import {
   ToggleButton,
   Box,
   SxProps,
+  Badge,
 } from '@mui/material';
 import { useState, useEffect, useRef, useContext } from 'react';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
@@ -204,8 +205,8 @@ function WSAudioPlayer(props: IProps) {
   const [org] = useGlobal('organization');
   const [features, setFeatures] = useState<IValues>();
   enum VoiceChange {
-    'Apply' = 'Apply Voice Change',
-    'Settings' = 'Voice Change Settings',
+    'Apply' = 'Convert Voice',
+    'Settings' = 'Convert Voice Settings',
   }
   const [voiceVisible, setVoiceVisible] = useState(false);
   const [voice, setVoice] = useState('');
@@ -947,7 +948,10 @@ function WSAudioPlayer(props: IProps) {
                     </>
                   )}
                   {features?.noNoise && !offline && (
-                    <LightTooltip id="noiseRemovalTip" title={ts.noiseRemoval}>
+                    <LightTooltip
+                      id="noiseRemovalTip"
+                      title={<Badge badgeContent={'AI'}>Reduce Noise</Badge>}
+                    >
                       <span>
                         <IconButton
                           id="noiseRemoval"
@@ -977,7 +981,7 @@ function WSAudioPlayer(props: IProps) {
                     !offline && (
                       <LightTooltip
                         id="voiceChangeTip"
-                        title={'AI Voice Change'}
+                        title={<Badge badgeContent={'AI'}>Convert Voice</Badge>}
                       >
                         <span>
                           <SplitButton

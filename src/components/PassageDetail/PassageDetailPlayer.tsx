@@ -1,5 +1,5 @@
 import { useGlobal } from '../../context/GlobalContext';
-import { Button, IconButton, Typography } from '@mui/material';
+import { Badge, Button, IconButton, Typography } from '@mui/material';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { IRegionParams, parseRegions } from '../../crud/useWavesurferRegions';
@@ -27,6 +27,7 @@ import AsrButton from '../../control/SplitButton';
 import { IValues } from '../Team/TeamSettings';
 import AsrProgress from '../../business/asr/AsrProgress';
 import { useGetAsrSettings } from '../../crud/useGetAsrSettings';
+import { LightTooltip } from '../StepEditor';
 
 export enum SaveSegments {
   showSaveButton = 0,
@@ -130,8 +131,8 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
 
   const [features, setFeatures] = useState<IValues>();
   enum AiOptions {
-    AutoTranscribe = 'Auto Transcribe',
-    AsrSettings = 'ASR Settings',
+    AutoTranscribe = 'Recognize Speech',
+    AsrSettings = 'Recognize Speech Settings',
   }
   const [asrProgressVisble, setAsrProgressVisble] = useState(false);
 
@@ -373,13 +374,18 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
               <></>
             )}
             {features?.aiTranscribe && !offline && (
-              <AsrButton
-                options={[AiOptions.AutoTranscribe, AiOptions.AsrSettings]}
-                onClick={handleAsrClick}
-                title="AI Transcribe"
+              <LightTooltip
+                title={<Badge badgeContent={'AI'}>Recognize Speech</Badge>}
               >
-                <TranscriptionLogo sx={{ height: 18, width: 18 }} />
-              </AsrButton>
+                <span>
+                  <AsrButton
+                    options={[AiOptions.AutoTranscribe, AiOptions.AsrSettings]}
+                    onClick={handleAsrClick}
+                  >
+                    <TranscriptionLogo sx={{ height: 18, width: 18 }} />
+                  </AsrButton>
+                </span>
+              </LightTooltip>
             )}
             {saveSegments === SaveSegments.showSaveButton ? (
               <Button
@@ -406,7 +412,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
       )}
       {asrLangVisible && (
         <BigDialog
-          title="Speech Recognition Settings"
+          title="Recognize Speech Settings"
           description={
             <Typography variant="body2" sx={{ maxWidth: 500 }}>
               Choose the language to recognize. If the language is not
@@ -422,7 +428,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
       )}
       {asrProgressVisble && (
         <BigDialog
-          title={'Ai Transcription in Progress'}
+          title={'Recognize Speech in Progress'}
           isOpen={asrProgressVisble}
           onOpen={handleAsrProgressVisible}
           bp={BigDialogBp.sm}

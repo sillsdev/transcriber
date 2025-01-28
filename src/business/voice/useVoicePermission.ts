@@ -49,7 +49,7 @@ export const useVoicePermission = ({
     setPermStatement(
       `I ${permState?.fullName ?? ''} provide consent for ${
         permState?.sponsor ?? sponsorOrg
-      } to record and store this file with my voice the cloud and possibly in a voice library for publishing and use in AI applications that require a voice sample, including voice conversion. The recording created by ${
+      } to record and store this file with my voice in the cloud and possibly in a voice library for publishing and use in AI applications that require a voice sample, including voice conversion. The recording created by ${
         permState?.sponsor ?? sponsorOrg
       } of me reading this script will become the exclusive property of ${
         permState.sponsor ?? sponsorOrg

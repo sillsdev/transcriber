@@ -8,7 +8,9 @@ import {
   Stack,
   FormControlLabel,
   Checkbox,
+  Badge,
 } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import { ISharedStrings } from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../../selector';
@@ -96,8 +98,14 @@ export default function SelectAsrLanguage({
               onClick={handlePhonetic}
             />
           }
-          label="Phonetic"
-          title={'Language choice is used to suggest word breaks'}
+          label={
+            <Badge
+              badgeContent={<InfoIcon color={'info'} fontSize="small" />}
+              title={'Language choice is used to suggest word breaks'}
+            >
+              Phonetic
+            </Badge>
+          }
           sx={{ ml: 2 }}
         />
       </Stack>

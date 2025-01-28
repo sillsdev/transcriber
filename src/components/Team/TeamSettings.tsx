@@ -14,6 +14,7 @@ import {
   Checkbox,
   IconButton,
   Typography,
+  Badge,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Options } from '../../control';
@@ -115,7 +116,7 @@ export function TeamSettings(props: IProps) {
                       onChange={handleFeatures(FeatureSlug.NoNoise)}
                     />
                   }
-                  label={'Noise Reduction'}
+                  label={<Badge badgeContent={'AI'}>Reduce Noise</Badge>}
                 />
               </Stack>
               <Stack direction="row" spacing={1}>
@@ -126,7 +127,7 @@ export function TeamSettings(props: IProps) {
                       onChange={handleFeatures(FeatureSlug.DeltaVoice)}
                     />
                   }
-                  label={'Voice Conversion'}
+                  label={<Badge badgeContent={'AI'}>Convert Voice</Badge>}
                 />
                 <IconButton
                   onClick={() => setVoiceVisible(true)}
@@ -143,7 +144,7 @@ export function TeamSettings(props: IProps) {
                       onChange={handleFeatures(FeatureSlug.AiTranscribe)}
                     />
                   }
-                  label={'Speech Transcription'}
+                  label={<Badge badgeContent={'AI'}>Recognize Speech</Badge>}
                 />
                 <IconButton
                   onClick={() => setAsrLangVisible(true)}
@@ -157,13 +158,13 @@ export function TeamSettings(props: IProps) {
         </Details>
       </Accordion>
       <BigDialog
-        title={'Voice Conversion Settings'}
+        title={'Convert Voice Settings'}
         isOpen={voiceVisible}
         onOpen={() => setVoiceVisible(false)}
         description={
           <Typography>
             Enter the name of the organization that will hold the rights for
-            recordings.
+            recordings of the converted voices.
           </Typography>
         }
         bp={BigDialogBp.sm}
@@ -175,7 +176,7 @@ export function TeamSettings(props: IProps) {
         />
       </BigDialog>
       <BigDialog
-        title="Speech Recognition Settings"
+        title="Recognize Speech Settings"
         description={
           <Typography variant="body2" sx={{ maxWidth: 500 }}>
             Choose the language to recognize. If the language is not available,
