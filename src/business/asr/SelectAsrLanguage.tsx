@@ -32,7 +32,7 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 
 interface ISelectAsrLanguage {
   refresh?: () => void;
-  onOpen: () => void;
+  onOpen: (cancal?: boolean) => void;
 }
 
 export default function SelectAsrLanguage({
@@ -111,7 +111,7 @@ export default function SelectAsrLanguage({
       </Stack>
       <Divider sx={{ pt: 2 }} />
       <ActionRow>
-        <AltButton onClick={onOpen}>{t.cancel}</AltButton>
+        <AltButton onClick={() => onOpen(true)}>{t.cancel}</AltButton>
         <PriButton
           onClick={handleSave}
           disabled={

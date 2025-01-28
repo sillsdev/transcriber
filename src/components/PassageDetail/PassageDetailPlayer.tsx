@@ -423,7 +423,11 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
           isOpen={asrLangVisible}
           onOpen={() => setAsrLangVisible(false)}
         >
-          <SelectAsrLanguage onOpen={handleTranscribe} />
+          <SelectAsrLanguage
+            onOpen={(cancel) =>
+              cancel ? setAsrLangVisible(false) : handleTranscribe()
+            }
+          />
         </BigDialog>
       )}
       {asrProgressVisble && (
