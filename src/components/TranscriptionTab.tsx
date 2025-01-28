@@ -159,6 +159,7 @@ export function TranscriptionTab(props: IProps) {
   const { getOrganizedBy } = useOrganizedBy();
   const getOfflineProject = useOfflnProjRead();
   const [globalStore] = useGlobal();
+  const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const { getTypeId, localizedArtifactType } = useArtifactType();
   const [artifactTypes] = useState<ArtifactTypeSlug[]>([
     ArtifactTypeSlug.Vernacular,
@@ -447,7 +448,7 @@ export function TranscriptionTab(props: IProps) {
         exportComplete();
         setBusy(false);
       } else {
-        if (!globalStore.enableOffsite) globalStore.enableOffsite = true;
+        if (!enableOffsite) setEnableOffsite(true);
         if (exportStatus.statusMsg) {
           showMessage(exportStatus.statusMsg);
         }

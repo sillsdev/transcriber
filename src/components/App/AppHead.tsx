@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { useGlobal } from '../../context/GlobalContext';
+import { useGlobal, useGetGlobal } from '../../context/GlobalContext';
 import { useLocation, useParams } from 'react-router-dom';
 import {
   IState,
@@ -152,9 +152,9 @@ export const AppHead = (props: IProps) => {
   const [busy] = useGlobal('remoteBusy');
   const [dataChangeCount] = useGlobal('dataChangeCount');
   const [importexportBusy] = useGlobal('importexportBusy');
-  const [globalStore] = useGlobal();
   const [isChanged] = useGlobal('changed');
   const [lang] = useGlobal('lang');
+  const getGlobal = useGetGlobal();
   const [exitAlert, setExitAlert] = useState(false);
   const isMounted = useMounted('apphead');
   const [version, setVersion] = useState('');
@@ -323,7 +323,7 @@ export const AppHead = (props: IProps) => {
     if (pathname === '/') return true;
     if (pathname.startsWith('/access')) return true;
     if (!exitAlert && isElectron && isMounted()) setExitAlert(true);
-    if (!globalStore.enableOffsite) {
+    if (!getGlobal('enableOffsite')) {
       e.preventDefault();
       e.returnValue = '';
       return true;

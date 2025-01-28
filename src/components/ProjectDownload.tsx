@@ -60,7 +60,7 @@ export const ProjectDownload = (props: IProps) => {
   const [errorReporter] = useGlobal('errorReporter');
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
-  const [globalStore] = useGlobal();
+  const [enableOffsite, setEngableOffsite] = useGlobal('enableOffsite');
   const [busy, setBusy] = useGlobal('importexportBusy');
   const { showMessage, showTitledMessage } = useSnackBar();
   const cancelRef = React.useRef(false);
@@ -130,7 +130,7 @@ export const ProjectDownload = (props: IProps) => {
         exportComplete();
         setProgress(Steps.Error);
       } else {
-        if (!globalStore.enableOffsite) globalStore.enableOffsite = true;
+        if (!enableOffsite) setEngableOffsite(true);
         if (exportStatus?.statusMsg) {
           showMessage(exportStatus?.statusMsg);
         }

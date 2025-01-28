@@ -53,6 +53,11 @@ const GlobalContext = React.createContext<GlobalCtxType | undefined>(undefined);
 
 const changes = {} as GlobalState;
 
+export const useGetGlobal = <K extends keyof GlobalState>() => {
+  const { globalState } = useContext(GlobalContext) as GlobalCtxType;
+  return (prop: K): GlobalState[K] => changes[prop] ?? globalState[prop];
+};
+
 export const useGlobal = <K extends keyof GlobalState>(
   prop?: K
 ): [GlobalState[K], (val: GlobalState[K]) => void] => {
@@ -65,7 +70,7 @@ export const useGlobal = <K extends keyof GlobalState>(
   if (prop === undefined) return [globalState, setGlobalState] as any;
 
   const handleChange = debounce(() => {
-    setGlobalState({ ...globalState, ...changes });
+    setGlobalState((state) => ({ ...state, ...changes }));
   }, 100);
 
   const setter = (val: GlobalState[K]) => {
