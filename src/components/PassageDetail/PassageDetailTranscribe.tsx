@@ -14,10 +14,11 @@ import { shallowEqual, useSelector } from 'react-redux';
 import TaskTable, { TaskTableWidth } from '../TaskTable';
 import { getStepComplete, ToolSlug } from '../../crud';
 import { findRecord } from '../../crud/tryFindRecord';
-import { JSONParse, waitForIt } from '../../utils';
+import { JSONParse } from '../../utils';
 import { useGlobal } from '../../context/GlobalContext';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { useArtifactType } from '../../crud/useArtifactType';
+import { UnsavedContext } from '../../context/UnsavedContext';
 
 interface TableContainerProps extends BoxProps {
   topFilter?: boolean;
@@ -60,6 +61,7 @@ export function PassageDetailTranscribe({
     rowData,
     passage,
   } = usePassageDetailContext();
+  const { waitForSave } = useContext(UnsavedContext).state;
   const { setState } = useContext(PassageDetailContext);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [topFilter, setTopFilter] = useState(false);
@@ -141,12 +143,7 @@ export function PassageDetailTranscribe({
   }, [currentstep, vernacularSteps, stepSettings, hasChecking]);
 
   const handleComplete = (complete: boolean) => {
-    waitForIt(
-      'change cleared after save',
-      () => !globals.changed,
-      () => false,
-      200
-    ).then(async () => {
+    waitForSave(undefined, 200).finally(async () => {
       await setStepComplete(currentstep, complete, getStepComplete(passage));
       //if we're now complete, go to the next step or passage
       if (complete) gotoNextStep();

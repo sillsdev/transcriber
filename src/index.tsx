@@ -176,7 +176,7 @@ const AuthApp = () => {
       clientId={webClientId}
       authorizationParams={{
         audience: apiIdentifier,
-        redirectUri: process.env.REACT_APP_CALLBACK,
+        redirect_uri: process.env.REACT_APP_CALLBACK,
         useRefreshTokens: true,
         onRedirectCallback: onRedirectingCallbck,
       }}
