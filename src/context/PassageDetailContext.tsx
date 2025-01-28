@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { useParams } from 'react-router-dom';
 import { shallowEqual } from 'react-redux';
 import {
@@ -246,7 +246,7 @@ const PassageDetailProvider = (props: IProps) => {
   const dispatch = useDispatch();
   const fetchBooks = (lang: string) => dispatch(actions.fetchBooks(lang));
   const { pasId, prjId } = useParams();
-  const [globals] = useGlobal();
+  const getGlobal = useGetGlobal();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [org] = useGlobal('organization');
@@ -284,7 +284,7 @@ const PassageDetailProvider = (props: IProps) => {
   const { getOrgDefault } = useOrgDefaults();
 
   const setCurrentStep = (stepId: string) => {
-    if (globals.changed) {
+    if (getGlobal('changed')) {
       setConfirm(stepId);
     } else {
       handleSetCurrentStep(stepId);
