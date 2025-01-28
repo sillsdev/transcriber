@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import Axios from 'axios';
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { TokenContext } from '../context/TokenProvider';
 import { shallowEqual } from 'react-redux';
 import {
@@ -78,7 +78,7 @@ export function Loading() {
   const [offline] = useGlobal('offline');
   const [fingerprint] = useGlobal('fingerprint');
   const [user, setUser] = useGlobal('user');
-  const [globalStore] = useGlobal();
+  const getGlobal = useGetGlobal();
   const [, setLang] = useGlobal('lang');
   const [, setOrbitRetries] = useGlobal('orbitRetries');
   const [, setProjectsLoaded] = useGlobal('projectsLoaded');
@@ -194,7 +194,7 @@ export function Loading() {
       setProjectsLoaded,
       setOrbitRetries,
       setLang,
-      global: globalStore,
+      getGlobal,
       getOfflineProject,
       offlineSetup,
       showMessage,

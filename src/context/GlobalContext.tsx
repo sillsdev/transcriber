@@ -44,6 +44,9 @@ export interface GlobalState {
   progress: number;
 }
 
+export type GlobalKey = keyof GlobalState;
+export type GetGlobalType = <K extends GlobalKey>(prop: K) => GlobalState[K];
+
 export interface GlobalCtxType {
   globalState: GlobalState;
   setGlobalState: React.Dispatch<React.SetStateAction<GlobalState>>;
@@ -53,21 +56,22 @@ const GlobalContext = React.createContext<GlobalCtxType | undefined>(undefined);
 
 const changes = {} as GlobalState;
 
-export const useGetGlobal = <K extends keyof GlobalState>() => {
+export const useGetGlobal = (): GetGlobalType => {
   const { globalState } = useContext(GlobalContext) as GlobalCtxType;
-  return (prop: K): GlobalState[K] => changes[prop] ?? globalState[prop];
+  return (prop) => changes[prop] ?? globalState[prop];
 };
 
-export const useGlobal = <K extends keyof GlobalState>(
+export const useGlobal = <K extends GlobalKey>(
   prop?: K
 ): [GlobalState[K], (val: GlobalState[K]) => void] => {
   const { globalState, setGlobalState } = useContext(
     GlobalContext
   ) as GlobalCtxType;
 
-  if (globalState === undefined) return [undefined, undefined] as any;
+  if (globalState === undefined || prop === undefined)
+    return [undefined, undefined] as any;
 
-  if (prop === undefined) return [globalState, setGlobalState] as any;
+  // if (prop === undefined) return [globalState, setGlobalState] as any;
 
   const handleChange = debounce(() => {
     setGlobalState((state) => ({ ...state, ...changes }));
