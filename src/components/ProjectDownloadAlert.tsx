@@ -86,6 +86,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
   const [hasSectionFilter, setHasSectionFilter] = React.useState(false);
   const [alert, setAlert] = React.useState(false);
   const [downloadSize, setDownloadSize] = React.useState(0);
+  const sizeRef = React.useRef(0);
   const downloadingRef = React.useRef(false);
   const [downloading, setDownloadingx] = React.useState(false);
   const [progress, setProgress] = React.useState(0);
@@ -173,7 +174,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
         const fileName = local.localname;
         if (fileNames.has(fileName)) continue;
         fileNames.add(fileName);
-        const fileSize = m.media.attributes?.filesize || 0;
+        const fileSize = m.media?.attributes?.filesize || 0;
         const proj = planProject[m.plan];
         const projRec = projects.find((p) => p.id === proj);
         const filterState = getFilterState(projRec);
@@ -243,6 +244,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
         0
       );
       setDownloadSize(newSize);
+      sizeRef.current = newSize;
     }
 
     return Array.from(needyProject);
@@ -261,8 +263,12 @@ export const ProjectDownloadAlert = (props: IProps) => {
   };
 
   const handleDownload = async () => {
+    if (sizeMb <= 0) {
+      handleClose(false)();
+      return;
+    }
     setDownloading(true);
-    if (downAmt === 'project') {
+    if (downAmt === 'project' || sizeMb <= 0) {
       setDownloadOpen(true);
     } else if (downAmt === 'filtered') {
       let n = 0;
@@ -288,7 +294,9 @@ export const ProjectDownloadAlert = (props: IProps) => {
   React.useEffect(() => {
     if (isElectron && tokenCtx.state.accessToken && !downloadingRef.current) {
       getNeedyRemoteIds().then((projRemIds) => {
-        if (projRemIds.length > 0) {
+        if (sizeRef.current === 0) {
+          handleClose(false)();
+        } else if (projRemIds.length > 0) {
           setNeedyIds(projRemIds);
           setAlert(true);
         } else cb();
@@ -448,6 +456,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
                         value="missing"
                         control={<Radio />}
                         label={t.missingFiles}
+                        disabled={sizeMb <= 0}
                       />
                       <FormControlLabel
                         value="project"
@@ -458,20 +467,22 @@ export const ProjectDownloadAlert = (props: IProps) => {
                   </FormControl>
                 </Grid>
                 <Grid item md={6}>
-                  {t.downloadMb
-                    .replace('{0}', sizeMb > 0 ? `~${sizeMb}` : '0')
-                    .replace(
-                      '{1}',
-                      sizeMb > 0
-                        ? `~${formatTime(sizeMb * 0.367 + 20)}`
-                        : '0:00'
-                    )
-                    .replace(
-                      '{2}',
-                      sizeMb > 0
-                        ? `~${formatTime(sizeMb * 0.42 + 65.3)}`
-                        : `0:00`
-                    )}
+                  {sizeMb > 0
+                    ? t.downloadMb
+                        .replace('{0}', sizeMb > 0 ? `~${sizeMb}` : '0')
+                        .replace(
+                          '{1}',
+                          sizeMb > 0
+                            ? `~${formatTime(sizeMb * 0.367 + 20)}`
+                            : '0:00'
+                        )
+                        .replace(
+                          '{2}',
+                          sizeMb > 0
+                            ? `~${formatTime(sizeMb * 0.42 + 65.3)}`
+                            : `0:00`
+                        )
+                    : 'No media files needed'}
                 </Grid>
               </Grid>
             </DialogContent>
@@ -479,7 +490,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
               sx={{ display: 'flex', justifyContent: 'space-between' }}
             >
               <AltButton
-                onClick={() => handleClose(true)()}
+                onClick={() => handleClose(false)()}
                 disabled={downloading}
               >
                 {t.downloadLater}

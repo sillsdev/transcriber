@@ -77,7 +77,8 @@ export function Logout() {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
-  if (/online|offline/i.test(view)) navigate(`/access/${view}`);
+  if (/online|offline/i.test(view))
+    setTimeout(() => navigate(`/access/${view}`), 200);
 
   return (
     <Box sx={{ width: '100%' }}>
