@@ -49,7 +49,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
   const { computeMovementRef, computeSectionRef } = useComputeRef();
   const { verseTerms } = useKeyTerms();
   const [link, setLink] = useState<string>();
-  const readSharedResource = useSharedResRead();
+  const { readSharedResource } = useSharedResRead();
   const allBookData: BookName[] = useSelector(
     (state: IState) => state.books.bookData
   );

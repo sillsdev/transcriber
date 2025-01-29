@@ -263,7 +263,7 @@ export function ScriptureTable(props: IProps) {
     getLocalDefault,
     setLocalDefault,
   } = useProjectDefaults();
-  const readSharedResource = useSharedResRead();
+  const { getSharedResource } = useSharedResRead();
   const getFilteredSteps = useFilteredSteps();
   const getDiscussionCount = useDiscussionCount({
     mediafiles,
@@ -1385,7 +1385,7 @@ export function ScriptureTable(props: IProps) {
         graphicFind,
         getPublishTo,
         publishStatus,
-        readSharedResource,
+        getSharedResource,
       });
       setSheet(newWorkflow);
 

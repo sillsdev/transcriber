@@ -7,7 +7,7 @@ import {
   sectionDescription,
   usePlanType,
 } from '../crud';
-import { BookName, Passage, Section } from '../model';
+import { BookName, Passage, Section, SharedResourceD } from '../model';
 import { PassageDetailContext } from '../context/PassageDetailContext';
 
 const GridRoot = styled(Grid)<GridProps>(({ theme }) => ({
@@ -19,9 +19,10 @@ interface IProps {
   section: Section;
   passage: Passage;
   allBookData: BookName[];
+  sharedResource: SharedResourceD | undefined;
 }
 export const SectionPassageTitle = (props: IProps) => {
-  const { section, passage, allBookData } = props;
+  const { section, passage, allBookData, sharedResource } = props;
   const [plan] = useGlobal('plan');
   const { sectionArr } = useContext(PassageDetailContext).state;
   const sectionMap = new Map<number, string>(sectionArr);
@@ -51,6 +52,7 @@ export const SectionPassageTitle = (props: IProps) => {
             passage={passage}
             bookData={allBookData}
             flat={isFlat}
+            sharedResource={sharedResource}
           />
         </Typography>
       </Grid>

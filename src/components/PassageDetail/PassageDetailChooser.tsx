@@ -3,7 +3,12 @@ import { useGlobal } from '../../context/GlobalContext';
 import { IPassageChooserStrings, PassageD } from '../../model';
 import { Typography, Tabs, Tab, SxProps } from '@mui/material';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
-import { related, passageRefText, remoteId } from '../../crud';
+import {
+  related,
+  passageRefText,
+  remoteId,
+  useSharedResRead,
+} from '../../crud';
 import { rememberCurrentPassage } from '../../utils';
 import { useSelector, shallowEqual } from 'react-redux';
 import { passageChooserSelector } from '../../selector';
@@ -37,6 +42,7 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
   const marks = useRef<Array<Mark>>([]);
   const [view, setView] = useState('');
   const { setCurrentStep } = usePassageDetailContext();
+  const { getSharedResource } = useSharedResRead();
   const passageNavigate = usePassageNavigate(() => {
     setView('');
   }, setCurrentStep);
@@ -83,9 +89,13 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
                 p.attributes?.sequencenum || 1
               }`;
           } else {
+            var sr = getSharedResource(p);
             //must be a note
             reference = (
-              <RefRender value={p.attributes?.reference} flat={false} />
+              <RefRender
+                value={sr?.attributes.title ?? p.attributes?.reference}
+                flat={false}
+              />
             );
           }
           if (marks.current.findIndex((m) => m.label === reference) > -1)
