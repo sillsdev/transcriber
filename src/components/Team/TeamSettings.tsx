@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Organization } from '../../model';
+import { Organization, OrganizationD } from '../../model';
 import {
   Accordion,
   AccordionSummary,
@@ -187,6 +187,7 @@ export function TeamSettings(props: IProps) {
         onOpen={() => setAsrLangVisible(false)}
       >
         <SelectAsrLanguage
+          team={team as OrganizationD}
           refresh={handleRefresh}
           onOpen={() => setAsrLangVisible(false)}
         />

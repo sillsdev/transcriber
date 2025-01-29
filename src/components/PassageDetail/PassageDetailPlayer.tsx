@@ -422,6 +422,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
             onOpen={(cancel) =>
               cancel ? setAsrLangVisible(false) : handleTranscribe()
             }
+            canBegin={true}
           />
         </BigDialog>
       )}
