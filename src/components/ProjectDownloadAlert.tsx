@@ -268,7 +268,7 @@ export const ProjectDownloadAlert = (props: IProps) => {
       return;
     }
     setDownloading(true);
-    if (downAmt === 'project' || sizeMb <= 0) {
+    if (downAmt === 'project') {
       setDownloadOpen(true);
     } else if (downAmt === 'filtered') {
       let n = 0;
