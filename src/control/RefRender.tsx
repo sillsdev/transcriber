@@ -7,6 +7,7 @@ import {
   NoteIcon,
   MovementIcon,
 } from './PlanIcons';
+import { Typography } from '@mui/material';
 
 /**
  * Returns the passage type corresponding to the provided reference value.
@@ -139,5 +140,20 @@ export const RefRender: FC<IProps> = memo(({ value, flat }: IProps) => {
     return <ArgType value={value} type={pt} Icon={NoteIcon} />;
   } else if (pt === PassageTypeEnum.CHAPTERNUMBER)
     return <ArgType value={value} type={pt} Icon={ChapterNumberIcon} />;
-  else return passageTypeMap[pt] ?? <>{value}</>;
+  else
+    return (
+      passageTypeMap[pt] ?? (
+        <Typography
+          component={'span'}
+          sx={{
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            maxWidth: '200px',
+          }}
+        >
+          {value}
+        </Typography>
+      )
+    );
 });
