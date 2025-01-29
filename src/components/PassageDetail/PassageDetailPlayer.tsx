@@ -10,6 +10,7 @@ import {
   MediaFile,
   MediaFileD,
   OrganizationD,
+  OrgWorkflowStepD,
 } from '../../model';
 import { UpdateRecord } from '../../model/baseModel';
 import { playerSelector } from '../../selector';
@@ -34,6 +35,8 @@ import AsrProgress from '../../business/asr/AsrProgress';
 import { useGetAsrSettings } from '../../crud/useGetAsrSettings';
 import { LightTooltip } from '../StepEditor';
 import { useOrbitData } from '../../hoc/useOrbitData';
+import { JSONParse } from '../../utils';
+import { ToolSlug } from '../../crud';
 
 export enum SaveSegments {
   showSaveButton = 0,
@@ -58,6 +61,7 @@ export interface DetailPlayerProps {
   position?: number;
   chooserReduce?: number;
   parentToolId?: string;
+  role?: string;
 }
 
 export function PassageDetailPlayer(props: DetailPlayerProps) {
@@ -80,6 +84,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     position,
     chooserReduce,
     parentToolId,
+    role,
   } = props;
 
   const [memory] = useGlobal('memory');
@@ -138,6 +143,14 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
 
   const [features, setFeatures] = useState<IValues>();
   const [asrProgressVisble, setAsrProgressVisble] = useState(false);
+  const orgSteps = useOrbitData<OrgWorkflowStepD[]>('orgworkflowstep');
+
+  const tool = useMemo(() => {
+    const toolText = orgSteps.find((s) => s.id === currentstep)?.attributes
+      ?.tool;
+    const val = toolText ? JSONParse(toolText)?.tool ?? '' : undefined;
+    return val;
+  }, [orgSteps, currentstep]);
 
   const { onPlayStatus, onCurrentSegment, setSegmentToWhole } = usePlayerLogic({
     allowSegment,
@@ -367,21 +380,28 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
             ) : (
               <></>
             )}
-            {features?.aiTranscribe && !offline && (
-              <LightTooltip
-                title={<Badge badgeContent={'AI'}>{asrTip ?? ''}</Badge>}
-              >
-                <span>
-                  <AsrButton
-                    id="asrButton"
-                    onClick={handleTranscribe}
-                    onSettings={() => setAsrLangVisible(true)}
-                  >
-                    <TranscriptionLogo sx={{ height: 18, width: 18 }} />
-                  </AsrButton>
-                </span>
-              </LightTooltip>
-            )}
+            {features?.aiTranscribe &&
+              !offline &&
+              tool === ToolSlug.Transcribe &&
+              role && (
+                <LightTooltip
+                  title={<Badge badgeContent={'AI'}>{asrTip ?? ''}</Badge>}
+                >
+                  <span>
+                    <AsrButton
+                      id="asrButton"
+                      onClick={handleTranscribe}
+                      onSettings={() => setAsrLangVisible(true)}
+                      disabled={role !== 'transcriber'}
+                    >
+                      <TranscriptionLogo
+                        disabled={role !== 'transcriber'}
+                        sx={{ height: 18, width: 18 }}
+                      />
+                    </AsrButton>
+                  </span>
+                </LightTooltip>
+              )}
             {saveSegments === SaveSegments.showSaveButton ? (
               <Button
                 id="segment-save"
