@@ -1,11 +1,16 @@
 import { useGlobal } from '../../context/GlobalContext';
 import { Badge, Button, IconButton, Typography } from '@mui/material';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { IRegionParams, parseRegions } from '../../crud/useWavesurferRegions';
 import WSAudioPlayer from '../WSAudioPlayer';
 import { useSelector, shallowEqual } from 'react-redux';
-import { IWsAudioPlayerStrings, MediaFile, MediaFileD } from '../../model';
+import {
+  IWsAudioPlayerStrings,
+  MediaFile,
+  MediaFileD,
+  OrganizationD,
+} from '../../model';
 import { UpdateRecord } from '../../model/baseModel';
 import { playerSelector } from '../../selector';
 import { NamedRegions, updateSegments } from '../../utils/namedSegments';
@@ -23,11 +28,12 @@ import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
 import SelectAsrLanguage, {
   AsrTarget,
 } from '../../business/asr/SelectAsrLanguage';
-import AsrButton from '../../control/SplitButton';
+import AsrButton from '../../control/ConfButton';
 import { IValues } from '../Team/TeamSettings';
 import AsrProgress from '../../business/asr/AsrProgress';
 import { useGetAsrSettings } from '../../crud/useGetAsrSettings';
 import { LightTooltip } from '../StepEditor';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
 export enum SaveSegments {
   showSaveButton = 0,
@@ -126,14 +132,11 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
   const { getOrgDefault } = useOrgDefaults();
   const [org] = useGlobal('organization');
   const { getAsrSettings } = useGetAsrSettings();
+  const teams = useOrbitData<OrganizationD[]>('organization');
   const [asrLangVisible, setAsrLangVisible] = useState(false);
   const [phonetic, setPhonetic] = useState(false);
 
   const [features, setFeatures] = useState<IValues>();
-  enum AiOptions {
-    AutoTranscribe = 'Recognize Speech',
-    AsrSettings = 'Recognize Speech Settings',
-  }
   const [asrProgressVisble, setAsrProgressVisble] = useState(false);
 
   const { onPlayStatus, onCurrentSegment, setSegmentToWhole } = usePlayerLogic({
@@ -284,25 +287,26 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     setShowTranscriptionId('');
   };
 
+  const asrTip = useMemo(() => {
+    const asr = getAsrSettings();
+    return 'Recognize Speech {0}'.replace(
+      '{0}',
+      asr ? `using ${asr?.language?.languageName}` : ''
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teams, getAsrSettings]);
+
   const handleTranscribe = () => {
     const asr = getAsrSettings();
     if (asr?.mmsIso === undefined || asr?.mmsIso === 'und') {
       setAsrLangVisible(true);
       return;
     }
-    setAsrLangVisible(false);
-    console.log('auto transcribe');
-    setAsrProgressVisble(true);
     setPhonetic(asr?.target === AsrTarget.phonetic);
-  };
-
-  const handleAutoTranscribe = () => {
-    const asr = getAsrSettings();
-    if (!(asr?.mmsIso === undefined || asr?.mmsIso === 'und')) {
-      setAsrLangVisible(true);
-    } else {
-      handleTranscribe();
-    }
+    setTimeout(() => {
+      setAsrLangVisible(false);
+      setAsrProgressVisble(true);
+    }, 200);
   };
 
   useEffect(() => {
@@ -311,16 +315,6 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
-
-  const handleAsrClick = (option: string) => {
-    if (option === AiOptions.AutoTranscribe) {
-      handleTranscribe();
-    } else if (option === AiOptions.AsrSettings) {
-      setAsrLangVisible(true);
-    } else {
-      handleAutoTranscribe();
-    }
-  };
 
   const handleAsrProgressVisible = (v: boolean) => {
     setAsrProgressVisble(v);
@@ -375,12 +369,13 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
             )}
             {features?.aiTranscribe && !offline && (
               <LightTooltip
-                title={<Badge badgeContent={'AI'}>Recognize Speech</Badge>}
+                title={<Badge badgeContent={'AI'}>{asrTip ?? ''}</Badge>}
               >
                 <span>
                   <AsrButton
-                    options={[AiOptions.AutoTranscribe, AiOptions.AsrSettings]}
-                    onClick={handleAsrClick}
+                    id="asrButton"
+                    onClick={handleTranscribe}
+                    onSettings={() => setAsrLangVisible(true)}
                   >
                     <TranscriptionLogo sx={{ height: 18, width: 18 }} />
                   </AsrButton>

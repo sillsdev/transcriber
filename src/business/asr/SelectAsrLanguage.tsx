@@ -56,14 +56,14 @@ export default function SelectAsrLanguage({
       });
   };
 
-  const handleSave = () => {
+  const handleSave = React.useCallback(() => {
     if (asrState) {
       setAsrSettings(asrState);
       saveAsrSettings();
       refresh?.();
     }
     onOpen();
-  };
+  }, [asrState, setAsrSettings, saveAsrSettings, refresh, onOpen]);
 
   React.useEffect(() => {
     const asr = getAsrSettings();
@@ -121,7 +121,7 @@ export default function SelectAsrLanguage({
                 asrState?.language?.bcp47 === 'und'))
           }
         >
-          {t.save}
+          {'Begin Recognition'}
         </PriButton>
       </ActionRow>
     </StyledBox>

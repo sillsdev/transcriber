@@ -66,7 +66,7 @@ import {
   useOrgDefaults,
 } from '../crud/useOrgDefaults';
 import NoChickenIcon from '../control/NoChickenIcon';
-import SplitButton from '../control/SplitButton';
+import VcButton from '../control/ConfButton';
 import VoiceConversionLogo from '../control/VoiceConversionLogo';
 import SpeakerName from './SpeakerName';
 import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
@@ -204,10 +204,6 @@ function WSAudioPlayer(props: IProps) {
   const [offline] = useGlobal('offline');
   const [org] = useGlobal('organization');
   const [features, setFeatures] = useState<IValues>();
-  enum VoiceChange {
-    'Apply' = 'Convert Voice',
-    'Settings' = 'Convert Voice Settings',
-  }
   const [voiceVisible, setVoiceVisible] = useState(false);
   const [voice, setVoice] = useState('');
   const voiceUrl = useVoiceUrl();
@@ -820,12 +816,10 @@ function WSAudioPlayer(props: IProps) {
       applyAudioAi(AudioAiFn.voiceConversion, targetVoice);
     }
   };
-  const handleVoiceChange = (option: string) => {
-    if (option === VoiceChange.Apply && Boolean(voice)) {
-      console.log('apply voice change');
+  const handleVoiceChange = () => {
+    if (Boolean(voice)) {
       applyVoiceChange();
     } else {
-      console.log('voice change settings');
       setVoiceVisible(true);
     }
   };
@@ -981,13 +975,17 @@ function WSAudioPlayer(props: IProps) {
                     !offline && (
                       <LightTooltip
                         id="voiceChangeTip"
-                        title={<Badge badgeContent={'AI'}>Convert Voice</Badge>}
+                        title={
+                          <Badge badgeContent={'AI'}>
+                            {'Convert Voice {0}'.replace('{0}', voice)}
+                          </Badge>
+                        }
                       >
                         <span>
-                          <SplitButton
+                          <VcButton
                             id="voiceChange"
-                            options={[VoiceChange.Apply, VoiceChange.Settings]}
                             onClick={handleVoiceChange}
+                            onSettings={() => setVoiceVisible(true)}
                             disabled={
                               !ready ||
                               recording ||
@@ -996,7 +994,10 @@ function WSAudioPlayer(props: IProps) {
                             }
                           >
                             <VoiceConversionLogo
-                              sx={{ width: '18pt', height: '18pt' }}
+                              sx={{
+                                width: '18pt',
+                                height: '18pt',
+                              }}
                               disabled={
                                 !ready ||
                                 recording ||
@@ -1004,7 +1005,7 @@ function WSAudioPlayer(props: IProps) {
                                 waitingForAI
                               }
                             />
-                          </SplitButton>
+                          </VcButton>
                         </span>
                       </LightTooltip>
                     )}
