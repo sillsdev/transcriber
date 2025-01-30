@@ -1178,6 +1178,7 @@ export function Transcriber(props: IProps) {
                             ? undefined
                             : onSaveProgress
                         }
+                        role={role}
                       />
                     </Grid>
                   </Grid>

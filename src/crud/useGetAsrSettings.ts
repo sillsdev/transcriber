@@ -25,7 +25,7 @@ const asrDefault: IAsrState = {
   selectRoman: false,
 };
 
-export function useGetAsrSettings() {
+export function useGetAsrSettings(teamIn?: OrganizationD) {
   const orgSteps = useOrbitData<OrgWorkflowStepD[]>('orgworkflowstep');
   const [team, setTeam] = React.useState<OrganizationD>();
   const [memory] = useGlobal('memory');
@@ -39,8 +39,10 @@ export function useGetAsrSettings() {
   const [artState, setArtState] = React.useState<IAsrState>();
 
   React.useEffect(() => {
-    if (org) {
-      setTeam(findRecord(memory, 'organization', org) as OrganizationD);
+    if (teamIn ?? org) {
+      setTeam(
+        findRecord(memory, 'organization', teamIn?.id ?? org) as OrganizationD
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);

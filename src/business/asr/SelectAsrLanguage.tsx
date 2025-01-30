@@ -11,7 +11,7 @@ import {
   Badge,
 } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
-import { ISharedStrings } from '../../model';
+import { ISharedStrings, OrganizationD } from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../../selector';
 import { AsrAlphabet, IAsrState } from './AsrAlphabet';
@@ -31,19 +31,23 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 }));
 
 interface ISelectAsrLanguage {
+  team?: OrganizationD;
   refresh?: () => void;
   onOpen: (cancal?: boolean) => void;
+  canBegin?: boolean;
 }
 
 export default function SelectAsrLanguage({
+  team,
   refresh,
   onOpen,
+  canBegin,
 }: ISelectAsrLanguage) {
   const [asrState, setAsrState] = React.useState<IAsrState>();
   const mmsLangs = useMmsLangs();
   const t: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { getAsrSettings, setAsrSettings, saveAsrSettings } =
-    useGetAsrSettings();
+    useGetAsrSettings(team);
 
   const handlePhonetic = () => {
     if (asrState)
@@ -56,14 +60,14 @@ export default function SelectAsrLanguage({
       });
   };
 
-  const handleSave = () => {
+  const handleSave = React.useCallback(() => {
     if (asrState) {
       setAsrSettings(asrState);
       saveAsrSettings();
       refresh?.();
     }
     onOpen();
-  };
+  }, [asrState, setAsrSettings, saveAsrSettings, refresh, onOpen]);
 
   React.useEffect(() => {
     const asr = getAsrSettings();
@@ -121,7 +125,7 @@ export default function SelectAsrLanguage({
                 asrState?.language?.bcp47 === 'und'))
           }
         >
-          {t.save}
+          {canBegin ? 'Begin Recognition' : t.save}
         </PriButton>
       </ActionRow>
     </StyledBox>
