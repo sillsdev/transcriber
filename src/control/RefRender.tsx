@@ -7,6 +7,7 @@ import {
   NoteIcon,
   MovementIcon,
 } from './PlanIcons';
+import { Typography } from '@mui/material';
 
 /**
  * Returns the passage type corresponding to the provided reference value.
@@ -94,19 +95,29 @@ interface AtProps {
   value: any;
   type: PassageTypeEnum;
   Icon: JSX.Element;
+  font?: string;
 }
 
-const ArgType: FC<AtProps> = memo(({ value, type, Icon }: AtProps) => {
-  const len = type.length;
-  const val = String(value);
-  if (val.length <= len + 1) {
-    return Icon;
-  }
+const ArgType: FC<AtProps> = memo(({ value, type, Icon, font }: AtProps) => {
+  const len = type !== PassageTypeEnum.PASSAGE ? type.length : -1;
+  let val = String(value).substring(len + 1);
+
   return (
     <>
-      {Icon}
-      {'\u00A0'}
-      {val.substring(len + 1)}
+      <Typography
+        component={'span'}
+        sx={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          maxWidth: '200px',
+          ...(font && { fontSize: font }),
+        }}
+      >
+        {Icon}
+        {'\u00A0'}
+        {val}
+      </Typography>
     </>
   );
 });
@@ -127,17 +138,24 @@ const passageTypeMap: IPtMap = {
   [PassageTypeEnum.CHAPTERNUMBER]: ChapterNumberIcon,
   [PassageTypeEnum.BOOK]: BookIcon,
   [PassageTypeEnum.ALTBOOK]: AltBookIcon,
+  [PassageTypeEnum.NOTE]: NoteIcon,
 };
 interface IProps {
   value: string;
   flat: boolean;
+  pt: PassageTypeEnum;
+  font?: string;
 }
 
-export const RefRender: FC<IProps> = memo(({ value, flat }: IProps) => {
-  const pt = passageTypeFromRef(value, flat);
-  if (pt === PassageTypeEnum.NOTE) {
-    return <ArgType value={value} type={pt} Icon={NoteIcon} />;
-  } else if (pt === PassageTypeEnum.CHAPTERNUMBER)
-    return <ArgType value={value} type={pt} Icon={ChapterNumberIcon} />;
-  else return passageTypeMap[pt] ?? <>{value}</>;
-});
+export const RefRender: FC<IProps> = memo(
+  ({ value, flat, pt, font }: IProps) => {
+    return (
+      <ArgType
+        value={value}
+        type={passageTypeFromRef(value)}
+        Icon={passageTypeMap[pt]}
+        font={font}
+      />
+    );
+  }
+);

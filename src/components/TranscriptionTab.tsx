@@ -59,6 +59,7 @@ import {
   PassageReference,
   afterStep,
   getStepComplete,
+  useSharedResRead,
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -161,6 +162,7 @@ export function TranscriptionTab(props: IProps) {
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const getGlobal = useGetGlobal();
   const { getTypeId, localizedArtifactType } = useArtifactType();
+  const { getSharedResource } = useSharedResRead();
   const [artifactTypes] = useState<ArtifactTypeSlug[]>([
     ArtifactTypeSlug.Vernacular,
     ArtifactTypeSlug.Retell,
@@ -517,6 +519,7 @@ export function TranscriptionTab(props: IProps) {
               const state = activityState.getString(getPassageState(passage));
               if (!isPublishingTitle(passage?.attributes?.reference, flat)) {
                 psgCount++;
+                let sr = getSharedResource(passage as PassageD);
                 rowData.push({
                   id: passage.id,
                   name: (
@@ -524,6 +527,8 @@ export function TranscriptionTab(props: IProps) {
                       passage={passage}
                       bookData={bookData}
                       flat={flat}
+                      sharedResource={sr}
+                      font={'0.8rem'}
                     />
                   ),
                   state: state,

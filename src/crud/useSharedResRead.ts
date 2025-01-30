@@ -1,11 +1,12 @@
 import { useGlobal } from '../context/GlobalContext';
-import { SharedResourceD } from '../model';
+import { PassageD, SharedResourceD } from '../model';
 import related from './related';
+import { findRecord } from './tryFindRecord';
 
 export const useSharedResRead = () => {
   const [memory] = useGlobal('memory');
 
-  return (passId: string) => {
+  const readSharedResource = (passId: string) => {
     const sharedResources = memory?.cache.query((q) =>
       q.findRecords('sharedresource')
     ) as SharedResourceD[];
@@ -14,4 +15,11 @@ export const useSharedResRead = () => {
     );
     return selected.length > 0 ? selected[0] : undefined;
   };
+  const getSharedResource = (p: PassageD) => {
+    const linkedRes = related(p, 'sharedResource');
+    if (linkedRes)
+      return findRecord(memory, 'sharedresource', linkedRes) as SharedResourceD;
+    return readSharedResource(p.id);
+  };
+  return { getSharedResource, readSharedResource };
 };

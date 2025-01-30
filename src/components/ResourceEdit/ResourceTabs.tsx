@@ -94,7 +94,7 @@ export function ResourceTabs({
   const graphics = useOrbitData<GraphicD[]>('graphic');
   const [value, setValue] = React.useState(0);
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
-  const readSharedResource = useSharedResRead();
+  const { getSharedResource, readSharedResource } = useSharedResRead();
   const updateSharedResource = useSharedResUpdate({ onUpdRef });
   const createSharedResource = useSharedResCreate({
     passage: { type: 'passage', id: passId },
@@ -122,16 +122,8 @@ export function ResourceTabs({
 
   const sharedResRec = React.useMemo(
     () => {
-      let res = readSharedResource(passId);
-      const linkedRes = related(ws?.passage, 'sharedResource');
-      if (!res && linkedRes) {
-        res = findRecord(
-          memory,
-          'sharedresource',
-          linkedRes
-        ) as SharedResourceD;
-      }
-      return res;
+      if (ws?.passage) return getSharedResource(ws?.passage);
+      else return readSharedResource(passId);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [passId, value]
