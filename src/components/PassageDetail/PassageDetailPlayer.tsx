@@ -304,7 +304,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     const asr = getAsrSettings();
     return 'Recognize Speech {0}'.replace(
       '{0}',
-      asr ? `using ${asr?.language?.languageName}` : ''
+      asr ? `\u2039 ${asr?.language?.languageName} \u203A\u00A0\u00A0` : ''
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teams, getAsrSettings]);

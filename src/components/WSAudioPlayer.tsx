@@ -977,7 +977,10 @@ function WSAudioPlayer(props: IProps) {
                         id="voiceChangeTip"
                         title={
                           <Badge badgeContent={'AI'}>
-                            {'Convert Voice {0}'.replace('{0}', voice)}
+                            {'Convert Voice {0}'.replace(
+                              '{0}',
+                              `\u2039 ${voice} \u203A\u00A0\u00A0`
+                            )}
                           </Badge>
                         }
                       >
@@ -1294,7 +1297,6 @@ function WSAudioPlayer(props: IProps) {
                             valueLabelFormat={valuetext}
                             onChange={handleSliderChange}
                           />
-
                           <LightTooltip
                             id="wsAudioFasterTip"
                             title={t.fasterTip.replace(
@@ -1365,7 +1367,8 @@ function WSAudioPlayer(props: IProps) {
               title={'Select Voice'}
               description={
                 <Typography>
-                  Enter the full name of the person whose voice will be used.
+                  Enter the full name of the person whose voice will be used to
+                  modify the voice or voices in the original recording.
                 </Typography>
               }
               isOpen={voiceVisible}
