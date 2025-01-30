@@ -479,11 +479,9 @@ export const usePlanSheetFill = ({
   };
 
   const refValue = (e: string | number) => {
-    if (
-      passageTypeFromRef(e as string, inlinePassages) !==
-      PassageTypeEnum.PASSAGE
-    )
-      return <RefRender value={e as string} flat={inlinePassages} />;
+    var pt = passageTypeFromRef(e as string, inlinePassages);
+    if (pt !== PassageTypeEnum.PASSAGE)
+      return <RefRender value={e as string} flat={inlinePassages} pt={pt} />;
     return e;
   };
 

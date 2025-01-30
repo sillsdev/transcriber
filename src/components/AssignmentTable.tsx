@@ -3,7 +3,7 @@ import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual } from 'react-redux';
 import {
   IState,
-  Passage,
+  PassageD,
   Section,
   User,
   IAssignmentTableStrings,
@@ -29,6 +29,7 @@ import {
   useOrganizedBy,
   usePassageState,
   useRole,
+  useSharedResRead,
 } from '../crud';
 import {
   TabAppBar,
@@ -86,7 +87,7 @@ export function AssignmentTable(props: IProps) {
     shallowEqual
   );
   const allBookData = useSelector((state: IState) => state.books.bookData);
-  const passages = useOrbitData<Passage[]>('passage');
+  const passages = useOrbitData<PassageD[]>('passage');
   const sections = useOrbitData<Section[]>('section');
   const mediafiles = useOrbitData<MediaFile[]>('mediafile');
   const users = useOrbitData<User[]>('user');
@@ -106,6 +107,7 @@ export function AssignmentTable(props: IProps) {
   const [organizedBy] = useState(getOrganizedBy(true));
   const [organizedByPlural] = useState(getOrganizedBy(false));
   const [refresh, setRefresh] = useState(0);
+  const { getSharedResource } = useSharedResRead();
   const columnDefs = useMemo(
     () =>
       !flat
@@ -168,7 +170,8 @@ export function AssignmentTable(props: IProps) {
         .filter((p) => related(p, 'section') === section.id)
         .sort(passageCompare);
       sectionRow.passages = sectionps.length.toString();
-      sectionps.forEach(function (passage: Passage) {
+      sectionps.forEach(function (passage: PassageD) {
+        var sr = getSharedResource(passage);
         rowData.push({
           id: passage.id,
           name: (
@@ -176,6 +179,7 @@ export function AssignmentTable(props: IProps) {
               passage={[passage]}
               bookData={allBookData}
               flat={false}
+              sr={sr}
             />
           ),
           state: activityState.getString(getPassageState(passage)),

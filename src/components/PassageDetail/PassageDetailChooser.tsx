@@ -82,24 +82,30 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
         if (!isPublishingTitle(p.attributes?.reference, false)) {
           newCount++;
           let reference: React.ReactNode = '';
+          let ref = '';
           if (psgType === PassageTypeEnum.PASSAGE) {
-            reference = passageRefText(p, allBookData);
-            if ((reference as string).length === 0)
-              reference = `${section?.attributes?.sequencenum}.${
+            ref = passageRefText(p, allBookData);
+            if ((ref as string).length === 0)
+              ref = `${section?.attributes?.sequencenum}.${
                 p.attributes?.sequencenum || 1
               }`;
           } else {
-            var sr = getSharedResource(p);
             //must be a note
+            var sr = getSharedResource(p);
+            ref = sr?.attributes.title ?? p.attributes?.reference;
+          }
+          reference = (
+            <RefRender value={ref} flat={false} pt={psgType} font={'0.8rem'} />
+          );
+          if (marks.current.findIndex((m) => m.label === reference) > -1)
             reference = (
               <RefRender
-                value={sr?.attributes.title ?? p.attributes?.reference}
+                value={ref + '#' + p.attributes?.sequencenum.toString()}
                 flat={false}
+                pt={psgType}
+                font={'0.8rem'}
               />
             );
-          }
-          if (marks.current.findIndex((m) => m.label === reference) > -1)
-            reference += '#' + p.attributes?.sequencenum.toString();
           marks.current.push({
             value: i,
             label: reference,

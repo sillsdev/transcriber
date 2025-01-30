@@ -79,27 +79,41 @@ describe('RefRender', () => {
   // A memorized version of the corresponding icon is returned by RefRender.
   it('should return the Move icon component', async () => {
     const { container } = render(
-      <RefRender value={PassageTypeEnum.MOVEMENT} flat={false} />
+      <RefRender
+        value={PassageTypeEnum.MOVEMENT}
+        flat={false}
+        pt={PassageTypeEnum.MOVEMENT}
+      />
     );
     await waitFor(() => expect(container.firstChild).not.toBe(null));
     expect(screen.getByTestId('move-icon')).toBeTruthy();
   });
   it('should return the Book icon component', async () => {
     const { container } = render(
-      <RefRender value={PassageTypeEnum.BOOK} flat={false} />
+      <RefRender
+        value={PassageTypeEnum.BOOK}
+        flat={false}
+        pt={PassageTypeEnum.BOOK}
+      />
     );
     await waitFor(() => expect(container.firstChild).not.toBe(null));
     expect(screen.getByTestId('book-icon')).toBeTruthy();
   });
   it('should return the Alt Book icon component', async () => {
     const { container } = render(
-      <RefRender value={PassageTypeEnum.ALTBOOK} flat={false} />
+      <RefRender
+        value={PassageTypeEnum.ALTBOOK}
+        flat={false}
+        pt={PassageTypeEnum.ALTBOOK}
+      />
     );
     await waitFor(() => expect(container.firstChild).not.toBe(null));
     expect(screen.getByTestId('alt-icon')).toBeTruthy();
   });
   it('should return the a text fragment component', async () => {
-    const { container } = render(<RefRender value={'1:1-4'} flat={false} />);
+    const { container } = render(
+      <RefRender value={'1:1-4'} flat={false} pt={PassageTypeEnum.PASSAGE} />
+    );
     await waitFor(() => expect(container.firstChild).not.toBe(null));
     expect(screen.getByText('1:1-4')).toBeTruthy();
   });
