@@ -57,7 +57,7 @@ export function useWaveSurfer(
   const widthRef = useRef(0);
   const markersRef = useRef([] as IMarker[]);
   const containerRef = useRef(container);
-
+  const clippingRef = useRef<{ start: number; end: number }>();
   const isNear = (position: number) => {
     return Math.abs(position - progressRef.current) < 0.3;
   };
@@ -293,6 +293,7 @@ export function useWaveSurfer(
     wavesurfer()?.loadDecodedBuffer();
     durationRef.current = 0;
     clearRegions();
+    resetClipping();
     wsGoto(0);
     onReady();
   };
@@ -492,9 +493,18 @@ export function useWaveSurfer(
     if (!wavesurfer()) return 0;
     var backend = wavesurfer()?.backend as any;
     var originalBuffer = backend.buffer;
-
+    const clippingThreshold = 0.0005;
+    console.log(
+      'insertBuffer',
+      startposition,
+      endposition,
+      clippingRef.current
+    );
     if (startposition === 0 && (originalBuffer?.length | 0) === 0) {
       loadDecoded(newBuffer);
+      if (detectClipping(newBuffer.getChannelData(0), clippingThreshold)) {
+        addClippingRegion({ start: startposition, end: endposition });
+      }
       return newBuffer ? newBuffer.length / newBuffer.sampleRate : 0;
     }
     var start_offset = (startposition * originalBuffer.sampleRate) >> 0;
@@ -514,6 +524,7 @@ export function useWaveSurfer(
       var new_data = newBuffer.getChannelData(
         ix < newBuffer.numChannels ? ix : newBuffer.numberOfChannels - 1
       );
+
       var uber_chan_data = uberSegment.getChannelData(ix);
 
       uber_chan_data.set(chan_data.slice(0, start_offset));
@@ -524,11 +535,35 @@ export function useWaveSurfer(
           start_offset + newBuffer.length
         );
     }
+
     loadDecoded(uberSegment);
+    var start_clip = 0;
+    if (clippingRef.current?.start === startposition) {
+      start_clip = (clippingRef.current?.end * newBuffer.sampleRate) >> 0;
+      startposition = clippingRef.current?.end;
+    }
+    console.log('start_clip', start_clip, 'startposition', startposition);
+    if (
+      detectClipping(
+        newBuffer.getChannelData(0).slice(start_clip),
+        clippingThreshold
+      )
+    ) {
+      addClippingRegion({ start: startposition, end: endposition });
+    }
     durationRef.current = wavesurfer()?.getDuration() || 0;
     return (start_offset + newBuffer.length) / originalBuffer.sampleRate;
   };
-
+  function detectClipping(channelData: Float32Array, threshold: number = 0.9) {
+    console.log('threshold', threshold);
+    for (let i = 0; i < channelData.length; i += 2) {
+      if (Math.abs(channelData[i]) >= threshold) {
+        console.warn('Potential clipping detected at sample', i);
+        return true;
+      }
+    }
+    return false;
+  }
   const wsInsertAudio = async (
     blob: Blob,
     position: number,
@@ -587,6 +622,16 @@ export function useWaveSurfer(
       wavesurfer()?.addMarker(m);
     });
   };
+  const resetClipping = () => (clippingRef.current = undefined);
+  const addClippingRegion = (r: { start: number; end: number }) => {
+    clippingRef.current = r;
+    wavesurfer()?.addRegion({
+      start: r.start, // start time in seconds
+      end: r.end, // end time in seconds
+      color: 'rgba(255, 0, 0, 0.5)', // red with 50% opacity
+    });
+    console.log(r);
+  };
 
   //delete the audio in the current region
   const wsRegionDelete = () => {
@@ -628,6 +673,7 @@ export function useWaveSurfer(
 
     loadDecoded(uberSegment);
     wavesurfer()?.regions.clear();
+    resetClipping();
     onRegion(0, true);
     var tmp = start - 0.03;
     if (tmp < 0) tmp = 0;
@@ -721,6 +767,7 @@ export function useWaveSurfer(
     }
     // Load the new buffer into Wavesurfer
     await wavesurfer()!.loadDecodedBuffer(combinedBuffer);
+    resetClipping();
     return await wsBlob();
   };
 
