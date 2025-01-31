@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Organization, OrganizationD } from '../../model';
+import { DialogMode, Organization, OrganizationD } from '../../model';
 import {
   Accordion,
   AccordionSummary,
@@ -49,13 +49,14 @@ export interface IValues {
 }
 
 interface IProps {
+  mode: DialogMode;
   team?: Organization;
   values: IValues;
   setValue: (what: string, value: string, init?: boolean) => void;
 }
 
 export function TeamSettings(props: IProps) {
-  const { team, values, setValue } = props;
+  const { mode, team, values, setValue } = props;
   const ctx = React.useContext(TeamContext);
   // const { getDefault, setDefault } = useOrgDefaults();
   const [voiceVisible, setVoiceVisible] = useState(false);
@@ -119,6 +120,7 @@ export function TeamSettings(props: IProps) {
                   label={<Badge badgeContent={'AI'}>Reduce Noise</Badge>}
                 />
               </Stack>
+
               <Stack direction="row" spacing={1}>
                 <FormControlLabel
                   control={
@@ -129,12 +131,14 @@ export function TeamSettings(props: IProps) {
                   }
                   label={<Badge badgeContent={'AI'}>Convert Voice</Badge>}
                 />
-                <IconButton
-                  onClick={() => setVoiceVisible(true)}
-                  disabled={!values?.[FeatureSlug.DeltaVoice]}
-                >
-                  <SettingsIcon />
-                </IconButton>
+                {mode !== DialogMode.add && (
+                  <IconButton
+                    onClick={() => setVoiceVisible(true)}
+                    disabled={!values?.[FeatureSlug.DeltaVoice]}
+                  >
+                    <SettingsIcon />
+                  </IconButton>
+                )}
               </Stack>
               <Stack direction="row" spacing={1}>
                 <FormControlLabel
@@ -146,12 +150,14 @@ export function TeamSettings(props: IProps) {
                   }
                   label={<Badge badgeContent={'AI'}>Recognize Speech</Badge>}
                 />
-                <IconButton
-                  onClick={() => setAsrLangVisible(true)}
-                  disabled={!values?.[FeatureSlug.AiTranscribe]}
-                >
-                  <SettingsIcon />
-                </IconButton>
+                {mode !== DialogMode.add && (
+                  <IconButton
+                    onClick={() => setAsrLangVisible(true)}
+                    disabled={!values?.[FeatureSlug.AiTranscribe]}
+                  >
+                    <SettingsIcon />
+                  </IconButton>
+                )}
               </Stack>
             </FormControl>
           </Stack>

@@ -372,6 +372,7 @@ export function TeamDialog(props: IProps) {
             fullWidth
           />
           <TeamSettings
+            mode={mode}
             team={values?.team}
             values={features}
             setValue={setValue}
