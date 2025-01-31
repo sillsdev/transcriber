@@ -4,14 +4,19 @@ import React, {
   useContext,
   useRef,
   CSSProperties,
+  PropsWithChildren,
   useMemo,
   useCallback,
-  useLayoutEffect,
 } from 'react';
 import { useGlobal } from '../context/GlobalContext';
 import { useParams } from 'react-router-dom';
-import { Allotment } from 'allotment';
-import 'allotment/dist/style.css';
+import {
+  default as SplitPaneBar,
+  Pane as PaneBar,
+  PaneProps,
+  SplitPaneProps,
+} from '../mods/react-split-pane';
+import styledComp from 'styled-components';
 import Confirm from './AlertDialog';
 import {
   MediaFile,
@@ -106,12 +111,75 @@ import {
 } from '@orbit/records';
 import { useDispatch } from 'react-redux';
 import { PassageTypeEnum } from '../model/passageType';
-import { AllotmentWrapper } from '../control/AllotmentWrapper';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
 const HISTORY_KEY = 'F7,CTRL+7';
 const INIT_PLAYER_HEIGHT = 180;
+
+const Wrapper = styledComp.div`
+  .Resizer {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    background: #000;
+    opacity: 0.2;
+    z-index: 1;
+    -moz-background-clip: padding;
+    -webkit-background-clip: padding;
+    background-clip: padding-box;
+  }
+
+  .Resizer:hover {
+    -webkit-transition: all 2s ease;
+    transition: all 2s ease;
+  }
+
+  .Resizer.horizontal {
+    height: 11px;
+    margin: -5px 0;
+    border-top: 5px solid rgba(255, 255, 255, 0);
+    border-bottom: 5px solid rgba(255, 255, 255, 0);
+    cursor: row-resize;
+    width: 100%;
+  }
+
+  .Resizer.horizontal:hover {
+    border-top: 5px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 5px solid rgba(0, 0, 0, 0.5);
+  }
+
+  .Resizer.vertical {
+    width: 11px;
+    margin: 0 -5px;
+    border-left: 5px solid rgba(255, 255, 255, 0);
+    border-right: 5px solid rgba(255, 255, 255, 0);
+    cursor: col-resize;
+  }
+
+  .Resizer.vertical:hover {
+    border-left: 5px solid rgba(0, 0, 0, 0.5);
+    border-right: 5px solid rgba(0, 0, 0, 0.5);
+  }
+  .Pane1 {
+    // background-color: blue;
+    display: flex;
+    min-height: 0;
+  }
+  .Pane2 {
+    // background-color: red;
+    display: flex;
+    min-height: 0;
+  }
+`;
+
+const SplitPane = (props: SplitPaneProps & PropsWithChildren) => {
+  return <SplitPaneBar {...props} />;
+};
+
+const Pane = (props: PaneProps & PropsWithChildren) => {
+  return <PaneBar {...props} className={props.className || 'pane'} />;
+};
 
 interface IProps {
   defaultWidth: number;
@@ -276,9 +344,6 @@ export function Transcriber(props: IProps) {
   } = usePassageDetailContext();
   const [boxHeight, setBoxHeight] = useState(
     discussionSize.height - (playerSize + 200)
-  );
-  const [maxPlayerSize, setMaxPlayerSize] = useState(
-    (discussionSize.height - chooserSize) / 2
   );
   const [style, setStyle] = useState({
     cursor: 'default',
@@ -458,25 +523,11 @@ export function Transcriber(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [toolsChanged]);
 
-  const handleBoxHeight = useMemo(
-    () =>
-      debounce((size: number) => {
-        if (size !== boxHeight) {
-          // console.log('write_boxheight', size);
-          setBoxHeight(Math.floor(size));
-        }
-      }, 100),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-  useLayoutEffect(() => {
-    handleBoxHeight(discussionSize.height - playerSize - chooserSize + 20);
+  useEffect(() => {
+    const newBoxHeight = discussionSize.height - playerSize - chooserSize;
+    if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [discussionSize, playerSize]);
-
-  useLayoutEffect(() => {
-    setMaxPlayerSize((discussionSize.height - chooserSize) / 2);
-  }, [discussionSize, chooserSize]);
 
   //user changes selected...tell the task table
   useEffect(() => {
@@ -626,7 +677,7 @@ export function Transcriber(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project, projType, artifactTypeSlug]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const newAssigned = rowData[index]?.assigned;
     if (newAssigned !== assigned) setAssigned(newAssigned);
     stateRef.current = state;
@@ -1060,18 +1111,10 @@ export function Transcriber(props: IProps) {
       setTextValue(textArea.value ?? '');
     }
   };
-  const handleSplitSize = useMemo(
-    () =>
-      debounce((sizes: number[]) => {
-        const newSize = Math.floor(sizes[0]);
-        if (newSize !== playerSize) {
-          // console.log('write_playersize', newSize);
-          setPlayerSize(newSize);
-        }
-      }, 500),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+  const handleSplitSize = debounce((e: any) => {
+    setPlayerSize(e);
+  }, 50);
+
   useEffect(() => {
     setArtifactTypeSlug(
       slug
@@ -1113,13 +1156,16 @@ export function Transcriber(props: IProps) {
           <AllDone />
         ) : (
           <Grid container direction="column" style={style}>
-            <AllotmentWrapper vert={`${playerSize + boxHeight}px`}>
-              <Allotment
-                vertical
-                defaultSizes={[playerSize, boxHeight]}
+            <Wrapper>
+              <SplitPane
+                defaultSize={playerSize}
+                minSize={INIT_PLAYER_HEIGHT}
+                maxSize={discussionSize.height - 280 - chooserSize}
+                style={{ position: 'static' }}
+                split="horizontal"
                 onChange={handleSplitSize}
               >
-                <Allotment.Pane maxSize={maxPlayerSize}>
+                <Pane>
                   <Grid
                     container
                     direction="row"
@@ -1182,16 +1228,15 @@ export function Transcriber(props: IProps) {
                       />
                     </Grid>
                   </Grid>
-                </Allotment.Pane>
-                <Allotment.Pane>
-                  <Grid item xs={12} sm container sx={{ height: 'inherit' }}>
+                </Pane>
+                <Pane>
+                  <Grid item xs={12} sm container>
                     <Grid
                       item
                       ref={transcriptionRef}
                       xs={showHistory ? 6 : 12}
                       container
                       direction="column"
-                      sx={{ height: 'inherit' }}
                     >
                       <StyledTextAreaAudosize
                         autoFocus
@@ -1215,9 +1260,9 @@ export function Transcriber(props: IProps) {
                       </Grid>
                     )}
                   </Grid>
-                </Allotment.Pane>
-              </Allotment>
-            </AllotmentWrapper>
+                </Pane>
+              </SplitPane>
+            </Wrapper>
 
             <Grid container direction="row" sx={{ pt: '12px' }}>
               <Grid item sx={{ display: 'flex', alignItems: 'center' }}>
