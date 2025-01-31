@@ -340,7 +340,7 @@ export const ProjectCard = (props: IProps) => {
       type: attr?.type,
       book: getProjectDefault(projDefBook, project as any as ProjectD) || '',
       story:
-        getProjectDefault(projDefStory, project as any as ProjectD) || true,
+        getProjectDefault(projDefStory, project as any as ProjectD) ?? true,
       bcp47: attr.language,
       languageName: attr.languageName || '',
       isPublic: attr.isPublic,
