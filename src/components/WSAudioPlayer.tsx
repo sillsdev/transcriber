@@ -59,7 +59,7 @@ import { AudioAiFn, useAudioAi } from '../utils/useAudioAi';
 import { Exception } from '@orbit/core';
 import { useGlobal } from '../context/GlobalContext';
 import { AxiosError } from 'axios';
-import { IValues } from './Team/TeamSettings';
+import { IFeatures } from './Team/TeamSettings';
 import {
   orgDefaultFeatures,
   orgDefaultVoices,
@@ -203,7 +203,7 @@ function WSAudioPlayer(props: IProps) {
   const timelineRef = useRef<any>();
   const [offline] = useGlobal('offline');
   const [org] = useGlobal('organization');
-  const [features, setFeatures] = useState<IValues>();
+  const [features, setFeatures] = useState<IFeatures>();
   const [voiceVisible, setVoiceVisible] = useState(false);
   const [voice, setVoice] = useState('');
   const voiceUrl = useVoiceUrl();
