@@ -40,7 +40,7 @@ export const useVoicePermission = ({
           } will only use my voice with languages I do not regularly use, to prevent impersonation. ${langPl} ${
             permState?.languages ?? 'English'
           }.`
-        : `I understand the my voice can be used by ${teamName} for any or all of its projects on audio files for the vernacular language, navigation language or any back translation languages.`;
+        : `I understand that my voice can be used by ${teamName} for any or all of its projects on audio files for the vernacular language, navigation language or any back translation languages.`;
 
     const compensated = permState?.hired
       ? 'Since I am being compendated for this work, my voice can be used by the team without additional compensation.'
