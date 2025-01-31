@@ -814,6 +814,8 @@ function WSAudioPlayer(props: IProps) {
     const targetVoice = await voiceUrl(voice);
     if (targetVoice) {
       applyAudioAi(AudioAiFn.voiceConversion, targetVoice);
+      setVoiceVisible(false);
+      showMessage('Beginning voice conversion...');
     }
   };
   const handleVoiceChange = () => {
