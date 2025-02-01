@@ -17,6 +17,7 @@ import FindAquifer from './FindAquifer';
 import { usePassageType } from '../../../crud/usePassageType';
 import { related } from '../../../crud';
 import { PassageTypeEnum } from '../../../model/passageType';
+import { Aquifer, BibleBrain } from '../../../assets/brands';
 
 export enum scopeI {
   passage,
@@ -95,7 +96,7 @@ export default function FindTabs({ onClose, closeRequested }: FindTabsProps) {
   );
 
   useEffect(() => {
-    import('../../../assets/bible-resource.js').then((module) => {
+    import('../../../assets/bible-resource').then((module) => {
       setResources(module.default);
     });
   }, []);
@@ -136,8 +137,16 @@ export default function FindTabs({ onClose, closeRequested }: FindTabsProps) {
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          {start === 0 && <Tab label={t.findBibleBrain} {...a11yProps(0)} />}
-          <Tab label={'Find: Aquifer'} {...a11yProps(1 - start)} />
+          {start === 0 && (
+            <Tab
+              label={t.findBrandedContent.replace('{0}', BibleBrain)}
+              {...a11yProps(0)}
+            />
+          )}
+          <Tab
+            label={t.findBrandedContent.replace('{0}', Aquifer)}
+            {...a11yProps(1 - start)}
+          />
           <Tab label={t.findOther} {...a11yProps(2 - start)} />
           <Tab
             label={<Badge badgeContent="AI">{t.create}</Badge>}

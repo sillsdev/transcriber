@@ -1,0 +1,9 @@
+export const Logos = 'Logos';
+export const BibleBrain = 'Bible Brain';
+export const Aquifer = 'Aquifer';
+export const Akuo = 'Akuo';
+export const ObtHelps = 'OBT Helps';
+export const FaithBridge = 'FaithBridge';
+export const ObtHelper = 'OBT Helper';
+export const UbsResources = 'UBS Resources';
+export const TranslatorsNotes = "Translator's Notes";

@@ -1756,9 +1756,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="findResource.findBibleBrain">
+      <unit id="findResource.findBrandedContent">
          <segment>
-            <source>Find: Bible Brain</source>
+            <source>Find: {0}</source>
             <target/>
          </segment>
       </unit>
@@ -3118,9 +3118,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.akuo">
+      <unit id="main.brandedSite">
          <segment>
-            <source>Access Akuo Site</source>
+            <source>Access {0} Site</source>
             <target/>
          </segment>
       </unit>
@@ -3328,12 +3328,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.openNotes">
-         <segment>
-            <source>Access Translator's Notes</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="main.openContent">
          <segment>
             <source>Access Open Content</source>
@@ -3385,12 +3379,6 @@
       <unit id="main.reportWhenOnline">
          <segment>
             <source>You must be online to use this menu item.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="main.resources">
-         <segment>
-            <source>Access UBS Resources</source>
             <target/>
          </segment>
       </unit>
@@ -5574,19 +5562,19 @@
       </unit>
       <unit id="publishLevel.bibleRequired">
          <segment>
-            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo or Obthelps.</source>
+            <source>You must have set up a Bible Id and Name in the Team Settings to publish to {0} or {1}.</source>
             <target/>
          </segment>
       </unit>
       <unit id="publishLevel.beta">
          <segment>
-            <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>
+            <source>Beta - visible on the {0} website when using the beta parameter (not available in the app)</source>
             <target/>
          </segment>
       </unit>
       <unit id="publishLevel.public">
          <segment>
-            <source>Public - visible to everyone using Akuo website or app</source>
+            <source>Public - visible to everyone using {0} website or app</source>
             <target/>
          </segment>
       </unit>
@@ -7644,13 +7632,13 @@
       </unit>
       <unit id="vProject.generalBook">
          <segment>
-            <source>Akuo Book Designation</source>
+            <source>{0} Book Designation</source>
             <target/>
          </segment>
       </unit>
       <unit id="vProject.generalStory">
          <segment>
-            <source>Show as Stories (not Extras) in Akuo</source>
+            <source>Show as Stories (not Extras) in {0}</source>
             <target/>
          </segment>
       </unit>

@@ -46,6 +46,7 @@ import { RecordKeyMap } from '@orbit/records';
 import { usePlanType } from '../../../crud';
 import { HttpStatusCode } from 'axios';
 import LinearProgress from '@mui/material/LinearProgress';
+import { BibleBrain } from '../../../assets/brands';
 interface FindBibleBrainProps {
   onClose?: () => void;
   closeRequested: boolean;
@@ -305,7 +306,7 @@ export default function FindBibleBrain({
                   label={
                     queryLang
                       ? t.querying
-                      : t.language.replace('{0}', 'Bible Brain')
+                      : t.language.replace('{0}', BibleBrain)
                   }
                 />
               )}
@@ -325,7 +326,7 @@ export default function FindBibleBrain({
                 label={
                   queryBible
                     ? t.querying
-                    : t.resource.replace('{0}', 'Bible Brain') + '*'
+                    : t.resource.replace('{0}', BibleBrain) + '*'
                 }
               />
             )}

@@ -32,6 +32,7 @@ import { mainSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { ContextHelp } from './ContextHelp';
 import { RecordKeyMap } from '@orbit/records';
+import { Akuo, TranslatorsNotes, UbsResources } from '../assets/brands';
 const ipc = (window as any)?.electron;
 
 const logosAppUri = 'https://app.logos.com/';
@@ -255,7 +256,9 @@ export function HelpMenu(props: IProps) {
             <ListItemIcon>
               <NotesIcon />
             </ListItemIcon>
-            <ListItemText primary={t.openNotes} />
+            <ListItemText
+              primary={t.brandedSite.replace('{0}', TranslatorsNotes)}
+            />
           </StyledMenuItem>
         )}
         {!isElectron && (
@@ -269,7 +272,9 @@ export function HelpMenu(props: IProps) {
               <ListItemIcon>
                 <NotesIcon />
               </ListItemIcon>
-              <ListItemText primary={t.openNotes} />
+              <ListItemText
+                primary={t.brandedSite.replace('{0}', TranslatorsNotes)}
+              />
             </StyledMenuItem>
           </a>
         )}
@@ -281,7 +286,9 @@ export function HelpMenu(props: IProps) {
             <ListItemIcon>
               <BooksIcon />
             </ListItemIcon>
-            <ListItemText primary={t.resources} />
+            <ListItemText
+              primary={t.brandedSite.replace('{0}', UbsResources)}
+            />
           </StyledMenuItem>
         )}
         {!isElectron && (
@@ -295,7 +302,9 @@ export function HelpMenu(props: IProps) {
               <ListItemIcon>
                 <BooksIcon />
               </ListItemIcon>
-              <ListItemText primary={t.resources} />
+              <ListItemText
+                primary={t.brandedSite.replace('{0}', UbsResources)}
+              />
             </StyledMenuItem>
           </a>
         )}
@@ -434,7 +443,7 @@ export function HelpMenu(props: IProps) {
             <ListItemIcon>
               <AkuoLogo />
             </ListItemIcon>
-            <ListItemText primary={t.akuo} />
+            <ListItemText primary={t.brandedSite.replace('{0}', Akuo)} />
           </StyledMenuItem>
         )}
         {!isElectron && (
@@ -448,7 +457,7 @@ export function HelpMenu(props: IProps) {
               <ListItemIcon>
                 <AkuoLogo />
               </ListItemIcon>
-              <ListItemText primary={t.akuo} />
+              <ListItemText primary={t.brandedSite.replace('{0}', Akuo)} />
             </StyledMenuItem>
           </a>
         )}

@@ -363,7 +363,7 @@ export interface IFindResourceStrings extends Localize.LocalizedStringsMethods {
     "create": string;
     "createItems": string;
     "createResource": string;
-    "findBibleBrain": string;
+    "findBrandedContent": string;
     "findOther": string;
     "findResource": string;
     "generalresource": string;
@@ -620,7 +620,7 @@ export interface ILanguagePickerStrings extends Localize.LocalizedStringsMethods
 export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "about": string;
     "admin": string;
-    "akuo": string;
+    "brandedSite": string;
     "apiError": string;
     "cancel": string;
     "cantCopy": string;
@@ -655,7 +655,6 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "media": string;
     "myAccount": string;
     "NoLoadOffline": string;
-    "openNotes": string;
     "openContent": string;
     "passages": string;
     "privacy": string;
@@ -665,7 +664,6 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "reportIssue": string;
     "reports": string;
     "reportWhenOnline": string;
-    "resources": string;
     "saveFirst": string;
     "saving": string;
     "sessionExpireTask": string;

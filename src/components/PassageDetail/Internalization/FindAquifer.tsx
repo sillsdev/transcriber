@@ -30,6 +30,7 @@ import { useGlobal } from '../../../context/GlobalContext';
 import { RecordKeyMap } from '@orbit/records';
 import { useDataChanges, useWaitForRemoteQueue } from '../../../utils';
 import BigDialog from '../../../hoc/BigDialog';
+import { Aquifer } from '../../../assets/brands';
 
 interface AquiferSearch {
   id: number;
@@ -333,7 +334,7 @@ export default function FindAquifer({ onClose }: IProps) {
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label={t.language.replace('{0}', 'Aquifer')}
+                  label={t.language.replace('{0}', Aquifer)}
                 />
               )}
             />

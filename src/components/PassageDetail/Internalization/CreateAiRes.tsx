@@ -11,7 +11,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ResourceItem from './ResourceItem';
 import { AltButton } from '../../../control';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { BookName, IFindResourceStrings, IState } from '../../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { findResourceSelector } from '../../../selector';
@@ -60,40 +60,47 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
     shallowEqual
   );
 
-  const scopeOptions = [
-    t.passage.toLowerCase(),
-    organizedBy.toLowerCase(),
-    t.chapter.toLowerCase(),
-    t.book.toLowerCase(),
-    t.movement.toLowerCase(),
-  ];
+  const scopeOptions = useMemo(
+    () => [
+      t.passage.toLowerCase(),
+      organizedBy.toLowerCase(),
+      t.chapter.toLowerCase(),
+      t.book.toLowerCase(),
+      t.movement.toLowerCase(),
+    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [t, organizedBy]
+  );
 
-  const aiQueries = [
-    {
-      type: t.oralVersion,
-      template: t.oralVersionTpl,
-    },
-    {
-      type: t.summary,
-      template: t.summaryTpl,
-    },
-    {
-      type: t.meaning,
-      template: t.meaningTpl,
-    },
-    {
-      type: t.script,
-      template: t.scriptTpl,
-    },
-    {
-      type: t.image,
-      template: t.imageTpl,
-    },
-    {
-      type: t.video,
-      template: t.videoTpl,
-    },
-  ];
+  const aiQueries = useMemo(
+    () => [
+      {
+        type: t.oralVersion,
+        template: t.oralVersionTpl,
+      },
+      {
+        type: t.summary,
+        template: t.summaryTpl,
+      },
+      {
+        type: t.meaning,
+        template: t.meaningTpl,
+      },
+      {
+        type: t.script,
+        template: t.scriptTpl,
+      },
+      {
+        type: t.image,
+        template: t.imageTpl,
+      },
+      {
+        type: t.video,
+        template: t.videoTpl,
+      },
+    ],
+    [t]
+  );
 
   const optVal = (item: string) => ({ value: item, label: camel2Title(item) });
 
@@ -213,7 +220,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
               onChange={handleTypeChange}
               sx={{ width: 180 }}
               renderInput={(params) => (
-                <TextField {...params} label={t?.type} />
+                <TextField {...params} label={t?.getString(type) ?? type} />
               )}
             />
           </Grid>
