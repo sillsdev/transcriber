@@ -374,7 +374,7 @@ export function TeamDialog(props: IProps) {
           <TeamSettings
             mode={mode}
             team={values?.team}
-            values={features}
+            values={{ features, workflowProgression }}
             setValue={setValue}
           />
           {mode !== DialogMode.add && canPublish && (

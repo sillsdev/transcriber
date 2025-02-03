@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DialogMode, Organization, OrganizationD } from '../../model';
 import {
   Accordion,
@@ -41,11 +41,16 @@ const Details = styled(AccordionDetails)<AccordionDetailsProps>(
   })
 );
 
-export interface IValues {
+export interface IFeatures {
   noNoise?: boolean;
   deltaVoice?: boolean;
   aiTranscribe?: boolean;
   [key: string]: any;
+}
+
+interface IValues {
+  features: IFeatures;
+  workflowProgression: string;
 }
 
 interface IProps {
@@ -68,8 +73,15 @@ export function TeamSettings(props: IProps) {
     t.workflowProgressionStep,
   ];
   const [workflowProgression, setWorkflowProgression] = useState(
-    t.workflowProgressionPassage
+    values?.workflowProgression ?? t.workflowProgressionPassage
   );
+
+  useEffect(() => {
+    setWorkflowProgression(
+      values?.workflowProgression ?? t.workflowProgressionPassage
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values?.workflowProgression]);
 
   const setProgression = (val: string) => {
     setWorkflowProgression(val);
@@ -113,7 +125,7 @@ export function TeamSettings(props: IProps) {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={values?.[FeatureSlug.NoNoise] ?? false}
+                      checked={values?.features?.[FeatureSlug.NoNoise] ?? false}
                       onChange={handleFeatures(FeatureSlug.NoNoise)}
                     />
                   }
@@ -125,7 +137,9 @@ export function TeamSettings(props: IProps) {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={values?.[FeatureSlug.DeltaVoice] ?? false}
+                      checked={
+                        values?.features?.[FeatureSlug.DeltaVoice] ?? false
+                      }
                       onChange={handleFeatures(FeatureSlug.DeltaVoice)}
                     />
                   }
@@ -134,7 +148,7 @@ export function TeamSettings(props: IProps) {
                 {mode !== DialogMode.add && (
                   <IconButton
                     onClick={() => setVoiceVisible(true)}
-                    disabled={!values?.[FeatureSlug.DeltaVoice]}
+                    disabled={!values?.features?.[FeatureSlug.DeltaVoice]}
                   >
                     <SettingsIcon />
                   </IconButton>
@@ -144,7 +158,9 @@ export function TeamSettings(props: IProps) {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={values?.[FeatureSlug.AiTranscribe] ?? false}
+                      checked={
+                        values?.features?.[FeatureSlug.AiTranscribe] ?? false
+                      }
                       onChange={handleFeatures(FeatureSlug.AiTranscribe)}
                     />
                   }
@@ -153,7 +169,7 @@ export function TeamSettings(props: IProps) {
                 {mode !== DialogMode.add && (
                   <IconButton
                     onClick={() => setAsrLangVisible(true)}
-                    disabled={!values?.[FeatureSlug.AiTranscribe]}
+                    disabled={!values?.features?.[FeatureSlug.AiTranscribe]}
                   >
                     <SettingsIcon />
                   </IconButton>

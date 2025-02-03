@@ -30,7 +30,7 @@ import SelectAsrLanguage, {
   AsrTarget,
 } from '../../business/asr/SelectAsrLanguage';
 import AsrButton from '../../control/ConfButton';
-import { IValues } from '../Team/TeamSettings';
+import { IFeatures } from '../Team/TeamSettings';
 import AsrProgress from '../../business/asr/AsrProgress';
 import { useGetAsrSettings } from '../../crud/useGetAsrSettings';
 import { LightTooltip } from '../StepEditor';
@@ -141,7 +141,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
   const [asrLangVisible, setAsrLangVisible] = useState(false);
   const [phonetic, setPhonetic] = useState(false);
 
-  const [features, setFeatures] = useState<IValues>();
+  const [features, setFeatures] = useState<IFeatures>();
   const [asrProgressVisble, setAsrProgressVisble] = useState(false);
   const orgSteps = useOrbitData<OrgWorkflowStepD[]>('orgworkflowstep');
 
