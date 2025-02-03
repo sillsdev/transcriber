@@ -61,8 +61,6 @@ interface IProps {
   createProject?: (name: string) => Promise<string>;
   team?: string;
   recordingRequired?: boolean;
-  state: IVoicePerm;
-  setState?: React.Dispatch<React.SetStateAction<IVoicePerm>>;
 }
 
 export function ProvideRights(props: IProps) {
@@ -73,12 +71,11 @@ export function ProvideRights(props: IProps) {
     createProject,
     team,
     recordingRequired,
-    state,
-    setState,
   } = props;
   const [user] = useGlobal('user');
   const [organizationId] = useGlobal('organization');
   const [busy] = useGlobal('importexportBusy');
+  const [state, setState] = useState<IVoicePerm>({});
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
@@ -132,6 +129,7 @@ export function ProvideRights(props: IProps) {
 
   useEffect(() => {
     setDefaultFileName(cleanFileName(`${speaker}_ip`));
+    setState({ fullName: speaker } as IVoicePerm);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [speaker]);
 
@@ -196,6 +194,7 @@ export function ProvideRights(props: IProps) {
           type: 'intellectualproperty',
           attributes: {
             rightsHolder: speaker,
+            notes: JSON.stringify(state),
           },
         } as IntellectualProperty & UninitializedRecord;
         await memory.update((t) => [
@@ -270,8 +269,8 @@ export function ProvideRights(props: IProps) {
           </Box>
         )}
         <VoiceStatement
-          team={teamRec}
           voice={speaker}
+          team={teamRec}
           state={state}
           setState={setState}
           setStatement={handleStatement}

@@ -54,7 +54,7 @@ import { NamedRegions } from '../utils/namedSegments';
 import { sharedSelector, wsAudioPlayerSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { WSAudioPlayerSilence } from './WSAudioPlayerSilence';
-import { ActionRow, AltButton, PriButton } from '../control';
+import { AltButton } from '../control';
 import { AudioAiFn, useAudioAi } from '../utils/useAudioAi';
 import { Exception } from '@orbit/core';
 import { useGlobal } from '../context/GlobalContext';
@@ -68,9 +68,9 @@ import {
 import NoChickenIcon from '../control/NoChickenIcon';
 import VcButton from '../control/ConfButton';
 import VoiceConversionLogo from '../control/VoiceConversionLogo';
-import SpeakerName from './SpeakerName';
 import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
 import { useVoiceUrl } from '../crud/useVoiceUrl';
+import SelectVoice from '../business/voice/SelectVoice';
 
 const VertDivider = (prop: DividerProps) => (
   <Divider orientation="vertical" flexItem sx={{ ml: '5px' }} {...prop} />
@@ -207,7 +207,7 @@ function WSAudioPlayer(props: IProps) {
   const [voiceVisible, setVoiceVisible] = useState(false);
   const [voice, setVoice] = useState('');
   const voiceUrl = useVoiceUrl();
-  const { getOrgDefault, setOrgDefault } = useOrgDefaults();
+  const { getOrgDefault } = useOrgDefaults();
   const [confirmAction, setConfirmAction] = useState<string | JSX.Element>('');
   const [jump] = useState(2);
   const playbackRef = useRef(1);
@@ -831,11 +831,7 @@ function WSAudioPlayer(props: IProps) {
   const handleCloseVoice = () => {
     setVoiceVisible(false);
   };
-  const handleSetVoice = (voice: string) => {
-    setVoice(voice);
-    const settings = getOrgDefault(orgDefaultVoices);
-    setOrgDefault(orgDefaultVoices, { ...settings, voice }, org);
-  };
+
   const onSplit = (split: IRegionChange) => {};
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -1380,21 +1376,7 @@ function WSAudioPlayer(props: IProps) {
               onOpen={handleCloseVoice}
               bp={BigDialogBp.sm}
             >
-              <>
-                <SpeakerName
-                  name={voice ?? ''}
-                  onChange={handleSetVoice}
-                  team={org}
-                  recordingRequired
-                />
-                <Divider sx={{ m: 1 }} />
-                <ActionRow>
-                  <AltButton onClick={handleCloseVoice}>{'Cancel'}</AltButton>
-                  <PriButton onClick={applyVoiceChange} disabled={!voice}>
-                    {'Begin Conversion'}
-                  </PriButton>
-                </ActionRow>
-              </>
+              <SelectVoice onOpen={handleCloseVoice} begin={applyVoiceChange} />
             </BigDialog>
           </>
         </Box>

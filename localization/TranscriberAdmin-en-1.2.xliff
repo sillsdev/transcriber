@@ -4534,14 +4534,14 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="mediaUpload.intellectualPropertyTask">
-      		<source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
+      		<source>Upload a speaker rights release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">MediaUpload.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="mediaUpload.intellectualPropertyTitle">
-      		<source>Upload Intellectual Property Release</source>
+      		<source>Upload Speaker Rights Release</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">MediaUpload.tsx</context>

@@ -2,6 +2,7 @@ import React from 'react';
 import { IVoicePerm } from './PersonalizeVoicePermission';
 import { Organization } from '../../model';
 import { voicePermOpts } from './PersonalizeVoicePermission';
+import { ILanguage } from '../../control';
 
 interface IVoicePermission {
   permissionState: IVoicePerm;
@@ -26,20 +27,30 @@ export const useVoicePermission = ({
     if (permState?.age) cats.push(`my age is ${permState.age ?? 'not given'}`);
     const catMsg =
       cats.length > 0
-        ? `To aid in categorizing my voice for use, ${cats.join(' and ')}.`
+        ? `To aid in categorizing my voice for use, ${cats.join(' and ')}. `
         : '';
 
-    const langPl =
-      (permState?.languages?.indexOf(' ') ?? -1) >= 0
-        ? 'The languages that I speak are'
-        : 'The language I speak is';
+    const langCnt = JSON.parse(permState?.languages ?? '[]')?.length;
+    const langList = JSON.parse(permState?.languages ?? '[]').map(
+      (l: ILanguage) => `${l.languageName} (${l.bcp47})`
+    );
+    const langStr =
+      langCnt > 1
+        ? langList.slice(0, -1).join(', ') + ` and ${langList.slice(-1)}`
+        : langCnt > 0
+        ? langList[0]
+        : 'English';
     const langUse =
       permState?.scope === voicePermOpts[1]
-        ? `${catMsg} I understand that ${
-            permState?.sponsor ?? sponsorOrg
-          } will only use my voice with languages I do not regularly use, to prevent impersonation. ${langPl} ${
-            permState?.languages ?? 'English'
-          }.`
+        ? langCnt > 0
+          ? `I understand that ${
+              permState?.sponsor ?? sponsorOrg
+            } will only use my voice with languages I do not regularly use, to prevent impersonation. ${
+              langCnt > 1
+                ? 'The languages that I speak are'
+                : 'The language I speak is'
+            } ${langStr}. `
+          : ''
         : `I understand that my voice can be used by ${teamName} for any or all of its projects on audio files for the vernacular language, navigation language or any back translation languages.`;
 
     const compensated = permState?.hired
@@ -55,7 +66,7 @@ export const useVoicePermission = ({
         permState.sponsor ?? sponsorOrg
       } which shall have the unlimited right to make, have made, use, copy, display in public, reconstruct, repair, modify, reproduce, publish, distribute and sell the Work Product, in whole or in part, or combine the Work Product with other matter, or not use the Work Product at all, as it sees fit. ${
         permState?.sponsor ?? sponsorOrg
-      } will use the recording in a variety of ways, including, but not limited to, Audio books, narrating apps, and scripture engagement to further the mission of the organization. ${langUse} I have been provided this script in a language I understand, and have been given the option to request this script in a language of my choice. This recording will act as my signature in place of a written agreement. ${compensated} I sign with my voice, ${
+      } will use the recording in a variety of ways, including, but not limited to, Audio books, narrating apps, and scripture engagement to further the mission of the organization. ${catMsg}${langUse} I have been provided this script in a language I understand, and have been given the option to request this script in a language of my choice. This recording will act as my signature in place of a written agreement. ${compensated} I sign with my voice, ${
         permState?.fullName ?? 'but choose not to be identified by name'
       }.`
     );
