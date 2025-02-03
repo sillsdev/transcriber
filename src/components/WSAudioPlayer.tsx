@@ -761,7 +761,10 @@ function WSAudioPlayer(props: IProps) {
     setBlobReady && setBlobReady(!inprogress);
   };
   const audioAiMsg = (fn: AudioAiFn, targetVoice?: string) => {
-    return ts.getString(`${fn}Failed`).replace('{0}', targetVoice ?? '');
+    return (
+      ts.getString(`${fn}Failed`) ??
+      'AI function {0}'.replace('{0}', targetVoice ?? '')
+    );
   };
   const applyAudioAi = (fn: AudioAiFn, targetVoice?: string) => {
     if (!reload) throw new Exception('need reload defined.');

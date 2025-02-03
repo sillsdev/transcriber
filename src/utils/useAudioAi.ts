@@ -231,7 +231,7 @@ export const useAudioAi = () => {
     cb,
   }: IRequestAudio) => {
     if (offline) return '';
-    if (file.size > 9000000 || targetVoice)
+    if (file.size > 7500000 || targetVoice)
       s3request(fn, cancelRef, file, targetVoice, cb).catch((err) =>
         cb(err as Error)
       );
@@ -254,11 +254,16 @@ export const useAudioAi = () => {
           } else cb(new Error(nrresponse.statusText));
         })
         .catch((err) => {
-          if (err.message.toString().includes('413'))
+          if (
+            err.status === HttpStatusCode.PayloadTooLarge ||
+            err.message.toString().includes('413')
+          ) {
+            console.log('payload too large', file.size);
+
             return s3request(fn, cancelRef, file, targetVoice, cb).catch(
               (err) => cb(err as Error)
             );
-          else cb(err as Error);
+          } else cb(err as Error);
         });
   };
 
