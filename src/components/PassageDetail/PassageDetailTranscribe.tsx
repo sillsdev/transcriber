@@ -12,7 +12,7 @@ import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { sharedSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import TaskTable, { TaskTableWidth } from '../TaskTable';
-import { getStepComplete, ToolSlug } from '../../crud';
+import { ToolSlug } from '../../crud';
 import { findRecord } from '../../crud/tryFindRecord';
 import { JSONParse } from '../../utils';
 import { useGetGlobal } from '../../context/GlobalContext';
@@ -59,7 +59,7 @@ export function PassageDetailTranscribe({
     setCurrentStep,
     gotoNextStep,
     rowData,
-    passage,
+    psgCompleted,
   } = usePassageDetailContext();
   const { waitForSave } = useContext(UnsavedContext).state;
   const { setState } = useContext(PassageDetailContext);
@@ -144,16 +144,16 @@ export function PassageDetailTranscribe({
 
   const handleComplete = (complete: boolean) => {
     waitForSave(undefined, 200).finally(async () => {
-      await setStepComplete(currentstep, complete, getStepComplete(passage));
+      await setStepComplete(currentstep, complete, psgCompleted);
       //if we're now complete, go to the next step or passage
       if (complete) gotoNextStep();
     });
   };
 
   const uncompletedSteps = async () => {
-    await setStepComplete(currentstep, false, getStepComplete(passage));
+    await setStepComplete(currentstep, false, psgCompleted);
     if (hasChecking && nextStep)
-      await setStepComplete(nextStep, false, getStepComplete(passage));
+      await setStepComplete(nextStep, false, psgCompleted);
     if (curRole === 'editor' && prevStep) setCurrentStep(prevStep || '');
   };
 
@@ -169,14 +169,14 @@ export function PassageDetailTranscribe({
         // only for vernacular
         const recordStep = parsedSteps.find((s) => s.tool === ToolSlug.Record);
         if (recordStep) {
-          await setStepComplete(recordStep.id, false, getStepComplete(passage));
+          await setStepComplete(recordStep.id, false, psgCompleted);
           setCurrentStep(recordStep.id);
           return;
         }
       }
     }
     if (curRole === 'editor' && prevStep) {
-      await setStepComplete(prevStep, false, getStepComplete(passage));
+      await setStepComplete(prevStep, false, psgCompleted);
       setCurrentStep(prevStep);
     }
   };
