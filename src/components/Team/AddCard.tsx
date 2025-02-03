@@ -22,7 +22,7 @@ import {
   ProjectType,
   initProjectState,
 } from './ProjectDialog';
-import { Language, ILanguage } from '../../control';
+import { Language, ILanguage, initLang } from '../../control';
 import Uploader from '../Uploader';
 import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
@@ -62,14 +62,6 @@ const StyledCardContent = styled(CardContent)<CardContentProps>(
     color: theme.palette.primary.contrastText,
   })
 );
-
-const initLang = {
-  bcp47: 'und',
-  languageName: '',
-  font: '',
-  rtl: false,
-  spellCheck: false,
-};
 
 interface IProps {
   team: TeamIdType;

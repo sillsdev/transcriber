@@ -22,7 +22,7 @@ import { Options } from '../../control';
 import { TeamContext } from '../../context/TeamContext';
 import SettingsIcon from '@mui/icons-material/Settings';
 import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
-import SelectVoice from '../../business/voice/SelectVoice';
+import SelectSponsor from '../../business/voice/SelectSponsor';
 import SelectAsrLanguage from '../../business/asr/SelectAsrLanguage';
 
 export enum FeatureSlug {
@@ -191,7 +191,7 @@ export function TeamSettings(props: IProps) {
         }
         bp={BigDialogBp.sm}
       >
-        <SelectVoice
+        <SelectSponsor
           team={team}
           refresh={handleRefresh}
           onOpen={() => setVoiceVisible(false)}

@@ -1,64 +1,98 @@
 import * as React from 'react';
-import { ActionRow, AltButton, GrowingSpacer, PriButton } from '../../control';
-import { Divider, Stack, TextField } from '@mui/material';
-import { ISharedStrings, Organization } from '../../model';
+import { ActionRow, AltButton, PriButton } from '../../control';
+import { Divider, Stack, Typography } from '@mui/material';
+import {
+  IntellectualPropertyD,
+  ISharedStrings,
+  MediaFileD,
+  Organization,
+} from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../../selector';
-import { IVoicePerm } from './PersonalizeVoicePermission';
-import { orgDefaultVoices, useOrgDefaults } from '../../crud';
+import {
+  findRecord,
+  orgDefaultVoices,
+  related,
+  useOrgDefaults,
+} from '../../crud';
+import SpeakerName from '../../components/SpeakerName';
+import { useGlobal } from '../../context/GlobalContext';
+import { useOrbitData } from '../../hoc/useOrbitData';
 
 interface ISelectVoice {
-  team?: Organization;
   refresh?: () => void;
   onOpen: () => void;
+  begin?: () => void;
 }
 
-export default function SelectVoice({ team, refresh, onOpen }: ISelectVoice) {
+export default function SelectSponsor({
+  refresh,
+  onOpen,
+  begin,
+}: ISelectVoice) {
   const [voice, setVoice] = React.useState<string>();
-  const [permState, setPermState] = React.useState<IVoicePerm>({});
+  const [org] = useGlobal('organization');
+  const [memory] = useGlobal('memory');
+  const ipRecs = useOrbitData<IntellectualPropertyD[]>('intellectualproperty');
   const { getDefault, setDefault } = useOrgDefaults();
   const t: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+
+  const team = React.useMemo(() => {
+    return findRecord(memory, 'organization', org) as Organization;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [org]);
 
   React.useEffect(() => {
     if (team) {
       const voices = getDefault(orgDefaultVoices, team);
       if (voices) {
         setVoice(voices?.voice);
-        setPermState(voices?.permission ?? {});
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [team]);
 
-  const handleSave = () => {
-    if (team) {
-      setDefault(orgDefaultVoices, { voice, permission: permState }, team);
-      refresh?.();
+  const statement = React.useMemo(() => {
+    const found = ipRecs.filter(
+      (r) =>
+        r.attributes.rightsHolder === voice &&
+        related(r, 'organization') === team.id
+    );
+    for (const ipRec of found) {
+      const mediaRec = findRecord(
+        memory,
+        'mediafile',
+        related(ipRec, 'releaseMediafile')
+      ) as MediaFileD;
+      if (mediaRec?.attributes?.transcription) {
+        return mediaRec.attributes.transcription;
+      }
     }
-    onOpen();
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [voice, team]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPermState((state) => ({
-      ...state,
-      [event.target.name]: event.target.value,
-    }));
+  const handleSetVoice = (voice: string) => {
+    setVoice(voice);
+    const settings = getDefault(orgDefaultVoices, team);
+    setDefault(orgDefaultVoices, { ...settings, voice }, team);
+    refresh?.();
   };
 
   return (
     <Stack sx={{ minWidth: 120, pt: 2 }} spacing={2}>
-      <TextField
-        name="sponsor"
-        label="Sponsor"
-        variant="outlined"
-        value={permState?.sponsor ?? 'SIL Global'}
-        onChange={handleChange}
+      <SpeakerName
+        name={voice ?? ''}
+        onChange={handleSetVoice}
+        team={team.id}
+        recordingRequired
       />
-      <Divider sx={{ pt: 2 }} />
+      <Typography>{statement}</Typography>
+      <Divider sx={{ m: 1 }} />
       <ActionRow>
-        <GrowingSpacer />
         <AltButton onClick={onOpen}>{t.cancel}</AltButton>
-        <PriButton onClick={handleSave}>{t.save}</PriButton>
+        <PriButton onClick={begin} disabled={!voice}>
+          {'Begin Conversion'}
+        </PriButton>
       </ActionRow>
     </Stack>
   );

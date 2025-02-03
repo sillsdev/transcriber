@@ -3888,13 +3888,13 @@
       </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
          <segment>
-            <source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
+            <source>Upload a speaker rights release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.intellectualPropertyTitle">
          <segment>
-            <source>Upload Intellectual Property Release</source>
+            <source>Upload Speaker Rights Release</source>
             <target/>
          </segment>
       </unit>

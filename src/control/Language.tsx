@@ -22,6 +22,14 @@ export interface ILanguage {
   info?: LangTag;
 }
 
+export const initLang: ILanguage = {
+  bcp47: 'und',
+  languageName: '',
+  font: '',
+  rtl: false,
+  spellCheck: false,
+};
+
 interface IProps extends ILanguage {
   onChange: (state: ILanguage) => void;
   filter?: (code: string) => boolean;

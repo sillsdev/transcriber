@@ -11,7 +11,6 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { ArtifactTypeSlug, findRecord, related } from '../crud';
 import { Typography } from '@mui/material';
 import { useOrbitData } from '../hoc/useOrbitData';
-import { IVoicePerm } from '../business/voice/PersonalizeVoicePermission';
 
 interface NameOptionType {
   inputValue?: string;
@@ -27,8 +26,6 @@ interface IProps {
   createProject?: (name: string) => Promise<string>;
   team?: string;
   recordingRequired?: boolean;
-  state?: IVoicePerm;
-  setState?: React.Dispatch<React.SetStateAction<IVoicePerm>>;
 }
 
 export function SpeakerName({
@@ -38,8 +35,6 @@ export function SpeakerName({
   createProject,
   team,
   recordingRequired,
-  state,
-  setState,
 }: IProps) {
   const ipRecs = useOrbitData<IntellectualProperty[]>('intellectualproperty');
   const [value, setValue] = React.useState<NameOptionType | null>({ name });
@@ -120,16 +115,16 @@ export function SpeakerName({
     const newSpeakers = new Array<NameOptionType>();
     const orgId = team || organization;
     ipRecs.forEach((r) => {
-      let reqRecording = !recordingRequired;
-      if (!reqRecording) {
+      let hasNeededRecording = !Boolean(recordingRequired);
+      if (!hasNeededRecording) {
         const mediaRec = findRecord(
           memory,
           'mediafile',
           related(r, 'releaseMediafile')
         ) as MediaFileD;
-        reqRecording = Boolean(mediaRec?.attributes?.transcription);
+        hasNeededRecording = Boolean(mediaRec?.attributes?.transcription);
       }
-      if (related(r, 'organization') === orgId && reqRecording) {
+      if (related(r, 'organization') === orgId && hasNeededRecording) {
         newSpeakers.push({ name: r.attributes.rightsHolder });
       }
     });
@@ -209,7 +204,7 @@ export function SpeakerName({
         <>
           <Typography>
             {recordingRequired
-              ? 'The recorded permission is used both as a voice sample to change the audio and as a license to use the voice sample in recordings.'
+              ? 'The recorded permission is used both as a voice sample to change the audio and as a license to use the voice sample in recordings. A suggested script for the recorded permission is given which can be personalized.'
               : t.releaseRights}
           </Typography>
           <ProvideRights
@@ -219,8 +214,6 @@ export function SpeakerName({
             createProject={createProject}
             team={team}
             recordingRequired={recordingRequired}
-            state={state ?? ({} as IVoicePerm)}
-            setState={setState}
           />
         </>
       </BigDialog>

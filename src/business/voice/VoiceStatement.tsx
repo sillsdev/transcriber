@@ -28,7 +28,7 @@ export const VoiceStatement = ({
 }: IProps) => {
   const [showPersonalize, setShowPersonalize] = React.useState<IVoicePerm>();
   const { permStatement } = useVoicePermission({
-    permissionState: { ...state, fullName: voice },
+    permissionState: state,
     team,
   });
 
@@ -37,7 +37,9 @@ export const VoiceStatement = ({
   };
 
   function handlePersonalize() {
-    setShowPersonalize(state);
+    const newState = { ...state, fullName: voice };
+    setState && setState(newState);
+    setShowPersonalize(newState);
   }
 
   useEffect(() => {
@@ -48,11 +50,8 @@ export const VoiceStatement = ({
   return (
     <Box>
       <Stack direction="column" spacing={1} sx={{ mx: 1 }}>
-        <Typography variant="body2" sx={{ py: 2 }} component={'div'}>
-          Record this permission statement if you agree:
-          <Typography sx={{ lineHeight: '1.2rem', pt: 1 }}>
-            {permStatement}
-          </Typography>
+        <Typography sx={{ lineHeight: '1.2rem', pt: 1 }}>
+          {permStatement}
         </Typography>
         <ActionRow>
           <IconButton onClick={handleCopy} title={'Copy to clipboard'}>
@@ -72,10 +71,7 @@ export const VoiceStatement = ({
         }}
         onSave={() => setShowPersonalize(undefined)}
       >
-        <PersonalizeVoicePermission
-          state={{ ...state, fullName: voice }}
-          setState={setState}
-        />
+        <PersonalizeVoicePermission state={state} setState={setState} />
       </BigDialog>
     </Box>
   );
