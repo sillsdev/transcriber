@@ -11,6 +11,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { vProjectSelector } from '../../../selector';
 import { IState, OptionType } from '../../../model';
 import BookSelect from '../../BookSelect';
+import { Akuo } from '../../../assets/brands';
 
 export const ProjectBook = (props: IProjectDialogState) => {
   const { state, setState, setBookErr } = props;
@@ -70,7 +71,7 @@ export const ProjectBook = (props: IProjectDialogState) => {
       {type !== 'scripture' && (
         <>
           <FormLabel sx={{ color: 'secondary.main' }}>
-            {t.generalBook}
+            {t.generalBook.replace('{0}', Akuo)}
           </FormLabel>
           {type === 'scripture' ? (
             <BookSelect
@@ -101,7 +102,7 @@ export const ProjectBook = (props: IProjectDialogState) => {
                     value="story"
                   />
                 }
-                label={t.generalStory}
+                label={t.generalStory.replace('{0}', Akuo)}
               />
             </>
           )}

@@ -332,7 +332,7 @@ export const FindResource = () => {
         }))
       );
     });
-    import('../../../assets/bible-resource.js').then((module) => {
+    import('../../../assets/bible-resource').then((module) => {
       setResources(module.default);
     });
     setTypeOpts(aiQueries.map((q) => q?.type.replace('-', ' ')).map(optVal));

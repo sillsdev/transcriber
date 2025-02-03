@@ -2048,8 +2048,8 @@
                <context context-type="sourcefile">findResource.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="findResource.findBibleBrain">
-            <source>Find: Bible Brain</source>
+         <trans-unit id="findResource.findBrandedContent">
+            <source>Find: {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">findResource.tsx</context>
@@ -3637,8 +3637,8 @@
                <context context-type="sourcefile">drawer.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="main.akuo">
-            <source>Access Akuo Site</source>
+         <trans-unit id="main.brandedSite">
+            <source>Access {0} Site</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">HelpMenu.tsx</context>
@@ -3882,13 +3882,6 @@
                <context context-type="sourcefile">drawer.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="main.openNotes">
-            <source>Access Translator's Notes</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">HelpMenu.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="main.openContent">
             <source>Access Open Content</source>
             <target/>
@@ -3947,13 +3940,6 @@
          </trans-unit>
          <trans-unit id="main.reportWhenOnline">
             <source>You must be online to use this menu item.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">HelpMenu.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="main.resources">
-            <source>Access UBS Resources</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">HelpMenu.tsx</context>
@@ -6502,21 +6488,21 @@
             </context-group>
          </trans-unit>
          <trans-unit id="publishLevel.bibleRequired">
-            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo or Obthelps.</source>
+            <source>You must have set up a Bible Id and Name in the Team Settings to publish to {0} or {1}.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="publishLevel.beta">
-            <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>
+            <source>Beta - visible on the {0} website when using the beta parameter (not available in the app)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="publishLevel.public">
-            <source>Public - visible to everyone using Akuo website or app</source>
+            <source>Public - visible to everyone using {0} website or app</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ConfirmPublishDialog.tsx</context>
@@ -8920,14 +8906,14 @@
          </trans-unit>
 
          <trans-unit id="vProject.generalBook">
-            <source>Akuo Book Designation</source>
+            <source>{0} Book Designation</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="vProject.generalStory">
-            <source>Show as Stories (not Extras) in Akuo</source>
+            <source>Show as Stories (not Extras) in {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>

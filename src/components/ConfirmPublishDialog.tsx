@@ -32,6 +32,7 @@ import { PublishLevelEnum, usePublishDestination } from '../crud';
 import ShowLink from '../control/ShowLink';
 import { PublishDestinationEnum } from '../crud';
 import { PassageTypeEnum } from '../model/passageType';
+import { Akuo, Aquifer, ObtHelps } from '../assets/brands';
 
 interface IProps {
   title: string;
@@ -170,7 +171,7 @@ function ConfirmPublishDialog(props: IProps) {
         <FormControlLabel
           value={PublishLevelEnum.Beta}
           control={<Radio />}
-          label={l.beta}
+          label={l.beta.replace('{0}', Akuo)}
           disabled={!hasBible}
         />
         <FormHelperText sx={{ textAlign: 'center' }}>
@@ -179,7 +180,7 @@ function ConfirmPublishDialog(props: IProps) {
         <FormControlLabel
           value={PublishLevelEnum.Public}
           control={<Radio />}
-          label={l.public}
+          label={l.public.replace('{0}', Akuo)}
           disabled={!hasBible}
         />
         {showNotPublished && (
@@ -206,7 +207,7 @@ function ConfirmPublishDialog(props: IProps) {
         <DialogContent id="alertJsx">
           {hasPublishing && !hasBible && (
             <Typography variant="h6" id="bible">
-              {l.bibleRequired}
+              {l.bibleRequired.replace('{0}', Akuo).replace('{1}', ObtHelps)}
             </Typography>
           )}
           {hasPublishing && (
@@ -221,11 +222,11 @@ function ConfirmPublishDialog(props: IProps) {
                     <Checkbox
                       checked={hasBible && akuoValue !== PublishLevelEnum.None}
                       onChange={handleAkuoChange}
-                      value="Akuo"
+                      value={Akuo}
                       disabled={!hasBible}
                     />
                   }
-                  label="Akuo"
+                  label={Akuo}
                 />
                 {akuoValue !== PublishLevelEnum.None &&
                   AkuoRadioGroup(false, hasBible)}
@@ -242,10 +243,10 @@ function ConfirmPublishDialog(props: IProps) {
                       onChange={handleCheckboxChange(
                         PublishDestinationEnum.Aquifer
                       )}
-                      value="Aquifer"
+                      value={Aquifer}
                     />
                   }
-                  label="Aquifer"
+                  label={Aquifer}
                 />
                 <FormControlLabel
                   sx={{ m: 1 }}
