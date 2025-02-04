@@ -51,6 +51,7 @@ export default function PersonalizeVoicePermission(props: IProps) {
   const [minorMsg, setMinorMsg] = React.useState('');
   const [genderMsg, setGenderMsg] = React.useState('');
   const [decorations, setDecorations] = React.useState<IDecorations>({});
+  const langEl = React.useRef<any>();
   const localOptions: IVoicePermOpts = {
     thisTeam: 'This team',
     anyTeam: 'Any team',
@@ -153,6 +154,21 @@ export default function PersonalizeVoicePermission(props: IProps) {
     setState && setState(newState);
   };
 
+  const handleExcludeClick = (e: any) => {
+    langEl.current.click();
+    e.stopPropagation();
+  };
+
+  const TAB = 9;
+  const SHIFT = 16;
+  const CTRL = 17;
+
+  const handleExcludeKey = (e: any) => {
+    if (langEl.current && e.keyCode && ![TAB, SHIFT, CTRL].includes(e.keyCode))
+      langEl.current.click();
+    e.stopPropagation();
+  };
+
   React.useEffect(() => {
     setDecorations({
       [localOptions[voicePermOpts[1]]]: (
@@ -175,17 +191,24 @@ export default function PersonalizeVoicePermission(props: IProps) {
             helperText={minorMsg}
             disabled={curState?.scope !== voicePermOpts[1]}
           />
-          <Language
-            {...(language ?? initLang)}
-            hideFont
-            hideSpelling
-            required={false}
-            onChange={handleLanguageChange}
+          <FormControlLabel
+            id="lang-control"
+            ref={langEl}
+            sx={{ display: 'none' }}
+            control={
+              <Language
+                {...(language ?? initLang)}
+                hideFont
+                hideSpelling
+                required={false}
+                onChange={handleLanguageChange}
+              />
+            }
+            label=""
           />
           <Autocomplete
             multiple
             id="excluded-languages"
-            disabled={(curState?.languages ?? '[]') === '[]'}
             options={JSON.parse(curState?.languages ?? '[]')}
             getOptionLabel={(option: ILanguage) =>
               `${option.languageName} (${option.bcp47})`
@@ -197,6 +220,8 @@ export default function PersonalizeVoicePermission(props: IProps) {
                 {...params}
                 variant="outlined"
                 label="Excluded languages"
+                onClick={handleExcludeClick}
+                onKeyDown={handleExcludeKey}
               />
             )}
           />
