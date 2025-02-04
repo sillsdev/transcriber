@@ -17,7 +17,7 @@ export const useMyNavigate = () => {
 
   function myNavigate(to: To, options?: NavigateOptions) {
     checkHome(to);
-    setGoTo({ to, options });
+    if (to !== goTo?.to) setGoTo({ to, options });
   }
   return myNavigate;
 };
