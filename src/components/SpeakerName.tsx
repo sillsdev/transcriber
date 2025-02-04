@@ -114,20 +114,23 @@ export function SpeakerName({
   React.useEffect(() => {
     const newSpeakers = new Array<NameOptionType>();
     const orgId = team || organization;
-    ipRecs.forEach((r) => {
-      let hasNeededRecording = !Boolean(recordingRequired);
-      if (!hasNeededRecording) {
+    const orgIp = ipRecs.filter((r) => related(r, 'organization') === orgId);
+    if (recordingRequired) {
+      orgIp.forEach((r) => {
         const mediaRec = findRecord(
           memory,
           'mediafile',
           related(r, 'releaseMediafile')
         ) as MediaFileD;
-        hasNeededRecording = Boolean(mediaRec?.attributes?.transcription);
-      }
-      if (related(r, 'organization') === orgId && hasNeededRecording) {
-        newSpeakers.push({ name: r.attributes.rightsHolder });
-      }
-    });
+        if (mediaRec?.attributes?.transcription) {
+          newSpeakers.push({ name: r.attributes.rightsHolder });
+        }
+      });
+    } else {
+      newSpeakers.push(
+        ...orgIp.map((r) => ({ name: r.attributes.rightsHolder }))
+      );
+    }
     setSpeakers(newSpeakers);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ipRecs, team, organization, recordingRequired]);

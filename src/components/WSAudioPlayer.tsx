@@ -10,7 +10,7 @@ import {
   SxProps,
   Badge,
 } from '@mui/material';
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import ForwardIcon from '@mui/icons-material/Refresh';
@@ -22,7 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import TimerIcon from '@mui/icons-material/AccessTime';
 import NextSegmentIcon from '@mui/icons-material/ArrowRightAlt';
 import UndoIcon from '@mui/icons-material/Undo';
-import { ISharedStrings, IWsAudioPlayerStrings, OrganizationD } from '../model';
+import { ISharedStrings, IWsAudioPlayerStrings } from '../model';
 import {
   FaHandScissors,
   FaAngleDoubleUp,
@@ -71,7 +71,6 @@ import VoiceConversionLogo from '../control/VoiceConversionLogo';
 import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
 import { useVoiceUrl } from '../crud/useVoiceUrl';
 import SelectVoice from '../business/voice/SelectVoice';
-import { useOrbitData } from '../hoc/useOrbitData';
 
 const VertDivider = (prop: DividerProps) => (
   <Divider orientation="vertical" flexItem sx={{ ml: '5px' }} {...prop} />
@@ -204,7 +203,6 @@ function WSAudioPlayer(props: IProps) {
   const timelineRef = useRef<any>();
   const [offline] = useGlobal('offline');
   const [org] = useGlobal('organization');
-  const organizations = useOrbitData<OrganizationD[]>('organization');
   const [features, setFeatures] = useState<IFeatures>();
   const [voiceVisible, setVoiceVisible] = useState(false);
   const [voice, setVoice] = useState('');
@@ -489,13 +487,16 @@ function WSAudioPlayer(props: IProps) {
     if (allowSpeed) speedKeys.forEach((k) => subscribe(k.key, k.cb));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowSpeed]);
+  const handleRefresh = () => {
+    setVoice(getOrgDefault(orgDefaultVoices));
+  };
   useEffect(() => {
     if (org) {
       setFeatures(getOrgDefault(orgDefaultFeatures));
-      setVoice(getOrgDefault(orgDefaultVoices, org)?.voice);
+      handleRefresh();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [org, organizations]);
+  }, [org]);
 
   const cleanupAutoStart = () => {
     if (autostartTimer.current) {
@@ -814,7 +815,7 @@ function WSAudioPlayer(props: IProps) {
   const handleNoiseRemoval = () => {
     applyAudioAi(AudioAiFn.noiseRemoval);
   };
-  const applyVoiceChange = (voice: string) => async () => {
+  const applyVoiceChange = async () => {
     if (!voice) return;
     const targetVoice = await voiceUrl(voice);
     if (targetVoice) {
@@ -825,7 +826,7 @@ function WSAudioPlayer(props: IProps) {
   };
   const handleVoiceChange = () => {
     if (Boolean(voice)) {
-      applyVoiceChange(voice)();
+      applyVoiceChange();
     } else {
       setVoiceVisible(true);
     }
@@ -835,6 +836,16 @@ function WSAudioPlayer(props: IProps) {
   };
 
   const onSplit = (split: IRegionChange) => {};
+
+  const voiceConvertTip = useMemo(
+    () =>
+      'Convert Voice {0}\u00A0\u00A0'.replace(
+        '{0}',
+        voice ? `\u2039 ${voice} \u203A` : ''
+      ),
+    [voice]
+  );
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Paper sx={{ p: 1, margin: 'auto' }}>
@@ -979,12 +990,7 @@ function WSAudioPlayer(props: IProps) {
                       <LightTooltip
                         id="voiceChangeTip"
                         title={
-                          <Badge badgeContent={'AI'}>
-                            {'Convert Voice {0}\u00A0\u00A0'.replace(
-                              '{0}',
-                              voice ? `\u2039 ${voice} \u203A` : ''
-                            )}
-                          </Badge>
+                          <Badge badgeContent={'AI'}>{voiceConvertTip}</Badge>
                         }
                       >
                         <span>
@@ -1378,7 +1384,11 @@ function WSAudioPlayer(props: IProps) {
               onOpen={handleCloseVoice}
               bp={BigDialogBp.sm}
             >
-              <SelectVoice onOpen={handleCloseVoice} begin={applyVoiceChange} />
+              <SelectVoice
+                onOpen={handleCloseVoice}
+                begin={applyVoiceChange}
+                refresh={handleRefresh}
+              />
             </BigDialog>
           </>
         </Box>

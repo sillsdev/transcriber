@@ -1,12 +1,7 @@
 import * as React from 'react';
 import { ActionRow, AltButton, PriButton } from '../../control';
 import { Divider, Stack, Typography } from '@mui/material';
-import {
-  IntellectualPropertyD,
-  ISharedStrings,
-  MediaFileD,
-  Organization,
-} from '../../model';
+import { IntellectualPropertyD, ISharedStrings, MediaFileD } from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../../selector';
 import {
@@ -20,39 +15,32 @@ import { useGlobal } from '../../context/GlobalContext';
 import { useOrbitData } from '../../hoc/useOrbitData';
 
 interface ISelectVoice {
-  refresh?: () => void;
   onOpen: () => void;
-  begin?: (voice: string) => () => Promise<void>;
+  begin?: () => void;
+  refresh?: () => void;
 }
 
-export default function SelectVoice({ refresh, onOpen, begin }: ISelectVoice) {
+export default function SelectVoice({ onOpen, begin, refresh }: ISelectVoice) {
   const [voice, setVoice] = React.useState<string>();
-  const [org] = useGlobal('organization');
   const [memory] = useGlobal('memory');
+  const [org] = useGlobal('organization');
   const ipRecs = useOrbitData<IntellectualPropertyD[]>('intellectualproperty');
-  const { getDefault, setDefault } = useOrgDefaults();
+  const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   const t: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
-  const team = React.useMemo(() => {
-    return findRecord(memory, 'organization', org) as Organization;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [org]);
-
   React.useEffect(() => {
-    if (team) {
-      const voices = getDefault(orgDefaultVoices, team);
-      if (voices) {
-        setVoice(voices?.voice);
-      }
+    const curVoice = getOrgDefault(orgDefaultVoices);
+    if (curVoice) {
+      setVoice(curVoice);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [team]);
+  }, []);
 
   const statement = React.useMemo(() => {
     const found = ipRecs.filter(
       (r) =>
-        r.attributes.rightsHolder === voice &&
-        related(r, 'organization') === team.id
+        r?.attributes?.rightsHolder === voice &&
+        related(r, 'organization') === org
     );
     for (const ipRec of found) {
       const mediaRec = findRecord(
@@ -65,12 +53,11 @@ export default function SelectVoice({ refresh, onOpen, begin }: ISelectVoice) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [voice, team]);
+  }, [voice, org]);
 
   const handleSetVoice = (voice: string) => {
     setVoice(voice);
-    const settings = getDefault(orgDefaultVoices, team);
-    setDefault(orgDefaultVoices, { ...settings, voice }, team);
+    setOrgDefault(orgDefaultVoices, voice);
     refresh?.();
   };
 
@@ -79,14 +66,13 @@ export default function SelectVoice({ refresh, onOpen, begin }: ISelectVoice) {
       <SpeakerName
         name={voice ?? ''}
         onChange={handleSetVoice}
-        team={team.id}
         recordingRequired
       />
       <Typography>{statement}</Typography>
       <Divider sx={{ m: 1 }} />
       <ActionRow>
         <AltButton onClick={onOpen}>{t.cancel}</AltButton>
-        <PriButton onClick={begin?.(voice as string)} disabled={!voice}>
+        <PriButton onClick={begin} disabled={!voice}>
           {'Begin Conversion'}
         </PriButton>
       </ActionRow>
