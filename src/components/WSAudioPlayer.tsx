@@ -10,7 +10,7 @@ import {
   SxProps,
   Badge,
 } from '@mui/material';
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import ForwardIcon from '@mui/icons-material/Refresh';
@@ -487,10 +487,13 @@ function WSAudioPlayer(props: IProps) {
     if (allowSpeed) speedKeys.forEach((k) => subscribe(k.key, k.cb));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowSpeed]);
+  const handleRefresh = () => {
+    setVoice(getOrgDefault(orgDefaultVoices));
+  };
   useEffect(() => {
     if (org) {
       setFeatures(getOrgDefault(orgDefaultFeatures));
-      setVoice(getOrgDefault(orgDefaultVoices, org)?.voice);
+      handleRefresh();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
@@ -833,6 +836,16 @@ function WSAudioPlayer(props: IProps) {
   };
 
   const onSplit = (split: IRegionChange) => {};
+
+  const voiceConvertTip = useMemo(
+    () =>
+      'Convert Voice {0}\u00A0\u00A0'.replace(
+        '{0}',
+        voice ? `\u2039 ${voice} \u203A` : ''
+      ),
+    [voice]
+  );
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Paper sx={{ p: 1, margin: 'auto' }}>
@@ -977,12 +990,7 @@ function WSAudioPlayer(props: IProps) {
                       <LightTooltip
                         id="voiceChangeTip"
                         title={
-                          <Badge badgeContent={'AI'}>
-                            {'Convert Voice {0}'.replace(
-                              '{0}',
-                              `\u2039 ${voice} \u203A\u00A0\u00A0`
-                            )}
-                          </Badge>
+                          <Badge badgeContent={'AI'}>{voiceConvertTip}</Badge>
                         }
                       >
                         <span>
@@ -1376,7 +1384,11 @@ function WSAudioPlayer(props: IProps) {
               onOpen={handleCloseVoice}
               bp={BigDialogBp.sm}
             >
-              <SelectVoice onOpen={handleCloseVoice} begin={applyVoiceChange} />
+              <SelectVoice
+                onOpen={handleCloseVoice}
+                begin={applyVoiceChange}
+                refresh={handleRefresh}
+              />
             </BigDialog>
           </>
         </Box>
