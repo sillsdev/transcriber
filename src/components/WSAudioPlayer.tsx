@@ -22,7 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import TimerIcon from '@mui/icons-material/AccessTime';
 import NextSegmentIcon from '@mui/icons-material/ArrowRightAlt';
 import UndoIcon from '@mui/icons-material/Undo';
-import { ISharedStrings, IWsAudioPlayerStrings } from '../model';
+import { ISharedStrings, IWsAudioPlayerStrings, OrganizationD } from '../model';
 import {
   FaHandScissors,
   FaAngleDoubleUp,
@@ -71,6 +71,7 @@ import VoiceConversionLogo from '../control/VoiceConversionLogo';
 import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
 import { useVoiceUrl } from '../crud/useVoiceUrl';
 import SelectVoice from '../business/voice/SelectVoice';
+import { useOrbitData } from '../hoc/useOrbitData';
 
 const VertDivider = (prop: DividerProps) => (
   <Divider orientation="vertical" flexItem sx={{ ml: '5px' }} {...prop} />
@@ -203,6 +204,7 @@ function WSAudioPlayer(props: IProps) {
   const timelineRef = useRef<any>();
   const [offline] = useGlobal('offline');
   const [org] = useGlobal('organization');
+  const organizations = useOrbitData<OrganizationD[]>('organization');
   const [features, setFeatures] = useState<IFeatures>();
   const [voiceVisible, setVoiceVisible] = useState(false);
   const [voice, setVoice] = useState('');
@@ -493,7 +495,7 @@ function WSAudioPlayer(props: IProps) {
       setVoice(getOrgDefault(orgDefaultVoices, org)?.voice);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [org]);
+  }, [org, organizations]);
 
   const cleanupAutoStart = () => {
     if (autostartTimer.current) {
@@ -812,7 +814,7 @@ function WSAudioPlayer(props: IProps) {
   const handleNoiseRemoval = () => {
     applyAudioAi(AudioAiFn.noiseRemoval);
   };
-  const applyVoiceChange = async () => {
+  const applyVoiceChange = (voice: string) => async () => {
     if (!voice) return;
     const targetVoice = await voiceUrl(voice);
     if (targetVoice) {
@@ -823,7 +825,7 @@ function WSAudioPlayer(props: IProps) {
   };
   const handleVoiceChange = () => {
     if (Boolean(voice)) {
-      applyVoiceChange();
+      applyVoiceChange(voice)();
     } else {
       setVoiceVisible(true);
     }
@@ -978,9 +980,9 @@ function WSAudioPlayer(props: IProps) {
                         id="voiceChangeTip"
                         title={
                           <Badge badgeContent={'AI'}>
-                            {'Convert Voice {0}'.replace(
+                            {'Convert Voice {0}\u00A0\u00A0'.replace(
                               '{0}',
-                              `\u2039 ${voice} \u203A\u00A0\u00A0`
+                              voice ? `\u2039 ${voice} \u203A` : ''
                             )}
                           </Badge>
                         }

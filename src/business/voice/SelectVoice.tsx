@@ -22,14 +22,10 @@ import { useOrbitData } from '../../hoc/useOrbitData';
 interface ISelectVoice {
   refresh?: () => void;
   onOpen: () => void;
-  begin?: () => void;
+  begin?: (voice: string) => () => Promise<void>;
 }
 
-export default function SelectSponsor({
-  refresh,
-  onOpen,
-  begin,
-}: ISelectVoice) {
+export default function SelectVoice({ refresh, onOpen, begin }: ISelectVoice) {
   const [voice, setVoice] = React.useState<string>();
   const [org] = useGlobal('organization');
   const [memory] = useGlobal('memory');
@@ -90,7 +86,7 @@ export default function SelectSponsor({
       <Divider sx={{ m: 1 }} />
       <ActionRow>
         <AltButton onClick={onOpen}>{t.cancel}</AltButton>
-        <PriButton onClick={begin} disabled={!voice}>
+        <PriButton onClick={begin?.(voice as string)} disabled={!voice}>
           {'Begin Conversion'}
         </PriButton>
       </ActionRow>
