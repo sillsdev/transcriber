@@ -2,9 +2,7 @@ import React from 'react';
 import { IAsrState } from '../business/asr/AsrAlphabet';
 import { OrganizationD, OrgWorkflowStepD } from '../model';
 import { orgDefaultAsr, useOrgDefaults } from './useOrgDefaults';
-import { useTeamUpdate } from './useTeamUpdate';
 import { useGlobal } from '../context/GlobalContext';
-import { findRecord } from './tryFindRecord';
 import { PassageDetailContext } from '../context/PassageDetailContext';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { JSONParse } from '../utils';
@@ -25,33 +23,26 @@ const asrDefault: IAsrState = {
   selectRoman: false,
 };
 
-export function useGetAsrSettings(teamIn?: OrganizationD) {
+export function useGetAsrSettings(team?: OrganizationD) {
   const orgSteps = useOrbitData<OrgWorkflowStepD[]>('orgworkflowstep');
-  const [team, setTeam] = React.useState<OrganizationD>();
   const [memory] = useGlobal('memory');
-  const [org] = useGlobal('organization');
   const [user] = useGlobal('user');
-  const { getDefault, setDefault } = useOrgDefaults();
-  const teamUpdate = useTeamUpdate();
+  const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   const ctx = React.useContext(PassageDetailContext);
   const currentstep = ctx?.state?.currentstep;
-  const [artId, setArtId] = React.useState('');
-  const [artState, setArtState] = React.useState<IAsrState>();
 
-  React.useEffect(() => {
-    if (teamIn ?? org) {
-      setTeam(
-        findRecord(memory, 'organization', teamIn?.id ?? org) as OrganizationD
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [org]);
-
-  React.useEffect(() => {
+  const getArtId = () => {
     const step = orgSteps.find((s) => s.id === currentstep);
     const json = JSONParse(step?.attributes?.tool ?? '{}');
     const settings = JSONParse(json?.settings ?? '{}');
-    setArtId(settings?.artifactTypeId ?? '');
+    return settings?.artifactTypeId ?? '';
+  };
+
+  const getWorkflowAsrState = () => {
+    const step = orgSteps.find((s) => s.id === currentstep);
+    const json = JSONParse(step?.attributes?.tool ?? '{}');
+    const settings = JSONParse(json?.settings ?? '{}');
+    if (!settings?.artifactTypeId || !settings) return asrDefault;
     const [languageName, bcp47] = settings?.language?.split('|') ?? ['', 'und'];
     const font = settings?.font ?? asrDefault.language.font;
     const rtl = settings?.rtl ?? asrDefault.language.rtl;
@@ -62,53 +53,38 @@ export function useGetAsrSettings(teamIn?: OrganizationD) {
       mmsIso,
       language: { ...asrDefault.language, languageName, bcp47, font, rtl },
     };
-    setArtState(state);
-  }, [orgSteps, currentstep]);
+    return state;
+  };
 
-  const getAsrSettings = React.useCallback(() => {
-    if (!artId) {
-      return (team ? getDefault(orgDefaultAsr, team) : {}) as IAsrState;
+  const getAsrSettings = () => {
+    if (!getArtId()) {
+      return getOrgDefault(orgDefaultAsr, team?.id) as IAsrState;
     }
-    return artState;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [team, artId, artState]);
+    return getWorkflowAsrState();
+  };
 
-  const setAsrSettings = React.useCallback(
-    (asrState: IAsrState) => {
-      if (!artId) {
-        if (team) setDefault(orgDefaultAsr, asrState, team);
-      } else {
-        setArtState(asrState);
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [team]
-  );
-
-  const saveAsrSettings = React.useCallback(() => {
-    if (!artId) {
-      if (team) teamUpdate(team);
+  const saveAsrSettings = (asrState: IAsrState) => {
+    if (!getArtId()) {
+      setOrgDefault(orgDefaultAsr, asrState, team?.id);
     } else {
       const step = orgSteps.find((s) => s.id === currentstep);
       if (!step) return;
       const json = JSONParse(step?.attributes?.tool ?? '{}');
       const settings = JSONParse(json?.settings ?? '{}');
       // settings.artifactTypeId = artId;
-      settings.language = `${artState?.language.languageName}|${artState?.language.bcp47}`;
-      settings.font = artState?.language.font;
-      settings.rtl = artState?.language.rtl;
-      // if (artState?.target === AsrTarget.alphabet) {
-      //   settings.mmsIso = artState.mmsIso;
-      //   settings.dialect = artState.dialect;
-      //   settings.selectRoman = artState.selectRoman;
+      settings.language = `${asrState?.language.languageName}|${asrState?.language.bcp47}`;
+      settings.font = asrState?.language.font;
+      settings.rtl = asrState?.language.rtl;
+      // if (asrState?.target === AsrTarget.alphabet) {
+      //   settings.mmsIso = asrState.mmsIso;
+      //   settings.dialect = asrState.dialect;
+      //   settings.selectRoman = asrState.selectRoman;
       // }
       json.settings = JSON.stringify(settings);
       step.attributes.tool = JSON.stringify(json);
       memory.update((t) => UpdateRecord(t, step, user));
     }
-    if (team) teamUpdate(team);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [team, teamUpdate, artId, artState, currentstep, orgSteps, user]);
+  };
 
-  return { getAsrSettings, setAsrSettings, saveAsrSettings };
+  return { getAsrSettings, saveAsrSettings };
 }

@@ -302,12 +302,14 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
 
   const asrTip = useMemo(() => {
     const asr = getAsrSettings();
-    return 'Recognize Speech {0}'.replace(
+    return 'Recognize Speech {0}\u00A0\u00A0'.replace(
       '{0}',
-      asr ? `\u2039 ${asr?.language?.languageName} \u203A\u00A0\u00A0` : ''
+      Boolean(asr?.language?.languageName?.trim())
+        ? `\u2039 ${asr?.language?.languageName} \u203A`
+        : ''
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [teams, getAsrSettings]);
+  }, [teams]);
 
   const handleTranscribe = () => {
     const asr = getAsrSettings();
