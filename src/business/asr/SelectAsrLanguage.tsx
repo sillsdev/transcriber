@@ -46,8 +46,7 @@ export default function SelectAsrLanguage({
   const [asrState, setAsrState] = React.useState<IAsrState>();
   const mmsLangs = useMmsLangs();
   const t: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const { getAsrSettings, setAsrSettings, saveAsrSettings } =
-    useGetAsrSettings(team);
+  const { getAsrSettings, saveAsrSettings } = useGetAsrSettings(team);
 
   const handlePhonetic = () => {
     if (asrState)
@@ -60,14 +59,13 @@ export default function SelectAsrLanguage({
       });
   };
 
-  const handleSave = React.useCallback(() => {
+  const handleSave = () => {
     if (asrState) {
-      setAsrSettings(asrState);
-      saveAsrSettings();
+      saveAsrSettings(asrState);
       refresh?.();
     }
     onOpen();
-  }, [asrState, setAsrSettings, saveAsrSettings, refresh, onOpen]);
+  };
 
   React.useEffect(() => {
     const asr = getAsrSettings();
@@ -85,7 +83,7 @@ export default function SelectAsrLanguage({
       selectRoman: asr?.selectRoman ?? false,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getAsrSettings]);
+  }, []);
 
   return (
     <StyledBox sx={{ minWidth: 120 }}>
