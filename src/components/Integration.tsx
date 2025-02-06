@@ -82,6 +82,8 @@ import {
   projDefExportNumbers,
   useProjectDefaults,
 } from '../crud/useProjectDefaults';
+import { Paratext } from '../assets/brands';
+import { addPt } from '../utils/addPt';
 
 const panelProps = { flexDirection: 'column' } as SxProps;
 const textFieldProps = { mx: 1, width: '600px' } as SxProps;
@@ -445,15 +447,16 @@ export function IntegrationPanel(props: IProps) {
   };
 
   const getProjectLabel = (): string => {
-    if (local) return t.selectProject;
+    const selectMsg = addPt(t.selectProject);
+    if (local) return selectMsg;
     return connected
       ? paratext_projectsStatus && paratext_projectsStatus.complete
         ? !paratext_projectsStatus.errStatus
           ? paratext_projects.length > 0
-            ? t.selectProject
+            ? selectMsg
             : formatWithLanguage(t.noProject)
           : (translateParatextError(paratext_projectsStatus, ts) as string)
-        : t.projectsPending
+        : addPt(t.projectsPending)
       : t.offline;
   };
   const findConnectedProject = () => {
@@ -505,7 +508,7 @@ export function IntegrationPanel(props: IProps) {
   const formatWithLanguage = (replLang: string): string => {
     let proj = getProject();
     let language = proj && proj.attributes ? proj.attributes.languageName : '';
-    return replLang.replace('{lang0}', language || '');
+    return replLang.replace('{lang0}', language || '').replace('{0}', Paratext);
   };
 
   const isFirstPassage = useMemo(() => {
@@ -652,12 +655,17 @@ export function IntegrationPanel(props: IProps) {
             };
           });
           getParatextDataPath().then((ptPath) => {
-            getLocalProjects(ptPath, t.projectsPending, projIds, langTag);
+            getLocalProjects(
+              ptPath,
+              addPt(t.projectsPending),
+              projIds,
+              langTag
+            );
           });
         } else {
           getProjects(
             accessToken || '',
-            t.projectsPending,
+            addPt(t.projectsPending),
             errorReporter,
             langTag
           );
@@ -742,12 +750,12 @@ export function IntegrationPanel(props: IProps) {
       <Accordion id="int-online" defaultExpanded={!local} disabled={local}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls={t.paratext}
-          id={t.paratext}
+          aria-controls={Paratext}
+          id={Paratext}
         >
           <StyledHeading>
             <ParatextLogo />
-            {'\u00A0' + t.paratext}
+            {'\u00A0' + Paratext}
           </StyledHeading>
         </AccordionSummary>
         <AccordionDetails sx={panelProps}>
@@ -839,7 +847,7 @@ export function IntegrationPanel(props: IProps) {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={t.questionAccount}
+                primary={addPt(t.questionAccount)}
                 secondary={
                   hasParatext
                     ? t.yes + ': ' + paratext_username
@@ -859,7 +867,7 @@ export function IntegrationPanel(props: IProps) {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={t.questionPermission}
+                primary={addPt(t.questionPermission)}
                 secondary={
                   hasPermission
                     ? t.yes + ' :' + ptPermission
@@ -922,12 +930,12 @@ export function IntegrationPanel(props: IProps) {
       <Accordion id="int-offln" defaultExpanded={local} disabled={!local}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls={t.paratextLocal}
-          id={t.paratextLocal}
+          aria-controls={addPt(t.paratextLocal)}
+          id={addPt(t.paratextLocal)}
         >
           <StyledHeading>
             <ParatextLogo />
-            {'\u00A0' + t.paratextLocal}
+            {'\u00A0' + addPt(t.paratextLocal)}
           </StyledHeading>
         </AccordionSummary>
         <AccordionDetails sx={panelProps}>
@@ -955,7 +963,7 @@ export function IntegrationPanel(props: IProps) {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={t.questionInstalled}
+                primary={addPt(t.questionInstalled)}
                 secondary={ptPath ? t.yes : t.no}
               />
             </ListItem>

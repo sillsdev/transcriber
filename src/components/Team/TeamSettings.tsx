@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { DialogMode, Organization, OrganizationD } from '../../model';
+import {
+  DialogMode,
+  ISharedStrings,
+  Organization,
+  OrganizationD,
+} from '../../model';
 import {
   Accordion,
   AccordionSummary,
@@ -24,6 +29,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
 import SelectSponsor from '../../business/voice/SelectSponsor';
 import SelectAsrLanguage from '../../business/asr/SelectAsrLanguage';
+import { shallowEqual, useSelector } from 'react-redux';
+import { sharedSelector } from '../../selector';
 
 export enum FeatureSlug {
   NoNoise = 'noNoise',
@@ -63,11 +70,11 @@ interface IProps {
 export function TeamSettings(props: IProps) {
   const { mode, team, values, setValue } = props;
   const ctx = React.useContext(TeamContext);
-  // const { getDefault, setDefault } = useOrgDefaults();
   const [voiceVisible, setVoiceVisible] = useState(false);
   const [asrLangVisible, setAsrLangVisible] = useState(false);
   const { cardStrings } = ctx.state;
   const t = cardStrings;
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const workflowOptions = [
     t.workflowProgressionPassage,
     t.workflowProgressionStep,
@@ -119,7 +126,7 @@ export function TeamSettings(props: IProps) {
               sx={{ border: '1px solid grey', mr: 1, px: 2 }}
             >
               <FormLabel sx={{ color: 'secondary.main' }}>
-                {'Experimental Features'}
+                {t.experimentalFeatures}
               </FormLabel>
               <Stack direction="row" spacing={1}>
                 <FormControlLabel
@@ -129,10 +136,9 @@ export function TeamSettings(props: IProps) {
                       onChange={handleFeatures(FeatureSlug.NoNoise)}
                     />
                   }
-                  label={<Badge badgeContent={'AI'}>Reduce Noise</Badge>}
+                  label={<Badge badgeContent={ts.ai}>{t.reduceNoise}</Badge>}
                 />
               </Stack>
-
               <Stack direction="row" spacing={1}>
                 <FormControlLabel
                   control={
@@ -143,7 +149,7 @@ export function TeamSettings(props: IProps) {
                       onChange={handleFeatures(FeatureSlug.DeltaVoice)}
                     />
                   }
-                  label={<Badge badgeContent={'AI'}>Convert Voice</Badge>}
+                  label={<Badge badgeContent={ts.ai}>{t.convertVoice}</Badge>}
                 />
                 {mode !== DialogMode.add && (
                   <IconButton
@@ -164,7 +170,7 @@ export function TeamSettings(props: IProps) {
                       onChange={handleFeatures(FeatureSlug.AiTranscribe)}
                     />
                   }
-                  label={<Badge badgeContent={'AI'}>Recognize Speech</Badge>}
+                  label={<Badge badgeContent={ts.ai}>t.recognizeSpeech</Badge>}
                 />
                 {mode !== DialogMode.add && (
                   <IconButton
@@ -180,15 +186,10 @@ export function TeamSettings(props: IProps) {
         </Details>
       </Accordion>
       <BigDialog
-        title={'Convert Voice Settings'}
+        title={t.convertVoiceSettings}
         isOpen={voiceVisible}
         onOpen={() => setVoiceVisible(false)}
-        description={
-          <Typography>
-            Enter the name of the organization that will hold the rights for
-            recordings of the converted voices.
-          </Typography>
-        }
+        description={<Typography>{t.convertPrompt}</Typography>}
         bp={BigDialogBp.sm}
       >
         <SelectSponsor
@@ -198,11 +199,10 @@ export function TeamSettings(props: IProps) {
         />
       </BigDialog>
       <BigDialog
-        title="Recognize Speech Settings"
+        title={t.recognizeSpeechSettings}
         description={
           <Typography variant="body2" sx={{ maxWidth: 500 }}>
-            Choose the language to recognize. If the language is not available,
-            choose a closely related language with a similar writing system.
+            {t.recognizePrompt}
           </Typography>
         }
         isOpen={asrLangVisible}

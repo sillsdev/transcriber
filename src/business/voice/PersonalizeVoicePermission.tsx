@@ -10,11 +10,11 @@ import {
   Typography,
 } from '@mui/material';
 import { ILanguage, Language, initLang, Options } from '../../control';
+import { shallowEqual, useSelector } from 'react-redux';
+import { voiceSelector } from '../../selector';
+import { IVoiceStrings } from '../../model';
 
-export const voicePermOpts: string[] = ['thisTeam', 'anyTeam'];
-interface IVoicePermOpts {
-  [key: string]: string;
-}
+export const voicePermOpts: string[] = ['thisTeam', 'allTeams'];
 
 const StyledStack = styled(Stack)<StackProps>(({ theme }) => ({
   '& * > .MuiBox-root': {
@@ -52,18 +52,12 @@ export default function PersonalizeVoicePermission(props: IProps) {
   const [genderMsg, setGenderMsg] = React.useState('');
   const [decorations, setDecorations] = React.useState<IDecorations>({});
   const langEl = React.useRef<any>();
-  const localOptions: IVoicePermOpts = {
-    thisTeam: 'This team',
-    anyTeam: 'Any team',
-  };
+  const t: IVoiceStrings = useSelector(voiceSelector, shallowEqual);
+  const localOptions = voicePermOpts.map((option) => t.getString(option));
 
   const handleChangeGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     const valid = /^[a-zA-Z]{0,15}$/.test(event.target.value);
-    if (!valid) {
-      setGenderMsg('Gender must be a single word.');
-    } else {
-      setGenderMsg('');
-    }
+    setGenderMsg(valid ? '' : t.genderOneWord);
     const updateTarget = (state: IVoicePerm) => ({
       ...state,
       [event.target.name]: event.target.value,
@@ -75,13 +69,11 @@ export default function PersonalizeVoicePermission(props: IProps) {
   const handleChangeAge = (event: React.ChangeEvent<HTMLInputElement>) => {
     const valid = /^[0-9]*$/.test(event.target.value);
     if (!valid) {
-      setMinorMsg('Age must be a number.');
+      setMinorMsg(t.ageAsNumber);
     } else {
       const newValue = parseInt(event.target.value);
       if (newValue < 18) {
-        setMinorMsg(
-          'You must be 18 years or older to give consent to use your voice.'
-        );
+        setMinorMsg(t.age18);
       } else {
         setMinorMsg('');
       }
@@ -171,11 +163,11 @@ export default function PersonalizeVoicePermission(props: IProps) {
 
   React.useEffect(() => {
     setDecorations({
-      [localOptions[voicePermOpts[1]]]: (
+      [t.allTeams]: (
         <Stack spacing={1} sx={{ p: 1 }}>
           <TextField
             name="gender"
-            label="Gender"
+            label={t.gender}
             variant="outlined"
             value={curState?.gender ?? ''}
             onChange={handleChangeGender}
@@ -184,7 +176,7 @@ export default function PersonalizeVoicePermission(props: IProps) {
           />
           <TextField
             name="age"
-            label="Age"
+            label={t.age}
             variant="outlined"
             value={curState?.age ?? ''}
             onChange={handleChangeAge}
@@ -219,7 +211,7 @@ export default function PersonalizeVoicePermission(props: IProps) {
               <TextField
                 {...params}
                 variant="outlined"
-                label="Excluded languages"
+                label={t.excludedLanguages}
                 onClick={handleExcludeClick}
                 onKeyDown={handleExcludeKey}
               />
@@ -233,21 +225,21 @@ export default function PersonalizeVoicePermission(props: IProps) {
 
   return (
     <StyledStack spacing={1} sx={{ py: 1 }}>
-      <Typography variant="h6">{`Options for ${
-        curState?.fullName ?? 'your'
-      } voice:`}</Typography>
+      <Typography variant="h6">
+        {t.voiceOptions.replace('{0}', curState?.fullName ?? 'your')}
+      </Typography>
       {!excludeName && (
         <FormControlLabel
           control={
             <Checkbox checked={excludeName} onChange={handleExcludeName} />
           }
-          label={'Exclude name?'}
+          label={t.excludeName}
         />
       )}
       <Options
-        label={'Scope of use'}
-        options={voicePermOpts.map((option) => localOptions[option])}
-        defaultValue={localOptions[curState?.scope ?? voicePermOpts[0]]}
+        label={t.scope}
+        options={localOptions}
+        defaultValue={t.getString(curState?.scope ?? voicePermOpts[0])}
         onChange={handleScope}
         decorations={decorations}
       />
@@ -259,7 +251,7 @@ export default function PersonalizeVoicePermission(props: IProps) {
             onClick={handleCheck}
           />
         }
-        label="Work for hire?"
+        label={t.forHire}
       />
     </StyledStack>
   );

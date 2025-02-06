@@ -337,7 +337,7 @@ export function TranscriptionTab(props: IProps) {
           showMessage(t.availableOnClipboard);
         })
         .catch((err) => {
-          showMessage(t.cantCopy);
+          showMessage(ts.cantCopy);
         });
     else
       showMessage(t.noData.replace('{0}', localizedArtifactType(artifactType)));
@@ -528,7 +528,7 @@ export function TranscriptionTab(props: IProps) {
                       bookData={bookData}
                       flat={flat}
                       sharedResource={sr}
-                      font={'0.8rem'}
+                      fontSize={'0.8rem'}
                     />
                   ),
                   state: state,

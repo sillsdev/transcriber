@@ -95,7 +95,12 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
             ref = sr?.attributes.title ?? p.attributes?.reference;
           }
           reference = (
-            <RefRender value={ref} flat={false} pt={psgType} font={'0.8rem'} />
+            <RefRender
+              value={ref}
+              flat={false}
+              pt={psgType}
+              fontSize={'0.8rem'}
+            />
           );
           if (marks.current.findIndex((m) => m.label === reference) > -1)
             reference = (
@@ -103,7 +108,7 @@ export const PassageDetailChooser = ({ width, sx }: IProps) => {
                 value={ref + '#' + p.attributes?.sequencenum.toString()}
                 flat={false}
                 pt={psgType}
-                font={'0.8rem'}
+                fontSize={'0.8rem'}
               />
             );
           marks.current.push({

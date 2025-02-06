@@ -7,6 +7,7 @@ import { TokenContext } from '../context/TokenProvider';
 import { profileSelector } from '../selector';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { UpdateRecord } from '../model/baseModel';
+import { addPt } from './addPt';
 
 export const useCanPublish = () => {
   const [canPublish, setCanPublish] = useState<boolean | undefined>();
@@ -45,7 +46,11 @@ export const useCanPublish = () => {
         !paratext_canPublishStatus
       ) {
         askingRef.current = true; //so we only call it once
-        getCanPublish(accessToken || '', errorReporter, t.checkingParatext);
+        getCanPublish(
+          accessToken || '',
+          errorReporter,
+          addPt(t.checkingParatext)
+        );
       }
       if (paratext_canPublishStatus) {
         if (paratext_canPublishStatus.errStatus) {

@@ -184,7 +184,7 @@ export default function AsrProgress({
     <Box sx={{ width: '100%' }}>
       <LinearProgress />
       <ActionRow>
-        <AltButton onClick={onClose}>Cancel</AltButton>
+        <AltButton onClick={onClose}>{ts.cancel}</AltButton>
       </ActionRow>
     </Box>
   );

@@ -10,6 +10,7 @@ import ImportTab from '../components/ImportTab';
 import { useProjectPlans, usePlan } from '../crud';
 import { AltButton } from '.';
 import { PlanContext } from '../context/PlanContext';
+import { addPt } from '../utils/addPt';
 
 interface IStateProps {
   t: IProjButtonsStrings;
@@ -85,11 +86,11 @@ export const ProjButtons = (props: IProps) => {
         <AltButton
           id="projButtonInt"
           key="integrations"
-          aria-label={t.integrations}
+          aria-label={addPt(t.integrations)}
           disabled={noIntegrate}
           onClick={handleIntegrations}
         >
-          {t.integrations}
+          {addPt(t.integrations)}
         </AltButton>
       )}
       <BigDialog

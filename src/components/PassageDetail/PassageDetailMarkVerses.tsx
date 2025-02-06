@@ -481,7 +481,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
           showMessage(tt.availableOnClipboard);
         })
         .catch((err) => {
-          showMessage(tt.cantCopy);
+          showMessage(ts.cantCopy);
         });
     else showMessage(tt.noData.replace('{0}', t.markVerses));
   };
@@ -584,7 +584,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
           onClick={handleCopy}
           disabled={numSegments === 0}
         >
-          {t.copyToClipboard}
+          {ts.clipboardCopy}
         </AltButton>
         <GrowingSpacer />
         <PriButton

@@ -19,6 +19,7 @@ import { useOrganizedBy } from '../../crud';
 import { IMatchData } from './makeRefMap';
 import { templateSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import { addPt } from '../../utils/addPt';
 
 interface IstrMap {
   [key: string]: string;
@@ -38,7 +39,7 @@ const InfoDialog = (props: InfoDialogProps) => {
   const t: ITemplateStrings = useSelector(templateSelector, shallowEqual);
 
   const pattern: IstrMap = {
-    BOOK: t.book,
+    BOOK: addPt(t.book),
     BOOKNAME: t.bookname,
     SECT: organizedBy,
     PASS: t.passage.replace('{0}', organizedBy),

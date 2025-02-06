@@ -6,6 +6,7 @@ import { IRegionParams, parseRegions } from '../../crud/useWavesurferRegions';
 import WSAudioPlayer from '../WSAudioPlayer';
 import { useSelector, shallowEqual } from 'react-redux';
 import {
+  ISharedStrings,
   IWsAudioPlayerStrings,
   MediaFile,
   MediaFileD,
@@ -13,7 +14,7 @@ import {
   OrgWorkflowStepD,
 } from '../../model';
 import { UpdateRecord } from '../../model/baseModel';
-import { playerSelector } from '../../selector';
+import { playerSelector, sharedSelector } from '../../selector';
 import { NamedRegions, updateSegments } from '../../utils/namedSegments';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import ViewIcon from '@mui/icons-material/RemoveRedEye';
@@ -101,6 +102,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     saveCompleted,
   } = useContext(UnsavedContext).state;
   const t: IWsAudioPlayerStrings = useSelector(playerSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const toolId = 'ArtifactSegments';
   const [requestPlay, setRequestPlay] = useState<RequestPlay>({
     play: undefined,
@@ -302,7 +304,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
 
   const asrTip = useMemo(() => {
     const asr = getAsrSettings();
-    return 'Recognize Speech {0}\u00A0\u00A0'.replace(
+    return (t.recognizeSpeech + '\u00A0\u00A0').replace(
       '{0}',
       Boolean(asr?.language?.languageName?.trim())
         ? `\u2039 ${asr?.language?.languageName} \u203A`
@@ -387,7 +389,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
               tool === ToolSlug.Transcribe &&
               role && (
                 <LightTooltip
-                  title={<Badge badgeContent={'AI'}>{asrTip ?? ''}</Badge>}
+                  title={<Badge badgeContent={ts.ai}>{asrTip ?? ''}</Badge>}
                 >
                   <span>
                     <AsrButton
@@ -429,12 +431,10 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
       )}
       {asrLangVisible && (
         <BigDialog
-          title="Recognize Speech Settings"
+          title={t.recognizeSpeechSettings}
           description={
             <Typography variant="body2" sx={{ maxWidth: 500 }}>
-              Choose the language to recognize. If the language is not
-              available, choose a closely related language with a similar
-              writing system.
+              {t.recognizePrompt}
             </Typography>
           }
           isOpen={asrLangVisible}
@@ -450,7 +450,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
       )}
       {asrProgressVisble && (
         <BigDialog
-          title={'Recognize Speech in Progress'}
+          title={t.recognizeProgress}
           isOpen={asrProgressVisble}
           onOpen={handleAsrProgressVisible}
           bp={BigDialogBp.sm}

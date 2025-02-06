@@ -6,6 +6,7 @@ import * as action from '../store';
 import { TokenContext } from '../context/TokenProvider';
 import { profileSelector } from '../selector';
 import { getParatextDataPath } from './paratextPath';
+import { addPt } from './addPt';
 
 export const useHasParatext = () => {
   const [ptPath, setPtPath] = useState('');
@@ -32,7 +33,11 @@ export const useHasParatext = () => {
   useEffect(() => {
     if (!isOffline) {
       if (!paratext_usernameStatus) {
-        getUserName(accessToken || '', errorReporter, t.checkingParatext);
+        getUserName(
+          accessToken || '',
+          errorReporter,
+          addPt(t.checkingParatext)
+        );
       }
       setHasParatext(paratext_username !== '');
     } else {

@@ -258,8 +258,8 @@ export const ErrorPage = () => {
   // If there is no error just render the children component.
   return (
     <ErrorPageDiv>
-      <h1>Oops!</h1>
-      <p>Sorry, an unexpected error has occurred.</p>
+      <h1>{t.oops}</h1>
+      <p>{t.unexpectedError}</p>
       <p>
         <i>{(error as any)?.statusText || error.message}</i>
       </p>

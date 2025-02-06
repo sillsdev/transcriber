@@ -95,32 +95,34 @@ interface AtProps {
   value: any;
   type: PassageTypeEnum;
   Icon: JSX.Element;
-  font?: string;
+  fontSize?: string;
 }
 
-const ArgType: FC<AtProps> = memo(({ value, type, Icon, font }: AtProps) => {
-  const len = type !== PassageTypeEnum.PASSAGE ? type.length : -1;
-  let val = String(value).substring(len + 1);
+const ArgType: FC<AtProps> = memo(
+  ({ value, type, Icon, fontSize }: AtProps) => {
+    const len = type !== PassageTypeEnum.PASSAGE ? type.length : -1;
+    let val = String(value).substring(len + 1);
 
-  return (
-    <>
-      <Typography
-        component={'span'}
-        sx={{
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-          maxWidth: '200px',
-          ...(font && { fontSize: font }),
-        }}
-      >
-        {Icon}
-        {'\u00A0'}
-        {val}
-      </Typography>
-    </>
-  );
-});
+    return (
+      <>
+        <Typography
+          component={'span'}
+          sx={{
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            maxWidth: '200px',
+            ...(fontSize && { fontSize }),
+          }}
+        >
+          {Icon}
+          {'\u00A0'}
+          {val}
+        </Typography>
+      </>
+    );
+  }
+);
 
 /**
  * Determines the passage type based on the input value and returns the
@@ -144,17 +146,17 @@ interface IProps {
   value: string;
   flat: boolean;
   pt: PassageTypeEnum;
-  font?: string;
+  fontSize?: string;
 }
 
 export const RefRender: FC<IProps> = memo(
-  ({ value, flat, pt, font }: IProps) => {
+  ({ value, flat, pt, fontSize }: IProps) => {
     return (
       <ArgType
         value={value}
         type={passageTypeFromRef(value)}
         Icon={passageTypeMap[pt]}
-        font={font}
+        fontSize={fontSize}
       />
     );
   }

@@ -1,9 +1,14 @@
 import * as React from 'react';
 import { ActionRow, AltButton, PriButton } from '../../control';
 import { Divider, Stack, Typography } from '@mui/material';
-import { IntellectualPropertyD, ISharedStrings, MediaFileD } from '../../model';
+import {
+  IntellectualPropertyD,
+  ISharedStrings,
+  IVoiceStrings,
+  MediaFileD,
+} from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
-import { sharedSelector } from '../../selector';
+import { sharedSelector, voiceSelector } from '../../selector';
 import {
   findRecord,
   orgDefaultVoices,
@@ -26,7 +31,8 @@ export default function SelectVoice({ onOpen, begin, refresh }: ISelectVoice) {
   const [org] = useGlobal('organization');
   const ipRecs = useOrbitData<IntellectualPropertyD[]>('intellectualproperty');
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
-  const t: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const t: IVoiceStrings = useSelector(voiceSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   React.useEffect(() => {
     const curVoice = getOrgDefault(orgDefaultVoices);
@@ -71,9 +77,9 @@ export default function SelectVoice({ onOpen, begin, refresh }: ISelectVoice) {
       <Typography>{statement}</Typography>
       <Divider sx={{ m: 1 }} />
       <ActionRow>
-        <AltButton onClick={onOpen}>{t.cancel}</AltButton>
+        <AltButton onClick={onOpen}>{ts.cancel}</AltButton>
         <PriButton onClick={begin} disabled={!voice}>
-          {'Begin Conversion'}
+          {t.convert}
         </PriButton>
       </ActionRow>
     </Stack>

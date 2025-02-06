@@ -8,6 +8,7 @@ import { useGlobal } from '../../context/GlobalContext';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../../selector';
+import { addPt } from '../../utils/addPt';
 
 export function WorkflowSteps() {
   const {
@@ -109,7 +110,7 @@ export function WorkflowSteps() {
       {shownWorkflow.map((w) => {
         const cameLabel = toCamel(w.label);
         const label = wfStr.hasOwnProperty(cameLabel)
-          ? wfStr.getString(cameLabel)
+          ? addPt(wfStr.getString(cameLabel))
           : w.label;
         return (
           <Stage

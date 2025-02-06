@@ -1,6 +1,6 @@
 /* eslint-disable no-template-curly-in-string */
 import React from 'react';
-import { IMainStrings } from '../model';
+import { IMainStrings, ISharedStrings } from '../model';
 import {
   Dialog,
   DialogTitle,
@@ -27,7 +27,7 @@ import stringReplace from 'react-string-replace';
 import { useSnackBar } from '../hoc/SnackBar';
 import { ApmLogo } from '../control/ApmLogo';
 import { StyledHeading } from '../control';
-import { mainSelector } from '../selector';
+import { mainSelector, sharedSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 const version = require('../../package.json').version;
 const copyright = require('../../package.json').build.copyright;
@@ -141,6 +141,7 @@ interface AboutDialogProps {
 function AboutDialog(props: AboutDialogProps) {
   const { onClose, open } = props;
   const t: IMainStrings = useSelector(mainSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { showMessage } = useSnackBar();
 
   const handleClose = () => onClose();
@@ -150,7 +151,7 @@ function AboutDialog(props: AboutDialogProps) {
     navigator.clipboard
       .writeText(`${API_CONFIG.productName} ${version} - ${buildDate}`)
       .catch(() => {
-        showMessage(t.cantCopy);
+        showMessage(ts.cantCopy);
       });
   };
 

@@ -375,7 +375,7 @@ export const PassageDataTable = (props: IProps) => {
           title={t.termsReview}
           description={
             <Typography sx={{ pb: 2 }}>
-              {'for {0}'.replace('{0}', data[curTermsCheck].title)}
+              {t.titleDesc.replace('{0}', data[curTermsCheck].title)}
             </Typography>
           }
           isOpen={termsCheck !== undefined}

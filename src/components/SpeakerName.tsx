@@ -206,9 +206,7 @@ export function SpeakerName({
       >
         <>
           <Typography>
-            {recordingRequired
-              ? 'The recorded permission is used both as a voice sample to change the audio and as a license to use the voice sample in recordings. A suggested script for the recorded permission is given which can be personalized.'
-              : t.releaseRights}
+            {recordingRequired ? t.voiceRights : t.releaseRights}
           </Typography>
           <ProvideRights
             speaker={value?.name || ''}

@@ -333,7 +333,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
           showMessage(tt.availableOnClipboard);
         })
         .catch((err) => {
-          showMessage(tt.cantCopy);
+          showMessage(ts.cantCopy);
         });
     else showMessage(tt.noData.replace('{0}', t.projectResourceConfigure));
   };
@@ -558,7 +558,7 @@ export const ProjectResourceConfigure = (props: IProps) => {
           onClick={handleCopy}
           disabled={numSegments === 0}
         >
-          {t.copyToClipboard}
+          {ts.clipboardCopy}
         </AltButton>
         <GrowingSpacer />
         <PriButton

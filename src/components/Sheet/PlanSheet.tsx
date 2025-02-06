@@ -74,6 +74,7 @@ import { usePlanSheetFill } from './usePlanSheetFill';
 import { useShowIcon } from './useShowIcon';
 import { RecordKeyMap } from '@orbit/records';
 import ConfirmPublishDialog from '../ConfirmPublishDialog';
+import { addPt } from '../../utils/addPt';
 
 const DOWN_ARROW = 'ARROWDOWN';
 export const SectionSeqCol = 0;
@@ -784,13 +785,13 @@ export function PlanSheet(props: IProps) {
         }
       });
     }
-    if (refErr && !warning) setWarning(t.refErr);
+    if (refErr && !warning) setWarning(addPt(t.refErr));
     else if (!refErr && warning) setWarning(undefined);
   };
 
   const handlePublishToggle: MouseEventHandler<HTMLButtonElement> = () => {
     if (!canPublish && !publishingOn) {
-      showMessage(t.paratextRequired);
+      showMessage(addPt(t.paratextRequired));
       return;
     }
     if (filtered && !publishingOn) {
