@@ -69,7 +69,7 @@ export const useVoicePermission = ({
         .replace('{2}', catMsg)
         .replace('{3}', langUse)
         .replace('{4}', compensated)
-        .replace('{4}', permState?.fullName ?? t.stNotIdentified)
+        .replace('{5}', permState?.fullName ?? t.stNotIdentified)
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [permState, team]);
