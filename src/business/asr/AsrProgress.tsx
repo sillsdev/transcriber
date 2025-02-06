@@ -6,15 +6,13 @@ import { TokenContext } from '../../context/TokenProvider';
 import { IAsrState } from './AsrAlphabet';
 import { axiosGet, axiosPost } from '../../utils/axios';
 import { HttpStatusCode } from 'axios';
-import { useFetchUrlNow } from '../../crud/useFetchUrlNow';
-import { ISharedStrings } from '../../model';
-import { shallowEqual, useSelector } from 'react-redux';
-import { sharedSelector } from '../../selector';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { remoteId } from '../../crud/remoteId';
 import { RecordKeyMap } from '@orbit/records';
 import { useGlobal } from '../../context/GlobalContext';
 import { ActionRow, AltButton } from '../../control';
+import { MediaFileD } from '../../model';
+import { getSegments, NamedRegions } from '../../utils/namedSegments';
 
 interface AsrProgressProps {
   mediaId: string;
@@ -35,14 +33,11 @@ export default function AsrProgress({
   const addingRef = React.useRef(false);
   const { getOrgDefault } = useOrgDefaults();
   const [memory] = useGlobal('memory');
-  const fetchUrl = useFetchUrlNow();
   const token = React.useContext(TokenContext).state.accessToken ?? '';
   const { showMessage } = useSnackBar();
-  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [taskId, setTaskId] = React.useState('');
   const taskTimer = React.useRef<NodeJS.Timeout>();
   const timerDelay = 5000; //5 seconds
-  const noTimes = React.useRef(0);
 
   const setTranscribing = (adding: boolean) => {
     setAddingx(adding);
@@ -57,7 +52,6 @@ export default function AsrProgress({
 
   const checkTask = async () => {
     console.log(`checking task: ${taskId}`);
-    noTimes.current -= 1;
     var response = await axiosGet(`aero/transcription/${taskId}`);
     if (response?.transcription) {
       //Do something with the transcription here
@@ -70,9 +64,6 @@ export default function AsrProgress({
       setTaskId('');
     } else if (response?.transcription === '') {
       status('no transcription');
-      setTaskId('');
-    } else if (noTimes.current <= 0) {
-      status('timed out');
       setTaskId('');
     } else {
       console.log('not done', response);
@@ -91,6 +82,36 @@ export default function AsrProgress({
     onClose && onClose();
   };
 
+  const PostTranscribe = async (remoteId: string) => {
+    const asr = getOrgDefault(orgDefaultAsr) as IAsrState | undefined;
+    const iso = asr?.dialect ?? asr?.mmsIso ?? 'eng';
+    const romanize = asr?.selectRoman ?? false;
+
+    const response = await axiosPost(
+      `mediafiles/${remoteId}/transcription/${iso}/${romanize}`,
+      undefined,
+      token
+    );
+
+    if (response.status === HttpStatusCode.Ok) {
+      var mediaRec = response?.data.data as MediaFileD;
+      var regionstr = getSegments(
+        NamedRegions.TRTask,
+        mediaRec?.attributes?.segments ?? '{}'
+      );
+      var segs = JSON.parse(regionstr);
+      if (segs.regions[0]?.label) {
+        setTaskId(segs.regions[0].label);
+      } else {
+        status('AI transcription failed');
+        closing();
+      }
+    } else {
+      status('AI transcription failed');
+      closing();
+    }
+  };
+  /*
   const PostTranscribeUrl = async (fileUrl: string) => {
     const asr = getOrgDefault(orgDefaultAsr) as IAsrState | undefined;
     const postdata: {
@@ -116,7 +137,7 @@ export default function AsrProgress({
       closing();
     }
   };
-
+*/
   React.useEffect(() => {
     if (taskId) {
       if (!taskTimer.current) launchTimer();
@@ -128,16 +149,17 @@ export default function AsrProgress({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskId]);
 
-  const handleTranscribe = (fileUrl: string) => {
+  const handleTranscribe = (remId: string) => {
     if (addingRef.current) return;
     setTranscribing(true);
-    noTimes.current = 50; // 4 minutes
-    PostTranscribeUrl(fileUrl);
+    PostTranscribe(remId);
   };
 
   React.useEffect(() => {
     const remId =
       remoteId('mediafile', mediaId, memory?.keyMap as RecordKeyMap) ?? mediaId;
+    handleTranscribe(remId);
+    /*
     fetchUrl({ id: remId, cancelled: () => false, noDownload: true }).then(
       (url) => {
         if (url === ts.expiredToken) {
@@ -148,6 +170,7 @@ export default function AsrProgress({
         }
       }
     );
+    */
 
     return () => {
       if (taskTimer.current) {
