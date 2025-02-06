@@ -531,7 +531,7 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
             <target/>
          </segment>
       </unit>
@@ -613,10 +613,10 @@
             <target>Menutup tanpa Menyimpan?</target>
          </segment>
       </unit>
-      <unit id="cards.connectParatext">
+      <unit id="cards.convertPrompt">
          <segment>
-            <source>Connect a Paratext Project</source>
-            <target/>
+            <source>Enter the name of the organization that will hold the rights for recordings of the converted voices.</source>
+            <target>Masukkan nama organisasi yang akan memegang hak untuk rekaman suara yang dikonversi.</target>
          </segment>
       </unit>
       <unit id="cards.copyComplete">
@@ -707,6 +707,12 @@
          <segment>
             <source>Edit Workflow {0}</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="cards.experimentalFeatures">
+         <segment>
+            <source>Experimental Features</source>
+            <target>Fitur Eksperimental</target>
          </segment>
       </unit>
       <unit id="cards.explainPublishing">
@@ -835,10 +841,10 @@
             <target>Sebuah proyek harus ditambahkan sebelum rekaman diizinkan</target>
          </segment>
       </unit>
-      <unit id="cards.Render">
+      <unit id="cards.recognizePrompt">
          <segment>
-            <source>Render to Paratext</source>
-            <target>Render sampai Paratext</target>
+            <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
+            <target>Pilih bahasa yang akan dikenali. Jika bahasa tidak tersedia, pilih bahasa yang terkait erat dengan sistem penulisan yang serupa.</target>
          </segment>
       </unit>
       <unit id="cards.publishing">
@@ -1143,8 +1149,8 @@
       </unit>
       <unit id="community.releaseRights">
          <segment>
-            <source>Upload or record a statement releasing the rights to publish material recorded by this speaker.</source>
-            <target>Unggah atau rekam pernyataan yang melepaskan hak untuk mempublikasikan materi yang direkam oleh pembicara ini.</target>
+            <source>Upload or record a statement releasing the rights to publish material recorded by this speaker. A suggested script for the recorded permission is given which can be personalized.</source>
+            <target>Unggah atau rekam pernyataan yang melepaskan hak untuk mempublikasikan materi yang direkam oleh pembicara ini. Naskah yang disarankan untuk izin rekaman diberikan yang dapat disesuaikan.</target>
          </segment>
       </unit>
       <unit id="community.rights">
@@ -1205,6 +1211,12 @@
          <segment>
             <source>{0} of {1} files uploaded successfully.</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="community.voiceRights">
+         <segment>
+            <source>The recorded permission is used both as a voice sample to change the audio and as a license to use the voice sample in recordings. A suggested script for the recorded permission is given which can be personalized.</source>
+            <target>Izin yang direkam digunakan sebagai sampel suara untuk mengubah audio dan sebagai lisensi untuk menggunakan sampel suara dalam rekaman. Naskah yang disarankan untuk izin rekaman diberikan yang dapat disesuaikan.</target>
          </segment>
       </unit>
       <unit id="consultantCheck.checked">
@@ -1503,7 +1515,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
             <target/>
          </segment>
       </unit>
@@ -1545,7 +1557,7 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
+            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
             <target/>
          </segment>
       </unit>
@@ -1593,7 +1605,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified!  Carry on!</source>
+            <source>I'm verified! Carry on!</source>
             <target/>
          </segment>
       </unit>
@@ -1723,12 +1735,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="findResource.clipboardCopy">
-         <segment>
-            <source>Copy to clipboard</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="findResource.convert">
          <segment>
             <source>Convert text to audio resource file</source>
@@ -1751,6 +1757,12 @@
          <segment>
             <source>Create AI Resource</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.findBrandedContent">
+         <segment>
+            <source>Find: {0}</source>
+            <target>Temukan: {0}</target>
          </segment>
       </unit>
       <unit id="grid.all">
@@ -2085,7 +2097,7 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
             <target/>
          </segment>
       </unit>
@@ -2151,7 +2163,7 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
+            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -2241,8 +2253,8 @@
       </unit>
       <unit id="integration.noProject">
          <segment>
-            <source>You are not a member of a {lang0} Paratext Project.</source>
-            <target/>
+            <source>You are not a member of a {lang0} {0} Project.</source>
+            <target>Anda bukan anggota dari Proyek {lang0} {0} Proyek.</target>
          </segment>
       </unit>
       <unit id="integration.offline">
@@ -2257,22 +2269,10 @@
             <target/>
          </segment>
       </unit>
-      <unit id="integration.paratext">
-         <segment>
-            <source>Paratext</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.paratextAssociation">
-         <segment>
-            <source>Paratext association</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="integration.paratextLocal">
          <segment>
-            <source>Paratext Local</source>
-            <target/>
+            <source>{0} Local</source>
+            <target>{0} Lokal</target>
          </segment>
       </unit>
       <unit id="integration.projectError">
@@ -2283,20 +2283,20 @@
       </unit>
       <unit id="integration.projectsPending">
          <segment>
-            <source>Querying Paratext projects...</source>
-            <target/>
+            <source>Querying {0} projects...</source>
+            <target>Menanyakan proyek {0} {0}...</target>
          </segment>
       </unit>
       <unit id="integration.questionAccount">
          <segment>
-            <source>Do you have a Paratext Account?</source>
-            <target/>
+            <source>Do you have a {0} Account?</source>
+            <target>Apakah Anda memiliki Akun {0}?</target>
          </segment>
       </unit>
       <unit id="integration.questionInstalled">
          <segment>
-            <source>Is Paratext installed locally?</source>
-            <target/>
+            <source>Is {0} installed locally?</source>
+            <target>Apakah {0} terinstal secara lokal?</target>
          </segment>
       </unit>
       <unit id="integration.questionOnline">
@@ -2307,20 +2307,14 @@
       </unit>
       <unit id="integration.questionPermission">
          <segment>
-            <source>Do you have permission to edit the Paratext project text?</source>
-            <target/>
+            <source>Do you have permission to edit the {0} project text?</source>
+            <target>Apakah Anda memiliki izin untuk mengedit teks proyek {0}?</target>
          </segment>
       </unit>
       <unit id="integration.questionProject">
          <segment>
-            <source>Are you connected to a {lang0} Paratext project?</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.removeProject">
-         <segment>
-            <source>Remove Paratext Project Association</source>
-            <target/>
+            <source>Are you connected to a {lang0} {0} project?</source>
+            <target>Apakah Anda terhubung ke proyek {lang0} {0} proyek?</target>
          </segment>
       </unit>
       <unit id="integration.render">
@@ -2331,8 +2325,8 @@
       </unit>
       <unit id="integration.selectProject">
          <segment>
-            <source>Select Paratext Project</source>
-            <target/>
+            <source>Select {0} Project</source>
+            <target>Pilih Proyek {0}</target>
          </segment>
       </unit>
       <unit id="integration.showHideFilter">
@@ -2905,10 +2899,10 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.akuo">
+      <unit id="main.brandedSite">
          <segment>
-            <source>Access Akuo Site</source>
-            <target>Akses Situs Akuo</target>
+            <source>Access {0} Site</source>
+            <target>Mengakses {0} Situs</target>
          </segment>
       </unit>
       <unit id="main.apiError">
@@ -2923,10 +2917,10 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.cantCopy">
+      <unit id="main.clear">
          <segment>
-            <source>Unable to copy to clipboard</source>
-            <target/>
+            <source>Clear</source>
+            <target>Hapus</target>
          </segment>
       </unit>
       <unit id="main.clearCache">
@@ -3069,7 +3063,7 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
             <target/>
          </segment>
       </unit>
@@ -3115,10 +3109,10 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.openNotes">
+      <unit id="main.oops">
          <segment>
-            <source>Access Translator's Notes</source>
-            <target>Akses Catatan Penerjemah</target>
+            <source>Oops!</source>
+            <target>Ups!</target>
          </segment>
       </unit>
       <unit id="main.openContent">
@@ -3173,12 +3167,6 @@
          <segment>
             <source>You must be online to use this menu item.</source>
             <target>Anda harus online untuk menggunakan item menu ini.</target>
-         </segment>
-      </unit>
-      <unit id="main.resources">
-         <segment>
-            <source>Access UBS Resources</source>
-            <target>Mengakses Sumber Daya UBS</target>
          </segment>
       </unit>
       <unit id="main.saveFirst">
@@ -3245,6 +3233,12 @@
          <segment>
             <source>Transcribe</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="main.unexpectedError">
+         <segment>
+            <source>Sorry, an unexpected error has occurred.</source>
+            <target>Maaf, telah terjadi kesalahan yang tidak terduga.</target>
          </segment>
       </unit>
       <unit id="main.UnsavedData">
@@ -3673,6 +3667,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.githubSupport">
+         <segment>
+            <source>Github markdown syntax supported</source>
+            <target>Sintaks penurunan harga Github didukung</target>
+         </segment>
+      </unit>
       <unit id="mediaUpload.graphicTask">
          <segment>
             <source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
@@ -3687,14 +3687,14 @@
       </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
          <segment>
-            <source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
-            <target>Unggah rilis kekayaan intelektual untuk {0} dalam format audio atau visual. Format audio yang diterima adalah .mp3, .m4a, .wav atau .ogg. Format visual yang diterima adalah .pdf, .png, atau .jpg.</target>
+            <source>Upload a speaker rights release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
+            <target>Unggah rilis hak pembicara untuk {0} dalam format audio atau visual. Format audio yang diterima adalah .mp3, .m4a, .wav, atau .ogg. Format visual yang diterima adalah .pdf, .png, atau .jpg.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.intellectualPropertyTitle">
          <segment>
-            <source>Upload Intellectual Property Release</source>
-            <target>Unggah Rilis Kekayaan Intelektual</target>
+            <source>Upload Speaker Rights Release</source>
+            <target>Unggah Rilis Hak Pembicara</target>
          </segment>
       </unit>
       <unit id="mediaUpload.invalidFile">
@@ -3743,6 +3743,12 @@
          <segment>
             <source>Enter Text</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.preview">
+         <segment>
+            <source>Preview</source>
+            <target>Pratinjau</target>
          </segment>
       </unit>
       <unit id="mediaUpload.projectResourceTask">
@@ -3991,12 +3997,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="passageDetailArtifacts.copyToClipboard">
-         <segment>
-            <source>Copy to Clipboard</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="passageDetailArtifacts.createResources">
          <segment>
             <source>Create Resources</source>
@@ -4229,6 +4229,12 @@
          <segment>
             <source>Title</source>
             <target>Judul</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.titleDesc">
+         <segment>
+            <source>for {0}</source>
+            <target>untuk {0}</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.type">
@@ -4545,8 +4551,8 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target/>
+            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <target>Apakah kita memerlukan grup ini? Atau hanya menggunakan admin tim? Orang-orang di grup ini akan dapat melakukan langkah apa pun, bahkan jika ditugaskan ke grup yang bukan grup mereka.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4557,8 +4563,8 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
-            <target/>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
+            <target>Kami juga tidak yakin apakah kami memerlukan izin ini, karena tidak jelas hal-hal khusus apa yang dilakukan oleh konsultan di perangkat lunak ini. Komentar Konsultan Independen akan terlihat oleh semua anggota tim.</target>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4587,14 +4593,20 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
             <target/>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
+            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="picker.font">
+         <segment>
+            <source>Font</source>
+            <target>Font</target>
          </segment>
       </unit>
       <unit id="planActions.addNote">
@@ -4797,8 +4809,8 @@
       </unit>
       <unit id="planSheet.paratextRequired">
          <segment>
-            <source>You must be a Paratext user with access to FOBAI resources to use this feature.</source>
-            <target>Anda harus menjadi pengguna Paratext dengan akses ke sumber daya FOBAI untuk menggunakan fitur ini.</target>
+            <source>You must be a {0} user with access to FOBAI resources to use this feature.</source>
+            <target>Anda harus menjadi pengguna {0} dengan akses ke sumber daya FOBAI untuk menggunakan fitur ini.</target>
          </segment>
       </unit>
       <unit id="planSheet.passageBelow">
@@ -4845,8 +4857,8 @@
       </unit>
       <unit id="planSheet.refErr">
          <segment>
-            <source>This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
-            <target/>
+            <source>This audio project contains invalid references and will not sync to {0} properly. (A valid reference would be 3:2-5 or similar.)</source>
+            <target>Proyek audio ini berisi referensi yang tidak valid dan tidak akan disinkronkan ke {0} dengan benar. (Referensi yang valid adalah 3:2-5 atau yang serupa).</target>
          </segment>
       </unit>
       <unit id="planSheet.removeFilter">
@@ -4995,8 +5007,8 @@
       </unit>
       <unit id="profile.checkingParatext">
          <segment>
-            <source>Checking for Paratext account...</source>
-            <target/>
+            <source>Checking for {0} account...</source>
+            <target>Memeriksa akun {0}...</target>
          </segment>
       </unit>
       <unit id="profile.close">
@@ -5067,14 +5079,14 @@
       </unit>
       <unit id="profile.installParatext">
          <segment>
-            <source>Install Paratext to be able to sync.</source>
-            <target/>
+            <source>Install {0} to be able to sync.</source>
+            <target>Instal {0} untuk dapat menyinkronkan.</target>
          </segment>
       </unit>
       <unit id="profile.linkingExplained">
          <segment>
-            <source>Log out and log in with Paratext button</source>
-            <target/>
+            <source>Log out and log in with {0} button</source>
+            <target>Keluar dan masuk dengan tombol {0}</target>
          </segment>
       </unit>
       <unit id="profile.locale">
@@ -5115,26 +5127,26 @@
       </unit>
       <unit id="profile.notLinked">
          <segment>
-            <source>Not linked to Paratext</source>
-            <target/>
+            <source>Not linked to {0}</source>
+            <target>Tidak ditautkan ke {0}</target>
          </segment>
       </unit>
       <unit id="profile.paratextLinked">
          <segment>
-            <source>Linked to Paratext</source>
-            <target/>
+            <source>Linked to {0}</source>
+            <target>Ditautkan ke {0}</target>
          </segment>
       </unit>
       <unit id="profile.paratextLinking">
          <segment>
-            <source>Linking to Paratext</source>
-            <target/>
+            <source>Linking to {0}</source>
+            <target>Ditautkan ke {0}</target>
          </segment>
       </unit>
       <unit id="profile.paratextNotLinked">
          <segment>
-            <source>Link to Paratext</source>
-            <target/>
+            <source>Link to {0}</source>
+            <target>Ditautkan ke {0}</target>
          </segment>
       </unit>
       <unit id="profile.phone">
@@ -5169,7 +5181,7 @@
       </unit>
       <unit id="profile.syncFrequency">
          <segment>
-            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
+            <source>Frequency of data sync in minutes. 0 to turn off sync.</source>
             <target/>
          </segment>
       </unit>
@@ -5223,8 +5235,8 @@
       </unit>
       <unit id="projButtons.integrations">
          <segment>
-            <source>Paratext Integration</source>
-            <target/>
+            <source>{0} Integration</source>
+            <target>{0} Integrasi</target>
          </segment>
       </unit>
       <unit id="projButtons.integrationsTitle">
@@ -5317,6 +5329,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectDownload.missingFiles">
+         <segment>
+            <source>Missing Files</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="publishLevel.none">
          <segment>
             <source>Not Published - not visible outside this project</source>
@@ -5325,20 +5343,20 @@
       </unit>
       <unit id="publishLevel.bibleRequired">
          <segment>
-            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo.</source>
-            <target>Anda harus sudah menyiapkan Id dan Nama Alkitab di Pengaturan Tim untuk mempublikasikan ke Akuo.</target>
+            <source>You must have set up a Bible Id and Name in the Team Settings to publish to {0} or {1}.</source>
+            <target>Anda harus sudah menyiapkan Id dan Nama Alkitab di Pengaturan Tim untuk menerbitkan ke {0} atau {1}.</target>
          </segment>
       </unit>
       <unit id="publishLevel.beta">
          <segment>
-            <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>
-            <target>Beta - terlihat di situs web Akuo ketika menggunakan parameter beta (tidak tersedia di aplikasi)</target>
+            <source>Beta - visible on the {0} website when using the beta parameter (not available in the app)</source>
+            <target>Beta - terlihat di situs web {0} ketika menggunakan parameter beta (tidak tersedia di aplikasi)</target>
          </segment>
       </unit>
       <unit id="publishLevel.public">
          <segment>
-            <source>Public - visible to everyone using Akuo website or app</source>
-            <target>Publik - dapat dilihat oleh semua orang yang menggunakan situs web atau aplikasi Akuo</target>
+            <source>Public - visible to everyone using {0} website or app</source>
+            <target>Publik - dapat dilihat oleh semua orang yang menggunakan situs web atau aplikasi {0}</target>
          </segment>
       </unit>
       <unit id="publishTo.Internalization">
@@ -5767,6 +5785,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="selectRecording.selectRecording">
+         <segment>
+            <source>Select Item</source>
+            <target>Pilih Item</target>
+         </segment>
+      </unit>
       <unit id="selectRecording.sourceSegment">
          <segment>
             <source>Source Segment</source>
@@ -5797,10 +5821,16 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.ai">
+         <segment>
+            <source>AI</source>
+            <target>KECERDASAN BUATAN (AI)</target>
+         </segment>
+      </unit>
       <unit id="shared.bookNotInParatext">
          <segment>
-            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
-            <target/>
+            <source>Passage {0}.{1}: {Pt} project does not contain book {2}.</source>
+            <target>Bagian {0}.{1}: Proyek {Pt} tidak berisi buku {2}.</target>
          </segment>
       </unit>
       <unit id="shared.BookNotSet">
@@ -5813,6 +5843,12 @@
          <segment>
             <source>Cancel</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="shared.cantCopy">
+         <segment>
+            <source>Unable to copy to clipboard</source>
+            <target>Tidak dapat menyalin ke papan klip</target>
          </segment>
       </unit>
       <unit id="shared.close">
@@ -5847,13 +5883,13 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
+            <source>Your {Pt} login has expired and can't be automatically renewed. Please log out and login again.</source>
+            <target>Login {Pt} Anda telah kedaluwarsa dan tidak dapat diperbarui secara otomatis. Silakan keluar dan masuk lagi.</target>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -5871,8 +5907,8 @@
       </unit>
       <unit id="shared.invalidParatextLogin">
          <segment>
-            <source>You must login with a valid paratext login.</source>
-            <target/>
+            <source>You must login with a valid {Pt} login.</source>
+            <target>Anda harus masuk dengan login {Pt} yang valid.</target>
          </segment>
       </unit>
       <unit id="shared.invalidReference">
@@ -5944,7 +5980,7 @@
       <unit id="shared.noiseRemoval">
          <segment>
             <source>Reduce Noise</source>
-            <target></target>
+            <target>Mengurangi Kebisingan</target>
          </segment>
       </unit>
       <unit id="shared.noiseRemovalFailed">
@@ -5997,14 +6033,14 @@
       </unit>
       <unit id="shared.bookNotFound">
          <segment>
-            <source>Paratext project does not contain book.</source>
-            <target>Proyek parateks tidak berisi buku.</target>
+            <source>{Pt} project does not contain book.</source>
+            <target>Proyek {Pt} tidak berisi buku.</target>
          </segment>
       </unit>
       <unit id="shared.referenceNotFound">
          <segment>
-            <source>Reference does not exist in Paratext chapter, or reference is within a larger verse range.</source>
-            <target/>
+            <source>Reference does not exist in {Pt} chapter, or reference is within a larger verse range.</source>
+            <target>Referensi tidak ada dalam pasal {Pt}, atau referensi berada dalam rentang ayat yang lebih besar.</target>
          </segment>
       </unit>
       <unit id="shared.role">
@@ -6327,8 +6363,8 @@
       </unit>
       <unit id="template.book">
          <segment>
-            <source>Paratext book identifier (Length 3 uppercase)</source>
-            <target/>
+            <source>{0} book identifier (Length 3 uppercase)</source>
+            <target>{0} pengenal buku (Panjang 3 huruf besar)</target>
          </segment>
       </unit>
       <unit id="template.bookname">
@@ -6525,8 +6561,8 @@
       </unit>
       <unit id="tool.paratext">
          <segment>
-            <source>Paratext Sync</source>
-            <target/>
+            <source>{0} Sync</source>
+            <target>{0} Sinkronisasi</target>
          </segment>
       </unit>
       <unit id="tool.phraseBackTranslate">
@@ -6607,6 +6643,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.beginRecognize">
+         <segment>
+            <source>Begin Recognition</source>
+            <target>Mulai Pengenalan</target>
+         </segment>
+      </unit>
       <unit id="transcriber.comment">
          <segment>
             <source>Comment</source>
@@ -6667,28 +6709,28 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.pullParatextCaption">
+      <unit id="transcriber.phonetic">
          <segment>
-            <source>Paratext</source>
-            <target/>
+            <source>Phonetic</source>
+            <target>Fonetik</target>
          </segment>
       </unit>
       <unit id="transcriber.pullParatextStart">
          <segment>
-            <source>Getting transcription from Paratext</source>
-            <target/>
+            <source>Getting transcription from {0}</source>
+            <target>Mendapatkan transkripsi dari {0}</target>
          </segment>
       </unit>
       <unit id="transcriber.pullParatextStatus">
          <segment>
-            <source>Transcription pulled from Paratext</source>
-            <target/>
+            <source>Transcription pulled from {0}</source>
+            <target>Transkripsi ditarik dari {0}</target>
          </segment>
       </unit>
       <unit id="transcriber.pullParatextTip">
          <segment>
-            <source>Pull transcription from Paratext</source>
-            <target/>
+            <source>Pull transcription from {0}</source>
+            <target>Menarik transkripsi dari {0}</target>
          </segment>
       </unit>
       <unit id="transcriber.reject">
@@ -6733,6 +6775,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.scriptOrDialect">
+         <segment>
+            <source>Script or Dialect</source>
+            <target>Aksara atau Dialek</target>
+         </segment>
+      </unit>
       <unit id="transcriber.submit">
          <segment>
             <source>Submit</source>
@@ -6757,9 +6805,15 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.transliterate">
+         <segment>
+            <source>Transliterate to Latin script</source>
+            <target>Mengalihaksarakan ke aksara Latin</target>
+         </segment>
+      </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
+            <source>Transcription updated by {0}. Keep their changes? {1}</source>
             <target/>
          </segment>
       </unit>
@@ -6811,12 +6865,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriptionShow.cantCopy">
-         <segment>
-            <source>Unable to copy to clipboard</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriptionShow.close">
          <segment>
             <source>Close</source>
@@ -6856,12 +6904,6 @@
       <unit id="transcriptionTab.cancel">
          <segment>
             <source>Cancel</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.cantCopy">
-         <segment>
-            <source>Unable to copy to clipboard</source>
             <target/>
          </segment>
       </unit>
@@ -6975,7 +7017,7 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported.  The export file is too large.</source>
+            <source>The audio project cannot be exported. The export file is too large.</source>
             <target/>
          </segment>
       </unit>
@@ -7017,7 +7059,7 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
+            <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
             <target/>
          </segment>
       </unit>
@@ -7231,12 +7273,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="verse.copyToClipboard">
-         <segment>
-            <source>Copy to clipboard</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="verse.issues">
          <segment>
             <source>The verse markup has issues. Do you want to continue?</source>
@@ -7321,6 +7357,12 @@
             <target>Pergi bekerja</target>
          </segment>
       </unit>
+      <unit id="voice.age">
+         <segment>
+            <source>Age</source>
+            <target>Usia</target>
+         </segment>
+      </unit>
       <unit id="vProject.add">
          <segment>
             <source>Add</source>
@@ -7390,13 +7432,19 @@
       <unit id="vProject.errgeneralBookNonScripture">
          <segment>
             <source>Book Designation must not be a Scripture book code.</source>
-            <target/>
+            <target>Penunjukan Buku tidak boleh berupa kode buku Alkitab.</target>
          </segment>
       </unit>
       <unit id="vProject.generalBook">
          <segment>
-            <source>Akuo Book Designation</source>
-            <target/>
+            <source>{0} Book Designation</source>
+            <target>{0} Penunjukan Buku</target>
+         </segment>
+      </unit>
+      <unit id="vProject.generalStory">
+         <segment>
+            <source>Show as Stories (not Extras) in {0}</source>
+            <target>Tunjukkan sebagai Cerita (bukan Ekstra) dalam {0}</target>
          </segment>
       </unit>
       <unit id="vProject.flat">
@@ -7665,7 +7713,7 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
             <target/>
          </segment>
       </unit>
@@ -7683,7 +7731,7 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
             <target/>
          </segment>
       </unit>
@@ -7779,20 +7827,20 @@
       </unit>
       <unit id="workflowSteps.paratextConsultantCheck">
          <segment>
-            <source>Consultant Check in Paratext</source>
-            <target/>
+            <source>Consultant Check in {0}</source>
+            <target>Pemeriksaan Konsultan dalam {0}</target>
          </segment>
       </unit>
       <unit id="workflowSteps.paratextPeerReview">
          <segment>
-            <source>Peer Review in Paratext</source>
-            <target/>
+            <source>Peer Review in {0}</source>
+            <target>Tinjauan Sejawat di {0}</target>
          </segment>
       </unit>
       <unit id="workflowSteps.paratextSync">
          <segment>
-            <source>Sync to Paratext</source>
-            <target/>
+            <source>Sync to {0}</source>
+            <target>Sinkronisasi ke {0}</target>
          </segment>
       </unit>
       <unit id="workflowSteps.peerReview">
@@ -7815,8 +7863,8 @@
       </unit>
       <unit id="workflowSteps.pBTParatextSync">
          <segment>
-            <source>Phrase BT Paratext</source>
-            <target>Terjemahan Balik Hentian Singkat</target>
+            <source>Phrase BT {0}</source>
+            <target>Frasa BT {0}</target>
          </segment>
       </unit>
       <unit id="workflowSteps.preliminaryApproval">
@@ -7911,8 +7959,8 @@
       </unit>
       <unit id="workflowSteps.wBTParatextSync">
          <segment>
-            <source>Whole BT Paratext</source>
-            <target>Terjemahan Balik Utuh menyinkronkan</target>
+            <source>Whole BT {0}</source>
+            <target>Seluruh BT {0}</target>
          </segment>
       </unit>
       <unit id="workflowSteps.none">
@@ -7927,10 +7975,22 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.beginVoiceConvert">
+         <segment>
+            <source>Beginning voice conversion...</source>
+            <target>Memulai konversi suara...</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.backTip">
          <segment>
             <source>Rewind {jump} {1} [{0}]</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.convertVoice">
+         <segment>
+            <source>Convert Voice {0}</source>
+            <target>Konversi Suara {0}</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.beginningTip">
@@ -7989,8 +8049,8 @@
       </unit>
       <unit id="wsAudioPlayer.aiInProgress">
          <segment>
-            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
-            <target>Layanan AI Sedang Berlangsung...  Ini adalah layanan jarak jauh yang mungkin memakan waktu lama jika rekamannya besar, atau jika ada permintaan lain yang mendahului permintaan Anda.</target>
+            <source>AI Service In Progress... This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target>Layanan AI Sedang Berlangsung... Ini adalah layanan jarak jauh yang mungkin memakan waktu lama jika rekamannya besar, atau jika ada permintaan lain yang mendahului permintaan Anda.</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.aiGiveUp">
@@ -8023,10 +8083,22 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.recognizeProgress">
+         <segment>
+            <source>Recognize Speech in Progress</source>
+            <target>Mengenali Ucapan yang Sedang Berlangsung</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.record">
          <segment>
             <source>Record [{0}]</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.reduceNoise">
+         <segment>
+            <source>Reduce Noise</source>
+            <target>Mengurangi Kebisingan</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.resume">
@@ -8045,6 +8117,12 @@
          <segment>
             <source>seconds</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.selectVoice">
+         <segment>
+            <source>Select Voice</source>
+            <target>Pilih Suara</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.silence">

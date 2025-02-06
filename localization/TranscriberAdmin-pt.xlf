@@ -531,7 +531,7 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
             <target/>
          </segment>
       </unit>
@@ -613,10 +613,10 @@
             <target>Fechar sem guardar?</target>
          </segment>
       </unit>
-      <unit id="cards.connectParatext">
+      <unit id="cards.convertPrompt">
          <segment>
-            <source>Connect a Paratext Project</source>
-            <target/>
+            <source>Enter the name of the organization that will hold the rights for recordings of the converted voices.</source>
+            <target>Introduza o nome da organização que irá deter os direitos de gravação das vozes convertidas.</target>
          </segment>
       </unit>
       <unit id="cards.copyComplete">
@@ -707,6 +707,12 @@
          <segment>
             <source>Edit Workflow {0}</source>
             <target>Editar Fluxo de Trabalho {0}</target>
+         </segment>
+      </unit>
+      <unit id="cards.experimentalFeatures">
+         <segment>
+            <source>Experimental Features</source>
+            <target>Caraterísticas experimentais</target>
          </segment>
       </unit>
       <unit id="cards.explainPublishing">
@@ -835,10 +841,10 @@
             <target>É necessário adicionar um projeto antes de as gravações serem permitidas</target>
          </segment>
       </unit>
-      <unit id="cards.Render">
+      <unit id="cards.recognizePrompt">
          <segment>
-            <source>Render to Paratext</source>
-            <target>Render a Paratext</target>
+            <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
+            <target>Escolha a língua a reconhecer. Se o idioma não estiver disponível, escolha um idioma estreitamente relacionado com um sistema de escrita semelhante.</target>
          </segment>
       </unit>
       <unit id="cards.publishing">
@@ -1143,8 +1149,8 @@
       </unit>
       <unit id="community.releaseRights">
          <segment>
-            <source>Upload or record a statement releasing the rights to publish material recorded by this speaker.</source>
-            <target>Carregar ou gravar uma declaração libertando os direitos de publicação do material gravado por este orador.</target>
+            <source>Upload or record a statement releasing the rights to publish material recorded by this speaker. A suggested script for the recorded permission is given which can be personalized.</source>
+            <target>Carregue ou grave uma declaração libertando os direitos de publicação do material gravado por este orador. É fornecida uma sugestão de guião para a autorização gravada, que pode ser personalizada.</target>
          </segment>
       </unit>
       <unit id="community.rights">
@@ -1205,6 +1211,12 @@
          <segment>
             <source>{0} of {1} files uploaded successfully.</source>
             <target>{0} de {1} arquivos carregados com sucesso.</target>
+         </segment>
+      </unit>
+      <unit id="community.voiceRights">
+         <segment>
+            <source>The recorded permission is used both as a voice sample to change the audio and as a license to use the voice sample in recordings. A suggested script for the recorded permission is given which can be personalized.</source>
+            <target>A permissão gravada é utilizada como uma amostra de voz para alterar o áudio e como uma licença para utilizar a amostra de voz em gravações. É fornecida uma sugestão de guião para a permissão gravada, que pode ser personalizada.</target>
          </segment>
       </unit>
       <unit id="consultantCheck.checked">
@@ -1503,7 +1515,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
             <target/>
          </segment>
       </unit>
@@ -1545,7 +1557,7 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
+            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
             <target/>
          </segment>
       </unit>
@@ -1593,7 +1605,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified!  Carry on!</source>
+            <source>I'm verified! Carry on!</source>
             <target/>
          </segment>
       </unit>
@@ -1723,12 +1735,6 @@
             <target>área de transferência</target>
          </segment>
       </unit>
-      <unit id="findResource.clipboardCopy">
-         <segment>
-            <source>Copy to clipboard</source>
-            <target>Copiar para a área de transferência</target>
-         </segment>
-      </unit>
       <unit id="findResource.convert">
          <segment>
             <source>Convert text to audio resource file</source>
@@ -1744,13 +1750,19 @@
       <unit id="findResource.createItems">
          <segment>
             <source>Create Items</source>
-            <target/>
+            <target>Criar itens</target>
          </segment>
       </unit>
       <unit id="findResource.createResource">
          <segment>
             <source>Create AI Resource</source>
-            <target/>
+            <target>Criar recurso de IA</target>
+         </segment>
+      </unit>
+      <unit id="findResource.findBrandedContent">
+         <segment>
+            <source>Find: {0}</source>
+            <target>Procurar: {0}</target>
          </segment>
       </unit>
       <unit id="grid.all">
@@ -2074,7 +2086,7 @@
       <unit id="import.importSyncDown">
          <segment>
             <source>Syncing online changes</source>
-            <target/>
+            <target>Sincronizar alterações online</target>
          </segment>
       </unit>
       <unit id="import.invalidITF">
@@ -2085,8 +2097,8 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
-            <target/>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
+            <target>Se este erro ocorreu durante a importação de alterações offline, feche a aplicação imediatamente e volte a abri-la. Se o erro persistir, contacte o suporte. Se continuar a utilizar a aplicação, perderá as alterações offline.</target>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -2151,7 +2163,7 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
+            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -2241,8 +2253,8 @@
       </unit>
       <unit id="integration.noProject">
          <segment>
-            <source>You are not a member of a {lang0} Paratext Project.</source>
-            <target/>
+            <source>You are not a member of a {lang0} {0} Project.</source>
+            <target>Não é membro de um projeto {lang0} {0} Projeto.</target>
          </segment>
       </unit>
       <unit id="integration.offline">
@@ -2257,22 +2269,10 @@
             <target>Uma História</target>
          </segment>
       </unit>
-      <unit id="integration.paratext">
-         <segment>
-            <source>Paratext</source>
-            <target>Paratext</target>
-         </segment>
-      </unit>
-      <unit id="integration.paratextAssociation">
-         <segment>
-            <source>Paratext association</source>
-            <target>Associação do Paratext</target>
-         </segment>
-      </unit>
       <unit id="integration.paratextLocal">
          <segment>
-            <source>Paratext Local</source>
-            <target/>
+            <source>{0} Local</source>
+            <target>{0} Local</target>
          </segment>
       </unit>
       <unit id="integration.projectError">
@@ -2283,20 +2283,20 @@
       </unit>
       <unit id="integration.projectsPending">
          <segment>
-            <source>Querying Paratext projects...</source>
-            <target>Consultando projetos...</target>
+            <source>Querying {0} projects...</source>
+            <target>Consultando {0} projetos...</target>
          </segment>
       </unit>
       <unit id="integration.questionAccount">
          <segment>
-            <source>Do you have a Paratext Account?</source>
-            <target>Você tem uma conta do Paratext?</target>
+            <source>Do you have a {0} Account?</source>
+            <target>Tem uma conta {0}?</target>
          </segment>
       </unit>
       <unit id="integration.questionInstalled">
          <segment>
-            <source>Is Paratext installed locally?</source>
-            <target/>
+            <source>Is {0} installed locally?</source>
+            <target>O {0} está instalado localmente?</target>
          </segment>
       </unit>
       <unit id="integration.questionOnline">
@@ -2307,20 +2307,14 @@
       </unit>
       <unit id="integration.questionPermission">
          <segment>
-            <source>Do you have permission to edit the Paratext project text?</source>
-            <target>Você tem permissão para editar o texto do projeto do Paratext?</target>
+            <source>Do you have permission to edit the {0} project text?</source>
+            <target>Você tem permissão para editar o texto do projeto {0}?</target>
          </segment>
       </unit>
       <unit id="integration.questionProject">
          <segment>
-            <source>Are you connected to a {lang0} Paratext project?</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.removeProject">
-         <segment>
-            <source>Remove Paratext Project Association</source>
-            <target>Remover Associação de Projeto</target>
+            <source>Are you connected to a {lang0} {0} project?</source>
+            <target>Está ligado a um projeto {lang0} {0} projeto?</target>
          </segment>
       </unit>
       <unit id="integration.render">
@@ -2331,8 +2325,8 @@
       </unit>
       <unit id="integration.selectProject">
          <segment>
-            <source>Select Paratext Project</source>
-            <target>Selecione Projeto do Paratext</target>
+            <source>Select {0} Project</source>
+            <target>Selecionar {0} Projeto</target>
          </segment>
       </unit>
       <unit id="integration.showHideFilter">
@@ -2905,10 +2899,10 @@
             <target>Administrador</target>
          </segment>
       </unit>
-      <unit id="main.akuo">
+      <unit id="main.brandedSite">
          <segment>
-            <source>Access Akuo Site</source>
-            <target>Acessar o site da Akuo</target>
+            <source>Access {0} Site</source>
+            <target>Aceder ao Sítio {0}</target>
          </segment>
       </unit>
       <unit id="main.apiError">
@@ -2923,10 +2917,10 @@
             <target>Cancelar</target>
          </segment>
       </unit>
-      <unit id="main.cantCopy">
+      <unit id="main.clear">
          <segment>
-            <source>Unable to copy to clipboard</source>
-            <target/>
+            <source>Clear</source>
+            <target>Limpar</target>
          </segment>
       </unit>
       <unit id="main.clearCache">
@@ -3069,7 +3063,7 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
             <target/>
          </segment>
       </unit>
@@ -3115,10 +3109,10 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.openNotes">
+      <unit id="main.oops">
          <segment>
-            <source>Access Translator's Notes</source>
-            <target>Acessar Notas do Tradutor</target>
+            <source>Oops!</source>
+            <target>Ops!</target>
          </segment>
       </unit>
       <unit id="main.openContent">
@@ -3173,12 +3167,6 @@
          <segment>
             <source>You must be online to use this menu item.</source>
             <target>Você deve estar on-line para usar esse item de menu.</target>
-         </segment>
-      </unit>
-      <unit id="main.resources">
-         <segment>
-            <source>Access UBS Resources</source>
-            <target>Acessar recursos do UBS</target>
          </segment>
       </unit>
       <unit id="main.saveFirst">
@@ -3245,6 +3233,12 @@
          <segment>
             <source>Transcribe</source>
             <target>Transcrever</target>
+         </segment>
+      </unit>
+      <unit id="main.unexpectedError">
+         <segment>
+            <source>Sorry, an unexpected error has occurred.</source>
+            <target>Desculpe, ocorreu um erro inesperado.</target>
          </segment>
       </unit>
       <unit id="main.UnsavedData">
@@ -3673,6 +3667,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.githubSupport">
+         <segment>
+            <source>Github markdown syntax supported</source>
+            <target>Sintaxe markdown do Github suportada</target>
+         </segment>
+      </unit>
       <unit id="mediaUpload.graphicTask">
          <segment>
             <source>Drag and drop a file here, or click here to browse for the file. Formats accepted are .png, .jpg (or .jpeg) and .webp.</source>
@@ -3687,14 +3687,14 @@
       </unit>
       <unit id="mediaUpload.intellectualPropertyTask">
          <segment>
-            <source>Upload an intellectual property release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
-            <target>Carregar uma versão de propriedade intelectual para {0} em formato áudio ou visual. Os formatos de áudio aceites são .mp3, .m4a, .wav ou .ogg. Os formatos visuais aceites são .pdf, .png, ou .jpg.</target>
+            <source>Upload a speaker rights release for {0} in audio or visual format. Audio formats accepted are .mp3, .m4a, .wav or .ogg. Visual formats accepted are .pdf, .png, or .jpg.</source>
+            <target>Carregue uma declaração de direitos de orador para {0} em formato áudio ou visual. Os formatos de áudio aceites são .mp3, .m4a, .wav ou .ogg. Os formatos visuais aceites são .pdf, .png ou .jpg.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.intellectualPropertyTitle">
          <segment>
-            <source>Upload Intellectual Property Release</source>
-            <target>Upload de publicação de propriedade intelectual</target>
+            <source>Upload Speaker Rights Release</source>
+            <target>Carregar a declaração de direitos do orador</target>
          </segment>
       </unit>
       <unit id="mediaUpload.invalidFile">
@@ -3743,6 +3743,12 @@
          <segment>
             <source>Enter Text</source>
             <target>Inserir texto</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.preview">
+         <segment>
+            <source>Preview</source>
+            <target>Pré-visualização</target>
          </segment>
       </unit>
       <unit id="mediaUpload.projectResourceTask">
@@ -3991,12 +3997,6 @@
             <target>Configurar Geral</target>
          </segment>
       </unit>
-      <unit id="passageDetailArtifacts.copyToClipboard">
-         <segment>
-            <source>Copy to Clipboard</source>
-            <target>Cópia para o Clipboard</target>
-         </segment>
-      </unit>
       <unit id="passageDetailArtifacts.createResources">
          <segment>
             <source>Create Resources</source>
@@ -4229,6 +4229,12 @@
          <segment>
             <source>Title</source>
             <target>Título</target>
+         </segment>
+      </unit>
+      <unit id="passageDetailArtifacts.titleDesc">
+         <segment>
+            <source>for {0}</source>
+            <target>para {0}</target>
          </segment>
       </unit>
       <unit id="passageDetailArtifacts.type">
@@ -4545,7 +4551,7 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
             <target/>
          </segment>
       </unit>
@@ -4557,7 +4563,7 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
             <target/>
          </segment>
       </unit>
@@ -4587,14 +4593,20 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
             <target/>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
-            <target/>
+            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
+            <target>Grupo de pares geral sem permissões especiais. Utilizar para atribuir debates a grupos de equipas.</target>
+         </segment>
+      </unit>
+      <unit id="picker.font">
+         <segment>
+            <source>Font</source>
+            <target>Tipo de letra</target>
          </segment>
       </unit>
       <unit id="planActions.addNote">
@@ -4797,8 +4809,8 @@
       </unit>
       <unit id="planSheet.paratextRequired">
          <segment>
-            <source>You must be a Paratext user with access to FOBAI resources to use this feature.</source>
-            <target>Tem de ser um utilizador do Paratext com acesso aos recursos FOBAI para utilizar esta funcionalidade.</target>
+            <source>You must be a {0} user with access to FOBAI resources to use this feature.</source>
+            <target>Para utilizar esta funcionalidade, é necessário ser um utilizador {0} com acesso aos recursos FOBAI.</target>
          </segment>
       </unit>
       <unit id="planSheet.passageBelow">
@@ -4845,8 +4857,8 @@
       </unit>
       <unit id="planSheet.refErr">
          <segment>
-            <source>This audio project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
-            <target/>
+            <source>This audio project contains invalid references and will not sync to {0} properly. (A valid reference would be 3:2-5 or similar.)</source>
+            <target>Este projeto áudio contém referências inválidas e não sincronizará corretamente com {0}. (Uma referência válida seria 3:2-5 ou semelhante).</target>
          </segment>
       </unit>
       <unit id="planSheet.removeFilter">
@@ -4995,8 +5007,8 @@
       </unit>
       <unit id="profile.checkingParatext">
          <segment>
-            <source>Checking for Paratext account...</source>
-            <target/>
+            <source>Checking for {0} account...</source>
+            <target>Verificação da conta {0}...</target>
          </segment>
       </unit>
       <unit id="profile.close">
@@ -5067,14 +5079,14 @@
       </unit>
       <unit id="profile.installParatext">
          <segment>
-            <source>Install Paratext to be able to sync.</source>
-            <target/>
+            <source>Install {0} to be able to sync.</source>
+            <target>Instalar {0} para poder sincronizar.</target>
          </segment>
       </unit>
       <unit id="profile.linkingExplained">
          <segment>
-            <source>Log out and log in with Paratext button</source>
-            <target/>
+            <source>Log out and log in with {0} button</source>
+            <target>Terminar sessão e iniciar sessão com o botão {0}</target>
          </segment>
       </unit>
       <unit id="profile.locale">
@@ -5115,26 +5127,26 @@
       </unit>
       <unit id="profile.notLinked">
          <segment>
-            <source>Not linked to Paratext</source>
-            <target/>
+            <source>Not linked to {0}</source>
+            <target>Não ligado a {0}</target>
          </segment>
       </unit>
       <unit id="profile.paratextLinked">
          <segment>
-            <source>Linked to Paratext</source>
-            <target/>
+            <source>Linked to {0}</source>
+            <target>Ligado a {0}</target>
          </segment>
       </unit>
       <unit id="profile.paratextLinking">
          <segment>
-            <source>Linking to Paratext</source>
-            <target/>
+            <source>Linking to {0}</source>
+            <target>Ligado a {0}</target>
          </segment>
       </unit>
       <unit id="profile.paratextNotLinked">
          <segment>
-            <source>Link to Paratext</source>
-            <target/>
+            <source>Link to {0}</source>
+            <target>Ligação a {0}</target>
          </segment>
       </unit>
       <unit id="profile.phone">
@@ -5169,8 +5181,8 @@
       </unit>
       <unit id="profile.syncFrequency">
          <segment>
-            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
-            <target/>
+            <source>Frequency of data sync in minutes. 0 to turn off sync.</source>
+            <target>Frequência da sincronização de dados em minutos. 0 para desativar a sincronização.</target>
          </segment>
       </unit>
       <unit id="profile.timezone">
@@ -5223,8 +5235,8 @@
       </unit>
       <unit id="projButtons.integrations">
          <segment>
-            <source>Paratext Integration</source>
-            <target/>
+            <source>{0} Integration</source>
+            <target>{0} Integração</target>
          </segment>
       </unit>
       <unit id="projButtons.integrationsTitle">
@@ -5308,13 +5320,19 @@
       <unit id="projectDownload.min">
          <segment>
             <source>Min {0}</source>
-            <target/>
+            <target>Mínimo {0}</target>
          </segment>
       </unit>
       <unit id="projectDownload.missing">
          <segment>
             <source>Missing MB</source>
-            <target/>
+            <target>MB em falta</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.missingFiles">
+         <segment>
+            <source>Missing Files</source>
+            <target>Ficheiros em falta</target>
          </segment>
       </unit>
       <unit id="publishLevel.none">
@@ -5325,20 +5343,20 @@
       </unit>
       <unit id="publishLevel.bibleRequired">
          <segment>
-            <source>You must have set up a Bible Id and Name in the Team Settings to publish to Akuo.</source>
-            <target>Você deve ter configurado um ID e um Nome da Bíblia nas Configurações da Equipe para publicar na Akuo.</target>
+            <source>You must have set up a Bible Id and Name in the Team Settings to publish to {0} or {1}.</source>
+            <target>Tem de ter definido um ID e um Nome da Bíblia nas Definições da Equipa para publicar em {0} ou {1}.</target>
          </segment>
       </unit>
       <unit id="publishLevel.beta">
          <segment>
-            <source>Beta - visible on the Akuo website when using the beta parameter (not available in the app)</source>
-            <target>Beta - visível no site da Akuo ao usar o parâmetro beta (não disponível no aplicativo)</target>
+            <source>Beta - visible on the {0} website when using the beta parameter (not available in the app)</source>
+            <target>Beta - visível no sítio Web {0} quando se utiliza o parâmetro beta (não disponível na aplicação)</target>
          </segment>
       </unit>
       <unit id="publishLevel.public">
          <segment>
-            <source>Public - visible to everyone using Akuo website or app</source>
-            <target>Público - visível para todos que usam o site ou o aplicativo Akuo</target>
+            <source>Public - visible to everyone using {0} website or app</source>
+            <target>Público - visível para todos os utilizadores do sítio Web ou da aplicação {0}</target>
          </segment>
       </unit>
       <unit id="publishTo.Internalization">
@@ -5767,6 +5785,12 @@
             <target>Jogar Item</target>
          </segment>
       </unit>
+      <unit id="selectRecording.selectRecording">
+         <segment>
+            <source>Select Item</source>
+            <target>Selecionar item</target>
+         </segment>
+      </unit>
       <unit id="selectRecording.sourceSegment">
          <segment>
             <source>Source Segment</source>
@@ -5797,10 +5821,16 @@
             <target>Admin</target>
          </segment>
       </unit>
+      <unit id="shared.ai">
+         <segment>
+            <source>AI</source>
+            <target>IA</target>
+         </segment>
+      </unit>
       <unit id="shared.bookNotInParatext">
          <segment>
-            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
-            <target/>
+            <source>Passage {0}.{1}: {Pt} project does not contain book {2}.</source>
+            <target>Passagem {0}.{1}: O projeto {Pt} não contém o livro {2}.</target>
          </segment>
       </unit>
       <unit id="shared.BookNotSet">
@@ -5813,6 +5843,12 @@
          <segment>
             <source>Cancel</source>
             <target>Cancelar</target>
+         </segment>
+      </unit>
+      <unit id="shared.cantCopy">
+         <segment>
+            <source>Unable to copy to clipboard</source>
+            <target>Não é possível copiar para a área de transferência</target>
          </segment>
       </unit>
       <unit id="shared.close">
@@ -5847,13 +5883,13 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
+            <source>Your {Pt} login has expired and can't be automatically renewed. Please log out and login again.</source>
+            <target>O seu início de sessão {Pt} expirou e não pode ser renovado automaticamente. Por favor, termine a sessão e inicie sessão novamente.</target>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -5871,8 +5907,8 @@
       </unit>
       <unit id="shared.invalidParatextLogin">
          <segment>
-            <source>You must login with a valid paratext login.</source>
-            <target/>
+            <source>You must login with a valid {Pt} login.</source>
+            <target>Tem de iniciar sessão com um início de sessão {Pt} válido.</target>
          </segment>
       </unit>
       <unit id="shared.invalidReference">
@@ -5944,7 +5980,7 @@
       <unit id="shared.noiseRemoval">
          <segment>
             <source>Reduce Noise</source>
-            <target></target>
+            <target>Reduzir ruído</target>
          </segment>
       </unit>
       <unit id="shared.noiseRemovalFailed">
@@ -5997,14 +6033,14 @@
       </unit>
       <unit id="shared.bookNotFound">
          <segment>
-            <source>Paratext project does not contain book.</source>
-            <target>O projecto de paratexto não contém o livro.</target>
+            <source>{Pt} project does not contain book.</source>
+            <target>O projeto {Pt} não contém o livro.</target>
          </segment>
       </unit>
       <unit id="shared.referenceNotFound">
          <segment>
-            <source>Reference does not exist in Paratext chapter, or reference is within a larger verse range.</source>
-            <target>A referência não existe no capítulo do Paratexto ou a referência está dentro de um intervalo maior de versos.</target>
+            <source>Reference does not exist in {Pt} chapter, or reference is within a larger verse range.</source>
+            <target>A referência não existe no capítulo {Pt}, ou a referência está dentro de um intervalo de versos maior.</target>
          </segment>
       </unit>
       <unit id="shared.role">
@@ -6327,8 +6363,8 @@
       </unit>
       <unit id="template.book">
          <segment>
-            <source>Paratext book identifier (Length 3 uppercase)</source>
-            <target>Identificador de livro em paratexto (comprimento 3 maiúsculas)</target>
+            <source>{0} book identifier (Length 3 uppercase)</source>
+            <target>{0} identificador do livro (comprimento 3 maiúsculas)</target>
          </segment>
       </unit>
       <unit id="template.bookname">
@@ -6525,8 +6561,8 @@
       </unit>
       <unit id="tool.paratext">
          <segment>
-            <source>Paratext Sync</source>
-            <target>Paratext Sync</target>
+            <source>{0} Sync</source>
+            <target>{Sincronização</target>
          </segment>
       </unit>
       <unit id="tool.phraseBackTranslate">
@@ -6607,6 +6643,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.beginRecognize">
+         <segment>
+            <source>Begin Recognition</source>
+            <target>Iniciar reconhecimento</target>
+         </segment>
+      </unit>
       <unit id="transcriber.comment">
          <segment>
             <source>Comment</source>
@@ -6667,28 +6709,28 @@
             <target>Você não tem mais tarefas para trabalhar!</target>
          </segment>
       </unit>
-      <unit id="transcriber.pullParatextCaption">
+      <unit id="transcriber.phonetic">
          <segment>
-            <source>Paratext</source>
-            <target/>
+            <source>Phonetic</source>
+            <target>Fonética</target>
          </segment>
       </unit>
       <unit id="transcriber.pullParatextStart">
          <segment>
-            <source>Getting transcription from Paratext</source>
-            <target/>
+            <source>Getting transcription from {0}</source>
+            <target>Obter transcrição de {0}</target>
          </segment>
       </unit>
       <unit id="transcriber.pullParatextStatus">
          <segment>
-            <source>Transcription pulled from Paratext</source>
-            <target/>
+            <source>Transcription pulled from {0}</source>
+            <target>Transcrição obtida de {0}</target>
          </segment>
       </unit>
       <unit id="transcriber.pullParatextTip">
          <segment>
-            <source>Pull transcription from Paratext</source>
-            <target/>
+            <source>Pull transcription from {0}</source>
+            <target>Obter transcrição de {0}</target>
          </segment>
       </unit>
       <unit id="transcriber.reject">
@@ -6733,6 +6775,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.scriptOrDialect">
+         <segment>
+            <source>Script or Dialect</source>
+            <target>Escrita ou dialeto</target>
+         </segment>
+      </unit>
       <unit id="transcriber.submit">
          <segment>
             <source>Submit</source>
@@ -6757,10 +6805,16 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.transliterate">
+         <segment>
+            <source>Transliterate to Latin script</source>
+            <target>Transliterar para escrita latina</target>
+         </segment>
+      </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
-            <target/>
+            <source>Transcription updated by {0}. Keep their changes? {1}</source>
+            <target>Transcrição actualizada por {0}. Manter as suas alterações? {1}</target>
          </segment>
       </unit>
       <unit id="transcribeReject.cancel">
@@ -6811,12 +6865,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriptionShow.cantCopy">
-         <segment>
-            <source>Unable to copy to clipboard</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriptionShow.close">
          <segment>
             <source>Close</source>
@@ -6857,12 +6905,6 @@
          <segment>
             <source>Cancel</source>
             <target>Cancelar</target>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.cantCopy">
-         <segment>
-            <source>Unable to copy to clipboard</source>
-            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.copyTip">
@@ -6975,7 +7017,7 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported.  The export file is too large.</source>
+            <source>The audio project cannot be exported. The export file is too large.</source>
             <target/>
          </segment>
       </unit>
@@ -7017,8 +7059,8 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
-            <target/>
+            <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
+            <target>Tem novas alterações locais que não foram incluídas na exportação ptf. Por favor, exporte também um ficheiro itf para capturar todas as alterações.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
@@ -7231,12 +7273,6 @@
             <target>Área de transferência</target>
          </segment>
       </unit>
-      <unit id="verse.copyToClipboard">
-         <segment>
-            <source>Copy to clipboard</source>
-            <target>Copiar para a área de transferência</target>
-         </segment>
-      </unit>
       <unit id="verse.issues">
          <segment>
             <source>The verse markup has issues. Do you want to continue?</source>
@@ -7321,6 +7357,12 @@
             <target>Ir trabalhar</target>
          </segment>
       </unit>
+      <unit id="voice.age">
+         <segment>
+            <source>Age</source>
+            <target>Idade</target>
+         </segment>
+      </unit>
       <unit id="vProject.add">
          <segment>
             <source>Add</source>
@@ -7395,8 +7437,14 @@
       </unit>
       <unit id="vProject.generalBook">
          <segment>
-            <source>Akuo Book Designation</source>
-            <target>Akuo Designação do livro</target>
+            <source>{0} Book Designation</source>
+            <target>{Designação do livro</target>
+         </segment>
+      </unit>
+      <unit id="vProject.generalStory">
+         <segment>
+            <source>Show as Stories (not Extras) in {0}</source>
+            <target>Mostrar como Histórias (não Extras) em {0}</target>
          </segment>
       </unit>
       <unit id="vProject.flat">
@@ -7665,7 +7713,7 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
             <target/>
          </segment>
       </unit>
@@ -7683,7 +7731,7 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
             <target/>
          </segment>
       </unit>
@@ -7779,20 +7827,20 @@
       </unit>
       <unit id="workflowSteps.paratextConsultantCheck">
          <segment>
-            <source>Consultant Check in Paratext</source>
-            <target>Verificação do consultor no Paratext</target>
+            <source>Consultant Check in {0}</source>
+            <target>Verificação do consultor em {0}</target>
          </segment>
       </unit>
       <unit id="workflowSteps.paratextPeerReview">
          <segment>
-            <source>Peer Review in Paratext</source>
-            <target>Revisão por pares no Paratext</target>
+            <source>Peer Review in {0}</source>
+            <target>Revisão por pares em {0}</target>
          </segment>
       </unit>
       <unit id="workflowSteps.paratextSync">
          <segment>
-            <source>Sync to Paratext</source>
-            <target>Sincronização com Paratext</target>
+            <source>Sync to {0}</source>
+            <target>Sincronizar com {0}</target>
          </segment>
       </unit>
       <unit id="workflowSteps.peerReview">
@@ -7815,8 +7863,8 @@
       </unit>
       <unit id="workflowSteps.pBTParatextSync">
          <segment>
-            <source>Phrase BT Paratext</source>
-            <target>Traduzir Frase Voltar Sincronização</target>
+            <source>Phrase BT {0}</source>
+            <target>Frase BT {0}</target>
          </segment>
       </unit>
       <unit id="workflowSteps.preliminaryApproval">
@@ -7911,8 +7959,8 @@
       </unit>
       <unit id="workflowSteps.wBTParatextSync">
          <segment>
-            <source>Whole BT Paratext</source>
-            <target>Traduzir todo Sincronização</target>
+            <source>Whole BT {0}</source>
+            <target>Todo o BT {0}</target>
          </segment>
       </unit>
       <unit id="workflowSteps.none">
@@ -7927,10 +7975,22 @@
             <target>Avançar {jump} {1} [{0}]</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.beginVoiceConvert">
+         <segment>
+            <source>Beginning voice conversion...</source>
+            <target>A iniciar a conversão de voz...</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.backTip">
          <segment>
             <source>Rewind {jump} {1} [{0}]</source>
             <target>Voltar {jump} {1} [{0}]</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.convertVoice">
+         <segment>
+            <source>Convert Voice {0}</source>
+            <target>Converter voz {0}</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.beginningTip">
@@ -7989,8 +8049,8 @@
       </unit>
       <unit id="wsAudioPlayer.aiInProgress">
          <segment>
-            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
-            <target>Serviço de IA em curso...  Este é um serviço remoto que pode demorar muito tempo se a gravação for grande ou se existirem outros pedidos antes do seu.</target>
+            <source>AI Service In Progress... This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target>Serviço de IA em curso... Este é um serviço remoto que pode demorar muito tempo se a gravação for grande ou se existirem outros pedidos antes do seu.</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.aiGiveUp">
@@ -8023,10 +8083,22 @@
             <target>Segmento Anterior [{0}]</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.recognizeProgress">
+         <segment>
+            <source>Recognize Speech in Progress</source>
+            <target>Reconhecer discurso em curso</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.record">
          <segment>
             <source>Record [{0}]</source>
             <target>Registro [{0}]</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.reduceNoise">
+         <segment>
+            <source>Reduce Noise</source>
+            <target>Reduzir o ruído</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.resume">
@@ -8045,6 +8117,12 @@
          <segment>
             <source>seconds</source>
             <target>Segundas</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.selectVoice">
+         <segment>
+            <source>Select Voice</source>
+            <target>Selecionar voz</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.silence">
