@@ -6,6 +6,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../../selector';
 import { IVoicePerm } from './PersonalizeVoicePermission';
 import { orgDefaultVoices, useOrgDefaults } from '../../crud';
+const owner = require('../../../package.json').author.name;
 
 interface ISelectVoice {
   team?: Organization;
@@ -51,7 +52,7 @@ export default function SelectSponsor({ team, refresh, onOpen }: ISelectVoice) {
         name="sponsor"
         label="Sponsor"
         variant="outlined"
-        value={permState?.sponsor ?? 'SIL Global'}
+        value={permState?.sponsor ?? owner}
         onChange={handleChange}
       />
       <Divider sx={{ pt: 2 }} />

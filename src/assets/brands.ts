@@ -3,6 +3,7 @@ export const BibleBrain = 'Bible Brain';
 export const Aquifer = 'Aquifer';
 export const Akuo = 'Akuo';
 export const ObtHelps = 'OBT Helps';
+export const Paratext = 'Paratext';
 export const FaithBridge = 'FaithBridge';
 export const ObtHelper = 'OBT Helper';
 export const UbsResources = 'UBS Resources';

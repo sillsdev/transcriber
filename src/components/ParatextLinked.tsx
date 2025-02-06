@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { profileSelector } from '../selector';
 import { useHasParatext } from '../utils';
 import { useGlobal } from '../context/GlobalContext';
+import { addPt } from '../utils/addPt';
 
 interface StyledCaptionProps extends TypographyProps {
   isCaption?: boolean;
@@ -61,7 +62,7 @@ export const ParatextLinked = (props: IProps) => {
     <>
       {status?.errStatus ? (
         <StyledCaption isCaption notLinked>
-          {t.notLinked}
+          {addPt(t.notLinked)}
         </StyledCaption>
       ) : (
         <></>
@@ -71,21 +72,23 @@ export const ParatextLinked = (props: IProps) => {
         {'\u00A0'}
         {status?.errStatus || 0 || (isOffline && !ptPath) ? (
           <>
-            <Link onClick={handleHowTo}>{t.paratextNotLinked}</Link>
+            <Link onClick={handleHowTo}>{addPt(t.paratextNotLinked)}</Link>
             <IconButton id="howToLink" color="primary" onClick={handleHowTo}>
               <InfoIcon />
             </IconButton>
           </>
         ) : (hasParatext && status?.complete) || ptPath ? (
-          t.paratextLinked
+          addPt(t.paratextLinked)
         ) : (
-          status?.statusMsg || t.checkingParatext
+          status?.statusMsg || addPt(t.checkingParatext)
         )}
       </StyledCaption>
       {howToLink && (
         <Confirm
-          title={t.paratextLinking}
-          text={isOffline ? t.installParatext : t.linkingExplained}
+          title={addPt(t.paratextLinking)}
+          text={
+            isOffline ? addPt(t.installParatext) : addPt(t.linkingExplained)
+          }
           yes={isOffline ? '' : t.logout}
           no={isOffline ? t.close : t.cancel}
           yesResponse={handleLogout}

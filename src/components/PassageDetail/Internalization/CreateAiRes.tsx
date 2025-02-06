@@ -12,9 +12,14 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import ResourceItem from './ResourceItem';
 import { AltButton } from '../../../control';
 import { useEffect, useMemo, useState } from 'react';
-import { BookName, IFindResourceStrings, IState } from '../../../model';
+import {
+  BookName,
+  IFindResourceStrings,
+  ISharedStrings,
+  IState,
+} from '../../../model';
 import { shallowEqual, useSelector } from 'react-redux';
-import { findResourceSelector } from '../../../selector';
+import { findResourceSelector, sharedSelector } from '../../../selector';
 import { OptionProps } from './FindTabs';
 import { BibleResource } from '../../../model/bible-resource';
 import { LaunchLink } from '../../../control/LaunchLink';
@@ -59,6 +64,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
     findResourceSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const scopeOptions = useMemo(
     () => [
@@ -252,7 +258,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
               sx={{ flexGrow: 1, ml: 2 }}
             />
             <Stack>
-              <IconButton onClick={handleCopy} title={t.clipboardCopy}>
+              <IconButton onClick={handleCopy} title={ts.clipboardCopy}>
                 <ContentCopyIcon />
               </IconButton>
               <IconButton onClick={handleClear} title={t.clearQuery}>

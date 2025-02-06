@@ -22,6 +22,7 @@ import { PassageTypeEnum } from '../../model/passageType';
 import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
 import { InitializedRecord } from '@orbit/records';
 import { PublishDestinationEnum } from '../../crud';
+import { addPt } from '../../utils/addPt';
 
 const shtSectionUpdate = (item: ISheet, rec: ISheet) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -313,7 +314,7 @@ export const getSheet = ({
         if (stepRec) {
           const strTag = toCamel(stepRec.attributes.name);
           item.step = wfStr.hasOwnProperty(strTag)
-            ? wfStr.getString(strTag)
+            ? addPt(wfStr.getString(strTag))
             : stepRec.attributes.name;
           item.stepId = stepRec.id;
           item.discussionCount = item.passage.id

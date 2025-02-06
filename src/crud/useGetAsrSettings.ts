@@ -8,20 +8,7 @@ import { useOrbitData } from '../hoc/useOrbitData';
 import { JSONParse } from '../utils';
 import { getLangTag } from 'mui-language-picker';
 import { UpdateRecord } from '../model/baseModel';
-
-const asrDefault: IAsrState = {
-  target: 'Alphabet',
-  language: {
-    bcp47: 'und',
-    languageName: 'English',
-    font: 'charissil',
-    rtl: false,
-    spellCheck: false,
-  },
-  mmsIso: 'eng',
-  dialect: undefined,
-  selectRoman: false,
-};
+import { AsrTarget } from '../business/asr/SelectAsrLanguage';
 
 export function useGetAsrSettings(team?: OrganizationD) {
   const orgSteps = useOrbitData<OrgWorkflowStepD[]>('orgworkflowstep');
@@ -30,6 +17,20 @@ export function useGetAsrSettings(team?: OrganizationD) {
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   const ctx = React.useContext(PassageDetailContext);
   const currentstep = ctx?.state?.currentstep;
+
+  const asrDefault: IAsrState = {
+    target: AsrTarget.alphabet,
+    language: {
+      bcp47: 'und',
+      languageName: 'English',
+      font: 'charissil',
+      rtl: false,
+      spellCheck: false,
+    },
+    mmsIso: 'eng',
+    dialect: undefined,
+    selectRoman: false,
+  };
 
   const getArtId = () => {
     const step = orgSteps.find((s) => s.id === currentstep);

@@ -249,6 +249,9 @@ export const usertableSelector = (state: IState) =>
 export const verseSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'verse' });
 
+export const voiceSelector = (state: IState) =>
+  localStrings(state as IState, { layout: 'voice' });
+
 export const vProjectSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'vProject' });
 

@@ -1,8 +1,11 @@
 import React from 'react';
 import { IVoicePerm } from './PersonalizeVoicePermission';
-import { Organization } from '../../model';
+import { IVoiceStrings, Organization } from '../../model';
 import { voicePermOpts } from './PersonalizeVoicePermission';
 import { ILanguage } from '../../control';
+import { shallowEqual, useSelector } from 'react-redux';
+import { voiceSelector } from '../../selector';
+const owner = require('../../../package.json').author.name;
 
 interface IVoicePermission {
   permissionState: IVoicePerm;
@@ -14,20 +17,24 @@ export const useVoicePermission = ({
   team,
 }: IVoicePermission) => {
   const [permStatement, setPermStatement] = React.useState('');
+  const t: IVoiceStrings = useSelector(voiceSelector, shallowEqual);
 
   React.useEffect(() => {
     const cats = [];
 
-    const teamName = team ? `the ${team?.attributes.name} team` : 'this team';
+    const teamName = team
+      ? t.stTeam.replace('{0}', team?.attributes.name)
+      : t.stThisTeam;
 
-    const sponsorOrg = permState?.sponsor ?? 'SIL Global';
+    const sponsorOrg = permState?.sponsor ?? owner;
 
     if (permState?.gender)
-      cats.push(`my gender is ${permState.gender ?? 'not going to be given'}`);
-    if (permState?.age) cats.push(`my age is ${permState.age ?? 'not given'}`);
+      cats.push(t.stGender.replace('{0}', permState.gender ?? t.stNotGiven));
+    if (permState?.age)
+      cats.push(t.stAge.replace('{0}', permState.gender ?? t.stNotGiven));
     const catMsg =
       cats.length > 0
-        ? `To aid in categorizing my voice for use, ${cats.join(' and ')}. `
+        ? t.stCategories.replace('{0}', cats.join(` ${t.stJoin} `)) + ' '
         : '';
 
     const langCnt = JSON.parse(permState?.languages ?? '[]')?.length;
@@ -36,40 +43,35 @@ export const useVoicePermission = ({
     );
     const langStr =
       langCnt > 1
-        ? langList.slice(0, -1).join(', ') + ` and ${langList.slice(-1)}`
+        ? langList.slice(0, -1).join(', ') +
+          ` ${t.stJoin} ${langList.slice(-1)}`
         : langCnt > 0
         ? langList[0]
         : 'English';
     const langUse =
       permState?.scope === voicePermOpts[1]
         ? langCnt > 0
-          ? `I understand that ${
-              permState?.sponsor ?? sponsorOrg
-            } will only use my voice with languages I do not regularly use, to prevent impersonation. ${
-              langCnt > 1
-                ? 'The languages that I speak are'
-                : 'The language I speak is'
-            } ${langStr}. `
+          ? t.stLangClause
+              .replace('{0}', sponsorOrg)
+              .replace(
+                '{1}',
+                `${langCnt > 1 ? t.stMyLangs : t.stMyLang} ${langStr}`
+              )
           : ''
-        : `I understand that my voice can be used by ${teamName} for any or all of its projects on audio files for the vernacular language, navigation language or any back translation languages.`;
+        : t.stTeamClause.replace('{0}', teamName);
 
-    const compensated = permState?.hired
-      ? 'Since I am being compendated for this work, my voice can be used by the team without additional compensation.'
-      : 'I understand that I will not be compensated for the use of my voice.';
+    const compensated = permState?.hired ? t.stHired : t.stVolunteer;
 
     setPermStatement(
-      `I ${permState?.fullName ?? ''} provide consent for ${
-        permState?.sponsor ?? sponsorOrg
-      } to record and store this file with my voice in the cloud and possibly in a voice library for publishing and use in AI applications that require a voice sample, including voice conversion. The recording created by ${
-        permState?.sponsor ?? sponsorOrg
-      } of me reading this script will become the exclusive property of ${
-        permState.sponsor ?? sponsorOrg
-      } which shall have the unlimited right to make, have made, use, copy, display in public, reconstruct, repair, modify, reproduce, publish, distribute and sell the Work Product, in whole or in part, or combine the Work Product with other matter, or not use the Work Product at all, as it sees fit. ${
-        permState?.sponsor ?? sponsorOrg
-      } will use the recording in a variety of ways, including, but not limited to, Audio books, narrating apps, and scripture engagement to further the mission of the organization. ${catMsg}${langUse} I have been provided this script in a language I understand, and have been given the option to request this script in a language of my choice. This recording will act as my signature in place of a written agreement. ${compensated} I sign with my voice, ${
-        permState?.fullName ?? 'but choose not to be identified by name'
-      }.`
+      t.stStatement
+        .replace('{0}', permState?.fullName ?? '')
+        .replace(/\{1}/g, sponsorOrg)
+        .replace('{2}', catMsg)
+        .replace('{3}', langUse)
+        .replace('{4}', compensated)
+        .replace('{4}', permState?.fullName ?? t.stNotIdentified)
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [permState, team]);
 
   return { permStatement };

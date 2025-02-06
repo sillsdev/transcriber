@@ -5,6 +5,7 @@ import {
   ITranscriptionShowStrings,
   ProjectD,
   OrgWorkflowStep,
+  ISharedStrings,
 } from '../model';
 import {
   Button,
@@ -25,7 +26,7 @@ import { related } from '../crud/related';
 import { findRecord } from '../crud/tryFindRecord';
 import { ArtifactTypeSlug } from '../crud/artifactTypeSlug';
 import { useSelector, shallowEqual } from 'react-redux';
-import { transcriptionShowSelector } from '../selector';
+import { sharedSelector, transcriptionShowSelector } from '../selector';
 import { useOrbitData } from '../hoc/useOrbitData';
 
 interface IProps {
@@ -58,6 +59,7 @@ function TranscriptionShow(props: IProps) {
     transcriptionShowSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const handleClose = () => {
     if (closeMethod) {
@@ -68,7 +70,7 @@ function TranscriptionShow(props: IProps) {
 
   const handleCopy = (text: string) => () => {
     navigator.clipboard.writeText(text).catch((err) => {
-      showMessage(t.cantCopy);
+      showMessage(ts.cantCopy);
     });
   };
 

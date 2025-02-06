@@ -111,6 +111,8 @@ import {
 } from '@orbit/records';
 import { useDispatch } from 'react-redux';
 import { PassageTypeEnum } from '../model/passageType';
+import { addPt } from '../utils/addPt';
+import { Paratext } from '../assets/brands';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -630,7 +632,7 @@ export function Transcriber(props: IProps) {
           ActivityStates.TranscribeReady,
         0,
         segmentsRef.current,
-        t.pullParatextStatus
+        addPt(t.pullParatextStatus)
       );
       resetParatextText();
     }
@@ -723,7 +725,7 @@ export function Transcriber(props: IProps) {
           passage,
           paratextProject,
           errorReporter,
-          t.pullParatextStart
+          addPt(t.pullParatextStart)
         );
       });
     } else {
@@ -741,7 +743,7 @@ export function Transcriber(props: IProps) {
             memory?.keyMap as RecordKeyMap
           ) as string),
         errorReporter,
-        t.pullParatextStart
+        addPt(t.pullParatextStart)
       );
     }
   };
@@ -1179,7 +1181,7 @@ export function Transcriber(props: IProps) {
                         PassageTypeEnum.NOTE
                       ) && (
                         <Grid item>
-                          <LightTooltip title={t.pullParatextTip}>
+                          <LightTooltip title={addPt(t.pullParatextTip)}>
                             <span>
                               <IconButton
                                 id="transcriber.pullParatext"
@@ -1187,10 +1189,8 @@ export function Transcriber(props: IProps) {
                                 disabled={!transSelected}
                               >
                                 <>
-                                  <PullIcon />{' '}
-                                  <Typography>
-                                    {t.pullParatextCaption}
-                                  </Typography>
+                                  <PullIcon />
+                                  <Typography>{Paratext}</Typography>
                                 </>
                               </IconButton>
                             </span>

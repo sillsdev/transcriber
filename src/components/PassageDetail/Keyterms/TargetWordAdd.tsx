@@ -273,7 +273,7 @@ export default function TargetWordAdd(props: IProps) {
                         edge="end"
                       >
                         <CancelIcon fontSize="small" />
-                      </IconButton>{' '}
+                      </IconButton>
                     </span>
                   </Tooltip>
                 </>

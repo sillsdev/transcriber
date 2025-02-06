@@ -8,8 +8,10 @@ import PersonalizeVoicePermission, {
   IVoicePerm,
 } from './PersonalizeVoicePermission';
 import { useVoicePermission } from './useVoicePermission';
-import { Organization } from '../../model';
+import { ISharedStrings, IVoiceStrings, Organization } from '../../model';
 import BigDialog from '../../hoc/BigDialog';
+import { shallowEqual, useSelector } from 'react-redux';
+import { sharedSelector, voiceSelector } from '../../selector';
 
 interface IProps {
   voice?: string;
@@ -27,6 +29,8 @@ export const VoiceStatement = ({
   setStatement,
 }: IProps) => {
   const [showPersonalize, setShowPersonalize] = React.useState<IVoicePerm>();
+  const t: IVoiceStrings = useSelector(voiceSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { permStatement } = useVoicePermission({
     permissionState: state,
     team,
@@ -54,15 +58,15 @@ export const VoiceStatement = ({
           {permStatement}
         </Typography>
         <ActionRow>
-          <IconButton onClick={handleCopy} title={'Copy to clipboard'}>
+          <IconButton onClick={handleCopy} title={ts.clipboardCopy}>
             <ContentCopyIcon color="primary" fontSize="small" />
           </IconButton>
           <GrowingSpacer />
-          <AltButton onClick={handlePersonalize}>{'Personalize'}</AltButton>
+          <AltButton onClick={handlePersonalize}>{t.personalize}</AltButton>
         </ActionRow>
       </Stack>
       <BigDialog
-        title={'Personalize Voice Permission'}
+        title={t.personalizeTitle}
         isOpen={Boolean(showPersonalize)}
         onOpen={() => setShowPersonalize(undefined)}
         onCancel={() => {

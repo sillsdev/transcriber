@@ -11,8 +11,10 @@ import { remoteId } from '../../crud/remoteId';
 import { RecordKeyMap } from '@orbit/records';
 import { useGlobal } from '../../context/GlobalContext';
 import { ActionRow, AltButton } from '../../control';
-import { MediaFileD } from '../../model';
+import { ISharedStrings, MediaFileD } from '../../model';
 import { getSegments, NamedRegions } from '../../utils/namedSegments';
+import { shallowEqual, useSelector } from 'react-redux';
+import { sharedSelector } from '../../selector';
 
 interface AsrProgressProps {
   mediaId: string;
@@ -38,6 +40,7 @@ export default function AsrProgress({
   const [taskId, setTaskId] = React.useState('');
   const taskTimer = React.useRef<NodeJS.Timeout>();
   const timerDelay = 5000; //5 seconds
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const setTranscribing = (adding: boolean) => {
     setAddingx(adding);
@@ -184,7 +187,7 @@ export default function AsrProgress({
     <Box sx={{ width: '100%' }}>
       <LinearProgress />
       <ActionRow>
-        <AltButton onClick={onClose}>Cancel</AltButton>
+        <AltButton onClick={onClose}>{ts.cancel}</AltButton>
       </ActionRow>
     </Box>
   );

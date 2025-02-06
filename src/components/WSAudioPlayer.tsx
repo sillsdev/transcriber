@@ -821,7 +821,7 @@ function WSAudioPlayer(props: IProps) {
     if (targetVoice) {
       applyAudioAi(AudioAiFn.voiceConversion, targetVoice);
       setVoiceVisible(false);
-      showMessage('Beginning voice conversion...');
+      showMessage(t.beginVoiceConvert);
     }
   };
   const handleVoiceChange = () => {
@@ -839,10 +839,11 @@ function WSAudioPlayer(props: IProps) {
 
   const voiceConvertTip = useMemo(
     () =>
-      'Convert Voice {0}\u00A0\u00A0'.replace(
+      (t.convertVoice + '\u00A0\u00A0').replace(
         '{0}',
         voice ? `\u2039 ${voice} \u203A` : ''
       ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [voice]
   );
 
@@ -958,7 +959,9 @@ function WSAudioPlayer(props: IProps) {
                   {features?.noNoise && !offline && (
                     <LightTooltip
                       id="noiseRemovalTip"
-                      title={<Badge badgeContent={'AI'}>Reduce Noise</Badge>}
+                      title={
+                        <Badge badgeContent={ts.ai}>{t.reduceNoise}</Badge>
+                      }
                     >
                       <span>
                         <IconButton
@@ -990,7 +993,7 @@ function WSAudioPlayer(props: IProps) {
                       <LightTooltip
                         id="voiceChangeTip"
                         title={
-                          <Badge badgeContent={'AI'}>{voiceConvertTip}</Badge>
+                          <Badge badgeContent={ts.ai}>{voiceConvertTip}</Badge>
                         }
                       >
                         <span>
@@ -1373,13 +1376,8 @@ function WSAudioPlayer(props: IProps) {
               />
             )}
             <BigDialog
-              title={'Select Voice'}
-              description={
-                <Typography>
-                  Enter the full name of the person whose voice will be used to
-                  modify the voice or voices in the original recording.
-                </Typography>
-              }
+              title={t.selectVoice}
+              description={<Typography>{t.selectVoicePrompt}</Typography>}
               isOpen={voiceVisible}
               onOpen={handleCloseVoice}
               bp={BigDialogBp.sm}

@@ -25,6 +25,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import {
   BookName,
   IFindResourceStrings,
+  ISharedStrings,
   IState,
   PassageD,
   SectionD,
@@ -32,7 +33,10 @@ import {
 import { useOrbitData } from '../../../hoc/useOrbitData';
 import { isElectron } from '../../../api-variable';
 import { SortBy, useKeyTerms } from '../Keyterms/useKeyTerms';
-import { findResourceSelector } from '../../../selector/selectors';
+import {
+  findResourceSelector,
+  sharedSelector,
+} from '../../../selector/selectors';
 import { LaunchLink } from '../../../control/LaunchLink';
 
 interface OptionProps {
@@ -141,6 +145,7 @@ export const FindResource = () => {
     findResourceSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   enum scopeI {
     passage,
@@ -508,7 +513,7 @@ export const FindResource = () => {
                     sx={{ flexGrow: 1, pl: 2 }}
                   />
                   <Stack>
-                    <IconButton onClick={handleCopy} title={t.clipboardCopy}>
+                    <IconButton onClick={handleCopy} title={ts.clipboardCopy}>
                       <ContentCopyIcon />
                     </IconButton>
                     {userEdited && (

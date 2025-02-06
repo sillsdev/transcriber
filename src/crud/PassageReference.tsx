@@ -8,14 +8,14 @@ interface IProps {
   bookData: BookName[];
   flat: boolean;
   sharedResource?: SharedResourceD;
-  font?: string;
+  fontSize?: string;
 }
 export const PassageReference: FC<IProps> = ({
   passage,
   bookData = [],
   flat,
   sharedResource,
-  font,
+  fontSize,
 }: IProps) => {
   let ref = passage?.attributes?.reference;
   if (sharedResource?.attributes?.title) ref = sharedResource.attributes.title;
@@ -26,7 +26,7 @@ export const PassageReference: FC<IProps> = ({
         value={ref}
         flat={flat}
         pt={passageTypeFromRef(passage?.attributes.reference)}
-        font={font}
+        fontSize={fontSize}
       />
     );
   const book = passageBook(passage, bookData);

@@ -23,6 +23,7 @@ import {
   RecordOperation,
   RecordTransformBuilder,
 } from '@orbit/records';
+import { addPt } from '../utils/addPt';
 
 export const defaultWorkflow = 'draft';
 
@@ -47,7 +48,7 @@ export const useOrgWorkflowSteps = () => {
   const creatingRef = useRef(false);
 
   const localizedWorkStep = (val: string) => {
-    return (t as ISwitches)[toCamel(val)] || val;
+    return addPt((t as ISwitches)[toCamel(val)]) || val;
   };
   const localizedWorkStepFromId = (id: string) => {
     try {

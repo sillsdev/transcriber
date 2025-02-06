@@ -14,6 +14,10 @@ import { getLangTag, LangTag } from 'mui-language-picker';
 import { mmsAsrDetail } from './mmsAsrDetail';
 import scriptNameData from '../../assets/scriptName';
 import { MmsLang } from '../../model/mmsLang';
+import { ITranscriberStrings } from '../../model';
+import { transcriberSelector } from '../../selector';
+import { shallowEqual, useSelector } from 'react-redux';
+import { AsrTarget } from './SelectAsrLanguage';
 
 export interface IAsrState {
   target: string;
@@ -34,6 +38,7 @@ export const AsrAlphabet = ({ state, setState, mmsLangs }: IAsrAlphabet) => {
   const [mmsLangMat, setMmsLangMat] = React.useState<MmsLang[]>();
   const [showRoman, setShowRoman] = React.useState(false);
   const init = React.useRef(true);
+  const t: ITranscriberStrings = useSelector(transcriberSelector, shallowEqual);
   const [scriptName] = React.useState(
     new Map(scriptNameData as [string, string][])
   );
@@ -103,12 +108,14 @@ export const AsrAlphabet = ({ state, setState, mmsLangs }: IAsrAlphabet) => {
           </Typography>
         ) : (mmsLangMat?.length ?? 0) > 1 ? (
           <FormControl sx={{ m: 1, minWidth: 200 }}>
-            <InputLabel id="dialect-select-label">Script or Dialect</InputLabel>
+            <InputLabel id="dialect-select-label">
+              {t.scriptOrDialect}
+            </InputLabel>
             <Select
               labelId={'dialect-select-label'}
               id={'dialect-select'}
               value={state.dialect}
-              label="Script or Dialect"
+              label={t.scriptOrDialect}
               onChange={handleChange}
             >
               {mmsLangMat?.map((mmsLang) => (
@@ -124,17 +131,16 @@ export const AsrAlphabet = ({ state, setState, mmsLangs }: IAsrAlphabet) => {
         ) : (
           <></>
         )}
-
         {showRoman && (
           <FormControlLabel
             control={
               <Checkbox
                 checked={state.selectRoman ?? false}
                 onChange={handleRoman}
-                disabled={state.target !== 'Alphabet'}
+                disabled={state.target !== AsrTarget.alphabet}
               />
             }
-            label={'Transliterate to Latin script'}
+            label={t.transliterate}
           />
         )}
       </Stack>

@@ -57,13 +57,13 @@ export const MarkDownEdit = ({ inValue, onValue }: MarkDownEditProps) => {
           component={'fieldset'}
           sx={{ border: '1px solid grey', flexGrow: 1 }}
         >
-          <FormLabel component={'legend'}>Preview</FormLabel>
+          <FormLabel component={'legend'}>{t.preview}</FormLabel>
           <Box sx={{ mx: 1 }}>
             <MarkDown remarkPlugins={[remarkGfm]}>{value}</MarkDown>
           </Box>
         </FormControl>
       )}
-      <LightTooltip title="Github markdown syntax supported">
+      <LightTooltip title={t.githubSupport}>
         <IconButton
           onClick={() => setLink(gfmSyntax.replace('{0}', lang))}
           sx={{ alignSelf: 'flex-start', p: '2px' }}

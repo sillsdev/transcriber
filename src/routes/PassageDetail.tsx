@@ -54,6 +54,7 @@ import Busy from '../components/Busy';
 import { RecordKeyMap } from '@orbit/records';
 import PassageDetailParatextIntegration from '../components/PassageDetail/PassageDetailParatextIntegration';
 import { PassageDetailDiscuss } from '../components/PassageDetail/PassageDetailDiscuss';
+import { addPt } from '../utils/addPt';
 
 const KeyTerms = React.lazy(
   () => import('../components/PassageDetail/Keyterms/KeyTerms')
@@ -284,7 +285,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
             <PassageDetailSectionPassage />
           </Grid>
           <Grid item id="tool" sx={rowProps} xs={3}>
-            {tool && t.hasOwnProperty(tool) ? t.getString(tool) : tool}
+            {tool && t.hasOwnProperty(tool) ? addPt(t.getString(tool)) : tool}
           </Grid>
           <Grid
             item

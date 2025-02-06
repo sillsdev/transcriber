@@ -11,9 +11,13 @@ import {
   Badge,
 } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
-import { ISharedStrings, OrganizationD } from '../../model';
+import {
+  ISharedStrings,
+  ITranscriberStrings,
+  OrganizationD,
+} from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
-import { sharedSelector } from '../../selector';
+import { sharedSelector, transcriberSelector } from '../../selector';
 import { AsrAlphabet, IAsrState } from './AsrAlphabet';
 import { useMmsLangs } from './useMmsLangs';
 import { useGetAsrSettings } from '../../crud/useGetAsrSettings';
@@ -45,7 +49,8 @@ export default function SelectAsrLanguage({
 }: ISelectAsrLanguage) {
   const [asrState, setAsrState] = React.useState<IAsrState>();
   const mmsLangs = useMmsLangs();
-  const t: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const t: ITranscriberStrings = useSelector(transcriberSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { getAsrSettings, saveAsrSettings } = useGetAsrSettings(team);
 
   const handlePhonetic = () => {
@@ -70,7 +75,7 @@ export default function SelectAsrLanguage({
   React.useEffect(() => {
     const asr = getAsrSettings();
     setAsrState({
-      target: asr?.target ?? 'Alphabet',
+      target: asr?.target ?? AsrTarget.alphabet,
       language: asr?.language ?? {
         bcp47: 'und',
         languageName: '',
@@ -103,9 +108,9 @@ export default function SelectAsrLanguage({
           label={
             <Badge
               badgeContent={<InfoIcon color={'info'} fontSize="small" />}
-              title={'Language choice is used to suggest word breaks'}
+              title={t.phoneticTip}
             >
-              Phonetic
+              {t.phonetic}
             </Badge>
           }
           sx={{ ml: 2 }}
@@ -113,17 +118,17 @@ export default function SelectAsrLanguage({
       </Stack>
       <Divider sx={{ pt: 2 }} />
       <ActionRow>
-        <AltButton onClick={() => onOpen(true)}>{t.cancel}</AltButton>
+        <AltButton onClick={() => onOpen(true)}>{ts.cancel}</AltButton>
         <PriButton
           onClick={handleSave}
           disabled={
             !asrState?.target ||
-            (asrState?.target === 'Alphabet' &&
+            (asrState?.target === AsrTarget.alphabet &&
               (asrState?.language?.bcp47 === undefined ||
                 asrState?.language?.bcp47 === 'und'))
           }
         >
-          {canBegin ? 'Begin Recognition' : t.save}
+          {canBegin ? t.beginRecognize : ts.save}
         </PriButton>
       </ActionRow>
     </StyledBox>
