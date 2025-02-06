@@ -88,13 +88,7 @@ export default function PersonalizeVoicePermission(props: IProps) {
   };
 
   const handleScope = (option: string) => {
-    let scope = option;
-    for (const [key, value] of Object.entries(localOptions)) {
-      if (value === option) {
-        scope = key;
-        break;
-      }
-    }
+    let scope = voicePermOpts[localOptions.indexOf(option)];
     const updateScope = (state: IVoicePerm) => ({ ...state, scope });
     setCurState(updateScope);
     setState && setState(updateScope);

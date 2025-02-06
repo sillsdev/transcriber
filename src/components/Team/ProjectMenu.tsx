@@ -29,6 +29,7 @@ import {
   toDoTableSelector,
 } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import { addPt } from '../../utils/addPt';
 
 interface IProps {
   inProject?: boolean;
@@ -161,7 +162,7 @@ export function ProjectMenu(props: IProps) {
               <ListItemIcon>
                 <ParatextLogo />
               </ListItemIcon>
-              <ListItemText primary={tpb.integrations} />
+              <ListItemText primary={addPt(tpb.integrations)} />
             </StyledMenuItem>
           )}
         {!inProject && (!isOffline || offlineOnly) && isAdmin && (
