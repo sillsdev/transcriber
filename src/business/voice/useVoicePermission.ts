@@ -31,7 +31,7 @@ export const useVoicePermission = ({
     if (permState?.gender)
       cats.push(t.stGender.replace('{0}', permState.gender ?? t.stNotGiven));
     if (permState?.age)
-      cats.push(t.stAge.replace('{0}', permState.gender ?? t.stNotGiven));
+      cats.push(t.stAge.replace('{0}', permState.age ?? t.stNotGiven));
     const catMsg =
       cats.length > 0
         ? t.stCategories.replace('{0}', cats.join(` ${t.stJoin} `)) + ' '

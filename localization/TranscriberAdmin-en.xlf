@@ -7776,13 +7776,13 @@
       </unit>
       <unit id="voice.excludeName">
          <segment>
-            <source>Exclude name?</source>
+            <source>Exclude my name.</source>
             <target/>
          </segment>
       </unit>
       <unit id="voice.forHire">
          <segment>
-            <source>Work for hire?</source>
+            <source>I work for hire.</source>
             <target/>
          </segment>
       </unit>

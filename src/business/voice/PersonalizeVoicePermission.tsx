@@ -237,13 +237,6 @@ export default function PersonalizeVoicePermission(props: IProps) {
         }
         label={t.excludeName}
       />
-      <Options
-        label={t.scope}
-        options={localOptions}
-        defaultValue={t.getString(curState?.scope ?? voicePermOpts[0])}
-        onChange={handleScope}
-        decorations={decorations}
-      />
       <FormControlLabel
         control={
           <Checkbox
@@ -253,6 +246,13 @@ export default function PersonalizeVoicePermission(props: IProps) {
           />
         }
         label={t.forHire}
+      />
+      <Options
+        label={t.scope}
+        options={localOptions}
+        defaultValue={t.getString(curState?.scope ?? voicePermOpts[0])}
+        onChange={handleScope}
+        decorations={decorations}
       />
     </StyledStack>
   );
