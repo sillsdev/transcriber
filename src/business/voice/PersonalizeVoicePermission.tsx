@@ -46,6 +46,7 @@ interface IProps {
 export default function PersonalizeVoicePermission(props: IProps) {
   const { state, setState } = props;
   const [excludeName, setExcludeName] = React.useState(false);
+  const [inName, setInName] = React.useState('');
   const [language, setLanguage] = React.useState<ILanguage>();
   const [curState, setCurState] = React.useState(state);
   const [minorMsg, setMinorMsg] = React.useState('');
@@ -114,7 +115,7 @@ export default function PersonalizeVoicePermission(props: IProps) {
   ) => {
     const newState = {
       ...curState,
-      fullName: checked ? undefined : props.state.fullName,
+      fullName: checked ? undefined : inName,
     };
     setCurState(newState);
     setState && setState(newState);
@@ -160,6 +161,14 @@ export default function PersonalizeVoicePermission(props: IProps) {
       langEl.current.click();
     e.stopPropagation();
   };
+
+  React.useEffect(() => {
+    setInName(state?.fullName ?? '');
+    return () => {
+      setInName('');
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   React.useEffect(() => {
     setDecorations({
@@ -228,14 +237,12 @@ export default function PersonalizeVoicePermission(props: IProps) {
       <Typography variant="h6">
         {t.voiceOptions.replace('{0}', curState?.fullName ?? 'your')}
       </Typography>
-      {!excludeName && (
-        <FormControlLabel
-          control={
-            <Checkbox checked={excludeName} onChange={handleExcludeName} />
-          }
-          label={t.excludeName}
-        />
-      )}
+      <FormControlLabel
+        control={
+          <Checkbox checked={excludeName} onChange={handleExcludeName} />
+        }
+        label={t.excludeName}
+      />
       <Options
         label={t.scope}
         options={localOptions}
