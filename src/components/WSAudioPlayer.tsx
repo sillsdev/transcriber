@@ -1090,13 +1090,17 @@ function WSAudioPlayer(props: IProps) {
                 />
               )}
               {waitingForAI && (
-                <>
-                  <Grid item xs={10}>
+                <Grid container sx={{ pr: 6 }}>
+                  <Grid item xs={12}>
                     <Typography sx={{ whiteSpace: 'normal' }}>
                       {t.aiInProgress}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{ display: 'flex', justifyContent: 'center' }}
+                  >
                     <AltButton
                       id="ai-cancel"
                       onClick={() => {
@@ -1107,7 +1111,7 @@ function WSAudioPlayer(props: IProps) {
                       {ts.cancel}
                     </AltButton>
                   </Grid>
-                </>
+                </Grid>
               )}
             </Grid>
             <div id="wsAudioTimeline" ref={timelineRef} />

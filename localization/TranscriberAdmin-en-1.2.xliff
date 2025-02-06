@@ -9073,14 +9073,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="voice.excludeName">
-            <source>Exclude name?</source>
+            <source>Exclude my name.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PersonalizeVoicePermission.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="voice.forHire">
-            <source>Work for hire?</source>
+            <source>I work for hire.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PersonalizeVoicePermission.tsx</context>
