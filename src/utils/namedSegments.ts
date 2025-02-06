@@ -6,6 +6,7 @@ export enum NamedRegions {
   BackTranslation = 'BT',
   ProjectResource = 'ProjRes',
   Verse = 'Verse',
+  TRTask = 'TRTask',
 }
 export function updateSegments(
   name: string,
@@ -41,8 +42,7 @@ export function getSegments(name: string, segments: string) {
     var thisone = json.find((j) => j['name'] === name) as INamedRegion;
     if (thisone?.regionInfo) {
       var ri = thisone?.regionInfo;
-      if (typeof ri === 'object')
-        return JSON.stringify(ri);
+      if (typeof ri === 'object') return JSON.stringify(ri);
       return thisone.regionInfo.toString();
     }
     return '{}';
