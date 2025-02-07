@@ -7,11 +7,19 @@ import {
   FormControlLabel,
   Box,
   SxProps,
+  styled,
+  FormControlLabelProps,
 } from '@mui/material';
 import { LanguagePicker, LangTag } from 'mui-language-picker';
 import { useSelector, shallowEqual } from 'react-redux';
 import { vProjectSelector, pickerSelector } from '../selector';
 import { fontFamilyName } from '../utils/fontFamilyName';
+
+const StyledFormControlLabel = styled(FormControlLabel)<FormControlLabelProps>({
+  '& .MuiFormControlLabel-asterisk': {
+    display: 'none',
+  },
+});
 
 export interface ILanguage {
   bcp47: string;
@@ -119,7 +127,7 @@ export const Language = (props: IProps) => {
         <FormLabel sx={{ color: 'secondary.main' }}>{t.language}</FormLabel>
       )}
       <FormGroup sx={fullBox || undefined}>
-        <FormControlLabel
+        <StyledFormControlLabel
           id="language-code"
           ref={langEl}
           sx={sx ?? { ml: 0 }}
