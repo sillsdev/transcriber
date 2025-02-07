@@ -20,6 +20,8 @@ import {
   findRecord,
   related,
   useUpdateRecord,
+  orgDefaultVoices,
+  useOrgDefaults,
 } from '../crud';
 import Memory from '@orbit/memory';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -99,6 +101,7 @@ export function ProvideRights(props: IProps) {
   const { showMessage } = useSnackBar();
   const cancelled = useRef(false);
   const updateRecord = useUpdateRecord();
+  const { getOrgDefault } = useOrgDefaults();
   const t: ICommunityStrings = useSelector(communitySelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
@@ -129,7 +132,8 @@ export function ProvideRights(props: IProps) {
 
   useEffect(() => {
     setDefaultFileName(cleanFileName(`${speaker}_ip`));
-    setState({ fullName: speaker } as IVoicePerm);
+    const voices = getOrgDefault(orgDefaultVoices) as IVoicePerm;
+    setState({ ...voices, fullName: speaker } as IVoicePerm);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [speaker]);
 

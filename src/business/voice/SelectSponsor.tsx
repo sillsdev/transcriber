@@ -15,17 +15,15 @@ interface ISelectVoice {
 }
 
 export default function SelectSponsor({ team, refresh, onOpen }: ISelectVoice) {
-  const [voice, setVoice] = React.useState<string>();
   const [permState, setPermState] = React.useState<IVoicePerm>({});
-  const { getDefault, setDefault } = useOrgDefaults();
+  const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   const t: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   React.useEffect(() => {
     if (team) {
-      const voices = getDefault(orgDefaultVoices, team);
+      const voices = getOrgDefault(orgDefaultVoices, team?.id) as IVoicePerm;
       if (voices) {
-        setVoice(voices?.voice);
-        setPermState(voices?.permission ?? {});
+        setPermState(voices);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -33,7 +31,7 @@ export default function SelectSponsor({ team, refresh, onOpen }: ISelectVoice) {
 
   const handleSave = () => {
     if (team) {
-      setDefault(orgDefaultVoices, { voice, permission: permState }, team);
+      setOrgDefault(orgDefaultVoices, permState, team?.id);
       refresh?.();
     }
     onOpen();
