@@ -978,6 +978,7 @@ function WSAudioPlayer(props: IProps) {
                             sx={{ width: '20pt', height: '20pt' }}
                             disabled={
                               !ready ||
+                              playing ||
                               recording ||
                               duration === 0 ||
                               waitingForAI
@@ -1003,6 +1004,7 @@ function WSAudioPlayer(props: IProps) {
                             onSettings={() => setVoiceVisible(true)}
                             disabled={
                               !ready ||
+                              playing ||
                               recording ||
                               duration === 0 ||
                               waitingForAI
