@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Autocomplete,
   Checkbox,
@@ -13,6 +13,7 @@ import { ILanguage, Language, initLang, Options } from '../../control';
 import { shallowEqual, useSelector } from 'react-redux';
 import { voiceSelector } from '../../selector';
 import { IVoiceStrings } from '../../model';
+import { getLangTag } from 'mui-language-picker';
 
 export const voicePermOpts: string[] = ['thisTeam', 'allTeams'];
 
@@ -55,6 +56,7 @@ export default function PersonalizeVoicePermission(props: IProps) {
   const langEl = React.useRef<any>();
   const t: IVoiceStrings = useSelector(voiceSelector, shallowEqual);
   const localOptions = voicePermOpts.map((option) => t.getString(option));
+  const [hideLang, setHideLang] = React.useState(false);
 
   const handleChangeGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     const valid = /^[a-zA-Z]{0,15}$/.test(event.target.value);
@@ -127,7 +129,13 @@ export default function PersonalizeVoicePermission(props: IProps) {
     setCurState(newState);
     setState && setState(newState);
     setLanguage(undefined);
+    setHideLang(true);
   };
+
+  useEffect(() => {
+    if (!hideLang) return;
+    setHideLang(false);
+  }, [hideLang]);
 
   const handleExcludeChange = (
     event: React.SyntheticEvent,
@@ -154,6 +162,14 @@ export default function PersonalizeVoicePermission(props: IProps) {
     if (langEl.current && e.keyCode && ![TAB, SHIFT, CTRL].includes(e.keyCode))
       langEl.current.click();
     e.stopPropagation();
+  };
+
+  const handleFilter = (code: string) => {
+    const langTag = getLangTag(code);
+    if (['Zxxx', 'Sgnw', 'Brai'].includes(langTag?.script ?? '')) return false;
+    const curLangs = JSON.parse(curState?.languages ?? '[]');
+    if (curLangs.some((l: ILanguage) => l.bcp47 === code)) return false;
+    return true;
   };
 
   React.useEffect(() => {
@@ -191,13 +207,18 @@ export default function PersonalizeVoicePermission(props: IProps) {
             ref={langEl}
             sx={{ display: 'none' }}
             control={
-              <Language
-                {...(language ?? initLang)}
-                hideFont
-                hideSpelling
-                required={false}
-                onChange={handleLanguageChange}
-              />
+              hideLang ? (
+                <></>
+              ) : (
+                <Language
+                  {...(language ?? initLang)}
+                  filter={handleFilter}
+                  hideFont
+                  hideSpelling
+                  required={false}
+                  onChange={handleLanguageChange}
+                />
+              )
             }
             label=""
           />
@@ -224,7 +245,7 @@ export default function PersonalizeVoicePermission(props: IProps) {
       ),
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [curState, minorMsg, language]);
+  }, [curState, minorMsg, language, hideLang]);
 
   return (
     <StyledStack spacing={1} sx={{ py: 1 }}>
