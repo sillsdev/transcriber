@@ -488,7 +488,7 @@ function WSAudioPlayer(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowSpeed]);
   const handleRefresh = () => {
-    setVoice(getOrgDefault(orgDefaultVoices));
+    setVoice(getOrgDefault(orgDefaultVoices)?.fullName);
   };
   useEffect(() => {
     if (org) {

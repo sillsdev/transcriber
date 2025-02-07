@@ -18,6 +18,7 @@ import {
 import SpeakerName from '../../components/SpeakerName';
 import { useGlobal } from '../../context/GlobalContext';
 import { useOrbitData } from '../../hoc/useOrbitData';
+import { IVoicePerm } from './PersonalizeVoicePermission';
 
 interface ISelectVoice {
   onOpen: () => void;
@@ -35,7 +36,7 @@ export default function SelectVoice({ onOpen, begin, refresh }: ISelectVoice) {
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   React.useEffect(() => {
-    const curVoice = getOrgDefault(orgDefaultVoices);
+    const curVoice = getOrgDefault(orgDefaultVoices)?.fullName;
     if (curVoice) {
       setVoice(curVoice);
     }
@@ -63,7 +64,8 @@ export default function SelectVoice({ onOpen, begin, refresh }: ISelectVoice) {
 
   const handleSetVoice = (voice: string) => {
     setVoice(voice);
-    setOrgDefault(orgDefaultVoices, voice);
+    const state = getOrgDefault(orgDefaultVoices) as IVoicePerm;
+    setOrgDefault(orgDefaultVoices, { ...state, fullName: voice });
     refresh?.();
   };
 

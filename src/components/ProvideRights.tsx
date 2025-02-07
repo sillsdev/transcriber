@@ -132,8 +132,8 @@ export function ProvideRights(props: IProps) {
 
   useEffect(() => {
     setDefaultFileName(cleanFileName(`${speaker}_ip`));
-    const voices = getOrgDefault(orgDefaultVoices) as IVoicePerm;
-    setState({ ...voices, fullName: speaker } as IVoicePerm);
+    const state = getOrgDefault(orgDefaultVoices) as IVoicePerm;
+    setState({ ...state, fullName: speaker } as IVoicePerm);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [speaker]);
 
