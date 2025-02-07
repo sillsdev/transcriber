@@ -160,16 +160,6 @@ const TokenChecked = () => (
 );
 
 const AuthApp = () => {
-  const onRedirectingCallbck = (appState?: { returnTo?: string }) => {
-    //user has requested a specific path
-    //remember it to come back to after loading
-    if (appState?.returnTo) {
-      localStorage.setItem(LocalKey.deeplink, appState.returnTo);
-    } else {
-      localStorage.removeItem(LocalKey.deeplink);
-    }
-  };
-
   return (
     <Auth0Provider
       domain={auth0Domain}
@@ -178,7 +168,6 @@ const AuthApp = () => {
         audience: apiIdentifier,
         redirect_uri: process.env.REACT_APP_CALLBACK,
         useRefreshTokens: true,
-        onRedirectCallback: onRedirectingCallbck,
       }}
     >
       <TokenChecked />

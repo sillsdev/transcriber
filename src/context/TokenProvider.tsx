@@ -135,6 +135,9 @@ function TokenProvider(props: IProps) {
           setAuthSession(user, token);
         })
         .catch((e: any) => {
+          if (e.error === 'login_required') {
+            localStorage.setItem(LocalKey.deeplink, window.location.pathname);
+          }
           handleLogOut();
           logError(Severity.error, errorReporter, e);
           loginWithRedirect(options);
