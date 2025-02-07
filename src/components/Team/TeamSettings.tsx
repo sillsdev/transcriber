@@ -170,7 +170,9 @@ export function TeamSettings(props: IProps) {
                       onChange={handleFeatures(FeatureSlug.AiTranscribe)}
                     />
                   }
-                  label={<Badge badgeContent={ts.ai}>t.recognizeSpeech</Badge>}
+                  label={
+                    <Badge badgeContent={ts.ai}>{t.recognizeSpeech}</Badge>
+                  }
                 />
                 {mode !== DialogMode.add && (
                   <IconButton
