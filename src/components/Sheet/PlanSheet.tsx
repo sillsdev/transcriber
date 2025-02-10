@@ -8,7 +8,7 @@ import {
   ReactElement,
   useCallback,
 } from 'react';
-import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
+import { useGlobal } from '../../context/GlobalContext';
 import {
   IPlanSheetStrings,
   ISharedStrings,
@@ -266,7 +266,7 @@ export function PlanSheet(props: IProps) {
   } = ctx.state;
 
   const [memory] = useGlobal('memory');
-  const getGlobal = useGetGlobal();
+  const [alertOpen] = useGlobal('alertOpen');
   const { showMessage } = useSnackBar();
   const [position, setPosition] = useState<{
     mouseX: null | number;
@@ -660,11 +660,7 @@ export function PlanSheet(props: IProps) {
   });
 
   const handleAutoSave = () => {
-    if (
-      changedRef.current &&
-      !preventSaveRef.current &&
-      !getGlobal('alertOpen')
-    ) {
+    if (changedRef.current && !preventSaveRef.current && !alertOpen) {
       handleSave();
     } else {
       startSaveTimer();

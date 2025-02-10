@@ -13,7 +13,6 @@ import { Severity } from '../../utils';
 import { OfflineProject, Plan, VProject } from '../../model';
 import { ITokenContext } from '../../context/TokenProvider';
 import { AlertSeverity } from '../../hoc/SnackBar';
-import { GetGlobalType } from '../../context/GlobalContext';
 
 export const orbitError = (ex: IApiError) => {
   return ex.response.status !== Severity.retry
@@ -54,11 +53,12 @@ export interface IFetchOrbitData {
   coordinator: Coordinator;
   tokenCtx: ITokenContext;
   fingerprint: string;
+  errorReporter: any;
+  orbitRetries: number;
   setUser: (id: string) => void;
   setProjectsLoaded: (value: string[]) => void;
   setOrbitRetries: (r: number) => void;
   setLang: (locale: string) => void;
-  getGlobal: GetGlobalType;
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject;
   offlineSetup: () => Promise<void>;
   showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void;
@@ -69,11 +69,12 @@ export const fetchOrbitData =
     coordinator,
     tokenCtx,
     fingerprint,
+    errorReporter,
+    orbitRetries,
     setUser,
     setProjectsLoaded,
     setOrbitRetries,
     setLang,
-    getGlobal,
     getOfflineProject,
     offlineSetup,
     showMessage,
@@ -83,12 +84,13 @@ export const fetchOrbitData =
       coordinator,
       tokenCtx,
       fingerprint,
+      errorReporter,
+      orbitRetries,
       setUser,
       setProjectsLoaded,
       (ex: IApiError) => dispatch(orbitError(ex)),
       setOrbitRetries,
       setLang,
-      getGlobal,
       getOfflineProject,
       offlineSetup,
       showMessage

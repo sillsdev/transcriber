@@ -38,7 +38,6 @@ import { updateBackTranslationType } from './crud/updateBackTranslationType';
 import { updateConsultantWorkflowStep } from './crud/updateConsultantWorkflowStep';
 import { serializersSettings } from './serializers/serializersFor';
 import { requestedSchema } from './schema';
-import { GetGlobalType } from './context/GlobalContext';
 type StategyError = (...args: unknown[]) => unknown;
 
 interface PullStratErrProps {
@@ -48,7 +47,8 @@ interface PullStratErrProps {
   showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void;
   memory: Memory;
   remote: JSONAPISource;
-  getGlobal: GetGlobalType;
+  orbitRetries: any;
+  errorReporter: any;
 }
 interface QueryStratErrProps {
   tokenCtx: ITokenContext;
@@ -79,7 +79,7 @@ const updateError =
     showMessage,
     memory,
     remote,
-    getGlobal,
+    orbitRetries,
   }: PullStratErrProps) =>
   (transform: RecordTransform, ex: any) => {
     console.log('***** api update fail', transform, ex);
@@ -90,8 +90,8 @@ const updateError =
       (ex instanceof Error &&
         (ex.message === 'Network Error' || ex.message === 'Failed to fetch'))
     ) {
-      if (getGlobal('orbitRetries') > 0) {
-        setOrbitRetries(getGlobal('orbitRetries') - 1);
+      if (orbitRetries > 0) {
+        setOrbitRetries(orbitRetries - 1);
         // When network errors are encountered, try again in 3s
         orbitError(orbitRetry(null, 'NetworkError - will try again soon'));
         setTimeout(() => {
@@ -142,12 +142,13 @@ export const Sources = async (
   coordinator: Coordinator,
   tokenCtx: ITokenContext,
   fingerprint: string,
+  errorReporter: any,
+  orbitRetries: number,
   setUser: (id: string) => void,
   setProjectsLoaded: (valud: string[]) => void,
   orbitError: (ex: IApiError) => void,
   setOrbitRetries: (r: number) => void,
   setLang: (locale: string) => void,
-  getGlobal: GetGlobalType,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
   offlineSetup: () => Promise<void>,
   showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void
@@ -240,7 +241,8 @@ export const Sources = async (
             showMessage,
             memory,
             remote,
-            getGlobal,
+            orbitRetries,
+            errorReporter,
           }) as unknown as StategyError,
           blocking: true,
         })
@@ -375,7 +377,7 @@ export const Sources = async (
       );
       logError(
         Severity.error,
-        getGlobal('errorReporter'),
+        errorReporter,
         infoMsg(err, 'ITFSYNC export failed: ')
       );
       throw err;
@@ -397,10 +399,7 @@ export const Sources = async (
     setLang(locale);
     localStorage.setItem(LocalKey.userId, user.id);
     localStorage.setItem(LocalKey.onlineUserId, user.id);
-    if (
-      getGlobal('errorReporter') &&
-      localStorage.getItem(LocalKey.connected) !== 'false'
-    )
+    if (errorReporter && localStorage.getItem(LocalKey.connected) !== 'false')
       Bugsnag.setUser(user.keys?.remoteId ?? user.id);
   }
   var user = localStorage.getItem(LocalKey.userId) as string;
@@ -410,7 +409,7 @@ export const Sources = async (
       memory,
       tokenCtx.state.accessToken || '',
       user,
-      getGlobal('errorReporter'),
+      errorReporter,
       offlineSetup
     );
   }

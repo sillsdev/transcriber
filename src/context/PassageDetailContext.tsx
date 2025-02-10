@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
-import { useGetGlobal, useGlobal } from '../context/GlobalContext';
+import { useGlobal } from '../context/GlobalContext';
 import { useParams } from 'react-router-dom';
 import { shallowEqual } from 'react-redux';
 import {
@@ -246,7 +246,6 @@ const PassageDetailProvider = (props: IProps) => {
   const dispatch = useDispatch();
   const fetchBooks = (lang: string) => dispatch(actions.fetchBooks(lang));
   const { pasId, prjId } = useParams();
-  const getGlobal = useGetGlobal();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [org] = useGlobal('organization');
@@ -282,9 +281,10 @@ const PassageDetailProvider = (props: IProps) => {
   const settingSegmentRef = useRef(false);
   const inPlayerRef = useRef<string>();
   const { getOrgDefault } = useOrgDefaults();
+  const [changed] = useGlobal('changed');
 
   const setCurrentStep = (stepId: string) => {
-    if (getGlobal('changed')) {
+    if (changed) {
       setConfirm(stepId);
     } else {
       handleSetCurrentStep(stepId);
