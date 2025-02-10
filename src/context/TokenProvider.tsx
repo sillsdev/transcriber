@@ -135,6 +135,11 @@ function TokenProvider(props: IProps) {
           setAuthSession(user, token);
         })
         .catch((e: any) => {
+          console.log(
+            'token error',
+            JSON.stringify(e),
+            window.location.pathname
+          );
           if (e.error === 'login_required') {
             localStorage.setItem(LocalKey.deeplink, window.location.pathname);
           }
