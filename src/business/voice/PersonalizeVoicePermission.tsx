@@ -7,6 +7,7 @@ import {
   StackProps,
   styled,
   TextField,
+  TextFieldProps,
   Typography,
 } from '@mui/material';
 import { ILanguage, Language, initLang, Options } from '../../control';
@@ -20,7 +21,13 @@ export const voicePermOpts: string[] = ['thisTeam', 'allTeams'];
 const StyledStack = styled(Stack)<StackProps>(({ theme }) => ({
   '& * > .MuiBox-root': {
     display: 'inline-flex',
-    alignItems: 'center',
+    alignItems: 'center', // center cancel button
+  },
+}));
+
+const StyledTextField = styled(TextField)<TextFieldProps>(({ theme }) => ({
+  '& .MuiAutocomplete-popupIndicator': {
+    display: 'none', // hide the dropdown arrow
   },
 }));
 
@@ -141,6 +148,8 @@ export default function PersonalizeVoicePermission(props: IProps) {
     event: React.SyntheticEvent,
     newValue: ILanguage[]
   ) => {
+    const codes = new Set(newValue.map((l) => l.bcp47));
+    if (codes.size !== newValue.length) return; // no duplicates
     const newState = {
       ...curState,
       languages: JSON.stringify(newValue),
@@ -179,6 +188,11 @@ export default function PersonalizeVoicePermission(props: IProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const excludeOptions = React.useMemo(
+    () => JSON.parse(curState?.languages ?? '[]'),
+    [curState?.languages]
+  );
 
   React.useEffect(() => {
     setDecorations({
@@ -225,14 +239,14 @@ export default function PersonalizeVoicePermission(props: IProps) {
           <Autocomplete
             multiple
             id="excluded-languages"
-            options={JSON.parse(curState?.languages ?? '[]')}
+            options={excludeOptions}
             getOptionLabel={(option: ILanguage) =>
               `${option.languageName} (${option.bcp47})`
             }
-            value={JSON.parse(curState?.languages ?? '[]')}
+            value={excludeOptions}
             onChange={handleExcludeChange}
             renderInput={(params) => (
-              <TextField
+              <StyledTextField
                 {...params}
                 variant="outlined"
                 label={t.excludedLanguages}
