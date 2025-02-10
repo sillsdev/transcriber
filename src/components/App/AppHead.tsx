@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { useGlobal, useGetGlobal } from '../../context/GlobalContext';
+import { useGlobal } from '../../context/GlobalContext';
 import { useLocation, useParams } from 'react-router-dom';
 import {
   IState,
@@ -154,7 +154,6 @@ export const AppHead = (props: IProps) => {
   const [importexportBusy] = useGlobal('importexportBusy');
   const [isChanged] = useGlobal('changed');
   const [lang] = useGlobal('lang');
-  const getGlobal = useGetGlobal();
   const [exitAlert, setExitAlert] = useState(false);
   const isMounted = useMounted('apphead');
   const [version, setVersion] = useState('');
@@ -174,6 +173,7 @@ export const AppHead = (props: IProps) => {
   const offlineAvailToggle = useOfflineAvailToggle();
   const { getPlan } = usePlan();
   const vProject = useVProjectRead();
+  const [enableOffsite] = useGlobal('enableOffsite');
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const saving = useMemo(() => anySaving(), [toolsChanged]);
@@ -323,7 +323,7 @@ export const AppHead = (props: IProps) => {
     if (pathname === '/') return true;
     if (pathname.startsWith('/access')) return true;
     if (!exitAlert && isElectron && isMounted()) setExitAlert(true);
-    if (!getGlobal('enableOffsite')) {
+    if (!enableOffsite) {
       e.preventDefault();
       e.returnValue = '';
       return true;

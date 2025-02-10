@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
-import { useGlobal, useGetGlobal } from '../context/GlobalContext';
+import { useGlobal } from '../context/GlobalContext';
 import * as actions from '../store';
 import {
   IState,
@@ -160,7 +160,6 @@ export function TranscriptionTab(props: IProps) {
   const { getOrganizedBy } = useOrganizedBy();
   const getOfflineProject = useOfflnProjRead();
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
-  const getGlobal = useGetGlobal();
   const { getTypeId, localizedArtifactType } = useArtifactType();
   const { getSharedResource } = useSharedResRead();
   const [artifactTypes] = useState<ArtifactTypeSlug[]>([
@@ -387,10 +386,8 @@ export function TranscriptionTab(props: IProps) {
   const handleEaf = (passageId: string) => () => {
     const mediaRec = getVernacularMediaRec(passageId, memory);
     if (!mediaRec) return;
-    const eafCode = btoa(
-      getMediaEaf(mediaRec, memory, getGlobal('errorReporter'))
-    );
-    const name = getMediaName(mediaRec, memory, getGlobal('errorReporter'));
+    const eafCode = btoa(getMediaEaf(mediaRec, memory, errorReporter));
+    const name = getMediaName(mediaRec, memory, errorReporter);
     setDataUrl('data:text/xml;base64,' + eafCode);
     setDataName(name + '.eaf');
   };

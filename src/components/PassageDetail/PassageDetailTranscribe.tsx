@@ -15,10 +15,10 @@ import TaskTable, { TaskTableWidth } from '../TaskTable';
 import { ToolSlug } from '../../crud';
 import { findRecord } from '../../crud/tryFindRecord';
 import { JSONParse } from '../../utils';
-import { useGetGlobal } from '../../context/GlobalContext';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { useArtifactType } from '../../crud/useArtifactType';
 import { UnsavedContext } from '../../context/UnsavedContext';
+import { useGlobal } from '../../context/GlobalContext';
 
 interface TableContainerProps extends BoxProps {
   topFilter?: boolean;
@@ -66,7 +66,7 @@ export function PassageDetailTranscribe({
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [topFilter, setTopFilter] = useState(false);
   const { localizedArtifactTypeFromId } = useArtifactType();
-  const getGlobal = useGetGlobal();
+  const [memory] = useGlobal('memory');
 
   const parsedSteps = useMemo(() => {
     if (!orgWorkflowSteps) return [];
@@ -191,8 +191,7 @@ export function PassageDetailTranscribe({
   };
 
   const media = useMemo(
-    () =>
-      findRecord(getGlobal('memory'), 'mediafile', mediafileId) as MediaFileD,
+    () => findRecord(memory, 'mediafile', mediafileId) as MediaFileD,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [mediafileId]
   );

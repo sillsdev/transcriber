@@ -1,5 +1,5 @@
 import { useState, useContext, useMemo, useRef, useEffect } from 'react';
-import { useGetGlobal, useGlobal } from '../../../context/GlobalContext';
+import { useGlobal } from '../../../context/GlobalContext';
 import {
   IPassageDetailArtifactsStrings,
   Passage,
@@ -101,7 +101,6 @@ export function PassageDetailArtifacts() {
   const sectionResources = useOrbitData<SectionResourceD[]>('sectionresource');
   const mediafiles = useOrbitData<MediaFile[]>('mediafile');
   const artifactTypes = useOrbitData<ArtifactType[]>('artifacttype');
-  const getGlobal = useGetGlobal();
   const [memory] = useGlobal('memory');
   const [busy, setBusy] = useGlobal('importexportBusy');
   const [remoteBusy] = useGlobal('remoteBusy');
@@ -483,7 +482,7 @@ export function PassageDetailArtifacts() {
   );
 
   useEffect(() => {
-    if (!getGlobal('importexportBusy') && !getGlobal('remoteBusy')) {
+    if (!busy && !remoteBusy) {
       setSelectedRows(rowData.filter(listFilter));
       setSortKey((sortKey) => sortKey + 1);
     }

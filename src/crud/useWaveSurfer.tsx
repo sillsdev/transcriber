@@ -1,6 +1,5 @@
 import _, { debounce } from 'lodash';
 import { useEffect, useRef, useState } from 'react';
-import { useGetGlobal } from '../context/GlobalContext';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
 import { logError, Severity } from '../utils/logErrorService';
@@ -12,6 +11,7 @@ import {
   useWaveSurferRegions,
 } from './useWavesurferRegions';
 import { convertToWav } from '../utils/wav';
+import { useGlobal } from '../context/GlobalContext';
 
 const noop = () => {};
 const noop1 = (x: any) => {};
@@ -42,7 +42,7 @@ export function useWaveSurfer(
   verses?: string
 ) {
   //const isMounted = useMounted('wavesurfer');
-  const getGlobal = useGetGlobal();
+  const [errorReporter] = useGlobal('errorReporter');
   const progressRef = useRef(0);
   const wavesurferRef = useRef<WaveSurfer>();
   const blobToLoad = useRef<Blob>();
@@ -121,7 +121,7 @@ export function useWaveSurfer(
       }
       if (onPlayStatus) onPlayStatus(playingRef.current);
     } catch (error: any) {
-      logError(Severity.error, getGlobal('errorReporter'), error);
+      logError(Severity.error, errorReporter, error);
     }
     //}
   };
