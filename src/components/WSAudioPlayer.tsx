@@ -969,6 +969,7 @@ function WSAudioPlayer(props: IProps) {
                           onClick={handleNoiseRemoval}
                           disabled={
                             !ready ||
+                            playing ||
                             recording ||
                             duration === 0 ||
                             waitingForAI
@@ -1017,6 +1018,7 @@ function WSAudioPlayer(props: IProps) {
                               }}
                               disabled={
                                 !ready ||
+                                playing ||
                                 recording ||
                                 duration === 0 ||
                                 waitingForAI
