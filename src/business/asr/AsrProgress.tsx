@@ -35,7 +35,6 @@ export default function AsrProgress({
 }: AsrProgressProps) {
   const addingRef = React.useRef(false);
   const [working, setWorking] = React.useState(false);
-  const mediaRef = React.useRef<MediaFileD>();
   const { getOrgDefault } = useOrgDefaults();
   const [memory] = useGlobal('memory');
   const token = React.useContext(TokenContext).state.accessToken ?? '';
@@ -117,7 +116,6 @@ export default function AsrProgress({
 
     if (response.status === HttpStatusCode.Ok) {
       const mediaRec = response?.data.data as MediaFileD;
-      mediaRef.current = mediaRec;
       const taskId = getTaskId(mediaRec);
       if (taskId) {
         setTaskId(taskId);
@@ -147,12 +145,16 @@ export default function AsrProgress({
     setTranscribing(true);
     setWorking(false);
     const mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFileD;
-    mediaRef.current = mediaRec;
-    const taskId = getTaskId(mediaRec);
-    if (taskId) {
-      setTaskId(taskId);
+    if (mediaRec?.attributes?.transcription) {
+      status('AI transcription complete');
+      closing();
     } else {
-      postTranscribe();
+      const taskId = getTaskId(mediaRec);
+      if (taskId) {
+        setTaskId(taskId);
+      } else {
+        postTranscribe();
+      }
     }
 
     return () => {
