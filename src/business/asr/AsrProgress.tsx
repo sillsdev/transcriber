@@ -179,7 +179,7 @@ export default function AsrProgress({
         <LinearProgress />
         {working && <Typography>{t.aiWillContinue}</Typography>}
         <ActionRow>
-          <AltButton onClick={closing}>{ts.cancel}</AltButton>
+          <AltButton onClick={closing}>{ts.close}</AltButton>
         </ActionRow>
       </Stack>
     </Box>

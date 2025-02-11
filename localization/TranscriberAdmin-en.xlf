@@ -7026,7 +7026,7 @@
       </unit>
       <unit id="transcriber.aiWillContinue">
          <segment>
-            <source>The AI will continue to work on the transcription even if canceled. You can check later to see if results are available.</source>
+            <source>The AI will continue to work on the transcription even if you close this progress box. You can check later to see if results are available.</source>
             <target/>
          </segment>
       </unit>

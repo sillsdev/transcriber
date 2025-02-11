@@ -1482,7 +1482,7 @@ const initialState = {
 		"en": {
 			"addNote": "Add Note",
 			"aiAsrFailed": "AI transcription failed",
-			"aiWillContinue": "The AI will continue to work on the transcription even if canceled. You can check later to see if results are available.",
+			"aiWillContinue": "The AI will continue to work on the transcription even if you close this progress box. You can check later to see if results are available.",
 			"beginRecognize": "Begin Recognition",
 			"comment": "Comment",
 			"congratulation": "Congratulations",
