@@ -144,6 +144,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
   const teams = useOrbitData<OrganizationD[]>('organization');
   const [asrLangVisible, setAsrLangVisible] = useState(false);
   const [phonetic, setPhonetic] = useState(false);
+  const [forceAi, setForceAi] = useState<boolean>();
 
   const [features, setFeatures] = useState<IFeatures>();
   const [asrProgressVisble, setAsrProgressVisble] = useState(false);
@@ -338,13 +339,14 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teams]);
 
-  const handleTranscribe = () => {
+  const handleTranscribe = (forceAi?: boolean) => {
     const asr = getAsrSettings();
     if (asr?.mmsIso === undefined || asr?.mmsIso === 'und') {
       setAsrLangVisible(true);
       return;
     }
     setPhonetic(asr?.target === AsrTarget.phonetic);
+    setForceAi(forceAi);
     setTimeout(() => {
       setAsrLangVisible(false);
       setAsrProgressVisble(true);
@@ -475,8 +477,8 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
           onOpen={() => setAsrLangVisible(false)}
         >
           <SelectAsrLanguage
-            onOpen={(cancel) =>
-              cancel ? setAsrLangVisible(false) : handleTranscribe()
+            onOpen={(cancel, forceAi) =>
+              cancel ? setAsrLangVisible(false) : handleTranscribe(forceAi)
             }
             canBegin={true}
           />
@@ -492,6 +494,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
           <AsrProgress
             mediaId={playerMediafile?.id ?? ''}
             phonetic={phonetic}
+            force={forceAi}
             setTranscription={onTranscription}
             onSaveTaskId={onSaveTaskId}
             onClose={() => handleAsrProgressVisible(false)}

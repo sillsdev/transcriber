@@ -35,6 +35,7 @@ export const getTaskId = (mediaRec: MediaFileD | undefined) => {
 interface AsrProgressProps {
   mediaId: string;
   phonetic: boolean;
+  force?: boolean;
   setTranscription?: (transcription: string) => void;
   onSaveTaskId: (mediaRec: MediaFileD) => void;
   onClose: () => void;
@@ -43,6 +44,7 @@ interface AsrProgressProps {
 export default function AsrProgress({
   mediaId,
   phonetic,
+  force,
   setTranscription,
   onSaveTaskId,
   onClose,
@@ -149,7 +151,9 @@ export default function AsrProgress({
     setTranscribing(true);
     setWorking(false);
     const mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFileD;
-    if (ignoreV1(mediaRec?.attributes?.transcription)) {
+    if (force) {
+      postTranscribe();
+    } else if (ignoreV1(mediaRec?.attributes?.transcription)) {
       status(t.transcriptionExists);
       closing();
     } else {

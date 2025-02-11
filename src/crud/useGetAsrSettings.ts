@@ -87,5 +87,5 @@ export function useGetAsrSettings(team?: OrganizationD) {
     }
   };
 
-  return { getAsrSettings, saveAsrSettings };
+  return { getAsrSettings, saveAsrSettings, getArtId };
 }
