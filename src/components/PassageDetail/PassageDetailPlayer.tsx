@@ -32,7 +32,7 @@ import SelectAsrLanguage, {
 } from '../../business/asr/SelectAsrLanguage';
 import AsrButton from '../../control/ConfButton';
 import { IFeatures } from '../Team/TeamSettings';
-import AsrProgress from '../../business/asr/AsrProgress';
+import AsrProgress, { getTaskId } from '../../business/asr/AsrProgress';
 import { useGetAsrSettings } from '../../crud/useGetAsrSettings';
 import { LightTooltip } from '../StepEditor';
 import { useOrbitData } from '../../hoc/useOrbitData';
@@ -63,6 +63,7 @@ export interface DetailPlayerProps {
   chooserReduce?: number;
   parentToolId?: string;
   role?: string;
+  hasTranscription?: boolean;
 }
 
 export function PassageDetailPlayer(props: DetailPlayerProps) {
@@ -86,6 +87,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     chooserReduce,
     parentToolId,
     role,
+    hasTranscription,
   } = props;
 
   const [memory] = useGlobal('memory');
@@ -208,6 +210,29 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
       }
     }
   };
+
+  const onSaveTaskId = (mediaRec: MediaFileD) => {
+    const curTaskId = getTaskId(mediafileRef.current as MediaFileD);
+    const newTaskId = getTaskId(mediaRec);
+    if (newTaskId !== curTaskId && mediaRec && mediafileRef.current) {
+      memory
+        .update((t) =>
+          t.replaceAttribute(
+            mediafileRef.current as MediaFileD, //I already checked for undefined
+            'segments',
+            mediaRec.attributes.segments
+          )
+        )
+        .then(() => {
+          forceRefresh();
+        });
+    }
+    setSegmentToWhole();
+  };
+
+  const aiTaskId = useMemo(() => {
+    return getTaskId(playerMediafile as MediaFileD);
+  }, [playerMediafile]);
 
   const onDuration = (duration: number) => {
     durationRef.current = duration;
@@ -398,10 +423,19 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
                       onSettings={() => setAsrLangVisible(true)}
                       disabled={role !== 'transcriber'}
                     >
-                      <TranscriptionLogo
-                        disabled={role !== 'transcriber'}
-                        sx={{ height: 18, width: 18 }}
-                      />
+                      {!hasTranscription && aiTaskId ? (
+                        <Badge variant="dot" color="primary">
+                          <TranscriptionLogo
+                            disabled={role !== 'transcriber'}
+                            sx={{ height: 18, width: 18 }}
+                          />
+                        </Badge>
+                      ) : (
+                        <TranscriptionLogo
+                          disabled={role !== 'transcriber'}
+                          sx={{ height: 18, width: 18 }}
+                        />
+                      )}
                     </AsrButton>
                   </span>
                 </LightTooltip>
@@ -459,6 +493,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
             mediaId={playerMediafile?.id ?? ''}
             phonetic={phonetic}
             setTranscription={onTranscription}
+            onSaveTaskId={onSaveTaskId}
             onClose={() => handleAsrProgressVisible(false)}
           />
         </BigDialog>

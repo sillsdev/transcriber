@@ -63,7 +63,7 @@ export default function ResourceItem({
           sx={{ m: 1 }}
         >
           {resource.ai ? (
-            <Badge badgeContent="AI">{resource.name}</Badge>
+            <Badge badgeContent={ts.ai}>{resource.name}</Badge>
           ) : (
             resource.name
           )}
@@ -76,7 +76,7 @@ export default function ResourceItem({
           onClick={handleHelp(resource)}
         >
           {resource.ai ? (
-            <Badge badgeContent="AI">{resource.name}</Badge>
+            <Badge badgeContent={ts.ai}>{resource.name}</Badge>
           ) : (
             resource.name
           )}

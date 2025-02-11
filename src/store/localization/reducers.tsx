@@ -1481,6 +1481,8 @@ const initialState = {
 	"transcriber": new LocalizedStrings({
 		"en": {
 			"addNote": "Add Note",
+			"aiAsrFailed": "AI transcription failed",
+			"aiWillContinue": "The AI will continue to work on the transcription even if canceled. You can check later to see if results are available.",
 			"beginRecognize": "Begin Recognition",
 			"comment": "Comment",
 			"congratulation": "Congratulations",
@@ -1490,6 +1492,7 @@ const initialState = {
 			"invalidReference": "Book or Reference is invalid.",
 			"needsNewRecording": "Rejected recording",
 			"needsNewTranscription": "Rejected transcription",
+			"noAsrTranscription": "No transcription!",
 			"noMedia": "Created task",
 			"noMoreTasks": "You have no more tasks to work on!",
 			"phonetic": "Phonetic",
@@ -1509,6 +1512,7 @@ const initialState = {
 			"submitReviewTip": "Submit as complete",
 			"submitTranscriptionTip": "Submit for review",
 			"transcribing": "Started to transcribe",
+			"transcriptionExists": "Transcription already exists",
 			"transliterate": "Transliterate to Latin script",
 			"updateByOther2": "Transcription updated by {0}.  Keep their changes? {1}",
 		}

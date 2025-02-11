@@ -113,6 +113,7 @@ import { useDispatch } from 'react-redux';
 import { PassageTypeEnum } from '../model/passageType';
 import { addPt } from '../utils/addPt';
 import { Paratext } from '../assets/brands';
+import { ignoreV1 } from '../utils/ignoreV1';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -1096,8 +1097,10 @@ export function Transcriber(props: IProps) {
   };
 
   const handleAutoTranscribe = (trans: string) => {
+    const transcription = transcriptionRef.current.firstChild.value;
     showTranscription({
-      transcription: trans.replace(/[0-9]+:[0-9]+.[0-9]+: /g, ''),
+      transcription:
+        transcription + trans.replace(/[0-9]+:[0-9]+.[0-9]+: /g, ''),
       position: 0,
     });
     toolChanged(toolId, true);
@@ -1225,6 +1228,7 @@ export function Transcriber(props: IProps) {
                             : onSaveProgress
                         }
                         role={role}
+                        hasTranscription={Boolean(ignoreV1(textValue))}
                       />
                     </Grid>
                   </Grid>

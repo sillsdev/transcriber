@@ -1399,6 +1399,8 @@ export interface ITranscribeAddNoteStrings extends Localize.LocalizedStringsMeth
 
 export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "addNote": string;
+    "aiAsrFailed": string;
+    "aiWillContinue": string;
     "beginRecognize": string;
     "comment": string;
     "congratulation": string;
@@ -1408,6 +1410,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "invalidReference": string;
     "needsNewRecording": string;
     "needsNewTranscription": string;
+    "noAsrTranscription": string;
     "noMedia": string;
     "noMoreTasks": string;
     "phonetic": string;
@@ -1427,6 +1430,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "submitReviewTip": string;
     "submitTranscriptionTip": string;
     "transcribing": string;
+    "transcriptionExists": string;
     "transliterate": string;
     "updateByOther2": string;
 };

@@ -12,25 +12,39 @@ import { remoteId } from '../../crud/remoteId';
 import { RecordKeyMap } from '@orbit/records';
 import { useGlobal } from '../../context/GlobalContext';
 import { ActionRow, AltButton } from '../../control';
-import { ISharedStrings, MediaFileD } from '../../model';
+import { ISharedStrings, ITranscriberStrings, MediaFileD } from '../../model';
 import { getSegments, NamedRegions } from '../../utils/namedSegments';
 import { shallowEqual, useSelector } from 'react-redux';
-import { sharedSelector } from '../../selector';
+import { sharedSelector, transcriberSelector } from '../../selector';
 import { Stack, Typography } from '@mui/material';
+import { ignoreV1 } from '../../utils/ignoreV1';
+
+export const getTaskId = (mediaRec: MediaFileD | undefined) => {
+  const regionstr = getSegments(
+    NamedRegions.TRTask,
+    mediaRec?.attributes?.segments || '{}'
+  );
+  const segs = JSON.parse(regionstr ?? {});
+  if (segs?.regions?.[0]?.label) {
+    return segs.regions[0].label;
+  } else {
+    return undefined;
+  }
+};
 
 interface AsrProgressProps {
   mediaId: string;
-  phonetic?: boolean;
-  setMessage?: (message: string) => void;
+  phonetic: boolean;
   setTranscription?: (transcription: string) => void;
-  onClose?: () => void;
+  onSaveTaskId: (mediaRec: MediaFileD) => void;
+  onClose: () => void;
 }
 
 export default function AsrProgress({
   mediaId,
   phonetic,
-  setMessage,
   setTranscription,
+  onSaveTaskId,
   onClose,
 }: AsrProgressProps) {
   const addingRef = React.useRef(false);
@@ -42,6 +56,7 @@ export default function AsrProgress({
   const [taskId, setTaskId] = React.useState('');
   const taskTimer = React.useRef<NodeJS.Timeout>();
   const timerDelay = 5000; //5 seconds
+  const t: ITranscriberStrings = useSelector(transcriberSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const setTranscribing = (adding: boolean) => {
@@ -49,22 +64,8 @@ export default function AsrProgress({
   };
 
   const status = (message: string) => {
-    setMessage && setMessage(message);
     showMessage(message);
     console.log(message);
-  };
-
-  const getTaskId = (mediaRec: MediaFileD | undefined) => {
-    const regionstr = getSegments(
-      NamedRegions.TRTask,
-      mediaRec?.attributes?.segments ?? '{}'
-    );
-    const segs = JSON.parse(regionstr);
-    if (segs.regions[0]?.label) {
-      return segs.regions[0].label;
-    } else {
-      return undefined;
-    }
   };
 
   const checkTask = async () => {
@@ -73,14 +74,13 @@ export default function AsrProgress({
     if (response?.transcription) {
       //Do something with the transcription here
       console.log(response);
-      setMessage && setMessage('');
       setTranscription &&
         setTranscription(
           phonetic ? response?.phonetic : response?.transcription
         );
       setTaskId('');
     } else if (response?.transcription === '') {
-      status('no transcription');
+      status(t.noAsrTranscription);
       setTaskId('');
     } else {
       console.log('not done', response);
@@ -96,6 +96,9 @@ export default function AsrProgress({
   };
 
   const closing = () => {
+    if (taskTimer.current) {
+      clearInterval(taskTimer.current);
+    }
     setTranscribing(false);
     setWorking(false);
     onClose && onClose();
@@ -118,13 +121,14 @@ export default function AsrProgress({
       const mediaRec = response?.data.data as MediaFileD;
       const taskId = getTaskId(mediaRec);
       if (taskId) {
+        onSaveTaskId(mediaRec);
         setTaskId(taskId);
       } else {
-        status('AI transcription failed');
+        status(t.aiAsrFailed);
         closing();
       }
     } else {
-      status('AI transcription failed');
+      status(t.aiAsrFailed);
       closing();
     }
   };
@@ -145,8 +149,8 @@ export default function AsrProgress({
     setTranscribing(true);
     setWorking(false);
     const mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFileD;
-    if (mediaRec?.attributes?.transcription) {
-      status('AI transcription complete');
+    if (ignoreV1(mediaRec?.attributes?.transcription)) {
+      status(t.transcriptionExists);
       closing();
     } else {
       const taskId = getTaskId(mediaRec);
@@ -169,15 +173,9 @@ export default function AsrProgress({
     <Box sx={{ width: '100%' }}>
       <Stack spacing={1}>
         <LinearProgress />
-        {working && (
-          <Typography>
-            {
-              'The AI will continue to work on the transcription even if canceled. You can check later to see if results are available.'
-            }
-          </Typography>
-        )}
+        {working && <Typography>{t.aiWillContinue}</Typography>}
         <ActionRow>
-          <AltButton onClick={onClose}>{ts.cancel}</AltButton>
+          <AltButton onClick={closing}>{ts.cancel}</AltButton>
         </ActionRow>
       </Stack>
     </Box>

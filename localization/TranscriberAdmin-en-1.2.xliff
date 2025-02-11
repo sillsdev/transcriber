@@ -8189,6 +8189,20 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="transcriber.aiAsrFailed">
+            <source>AI transcription failed</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Transcriber.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcriber.aiWillContinue">
+            <source>The AI will continue to work on the transcription even if canceled. You can check later to see if results are available.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Transcriber.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="transcriber.beginRecognize">
             <source>Begin Recognition</source>
             <target/>
@@ -8247,6 +8261,13 @@
          </trans-unit>
          <trans-unit id="transcriber.needsNewTranscription">
             <source>Rejected transcription</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Transcriber.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcriber.noAsrTranscription">
+            <source>No transcription!</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>
@@ -8380,6 +8401,13 @@
          </trans-unit>
          <trans-unit id="transcriber.transcribing">
             <source>Started to transcribe</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Transcriber.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcriber.transcriptionExists">
+            <source>Transcription already exists</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>
