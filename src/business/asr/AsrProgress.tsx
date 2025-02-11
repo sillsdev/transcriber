@@ -13,20 +13,10 @@ import { RecordKeyMap } from '@orbit/records';
 import { useGlobal } from '../../context/GlobalContext';
 import { ActionRow, AltButton } from '../../control';
 import { ISharedStrings, MediaFileD } from '../../model';
-import {
-  getSegments,
-  NamedRegions,
-  updateSegments,
-} from '../../utils/namedSegments';
+import { getSegments, NamedRegions } from '../../utils/namedSegments';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../../selector';
 import { Stack, Typography } from '@mui/material';
-
-enum AiStatus {
-  'working',
-  'done',
-  'error',
-}
 
 interface AsrProgressProps {
   mediaId: string;
@@ -78,33 +68,6 @@ export default function AsrProgress({
     }
   };
 
-  const setTaskStatus = (status: AiStatus) => {
-    const mediaRec = mediaRef.current;
-    if (mediaRec) {
-      const values = getTaskId(mediaRec);
-      if (values) {
-        const [taskId, oldStatus] = values.split('|');
-        if (status !== oldStatus) {
-          const regionstr = getSegments(
-            NamedRegions.TRTask,
-            mediaRec?.attributes?.segments ?? '{}'
-          );
-          const segs = JSON.parse(regionstr);
-          segs.regions[0] = {
-            ...segs.regions[0],
-            label: `${taskId}|${status}`,
-          };
-          updateSegments(
-            NamedRegions.TRTask,
-            mediaRec?.attributes?.segments ?? '{}',
-            JSON.stringify(segs)
-          );
-          memory.update((t) => t.updateRecord(mediaRec));
-        }
-      }
-    }
-  };
-
   const checkTask = async () => {
     console.log(`checking task: ${taskId}`);
     const response = await axiosGet(`aero/transcription/${taskId}`);
@@ -116,12 +79,10 @@ export default function AsrProgress({
         setTranscription(
           phonetic ? response?.phonetic : response?.transcription
         );
-      setTaskStatus(AiStatus.done);
       setTaskId('');
     } else if (response?.transcription === '') {
       status('no transcription');
       setTaskId('');
-      setTaskStatus(AiStatus.error);
     } else {
       console.log('not done', response);
       setWorking(true);
@@ -157,11 +118,9 @@ export default function AsrProgress({
     if (response.status === HttpStatusCode.Ok) {
       const mediaRec = response?.data.data as MediaFileD;
       mediaRef.current = mediaRec;
-      const values = getTaskId(mediaRec);
-      if (values) {
-        const [taskId] = values.split('|');
+      const taskId = getTaskId(mediaRec);
+      if (taskId) {
         setTaskId(taskId);
-        setTaskStatus(AiStatus.working);
       } else {
         status('AI transcription failed');
         closing();
@@ -189,19 +148,9 @@ export default function AsrProgress({
     setWorking(false);
     const mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFileD;
     mediaRef.current = mediaRec;
-    const values = getTaskId(mediaRec);
-    if (values) {
-      const [taskId, aiStatus] = values.split('|');
-      if (aiStatus === AiStatus.error) {
-        status('AI transcription restarting');
-        postTranscribe();
-      }
-      if (aiStatus === AiStatus.done) {
-        status('AI transcription complete');
-        onClose && onClose();
-      } else {
-        setTaskId(taskId);
-      }
+    const taskId = getTaskId(mediaRec);
+    if (taskId) {
+      setTaskId(taskId);
     } else {
       postTranscribe();
     }
