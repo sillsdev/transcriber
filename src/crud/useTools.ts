@@ -33,9 +33,7 @@ export const useTools = () => {
   const [fromLocal] = useState<ISwitches>({});
 
   const localizedTool = (val: string) => {
-    const strs = t as ISwitches;
-    const key = addPt(strs[val]);
-    return key ? key : val;
+    return addPt((t as ISwitches)[val] ?? '') || val;
   };
 
   const fromLocalizedTool = (val: string) => {

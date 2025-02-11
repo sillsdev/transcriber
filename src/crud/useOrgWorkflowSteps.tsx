@@ -48,7 +48,7 @@ export const useOrgWorkflowSteps = () => {
   const creatingRef = useRef(false);
 
   const localizedWorkStep = (val: string) => {
-    return addPt((t as ISwitches)[toCamel(val)]) || val;
+    return addPt((t as ISwitches)[toCamel(val)] ?? '') || val;
   };
   const localizedWorkStepFromId = (id: string) => {
     try {
