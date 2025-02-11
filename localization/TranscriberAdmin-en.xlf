@@ -7018,6 +7018,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.aiAsrFailed">
+         <segment>
+            <source>AI transcription failed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.aiWillContinue">
+         <segment>
+            <source>The AI will continue to work on the transcription even if canceled. You can check later to see if results are available.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriber.beginRecognize">
          <segment>
             <source>Begin Recognition</source>
@@ -7069,6 +7081,12 @@
       <unit id="transcriber.needsNewTranscription">
          <segment>
             <source>Rejected transcription</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.noAsrTranscription">
+         <segment>
+            <source>No transcription!</source>
             <target/>
          </segment>
       </unit>
@@ -7183,6 +7201,12 @@
       <unit id="transcriber.transcribing">
          <segment>
             <source>Started to transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.transcriptionExists">
+         <segment>
+            <source>Transcription already exists</source>
             <target/>
          </segment>
       </unit>

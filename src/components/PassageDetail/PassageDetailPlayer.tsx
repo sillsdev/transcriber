@@ -32,7 +32,7 @@ import SelectAsrLanguage, {
 } from '../../business/asr/SelectAsrLanguage';
 import AsrButton from '../../control/ConfButton';
 import { IFeatures } from '../Team/TeamSettings';
-import AsrProgress from '../../business/asr/AsrProgress';
+import AsrProgress, { getTaskId } from '../../business/asr/AsrProgress';
 import { useGetAsrSettings } from '../../crud/useGetAsrSettings';
 import { LightTooltip } from '../StepEditor';
 import { useOrbitData } from '../../hoc/useOrbitData';
@@ -63,6 +63,7 @@ export interface DetailPlayerProps {
   chooserReduce?: number;
   parentToolId?: string;
   role?: string;
+  hasTranscription?: boolean;
 }
 
 export function PassageDetailPlayer(props: DetailPlayerProps) {
@@ -86,6 +87,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     chooserReduce,
     parentToolId,
     role,
+    hasTranscription,
   } = props;
 
   const [memory] = useGlobal('memory');
@@ -142,6 +144,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
   const teams = useOrbitData<OrganizationD[]>('organization');
   const [asrLangVisible, setAsrLangVisible] = useState(false);
   const [phonetic, setPhonetic] = useState(false);
+  const [forceAi, setForceAi] = useState<boolean>();
 
   const [features, setFeatures] = useState<IFeatures>();
   const [asrProgressVisble, setAsrProgressVisble] = useState(false);
@@ -208,6 +211,29 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
       }
     }
   };
+
+  const onSaveTaskId = (mediaRec: MediaFileD) => {
+    const curTaskId = getTaskId(mediafileRef.current as MediaFileD);
+    const newTaskId = getTaskId(mediaRec);
+    if (newTaskId !== curTaskId && mediaRec && mediafileRef.current) {
+      memory
+        .update((t) =>
+          t.replaceAttribute(
+            mediafileRef.current as MediaFileD, //I already checked for undefined
+            'segments',
+            mediaRec.attributes.segments
+          )
+        )
+        .then(() => {
+          forceRefresh();
+        });
+    }
+    setSegmentToWhole();
+  };
+
+  const aiTaskId = useMemo(() => {
+    return getTaskId(playerMediafile as MediaFileD);
+  }, [playerMediafile]);
 
   const onDuration = (duration: number) => {
     durationRef.current = duration;
@@ -313,13 +339,14 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teams]);
 
-  const handleTranscribe = () => {
+  const handleTranscribe = (forceAi?: boolean) => {
     const asr = getAsrSettings();
     if (asr?.mmsIso === undefined || asr?.mmsIso === 'und') {
       setAsrLangVisible(true);
       return;
     }
     setPhonetic(asr?.target === AsrTarget.phonetic);
+    setForceAi(forceAi);
     setTimeout(() => {
       setAsrLangVisible(false);
       setAsrProgressVisble(true);
@@ -398,10 +425,19 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
                       onSettings={() => setAsrLangVisible(true)}
                       disabled={role !== 'transcriber'}
                     >
-                      <TranscriptionLogo
-                        disabled={role !== 'transcriber'}
-                        sx={{ height: 18, width: 18 }}
-                      />
+                      {!hasTranscription && aiTaskId ? (
+                        <Badge variant="dot" color="primary">
+                          <TranscriptionLogo
+                            disabled={role !== 'transcriber'}
+                            sx={{ height: 18, width: 18 }}
+                          />
+                        </Badge>
+                      ) : (
+                        <TranscriptionLogo
+                          disabled={role !== 'transcriber'}
+                          sx={{ height: 18, width: 18 }}
+                        />
+                      )}
                     </AsrButton>
                   </span>
                 </LightTooltip>
@@ -441,8 +477,8 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
           onOpen={() => setAsrLangVisible(false)}
         >
           <SelectAsrLanguage
-            onOpen={(cancel) =>
-              cancel ? setAsrLangVisible(false) : handleTranscribe()
+            onOpen={(cancel, forceAi) =>
+              cancel ? setAsrLangVisible(false) : handleTranscribe(forceAi)
             }
             canBegin={true}
           />
@@ -458,7 +494,9 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
           <AsrProgress
             mediaId={playerMediafile?.id ?? ''}
             phonetic={phonetic}
+            force={forceAi}
             setTranscription={onTranscription}
+            onSaveTaskId={onSaveTaskId}
             onClose={() => handleAsrProgressVisible(false)}
           />
         </BigDialog>

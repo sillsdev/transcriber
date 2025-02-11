@@ -10,9 +10,9 @@ import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { ReactNode, SyntheticEvent, useEffect, useState } from 'react';
 import { LaunchLink } from '../../../control/LaunchLink';
 import { BibleResource } from '../../../model/bible-resource';
-import { IFindResourceStrings } from '../../../model';
+import { IFindResourceStrings, ISharedStrings } from '../../../model';
 import { shallowEqual, useSelector } from 'react-redux';
-import { findResourceSelector } from '../../../selector';
+import { findResourceSelector, sharedSelector } from '../../../selector';
 import FindAquifer from './FindAquifer';
 import { usePassageType } from '../../../crud/usePassageType';
 import { related } from '../../../crud';
@@ -94,6 +94,7 @@ export default function FindTabs({ onClose, closeRequested }: FindTabsProps) {
     findResourceSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   useEffect(() => {
     import('../../../assets/bible-resource').then((module) => {
@@ -149,7 +150,7 @@ export default function FindTabs({ onClose, closeRequested }: FindTabsProps) {
           />
           <Tab label={t.findOther} {...a11yProps(2 - start)} />
           <Tab
-            label={<Badge badgeContent="AI">{t.create}</Badge>}
+            label={<Badge badgeContent={ts.ai}>{t.create}</Badge>}
             {...a11yProps(3 - start)}
           />
         </Tabs>

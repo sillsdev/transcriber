@@ -67,6 +67,7 @@ const ResourceItem = ({
     findResourceSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const handleClick = (_kind: string, hrefTpl: string) => () => {
     const book = passage?.attributes?.book;
@@ -96,7 +97,7 @@ const ResourceItem = ({
           sx={{ m: 1 }}
         >
           {resource.ai ? (
-            <Badge badgeContent="AI">{resource.name}</Badge>
+            <Badge badgeContent={ts.ai}>{resource.name}</Badge>
           ) : (
             resource.name
           )}
@@ -109,7 +110,7 @@ const ResourceItem = ({
           onClick={handleHelp(resource)}
         >
           {resource.ai ? (
-            <Badge badgeContent="AI">{resource.name}</Badge>
+            <Badge badgeContent={ts.ai}>{resource.name}</Badge>
           ) : (
             resource.name
           )}

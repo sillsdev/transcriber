@@ -6,33 +6,51 @@ import { TokenContext } from '../../context/TokenProvider';
 import { IAsrState } from './AsrAlphabet';
 import { axiosGet, axiosPost } from '../../utils/axios';
 import { HttpStatusCode } from 'axios';
+import { findRecord } from '../../crud/tryFindRecord';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { remoteId } from '../../crud/remoteId';
 import { RecordKeyMap } from '@orbit/records';
 import { useGlobal } from '../../context/GlobalContext';
 import { ActionRow, AltButton } from '../../control';
-import { ISharedStrings, MediaFileD } from '../../model';
+import { ISharedStrings, ITranscriberStrings, MediaFileD } from '../../model';
 import { getSegments, NamedRegions } from '../../utils/namedSegments';
 import { shallowEqual, useSelector } from 'react-redux';
-import { sharedSelector } from '../../selector';
+import { sharedSelector, transcriberSelector } from '../../selector';
+import { Stack, Typography } from '@mui/material';
+import { ignoreV1 } from '../../utils/ignoreV1';
+
+export const getTaskId = (mediaRec: MediaFileD | undefined) => {
+  const regionstr = getSegments(
+    NamedRegions.TRTask,
+    mediaRec?.attributes?.segments || '{}'
+  );
+  const segs = JSON.parse(regionstr ?? {});
+  if (segs?.regions?.[0]?.label) {
+    return segs.regions[0].label;
+  } else {
+    return undefined;
+  }
+};
 
 interface AsrProgressProps {
   mediaId: string;
-  phonetic?: boolean;
-  setMessage?: (message: string) => void;
+  phonetic: boolean;
+  force?: boolean;
   setTranscription?: (transcription: string) => void;
-  onClose?: () => void;
+  onSaveTaskId: (mediaRec: MediaFileD) => void;
+  onClose: () => void;
 }
 
 export default function AsrProgress({
   mediaId,
   phonetic,
-  setMessage,
+  force,
   setTranscription,
+  onSaveTaskId,
   onClose,
 }: AsrProgressProps) {
-  const [, setAddingx] = React.useState(false);
   const addingRef = React.useRef(false);
+  const [working, setWorking] = React.useState(false);
   const { getOrgDefault } = useOrgDefaults();
   const [memory] = useGlobal('memory');
   const token = React.useContext(TokenContext).state.accessToken ?? '';
@@ -40,36 +58,35 @@ export default function AsrProgress({
   const [taskId, setTaskId] = React.useState('');
   const taskTimer = React.useRef<NodeJS.Timeout>();
   const timerDelay = 5000; //5 seconds
+  const t: ITranscriberStrings = useSelector(transcriberSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const setTranscribing = (adding: boolean) => {
-    setAddingx(adding);
     addingRef.current = adding;
   };
 
   const status = (message: string) => {
-    setMessage && setMessage(message);
     showMessage(message);
     console.log(message);
   };
 
   const checkTask = async () => {
     console.log(`checking task: ${taskId}`);
-    var response = await axiosGet(`aero/transcription/${taskId}`);
+    const response = await axiosGet(`aero/transcription/${taskId}`);
     if (response?.transcription) {
       //Do something with the transcription here
       console.log(response);
-      setMessage && setMessage('');
       setTranscription &&
         setTranscription(
           phonetic ? response?.phonetic : response?.transcription
         );
       setTaskId('');
     } else if (response?.transcription === '') {
-      status('no transcription');
+      status(t.noAsrTranscription);
       setTaskId('');
     } else {
       console.log('not done', response);
+      setWorking(true);
     }
     return undefined;
   };
@@ -81,66 +98,43 @@ export default function AsrProgress({
   };
 
   const closing = () => {
+    if (taskTimer.current) {
+      clearInterval(taskTimer.current);
+    }
     setTranscribing(false);
+    setWorking(false);
     onClose && onClose();
   };
 
-  const PostTranscribe = async (remoteId: string) => {
+  const postTranscribe = async () => {
+    const remId =
+      remoteId('mediafile', mediaId, memory?.keyMap as RecordKeyMap) ?? mediaId;
     const asr = getOrgDefault(orgDefaultAsr) as IAsrState | undefined;
     const iso = asr?.dialect ?? asr?.mmsIso ?? 'eng';
     const romanize = asr?.selectRoman ?? false;
 
     const response = await axiosPost(
-      `mediafiles/${remoteId}/transcription/${iso}/${romanize}`,
+      `mediafiles/${remId}/transcription/${iso}/${romanize}`,
       undefined,
       token
     );
 
     if (response.status === HttpStatusCode.Ok) {
-      var mediaRec = response?.data.data as MediaFileD;
-      var regionstr = getSegments(
-        NamedRegions.TRTask,
-        mediaRec?.attributes?.segments ?? '{}'
-      );
-      var segs = JSON.parse(regionstr);
-      if (segs.regions[0]?.label) {
-        setTaskId(segs.regions[0].label);
+      const mediaRec = response?.data.data as MediaFileD;
+      const taskId = getTaskId(mediaRec);
+      if (taskId) {
+        onSaveTaskId(mediaRec);
+        setTaskId(taskId);
       } else {
-        status('AI transcription failed');
+        status(t.aiAsrFailed);
         closing();
       }
     } else {
-      status('AI transcription failed');
+      status(t.aiAsrFailed);
       closing();
     }
   };
-  /*
-  const PostTranscribeUrl = async (fileUrl: string) => {
-    const asr = getOrgDefault(orgDefaultAsr) as IAsrState | undefined;
-    const postdata: {
-      fileUrl: string;
-      iso: string;
-      romanize: boolean;
-    } = {
-      fileUrl,
-      iso: asr?.dialect ?? asr?.mmsIso ?? 'eng',
-      romanize: asr?.selectRoman ?? false,
-    };
-    const response = await axiosPost(
-      'Aero/transcription/fromfile',
-      postdata,
-      token
-    );
 
-    if (response.status === HttpStatusCode.Ok) {
-      console.log(`launching ${response?.data}`);
-      setTaskId(response?.data ?? '');
-    } else {
-      status('AI transcription failed');
-      closing();
-    }
-  };
-*/
   React.useEffect(() => {
     if (taskId) {
       if (!taskTimer.current) launchTimer();
@@ -152,28 +146,24 @@ export default function AsrProgress({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskId]);
 
-  const handleTranscribe = (remId: string) => {
+  React.useEffect(() => {
     if (addingRef.current) return;
     setTranscribing(true);
-    PostTranscribe(remId);
-  };
-
-  React.useEffect(() => {
-    const remId =
-      remoteId('mediafile', mediaId, memory?.keyMap as RecordKeyMap) ?? mediaId;
-    handleTranscribe(remId);
-    /*
-    fetchUrl({ id: remId, cancelled: () => false, noDownload: true }).then(
-      (url) => {
-        if (url === ts.expiredToken) {
-          status(ts.expiredToken);
-          onClose && onClose();
-        } else if (url) {
-          handleTranscribe(url);
-        }
+    setWorking(false);
+    const mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFileD;
+    if (force) {
+      postTranscribe();
+    } else if (ignoreV1(mediaRec?.attributes?.transcription)) {
+      status(t.transcriptionExists);
+      closing();
+    } else {
+      const taskId = getTaskId(mediaRec);
+      if (taskId) {
+        setTaskId(taskId);
+      } else {
+        postTranscribe();
       }
-    );
-    */
+    }
 
     return () => {
       if (taskTimer.current) {
@@ -185,10 +175,13 @@ export default function AsrProgress({
 
   return (
     <Box sx={{ width: '100%' }}>
-      <LinearProgress />
-      <ActionRow>
-        <AltButton onClick={onClose}>{ts.cancel}</AltButton>
-      </ActionRow>
+      <Stack spacing={1}>
+        <LinearProgress />
+        {working && <Typography>{t.aiWillContinue}</Typography>}
+        <ActionRow>
+          <AltButton onClick={closing}>{ts.cancel}</AltButton>
+        </ActionRow>
+      </Stack>
     </Box>
   );
 }

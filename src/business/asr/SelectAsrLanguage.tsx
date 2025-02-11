@@ -37,7 +37,7 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 interface ISelectAsrLanguage {
   team?: OrganizationD;
   refresh?: () => void;
-  onOpen: (cancal?: boolean) => void;
+  onOpen: (cancal?: boolean, force?: boolean) => void;
   canBegin?: boolean;
 }
 
@@ -48,10 +48,11 @@ export default function SelectAsrLanguage({
   canBegin,
 }: ISelectAsrLanguage) {
   const [asrState, setAsrState] = React.useState<IAsrState>();
+  const [asrStateIn, setAsrStateIn] = React.useState<IAsrState>();
   const mmsLangs = useMmsLangs();
   const t: ITranscriberStrings = useSelector(transcriberSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const { getAsrSettings, saveAsrSettings } = useGetAsrSettings(team);
+  const { getAsrSettings, saveAsrSettings, getArtId } = useGetAsrSettings(team);
 
   const handlePhonetic = () => {
     if (asrState)
@@ -69,12 +70,16 @@ export default function SelectAsrLanguage({
       saveAsrSettings(asrState);
       refresh?.();
     }
-    onOpen();
+    onOpen(
+      false,
+      asrStateIn?.language.bcp47 !== asrState?.language.bcp47 ||
+        asrStateIn?.selectRoman !== asrState?.selectRoman
+    );
   };
 
   React.useEffect(() => {
     const asr = getAsrSettings();
-    setAsrState({
+    const defaultAsr = {
       target: asr?.target ?? AsrTarget.alphabet,
       language: asr?.language ?? {
         bcp47: 'und',
@@ -86,7 +91,9 @@ export default function SelectAsrLanguage({
       mmsIso: asr?.mmsIso ?? 'eng',
       dialect: asr?.dialect,
       selectRoman: asr?.selectRoman ?? false,
-    });
+    };
+    setAsrState({ ...defaultAsr });
+    setAsrStateIn({ ...defaultAsr });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -98,23 +105,25 @@ export default function SelectAsrLanguage({
           setState={setAsrState}
           mmsLangs={mmsLangs}
         />
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={asrState?.target === AsrTarget.phonetic}
-              onClick={handlePhonetic}
-            />
-          }
-          label={
-            <Badge
-              badgeContent={<InfoIcon color={'info'} fontSize="small" />}
-              title={t.phoneticTip}
-            >
-              {t.phonetic}
-            </Badge>
-          }
-          sx={{ ml: 2 }}
-        />
+        {!getArtId() && (
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={asrState?.target === AsrTarget.phonetic}
+                onClick={handlePhonetic}
+              />
+            }
+            label={
+              <Badge
+                badgeContent={<InfoIcon color={'info'} fontSize="small" />}
+                title={t.phoneticTip}
+              >
+                {t.phonetic}
+              </Badge>
+            }
+            sx={{ ml: 2 }}
+          />
+        )}
       </Stack>
       <Divider sx={{ pt: 2 }} />
       <ActionRow>
