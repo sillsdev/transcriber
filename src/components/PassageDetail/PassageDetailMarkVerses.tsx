@@ -300,8 +300,8 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
       savingRef.current = true;
       if (media) {
         if (numSegments !== 0) {
-          let segs = getSortedRegions(segmentsRef.current);
-          segs = segs.map((r, i) =>
+          let regions = getSortedRegions(segmentsRef.current);
+          regions = regions.map((r, i) =>
             i + 1 < dataRef.current.length
               ? {
                   ...r,
@@ -309,7 +309,6 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
                 }
               : { ...r, label: '' }
           );
-          const regions = JSON.stringify(segs);
           segmentsRef.current = JSON.stringify({ regions });
         }
         // update all three segment types: verse, transcription, backtranslation
