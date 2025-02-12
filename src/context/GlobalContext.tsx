@@ -84,7 +84,10 @@ export const useGlobal = <K extends GlobalKey>(
 
 export const useGetGlobal = (): GetGlobalType => {
   const { globalState } = useContext(GlobalContext) as GlobalCtxType;
-  return (prop) => changes[prop] ?? globalState[prop];
+  return (prop) => {
+    // console.log(`useGetGlobal ${prop} is ${changes[prop]}`);
+    return changes[prop] ?? globalState[prop];
+  };
 };
 
 interface GlobalProps {
