@@ -13,15 +13,15 @@ import { RecordKeyMap } from '@orbit/records';
 import { useGlobal } from '../../context/GlobalContext';
 import { ActionRow, AltButton } from '../../control';
 import {
+  ICardsStrings,
   ISharedStrings,
   ITranscriberStrings,
-  IWsAudioPlayerStrings,
   MediaFileD,
 } from '../../model';
 import { getSegments, NamedRegions } from '../../utils/namedSegments';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
-  playerSelector,
+  cardsSelector,
   sharedSelector,
   transcriberSelector,
 } from '../../selector';
@@ -69,7 +69,7 @@ export default function AsrProgress({
   const timerDelay = 5000; //5 seconds
   const t: ITranscriberStrings = useSelector(transcriberSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const tp: IWsAudioPlayerStrings = useSelector(playerSelector, shallowEqual);
+  const tc: ICardsStrings = useSelector(cardsSelector, shallowEqual);
 
   const setTranscribing = (adding: boolean) => {
     addingRef.current = adding;
@@ -189,7 +189,7 @@ export default function AsrProgress({
         <LinearProgress />
         {working && (
           <Typography>
-            {t.aiWillContinue.replace(/\{0}/g, tp.recognizeSpeech)}
+            {t.aiWillContinue.replace(/\{0\}/g, tc.recognizeSpeech)}
           </Typography>
         )}
         <ActionRow>
