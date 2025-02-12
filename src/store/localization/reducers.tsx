@@ -1482,7 +1482,7 @@ const initialState = {
 		"en": {
 			"addNote": "Add Note",
 			"aiAsrFailed": "AI transcription failed",
-			"aiWillContinue": "The AI will continue to work on the transcription even if you close this progress box. You can check later to see if results are available.",
+			"aiWillContinue": "The AI will continue to work on the transcription even if you close this progress box. Click the {0} button to open the progress box on this workflow step to see the results. Use the settings gear on {0} button to see the transcription using a different language.",
 			"beginRecognize": "Begin Recognition",
 			"comment": "Comment",
 			"congratulation": "Congratulations",

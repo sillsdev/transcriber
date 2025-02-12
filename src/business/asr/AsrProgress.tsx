@@ -12,10 +12,19 @@ import { remoteId } from '../../crud/remoteId';
 import { RecordKeyMap } from '@orbit/records';
 import { useGlobal } from '../../context/GlobalContext';
 import { ActionRow, AltButton } from '../../control';
-import { ISharedStrings, ITranscriberStrings, MediaFileD } from '../../model';
+import {
+  ISharedStrings,
+  ITranscriberStrings,
+  IWsAudioPlayerStrings,
+  MediaFileD,
+} from '../../model';
 import { getSegments, NamedRegions } from '../../utils/namedSegments';
 import { shallowEqual, useSelector } from 'react-redux';
-import { sharedSelector, transcriberSelector } from '../../selector';
+import {
+  playerSelector,
+  sharedSelector,
+  transcriberSelector,
+} from '../../selector';
 import { Stack, Typography } from '@mui/material';
 import { ignoreV1 } from '../../utils/ignoreV1';
 
@@ -60,6 +69,7 @@ export default function AsrProgress({
   const timerDelay = 5000; //5 seconds
   const t: ITranscriberStrings = useSelector(transcriberSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const tp: IWsAudioPlayerStrings = useSelector(playerSelector, shallowEqual);
 
   const setTranscribing = (adding: boolean) => {
     addingRef.current = adding;
@@ -177,7 +187,11 @@ export default function AsrProgress({
     <Box sx={{ width: '100%' }}>
       <Stack spacing={1}>
         <LinearProgress />
-        {working && <Typography>{t.aiWillContinue}</Typography>}
+        {working && (
+          <Typography>
+            {t.aiWillContinue.replace(/\{0}/g, tp.recognizeSpeech)}
+          </Typography>
+        )}
         <ActionRow>
           <AltButton onClick={closing}>{ts.close}</AltButton>
         </ActionRow>
