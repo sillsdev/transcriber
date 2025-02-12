@@ -45,6 +45,7 @@ export interface GlobalState {
 }
 
 export type GlobalKey = keyof GlobalState;
+export type GetGlobalType = <K extends GlobalKey>(prop: K) => GlobalState[K];
 
 export interface GlobalCtxType {
   globalState: GlobalState;
@@ -79,6 +80,11 @@ export const useGlobal = <K extends GlobalKey>(
   };
 
   return [changes[prop] ?? globalState[prop], setter];
+};
+
+export const useGetGlobal = (): GetGlobalType => {
+  const { globalState } = useContext(GlobalContext) as GlobalCtxType;
+  return (prop) => changes[prop] ?? globalState[prop];
 };
 
 interface GlobalProps {
