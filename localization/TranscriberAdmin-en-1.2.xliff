@@ -9128,6 +9128,13 @@
                <context context-type="sourcefile">PersonalizeVoicePermission.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="voice.myProjects">
+            <source>my personal projects</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PersonalizeVoicePermission.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="voice.personalize">
             <source>Personalize</source>
             <target/>

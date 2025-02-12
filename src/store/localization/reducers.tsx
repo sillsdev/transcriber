@@ -1655,6 +1655,7 @@ const initialState = {
 			"forHire": "I work for hire.",
 			"gender": "Gender",
 			"genderOneWord": "Gender must be a single word.",
+			"myProjects": "my personal projects",
 			"personalize": "Personalize",
 			"personalizeTitle": "Personalize Voice Permission",
 			"scope": "Scope of use",

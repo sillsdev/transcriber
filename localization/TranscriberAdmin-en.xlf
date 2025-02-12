@@ -7822,6 +7822,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="voice.myProjects">
+         <segment>
+            <source>my personal projects</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="voice.personalize">
          <segment>
             <source>Personalize</source>

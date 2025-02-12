@@ -22,7 +22,9 @@ export const useVoicePermission = ({
   React.useEffect(() => {
     const cats = [];
 
-    const teamName = team
+    const teamName = team?.attributes?.name.startsWith('>')
+      ? t.myProjects
+      : team
       ? t.stTeam.replace('{0}', team?.attributes.name)
       : t.stThisTeam;
 

@@ -1563,6 +1563,7 @@ export interface IVoiceStrings extends Localize.LocalizedStringsMethods {
     "forHire": string;
     "gender": string;
     "genderOneWord": string;
+    "myProjects": string;
     "personalize": string;
     "personalizeTitle": string;
     "scope": string;
