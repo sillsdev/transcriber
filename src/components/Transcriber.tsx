@@ -1097,13 +1097,11 @@ export function Transcriber(props: IProps) {
   };
 
   const handleAutoTranscribe = (trans: string) => {
-    var transcription = transcriptionRef.current.firstChild.value;
-    if (trans.trimStart().startsWith(transcription)) transcription = '';
-    showTranscription({
-      transcription:
-        transcription + trans.replace(/[0-9]+:[0-9]+.[0-9]+: /g, ''),
-      position: 0,
-    });
+    var curTrans: string = transcriptionRef.current?.firstChild?.value ?? '';
+    if (curTrans.includes(trans)) return;
+    const transcription = curTrans + trans;
+    showTranscription({ transcription, position: 0 });
+    setTextValue(transcription);
     toolChanged(toolId, true);
   };
 
@@ -1154,6 +1152,8 @@ export function Transcriber(props: IProps) {
       }
     }
   };
+
+  console.log('transcription', transcriptionRef.current?.firstChild?.value);
 
   return (
     <GrowingDiv>
@@ -1229,7 +1229,7 @@ export function Transcriber(props: IProps) {
                             : onSaveProgress
                         }
                         role={role}
-                        hasTranscription={Boolean(ignoreV1(textValue))}
+                        hasTranscription={Boolean(ignoreV1(textValue.trim()))}
                       />
                     </Grid>
                   </Grid>

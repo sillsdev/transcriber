@@ -11,7 +11,6 @@ import {
   MediaFile,
   MediaFileD,
   OrganizationD,
-  OrgWorkflowStepD,
 } from '../../model';
 import { UpdateRecord } from '../../model/baseModel';
 import { playerSelector, sharedSelector } from '../../selector';
@@ -36,8 +35,7 @@ import AsrProgress, { getTaskId } from '../../business/asr/AsrProgress';
 import { useGetAsrSettings } from '../../crud/useGetAsrSettings';
 import { LightTooltip } from '../StepEditor';
 import { useOrbitData } from '../../hoc/useOrbitData';
-import { JSONParse } from '../../utils';
-import { findRecord, pullTableList, ToolSlug } from '../../crud';
+import { findRecord, pullTableList } from '../../crud';
 import IndexedDBSource from '@orbit/indexeddb';
 import JSONAPISource from '@orbit/jsonapi';
 
@@ -153,14 +151,6 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
 
   const [features, setFeatures] = useState<IFeatures>();
   const [asrProgressVisble, setAsrProgressVisble] = useState(false);
-  const orgSteps = useOrbitData<OrgWorkflowStepD[]>('orgworkflowstep');
-
-  const tool = useMemo(() => {
-    const toolText = orgSteps.find((s) => s.id === currentstep)?.attributes
-      ?.tool;
-    const val = toolText ? JSONParse(toolText)?.tool ?? '' : undefined;
-    return val;
-  }, [orgSteps, currentstep]);
 
   const { onPlayStatus, onCurrentSegment, setSegmentToWhole } = usePlayerLogic({
     allowSegment,
@@ -421,37 +411,34 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
             ) : (
               <></>
             )}
-            {features?.aiTranscribe &&
-              !offline &&
-              tool === ToolSlug.Transcribe &&
-              role && (
-                <LightTooltip
-                  title={<Badge badgeContent={ts.ai}>{asrTip ?? ''}</Badge>}
-                >
-                  <span>
-                    <AsrButton
-                      id="asrButton"
-                      onClick={handleTranscribe}
-                      onSettings={() => setAsrLangVisible(true)}
-                      disabled={role !== 'transcriber'}
-                    >
-                      {!hasTranscription && aiTaskId ? (
-                        <Badge variant="dot" color="primary">
-                          <TranscriptionLogo
-                            disabled={role !== 'transcriber'}
-                            sx={{ height: 18, width: 18 }}
-                          />
-                        </Badge>
-                      ) : (
+            {features?.aiTranscribe && !offline && onTranscription && role && (
+              <LightTooltip
+                title={<Badge badgeContent={ts.ai}>{asrTip ?? ''}</Badge>}
+              >
+                <span>
+                  <AsrButton
+                    id="asrButton"
+                    onClick={handleTranscribe}
+                    onSettings={() => setAsrLangVisible(true)}
+                    disabled={role !== 'transcriber'}
+                  >
+                    {!hasTranscription && aiTaskId && role === 'transcriber' ? (
+                      <Badge variant="dot" color="primary">
                         <TranscriptionLogo
                           disabled={role !== 'transcriber'}
                           sx={{ height: 18, width: 18 }}
                         />
-                      )}
-                    </AsrButton>
-                  </span>
-                </LightTooltip>
-              )}
+                      </Badge>
+                    ) : (
+                      <TranscriptionLogo
+                        disabled={role !== 'transcriber'}
+                        sx={{ height: 18, width: 18 }}
+                      />
+                    )}
+                  </AsrButton>
+                </span>
+              </LightTooltip>
+            )}
             {saveSegments === SaveSegments.showSaveButton ? (
               <Button
                 id="segment-save"
@@ -475,7 +462,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
           closeMethod={handleCloseTranscription}
         />
       )}
-      {asrLangVisible && (
+      {asrLangVisible && onTranscription && (
         <BigDialog
           title={t.recognizeSpeechSettings}
           description={

@@ -200,7 +200,7 @@ export default function AsrProgress({
     const mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFileD;
     if (force) {
       postTranscribe();
-    } else if (ignoreV1(mediaRec?.attributes?.transcription)) {
+    } else if (ignoreV1((mediaRec?.attributes?.transcription ?? '').trim())) {
       status(t.transcriptionExists);
       closing();
     } else {
