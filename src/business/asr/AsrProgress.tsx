@@ -38,10 +38,11 @@ export const getTasks = (mediaRec: MediaFileD | undefined) => {
   var tsks: VerseTask[] = [];
   if (Array.isArray(segs?.regions)) {
     (segs?.regions as Array<any>).forEach((region) => {
+      const part: string[] = region.label.split('|');
       tsks.push({
-        taskId: region.label.split('|')[0],
-        verse: region.label.split('|')[1], //undefined if no timing
-        complete: false,
+        taskId: part[0],
+        verse: part[1], //undefined if no timing
+        complete: part[2] === 'true',
       });
     });
     return tsks;
@@ -49,19 +50,41 @@ export const getTasks = (mediaRec: MediaFileD | undefined) => {
     return undefined;
   }
 };
+// logic to create the regionstr from the tasks
+export const saveTaskInfo = (
+  mediaRec: MediaFileD | undefined,
+  tasks: VerseTask[]
+) => {
+  const regionstr = getSegments(
+    NamedRegions.TRTask,
+    mediaRec?.attributes?.segments || '{}'
+  );
+  const segs = JSON.parse(regionstr ?? {});
+  var regions: any[] = [];
+  tasks.forEach((task) => {
+    regions.push({
+      start: 0,
+      end: 0,
+      label: `${task.taskId}|${task.verse}|${task.complete}`,
+    });
+  });
+  segs.regions = regions;
+  return JSON.stringify(segs);
+};
+
 export const getTaskId = (mediaRec: MediaFileD | undefined) => {
   var tasks = getTasks(mediaRec);
-  if (tasks) return tasks[0].taskId;
+  return tasks?.find((tasks) => !tasks.complete)?.taskId;
 };
 interface AsrProgressProps {
   mediaId: string;
   phonetic: boolean;
   force?: boolean;
   setTranscription: (transcription: string) => void;
-  onSaveTasks: (mediaRec: MediaFileD) => void;
+  onSaveTasks: (mediaId: string, tasks?: VerseTask[]) => void;
   onClose: () => void;
 }
-interface VerseTask {
+export interface VerseTask {
   taskId: string;
   verse: string;
   complete: boolean;
@@ -144,6 +167,7 @@ export default function AsrProgress({
     if (taskTimer.current) {
       clearInterval(taskTimer.current);
     }
+    onSaveTasks(mediaId, tasks);
     setTranscribing(false);
     setWorking(false);
     onClose && onClose();
@@ -164,7 +188,7 @@ export default function AsrProgress({
       const mediaRec = response?.data.data as MediaFileD;
       const tasks = getTasks(mediaRec);
       if (tasks) {
-        onSaveTasks(mediaRec);
+        onSaveTasks(mediaId);
         if (tasks.length > 1) setTasks(tasks);
         setTaskId(tasks[0].taskId);
       } else {
@@ -200,15 +224,20 @@ export default function AsrProgress({
     const mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFileD;
     if (force) {
       postTranscribe();
-    } else if (ignoreV1(mediaRec?.attributes?.transcription ?? '')?.trim()) {
-      status(t.transcriptionExists);
-      closing();
     } else {
       const taskId = getTaskId(mediaRec);
-      if (taskId) {
-        setTaskId(taskId);
+      if (
+        !taskId &&
+        ignoreV1((mediaRec?.attributes?.transcription ?? '').trim())
+      ) {
+        status(t.transcriptionExists);
+        closing();
       } else {
-        postTranscribe();
+        if (taskId) {
+          setTaskId(taskId);
+        } else {
+          postTranscribe();
+        }
       }
     }
 

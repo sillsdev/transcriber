@@ -1096,35 +1096,33 @@ export function Transcriber(props: IProps) {
     if (teamDefault) setOrgDefault(NamedRegions.Transcription, params);
   };
 
+  const addText = (text: string, atEnd?: boolean) => {
+    if (transcriptionRef.current) {
+      focusOnTranscription();
+      const textArea = transcriptionRef.current
+        .firstChild as HTMLTextAreaElement;
+      if (atEnd) setTextValue(textArea.value ?? '');
+      insertAtCursor(textArea, text);
+      setTextValue(textArea.value ?? '');
+    }
+  };
+
   const handleAutoTranscribe = (trans: string) => {
     const cleanTrans = trans.replace(/[0-9]+:[0-9]+.[0-9]+: /g, '').trim();
     const curTrans: string = transcriptionRef.current?.firstChild?.value ?? '';
     if (curTrans.includes(cleanTrans)) return;
-    let transcription = curTrans + cleanTrans;
-    const m = /\\v (\d+)/.exec(curTrans);
-    if (m) {
-      const verseTextIdx = m.index + m[0].length;
-      transcription = curTrans.substring(0, verseTextIdx);
-      if (m[0].length > 0) transcription += ' ';
-      transcription += cleanTrans;
-      const endIndex = curTrans.indexOf('\\v', verseTextIdx);
-      if (endIndex > -1) transcription += curTrans.substring(endIndex);
-    }
-    showTranscription({ transcription, position: 0 });
-    setTextValue(transcription);
+    const m = /\\v (\d+)\s?/.exec(cleanTrans);
+    const index = m && curTrans.includes(m[0]) ? m[0].length : 0;
+    const space = /\s$/.test(curTrans) ? '' : ' ';
+    addText(space + cleanTrans.substring(index), true);
     toolChanged(toolId, true);
   };
 
   const onSaveProgress = (progress: number) => {
-    if (transcriptionRef.current) {
-      focusOnTranscription();
-      const timeStamp = '(' + formatTime(progress) + ')';
-      const textArea = transcriptionRef.current
-        .firstChild as HTMLTextAreaElement;
-      insertAtCursor(textArea, timeStamp);
-      setTextValue(textArea.value ?? '');
-    }
+    const timeStamp = '(' + formatTime(progress) + ')';
+    addText(timeStamp);
   };
+
   const handleSplitSize = debounce((e: any) => {
     setPlayerSize(e);
   }, 50);
@@ -1162,8 +1160,6 @@ export function Transcriber(props: IProps) {
       }
     }
   };
-
-  console.log('transcription', transcriptionRef.current?.firstChild?.value);
 
   return (
     <GrowingDiv>

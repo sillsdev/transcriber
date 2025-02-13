@@ -31,7 +31,11 @@ import SelectAsrLanguage, {
 } from '../../business/asr/SelectAsrLanguage';
 import AsrButton from '../../control/ConfButton';
 import { IFeatures } from '../Team/TeamSettings';
-import AsrProgress, { getTaskId } from '../../business/asr/AsrProgress';
+import AsrProgress, {
+  getTaskId,
+  saveTaskInfo,
+  VerseTask,
+} from '../../business/asr/AsrProgress';
 import { useGetAsrSettings } from '../../crud/useGetAsrSettings';
 import { LightTooltip } from '../StepEditor';
 import { useOrbitData } from '../../hoc/useOrbitData';
@@ -207,15 +211,18 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     }
   };
 
-  const onSaveTasks = (mediaRec: MediaFileD) => {
-    pullTableList(
-      'mediafile',
-      Array(mediaRec.id),
-      memory,
-      remote,
-      backup,
-      reporter
-    )
+  const onSaveTasks = (mediaId: string, tasks?: VerseTask[]) => {
+    if (tasks) {
+      const mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFileD;
+      const newSegs = updateSegments(
+        NamedRegions.TRTask,
+        mediaRec?.attributes?.segments || '{}',
+        saveTaskInfo(mediaRec, tasks)
+      );
+      memory.update((t) => t.replaceAttribute(mediaRec, 'segments', newSegs));
+      return;
+    }
+    pullTableList('mediafile', Array(mediaId), memory, remote, backup, reporter)
       .then((r) => {
         forceRefresh();
       })
