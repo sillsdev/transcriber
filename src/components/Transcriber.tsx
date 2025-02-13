@@ -1097,17 +1097,20 @@ export function Transcriber(props: IProps) {
   };
 
   const handleAutoTranscribe = (trans: string) => {
-    var curTrans: string = transcriptionRef.current?.firstChild?.value ?? '';
-    if (curTrans.includes(trans)) return;
-    let transcription = curTrans + trans;
+    const cleanTrans = trans.replace(/[0-9]+:[0-9]+.[0-9]+: /g, '').trim();
+    const curTrans: string = transcriptionRef.current?.firstChild?.value ?? '';
+    if (curTrans.includes(cleanTrans)) return;
+    let transcription = curTrans + cleanTrans;
     const m = /\\v (\d+)/.exec(curTrans);
     if (m) {
       const endIndex = curTrans.indexOf('\\v', m.index + m[0].length);
       if (endIndex > -1) {
         transcription =
-          curTrans.substring(0, m.index) + trans + curTrans.substring(endIndex);
+          curTrans.substring(0, m.index) +
+          cleanTrans +
+          curTrans.substring(endIndex);
       } else {
-        transcription = curTrans.substring(0, m.index) + trans;
+        transcription = curTrans.substring(0, m.index) + cleanTrans;
       }
     }
     showTranscription({ transcription, position: 0 });
