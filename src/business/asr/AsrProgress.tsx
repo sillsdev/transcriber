@@ -27,6 +27,7 @@ import {
 } from '../../selector';
 import { Stack, Typography } from '@mui/material';
 import { ignoreV1 } from '../../utils/ignoreV1';
+import { infoMsg, logError, Severity } from '../../utils';
 
 export const getTasks = (mediaRec: MediaFileD | undefined) => {
   const regionstr = getSegments(
@@ -87,6 +88,7 @@ export default function AsrProgress({
   const t: ITranscriberStrings = useSelector(transcriberSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const tc: ICardsStrings = useSelector(cardsSelector, shallowEqual);
+  const [errorReporter] = useGlobal('errorReporter');
 
   const setTaskId = (taskId: string) => {
     setTaskIdx(taskId);
@@ -170,6 +172,11 @@ export default function AsrProgress({
         closing();
       }
     } catch (error: any) {
+      logError(
+        Severity.error,
+        errorReporter,
+        infoMsg(error, t.aiAsrFailed + (error as AxiosError).message)
+      );
       status(t.aiAsrFailed + (error as AxiosError).message);
       closing();
     }

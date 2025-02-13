@@ -225,10 +225,13 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
       remote,
       backup,
       reporter
-    ).then((r) => {
-      forceRefresh();
-      setSegmentToWhole();
-    });
+    )
+      .then((r) => {
+        forceRefresh();
+      })
+      .finally(() => {
+        setSegmentToWhole();
+      });
   };
 
   const aiTaskId = useMemo(() => {
