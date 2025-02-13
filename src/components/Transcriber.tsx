@@ -1103,15 +1103,12 @@ export function Transcriber(props: IProps) {
     let transcription = curTrans + cleanTrans;
     const m = /\\v (\d+)/.exec(curTrans);
     if (m) {
-      const endIndex = curTrans.indexOf('\\v', m.index + m[0].length);
-      if (endIndex > -1) {
-        transcription =
-          curTrans.substring(0, m.index) +
-          cleanTrans +
-          curTrans.substring(endIndex);
-      } else {
-        transcription = curTrans.substring(0, m.index) + cleanTrans;
-      }
+      const verseTextIdx = m.index + m[0].length;
+      transcription = curTrans.substring(0, verseTextIdx);
+      if (m[0].length > 0) transcription += ' ';
+      transcription += cleanTrans;
+      const endIndex = curTrans.indexOf('\\v', verseTextIdx);
+      if (endIndex > -1) transcription += curTrans.substring(endIndex);
     }
     showTranscription({ transcription, position: 0 });
     setTextValue(transcription);
