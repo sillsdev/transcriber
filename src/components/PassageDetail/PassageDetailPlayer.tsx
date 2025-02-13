@@ -37,7 +37,7 @@ import { useGetAsrSettings } from '../../crud/useGetAsrSettings';
 import { LightTooltip } from '../StepEditor';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { JSONParse } from '../../utils';
-import { pullTableList, ToolSlug } from '../../crud';
+import { findRecord, pullTableList, ToolSlug } from '../../crud';
 import IndexedDBSource from '@orbit/indexeddb';
 import JSONAPISource from '@orbit/jsonapi';
 
@@ -235,8 +235,15 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
   };
 
   const aiTaskId = useMemo(() => {
-    return getTaskId(playerMediafile as MediaFileD);
-  }, [playerMediafile]);
+    const mediaRec = findRecord(
+      memory,
+      'mediafile',
+      playerMediafile?.id || ''
+    ) as MediaFileD;
+    const taskId = getTaskId(mediaRec);
+    return taskId;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerMediafile, asrProgressVisble]);
 
   const onDuration = (duration: number) => {
     durationRef.current = duration;
