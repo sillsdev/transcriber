@@ -1099,7 +1099,17 @@ export function Transcriber(props: IProps) {
   const handleAutoTranscribe = (trans: string) => {
     var curTrans: string = transcriptionRef.current?.firstChild?.value ?? '';
     if (curTrans.includes(trans)) return;
-    const transcription = curTrans + trans;
+    let transcription = curTrans + trans;
+    const m = /\\v (\d+)/.exec(curTrans);
+    if (m) {
+      const endIndex = curTrans.indexOf('\\v', m.index + m[0].length);
+      if (endIndex > -1) {
+        transcription =
+          curTrans.substring(0, m.index) + trans + curTrans.substring(endIndex);
+      } else {
+        transcription = curTrans.substring(0, m.index) + trans;
+      }
+    }
     showTranscription({ transcription, position: 0 });
     setTextValue(transcription);
     toolChanged(toolId, true);
