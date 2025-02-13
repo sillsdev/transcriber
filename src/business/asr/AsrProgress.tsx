@@ -5,7 +5,7 @@ import { orgDefaultAsr, useOrgDefaults } from '../../crud/useOrgDefaults';
 import { TokenContext } from '../../context/TokenProvider';
 import { IAsrState } from './AsrAlphabet';
 import { axiosGet, axiosPost } from '../../utils/axios';
-import { HttpStatusCode } from 'axios';
+import { AxiosError } from 'axios';
 import { findRecord } from '../../crud/tryFindRecord';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { remoteId } from '../../crud/remoteId';
@@ -27,35 +27,51 @@ import {
 } from '../../selector';
 import { Stack, Typography } from '@mui/material';
 import { ignoreV1 } from '../../utils/ignoreV1';
+import { infoMsg, logError, Severity } from '../../utils';
 
-export const getTaskId = (mediaRec: MediaFileD | undefined) => {
+export const getTasks = (mediaRec: MediaFileD | undefined) => {
   const regionstr = getSegments(
     NamedRegions.TRTask,
     mediaRec?.attributes?.segments || '{}'
   );
   const segs = JSON.parse(regionstr ?? {});
-  if (segs?.regions?.[0]?.label) {
-    return segs.regions[0].label;
+  var tsks: VerseTask[] = [];
+  if (Array.isArray(segs?.regions)) {
+    (segs?.regions as Array<any>).forEach((region) => {
+      tsks.push({
+        taskId: region.label.split('|')[0],
+        verse: region.label.split('|')[1], //undefined if no timing
+        complete: false,
+      });
+    });
+    return tsks;
   } else {
     return undefined;
   }
 };
-
+export const getTaskId = (mediaRec: MediaFileD | undefined) => {
+  var tasks = getTasks(mediaRec);
+  if (tasks) return tasks[0].taskId;
+};
 interface AsrProgressProps {
   mediaId: string;
   phonetic: boolean;
   force?: boolean;
-  setTranscription?: (transcription: string) => void;
-  onSaveTaskId: (mediaRec: MediaFileD) => void;
+  setTranscription: (transcription: string) => void;
+  onSaveTasks: (mediaRec: MediaFileD) => void;
   onClose: () => void;
 }
-
+interface VerseTask {
+  taskId: string;
+  verse: string;
+  complete: boolean;
+}
 export default function AsrProgress({
   mediaId,
   phonetic,
   force,
   setTranscription,
-  onSaveTaskId,
+  onSaveTasks,
   onClose,
 }: AsrProgressProps) {
   const addingRef = React.useRef(false);
@@ -64,13 +80,21 @@ export default function AsrProgress({
   const [memory] = useGlobal('memory');
   const token = React.useContext(TokenContext).state.accessToken ?? '';
   const { showMessage } = useSnackBar();
-  const [taskId, setTaskId] = React.useState('');
+  const [taskId, setTaskIdx] = React.useState('');
+  const taskIdRef = React.useRef('');
+  const [tasks, setTasks] = React.useState<VerseTask[]>();
   const taskTimer = React.useRef<NodeJS.Timeout>();
   const timerDelay = 5000; //5 seconds
   const t: ITranscriberStrings = useSelector(transcriberSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const tc: ICardsStrings = useSelector(cardsSelector, shallowEqual);
+  const [errorReporter] = useGlobal('errorReporter');
 
+  const setTaskId = (taskId: string) => {
+    setTaskIdx(taskId);
+    taskIdRef.current = taskId;
+    if (taskId === '') setTasks(undefined);
+  };
   const setTranscribing = (adding: boolean) => {
     addingRef.current = adding;
   };
@@ -81,21 +105,30 @@ export default function AsrProgress({
   };
 
   const checkTask = async () => {
-    console.log(`checking task: ${taskId}`);
-    const response = await axiosGet(`aero/transcription/${taskId}`);
+    const response: any = await axiosGet(
+      `aero/transcription/${taskIdRef.current}`
+    );
     if (response?.transcription) {
-      //Do something with the transcription here
-      console.log(response);
-      setTranscription &&
-        setTranscription(
-          phonetic ? response?.phonetic : response?.transcription
-        );
-      setTaskId('');
+      console.log(taskIdRef.current, response);
+      var verse = '';
+      var nextTask = '';
+      if (tasks) {
+        var ix = tasks.findIndex((t) => t.taskId === taskIdRef.current);
+        if (ix >= 0) {
+          verse = ` \\v ${tasks[ix].verse} `;
+          tasks[ix].complete = true;
+          nextTask = ix < tasks.length - 1 ? tasks[ix + 1].taskId : '';
+        }
+      }
+      setTranscription(
+        verse + (phonetic ? response?.phonetic : response?.transcription)
+      );
+      setTaskId(nextTask);
     } else if (response?.transcription === '') {
       status(t.noAsrTranscription);
       setTaskId('');
     } else {
-      console.log('not done', response);
+      console.log(`${taskIdRef.current} not done`, response);
       setWorking(true);
     }
     return undefined;
@@ -122,25 +155,29 @@ export default function AsrProgress({
     const asr = getOrgDefault(orgDefaultAsr) as IAsrState | undefined;
     const iso = asr?.dialect ?? asr?.mmsIso ?? 'eng';
     const romanize = asr?.selectRoman ?? false;
-
-    const response = await axiosPost(
-      `mediafiles/${remId}/transcription/${iso}/${romanize}`,
-      undefined,
-      token
-    );
-
-    if (response.status === HttpStatusCode.Ok) {
+    try {
+      const response = await axiosPost(
+        `mediafiles/${remId}/transcription/${iso}/${romanize}`,
+        undefined,
+        token
+      );
       const mediaRec = response?.data.data as MediaFileD;
-      const taskId = getTaskId(mediaRec);
-      if (taskId) {
-        onSaveTaskId(mediaRec);
-        setTaskId(taskId);
+      const tasks = getTasks(mediaRec);
+      if (tasks) {
+        onSaveTasks(mediaRec);
+        if (tasks.length > 1) setTasks(tasks);
+        setTaskId(tasks[0].taskId);
       } else {
         status(t.aiAsrFailed);
         closing();
       }
-    } else {
-      status(t.aiAsrFailed);
+    } catch (error: any) {
+      logError(
+        Severity.error,
+        errorReporter,
+        infoMsg(error, t.aiAsrFailed + (error as AxiosError).message)
+      );
+      status(t.aiAsrFailed + (error as AxiosError).message);
       closing();
     }
   };

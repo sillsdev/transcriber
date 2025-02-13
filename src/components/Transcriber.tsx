@@ -1097,7 +1097,8 @@ export function Transcriber(props: IProps) {
   };
 
   const handleAutoTranscribe = (trans: string) => {
-    const transcription = transcriptionRef.current.firstChild.value;
+    var transcription = transcriptionRef.current.firstChild.value;
+    if (trans.trimStart().startsWith(transcription)) transcription = '';
     showTranscription({
       transcription:
         transcription + trans.replace(/[0-9]+:[0-9]+.[0-9]+: /g, ''),

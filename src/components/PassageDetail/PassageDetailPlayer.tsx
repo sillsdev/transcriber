@@ -37,7 +37,9 @@ import { useGetAsrSettings } from '../../crud/useGetAsrSettings';
 import { LightTooltip } from '../StepEditor';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { JSONParse } from '../../utils';
-import { ToolSlug } from '../../crud';
+import { pullTableList, ToolSlug } from '../../crud';
+import IndexedDBSource from '@orbit/indexeddb';
+import JSONAPISource from '@orbit/jsonapi';
 
 export enum SaveSegments {
   showSaveButton = 0,
@@ -132,7 +134,10 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
 
   const [defaultSegments, setDefaultSegments] = useState('{}');
   const [showTranscriptionId, setShowTranscriptionId] = useState('');
-
+  const [coordinator] = useGlobal('coordinator');
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
+  const [reporter] = useGlobal('errorReporter');
   const segmentsRef = useRef('');
   const playingRef = useRef(playing);
   const savingRef = useRef(false);
@@ -212,23 +217,21 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     }
   };
 
-  const onSaveTaskId = (mediaRec: MediaFileD) => {
-    const curTaskId = getTaskId(mediafileRef.current as MediaFileD);
-    const newTaskId = getTaskId(mediaRec);
-    if (newTaskId !== curTaskId && mediaRec && mediafileRef.current) {
-      memory
-        .update((t) =>
-          t.replaceAttribute(
-            mediafileRef.current as MediaFileD, //I already checked for undefined
-            'segments',
-            mediaRec.attributes.segments
-          )
-        )
-        .then(() => {
-          forceRefresh();
-        });
-    }
-    setSegmentToWhole();
+  const onSaveTasks = (mediaRec: MediaFileD) => {
+    pullTableList(
+      'mediafile',
+      Array(mediaRec.id),
+      memory,
+      remote,
+      backup,
+      reporter
+    )
+      .then((r) => {
+        forceRefresh();
+      })
+      .finally(() => {
+        setSegmentToWhole();
+      });
   };
 
   const aiTaskId = useMemo(() => {
@@ -484,7 +487,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
           />
         </BigDialog>
       )}
-      {asrProgressVisble && (
+      {asrProgressVisble && onTranscription && (
         <BigDialog
           title={t.recognizeProgress}
           isOpen={asrProgressVisble}
@@ -496,7 +499,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
             phonetic={phonetic}
             force={forceAi}
             setTranscription={onTranscription}
-            onSaveTaskId={onSaveTaskId}
+            onSaveTasks={onSaveTasks}
             onClose={() => handleAsrProgressVisible(false)}
           />
         </BigDialog>

@@ -28,9 +28,17 @@ import { axiosGet, axiosPost } from '../../../utils/axios';
 import { TokenContext } from '../../../context/TokenProvider';
 import { useGlobal } from '../../../context/GlobalContext';
 import { RecordKeyMap } from '@orbit/records';
-import { useDataChanges, useWaitForRemoteQueue } from '../../../utils';
+import {
+  infoMsg,
+  logError,
+  Severity,
+  useDataChanges,
+  useWaitForRemoteQueue,
+} from '../../../utils';
 import BigDialog from '../../../hoc/BigDialog';
 import { Aquifer } from '../../../assets/brands';
+import { useSnackBar } from '../../../hoc/SnackBar';
+import { AxiosError } from 'axios';
 
 interface AquiferSearch {
   id: number;
@@ -140,6 +148,8 @@ export default function FindAquifer({ onClose }: IProps) {
     e.stopPropagation();
     setPreviewItem(row);
   };
+  const { showMessage } = useSnackBar();
+  const [errorReporter] = useGlobal('errorReporter');
 
   const columnDefs = [
     { name: 'name', title: t.name },
@@ -299,15 +309,24 @@ export default function FindAquifer({ onClose }: IProps) {
       ),
       Items: add,
     };
-    axiosPost('aquifer', postdata, token).then((response) => {
-      //could process response as ChangeList but this is easier
-      forceDataChanges().then(() => {
-        waitForDataChangesQueue('aquifer resource added').then(() => {
-          setAdding(false);
-          onClose && onClose();
+    axiosPost('aquifer', postdata, token)
+      .then((response) => {
+        //could process response as ChangeList but this is easier
+        forceDataChanges().then(() => {
+          waitForDataChangesQueue('aquifer resource added').then(() => {
+            setAdding(false);
+            onClose && onClose();
+          });
         });
+      })
+      .catch((err) => {
+        showMessage('Aquifer add failed ' + (err as AxiosError).message);
+        logError(
+          Severity.error,
+          errorReporter,
+          infoMsg(err, 'Aquifer add failed ')
+        );
       });
-    });
   };
 
   return (
