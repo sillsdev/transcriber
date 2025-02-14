@@ -26,7 +26,7 @@ import {
   transcriberSelector,
 } from '../../selector';
 import { Stack, Typography } from '@mui/material';
-import { ignoreV1 } from '../../utils/ignoreV1';
+import { ignoreVs } from '../../utils/ignoreVs';
 import { infoMsg, logError, Severity } from '../../utils';
 
 export interface VerseTask {
@@ -212,7 +212,7 @@ export default function AsrProgress({
       const taskId = getTaskId(mediaRec);
       if (
         (!tasks || !taskId) &&
-        ignoreV1((mediaRec?.attributes?.transcription ?? '').trim())
+        ignoreVs((mediaRec?.attributes?.transcription ?? '').trim())
       ) {
         status(t.transcriptionExists);
         closing();
