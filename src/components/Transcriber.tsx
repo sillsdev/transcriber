@@ -113,7 +113,6 @@ import { useDispatch } from 'react-redux';
 import { PassageTypeEnum } from '../model/passageType';
 import { addPt } from '../utils/addPt';
 import { Paratext } from '../assets/brands';
-import { ignoreV1 } from '../utils/ignoreV1';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -290,6 +289,8 @@ export function Transcriber(props: IProps) {
   const [projData, setProjData] = useState<FontData>();
   const [suggestedSegs, setSuggestedSegs] = useState<string>();
   const verseSegs = useRef<string>();
+  const [verseLabels, setVerseLabels] = useState<string[]>([]);
+  const [contentVerses, setContentVerses] = useState<string[]>([]);
   const playedSecsRef = useRef<number>(0);
   const segmentsRef = useRef<string>();
   const stateRef = useRef<string>(state);
@@ -573,6 +574,12 @@ export function Transcriber(props: IProps) {
         let segs = getSortedRegions(
           getSegments(NamedRegions.Verse, defaultSegments)
         );
+        const verseLabels: string[] = [];
+        segs.forEach((region) => {
+          const vnum = region?.label?.split(':')[1];
+          if (vnum) verseLabels.push(vnum);
+        });
+        setVerseLabels(verseLabels);
         if (segs.length > 0) {
           const textArea = transcriptionRef.current
             .firstChild as HTMLTextAreaElement;
@@ -1048,6 +1055,22 @@ export function Transcriber(props: IProps) {
     };
   };
 
+  useEffect(() => {
+    const transcription = textValue;
+    if (!transcription) return;
+    const newContentVerses: string[] = [];
+    verseLabels.forEach((label) => {
+      const pat = new RegExp(`\\\\v\\s+${label}\\s+[^\\\\]+`);
+      if (pat.test(transcription as string)) {
+        newContentVerses.push(label);
+      }
+    });
+    if (JSON.stringify(contentVerses) !== JSON.stringify(newContentVerses)) {
+      setContentVerses(newContentVerses);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [textValue, verseLabels]);
+
   const showTranscription = (val: ITrans) => {
     transcriptionIn.current = val.transcription;
     setTextValue(val.transcription ?? '');
@@ -1235,7 +1258,11 @@ export function Transcriber(props: IProps) {
                             : onSaveProgress
                         }
                         role={role}
-                        hasTranscription={Boolean(ignoreV1(textValue.trim()))}
+                        hasTranscription={
+                          textValue !== '' &&
+                          verseLabels.length === contentVerses.length
+                        }
+                        contentVerses={contentVerses}
                       />
                     </Grid>
                   </Grid>
