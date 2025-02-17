@@ -427,9 +427,9 @@ export const AudioTable = (props: IProps) => {
       {publishItem !== -1 && (
         <ConfirmPublishDialog
           title={t.publish}
-          propogateLabel={''}
+          propagateLabel={''}
           description={''}
-          noPropogateDescription={''}
+          noPropagateDescription={''}
           yesResponse={publishConfirm}
           noResponse={publishRefused}
           current={getPublishTo(

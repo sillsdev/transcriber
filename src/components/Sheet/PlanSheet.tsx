@@ -1077,7 +1077,7 @@ export function PlanSheet(props: IProps) {
                 '{0}',
                 isMovement(currentRowRef.current - 1) ? pt.MOVE : organizedBy
               )}
-              propogateLabel={t.propogate
+              propagateLabel={t.propagate
                 .replaceAll(
                   '{0}',
                   isMovement(currentRowRef.current - 1)
@@ -1098,12 +1098,12 @@ export function PlanSheet(props: IProps) {
                     )
                   : t.confirmPublishSection.replaceAll('{0}', organizedBy)
               }
-              noPropogateDescription={
+              noPropagateDescription={
                 isMovement(currentRowRef.current - 1)
-                  ? t.confirmPublishMovementNoPropogate
+                  ? t.confirmPublishMovementNoPropagate
                       .replaceAll('{0}', organizedByPlural)
                       .replaceAll('{1}', Akuo)
-                  : t.confirmPublishSectionNoPropogate.replaceAll(
+                  : t.confirmPublishSectionNoPropagate.replaceAll(
                       '{0}',
                       organizedBy
                     )
