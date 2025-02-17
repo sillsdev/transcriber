@@ -29,49 +29,29 @@ import { Stack, Typography } from '@mui/material';
 import { ignoreV1 } from '../../utils/ignoreV1';
 import { infoMsg, logError, Severity } from '../../utils';
 
-export const getTasks = (mediaRec: MediaFileD | undefined) => {
-  const regionstr = getSegments(
-    NamedRegions.TRTask,
-    mediaRec?.attributes?.segments || '{}'
-  );
-  const segs = JSON.parse(regionstr ?? {});
-  var tsks: VerseTask[] = [];
-  if (Array.isArray(segs?.regions)) {
-    (segs?.regions as Array<any>).forEach((region) => {
-      tsks.push({
-        taskId: region.label.split('|')[0],
-        verse: region.label.split('|')[1], //undefined if no timing
-        complete: false,
-      });
-    });
-    return tsks;
-  } else {
-    return undefined;
-  }
-};
-export const getTaskId = (mediaRec: MediaFileD | undefined) => {
-  var tasks = getTasks(mediaRec);
-  if (tasks) return tasks[0].taskId;
-};
-interface AsrProgressProps {
-  mediaId: string;
-  phonetic: boolean;
-  force?: boolean;
-  setTranscription: (transcription: string) => void;
-  onSaveTasks: (mediaRec: MediaFileD) => void;
-  onClose: () => void;
-}
-interface VerseTask {
+export interface VerseTask {
   taskId: string;
   verse: string;
   complete: boolean;
 }
+
+interface AsrProgressProps {
+  mediaId: string;
+  phonetic: boolean;
+  force?: boolean;
+  contentVerses?: string[];
+  setTranscription: (transcription: string) => void;
+  onPullTasks: (mediaId: string) => void;
+  onClose: () => void;
+}
+
 export default function AsrProgress({
   mediaId,
   phonetic,
   force,
+  contentVerses,
   setTranscription,
-  onSaveTasks,
+  onPullTasks,
   onClose,
 }: AsrProgressProps) {
   const addingRef = React.useRef(false);
@@ -89,6 +69,34 @@ export default function AsrProgress({
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const tc: ICardsStrings = useSelector(cardsSelector, shallowEqual);
   const [errorReporter] = useGlobal('errorReporter');
+
+  const getTasks = (mediaRec: MediaFileD | undefined) => {
+    const regionstr = getSegments(
+      NamedRegions.TRTask,
+      mediaRec?.attributes?.segments || '{}'
+    );
+    const segs = JSON.parse(regionstr ?? {});
+    var tsks: VerseTask[] = [];
+    if (Array.isArray(segs?.regions)) {
+      (segs?.regions as Array<any>).forEach((region) => {
+        const part: string[] = region.label.split('|');
+        tsks.push({
+          taskId: part[0],
+          verse: part[1], //undefined if no timing
+          complete: contentVerses?.includes(part[1] ?? 'x') ?? false,
+        });
+      });
+      return tsks;
+    } else {
+      return undefined;
+    }
+  };
+
+  const getTaskId = (mediaRec: MediaFileD | undefined) => {
+    var tsks = getTasks(mediaRec);
+    if (tsks && !tasks) setTasks(tsks);
+    return tsks?.find((tasks) => !tasks.complete)?.taskId;
+  };
 
   const setTaskId = (taskId: string) => {
     setTaskIdx(taskId);
@@ -115,7 +123,7 @@ export default function AsrProgress({
       if (tasks) {
         var ix = tasks.findIndex((t) => t.taskId === taskIdRef.current);
         if (ix >= 0) {
-          verse = ` \\v ${tasks[ix].verse} `;
+          if (tasks[ix]?.verse) verse = ` \\v ${tasks[ix].verse} `;
           tasks[ix].complete = true;
           nextTask = ix < tasks.length - 1 ? tasks[ix + 1].taskId : '';
         }
@@ -164,7 +172,7 @@ export default function AsrProgress({
       const mediaRec = response?.data.data as MediaFileD;
       const tasks = getTasks(mediaRec);
       if (tasks) {
-        onSaveTasks(mediaRec);
+        onPullTasks(remId);
         if (tasks.length > 1) setTasks(tasks);
         setTaskId(tasks[0].taskId);
       } else {
@@ -200,15 +208,20 @@ export default function AsrProgress({
     const mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFileD;
     if (force) {
       postTranscribe();
-    } else if (ignoreV1(mediaRec?.attributes?.transcription)) {
-      status(t.transcriptionExists);
-      closing();
     } else {
       const taskId = getTaskId(mediaRec);
-      if (taskId) {
-        setTaskId(taskId);
+      if (
+        (!tasks || !taskId) &&
+        ignoreV1((mediaRec?.attributes?.transcription ?? '').trim())
+      ) {
+        status(t.transcriptionExists);
+        closing();
       } else {
-        postTranscribe();
+        if (taskId) {
+          setTaskId(taskId);
+        } else {
+          postTranscribe();
+        }
       }
     }
 

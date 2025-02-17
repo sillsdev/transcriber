@@ -289,7 +289,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
 
   const handleComplete = (complete: boolean) => {
     waitForSave(undefined, 200).finally(async () => {
-      console.log('handlecomplete', currentstep, complete);
+      // console.log('handlecomplete', currentstep, complete);
       await setStepComplete(currentstep, complete);
       if (complete) gotoNextStep();
     });

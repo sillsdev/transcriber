@@ -11,11 +11,14 @@ import {
   MediaFile,
   MediaFileD,
   OrganizationD,
-  OrgWorkflowStepD,
 } from '../../model';
 import { UpdateRecord } from '../../model/baseModel';
 import { playerSelector, sharedSelector } from '../../selector';
-import { NamedRegions, updateSegments } from '../../utils/namedSegments';
+import {
+  getSegments,
+  NamedRegions,
+  updateSegments,
+} from '../../utils/namedSegments';
 import usePassageDetailContext from '../../context/usePassageDetailContext';
 import ViewIcon from '@mui/icons-material/RemoveRedEye';
 import TranscriptionShow from '../TranscriptionShow';
@@ -32,12 +35,11 @@ import SelectAsrLanguage, {
 } from '../../business/asr/SelectAsrLanguage';
 import AsrButton from '../../control/ConfButton';
 import { IFeatures } from '../Team/TeamSettings';
-import AsrProgress, { getTaskId } from '../../business/asr/AsrProgress';
+import AsrProgress from '../../business/asr/AsrProgress';
 import { useGetAsrSettings } from '../../crud/useGetAsrSettings';
 import { LightTooltip } from '../StepEditor';
 import { useOrbitData } from '../../hoc/useOrbitData';
-import { JSONParse } from '../../utils';
-import { findRecord, pullTableList, ToolSlug } from '../../crud';
+import { pullTableList } from '../../crud';
 import IndexedDBSource from '@orbit/indexeddb';
 import JSONAPISource from '@orbit/jsonapi';
 
@@ -66,6 +68,7 @@ export interface DetailPlayerProps {
   parentToolId?: string;
   role?: string;
   hasTranscription?: boolean;
+  contentVerses?: string[];
 }
 
 export function PassageDetailPlayer(props: DetailPlayerProps) {
@@ -90,6 +93,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     parentToolId,
     role,
     hasTranscription,
+    contentVerses,
   } = props;
 
   const [memory] = useGlobal('memory');
@@ -147,20 +151,13 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
   const [org] = useGlobal('organization');
   const { getAsrSettings } = useGetAsrSettings();
   const teams = useOrbitData<OrganizationD[]>('organization');
+  const mediarecs = useOrbitData<MediaFileD[]>('mediafile');
   const [asrLangVisible, setAsrLangVisible] = useState(false);
   const [phonetic, setPhonetic] = useState(false);
   const [forceAi, setForceAi] = useState<boolean>();
 
   const [features, setFeatures] = useState<IFeatures>();
   const [asrProgressVisble, setAsrProgressVisble] = useState(false);
-  const orgSteps = useOrbitData<OrgWorkflowStepD[]>('orgworkflowstep');
-
-  const tool = useMemo(() => {
-    const toolText = orgSteps.find((s) => s.id === currentstep)?.attributes
-      ?.tool;
-    const val = toolText ? JSONParse(toolText)?.tool ?? '' : undefined;
-    return val;
-  }, [orgSteps, currentstep]);
 
   const { onPlayStatus, onCurrentSegment, setSegmentToWhole } = usePlayerLogic({
     allowSegment,
@@ -217,10 +214,10 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     }
   };
 
-  const onSaveTasks = (mediaRec: MediaFileD) => {
+  const onPullTasks = (remoteId: string) => {
     pullTableList(
       'mediafile',
-      Array(mediaRec.id),
+      Array(remoteId),
       memory,
       remote,
       backup,
@@ -234,16 +231,16 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
       });
   };
 
-  const aiTaskId = useMemo(() => {
-    const mediaRec = findRecord(
-      memory,
-      'mediafile',
-      playerMediafile?.id || ''
-    ) as MediaFileD;
-    const taskId = getTaskId(mediaRec);
-    return taskId;
+  const hasAiTasks = useMemo(() => {
+    const mediaRec = mediarecs.find((m) => m.id === playerMediafile?.id);
+    return (
+      getSegments(
+        NamedRegions.TRTask,
+        mediaRec?.attributes?.segments || '{}'
+      ) !== '{}'
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playerMediafile, asrProgressVisble]);
+  }, [playerMediafile, mediarecs]);
 
   const onDuration = (duration: number) => {
     durationRef.current = duration;
@@ -421,37 +418,36 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
             ) : (
               <></>
             )}
-            {features?.aiTranscribe &&
-              !offline &&
-              tool === ToolSlug.Transcribe &&
-              role && (
-                <LightTooltip
-                  title={<Badge badgeContent={ts.ai}>{asrTip ?? ''}</Badge>}
-                >
-                  <span>
-                    <AsrButton
-                      id="asrButton"
-                      onClick={handleTranscribe}
-                      onSettings={() => setAsrLangVisible(true)}
-                      disabled={role !== 'transcriber'}
-                    >
-                      {!hasTranscription && aiTaskId ? (
-                        <Badge variant="dot" color="primary">
-                          <TranscriptionLogo
-                            disabled={role !== 'transcriber'}
-                            sx={{ height: 18, width: 18 }}
-                          />
-                        </Badge>
-                      ) : (
+            {features?.aiTranscribe && !offline && onTranscription && role && (
+              <LightTooltip
+                title={<Badge badgeContent={ts.ai}>{asrTip ?? ''}</Badge>}
+              >
+                <span>
+                  <AsrButton
+                    id="asrButton"
+                    onClick={handleTranscribe}
+                    onSettings={() => setAsrLangVisible(true)}
+                    disabled={role !== 'transcriber'}
+                  >
+                    {!hasTranscription &&
+                    hasAiTasks &&
+                    role === 'transcriber' ? (
+                      <Badge variant="dot" color="primary">
                         <TranscriptionLogo
                           disabled={role !== 'transcriber'}
                           sx={{ height: 18, width: 18 }}
                         />
-                      )}
-                    </AsrButton>
-                  </span>
-                </LightTooltip>
-              )}
+                      </Badge>
+                    ) : (
+                      <TranscriptionLogo
+                        disabled={role !== 'transcriber'}
+                        sx={{ height: 18, width: 18 }}
+                      />
+                    )}
+                  </AsrButton>
+                </span>
+              </LightTooltip>
+            )}
             {saveSegments === SaveSegments.showSaveButton ? (
               <Button
                 id="segment-save"
@@ -475,7 +471,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
           closeMethod={handleCloseTranscription}
         />
       )}
-      {asrLangVisible && (
+      {asrLangVisible && onTranscription && (
         <BigDialog
           title={t.recognizeSpeechSettings}
           description={
@@ -505,8 +501,9 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
             mediaId={playerMediafile?.id ?? ''}
             phonetic={phonetic}
             force={forceAi}
+            contentVerses={contentVerses}
             setTranscription={onTranscription}
-            onSaveTasks={onSaveTasks}
+            onPullTasks={onPullTasks}
             onClose={() => handleAsrProgressVisible(false)}
           />
         </BigDialog>

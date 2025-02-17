@@ -113,7 +113,6 @@ import { useDispatch } from 'react-redux';
 import { PassageTypeEnum } from '../model/passageType';
 import { addPt } from '../utils/addPt';
 import { Paratext } from '../assets/brands';
-import { ignoreV1 } from '../utils/ignoreV1';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
@@ -290,6 +289,8 @@ export function Transcriber(props: IProps) {
   const [projData, setProjData] = useState<FontData>();
   const [suggestedSegs, setSuggestedSegs] = useState<string>();
   const verseSegs = useRef<string>();
+  const [verseLabels, setVerseLabels] = useState<string[]>([]);
+  const [contentVerses, setContentVerses] = useState<string[]>([]);
   const playedSecsRef = useRef<number>(0);
   const segmentsRef = useRef<string>();
   const stateRef = useRef<string>(state);
@@ -573,6 +574,12 @@ export function Transcriber(props: IProps) {
         let segs = getSortedRegions(
           getSegments(NamedRegions.Verse, defaultSegments)
         );
+        const verseLabels: string[] = [];
+        segs.forEach((region) => {
+          const vnum = region?.label?.split(':')[1];
+          if (vnum) verseLabels.push(vnum);
+        });
+        setVerseLabels(verseLabels);
         if (segs.length > 0) {
           const textArea = transcriptionRef.current
             .firstChild as HTMLTextAreaElement;
@@ -1048,6 +1055,22 @@ export function Transcriber(props: IProps) {
     };
   };
 
+  useEffect(() => {
+    const transcription = textValue;
+    if (!transcription) return;
+    const newContentVerses: string[] = [];
+    verseLabels.forEach((label) => {
+      const pat = new RegExp(`\\\\v\\s+${label}\\s+[^\\\\]+`);
+      if (pat.test(transcription as string)) {
+        newContentVerses.push(label);
+      }
+    });
+    if (JSON.stringify(contentVerses) !== JSON.stringify(newContentVerses)) {
+      setContentVerses(newContentVerses);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [textValue, verseLabels]);
+
   const showTranscription = (val: ITrans) => {
     transcriptionIn.current = val.transcription;
     setTextValue(val.transcription ?? '');
@@ -1096,27 +1119,33 @@ export function Transcriber(props: IProps) {
     if (teamDefault) setOrgDefault(NamedRegions.Transcription, params);
   };
 
+  const addText = (text: string, atEnd?: boolean) => {
+    if (transcriptionRef.current) {
+      focusOnTranscription();
+      const textArea = transcriptionRef.current
+        .firstChild as HTMLTextAreaElement;
+      if (atEnd) setTextValue(textArea.value ?? '');
+      insertAtCursor(textArea, text);
+      setTextValue(textArea.value ?? '');
+    }
+  };
+
   const handleAutoTranscribe = (trans: string) => {
-    var transcription = transcriptionRef.current.firstChild.value;
-    if (trans.trimStart().startsWith(transcription)) transcription = '';
-    showTranscription({
-      transcription:
-        transcription + trans.replace(/[0-9]+:[0-9]+.[0-9]+: /g, ''),
-      position: 0,
-    });
+    const cleanTrans = trans.replace(/[0-9]+:[0-9]+.[0-9]+: /g, '').trim();
+    const curTrans: string = transcriptionRef.current?.firstChild?.value ?? '';
+    if (curTrans.includes(cleanTrans)) return;
+    const m = /\\v (\d+)\s?/.exec(cleanTrans);
+    const index = m && curTrans.includes(m[0]) ? m[0].length : 0;
+    const space = /\s$/.test(curTrans) ? '' : ' ';
+    addText(space + cleanTrans.substring(index), true);
     toolChanged(toolId, true);
   };
 
   const onSaveProgress = (progress: number) => {
-    if (transcriptionRef.current) {
-      focusOnTranscription();
-      const timeStamp = '(' + formatTime(progress) + ')';
-      const textArea = transcriptionRef.current
-        .firstChild as HTMLTextAreaElement;
-      insertAtCursor(textArea, timeStamp);
-      setTextValue(textArea.value ?? '');
-    }
+    const timeStamp = '(' + formatTime(progress) + ')';
+    addText(timeStamp);
   };
+
   const handleSplitSize = debounce((e: any) => {
     setPlayerSize(e);
   }, 50);
@@ -1229,7 +1258,11 @@ export function Transcriber(props: IProps) {
                             : onSaveProgress
                         }
                         role={role}
-                        hasTranscription={Boolean(ignoreV1(textValue))}
+                        hasTranscription={
+                          textValue !== '' &&
+                          verseLabels.length === contentVerses.length
+                        }
+                        contentVerses={contentVerses}
                       />
                     </Grid>
                   </Grid>
