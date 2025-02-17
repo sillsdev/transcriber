@@ -114,7 +114,7 @@ export function AssignmentTable(props: IProps) {
         ? [
             { name: 'name', title: organizedBy },
             { name: 'state', title: t.sectionstate },
-            { name: 'passages', title: t.passages },
+            { name: 'passages', title: ts.passages },
             { name: 'transcriber', title: ts.transcriber },
             { name: 'editor', title: ts.editor },
           ]
@@ -124,7 +124,7 @@ export function AssignmentTable(props: IProps) {
             { name: 'transcriber', title: ts.transcriber },
             { name: 'editor', title: ts.editor },
           ],
-    [flat, organizedBy, t.passages, t.sectionstate, ts.editor, ts.transcriber]
+    [flat, organizedBy, ts.passages, t.sectionstate, ts.editor, ts.transcriber]
   );
   const [filter, setFilter] = useState(false);
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);

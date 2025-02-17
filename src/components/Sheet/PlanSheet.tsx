@@ -75,6 +75,7 @@ import { useShowIcon } from './useShowIcon';
 import { RecordKeyMap } from '@orbit/records';
 import ConfirmPublishDialog from '../ConfirmPublishDialog';
 import { addPt } from '../../utils/addPt';
+import { Akuo } from '../../assets/brands';
 
 const DOWN_ARROW = 'ARROWDOWN';
 export const SectionSeqCol = 0;
@@ -1076,6 +1077,19 @@ export function PlanSheet(props: IProps) {
                 '{0}',
                 isMovement(currentRowRef.current - 1) ? pt.MOVE : organizedBy
               )}
+              propogateLabel={t.propogate
+                .replaceAll(
+                  '{0}',
+                  isMovement(currentRowRef.current - 1)
+                    ? organizedByPlural
+                    : ts.passages
+                )
+                .replaceAll(
+                  '{1}',
+                  isMovement(currentRowRef.current - 1)
+                    ? t.movement
+                    : organizedBy
+                )}
               description={
                 isMovement(currentRowRef.current - 1)
                   ? t.confirmPublishMovement.replaceAll(
@@ -1083,6 +1097,16 @@ export function PlanSheet(props: IProps) {
                       organizedByPlural
                     )
                   : t.confirmPublishSection.replaceAll('{0}', organizedBy)
+              }
+              noPropogateDescription={
+                isMovement(currentRowRef.current - 1)
+                  ? t.confirmPublishMovementNoPropogate
+                      .replaceAll('{0}', organizedByPlural)
+                      .replaceAll('{1}', Akuo)
+                  : t.confirmPublishSectionNoPropogate.replaceAll(
+                      '{0}',
+                      organizedBy
+                    )
               }
               yesResponse={publishConfirm}
               noResponse={publishRefused}
