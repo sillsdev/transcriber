@@ -36,9 +36,9 @@ import { Akuo, Aquifer, ObtHelps } from '../assets/brands';
 
 interface IProps {
   title: string;
-  propogateLabel: string;
+  propagateLabel: string;
   description: string;
-  noPropogateDescription: string;
+  noPropagateDescription: string;
   current: PublishDestinationEnum[];
   sharedProject: boolean;
   hasPublishing: boolean;
@@ -52,9 +52,9 @@ interface IProps {
 function ConfirmPublishDialog(props: IProps) {
   const {
     title,
-    propogateLabel,
+    propagateLabel,
     description,
-    noPropogateDescription,
+    noPropagateDescription,
     sharedProject,
     hasPublishing,
     hasBible,
@@ -74,7 +74,7 @@ function ConfirmPublishDialog(props: IProps) {
   const { getDefaults } = usePublishDestination();
   const p: IPublishToStrings = useSelector(publishToSelector, shallowEqual);
   const [open, setOpen] = useState(true);
-  const [propogate, setPropogate] = useState(true);
+  const [propagate, setPropagate] = useState(true);
   const [value, setValuex] = useState(
     current.length === 0 && !noDefaults
       ? getDefaults(hasPublishing, sharedProject)
@@ -114,10 +114,10 @@ function ConfirmPublishDialog(props: IProps) {
     if (yesResponse !== null && value !== current) {
       if (!value.includes(PublishDestinationEnum.PublishDestinationSetByUser))
         value.push(PublishDestinationEnum.PublishDestinationSetByUser);
-      if (propogate) value.push(PublishDestinationEnum.PropogateSection);
+      if (propagate) value.push(PublishDestinationEnum.PropagateSection);
       else
         setValue([
-          ...value.filter((v) => v !== PublishDestinationEnum.PropogateSection),
+          ...value.filter((v) => v !== PublishDestinationEnum.PropagateSection),
         ]);
       yesResponse(value);
     } else handleNo();
@@ -171,11 +171,11 @@ function ConfirmPublishDialog(props: IProps) {
       );
     }
   };
-  const handlePropogateChange = (
+  const handlePropagateChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const checked = event.target.checked;
-    setPropogate(checked);
+    setPropagate(checked);
   };
   const AkuoRadioGroup = (showNotPublished: boolean, hasBible: boolean) => (
     <Box sx={{ p: 2, marginLeft: '30px', border: '2px grey' }}>
@@ -228,20 +228,20 @@ function ConfirmPublishDialog(props: IProps) {
           )}
           {hasPublishing && (
             <>
-              {propogateLabel && (
+              {propagateLabel && (
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={propogate}
-                      onChange={handlePropogateChange}
-                      value={'Propogate'}
+                      checked={propagate}
+                      onChange={handlePropagateChange}
+                      value={'Propagate'}
                     />
                   }
-                  label={propogateLabel}
+                  label={propagateLabel}
                 />
               )}
               <Typography id="alertDesc">
-                {propogate ? description : noPropogateDescription}
+                {propagate ? description : noPropagateDescription}
               </Typography>
             </>
           )}

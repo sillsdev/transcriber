@@ -999,9 +999,9 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "confirm": string;
     "confirmPublish": string;
     "confirmPublishMovement": string;
-    "confirmPublishMovementNoPropogate": string;
+    "confirmPublishMovementNoPropagate": string;
     "confirmPublishSection": string;
-    "confirmPublishSectionNoPropogate": string;
+    "confirmPublishSectionNoPropagate": string;
     "filtered": string;
     "firstMovement": string;
     "graphic": string;
@@ -1018,7 +1018,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "passageToPrevSection": string;
     "passageToNextSection": string;
     "pasting": string;
-    "propogate": string;
+    "propagate": string;
     "publish": string;
     "published": string;
     "refErr": string;

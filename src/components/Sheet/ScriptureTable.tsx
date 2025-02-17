@@ -1541,7 +1541,7 @@ export function ScriptureTable(props: IProps) {
       //if this is a movement...publish all the sections below it
       if (
         ws.published !== destinations &&
-        destinations.includes(PublishDestinationEnum.PropogateSection) &&
+        destinations.includes(PublishDestinationEnum.PropagateSection) &&
         ws.level === SheetLevel.Movement
       ) {
         let i = index + 1;
