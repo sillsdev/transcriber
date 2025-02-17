@@ -177,7 +177,7 @@ export function TranscriptionTab(props: IProps) {
     { name: 'name', title: getOrganizedBy(true) },
     { name: 'state', title: t.sectionstate },
     { name: 'planName', title: t.plan },
-    { name: 'passages', title: t.passages },
+    { name: 'passages', title: ts.passages },
     { name: 'transcriber', title: ts.transcriber },
     { name: 'editor', title: ts.editor },
     { name: 'action', title: '\u00A0' },

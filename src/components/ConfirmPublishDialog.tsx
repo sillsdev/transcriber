@@ -36,7 +36,9 @@ import { Akuo, Aquifer, ObtHelps } from '../assets/brands';
 
 interface IProps {
   title: string;
+  propogateLabel: string;
   description: string;
+  noPropogateDescription: string;
   current: PublishDestinationEnum[];
   sharedProject: boolean;
   hasPublishing: boolean;
@@ -50,7 +52,9 @@ interface IProps {
 function ConfirmPublishDialog(props: IProps) {
   const {
     title,
+    propogateLabel,
     description,
+    noPropogateDescription,
     sharedProject,
     hasPublishing,
     hasBible,
@@ -70,6 +74,7 @@ function ConfirmPublishDialog(props: IProps) {
   const { getDefaults } = usePublishDestination();
   const p: IPublishToStrings = useSelector(publishToSelector, shallowEqual);
   const [open, setOpen] = useState(true);
+  const [propogate, setPropogate] = useState(true);
   const [value, setValuex] = useState(
     current.length === 0 && !noDefaults
       ? getDefaults(hasPublishing, sharedProject)
@@ -107,7 +112,13 @@ function ConfirmPublishDialog(props: IProps) {
   };
   const handleYes = () => {
     if (yesResponse !== null && value !== current) {
-      value.push(PublishDestinationEnum.PublishDestinationSetByUser);
+      if (!value.includes(PublishDestinationEnum.PublishDestinationSetByUser))
+        value.push(PublishDestinationEnum.PublishDestinationSetByUser);
+      if (propogate) value.push(PublishDestinationEnum.PropogateSection);
+      else
+        setValue([
+          ...value.filter((v) => v !== PublishDestinationEnum.PropogateSection),
+        ]);
       yesResponse(value);
     } else handleNo();
     setOpen(false);
@@ -160,6 +171,12 @@ function ConfirmPublishDialog(props: IProps) {
       );
     }
   };
+  const handlePropogateChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const checked = event.target.checked;
+    setPropogate(checked);
+  };
   const AkuoRadioGroup = (showNotPublished: boolean, hasBible: boolean) => (
     <Box sx={{ p: 2, marginLeft: '30px', border: '2px grey' }}>
       <RadioGroup
@@ -193,7 +210,6 @@ function ConfirmPublishDialog(props: IProps) {
       </RadioGroup>
     </Box>
   );
-
   return (
     <Dialog
       open={open}
@@ -211,7 +227,23 @@ function ConfirmPublishDialog(props: IProps) {
             </Typography>
           )}
           {hasPublishing && (
-            <Typography id="alertDesc">{description}</Typography>
+            <>
+              {propogateLabel && (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={propogate}
+                      onChange={handlePropogateChange}
+                      value={'Propogate'}
+                    />
+                  }
+                  label={propogateLabel}
+                />
+              )}
+              <Typography id="alertDesc">
+                {propogate ? description : noPropogateDescription}
+              </Typography>
+            </>
           )}
           <FormControl>
             {hasPublishing && sharedProject && (

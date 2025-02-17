@@ -77,7 +77,6 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
     "assignSec": string;
     "delete": string;
     "filter": string;
-    "passages": string;
     "removeSec": string;
     "role": string;
     "sectionstate": string;
@@ -660,7 +659,6 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "NoLoadOffline": string;
     "oops": string;
     "openContent": string;
-    "passages": string;
     "privacy": string;
     "project": string;
     "orgRole": string;
@@ -1001,7 +999,9 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "confirm": string;
     "confirmPublish": string;
     "confirmPublishMovement": string;
+    "confirmPublishMovementNoPropogate": string;
     "confirmPublishSection": string;
+    "confirmPublishSectionNoPropogate": string;
     "filtered": string;
     "firstMovement": string;
     "graphic": string;
@@ -1018,6 +1018,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "passageToPrevSection": string;
     "passageToNextSection": string;
     "pasting": string;
+    "propogate": string;
     "publish": string;
     "published": string;
     "refErr": string;
@@ -1262,6 +1263,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "observer": string;
     "paratextchapterSpan": string;
     "part": string;
+    "passages": string;
     "peerreviewer": string;
     "recordingInProgress": string;
     "bookNotFound": string;
@@ -1484,7 +1486,6 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "noData": string;
     "offlineData": string;
     "changed": string;
-    "passages": string;
     "plan": string;
     "scriptureBurrito": string;
     "sectionstate": string;
