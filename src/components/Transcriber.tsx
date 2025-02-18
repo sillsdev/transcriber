@@ -4,19 +4,12 @@ import React, {
   useContext,
   useRef,
   CSSProperties,
-  PropsWithChildren,
   useMemo,
   useCallback,
 } from 'react';
 import { useGlobal } from '../context/GlobalContext';
 import { useParams } from 'react-router-dom';
-import {
-  default as SplitPaneBar,
-  Pane as PaneBar,
-  PaneProps,
-  SplitPaneProps,
-} from '../mods/react-split-pane';
-import styledComp from 'styled-components';
+import { SplitWrapper as Wrapper, SplitPane, Pane } from '../control/Panes';
 import Confirm from './AlertDialog';
 import {
   MediaFile,
@@ -118,70 +111,6 @@ import { Paratext } from '../assets/brands';
 
 const HISTORY_KEY = 'F7,CTRL+7';
 const INIT_PLAYER_HEIGHT = 180;
-
-const Wrapper = styledComp.div`
-  .Resizer {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    background: #000;
-    opacity: 0.2;
-    z-index: 1;
-    -moz-background-clip: padding;
-    -webkit-background-clip: padding;
-    background-clip: padding-box;
-  }
-
-  .Resizer:hover {
-    -webkit-transition: all 2s ease;
-    transition: all 2s ease;
-  }
-
-  .Resizer.horizontal {
-    height: 11px;
-    margin: -5px 0;
-    border-top: 5px solid rgba(255, 255, 255, 0);
-    border-bottom: 5px solid rgba(255, 255, 255, 0);
-    cursor: row-resize;
-    width: 100%;
-  }
-
-  .Resizer.horizontal:hover {
-    border-top: 5px solid rgba(0, 0, 0, 0.5);
-    border-bottom: 5px solid rgba(0, 0, 0, 0.5);
-  }
-
-  .Resizer.vertical {
-    width: 11px;
-    margin: 0 -5px;
-    border-left: 5px solid rgba(255, 255, 255, 0);
-    border-right: 5px solid rgba(255, 255, 255, 0);
-    cursor: col-resize;
-  }
-
-  .Resizer.vertical:hover {
-    border-left: 5px solid rgba(0, 0, 0, 0.5);
-    border-right: 5px solid rgba(0, 0, 0, 0.5);
-  }
-  .Pane1 {
-    // background-color: blue;
-    display: flex;
-    min-height: 0;
-  }
-  .Pane2 {
-    // background-color: red;
-    display: flex;
-    min-height: 0;
-  }
-`;
-
-const SplitPane = (props: SplitPaneProps & PropsWithChildren) => {
-  return <SplitPaneBar {...props} />;
-};
-
-const Pane = (props: PaneProps & PropsWithChildren) => {
-  return <PaneBar {...props} className={props.className || 'pane'} />;
-};
 
 interface IProps {
   defaultWidth: number;
@@ -366,10 +295,9 @@ export function Transcriber(props: IProps) {
   const { slugFromId } = useArtifactType();
 
   const [textAreaStyle, setTextAreaStyle] = useState<CSSProperties>({
-    overflow: 'auto',
+    overflow: 'auto !important',
     backgroundColor: '#cfe8fc',
     height: boxHeight,
-    width: '98hu',
     fontFamily: projData?.fontFamily,
     fontSize: projData?.fontSize,
     direction: projData?.fontDir as any,
@@ -436,7 +364,7 @@ export function Transcriber(props: IProps) {
     });
     setTextAreaStyle({
       ...textAreaStyle,
-      height: boxHeight,
+      height: `${boxHeight}px !important`,
       fontFamily: projData?.fontFamily,
       fontSize: projData?.fontSize,
       direction: projData?.fontDir as any,
@@ -1283,7 +1211,7 @@ export function Transcriber(props: IProps) {
                         readOnly={!transSelected || role === 'view'}
                         family={projData?.fontConfig?.custom?.families[0] ?? ''}
                         url={projData?.fontConfig?.custom?.urls[0] ?? ''}
-                        style={textAreaStyle}
+                        overrides={textAreaStyle}
                         onChange={handleChange}
                         lang={projData?.langTag || 'en'}
                         spellCheck={projData?.spellCheck}

@@ -5,20 +5,23 @@ import {
   TextField,
   FilledTextFieldProps,
 } from '@mui/material';
+import { CSSProperties } from 'styled-components';
 
 export interface StyledTextAreaAutosizeProps extends TextareaAutosizeProps {
   family: string;
   url: string;
+  overrides?: CSSProperties;
 }
 
 export const StyledTextAreaAudosize = styled(TextareaAutosize, {
-  shouldForwardProp: (prop) => prop !== 'family' && prop !== 'url',
-})<StyledTextAreaAutosizeProps>(({ family, url }) => ({
+  shouldForwardProp: (prop) =>
+    prop !== 'family' && prop !== 'url' && prop !== 'overrides',
+})<StyledTextAreaAutosizeProps>(({ family, url, overrides }) => ({
   '@font-face': {
     fontFamily: family,
     src: `url(${url})`,
   },
-  overflow: 'auto !important',
+  ...overrides,
 }));
 
 export interface StyledTextFieldProps extends FilledTextFieldProps {
