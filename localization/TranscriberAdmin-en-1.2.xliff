@@ -5907,28 +5907,28 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.confirmPublishMovement">
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this Movement will be marked as published. If you have previously published and now choose 'Not Published', the {0} and passages and notes will be marked as not published.</source>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this movement will be marked as published. If you have previously published and now choose not to publish, the {0} and passages and notes will be marked as not published.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.confirmPublishMovementNoPropagate">
-            <source>The publishing status of the {0} in the movement will not be changed. If you choose to publish, the Movement will be marked as published. If you have previously published and now choose 'Not Published', the movement will be marked as not published, but if any {0} are published, the Movement will still appear in {1}.</source>
+            <source>The publishing status of the {0} in the movement will not be changed. If you choose to publish, the movement will be marked as published. If you have previously published and now choose not to publish, the movement will be marked as not published, but if any {0} are published to {1}, the movement will still appear in {1}.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>         
          <trans-unit id="planSheet.confirmPublishSection">
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes will be marked as not published.</source>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.confirmPublishSectionNoPropagate">
-            <source>If you choose to publish, the {0} will be marked as published but the publishing status of the passages and notes in this {0} will not be changed. If you have previously published and now choose 'Not Published', the {0} will be marked as not published.</source>
+            <source>If you choose to publish, the {0} will be marked as published but the publishing status of the passages and notes in this {0} will not be changed. If you have previously published and now choose not to publish, the {0} will be marked as not published.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
@@ -6047,7 +6047,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.propagate">
-            <source>Propagate to all {0} in the {1}.</source>
+            <source>Propagate to all {0} in the {1}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Community.tsx</context>
