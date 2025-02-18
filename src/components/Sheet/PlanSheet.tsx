@@ -1081,31 +1081,34 @@ export function PlanSheet(props: IProps) {
                 .replaceAll(
                   '{0}',
                   isMovement(currentRowRef.current - 1)
-                    ? organizedByPlural
-                    : ts.passages
+                    ? organizedByPlural.toLocaleLowerCase()
+                    : ts.passages.toLocaleLowerCase()
                 )
                 .replaceAll(
                   '{1}',
                   isMovement(currentRowRef.current - 1)
-                    ? t.movement
-                    : organizedBy
+                    ? t.movement.toLocaleLowerCase()
+                    : organizedBy.toLocaleLowerCase()
                 )}
               description={
                 isMovement(currentRowRef.current - 1)
                   ? t.confirmPublishMovement.replaceAll(
                       '{0}',
-                      organizedByPlural
+                      organizedByPlural.toLocaleLowerCase()
                     )
-                  : t.confirmPublishSection.replaceAll('{0}', organizedBy)
+                  : t.confirmPublishSection.replaceAll(
+                      '{0}',
+                      organizedBy.toLocaleLowerCase()
+                    )
               }
               noPropagateDescription={
                 isMovement(currentRowRef.current - 1)
                   ? t.confirmPublishMovementNoPropagate
-                      .replaceAll('{0}', organizedByPlural)
+                      .replaceAll('{0}', organizedByPlural.toLocaleLowerCase())
                       .replaceAll('{1}', Akuo)
                   : t.confirmPublishSectionNoPropagate.replaceAll(
                       '{0}',
-                      organizedBy
+                      organizedBy.toLocaleLowerCase()
                     )
               }
               yesResponse={publishConfirm}
