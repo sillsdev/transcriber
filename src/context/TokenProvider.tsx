@@ -138,10 +138,10 @@ function TokenProvider(props: IProps) {
           console.log(
             'token error',
             JSON.stringify(e),
-            window.location.pathname
+            window?.location?.pathname
           );
-          if (e.error === 'login_required') {
-            localStorage.setItem(LocalKey.deeplink, window.location.pathname);
+          if (e.error === 'login_required' && window?.location?.pathname) {
+            localStorage.setItem(LocalKey.deeplink, window?.location?.pathname);
           }
           handleLogOut();
           logError(Severity.error, errorReporter, e);
