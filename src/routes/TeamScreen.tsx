@@ -15,12 +15,12 @@ import { PlanD } from '../model';
 
 export const TeamScreen = () => {
   const { pathname } = useLocation();
-  const [isOffline] = useGlobal('offline');
-  const [project, setProject] = useGlobal('project');
-  const [projType] = useGlobal('projType');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [project, setProject] = useGlobal('project'); //verified this is not used in a function 2/18/25
+  const [projType] = useGlobal('projType'); //verified this is not used in a function 2/18/25
   const [memory] = useGlobal('memory');
-  const [plan] = useGlobal('plan');
-  const [home, setHome] = useGlobal('home');
+  const [plan] = useGlobal('plan'); //verified this is not used in a function 2/18/25
+  const [home, setHome] = useGlobal('home'); //verified this is not used in a function 2/18/25
   const [view, setView] = useState('');
   const { startClear } = useContext(UnsavedContext).state;
   const { resetProject } = useHome();

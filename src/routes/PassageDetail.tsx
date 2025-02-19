@@ -63,7 +63,7 @@ interface PGProps {
 
 const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   const INIT_PLAYERPANE_HEIGHT = 150 + 48; // 48 for possible passage chooser
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const [width, setWidth] = useState(window.innerWidth);
   const [height, setHeight] = useState(window.innerHeight);
   const widthRef = React.useRef(window.innerWidth);
@@ -395,7 +395,7 @@ export const PassageDetail = () => {
   const { pathname } = useLocation();
   const setUrlContext = useUrlContext();
   const [view, setView] = useState('');
-  const [projType] = useGlobal('projType');
+  const [projType] = useGlobal('projType'); //verified this is not used in a function 2/18/25
   const [user] = useGlobal('user');
   const [minWidth, setMinWidth] = useState(800);
   const { setProjectType } = useProjectType();

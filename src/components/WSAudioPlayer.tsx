@@ -201,7 +201,7 @@ function WSAudioPlayer(props: IProps) {
   } = props;
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [org] = useGlobal('organization');
   const [features, setFeatures] = useState<IFeatures>();
   const [voiceVisible, setVoiceVisible] = useState(false);

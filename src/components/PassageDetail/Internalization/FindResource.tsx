@@ -127,7 +127,7 @@ export const FindResource = () => {
   const [bibleProjectLangs, setBibleProjectLangs] = useState<OptionProps[]>([]);
   const [links, setLinks] = useState<Tpl>({});
   const [resources, setResources] = useState<BibleResource[]>([]);
-  const [planId] = useGlobal('plan');
+  const [planId] = useGlobal('plan'); //will be constant here
   const [query, setQuery] = useState('');
   const [userEdited, setUserEdited] = useState(false);
   const [scope, setScope] = useState<string>('');

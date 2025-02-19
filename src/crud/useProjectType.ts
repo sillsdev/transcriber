@@ -1,4 +1,4 @@
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { related } from '.';
 import { ProjectD, ProjectType, VProject } from '../model';
 import { ReplaceRelatedRecord } from '../model/baseModel';
@@ -6,7 +6,8 @@ import { logError, Severity } from '../utils';
 
 export const useProjectType = () => {
   const [memory] = useGlobal('memory');
-  const [projType, setProjType] = useGlobal('projType');
+  const [, setProjType] = useGlobal('projType');
+  const getGlobal = useGetGlobal();
   const [errorReporter] = useGlobal('errorReporter');
 
   const getProjType = (project: string | VProject) => {
@@ -67,7 +68,7 @@ export const useProjectType = () => {
 
   const setProjectType = (projectId: string) => {
     const pt = getProjType(projectId);
-    if (pt !== projType) setProjType(pt);
+    if (pt !== getGlobal('projType')) setProjType(pt);
     return pt;
   };
 

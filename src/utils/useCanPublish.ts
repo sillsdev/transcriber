@@ -12,7 +12,7 @@ import { addPt } from './addPt';
 export const useCanPublish = () => {
   const [canPublish, setCanPublish] = useState<boolean | undefined>();
   const askingRef = useRef(false);
-  const [isOffline] = useGlobal('offline');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [memory] = useGlobal('memory');
   const { accessToken } = useContext(TokenContext).state;
   const [errorReporter] = useGlobal('errorReporter');

@@ -34,7 +34,7 @@ export function Visualize(props: IProps) {
   const users = useOrbitData<User[]>('user');
   const mediafiles = useOrbitData<MediaFile[]>('mediafile');
   const passages = useOrbitData<Passage[]>('passage');
-  const [project] = useGlobal('project');
+  const [project] = useGlobal('project'); //verified this is not used in a function 2/18/25
   const [rows, setRows] = useState<Array<IPlanRow>>([]);
   const [data1, setData1] = useState<Array<IWork>>([]);
   const [data2, setData2] = useState<Array<IWork>>([]);

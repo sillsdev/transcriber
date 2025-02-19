@@ -23,6 +23,7 @@ import { useCanBeFlat } from '../../../crud/useCanBeFlat';
 import { IVProjectStrings } from '../../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { vProjectSelector } from '../../../selector';
+import { useGlobal } from '../../../context/GlobalContext';
 
 const StyledAccordionSummary = styled(AccordionSummary)<AccordionSummaryProps>(
   ({ theme }) => ({
@@ -74,7 +75,8 @@ export function ProjectExpansion(props: IProjectDialogState) {
     t.scenes,
     t.pericopes,
   ]);
-  const { SnackBar, message, showMessage } = useSnackBar();
+  const { SnackBar, showMessage } = useSnackBar();
+  const [message] = useGlobal('snackMessage');
 
   const handleShareable = (e: any, val: boolean) => {
     setState((state) => ({ ...state, isPublic: val }));

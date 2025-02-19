@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import * as actions from '../store';
 import {
   IState,
@@ -132,14 +132,14 @@ export function TranscriptionTab(props: IProps) {
   const users = useOrbitData<User[]>('user');
   const roles = useOrbitData<Role[]>('role');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [busy, setBusy] = useGlobal('importexportBusy');
-  const [plan, setPlan] = useGlobal('plan');
+  const [busy, setBusy] = useGlobal('importexportBusy'); //verified this is not used in a function 2/18/25
+  const [plan, setPlan] = useGlobal('plan'); //will be constant here
   const getPlanType = usePlanType();
   const [isScripture, setScripture] = useState(false);
   const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
   const backup = coordinator?.getSource('backup') as IndexedDBSource;
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [errorReporter] = useGlobal('errorReporter');
   const [lang] = useGlobal('lang');
   const token = useContext(TokenContext).state.accessToken;
@@ -155,7 +155,7 @@ export function TranscriptionTab(props: IProps) {
   const [exportUrl, setExportUrl] = useState<string | undefined>();
   const [exportName, setExportName] = useState('');
   const sectionMap = new Map<number, string>(sectionArr);
-  const [project] = useGlobal('project');
+  const [project] = useGlobal('project'); //will be constant here
   const [user] = useGlobal('user');
   const { getOrganizedBy } = useOrganizedBy();
   const getOfflineProject = useOfflnProjRead();
@@ -173,6 +173,8 @@ export function TranscriptionTab(props: IProps) {
     artifactTypes[0]
   );
   const getTranscription = useTranscription(true);
+  const getGlobal = useGetGlobal();
+
   const columnDefs = [
     { name: 'name', title: getOrganizedBy(true) },
     { name: 'state', title: t.sectionstate },
@@ -274,7 +276,7 @@ export function TranscriptionTab(props: IProps) {
   };
   const handleProjectExport = () => {
     setAlertOpen(false);
-    if (offline) setOpenExport(true);
+    if (getGlobal('offline')) setOpenExport(true);
     else doProjectExport(ExportType.PTF);
   };
 

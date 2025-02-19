@@ -25,7 +25,7 @@ export function TitleEdit({
   onTextChange,
   onMediaIdChange,
 }: IProps) {
-  const [planId] = useGlobal('plan');
+  const [planId] = useGlobal('plan'); //will be constant here
   const [memory] = useGlobal('memory');
   const [titlex, setTitle] = useState(title || '');
   const [titleMediafile, setTitleMediafile] = useState('');

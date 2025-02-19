@@ -15,7 +15,7 @@ interface IProps {
 
 export const ResourceEditAction = ({ item, onEdit, onDelete }: IProps) => {
   const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const t: IMediaActionsStrings = useSelector(
     mediaActionsSelector,
     shallowEqual

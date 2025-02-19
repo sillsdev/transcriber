@@ -71,7 +71,7 @@ export const AddCard = (props: IProps) => {
   const { team } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const ctx = React.useContext(TeamContext);
   const {
     projectCreate,
@@ -100,7 +100,7 @@ export const AddCard = (props: IProps) => {
   const [book, setBookx] = React.useState<OptionType | null>(null);
   const bookRef = useRef<OptionType | null>(null);
   const languageRef = useRef<ILanguage>(initLang);
-  const [complete, setComplete] = useGlobal('progress');
+  const [complete, setComplete] = useGlobal('progress'); //verified this is not used in a function 2/18/25S
   const [, setBusy] = useGlobal('importexportBusy');
   const [steps] = React.useState([
     t.projectCreated,
@@ -270,7 +270,7 @@ export const AddCard = (props: IProps) => {
             defaultFont: languageRef.current.font,
           },
         } as ProjectD;
-        await memory.update((t) => [
+        await memory.update((t: any) => [
           ...UpdateRecord(t, updProj, user),
           t
             .replaceAttribute(planRec as RecordIdentity, 'name', newName)
@@ -324,7 +324,7 @@ export const AddCard = (props: IProps) => {
       ));
     if (planRef.current) {
       const planRecId = { type: 'plan', id: planRef.current } as RecordIdentity;
-      await memory.update((t) => [
+      await memory.update((t: any) => [
         ...ReplaceRelatedRecord(
           t,
           planRecId,

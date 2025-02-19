@@ -9,7 +9,7 @@ export const useSecResCreate = (section: RecordIdentity) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
 
   const InternalizationStep = () => {
     const workflowsteps = memory?.cache.query((q) =>

@@ -15,7 +15,7 @@ import { related, findRecord } from '.';
 import { useProjectDelete } from './useProjectDelete';
 export const useTeamDelete = () => {
   const [memory] = useGlobal('memory');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const projectDelete = useProjectDelete();
 
   const noTeam = (teamId: string) =>

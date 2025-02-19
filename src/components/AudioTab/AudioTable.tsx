@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useGlobal } from '../../context/GlobalContext';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
@@ -68,11 +68,11 @@ export const AudioTable = (props: IProps) => {
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const lang = useSelector((state: IState) => state.strings.lang);
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [memory] = useGlobal('memory');
   const [org] = useGlobal('organization');
   const [user] = useGlobal('user');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [, setBusy] = useGlobal('remoteBusy');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
@@ -287,13 +287,17 @@ export const AudioTable = (props: IProps) => {
     tableColumn: any;
     children?: Array<any>;
   }
+  const canCreate = useMemo(
+    () => !offline || offlineOnly,
+    [offline, offlineOnly]
+  );
 
   const PlayCell = ({ value, style, row, mediaId, ...restProps }: ICell) => (
     <Table.Cell row={row} {...restProps} style={{ ...style }} value>
       <MediaActions
         rowIndex={row.index}
         mediaId={row.id}
-        online={!offline || offlineOnly}
+        online={canCreate}
         readonly={onAttach ? readonly : true}
         attached={Boolean(row.passId)}
         onAttach={onAttach}
@@ -310,7 +314,7 @@ export const AudioTable = (props: IProps) => {
         <MediaActions2
           rowIndex={row.index}
           mediaId={mediaId || ''}
-          online={!offline || offlineOnly}
+          online={canCreate}
           readonly={readonly}
           canDelete={!readonly && !row.readyToShare}
           onDelete={handleConfirmAction}

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useGlobal } from '../../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
 import { Grid } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import { TeamContext } from '../../context/TeamContext';
@@ -14,14 +14,14 @@ export const PersonalItem = () => {
   const ctx = React.useContext(TeamContext);
   const { personalTeam, personalProjects, cardStrings } = ctx.state;
   const t = cardStrings;
-  const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const [changed] = useGlobal('changed');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
+  const getGlobal = useGetGlobal();
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [showWorkflow, setShowWorkflow] = useState(false);
 
   const handleWorkflow = (isOpen: boolean) => {
-    if (changed) {
+    if (getGlobal('changed')) {
       startSave();
       waitForSave(() => setShowWorkflow(isOpen), 500);
     } else setShowWorkflow(isOpen);

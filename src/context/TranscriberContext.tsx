@@ -139,7 +139,7 @@ const TranscriberProvider = (props: IProps) => {
   const { pasId, slug, medId } = useParams();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [devPlan] = useGlobal('plan');
+  const [devPlan] = useGlobal('plan'); //will be constant here
   const { getPlan } = usePlan();
   const view = React.useRef('');
   const [refreshed, setRefreshed] = useState(0);

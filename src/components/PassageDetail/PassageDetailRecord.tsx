@@ -51,13 +51,13 @@ export function PassageDetailRecord(props: IProps) {
   } = useContext(UnsavedContext).state;
   const [reporter] = useGlobal('errorReporter');
   const [, setBigBusy] = useGlobal('importexportBusy');
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
   const [coordinator] = useGlobal('coordinator');
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const memory = coordinator?.getSource('memory') as Memory;
   const { passage, sharedResource, mediafileId, chooserSize, setRecording } =
     usePassageDetailContext();

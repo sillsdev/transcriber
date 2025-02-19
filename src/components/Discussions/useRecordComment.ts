@@ -1,5 +1,5 @@
 import { useMemo, useRef, useContext } from 'react';
-import { useGlobal } from '../../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
 import {
   findRecord,
   pullTableList,
@@ -39,15 +39,15 @@ export const useRecordComment = ({
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const backup = coordinator?.getSource('backup') as IndexedDBSource;
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const [user] = useGlobal('user');
-  const [offline] = useGlobal('offline');
+
   const { accessToken } = useContext(TokenContext).state;
   const { commentId } = useArtifactType();
   const fileList = useRef<File[]>();
   const mediaIdRef = useRef('');
   const { createMedia } = useOfflnMediafileCreate();
-
+  const getGlobal = useGetGlobal();
   const passageId = useMemo(() => {
     const vernRec = findRecord(memory, 'mediafile', mediafileId) as MediaFile;
     return related(vernRec, 'passage') as string;
@@ -80,7 +80,7 @@ export const useRecordComment = ({
         )
       ).id;
     }
-    if (!offline && mediaIdRef.current) {
+    if (!getGlobal('offline') && mediaIdRef.current) {
       pullTableList(
         'mediafile',
         Array(mediaIdRef.current),
@@ -127,7 +127,7 @@ export const useRecordComment = ({
       files,
       n: 0,
       token: accessToken || '',
-      offline: offline,
+      offline: getGlobal('offline'),
       errorReporter: reporter,
       uploadType: UploadType.Media,
       cb: itemComplete,

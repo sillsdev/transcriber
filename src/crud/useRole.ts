@@ -9,8 +9,8 @@ import { ReplaceRelatedRecord } from '../model/baseModel';
 export const useRole = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const [orgRole, setOrgRole] = useGlobal('orgRole');
+  const [offlineOnly] = useGlobal('offlineOnly'); //verified this is not used in a function 2/18/25
+  const [orgRole, setOrgRole] = useGlobal('orgRole'); //verified this is not used in a function 2/18/25
   const [errorReporter] = useGlobal('errorReporter');
 
   interface IUniqueRoles {
@@ -104,11 +104,15 @@ export const useRole = () => {
     return getMbrRole(gMbrRecs);
   };
 
-  const setMyOrgRole = (orgId: string) => {
-    const role = getMyOrgRole(orgId);
-    if (role !== orgRole) setOrgRole(role);
-    return role;
-  };
+  const setMyOrgRole = useMemo(
+    () => (orgId: string) => {
+      const role = getMyOrgRole(orgId);
+      if (role !== orgRole) setOrgRole(role);
+      return role;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [orgRole]
+  );
 
   return {
     getRoleId,

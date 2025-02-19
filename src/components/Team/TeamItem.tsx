@@ -1,5 +1,5 @@
 import React, { useContext, useState, useMemo } from 'react';
-import { useGlobal } from '../../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
 import { Grid } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import { Organization, DialogMode, OrganizationD } from '../../model';
@@ -21,10 +21,10 @@ interface IProps {
 
 export const TeamItem = (props: IProps) => {
   const { team } = props;
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [, setOrganization] = useGlobal('organization');
-  const [busy] = useGlobal('remoteBusy');
+  const [busy] = useGlobal('remoteBusy'); //verified this is not used in a function 2/18/25
   const [editOpen, setEditOpen] = useState(false);
   const [showWorkflow, setShowWorkflow] = useState(false);
   const [deleteItem, setDeleteItem] = useState<RecordIdentity>();
@@ -36,7 +36,7 @@ export const TeamItem = (props: IProps) => {
   const [openMember, setOpenMember] = useState(false);
   const { setMyOrgRole } = useRole();
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
-  const [changed] = useGlobal('changed');
+  const getGlobal = useGetGlobal();
   const handleMembers = (team: OrganizationD) => () => {
     setOrganization(team.id);
     setMyOrgRole(team.id);
@@ -85,7 +85,7 @@ export const TeamItem = (props: IProps) => {
   const handleDeleteRefused = () => setDeleteItem(undefined);
 
   const handleWorkflow = (isOpen: boolean) => {
-    if (changed) {
+    if (getGlobal('changed')) {
       startSave();
       waitForSave(() => setShowWorkflow(isOpen), 500);
     } else setShowWorkflow(isOpen);

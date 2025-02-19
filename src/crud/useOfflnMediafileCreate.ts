@@ -7,7 +7,7 @@ import { getContentType } from '../utils/contentType';
 
 export const useOfflnMediafileCreate = () => {
   const [memory] = useGlobal('memory');
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const [user] = useGlobal('user');
   const createMedia = async (
     data: any, //from upload

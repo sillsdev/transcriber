@@ -24,8 +24,8 @@ export const PassageDetailStepComplete = () => {
     passage,
   } = usePassageDetailContext();
   const { pathname } = useLocation();
-  const [busy] = useGlobal('remoteBusy');
-  const [importexportBusy] = useGlobal('importexportBusy');
+  const [busy] = useGlobal('remoteBusy'); //verified this is not used in a function 2/18/25
+  const [importexportBusy] = useGlobal('importexportBusy'); //verified this is not used in a function 2/18/25
   const [view, setView] = useState('');
   const t: IPassageDetailStepCompleteStrings = useSelector(
     passageDetailStepCompleteSelector,

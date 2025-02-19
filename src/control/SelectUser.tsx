@@ -21,7 +21,7 @@ export const SelectUser = (props: IProps) => {
     'organizationmembership'
   );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //verified this is not used in a function 2/18/25
   const [organization] = useGlobal('organization');
   const [orgUsers, setOrgUsers] = useState<User[]>([]);
   const [role, setUser] = useState(initUser);

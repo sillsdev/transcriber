@@ -1,4 +1,4 @@
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import * as actions from '../store';
 import Axios from 'axios';
 import JSONAPISource from '@orbit/jsonapi';
@@ -30,23 +30,26 @@ export function Online(doCheck: boolean, cb: (result: boolean) => void) {
 export const useCheckOnline = (label: string) => {
   const dispatch = useDispatch();
   const resetOrbitError = actions.resetOrbitError;
-  const [connected, setConnected] = useGlobal('connected');
-  const [orbitRetries, setOrbitRetries] = useGlobal('orbitRetries');
+  const getGlobal = useGetGlobal();
+  const [, setConnected] = useGlobal('connected');
+  const [, setOrbitRetries] = useGlobal('orbitRetries');
   const [coordinator] = useGlobal('coordinator');
-  const [offline] = useGlobal('offline');
   const remote = coordinator?.getSource('remote') as JSONAPISource;
 
   const checkOnline = (
     cb: (result: boolean) => void,
     forceCheck: boolean = false
   ) => {
-    if (!forceCheck && offline) {
+    if (!forceCheck && getGlobal('offline')) {
       localStorage.setItem(LocalKey.connected, 'false');
     }
     //console.log('Checking online status for ' + label);
-    Online(forceCheck || !offline, (result) => {
-      if (connected !== result) {
-        localStorage.setItem(LocalKey.connected, `${result && !offline}`);
+    Online(forceCheck || !getGlobal('offline'), (result) => {
+      if (getGlobal('connected') !== result) {
+        localStorage.setItem(
+          LocalKey.connected,
+          `${result && !getGlobal('offline')}`
+        );
         if (API_CONFIG.snagId !== '') {
           if (result) {
             Bugsnag.resumeSession();
@@ -57,7 +60,7 @@ export const useCheckOnline = (label: string) => {
         setConnected(result);
         if (result) {
           dispatch(resetOrbitError());
-          if (orbitRetries < OrbitNetworkErrorRetries) {
+          if (getGlobal('orbitRetries') < OrbitNetworkErrorRetries) {
             remote.requestQueue.retry();
             setOrbitRetries(OrbitNetworkErrorRetries);
           }

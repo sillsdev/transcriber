@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState, useEffect } from 'react';
-import { useGlobal } from '../../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
@@ -136,7 +136,7 @@ export const ProjectCard = (props: IProps) => {
   const { localizedOrganizedBy } = useOrganizedBy();
   const [, setOrganizedBySing] = useState('');
   const [, setOrganizedByPlural] = useState('');
-  const [projectId] = useGlobal('project');
+  const [projectId] = useGlobal('project'); //verified this is not used in a function 2/18/25
   const [user] = useGlobal('user');
   const projectPlans = useProjectPlans();
   const offlineProjectRead = useOfflnProjRead();
@@ -156,7 +156,7 @@ export const ProjectCard = (props: IProps) => {
   const { leaveHome } = useHome();
   const { getParam, setParam } = useJsonParams();
   const sections = useOrbitData<Section[]>('section');
-
+  const getGlobal = useGetGlobal();
   const handleSelect = (project: VProjectD) => () => {
     loadProject(project);
     leaveHome();
@@ -229,7 +229,7 @@ export const ProjectCard = (props: IProps) => {
         copyProject({
           projectid: remoteIdNum(
             'project',
-            projectId,
+            getGlobal('project'),
             memory?.keyMap as RecordKeyMap
           ),
           sameorg: what === 'copysame',
@@ -255,7 +255,7 @@ export const ProjectCard = (props: IProps) => {
   const handleProjectAction = (what: string) => {
     const [projectid] = setProjectParams(project);
     //otherwise it will be done in the useEffect for projectId
-    if (projectid === projectId) doOpen(what);
+    if (projectid === getGlobal('project')) doOpen(what);
     else setOpen(what);
   };
 

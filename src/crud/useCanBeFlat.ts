@@ -1,4 +1,4 @@
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import related from './related';
 import { Passage, Plan, Section } from '../model';
 import { passageTypeFromRef } from '../control/RefRender';
@@ -6,11 +6,13 @@ import { PassageTypeEnum } from '../model/passageType';
 
 export const useCanBeFlat = () => {
   const [memory] = useGlobal('memory');
-  const [project] = useGlobal('project');
+  const getGlobal = useGetGlobal();
 
   return () => {
     const plans = memory?.cache.query((q) => q.findRecords('plan')) as Plan[];
-    const plan = plans.find((p) => related(p, 'project') === project);
+    const plan = plans.find(
+      (p) => related(p, 'project') === getGlobal('project')
+    );
     const sectionIds = (
       memory?.cache.query((q) => q.findRecords('section')) as Section[]
     )

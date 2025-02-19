@@ -21,7 +21,7 @@ interface IHelpLinkProps {
 }
 
 export function ContextHelp({ topic, reset }: IHelpLinkProps) {
-  const [isOffline] = useGlobal('offline');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [showTopic, setShowTopic] = React.useState<string>();
   const [helpToggle, setHelpToggle] = React.useState(false);
   const helpRef = React.useRef<any>();

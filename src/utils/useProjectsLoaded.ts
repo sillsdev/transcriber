@@ -1,11 +1,12 @@
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 
 export const useProjectsLoaded = () => {
-  const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
+  const getGlobal = useGetGlobal();
+  const [, setProjectsLoaded] = useGlobal('projectsLoaded');
 
   function AddProjectLoaded(project: string) {
-    if (projectsLoaded.includes(project)) return;
-    var pl = [...projectsLoaded];
+    if (getGlobal('projectsLoaded').includes(project)) return;
+    var pl = [...getGlobal('projectsLoaded')];
     pl.push(project);
     setProjectsLoaded(pl);
   }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual } from 'react-redux';
 import {
@@ -154,15 +154,16 @@ export function InvitationTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organization, roles, invitations, confirmAction, ts]);
 
-  const canEdit = () => {
-    return userIsAdmin && !offline;
-  };
+  const canEdit = useMemo(
+    () => userIsAdmin && !offline,
+    [offline, userIsAdmin]
+  );
 
   return (
     <Box sx={{ display: 'flex' }}>
       <div>
         <ActionRow>
-          {canEdit() && (
+          {canEdit && (
             <>
               <PriButton
                 id="inviteAdd"

@@ -40,7 +40,7 @@ interface IProps {
 
 export const ParatextLinked = (props: IProps) => {
   const { setView } = props;
-  const [isOffline] = useGlobal('offline');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const { hasParatext, ptPath } = useHasParatext();
   const t: IProfileStrings = useSelector(profileSelector);
   const status = useSelector((state: IState) => state.paratext.usernameStatus);

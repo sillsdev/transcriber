@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
 import * as actions from '../store';
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import {
   IState,
   IIntegrationStrings,
@@ -228,7 +228,6 @@ export function IntegrationPanel(props: IProps) {
   const projects = useOrbitData<ProjectD[]>('project');
   const passages = useOrbitData<PassageD[]>('passage');
   const mediafiles = useOrbitData<MediaFileD[]>('mediafile');
-  const [connected] = useGlobal('connected');
   const [hasPtProj, setHasPtProj] = useState(false);
   const [ptProj, setPtProj] = useState(-1);
   const [ptProjId, setPtProjId] = useState('');
@@ -237,10 +236,11 @@ export function IntegrationPanel(props: IProps) {
   const [hasPermission, setHasPermission] = useState(false);
   const [ptPermission, setPtPermission] = useState('None');
   const [myProject, setMyProject] = useState('');
-  const [project] = useGlobal('project');
+  const [connected] = useGlobal('connected'); //verified this is not used in a function 2/18/25
+  const [project] = useGlobal('project'); //will be constant here
   const [user] = useGlobal('user');
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [local, setLocal] = useState(offline || offlineOnly);
   const { accessToken } = useContext(TokenContext).state;
   const forceDataChanges = useDataChanges();
@@ -250,11 +250,11 @@ export function IntegrationPanel(props: IProps) {
   const [paratextIntegration, setParatextIntegration] = useState('');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator?.getSource('memory') as Memory;
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
 
   const [errorReporter] = useGlobal('errorReporter');
   const { showMessage, showTitledMessage } = useSnackBar();
-  const [busy] = useGlobal('remoteBusy');
+  const [busy] = useGlobal('remoteBusy'); //verified this is not used in a function 2/18/25
   const [ptPath, setPtPath] = useState('');
   const syncing = React.useRef<boolean>(false);
   const setSyncing = (state: boolean) => (syncing.current = state);
@@ -270,7 +270,7 @@ export function IntegrationPanel(props: IProps) {
   const intSave = React.useRef('');
   const { getOrganizedBy } = useOrganizedBy();
   const { getProjectDefault, setProjectDefault } = useProjectDefaults();
-
+  const getGlobal = useGetGlobal();
   const [exportNumbers, setExportNumbers] = useState(
     JSON.parse(getProjectDefault(projDefExportNumbers) ?? false) as boolean
   );
@@ -449,7 +449,7 @@ export function IntegrationPanel(props: IProps) {
   const getProjectLabel = (): string => {
     const selectMsg = addPt(t.selectProject);
     if (local) return selectMsg;
-    return connected
+    return getGlobal('connected')
       ? paratext_projectsStatus && paratext_projectsStatus.complete
         ? !paratext_projectsStatus.errStatus
           ? paratext_projects.length > 0
@@ -468,7 +468,7 @@ export function IntegrationPanel(props: IProps) {
         related(pi, 'project') === project
     ) as ProjectIntegration[];
     let index = -1;
-    if (!offline) curInt = curInt.filter((i) => Boolean(i?.keys?.remoteId));
+    if (!local) curInt = curInt.filter((i) => Boolean(i?.keys?.remoteId));
     if (curInt.length > 0) {
       const settings = JSON.parse(curInt[0].attributes.settings);
       index = paratext_projects.findIndex((p) => {

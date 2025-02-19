@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useGlobal } from '../context/GlobalContext';
+import { useGlobal, useGetGlobal } from '../context/GlobalContext';
 import { related } from '.';
 import {
   IWorkflowStepsStrings,
@@ -42,9 +42,8 @@ export const useOrgWorkflowSteps = () => {
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
   const [errorReporter] = useGlobal('errorReporter');
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
   const waitForRemoteQueue = useWaitForRemoteQueue();
+  const getGlobal = useGetGlobal();
   const creatingRef = useRef(false);
 
   const localizedWorkStep = (val: string) => {
@@ -115,7 +114,7 @@ export const useOrgWorkflowSteps = () => {
         (s) =>
           (process === 'ANY' || s.attributes.process === process) &&
           related(s, 'organization') === org &&
-          Boolean(s.keys?.remoteId) !== offlineOnly
+          Boolean(s.keys?.remoteId) !== getGlobal('offlineOnly')
       )
       .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
   };
@@ -129,7 +128,7 @@ export const useOrgWorkflowSteps = () => {
           .filter({ attribute: 'process', value: process })
       )) as WorkflowStepD[]
     )
-      .filter((s) => Boolean(s?.keys?.remoteId) !== offlineOnly)
+      .filter((s) => Boolean(s?.keys?.remoteId) !== getGlobal('offlineOnly'))
       .sort((a, b) => a.attributes.sequencenum - b.attributes.sequencenum);
     var tb = new RecordTransformBuilder();
     //originally had them all in one ops, but it was too fast
@@ -147,7 +146,10 @@ export const useOrgWorkflowSteps = () => {
   }
 
   const GetOrgWorkflowSteps = async ({ process, org, showAll }: IGetSteps) => {
-    if (creatingRef.current && (!offline || offlineOnly))
+    if (
+      creatingRef.current &&
+      (!getGlobal('offline') || getGlobal('offlineOnly'))
+    )
       await waitForIt(
         'creating org workflow',
         () => !creatingRef.current,

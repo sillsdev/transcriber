@@ -22,8 +22,8 @@ interface IProps {
 
 export function DiscussionMenu(props: IProps) {
   const { id, action, resolved, canSet, stopPlayer } = props;
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const t: IDiscussionMenuStrings = useSelector(
     discussionMenuSelector,

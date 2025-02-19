@@ -43,7 +43,7 @@ interface IProps {
 export function UserMenu(props: IProps) {
   const { action } = props;
   const users = useOrbitData<User[]>('user');
-  const [orgRole] = useGlobal('orgRole');
+  const [orgRole] = useGlobal('orgRole'); //verified this is not used in a function 2/18/25
   const [developer] = useGlobal('developer');
   const [user] = useGlobal('user');
   const { pathname } = useLocation();

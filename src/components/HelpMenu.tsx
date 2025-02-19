@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { IMainStrings, Plan } from '../model';
 import { IconButton, ListItemIcon, ListItemText, SxProps } from '@mui/material';
 import ReportIcon from '@mui/icons-material/Report';
@@ -46,8 +46,7 @@ interface IProps {
 export function HelpMenu(props: IProps) {
   const { online, action } = props;
   const { pathname } = useLocation();
-  const [offline] = useGlobal('offline');
-  const [projType] = useGlobal('projType');
+  const [projType] = useGlobal('projType'); //verified this is not used in a function 2/18/25
   const [memory] = useGlobal('memory');
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
@@ -57,7 +56,7 @@ export function HelpMenu(props: IProps) {
   const { showMessage } = useSnackBar();
   const { getPlan } = usePlan();
   const t: IMainStrings = useSelector(mainSelector, shallowEqual);
-
+  const getGlobal = useGetGlobal();
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setShift(event.shiftKey);
     setAnchorEl(event.currentTarget);
@@ -73,7 +72,7 @@ export function HelpMenu(props: IProps) {
   };
 
   const handleDownload = (url: string, inOffline?: boolean) => async () => {
-    const loc = inOffline !== undefined ? inOffline : offline;
+    const loc = inOffline !== undefined ? inOffline : getGlobal('offline');
     const urlObj = new URL(url);
     const name = urlObj.pathname.split('/').pop() || '';
     const folder = await execFolder();

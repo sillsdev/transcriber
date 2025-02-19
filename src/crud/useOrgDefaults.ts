@@ -19,11 +19,11 @@ export const orgDefaultAsr = 'asr';
 
 export const useOrgDefaults = () => {
   const [organization] = useGlobal('organization');
-  const [orgRole] = useGlobal('orgRole');
+  const [orgRole] = useGlobal('orgRole'); //verified this is not used in a function 2/18/25
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly'); //verified this is not used in a function 2/18/25
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const { getParam, setParam } = useJsonParams();
   const getDefault = (label: string, org: Organization | OrganizationD) => {
     return getParam(label, org.attributes?.defaultParams);

@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, useRef } from 'react';
-import { useGlobal } from '../../../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../../../context/GlobalContext';
 import {
   MediaFileD,
   SectionResourceD,
@@ -41,9 +41,9 @@ interface IProps {
 export const SelectProjectResource = (props: IProps) => {
   const { onSelect, onOpen } = props;
   const [memory] = useGlobal('memory');
-  const [complete, setComplete] = useGlobal('progress');
-  const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [, setComplete] = useGlobal('progress');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const { userIsAdmin } = useRole();
   const [resource, setResouce] = useState<MediaFileD[]>([]);
   const ctx = useContext(PassageDetailContext);
@@ -56,6 +56,7 @@ export const SelectProjectResource = (props: IProps) => {
   );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const media = useRef<MediaFileD[]>();
+  const getGlobal = useGetGlobal();
 
   const handleSelect = (m: MediaFileD) => {
     onSelect && onSelect(m);
@@ -102,7 +103,9 @@ export const SelectProjectResource = (props: IProps) => {
   };
 
   const handleCancel = () => {
+    let complete = getGlobal('progress');
     if (complete === 0 || complete === 100) onOpen && onOpen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   };
 
   useEffect(() => {

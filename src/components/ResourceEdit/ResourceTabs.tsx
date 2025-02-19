@@ -109,8 +109,8 @@ export function ResourceTabs({
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const [memory] = useGlobal('memory');
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const { showMessage } = useSnackBar();
   const { localizedArtifactCategory } = useArtifactCategory();
   const { getPassageTypeRec } = usePassageType();

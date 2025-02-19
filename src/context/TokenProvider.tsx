@@ -6,7 +6,7 @@ import Busy from '../components/Busy';
 import TokenDialog from '../components/TokenDialog';
 import moment from 'moment';
 import jwtDecode from 'jwt-decode';
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { useUpdateOrbitToken } from '../crud';
 import { LocalKey, logError, Severity, useInterval } from '../utils';
 import { isElectron } from '../api-variable';
@@ -51,7 +51,6 @@ function TokenProvider(props: IProps) {
   } = useAuth0();
   const [modalOpen, setModalOpen] = React.useState(false);
   const [secondsToExpire, setSecondsToExpire] = React.useState(0);
-  const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const updateOrbitToken = useUpdateOrbitToken();
   const view = React.useRef<any>('');
@@ -63,6 +62,7 @@ function TokenProvider(props: IProps) {
     ...initState,
   });
   const expiresAtRef = useRef<number | null>(null);
+  const getGlobal = useGetGlobal();
   const setAuthSession = (profile: User | undefined, accessToken: string) => {
     if (accessToken) {
       const decodedToken = jwtDecode(accessToken) as IToken;
@@ -112,7 +112,7 @@ function TokenProvider(props: IProps) {
   };
 
   const resetExpiresAt = () => {
-    if (offline) return;
+    if (getGlobal('offline')) return;
     if (isElectron) {
       ipc
         ?.refreshToken()
@@ -151,7 +151,7 @@ function TokenProvider(props: IProps) {
   };
 
   React.useEffect(() => {
-    if (!offline) {
+    if (!getGlobal('offline')) {
       if (localStorage.getItem(LocalKey.loggedIn) === 'true') {
         resetExpiresAt();
       }
@@ -178,7 +178,7 @@ function TokenProvider(props: IProps) {
   };
 
   const checkTokenExpired = () => {
-    if (!offline) {
+    if (!getGlobal('offline')) {
       if ((expiresAtRef.current ?? 0) > 0) {
         const secondsLeft = timeUntilExpire();
         if (secondsLeft < Expires + 30) {
@@ -195,7 +195,10 @@ function TokenProvider(props: IProps) {
     }
   };
 
-  useInterval(checkTokenExpired, state?.expiresAt && !offline ? 5000 : null);
+  useInterval(
+    checkTokenExpired,
+    state?.expiresAt && !getGlobal('offline') ? 5000 : null
+  );
 
   const handleClose = (value: number) => {
     setModalOpen(false);

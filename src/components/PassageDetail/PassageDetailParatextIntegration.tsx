@@ -23,7 +23,7 @@ export default function PassageDetailParatextIntegration() {
   const { passage, currentstep, sectionArr, gotoNextStep, setStepComplete } =
     usePassageDetailContext();
   const [memory] = useGlobal('memory');
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const { slugFromId } = useArtifactType();
   const planType = usePlanType();
   const { settings } = useStepTool(currentstep);

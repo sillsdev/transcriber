@@ -38,7 +38,7 @@ export const SelectSharedResource = (props: IProps) => {
   const { sourcePassages, scope, onScope, onOpen, onSelect } = props;
   const [refLevel, setRefLevel] = useState<RefLevel>(RefLevel.Verse);
   const [memory] = useGlobal('memory');
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const ctx = useContext(PassageDetailContext);
   const { passage, section } = ctx.state;
   const getAllSharedResources = useAllSharedResourceRead();

@@ -63,11 +63,11 @@ const PlanProvider = (props: IProps) => {
     shallowEqual
   );
   const [memory] = useGlobal('memory');
-  const [plan] = useGlobal('plan');
-  const [project] = useGlobal('project');
-  const [connected] = useGlobal('connected');
-  const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [plan] = useGlobal('plan'); //will be constant here
+  const [project] = useGlobal('project'); //will be constant here
+  const [connected] = useGlobal('connected'); //verified this is not used in a function 2/18/25
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [isDeveloper] = useGlobal('developer');
   const getPlanType = usePlanType();
   const { userIsAdmin } = useRole();

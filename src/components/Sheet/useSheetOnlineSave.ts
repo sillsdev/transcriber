@@ -54,7 +54,7 @@ export const useWfOnlineSave = (props: IProps) => {
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const backup = coordinator?.getSource('backup') as IndexedDBSource;
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const { getPassageTypeRec, checkIt } = usePassageType();
   const { setPublishTo, isPublished } = usePublishDestination();
 
@@ -150,7 +150,7 @@ export const useWfOnlineSave = (props: IProps) => {
       const rn = new StandardRecordNormalizer({ schema: memory?.schema });
       sp = rn.normalizeRecord(sp) as SectionPassageD;
       setComplete(20);
-      let rec = await memory.update((t) => t.addRecord(sp), {
+      let rec = await memory.update((t: any) => t.addRecord(sp), {
         label: 'Update Plan Section and Passages',
         sources: {
           remote: {

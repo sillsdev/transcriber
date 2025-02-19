@@ -96,7 +96,7 @@ export function SelectSections(props: IProps) {
   const passages = useOrbitData<PassageD[]>('passage');
   const sections = useOrbitData<SectionD[]>('section');
   const [memory] = useGlobal('memory');
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const [data, setData] = useState(Array<IRow>());
   const [heightStyle, setHeightStyle] = useState({
     maxHeight: `${window.innerHeight - 250}px`,
