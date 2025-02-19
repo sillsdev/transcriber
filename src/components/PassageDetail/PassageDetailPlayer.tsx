@@ -11,6 +11,7 @@ import {
   MediaFile,
   MediaFileD,
   OrganizationD,
+  OrgWorkflowStepD,
 } from '../../model';
 import { UpdateRecord } from '../../model/baseModel';
 import { playerSelector, sharedSelector } from '../../selector';
@@ -151,6 +152,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
   const [org] = useGlobal('organization');
   const { getAsrSettings } = useGetAsrSettings();
   const teams = useOrbitData<OrganizationD[]>('organization');
+  const orgSteps = useOrbitData<OrgWorkflowStepD[]>('orgworkflowstep');
   const mediarecs = useOrbitData<MediaFileD[]>('mediafile');
   const [asrLangVisible, setAsrLangVisible] = useState(false);
   const [phonetic, setPhonetic] = useState(false);
@@ -344,7 +346,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
         : ''
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [teams]);
+  }, [teams, orgSteps]);
 
   const handleTranscribe = (forceAi?: boolean) => {
     const asr = getAsrSettings();
