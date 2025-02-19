@@ -92,10 +92,12 @@ export default function AsrProgress({
     }
   };
 
-  const getTaskId = (mediaRec: MediaFileD | undefined) => {
+  const getTaskId = (
+    mediaRec: MediaFileD | undefined
+  ): [string | undefined, VerseTask[] | undefined] => {
     var tsks = getTasks(mediaRec);
     if (tsks && !tasks) setTasks(tsks);
-    return tsks?.find((tasks) => !tasks.complete)?.taskId;
+    return [tsks?.find((tasks) => !tasks.complete)?.taskId, tsks];
   };
 
   const setTaskId = (taskId: string) => {
@@ -209,7 +211,7 @@ export default function AsrProgress({
     if (force) {
       postTranscribe();
     } else {
-      const taskId = getTaskId(mediaRec);
+      const [taskId, tasks] = getTaskId(mediaRec);
       if (
         (!tasks || !taskId) &&
         ignoreVs((mediaRec?.attributes?.transcription ?? '').trim())
