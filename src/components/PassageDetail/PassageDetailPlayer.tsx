@@ -42,6 +42,8 @@ import { useOrbitData } from '../../hoc/useOrbitData';
 import { pullTableList } from '../../crud';
 import IndexedDBSource from '@orbit/indexeddb';
 import JSONAPISource from '@orbit/jsonapi';
+import { useCheckOnline } from '../../utils/useCheckOnline';
+import { useSnackBar } from '../../hoc/SnackBar';
 
 export enum SaveSegments {
   showSaveButton = 0,
@@ -158,6 +160,8 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
 
   const [features, setFeatures] = useState<IFeatures>();
   const [asrProgressVisble, setAsrProgressVisble] = useState(false);
+  const checkOnline = useCheckOnline(t.recognizeSpeech);
+  const { showMessage } = useSnackBar();
 
   const { onPlayStatus, onCurrentSegment, setSegmentToWhole } = usePlayerLogic({
     allowSegment,
@@ -346,18 +350,34 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teams]);
 
-  const handleTranscribe = (forceAi?: boolean) => {
-    const asr = getAsrSettings();
-    if (asr?.mmsIso === undefined || asr?.mmsIso === 'und') {
+  const handleAsrSettings = () => {
+    checkOnline((online) => {
+      if (!online) {
+        showMessage(ts.mustBeOnline);
+        return;
+      }
       setAsrLangVisible(true);
-      return;
-    }
-    setPhonetic(asr?.target === AsrTarget.phonetic);
-    setForceAi(forceAi);
-    setTimeout(() => {
-      setAsrLangVisible(false);
-      setAsrProgressVisble(true);
-    }, 200);
+    });
+  };
+
+  const handleTranscribe = (forceAi?: boolean) => {
+    checkOnline((online) => {
+      if (!online) {
+        showMessage(ts.mustBeOnline);
+        return;
+      }
+      const asr = getAsrSettings();
+      if (asr?.mmsIso === undefined || asr?.mmsIso === 'und') {
+        setAsrLangVisible(true);
+        return;
+      }
+      setPhonetic(asr?.target === AsrTarget.phonetic);
+      setForceAi(forceAi);
+      setTimeout(() => {
+        setAsrLangVisible(false);
+        setAsrProgressVisble(true);
+      }, 200);
+    });
   };
 
   useEffect(() => {
@@ -426,7 +446,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
                   <AsrButton
                     id="asrButton"
                     onClick={handleTranscribe}
-                    onSettings={() => setAsrLangVisible(true)}
+                    onSettings={handleAsrSettings}
                     disabled={role !== 'transcriber'}
                   >
                     {!hasTranscription &&
