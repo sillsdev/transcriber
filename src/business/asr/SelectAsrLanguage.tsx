@@ -21,6 +21,8 @@ import { sharedSelector, transcriberSelector } from '../../selector';
 import { AsrAlphabet, IAsrState } from './AsrAlphabet';
 import { useMmsLangs } from './useMmsLangs';
 import { useGetAsrSettings } from '../../crud/useGetAsrSettings';
+import { useCheckOnline } from '../../utils/useCheckOnline';
+import { useSnackBar } from '../../hoc/SnackBar';
 
 export enum AsrTarget {
   alphabet = 'Alphabet',
@@ -53,6 +55,8 @@ export default function SelectAsrLanguage({
   const t: ITranscriberStrings = useSelector(transcriberSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { getAsrSettings, saveAsrSettings, getArtId } = useGetAsrSettings(team);
+  const checkOnline = useCheckOnline(t.beginRecognize);
+  const { showMessage } = useSnackBar();
 
   const handlePhonetic = () => {
     if (asrState)
@@ -66,15 +70,21 @@ export default function SelectAsrLanguage({
   };
 
   const handleSave = () => {
-    if (asrState) {
-      saveAsrSettings(asrState);
-      refresh?.();
-    }
-    onOpen(
-      false,
-      asrStateIn?.language.bcp47 !== asrState?.language.bcp47 ||
-        asrStateIn?.selectRoman !== asrState?.selectRoman
-    );
+    checkOnline((online) => {
+      if (!online) {
+        showMessage(ts.mustBeOnline);
+        return;
+      }
+      if (asrState) {
+        saveAsrSettings(asrState);
+        refresh?.();
+      }
+      onOpen(
+        false,
+        asrStateIn?.language.bcp47 !== asrState?.language.bcp47 ||
+          asrStateIn?.selectRoman !== asrState?.selectRoman
+      );
+    });
   };
 
   React.useEffect(() => {

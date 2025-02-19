@@ -40,7 +40,7 @@ import { IosSlider } from '../control/IosSlider';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
 import WSAudioPlayerZoom from './WSAudioPlayerZoom';
-import { logError, Severity } from '../utils';
+import { logError, Severity, useCheckOnline } from '../utils';
 import {
   IRegion,
   IRegionChange,
@@ -249,6 +249,7 @@ function WSAudioPlayer(props: IProps) {
   const [oneShotUsed, setOneShotUsed] = useState(false);
   const cancelAIRef = useRef(false);
   const { requestAudioAi } = useAudioAi();
+  const checkOnline = useCheckOnline(t.reduceNoise);
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
   const {
@@ -770,59 +771,71 @@ function WSAudioPlayer(props: IProps) {
     );
   };
   const applyAudioAi = (fn: AudioAiFn, targetVoice?: string) => {
-    if (!reload) throw new Exception('need reload defined.');
-    cancelAIRef.current = false;
-    try {
-      doingAI(true);
-      const filename = `${Date.now()}nr.wav`;
-      wsRegionBlob().then((blob) => {
-        if (blob) {
-          requestAudioAi({
-            fn,
-            cancelRef: cancelAIRef,
-            file: new File([blob], filename, { type: 'audio/wav' }),
-            targetVoice,
-            cb: (file: File | Error) => {
-              if (file instanceof File) {
-                var regionblob = new Blob([file], { type: file.type });
-                if (regionblob) {
-                  wsRegionReplace(regionblob).then((newblob) => {
-                    if (newblob) reload(newblob);
-                    setChanged && setChanged(true);
-                  });
+    checkOnline((online) => {
+      if (!online) {
+        showMessage(ts.mustBeOnline);
+        return;
+      }
+      if (!reload) throw new Exception('need reload defined.');
+      cancelAIRef.current = false;
+      try {
+        doingAI(true);
+        const filename = `${Date.now()}nr.wav`;
+        wsRegionBlob().then((blob) => {
+          if (blob) {
+            requestAudioAi({
+              fn,
+              cancelRef: cancelAIRef,
+              file: new File([blob], filename, { type: 'audio/wav' }),
+              targetVoice,
+              cb: (file: File | Error) => {
+                if (file instanceof File) {
+                  var regionblob = new Blob([file], { type: file.type });
+                  if (regionblob) {
+                    wsRegionReplace(regionblob).then((newblob) => {
+                      if (newblob) reload(newblob);
+                      setChanged && setChanged(true);
+                    });
+                  }
+                } else {
+                  if ((file as Error).message !== 'canceled')
+                    showMessage(
+                      `${audioAiMsg(fn, targetVoice)} ${
+                        (file as Error).message
+                      } ${(file as AxiosError).response?.data ?? ''}`
+                    );
                 }
-              } else {
-                if ((file as Error).message !== 'canceled')
-                  showMessage(
-                    `${audioAiMsg(fn, targetVoice)} ${
-                      (file as Error).message
-                    } ${(file as AxiosError).response?.data ?? ''}`
-                  );
-              }
-              doingAI(false);
-            },
-          });
-        } else {
-          doingAI(false);
-        }
-      });
-    } catch (error: any) {
-      logError(Severity.error, errorReporter, error.message);
-      showMessage(audioAiMsg(fn, targetVoice));
-      doingAI(false);
-    }
+                doingAI(false);
+              },
+            });
+          } else {
+            doingAI(false);
+          }
+        });
+      } catch (error: any) {
+        logError(Severity.error, errorReporter, error.message);
+        showMessage(audioAiMsg(fn, targetVoice));
+        doingAI(false);
+      }
+    });
   };
   const handleNoiseRemoval = () => {
     applyAudioAi(AudioAiFn.noiseRemoval);
   };
-  const applyVoiceChange = async () => {
-    if (!voice) return;
-    const targetVoice = await voiceUrl(voice);
-    if (targetVoice) {
-      applyAudioAi(AudioAiFn.voiceConversion, targetVoice);
-      setVoiceVisible(false);
-      showMessage(t.beginVoiceConvert);
-    }
+  const applyVoiceChange = () => {
+    checkOnline(async (online) => {
+      if (!online) {
+        showMessage(ts.mustBeOnline);
+        return;
+      }
+      if (!voice) return;
+      const targetVoice = await voiceUrl(voice);
+      if (targetVoice) {
+        applyAudioAi(AudioAiFn.voiceConversion, targetVoice);
+        setVoiceVisible(false);
+        showMessage(t.beginVoiceConvert);
+      }
+    });
   };
   const handleVoiceChange = () => {
     if (Boolean(voice)) {
@@ -833,6 +846,15 @@ function WSAudioPlayer(props: IProps) {
   };
   const handleCloseVoice = () => {
     setVoiceVisible(false);
+  };
+  const handleVoiceSettings = () => {
+    checkOnline((online) => {
+      if (!online) {
+        showMessage(ts.mustBeOnline);
+        return;
+      }
+      setVoiceVisible(true);
+    });
   };
 
   const onSplit = (split: IRegionChange) => {};
@@ -1002,7 +1024,7 @@ function WSAudioPlayer(props: IProps) {
                           <VcButton
                             id="voiceChange"
                             onClick={handleVoiceChange}
-                            onSettings={() => setVoiceVisible(true)}
+                            onSettings={handleVoiceSettings}
                             disabled={
                               !ready ||
                               playing ||
