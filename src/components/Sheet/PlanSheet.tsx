@@ -45,6 +45,8 @@ import {
   rememberCurrentPassage,
   positiveWholeOnly,
   useCanPublish,
+  logError,
+  Severity,
 } from '../../utils';
 import {
   PublishDestinationEnum,
@@ -267,6 +269,7 @@ export function PlanSheet(props: IProps) {
   } = ctx.state;
 
   const [memory] = useGlobal('memory');
+  const [errorReporter] = useGlobal('errorReporter');
   const [alertOpen] = useGlobal('alertOpen');
   const { showMessage } = useSnackBar();
   const [position, setPosition] = useState<{
@@ -499,7 +502,7 @@ export function PlanSheet(props: IProps) {
     sheetScroll();
   };
 
-  const handleValueRender = (cell: ICell) => {
+  const handleValueRender: DataSheet.ValueRenderer<ICell> = (cell) => {
     return cell?.className?.substring(0, 4) === 'book' && bookMap
       ? bookMap[cell.value]
       : cell?.className?.includes('num')
@@ -574,11 +577,11 @@ export function PlanSheet(props: IProps) {
     updateData(colChanges);
   };
 
-  const handleContextMenu = (
-    e: MouseEvent,
-    cell: any,
-    i: number,
-    j: number
+  const handleContextMenu: DataSheet.ContextMenuHandler<ICell> = (
+    e,
+    cell,
+    i,
+    j
   ) => {
     e.preventDefault();
     if (i > 0 && !readonly) {
@@ -587,6 +590,27 @@ export function PlanSheet(props: IProps) {
   };
 
   const handleNoContextMenu = () => setPosition(initialPosition);
+
+  const handleCopy = (props: DataSheet.HandleCopyProps<ICell>) => {
+    console.log(props);
+    let content = '';
+    for (
+      let idx = Math.min(0, props.start.i - 1);
+      idx <= props.end.i - 1;
+      idx++
+    ) {
+      const row = [...rowData[idx]];
+      if (Boolean(row[0])) row[2] = '';
+      content += row.join('\t') + '\n';
+    }
+    navigator.clipboard.writeText(content).catch((reason) => {
+      logError(
+        Severity.error,
+        errorReporter,
+        new Error(`${ts.cantCopy}: ${reason}`)
+      );
+    });
+  };
 
   const parsePaste = (clipBoard: string) => {
     if (readonly) return Array<Array<string>>();
@@ -1059,6 +1083,7 @@ export function PlanSheet(props: IProps) {
             onCellsChanged={handleCellsChanged}
             parsePaste={parsePaste}
             onSelect={handleSelect}
+            handleCopy={handleCopy}
           />
           {confirmAction !== '' ? (
             <Confirm
