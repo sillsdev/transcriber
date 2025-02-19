@@ -592,7 +592,6 @@ export function PlanSheet(props: IProps) {
   const handleNoContextMenu = () => setPosition(initialPosition);
 
   const handleCopy = (props: DataSheet.HandleCopyProps<ICell>) => {
-    console.log(props);
     let content = '';
     for (
       let idx = Math.min(0, props.start.i - 1);
