@@ -252,7 +252,7 @@ export const AudioTable = (props: IProps) => {
   useEffect(() => {
     if (org) {
       var bible = getOrgBible(org);
-      setHasBible(bible !== undefined);
+      setHasBible((bible?.attributes.bibleName ?? '') !== '');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);

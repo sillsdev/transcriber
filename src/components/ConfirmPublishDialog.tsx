@@ -325,7 +325,7 @@ function ConfirmPublishDialog(props: IProps) {
           onClick={handleYes}
           variant="contained"
           color="primary"
-          disabled={value === current}
+          disabled={value === current || !hasBible}
           autoFocus
         >
           {t.yes}
