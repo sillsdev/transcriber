@@ -327,6 +327,8 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
             segmentsRef.current
           );
         }
+        // remove TRTask segments that handle AI transcription
+        segments = updateSegments(NamedRegions.TRTask, segments, '');
         projectSegmentSave({ media, segments })
           .then(() => {
             saveCompleted(verseToolId);
