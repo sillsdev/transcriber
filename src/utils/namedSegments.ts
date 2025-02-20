@@ -17,7 +17,11 @@ export function updateSegments(
   if (Array.isArray(json)) {
     var index = json.findIndex((j) => j['name'] === name);
     if (index >= 0) {
-      json[index]['regionInfo'] = fornamesegs;
+      if (fornamesegs) {
+        json[index]['regionInfo'] = fornamesegs;
+      } else {
+        json.splice(index, 1); //remove it
+      }
     } else {
       json.push({ name: name, regionInfo: fornamesegs });
     }
