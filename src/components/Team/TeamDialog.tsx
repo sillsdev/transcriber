@@ -150,7 +150,7 @@ export function TeamDialog(props: IProps) {
         10000
       ).finally(() => {
         const current =
-          mode === DialogMode.edit && values
+          mode === DialogMode.edit && values?.team
             ? values.team
             : ({ attributes: {} } as OrganizationD);
         let df = setParam(
@@ -356,21 +356,27 @@ export function TeamDialog(props: IProps) {
         disableEnforceFocus
       >
         <DialogTitle id="teamDlg">
-          {mode === DialogMode.add ? t.addTeam : t.teamSettings}
+          {mode === DialogMode.add
+            ? t.addTeam
+            : onDelete
+            ? t.teamSettings
+            : 'Personal Settings'}
         </DialogTitle>
         <DialogContent>
           {saving && <LinearProgress id="busy" variant="indeterminate" />}
-          <TextField
-            autoFocus
-            margin="dense"
-            id="teamName"
-            label={t.teamName}
-            value={name}
-            helperText={!saving && name && nameInUse(name) && t.nameInUse}
-            required
-            onChange={handleChange}
-            fullWidth
-          />
+          {onDelete && (
+            <TextField
+              autoFocus
+              margin="dense"
+              id="teamName"
+              label={t.teamName}
+              value={name}
+              helperText={!saving && name && nameInUse(name) && t.nameInUse}
+              required
+              onChange={handleChange}
+              fullWidth
+            />
+          )}
           <TeamSettings
             mode={mode}
             team={values?.team}
@@ -413,7 +419,7 @@ export function TeamDialog(props: IProps) {
                 ))}
             </TextField>
           )}
-          {mode === DialogMode.edit && (
+          {mode === DialogMode.edit && onDelete && (
             <div>
               <DeleteExpansion
                 title={t.deleteTeam}
@@ -441,8 +447,7 @@ export function TeamDialog(props: IProps) {
               disabled ||
               recording ||
               saving ||
-              name === '' ||
-              nameInUse(name) ||
+              (values && (name === '' || nameInUse(name))) ||
               !changed ||
               bibleIdError !== ''
             }
