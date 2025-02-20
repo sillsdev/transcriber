@@ -32,7 +32,6 @@ import {
   TabActions,
   ActionHeight,
   GrowingSpacer,
-  AltButton,
   PriButton,
   iconMargin,
   LightTooltip,
@@ -261,7 +260,6 @@ export function PlanSheet(props: IProps) {
   const {
     hidePublishing,
     publishingOn,
-    projButtonStr,
     connected,
     readonly,
     sectionArr,
@@ -592,13 +590,11 @@ export function PlanSheet(props: IProps) {
 
   const handleNoContextMenu = () => setPosition(initialPosition);
 
-  const handleCopy = (props: DataSheet.HandleCopyProps<ICell>) => {
+  const handleSheetCopy = (start?: number, end?: number) => {
     let content = '';
-    for (
-      let idx = Math.min(0, props.start.i - 1);
-      idx <= props.end.i - 1;
-      idx++
-    ) {
+    start = start ?? 0;
+    end = end ?? rowData.length;
+    for (let idx = start; idx < end; idx++) {
       const row = [...rowData[idx]];
       if (Boolean(row[0])) row[2] = '';
       content += row.join('\t') + '\n';
@@ -992,20 +988,10 @@ export function PlanSheet(props: IProps) {
                   )}
                   onAction={(what: ExtraIcon) => onAction(currentRow - 1, what)}
                 />
-                <AltButton
-                  id="planSheetImp"
-                  key="importExcel"
-                  aria-label={t.tablePaste}
-                  disabled={pasting || anyRecording || readonly || filtered}
-                  onClick={handleTablePaste}
-                >
-                  {t.tablePaste}
-                </AltButton>
-                <AltButton
-                  id="planSheetReseq"
-                  key="resequence"
-                  aria-label={t.resequence}
-                  disabled={
+                <ProjButtons
+                  {...props}
+                  noPaste={pasting || anyRecording || readonly || filtered}
+                  noReseq={
                     pasting ||
                     data.length < 2 ||
                     anyRecording ||
@@ -1013,15 +999,11 @@ export function PlanSheet(props: IProps) {
                     filtered ||
                     !hidePublishing
                   }
-                  onClick={handleResequence}
-                >
-                  {t.resequence}
-                </AltButton>
-                <ProjButtons
-                  {...props}
                   noImExport={anyRecording || pasting}
                   noIntegrate={anyRecording || pasting || data.length < 2}
-                  t={projButtonStr}
+                  onCopy={handleSheetCopy}
+                  onPaste={handleTablePaste}
+                  onReseq={handleResequence}
                 />
               </>
             )}
@@ -1087,7 +1069,6 @@ export function PlanSheet(props: IProps) {
             onCellsChanged={handleCellsChanged}
             parsePaste={parsePaste}
             onSelect={handleSelect}
-            handleCopy={handleCopy}
           />
           {confirmAction !== '' ? (
             <Confirm

@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from '../context/GlobalContext';
-import { IProjButtonsStrings } from '../model';
+import {
+  IPlanSheetStrings,
+  IProjButtonsStrings,
+  ISharedStrings,
+} from '../model';
 import { Divider, Menu, MenuItem } from '@mui/material';
 import DropDownIcon from '@mui/icons-material/ArrowDropDown';
 import BigDialog from '../hoc/BigDialog';
@@ -11,19 +15,35 @@ import { useProjectPlans, usePlan } from '../crud';
 import { AltButton } from '.';
 import { PlanContext } from '../context/PlanContext';
 import { addPt } from '../utils/addPt';
+import { shallowEqual, useSelector } from 'react-redux';
+import {
+  planSheetSelector,
+  projButtonsSelector,
+  sharedSelector,
+} from '../selector';
 
-interface IStateProps {
-  t: IProjButtonsStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
+  noPaste?: boolean;
+  noReseq?: boolean;
   noImExport?: boolean;
   noIntegrate?: boolean;
   onLeft?: boolean;
+  onCopy: () => void;
+  onPaste: () => void;
+  onReseq: () => void;
 }
 
 export const ProjButtons = (props: IProps) => {
-  const { noImExport, noIntegrate, onLeft, t } = props;
+  const {
+    onCopy,
+    noPaste,
+    noReseq,
+    noImExport,
+    noIntegrate,
+    onLeft,
+    onPaste,
+    onReseq,
+  } = props;
   const { getPlanName } = usePlan();
   const [plan] = useGlobal('plan'); //verified this is not used in a function 2/18/25
   const [project] = useGlobal('project'); //verified this is not used in a function 2/18/25
@@ -35,6 +55,9 @@ export const ProjButtons = (props: IProps) => {
   const [openExport, setOpenExport] = React.useState(false);
   const [openImport, setOpenImport] = React.useState(false);
   const [planName, setPlanName] = useState('');
+  const t: IProjButtonsStrings = useSelector(projButtonsSelector, shallowEqual);
+  const tp: IPlanSheetStrings = useSelector(planSheetSelector, shallowEqual);
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
 
@@ -65,7 +88,7 @@ export const ProjButtons = (props: IProps) => {
         disabled={noImExport}
         onClick={handleMenu}
       >
-        {t.importExport}
+        {t.sheet}
         <DropDownIcon sx={{ ml: 1 }} />
       </AltButton>
       <Menu
@@ -74,25 +97,31 @@ export const ProjButtons = (props: IProps) => {
         open={Boolean(actionMenuItem)}
         onClose={handleClose}
       >
+        <MenuItem id="planSheetCopy" disabled={noPaste} onClick={onCopy}>
+          {ts.clipboardCopy}
+        </MenuItem>
+        <MenuItem id="planSheetPaste" disabled={noPaste} onClick={onPaste}>
+          {tp.tablePaste}
+        </MenuItem>
+        <MenuItem id="planSheetReseq" disabled={noReseq} onClick={onReseq}>
+          {tp.resequence}
+        </MenuItem>
         <MenuItem id="projButtonImp" onClick={handleImport}>
           {t.import}
         </MenuItem>
-
         <MenuItem id="projButtonExp" onClick={handleExport}>
           {t.export}
         </MenuItem>
+        {projType.toLowerCase() === 'scripture' && (
+          <MenuItem
+            id="projButtonInt"
+            disabled={noIntegrate}
+            onClick={handleIntegrations}
+          >
+            {addPt(t.integrations)}
+          </MenuItem>
+        )}
       </Menu>
-      {projType.toLowerCase() === 'scripture' && (
-        <AltButton
-          id="projButtonInt"
-          key="integrations"
-          aria-label={addPt(t.integrations)}
-          disabled={noIntegrate}
-          onClick={handleIntegrations}
-        >
-          {addPt(t.integrations)}
-        </AltButton>
-      )}
       <BigDialog
         title={t.integrationsTitle.replace('{0}', planName)}
         isOpen={openIntegration}

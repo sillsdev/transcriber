@@ -6536,6 +6536,13 @@
                <context context-type="sourcefile">ProjButtons.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="projButtons.sheet">
+            <source>Spreadsheet</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">ProjButtons.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="projectDownload.amount">
             <source>Amount to download</source>
             <target/>
