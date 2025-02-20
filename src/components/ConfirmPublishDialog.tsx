@@ -46,7 +46,7 @@ interface IProps {
   noDefaults?: boolean;
   passageType?: PassageTypeEnum;
   noResponse: () => void;
-  yesResponse: (destinations: PublishDestinationEnum[]) => void;
+  yesResponse: (destinations: PublishDestinationEnum[]) => Promise<void>;
 }
 
 function ConfirmPublishDialog(props: IProps) {
@@ -80,7 +80,7 @@ function ConfirmPublishDialog(props: IProps) {
       ? getDefaults(hasPublishing, sharedProject)
       : current
   );
-
+  const [doingIt, setDoingIt] = useState(false);
   const calcAkuoValue = (val: PublishDestinationEnum[]) => {
     if (val.includes(PublishDestinationEnum.AkuoBeta)) {
       return PublishLevelEnum.Beta;
@@ -112,6 +112,7 @@ function ConfirmPublishDialog(props: IProps) {
   };
   const handleYes = () => {
     if (yesResponse !== null && value !== current) {
+      setDoingIt(true);
       if (!value.includes(PublishDestinationEnum.PublishDestinationSetByUser))
         value.push(PublishDestinationEnum.PublishDestinationSetByUser);
       if (propagate) value.push(PublishDestinationEnum.PropagateSection);
@@ -119,9 +120,11 @@ function ConfirmPublishDialog(props: IProps) {
         setValue([
           ...value.filter((v) => v !== PublishDestinationEnum.PropagateSection),
         ]);
-      yesResponse(value);
+      yesResponse(value).then(() => {
+        setDoingIt(false);
+        setOpen(false);
+      });
     } else handleNo();
-    setOpen(false);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -317,7 +320,12 @@ function ConfirmPublishDialog(props: IProps) {
         <DialogContentText id="alertDesc">{t.areYouSure}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button id="alertNo" onClick={handleNo} color="primary">
+        <Button
+          id="alertNo"
+          onClick={handleNo}
+          color="primary"
+          disabled={doingIt}
+        >
           {value === current ? ts.cancel : t.no}
         </Button>
         <Button
@@ -325,7 +333,7 @@ function ConfirmPublishDialog(props: IProps) {
           onClick={handleYes}
           variant="contained"
           color="primary"
-          disabled={value === current || !hasBible}
+          disabled={value === current || !hasBible || doingIt}
           autoFocus
         >
           {t.yes}

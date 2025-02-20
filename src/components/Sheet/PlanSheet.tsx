@@ -351,7 +351,7 @@ export function PlanSheet(props: IProps) {
     startSave();
   };
 
-  const publishConfirm = (destinations: PublishDestinationEnum[]) => {
+  const publishConfirm = async (destinations: PublishDestinationEnum[]) => {
     setConfirmPublish(false);
     setSectionPublish(currentRowRef.current - 1, destinations);
   };

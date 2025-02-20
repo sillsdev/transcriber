@@ -181,23 +181,23 @@ export const AudioTable = (props: IProps) => {
     if (rowVer) setVerValue(parseInt(rowVer));
     setShowId(id);
   };
-  const updateMediaRec = (id: string, publishTo: PublishDestinationEnum[]) => {
+  const updateMediaRec = async (
+    id: string,
+    publishTo: PublishDestinationEnum[]
+  ) => {
     var mediaRec = memory.cache.query((q) =>
       q.findRecord({ type: 'mediafile', id: id })
     ) as MediaFileD;
     mediaRec.attributes.publishTo = setPublishTo(publishTo);
     mediaRec.attributes.readyToShare = isPublished(publishTo);
-    memory
-      .update((t) => UpdateRecord(t, mediaRec, user))
-      .then(() => {
-        waitForRemoteQueue('publishTo').then(() => {
-          forceDataChanges();
-        });
-        setRefresh();
-      });
+    await memory.update((t) => UpdateRecord(t, mediaRec, user));
+    await waitForRemoteQueue('publishTo');
+    await forceDataChanges();
+    setRefresh();
   };
-  const publishConfirm = (destinations: PublishDestinationEnum[]) => {
-    updateMediaRec(data[publishItem].id, destinations);
+
+  const publishConfirm = async (destinations: PublishDestinationEnum[]) => {
+    await updateMediaRec(data[publishItem].id, destinations);
     setPublishItem(-1);
   };
   const publishRefused = () => {
