@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
-import { orgDefaultAsr, useOrgDefaults } from '../../crud/useOrgDefaults';
 import { TokenContext } from '../../context/TokenProvider';
 import { IAsrState } from './AsrAlphabet';
 import { axiosGet, axiosPost } from '../../utils/axios';
@@ -28,6 +27,7 @@ import {
 import { Stack, Typography } from '@mui/material';
 import { ignoreVs } from '../../utils/ignoreVs';
 import { infoMsg, logError, Severity } from '../../utils';
+import { useGetAsrSettings } from '../../crud/useGetAsrSettings';
 
 export interface VerseTask {
   taskId: string;
@@ -56,7 +56,7 @@ export default function AsrProgress({
 }: AsrProgressProps) {
   const addingRef = React.useRef(false);
   const [working, setWorking] = React.useState(false);
-  const { getOrgDefault } = useOrgDefaults();
+  const { getAsrSettings } = useGetAsrSettings();
   const [memory] = useGlobal('memory');
   const token = React.useContext(TokenContext).state.accessToken ?? '';
   const { showMessage } = useSnackBar();
@@ -162,8 +162,8 @@ export default function AsrProgress({
   const postTranscribe = async () => {
     const remId =
       remoteId('mediafile', mediaId, memory?.keyMap as RecordKeyMap) ?? mediaId;
-    const asr = getOrgDefault(orgDefaultAsr) as IAsrState | undefined;
-    const iso = asr?.dialect ?? asr?.mmsIso ?? 'eng';
+    const asr = getAsrSettings() as IAsrState | undefined;
+    const iso = asr?.mmsIso ?? 'eng';
     const romanize = asr?.selectRoman ?? false;
     try {
       const response = await axiosPost(
