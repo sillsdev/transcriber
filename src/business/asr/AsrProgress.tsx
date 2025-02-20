@@ -208,23 +208,17 @@ export default function AsrProgress({
     setTranscribing(true);
     setWorking(false);
     const mediaRec = findRecord(memory, 'mediafile', mediaId) as MediaFileD;
-    if (force) {
-      postTranscribe();
+    const [taskId, tasks] = getTaskId(mediaRec);
+    if (
+      (!tasks || !taskId) &&
+      ignoreVs((mediaRec?.attributes?.transcription ?? '').trim())
+    ) {
+      status(t.transcriptionExists);
+      closing();
+    } else if (taskId && !force) {
+      setTaskId(taskId);
     } else {
-      const [taskId, tasks] = getTaskId(mediaRec);
-      if (
-        (!tasks || !taskId) &&
-        ignoreVs((mediaRec?.attributes?.transcription ?? '').trim())
-      ) {
-        status(t.transcriptionExists);
-        closing();
-      } else {
-        if (taskId) {
-          setTaskId(taskId);
-        } else {
-          postTranscribe();
-        }
-      }
+      postTranscribe();
     }
 
     return () => {
