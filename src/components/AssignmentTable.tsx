@@ -94,7 +94,7 @@ export function AssignmentTable(props: IProps) {
   const roles = useOrbitData<Role[]>('role');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const { showMessage } = useSnackBar();
   const ctx = useContext(PlanContext);
   const { flat, sectionArr } = ctx.state;

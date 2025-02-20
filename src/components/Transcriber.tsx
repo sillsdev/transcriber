@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useCallback,
 } from 'react';
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { useParams } from 'react-router-dom';
 import { SplitWrapper as Wrapper, SplitPane, Pane } from '../control/Panes';
 import Confirm from './AlertDialog';
@@ -206,10 +206,10 @@ export function Transcriber(props: IProps) {
 
   const { toolChanged, saveCompleted } = useContext(UnsavedContext).state;
   const [memory] = useGlobal('memory');
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const [project] = useGlobal('project');
-  const [projType] = useGlobal('projType');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
+  const [project] = useGlobal('project'); //will be constant here
+  const [projType] = useGlobal('projType'); //verified this is not used in a function 2/18/25
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
   const [errorReporter] = useGlobal('errorReporter');
@@ -281,6 +281,8 @@ export function Transcriber(props: IProps) {
   const [style, setStyle] = useState({
     cursor: 'default',
   });
+  const getGlobal = useGetGlobal();
+
   const transcribeDefaultParams = {
     silenceThreshold: 0.004,
     timeThreshold: 0.02,
@@ -613,7 +615,7 @@ export function Transcriber(props: IProps) {
       ) || projType.toLowerCase() !== 'scripture';
     if (ptCheck !== noParatext) setNoParatext(ptCheck);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project, projType, artifactTypeSlug]);
+  }, [project, projType, artifactTypeSlug, offline]);
 
   useEffect(() => {
     const newAssigned = rowData[index]?.assigned;
@@ -654,7 +656,7 @@ export function Transcriber(props: IProps) {
       showMessage(t.invalidReference);
       return;
     }
-    if (offline) {
+    if (getGlobal('offline')) {
       getParatextDataPath().then((ptPath: string) => {
         getParatextTextLocal(
           ptPath,

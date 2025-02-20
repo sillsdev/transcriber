@@ -8,7 +8,7 @@ import {
   ReactElement,
   useCallback,
 } from 'react';
-import { useGlobal } from '../../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
 import {
   IPlanSheetStrings,
   ISharedStrings,
@@ -270,7 +270,6 @@ export function PlanSheet(props: IProps) {
 
   const [memory] = useGlobal('memory');
   const [errorReporter] = useGlobal('errorReporter');
-  const [alertOpen] = useGlobal('alertOpen');
   const { showMessage } = useSnackBar();
   const [position, setPosition] = useState<{
     mouseX: null | number;
@@ -283,7 +282,7 @@ export function PlanSheet(props: IProps) {
   const [confirmAction, setConfirmAction] = useState('');
   const suggestionRef = useRef<Array<OptionType>>();
   const saveTimer = useRef<NodeJS.Timeout>();
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [offlineOnly] = useGlobal('offlineOnly');
   const [pasting, setPasting] = useState(false);
   const preventSaveRef = useRef<boolean>(false);
@@ -340,6 +339,8 @@ export function PlanSheet(props: IProps) {
   const [org] = useGlobal('organization');
   const [hasBible, setHasBible] = useState(false);
   const { getOrgBible } = useBible();
+  const getGlobal = useGetGlobal();
+
   useEffect(() => {
     if (org) {
       var bible = getOrgBible(org);
@@ -684,7 +685,11 @@ export function PlanSheet(props: IProps) {
   });
 
   const handleAutoSave = () => {
-    if (changedRef.current && !preventSaveRef.current && !alertOpen) {
+    if (
+      changedRef.current &&
+      !preventSaveRef.current &&
+      !getGlobal('alertOpen')
+    ) {
       handleSave();
     } else {
       startSaveTimer();

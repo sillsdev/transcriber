@@ -43,9 +43,9 @@ function TranscriptionShow(props: IProps) {
   const { id, isMediaId, visible, closeMethod, exportId, version } = props;
   const workflowSteps = useOrbitData<OrgWorkflowStep[]>('orgworkflowstep');
   const [memory] = useGlobal('memory');
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [org] = useGlobal('organization');
-  const [projectId] = useGlobal('project');
+  const [projectId] = useGlobal('project'); //will be constant here
   const [open, setOpen] = useState(visible);
   const { showMessage } = useSnackBar();
   const [transcription, setTranscription] = useState('');

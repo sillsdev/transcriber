@@ -16,8 +16,8 @@ interface IProps {
 export const AddResource = (props: IProps) => {
   const { action, stopPlayer } = props;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const t: IPassageDetailArtifactsStrings = useSelector(
     resourceSelector,
     shallowEqual

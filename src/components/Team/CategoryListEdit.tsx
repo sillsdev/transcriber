@@ -45,7 +45,7 @@ interface IProps {
 
 export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   const [refresh, setRefresh] = React.useState(0);
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [categories, setCategories] = useState<IArtifactCategory[]>([]);
   const [typeCategories, setTypeCategories] = useState<IArtifactCategory[]>([]);
   const [edited, setEdited] = useState<Map<string, IArtifactCategory>>(

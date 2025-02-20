@@ -45,7 +45,7 @@ export const useArtifactCategory = (teamId?: string) => {
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
   const curOrg = teamId ?? organization;
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const waitForRemoteQueue = useWaitForRemoteQueue();
   const t: IArtifactCategoryStrings = useSelector(stringSelector, shallowEqual);
   const [fromLocal] = useState<ISwitches>({});

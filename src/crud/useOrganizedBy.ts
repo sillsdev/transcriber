@@ -1,4 +1,4 @@
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { Plan, IVProjectStrings } from '../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { vProjectSelector } from '../selector';
@@ -8,7 +8,7 @@ export interface ISwitches {
 }
 export const useOrganizedBy = () => {
   const [memory] = useGlobal('memory');
-  const [plan] = useGlobal('plan');
+  const getGlobal = useGetGlobal();
   const t: IVProjectStrings = useSelector(vProjectSelector, shallowEqual);
 
   const switchToLocal: ISwitches = {
@@ -51,7 +51,7 @@ export const useOrganizedBy = () => {
   };
 
   const getOrganizedBy = (singular: boolean, planId?: string) => {
-    if (!planId || planId === '') planId = plan;
+    if (!planId || planId === '') planId = getGlobal('plan');
     if (!planId || planId === '')
       return localizedOrganizedBy('section', singular);
     const planRec = memory?.cache.query((q) => q.findRecords('plan')) as Plan[];

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { Organization, OrganizationD, User } from '../model';
 import { waitForIt } from '../utils';
 import { useTeamCreate, isPersonalTeam, remoteIdNum, defaultWorkflow } from '.';
@@ -8,19 +8,18 @@ import { RecordKeyMap } from '@orbit/records';
 
 export const useNewTeamId = () => {
   const [memory] = useGlobal('memory');
-  const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const [user] = useGlobal('user');
   const teamRef = React.useRef<string>();
   const orbitTeamCreate = useTeamCreate();
+  const getGlobal = useGetGlobal();
 
   const getPersonalId = async () => {
     await waitForIt(
       'have user for personal team',
-      () => Boolean(user),
+      () => Boolean(getGlobal('user')),
       () => false,
       100
     );
+    const user = getGlobal('user');
     const orgs = (await memory.query((q) =>
       q.findRecords('organization')
     )) as OrganizationD[];
@@ -43,11 +42,11 @@ export const useNewTeamId = () => {
   };
 
   const newPersonal = async () => {
-    if (!user) return;
+    if (!getGlobal('user')) return;
     teamRef.current = await getPersonalId();
     if (!teamRef.current) {
       const userRec = memory.cache.query((q) =>
-        q.findRecord({ type: 'user', id: user })
+        q.findRecord({ type: 'user', id: getGlobal('user') })
       ) as User;
       const userName = userRec?.attributes?.name ?? 'user';
       const personalOrg = `>${userName} Personal<`;
@@ -71,7 +70,7 @@ export const useNewTeamId = () => {
       const testId = await getPersonalId();
       if (testId) {
         teamId = testId;
-      } else if (!isOffline || offlineOnly) {
+      } else if (!getGlobal('offline') || getGlobal('offlineOnly')) {
         await newPersonal();
         await waitForIt(
           'create new team',

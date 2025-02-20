@@ -54,7 +54,7 @@ export const useWfOnlineSave = (props: IProps) => {
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const backup = coordinator?.getSource('backup') as IndexedDBSource;
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const { getPassageTypeRec, checkIt } = usePassageType();
   const { setPublishTo, isPublished } = usePublishDestination();
 

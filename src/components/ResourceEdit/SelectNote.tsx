@@ -32,7 +32,7 @@ export const SelectNote = (props: IProps) => {
   const { passage, onOpen, onSelect } = props;
   const [refLevel, setRefLevel] = useState<RefLevel>(RefLevel.All);
   const [memory] = useGlobal('memory');
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const { getNotes, noteRefs, noteSource } = useNotes();
   const [notes, setNotes] = useState<SharedResourceD[]>([]);
   const [data, setData] = useState<IRRow[]>([]);

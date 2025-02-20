@@ -7,7 +7,7 @@ import { parseRef } from '../../../crud/passage';
 export const useComputeRef = () => {
   const passages = useOrbitData<PassageD[]>('passage');
   const sections = useOrbitData<SectionD[]>('section');
-  const [planId] = useGlobal('plan');
+  const [planId] = useGlobal('plan'); //will be constant here
 
   const computeMovementRef = (passage: PassageD) => {
     const sectionId = related(passage, 'section');

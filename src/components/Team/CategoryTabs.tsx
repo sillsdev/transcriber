@@ -46,7 +46,7 @@ interface IProps {
 
 export default function CategoryTabs({ teamId, flat, onClose }: IProps) {
   const [value, setValue] = React.useState(0);
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const t: ICategoryStrings = useSelector(categorySelector, shallowEqual);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {

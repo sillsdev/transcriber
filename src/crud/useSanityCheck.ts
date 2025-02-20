@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { useGlobal } from '../context/GlobalContext';
+import { useGlobal, useGetGlobal } from '../context/GlobalContext';
 import { findRecord, related, staticFiles, updateableFiles } from '.';
 import Memory from '@orbit/memory';
 import moment from 'moment';
@@ -18,7 +18,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
   const remote = coordinator?.getSource('datachanges') as JSONAPISource;
   const token = useContext(TokenContext).state.accessToken;
   const [errorReporter] = useGlobal('errorReporter');
-  const [isOffline] = useGlobal('offline');
+  const getGlobal = useGetGlobal();
 
   const stringToDateNum = (val: string) =>
     val ? moment(val.endsWith('Z') ? val : val + 'Z').valueOf() : 0;
@@ -364,7 +364,7 @@ export const useSanityCheck = (setLanguage: typeof actions.setLanguage) => {
 
     var project = findRecord(memory, 'project', projectId) as ProjectD;
     var remoteProjectId = project?.keys?.remoteId ?? '';
-    if (!isOffline && project?.keys?.remoteId) {
+    if (!getGlobal('offline') && project?.keys?.remoteId) {
       var tables = staticFiles
         .concat(updateableFiles)
         .sort((i, j) => (i.sort <= j.sort ? -1 : 1))

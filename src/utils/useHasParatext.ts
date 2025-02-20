@@ -11,7 +11,7 @@ import { addPt } from './addPt';
 export const useHasParatext = () => {
   const [ptPath, setPtPath] = useState('');
   const [hasParatext, setHasParatext] = useState(false);
-  const [isOffline] = useGlobal('offline');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const { accessToken } = useContext(TokenContext).state;
   const [errorReporter] = useGlobal('errorReporter');
   const paratext_username = useSelector(

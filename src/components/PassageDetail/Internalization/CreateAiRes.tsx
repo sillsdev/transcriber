@@ -43,7 +43,7 @@ interface CreateAiResProps {
 export default function CreateAiRes({ resources }: CreateAiResProps) {
   const [typeOpts, setTypeOpts] = useState<OptionProps[]>([]);
   const [scopeOpts, setScopeOpts] = useState<OptionProps[]>([]);
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const { flat } = usePlanType()(plan);
   const [query, setQuery] = useState('');
   const [userEdited, setUserEdited] = useState(false);

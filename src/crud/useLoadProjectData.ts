@@ -1,4 +1,4 @@
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import * as actions from '../store';
 import { IApiError, IMainStrings } from '../model';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -13,16 +13,14 @@ export const useLoadProjectData = () => {
   const dispatch = useDispatch();
   const doOrbitError = (ex: IApiError) => dispatch(actions.doOrbitError(ex));
   const [coordinator] = useGlobal('coordinator');
-  const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const [projectsLoaded] = useGlobal('projectsLoaded');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [, setBusy] = useGlobal('importexportBusy');
   const AddProjectLoaded = useProjectsLoaded();
   const { showMessage } = useSnackBar();
   const checkOnline = useCheckOnline('LoadProjectData');
-
+  const getGlobal = useGetGlobal();
   return (projectId: string, cb?: () => void) => {
-    if (projectsLoaded.includes(projectId) || offlineOnly) {
+    if (getGlobal('projectsLoaded').includes(projectId) || offlineOnly) {
       if (cb) cb();
       return;
     }
@@ -30,8 +28,8 @@ export const useLoadProjectData = () => {
       LoadProjectData(
         projectId,
         coordinator,
-        online && !isOffline,
-        projectsLoaded,
+        online && !getGlobal('offline'),
+        getGlobal('projectsLoaded'),
         AddProjectLoaded,
         setBusy,
         doOrbitError

@@ -17,7 +17,7 @@ export const useVProjectCreate = () => {
   const [coordinator] = useGlobal('coordinator');
   const [user] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
 
   const offlineProjectCreate = useOfflnProjCreate();
 

@@ -9,8 +9,8 @@ import { getPlanName } from '../../context/TranscriberContext';
 import { related } from '../../crud';
 
 export const TeamProjects = () => {
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const ctx = React.useContext(TeamContext);
   const { teams, importOpen, setImportOpen, importProject, personalProjects } =
     ctx.state;

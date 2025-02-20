@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { useParams } from 'react-router-dom';
 import { shallowEqual } from 'react-redux';
 import {
@@ -250,11 +250,11 @@ const PassageDetailProvider = (props: IProps) => {
   const [user] = useGlobal('user');
   const [org] = useGlobal('organization');
   const [errorReporter] = useGlobal('errorReporter');
-  const [saveResult, setSaveResult] = useGlobal('saveResult');
+  const [saveResult, setSaveResult] = useGlobal('saveResult'); //verified this is not used in a function 2/18/25
   const [confirm, setConfirm] = useState('');
   const view = React.useRef('');
   const { showMessage } = useSnackBar();
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const { getProjectDefault } = useProjectDefaults();
   const [state, setState] = useState({
     ...initState,
@@ -281,10 +281,10 @@ const PassageDetailProvider = (props: IProps) => {
   const settingSegmentRef = useRef(false);
   const inPlayerRef = useRef<string>();
   const { getOrgDefault } = useOrgDefaults();
-  const [changed] = useGlobal('changed');
+  const getGlobal = useGetGlobal();
 
   const setCurrentStep = (stepId: string) => {
-    if (changed) {
+    if (getGlobal('changed')) {
       setConfirm(stepId);
     } else {
       handleSetCurrentStep(stepId);
@@ -297,6 +297,7 @@ const PassageDetailProvider = (props: IProps) => {
     var step = state.orgWorkflowSteps.find((s) => s.id === stepId);
     var tool = getTool(step?.attributes?.tool) as ToolSlug;
     setCurrentSegment(undefined, 0);
+
     setState((state: ICtxState) => {
       return {
         ...state,
@@ -320,6 +321,7 @@ const PassageDetailProvider = (props: IProps) => {
     }
     segmentsCb.current = undefined;
   };
+
   const forceRefresh = (rowData?: IRow[]) => {
     refreshRef.current = refreshRef.current + 1;
     setState((state: ICtxState) => {
@@ -544,7 +546,9 @@ const PassageDetailProvider = (props: IProps) => {
     if (nextpsg && nextpsg !== state.passage?.keys?.remoteId) {
       rememberCurrentPassage(memory, nextpsg);
       passageNavigate(`/detail/${prjId}/${nextpsg}`);
-    } else setCurrentStep(''); // setting to empty jumps to first uncompleted
+    } else {
+      setCurrentStep('');
+    } // setting to empty jumps to first uncompleted
   };
   const setStepComplete = async (
     stepid: string,

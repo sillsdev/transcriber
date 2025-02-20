@@ -1,4 +1,4 @@
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 import {
   PlanD,
@@ -15,9 +15,10 @@ import { related } from '.';
 
 export const useProjectDelete = () => {
   const [memory] = useGlobal('memory');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const offlineDelete = useOfflnProjDelete();
-  const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
+  const [, setProjectsLoaded] = useGlobal('projectsLoaded');
+  const getGlobal = useGetGlobal();
 
   return async (projectid: string) => {
     await offlineDelete(projectid);
@@ -157,6 +158,8 @@ export const useProjectDelete = () => {
     );
     await memory.update(ops);
 
-    setProjectsLoaded(projectsLoaded.filter((p) => p !== projectid));
+    setProjectsLoaded(
+      getGlobal('projectsLoaded').filter((p) => p !== projectid)
+    );
   };
 };

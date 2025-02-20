@@ -1,5 +1,5 @@
 import { useRef, useContext } from 'react';
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { pullTableList, remoteIdNum, useOfflnMediafileCreate } from '.';
 import * as actions from '../store';
 import JSONAPISource from '@orbit/jsonapi';
@@ -27,9 +27,8 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const backup = coordinator?.getSource('backup') as IndexedDBSource;
-  const [plan] = useGlobal('plan');
+  const getGlobal = useGetGlobal();
   const [user] = useGlobal('user');
-  const [offline] = useGlobal('offline');
   const { accessToken } = useContext(TokenContext).state;
   const fileList = useRef<File[]>();
   const mediaIdRef = useRef('');
@@ -55,7 +54,7 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
         )
       ).id;
     }
-    if (!offline && mediaIdRef.current) {
+    if (!getGlobal('offline') && mediaIdRef.current) {
       pullTableList(
         'mediafile',
         Array(mediaIdRef.current),
@@ -75,7 +74,8 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
 
   return async (files: File[]) => {
     const getPlanId = () =>
-      remoteIdNum('plan', plan, memory?.keyMap as RecordKeyMap) || plan;
+      remoteIdNum('plan', getGlobal('plan'), memory?.keyMap as RecordKeyMap) ||
+      getGlobal('plan');
     const getArtifactId = () =>
       remoteIdNum('artifacttype', artifactId, memory?.keyMap as RecordKeyMap) ||
       artifactId;
@@ -102,7 +102,7 @@ export const useMediaUpload = ({ artifactId, afterUploadCb }: IProps) => {
       files,
       n: 0,
       token: accessToken || '',
-      offline: offline,
+      offline: getGlobal('offline'),
       errorReporter: reporter,
       uploadType: UploadType.Media,
       cb: itemComplete,

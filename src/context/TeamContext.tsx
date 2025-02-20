@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { shallowEqual, useSelector } from 'react-redux';
 import * as actions from '../store';
 import {
@@ -172,8 +172,8 @@ const TeamProvider = (props: IProps) => {
   const [, setProject] = useGlobal('project');
   const [, setPlan] = useGlobal('plan');
   const [user] = useGlobal('user');
-  const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [importOpen, setImportOpen] = useState(false);
   const [importProject, setImportProject] = useState<VProject>();
   const [state, setState] = useState({
@@ -208,7 +208,7 @@ const TeamProvider = (props: IProps) => {
   const { resetProject } = useHome();
   const { getOrganizedBy, localizedOrganizedBy } = useOrganizedBy();
   const isMakingPersonal = useRef(false);
-
+  const getGlobal = useGetGlobal();
   const setProjectParams = (plan: PlanD | VProjectD) => {
     const projectId = related(plan, 'project');
     const vproj = plan?.type === 'plan' ? vProject(plan) : plan;
@@ -259,7 +259,9 @@ const TeamProvider = (props: IProps) => {
       .filter(
         (o) =>
           !isPersonalTeam(o.id, organizations) &&
-          (!isOffline || offlineOnly || teamProjects(o.id).length > 0)
+          (!getGlobal('offline') ||
+            offlineOnly ||
+            teamProjects(o.id).length > 0)
       )
       .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1));
   };
@@ -285,7 +287,8 @@ const TeamProvider = (props: IProps) => {
       .filter(
         (p) =>
           related(p, 'organization') === teamId &&
-          (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
+          (!getGlobal('offline') ||
+            oProjRead(p.id)?.attributes?.offlineAvailable)
       )
       .map((p) => p.id);
     return plans

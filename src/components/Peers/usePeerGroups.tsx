@@ -21,7 +21,7 @@ export const usePeerGroups = () => {
   const [myGroups, setMyGroups] = useState<GroupD[]>([]);
   const [check, setCheck] = useState<string[]>();
   const [user] = useGlobal('user');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
 
   const cKey = (userId: string, groupId: string) => `${userId}_${groupId}`;
 

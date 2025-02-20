@@ -12,7 +12,7 @@ import { Typography } from '@mui/material';
 export const NoteTitle = (props: IResourceState) => {
   const { state, setState } = props;
   const { title, ws } = state;
-  const [planId] = useGlobal('plan');
+  const [planId] = useGlobal('plan'); //will be constant here
   const [memory] = useGlobal('memory');
   const [titlex, setTitle] = useState(title || '');
   const [source, setSource] = useState('');

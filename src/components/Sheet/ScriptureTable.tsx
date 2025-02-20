@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
-import { useGlobal } from '../../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -172,21 +172,22 @@ export function ScriptureTable(props: IProps) {
   const { prjId } = useParams();
   const [width, setWidth] = useState(window.innerWidth);
   const [organization] = useGlobal('organization');
-  const [project] = useGlobal('project');
-  const [plan] = useGlobal('plan');
+  const [project] = useGlobal('project'); //will be constant here
+  const [plan] = useGlobal('plan'); //will be constant here
   const [coordinator] = useGlobal('coordinator');
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const memory = coordinator?.getSource('memory') as Memory;
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
   const [org] = useGlobal('organization');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [, setBusy] = useGlobal('importexportBusy');
   const myChangedRef = useRef(false);
   const savingRef = useRef(false);
   const updateRef = useRef(false);
   const doForceDataChanges = useRef(false);
   const { showMessage } = useSnackBar();
+  const getGlobal = useGetGlobal();
   const ctx = React.useContext(PlanContext);
   const {
     flat,
@@ -332,7 +333,7 @@ export function ScriptureTable(props: IProps) {
   const setSheet = (ws: ISheet[]) => {
     sheetRef.current = ws;
     setSheetx(ws);
-    var anyPublishing = !offline
+    var anyPublishing = !getGlobal('offline')
       ? ws.some((s) => isPublishingTitle(s.reference ?? '', flat))
       : false;
     if (publishingOn !== anyPublishing) setCanPublish(anyPublishing);
@@ -1023,7 +1024,7 @@ export function ScriptureTable(props: IProps) {
             plan,
             memory,
             VernacularTag,
-            offline
+            getGlobal('offline')
           )
         );
       }

@@ -23,7 +23,7 @@ interface IProps {
 }
 export const SectionPassageTitle = (props: IProps) => {
   const { section, passage, allBookData, sharedResource } = props;
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const { sectionArr } = useContext(PassageDetailContext).state;
   const sectionMap = new Map<number, string>(sectionArr);
   const planType = usePlanType();

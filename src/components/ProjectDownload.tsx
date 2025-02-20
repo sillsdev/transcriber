@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import * as actions from '../store';
 import path from 'path-browserify';
 import {
@@ -61,7 +61,7 @@ export const ProjectDownload = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const [enableOffsite, setEngableOffsite] = useGlobal('enableOffsite');
-  const [busy, setBusy] = useGlobal('importexportBusy');
+  const [, setBusy] = useGlobal('importexportBusy');
   const { showMessage, showTitledMessage } = useSnackBar();
   const cancelRef = React.useRef(false);
   const isCancelled = () => cancelRef.current;
@@ -76,7 +76,7 @@ export const ProjectDownload = (props: IProps) => {
   const [exportUrl, setExportUrl] = React.useState('');
   const [offlineUpdates] = React.useState<RecordOperation[]>([]);
   const backup = coordinator?.getSource('backup') as IndexedDBSource;
-
+  const getGlobal = useGetGlobal();
   const translateError = (err: IAxiosStatus): string => {
     if (err.errStatus === 401) return ts.expiredToken;
     if (err.errMsg.includes('RangeError')) return t.exportTooLarge;
@@ -109,7 +109,7 @@ export const ProjectDownload = (props: IProps) => {
         setSteps(newSteps);
         cancelRef.current = false;
         doProjectExport(ExportType.PTF, projectIds[currentStep]);
-      } else if (busy) {
+      } else if (getGlobal('importexportBusy')) {
         setBusy(false);
         if (offlineUpdates.length > 0) updateLocalOnly();
         setTimeout(() => {

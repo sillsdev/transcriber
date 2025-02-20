@@ -9,7 +9,7 @@ interface IProps {
 }
 
 export function PrivateRoute({ el }: IProps) {
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const { pathname } = useLocation();
   const navigate = useMyNavigate();
   const { authenticated } = useContext(TokenContext).state;

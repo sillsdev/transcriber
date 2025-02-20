@@ -19,7 +19,7 @@ export const SelectRole = (props: IProps) => {
   const { onChange, initRole, required, disabled, label, rowid } = props;
   const roles = useOrbitData<RoleD[]>('role');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [role, setRole] = useState(initRole);
 
   const handleRoleChange = (e: any) => {

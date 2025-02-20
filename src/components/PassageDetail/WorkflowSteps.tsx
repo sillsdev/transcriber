@@ -4,7 +4,7 @@ import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { toCamel } from '../../utils';
 import { useEffect, useState } from 'react';
 import { SimpleWf } from '../../context/PassageDetailContext';
-import { useGlobal } from '../../context/GlobalContext';
+import { useGetGlobal } from '../../context/GlobalContext';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../../selector';
@@ -26,9 +26,9 @@ export function WorkflowSteps() {
   const [shownWorkflow, setShownWorkflow] = useState<SimpleWf[]>([]);
   const [width, setWidth] = useState(0);
   const [stageWdith, setStageWidth] = useState(300);
-  const [busy] = useGlobal('remoteBusy');
   const { showMessage } = useSnackBar();
   const ts = useSelector(sharedSelector, shallowEqual);
+  const getGlobal = useGetGlobal();
   const prevWF = {
     id: 'prev',
     label: '<<',
@@ -90,7 +90,7 @@ export function WorkflowSteps() {
   };
 
   const handleSelect = (item: string) => {
-    if (busy) {
+    if (getGlobal('remoteBusy')) {
       showMessage(ts.wait);
       return;
     }

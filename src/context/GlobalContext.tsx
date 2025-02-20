@@ -8,40 +8,46 @@ import { debounce } from 'lodash';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 
 export interface GlobalState {
-  home: boolean;
-  organization: string;
-  orgRole: RoleNames | undefined;
-  project: string;
-  projType: string;
-  plan: string;
-  tab: number;
-  user: string;
-  lang: string;
+  //constants
   coordinator: Coordinator;
-  memory: Memory;
-  remoteBusy: boolean;
-  dataChangeCount: number;
-  saveResult: string | undefined;
-  snackMessage: JSX.Element;
-  snackAlert: AlertSeverity | undefined;
-  changed: boolean;
-  projectsLoaded: string[];
-  loadComplete: boolean;
-  importexportBusy: boolean;
-  autoOpenAddMedia: boolean; // open a dialog
-  editUserId: string | null;
-  developer: string | null;
-  offline: boolean;
   errorReporter: any; // bugsnagClient
-  alertOpen: boolean;
   fingerprint: string;
-  orbitRetries: number;
-  enableOffsite: boolean;
-  connected: boolean;
-  offlineOnly: boolean;
+  memory: Memory;
+
+  //effectively constant
+  lang: string; //profile
   latestVersion: string;
+  loadComplete: boolean; //Loading
+  offlineOnly: boolean; //errorPage, access, logout
+  organization: string; //Loading
   releaseDate: string;
-  progress: number;
+  user: string; //loading, profile, welcome, logout
+
+  //modified during execution
+  alertOpen: boolean; //verified
+  autoOpenAddMedia: boolean; //verified  // open a dialog
+  changed: boolean; //verified //UnsavedContext
+  connected: boolean; //verified //useCheckOnline
+  dataChangeCount: number; //verified
+  developer: string | null; //not verified but not userfacing
+  editUserId: string | null; //verified //UserTable, Access, Profile
+  enableOffsite: boolean; //verified
+  home: boolean; //verified //TeamScreen, useHome
+  importexportBusy: boolean; //verified
+  orbitRetries: number; //verified
+  orgRole: RoleNames | undefined; //verified //useRole, useTeamCreate, useHome
+  plan: string; //verified
+  progress: number; //verified
+  project: string; //verified //AppHead, useUrlContext, Loading, TeamScreen
+  projectsLoaded: string[]; //verified
+  projType: string; //verified //useHome, useProjectType
+  remoteBusy: boolean; //verified //datachanges, unsavedcontext, teamactions,consultantcheck, audiotable
+  saveResult: string | undefined; //verified //PassageDetailContext, UnsavedContext
+  snackAlert: AlertSeverity | undefined; //verified //SnackBar
+  snackMessage: JSX.Element; //verified //SnackBar
+  tab: number; //verified //GroupTabs, PlanTabs
+
+  offline: boolean;
 }
 
 export type GlobalKey = keyof GlobalState;
@@ -74,11 +80,9 @@ export const useGlobal = <K extends GlobalKey>(
 
   const setter = (val: GlobalState[K]) => {
     if (val === (changes[prop] ?? globalState[prop])) return; // ignore set to same value
-    // console.log(`setGlobalState ${prop} to ${val}`);
     changes[prop] = val; // keep track of all changes
     handleChange(); // post them as react can handle them
   };
-
   return [changes[prop] ?? globalState[prop], setter];
 };
 

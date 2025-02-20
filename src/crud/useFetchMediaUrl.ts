@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import { useGlobal } from '../context/GlobalContext';
+import { useGlobal, useGetGlobal } from '../context/GlobalContext';
 import { isElectron } from '../api-variable';
 import { remoteIdGuid, remoteId } from '../crud';
 import { dataPath, PathType } from '../utils/dataPath';
@@ -78,9 +78,9 @@ export interface IFetchMediaProps {
 export const useFetchMediaUrl = (reporter?: any) => {
   const [state, dispatch] = useReducer(stateReducer, mediaClean);
   const [memory] = useGlobal('memory');
-  const [offline] = useGlobal('offline');
-  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const getGlobal = useGetGlobal();
   const fetchUrl = useFetchUrlNow();
   const safeURL = async (path: string) => {
     if (!path.startsWith('http')) {
@@ -138,7 +138,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
               mediarec.attributes.originalFile;
             let path = await dataPath(audioUrl, PathType.MEDIA, local);
             let foundLocal = local.localname === path;
-            if (foundLocal || offline) {
+            if (foundLocal || getGlobal('offline')) {
               if (!path.startsWith('http')) {
                 if (cancelled()) return;
                 dispatch({
@@ -146,7 +146,7 @@ export const useFetchMediaUrl = (reporter?: any) => {
                   type: MediaSt.FETCHED,
                 });
                 return;
-              } else if (offline) {
+              } else if (getGlobal('offline')) {
                 dispatch({
                   payload: 'no offline file',
                   type: MediaSt.ERROR,

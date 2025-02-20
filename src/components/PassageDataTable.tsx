@@ -101,7 +101,7 @@ export const PassageDataTable = (props: IProps) => {
   const [termsCheck, setTermsCheck] = useState<number[]>([]);
   const [curTermsCheck, setCurTermsCheck] = useState<number>();
   const [bookOpt, setBookOpt] = useState<OptionType>();
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const planType = usePlanType();
   const bookSuggestions = useSelector(
     (state: IState) => state.books.suggestions

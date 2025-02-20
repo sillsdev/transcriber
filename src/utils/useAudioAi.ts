@@ -1,4 +1,4 @@
-import { useGlobal } from '../context/GlobalContext';
+import { useGlobal, useGetGlobal } from '../context/GlobalContext';
 
 import logError, { Severity } from './logErrorService';
 import {
@@ -35,13 +35,12 @@ const timerDelay = 10000; //10 seconds
 
 export const useAudioAi = () => {
   const [reporter] = useGlobal('errorReporter');
-  const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const fileList: fileTask[] = [];
   const returnAsS3List: fileTask[] = [];
   const taskTimer = useRef<NodeJS.Timeout>();
   const token = useContext(TokenContext).state.accessToken;
-
+  const getGlobal = useGetGlobal();
   const cancelled = new Error('canceled');
 
   const cleanupTimer = () => {
@@ -173,7 +172,7 @@ export const useAudioAi = () => {
     targetVoice: string | undefined,
     cb: (file: File | Error) => void
   ) => {
-    if (offline || !token) return '';
+    if (getGlobal('offline') || !token) return '';
     var response = await axiosGet(
       `S3Files/put/AI/${file.name}/wav`,
       undefined,
@@ -230,7 +229,7 @@ export const useAudioAi = () => {
     targetVoice,
     cb,
   }: IRequestAudio) => {
-    if (offline) return '';
+    if (getGlobal('offline')) return '';
     if (file.size > 7500000 || targetVoice)
       s3request(fn, cancelRef, file, targetVoice, cb).catch((err) =>
         cb(err as Error)

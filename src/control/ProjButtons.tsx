@@ -25,9 +25,9 @@ interface IProps extends IStateProps {
 export const ProjButtons = (props: IProps) => {
   const { noImExport, noIntegrate, onLeft, t } = props;
   const { getPlanName } = usePlan();
-  const [plan] = useGlobal('plan');
-  const [project] = useGlobal('project');
-  const [projType] = useGlobal('projType');
+  const [plan] = useGlobal('plan'); //verified this is not used in a function 2/18/25
+  const [project] = useGlobal('project'); //verified this is not used in a function 2/18/25
+  const [projType] = useGlobal('projType'); //verified this is not used in a function 2/18/25
   const { sectionArr } = React.useContext(PlanContext).state;
   const projectPlans = useProjectPlans();
   const [actionMenuItem, setActionMenuItem] = React.useState(null);

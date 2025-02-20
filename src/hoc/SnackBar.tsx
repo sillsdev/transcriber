@@ -26,7 +26,7 @@ const BarBox = styled(Box)<BoxProps>(() => ({
 }));
 
 export const useSnackBar = () => {
-  const [message, setMessage] = useGlobal('snackMessage');
+  const [, setMessage] = useGlobal('snackMessage');
   const [, setAlert] = useGlobal('snackAlert');
 
   const messageReset = () => {
@@ -36,22 +36,18 @@ export const useSnackBar = () => {
   const showMessage = (msg: string | JSX.Element, alert?: AlertSeverity) => {
     setAlert(alert);
     if (typeof msg === 'string') {
-      if (message?.props?.children !== msg) setMessage(<span>{msg}</span>);
-    } else if (message?.props?.children !== msg.props.children) setMessage(msg);
+      setMessage(<span>{msg}</span>);
+    } else setMessage(msg);
   };
 
   const showTitledMessage = (title: string, msg: JSX.Element | string) => {
-    if (
-      message.props.children !==
-      (typeof msg === 'string' ? msg : msg.props.children)
-    )
-      setMessage(
-        <span>
-          {title}
-          <br />
-          {msg}
-        </span>
-      );
+    setMessage(
+      <span>
+        {title}
+        <br />
+        {msg}
+      </span>
+    );
   };
 
   interface ISBProps {
@@ -61,7 +57,7 @@ export const useSnackBar = () => {
   function SimpleSnackbar(props: ISBProps) {
     const isMounted = useMounted('snackbar');
     const { message } = props;
-    const [alert] = useGlobal('snackAlert');
+    const [alert] = useGlobal('snackAlert'); //verified this is not used in a function 2/18/25
     const [open, setOpen] = useState(false);
 
     const handleClose = () => {
@@ -121,7 +117,6 @@ export const useSnackBar = () => {
 
   return {
     SnackBar: SimpleSnackbar,
-    message,
     showMessage,
     showTitledMessage,
   };

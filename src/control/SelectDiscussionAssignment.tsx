@@ -42,7 +42,7 @@ export const SelectDiscussionAssignment = (props: IProps) => {
   );
   const { peerGroups } = usePeerGroups();
   const [orgUsers, setOrgUsers] = useState<User[]>([]);
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [organization] = useGlobal('organization');
   const [value, setValue] = useState(initAssignment);
   const t = useSelector(

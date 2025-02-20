@@ -78,7 +78,7 @@ const ProjectName = ({ setView, switchTo }: INameProps) => {
   const ctx = useContext(UnsavedContext);
   const { checkSavedFn } = ctx.state;
   const { getPlanName } = usePlan();
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //verified this is not used in a function 2/18/25
   const { prjId } = useParams();
   const navigate = useMyNavigate();
   const { goHome } = useHome();
@@ -133,26 +133,26 @@ export const AppHead = (props: IProps) => {
   const navigate = useMyNavigate();
   const offlineProjects = useOrbitData<OfflineProject[]>('offlineproject');
   const [hasOfflineProjects, setHasOfflineProjects] = useState(false);
-  const [home] = useGlobal('home');
-  const [orgRole] = useGlobal('orgRole');
+  const [home] = useGlobal('home'); //verified this is not used in a function 2/18/25
+  const [orgRole] = useGlobal('orgRole'); //verified this is not used in a function 2/18/25
+  const [connected, setConnected] = useGlobal('connected'); //verified this is not used in a function 2/18/25
   const [errorReporter] = useGlobal('errorReporter');
   const [coordinator] = useGlobal('coordinator');
   const [user] = useGlobal('user');
-  const [project, setProject] = useGlobal('project');
-  const [plan, setPlan] = useGlobal('plan');
+  const [, setProject] = useGlobal('project');
+  const [plan, setPlan] = useGlobal('plan'); //verified this is not used in a function 2/18/25
   const remote = coordinator?.getSource('remote') as JSONAPISource;
-  const [isOffline] = useGlobal('offline');
-  const [isOfflineOnly] = useGlobal('offlineOnly');
-  const [connected, setConnected] = useGlobal('connected');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [isOfflineOnly] = useGlobal('offlineOnly'); //verified this is not used in a function 2/18/25
   const tokenCtx = useContext(TokenContext);
   const ctx = useContext(UnsavedContext);
   const { checkSavedFn, startSave, toolsChanged, anySaving } = ctx.state;
   const [cssVars, setCssVars] = useState<React.CSSProperties>(twoIcon);
   const [view, setView] = useState('');
-  const [busy] = useGlobal('remoteBusy');
-  const [dataChangeCount] = useGlobal('dataChangeCount');
-  const [importexportBusy] = useGlobal('importexportBusy');
-  const [isChanged] = useGlobal('changed');
+  const [busy] = useGlobal('remoteBusy'); //verified this is not used in a function 2/18/25
+  const [dataChangeCount] = useGlobal('dataChangeCount'); //verified this is not used in a function 2/18/25
+  const [importexportBusy] = useGlobal('importexportBusy'); //verified this is not used in a function 2/18/25
+  const [isChanged] = useGlobal('changed'); //verified this is only used in a useEffect
   const [lang] = useGlobal('lang');
   const getGlobal = useGetGlobal();
   const [exitAlert, setExitAlert] = useState(false);
@@ -161,9 +161,9 @@ export const AppHead = (props: IProps) => {
   const [updates] = useState(
     (localStorage.getItem('updates') || 'true') === 'true'
   );
-  const [latestVersion, setLatestVersion] = useGlobal('latestVersion');
-  const [latestRelease, setLatestRelease] = useGlobal('releaseDate');
-  const [complete] = useGlobal('progress');
+  const [latestVersion, setLatestVersion] = useGlobal('latestVersion'); //verified this is not used in a function 2/18/25
+  const [latestRelease, setLatestRelease] = useGlobal('releaseDate'); //verified this is not used in a function 2/18/25
+  const [complete] = useGlobal('progress'); //verified this is not used in a function 2/18/25
   const [downloadAlert, setDownloadAlert] = useState(false);
   const [updateTipOpen, setUpdateTipOpen] = useState(false);
   const [showTerms, setShowTerms] = useState('');
@@ -200,7 +200,7 @@ export const AppHead = (props: IProps) => {
       checkSavedFn(() => {
         waitForRemoteQueue('logout on electron...').then(() => {
           waitForDataChangesQueue('logout on electron').then(() => {
-            if (isOffline) downDone();
+            if (getGlobal('offline')) downDone();
             else setDownloadAlert(true);
           });
         });
@@ -245,17 +245,19 @@ export const AppHead = (props: IProps) => {
   const cloudAction = () => {
     localStorage.setItem(
       'mode',
-      isOffline || orbitStatus !== undefined || !connected
+      getGlobal('offline') ||
+        orbitStatus !== undefined ||
+        !getGlobal('connected')
         ? 'online-cloud'
         : 'online-local'
     );
-    localStorage.setItem(LocalKey.plan, plan);
+    localStorage.setItem(LocalKey.plan, getGlobal('plan'));
     handleMenu('Logout');
   };
 
   const handleSetOnline = (cb?: () => void) => {
     Online(true, (isConnected) => {
-      if (connected !== isConnected) {
+      if (getGlobal('connected') !== isConnected) {
         localStorage.setItem(LocalKey.connected, isConnected.toString());
         setConnected(isConnected);
       }
@@ -275,7 +277,9 @@ export const AppHead = (props: IProps) => {
 
   const handleCloud = () => {
     handleSetOnline(() => {
-      const planRec = plan ? getPlan(plan) : undefined;
+      const planRec = getGlobal('plan')
+        ? getPlan(getGlobal('plan'))
+        : undefined;
       if (!planRec) {
         if (hasOfflineProjects) cloudAction();
         return;
@@ -284,8 +288,8 @@ export const AppHead = (props: IProps) => {
       if (offlineProject?.attributes?.offlineAvailable) {
         cloudAction();
       } else {
-        LoadData(project, () => {
-          offlineAvailToggle(project).then(() => {
+        LoadData(getGlobal('project'), () => {
+          offlineAvailToggle(getGlobal('project')).then(() => {
             cloudAction();
           });
         });

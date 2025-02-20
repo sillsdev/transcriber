@@ -32,7 +32,7 @@ import { useOrbitData } from '../../hoc/useOrbitData';
 export function Peer() {
   const memberships = useOrbitData<GroupMembership[]>('groupmembership');
   const [memory] = useGlobal('memory');
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
   const { userNames, peerGroups, check, cAdd, cDelete, cKey } = usePeerGroups();

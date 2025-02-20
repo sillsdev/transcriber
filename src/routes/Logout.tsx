@@ -26,7 +26,7 @@ export function Logout() {
   const curPath = useRef('');
   const [user] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
-  const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly'); //will be constant here
   const ctx = useContext(TokenContext).state;
   const [view, setView] = useState('');
   const logoutResets = useLogoutResets();

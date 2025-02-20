@@ -160,7 +160,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
   } = useContext(UnsavedContext).state;
   const projectSegmentSave = useProjectSegmentSave();
   const { showMessage } = useSnackBar();
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const planType = usePlanType();
 
   const isFlat = useMemo(() => {
@@ -289,7 +289,6 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
 
   const handleComplete = (complete: boolean) => {
     waitForSave(undefined, 200).finally(async () => {
-      // console.log('handlecomplete', currentstep, complete);
       await setStepComplete(currentstep, complete);
       if (complete) gotoNextStep();
     });

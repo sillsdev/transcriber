@@ -33,7 +33,7 @@ export const useTeamCreate = () => {
   const [, setOrganization] = useGlobal('organization');
   const [, setOrgRole] = useGlobal('orgRole');
   const [, setProject] = useGlobal('project');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const { showMessage } = useSnackBar();
   const { setProjectType } = useProjectType();
   const { getRoleId } = useRole();

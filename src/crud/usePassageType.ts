@@ -7,7 +7,7 @@ import { RecordKeyMap } from '@orbit/records';
 
 export const usePassageType = () => {
   const [memory] = useGlobal('memory');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const { showMessage } = useSnackBar();
 
   const getPassageTypeFromId = (id?: string) => {

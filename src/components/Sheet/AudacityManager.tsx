@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from '../../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
 import moment from 'moment';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
@@ -102,8 +102,7 @@ function AudacityManager(props: IProps) {
   const [topic, setTopic] = React.useState<string>();
   const nameRef = React.useRef('');
   const [memory] = useGlobal('memory');
-  const [changed] = useGlobal('changed');
-  const [isOffline] = useGlobal('offline');
+  const getGlobal = useGetGlobal();
   const { showMessage } = useSnackBar();
   const { tryDownload } = useDownloadMedia();
   const getProjName = useAudProjName();
@@ -113,7 +112,6 @@ function AudacityManager(props: IProps) {
   );
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const fetchUrl = useFetchUrlNow();
-
   const handleClose = () => {
     onClose();
   };
@@ -168,7 +166,7 @@ function AudacityManager(props: IProps) {
     if ((mediaId || '') !== '') {
       const remId =
         remoteId('mediafile', mediaId, memory?.keyMap as RecordKeyMap) ?? '';
-      if (remId !== '' && !isOffline) {
+      if (remId !== '' && !getGlobal('offline')) {
         mediaName =
           (await fetchUrl({
             id: remId,
@@ -222,7 +220,7 @@ function AudacityManager(props: IProps) {
   };
 
   const handleOpen = async () => {
-    if (changed) {
+    if (getGlobal('changed')) {
       showMessage(t.saveFirst);
       return;
     }

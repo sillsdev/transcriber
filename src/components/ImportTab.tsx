@@ -130,14 +130,14 @@ export function ImportTab(props: IProps) {
     imported: string;
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_busy, setBusy] = useGlobal('importexportBusy');
+  const [, setBusy] = useGlobal('importexportBusy');
   const importingRef = useRef(false);
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator?.getSource('memory') as Memory;
   const remote = coordinator?.getSource('remote') as JSONAPISource;
   const [errorReporter] = useGlobal('errorReporter');
   const [user] = useGlobal('user');
-  const [isOffline] = useGlobal('offline');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const token = useContext(TokenContext).state.accessToken;
   const { showMessage } = useSnackBar();
   const [changeData, setChangeData] = useState(Array<IRow>());

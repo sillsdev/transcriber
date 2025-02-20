@@ -89,7 +89,7 @@ export default function FindBibleBrain({
   const [queryLang, setQueryLang] = useState(true);
   const [queryBible, setQueryBible] = useState(true);
   const bookN = useBookN();
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const planType = usePlanType();
   const [progress, setProgress] = useState(0);
   const [count, setCount] = useState(0);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useGlobal } from '../context/GlobalContext';
+import { useGlobal, useGetGlobal } from '../context/GlobalContext';
 import { useLocation } from 'react-router-dom';
 import { useAuth0, RedirectLoginOptions } from '@auth0/auth0-react';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -119,12 +119,14 @@ export function Access() {
   const { pathname } = useLocation();
   const navigate = useMyNavigate();
   const { loginWithRedirect, isAuthenticated } = useAuth0();
-  const [offline, setOffline] = useGlobal('offline');
+  //might need to add this to dependancy arrays?
+  const [offline, setOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [isDeveloper] = useGlobal('developer');
   const [user] = useGlobal('user');
 
   const [, setEditId] = useGlobal('editUserId');
-  const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
+  const [, setOfflineOnly] = useGlobal('offlineOnly');
+  const getGlobal = useGetGlobal();
   const tokenCtx = useContext(TokenContext);
   const { logout, accessToken, expiresAt } = tokenCtx.state;
   const [importOpen, setImportOpen] = useState(false);
@@ -373,7 +375,7 @@ export function Access() {
     else doLogout();
   } else if (
     (!isElectron && tokenCtx.state.authenticated()) ||
-    offlineOnly ||
+    getGlobal('offlineOnly') ||
     (isElectron && selectedUser !== '')
   ) {
     setTimeout(() => navigate('/loading'), 200);

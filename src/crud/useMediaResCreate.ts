@@ -8,7 +8,7 @@ import { getContentType } from '../utils/contentType';
 export const useMediaResCreate = (passage: RecordIdentity, stepId: string) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const { getTypeId } = useArtifactType();
 
   return async (res: Resource, artifactCategoryId?: string) => {

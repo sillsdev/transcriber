@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { useParams } from 'react-router-dom';
 import {
   IPlanTabsStrings,
@@ -46,11 +46,11 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const mediafiles = useOrbitData<MediaFileD[]>('mediafile');
   const ctx = React.useContext(PlanContext);
   const { flat, scripture, sectionArr } = ctx.state;
-  const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const [plan] = useGlobal('plan');
-  const [tab, setTab] = useGlobal('tab');
-  const [busy] = useGlobal('remoteBusy');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
+  const [plan] = useGlobal('plan'); //will be constant here
+  const [tab, setTab] = useGlobal('tab'); //verified this is not used in a function 2/18/25
+  const getGlobal = useGetGlobal();
   const { prjId, tabNm } = useParams();
   const { getOrganizedBy } = useOrganizedBy();
   const [planMedia, attached, trans] = useMediaCounts(plan, mediafiles);
@@ -71,7 +71,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   }, [scripture, flat]);
 
   const handleChange = (event: any, value: number) => {
-    if (busy) return;
+    if (getGlobal('remoteBusy')) return;
     setTab(value);
   };
   const organizedBy = getOrganizedBy(false);

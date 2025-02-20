@@ -240,8 +240,8 @@ export const DiscussionCard = (props: IProps) => {
   const [user] = useGlobal('user');
   const [team] = useGlobal('organization');
   const [memory] = useGlobal('memory');
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [myComments, setMyComments] = useState<CommentD[]>([]);
   const [showComments, setShowComments] = useState(true);
   const [artifactCategory, setArtifactCategory] = useState('');

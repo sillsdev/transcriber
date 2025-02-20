@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useGlobal } from '../context/GlobalContext';
+import { useGetGlobal } from '../context/GlobalContext';
 import { isElectron } from '../api-variable';
 import { launch } from '../utils';
 
@@ -11,13 +11,13 @@ interface IProps {
 }
 export function ExternalLink(props: IProps) {
   const { register, finish } = props;
-  const [isOffline] = useGlobal('offline');
   const externalRef = useRef<any>();
   const [externalUrl, setExternalUrl] = useState<string>('#');
+  const getGlobal = useGetGlobal();
 
   const handleLaunch = (target: string) => {
     if (isElectron) {
-      launch(target, !isOffline);
+      launch(target, !getGlobal('offline'));
     } else {
       setExternalUrl(target);
     }
