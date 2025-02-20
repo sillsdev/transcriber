@@ -112,6 +112,7 @@ jest.mock('../../utils/logErrorService', () => jest.fn());
 jest.mock('../../context/GlobalContext', () => ({
   useGlobal: (arg: string) =>
     arg === 'memory' ? [mockMemory, jest.fn()] : [{}, jest.fn()],
+  useGetGlobal: () => (arg: string) => false, // remoteBusy & importexportBusy
 }));
 jest.mock('react-redux', () => ({
   useSelector: () => ({

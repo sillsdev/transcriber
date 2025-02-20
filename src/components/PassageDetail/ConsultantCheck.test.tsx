@@ -17,10 +17,8 @@ var mockPassageStepComplete: string | null = null;
 var mockUpdateRecord = jest.fn();
 
 jest.mock('../../context/GlobalContext', () => ({
-  useGlobal: (token: string) => {
-    if (token === 'remoteBusy') return [false, jest.fn()];
-    else return [null, jest.fn()];
-  },
+  useGlobal: (token: string) => [null, jest.fn()], // memory
+  useGetGlobal: () => (arg: string) => false, // remoteBusy
 }));
 jest.mock('../../crud', () => ({
   useArtifactType: () => ({
