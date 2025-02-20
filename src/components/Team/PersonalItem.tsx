@@ -36,16 +36,26 @@ export const PersonalItem = () => {
   return (
     <TeamPaper id="PersonalItem">
       <TeamHeadDiv>
-        <TeamName variant="h5">
-          <PersonIcon sx={{ pr: 1 }} />
-          {t.personalProjects}
-        </TeamName>
-        {'\u00A0'}
-        {canModify(isOffline, offlineOnly) && (
-          <AltButton id="editWorkflow" onClick={handleEditWorkflow}>
-            {t.editWorkflow.replace('{0}', '')}
-          </AltButton>
-        )}
+        <Grid container>
+          <Grid item xs={12} md={8}>
+            <TeamName variant="h5">
+              <PersonIcon sx={{ pr: 1 }} />
+              {t.personalProjects}
+            </TeamName>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={4}
+            sx={{ display: 'flex', justifyContent: 'flex-end' }}
+          >
+            {canModify(isOffline, offlineOnly) && (
+              <AltButton id="editWorkflow" onClick={handleEditWorkflow}>
+                {t.editWorkflow.replace('{0}', '')}
+              </AltButton>
+            )}
+          </Grid>
+        </Grid>
       </TeamHeadDiv>
       <Grid container sx={{ px: 2 }}>
         {personalProjects.map((i) => {
