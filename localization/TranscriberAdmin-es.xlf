@@ -361,12 +361,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="assignmentTable.passages">
-         <segment>
-            <source>Passages</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="assignmentTable.removeSec">
          <segment>
             <source>Remove Assignment</source>
@@ -531,8 +525,8 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
-            <target>Si tiene un proyecto Audacity existente que desea vincular a este pasaje, haga clic en BROWSE. Para crear un nuevo proyecto Audacity con un nombre creado automáticamente, haga clic en CREAR.</target>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="audacityManager.title">
@@ -617,6 +611,12 @@
          <segment>
             <source>Enter the name of the organization that will hold the rights for recordings of the converted voices.</source>
             <target>Introduzca el nombre de la organización que tendrá los derechos de las grabaciones de las voces convertidas.</target>
+         </segment>
+      </unit>
+      <unit id="cards.convertVoice">
+         <segment>
+            <source>Convert Voice</source>
+            <target/>
          </segment>
       </unit>
       <unit id="cards.copyComplete">
@@ -845,6 +845,12 @@
          <segment>
             <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
             <target>Elija el idioma que desea reconocer. Si el idioma no está disponible, elija un idioma estrechamente relacionado con un sistema de escritura similar.</target>
+         </segment>
+      </unit>
+      <unit id="cards.recognizeSpeech">
+         <segment>
+            <source>Recognize Speech</source>
+            <target/>
          </segment>
       </unit>
       <unit id="cards.publishing">
@@ -1515,8 +1521,8 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
-            <target>Este archivo no se exportó desde la última versión. Vuelva a exportar el archivo PTF desde la versión en línea.</target>
+            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="electronImport.importPending">
@@ -1557,8 +1563,8 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
-            <target>Este archivo se exportó con una versión más reciente del programa. Debe descargar la última versión antes de importar. Si continúa, es posible que algunos datos no se importen correctamente.</target>
+            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="electronImport.project">
@@ -1605,8 +1611,8 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified! Carry on!</source>
-            <target>¡Estoy verificado! ¡Continúe!</target>
+            <source>I'm verified!  Carry on!</source>
+            <target/>
          </segment>
       </unit>
       <unit id="emailUnverified.verify">
@@ -1763,6 +1769,12 @@
          <segment>
             <source>Find: {0}</source>
             <target>Buscar: {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.findOther">
+         <segment>
+            <source>Find: Other</source>
+            <target/>
          </segment>
       </unit>
       <unit id="grid.all">
@@ -2097,8 +2109,8 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occured while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
-            <target>Si se ha producido este error al importar cambios sin conexión, cierre la aplicación inmediatamente y vuelva a abrirla. Si el error persiste, ponte en contacto con el servicio de asistencia. Si continúa utilizando la aplicación, perderá los cambios sin conexión.</target>
+            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -2163,7 +2175,7 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
+            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -3063,8 +3075,8 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
-            <target>Invitación no aceptada. Debe iniciar sesión con el correo electrónico al que se envió la invitación.</target>
+            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="main.loadingTable">
@@ -3119,12 +3131,6 @@
          <segment>
             <source>Access Open Content</source>
             <target>Acceso a contenido abierto</target>
-         </segment>
-      </unit>
-      <unit id="main.passages">
-         <segment>
-            <source>Passages</source>
-            <target/>
          </segment>
       </unit>
       <unit id="main.privacy">
@@ -4551,8 +4557,8 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target>¿Necesitamos este grupo? ¿O basta con utilizar team admin? Las personas de este grupo podrán realizar cualquier paso, aunque esté asignado a un grupo en el que no estén.</target>
+            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4563,8 +4569,8 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independant Consultant's comments will be visible to all team members.</source>
-            <target>Tampoco estoy seguro de que necesitemos este permiso, porque no está claro qué cosas especiales hacen los consultores en este software. Los comentarios de los Consultores Independientes serán visibles para todos los miembros del equipo.</target>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4593,20 +4599,26 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-            <target>Los comentarios de los mentores sólo serán visibles para los CIT. Los mentores pueden aprobar los comentarios de los CIT para hacerlos visibles al resto del equipo.</target>
+            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
-            <target>Grupo de compañeros general sin permisos especiales. Utilícelo para asignar debates a grupos de equipo.</target>
+            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="picker.font">
          <segment>
             <source>Font</source>
             <target>Fuente</target>
+         </segment>
+      </unit>
+      <unit id="picker.script">
+         <segment>
+            <source>Script</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planActions.addNote">
@@ -4737,14 +4749,26 @@
       </unit>
       <unit id="planSheet.confirmPublishMovement">
          <segment>
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this Movement will be marked as published. If you have previously published and now choose 'Not Published', the {0} and passages and notes will be marked as not published.</source>
-            <target>Si elige publicar, el {0} y la última versión de todos los pasajes y notas en todos los {0} de este Movimiento se marcarán como publicados. Si ha publicado previamente y ahora elige "No publicado", el {0} y los pasajes y notas se marcarán como no publicados.</target>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this movement will be marked as published. If you have previously published and now choose not to publish, the {0} and passages and notes will be marked as not published.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.confirmPublishMovementNoPropagate">
+         <segment>
+            <source>The publishing status of the {0} in the movement will not be changed. If you choose to publish, the movement will be marked as published. If you have previously published and now choose not to publish, the movement will be marked as not published, but if any {0} are published to {1}, the movement will still appear in {1}.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishSection">
          <segment>
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes will be marked as not published.</source>
-            <target>Si elige publicar, el {0} y la última versión de todos los pasajes y notas en este {0} se marcarán como publicados. Si ha publicado previamente y ahora elige «No publicado», los pasajes y notas se marcarán como no publicados.</target>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.confirmPublishSectionNoPropagate">
+         <segment>
+            <source>If you choose to publish, the {0} will be marked as published but the publishing status of the passages and notes in this {0} will not be changed. If you have previously published and now choose not to publish, the {0} will be marked as not published.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planSheet.filtered">
@@ -4841,6 +4865,12 @@
          <segment>
             <source>Pasting</source>
             <target>Pegando</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.propagate">
+         <segment>
+            <source>Propagate to all {0} in the {1}</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planSheet.publish">
@@ -5181,8 +5211,8 @@
       </unit>
       <unit id="profile.syncFrequency">
          <segment>
-            <source>Frequency of data sync in minutes. 0 to turn off sync.</source>
-            <target>Frecuencia de sincronización de datos en minutos. 0 para desactivar la sincronización.</target>
+            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.timezone">
@@ -5255,6 +5285,12 @@
          <segment>
             <source>{0} Reports</source>
             <target>{0} Informes</target>
+         </segment>
+      </unit>
+      <unit id="projButtons.sheet">
+         <segment>
+            <source>Sheet</source>
+            <target/>
          </segment>
       </unit>
       <unit id="projectDownload.amount">
@@ -5333,6 +5369,12 @@
          <segment>
             <source>Missing Files</source>
             <target>Archivos perdidos</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.projects">
+         <segment>
+            <source>Projects</source>
+            <target/>
          </segment>
       </unit>
       <unit id="publishLevel.none">
@@ -5851,6 +5893,12 @@
             <target>No se puede copiar al portapapeles</target>
          </segment>
       </unit>
+      <unit id="shared.clipboardCopy">
+         <segment>
+            <source>Copy to clipboard</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.close">
          <segment>
             <source>Close</source>
@@ -5883,14 +5931,14 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your {Pt} login has expired and can't be automatically renewed. Please log out and login again.</source>
-            <target>Su sesión de {Pt} ha caducado y no puede ser renovada automáticamente. Por favor, cierre la sesión y vuelva a iniciarla.</target>
+            <source>Your {Pt} login has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
-            <target>Su nombre de usuario ha caducado y no puede ser renovado automáticamente. Cierre la sesión y vuelva a iniciarla.</target>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="shared.fileNotFound">
@@ -6017,6 +6065,12 @@
          <segment>
             <source>Part {0}</source>
             <target>Parte {0}</target>
+         </segment>
+      </unit>
+      <unit id="shared.passages">
+         <segment>
+            <source>Passages</source>
+            <target/>
          </segment>
       </unit>
       <unit id="shared.peerreviewer">
@@ -6643,6 +6697,12 @@
             <target>Añadir nota</target>
          </segment>
       </unit>
+      <unit id="transcriber.aiAsrFailed">
+         <segment>
+            <source>AI transcription failed</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriber.beginRecognize">
          <segment>
             <source>Begin Recognition</source>
@@ -6697,6 +6757,12 @@
             <target>Transcripción rechazada</target>
          </segment>
       </unit>
+      <unit id="transcriber.noAsrTranscription">
+         <segment>
+            <source>No transcription!</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriber.noMedia">
          <segment>
             <source>Created task</source>
@@ -6713,6 +6779,12 @@
          <segment>
             <source>Phonetic</source>
             <target>Fonética</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.phoneticTip">
+         <segment>
+            <source>Language choice is used to suggest word breaks</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.pullParatextStart">
@@ -6805,6 +6877,12 @@
             <target>Comenzó a transcribir</target>
          </segment>
       </unit>
+      <unit id="transcriber.transcriptionExists">
+         <segment>
+            <source>Transcription already exists</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriber.transliterate">
          <segment>
             <source>Transliterate to Latin script</source>
@@ -6813,8 +6891,8 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}. Keep their changes? {1}</source>
-            <target>Transcripción actualizada por {0}. ¿Mantener sus cambios? {1}</target>
+            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcribeReject.cancel">
@@ -7017,8 +7095,8 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported. The export file is too large.</source>
-            <target>No se puede exportar el proyecto de audio. El archivo de exportación es demasiado grande.</target>
+            <source>The audio project cannot be exported.  The export file is too large.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportType">
@@ -7059,20 +7137,14 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the ptf export. Please also export an itf file to capture all changes.</source>
-            <target>Tienes nuevos cambios localmente que no se incluyeron en la exportación ptf. Por favor, exporte también un archivo itf para capturar todos los cambios.</target>
+            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
          <segment>
             <source>Changed</source>
             <target>Cambiado</target>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.passages">
-         <segment>
-            <source>Passages</source>
-            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.plan">
@@ -7361,6 +7433,12 @@
          <segment>
             <source>Age</source>
             <target>Edad</target>
+         </segment>
+      </unit>
+      <unit id="voice.ageAsNumber">
+         <segment>
+            <source>Age must be a number.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="vProject.add">
@@ -7713,8 +7791,8 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-            <target>Configure el proyecto de audio, dividiendo el trabajo en pasajes que pueden asignarse a varios transcriptores y editores. Los transcriptores y editores pueden trabajar en línea o fuera de línea descargando o importando el proyecto de audio.</target>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="welcome.team">
@@ -7731,8 +7809,8 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
-            <target>Se ha creado un proyecto de audio en línea. Los transcriptores y editores pueden trabajar en línea, fuera de línea seleccionando la opción Disponible fuera de línea en el menú de la tarjeta del proyecto de audio, o fuera de línea importándolo.</target>
+            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="welcome.title">
@@ -8049,8 +8127,8 @@
       </unit>
       <unit id="wsAudioPlayer.aiInProgress">
          <segment>
-            <source>AI Service In Progress... This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
-            <target>Servicio AI en curso... Este es un servicio remoto que puede tardar mucho tiempo si la grabación es grande, o si hay otras solicitudes por delante de la suya.</target>
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.aiGiveUp">
@@ -8089,6 +8167,12 @@
             <target>Reconocer voz en curso</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.recognizePrompt">
+         <segment>
+            <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.record">
          <segment>
             <source>Record [{0}]</source>
@@ -8123,6 +8207,12 @@
          <segment>
             <source>Select Voice</source>
             <target>Seleccionar voz</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.selectVoicePrompt">
+         <segment>
+            <source>Enter the full name of the person whose voice will be used to modify the voice or voices in the original recording.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.silence">

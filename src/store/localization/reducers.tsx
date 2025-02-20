@@ -1157,6 +1157,7 @@ const initialState = {
 			"integrationsTitle": "{0} Integrations",
 			"reports": "Reports",
 			"reportsTitle": "{0} Reports",
+			"sheet": "Sheet",
 		}
 	}),
 	"projectDownload": new LocalizedStrings({

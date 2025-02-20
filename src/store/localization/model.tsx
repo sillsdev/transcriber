@@ -1097,6 +1097,7 @@ export interface IProjButtonsStrings extends Localize.LocalizedStringsMethods {
     "integrationsTitle": string;
     "reports": string;
     "reportsTitle": string;
+    "sheet": string;
 };
 
 export interface IProjectDownloadStrings extends Localize.LocalizedStringsMethods {

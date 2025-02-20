@@ -5602,6 +5602,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projButtons.sheet">
+         <segment>
+            <source>Sheet</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="projectDownload.amount">
          <segment>
             <source>Amount to download</source>

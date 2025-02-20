@@ -361,12 +361,6 @@
             <target>Filtre</target>
          </segment>
       </unit>
-      <unit id="assignmentTable.passages">
-         <segment>
-            <source>Passages</source>
-            <target>Passage</target>
-         </segment>
-      </unit>
       <unit id="assignmentTable.removeSec">
          <segment>
             <source>Remove Assignment</source>
@@ -629,6 +623,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.convertVoiceSettings">
+         <segment>
+            <source>Convert Voice Settings</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.copyComplete">
          <segment>
             <source>Copy Complete {0}</source>
@@ -863,6 +863,12 @@
       <unit id="cards.recognizeSpeech">
          <segment>
             <source>Recognize Speech</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.recognizeSpeechSettings">
+         <segment>
+            <source>Recognize Speech Settings</source>
             <target/>
          </segment>
       </unit>
@@ -1790,6 +1796,12 @@
       <unit id="findResource.findOther">
          <segment>
             <source>Find: Other</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.findResource">
+         <segment>
+            <source>Find Resource</source>
             <target/>
          </segment>
       </unit>
@@ -3149,12 +3161,6 @@
          <segment>
             <source>Access Open Content</source>
             <target>Accéder au contenu ouvert</target>
-         </segment>
-      </unit>
-      <unit id="main.passages">
-         <segment>
-            <source>Passages</source>
-            <target>Passages</target>
          </segment>
       </unit>
       <unit id="main.privacy">
@@ -4654,6 +4660,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="picker.language">
+         <segment>
+            <source>Language</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planActions.addNote">
          <segment>
             <source>Add Note</source>
@@ -4782,13 +4794,25 @@
       </unit>
       <unit id="planSheet.confirmPublishMovement">
          <segment>
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this Movement will be marked as published. If you have previously published and now choose 'Not Published', the {0} and passages and notes will be marked as not published.</source>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this movement will be marked as published. If you have previously published and now choose not to publish, the {0} and passages and notes will be marked as not published.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.confirmPublishMovementNoPropagate">
+         <segment>
+            <source>The publishing status of the {0} in the movement will not be changed. If you choose to publish, the movement will be marked as published. If you have previously published and now choose not to publish, the movement will be marked as not published, but if any {0} are published to {1}, the movement will still appear in {1}.</source>
             <target/>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishSection">
          <segment>
-            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose 'Not Published', the passages and notes will be marked as not published.</source>
+            <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.confirmPublishSectionNoPropagate">
+         <segment>
+            <source>If you choose to publish, the {0} will be marked as published but the publishing status of the passages and notes in this {0} will not be changed. If you have previously published and now choose not to publish, the {0} will be marked as not published.</source>
             <target/>
          </segment>
       </unit>
@@ -4886,6 +4910,12 @@
          <segment>
             <source>Pasting</source>
             <target>Coller</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.propagate">
+         <segment>
+            <source>Propagate to all {0} in the {1}</source>
+            <target/>
          </segment>
       </unit>
       <unit id="planSheet.publish">
@@ -5303,6 +5333,12 @@
             <target>Rapports de {0}</target>
          </segment>
       </unit>
+      <unit id="projButtons.sheet">
+         <segment>
+            <source>Sheet</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="projectDownload.amount">
          <segment>
             <source>Amount to download</source>
@@ -5384,6 +5420,12 @@
       <unit id="projectDownload.projects">
          <segment>
             <source>Projects</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.project">
+         <segment>
+            <source>Project</source>
             <target/>
          </segment>
       </unit>
@@ -6081,6 +6123,12 @@
             <target>Partie {0}</target>
          </segment>
       </unit>
+      <unit id="shared.passages">
+         <segment>
+            <source>Passages</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.peerreviewer">
          <segment>
             <source>Peer Reviewer</source>
@@ -6705,6 +6753,12 @@
             <target>Ajouter une note</target>
          </segment>
       </unit>
+      <unit id="transcriber.aiAsrFailed">
+         <segment>
+            <source>AI transcription failed</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriber.beginRecognize">
          <segment>
             <source>Begin Recognition</source>
@@ -6757,6 +6811,12 @@
          <segment>
             <source>Rejected transcription</source>
             <target>Transcription refusée</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.noAsrTranscription">
+         <segment>
+            <source>No transcription!</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.noMedia">
@@ -6871,6 +6931,12 @@
          <segment>
             <source>Started to transcribe</source>
             <target>A commencé à transcrire</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.transcriptionExists">
+         <segment>
+            <source>Transcription already exists</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.transliterate">
@@ -7137,12 +7203,6 @@
          <segment>
             <source>Changed</source>
             <target>Modifié</target>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.passages">
-         <segment>
-            <source>Passages</source>
-            <target>Passages</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.plan">
@@ -7437,6 +7497,12 @@
       <unit id="voice.ageAsNumber">
          <segment>
             <source>Age must be a number.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="voice.age18">
+         <segment>
+            <source>You must be 18 years or older to give consent to use your voice.</source>
             <target/>
          </segment>
       </unit>
@@ -8171,6 +8237,12 @@
       <unit id="wsAudioPlayer.recognizePrompt">
          <segment>
             <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.recognizeSpeech">
+         <segment>
+            <source>Recognize Speech {0}</source>
             <target/>
          </segment>
       </unit>
