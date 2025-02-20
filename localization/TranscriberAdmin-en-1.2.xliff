@@ -6537,7 +6537,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="projButtons.sheet">
-            <source>Sheet</source>
+            <source>Spreadsheet</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ProjButtons.tsx</context>

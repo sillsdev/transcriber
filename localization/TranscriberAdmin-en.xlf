@@ -5604,7 +5604,7 @@
       </unit>
       <unit id="projButtons.sheet">
          <segment>
-            <source>Sheet</source>
+            <source>Spreadsheet</source>
             <target/>
          </segment>
       </unit>
