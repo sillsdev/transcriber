@@ -270,7 +270,7 @@ export const AddCard = (props: IProps) => {
             defaultFont: languageRef.current.font,
           },
         } as ProjectD;
-        await memory.update((t: any) => [
+        await memory.update((t) => [
           ...UpdateRecord(t, updProj, user),
           t
             .replaceAttribute(planRec as RecordIdentity, 'name', newName)
@@ -324,7 +324,7 @@ export const AddCard = (props: IProps) => {
       ));
     if (planRef.current) {
       const planRecId = { type: 'plan', id: planRef.current } as RecordIdentity;
-      await memory.update((t: any) => [
+      await memory.update((t) => [
         ...ReplaceRelatedRecord(
           t,
           planRecId,

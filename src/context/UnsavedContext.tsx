@@ -71,7 +71,6 @@ const UnsavedProvider = (props: PropsWithChildren) => {
   const toolsChangedRef = useRef<IIndexableSaveInfo<SaveInfo>>({});
   const getGlobal = useGetGlobal();
   const setChanged = (c: boolean) => {
-    console.log('setChanged', c);
     setChangedx(c);
     changedRef.current = c;
   };

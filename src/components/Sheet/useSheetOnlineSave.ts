@@ -150,7 +150,7 @@ export const useWfOnlineSave = (props: IProps) => {
       const rn = new StandardRecordNormalizer({ schema: memory?.schema });
       sp = rn.normalizeRecord(sp) as SectionPassageD;
       setComplete(20);
-      let rec = await memory.update((t: any) => t.addRecord(sp), {
+      let rec = await memory.update((t) => t.addRecord(sp), {
         label: 'Update Plan Section and Passages',
         sources: {
           remote: {

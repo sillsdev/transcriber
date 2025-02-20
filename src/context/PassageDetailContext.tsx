@@ -297,7 +297,7 @@ const PassageDetailProvider = (props: IProps) => {
     var step = state.orgWorkflowSteps.find((s) => s.id === stepId);
     var tool = getTool(step?.attributes?.tool) as ToolSlug;
     setCurrentSegment(undefined, 0);
-    console.log('handleSetCurrentStep', stepId);
+
     setState((state: ICtxState) => {
       return {
         ...state,
@@ -538,18 +538,15 @@ const PassageDetailProvider = (props: IProps) => {
   };
 
   const gotoNextStep = () => {
-    console.log('gotonextstep');
     var gotoNextPassage =
       getOrgDefault(orgDefaultWorkflowProgression) !== 'step';
     const nextpsg = gotoNextPassage
       ? nextPasId(state.section, state.passage.id, memory)
       : undefined;
-    console.log('next psg?', nextpsg);
     if (nextpsg && nextpsg !== state.passage?.keys?.remoteId) {
       rememberCurrentPassage(memory, nextpsg);
       passageNavigate(`/detail/${prjId}/${nextpsg}`);
     } else {
-      console.log('set to blank');
       setCurrentStep('');
     } // setting to empty jumps to first uncompleted
   };
@@ -1072,14 +1069,8 @@ const PassageDetailProvider = (props: IProps) => {
   }, [state.orgWorkflowSteps]);
 
   useEffect(() => {
-    console.log(
-      'state.currentstep',
-      state.currentstep,
-      state.orgWorkflowSteps.length
-    );
     if (state.currentstep === '' && state.orgWorkflowSteps.length > 0) {
       const next = getNextStep(state);
-      console.log('next', next);
       if (state.currentstep !== next) {
         setCurrentStep(next);
       }
