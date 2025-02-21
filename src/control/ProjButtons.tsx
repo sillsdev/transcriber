@@ -23,6 +23,7 @@ import {
 } from '../selector';
 
 interface IProps {
+  noCopy?: boolean;
   noPaste?: boolean;
   noReseq?: boolean;
   noImExport?: boolean;
@@ -35,6 +36,7 @@ interface IProps {
 
 export const ProjButtons = (props: IProps) => {
   const {
+    noCopy,
     onCopy,
     noPaste,
     noReseq,
@@ -97,7 +99,7 @@ export const ProjButtons = (props: IProps) => {
         open={Boolean(actionMenuItem)}
         onClose={handleClose}
       >
-        <MenuItem id="planSheetCopy" disabled={noPaste} onClick={onCopy}>
+        <MenuItem id="planSheetCopy" disabled={noCopy} onClick={onCopy}>
           {ts.clipboardCopy}
         </MenuItem>
         <MenuItem id="planSheetPaste" disabled={noPaste} onClick={onPaste}>

@@ -999,6 +999,7 @@ export function PlanSheet(props: IProps) {
                 />
                 <ProjButtons
                   {...props}
+                  noCopy={pasting || filtered}
                   noPaste={pasting || anyRecording || readonly || filtered}
                   noReseq={
                     pasting ||
