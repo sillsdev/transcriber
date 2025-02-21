@@ -280,9 +280,7 @@ export function PassageDetailItem(props: IProps) {
   };
 
   const handleSetCanSave = (valid: boolean) => {
-    if (valid !== canSave) {
-      setCanSave(valid);
-    }
+    setCanSave(valid);
   };
   const handleChangeType = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRecordType((event.target as HTMLInputElement).value as ArtifactTypeSlug);
