@@ -287,6 +287,7 @@ export function PlanSheet(props: IProps) {
   const [preventSave, setPreventSavex] = useState(false);
   const [anyRecording, setAnyRecording] = useState(false);
   const currentRowRef = useRef<number>(-1);
+  const startRowRef = useRef<number>(-1);
   const [currentRow, setCurrentRowx] = useState(-1);
   const [active, setActive] = useState(-1); // used for action menu to display
   const sheetRef = useRef<any>();
@@ -498,6 +499,7 @@ export function PlanSheet(props: IProps) {
 
   const handleSelect = (loc: DataSheet.Selection) => {
     setCurrentRow(loc.end.i);
+    startRowRef.current = loc.start.i;
     sheetScroll();
   };
 
@@ -594,9 +596,16 @@ export function PlanSheet(props: IProps) {
     let content = '';
     start = start ?? 0;
     end = end ?? rowData.length;
+    if (
+      startRowRef.current !== -1 &&
+      startRowRef.current !== currentRowRef.current
+    ) {
+      start = startRowRef.current - 1;
+      end = currentRowRef.current;
+    }
     for (let idx = start; idx < end; idx++) {
       const row = [...rowData[idx]];
-      if (Boolean(row[0])) row[2] = '';
+      if (Boolean(row[0]) && (row[2] as string).startsWith('(')) row[2] = '';
       content += row.join('\t') + '\n';
     }
     navigator.clipboard.writeText(content).catch((reason) => {
