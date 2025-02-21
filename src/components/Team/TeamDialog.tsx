@@ -360,7 +360,7 @@ export function TeamDialog(props: IProps) {
             ? t.addTeam
             : onDelete
             ? t.teamSettings
-            : 'Personal Settings'}
+            : t.personalSettings}
         </DialogTitle>
         <DialogContent>
           {saving && <LinearProgress id="busy" variant="indeterminate" />}

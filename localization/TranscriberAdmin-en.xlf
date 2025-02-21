@@ -832,6 +832,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.personalSettings">
+         <segment>
+            <source>Personal Settings</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.process">
          <segment>
             <source>Default Workflow</source>
