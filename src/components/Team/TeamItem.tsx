@@ -102,17 +102,24 @@ export const TeamItem = (props: IProps) => {
   return (
     <TeamPaper id="TeamItem">
       <TeamHeadDiv>
-        <TeamName variant="h5">
-          <GroupIcon sx={{ pr: 1 }} />
-          {team?.attributes?.name}
-        </TeamName>
-        <div>
-          <AltButton id="teamMembers" onClick={handleMembers(team)}>
-            {t.members.replace('{0}', teamMembers(team.id).toString())}
-          </AltButton>
-          {' \u00A0'}
-          {canModify && (
-            <>
+        <Grid container direction={'row'}>
+          <Grid item xs={12} md={4} lg={7}>
+            <TeamName variant="h5">
+              <GroupIcon sx={{ pr: 1 }} />
+              {team?.attributes?.name}
+            </TeamName>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={8}
+            lg={5}
+            sx={{ display: 'flex', justifyContent: 'flex-end' }}
+          >
+            <AltButton id="teamMembers" onClick={handleMembers(team)}>
+              {t.members.replace('{0}', teamMembers(team.id).toString())}
+            </AltButton>
+            {canModify && (
               <AltButton
                 id="editWorkflow"
                 onClick={handleEditWorkflow}
@@ -120,7 +127,8 @@ export const TeamItem = (props: IProps) => {
               >
                 {t.editWorkflow.replace('{0}', '')}
               </AltButton>
-              {' \u00A0'}
+            )}
+            {canModify && (
               <AltButton
                 id="teamSettings"
                 onClick={handleSettings(team)}
@@ -128,9 +136,9 @@ export const TeamItem = (props: IProps) => {
               >
                 {t.settings}
               </AltButton>
-            </>
-          )}
-        </div>
+            )}
+          </Grid>
+        </Grid>
       </TeamHeadDiv>
       {editOpen && (
         <TeamDialog

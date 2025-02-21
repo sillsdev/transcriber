@@ -182,6 +182,7 @@ const initialState = {
 			"offlineAvail": "Offline Available",
 			"passagesCreated": "Passages Created",
 			"personalProjects": "Personal Audio Projects",
+			"personalSettings": "Personal Settings",
 			"process": "Default Workflow",
 			"projectCreated": "Audio Project Created",
 			"projectRequired": "A project must be added before recordings are allowed",

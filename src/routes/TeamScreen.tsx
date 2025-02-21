@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useGlobal } from '../context/GlobalContext';
 import { LocalKey, localUserKey, useHome } from '../utils';
-import { Box } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import AppHead from '../components/App/AppHead';
 import { TeamProvider } from '../context/TeamContext';
 import { TeamProjects } from '../components/Team';
@@ -75,10 +75,18 @@ export const TeamScreen = () => {
     <Box sx={{ width: '100%' }}>
       <AppHead />
       <TeamProvider>
-        <Box id="TeamScreen" sx={{ display: 'flex', paddingTop: '80px' }}>
-          <TeamActions />
-          <TeamProjects />
-        </Box>
+        <Grid
+          container
+          id="TeamScreen"
+          sx={{ display: 'flex', paddingTop: '80px' }}
+        >
+          <Grid item xs={6} md={3} lg={2}>
+            <TeamActions />
+          </Grid>
+          <Grid item xs={12} md={9} lg={10}>
+            <TeamProjects />
+          </Grid>
+        </Grid>
       </TeamProvider>
     </Box>
   );

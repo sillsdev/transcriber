@@ -4,21 +4,64 @@ import { Grid } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import { TeamContext } from '../../context/TeamContext';
 import BigDialog from '../../hoc/BigDialog';
-import { ProjectCard, AddCard } from '.';
+import { ProjectCard, AddCard, TeamDialog, ITeamDialog } from '.';
 import { StepEditor } from '../StepEditor';
-import { defaultWorkflow } from '../../crud';
+import { defaultWorkflow, useBible } from '../../crud';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { TeamPaper, TeamHeadDiv, TeamName, AltButton } from '../../control';
+import DialogMode from '../../model/dialogMode';
+import { useOrbitData } from '../../hoc/useOrbitData';
+import { OrganizationD } from '../../model';
 
 export const PersonalItem = () => {
   const ctx = React.useContext(TeamContext);
-  const { personalTeam, personalProjects, cardStrings } = ctx.state;
+  const { personalTeam, personalProjects, cardStrings, teamUpdate } = ctx.state;
   const t = cardStrings;
-  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [busy] = useGlobal('remoteBusy'); //verified this is not used in a function 2/18/25
+  const orgs = useOrbitData<OrganizationD[]>('organization');
   const getGlobal = useGetGlobal();
+  const [editOpen, setEditOpen] = useState(false);
+  const { createBible, updateBible } = useBible();
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
   const [showWorkflow, setShowWorkflow] = useState(false);
+
+  const handleSettings = () => {
+    setEditOpen(true);
+  };
+
+  const team = React.useMemo(
+    () => orgs.find((o) => o.id === personalTeam),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [personalTeam, orgs]
+  );
+
+  const handleCommitSettings = async (
+    values: ITeamDialog,
+    cb?: (id: string) => Promise<void>
+  ) => {
+    if (values.bible)
+      if (!values.bible.id) {
+        await createBible(
+          values.bible,
+          values.bibleMediafile,
+          values.isoMediafile,
+          values.team.id
+        );
+      } else
+        await updateBible(
+          values.bible,
+          values.bibleMediafile,
+          values.isoMediafile,
+          values.team.id
+        );
+
+    teamUpdate(values.team);
+
+    cb && (await cb(values.team.id));
+    setEditOpen(false);
+  };
 
   const handleWorkflow = (isOpen: boolean) => {
     if (getGlobal('changed')) {
@@ -36,16 +79,35 @@ export const PersonalItem = () => {
   return (
     <TeamPaper id="PersonalItem">
       <TeamHeadDiv>
-        <TeamName variant="h5">
-          <PersonIcon sx={{ pr: 1 }} />
-          {t.personalProjects}
-        </TeamName>
-        {'\u00A0'}
-        {canModify(isOffline, offlineOnly) && (
-          <AltButton id="editWorkflow" onClick={handleEditWorkflow}>
-            {t.editWorkflow.replace('{0}', '')}
-          </AltButton>
-        )}
+        <Grid container>
+          <Grid item xs={12} md={8}>
+            <TeamName variant="h5">
+              <PersonIcon sx={{ pr: 1 }} />
+              {t.personalProjects}
+            </TeamName>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={4}
+            sx={{ display: 'flex', justifyContent: 'flex-end' }}
+          >
+            {canModify(isOffline, offlineOnly) && (
+              <AltButton id="editWorkflow" onClick={handleEditWorkflow}>
+                {t.editWorkflow.replace('{0}', '')}
+              </AltButton>
+            )}
+            {canModify(isOffline, offlineOnly) && (
+              <AltButton
+                id="teamSettings"
+                onClick={handleSettings}
+                disabled={busy}
+              >
+                {t.settings}
+              </AltButton>
+            )}
+          </Grid>
+        </Grid>
       </TeamHeadDiv>
       <Grid container sx={{ px: 2 }}>
         {personalProjects.map((i) => {
@@ -60,6 +122,15 @@ export const PersonalItem = () => {
       >
         <StepEditor process={defaultWorkflow} org={personalTeam} />
       </BigDialog>
+      {editOpen && (
+        <TeamDialog
+          mode={DialogMode.edit}
+          values={{ team } as ITeamDialog}
+          isOpen={editOpen}
+          onOpen={setEditOpen}
+          onCommit={handleCommitSettings}
+        />
+      )}
     </TeamPaper>
   );
 };
