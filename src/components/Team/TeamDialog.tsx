@@ -78,7 +78,7 @@ export function TeamDialog(props: IProps) {
   const { setParam } = useJsonParams();
   const [changed, setChanged] = React.useState(false);
   const ctx = React.useContext(TeamContext);
-  const { cardStrings } = ctx.state;
+  const { cardStrings, personalTeam } = ctx.state;
   const t = cardStrings;
   const [memory] = useGlobal('memory');
   const [process, setProcess] = useState<string>();
@@ -364,7 +364,7 @@ export function TeamDialog(props: IProps) {
         </DialogTitle>
         <DialogContent>
           {saving && <LinearProgress id="busy" variant="indeterminate" />}
-          {onDelete && (
+          {values?.team.id !== personalTeam && (
             <TextField
               autoFocus
               margin="dense"
@@ -419,7 +419,7 @@ export function TeamDialog(props: IProps) {
                 ))}
             </TextField>
           )}
-          {mode === DialogMode.edit && onDelete && (
+          {mode === DialogMode.edit && values?.team.id !== personalTeam && (
             <div>
               <DeleteExpansion
                 title={t.deleteTeam}
