@@ -77,6 +77,12 @@ export const ProjButtons = (props: IProps) => {
   const handleIntegrations = () => {
     setOpenIntegration(true);
   };
+
+  const handleChoice = (choice: () => void) => () => {
+    setActionMenuItem(null);
+    choice();
+  };
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => setPlanName(getPlanName(plan)), [plan]);
   return (
@@ -99,13 +105,25 @@ export const ProjButtons = (props: IProps) => {
         open={Boolean(actionMenuItem)}
         onClose={handleClose}
       >
-        <MenuItem id="planSheetCopy" disabled={noCopy} onClick={onCopy}>
+        <MenuItem
+          id="planSheetCopy"
+          disabled={noCopy}
+          onClick={handleChoice(onCopy)}
+        >
           {ts.clipboardCopy}
         </MenuItem>
-        <MenuItem id="planSheetPaste" disabled={noPaste} onClick={onPaste}>
+        <MenuItem
+          id="planSheetPaste"
+          disabled={noPaste}
+          onClick={handleChoice(onPaste)}
+        >
           {tp.tablePaste}
         </MenuItem>
-        <MenuItem id="planSheetReseq" disabled={noReseq} onClick={onReseq}>
+        <MenuItem
+          id="planSheetReseq"
+          disabled={noReseq}
+          onClick={handleChoice(onReseq)}
+        >
           {tp.resequence}
         </MenuItem>
         <MenuItem id="projButtonImp" onClick={handleImport}>
