@@ -31,6 +31,7 @@ import SelectSponsor from '../../business/voice/SelectSponsor';
 import SelectAsrLanguage from '../../business/asr/SelectAsrLanguage';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../../selector';
+import { useGlobal } from '../../context/GlobalContext';
 
 export enum FeatureSlug {
   NoNoise = 'noNoise',
@@ -72,6 +73,7 @@ export function TeamSettings(props: IProps) {
   const ctx = React.useContext(TeamContext);
   const [voiceVisible, setVoiceVisible] = useState(false);
   const [asrLangVisible, setAsrLangVisible] = useState(false);
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const { cardStrings } = ctx.state;
   const t = cardStrings;
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
@@ -121,72 +123,77 @@ export function TeamSettings(props: IProps) {
               options={workflowOptions}
               onChange={setProgression}
             />
-            <FormControl
-              component="fieldset"
-              sx={{ border: '1px solid grey', mr: 1, px: 2 }}
-            >
-              <FormLabel sx={{ color: 'secondary.main' }}>
-                {t.experimentalFeatures}
-              </FormLabel>
-              <Stack direction="row" spacing={1}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={values?.features?.[FeatureSlug.NoNoise] ?? false}
-                      onChange={handleFeatures(FeatureSlug.NoNoise)}
-                    />
-                  }
-                  label={<Badge badgeContent={ts.ai}>{t.reduceNoise}</Badge>}
-                />
-              </Stack>
-              <Stack direction="row" spacing={1}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={
-                        values?.features?.[FeatureSlug.DeltaVoice] ?? false
-                      }
-                      onChange={handleFeatures(FeatureSlug.DeltaVoice)}
-                    />
-                  }
-                  label={<Badge badgeContent={ts.ai}>{t.convertVoice}</Badge>}
-                />
-                {mode !== DialogMode.add && (
-                  <IconButton
-                    onClick={() => setVoiceVisible(true)}
-                    disabled={!values?.features?.[FeatureSlug.DeltaVoice]}
-                  >
-                    <SettingsIcon />
-                  </IconButton>
-                )}
-              </Stack>
-              <Stack direction="row" spacing={1}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={
-                        values?.features?.[FeatureSlug.AiTranscribe] ?? false
-                      }
-                      onChange={handleFeatures(FeatureSlug.AiTranscribe)}
-                    />
-                  }
-                  label={
-                    <Badge badgeContent={ts.ai}>{t.recognizeSpeech}</Badge>
-                  }
-                />
-                {mode !== DialogMode.add && (
-                  <IconButton
-                    onClick={() => setAsrLangVisible(true)}
-                    disabled={!values?.features?.[FeatureSlug.AiTranscribe]}
-                  >
-                    <SettingsIcon />
-                  </IconButton>
-                )}
-              </Stack>
-            </FormControl>
+            {!offline && (
+              <FormControl
+                component="fieldset"
+                sx={{ border: '1px solid grey', mr: 1, px: 2 }}
+              >
+                <FormLabel sx={{ color: 'secondary.main' }}>
+                  {t.experimentalFeatures}
+                </FormLabel>
+                <Stack direction="row" spacing={1}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={
+                          values?.features?.[FeatureSlug.NoNoise] ?? false
+                        }
+                        onChange={handleFeatures(FeatureSlug.NoNoise)}
+                      />
+                    }
+                    label={<Badge badgeContent={ts.ai}>{t.reduceNoise}</Badge>}
+                  />
+                </Stack>
+                <Stack direction="row" spacing={1}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={
+                          values?.features?.[FeatureSlug.DeltaVoice] ?? false
+                        }
+                        onChange={handleFeatures(FeatureSlug.DeltaVoice)}
+                      />
+                    }
+                    label={<Badge badgeContent={ts.ai}>{t.convertVoice}</Badge>}
+                  />
+                  {mode !== DialogMode.add && (
+                    <IconButton
+                      onClick={() => setVoiceVisible(true)}
+                      disabled={!values?.features?.[FeatureSlug.DeltaVoice]}
+                    >
+                      <SettingsIcon />
+                    </IconButton>
+                  )}
+                </Stack>
+                <Stack direction="row" spacing={1}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={
+                          values?.features?.[FeatureSlug.AiTranscribe] ?? false
+                        }
+                        onChange={handleFeatures(FeatureSlug.AiTranscribe)}
+                      />
+                    }
+                    label={
+                      <Badge badgeContent={ts.ai}>{t.recognizeSpeech}</Badge>
+                    }
+                  />
+                  {mode !== DialogMode.add && (
+                    <IconButton
+                      onClick={() => setAsrLangVisible(true)}
+                      disabled={!values?.features?.[FeatureSlug.AiTranscribe]}
+                    >
+                      <SettingsIcon />
+                    </IconButton>
+                  )}
+                </Stack>
+              </FormControl>
+            )}
           </Stack>
         </Details>
       </Accordion>
+
       <BigDialog
         title={t.convertVoiceSettings}
         isOpen={voiceVisible}
