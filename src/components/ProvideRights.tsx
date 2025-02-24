@@ -306,7 +306,7 @@ export function ProvideRights(props: IProps) {
             id="spkr-save"
             sx={buttonProp}
             onClick={handleSave}
-            disabled={!canSave}
+            disabled={!canSave || state?.valid === false}
           >
             {ts.save}
           </PriButton>

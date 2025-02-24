@@ -44,6 +44,7 @@ export interface IVoicePerm {
   sponsor?: string;
   team?: string;
   scope?: string;
+  valid?: boolean;
 }
 
 interface IProps {
@@ -65,19 +66,27 @@ export default function PersonalizeVoicePermission(props: IProps) {
   const localOptions = voicePermOpts.map((option) => t.getString(option));
   const [hideLang, setHideLang] = React.useState(false);
 
+  const genderValid = (value?: string) => /^[a-zA-Z]{0,15}$/.test(value ?? '');
+
+  const ageValid = (value?: string) => /^[0-9]*$/.test(value ?? '');
+
+  const allValid = (state: IVoicePerm) =>
+    genderValid(state.gender) && ageValid(state.age);
+
   const handleChangeGender = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const valid = /^[a-zA-Z]{0,15}$/.test(event.target.value);
+    const valid = genderValid(event.target.value);
     setGenderMsg(valid ? '' : t.genderOneWord);
     const updateTarget = (state: IVoicePerm) => ({
       ...state,
       [event.target.name]: event.target.value,
+      valid: allValid({ ...state, [event.target.name]: event.target.value }),
     });
     setCurState(updateTarget);
     if (valid) setState && setState(updateTarget);
   };
 
   const handleChangeAge = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const valid = /^[0-9]*$/.test(event.target.value);
+    const valid = ageValid(event.target.value);
     if (!valid) {
       setMinorMsg(t.ageAsNumber);
     } else {
@@ -91,6 +100,7 @@ export default function PersonalizeVoicePermission(props: IProps) {
     const updateTarget = (state: IVoicePerm) => ({
       ...state,
       [event.target.name]: event.target.value,
+      valid: allValid({ ...state, [event.target.name]: event.target.value }),
     });
     setCurState(updateTarget);
     if (valid) setState && setState(updateTarget);

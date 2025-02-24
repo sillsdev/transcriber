@@ -73,7 +73,9 @@ export const VoiceStatement = ({
           setState && setState(showPersonalize as IVoicePerm);
           setShowPersonalize(undefined);
         }}
-        onSave={() => setShowPersonalize(undefined)}
+        onSave={() =>
+          state?.valid !== false ? setShowPersonalize(undefined) : undefined
+        }
       >
         <PersonalizeVoicePermission state={state} setState={setState} />
       </BigDialog>
