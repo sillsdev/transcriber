@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   IAlertStrings,
   IPublishLevelStrings,
@@ -174,6 +174,13 @@ function ConfirmPublishDialog(props: IProps) {
       );
     }
   };
+  const needsBibleId = useMemo(
+    () =>
+      value.includes(PublishDestinationEnum.OBTHelps) ||
+      value.includes(PublishDestinationEnum.AkuoBeta) ||
+      value.includes(PublishDestinationEnum.AkuoPublic),
+    [value]
+  );
   const handlePropagateChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -333,7 +340,7 @@ function ConfirmPublishDialog(props: IProps) {
           onClick={handleYes}
           variant="contained"
           color="primary"
-          disabled={value === current || !hasBible || doingIt}
+          disabled={value === current || (!hasBible && needsBibleId) || doingIt}
           autoFocus
         >
           {t.yes}
