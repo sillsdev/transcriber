@@ -20,6 +20,7 @@ import { IMatchData } from './makeRefMap';
 import { templateSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { addPt } from '../../utils/addPt';
+import { Render } from '../../assets/brands';
 
 interface IstrMap {
   [key: string]: string;
@@ -178,7 +179,11 @@ export function Template(props: ITemplateProps) {
         sx={{ mx: 2, width: '600px' }}
         value={template ?? ''}
         onChange={handleTemplateChange}
-        helperText={template === '{SECT}' ? t.renderExportTemplate : undefined}
+        helperText={
+          template === '{SECT}'
+            ? t.renderExportTemplate.replace('{0}', Render)
+            : undefined
+        }
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">

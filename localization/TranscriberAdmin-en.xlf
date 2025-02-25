@@ -798,7 +798,7 @@
       </unit>
       <unit id="cards.OBTr">
          <segment>
-            <source>Oral Bible Translation (like Render)</source>
+            <source>Oral Bible Translation (like {0})</source>
             <target/>
          </segment>
       </unit>
@@ -1398,7 +1398,7 @@
       </unit>
       <unit id="discussionCard.confirmDelete">
          <segment>
-            <source>Delete this discussion and all commments?</source>
+            <source>Delete this discussion and all comments?</source>
             <target/>
          </segment>
       </unit>
@@ -2334,7 +2334,7 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <source>If this error occurred while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
             <target/>
          </segment>
       </unit>
@@ -2551,12 +2551,6 @@
       <unit id="integration.questionProject">
          <segment>
             <source>Are you connected to a {lang0} {0} project?</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.render">
-         <segment>
-            <source>Render</source>
             <target/>
          </segment>
       </unit>
@@ -2988,7 +2982,7 @@
       </unit>
       <unit id="keyTerms.settingLanguage">
          <segment>
-            <source>Set Langauge</source>
+            <source>Set Language</source>
             <target/>
          </segment>
       </unit>
@@ -3606,7 +3600,7 @@
       </unit>
       <unit id="mediaTab.cancelling">
          <segment>
-            <source>Cancelling with {0} of {1} completed.</source>
+            <source>Canceling with {0} of {1} completed.</source>
             <target/>
          </segment>
       </unit>
@@ -3990,7 +3984,7 @@
       </unit>
       <unit id="mediaUpload.PTFtask">
          <segment>
-            <source>Upload a Portable Transcriber File (ptf).</source>
+            <source>Upload a Portable Transcriber File (PTF).</source>
             <target/>
          </segment>
       </unit>
@@ -4794,7 +4788,7 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independent Consultant's comments will be visible to all team members.</source>
             <target/>
          </segment>
       </unit>
@@ -5220,7 +5214,7 @@
       </unit>
       <unit id="planSheet.resequence">
          <segment>
-            <source>Resequence</source>
+            <source>Re-sequence</source>
             <target/>
          </segment>
       </unit>
@@ -6804,7 +6798,7 @@
       </unit>
       <unit id="template.renderExportTemplate">
          <segment>
-            <source>The {SECT} template works for files exported from Render.</source>
+            <source>The {SECT} template works for files exported from {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -7086,7 +7080,7 @@
       </unit>
       <unit id="transcriber.incomplete">
          <segment>
-            <source>Incomplete transcripiton</source>
+            <source>Incomplete transcription</source>
             <target/>
          </segment>
       </unit>
@@ -7428,7 +7422,7 @@
       </unit>
       <unit id="transcriptionTab.exportPTFtype">
          <segment>
-            <source>Export Audio Project (ptf)</source>
+            <source>Export Audio Project (PTF)</source>
             <target/>
          </segment>
       </unit>
@@ -7488,7 +7482,7 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
+            <source>You have new changes locally that were not included in the PTF export.  Please also export an itf file to capture all changes.</source>
             <target/>
          </segment>
       </unit>
@@ -7884,7 +7878,7 @@
       </unit>
       <unit id="voice.stHired">
          <segment>
-            <source>Since I am being compendated by the team, my voice can be used by the team without additional compensation.</source>
+            <source>Since I am being compensated by the team, my voice can be used by the team without additional compensation.</source>
             <target/>
          </segment>
       </unit>
@@ -8088,7 +8082,7 @@
       </unit>
       <unit id="vProject.howToPublic">
          <segment>
-            <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
+            <source>Contact Nathan Payne (nathan_payne at sil.org) for access to create shared content.</source>
             <target/>
          </segment>
       </unit>
@@ -8160,13 +8154,13 @@
       </unit>
       <unit id="vProject.renderCustomize">
          <segment>
-            <source>including Render customization</source>
+            <source>including {0} customization</source>
             <target/>
          </segment>
       </unit>
       <unit id="vProject.renderRecommended">
          <segment>
-            <source>Recommended for Render</source>
+            <source>Recommended for {0}</source>
             <target/>
          </segment>
       </unit>

@@ -511,7 +511,6 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "questionOnline": string;
     "questionPermission": string;
     "questionProject": string;
-    "render": string;
     "selectProject": string;
     "showHideFilter": string;
     "sync": string;

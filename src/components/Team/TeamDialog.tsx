@@ -39,6 +39,7 @@ import { useCanPublish, useJsonParams, waitForIt } from '../../utils';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity } from '@orbit/records';
 import TeamSettings from './TeamSettings';
+import { Render } from '../../assets/brands';
 
 interface IFeatures {
   [key: string]: any;
@@ -312,7 +313,7 @@ export function TeamDialog(props: IProps) {
       setProcessOptions(
         newProcess.map((p) => ({
           value: p,
-          label: t.getString(p) || p,
+          label: t.getString(p)?.replace('{0}', Render) || p,
         }))
       );
     }

@@ -619,6 +619,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.convertVoiceSettings">
+         <segment>
+            <source>Convert Voice Settings</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.copyComplete">
          <segment>
             <source>Copy Complete {0}</source>
@@ -789,8 +795,8 @@
       </unit>
       <unit id="cards.OBTr">
          <segment>
-            <source>Oral Bible Translation (like Render)</source>
-            <target>Устный перевод Библии (типа Render)</target>
+            <source>Oral Bible Translation (like {0})</source>
+            <target/>
          </segment>
       </unit>
       <unit id="cards.OBTo">
@@ -823,6 +829,12 @@
             <target>Персональные аудиопроекты</target>
          </segment>
       </unit>
+      <unit id="cards.personalSettings">
+         <segment>
+            <source>Personal Settings</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.process">
          <segment>
             <source>Default Workflow</source>
@@ -850,6 +862,18 @@
       <unit id="cards.recognizeSpeech">
          <segment>
             <source>Recognize Speech</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.recognizeSpeechSettings">
+         <segment>
+            <source>Recognize Speech Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.reduceNoise">
+         <segment>
+            <source>Reduce Noise</source>
             <target/>
          </segment>
       </unit>
@@ -1371,8 +1395,8 @@
       </unit>
       <unit id="discussionCard.confirmDelete">
          <segment>
-            <source>Delete this discussion and all commments?</source>
-            <target>Удалить это обсуждение и все комментарии?</target>
+            <source>Delete this discussion and all comments?</source>
+            <target/>
          </segment>
       </unit>
       <unit id="discussionCard.locate">
@@ -1777,6 +1801,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.findResource">
+         <segment>
+            <source>Find Resource</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.generalresource">
+         <segment>
+            <source>Create a General Resource</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="grid.all">
          <segment>
             <source>All</source>
@@ -2109,7 +2145,7 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <source>If this error occurred while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
             <target/>
          </segment>
       </unit>
@@ -2327,12 +2363,6 @@
          <segment>
             <source>Are you connected to a {lang0} {0} project?</source>
             <target>Вы подключены к {lang0} {0} проекту?</target>
-         </segment>
-      </unit>
-      <unit id="integration.render">
-         <segment>
-            <source>Render</source>
-            <target/>
          </segment>
       </unit>
       <unit id="integration.selectProject">
@@ -2763,8 +2793,8 @@
       </unit>
       <unit id="keyTerms.settingLanguage">
          <segment>
-            <source>Set Langauge</source>
-            <target>Установить язык</target>
+            <source>Set Language</source>
+            <target/>
          </segment>
       </unit>
       <unit id="keyTerms.sortShow">
@@ -3381,8 +3411,8 @@
       </unit>
       <unit id="mediaTab.cancelling">
          <segment>
-            <source>Cancelling with {0} of {1} completed.</source>
-            <target>Отмена с {0} из {1} завершена.</target>
+            <source>Canceling with {0} of {1} completed.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.choosePassage">
@@ -3765,7 +3795,7 @@
       </unit>
       <unit id="mediaUpload.PTFtask">
          <segment>
-            <source>Upload a Portable Transcriber File (ptf).</source>
+            <source>Upload a Portable Transcriber File (PTF).</source>
             <target/>
          </segment>
       </unit>
@@ -4569,7 +4599,7 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independent Consultant's comments will be visible to all team members.</source>
             <target/>
          </segment>
       </unit>
@@ -4618,6 +4648,18 @@
       <unit id="picker.script">
          <segment>
             <source>Script</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="picker.language">
+         <segment>
+            <source>Language</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="picker.selectLanguage">
+         <segment>
+            <source>Choose Language Details</source>
             <target/>
          </segment>
       </unit>
@@ -4899,7 +4941,7 @@
       </unit>
       <unit id="planSheet.resequence">
          <segment>
-            <source>Resequence</source>
+            <source>Re-sequence</source>
             <target/>
          </segment>
       </unit>
@@ -5289,7 +5331,7 @@
       </unit>
       <unit id="projButtons.sheet">
          <segment>
-            <source>Sheet</source>
+            <source>Spreadsheet</source>
             <target/>
          </segment>
       </unit>
@@ -5374,6 +5416,18 @@
       <unit id="projectDownload.projects">
          <segment>
             <source>Projects</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.project">
+         <segment>
+            <source>Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.projectDetails">
+         <segment>
+            <source>Project Details</source>
             <target/>
          </segment>
       </unit>
@@ -6459,8 +6513,8 @@
       </unit>
       <unit id="template.renderExportTemplate">
          <segment>
-            <source>The {SECT} template works for files exported from Render.</source>
-            <target>Шаблон {SECT} работает для файлов, экспортированных из Render.</target>
+            <source>The {SECT} template works for files exported from {0}.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="template.templateCodes">
@@ -6703,6 +6757,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.aiWillContinue">
+         <segment>
+            <source>The AI will continue to work on the transcription even if you close this progress box. Click the {0} button to open the progress box on this workflow step to see the results. Use the settings gear on {0} button to see the transcription using a different language.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriber.beginRecognize">
          <segment>
             <source>Begin Recognition</source>
@@ -6735,7 +6795,7 @@
       </unit>
       <unit id="transcriber.incomplete">
          <segment>
-            <source>Incomplete transcripiton</source>
+            <source>Incomplete transcription</source>
             <target/>
          </segment>
       </unit>
@@ -7077,8 +7137,8 @@
       </unit>
       <unit id="transcriptionTab.exportPTFtype">
          <segment>
-            <source>Export Audio Project (ptf)</source>
-            <target>Экспорт аудиопроекта (ptf)</target>
+            <source>Export Audio Project (PTF)</source>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportSince">
@@ -7137,7 +7197,7 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
+            <source>You have new changes locally that were not included in the PTF export.  Please also export an itf file to capture all changes.</source>
             <target/>
          </segment>
       </unit>
@@ -7441,6 +7501,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="voice.age18">
+         <segment>
+            <source>You must be 18 years or older to give consent to use your voice.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="voice.allTeams">
+         <segment>
+            <source>All Teams</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.add">
          <segment>
             <source>Add</source>
@@ -7557,8 +7629,8 @@
       </unit>
       <unit id="vProject.howToPublic">
          <segment>
-            <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
-            <target>Свяжитесь с Натаном Пейном (nathan_payne@sil.org), чтобы получить доступ к созданию общего контента.</target>
+            <source>Contact Nathan Payne (nathan_payne at sil.org) for access to create shared content.</source>
+            <target/>
          </segment>
       </unit>
       <unit id="vProject.language">
@@ -7629,13 +7701,13 @@
       </unit>
       <unit id="vProject.renderCustomize">
          <segment>
-            <source>including Render customization</source>
+            <source>including {0} customization</source>
             <target/>
          </segment>
       </unit>
       <unit id="vProject.renderRecommended">
          <segment>
-            <source>Recommended for Render</source>
+            <source>Recommended for {0}</source>
             <target/>
          </segment>
       </unit>
@@ -8170,6 +8242,18 @@
       <unit id="wsAudioPlayer.recognizePrompt">
          <segment>
             <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.recognizeSpeech">
+         <segment>
+            <source>Recognize Speech {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.recognizeSpeechSettings">
+         <segment>
+            <source>Recognize Speech Settings</source>
             <target/>
          </segment>
       </unit>

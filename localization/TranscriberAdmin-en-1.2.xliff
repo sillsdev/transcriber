@@ -928,7 +928,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="cards.OBTr">
-      		<source>Oral Bible Translation (like Render)</source>
+      		<source>Oral Bible Translation (like {0})</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TeamDialog.tsx</context>
@@ -1628,7 +1628,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="discussionCard.confirmDelete">
-            <source>Delete this discussion and all commments?</source>
+            <source>Delete this discussion and all comments?</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">DiscussionCard.tsx</context>
@@ -2721,7 +2721,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="import.unknownError">
-            <source>If this error occured while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
+            <source>If this error occurred while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">import.tsx</context>
@@ -2974,13 +2974,6 @@
          </trans-unit>
          <trans-unit id="integration.questionProject">
             <source>Are you connected to a {lang0} {0} project?</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="integration.render">
-            <source>Render</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">integration.tsx</context>
@@ -3484,7 +3477,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="keyTerms.settingLanguage">
-      		<source>Set Langauge</source>
+      		<source>Set Language</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">KeyTermSort.tsx</context>
@@ -4205,7 +4198,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="mediaTab.cancelling">
-      		<source>Cancelling with {0} of {1} completed.</source>
+      		<source>Canceling with {0} of {1} completed.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">MediaTab.tsx</context>
@@ -4653,7 +4646,7 @@
       		</context-group>
       	</trans-unit>
          <trans-unit id="mediaUpload.PTFtask">
-            <source>Upload a Portable Transcriber File (ptf).</source>
+            <source>Upload a Portable Transcriber File (PTF).</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaUpload.tsx</context>
@@ -5592,7 +5585,7 @@
       		</context-group>
       	</trans-unit>
          <trans-unit id="permission.consultantTip">
-      		<source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independant Consultant's comments will be visible to all team members.</source>
+      		<source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independent Consultant's comments will be visible to all team members.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">GroupDialog.tsx</context>
@@ -6089,7 +6082,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.resequence">
-            <source>Resequence</source>
+            <source>Re-sequence</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -7938,7 +7931,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="template.renderExportTemplate">
-      		<source>The {SECT} template works for files exported from Render.</source>
+      		<source>The {SECT} template works for files exported from {0}.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">template.tsx</context>
@@ -8267,7 +8260,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="transcriber.incomplete">
-            <source>Incomplete transcripiton</source>
+            <source>Incomplete transcription</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>
@@ -8666,7 +8659,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="transcriptionTab.exportPTFtype">
-            <source>Export Audio Project (ptf)</source>
+            <source>Export Audio Project (PTF)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ExportTab.tsx</context>
@@ -8736,7 +8729,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="transcriptionTab.offlineData">
-      		<source>You have new changes locally that were not included in the ptf export.  Please also export an itf file to capture all changes.</source>
+      		<source>You have new changes locally that were not included in the PTF export.  Please also export an itf file to capture all changes.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TranscriptionTab.tsx</context>
@@ -9199,7 +9192,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="voice.stHired">
-            <source>Since I am being compendated by the team, my voice can be used by the team without additional compensation.</source>
+            <source>Since I am being compensated by the team, my voice can be used by the team without additional compensation.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PersonalizeVoicePermission.tsx</context>
@@ -9438,7 +9431,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="vProject.howToPublic">
-            <source>Contact Nathan Payne (nathan_payne@sil.org) for access to create shared content.</source>
+            <source>Contact Nathan Payne (nathan_payne at sil.org) for access to create shared content.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
@@ -9522,14 +9515,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="vProject.renderCustomize">
-            <source>including Render customization</source>
+            <source>including {0} customization</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">projectExpansion.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="vProject.renderRecommended">
-            <source>Recommended for Render</source>
+            <source>Recommended for {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">projectExpansion.tsx</context>
