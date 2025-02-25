@@ -1546,7 +1546,7 @@
       <unit id="electronImport.importOldFile">
          <segment>
             <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
-            <target>Este archivo no se ha exportado desde la última versión. Vuelva a exportar el archivo PTF desde la versión en línea.</target>
+            <target>Este archivo no se exportó desde la última versión. Vuelva a exportar su archivo PTF desde la versión en línea.</target>
          </segment>
       </unit>
       <unit id="electronImport.importPending">
@@ -1811,6 +1811,192 @@
          <segment>
             <source>Create a General Resource</source>
             <target>Crear un recurso general</target>
+         </segment>
+      </unit>
+      <unit id="findResource.group">
+         <segment>
+            <source>Group</source>
+            <target>Grupo</target>
+         </segment>
+      </unit>
+      <unit id="findResource.image">
+         <segment>
+            <source>image</source>
+            <target>imagen</target>
+         </segment>
+      </unit>
+      <unit id="findResource.imageTpl">
+         <segment>
+            <source>Please provide an image for {0}</source>
+            <target>Por favor, proporcione una imagen para {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.language">
+         <segment>
+            <source>Language</source>
+            <target>Idioma</target>
+         </segment>
+      </unit>
+      <unit id="findResource.launch">
+         <segment>
+            <source>Launch</source>
+            <target>Lanzamiento</target>
+         </segment>
+      </unit>
+      <unit id="findResource.meaning">
+         <segment>
+            <source>meaning</source>
+            <target>Significado</target>
+         </segment>
+      </unit>
+      <unit id="findResource.meaningTpl">
+         <segment>
+            <source>Please draft a story to illustrate the meaning of {0}</source>
+            <target>Por favor, redacte una historia para ilustrar el significado de {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.mediaType">
+         <segment>
+            <source>Media</source>
+            <target>Medios de comunicación</target>
+         </segment>
+      </unit>
+      <unit id="findResource.movement">
+         <segment>
+            <source>movement</source>
+            <target>movimiento</target>
+         </segment>
+      </unit>
+      <unit id="findResource.name">
+         <segment>
+            <source>Name</source>
+            <target>Nombre</target>
+         </segment>
+      </unit>
+      <unit id="findResource.oralVersion">
+         <segment>
+            <source>oral-version</source>
+            <target>versión oral</target>
+         </segment>
+      </unit>
+      <unit id="findResource.oralVersionTpl">
+         <segment>
+            <source>Please provide an oral translation of {0}</source>
+            <target>Realice una traducción oral de {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.passage">
+         <segment>
+            <source>Passage</source>
+            <target>Pasaje</target>
+         </segment>
+      </unit>
+      <unit id="findResource.preview">
+         <segment>
+            <source>Preview</source>
+            <target>Vista previa</target>
+         </segment>
+      </unit>
+      <unit id="findResource.query">
+         <segment>
+            <source>Query</source>
+            <target>Consulta</target>
+         </segment>
+      </unit>
+      <unit id="findResource.querying">
+         <segment>
+            <source>Querying...</source>
+            <target>Consulta...</target>
+         </segment>
+      </unit>
+      <unit id="findResource.queryBuilder">
+         <segment>
+            <source>AI Query Builder</source>
+            <target>Generador de consultas AI</target>
+         </segment>
+      </unit>
+      <unit id="findResource.reset">
+         <segment>
+            <source>Reset</source>
+            <target>Restablecer</target>
+         </segment>
+      </unit>
+      <unit id="findResource.scope">
+         <segment>
+            <source>Scope</source>
+            <target>Ámbito</target>
+         </segment>
+      </unit>
+      <unit id="findResource.script">
+         <segment>
+            <source>script</source>
+            <target>script</target>
+         </segment>
+      </unit>
+      <unit id="findResource.scriptTpl">
+         <segment>
+            <source>Please provide a script for {0}</source>
+            <target>Por favor, proporcione una secuencia de comandos para {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.section">
+         <segment>
+            <source>section</source>
+            <target>sección</target>
+         </segment>
+      </unit>
+      <unit id="findResource.source">
+         <segment>
+            <source>Source</source>
+            <target>Fuente</target>
+         </segment>
+      </unit>
+      <unit id="findResource.summary">
+         <segment>
+            <source>summary</source>
+            <target>resumen</target>
+         </segment>
+      </unit>
+      <unit id="findResource.summaryTpl">
+         <segment>
+            <source>Please provide a summary of {0}</source>
+            <target>Por favor, proporcione un resumen de {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.type">
+         <segment>
+            <source>Type</source>
+            <target>Tipo</target>
+         </segment>
+      </unit>
+      <unit id="findResource.unavailable">
+         <segment>
+            <source>unavailable</source>
+            <target>no disponible</target>
+         </segment>
+      </unit>
+      <unit id="findResource.video">
+         <segment>
+            <source>video</source>
+            <target>vídeo</target>
+         </segment>
+      </unit>
+      <unit id="findResource.videoTpl">
+         <segment>
+            <source>Please provide a video for {0}</source>
+            <target>Por favor, proporcione un vídeo de {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.whatsAppHelp">
+         <segment>
+            <source>Install the What's App app on your phone and join the group for your language. You can also install What's App on Windows and link to your phone App. Use Meta AI</source>
+            <target>Instala la aplicación What's App en tu teléfono y únete al grupo de tu idioma. También puedes instalar What's App en Windows y vincularla a la aplicación de tu teléfono. Utilizar Meta AI</target>
+         </segment>
+      </unit>
+      <unit id="findResource.withTiming">
+         <segment>
+            <source>Audio Bible with verse timing</source>
+            <target>Biblia en audio con sincronización de versículos</target>
          </segment>
       </unit>
       <unit id="grid.all">
@@ -2146,7 +2332,7 @@
       <unit id="import.unknownError">
          <segment>
             <source>If this error occurred while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
-            <target>Si se ha producido este error al importar cambios sin conexión, cierre la aplicación inmediatamente y vuelva a abrirla. Si el error persiste, póngase en contacto con el servicio de asistencia. Si continúa utilizando la aplicación, perderá los cambios sin conexión.</target>
+            <target>Si se ha producido este error al importar cambios sin conexión, cierra la aplicación inmediatamente y vuelve a abrirla. Si el error persiste, ponte en contacto con el servicio de asistencia. Si continúa utilizando la aplicación, perderá los cambios sin conexión.</target>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -4663,6 +4849,90 @@
             <target>Elija Detalles del idioma</target>
          </segment>
       </unit>
+      <unit id="picker.findALanguage">
+         <segment>
+            <source>Find a language by name, code, or country</source>
+            <target>Buscar un idioma por nombre, código o país</target>
+         </segment>
+      </unit>
+      <unit id="picker.codeExplained">
+         <segment>
+            <source>Code Explained</source>
+            <target>Explicación del código</target>
+         </segment>
+      </unit>
+      <unit id="picker.subtags">
+         <segment>
+            <source>Subtags</source>
+            <target>Subetiquetas</target>
+         </segment>
+      </unit>
+      <unit id="picker.details">
+         <segment>
+            <source>Details</source>
+            <target>Detalles</target>
+         </segment>
+      </unit>
+      <unit id="picker.languageOf">
+         <segment>
+            <source>A Language of $1$2.</source>
+            <target>Un idioma de $1$2</target>
+         </segment>
+      </unit>
+      <unit id="picker.inScript">
+         <segment>
+            <source> in the $1 script</source>
+            <target> en el script de $1</target>
+         </segment>
+      </unit>
+      <unit id="picker.select">
+         <segment>
+            <source>Save</source>
+            <target>Guardar</target>
+         </segment>
+      </unit>
+      <unit id="picker.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target>Cancelar</target>
+         </segment>
+      </unit>
+      <unit id="picker.phonetic">
+         <segment>
+            <source>Phonetic</source>
+            <target>Fonética</target>
+         </segment>
+      </unit>
+      <unit id="picker.changeName">
+         <segment>
+            <source>Change Name</source>
+            <target>Cambiar nombre</target>
+         </segment>
+      </unit>
+      <unit id="picker.nameInstruction">
+         <segment>
+            <source>If you would like to change the language name enter the new name here.</source>
+            <target>Si desea cambiar el nombre del idioma, introduzca aquí el nuevo nombre.</target>
+         </segment>
+      </unit>
+      <unit id="picker.newName">
+         <segment>
+            <source>New Language Name</source>
+            <target>Nuevo nombre de idioma</target>
+         </segment>
+      </unit>
+      <unit id="picker.change">
+         <segment>
+            <source>Change</source>
+            <target>Cambiar</target>
+         </segment>
+      </unit>
+      <unit id="picker.noFonts">
+         <segment>
+            <source>No recommended fonts</source>
+            <target>Fuentes no recomendadas</target>
+         </segment>
+      </unit>
       <unit id="planActions.addNote">
          <segment>
             <source>Add Note</source>
@@ -5431,6 +5701,18 @@
             <target>Detalles del proyecto</target>
          </segment>
       </unit>
+      <unit id="projectDownload.team">
+         <segment>
+            <source>Team</source>
+            <target>Equipo</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.total">
+         <segment>
+            <source>Total MB</source>
+            <target>MB totales</target>
+         </segment>
+      </unit>
       <unit id="publishLevel.none">
          <segment>
             <source>Not Published - not visible outside this project</source>
@@ -5992,7 +6274,7 @@
       <unit id="shared.expiredToken">
          <segment>
             <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
-            <target>Su nombre de usuario ha caducado y no se puede renovar automáticamente. Cierre la sesión y vuelva a iniciarla.</target>
+            <target>Su nombre de usuario ha caducado y no puede renovarse automáticamente. Por favor, cierre la sesión y conéctese de nuevo.</target>
          </segment>
       </unit>
       <unit id="shared.fileNotFound">
@@ -7156,7 +7438,7 @@
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
             <source>The audio project cannot be exported. The export file is too large.</source>
-            <target>No se puede exportar el proyecto de audio. El archivo de exportación es demasiado grande.</target>
+            <target>El proyecto de audio no puede exportarse. El archivo de exportación es demasiado grande.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportType">
@@ -7513,6 +7795,174 @@
             <target>Todos los equipos</target>
          </segment>
       </unit>
+      <unit id="voice.convert">
+         <segment>
+            <source>Begin Conversion</source>
+            <target>Iniciar conversión</target>
+         </segment>
+      </unit>
+      <unit id="voice.excludedLanguages">
+         <segment>
+            <source>Excluded languages</source>
+            <target>Idiomas excluidos</target>
+         </segment>
+      </unit>
+      <unit id="voice.excludeName">
+         <segment>
+            <source>Exclude my name.</source>
+            <target>Excluir mi nombre.</target>
+         </segment>
+      </unit>
+      <unit id="voice.forHire">
+         <segment>
+            <source>I work for hire.</source>
+            <target>Trabajo por cuenta ajena.</target>
+         </segment>
+      </unit>
+      <unit id="voice.gender">
+         <segment>
+            <source>Gender</source>
+            <target>Género</target>
+         </segment>
+      </unit>
+      <unit id="voice.genderOneWord">
+         <segment>
+            <source>Gender must be a single word.</source>
+            <target>El género debe ser una sola palabra.</target>
+         </segment>
+      </unit>
+      <unit id="voice.myProjects">
+         <segment>
+            <source>my personal projects</source>
+            <target>mis proyectos personales</target>
+         </segment>
+      </unit>
+      <unit id="voice.personalize">
+         <segment>
+            <source>Personalize</source>
+            <target>Personalizar</target>
+         </segment>
+      </unit>
+      <unit id="voice.personalizeTitle">
+         <segment>
+            <source>Personalize Voice Permission</source>
+            <target>Personalizar Permiso de voz</target>
+         </segment>
+      </unit>
+      <unit id="voice.scope">
+         <segment>
+            <source>Scope of use</source>
+            <target>Ámbito de uso</target>
+         </segment>
+      </unit>
+      <unit id="voice.stAge">
+         <segment>
+            <source>my age is {0}</source>
+            <target>mi edad es {0}</target>
+         </segment>
+      </unit>
+      <unit id="voice.stCategories">
+         <segment>
+            <source>To aid in categorizing my voice for use, {0}.</source>
+            <target>Para ayudar a categorizar mi voz para su uso, {0}.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stGender">
+         <segment>
+            <source>my gender is {0}</source>
+            <target>mi sexo es {0}</target>
+         </segment>
+      </unit>
+      <unit id="voice.stHired">
+         <segment>
+            <source>Since I am being compensated by the team, my voice can be used by the team without additional compensation.</source>
+            <target>Dado que el equipo me compensa, puede utilizar mi voz sin compensación adicional.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stJoin">
+         <segment>
+            <source>and</source>
+            <target>y</target>
+         </segment>
+      </unit>
+      <unit id="voice.stLangClause">
+         <segment>
+            <source>I understand that {0} will only use my voice with languages I do not regularly use, to prevent impersonation. {1}. </source>
+            <target>Entiendo que {0} sólo utilizará mi voz con idiomas que no uso habitualmente, para evitar suplantaciones. {1}. </target>
+         </segment>
+      </unit>
+      <unit id="voice.stMyLang">
+         <segment>
+            <source>The language I speak is</source>
+            <target>El idioma que hablo es</target>
+         </segment>
+      </unit>
+      <unit id="voice.stMyLangs">
+         <segment>
+            <source>The languages that I speak are</source>
+            <target>Los idiomas que hablo son</target>
+         </segment>
+      </unit>
+      <unit id="voice.stNotGiven">
+         <segment>
+            <source>not given</source>
+            <target>no indicado</target>
+         </segment>
+      </unit>
+      <unit id="voice.stNotIdentified">
+         <segment>
+            <source>but choose not to be identified by name</source>
+            <target>pero elijo no ser identificado por mi nombre</target>
+         </segment>
+      </unit>
+      <unit id="voice.stStatement">
+         <segment>
+            <source>I {0} provide consent for {1} to record and store this file with my voice in the cloud and possibly in a voice library for publishing and use in AI applications that require a voice sample, including voice conversion. The recording created by {1} of me reading this script will become the exclusive property of {1} which shall have the unlimited right to make, have made, use, copy, display in public, reconstruct, repair, modify, reproduce, publish, distribute and sell the Work Product, in whole or in part, or combine the Work Product with other matter, or not use the Work Product at all, as it sees fit. {1} will use the recording in a variety of ways, including, but not limited to, Audio books, narrating apps, and scripture engagement to further the mission of the organization. {2}{3} I have been provided this script in a language I understand, and have been given the option to request this script in a language of my choice. This recording will act as my signature in place of a written agreement. {4} I sign with my voice, {5}.</source>
+            <target>Yo {0} doy mi consentimiento para que {1} grabe y almacene este archivo con mi voz en la nube y posiblemente en una biblioteca de voz para su publicación y uso en aplicaciones de IA que requieran una muestra de voz, incluida la conversión de voz. La grabación creada por {1} de mí leyendo este guión pasará a ser propiedad exclusiva de {1}, que tendrá el derecho ilimitado de hacer, mandar hacer, usar, copiar, mostrar en público, reconstruir, reparar, modificar, reproducir, publicar, distribuir y vender el Producto del Trabajo, en su totalidad o en parte, o combinar el Producto del Trabajo con otra materia, o no usar el Producto del Trabajo en absoluto, como considere oportuno. {1}{2}{3} utilizará la grabación de diversas maneras, incluyendo, entre otras, audiolibros, narración de aplicaciones y compromiso con las escrituras para promover la misión de la organización. {2}{3} Se me ha proporcionado este guión en un idioma que entiendo, y se me ha dado la opción de solicitar este guión en un idioma de mi elección. Esta grabación actuará como mi firma en lugar de un acuerdo por escrito. {4} Firmo con mi voz, {5}.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stTeam">
+         <segment>
+            <source>the {0} team</source>
+            <target>el equipo {0}</target>
+         </segment>
+      </unit>
+      <unit id="voice.stTeamClause">
+         <segment>
+            <source>I understand that my voice can be used by {0} for any or all of its projects on audio files for the vernacular language, navigation language or any back translation languages.</source>
+            <target>Entiendo que mi voz puede ser utilizada por {0} para cualquiera o todos sus proyectos en archivos de audio para la lengua vernácula, la lengua de navegación o cualquier lengua de retrotraducción.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stThisTeam">
+         <segment>
+            <source>this team</source>
+            <target>este equipo</target>
+         </segment>
+      </unit>
+      <unit id="voice.stVolunteer">
+         <segment>
+            <source>I understand that I will not be compensated for the use of my voice.</source>
+            <target>Entiendo que no seré compensado por el uso de mi voz.</target>
+         </segment>
+      </unit>
+      <unit id="voice.thisTeam">
+         <segment>
+            <source>This Team</source>
+            <target>Este equipo</target>
+         </segment>
+      </unit>
+      <unit id="voice.voiceOptions">
+         <segment>
+            <source>Options for {0} voice:</source>
+            <target>Opciones para {0} voz:</target>
+         </segment>
+      </unit>
+      <unit id="voice.your">
+         <segment>
+            <source>your</source>
+            <target>su</target>
+         </segment>
+      </unit>
       <unit id="vProject.add">
          <segment>
             <source>Add</source>
@@ -7864,7 +8314,7 @@
       <unit id="welcome.setupTeamTip">
          <segment>
             <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-            <target>Configurar el proyecto de audio, dividiendo el trabajo en pasajes que puedan asignarse a varios transcriptores y editores. Los transcriptores y editores pueden trabajar en línea o fuera de línea descargando o importando el proyecto de audio.</target>
+            <target>Configure el proyecto de audio, dividiendo el trabajo en pasajes que puedan asignarse a varios transcriptores y editores. Los transcriptores y editores pueden trabajar en línea o fuera de línea descargando o importando el proyecto de audio.</target>
          </segment>
       </unit>
       <unit id="welcome.team">
@@ -8200,7 +8650,7 @@
       <unit id="wsAudioPlayer.aiInProgress">
          <segment>
             <source>AI Service In Progress... This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
-            <target>Servicio AI en curso... Este es un servicio remoto que puede tardar mucho tiempo si la grabación es grande, o si hay otras solicitudes por delante de la suya.</target>
+            <target>Servicio AI en curso... Este es un servicio remoto que puede tardar mucho tiempo si la grabación es grande, o si hay otras solicitudes antes que la suya.</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.aiGiveUp">

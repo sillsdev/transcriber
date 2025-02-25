@@ -525,7 +525,7 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
             <target/>
          </segment>
       </unit>
@@ -616,13 +616,13 @@
       <unit id="cards.convertVoice">
          <segment>
             <source>Convert Voice</source>
-            <target/>
+            <target>Преобразование голоса</target>
          </segment>
       </unit>
       <unit id="cards.convertVoiceSettings">
          <segment>
             <source>Convert Voice Settings</source>
-            <target/>
+            <target>Настройки преобразования голоса</target>
          </segment>
       </unit>
       <unit id="cards.copyComplete">
@@ -796,7 +796,7 @@
       <unit id="cards.OBTr">
          <segment>
             <source>Oral Bible Translation (like {0})</source>
-            <target/>
+            <target>Устный перевод Библии (как {0})</target>
          </segment>
       </unit>
       <unit id="cards.OBTo">
@@ -832,7 +832,7 @@
       <unit id="cards.personalSettings">
          <segment>
             <source>Personal Settings</source>
-            <target/>
+            <target>Персональные настройки</target>
          </segment>
       </unit>
       <unit id="cards.process">
@@ -862,19 +862,19 @@
       <unit id="cards.recognizeSpeech">
          <segment>
             <source>Recognize Speech</source>
-            <target/>
+            <target>Распознавать речь</target>
          </segment>
       </unit>
       <unit id="cards.recognizeSpeechSettings">
          <segment>
             <source>Recognize Speech Settings</source>
-            <target/>
+            <target>Настройки распознавания речи</target>
          </segment>
       </unit>
       <unit id="cards.reduceNoise">
          <segment>
             <source>Reduce Noise</source>
-            <target/>
+            <target>Уменьшить шум</target>
          </segment>
       </unit>
       <unit id="cards.publishing">
@@ -1396,7 +1396,7 @@
       <unit id="discussionCard.confirmDelete">
          <segment>
             <source>Delete this discussion and all comments?</source>
-            <target/>
+            <target>Удалить это обсуждение и все комментарии?</target>
          </segment>
       </unit>
       <unit id="discussionCard.locate">
@@ -1545,7 +1545,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
             <target/>
          </segment>
       </unit>
@@ -1587,7 +1587,7 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
+            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
             <target/>
          </segment>
       </unit>
@@ -1635,7 +1635,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified!  Carry on!</source>
+            <source>I'm verified! Carry on!</source>
             <target/>
          </segment>
       </unit>
@@ -1798,19 +1798,205 @@
       <unit id="findResource.findOther">
          <segment>
             <source>Find: Other</source>
-            <target/>
+            <target>Найти: Другие</target>
          </segment>
       </unit>
       <unit id="findResource.findResource">
          <segment>
             <source>Find Resource</source>
-            <target/>
+            <target>Найти ресурс</target>
          </segment>
       </unit>
       <unit id="findResource.generalresource">
          <segment>
             <source>Create a General Resource</source>
-            <target/>
+            <target>Создать общий ресурс</target>
+         </segment>
+      </unit>
+      <unit id="findResource.group">
+         <segment>
+            <source>Group</source>
+            <target>Группа</target>
+         </segment>
+      </unit>
+      <unit id="findResource.image">
+         <segment>
+            <source>image</source>
+            <target>изображение</target>
+         </segment>
+      </unit>
+      <unit id="findResource.imageTpl">
+         <segment>
+            <source>Please provide an image for {0}</source>
+            <target>Пожалуйста, укажите изображение для {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.language">
+         <segment>
+            <source>Language</source>
+            <target>Язык</target>
+         </segment>
+      </unit>
+      <unit id="findResource.launch">
+         <segment>
+            <source>Launch</source>
+            <target>Запуск</target>
+         </segment>
+      </unit>
+      <unit id="findResource.meaning">
+         <segment>
+            <source>meaning</source>
+            <target>Значение</target>
+         </segment>
+      </unit>
+      <unit id="findResource.meaningTpl">
+         <segment>
+            <source>Please draft a story to illustrate the meaning of {0}</source>
+            <target>Пожалуйста, составьте рассказ, иллюстрирующий значение слова {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.mediaType">
+         <segment>
+            <source>Media</source>
+            <target>СМИ</target>
+         </segment>
+      </unit>
+      <unit id="findResource.movement">
+         <segment>
+            <source>movement</source>
+            <target>движение</target>
+         </segment>
+      </unit>
+      <unit id="findResource.name">
+         <segment>
+            <source>Name</source>
+            <target>Название</target>
+         </segment>
+      </unit>
+      <unit id="findResource.oralVersion">
+         <segment>
+            <source>oral-version</source>
+            <target>устный перевод</target>
+         </segment>
+      </unit>
+      <unit id="findResource.oralVersionTpl">
+         <segment>
+            <source>Please provide an oral translation of {0}</source>
+            <target>Пожалуйста, сделайте устный перевод {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.passage">
+         <segment>
+            <source>Passage</source>
+            <target>Пассаж</target>
+         </segment>
+      </unit>
+      <unit id="findResource.preview">
+         <segment>
+            <source>Preview</source>
+            <target>Предварительный просмотр</target>
+         </segment>
+      </unit>
+      <unit id="findResource.query">
+         <segment>
+            <source>Query</source>
+            <target>Запрос</target>
+         </segment>
+      </unit>
+      <unit id="findResource.querying">
+         <segment>
+            <source>Querying...</source>
+            <target>Запрос...</target>
+         </segment>
+      </unit>
+      <unit id="findResource.queryBuilder">
+         <segment>
+            <source>AI Query Builder</source>
+            <target>Конструктор запросов AI</target>
+         </segment>
+      </unit>
+      <unit id="findResource.reset">
+         <segment>
+            <source>Reset</source>
+            <target>Сброс</target>
+         </segment>
+      </unit>
+      <unit id="findResource.scope">
+         <segment>
+            <source>Scope</source>
+            <target>Область</target>
+         </segment>
+      </unit>
+      <unit id="findResource.script">
+         <segment>
+            <source>script</source>
+            <target>скрипт</target>
+         </segment>
+      </unit>
+      <unit id="findResource.scriptTpl">
+         <segment>
+            <source>Please provide a script for {0}</source>
+            <target>Пожалуйста, предоставьте скрипт для {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.section">
+         <segment>
+            <source>section</source>
+            <target>раздел</target>
+         </segment>
+      </unit>
+      <unit id="findResource.source">
+         <segment>
+            <source>Source</source>
+            <target>Источник</target>
+         </segment>
+      </unit>
+      <unit id="findResource.summary">
+         <segment>
+            <source>summary</source>
+            <target>резюме</target>
+         </segment>
+      </unit>
+      <unit id="findResource.summaryTpl">
+         <segment>
+            <source>Please provide a summary of {0}</source>
+            <target>Пожалуйста, предоставьте краткое описание {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.type">
+         <segment>
+            <source>Type</source>
+            <target>Тип</target>
+         </segment>
+      </unit>
+      <unit id="findResource.unavailable">
+         <segment>
+            <source>unavailable</source>
+            <target>недоступно</target>
+         </segment>
+      </unit>
+      <unit id="findResource.video">
+         <segment>
+            <source>video</source>
+            <target>видео</target>
+         </segment>
+      </unit>
+      <unit id="findResource.videoTpl">
+         <segment>
+            <source>Please provide a video for {0}</source>
+            <target>Пожалуйста, предоставьте видео для {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.whatsAppHelp">
+         <segment>
+            <source>Install the What's App app on your phone and join the group for your language. You can also install What's App on Windows and link to your phone App. Use Meta AI</source>
+            <target>Установите приложение What's App на свой телефон и присоединитесь к группе для вашего языка. Вы также можете установить What's App на Windows и связать его с приложением на телефоне. Используйте Meta AI</target>
+         </segment>
+      </unit>
+      <unit id="findResource.withTiming">
+         <segment>
+            <source>Audio Bible with verse timing</source>
+            <target>Аудио Библия с синхронизацией стихов</target>
          </segment>
       </unit>
       <unit id="grid.all">
@@ -2145,8 +2331,8 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occurred while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
-            <target/>
+            <source>If this error occurred while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
+            <target>Если эта ошибка возникла при импорте изменений в автономном режиме, пожалуйста, немедленно закройте приложение и откройте его снова. Если ошибка не исчезла, обратитесь в службу поддержки. Если вы продолжите использовать приложение, вы потеряете изменения, сделанные в автономном режиме.</target>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -2211,7 +2397,7 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
+            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -2794,7 +2980,7 @@
       <unit id="keyTerms.settingLanguage">
          <segment>
             <source>Set Language</source>
-            <target/>
+            <target>Установить язык</target>
          </segment>
       </unit>
       <unit id="keyTerms.sortShow">
@@ -3105,7 +3291,7 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
             <target/>
          </segment>
       </unit>
@@ -3412,7 +3598,7 @@
       <unit id="mediaTab.cancelling">
          <segment>
             <source>Canceling with {0} of {1} completed.</source>
-            <target/>
+            <target>Отмена при завершении {0} из {1}.</target>
          </segment>
       </unit>
       <unit id="mediaTab.choosePassage">
@@ -3796,7 +3982,7 @@
       <unit id="mediaUpload.PTFtask">
          <segment>
             <source>Upload a Portable Transcriber File (PTF).</source>
-            <target/>
+            <target>Загрузите файл переносного транскриптора (PTF).</target>
          </segment>
       </unit>
       <unit id="mediaUpload.PTFtitle">
@@ -4587,8 +4773,8 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target/>
+            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <target>Нужна ли нам эта группа? Или просто использовать командного администратора? Люди в этой группе смогут выполнить любой шаг, даже если он назначен группе, в которой они не состоят.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4599,8 +4785,8 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independent Consultant's comments will be visible to all team members.</source>
-            <target/>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independent Consultant's comments will be visible to all team members.</source>
+            <target>Не уверен, что нам нужно это разрешение, потому что неясно, что особенного делают консультанты в этом программном обеспечении. Комментарии независимого консультанта будут видны всем членам команды.</target>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4629,14 +4815,14 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-            <target/>
+            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <target>Комментарии наставника будут видны только CIT. Наставники могут одобрить комментарии CIT, чтобы они стали видны остальным членам команды.</target>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
-            <target/>
+            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
+            <target>Общая группа сверстников без особых прав. Используется для распределения обсуждений по группам.</target>
          </segment>
       </unit>
       <unit id="picker.font">
@@ -4648,19 +4834,103 @@
       <unit id="picker.script">
          <segment>
             <source>Script</source>
-            <target/>
+            <target>Сценарий</target>
          </segment>
       </unit>
       <unit id="picker.language">
          <segment>
             <source>Language</source>
-            <target/>
+            <target>Язык</target>
          </segment>
       </unit>
       <unit id="picker.selectLanguage">
          <segment>
             <source>Choose Language Details</source>
-            <target/>
+            <target>Выбор сведений о языке</target>
+         </segment>
+      </unit>
+      <unit id="picker.findALanguage">
+         <segment>
+            <source>Find a language by name, code, or country</source>
+            <target>Найдите язык по названию, коду или стране.</target>
+         </segment>
+      </unit>
+      <unit id="picker.codeExplained">
+         <segment>
+            <source>Code Explained</source>
+            <target>Объяснение кода</target>
+         </segment>
+      </unit>
+      <unit id="picker.subtags">
+         <segment>
+            <source>Subtags</source>
+            <target>Подтеги</target>
+         </segment>
+      </unit>
+      <unit id="picker.details">
+         <segment>
+            <source>Details</source>
+            <target>Подробности</target>
+         </segment>
+      </unit>
+      <unit id="picker.languageOf">
+         <segment>
+            <source>A Language of $1$2.</source>
+            <target>Язык $1$2.</target>
+         </segment>
+      </unit>
+      <unit id="picker.inScript">
+         <segment>
+            <source> in the $1 script</source>
+            <target> в скрипте $1</target>
+         </segment>
+      </unit>
+      <unit id="picker.select">
+         <segment>
+            <source>Save</source>
+            <target>Сохранить</target>
+         </segment>
+      </unit>
+      <unit id="picker.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target>Отменить</target>
+         </segment>
+      </unit>
+      <unit id="picker.phonetic">
+         <segment>
+            <source>Phonetic</source>
+            <target>Фонетический</target>
+         </segment>
+      </unit>
+      <unit id="picker.changeName">
+         <segment>
+            <source>Change Name</source>
+            <target>Изменение Имя</target>
+         </segment>
+      </unit>
+      <unit id="picker.nameInstruction">
+         <segment>
+            <source>If you would like to change the language name enter the new name here.</source>
+            <target>Если вы хотите изменить название языка, введите новое название здесь.</target>
+         </segment>
+      </unit>
+      <unit id="picker.newName">
+         <segment>
+            <source>New Language Name</source>
+            <target>Новое название языка</target>
+         </segment>
+      </unit>
+      <unit id="picker.change">
+         <segment>
+            <source>Change</source>
+            <target>Изменить</target>
+         </segment>
+      </unit>
+      <unit id="picker.noFonts">
+         <segment>
+            <source>No recommended fonts</source>
+            <target>Нет рекомендуемых шрифтов</target>
          </segment>
       </unit>
       <unit id="planActions.addNote">
@@ -4792,25 +5062,25 @@
       <unit id="planSheet.confirmPublishMovement">
          <segment>
             <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this movement will be marked as published. If you have previously published and now choose not to publish, the {0} and passages and notes will be marked as not published.</source>
-            <target/>
+            <target>Если вы решите опубликовать, {0} и последняя версия всех отрывков и нот во всех {0} в этом движении будут отмечены как опубликованные. Если вы публиковали ранее и теперь решили не публиковать, {0}, а также отрывки и примечания будут помечены как не опубликованные.</target>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishMovementNoPropagate">
          <segment>
             <source>The publishing status of the {0} in the movement will not be changed. If you choose to publish, the movement will be marked as published. If you have previously published and now choose not to publish, the movement will be marked as not published, but if any {0} are published to {1}, the movement will still appear in {1}.</source>
-            <target/>
+            <target>Статус публикации {0} в этом движении не изменится. Если вы решите опубликовать, движение будет помечено как опубликованное. Если вы ранее публиковали движение, а теперь решили не публиковать, оно будет помечено как не опубликованное, но если какие-либо {0} опубликованы в {1}, движение по-прежнему будет отображаться в {1}.</target>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishSection">
          <segment>
             <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</source>
-            <target/>
+            <target>Если вы решите опубликовать движение, то {0} и последняя версия всех отрывков и нот в этом {0} будут помечены как опубликованные. Если вы ранее публиковали, а теперь решили не публиковать, отрывки и заметки будут помечены как не опубликованные.</target>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishSectionNoPropagate">
          <segment>
             <source>If you choose to publish, the {0} will be marked as published but the publishing status of the passages and notes in this {0} will not be changed. If you have previously published and now choose not to publish, the {0} will be marked as not published.</source>
-            <target/>
+            <target>Если вы решите опубликовать, {0} будет помечен как опубликованный, но статус публикации отрывков и заметок в этом {0} не изменится. Если вы ранее публиковали, а теперь решили не публиковать, {0} будет помечен как не опубликованный.</target>
          </segment>
       </unit>
       <unit id="planSheet.filtered">
@@ -4912,7 +5182,7 @@
       <unit id="planSheet.propagate">
          <segment>
             <source>Propagate to all {0} in the {1}</source>
-            <target/>
+            <target>Распространить на все {0} в {1}.</target>
          </segment>
       </unit>
       <unit id="planSheet.publish">
@@ -4942,7 +5212,7 @@
       <unit id="planSheet.resequence">
          <segment>
             <source>Re-sequence</source>
-            <target/>
+            <target>Повторная последовательность</target>
          </segment>
       </unit>
       <unit id="planSheet.save">
@@ -5253,8 +5523,8 @@
       </unit>
       <unit id="profile.syncFrequency">
          <segment>
-            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
-            <target/>
+            <source>Frequency of data sync in minutes. 0 to turn off sync.</source>
+            <target>Частота синхронизации данных в минутах. 0 для отключения синхронизации.</target>
          </segment>
       </unit>
       <unit id="profile.timezone">
@@ -5332,7 +5602,7 @@
       <unit id="projButtons.sheet">
          <segment>
             <source>Spreadsheet</source>
-            <target/>
+            <target>Электронная таблица</target>
          </segment>
       </unit>
       <unit id="projectDownload.amount">
@@ -5416,19 +5686,31 @@
       <unit id="projectDownload.projects">
          <segment>
             <source>Projects</source>
-            <target/>
+            <target>Проекты</target>
          </segment>
       </unit>
       <unit id="projectDownload.project">
          <segment>
             <source>Project</source>
-            <target/>
+            <target>Проект</target>
          </segment>
       </unit>
       <unit id="projectDownload.projectDetails">
          <segment>
             <source>Project Details</source>
-            <target/>
+            <target>Сведения о проекте</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.team">
+         <segment>
+            <source>Team</source>
+            <target>Команда</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.total">
+         <segment>
+            <source>Total MB</source>
+            <target>Всего МБ</target>
          </segment>
       </unit>
       <unit id="publishLevel.none">
@@ -5950,7 +6232,7 @@
       <unit id="shared.clipboardCopy">
          <segment>
             <source>Copy to clipboard</source>
-            <target/>
+            <target>Скопировать в буфер обмена</target>
          </segment>
       </unit>
       <unit id="shared.close">
@@ -5985,13 +6267,13 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your {Pt} login has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
+            <source>Your {Pt} login has expired and can't be automatically renewed. Please log out and login again.</source>
+            <target>Срок действия вашего логина {Pt} истек и не может быть автоматически продлен. Пожалуйста, выйдите из системы и войдите снова.</target>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -6124,7 +6406,7 @@
       <unit id="shared.passages">
          <segment>
             <source>Passages</source>
-            <target/>
+            <target>Прохождения</target>
          </segment>
       </unit>
       <unit id="shared.peerreviewer">
@@ -6514,7 +6796,7 @@
       <unit id="template.renderExportTemplate">
          <segment>
             <source>The {SECT} template works for files exported from {0}.</source>
-            <target/>
+            <target>Шаблон {SECT} работает для файлов, экспортированных из {0}.</target>
          </segment>
       </unit>
       <unit id="template.templateCodes">
@@ -6754,13 +7036,13 @@
       <unit id="transcriber.aiAsrFailed">
          <segment>
             <source>AI transcription failed</source>
-            <target/>
+            <target>Не удалось выполнить транскрипцию AI</target>
          </segment>
       </unit>
       <unit id="transcriber.aiWillContinue">
          <segment>
             <source>The AI will continue to work on the transcription even if you close this progress box. Click the {0} button to open the progress box on this workflow step to see the results. Use the settings gear on {0} button to see the transcription using a different language.</source>
-            <target/>
+            <target>ИИ продолжит работу над транскрипцией, даже если вы закроете это окно выполнения. Нажмите кнопку {0}, чтобы открыть окно выполнения на этом шаге рабочего процесса и посмотреть результаты. Используйте шестеренку настроек на кнопке {0}, чтобы просмотреть транскрипцию на другом языке.</target>
          </segment>
       </unit>
       <unit id="transcriber.beginRecognize">
@@ -6796,7 +7078,7 @@
       <unit id="transcriber.incomplete">
          <segment>
             <source>Incomplete transcription</source>
-            <target/>
+            <target>Незавершенная транскрипция</target>
          </segment>
       </unit>
       <unit id="transcriber.invalidReference">
@@ -6820,7 +7102,7 @@
       <unit id="transcriber.noAsrTranscription">
          <segment>
             <source>No transcription!</source>
-            <target/>
+            <target>Нет транскрипции!</target>
          </segment>
       </unit>
       <unit id="transcriber.noMedia">
@@ -6844,7 +7126,7 @@
       <unit id="transcriber.phoneticTip">
          <segment>
             <source>Language choice is used to suggest word breaks</source>
-            <target/>
+            <target>Выбор языка используется для подсказки разрыва слов</target>
          </segment>
       </unit>
       <unit id="transcriber.pullParatextStart">
@@ -6940,7 +7222,7 @@
       <unit id="transcriber.transcriptionExists">
          <segment>
             <source>Transcription already exists</source>
-            <target/>
+            <target>Транскрипция уже существует</target>
          </segment>
       </unit>
       <unit id="transcriber.transliterate">
@@ -6951,8 +7233,8 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
-            <target/>
+            <source>Transcription updated by {0}. Keep their changes? {1}</source>
+            <target>Транскрипция обновлена {0}. Сохранить их изменения? {1}</target>
          </segment>
       </unit>
       <unit id="transcribeReject.cancel">
@@ -7138,7 +7420,7 @@
       <unit id="transcriptionTab.exportPTFtype">
          <segment>
             <source>Export Audio Project (PTF)</source>
-            <target/>
+            <target>Экспорт аудиопроекта (PTF)</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportSince">
@@ -7155,7 +7437,7 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported.  The export file is too large.</source>
+            <source>The audio project cannot be exported. The export file is too large.</source>
             <target/>
          </segment>
       </unit>
@@ -7197,8 +7479,8 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the PTF export.  Please also export an itf file to capture all changes.</source>
-            <target/>
+            <source>You have new changes locally that were not included in the PTF export. Please also export an itf file to capture all changes.</source>
+            <target>У вас есть новые локальные изменения, которые не были включены в экспорт PTF. Пожалуйста, экспортируйте также файл itf, чтобы отразить все изменения.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
@@ -7498,19 +7780,187 @@
       <unit id="voice.ageAsNumber">
          <segment>
             <source>Age must be a number.</source>
-            <target/>
+            <target>Возраст должен быть числом.</target>
          </segment>
       </unit>
       <unit id="voice.age18">
          <segment>
             <source>You must be 18 years or older to give consent to use your voice.</source>
-            <target/>
+            <target>Вам должно быть 18 лет или больше, чтобы дать согласие на использование вашего голоса.</target>
          </segment>
       </unit>
       <unit id="voice.allTeams">
          <segment>
             <source>All Teams</source>
-            <target/>
+            <target>Все команды</target>
+         </segment>
+      </unit>
+      <unit id="voice.convert">
+         <segment>
+            <source>Begin Conversion</source>
+            <target>Начать преобразование</target>
+         </segment>
+      </unit>
+      <unit id="voice.excludedLanguages">
+         <segment>
+            <source>Excluded languages</source>
+            <target>Исключенные языки</target>
+         </segment>
+      </unit>
+      <unit id="voice.excludeName">
+         <segment>
+            <source>Exclude my name.</source>
+            <target>Исключите мое имя.</target>
+         </segment>
+      </unit>
+      <unit id="voice.forHire">
+         <segment>
+            <source>I work for hire.</source>
+            <target>Я работаю по найму.</target>
+         </segment>
+      </unit>
+      <unit id="voice.gender">
+         <segment>
+            <source>Gender</source>
+            <target>Пол</target>
+         </segment>
+      </unit>
+      <unit id="voice.genderOneWord">
+         <segment>
+            <source>Gender must be a single word.</source>
+            <target>Пол должен состоять из одного слова.</target>
+         </segment>
+      </unit>
+      <unit id="voice.myProjects">
+         <segment>
+            <source>my personal projects</source>
+            <target>мои личные проекты</target>
+         </segment>
+      </unit>
+      <unit id="voice.personalize">
+         <segment>
+            <source>Personalize</source>
+            <target>Персонализация</target>
+         </segment>
+      </unit>
+      <unit id="voice.personalizeTitle">
+         <segment>
+            <source>Personalize Voice Permission</source>
+            <target>Персонализировать голос Разрешение</target>
+         </segment>
+      </unit>
+      <unit id="voice.scope">
+         <segment>
+            <source>Scope of use</source>
+            <target>Сфера использования</target>
+         </segment>
+      </unit>
+      <unit id="voice.stAge">
+         <segment>
+            <source>my age is {0}</source>
+            <target>Мой возраст - {0}</target>
+         </segment>
+      </unit>
+      <unit id="voice.stCategories">
+         <segment>
+            <source>To aid in categorizing my voice for use, {0}.</source>
+            <target>Чтобы помочь классифицировать мой голос для использования, {0}.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stGender">
+         <segment>
+            <source>my gender is {0}</source>
+            <target>мой пол - {0}</target>
+         </segment>
+      </unit>
+      <unit id="voice.stHired">
+         <segment>
+            <source>Since I am being compensated by the team, my voice can be used by the team without additional compensation.</source>
+            <target>Поскольку я получаю вознаграждение от команды, мой голос может быть использован командой без дополнительной компенсации.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stJoin">
+         <segment>
+            <source>and</source>
+            <target>и</target>
+         </segment>
+      </unit>
+      <unit id="voice.stLangClause">
+         <segment>
+            <source>I understand that {0} will only use my voice with languages I do not regularly use, to prevent impersonation. {1}. </source>
+            <target>Я понимаю, что {0} будет использовать мой голос только в языках, которые я не использую регулярно, чтобы избежать пародирования. {1}. </target>
+         </segment>
+      </unit>
+      <unit id="voice.stMyLang">
+         <segment>
+            <source>The language I speak is</source>
+            <target>Язык, которым я владею</target>
+         </segment>
+      </unit>
+      <unit id="voice.stMyLangs">
+         <segment>
+            <source>The languages that I speak are</source>
+            <target>Языки, на которых я говорю</target>
+         </segment>
+      </unit>
+      <unit id="voice.stNotGiven">
+         <segment>
+            <source>not given</source>
+            <target>не указан</target>
+         </segment>
+      </unit>
+      <unit id="voice.stNotIdentified">
+         <segment>
+            <source>but choose not to be identified by name</source>
+            <target>но предпочитаю не называть себя по имени</target>
+         </segment>
+      </unit>
+      <unit id="voice.stStatement">
+         <segment>
+            <source>I {0} provide consent for {1} to record and store this file with my voice in the cloud and possibly in a voice library for publishing and use in AI applications that require a voice sample, including voice conversion. The recording created by {1} of me reading this script will become the exclusive property of {1} which shall have the unlimited right to make, have made, use, copy, display in public, reconstruct, repair, modify, reproduce, publish, distribute and sell the Work Product, in whole or in part, or combine the Work Product with other matter, or not use the Work Product at all, as it sees fit. {1} will use the recording in a variety of ways, including, but not limited to, Audio books, narrating apps, and scripture engagement to further the mission of the organization. {2}{3} I have been provided this script in a language I understand, and have been given the option to request this script in a language of my choice. This recording will act as my signature in place of a written agreement. {4} I sign with my voice, {5}.</source>
+            <target>Я {0} даю согласие {1} на запись и хранение этого файла с моим голосом в облаке и, возможно, в голосовой библиотеке для публикации и использования в приложениях искусственного интеллекта, которым требуется образец голоса, включая преобразование голоса. Созданная {1} запись моего чтения этого сценария станет исключительной собственностью {1}, которая будет иметь неограниченное право делать, производить, использовать, копировать, демонстрировать публично, реконструировать, ремонтировать, модифицировать, воспроизводить, публиковать, распространять и продавать Рабочий продукт полностью или частично, объединять Рабочий продукт с другими материалами или не использовать Рабочий продукт вообще, по своему усмотрению. {1} будет использовать запись различными способами, включая, но не ограничиваясь, аудиокниги, приложения для чтения и вовлечение в чтение Священного Писания для продвижения миссии организации. {2}{3} Мне предоставили этот сценарий на понятном мне языке и дали возможность запросить его на другом языке по моему выбору. Эта запись будет служить моей подписью вместо письменного соглашения. {4} Я подписываюсь своим голосом, {5}.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stTeam">
+         <segment>
+            <source>the {0} team</source>
+            <target>команда {0}</target>
+         </segment>
+      </unit>
+      <unit id="voice.stTeamClause">
+         <segment>
+            <source>I understand that my voice can be used by {0} for any or all of its projects on audio files for the vernacular language, navigation language or any back translation languages.</source>
+            <target>Я понимаю, что мой голос может быть использован компанией {0} в любом или всех ее проектах для создания аудиофайлов для родного языка, языка навигации или любых языков обратного перевода.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stThisTeam">
+         <segment>
+            <source>this team</source>
+            <target>эта команда</target>
+         </segment>
+      </unit>
+      <unit id="voice.stVolunteer">
+         <segment>
+            <source>I understand that I will not be compensated for the use of my voice.</source>
+            <target>Я понимаю, что мне не будет выплачена компенсация за использование моего голоса.</target>
+         </segment>
+      </unit>
+      <unit id="voice.thisTeam">
+         <segment>
+            <source>This Team</source>
+            <target>Эта команда</target>
+         </segment>
+      </unit>
+      <unit id="voice.voiceOptions">
+         <segment>
+            <source>Options for {0} voice:</source>
+            <target>Варианты использования голоса {0}:</target>
+         </segment>
+      </unit>
+      <unit id="voice.your">
+         <segment>
+            <source>your</source>
+            <target>ваш</target>
          </segment>
       </unit>
       <unit id="vProject.add">
@@ -7630,7 +8080,7 @@
       <unit id="vProject.howToPublic">
          <segment>
             <source>Contact Nathan Payne (nathan_payne at sil.org) for access to create shared content.</source>
-            <target/>
+            <target>Свяжитесь с Натаном Пейном (nathan_payne at sil.org), чтобы получить доступ к созданию общего контента.</target>
          </segment>
       </unit>
       <unit id="vProject.language">
@@ -7702,13 +8152,13 @@
       <unit id="vProject.renderCustomize">
          <segment>
             <source>including {0} customization</source>
-            <target/>
+            <target>включая {0} настройку</target>
          </segment>
       </unit>
       <unit id="vProject.renderRecommended">
          <segment>
             <source>Recommended for {0}</source>
-            <target/>
+            <target>Рекомендуется для {0}</target>
          </segment>
       </unit>
       <unit id="vProject.rightToLeft">
@@ -7863,7 +8313,7 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
             <target/>
          </segment>
       </unit>
@@ -7881,7 +8331,7 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
             <target/>
          </segment>
       </unit>
@@ -8199,8 +8649,8 @@
       </unit>
       <unit id="wsAudioPlayer.aiInProgress">
          <segment>
-            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
-            <target/>
+            <source>AI Service In Progress... This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target>AI Service In Progress... Это удаленная служба, которая может занять много времени, если запись большая или если есть другие запросы, опережающие ваш.</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.aiGiveUp">
@@ -8242,19 +8692,19 @@
       <unit id="wsAudioPlayer.recognizePrompt">
          <segment>
             <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
-            <target/>
+            <target>Выберите язык для распознавания. Если язык недоступен, выберите близкий язык с похожей системой письма.</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.recognizeSpeech">
          <segment>
             <source>Recognize Speech {0}</source>
-            <target/>
+            <target>Распознавать речь {0}</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.recognizeSpeechSettings">
          <segment>
             <source>Recognize Speech Settings</source>
-            <target/>
+            <target>Настройки распознавания речи</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.record">
@@ -8296,7 +8746,7 @@
       <unit id="wsAudioPlayer.selectVoicePrompt">
          <segment>
             <source>Enter the full name of the person whose voice will be used to modify the voice or voices in the original recording.</source>
-            <target/>
+            <target>Введите полное имя человека, чей голос будет использоваться для изменения голоса или голосов в исходной записи.</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.silence">
