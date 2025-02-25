@@ -274,10 +274,7 @@ export function TeamDialog(props: IProps) {
 
   const nameInUse = (newName: string): boolean => {
     if (newName === values?.team.attributes.name) return false;
-    const sameNameRec = organizations.filter(
-      (o) => o?.attributes?.name === newName
-    );
-    return sameNameRec.length > 0;
+    return Boolean(organizations.find((o) => o?.attributes?.name === newName));
   };
 
   useEffect(() => {
@@ -448,7 +445,8 @@ export function TeamDialog(props: IProps) {
               disabled ||
               recording ||
               saving ||
-              (values && (name === '' || nameInUse(name))) ||
+              name === '' ||
+              nameInUse(name) ||
               !changed ||
               bibleIdError !== ''
             }
