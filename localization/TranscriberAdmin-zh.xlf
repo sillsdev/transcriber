@@ -525,7 +525,7 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
             <target/>
          </segment>
       </unit>
@@ -616,13 +616,13 @@
       <unit id="cards.convertVoice">
          <segment>
             <source>Convert Voice</source>
-            <target/>
+            <target>转换语音</target>
          </segment>
       </unit>
       <unit id="cards.convertVoiceSettings">
          <segment>
             <source>Convert Voice Settings</source>
-            <target/>
+            <target>转换语音设置</target>
          </segment>
       </unit>
       <unit id="cards.copyComplete">
@@ -796,7 +796,7 @@
       <unit id="cards.OBTr">
          <segment>
             <source>Oral Bible Translation (like {0})</source>
-            <target/>
+            <target>口语圣经翻译（如 {0}</target>
          </segment>
       </unit>
       <unit id="cards.OBTo">
@@ -832,7 +832,7 @@
       <unit id="cards.personalSettings">
          <segment>
             <source>Personal Settings</source>
-            <target/>
+            <target>个人设置</target>
          </segment>
       </unit>
       <unit id="cards.process">
@@ -862,19 +862,19 @@
       <unit id="cards.recognizeSpeech">
          <segment>
             <source>Recognize Speech</source>
-            <target/>
+            <target>识别语音</target>
          </segment>
       </unit>
       <unit id="cards.recognizeSpeechSettings">
          <segment>
             <source>Recognize Speech Settings</source>
-            <target/>
+            <target>识别语音设置</target>
          </segment>
       </unit>
       <unit id="cards.reduceNoise">
          <segment>
             <source>Reduce Noise</source>
-            <target/>
+            <target>降低噪音</target>
          </segment>
       </unit>
       <unit id="cards.publishing">
@@ -1396,7 +1396,7 @@
       <unit id="discussionCard.confirmDelete">
          <segment>
             <source>Delete this discussion and all comments?</source>
-            <target/>
+            <target>删除此讨论和所有评论？</target>
          </segment>
       </unit>
       <unit id="discussionCard.locate">
@@ -1545,7 +1545,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
             <target/>
          </segment>
       </unit>
@@ -1587,7 +1587,7 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
+            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
             <target/>
          </segment>
       </unit>
@@ -1635,7 +1635,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified!  Carry on!</source>
+            <source>I'm verified! Carry on!</source>
             <target/>
          </segment>
       </unit>
@@ -1798,19 +1798,205 @@
       <unit id="findResource.findOther">
          <segment>
             <source>Find: Other</source>
-            <target/>
+            <target>查找： 其他</target>
          </segment>
       </unit>
       <unit id="findResource.findResource">
          <segment>
             <source>Find Resource</source>
-            <target/>
+            <target>查找资源</target>
          </segment>
       </unit>
       <unit id="findResource.generalresource">
          <segment>
             <source>Create a General Resource</source>
-            <target/>
+            <target>创建一般资源</target>
+         </segment>
+      </unit>
+      <unit id="findResource.group">
+         <segment>
+            <source>Group</source>
+            <target>组</target>
+         </segment>
+      </unit>
+      <unit id="findResource.image">
+         <segment>
+            <source>image</source>
+            <target>图像</target>
+         </segment>
+      </unit>
+      <unit id="findResource.imageTpl">
+         <segment>
+            <source>Please provide an image for {0}</source>
+            <target>请提供 {0} 的图像</target>
+         </segment>
+      </unit>
+      <unit id="findResource.language">
+         <segment>
+            <source>Language</source>
+            <target>语言</target>
+         </segment>
+      </unit>
+      <unit id="findResource.launch">
+         <segment>
+            <source>Launch</source>
+            <target>启动</target>
+         </segment>
+      </unit>
+      <unit id="findResource.meaning">
+         <segment>
+            <source>meaning</source>
+            <target>意义</target>
+         </segment>
+      </unit>
+      <unit id="findResource.meaningTpl">
+         <segment>
+            <source>Please draft a story to illustrate the meaning of {0}</source>
+            <target>请起草一个故事，说明{0}的含义。</target>
+         </segment>
+      </unit>
+      <unit id="findResource.mediaType">
+         <segment>
+            <source>Media</source>
+            <target>媒体</target>
+         </segment>
+      </unit>
+      <unit id="findResource.movement">
+         <segment>
+            <source>movement</source>
+            <target>运动</target>
+         </segment>
+      </unit>
+      <unit id="findResource.name">
+         <segment>
+            <source>Name</source>
+            <target>名称</target>
+         </segment>
+      </unit>
+      <unit id="findResource.oralVersion">
+         <segment>
+            <source>oral-version</source>
+            <target>口译</target>
+         </segment>
+      </unit>
+      <unit id="findResource.oralVersionTpl">
+         <segment>
+            <source>Please provide an oral translation of {0}</source>
+            <target>请口头翻译{0}。</target>
+         </segment>
+      </unit>
+      <unit id="findResource.passage">
+         <segment>
+            <source>Passage</source>
+            <target>段落</target>
+         </segment>
+      </unit>
+      <unit id="findResource.preview">
+         <segment>
+            <source>Preview</source>
+            <target>预览</target>
+         </segment>
+      </unit>
+      <unit id="findResource.query">
+         <segment>
+            <source>Query</source>
+            <target>查询</target>
+         </segment>
+      </unit>
+      <unit id="findResource.querying">
+         <segment>
+            <source>Querying...</source>
+            <target>查询...</target>
+         </segment>
+      </unit>
+      <unit id="findResource.queryBuilder">
+         <segment>
+            <source>AI Query Builder</source>
+            <target>人工智能查询生成器</target>
+         </segment>
+      </unit>
+      <unit id="findResource.reset">
+         <segment>
+            <source>Reset</source>
+            <target>重置</target>
+         </segment>
+      </unit>
+      <unit id="findResource.scope">
+         <segment>
+            <source>Scope</source>
+            <target>范围</target>
+         </segment>
+      </unit>
+      <unit id="findResource.script">
+         <segment>
+            <source>script</source>
+            <target>脚本</target>
+         </segment>
+      </unit>
+      <unit id="findResource.scriptTpl">
+         <segment>
+            <source>Please provide a script for {0}</source>
+            <target>请提供 {0} 节的脚本</target>
+         </segment>
+      </unit>
+      <unit id="findResource.section">
+         <segment>
+            <source>section</source>
+            <target>节的脚本</target>
+         </segment>
+      </unit>
+      <unit id="findResource.source">
+         <segment>
+            <source>Source</source>
+            <target>来源</target>
+         </segment>
+      </unit>
+      <unit id="findResource.summary">
+         <segment>
+            <source>summary</source>
+            <target>摘要</target>
+         </segment>
+      </unit>
+      <unit id="findResource.summaryTpl">
+         <segment>
+            <source>Please provide a summary of {0}</source>
+            <target>请提供 {0} 的摘要</target>
+         </segment>
+      </unit>
+      <unit id="findResource.type">
+         <segment>
+            <source>Type</source>
+            <target>类型</target>
+         </segment>
+      </unit>
+      <unit id="findResource.unavailable">
+         <segment>
+            <source>unavailable</source>
+            <target>不可用</target>
+         </segment>
+      </unit>
+      <unit id="findResource.video">
+         <segment>
+            <source>video</source>
+            <target>视频</target>
+         </segment>
+      </unit>
+      <unit id="findResource.videoTpl">
+         <segment>
+            <source>Please provide a video for {0}</source>
+            <target>请提供 {0} 的视频</target>
+         </segment>
+      </unit>
+      <unit id="findResource.whatsAppHelp">
+         <segment>
+            <source>Install the What's App app on your phone and join the group for your language. You can also install What's App on Windows and link to your phone App. Use Meta AI</source>
+            <target>在您的手机上安装 What's App 应用程序，并加入您所使用语言的群组。您也可以在 Windows 上安装 What's App，并链接到您的手机应用程序。使用 Meta AI</target>
+         </segment>
+      </unit>
+      <unit id="findResource.withTiming">
+         <segment>
+            <source>Audio Bible with verse timing</source>
+            <target>带经文计时的有声圣经</target>
          </segment>
       </unit>
       <unit id="grid.all">
@@ -2145,8 +2331,8 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occurred while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
-            <target/>
+            <source>If this error occurred while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
+            <target>如果在导入离线更改时出现此错误，请立即关闭应用程序并重新打开。 如果错误仍然存在，请联系技术支持。 如果继续使用应用程序，您将丢失离线更改。</target>
          </segment>
       </unit>
       <unit id="import.invalidProject">
@@ -2211,7 +2397,7 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
+            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -2794,7 +2980,7 @@
       <unit id="keyTerms.settingLanguage">
          <segment>
             <source>Set Language</source>
-            <target/>
+            <target>设置语言</target>
          </segment>
       </unit>
       <unit id="keyTerms.sortShow">
@@ -3105,7 +3291,7 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
             <target/>
          </segment>
       </unit>
@@ -3412,7 +3598,7 @@
       <unit id="mediaTab.cancelling">
          <segment>
             <source>Canceling with {0} of {1} completed.</source>
-            <target/>
+            <target>以 {0} 的 {1} 完成取消。</target>
          </segment>
       </unit>
       <unit id="mediaTab.choosePassage">
@@ -3796,7 +3982,7 @@
       <unit id="mediaUpload.PTFtask">
          <segment>
             <source>Upload a Portable Transcriber File (PTF).</source>
-            <target/>
+            <target>上传便携式转录器文件 (PTF)。</target>
          </segment>
       </unit>
       <unit id="mediaUpload.PTFtitle">
@@ -4587,7 +4773,7 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
             <target/>
          </segment>
       </unit>
@@ -4599,8 +4785,8 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independent Consultant's comments will be visible to all team members.</source>
-            <target/>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independent Consultant's comments will be visible to all team members.</source>
+            <target>也不确定是否需要此权限，因为不清楚顾问在此软件中做了哪些特殊事情。 独立顾问的评论将对所有团队成员可见。</target>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4629,13 +4815,13 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
             <target/>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
+            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
             <target/>
          </segment>
       </unit>
@@ -4648,19 +4834,103 @@
       <unit id="picker.script">
          <segment>
             <source>Script</source>
-            <target/>
+            <target>脚本</target>
          </segment>
       </unit>
       <unit id="picker.language">
          <segment>
             <source>Language</source>
-            <target/>
+            <target>语言</target>
          </segment>
       </unit>
       <unit id="picker.selectLanguage">
          <segment>
             <source>Choose Language Details</source>
-            <target/>
+            <target>选择语言详细信息</target>
+         </segment>
+      </unit>
+      <unit id="picker.findALanguage">
+         <segment>
+            <source>Find a language by name, code, or country</source>
+            <target>按名称、代码或国家查找语言</target>
+         </segment>
+      </unit>
+      <unit id="picker.codeExplained">
+         <segment>
+            <source>Code Explained</source>
+            <target>代码解释</target>
+         </segment>
+      </unit>
+      <unit id="picker.subtags">
+         <segment>
+            <source>Subtags</source>
+            <target>副标签</target>
+         </segment>
+      </unit>
+      <unit id="picker.details">
+         <segment>
+            <source>Details</source>
+            <target>详细信息</target>
+         </segment>
+      </unit>
+      <unit id="picker.languageOf">
+         <segment>
+            <source>A Language of $1$2.</source>
+            <target>1$2 的语言。</target>
+         </segment>
+      </unit>
+      <unit id="picker.inScript">
+         <segment>
+            <source> in the $1 script</source>
+            <target> 在 $1 脚本中</target>
+         </segment>
+      </unit>
+      <unit id="picker.select">
+         <segment>
+            <source>Save</source>
+            <target>保存</target>
+         </segment>
+      </unit>
+      <unit id="picker.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target>取消</target>
+         </segment>
+      </unit>
+      <unit id="picker.phonetic">
+         <segment>
+            <source>Phonetic</source>
+            <target>拼音</target>
+         </segment>
+      </unit>
+      <unit id="picker.changeName">
+         <segment>
+            <source>Change Name</source>
+            <target>更改名称</target>
+         </segment>
+      </unit>
+      <unit id="picker.nameInstruction">
+         <segment>
+            <source>If you would like to change the language name enter the new name here.</source>
+            <target>如果要更改语言名称，请在此处输入新名称。</target>
+         </segment>
+      </unit>
+      <unit id="picker.newName">
+         <segment>
+            <source>New Language Name</source>
+            <target>新语言名称</target>
+         </segment>
+      </unit>
+      <unit id="picker.change">
+         <segment>
+            <source>Change</source>
+            <target>更改</target>
+         </segment>
+      </unit>
+      <unit id="picker.noFonts">
+         <segment>
+            <source>No recommended fonts</source>
+            <target>不推荐字体</target>
          </segment>
       </unit>
       <unit id="planActions.addNote">
@@ -4792,19 +5062,19 @@
       <unit id="planSheet.confirmPublishMovement">
          <segment>
             <source>If you choose to publish, the {0} and the latest version of all passages and notes in all {0} in this movement will be marked as published. If you have previously published and now choose not to publish, the {0} and passages and notes will be marked as not published.</source>
-            <target/>
+            <target>如果您选择发布，本乐章中的 {0} 以及所有 {0} 中所有段落和注释的最新版本都将标记为已发布。如果您之前已发表，但现在选择不发表，则{0}以及段落和注释将被标记为未发表。</target>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishMovementNoPropagate">
          <segment>
             <source>The publishing status of the {0} in the movement will not be changed. If you choose to publish, the movement will be marked as published. If you have previously published and now choose not to publish, the movement will be marked as not published, but if any {0} are published to {1}, the movement will still appear in {1}.</source>
-            <target/>
+            <target>乐章中{0}的出版状态不会改变。如果您选择发表，乐章将被标记为已发表。如果您之前已出版，但现在选择不出版，则乐章将被标记为未出版，但如果有任何{0}已出版至{1}，则乐章仍将出现在{1}中。</target>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishSection">
          <segment>
             <source>If you choose to publish, the {0} and the latest version of all passages and notes in this {0} will be marked as published. If you have previously published and now choose not to publish, the passages and notes will be marked as not published.</source>
-            <target/>
+            <target>如果您选择发表，则{0}以及该{0}中所有段落和注释的最新版本都将标记为已发表。如果之前已发布，现在选择不发布，则段落和注释将被标记为未发布。</target>
          </segment>
       </unit>
       <unit id="planSheet.confirmPublishSectionNoPropagate">
@@ -4912,7 +5182,7 @@
       <unit id="planSheet.propagate">
          <segment>
             <source>Propagate to all {0} in the {1}</source>
-            <target/>
+            <target>传播到 {1} 中的所有 {0}</target>
          </segment>
       </unit>
       <unit id="planSheet.publish">
@@ -4942,7 +5212,7 @@
       <unit id="planSheet.resequence">
          <segment>
             <source>Re-sequence</source>
-            <target/>
+            <target>重序列</target>
          </segment>
       </unit>
       <unit id="planSheet.save">
@@ -5253,8 +5523,8 @@
       </unit>
       <unit id="profile.syncFrequency">
          <segment>
-            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
-            <target/>
+            <source>Frequency of data sync in minutes. 0 to turn off sync.</source>
+            <target>数据同步频率（分钟）。 0 表示关闭同步。</target>
          </segment>
       </unit>
       <unit id="profile.timezone">
@@ -5332,7 +5602,7 @@
       <unit id="projButtons.sheet">
          <segment>
             <source>Spreadsheet</source>
-            <target/>
+            <target>电子表格</target>
          </segment>
       </unit>
       <unit id="projectDownload.amount">
@@ -5416,19 +5686,31 @@
       <unit id="projectDownload.projects">
          <segment>
             <source>Projects</source>
-            <target/>
+            <target>项目</target>
          </segment>
       </unit>
       <unit id="projectDownload.project">
          <segment>
             <source>Project</source>
-            <target/>
+            <target>项目</target>
          </segment>
       </unit>
       <unit id="projectDownload.projectDetails">
          <segment>
             <source>Project Details</source>
-            <target/>
+            <target>项目详情</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.team">
+         <segment>
+            <source>Team</source>
+            <target>团队</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.total">
+         <segment>
+            <source>Total MB</source>
+            <target>总 MB</target>
          </segment>
       </unit>
       <unit id="publishLevel.none">
@@ -5950,7 +6232,7 @@
       <unit id="shared.clipboardCopy">
          <segment>
             <source>Copy to clipboard</source>
-            <target/>
+            <target>复制到剪贴板</target>
          </segment>
       </unit>
       <unit id="shared.close">
@@ -5985,13 +6267,13 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your {Pt} login has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
+            <source>Your {Pt} login has expired and can't be automatically renewed. Please log out and login again.</source>
+            <target>您的 {Pt} 登录已过期，无法自动更新。 请退出并重新登录。</target>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -6124,7 +6406,7 @@
       <unit id="shared.passages">
          <segment>
             <source>Passages</source>
-            <target/>
+            <target>段落</target>
          </segment>
       </unit>
       <unit id="shared.peerreviewer">
@@ -6514,7 +6796,7 @@
       <unit id="template.renderExportTemplate">
          <segment>
             <source>The {SECT} template works for files exported from {0}.</source>
-            <target/>
+            <target>{SECT} 模板适用于从 {0} 导出的文件。</target>
          </segment>
       </unit>
       <unit id="template.templateCodes">
@@ -6754,13 +7036,13 @@
       <unit id="transcriber.aiAsrFailed">
          <segment>
             <source>AI transcription failed</source>
-            <target/>
+            <target>人工智能转录失败</target>
          </segment>
       </unit>
       <unit id="transcriber.aiWillContinue">
          <segment>
             <source>The AI will continue to work on the transcription even if you close this progress box. Click the {0} button to open the progress box on this workflow step to see the results. Use the settings gear on {0} button to see the transcription using a different language.</source>
-            <target/>
+            <target>即使您关闭此进度框，人工智能仍将继续转录工作。单击 {0} 按钮打开此工作流程步骤的进度框，查看结果。使用{0}按钮上的设置齿轮查看使用不同语言进行的转录。</target>
          </segment>
       </unit>
       <unit id="transcriber.beginRecognize">
@@ -6796,7 +7078,7 @@
       <unit id="transcriber.incomplete">
          <segment>
             <source>Incomplete transcription</source>
-            <target/>
+            <target>转录不完整</target>
          </segment>
       </unit>
       <unit id="transcriber.invalidReference">
@@ -6820,7 +7102,7 @@
       <unit id="transcriber.noAsrTranscription">
          <segment>
             <source>No transcription!</source>
-            <target/>
+            <target>无转录！</target>
          </segment>
       </unit>
       <unit id="transcriber.noMedia">
@@ -6844,7 +7126,7 @@
       <unit id="transcriber.phoneticTip">
          <segment>
             <source>Language choice is used to suggest word breaks</source>
-            <target/>
+            <target>语言选择用于提示断词</target>
          </segment>
       </unit>
       <unit id="transcriber.pullParatextStart">
@@ -6940,7 +7222,7 @@
       <unit id="transcriber.transcriptionExists">
          <segment>
             <source>Transcription already exists</source>
-            <target/>
+            <target>转录内容已经存在</target>
          </segment>
       </unit>
       <unit id="transcriber.transliterate">
@@ -6951,7 +7233,7 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
+            <source>Transcription updated by {0}. Keep their changes? {1}</source>
             <target/>
          </segment>
       </unit>
@@ -7138,7 +7420,7 @@
       <unit id="transcriptionTab.exportPTFtype">
          <segment>
             <source>Export Audio Project (PTF)</source>
-            <target/>
+            <target>导出音频项目 (PTF)</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportSince">
@@ -7155,7 +7437,7 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported.  The export file is too large.</source>
+            <source>The audio project cannot be exported. The export file is too large.</source>
             <target/>
          </segment>
       </unit>
@@ -7197,8 +7479,8 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the PTF export.  Please also export an itf file to capture all changes.</source>
-            <target/>
+            <source>You have new changes locally that were not included in the PTF export. Please also export an itf file to capture all changes.</source>
+            <target>您在本地有新的更改，但未包含在 PTF 导出中。 请同时导出一个 itf 文件以记录所有更改。</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
@@ -7498,19 +7780,187 @@
       <unit id="voice.ageAsNumber">
          <segment>
             <source>Age must be a number.</source>
-            <target/>
+            <target>年龄必须是数字。</target>
          </segment>
       </unit>
       <unit id="voice.age18">
          <segment>
             <source>You must be 18 years or older to give consent to use your voice.</source>
-            <target/>
+            <target>您必须年满 18 岁才能同意使用您的声音。</target>
          </segment>
       </unit>
       <unit id="voice.allTeams">
          <segment>
             <source>All Teams</source>
-            <target/>
+            <target>所有团队</target>
+         </segment>
+      </unit>
+      <unit id="voice.convert">
+         <segment>
+            <source>Begin Conversion</source>
+            <target>开始转换</target>
+         </segment>
+      </unit>
+      <unit id="voice.excludedLanguages">
+         <segment>
+            <source>Excluded languages</source>
+            <target>排除的语言</target>
+         </segment>
+      </unit>
+      <unit id="voice.excludeName">
+         <segment>
+            <source>Exclude my name.</source>
+            <target>排除我的姓名。</target>
+         </segment>
+      </unit>
+      <unit id="voice.forHire">
+         <segment>
+            <source>I work for hire.</source>
+            <target>我受雇于人。</target>
+         </segment>
+      </unit>
+      <unit id="voice.gender">
+         <segment>
+            <source>Gender</source>
+            <target>性别</target>
+         </segment>
+      </unit>
+      <unit id="voice.genderOneWord">
+         <segment>
+            <source>Gender must be a single word.</source>
+            <target>性别必须是一个单词。</target>
+         </segment>
+      </unit>
+      <unit id="voice.myProjects">
+         <segment>
+            <source>my personal projects</source>
+            <target>我的个人项目</target>
+         </segment>
+      </unit>
+      <unit id="voice.personalize">
+         <segment>
+            <source>Personalize</source>
+            <target>个性化</target>
+         </segment>
+      </unit>
+      <unit id="voice.personalizeTitle">
+         <segment>
+            <source>Personalize Voice Permission</source>
+            <target>个性化语音许可</target>
+         </segment>
+      </unit>
+      <unit id="voice.scope">
+         <segment>
+            <source>Scope of use</source>
+            <target>使用范围</target>
+         </segment>
+      </unit>
+      <unit id="voice.stAge">
+         <segment>
+            <source>my age is {0}</source>
+            <target>我的年龄是 {0}</target>
+         </segment>
+      </unit>
+      <unit id="voice.stCategories">
+         <segment>
+            <source>To aid in categorizing my voice for use, {0}.</source>
+            <target>为了帮助对我的声音进行分类以便使用，{0}。</target>
+         </segment>
+      </unit>
+      <unit id="voice.stGender">
+         <segment>
+            <source>my gender is {0}</source>
+            <target>我的性别是 {0}</target>
+         </segment>
+      </unit>
+      <unit id="voice.stHired">
+         <segment>
+            <source>Since I am being compensated by the team, my voice can be used by the team without additional compensation.</source>
+            <target>既然团队给了我报酬，我的声音就可以被团队使用，无需额外补偿。</target>
+         </segment>
+      </unit>
+      <unit id="voice.stJoin">
+         <segment>
+            <source>and</source>
+            <target>并且</target>
+         </segment>
+      </unit>
+      <unit id="voice.stLangClause">
+         <segment>
+            <source>I understand that {0} will only use my voice with languages I do not regularly use, to prevent impersonation. {1}. </source>
+            <target>我明白，{0} 将只在我不经常使用的语言中使用我的声音，以防止冒充。{1}. </target>
+         </segment>
+      </unit>
+      <unit id="voice.stMyLang">
+         <segment>
+            <source>The language I speak is</source>
+            <target>我说的语言是</target>
+         </segment>
+      </unit>
+      <unit id="voice.stMyLangs">
+         <segment>
+            <source>The languages that I speak are</source>
+            <target>我说的语言是</target>
+         </segment>
+      </unit>
+      <unit id="voice.stNotGiven">
+         <segment>
+            <source>not given</source>
+            <target>不提供</target>
+         </segment>
+      </unit>
+      <unit id="voice.stNotIdentified">
+         <segment>
+            <source>but choose not to be identified by name</source>
+            <target>但选择不透露姓名</target>
+         </segment>
+      </unit>
+      <unit id="voice.stStatement">
+         <segment>
+            <source>I {0} provide consent for {1} to record and store this file with my voice in the cloud and possibly in a voice library for publishing and use in AI applications that require a voice sample, including voice conversion. The recording created by {1} of me reading this script will become the exclusive property of {1} which shall have the unlimited right to make, have made, use, copy, display in public, reconstruct, repair, modify, reproduce, publish, distribute and sell the Work Product, in whole or in part, or combine the Work Product with other matter, or not use the Work Product at all, as it sees fit. {1} will use the recording in a variety of ways, including, but not limited to, Audio books, narrating apps, and scripture engagement to further the mission of the organization. {2}{3} I have been provided this script in a language I understand, and have been given the option to request this script in a language of my choice. This recording will act as my signature in place of a written agreement. {4} I sign with my voice, {5}.</source>
+            <target>本人{0}同意{1}录制并在云端存储此文件和本人的语音，并可能将其存储在语音库中，以便在需要语音样本的人工智能应用程序中发布和使用，包括语音转换。由{1}录制的我朗读本脚本的录音将成为{1}的专有财产，{1}有权在其认为合适的情况下制作、制作、使用、复制、公开展示、重建、修复、修改、复制、出版、分发和销售全部或部分工作成果，或将工作成果与其他事项相结合，或完全不使用工作成果。{1}将以各种方式使用录音，包括但不限于有声读物、解说应用程序和经文参与，以推进本组织的使命。{2}{3} 我已获得以我所理解的语言编写的剧本，并可选择以我所选择的语言编写剧本。此录音将作为我的签名，代替书面协议。{4} 我用声音签名，{5}。</target>
+         </segment>
+      </unit>
+      <unit id="voice.stTeam">
+         <segment>
+            <source>the {0} team</source>
+            <target>{0}团队</target>
+         </segment>
+      </unit>
+      <unit id="voice.stTeamClause">
+         <segment>
+            <source>I understand that my voice can be used by {0} for any or all of its projects on audio files for the vernacular language, navigation language or any back translation languages.</source>
+            <target>我明白我的声音可被 {0} 用于其任何或所有项目的音频文件，包括白话、导航语言或任何回译语言。</target>
+         </segment>
+      </unit>
+      <unit id="voice.stThisTeam">
+         <segment>
+            <source>this team</source>
+            <target>本团队</target>
+         </segment>
+      </unit>
+      <unit id="voice.stVolunteer">
+         <segment>
+            <source>I understand that I will not be compensated for the use of my voice.</source>
+            <target>我明白，使用我的声音将不会得到任何补偿。</target>
+         </segment>
+      </unit>
+      <unit id="voice.thisTeam">
+         <segment>
+            <source>This Team</source>
+            <target>本团队</target>
+         </segment>
+      </unit>
+      <unit id="voice.voiceOptions">
+         <segment>
+            <source>Options for {0} voice:</source>
+            <target>{0}声音的选项：</target>
+         </segment>
+      </unit>
+      <unit id="voice.your">
+         <segment>
+            <source>your</source>
+            <target>您的</target>
          </segment>
       </unit>
       <unit id="vProject.add">
@@ -7630,7 +8080,7 @@
       <unit id="vProject.howToPublic">
          <segment>
             <source>Contact Nathan Payne (nathan_payne at sil.org) for access to create shared content.</source>
-            <target/>
+            <target>请联系 Nathan Payne (nathan_payne at sil.org) 以获取创建共享内容的权限。</target>
          </segment>
       </unit>
       <unit id="vProject.language">
@@ -7702,13 +8152,13 @@
       <unit id="vProject.renderCustomize">
          <segment>
             <source>including {0} customization</source>
-            <target/>
+            <target>包括 {0} 个性化</target>
          </segment>
       </unit>
       <unit id="vProject.renderRecommended">
          <segment>
             <source>Recommended for {0}</source>
-            <target/>
+            <target>推荐用于 {0}</target>
          </segment>
       </unit>
       <unit id="vProject.rightToLeft">
@@ -7863,7 +8313,7 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
             <target/>
          </segment>
       </unit>
@@ -7881,7 +8331,7 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
             <target/>
          </segment>
       </unit>
@@ -8199,8 +8649,8 @@
       </unit>
       <unit id="wsAudioPlayer.aiInProgress">
          <segment>
-            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
-            <target/>
+            <source>AI Service In Progress... This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target>人工智能服务进行中... 这是一项远程服务，如果录制内容较多，或有其他请求排在您的请求之前，则可能需要很长时间。</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.aiGiveUp">
@@ -8242,19 +8692,19 @@
       <unit id="wsAudioPlayer.recognizePrompt">
          <segment>
             <source>Choose the language to recognize. If the language is not available, choose a closely related language with a similar writing system.</source>
-            <target/>
+            <target>选择要识别的语言。如果没有该语言，请选择与之密切相关、书写系统相似的语言。</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.recognizeSpeech">
          <segment>
             <source>Recognize Speech {0}</source>
-            <target/>
+            <target>识别语音 {0}</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.recognizeSpeechSettings">
          <segment>
             <source>Recognize Speech Settings</source>
-            <target/>
+            <target>识别语音设置</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.record">
@@ -8296,7 +8746,7 @@
       <unit id="wsAudioPlayer.selectVoicePrompt">
          <segment>
             <source>Enter the full name of the person whose voice will be used to modify the voice or voices in the original recording.</source>
-            <target/>
+            <target>输入将用来修改原始录音中声音的人的全名。</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.silence">

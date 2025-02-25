@@ -45,6 +45,7 @@ import IndexedDBSource from '@orbit/indexeddb';
 import JSONAPISource from '@orbit/jsonapi';
 import { useCheckOnline } from '../../utils/useCheckOnline';
 import { useSnackBar } from '../../hoc/SnackBar';
+import { useLocLangName } from '../../utils/useLocLangName';
 
 export enum SaveSegments {
   showSaveButton = 0,
@@ -164,6 +165,7 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
   const [asrProgressVisble, setAsrProgressVisble] = useState(false);
   const checkOnline = useCheckOnline(t.recognizeSpeech);
   const { showMessage } = useSnackBar();
+  const [getName] = useLocLangName();
 
   const { onPlayStatus, onCurrentSegment, setSegmentToWhole } = usePlayerLogic({
     allowSegment,
@@ -346,7 +348,9 @@ export function PassageDetailPlayer(props: DetailPlayerProps) {
     return (t.recognizeSpeech + '\u00A0\u00A0').replace(
       '{0}',
       Boolean(asr?.language?.languageName?.trim())
-        ? `\u2039 ${asr?.language?.languageName} \u203A`
+        ? `\u2039 ${
+            getName(asr?.language.bcp47) || asr?.language?.languageName
+          } \u203A`
         : ''
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps

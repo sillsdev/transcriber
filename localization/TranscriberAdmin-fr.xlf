@@ -526,7 +526,7 @@
       <unit id="audacityManager.tip">
          <segment>
             <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
-            <target>Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur BROWSE. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CRÉER.</target>
+            <target>Si vous avez un projet Audacity existant que vous souhaitez lier à ce passage, cliquez sur BROWSE. Pour créer un nouveau projet Audacity avec un nom créé automatiquement, cliquez sur CREATE.</target>
          </segment>
       </unit>
       <unit id="audacityManager.title">
@@ -1588,7 +1588,7 @@
       <unit id="electronImport.newerVersion">
          <segment>
             <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
-            <target>Ce fichier a été exporté avec une version plus récente du programme. Vous devriez télécharger la dernière version avant d'importer ! Si vous continuez, certaines données pourraient ne pas être importées correctement.</target>
+            <target>Ce fichier a été exporté avec une version plus récente du programme. Vous devriez télécharger la dernière version avant de l'importer ! Si vous continuez, certaines données pourraient ne pas être importées correctement.</target>
          </segment>
       </unit>
       <unit id="electronImport.project">
@@ -1817,6 +1817,186 @@
          <segment>
             <source>Group</source>
             <target>Groupe</target>
+         </segment>
+      </unit>
+      <unit id="findResource.image">
+         <segment>
+            <source>image</source>
+            <target>image</target>
+         </segment>
+      </unit>
+      <unit id="findResource.imageTpl">
+         <segment>
+            <source>Please provide an image for {0}</source>
+            <target>Veuillez fournir une image pour {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.language">
+         <segment>
+            <source>Language</source>
+            <target>Langue</target>
+         </segment>
+      </unit>
+      <unit id="findResource.launch">
+         <segment>
+            <source>Launch</source>
+            <target>Lancer</target>
+         </segment>
+      </unit>
+      <unit id="findResource.meaning">
+         <segment>
+            <source>meaning</source>
+            <target>sens</target>
+         </segment>
+      </unit>
+      <unit id="findResource.meaningTpl">
+         <segment>
+            <source>Please draft a story to illustrate the meaning of {0}</source>
+            <target>Veuillez rédiger une histoire pour illustrer la signification de {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.mediaType">
+         <segment>
+            <source>Media</source>
+            <target>Médias</target>
+         </segment>
+      </unit>
+      <unit id="findResource.movement">
+         <segment>
+            <source>movement</source>
+            <target>mouvement</target>
+         </segment>
+      </unit>
+      <unit id="findResource.name">
+         <segment>
+            <source>Name</source>
+            <target>Nom</target>
+         </segment>
+      </unit>
+      <unit id="findResource.oralVersion">
+         <segment>
+            <source>oral-version</source>
+            <target>version orale</target>
+         </segment>
+      </unit>
+      <unit id="findResource.oralVersionTpl">
+         <segment>
+            <source>Please provide an oral translation of {0}</source>
+            <target>Veuillez fournir une traduction orale de {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.passage">
+         <segment>
+            <source>Passage</source>
+            <target>Passage</target>
+         </segment>
+      </unit>
+      <unit id="findResource.preview">
+         <segment>
+            <source>Preview</source>
+            <target>Aperçu</target>
+         </segment>
+      </unit>
+      <unit id="findResource.query">
+         <segment>
+            <source>Query</source>
+            <target>Interroger</target>
+         </segment>
+      </unit>
+      <unit id="findResource.querying">
+         <segment>
+            <source>Querying...</source>
+            <target>Interroger...</target>
+         </segment>
+      </unit>
+      <unit id="findResource.queryBuilder">
+         <segment>
+            <source>AI Query Builder</source>
+            <target>AI Query Builder</target>
+         </segment>
+      </unit>
+      <unit id="findResource.reset">
+         <segment>
+            <source>Reset</source>
+            <target>Réinitialiser</target>
+         </segment>
+      </unit>
+      <unit id="findResource.scope">
+         <segment>
+            <source>Scope</source>
+            <target>Champ d'application</target>
+         </segment>
+      </unit>
+      <unit id="findResource.script">
+         <segment>
+            <source>script</source>
+            <target>script</target>
+         </segment>
+      </unit>
+      <unit id="findResource.scriptTpl">
+         <segment>
+            <source>Please provide a script for {0}</source>
+            <target>Veuillez fournir un script pour {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.section">
+         <segment>
+            <source>section</source>
+            <target>section</target>
+         </segment>
+      </unit>
+      <unit id="findResource.source">
+         <segment>
+            <source>Source</source>
+            <target>Source</target>
+         </segment>
+      </unit>
+      <unit id="findResource.summary">
+         <segment>
+            <source>summary</source>
+            <target>résumé</target>
+         </segment>
+      </unit>
+      <unit id="findResource.summaryTpl">
+         <segment>
+            <source>Please provide a summary of {0}</source>
+            <target>Veuillez fournir un résumé de {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.type">
+         <segment>
+            <source>Type</source>
+            <target>Type</target>
+         </segment>
+      </unit>
+      <unit id="findResource.unavailable">
+         <segment>
+            <source>unavailable</source>
+            <target>indisponible</target>
+         </segment>
+      </unit>
+      <unit id="findResource.video">
+         <segment>
+            <source>video</source>
+            <target>vidéo</target>
+         </segment>
+      </unit>
+      <unit id="findResource.videoTpl">
+         <segment>
+            <source>Please provide a video for {0}</source>
+            <target>Veuillez fournir une vidéo pour {0}</target>
+         </segment>
+      </unit>
+      <unit id="findResource.whatsAppHelp">
+         <segment>
+            <source>Install the What's App app on your phone and join the group for your language. You can also install What's App on Windows and link to your phone App. Use Meta AI</source>
+            <target>Installez l'application What's App sur votre téléphone et rejoignez le groupe correspondant à votre langue. Vous pouvez également installer l'application What's App sur Windows et la relier à l'application de votre téléphone. Utiliser Meta AI</target>
+         </segment>
+      </unit>
+      <unit id="findResource.withTiming">
+         <segment>
+            <source>Audio Bible with verse timing</source>
+            <target>Bible audio avec minutage des versets</target>
          </segment>
       </unit>
       <unit id="grid.all">
@@ -4594,7 +4774,7 @@
       <unit id="permission.adminTip">
          <segment>
             <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
-            <target>Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur d'équipe ? Les membres de ce groupe pourront effectuer n'importe quelle étape, même si elle est assignée à un groupe dont ils ne font pas partie.</target>
+            <target>Avons-nous besoin de ce groupe ? Ou utiliser simplement l'administrateur de l'équipe ? Les membres de ce groupe pourront effectuer n'importe quelle étape, même si elle est assignée à un groupe dont ils ne font pas partie.</target>
          </segment>
       </unit>
       <unit id="permission.consultant">
@@ -4606,7 +4786,7 @@
       <unit id="permission.consultantTip">
          <segment>
             <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independent Consultant's comments will be visible to all team members.</source>
-            <target/>
+            <target>Je ne suis pas sûr que nous ayons besoin de cette autorisation non plus, car on ne sait pas très bien ce que les consultants font de particulier dans ce logiciel. Les commentaires du consultant indépendant seront visibles par tous les membres de l'équipe.</target>
          </segment>
       </unit>
       <unit id="permission.consultantInTraining">
@@ -4636,7 +4816,7 @@
       <unit id="permission.mentorTip">
          <segment>
             <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
-            <target>Les commentaires des mentors ne seront visibles que par les CIT. Les mentors peuvent approuver les commentaires du CIT pour les rendre visibles au reste de l'équipe.</target>
+            <target>Les commentaires du mentor ne seront visibles que par les CIT. Les mentors peuvent approuver les commentaires des CIT pour les rendre visibles au reste de l'équipe.</target>
          </segment>
       </unit>
       <unit id="permission.nspTip">
@@ -4673,6 +4853,84 @@
          <segment>
             <source>Find a language by name, code, or country</source>
             <target>Trouver une langue par nom, code ou pays</target>
+         </segment>
+      </unit>
+      <unit id="picker.codeExplained">
+         <segment>
+            <source>Code Explained</source>
+            <target>Explication du code</target>
+         </segment>
+      </unit>
+      <unit id="picker.subtags">
+         <segment>
+            <source>Subtags</source>
+            <target>Sous-tags</target>
+         </segment>
+      </unit>
+      <unit id="picker.details">
+         <segment>
+            <source>Details</source>
+            <target>Détails</target>
+         </segment>
+      </unit>
+      <unit id="picker.languageOf">
+         <segment>
+            <source>A Language of $1$2.</source>
+            <target>Un langage de $1$2.</target>
+         </segment>
+      </unit>
+      <unit id="picker.inScript">
+         <segment>
+            <source> in the $1 script</source>
+            <target> dans le script $1</target>
+         </segment>
+      </unit>
+      <unit id="picker.select">
+         <segment>
+            <source>Save</source>
+            <target>Sauvegarder</target>
+         </segment>
+      </unit>
+      <unit id="picker.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target>Annuler</target>
+         </segment>
+      </unit>
+      <unit id="picker.phonetic">
+         <segment>
+            <source>Phonetic</source>
+            <target>Phonétique</target>
+         </segment>
+      </unit>
+      <unit id="picker.changeName">
+         <segment>
+            <source>Change Name</source>
+            <target>Changement de nom</target>
+         </segment>
+      </unit>
+      <unit id="picker.nameInstruction">
+         <segment>
+            <source>If you would like to change the language name enter the new name here.</source>
+            <target>Si vous souhaitez modifier le nom de la langue, entrez le nouveau nom ici.</target>
+         </segment>
+      </unit>
+      <unit id="picker.newName">
+         <segment>
+            <source>New Language Name</source>
+            <target>Nouveau nom de langue</target>
+         </segment>
+      </unit>
+      <unit id="picker.change">
+         <segment>
+            <source>Change</source>
+            <target>Changement</target>
+         </segment>
+      </unit>
+      <unit id="picker.noFonts">
+         <segment>
+            <source>No recommended fonts</source>
+            <target>Pas de polices recommandées</target>
          </segment>
       </unit>
       <unit id="planActions.addNote">
@@ -5447,6 +5705,12 @@
          <segment>
             <source>Team</source>
             <target>L'équipe</target>
+         </segment>
+      </unit>
+      <unit id="projectDownload.total">
+         <segment>
+            <source>Total MB</source>
+            <target>Total MB</target>
          </segment>
       </unit>
       <unit id="publishLevel.none">
@@ -7537,6 +7801,168 @@
             <target>Commencer la conversion</target>
          </segment>
       </unit>
+      <unit id="voice.excludedLanguages">
+         <segment>
+            <source>Excluded languages</source>
+            <target>Langues exclues</target>
+         </segment>
+      </unit>
+      <unit id="voice.excludeName">
+         <segment>
+            <source>Exclude my name.</source>
+            <target>Exclure mon nom.</target>
+         </segment>
+      </unit>
+      <unit id="voice.forHire">
+         <segment>
+            <source>I work for hire.</source>
+            <target>Je travaille pour le compte d'autrui.</target>
+         </segment>
+      </unit>
+      <unit id="voice.gender">
+         <segment>
+            <source>Gender</source>
+            <target>Genre</target>
+         </segment>
+      </unit>
+      <unit id="voice.genderOneWord">
+         <segment>
+            <source>Gender must be a single word.</source>
+            <target>Le genre doit être un seul mot.</target>
+         </segment>
+      </unit>
+      <unit id="voice.myProjects">
+         <segment>
+            <source>my personal projects</source>
+            <target>mes projets personnels</target>
+         </segment>
+      </unit>
+      <unit id="voice.personalize">
+         <segment>
+            <source>Personalize</source>
+            <target>Personnaliser</target>
+         </segment>
+      </unit>
+      <unit id="voice.personalizeTitle">
+         <segment>
+            <source>Personalize Voice Permission</source>
+            <target>Permission de personnaliser la voix</target>
+         </segment>
+      </unit>
+      <unit id="voice.scope">
+         <segment>
+            <source>Scope of use</source>
+            <target>Champ d'application</target>
+         </segment>
+      </unit>
+      <unit id="voice.stAge">
+         <segment>
+            <source>my age is {0}</source>
+            <target>mon âge est {0}</target>
+         </segment>
+      </unit>
+      <unit id="voice.stCategories">
+         <segment>
+            <source>To aid in categorizing my voice for use, {0}.</source>
+            <target>Pour faciliter la catégorisation de ma voix en vue de son utilisation, {0}.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stGender">
+         <segment>
+            <source>my gender is {0}</source>
+            <target>mon sexe est {0}</target>
+         </segment>
+      </unit>
+      <unit id="voice.stHired">
+         <segment>
+            <source>Since I am being compensated by the team, my voice can be used by the team without additional compensation.</source>
+            <target>Étant donné que je suis rémunéré par l'équipe, ma voix peut être utilisée par l'équipe sans compensation supplémentaire.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stJoin">
+         <segment>
+            <source>and</source>
+            <target>et</target>
+         </segment>
+      </unit>
+      <unit id="voice.stLangClause">
+         <segment>
+            <source>I understand that {0} will only use my voice with languages I do not regularly use, to prevent impersonation. {1}. </source>
+            <target>Je comprends que {0} n'utilisera ma voix qu'avec des langues que je n'utilise pas régulièrement, afin d'éviter toute usurpation d'identité. {1}. </target>
+         </segment>
+      </unit>
+      <unit id="voice.stMyLang">
+         <segment>
+            <source>The language I speak is</source>
+            <target>La langue que je parle est</target>
+         </segment>
+      </unit>
+      <unit id="voice.stMyLangs">
+         <segment>
+            <source>The languages that I speak are</source>
+            <target>Les langues que je parle sont</target>
+         </segment>
+      </unit>
+      <unit id="voice.stNotGiven">
+         <segment>
+            <source>not given</source>
+            <target>ne sont pas indiquées</target>
+         </segment>
+      </unit>
+      <unit id="voice.stNotIdentified">
+         <segment>
+            <source>but choose not to be identified by name</source>
+            <target>mais je choisis de ne pas être identifié(e) par mon nom</target>
+         </segment>
+      </unit>
+      <unit id="voice.stStatement">
+         <segment>
+            <source>I {0} provide consent for {1} to record and store this file with my voice in the cloud and possibly in a voice library for publishing and use in AI applications that require a voice sample, including voice conversion. The recording created by {1} of me reading this script will become the exclusive property of {1} which shall have the unlimited right to make, have made, use, copy, display in public, reconstruct, repair, modify, reproduce, publish, distribute and sell the Work Product, in whole or in part, or combine the Work Product with other matter, or not use the Work Product at all, as it sees fit. {1} will use the recording in a variety of ways, including, but not limited to, Audio books, narrating apps, and scripture engagement to further the mission of the organization. {2}{3} I have been provided this script in a language I understand, and have been given the option to request this script in a language of my choice. This recording will act as my signature in place of a written agreement. {4} I sign with my voice, {5}.</source>
+            <target>Je {0} donne mon accord pour que {1} enregistre et stocke ce fichier avec ma voix dans le nuage et éventuellement dans une bibliothèque vocale pour la publication et l'utilisation dans des applications d'IA qui nécessitent un échantillon de voix, y compris la conversion vocale. L'enregistrement créé par {1} de moi lisant ce script deviendra la propriété exclusive de {1} qui aura le droit illimité de faire, de faire faire, d'utiliser, de copier, d'afficher en public, de reconstruire, de réparer, de modifier, de reproduire, de publier, de distribuer et de vendre le produit du travail, en tout ou en partie, ou de combiner le produit du travail avec d'autres éléments, ou de ne pas utiliser le produit du travail du tout, comme il l'entend. {1} utilisera l'enregistrement de diverses manières, y compris, mais sans s'y limiter, les livres audio, les applications de narration et l'engagement scriptural pour faire avancer la mission de l'organisation. {2}{3} J'ai reçu ce texte dans une langue que je comprends et j'ai eu la possibilité de demander ce texte dans la langue de mon choix. Cet enregistrement tient lieu de signature au lieu d'un accord écrit. {4} Je signe de ma voix, {5}.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stTeam">
+         <segment>
+            <source>the {0} team</source>
+            <target>l'équipe {0}</target>
+         </segment>
+      </unit>
+      <unit id="voice.stTeamClause">
+         <segment>
+            <source>I understand that my voice can be used by {0} for any or all of its projects on audio files for the vernacular language, navigation language or any back translation languages.</source>
+            <target>Je comprends que ma voix peut être utilisée par {0} pour tout ou partie de ses projets sur des fichiers audio pour la langue vernaculaire, la langue de navigation ou toute langue de rétro-traduction.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stThisTeam">
+         <segment>
+            <source>this team</source>
+            <target>cette équipe</target>
+         </segment>
+      </unit>
+      <unit id="voice.stVolunteer">
+         <segment>
+            <source>I understand that I will not be compensated for the use of my voice.</source>
+            <target>Je comprends que je ne serai pas rémunéré pour l'utilisation de ma voix.</target>
+         </segment>
+      </unit>
+      <unit id="voice.thisTeam">
+         <segment>
+            <source>This Team</source>
+            <target>Cette équipe</target>
+         </segment>
+      </unit>
+      <unit id="voice.voiceOptions">
+         <segment>
+            <source>Options for {0} voice:</source>
+            <target>Options pour la voix de {0} :</target>
+         </segment>
+      </unit>
+      <unit id="voice.your">
+         <segment>
+            <source>your</source>
+            <target>votre</target>
+         </segment>
+      </unit>
       <unit id="vProject.add">
          <segment>
             <source>Add</source>
@@ -7888,7 +8314,7 @@
       <unit id="welcome.setupTeamTip">
          <segment>
             <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
-            <target>Mettre en place le projet audio, en divisant le travail en passages qui peuvent être assignés à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
+            <target>Configurez le projet audio, en divisant le travail en passages qui peuvent être assignés à différents transcripteurs et éditeurs. Les transcripteurs et les éditeurs peuvent travailler en ligne ou hors ligne en téléchargeant ou en important le projet audio.</target>
          </segment>
       </unit>
       <unit id="welcome.team">

@@ -14,6 +14,7 @@ import { LanguagePicker, LangTag } from 'mui-language-picker';
 import { useSelector, shallowEqual } from 'react-redux';
 import { vProjectSelector, pickerSelector } from '../selector';
 import { fontFamilyName } from '../utils/fontFamilyName';
+import { IPickerStrings, IVProjectStrings } from '../model';
 
 const StyledFormControlLabel = styled(FormControlLabel)<FormControlLabelProps>({
   '& .MuiFormControlLabel-asterisk': {
@@ -68,8 +69,8 @@ export const Language = (props: IProps) => {
     rtl,
     spellCheck,
   });
-  const t = useSelector(vProjectSelector, shallowEqual);
-  const lt = useSelector(pickerSelector, shallowEqual);
+  const t: IVProjectStrings = useSelector(vProjectSelector, shallowEqual);
+  const lt: IPickerStrings = useSelector(pickerSelector, shallowEqual);
   const stateRef = React.useRef<ILanguage>();
   const langEl = React.useRef<any>();
 

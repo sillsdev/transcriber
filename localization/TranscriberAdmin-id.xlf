@@ -1813,6 +1813,192 @@
             <target/>
          </segment>
       </unit>
+      <unit id="findResource.group">
+         <segment>
+            <source>Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.image">
+         <segment>
+            <source>image</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.imageTpl">
+         <segment>
+            <source>Please provide an image for {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.language">
+         <segment>
+            <source>Language</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.launch">
+         <segment>
+            <source>Launch</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.meaning">
+         <segment>
+            <source>meaning</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.meaningTpl">
+         <segment>
+            <source>Please draft a story to illustrate the meaning of {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.mediaType">
+         <segment>
+            <source>Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.movement">
+         <segment>
+            <source>movement</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.name">
+         <segment>
+            <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.oralVersion">
+         <segment>
+            <source>oral-version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.oralVersionTpl">
+         <segment>
+            <source>Please provide an oral translation of {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.passage">
+         <segment>
+            <source>Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.preview">
+         <segment>
+            <source>Preview</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.query">
+         <segment>
+            <source>Query</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.querying">
+         <segment>
+            <source>Querying...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.queryBuilder">
+         <segment>
+            <source>AI Query Builder</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.reset">
+         <segment>
+            <source>Reset</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.scope">
+         <segment>
+            <source>Scope</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.script">
+         <segment>
+            <source>script</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.scriptTpl">
+         <segment>
+            <source>Please provide a script for {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.section">
+         <segment>
+            <source>section</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.source">
+         <segment>
+            <source>Source</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.summary">
+         <segment>
+            <source>summary</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.summaryTpl">
+         <segment>
+            <source>Please provide a summary of {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.type">
+         <segment>
+            <source>Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.unavailable">
+         <segment>
+            <source>unavailable</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.video">
+         <segment>
+            <source>video</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.videoTpl">
+         <segment>
+            <source>Please provide a video for {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.whatsAppHelp">
+         <segment>
+            <source>Install the What's App app on your phone and join the group for your language. You can also install What's App on Windows and link to your phone App. Use Meta AI</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="findResource.withTiming">
+         <segment>
+            <source>Audio Bible with verse timing</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="grid.all">
          <segment>
             <source>All</source>
@@ -4663,6 +4849,90 @@
             <target>Memilih Detail Bahasa</target>
          </segment>
       </unit>
+      <unit id="picker.findALanguage">
+         <segment>
+            <source>Find a language by name, code, or country</source>
+            <target>Menemukan bahasa berdasarkan nama, kode, atau negara</target>
+         </segment>
+      </unit>
+      <unit id="picker.codeExplained">
+         <segment>
+            <source>Code Explained</source>
+            <target>Penjelasan Kode</target>
+         </segment>
+      </unit>
+      <unit id="picker.subtags">
+         <segment>
+            <source>Subtags</source>
+            <target>Subtag</target>
+         </segment>
+      </unit>
+      <unit id="picker.details">
+         <segment>
+            <source>Details</source>
+            <target>Detail</target>
+         </segment>
+      </unit>
+      <unit id="picker.languageOf">
+         <segment>
+            <source>A Language of $1$2.</source>
+            <target>Bahasa $1$2.</target>
+         </segment>
+      </unit>
+      <unit id="picker.inScript">
+         <segment>
+            <source> in the $1 script</source>
+            <target> dalam skrip $1</target>
+         </segment>
+      </unit>
+      <unit id="picker.select">
+         <segment>
+            <source>Save</source>
+            <target>Simpan</target>
+         </segment>
+      </unit>
+      <unit id="picker.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target>Batal</target>
+         </segment>
+      </unit>
+      <unit id="picker.phonetic">
+         <segment>
+            <source>Phonetic</source>
+            <target>Fonetik</target>
+         </segment>
+      </unit>
+      <unit id="picker.changeName">
+         <segment>
+            <source>Change Name</source>
+            <target>Ubah Nama</target>
+         </segment>
+      </unit>
+      <unit id="picker.nameInstruction">
+         <segment>
+            <source>If you would like to change the language name enter the new name here.</source>
+            <target>Jika Anda ingin mengubah nama bahasa, masukkan nama baru di sini.</target>
+         </segment>
+      </unit>
+      <unit id="picker.newName">
+         <segment>
+            <source>New Language Name</source>
+            <target>Nama Bahasa Baru</target>
+         </segment>
+      </unit>
+      <unit id="picker.change">
+         <segment>
+            <source>Change</source>
+            <target>Ubah</target>
+         </segment>
+      </unit>
+      <unit id="picker.noFonts">
+         <segment>
+            <source>No recommended fonts</source>
+            <target>Tidak ada jenis huruf yang disarankan</target>
+         </segment>
+      </unit>
       <unit id="planActions.addNote">
          <segment>
             <source>Add Note</source>
@@ -5431,6 +5701,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectDownload.team">
+         <segment>
+            <source>Team</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectDownload.total">
+         <segment>
+            <source>Total MB</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="publishLevel.none">
          <segment>
             <source>Not Published - not visible outside this project</source>
@@ -5986,7 +6268,7 @@
       <unit id="shared.expiredParatextToken">
          <segment>
             <source>Your {Pt} login has expired and can't be automatically renewed. Please log out and login again.</source>
-            <target>Login {Pt} Anda telah kedaluwarsa dan tidak dapat diperpanjang secara otomatis. Silakan keluar dan masuk lagi.</target>
+            <target>Login {Pt} Anda telah kedaluwarsa dan tidak dapat diperbarui secara otomatis. Silakan keluar dan masuk lagi.</target>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
@@ -7198,7 +7480,7 @@
       <unit id="transcriptionTab.offlineData">
          <segment>
             <source>You have new changes locally that were not included in the PTF export. Please also export an itf file to capture all changes.</source>
-            <target>Anda memiliki perubahan baru secara lokal yang tidak disertakan dalam ekspor PTF. Harap juga mengekspor file itf untuk menangkap semua perubahan.</target>
+            <target>Anda memiliki perubahan baru secara lokal yang tidak disertakan dalam ekspor PTF. Silakan juga mengekspor file itf untuk menangkap semua perubahan.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.changed">
@@ -7511,6 +7793,174 @@
          <segment>
             <source>All Teams</source>
             <target>Semua Tim</target>
+         </segment>
+      </unit>
+      <unit id="voice.convert">
+         <segment>
+            <source>Begin Conversion</source>
+            <target>Mulai Konversi</target>
+         </segment>
+      </unit>
+      <unit id="voice.excludedLanguages">
+         <segment>
+            <source>Excluded languages</source>
+            <target>Bahasa yang dikecualikan</target>
+         </segment>
+      </unit>
+      <unit id="voice.excludeName">
+         <segment>
+            <source>Exclude my name.</source>
+            <target>Kecualikan nama saya.</target>
+         </segment>
+      </unit>
+      <unit id="voice.forHire">
+         <segment>
+            <source>I work for hire.</source>
+            <target>Saya bekerja untuk disewa.</target>
+         </segment>
+      </unit>
+      <unit id="voice.gender">
+         <segment>
+            <source>Gender</source>
+            <target>Jenis kelamin</target>
+         </segment>
+      </unit>
+      <unit id="voice.genderOneWord">
+         <segment>
+            <source>Gender must be a single word.</source>
+            <target>Jenis kelamin harus berupa satu kata.</target>
+         </segment>
+      </unit>
+      <unit id="voice.myProjects">
+         <segment>
+            <source>my personal projects</source>
+            <target>proyek pribadi saya</target>
+         </segment>
+      </unit>
+      <unit id="voice.personalize">
+         <segment>
+            <source>Personalize</source>
+            <target>Personalisasi</target>
+         </segment>
+      </unit>
+      <unit id="voice.personalizeTitle">
+         <segment>
+            <source>Personalize Voice Permission</source>
+            <target>Personalisasi Izin Suara</target>
+         </segment>
+      </unit>
+      <unit id="voice.scope">
+         <segment>
+            <source>Scope of use</source>
+            <target>Lingkup penggunaan</target>
+         </segment>
+      </unit>
+      <unit id="voice.stAge">
+         <segment>
+            <source>my age is {0}</source>
+            <target>usia saya adalah {0}</target>
+         </segment>
+      </unit>
+      <unit id="voice.stCategories">
+         <segment>
+            <source>To aid in categorizing my voice for use, {0}.</source>
+            <target>Untuk membantu mengkategorikan suara saya untuk digunakan, {0}.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stGender">
+         <segment>
+            <source>my gender is {0}</source>
+            <target>jenis kelamin saya adalah {0}</target>
+         </segment>
+      </unit>
+      <unit id="voice.stHired">
+         <segment>
+            <source>Since I am being compensated by the team, my voice can be used by the team without additional compensation.</source>
+            <target>Karena saya diberi kompensasi oleh tim, suara saya dapat digunakan oleh tim tanpa kompensasi tambahan.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stJoin">
+         <segment>
+            <source>and</source>
+            <target>dan</target>
+         </segment>
+      </unit>
+      <unit id="voice.stLangClause">
+         <segment>
+            <source>I understand that {0} will only use my voice with languages I do not regularly use, to prevent impersonation. {1}. </source>
+            <target>Saya memahami bahwa {0} hanya akan menggunakan suara saya dengan bahasa yang tidak sering saya gunakan, untuk mencegah peniruan. {1}. </target>
+         </segment>
+      </unit>
+      <unit id="voice.stMyLang">
+         <segment>
+            <source>The language I speak is</source>
+            <target>Bahasa yang saya gunakan adalah</target>
+         </segment>
+      </unit>
+      <unit id="voice.stMyLangs">
+         <segment>
+            <source>The languages that I speak are</source>
+            <target>Bahasa yang saya gunakan adalah</target>
+         </segment>
+      </unit>
+      <unit id="voice.stNotGiven">
+         <segment>
+            <source>not given</source>
+            <target>tidak diberikan</target>
+         </segment>
+      </unit>
+      <unit id="voice.stNotIdentified">
+         <segment>
+            <source>but choose not to be identified by name</source>
+            <target>tetapi memilih untuk tidak diidentifikasi dengan nama</target>
+         </segment>
+      </unit>
+      <unit id="voice.stStatement">
+         <segment>
+            <source>I {0} provide consent for {1} to record and store this file with my voice in the cloud and possibly in a voice library for publishing and use in AI applications that require a voice sample, including voice conversion. The recording created by {1} of me reading this script will become the exclusive property of {1} which shall have the unlimited right to make, have made, use, copy, display in public, reconstruct, repair, modify, reproduce, publish, distribute and sell the Work Product, in whole or in part, or combine the Work Product with other matter, or not use the Work Product at all, as it sees fit. {1} will use the recording in a variety of ways, including, but not limited to, Audio books, narrating apps, and scripture engagement to further the mission of the organization. {2}{3} I have been provided this script in a language I understand, and have been given the option to request this script in a language of my choice. This recording will act as my signature in place of a written agreement. {4} I sign with my voice, {5}.</source>
+            <target>Saya {0} memberikan izin kepada {1} untuk merekam dan menyimpan file ini dengan suara saya di cloud dan mungkin di perpustakaan suara untuk dipublikasikan dan digunakan dalam aplikasi AI yang memerlukan sampel suara, termasuk konversi suara. Rekaman yang dibuat oleh {1} dari saya membaca skrip ini akan menjadi milik eksklusif {1} yang akan memiliki hak tak terbatas untuk membuat, membuat, menggunakan, menyalin, menampilkan di depan umum, merekonstruksi, memperbaiki, memodifikasi, mereproduksi, mempublikasikan, mendistribusikan, dan menjual Produk Kerja, secara keseluruhan atau sebagian, atau menggabungkan Produk Kerja dengan materi lain, atau tidak menggunakan Produk Kerja sama sekali, sesuai dengan keinginannya. {1} akan menggunakan rekaman tersebut dalam berbagai cara, termasuk, namun tidak terbatas pada, buku audio, aplikasi narasi, dan keterlibatan kitab suci untuk memajukan misi organisasi. {2}{3} Saya telah diberikan naskah ini dalam bahasa yang saya pahami, dan telah diberi pilihan untuk meminta naskah ini dalam bahasa pilihan saya. Rekaman ini akan bertindak sebagai tanda tangan saya sebagai pengganti perjanjian tertulis. {4} Saya menandatangani dengan suara saya, {5}.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stTeam">
+         <segment>
+            <source>the {0} team</source>
+            <target>tim {0}</target>
+         </segment>
+      </unit>
+      <unit id="voice.stTeamClause">
+         <segment>
+            <source>I understand that my voice can be used by {0} for any or all of its projects on audio files for the vernacular language, navigation language or any back translation languages.</source>
+            <target>Saya memahami bahwa suara saya dapat digunakan oleh {0} untuk salah satu atau semua proyeknya dalam file audio untuk bahasa daerah, bahasa navigasi, atau bahasa terjemahan balik.</target>
+         </segment>
+      </unit>
+      <unit id="voice.stThisTeam">
+         <segment>
+            <source>this team</source>
+            <target>tim ini</target>
+         </segment>
+      </unit>
+      <unit id="voice.stVolunteer">
+         <segment>
+            <source>I understand that I will not be compensated for the use of my voice.</source>
+            <target>Saya memahami bahwa saya tidak akan diberi kompensasi atas penggunaan suara saya.</target>
+         </segment>
+      </unit>
+      <unit id="voice.thisTeam">
+         <segment>
+            <source>This Team</source>
+            <target>Tim ini</target>
+         </segment>
+      </unit>
+      <unit id="voice.voiceOptions">
+         <segment>
+            <source>Options for {0} voice:</source>
+            <target>Opsi untuk suara {0}:</target>
+         </segment>
+      </unit>
+      <unit id="voice.your">
+         <segment>
+            <source>your</source>
+            <target>Anda</target>
          </segment>
       </unit>
       <unit id="vProject.add">
