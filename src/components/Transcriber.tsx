@@ -1004,7 +1004,7 @@ export function Transcriber(props: IProps) {
       setContentVerses(newContentVerses);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [textValue, verseLabels]);
+  }, [textValue, verseLabels, playerMediafile]);
 
   const showTranscription = (val: ITrans) => {
     transcriptionIn.current = val.transcription;
