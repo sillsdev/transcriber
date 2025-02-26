@@ -764,13 +764,23 @@ function WSAudioPlayer(props: IProps) {
     setBusy && setBusy(inprogress);
     setBlobReady && setBlobReady(!inprogress);
   };
-  const audioAiMsg = (fn: AudioAiFn, targetVoice?: string) => {
-    return (
+  const audioAiMsg = (
+    fn: AudioAiFn,
+    targetVoice?: string,
+    error?: Error | AxiosError
+  ) => {
+    let msg =
       t.getString(`${fn}Failed`) ??
       t.aiFailed
         .replace('{0}', targetVoice ? ` for ${targetVoice}` : '')
-        .replace('{1}', fn)
-    );
+        .replace('{1}', fn);
+    if (error instanceof Error) {
+      msg += ` ${error.message}`;
+    }
+    if (error instanceof AxiosError) {
+      msg += ` ${error.response?.data}`;
+    }
+    return msg;
   };
   const applyAudioAi = (fn: AudioAiFn, targetVoice?: string) => {
     checkOnline((online) => {
@@ -800,12 +810,11 @@ function WSAudioPlayer(props: IProps) {
                     });
                   }
                 } else {
-                  if ((file as Error).message !== 'canceled')
-                    showMessage(
-                      `${audioAiMsg(fn, targetVoice)} ${
-                        (file as Error).message
-                      } ${(file as AxiosError).response?.data ?? ''}`
-                    );
+                  if ((file as Error).message !== 'canceled') {
+                    const msg = audioAiMsg(fn, targetVoice, file);
+                    showMessage(msg);
+                    logError(Severity.error, errorReporter, msg);
+                  }
                 }
                 doingAI(false);
               },
@@ -815,8 +824,9 @@ function WSAudioPlayer(props: IProps) {
           }
         });
       } catch (error: any) {
-        logError(Severity.error, errorReporter, error.message);
-        showMessage(audioAiMsg(fn, targetVoice));
+        const msg = audioAiMsg(fn, targetVoice, error);
+        logError(Severity.error, errorReporter, msg);
+        showMessage(msg);
         doingAI(false);
       }
     });
