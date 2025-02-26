@@ -800,12 +800,13 @@ function WSAudioPlayer(props: IProps) {
                     });
                   }
                 } else {
-                  if ((file as Error).message !== 'canceled')
-                    showMessage(
-                      `${audioAiMsg(fn, targetVoice)} ${
-                        (file as Error).message
-                      } ${(file as AxiosError).response?.data ?? ''}`
-                    );
+                  if ((file as Error).message !== 'canceled') {
+                    const msg = `${audioAiMsg(fn, targetVoice)} ${
+                      (file as Error).message
+                    } ${(file as AxiosError).response?.data ?? ''}`;
+                    showMessage(msg);
+                    logError(Severity.error, errorReporter, msg);
+                  }
                 }
                 doingAI(false);
               },

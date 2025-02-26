@@ -231,7 +231,7 @@ export const useAudioAi = () => {
   }: IRequestAudio) => {
     if (getGlobal('offline')) return '';
     // larger sizes give Network Error
-    if (file.size > 6500000 || targetVoice)
+    if (file.size > 6000000 || targetVoice)
       s3request(fn, cancelRef, file, targetVoice, cb).catch((err) =>
         cb(err as Error)
       );
@@ -258,7 +258,18 @@ export const useAudioAi = () => {
             err.status === HttpStatusCode.PayloadTooLarge ||
             err.message.toString().includes('413')
           ) {
-            console.log('payload too large', file.size);
+            const msg = `payload too large: ${file.size} ... retrying`;
+            logError(Severity.error, errorReporter, msg);
+
+            return s3request(fn, cancelRef, file, targetVoice, cb).catch(
+              (err) => cb(err as Error)
+            );
+          } else if (
+            err.code === 'ERR_NETWORK' ||
+            err.message === 'Network Error'
+          ) {
+            const msg = `network error (size: ${file.size}) ... retrying `;
+            logError(Severity.error, errorReporter, msg);
 
             return s3request(fn, cancelRef, file, targetVoice, cb).catch(
               (err) => cb(err as Error)
