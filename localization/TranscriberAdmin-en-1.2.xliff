@@ -10011,6 +10011,27 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="wsAudioPlayer.aiFailed">
+            <source>AI function {1} failed {0}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.aiGiveUp">
+            <source>Stop Waiting...</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.aiInProgress">
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="wsAudioPlayer.beginVoiceConvert">
             <source>Beginning voice conversion...</source>
             <target/>
@@ -10095,15 +10116,8 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="wsAudioPlayer.aiInProgress">
-            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="wsAudioPlayer.aiGiveUp">
-            <source>Stop Waiting...</source>
+         <trans-unit id="wsAudioPlayer.noiseremovalFailed">
+            <source>Noise removal failed (More than likely, the server is unavailable).</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -10244,6 +10258,13 @@
          </trans-unit>
          <trans-unit id="wsAudioPlayer.undoTip">
             <source>Undo</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.voiceconversionFailed">
+            <source>Voice convert failed (More than likely, the server is unavailable).</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>

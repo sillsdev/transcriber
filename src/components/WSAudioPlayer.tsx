@@ -766,8 +766,10 @@ function WSAudioPlayer(props: IProps) {
   };
   const audioAiMsg = (fn: AudioAiFn, targetVoice?: string) => {
     return (
-      ts.getString(`${fn}Failed`) ??
-      'AI function {0}'.replace('{0}', targetVoice ?? '')
+      t.getString(`${fn}Failed`) ??
+      t.aiFailed
+        .replace('{0}', targetVoice ? ` for ${targetVoice}` : '')
+        .replace('{1}', fn)
     );
   };
   const applyAudioAi = (fn: AudioAiFn, targetVoice?: string) => {
