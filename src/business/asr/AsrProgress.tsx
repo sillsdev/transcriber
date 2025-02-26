@@ -83,7 +83,7 @@ export default function AsrProgress({
         tsks.push({
           taskId: part[0],
           verse: part[1], //undefined if no timing
-          complete: contentVerses?.includes(part[1] ?? 'x') ?? false,
+          complete: contentVerses?.includes(part[1] ?? 'no-verses') ?? false,
         });
       });
       return tsks;

@@ -990,11 +990,16 @@ export function Transcriber(props: IProps) {
     if (!transcription) return;
     const newContentVerses: string[] = [];
     verseLabels.forEach((label) => {
-      const pat = new RegExp(`\\\\v\\s+${label}\\s+[^\\\\]+`);
+      const pat = new RegExp(`\\\\v\\s+${label}\\s+[^\\\\]`);
       if (pat.test(transcription as string)) {
         newContentVerses.push(label);
       }
     });
+    if (newContentVerses.length === 0) {
+      if (!/\\v/.test(transcription as string)) {
+        newContentVerses.push('no-verses');
+      }
+    }
     if (JSON.stringify(contentVerses) !== JSON.stringify(newContentVerses)) {
       setContentVerses(newContentVerses);
     }
@@ -1190,7 +1195,7 @@ export function Transcriber(props: IProps) {
                         role={role}
                         hasTranscription={
                           textValue !== '' &&
-                          verseLabels.length === contentVerses.length
+                          verseLabels.length <= contentVerses.length
                         }
                         contentVerses={contentVerses}
                       />
