@@ -230,7 +230,8 @@ export const useAudioAi = () => {
     cb,
   }: IRequestAudio) => {
     if (getGlobal('offline')) return '';
-    if (file.size > 7500000 || targetVoice)
+    // larger sizes give Network Error
+    if (file.size > 6500000 || targetVoice)
       s3request(fn, cancelRef, file, targetVoice, cb).catch((err) =>
         cb(err as Error)
       );
