@@ -767,18 +767,18 @@ function WSAudioPlayer(props: IProps) {
   const audioAiMsg = (
     fn: AudioAiFn,
     targetVoice?: string,
-    file?: Error | AxiosError
+    error?: Error | AxiosError
   ) => {
     let msg =
       t.getString(`${fn}Failed`) ??
       t.aiFailed
         .replace('{0}', targetVoice ? ` for ${targetVoice}` : '')
         .replace('{1}', fn);
-    if (file instanceof Error) {
-      msg += ` ${file.message}`;
+    if (error instanceof Error) {
+      msg += ` ${error.message}`;
     }
-    if (file instanceof AxiosError) {
-      msg += ` ${file.response?.data}`;
+    if (error instanceof AxiosError) {
+      msg += ` ${error.response?.data}`;
     }
     return msg;
   };
