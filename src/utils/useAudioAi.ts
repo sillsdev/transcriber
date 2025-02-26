@@ -259,7 +259,7 @@ export const useAudioAi = () => {
             err.message.toString().includes('413')
           ) {
             const msg = `payload too large: ${file.size} ... retrying`;
-            logError(Severity.error, errorReporter, msg);
+            logError(Severity.info, errorReporter, msg);
 
             return s3request(fn, cancelRef, file, targetVoice, cb).catch(
               (err) => cb(err as Error)
@@ -269,7 +269,7 @@ export const useAudioAi = () => {
             err.message === 'Network Error'
           ) {
             const msg = `network error (size: ${file.size}) ... retrying `;
-            logError(Severity.error, errorReporter, msg);
+            logError(Severity.info, errorReporter, msg);
 
             return s3request(fn, cancelRef, file, targetVoice, cb).catch(
               (err) => cb(err as Error)
