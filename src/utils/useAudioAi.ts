@@ -113,7 +113,7 @@ export const useAudioAi = () => {
     return undefined;
   };
 
-  const checkNoiseRemovalTasks = async (fn: AudioAiFn) => {
+  const checkTasks = async (fn: AudioAiFn) => {
     fileList.forEach(async (filetask) => {
       try {
         if (!filetask.cancelRef.current) {
@@ -154,7 +154,7 @@ export const useAudioAi = () => {
 
   const launchTimer = (fn: AudioAiFn) => {
     taskTimer.current = setInterval(() => {
-      checkNoiseRemovalTasks(fn);
+      checkTasks(fn);
     }, timerDelay);
   };
 
@@ -163,6 +163,11 @@ export const useAudioAi = () => {
       axiosDelete(`S3Files/AI/${filename}`, token).catch((err) =>
         logError(Severity.error, errorReporter, err)
       );
+  };
+
+  const doCancel = (fn: AudioAiFn, cb: (file: File | Error) => void) => {
+    checkTasks(fn);
+    cb(cancelled);
   };
 
   const s3request = async (
@@ -210,7 +215,7 @@ export const useAudioAi = () => {
                       cb(err as Error);
                     })
                     .finally(() => deleteS3File(file.name));
-                else cb(cancelled);
+                else doCancel(fn, cb);
               })
               .catch((err) => {
                 logError(Severity.error, errorReporter, err);
@@ -238,7 +243,7 @@ export const useAudioAi = () => {
     else
       axiosPostFile(`aero/${fn}`, file)
         .then((nrresponse) => {
-          if (cancelRef.current) cb(cancelled);
+          if (cancelRef.current) doCancel(fn, cb);
           else if (nrresponse.status === HttpStatusCode.Ok) {
             var taskId = nrresponse.data ?? '';
             fileList.push({
