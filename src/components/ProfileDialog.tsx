@@ -179,16 +179,18 @@ export function ProfileDialog(props: ProfileDialogProps) {
         sx={{
           display: 'flex',
           flexDirection: 'row',
-          //flexWrap: 'wrap'
+          flexWrap: 'wrap'
         }}
       >
         <Box 
-          id="profilePanel" 
+          id="profilePanel"
           sx={{
             display: 'flex',
-            flex: '0 1 40%',
+            flex: '1 1 40%',
             flexDirection: 'column',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            maxWidth: '100%',
+            backgroundColor: 'secondary.main'
           }}
         >
           <LicenseAccordion {...about.mit} kid="mit" />
@@ -202,8 +204,9 @@ export function ProfileDialog(props: ProfileDialogProps) {
         <Box id="profileMain" 
           sx={{
             display: 'flex',
-            flex: '0 1 60%',
+            flex: '1 1 57%', //figure out why its 57% and not 60%
             flexDirection: 'column',
+            maxWidth: '100%',
             justifyContent: 'center'
           }}
         >
