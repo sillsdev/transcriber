@@ -525,7 +525,7 @@
       </unit>
       <unit id="audacityManager.tip">
          <segment>
-            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE. To create a new Audacity project with an automatically created name, click CREATE.</source>
+            <source>If you have an existing Audacity project you want to link to this passage, click BROWSE.  To create a new Audacity project with an automatically created name, click CREATE.</source>
             <target/>
          </segment>
       </unit>
@@ -1545,7 +1545,7 @@
       </unit>
       <unit id="electronImport.importOldFile">
          <segment>
-            <source>This file was not exported from the latest version. Reexport your PTF file from the online version.</source>
+            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
             <target/>
          </segment>
       </unit>
@@ -1587,7 +1587,7 @@
       </unit>
       <unit id="electronImport.newerVersion">
          <segment>
-            <source>This file was exported with a newer version of the program. You should download the latest version before importing! If you continue, some data may not be imported correctly.</source>
+            <source>This file was exported with a newer version of the program.  You should download the latest version before importing!  If you continue, some data may not be imported correctly.</source>
             <target/>
          </segment>
       </unit>
@@ -1635,7 +1635,7 @@
       </unit>
       <unit id="emailUnverified.verified">
          <segment>
-            <source>I'm verified! Carry on!</source>
+            <source>I'm verified!  Carry on!</source>
             <target/>
          </segment>
       </unit>
@@ -2331,7 +2331,7 @@
       </unit>
       <unit id="import.unknownError">
          <segment>
-            <source>If this error occurred while importing offline changes, please close the app immediately and reopen. If the error persists, contact support. If you continue to use the app, you will lose offline changes.</source>
+            <source>If this error occurred while importing offline changes, please close the app immediately and reopen.  If the error persists, contact support.  If you continue to use the app, you will lose offline changes.</source>
             <target>Se esse erro ocorreu durante a importação de alterações off-line, feche o aplicativo imediatamente e abra-o novamente. Se o erro persistir, entre em contato com o suporte. Se continuar a usar o aplicativo, você perderá as alterações off-line.</target>
          </segment>
       </unit>
@@ -2397,7 +2397,7 @@
       </unit>
       <unit id="import.projectNotFound">
          <segment>
-            <source>ITF does not contain current audio project. It contains audio project {0}.</source>
+            <source>ITF does not contain current audio project.  It contains audio project {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -3291,7 +3291,7 @@
       </unit>
       <unit id="main.inviteError">
          <segment>
-            <source>Invitation not accepted. You must login with the email that the invitation was sent to.</source>
+            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
             <target/>
          </segment>
       </unit>
@@ -4773,7 +4773,7 @@
       </unit>
       <unit id="permission.adminTip">
          <segment>
-            <source>Do we need this group? Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
+            <source>Do we need this group?  Or just use team admin? People in this group will be able to do any step, even if it is assigned to a group they are not in.</source>
             <target/>
          </segment>
       </unit>
@@ -4785,7 +4785,7 @@
       </unit>
       <unit id="permission.consultantTip">
          <segment>
-            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software. Independent Consultant's comments will be visible to all team members.</source>
+            <source>Not sure we need this permission either, because it is unclear what special things consultants do in this software.  Independent Consultant's comments will be visible to all team members.</source>
             <target>Também não tenho certeza se precisamos dessa permissão, pois não está claro o que os consultores fazem de especial nesse software. Os comentários do Consultor Independente ficarão visíveis para todos os membros da equipe.</target>
          </segment>
       </unit>
@@ -4815,13 +4815,13 @@
       </unit>
       <unit id="permission.mentorTip">
          <segment>
-            <source>Mentor's comments will only be visible to CITs. Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
+            <source>Mentor's comments will only be visible to CITs.  Mentors can approve CIT's comments to make them visible to the rest of the team.</source>
             <target/>
          </segment>
       </unit>
       <unit id="permission.nspTip">
          <segment>
-            <source>General Peer Group with no special permissions. Use to assign discussions to team groups.</source>
+            <source>General Peer Group with no special permissions.  Use to assign discussions to team groups.</source>
             <target>Grupo geral de pares sem permissões especiais. Use para atribuir discussões a grupos de equipes.</target>
          </segment>
       </unit>
@@ -5523,7 +5523,7 @@
       </unit>
       <unit id="profile.syncFrequency">
          <segment>
-            <source>Frequency of data sync in minutes. 0 to turn off sync.</source>
+            <source>Frequency of data sync in minutes.  0 to turn off sync.</source>
             <target>Frequência de sincronização de dados em minutos. 0 para desativar a sincronização.</target>
          </segment>
       </unit>
@@ -6267,13 +6267,13 @@
       </unit>
       <unit id="shared.expiredParatextToken">
          <segment>
-            <source>Your {Pt} login has expired and can't be automatically renewed. Please log out and login again.</source>
+            <source>Your {Pt} login has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target>Seu login {Pt} expirou e não pode ser renovado automaticamente. Faça logout e login novamente.</target>
          </segment>
       </unit>
       <unit id="shared.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed. Please log out and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -7233,7 +7233,7 @@
       </unit>
       <unit id="transcriber.updateByOther2">
          <segment>
-            <source>Transcription updated by {0}. Keep their changes? {1}</source>
+            <source>Transcription updated by {0}.  Keep their changes? {1}</source>
             <target>Transcrição atualizada por {0}. Manter suas alterações? {1}</target>
          </segment>
       </unit>
@@ -7437,7 +7437,7 @@
       </unit>
       <unit id="transcriptionTab.exportTooLarge">
          <segment>
-            <source>The audio project cannot be exported. The export file is too large.</source>
+            <source>The audio project cannot be exported.  The export file is too large.</source>
             <target/>
          </segment>
       </unit>
@@ -7479,7 +7479,7 @@
       </unit>
       <unit id="transcriptionTab.offlineData">
          <segment>
-            <source>You have new changes locally that were not included in the PTF export. Please also export an itf file to capture all changes.</source>
+            <source>You have new changes locally that were not included in the PTF export.  Please also export an itf file to capture all changes.</source>
             <target>Você tem novas alterações no local que não foram incluídas na exportação do PTF. Exporte também um arquivo itf para capturar todas as alterações.</target>
          </segment>
       </unit>
@@ -8313,7 +8313,7 @@
       </unit>
       <unit id="welcome.setupTeamTip">
          <segment>
-            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors. Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
+            <source>Set up the audio project, dividing work into passages that can be assigned to various transcribers and editors.  Transcribers and editors can work online or offline by downloading or importing the audio project.</source>
             <target/>
          </segment>
       </unit>
@@ -8331,7 +8331,7 @@
       </unit>
       <unit id="welcome.teamTip">
          <segment>
-            <source>A audio project has been set up online. Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
+            <source>A audio project has been set up online.  Transcribers and editors can work online, offline by selecting the Offline Available option on the audio project card menu, or offline by importing it.</source>
             <target/>
          </segment>
       </unit>
@@ -8575,6 +8575,24 @@
             <target>Avançar {jump} {1} [{0}]</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.aiFailed">
+         <segment>
+            <source>AI function {1} failed {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aiGiveUp">
+         <segment>
+            <source>Stop Waiting...</source>
+            <target>Pare de esperar...</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aiInProgress">
+         <segment>
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target>Serviço de IA em andamento... Este é um serviço remoto que pode levar muito tempo se a gravação for grande ou se houver outras solicitações antes da sua.</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.beginVoiceConvert">
          <segment>
             <source>Beginning voice conversion...</source>
@@ -8647,16 +8665,10 @@
             <target>Próximo segmento [{0}]</target>
          </segment>
       </unit>
-      <unit id="wsAudioPlayer.aiInProgress">
+      <unit id="wsAudioPlayer.noiseremovalFailed">
          <segment>
-            <source>AI Service In Progress... This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
-            <target>Serviço de IA em andamento... Este é um serviço remoto que pode levar muito tempo se a gravação for grande ou se houver outras solicitações antes da sua.</target>
-         </segment>
-      </unit>
-      <unit id="wsAudioPlayer.aiGiveUp">
-         <segment>
-            <source>Stop Waiting...</source>
-            <target>Pare de esperar...</target>
+            <source>Noise removal failed (More than likely, the server is unavailable).</source>
+            <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.pauseRecord">
@@ -8777,6 +8789,12 @@
          <segment>
             <source>Undo</source>
             <target>Desfazer</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.voiceconversionFailed">
+         <segment>
+            <source>Voice convert failed (More than likely, the server is unavailable).</source>
+            <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayerSegment.apply">

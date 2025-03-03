@@ -1797,6 +1797,9 @@ const initialState = {
 	"wsAudioPlayer": new LocalizedStrings({
 		"en": {
 			"aheadTip": "Ahead {jump} {1} [{0}]",
+			"aiFailed": "AI function {1} failed {0}",
+			"aiGiveUp": "Stop Waiting...",
+			"aiInProgress": "AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.",
 			"beginVoiceConvert": "Beginning voice conversion...",
 			"backTip": "Rewind {jump} {1} [{0}]",
 			"convertVoice": "Convert Voice {0}",
@@ -1809,8 +1812,7 @@ const initialState = {
 			"loopoff": "Loop Off",
 			"loopon": "Loop On",
 			"nextRegion": "Next Segment [{0}]",
-			"aiInProgress": "AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.",
-			"aiGiveUp": "Stop Waiting...",
+			"noiseremovalFailed": "Noise removal failed (More than likely, the server is unavailable).",
 			"pauseRecord": "Pause",
 			"pauseTip": "Pause [{0}]",
 			"playTip": "Play [{0}]",
@@ -1831,6 +1833,7 @@ const initialState = {
 			"stopTip": "Stop [{0}]",
 			"timerTip": "Timestamp [{0}]",
 			"undoTip": "Undo",
+			"voiceconversionFailed": "Voice convert failed (More than likely, the server is unavailable).",
 		}
 	}),
 	"wsAudioPlayerSegment": new LocalizedStrings({

@@ -8578,6 +8578,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.aiFailed">
+         <segment>
+            <source>AI function {1} failed {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aiGiveUp">
+         <segment>
+            <source>Stop Waiting...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aiInProgress">
+         <segment>
+            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.beginVoiceConvert">
          <segment>
             <source>Beginning voice conversion...</source>
@@ -8650,15 +8668,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="wsAudioPlayer.aiInProgress">
+      <unit id="wsAudioPlayer.noiseremovalFailed">
          <segment>
-            <source>AI Service In Progress...  This is a remote service that may take a long time if the recording is large, or if there are other requests ahead of yours.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="wsAudioPlayer.aiGiveUp">
-         <segment>
-            <source>Stop Waiting...</source>
+            <source>Noise removal failed (More than likely, the server is unavailable).</source>
             <target/>
          </segment>
       </unit>
@@ -8779,6 +8791,12 @@
       <unit id="wsAudioPlayer.undoTip">
          <segment>
             <source>Undo</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.voiceconversionFailed">
+         <segment>
+            <source>Voice convert failed (More than likely, the server is unavailable).</source>
             <target/>
          </segment>
       </unit>

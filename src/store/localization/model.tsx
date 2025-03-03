@@ -1701,6 +1701,9 @@ export interface IWorkflowStepsStrings extends Localize.LocalizedStringsMethods 
 
 export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods {
     "aheadTip": string;
+    "aiFailed": string;
+    "aiGiveUp": string;
+    "aiInProgress": string;
     "beginVoiceConvert": string;
     "backTip": string;
     "convertVoice": string;
@@ -1713,8 +1716,7 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "loopoff": string;
     "loopon": string;
     "nextRegion": string;
-    "aiInProgress": string;
-    "aiGiveUp": string;
+    "noiseremovalFailed": string;
     "pauseRecord": string;
     "pauseTip": string;
     "playTip": string;
@@ -1735,6 +1737,7 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "stopTip": string;
     "timerTip": string;
     "undoTip": string;
+    "voiceconversionFailed": string;
 };
 
 export interface IWsAudioPlayerSegmentStrings extends Localize.LocalizedStringsMethods {
