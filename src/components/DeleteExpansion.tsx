@@ -41,10 +41,11 @@ export function DeleteExpansion(props: IProps) {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
+          sx={{ backgroundColor: 'primary.main' }}
         >
           <Heading>{t.advanced}</Heading>
         </AccordionSummary>
-        <AccordionDetails sx={{ display: 'flex', flexDirection: 'column' }}>
+        <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', backgroundColor: 'primary.main' }}>
           {children}
           <FormLabel>
             <Typography variant="h5" sx={{ pb: '10px' }}>
