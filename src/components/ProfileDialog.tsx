@@ -231,13 +231,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
             backgroundColor: 'secondary.main'
           }}
         >
-          <LicenseAccordion {...about.mit} kid="mit" />
-          <LicenseAccordion {...about.bsd} kid="bsd" />
-          <LicenseAccordion {...about.apache} kid="ap" />
-          <LicenseAccordion {...about.mpl} kid="apl" />
           <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-          <LicenseAccordion {...about.LGPLv21} kid="gpl" />
-          <LicenseAccordion {...about.icons8} kid="ic8" />
           <DeleteExpansion
           title={tp.deleteUser}
           explain={tp.deleteExplained}
