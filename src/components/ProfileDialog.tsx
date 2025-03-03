@@ -154,16 +154,39 @@ function ProfileDialog(props: ProfileDialogProps) {
       maxWidth="md"
     >
       <DialogTitle id="profileDlg">{t.myAccount}</DialogTitle>
-      <DialogContent id="profilePanel" sx={{ px: 4 }}>
-        <LicenseAccordion {...about.mit} kid="mit" />
-        <LicenseAccordion {...about.bsd} kid="bsd" />
-        <LicenseAccordion {...about.apache} kid="ap" />
-        <LicenseAccordion {...about.mpl} kid="apl" />
-        <LicenseAccordion {...about.LGPLv21} kid="gpl" />
-        <LicenseAccordion {...about.icons8} kid="ic8" />
-      </DialogContent>
-      <DialogContent id="profileMain" sx={{ px: 4 }}>
-        <Typography variant="h6">{t.team}</Typography>
+      <DialogContent id="profileContent" 
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          //flexWrap: 'wrap'
+        }}
+      >
+        <Box 
+          id="profilePanel" 
+          sx={{
+            display: 'flex',
+            flex: '0 1 40%',
+            flexDirection: 'column',
+            justifyContent: 'center'
+          }}
+        >
+          <LicenseAccordion {...about.mit} kid="mit" />
+          <LicenseAccordion {...about.bsd} kid="bsd" />
+          <LicenseAccordion {...about.apache} kid="ap" />
+          <LicenseAccordion {...about.mpl} kid="apl" />
+          <LicenseAccordion {...about.LGPLv21} kid="gpl" />
+          <LicenseAccordion {...about.icons8} kid="ic8" />
+        </Box>
+        <Box id="profileMain" 
+          sx={{
+            display: 'flex',
+            flex: '0 1 60%',
+            flexDirection: 'column',
+            justifyContent: 'center'
+          }}
+        >
+          <Typography variant="h6">{t.team}</Typography>
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button id="profileClose" variant="outlined" onClick={handleClose}>
