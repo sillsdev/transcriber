@@ -214,9 +214,21 @@ export function ProfileDialog(props: ProfileDialogProps) {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button id="profileClose" variant="outlined" onClick={handleClose}>
-          {t.exit}
-        </Button>
+        {readOnly && (
+          <Button id="profileClose" variant="outlined" onClick={handleClose}>
+            {t.exit} {/*make t.close*/}
+          </Button>
+        )}
+        {!readOnly && (
+          <Button id="profileSave" variant="contained" onClick={handleClose}>
+            {t.exit} {/*make t.save*/}
+          </Button>
+        )}
+        {!readOnly && (
+          <Button id="profileCancel" variant="contained" onClick={handleClose}>
+            {t.exit} {/*make t.cancel*/}
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );
