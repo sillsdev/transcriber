@@ -38,6 +38,7 @@ import { StyledHeading } from '../control';
 import { makeAbbr } from '../utils';
 import { mainSelector, sharedSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import ParatextLinkedButton from '../components/ParatextLinkedButton';
 import { profileSelector } from '../selector';
 import { UnsavedContext } from '../context/UnsavedContext';
 import DeleteExpansion from '../components/DeleteExpansion';
@@ -48,6 +49,7 @@ const bigAvatarProps = { width: '150px', height: '150px' } as SxProps;
 interface IBigAvatarProps {
   avatarUrl: string | null;
   name: string;
+  //urlFunc: (event: React.MouseEvent<HTMLElement>) => void
 }
 const BigAvatar = (props: IBigAvatarProps) => {
   const { avatarUrl, name } = props;
@@ -55,7 +57,7 @@ const BigAvatar = (props: IBigAvatarProps) => {
   if (!avatarUrl || avatarUrl === '') {
     return <Avatar sx={bigAvatarProps}>{makeAbbr(name)}</Avatar>;
   }
-  return <Avatar sx={bigAvatarProps} src={avatarUrl} />;
+  return <Avatar sx={bigAvatarProps} src={avatarUrl}/>;
 };
 // img stuff above
 
@@ -173,7 +175,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const handleExit = () => onClose();
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [name, setName] = useState('');
-
+  const [view, setView] = useState('');
   const [currentUser, setCurrentUser] = useState<UserD | undefined>();
   const [syncFreq, setSyncFreq] = useState(2);
   const [deleteItem, setDeleteItem] = useState('');
@@ -232,6 +234,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
           }}
         >
           <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+          <ParatextLinkedButton setView={setView} />
           <DeleteExpansion
             title={tp.deleteUser}
             explain={tp.deleteExplained}
