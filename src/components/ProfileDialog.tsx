@@ -561,16 +561,7 @@ function EditProfileView(finishAdd?: () => void) {
     // return <StickyRedirect to={view} />;
   }
 
-  return [(<Box
-    id="profileContent"
-    sx={{
-      display: 'flex',
-      flex: '1 1 40%',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      maxWidth: '100%',
-      backgroundColor: 'secondary.main'
-    }}>
+  return [(<Box>
     <StyledGrid item xs={12} md={5}>
       <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
       <Caption>{email || ''}</Caption>
@@ -617,14 +608,7 @@ function EditProfileView(finishAdd?: () => void) {
       </DeleteExpansion>
     )}
   </Box>),
-    (<Box id="profileMain" 
-        sx={{
-          display: 'flex',
-          flex: '1 1 57%', //figure out why its 57% and not 60%
-          flexDirection: 'column',
-          maxWidth: '100%',
-          justifyContent: 'center'
-        }}>
+    (<Box>
         <Grid item xs={12} md={7}>
           {editUserId && /Add/i.test(editUserId) ? (
             <Typography variant="h6">{tp.addMember}</Typography>
@@ -913,10 +897,33 @@ export function ProfileDialog(props: ProfileDialogProps) {
   } = useContext(UnsavedContext).state;
 
   const getPanes = () => {
-    let panes = readOnly ? 
+    let panes = readOnly ?
       ReadProfileView() :
       EditProfileView(finishAdd);
-    return panes;
+    return [
+      (<Box id="profileContent"
+        sx={{
+          display: 'flex',
+          flex: '1 1 40%',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          maxWidth: '100%',
+          backgroundColor: 'secondary.main'
+        }}>
+        {panes[0]}
+      </Box>),
+      (<Box id="profileMain" 
+        sx={{
+          display: 'flex',
+          flex: '1 1 57%', //figure out why its 57% and not 60%
+          flexDirection: 'column',
+          maxWidth: '100%',
+          justifyContent: 'center',
+          mx: "10px"
+        }}>
+        {panes[1]}
+      </Box>)
+    ];
   };
 
   return (
@@ -956,9 +963,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
           flexWrap: 'wrap',
           padding: '0px'
         }}>
-        {
-          getPanes()
-        }
+        { getPanes() }
       </DialogContent>
     </Dialog>
   );
