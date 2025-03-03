@@ -167,6 +167,7 @@ export function UserMenu(props: IProps) {
           <ListItemText primary={t.myAccount} />
         </TermsItem>
       </StyledMenu>
+
       <ProfileDialog open={profileOpen} onClose={handleProfile(false)} />
     </div>
   );

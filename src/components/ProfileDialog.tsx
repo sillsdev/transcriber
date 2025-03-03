@@ -145,31 +145,16 @@ function ProfileDialog(props: ProfileDialogProps) {
 
   return (
     <Dialog
-      id="about"
+      id="profile"
       onClose={handleClose}
-      aria-labelledby="aboutDlg"
+      aria-labelledby="profileDlg"
       open={open}
       scroll={'paper'}
       disableEnforceFocus
+      maxWidth="md"
     >
-      <DialogTitle id="aboutDlg">{t.about}</DialogTitle>
-      <DialogContent id="about-version" sx={{ px: 4 }}>
-        <Tooltip title={t.copyClipboard}>
-          <div>
-            <ProductIdentBox>
-              <ApmLogo sx={{ width: '64px', height: '64px' }} />
-              {'\u00A0'}
-              <Typography variant="h4">{API_CONFIG.productName}</Typography>
-            </ProductIdentBox>
-          </div>
-        </Tooltip>
-        <Typography variant="h6">{t.team}</Typography>
-        <ListItems items={about.people} kid="pe" />
-        <Typography variant="h6">{t.thanks}</Typography>
-        <ListItems items={about.thanks} kid="th" />
-        <Typography variant="h6">
-          {t.reliesOn.replace('{0}', API_CONFIG.productName)}
-        </Typography>
+      <DialogTitle id="profileDlg">{t.myAccount}</DialogTitle>
+      <DialogContent id="profilePanel" sx={{ px: 4 }}>
         <LicenseAccordion {...about.mit} kid="mit" />
         <LicenseAccordion {...about.bsd} kid="bsd" />
         <LicenseAccordion {...about.apache} kid="ap" />
@@ -177,8 +162,11 @@ function ProfileDialog(props: ProfileDialogProps) {
         <LicenseAccordion {...about.LGPLv21} kid="gpl" />
         <LicenseAccordion {...about.icons8} kid="ic8" />
       </DialogContent>
+      <DialogContent id="profileMain" sx={{ px: 4 }}>
+        <Typography variant="h6">{t.team}</Typography>
+      </DialogContent>
       <DialogActions>
-        <Button id="aboutExit" variant="outlined" onClick={handleExit}>
+        <Button id="profileClose" variant="outlined" onClick={handleClose}>
           {t.exit}
         </Button>
       </DialogActions>
