@@ -27,10 +27,11 @@ interface IProps {
   explain: string;
   handleDelete: () => void;
   inProgress: boolean;
+  children?: any;
 }
 
 export function DeleteExpansion(props: IProps) {
-  const { handleDelete, title, explain, inProgress } = props;
+  const { handleDelete, title, explain, inProgress, children } = props;
   const t: IDeleteExpansionStrings = useSelector(deleteExpandSelector);
 
   return (
@@ -44,6 +45,7 @@ export function DeleteExpansion(props: IProps) {
           <Heading>{t.advanced}</Heading>
         </AccordionSummary>
         <AccordionDetails sx={{ display: 'flex', flexDirection: 'column' }}>
+          {children}
           <FormLabel>
             <Typography variant="h5" sx={{ pb: '10px' }}>
               {t.dangerZone}

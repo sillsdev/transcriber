@@ -7,7 +7,11 @@ import { logError, Severity } from '../utils';
 import { waitForIt } from '../utils/waitForIt';
 
 const CAPTURE_OPTIONS = {
-  audio: true,
+  audio: {
+    autoGainControl: false,
+    echoCancellation: false,
+    noiseSuppression: false,
+  },
   video: false,
 };
 const noop = () => {};
