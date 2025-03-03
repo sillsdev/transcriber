@@ -191,12 +191,11 @@ export function ProfileDialog(props: ProfileDialogProps) {
             justifyContent: 'center'
           }}
         >
-          {/* the top item is the user avatar image */}
-        <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-        <LicenseAccordion {...about.mit} kid="mit" />
+          <LicenseAccordion {...about.mit} kid="mit" />
           <LicenseAccordion {...about.bsd} kid="bsd" />
           <LicenseAccordion {...about.apache} kid="ap" />
           <LicenseAccordion {...about.mpl} kid="apl" />
+          <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
           <LicenseAccordion {...about.LGPLv21} kid="gpl" />
           <LicenseAccordion {...about.icons8} kid="ic8" />
         </Box>
@@ -219,5 +218,4 @@ export function ProfileDialog(props: ProfileDialogProps) {
     </Dialog>
   );
 }
-//}
 export default ProfileDialog;
