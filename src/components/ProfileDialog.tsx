@@ -1,12 +1,18 @@
 /* eslint-disable no-template-curly-in-string */
-import React, { useState } from 'react';
-import { IMainStrings, ISharedStrings } from '../model';
+import React, { useState, useContext} from 'react';
+import { 
+  IMainStrings, 
+  ISharedStrings, 
+  IProfileStrings, 
+  UserD, 
+} from '../model';
 import {
   Dialog,
   DialogTitle,
   Button,
   DialogContent,
   DialogActions,
+  FormControlLabel,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -32,6 +38,9 @@ import { StyledHeading } from '../control';
 import { makeAbbr } from '../utils';
 import { mainSelector, sharedSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import { profileSelector } from '../selector';
+import { UnsavedContext } from '../context/UnsavedContext';
+import DeleteExpansion from '../components/DeleteExpansion';
 
 // img stuff below
 const bigAvatarProps = { width: '150px', height: '150px' } as SxProps;
@@ -158,11 +167,40 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const { onClose, open } = props;
   const t: IMainStrings = useSelector(mainSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
+  const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
   const { showMessage } = useSnackBar();
   const handleClose = () => onClose();
   const handleExit = () => onClose();
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [name, setName] = useState('');
+
+  const [currentUser, setCurrentUser] = useState<UserD | undefined>();
+  const [syncFreq, setSyncFreq] = useState(2);
+  const [deleteItem, setDeleteItem] = useState('');
+  const [hotKeys, setHotKeys] = useState<string | null>(null);
+  const toolId = 'profile';
+  const {
+    startSave,
+    saveCompleted,
+    toolChanged,
+    toolsChanged,
+    saveRequested,
+    clearRequested,
+    clearCompleted,
+    isChanged,
+  } = useContext(UnsavedContext).state;
+
+  const handleDelete = () => {
+    if (currentUser) setDeleteItem(currentUser.id);
+  };
+  const handleSyncFreqChange = (e: any) => {
+    if (e.target.value < 0) e.target.value = 0;
+    if (e.target.value > 720) e.target.value = 720;
+    toolChanged(toolId, true);
+    setSyncFreq(e.target.value);
+    var hk = JSON.parse(hotKeys ?? '{}');
+    setHotKeys(JSON.stringify({ ...hk, syncFreq: e.target.value }));
+  };
 
   return (
     <Dialog
@@ -193,13 +231,29 @@ export function ProfileDialog(props: ProfileDialogProps) {
             backgroundColor: 'secondary.main'
           }}
         >
-          <LicenseAccordion {...about.mit} kid="mit" />
-          <LicenseAccordion {...about.bsd} kid="bsd" />
-          <LicenseAccordion {...about.apache} kid="ap" />
-          <LicenseAccordion {...about.mpl} kid="apl" />
           <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-          <LicenseAccordion {...about.LGPLv21} kid="gpl" />
-          <LicenseAccordion {...about.icons8} kid="ic8" />
+          <DeleteExpansion
+          title={tp.deleteUser}
+          explain={tp.deleteExplained}
+          handleDelete={() => handleDelete()}
+          inProgress={deleteItem !== ''}
+        >
+          <FormControlLabel
+            control={
+              <input
+                title={tp.syncFrequency}
+                value={syncFreq}
+                onChange={handleSyncFreqChange}
+                type="number"
+                min={0}
+                max={720}
+                style={{ width: '3em', margin: '8px' }}
+              />
+            }
+            label={tp.syncFrequency}
+          />
+          <br></br>
+      </DeleteExpansion>
         </Box>
         <Box id="profileMain" 
           sx={{
