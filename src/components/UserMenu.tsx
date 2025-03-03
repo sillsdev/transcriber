@@ -149,7 +149,12 @@ export function UserMenu(props: IProps) {
         <TermsItem id="terms" onClick={handleAction('Terms')}>
           <ListItemText primary={t.terms} />
         </TermsItem>
+        <TermsItem id="profiled" onClick={handleAction('Profiled')}>
+          <ListItemText primary={t.myAccount} />
+        </TermsItem>
       </StyledMenu>
+      
+      <ProfileDialog open={aboutOpen} onClose={handleAbout(false)} />
     </div>
   );
 }
