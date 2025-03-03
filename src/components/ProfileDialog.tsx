@@ -918,7 +918,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
           flex: '1 1 57%', //figure out why its 57% and not 60%
           flexDirection: 'column',
           maxWidth: '100%',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          mx: "10px"
         }}>
         {panes[1]}
       </Box>)
