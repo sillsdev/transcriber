@@ -558,74 +558,66 @@ function EditProfileView(finishAdd?: () => void) {
   if (/Logout/i.test(view)) navigate('/logout');
   else if (/access/i.test(view)) navigate('/');
   else if (view && !/Profile/i.test(view)) {
-    return <StickyRedirect to={view} />;
+    // return <StickyRedirect to={view} />;
   }
 
-  return (
-    <DialogContent
-      id="profileContent" 
-      sx={{
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'wrap'
-      }}>
-      <Box
-        id="profileContent"
-        sx={{
-          display: 'flex',
-          flex: '1 1 40%',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          maxWidth: '100%',
-          backgroundColor: 'secondary.main'
-        }}>
-        <StyledGrid item xs={12} md={5}>
-          <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-          <Caption>{email || ''}</Caption>
-          <ParatextLinked setView={setView} />
-        </StyledGrid>
-        {(!isOffline || offlineOnly) &&
-        !editUserId &&
-        currentUser &&
-        currentUser.attributes?.name !== currentUser.attributes?.email && (
-          <DeleteExpansion
-            title={tp.deleteUser}
-            explain={tp.deleteExplained}
-            handleDelete={handleDelete}
-            inProgress={deleteItem !== ''}
-          >
-            <FormGroup
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                flexGrow: 1,
-                paddingLeft: '20px',
-              }}
-            >
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <TextField
-                      title={tp.syncFrequency}
-                      value={syncFreq}
-                      onChange={handleSyncFreqChange}
-                      type="number"
-                      inputProps={{
-                        min: 0,
-                        max: 720
-                      }}
-                      size="small"
-                      style={{ margin: '8px' }}
-                    />
-                  }
-                  label={tp.syncFrequency}
+  return [(<Box
+    id="profileContent"
+    sx={{
+      display: 'flex',
+      flex: '1 1 40%',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      maxWidth: '100%',
+      backgroundColor: 'secondary.main'
+    }}>
+    <StyledGrid item xs={12} md={5}>
+      <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+      <Caption>{email || ''}</Caption>
+      <ParatextLinked setView={setView} />
+    </StyledGrid>
+    {(!isOffline || offlineOnly) &&
+    !editUserId &&
+    currentUser &&
+    currentUser.attributes?.name !== currentUser.attributes?.email && (
+      <DeleteExpansion
+        title={tp.deleteUser}
+        explain={tp.deleteExplained}
+        handleDelete={handleDelete}
+        inProgress={deleteItem !== ''}
+      >
+        <FormGroup
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexGrow: 1,
+            paddingLeft: '20px',
+          }}
+        >
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <TextField
+                  title={tp.syncFrequency}
+                  value={syncFreq}
+                  onChange={handleSyncFreqChange}
+                  type="number"
+                  inputProps={{
+                    min: 0,
+                    max: 720
+                  }}
+                  size="small"
+                  style={{ margin: '8px' }}
                 />
-              </FormGroup>
-            </FormGroup>
-          </DeleteExpansion>
-        )}
-      </Box>
-      <Box id="profileMain" 
+              }
+              label={tp.syncFrequency}
+            />
+          </FormGroup>
+        </FormGroup>
+      </DeleteExpansion>
+    )}
+  </Box>),
+    (<Box id="profileMain" 
         sx={{
           display: 'flex',
           flex: '1 1 57%', //figure out why its 57% and not 60%
@@ -866,8 +858,7 @@ function EditProfileView(finishAdd?: () => void) {
             </PriButton>
           </ActionRow>
         </Grid>
-      </Box>
-      {deleteItem !== '' && (
+        {deleteItem !== '' && (
         <Confirm
           text={''}
           yesResponse={handleDeleteConfirmed}
@@ -881,12 +872,12 @@ function EditProfileView(finishAdd?: () => void) {
           noResponse={handleCancelAborted}
         />
       )}
-    </DialogContent>
-  );
+      </Box>)
+  ];
 }
 
 function ReadProfileView() {
-  return (<DialogContent></DialogContent>);
+  return [(<Box></Box>), (<Box></Box>)];
 }
 
 interface ProfileDialogProps {
@@ -921,6 +912,13 @@ export function ProfileDialog(props: ProfileDialogProps) {
     isChanged,
   } = useContext(UnsavedContext).state;
 
+  const getPanes = () => {
+    let panes = readOnly ? 
+      ReadProfileView() :
+      EditProfileView(finishAdd);
+    return panes;
+  };
+
   return (
     <Dialog
       id="profile"
@@ -949,11 +947,16 @@ export function ProfileDialog(props: ProfileDialogProps) {
           <CloseIcon></CloseIcon>
         </IconButton>
       </DialogTitle>
-      {
-        readOnly ? 
-        ReadProfileView() :
-        EditProfileView(finishAdd)
-      }
+      <DialogContent id="profileContent" 
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          flexWrap: 'wrap'
+        }}>
+        {
+          getPanes()
+        }
+      </DialogContent>
     </Dialog>
   );
 }
