@@ -16,10 +16,12 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Avatar,
   List,
   ListItem,
   ListItemText,
   Link,
+  SxProps,
   Tooltip,
   Box,
   BoxProps,
@@ -33,11 +35,29 @@ import stringReplace from 'react-string-replace';
 import { useSnackBar } from '../hoc/SnackBar';
 import { ApmLogo } from '../control/ApmLogo';
 import { StyledHeading } from '../control';
+import { makeAbbr } from '../utils';
 import { mainSelector, sharedSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { profileSelector } from '../selector';
 import { UnsavedContext } from '../context/UnsavedContext';
 import DeleteExpansion from '../components/DeleteExpansion';
+
+// img stuff below
+const bigAvatarProps = { width: '150px', height: '150px' } as SxProps;
+
+interface IBigAvatarProps {
+  avatarUrl: string | null;
+  name: string;
+}
+const BigAvatar = (props: IBigAvatarProps) => {
+  const { avatarUrl, name } = props;
+
+  if (!avatarUrl || avatarUrl === '') {
+    return <Avatar sx={bigAvatarProps}>{makeAbbr(name)}</Avatar>;
+  }
+  return <Avatar sx={bigAvatarProps} src={avatarUrl} />;
+};
+// img stuff above
 
 
 const CopyrightText = styled(Typography)<TypographyProps>(() => ({
@@ -68,6 +88,10 @@ interface ItemsProps {
   items: string[];
   kid: string;
 }
+
+
+//export function ProfileDialog(props: IProps) {
+
 const ListItems = ({ items, kid }: ItemsProps) => {
   const part = (s: string, i: number) => s.split('|')[i];
 
@@ -92,7 +116,6 @@ const ListItems = ({ items, kid }: ItemsProps) => {
     </List>
   );
 };
-
 const ParaItems = ({ items, kid }: ItemsProps) => {
   return (
     <Paragraphs>
@@ -104,7 +127,6 @@ const ParaItems = ({ items, kid }: ItemsProps) => {
     </Paragraphs>
   );
 };
-
 interface LicenseProps {
   title: string;
   url: string;
@@ -112,7 +134,6 @@ interface LicenseProps {
   product: string[];
   kid: string;
 }
-
 const LicenseAccordion = ({ title, url, text, product, kid }: LicenseProps) => {
   return (
     <>
@@ -138,21 +159,20 @@ const LicenseAccordion = ({ title, url, text, product, kid }: LicenseProps) => {
     </>
   );
 };
-
 interface ProfileDialogProps {
   open: boolean;
   onClose: () => void;
 }
-
-function ProfileDialog(props: ProfileDialogProps) {
+export function ProfileDialog(props: ProfileDialogProps) {
   const { onClose, open } = props;
   const t: IMainStrings = useSelector(mainSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
   const { showMessage } = useSnackBar();
-
   const handleClose = () => onClose();
   const handleExit = () => onClose();
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [name, setName] = useState('');
 
   const [currentUser, setCurrentUser] = useState<UserD | undefined>();
   const [syncFreq, setSyncFreq] = useState(2);
@@ -215,6 +235,7 @@ function ProfileDialog(props: ProfileDialogProps) {
           <LicenseAccordion {...about.bsd} kid="bsd" />
           <LicenseAccordion {...about.apache} kid="ap" />
           <LicenseAccordion {...about.mpl} kid="apl" />
+          <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
           <LicenseAccordion {...about.LGPLv21} kid="gpl" />
           <LicenseAccordion {...about.icons8} kid="ic8" />
           <DeleteExpansion
