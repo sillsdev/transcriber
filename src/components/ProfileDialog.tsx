@@ -934,7 +934,9 @@ export function ProfileDialog(props: ProfileDialogProps) {
         sx={{
           display: 'flex', 
           justifyContent: 'space-between', 
-          alignItems: 'center'
+          alignItems: 'center',
+          padding: '10px',
+          paddingLeft: '25px'
         }}
       >
         {t.myAccount}
@@ -951,7 +953,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
         sx={{
           display: 'flex',
           flexDirection: 'row',
-          flexWrap: 'wrap'
+          flexWrap: 'wrap',
+          padding: '0px'
         }}>
         {
           getPanes()
