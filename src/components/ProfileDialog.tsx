@@ -29,7 +29,9 @@ import {
   TextField,
   MenuItem,
   Checkbox,
+  IconButton,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
 import SaveIcon from '@mui/icons-material/Save';
 import Typography, { TypographyProps } from '@mui/material/Typography';
@@ -929,29 +931,29 @@ export function ProfileDialog(props: ProfileDialogProps) {
       disableEnforceFocus
       maxWidth="md"
     >
-      <DialogTitle id="profileDlg">{t.myAccount}</DialogTitle>
+      <DialogTitle
+        id="profileDlg"
+        sx={{
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center'
+        }}
+      >
+        {t.myAccount}
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            color: 'gray',
+          }}>
+          <CloseIcon></CloseIcon>
+        </IconButton>
+      </DialogTitle>
       {
         readOnly ? 
         ReadProfileView() :
         EditProfileView(finishAdd)
       }
-      <DialogActions>
-        {readOnly && (
-          <Button id="profileClose" variant="outlined" onClick={handleClose}>
-            {t.exit} {/*make t.close*/}
-          </Button>
-        )}
-        {!readOnly && (
-          <Button id="profileSave" variant="contained" onClick={handleClose}>
-            {t.exit} {/*make t.save*/}
-          </Button>
-        )}
-        {!readOnly && (
-          <Button id="profileCancel" variant="contained" onClick={handleClose}>
-            {t.exit} {/*make t.cancel*/}
-          </Button>
-        )}
-      </DialogActions>
     </Dialog>
   );
 }
