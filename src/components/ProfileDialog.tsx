@@ -233,27 +233,27 @@ export function ProfileDialog(props: ProfileDialogProps) {
         >
           <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
           <DeleteExpansion
-          title={tp.deleteUser}
-          explain={tp.deleteExplained}
-          handleDelete={() => handleDelete()}
-          inProgress={deleteItem !== ''}
-        >
-          <FormControlLabel
-            control={
-              <input
-                title={tp.syncFrequency}
-                value={syncFreq}
-                onChange={handleSyncFreqChange}
-                type="number"
-                min={0}
-                max={720}
-                style={{ width: '3em', margin: '8px' }}
-              />
-            }
-            label={tp.syncFrequency}
-          />
-          <br></br>
-      </DeleteExpansion>
+            title={tp.deleteUser}
+            explain={tp.deleteExplained}
+            handleDelete={() => handleDelete()}
+            inProgress={deleteItem !== ''}
+          >
+            <FormControlLabel
+              control={
+                <input
+                  title={tp.syncFrequency}
+                  value={syncFreq}
+                  onChange={handleSyncFreqChange}
+                  type="number"
+                  min={0}
+                  max={720}
+                  style={{ width: '3em', margin: '8px' }}
+                />
+              }
+              label={tp.syncFrequency}
+            />
+            <br/>
+          </DeleteExpansion>
         </Box>
         <Box id="profileMain" 
           sx={{
