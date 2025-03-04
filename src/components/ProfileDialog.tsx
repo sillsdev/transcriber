@@ -1144,18 +1144,6 @@ function ReadProfileView(props: IReadProfileViewProps) {
         />
         <FormControl>
           <FormGroup sx={{ pb: 3 }}>
-            {email !== '' && (
-              <FormControlLabel
-                sx={textFieldProps}
-                control={
-                  <Checkbox
-                    id="digest"
-                    checked={digest === 1}
-                  />
-                }
-                label={tp.sendDigest}
-              />
-            )}
             {userIsSharedContentAdmin && (
               <FormControlLabel
                 sx={textFieldProps}
