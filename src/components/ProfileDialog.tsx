@@ -120,9 +120,7 @@ const menuProps = {
 } as SxProps;
 const bigAvatarProps = {
   width: '150px', 
-  height: '150px', 
-  border: '2px solid rgb(255, 255, 255, 0.5)', 
-  padding: '10px'
+  height: '150px'
 } as SxProps;
 const profileContentProps = {
   display: 'flex',
@@ -629,7 +627,7 @@ function EditProfileView(props: IEditProfileView) {
                     borderRadius: '50%', 
                     border: '0.5px solid rgb(255, 255, 255, 0.5)',
                     padding: '17px' }}>
-        <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+          <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
         </Box>
       <Caption>{email || ''}</Caption>
       <Button disabled>Edit Profile</Button> {/* TODO: Translation*/}
@@ -1057,10 +1055,16 @@ function ReadProfileView(props: IReadProfileViewProps) {
     <Box id="profilePanel"
       sx={profilePanelProps}>
       <StyledGrid item xs={12} md={5}>
-        <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+        <Box sx= {{ width: '150px',
+                    height: '150px',
+                    borderRadius: '50%', 
+                    border: '0.5px solid rgb(255, 255, 255, 0.5)',
+                    padding: '17px' }}>
+          <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+        </Box>
         <Caption>{email || ''}</Caption>
-        <ParatextLinked setView={setView} />
         <Button onClick={onEditClick}>Edit Profile</Button> {/* TODO: Translation*/}
+        <ParatextLinkedButton setView={setView} />
       </StyledGrid>
     </Box>
     <Box id="profileMain" 
