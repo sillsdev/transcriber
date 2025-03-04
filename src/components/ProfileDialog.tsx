@@ -97,15 +97,9 @@ const selectProps = {
   mx: 1,
   width: '206px',
   "&:has([readOnly]) ": {
-    "& .MuiSelect-icon": {
-      display: 'none'
-    },
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.6)"
     },
-    "& .MuiSelect-select:focus": {
-      backgroundColor: "unset"
-    }
   }
 } as SxProps;
 
@@ -139,7 +133,9 @@ const profilePanelProps = {
   flexDirection: 'column',
   justifyContent: 'center',
   maxWidth: '100%',
-  backgroundColor: 'secondary.dark'
+  backgroundColor: 'secondary.dark',
+  height: '100%',
+  textAlign: 'center'
 } as SxProps;
 
 const profileMainProps = {
@@ -649,10 +645,14 @@ function EditProfileView(props: IEditProfileView) {
                       height: '150px',
                       borderRadius: '50%', 
                       border: '0.5px solid rgb(255, 255, 255, 0.5)',
-                      padding: '17px' }}>
+                      padding: '17px',
+                      margin: '10% auto 1% auto' }}>
             <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
           </Box>
-          <Caption>{email || ''}</Caption>
+          <Caption sx={{ margin: '0% auto', 
+                         overflow: 'visible',
+                         position: 'relative',
+                         right: '+16px' }} >{email || ''}</Caption>
           <Button disabled variant="contained" sx={editProfileProps}>Edit Profile</Button> {/* TODO: Translation*/}
           <ParatextLinkedButton setView={setView} />
         </StyledGrid>
@@ -702,7 +702,8 @@ function EditProfileView(props: IEditProfileView) {
     </Box>
     <Box id="profileMain" 
       sx={profileMainProps}>
-      <Grid item xs={12} md={7}>
+      
+      <Grid item xs={12} md={7} sx={{ maxWidth: '100%' }}>
           {editUserId && /Add/i.test(editUserId) ? (
             <Typography variant="h6">{tp.addMember}</Typography>
           ) : userNotComplete() ? (
@@ -710,8 +711,8 @@ function EditProfileView(props: IEditProfileView) {
           ) : (
             <Typography variant="h6">{tp.userProfile}</Typography>
           )}
-          <FormControl>
-            <FormGroup sx={{ padding: '3px', pb: 2, marginBottom: '30px' }}>
+          <FormControl sx={{ width: '100%'}}>
+            <FormGroup sx={{ padding: '3px', pb: 2, marginBottom: '30px', width: '100%' }}>
               <FormControlLabel
                 control={
                   <TextField
@@ -731,6 +732,7 @@ function EditProfileView(props: IEditProfileView) {
                     margin="normal"
                     variant="outlined"
                     size="small"
+                    fullWidth
                     required
                     autoFocus
                   />
@@ -747,6 +749,7 @@ function EditProfileView(props: IEditProfileView) {
                     onChange={handleGivenChange}
                     margin="normal"
                     required
+                    fullWidth
                     variant="outlined"
                     size="small"
                   />
@@ -763,6 +766,7 @@ function EditProfileView(props: IEditProfileView) {
                     onChange={handleFamilyChange}
                     margin="normal"
                     required
+                    fullWidth
                     variant="outlined"
                     size="small"
                   />
@@ -1081,10 +1085,14 @@ function ReadProfileView(props: IReadProfileViewProps) {
                     height: '150px',
                     borderRadius: '50%', 
                     border: '0.5px solid rgb(255, 255, 255, 0.5)',
-                    padding: '17px' }}>
+                    padding: '17px',
+                    margin: '10% auto 1% auto' }}>
           <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
         </Box>
-        <Caption>{email || ''}</Caption>
+        <Caption sx={{ margin: '0% auto', 
+                       overflow: 'visible',
+                       position: 'relative',
+                       right: '+16px' }} >{email || ''}</Caption>
         <Button onClick={onEditClick} sx={editProfileProps}>Edit Profile</Button> {/* TODO: Translation*/}
         <ParatextLinkedButton setView={setView} />
       </StyledGrid>
@@ -1106,13 +1114,6 @@ function ReadProfileView(props: IReadProfileViewProps) {
           sx={textFieldProps}
           value={name}
           onClick={handleNameClick}
-          helperText={
-            dupName && (
-              <Typography color="secondary" variant="caption">
-                {tp.userExists}
-              </Typography>
-            )
-          }
           margin="normal"
           variant="standard"
           InputProps={{
