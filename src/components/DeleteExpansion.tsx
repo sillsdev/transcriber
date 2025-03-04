@@ -11,6 +11,8 @@ import {
   Button,
   Box,
   styled,
+  SxProps,
+  Theme,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { GrowingSpacer } from '../control';
@@ -27,11 +29,14 @@ interface IProps {
   explain: string;
   handleDelete: () => void;
   inProgress: boolean;
+  SummaryProps?: SxProps<Theme>;
+  DetailsProps?: SxProps<Theme>;
+  DeleteButtonProps?: SxProps<Theme>;
   children?: any;
 }
 
 export function DeleteExpansion(props: IProps) {
-  const { handleDelete, title, explain, inProgress, children } = props;
+  const { handleDelete, title, explain, inProgress, SummaryProps, DetailsProps, DeleteButtonProps, children } = props;
   const t: IDeleteExpansionStrings = useSelector(deleteExpandSelector);
 
   return (
@@ -41,11 +46,11 @@ export function DeleteExpansion(props: IProps) {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
-          sx={{ backgroundColor: 'primary.dark' }}
+          sx={SummaryProps}
         >
           <Heading>{t.advanced}</Heading>
         </AccordionSummary>
-        <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', backgroundColor: 'primary.main' }}>
+        <AccordionDetails sx={DetailsProps || { display: 'flex', flexDirection: 'column' }}>
           {children}
           <FormLabel>
             <Typography variant="h5" sx={{ pb: '10px' }}>
@@ -78,7 +83,7 @@ export function DeleteExpansion(props: IProps) {
                 color="secondary"
                 aria-label={t.delete}
                 variant="contained"
-                sx={{ m: 1 }}
+                sx={DeleteButtonProps || { m: 1 }}
                 onClick={handleDelete}
                 disabled={inProgress}
               >

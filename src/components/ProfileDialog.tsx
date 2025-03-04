@@ -640,6 +640,9 @@ function EditProfileView(props: IEditProfileView) {
             explain={tp.deleteExplained}
             handleDelete={handleDelete}
             inProgress={deleteItem !== ''}
+            SummaryProps={{ backgroundColor: 'primary.dark' }}
+            DetailsProps={{ backgroundColor: 'primary.main' }}
+            DeleteButtonProps={{ m: 1 }}
           >
             <FormGroup
               sx={{
