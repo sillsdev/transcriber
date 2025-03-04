@@ -683,7 +683,7 @@ function EditProfileView(props: IEditProfileView) {
             <Typography variant="h6">{tp.userProfile}</Typography>
           )}
           <FormControl>
-            <FormGroup sx={{ padding: '3px', pb: 2 }}>
+            <FormGroup sx={{ padding: '3px', pb: 2, marginBottom: '30px' }}>
               <FormControlLabel
                 control={
                   <TextField
