@@ -139,8 +139,7 @@ const profilePanelProps = {
   flexDirection: 'column',
   justifyContent: 'center',
   maxWidth: '100%',
-  backgroundColor: 'secondary.dark',
-  height: '100%'
+  backgroundColor: 'secondary.dark'
 } as SxProps;
 
 const profileMainProps = {
@@ -150,8 +149,7 @@ const profileMainProps = {
   maxWidth: '100%',
   justifyContent: 'center',
   mx: "10px",
-  padding: '10px',
-  height: 'calc(100% - 48px)'
+  padding: '10px'
 } as SxProps;
 
 interface IBigAvatarProps {
@@ -627,58 +625,62 @@ function EditProfileView(props: IEditProfileView) {
     sx={profileContentProps}>
     <Box id="profilePanel"
       sx={profilePanelProps}>
-      <StyledGrid item xs={12} md={5}>
-        <Box sx= {{ width: '150px',
-                    height: '150px',
-                    borderRadius: '50%', 
-                    border: '0.5px solid rgb(255, 255, 255, 0.5)',
-                    padding: '17px' }}>
-          <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-        </Box>
-      <Caption>{email || ''}</Caption>
-      <Button disabled>Edit Profile</Button> {/* TODO: Translation*/}
-      <ParatextLinkedButton setView={setView} />
-    </StyledGrid>
-    {(!isOffline || offlineOnly) &&
-    !editUserId &&
-    currentUser &&
-    currentUser.attributes?.name !== currentUser.attributes?.email && (
-      <DeleteExpansion
-        title={tp.deleteUser}
-        explain={tp.deleteExplained}
-        handleDelete={handleDelete}
-        inProgress={deleteItem !== ''}
-      >
-        <FormGroup
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexGrow: 1,
-            paddingLeft: '20px',
-          }}
-        >
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <TextField
-                  title={tp.syncFrequency}
-                  value={syncFreq}
-                  onChange={handleSyncFreqChange}
-                  type="number"
-                  inputProps={{
-                    min: 0,
-                    max: 720
-                  }}
-                  size="small"
-                  style={{ margin: '8px' }}
+      <Box sx={{ height: 'calc(100% - 48px)' }}>
+        <StyledGrid item xs={12} md={5}>
+          <Box sx= {{ width: '150px',
+                      height: '150px',
+                      borderRadius: '50%', 
+                      border: '0.5px solid rgb(255, 255, 255, 0.5)',
+                      padding: '17px' }}>
+            <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+          </Box>
+          <Caption>{email || ''}</Caption>
+          <Button disabled variant="contained" sx={{ color: 'transparent', backgroundColor: 'white' }}>Edit Profile</Button> {/* TODO: Translation*/}
+          <ParatextLinkedButton setView={setView} />
+        </StyledGrid>
+      </Box>
+      <Box>
+        {(!isOffline || offlineOnly) &&
+        !editUserId &&
+        currentUser &&
+        currentUser.attributes?.name !== currentUser.attributes?.email && (
+          <DeleteExpansion
+            title={tp.deleteUser}
+            explain={tp.deleteExplained}
+            handleDelete={handleDelete}
+            inProgress={deleteItem !== ''}
+          >
+            <FormGroup
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                flexGrow: 1,
+                paddingLeft: '20px',
+              }}
+            >
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <TextField
+                      title={tp.syncFrequency}
+                      value={syncFreq}
+                      onChange={handleSyncFreqChange}
+                      type="number"
+                      inputProps={{
+                        min: 0,
+                        max: 720
+                      }}
+                      size="small"
+                      style={{ margin: '8px' }}
+                    />
+                  }
+                  label={tp.syncFrequency}
                 />
-              }
-              label={tp.syncFrequency}
-            />
-          </FormGroup>
-        </FormGroup>
-      </DeleteExpansion>
-    )}
+              </FormGroup>
+            </FormGroup>
+          </DeleteExpansion>
+        )}
+      </Box>
     </Box>
     <Box id="profileMain" 
       sx={profileMainProps}>
