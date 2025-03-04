@@ -254,10 +254,12 @@ function EditProfileView(finishAdd?: () => void) {
     toolChanged(toolId, true);
     setLocked(!locked);
   };
+
   const handleSharedContentChange = () => {
     toolChanged(toolId, true);
     setSharedContent(!Boolean(sharedContent));
   };
+
   const handleDigestChange = () => {
     toolChanged(toolId, true);
     setDigest(
@@ -435,6 +437,7 @@ function EditProfileView(finishAdd?: () => void) {
   const handleDelete = () => {
     if (currentUser) setDeleteItem(currentUser.id);
   };
+
   const handleDeleteConfirmed = async () => {
     const deleteRec = getUserRec(deleteItem);
     await waitForRemoteQueue('wait for any changes to finish');
@@ -451,6 +454,7 @@ function EditProfileView(finishAdd?: () => void) {
     localStorage.removeItem(LocalKey.userId);
     setView('Logout');
   };
+
   const handleDeleteRefused = () => {
     setDeleteItem('');
   };
@@ -536,6 +540,7 @@ function EditProfileView(finishAdd?: () => void) {
     const hk = JSON.parse(hotKeys ?? '{}');
     return hk.syncFreq ?? 2;
   };
+
   useEffect(() => {
     if (timezone === '') {
       const myZone = moment.tz.guess();
@@ -563,8 +568,8 @@ function EditProfileView(finishAdd?: () => void) {
     // return <StickyRedirect to={view} />;
   }
 
-  return [(<Box>
-    <Box>
+  return [(<Box sx={{backgroundColor: 'pink', height: '100%'}}>
+    <Box sx={{backgroundColor: 'yellow', height: 'calc(100% - 48px)'}}>
       <StyledGrid item xs={12} md={5}>
         <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
         <Caption>{email || ''}</Caption>
