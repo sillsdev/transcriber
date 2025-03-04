@@ -641,13 +641,6 @@ function EditProfileView(finishAdd?: () => void) {
                     autoFocus
                   />
                 }
-                sx={{
-                  "&:has([readOnly]) ": {
-                    "& .MuiFormControlLabel-root": {
-                      cursor: "default"
-                    }
-                  }
-                }}
                 label=""
               />
               <FormControlLabel
