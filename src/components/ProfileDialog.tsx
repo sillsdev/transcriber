@@ -901,7 +901,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
           flexDirection: 'column',
           justifyContent: 'center',
           maxWidth: '100%',
-          backgroundColor: 'secondary.main'
+          backgroundColor: 'secondary.dark'
         }}>
         {panes[0]}
       </Box>),
