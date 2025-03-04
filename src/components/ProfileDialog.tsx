@@ -33,6 +33,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, alpha, Theme, useTheme } from '@mui/material/styles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSnackBar } from '../hoc/SnackBar';
 import { langName, localeDefault, LocalKey, makeAbbr, uiLang, uiLangDev, useMyNavigate, useWaitForRemoteQueue, waitForIt } from '../utils';
 import { mainSelector } from '../selector';
@@ -655,6 +656,7 @@ function EditProfileView(props: IEditProfileView) {
             explain={"The following action cannot be undone:"} // TODO: Setup translation for this
             handleDelete={handleDelete}
             inProgress={deleteItem !== ''}
+            icon={(<ExpandMoreIcon sx={{ color: 'primary.contrastText', rotate: '180deg' }} />)}
             SummaryProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
             DetailsProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
             DeleteButtonProps={{  }}

@@ -30,6 +30,7 @@ interface IProps {
   explain: string;
   handleDelete: () => void;
   inProgress: boolean;
+  icon?: React.ReactNode;
   SummaryProps?: SxProps<Theme>;
   DetailsProps?: SxProps<Theme>;
   DeleteButtonProps?: ButtonProps;
@@ -38,14 +39,14 @@ interface IProps {
 }
 
 export function DeleteExpansion(props: IProps) {
-  const { handleDelete, title, explain, inProgress, SummaryProps, DetailsProps, DeleteButtonProps, DeleteButtonLabel, children } = props;
+  const { handleDelete, title, explain, inProgress, icon, SummaryProps, DetailsProps, DeleteButtonProps, DeleteButtonLabel, children } = props;
   const t: IDeleteExpansionStrings = useSelector(deleteExpandSelector);
 
   return (
     <Box sx={{ width: '100%' }}>
       <Accordion>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={ icon || <ExpandMoreIcon/>}
           aria-controls="panel1a-content"
           id="panel1a-header"
           sx={SummaryProps}
