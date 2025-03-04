@@ -676,7 +676,7 @@ function EditProfileView(props: IEditProfileView) {
                     onChange={handleSyncFreqSwitch}
                   />
                 }
-                label="Enable Sync" // TODO: Setup translation for this
+                label="Enable Data Sync" // TODO: Setup translation for this
               />
               <FormGroup>
                 <FormControlLabel
