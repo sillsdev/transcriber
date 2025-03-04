@@ -1060,13 +1060,13 @@ function ReadProfileView(props: IReadProfileViewProps) {
     sx={profileContentProps}>
     <Box id="profilePanel"
       sx={profilePanelProps}>
-      <StyledGrid item xs={12} md={5}>
+      <StyledGrid item xs={12} md={5} sx={{ height: '460px' }}>
         <Box sx= {{ width: '150px',
                     height: '150px',
                     borderRadius: '50%', 
                     border: '0.5px solid rgb(255, 255, 255, 0.5)',
                     padding: '17px',
-                    margin: '10% auto 1% auto' }}>
+                    margin: '1% auto 1% auto' }}>
           <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
         </Box>
         <Caption sx={{ margin: '0% auto', 
@@ -1079,7 +1079,7 @@ function ReadProfileView(props: IReadProfileViewProps) {
     </Box>
     <Box id="profileMain" 
       sx={profileMainProps}>
-      <Grid container>
+      <Grid container sx={{ height: '495px' }}>
       <Grid item xs={12} md={7}>
         {editUserId && /Add/i.test(editUserId) ? (
           <Typography variant="h6">{tp.addMember}</Typography>
