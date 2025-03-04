@@ -11,7 +11,6 @@ import {
   OrganizationMembership, 
 } from '../model';
 import {
-  alpha,
   Dialog,
   DialogTitle,
   Button,
@@ -58,8 +57,6 @@ import ParatextLinked from './ParatextLinked';
 import SelectRole from '../control/SelectRole';
 import { ActionRow, AltButton, PriButton } from '../control';
 
-import UserAvatarRinged from './UserAvatarRinged';
-
 interface ContainerProps extends PaperProps {
   noMargin?: boolean;
 }
@@ -95,6 +92,7 @@ const textFieldProps = {
     },
   }
 } as SxProps;
+
 const selectProps = {
   mx: 1,
   width: '206px',
@@ -110,6 +108,7 @@ const selectProps = {
     }
   }
 } as SxProps;
+
 const menuProps = {
   width: '200px',
   "&:has([readOnly]) ": {
@@ -121,18 +120,19 @@ const menuProps = {
     },
   }
 } as SxProps;
+
 const bigAvatarProps = {
   width: '150px', 
-  height: '150px', 
-  border: '2px solid rgb(255, 255, 255, 0.5)', 
-  padding: '10px'
+  height: '150px'
 } as SxProps;
+
 const profileContentProps = {
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'wrap',
   padding: '0px'
 } as SxProps;
+
 const profilePanelProps = {
   display: 'flex',
   flex: '1 1 40%',
@@ -142,9 +142,10 @@ const profilePanelProps = {
   backgroundColor: 'secondary.dark',
   height: '100%'
 } as SxProps;
+
 const profileMainProps = {
   display: 'flex',
-  flex: '1 1 57%', //figure out why its 57% and not 60%
+  flex: '1 1 54%', //figure out why its 54% and not 60%
   flexDirection: 'column',
   maxWidth: '100%',
   justifyContent: 'center',
@@ -627,7 +628,13 @@ function EditProfileView(props: IEditProfileView) {
     <Box id="profilePanel"
       sx={profilePanelProps}>
       <StyledGrid item xs={12} md={5}>
-      <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+        <Box sx= {{ width: '150px',
+                    height: '150px',
+                    borderRadius: '50%', 
+                    border: '0.5px solid rgb(255, 255, 255, 0.5)',
+                    padding: '17px' }}>
+          <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+        </Box>
       <Caption>{email || ''}</Caption>
       <Button disabled>Edit Profile</Button> {/* TODO: Translation*/}
       <ParatextLinkedButton setView={setView} />
@@ -1054,10 +1061,16 @@ function ReadProfileView(props: IReadProfileViewProps) {
     <Box id="profilePanel"
       sx={profilePanelProps}>
       <StyledGrid item xs={12} md={5}>
-        <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+        <Box sx= {{ width: '150px',
+                    height: '150px',
+                    borderRadius: '50%', 
+                    border: '0.5px solid rgb(255, 255, 255, 0.5)',
+                    padding: '17px' }}>
+          <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+        </Box>
         <Caption>{email || ''}</Caption>
-        <ParatextLinked setView={setView} />
         <Button onClick={onEditClick}>Edit Profile</Button> {/* TODO: Translation*/}
+        <ParatextLinkedButton setView={setView} />
       </StyledGrid>
     </Box>
     <Box id="profileMain" 
@@ -1196,8 +1209,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
           padding: '10px',
           paddingLeft: '25px',
           color: 'secondary.contrastText',
-          borderBottom: '1px solid',
-          borderColor: 'lightgray'
+          borderBottom: '1px solid lightgray'
         }}
       >
         {t.myAccount}
