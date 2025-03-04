@@ -413,6 +413,7 @@ function EditProfileView(finishAdd?: () => void) {
       setConfirmCancel(message);
     } else handleCancelConfirmed();
   };
+
   const handleCancelConfirmed = () => {
     setConfirmCancel(undefined);
     toolChanged(toolId, false);
@@ -426,6 +427,7 @@ function EditProfileView(finishAdd?: () => void) {
     }
     doClose();
   };
+
   const handleCancelAborted = () => {
     setConfirmCancel(undefined);
   };
@@ -875,8 +877,6 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const t: IMainStrings = useSelector(mainSelector, shallowEqual);
   const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
   const { showMessage } = useSnackBar();
-  const handleClose = () => onClose();
-  const handleExit = () => onClose();
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [view, setView] = useState('');
@@ -895,6 +895,13 @@ export function ProfileDialog(props: ProfileDialogProps) {
     clearCompleted,
     isChanged,
   } = useContext(UnsavedContext).state;
+
+  const handleClose = () => {
+    if (!readOnly) {
+      
+    }
+    onClose();
+  };
 
   const getPanes = () => {
     let panes = readOnly ?
