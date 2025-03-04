@@ -31,6 +31,7 @@ import {
   MenuItem,
   Checkbox,
   IconButton,
+  Skeleton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
@@ -943,7 +944,6 @@ function ReadProfileView(props: IReadProfileViewProps) {
   const [organization] = useGlobal('organization');
   const [user,] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
-  const { userIsAdmin, userIsSharedContentAdmin } = useRole();
   const [currentUser, setCurrentUser] = useState<UserD | undefined>();
   const [name, setName] = useState('');
   const [given, setGiven] = useState<string | null>(null);
@@ -956,9 +956,6 @@ function ReadProfileView(props: IReadProfileViewProps) {
   const [locale, setLocale] = useState<string>(
     localeDefault(isDeveloper === 'true')
   );
-  const [, setNews] = useState<boolean | null>(null);
-  const [sharedContent, setSharedContent] = useState(false);
-  const [digest, setDigest] = useState<DigestPreference | null>(null);
   const [phone, setPhone] = useState<string | null>(null);
   const [bcp47, setBcp47] = useState<string | null>(null);
   const [timerDir, setTimerDir] = useState<string | null>(null);
@@ -966,8 +963,7 @@ function ReadProfileView(props: IReadProfileViewProps) {
   const [progBar, setProgBar] = useState<string | null>(null);
   const [hotKeys, setHotKeys] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [showDetail, ] = useState(false);
-  const [locked, setLocked] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
   const [dupName, ] = useState(false);
   const [, setView] = useState('');
 
@@ -1034,10 +1030,6 @@ function ReadProfileView(props: IReadProfileViewProps) {
     setLocale(
       attr.locale ? attr.locale : localeDefault(isDeveloper === 'true')
     );
-    setNews(attr.newsPreference);
-    setSharedContent(attr.sharedContentCreator ?? false);
-    setDigest(attr.digestPreference);
-    setLocked(true);
     setBcp47(attr.uilanguagebcp47);
     setTimerDir(attr.timercountUp);
     setSpeed(attr.playbackSpeed);
@@ -1047,6 +1039,10 @@ function ReadProfileView(props: IReadProfileViewProps) {
     setSyncFreq(getSyncFreq(attr.hotKeys));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [user, editUserId]);
+
+  const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
+    if (event.shiftKey) setShowDetail(!showDetail);
+  };
 
   const userNotComplete = () =>
     currentUser === undefined ||
@@ -1080,6 +1076,7 @@ function ReadProfileView(props: IReadProfileViewProps) {
           label={tp.name}
           sx={textFieldProps}
           value={name}
+          onClick={handleNameClick}
           helperText={
             dupName && (
               <Typography color="secondary" variant="caption">
@@ -1142,51 +1139,20 @@ function ReadProfileView(props: IReadProfileViewProps) {
             disableUnderline: true
           }}
         />
-        <FormControl>
-          <FormGroup sx={{ pb: 3 }}>
-            {userIsSharedContentAdmin && (
-              <FormControlLabel
-                sx={textFieldProps}
-                control={
-                  <Checkbox
-                    id="sharedcontent"
-                    checked={sharedContent}
-                  />
-                }
-                label={tp.sharedContentCreator}
-              />
-            )}
-            {showDetail && (
-              <>
-                <FormControlLabel
-                  control={
-                    <TextField
-                      id="phone"
-                      label={tp.phone}
-                      sx={textFieldProps}
-                      value={phone}
-                      margin="normal"
-                      variant="filled"
-                    />
-                  }
-                  label=""
-                />
-                {userIsAdmin && (
-                  <FormControlLabel
-                    sx={textFieldProps}
-                    control={
-                      <Checkbox
-                        id="checkbox-locked"
-                        checked={locked}
-                      />
-                    }
-                    label={tp.locked}
-                  />
-                )}
-              </>
-            )}
-          </FormGroup>
-        </FormControl>
+        {showDetail && (
+          <TextField
+          id="phone"
+          label={tp.phone}
+          sx={textFieldProps}
+          value={phone || "none"}
+          margin="normal"
+          variant="standard"
+          InputProps={{
+            readOnly: true,
+            disableUnderline: true
+          }}
+        />
+        )}
       </Grid>
     </Grid>
     </Box>
