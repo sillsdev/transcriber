@@ -379,21 +379,25 @@ const ipcMethods = () => {
       input = input.replace(/\//g, '\\');
       output = output.replace(/\//g, '\\');
     }
-    normalize({
-      input,
-      output,
-      loudness: {
-        normalization: 'ebuR128',
-        target: {
-          input_i: -23,
-          input_lra: 7.0,
-          input_tp: -2.0,
+    try {
+      await normalize({
+        input,
+        output,
+        loudness: {
+          normalization: 'ebuR128',
+          target: {
+            input_i: -23,
+            input_lra: 7.0,
+            input_tp: -2.0,
+          },
         },
-      },
-      verbose: true,
-    })
-      .then(() => console.log('Audio normalization complete'))
-      .catch((error) => console.error('Error:', error));
+        verbose: true,
+      });
+      return;
+    } catch (error) {
+      console.error(error);
+      return JSON.stringify(error);
+    }
   });
 };
 
