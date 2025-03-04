@@ -41,7 +41,7 @@ export function DeleteExpansion(props: IProps) {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
-          sx={{ backgroundColor: 'primary.main' }}
+          sx={{ backgroundColor: 'primary.dark' }}
         >
           <Heading>{t.advanced}</Heading>
         </AccordionSummary>

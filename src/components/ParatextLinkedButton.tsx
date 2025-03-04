@@ -10,7 +10,7 @@ import {
 import { IState, IProfileStrings } from '../model';
 import Confirm from './AlertDialog';
 import InfoIcon from '@mui/icons-material/Info';
-import ParatextIcon from '../control/ParatextLogo';
+import { AltButton } from '../control/AltButton';
 import { useSelector } from 'react-redux';
 import { profileSelector } from '../selector';
 import { useHasParatext } from '../utils';
@@ -69,11 +69,17 @@ export const ParatextLinkedButton = (props: IProps) => {
         <></>
       )}
       <StyledCaption isCaption={Boolean(!status?.errStatus)}>
-        {/* <ParatextIcon /> */}
-        {'\u00A0'}
         {status?.errStatus || 0 || (isOffline && !ptPath) ? (
           <>
-            <Button onClick={handleHowTo}>{addPt(t.paratextNotLinked)}</Button>
+            <AltButton
+              id="paraButton"
+              key="paratext"
+              sx={{ color: 'primary.contrastText'}} //this just means black
+              onClick={handleHowTo}
+            >
+              {addPt(t.paratextNotLinked)}
+            </AltButton>
+            {/* <Button variant="outlined" onClick={handleHowTo}>{addPt(t.paratextNotLinked)}</Button> */}
           </>
         ) : (hasParatext && status?.complete) || ptPath ? (
           addPt(t.paratextLinked)

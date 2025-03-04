@@ -567,7 +567,7 @@ function EditProfileView(finishAdd?: () => void) {
     <StyledGrid item xs={12} md={5}>
       <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
       <Caption>{email || ''}</Caption>
-      <ParatextLinked setView={setView} />
+      <ParatextLinkedButton setView={setView} />
     </StyledGrid>
     {(!isOffline || offlineOnly) &&
     !editUserId &&
@@ -643,13 +643,6 @@ function EditProfileView(finishAdd?: () => void) {
                     autoFocus
                   />
                 }
-                sx={{
-                  "&:has([readOnly]) ": {
-                    "& .MuiFormControlLabel-root": {
-                      cursor: "default"
-                    }
-                  }
-                }}
                 label=""
               />
               <FormControlLabel
@@ -915,7 +908,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
           flexDirection: 'column',
           justifyContent: 'center',
           maxWidth: '100%',
-          backgroundColor: 'secondary.main'
+          backgroundColor: 'secondary.dark'
         }}>
         {panes[0]}
       </Box>),
