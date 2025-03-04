@@ -122,6 +122,16 @@ const profileMainProps = {
   padding: '10px'
 } as SxProps;
 
+const profileEmailProps = {
+  width: '100%',
+  overflow: 'visible',
+  position: 'relative',
+  textAlign: 'center',
+  color: 'primary.contrastText',
+  marginTop: '10px',
+  marginBottom: '10px'
+} as SxProps;
+
 const editProfileProps = (theme: Theme) => {return {
   color: 'secondary.dark', 
   backgroundColor: 'primary.contrastText',
@@ -630,10 +640,7 @@ function EditProfileView(props: IEditProfileView) {
                       margin: '10% auto 1% auto' }}>
             <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
           </Box>
-          <Caption sx={{ margin: '0% auto', 
-                         overflow: 'visible',
-                         position: 'relative',
-                         right: '+16px' }} >{email || ''}</Caption>
+          <Caption sx={profileEmailProps} >{email || ''}</Caption>
           <Button disabled variant="contained" sx={editProfileProps(theme)}>Edit Profile</Button> {/* TODO: Translation*/}
           <ParatextLinkedButton setView={setView} />
         </StyledGrid>
@@ -651,6 +658,7 @@ function EditProfileView(props: IEditProfileView) {
             SummaryProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
             DetailsProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
             DeleteButtonProps={{  }}
+            DeleteButtonLabel='Delete User' // TODO: Translation
           >
             <FormGroup
               sx={{
@@ -1081,12 +1089,9 @@ function ReadProfileView(props: IReadProfileViewProps) {
                     margin: '1% auto 1% auto' }}>
           <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
         </Box>
-        <Caption sx={{ margin: '0% auto', 
-                       overflow: 'visible',
-                       position: 'relative',
-                       right: '+16px' }} >{email || ''}</Caption>
+        <Caption sx={profileEmailProps} >{email || ''}</Caption>
         <Button onClick={onEditClick} sx={editProfileProps(theme)}>Edit Profile</Button> {/* TODO: Translation*/}
-        <ParatextLinkedButton setView={setView} />
+        <ParatextLinkedButton setView={setView}/>
       </StyledGrid>
     </Box>
     <Box id="profileMain" 
