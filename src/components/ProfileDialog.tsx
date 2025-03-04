@@ -11,6 +11,7 @@ import {
   OrganizationMembership, 
 } from '../model';
 import {
+  alpha,
   Dialog,
   DialogTitle,
   Button,
@@ -56,6 +57,8 @@ import ParatextLinked from './ParatextLinked';
 import SelectRole from '../control/SelectRole';
 import { ActionRow, AltButton, PriButton } from '../control';
 
+import UserAvatarRinged from './UserAvatarRinged';
+
 interface ContainerProps extends PaperProps {
   noMargin?: boolean;
 }
@@ -94,12 +97,20 @@ const textFieldProps = {
 } as SxProps;
 const selectProps = { mx: 1, width: '206px' } as SxProps;
 const menuProps = { width: '200px' } as SxProps;
-const bigAvatarProps = { width: '150px', height: '150px' } as SxProps;
+
+const StyledGrid = styled(Grid)<GridProps>(() => ({
+  padding: '0 30px',
+}));
+
+
+const bigAvatarProps = { width: '150px', 
+                         height: '150px', 
+                         border: '2px solid rgb(255, 255, 255, 0.5)', 
+                         padding: '10px' } as SxProps;
 
 interface IBigAvatarProps {
   avatarUrl: string | null;
   name: string;
-  //urlFunc: (event: React.MouseEvent<HTMLElement>) => void
 }
 const BigAvatar = (props: IBigAvatarProps) => {
   const { avatarUrl, name } = props;
@@ -109,11 +120,6 @@ const BigAvatar = (props: IBigAvatarProps) => {
   }
   return <Avatar sx={bigAvatarProps} src={avatarUrl}/>;
 };
-
-const StyledGrid = styled(Grid)<GridProps>(() => ({
-  padding: '0 30px',
-}));
-
 
 function EditProfileView(finishAdd?: () => void) {
   const users = useOrbitData<UserD[]>('user');
