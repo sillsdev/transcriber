@@ -28,7 +28,7 @@ export interface IArtifactType {
 const stringSelector = (state: IState) =>
   localStrings(state as IState, { layout: 'artifactType' });
 
-export const useArtifactType = () => {
+export const useArtifactType = (org?: string) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
@@ -78,7 +78,7 @@ export const useArtifactType = () => {
         (r) =>
           (!Boolean(r.relationships) ||
             (Boolean(r.relationships) &&
-              (related(r, 'organization') === organization ||
+              (related(r, 'organization') === (org ?? organization) ||
                 related(r, 'organization') === null))) &&
           Boolean(r.keys?.remoteId) !== offlineOnly
       )
@@ -143,7 +143,7 @@ export const useArtifactType = () => {
         artifactType,
         'organization',
         'organization',
-        organization
+        org ?? organization
       ),
     ]);
   };
