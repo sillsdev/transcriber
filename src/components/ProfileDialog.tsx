@@ -134,7 +134,6 @@ const profilePanelProps = {
   justifyContent: 'center',
   maxWidth: '100%',
   backgroundColor: 'secondary.dark',
-  height: '100%',
   textAlign: 'center'
 } as SxProps;
 
@@ -637,9 +636,8 @@ function EditProfileView(props: IEditProfileView) {
 
   return (<DialogContent id="profileContent" 
     sx={profileContentProps}>
-    <Box id="profilePanel"
-      sx={profilePanelProps}>
-      <Box sx={{ height: 'calc(100% - 48px)' }}>
+    <Box id="profilePanel" sx={profilePanelProps}>
+      <Box sx={{ height: '100%' }}>
         <StyledGrid item xs={12} md={5}>
           <Box sx= {{ width: '150px',
                       height: '150px',
