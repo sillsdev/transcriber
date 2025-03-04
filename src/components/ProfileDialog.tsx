@@ -610,7 +610,7 @@ function EditProfileView(finishAdd?: () => void) {
       </DeleteExpansion>
     )}
   </Box>),
-    (<Box>
+    (<Box sx={{ padding: '10px' }}>
         <Grid item xs={12} md={7}>
           {editUserId && /Add/i.test(editUserId) ? (
             <Typography variant="h6">{tp.addMember}</Typography>
@@ -620,7 +620,7 @@ function EditProfileView(finishAdd?: () => void) {
             <Typography variant="h6">{tp.userProfile}</Typography>
           )}
           <FormControl>
-            <FormGroup sx={{ pb: 3 }}>
+            <FormGroup sx={{ padding: '3px', pb: 2 }}>
               <FormControlLabel
                 control={
                   <TextField
@@ -638,7 +638,8 @@ function EditProfileView(finishAdd?: () => void) {
                       )
                     }
                     margin="normal"
-                    variant="filled"
+                    variant="outlined"
+                    size="small"
                     required
                     autoFocus
                   />
@@ -655,7 +656,8 @@ function EditProfileView(finishAdd?: () => void) {
                     onChange={handleGivenChange}
                     margin="normal"
                     required
-                    variant="filled"
+                    variant="outlined"
+                    size="small"
                   />
                 }
                 label=""
@@ -670,7 +672,8 @@ function EditProfileView(finishAdd?: () => void) {
                     onChange={handleFamilyChange}
                     margin="normal"
                     required
-                    variant="filled"
+                    variant="outlined"
+                    size="small"
                   />
                 }
                 label=""
@@ -702,7 +705,8 @@ function EditProfileView(finishAdd?: () => void) {
                       },
                     }}
                     margin="normal"
-                    variant="filled"
+                    variant="outlined"
+                    size="small"
                     required={true}
                   >
                     {uiLanguages.map((option: string, idx: number) => (
@@ -729,7 +733,8 @@ function EditProfileView(finishAdd?: () => void) {
                       },
                     }}
                     margin="normal"
-                    variant="filled"
+                    variant="outlined"
+                    size="small"
                     required={true}
                   >
                     {moment.tz
@@ -745,12 +750,17 @@ function EditProfileView(finishAdd?: () => void) {
               />
               {email !== '' && (
                 <FormControlLabel
-                  sx={textFieldProps}
+                  sx={{...textFieldProps, marginLeft: '-6px', paddingLeft: '0px'}}
                   control={
                     <Checkbox
                       id="digest"
                       checked={digest === 1}
                       onChange={handleDigestChange}
+                      sx={{
+                        margin: '0px',
+                        paddingLeft: '0px',
+                        textAlign: 'left'
+                      }}
                     />
                   }
                   label={tp.sendDigest}
@@ -780,7 +790,8 @@ function EditProfileView(finishAdd?: () => void) {
                         value={phone}
                         onChange={handlePhoneChange}
                         margin="normal"
-                        variant="filled"
+                        variant="outlined"
+                        size="small"
                       />
                     }
                     label=""
@@ -802,7 +813,28 @@ function EditProfileView(finishAdd?: () => void) {
               )}
             </FormGroup>
           </FormControl>
-          <ActionRow>
+          <ActionRow sx={{ textAlign: 'left', padding: '0px' }}>
+            <PriButton
+              id="profileSave"
+              key="add"
+              aria-label={tp.add}
+              disabled={
+                !requiredComplete() ||
+                !myChanged ||
+                saveRequested(toolId) ||
+                dupName
+              }
+              sx={{
+                marginLeft: '0'
+              }}
+              onClick={currentUser === undefined ? handleAdd : handleSave}
+            >
+              {editUserId && /Add/i.test(editUserId)
+                ? tp.add
+                : userNotComplete()
+                  ? tp.next
+                  : tp.save}
+            </PriButton>
             {((editUserId && /Add/i.test(editUserId)) ||
               (currentUser &&
                 currentUser.attributes?.name !==
@@ -816,25 +848,6 @@ function EditProfileView(finishAdd?: () => void) {
                   {tp.cancel}
                 </AltButton>
               )}
-            <PriButton
-              id="profileSave"
-              key="add"
-              aria-label={tp.add}
-              disabled={
-                !requiredComplete() ||
-                !myChanged ||
-                saveRequested(toolId) ||
-                dupName
-              }
-              onClick={currentUser === undefined ? handleAdd : handleSave}
-            >
-              {editUserId && /Add/i.test(editUserId)
-                ? tp.add
-                : userNotComplete()
-                  ? tp.next
-                  : tp.save}
-              <SaveIcon sx={{ ml: 1 }} />
-            </PriButton>
           </ActionRow>
         </Grid>
         {deleteItem !== '' && (
@@ -943,16 +956,17 @@ export function ProfileDialog(props: ProfileDialogProps) {
           justifyContent: 'space-between', 
           alignItems: 'center',
           padding: '10px',
-          paddingLeft: '25px'
+          paddingLeft: '25px',
+          color: 'secondary.contrastText',
+          borderBottom: '1px solid',
+          borderColor: 'lightgray'
         }}
       >
         {t.myAccount}
         <IconButton
           aria-label="close"
           onClick={handleClose}
-          sx={{
-            color: 'gray',
-          }}>
+          sx={{ color: 'secondary.contrastText' }}>
           <CloseIcon></CloseIcon>
         </IconButton>
       </DialogTitle>
