@@ -13,6 +13,7 @@ import {
   styled,
   SxProps,
   Theme,
+  ButtonProps,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { GrowingSpacer } from '../control';
@@ -31,12 +32,13 @@ interface IProps {
   inProgress: boolean;
   SummaryProps?: SxProps<Theme>;
   DetailsProps?: SxProps<Theme>;
-  DeleteButtonProps?: SxProps<Theme>;
+  DeleteButtonProps?: ButtonProps;
+  DeleteButtonLabel?: string;
   children?: any;
 }
 
 export function DeleteExpansion(props: IProps) {
-  const { handleDelete, title, explain, inProgress, SummaryProps, DetailsProps, DeleteButtonProps, children } = props;
+  const { handleDelete, title, explain, inProgress, SummaryProps, DetailsProps, DeleteButtonProps, DeleteButtonLabel, children } = props;
   const t: IDeleteExpansionStrings = useSelector(deleteExpandSelector);
 
   return (
@@ -83,11 +85,12 @@ export function DeleteExpansion(props: IProps) {
                 color="secondary"
                 aria-label={t.delete}
                 variant="contained"
-                sx={DeleteButtonProps || { m: 1 }}
+                sx={{ m: 1 }}
                 onClick={handleDelete}
                 disabled={inProgress}
+                {...DeleteButtonProps}
               >
-                {t.delete}
+                {DeleteButtonLabel || t.delete}
               </Button>
             </Box>
           </FormGroup>
