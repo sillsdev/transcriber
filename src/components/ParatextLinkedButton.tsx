@@ -62,7 +62,7 @@ export const ParatextLinkedButton = (props: IProps) => {
   return (
     <>
       {status?.errStatus ? (
-        <StyledCaption isCaption notLinked>
+        <StyledCaption isCaption notLinked sx = {{ color: 'primary.contrastText', fontSize: '13px', fontWeight: 'normal' }}>
           {addPt(t.notLinked)}
         </StyledCaption>
       ) : (
@@ -74,7 +74,10 @@ export const ParatextLinkedButton = (props: IProps) => {
             <AltButton
               id="paraButton"
               key="paratext"
-              sx={{ color: 'primary.contrastText', borderColor: 'white', textTransform: 'lowercase' }} //this just means black
+              sx={{ color: 'primary.contrastText', 
+                borderColor: 'white', 
+                textTransform: 'capitalize', 
+                }} //this just means black
               onClick={handleHowTo}
             >
               {addPt(t.paratextNotLinked)}
