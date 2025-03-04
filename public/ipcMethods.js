@@ -380,6 +380,9 @@ const ipcMethods = () => {
       output = output.replace(/\//g, '\\');
     }
     try {
+      // see: https://www.electronjs.org/docs/latest/tutorial/asar-archives#executing-binaries-inside-asar-archive
+      // we modified the code from ffmpeg-normalize to make it work with electronjs
+      // we replaced child_process.exec with child_process.execFile
       await normalize({
         input,
         output,
