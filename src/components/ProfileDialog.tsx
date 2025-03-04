@@ -11,7 +11,6 @@ import {
   OrganizationMembership, 
 } from '../model';
 import {
-  alpha,
   Dialog,
   DialogTitle,
   Button,
@@ -56,8 +55,6 @@ import StickyRedirect from './StickyRedirect';
 import ParatextLinked from './ParatextLinked';
 import SelectRole from '../control/SelectRole';
 import { ActionRow, AltButton, PriButton } from '../control';
-
-import UserAvatarRinged from './UserAvatarRinged';
 
 interface ContainerProps extends PaperProps {
   noMargin?: boolean;
@@ -626,7 +623,13 @@ function EditProfileView(props: IEditProfileView) {
     <Box id="profilePanel"
       sx={profilePanelProps}>
       <StyledGrid item xs={12} md={5}>
-      <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+        <Box sx= {{ width: '150px',
+                    height: '150px',
+                    borderRadius: '50%', 
+                    border: '0.5px solid rgb(255, 255, 255, 0.5)',
+                    padding: '17px' }}>
+        <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+        </Box>
       <Caption>{email || ''}</Caption>
       <Button disabled>Edit Profile</Button> {/* TODO: Translation*/}
       <ParatextLinkedButton setView={setView} />
