@@ -74,7 +74,7 @@ export const ParatextLinkedButton = (props: IProps) => {
             <AltButton
               id="paraButton"
               key="paratext"
-              sx={{ color: 'primary.contrastText'}} //this just means black
+              sx={{ color: 'primary.contrastText', borderColor: 'white', textTransform: 'lowercase' }} //this just means black
               onClick={handleHowTo}
             >
               {addPt(t.paratextNotLinked)}
