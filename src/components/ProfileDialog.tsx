@@ -137,10 +137,12 @@ const editProfileProps = (theme: Theme) => {return {
   backgroundColor: 'primary.contrastText',
   textTransform: 'capitalize',
   opacity: '100%',
+  width: '120px',
   '&.Mui-disabled': {
     color: 'secondary.dark', 
-    backgroundColor: 'primary.contrastText', 
-    opacity: '50%' 
+    backgroundColor: 'primary.contrastText',
+    opacity: '50%',
+    padding: '6px'
   },
   '&:hover': {
     borderColor: 'primary.contrastText',
@@ -641,7 +643,7 @@ function EditProfileView(props: IEditProfileView) {
             <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
           </Box>
           <Caption sx={profileEmailProps} >{email || ''}</Caption>
-          <Button disabled variant="contained" sx={editProfileProps(theme)}>Edit Profile</Button> {/* TODO: Translation*/}
+          <Button disabled variant="contained" sx={editProfileProps(theme)}>Editing Profile</Button> {/* TODO: Translation*/}
           <ParatextLinkedButton setView={setView} />
         </StyledGrid>
       </Box>
