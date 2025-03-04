@@ -32,7 +32,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, Theme, useTheme } from '@mui/material/styles';
 import { useSnackBar } from '../hoc/SnackBar';
 import { langName, localeDefault, LocalKey, makeAbbr, uiLang, uiLangDev, useMyNavigate, useWaitForRemoteQueue, waitForIt } from '../utils';
 import { mainSelector } from '../selector';
@@ -122,7 +122,7 @@ const profileMainProps = {
   padding: '10px'
 } as SxProps;
 
-const editProfileProps = {
+const editProfileProps = (theme: Theme) => {return {
   color: 'secondary.dark', 
   backgroundColor: 'primary.contrastText',
   textTransform: 'capitalize',
@@ -134,11 +134,12 @@ const editProfileProps = {
   },
   '&:hover': {
     borderColor: 'primary.contrastText',
-    backgroundColor: 'alpha(primary.contrastText, 0.1)',
+    backgroundColor: 'primary.contrastText', 
     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
-    opacity: '100%'
+    opacity: '90%'
   }
-} as SxProps;
+} as SxProps};
+
 
 interface IBigAvatarProps {
   avatarUrl: string | null;
@@ -167,6 +168,7 @@ function EditProfileView(props: IEditProfileView) {
   const users = useOrbitData<UserD[]>('user');
   const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
   const dispatch = useDispatch();
+  const theme = useTheme();
   const setLanguage = (lang: string) => dispatch(action.setLanguage(lang));
   const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [memory] = useGlobal('memory');
@@ -627,7 +629,7 @@ function EditProfileView(props: IEditProfileView) {
                          overflow: 'visible',
                          position: 'relative',
                          right: '+16px' }} >{email || ''}</Caption>
-          <Button disabled variant="contained" sx={editProfileProps}>Edit Profile</Button> {/* TODO: Translation*/}
+          <Button disabled variant="contained" sx={editProfileProps(theme)}>Edit Profile</Button> {/* TODO: Translation*/}
           <ParatextLinkedButton setView={setView} />
         </StyledGrid>
       </Box>
@@ -947,6 +949,7 @@ interface IReadProfileViewProps {
 };
 function ReadProfileView(props: IReadProfileViewProps) {
   const { onEditClick } = props;
+  const theme = useTheme();
   const users = useOrbitData<UserD[]>('user');
   const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
   const [memory] = useGlobal('memory');
@@ -1074,7 +1077,7 @@ function ReadProfileView(props: IReadProfileViewProps) {
                        overflow: 'visible',
                        position: 'relative',
                        right: '+16px' }} >{email || ''}</Caption>
-        <Button onClick={onEditClick} sx={editProfileProps}>Edit Profile</Button> {/* TODO: Translation*/}
+        <Button onClick={onEditClick} sx={editProfileProps(theme)}>Edit Profile</Button> {/* TODO: Translation*/}
         <ParatextLinkedButton setView={setView} />
       </StyledGrid>
     </Box>
