@@ -653,13 +653,14 @@ function EditProfileView(props: IEditProfileView) {
         currentUser &&
         currentUser.attributes?.name !== currentUser.attributes?.email && (
           <DeleteExpansion
-            title={tp.deleteUser}
-            explain={tp.deleteExplained}
+            title={""}
+            explain={"The following action cannot be undone:"} // TODO: Setup translation for this
             handleDelete={handleDelete}
             inProgress={deleteItem !== ''}
-            SummaryProps={{ backgroundColor: 'primary.dark' }}
-            DetailsProps={{ backgroundColor: 'primary.main' }}
-            DeleteButtonProps={{ m: 1 }}
+            SummaryProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
+            DetailsProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
+            DeleteButtonProps={{  }}
+            DeleteButtonLabel='Delete User' // TODO: Translation
           >
             <FormGroup
               sx={{
