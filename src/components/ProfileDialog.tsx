@@ -564,51 +564,55 @@ function EditProfileView(finishAdd?: () => void) {
   }
 
   return [(<Box>
-    <StyledGrid item xs={12} md={5}>
-      <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-      <Caption>{email || ''}</Caption>
-      <ParatextLinkedButton setView={setView} />
-    </StyledGrid>
-    {(!isOffline || offlineOnly) &&
-    !editUserId &&
-    currentUser &&
-    currentUser.attributes?.name !== currentUser.attributes?.email && (
-      <DeleteExpansion
-        title={tp.deleteUser}
-        explain={tp.deleteExplained}
-        handleDelete={handleDelete}
-        inProgress={deleteItem !== ''}
-      >
-        <FormGroup
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexGrow: 1,
-            paddingLeft: '20px',
-          }}
+    <Box>
+      <StyledGrid item xs={12} md={5}>
+        <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+        <Caption>{email || ''}</Caption>
+        <ParatextLinkedButton setView={setView} />
+      </StyledGrid>
+    </Box>
+    <Box>
+      {(!isOffline || offlineOnly) &&
+      !editUserId &&
+      currentUser &&
+      currentUser.attributes?.name !== currentUser.attributes?.email && (
+        <DeleteExpansion
+          title={tp.deleteUser}
+          explain={tp.deleteExplained}
+          handleDelete={handleDelete}
+          inProgress={deleteItem !== ''}
         >
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <TextField
-                  title={tp.syncFrequency}
-                  value={syncFreq}
-                  onChange={handleSyncFreqChange}
-                  type="number"
-                  inputProps={{
-                    min: 0,
-                    max: 720
-                  }}
-                  size="small"
-                  style={{ margin: '8px' }}
-                />
-              }
-              label={tp.syncFrequency}
-            />
+          <FormGroup
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              flexGrow: 1,
+              paddingLeft: '20px',
+            }}
+          >
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <TextField
+                    title={tp.syncFrequency}
+                    value={syncFreq}
+                    onChange={handleSyncFreqChange}
+                    type="number"
+                    inputProps={{
+                      min: 0,
+                      max: 720
+                    }}
+                    size="small"
+                    style={{ margin: '8px' }}
+                  />
+                }
+                label={tp.syncFrequency}
+              />
+            </FormGroup>
           </FormGroup>
-        </FormGroup>
-      </DeleteExpansion>
-    )}
+        </DeleteExpansion>
+      )}
+    </Box>
   </Box>),
     (<Box>
         <Grid item xs={12} md={7}>
