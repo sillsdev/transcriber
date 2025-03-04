@@ -628,10 +628,13 @@ function EditProfileView(props: IEditProfileView) {
                       borderRadius: '50%', 
                       border: '0.5px solid rgb(255, 255, 255, 0.5)',
                       padding: '17px',
-                      margin: '10% 20% 1% 20%' }}>
+                      margin: '10% auto 1% auto' }}>
             <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
           </Box>
-          <Caption sx={{ margin: '0% 20%', overflow: 'visible'}} >{email || ''}</Caption>
+          <Caption sx={{ margin: '0% auto', 
+                         overflow: 'visible',
+                         position: 'relative',
+                         right: '+16px' }} >{email || ''}</Caption>
           <Button disabled variant="contained" sx={{ color: 'transparent', backgroundColor: 'white' }}>Edit Profile</Button> {/* TODO: Translation*/}
           <ParatextLinkedButton setView={setView} />
         </StyledGrid>
@@ -1069,10 +1072,13 @@ function ReadProfileView(props: IReadProfileViewProps) {
                     borderRadius: '50%', 
                     border: '0.5px solid rgb(255, 255, 255, 0.5)',
                     padding: '17px',
-                    margin: '10% 20% 1% 20%' }}>
+                    margin: '10% auto 1% auto' }}>
           <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
         </Box>
-        <Caption sx={{ margin: '0% 20%', overflow: 'visible' }} >{email || ''}</Caption>
+        <Caption sx={{ margin: '0% auto', 
+                       overflow: 'visible',
+                       position: 'relative',
+                       right: '+16px' }} >{email || ''}</Caption>
         <Button onClick={onEditClick}>Edit Profile</Button> {/* TODO: Translation*/}
         <ParatextLinkedButton setView={setView} />
       </StyledGrid>
