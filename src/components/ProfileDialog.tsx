@@ -32,7 +32,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, Theme, useTheme } from '@mui/material/styles';
 import { useSnackBar } from '../hoc/SnackBar';
 import { langName, localeDefault, LocalKey, makeAbbr, uiLang, uiLangDev, useMyNavigate, useWaitForRemoteQueue, waitForIt } from '../utils';
 import { mainSelector } from '../selector';
@@ -60,6 +60,7 @@ const Caption = styled(Typography)<TypographyProps>(() => ({
 
 const textFieldProps = {
   mx: 1,
+  width: '100%',
   "&:has([readOnly]) ": {
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.6)"
@@ -121,7 +122,7 @@ const profileMainProps = {
   padding: '10px'
 } as SxProps;
 
-const editProfileProps = {
+const editProfileProps = (theme: Theme) => {return {
   color: 'secondary.dark', 
   backgroundColor: 'primary.contrastText',
   textTransform: 'capitalize',
@@ -133,11 +134,12 @@ const editProfileProps = {
   },
   '&:hover': {
     borderColor: 'primary.contrastText',
-    backgroundColor: 'alpha(primary.contrastText, 0.1)',
+    backgroundColor: 'primary.contrastText', 
     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
-    opacity: '100%'
+    opacity: '90%'
   }
-} as SxProps;
+} as SxProps};
+
 
 interface IBigAvatarProps {
   avatarUrl: string | null;
@@ -166,6 +168,7 @@ function EditProfileView(props: IEditProfileView) {
   const users = useOrbitData<UserD[]>('user');
   const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
   const dispatch = useDispatch();
+  const theme = useTheme();
   const setLanguage = (lang: string) => dispatch(action.setLanguage(lang));
   const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [memory] = useGlobal('memory');
@@ -265,7 +268,12 @@ function EditProfileView(props: IEditProfileView) {
   const handleSyncFreqSwitch = (e: React.ChangeEvent<HTMLInputElement>) => {
     toolChanged(toolId, true);
     setSync(e.target.checked);
-    setSyncFreq(0);
+    if (e.target.checked) {
+      setSyncFreq(2);
+    }
+    else {
+      setSyncFreq(0);
+    }
     var hk = JSON.parse(hotKeys ?? '{}');
     setHotKeys(JSON.stringify({ ...hk, syncFreq: 0 }));
   };
@@ -626,7 +634,7 @@ function EditProfileView(props: IEditProfileView) {
                          overflow: 'visible',
                          position: 'relative',
                          right: '+16px' }} >{email || ''}</Caption>
-          <Button disabled variant="contained" sx={editProfileProps}>Edit Profile</Button> {/* TODO: Translation*/}
+          <Button disabled variant="contained" sx={editProfileProps(theme)}>Edit Profile</Button> {/* TODO: Translation*/}
           <ParatextLinkedButton setView={setView} />
         </StyledGrid>
       </Box>
@@ -949,6 +957,7 @@ interface IReadProfileViewProps {
 };
 function ReadProfileView(props: IReadProfileViewProps) {
   const { onEditClick } = props;
+  const theme = useTheme();
   const users = useOrbitData<UserD[]>('user');
   const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
   const [memory] = useGlobal('memory');
@@ -1063,26 +1072,26 @@ function ReadProfileView(props: IReadProfileViewProps) {
     sx={profileContentProps}>
     <Box id="profilePanel"
       sx={profilePanelProps}>
-      <StyledGrid item xs={12} md={5}>
+      <StyledGrid item xs={12} md={5} sx={{ height: '460px' }}>
         <Box sx= {{ width: '150px',
                     height: '150px',
                     borderRadius: '50%', 
                     border: '0.5px solid rgb(255, 255, 255, 0.5)',
                     padding: '17px',
-                    margin: '10% auto 1% auto' }}>
+                    margin: '1% auto 1% auto' }}>
           <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
         </Box>
         <Caption sx={{ margin: '0% auto', 
                        overflow: 'visible',
                        position: 'relative',
                        right: '+16px' }} >{email || ''}</Caption>
-        <Button onClick={onEditClick} sx={editProfileProps}>Edit Profile</Button> {/* TODO: Translation*/}
+        <Button onClick={onEditClick} sx={editProfileProps(theme)}>Edit Profile</Button> {/* TODO: Translation*/}
         <ParatextLinkedButton setView={setView} />
       </StyledGrid>
     </Box>
     <Box id="profileMain" 
       sx={profileMainProps}>
-      <Grid container>
+      <Grid container sx={{ height: '495px' }}>
       <Grid item xs={12} md={7}>
         {editUserId && /Add/i.test(editUserId) ? (
           <Typography variant="h6">{tp.addMember}</Typography>
