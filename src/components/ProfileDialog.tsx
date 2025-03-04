@@ -949,7 +949,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
         {t.myAccount}
         <IconButton
           aria-label="close"
-          onClick={onClose}
+          onClick={handleClose}
           sx={{
             color: 'gray',
           }}>
