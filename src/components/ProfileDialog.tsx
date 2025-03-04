@@ -95,6 +95,7 @@ const textFieldProps = {
     },
   }
 } as SxProps;
+
 const selectProps = {
   mx: 1,
   width: '206px',
@@ -110,6 +111,7 @@ const selectProps = {
     }
   }
 } as SxProps;
+
 const menuProps = {
   width: '200px',
   "&:has([readOnly]) ": {
@@ -121,18 +123,21 @@ const menuProps = {
     },
   }
 } as SxProps;
+
 const bigAvatarProps = {
   width: '150px', 
   height: '150px', 
   border: '2px solid rgb(255, 255, 255, 0.5)', 
   padding: '10px'
 } as SxProps;
+
 const profileContentProps = {
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'wrap',
   padding: '0px'
 } as SxProps;
+
 const profilePanelProps = {
   display: 'flex',
   flex: '1 1 40%',
@@ -142,9 +147,10 @@ const profilePanelProps = {
   backgroundColor: 'secondary.dark',
   height: '100%'
 } as SxProps;
+
 const profileMainProps = {
   display: 'flex',
-  flex: '1 1 57%', //figure out why its 57% and not 60%
+  flex: '1 1 54%', //figure out why its 54% and not 60%
   flexDirection: 'column',
   maxWidth: '100%',
   justifyContent: 'center',
@@ -1196,8 +1202,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
           padding: '10px',
           paddingLeft: '25px',
           color: 'secondary.contrastText',
-          borderBottom: '1px solid',
-          borderColor: 'lightgray'
+          borderBottom: '1px solid lightgray'
         }}
       >
         {t.myAccount}
