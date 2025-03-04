@@ -60,6 +60,7 @@ const Caption = styled(Typography)<TypographyProps>(() => ({
 
 const textFieldProps = {
   mx: 1,
+  width: '100%',
   "&:has([readOnly]) ": {
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.6)"
