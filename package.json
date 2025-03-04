@@ -45,6 +45,7 @@
     "browser-image-compression": "^2.0.2",
     "electron-is-dev": "^2.0.0",
     "execa": "^4.0.2",
+    "ffmpeg-normalize": "^1.8.0",
     "fingerprintjs2": "^2.1.4",
     "fs-extra": "^11.2.0",
     "js-base64": "^3.7.7",

@@ -22,6 +22,7 @@ const convert = require('xml-js');
 const ChildProcess = require('child_process');
 // execa is an ESM module so we included source to make it work
 const execa = require('./execa');
+const { normalize } = require('./normalizer');
 
 const ipcMethods = () => {
   ipcMain.handle('availSpellLangs', async () => {
@@ -371,6 +372,28 @@ const ipcMethods = () => {
   ipcMain.handle('downloadClose', async (event, token) => {
     downloadClose(token);
     return;
+  });
+
+  ipcMain.handle('normalize', async (event, input, output) => {
+    if (process.platform === 'win32') {
+      input = input.replace(/\//g, '\\');
+      output = output.replace(/\//g, '\\');
+    }
+    normalize({
+      input,
+      output,
+      loudness: {
+        normalization: 'ebuR128',
+        target: {
+          input_i: -23,
+          input_lra: 7.0,
+          input_tp: -2.0,
+        },
+      },
+      verbose: true,
+    })
+      .then(() => console.log('Audio normalization complete'))
+      .catch((error) => console.error('Error:', error));
   });
 };
 
