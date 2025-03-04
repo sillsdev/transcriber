@@ -168,7 +168,7 @@ export function UserMenu(props: IProps) {
         </TermsItem>
       </StyledMenu>
 
-      <ProfileDialog open={profileOpen} onClose={handleProfile(false)} />
+      <ProfileDialog open={profileOpen} onClose={handleProfile(false)} readOnlyMode={true} />
     </div>
   );
 }
