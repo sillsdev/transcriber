@@ -97,15 +97,9 @@ const selectProps = {
   mx: 1,
   width: '206px',
   "&:has([readOnly]) ": {
-    "& .MuiSelect-icon": {
-      display: 'none'
-    },
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.6)"
     },
-    "& .MuiSelect-select:focus": {
-      backgroundColor: "unset"
-    }
   }
 } as SxProps;
 
@@ -1096,13 +1090,6 @@ function ReadProfileView(props: IReadProfileViewProps) {
           sx={textFieldProps}
           value={name}
           onClick={handleNameClick}
-          helperText={
-            dupName && (
-              <Typography color="secondary" variant="caption">
-                {tp.userExists}
-              </Typography>
-            )
-          }
           margin="normal"
           variant="standard"
           InputProps={{
