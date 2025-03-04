@@ -16,6 +16,8 @@ import { profileSelector } from '../selector';
 import { useHasParatext } from '../utils';
 import { useGlobal } from '../context/GlobalContext';
 import { addPt } from '../utils/addPt';
+import CheckIcon from '@mui/icons-material/Check';
+
 
 interface StyledCaptionProps extends TypographyProps {
   isCaption?: boolean;
@@ -29,6 +31,7 @@ const StyledCaption = styled(Typography, {
     width: '100%',
     textAlign: 'center',
     marginTop: '13%',
+    color: 'rgb(190, 190, 190, 0.65)',//primary.contrastText
   }),
   ...(notLinked && {
     fontWeight: 'bold',
@@ -98,7 +101,10 @@ export const ParatextLinkedButton = (props: IProps) => {
         ) : (
           status?.statusMsg || addPt(t.checkingParatext)
         )}
+        {(hasParatext) && status?.complete && <CheckIcon sx={{position: 'relative', top: '+5px'}}/>}
+        {/* //(hasParatext)  && status?.complete ||  ptPath && */}
       </StyledCaption>
+      
       {howToLink && (
         <Confirm
           title={addPt(t.paratextLinking)}

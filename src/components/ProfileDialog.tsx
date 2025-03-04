@@ -379,7 +379,7 @@ function EditProfileView(props: IEditProfileView) {
             } as UserD,
             currentUser !== undefined ? currentUser.id : ''
           )
-        // we aren't allowing them to change owner oraganization currently
+        // we aren't allowing them to change owner organization currently
       );
       setLang(locale);
       const mbrRec = getMbrRoleRec(
@@ -1079,7 +1079,6 @@ function ReadProfileView(props: IReadProfileViewProps) {
     currentUser === undefined ||
     currentUser.attributes?.name.toLowerCase() ===
     currentUser.attributes?.email.toLowerCase();
-
   return (<DialogContent id="profileContent" 
     sx={profileContentProps}>
     <Box id="profilePanel"
