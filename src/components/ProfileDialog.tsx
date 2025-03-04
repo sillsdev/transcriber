@@ -565,7 +565,7 @@ function EditProfileView(finishAdd?: () => void) {
     <StyledGrid item xs={12} md={5}>
       <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
       <Caption>{email || ''}</Caption>
-      <ParatextLinked setView={setView} />
+      <ParatextLinkedButton setView={setView} />
     </StyledGrid>
     {(!isOffline || offlineOnly) &&
     !editUserId &&
