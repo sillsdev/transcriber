@@ -32,7 +32,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import { useSnackBar } from '../hoc/SnackBar';
 import { langName, localeDefault, LocalKey, makeAbbr, uiLang, uiLangDev, useMyNavigate, useWaitForRemoteQueue, waitForIt } from '../utils';
 import { mainSelector } from '../selector';
@@ -69,7 +69,7 @@ const textFieldProps = {
 
 const selectProps = {
   mx: 1,
-  width: '206px',
+  width: '100%',
   "&:has([readOnly]) ": {
     "& .MuiInputLabel-root": {
       color: "rgba(0, 0, 0, 0.6)"
@@ -108,7 +108,6 @@ const profilePanelProps = {
   justifyContent: 'center',
   maxWidth: '100%',
   backgroundColor: 'secondary.dark',
-  height: '100%',
   textAlign: 'center'
 } as SxProps;
 
@@ -120,6 +119,24 @@ const profileMainProps = {
   justifyContent: 'center',
   mx: "10px",
   padding: '10px'
+} as SxProps;
+
+const editProfileProps = {
+  color: 'secondary.dark', 
+  backgroundColor: 'primary.contrastText',
+  textTransform: 'capitalize',
+  opacity: '100%',
+  '&.Mui-disabled': {
+    color: 'secondary.dark', 
+    backgroundColor: 'primary.contrastText', 
+    opacity: '50%' 
+  },
+  '&:hover': {
+    borderColor: 'primary.contrastText',
+    backgroundColor: 'alpha(primary.contrastText, 0.1)',
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+    opacity: '100%'
+  }
 } as SxProps;
 
 interface IBigAvatarProps {
@@ -594,20 +611,22 @@ function EditProfileView(props: IEditProfileView) {
 
   return (<DialogContent id="profileContent" 
     sx={profileContentProps}>
-    <Box id="profilePanel"
-      sx={profilePanelProps}>
-      <Box sx={{ height: 'calc(100% - 48px)' }}>
+    <Box id="profilePanel" sx={profilePanelProps}>
+      <Box sx={{ height: '100%' }}>
         <StyledGrid item xs={12} md={5}>
           <Box sx= {{ width: '150px',
                       height: '150px',
                       borderRadius: '50%', 
                       border: '0.5px solid rgb(255, 255, 255, 0.5)',
                       padding: '17px',
-                      margin: '10% 20% 1% 20%' }}>
+                      margin: '10% auto 1% auto' }}>
             <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
           </Box>
-          <Caption sx={{ margin: '0% 20%', overflow: 'visible'}} >{email || ''}</Caption>
-          <Button disabled variant="contained" sx={{ color: 'transparent', backgroundColor: 'white' }}>Edit Profile</Button> {/* TODO: Translation*/}
+          <Caption sx={{ margin: '0% auto', 
+                         overflow: 'visible',
+                         position: 'relative',
+                         right: '+16px' }} >{email || ''}</Caption>
+          <Button disabled variant="contained" sx={editProfileProps}>Edit Profile</Button> {/* TODO: Translation*/}
           <ParatextLinkedButton setView={setView} />
         </StyledGrid>
       </Box>
@@ -665,7 +684,8 @@ function EditProfileView(props: IEditProfileView) {
     </Box>
     <Box id="profileMain" 
       sx={profileMainProps}>
-      <Grid item xs={12} md={7}>
+      
+      <Grid item xs={12} md={7} sx={{ maxWidth: '100%' }}>
           {editUserId && /Add/i.test(editUserId) ? (
             <Typography variant="h6">{tp.addMember}</Typography>
           ) : userNotComplete() ? (
@@ -673,8 +693,8 @@ function EditProfileView(props: IEditProfileView) {
           ) : (
             <Typography variant="h6">{tp.userProfile}</Typography>
           )}
-          <FormControl>
-            <FormGroup sx={{ padding: '3px', pb: 2, marginBottom: '30px' }}>
+          <FormControl sx={{ width: '100%'}}>
+            <FormGroup sx={{ padding: '3px', pb: 2, marginBottom: '30px', width: '100%' }}>
               <FormControlLabel
                 control={
                   <TextField
@@ -694,6 +714,7 @@ function EditProfileView(props: IEditProfileView) {
                     margin="normal"
                     variant="outlined"
                     size="small"
+                    fullWidth
                     required
                     autoFocus
                   />
@@ -710,6 +731,7 @@ function EditProfileView(props: IEditProfileView) {
                     onChange={handleGivenChange}
                     margin="normal"
                     required
+                    fullWidth
                     variant="outlined"
                     size="small"
                   />
@@ -726,6 +748,7 @@ function EditProfileView(props: IEditProfileView) {
                     onChange={handleFamilyChange}
                     margin="normal"
                     required
+                    fullWidth
                     variant="outlined"
                     size="small"
                   />
@@ -804,17 +827,13 @@ function EditProfileView(props: IEditProfileView) {
               />
               {email !== '' && (
                 <FormControlLabel
-                  sx={{...textFieldProps, marginLeft: '-6px', paddingLeft: '0px'}}
+                  sx={{...textFieldProps, marginLeft: '-16px', paddingLeft: '0px'}}
                   control={
                     <Checkbox
                       id="digest"
                       checked={digest === 1}
                       onChange={handleDigestChange}
-                      sx={{
-                        margin: '0px',
-                        paddingLeft: '0px',
-                        textAlign: 'left'
-                      }}
+                      sx={{ margin: '0px' }}
                     />
                   }
                   label={tp.sendDigest}
@@ -1047,11 +1066,14 @@ function ReadProfileView(props: IReadProfileViewProps) {
                     borderRadius: '50%', 
                     border: '0.5px solid rgb(255, 255, 255, 0.5)',
                     padding: '17px',
-                    margin: '10% 20% 1% 20%' }}>
+                    margin: '10% auto 1% auto' }}>
           <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
         </Box>
-        <Caption sx={{ margin: '0% 20%', overflow: 'visible' }} >{email || ''}</Caption>
-        <Button onClick={onEditClick}>Edit Profile</Button> {/* TODO: Translation*/}
+        <Caption sx={{ margin: '0% auto', 
+                       overflow: 'visible',
+                       position: 'relative',
+                       right: '+16px' }} >{email || ''}</Caption>
+        <Button onClick={onEditClick} sx={editProfileProps}>Edit Profile</Button> {/* TODO: Translation*/}
         <ParatextLinkedButton setView={setView} />
       </StyledGrid>
     </Box>
