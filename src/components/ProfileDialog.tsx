@@ -139,7 +139,9 @@ const profilePanelProps = {
   flexDirection: 'column',
   justifyContent: 'center',
   maxWidth: '100%',
-  backgroundColor: 'secondary.dark'
+  backgroundColor: 'secondary.dark',
+  height: '100%',
+  textAlign: 'center'
 } as SxProps;
 
 const profileMainProps = {
@@ -631,10 +633,11 @@ function EditProfileView(props: IEditProfileView) {
                       height: '150px',
                       borderRadius: '50%', 
                       border: '0.5px solid rgb(255, 255, 255, 0.5)',
-                      padding: '17px' }}>
+                      padding: '17px',
+                      margin: '10% 20% 1% 20%' }}>
             <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
           </Box>
-          <Caption>{email || ''}</Caption>
+          <Caption sx={{ margin: '0% 20%', overflow: 'visible'}} >{email || ''}</Caption>
           <Button disabled variant="contained" sx={{ color: 'transparent', backgroundColor: 'white' }}>Edit Profile</Button> {/* TODO: Translation*/}
           <ParatextLinkedButton setView={setView} />
         </StyledGrid>
@@ -1067,10 +1070,11 @@ function ReadProfileView(props: IReadProfileViewProps) {
                     height: '150px',
                     borderRadius: '50%', 
                     border: '0.5px solid rgb(255, 255, 255, 0.5)',
-                    padding: '17px' }}>
+                    padding: '17px',
+                    margin: '10% 20% 1% 20%' }}>
           <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
         </Box>
-        <Caption>{email || ''}</Caption>
+        <Caption sx={{ margin: '0% 20%', overflow: 'visible' }} >{email || ''}</Caption>
         <Button onClick={onEditClick}>Edit Profile</Button> {/* TODO: Translation*/}
         <ParatextLinkedButton setView={setView} />
       </StyledGrid>

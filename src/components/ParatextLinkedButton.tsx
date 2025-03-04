@@ -26,8 +26,9 @@ const StyledCaption = styled(Typography, {
 })<StyledCaptionProps>(({ isCaption, notLinked, theme }) => ({
   ...(isCaption && {
     display: 'table',
-    width: 200,
-    textAlign: 'left',
+    width: '100%',
+    textAlign: 'center',
+    marginTop: '13%',
   }),
   ...(notLinked && {
     fontWeight: 'bold',
@@ -62,7 +63,9 @@ export const ParatextLinkedButton = (props: IProps) => {
   return (
     <>
       {status?.errStatus ? (
-        <StyledCaption isCaption notLinked sx = {{ color: 'primary.contrastText', fontSize: '13px', fontWeight: 'normal' }}>
+        <StyledCaption isCaption notLinked sx = {{ color: 'primary.contrastText',
+                                                   fontSize: '13px', 
+                                                   fontWeight: 'normal' }}>
           {addPt(t.notLinked)}
         </StyledCaption>
       ) : (
@@ -77,6 +80,7 @@ export const ParatextLinkedButton = (props: IProps) => {
               sx={{ color: 'primary.contrastText', 
                 borderColor: 'white', 
                 textTransform: 'capitalize', 
+                marginBottom: '26%',
                 }} //this just means black
               onClick={handleHowTo}
             >
