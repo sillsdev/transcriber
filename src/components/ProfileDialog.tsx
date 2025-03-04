@@ -36,7 +36,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
 import SaveIcon from '@mui/icons-material/Save';
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import { styled } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import { useSnackBar } from '../hoc/SnackBar';
 import { langName, localeDefault, LocalKey, localUserKey, makeAbbr, uiLang, uiLangDev, useMyNavigate, useWaitForRemoteQueue, waitForIt } from '../utils';
 import { mainSelector, sharedSelector } from '../selector';
@@ -150,6 +150,24 @@ const profileMainProps = {
   justifyContent: 'center',
   mx: "10px",
   padding: '10px'
+} as SxProps;
+
+const editProfileProps = {
+  color: 'secondary.dark', 
+  backgroundColor: 'primary.contrastText',
+  textTransform: 'capitalize',
+  opacity: '100%',
+  '&.Mui-disabled': {
+    color: 'secondary.dark', 
+    backgroundColor: 'primary.contrastText', 
+    opacity: '50%' 
+  },
+  '&:hover': {
+    borderColor: 'primary.contrastText',
+    backgroundColor: 'alpha(primary.contrastText, 0.1)',
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+    opacity: '100%'
+  }
 } as SxProps;
 
 interface IBigAvatarProps {
@@ -635,7 +653,7 @@ function EditProfileView(props: IEditProfileView) {
             <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
           </Box>
           <Caption>{email || ''}</Caption>
-          <Button disabled variant="contained" sx={{ color: 'transparent', backgroundColor: 'white' }}>Edit Profile</Button> {/* TODO: Translation*/}
+          <Button disabled variant="contained" sx={editProfileProps}>Edit Profile</Button> {/* TODO: Translation*/}
           <ParatextLinkedButton setView={setView} />
         </StyledGrid>
       </Box>
@@ -823,17 +841,13 @@ function EditProfileView(props: IEditProfileView) {
               />
               {email !== '' && (
                 <FormControlLabel
-                  sx={{...textFieldProps, marginLeft: '-6px', paddingLeft: '0px'}}
+                  sx={{...textFieldProps, marginLeft: '-16px', paddingLeft: '0px'}}
                   control={
                     <Checkbox
                       id="digest"
                       checked={digest === 1}
                       onChange={handleDigestChange}
-                      sx={{
-                        margin: '0px',
-                        paddingLeft: '0px',
-                        textAlign: 'left'
-                      }}
+                      sx={{ margin: '0px' }}
                     />
                   }
                   label={tp.sendDigest}
@@ -1071,7 +1085,7 @@ function ReadProfileView(props: IReadProfileViewProps) {
           <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
         </Box>
         <Caption>{email || ''}</Caption>
-        <Button onClick={onEditClick}>Edit Profile</Button> {/* TODO: Translation*/}
+        <Button onClick={onEditClick} sx={editProfileProps}>Edit Profile</Button> {/* TODO: Translation*/}
         <ParatextLinkedButton setView={setView} />
       </StyledGrid>
     </Box>
