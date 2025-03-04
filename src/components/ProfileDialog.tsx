@@ -687,7 +687,8 @@ function EditProfileView(props: IEditProfileView) {
     </Box>
     <Box id="profileMain" 
       sx={profileMainProps}>
-      <Grid item xs={12} md={7}>
+      
+      <Grid item xs={12} md={7} sx={{ maxWidth: '100%' }}>
           {editUserId && /Add/i.test(editUserId) ? (
             <Typography variant="h6">{tp.addMember}</Typography>
           ) : userNotComplete() ? (
@@ -695,8 +696,8 @@ function EditProfileView(props: IEditProfileView) {
           ) : (
             <Typography variant="h6">{tp.userProfile}</Typography>
           )}
-          <FormControl>
-            <FormGroup sx={{ padding: '3px', pb: 2, marginBottom: '30px' }}>
+          <FormControl sx={{ width: '100%'}}>
+            <FormGroup sx={{ padding: '3px', pb: 2, marginBottom: '30px', width: '100%' }}>
               <FormControlLabel
                 control={
                   <TextField
@@ -716,6 +717,7 @@ function EditProfileView(props: IEditProfileView) {
                     margin="normal"
                     variant="outlined"
                     size="small"
+                    fullWidth
                     required
                     autoFocus
                   />
@@ -732,6 +734,7 @@ function EditProfileView(props: IEditProfileView) {
                     onChange={handleGivenChange}
                     margin="normal"
                     required
+                    fullWidth
                     variant="outlined"
                     size="small"
                   />
@@ -748,6 +751,7 @@ function EditProfileView(props: IEditProfileView) {
                     onChange={handleFamilyChange}
                     margin="normal"
                     required
+                    fullWidth
                     variant="outlined"
                     size="small"
                   />
