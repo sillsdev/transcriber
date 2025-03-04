@@ -267,7 +267,12 @@ function EditProfileView(props: IEditProfileView) {
   const handleSyncFreqSwitch = (e: React.ChangeEvent<HTMLInputElement>) => {
     toolChanged(toolId, true);
     setSync(e.target.checked);
-    setSyncFreq(0);
+    if (e.target.checked) {
+      setSyncFreq(2);
+    }
+    else {
+      setSyncFreq(0);
+    }
     var hk = JSON.parse(hotKeys ?? '{}');
     setHotKeys(JSON.stringify({ ...hk, syncFreq: 0 }));
   };
