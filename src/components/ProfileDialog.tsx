@@ -2,7 +2,6 @@
 import React, { useState, useContext, useRef, useEffect, MouseEventHandler} from 'react';
 import { 
   IMainStrings, 
-  ISharedStrings, 
   IProfileStrings, 
   UserD,
   DigestPreference,
@@ -15,14 +14,11 @@ import {
   DialogTitle,
   Button,
   DialogContent,
-  DialogActions,
   FormControlLabel,
   Avatar,
   SxProps,
   Box,
   Grid,
-  PaperProps,
-  Paper,
   GridProps,
   FormControl,
   FormGroup,
@@ -31,15 +27,15 @@ import {
   Checkbox,
   IconButton,
   Skeleton,
+  Switch,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
-import SaveIcon from '@mui/icons-material/Save';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, alpha, Theme, useTheme } from '@mui/material/styles';
 import { useSnackBar } from '../hoc/SnackBar';
-import { langName, localeDefault, LocalKey, localUserKey, makeAbbr, uiLang, uiLangDev, useMyNavigate, useWaitForRemoteQueue, waitForIt } from '../utils';
-import { mainSelector, sharedSelector } from '../selector';
+import { langName, localeDefault, LocalKey, makeAbbr, uiLang, uiLangDev, useMyNavigate, useWaitForRemoteQueue, waitForIt } from '../utils';
+import { mainSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import ParatextLinkedButton from '../components/ParatextLinkedButton';
 import { profileSelector } from '../selector';
@@ -52,30 +48,8 @@ import * as action from '../store';
 import { related, RemoveUserFromOrg, useAddToOrgAndGroup, useRole, useTeamDelete, useUser } from '../crud';
 import moment from 'moment';
 import { AddRecord, UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
-import StickyRedirect from './StickyRedirect';
-import ParatextLinked from './ParatextLinked';
 import SelectRole from '../control/SelectRole';
 import { ActionRow, AltButton, PriButton } from '../control';
-
-interface ContainerProps extends PaperProps {
-  noMargin?: boolean;
-}
-const PaperContainer = styled(Paper, {
-  shouldForwardProp: (prop) => prop !== 'noMargin',
-})<ContainerProps>(({ noMargin, theme }) => ({
-  display: 'flex',
-  flexGrow: 1,
-  marginTop: '80px',
-  padding: '40px',
-  justifyContent: 'center',
-  ...(noMargin
-    ? {
-      margin: 0,
-    }
-    : {
-      margin: theme.spacing(4),
-    }),
-}));
 
 const Caption = styled(Typography)<TypographyProps>(() => ({
   width: 150,
@@ -214,7 +188,7 @@ function EditProfileView(props: IEditProfileView) {
   const [family, setFamily] = useState<string | null>(null);
   const [email, setEmail] = useState('');
   const [timezone, setTimezone] = useState<string>(moment.tz.guess() || '');
-  // const [sync, setSync] = useState(true);
+  const [sync, setSync] = useState(true);
   const [syncFreq, setSyncFreq] = useState(2);
   const [role, setRole] = useState('');
   const [locale, setLocale] = useState<string>(
@@ -290,12 +264,13 @@ function EditProfileView(props: IEditProfileView) {
     toolChanged(toolId, true);
     setFamily(e.target.value);
   };
-  // const handleSyncFreqSwitch = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   toolChanged(toolId, true);
-  //   setSync(e.target.checked);
-  //   var hk = JSON.parse(hotKeys ?? '{}');
-  //   setHotKeys(JSON.stringify({ ...hk, syncFreq: 0 }));
-  // };
+  const handleSyncFreqSwitch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    toolChanged(toolId, true);
+    setSync(e.target.checked);
+    setSyncFreq(0);
+    var hk = JSON.parse(hotKeys ?? '{}');
+    setHotKeys(JSON.stringify({ ...hk, syncFreq: 0 }));
+  };
   const handleSyncFreqChange = (e: any) => {
     if (e.target.value < 0) e.target.value = 0;
     if (e.target.value > 720) e.target.value = 720;
@@ -676,6 +651,14 @@ function EditProfileView(props: IEditProfileView) {
                 paddingLeft: '20px',
               }}
             >
+              <FormControlLabel
+                control={
+                  <Switch defaultChecked
+                    onChange={handleSyncFreqSwitch}
+                  />
+                }
+                label="Enable Sync" // TODO: Setup translation for this
+              />
               <FormGroup>
                 <FormControlLabel
                   control={
@@ -693,6 +676,7 @@ function EditProfileView(props: IEditProfileView) {
                     />
                   }
                   label={tp.syncFrequency}
+                  disabled={!sync}
                 />
               </FormGroup>
             </FormGroup>
@@ -978,7 +962,6 @@ function ReadProfileView(props: IReadProfileViewProps) {
   const [family, setFamily] = useState<string | null>(null);
   const [email, setEmail] = useState('');
   const [timezone, setTimezone] = useState<string>(moment.tz.guess() || '');
-  // const [sync, setSync] = useState(true);
   const [, setSyncFreq] = useState(2);
   const [, setRole] = useState('');
   const [locale, setLocale] = useState<string>(
@@ -992,7 +975,6 @@ function ReadProfileView(props: IReadProfileViewProps) {
   const [hotKeys, setHotKeys] = useState<string | null>(null);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [showDetail, setShowDetail] = useState(false);
-  const [dupName, ] = useState(false);
   const [, setView] = useState('');
 
   const getSyncFreq = (hotKeys: string | null) => {
@@ -1081,13 +1063,13 @@ function ReadProfileView(props: IReadProfileViewProps) {
     sx={profileContentProps}>
     <Box id="profilePanel"
       sx={profilePanelProps}>
-      <StyledGrid item xs={12} md={5}>
+      <StyledGrid item xs={12} md={5} sx={{ height: '460px' }}>
         <Box sx= {{ width: '150px',
                     height: '150px',
                     borderRadius: '50%', 
                     border: '0.5px solid rgb(255, 255, 255, 0.5)',
                     padding: '17px',
-                    margin: '10% auto 1% auto' }}>
+                    margin: '1% auto 1% auto' }}>
           <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
         </Box>
         <Caption sx={{ margin: '0% auto', 
@@ -1100,7 +1082,7 @@ function ReadProfileView(props: IReadProfileViewProps) {
     </Box>
     <Box id="profileMain" 
       sx={profileMainProps}>
-      <Grid container>
+      <Grid container sx={{ height: '495px' }}>
       <Grid item xs={12} md={7}>
         {editUserId && /Add/i.test(editUserId) ? (
           <Typography variant="h6">{tp.addMember}</Typography>
