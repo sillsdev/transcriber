@@ -1,5 +1,5 @@
 /* eslint-disable no-template-curly-in-string */
-import React, { useState, useContext, useRef, useEffect} from 'react';
+import React, { useState, useContext, useRef, useEffect, MouseEventHandler} from 'react';
 import { 
   IMainStrings, 
   ISharedStrings, 
@@ -89,24 +89,68 @@ const Caption = styled(Typography)<TypographyProps>(() => ({
 const textFieldProps = {
   mx: 1,
   "&:has([readOnly]) ": {
-    "& .MuiInputLabel-standard": {
-      color: "rgba(0, 0, 0, 0.6)",
-      cursor: 'default'
+    "& .MuiInputLabel-root": {
+      color: "rgba(0, 0, 0, 0.6)"
     },
   }
 } as SxProps;
-const selectProps = { mx: 1, width: '206px' } as SxProps;
-const menuProps = { width: '200px' } as SxProps;
-
-const StyledGrid = styled(Grid)<GridProps>(() => ({
-  padding: '0 30px',
-}));
-
-
-const bigAvatarProps = { width: '150px', 
-                         height: '150px', 
-                         border: '2px solid rgb(255, 255, 255, 0.5)', 
-                         padding: '10px' } as SxProps;
+const selectProps = {
+  mx: 1,
+  width: '206px',
+  "&:has([readOnly]) ": {
+    "& .MuiSelect-icon": {
+      display: 'none'
+    },
+    "& .MuiInputLabel-root": {
+      color: "rgba(0, 0, 0, 0.6)"
+    },
+    "& .MuiSelect-select:focus": {
+      backgroundColor: "unset"
+    }
+  }
+} as SxProps;
+const menuProps = {
+  width: '200px',
+  "&:has([readOnly]) ": {
+    "& .MuiSvgIcon-root-MuiSelect-icon": {
+      display: 'none'
+    },
+    "& .MuiInputLabel-root": {
+      color: "rgba(0, 0, 0, 0.6)"
+    },
+  }
+} as SxProps;
+const bigAvatarProps = {
+  width: '150px', 
+  height: '150px', 
+  border: '2px solid rgb(255, 255, 255, 0.5)', 
+  padding: '10px'
+} as SxProps;
+const profileContentProps = {
+  display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  padding: '0px'
+} as SxProps;
+const profilePanelProps = {
+  display: 'flex',
+  flex: '1 1 40%',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  maxWidth: '100%',
+  backgroundColor: 'secondary.dark',
+  height: '100%'
+} as SxProps;
+const profileMainProps = {
+  display: 'flex',
+  flex: '1 1 57%', //figure out why its 57% and not 60%
+  flexDirection: 'column',
+  maxWidth: '100%',
+  justifyContent: 'center',
+  mx: "10px",
+  padding: '10px',
+  height: 'calc(100% - 48px)'
+} as SxProps;
 
 interface IBigAvatarProps {
   avatarUrl: string | null;
@@ -121,9 +165,18 @@ const BigAvatar = (props: IBigAvatarProps) => {
   return <Avatar sx={bigAvatarProps} src={avatarUrl}/>;
 };
 
-function EditProfileView(finishAdd?: () => void) {
+const StyledGrid = styled(Grid)<GridProps>(() => ({
+  padding: '0 30px',
+}));
+
+interface IEditProfileView {
+  finishAdd?: () => void;
+  onCancel?: () => void;
+  onSave?: () => void;
+};
+function EditProfileView(props: IEditProfileView) {
+  const { finishAdd, onCancel, onSave } = props;
   const users = useOrbitData<UserD[]>('user');
-  const t: IMainStrings = useSelector(mainSelector, shallowEqual);
   const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
   const dispatch = useDispatch();
   const setLanguage = (lang: string) => dispatch(action.setLanguage(lang));
@@ -283,15 +336,6 @@ function EditProfileView(finishAdd?: () => void) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolsChanged]);
 
-  const doClose = () => {
-    const view = localStorage.getItem(localUserKey(LocalKey.url));
-    if (view && !/Profile/i.test(view)) {
-      setView(view);
-    } else {
-      setView('/team');
-    }
-  };
-
   const handleSave = () => {
     if (!saving.current && isChanged(toolId)) {
       startSave(toolId);
@@ -349,7 +393,9 @@ function EditProfileView(finishAdd?: () => void) {
       setEditUserId(null);
     }
     saving.current = false;
-    doClose();
+    if (onSave) {
+      onSave();
+    }
   };
 
   const handleAdd = async () => {
@@ -400,7 +446,6 @@ function EditProfileView(finishAdd?: () => void) {
     if (getGlobal('editUserId')) {
       setEditUserId(null);
     }
-    doClose();
   };
 
   const handleCancel = () => {
@@ -433,7 +478,9 @@ function EditProfileView(finishAdd?: () => void) {
         return;
       }
     }
-    doClose();
+    if (onCancel) {
+      onCancel();
+    }
   };
 
   const handleCancelAborted = () => {
@@ -574,59 +621,60 @@ function EditProfileView(finishAdd?: () => void) {
     // return <StickyRedirect to={view} />;
   }
 
-  return [(<Box sx={{height: '100%'}}>
-    <Box sx={{height: 'calc(100% - 48px)'}}>
+  return (<DialogContent id="profileContent" 
+    sx={profileContentProps}>
+    <Box id="profilePanel"
+      sx={profilePanelProps}>
       <StyledGrid item xs={12} md={5}>
-        <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-        <Caption>{email || ''}</Caption>
-        <ParatextLinkedButton setView={setView} />
-      </StyledGrid>
-    </Box>
-    <Box>
-      {(!isOffline || offlineOnly) &&
-      !editUserId &&
-      currentUser &&
-      currentUser.attributes?.name !== currentUser.attributes?.email && (
-        <DeleteExpansion
-          title={tp.deleteUser}
-          explain={tp.deleteExplained}
-          handleDelete={handleDelete}
-          inProgress={deleteItem !== ''}
+      <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+      <Caption>{email || ''}</Caption>
+      <Button disabled>Edit Profile</Button> {/* TODO: Translation*/}
+      <ParatextLinkedButton setView={setView} />
+    </StyledGrid>
+    {(!isOffline || offlineOnly) &&
+    !editUserId &&
+    currentUser &&
+    currentUser.attributes?.name !== currentUser.attributes?.email && (
+      <DeleteExpansion
+        title={tp.deleteUser}
+        explain={tp.deleteExplained}
+        handleDelete={handleDelete}
+        inProgress={deleteItem !== ''}
+      >
+        <FormGroup
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexGrow: 1,
+            paddingLeft: '20px',
+          }}
         >
-          <FormGroup
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              flexGrow: 1,
-              paddingLeft: '20px',
-            }}
-          >
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <TextField
-                    title={tp.syncFrequency}
-                    value={syncFreq}
-                    onChange={handleSyncFreqChange}
-                    type="number"
-                    inputProps={{
-                      min: 0,
-                      max: 720
-                    }}
-                    size="small"
-                    style={{ margin: '8px' }}
-                  />
-                }
-                label={tp.syncFrequency}
-              />
-            </FormGroup>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <TextField
+                  title={tp.syncFrequency}
+                  value={syncFreq}
+                  onChange={handleSyncFreqChange}
+                  type="number"
+                  inputProps={{
+                    min: 0,
+                    max: 720
+                  }}
+                  size="small"
+                  style={{ margin: '8px' }}
+                />
+              }
+              label={tp.syncFrequency}
+            />
           </FormGroup>
-        </DeleteExpansion>
-      )}
+        </FormGroup>
+      </DeleteExpansion>
+    )}
     </Box>
-  </Box>),
-    (<Box sx={{ padding: '10px' }}>
-        <Grid item xs={12} md={7}>
+    <Box id="profileMain" 
+      sx={profileMainProps}>
+      <Grid item xs={12} md={7}>
           {editUserId && /Add/i.test(editUserId) ? (
             <Typography variant="h6">{tp.addMember}</Typography>
           ) : userNotComplete() ? (
@@ -879,80 +927,289 @@ function EditProfileView(finishAdd?: () => void) {
           noResponse={handleCancelAborted}
         />
       )}
-      </Box>)
-  ];
+    </Box>
+  </DialogContent>);
 }
 
-function ReadProfileView() {
-  return [(<Box></Box>), (<Box></Box>)];
+interface IReadProfileViewProps {
+  onEditClick?: MouseEventHandler<HTMLButtonElement>;
+};
+function ReadProfileView(props: IReadProfileViewProps) {
+  const { onEditClick } = props;
+  const users = useOrbitData<UserD[]>('user');
+  const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
+  const [memory] = useGlobal('memory');
+  const [editUserId,] = useGlobal('editUserId'); //verified this is not used in a function 2/18/25
+  const [organization] = useGlobal('organization');
+  const [user,] = useGlobal('user');
+  const [isDeveloper] = useGlobal('developer');
+  const { userIsAdmin, userIsSharedContentAdmin } = useRole();
+  const [currentUser, setCurrentUser] = useState<UserD | undefined>();
+  const [name, setName] = useState('');
+  const [given, setGiven] = useState<string | null>(null);
+  const [family, setFamily] = useState<string | null>(null);
+  const [email, setEmail] = useState('');
+  const [timezone, setTimezone] = useState<string>(moment.tz.guess() || '');
+  // const [sync, setSync] = useState(true);
+  const [, setSyncFreq] = useState(2);
+  const [, setRole] = useState('');
+  const [locale, setLocale] = useState<string>(
+    localeDefault(isDeveloper === 'true')
+  );
+  const [, setNews] = useState<boolean | null>(null);
+  const [sharedContent, setSharedContent] = useState(false);
+  const [digest, setDigest] = useState<DigestPreference | null>(null);
+  const [phone, setPhone] = useState<string | null>(null);
+  const [bcp47, setBcp47] = useState<string | null>(null);
+  const [timerDir, setTimerDir] = useState<string | null>(null);
+  const [speed, setSpeed] = useState<string | null>(null);
+  const [progBar, setProgBar] = useState<string | null>(null);
+  const [hotKeys, setHotKeys] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [showDetail, ] = useState(false);
+  const [locked, setLocked] = useState(false);
+  const [dupName, ] = useState(false);
+  const [, setView] = useState('');
+
+  const getSyncFreq = (hotKeys: string | null) => {
+    const hk = JSON.parse(hotKeys ?? '{}');
+    return hk.syncFreq ?? 2;
+  };
+
+  useEffect(() => {
+    let userRec = {
+      type: 'user',
+      id: '',
+      attributes: {
+        name,
+        givenName: given,
+        familyName: family,
+        email,
+        phone,
+        timezone,
+        locale,
+        isLocked: true,
+        auth0Id: '',
+        silUserid: 0,
+        identityToken: '',
+        uilanguagebcp47: bcp47,
+        timercountUp: timerDir,
+        playbackSpeed: speed,
+        progressbarTypeid: progBar,
+        digestPreference: DigestPreference.dailyDigest,
+        newsPreference: false,
+        sharedContentCreator: false,
+        hotKeys,
+        avatarUrl,
+      },
+    } as User;
+    if (!editUserId || !/Add/i.test(editUserId)) {
+      const current = users.filter(
+        (u) => u.id === (editUserId ? editUserId : user)
+      );
+      if (current.length === 1) {
+        userRec = current[0];
+        setCurrentUser(userRec as UserD);
+        const orgMbrRecs = memory?.cache.query((q) =>
+          q.findRecords('organizationmembership')
+        ) as OrganizationMembership[];
+        const mbrRec = orgMbrRecs.filter(
+          (r) =>
+            related(r, 'user') === userRec.id &&
+            related(r, 'organization') === organization
+        );
+        if (mbrRec.length > 0) {
+          setRole(related(mbrRec[0], 'role'));
+        }
+      }
+    }
+    const attr = userRec.attributes;
+    if (!attr) return;
+    setName(attr.name !== attr.email ? attr.name : '');
+    setGiven(attr.givenName ? attr.givenName : '');
+    setFamily(attr.familyName ? attr.familyName : '');
+    setEmail(attr.email.toLowerCase());
+    setPhone(attr.phone);
+    setTimezone(attr.timezone || '');
+    setLocale(
+      attr.locale ? attr.locale : localeDefault(isDeveloper === 'true')
+    );
+    setNews(attr.newsPreference);
+    setSharedContent(attr.sharedContentCreator ?? false);
+    setDigest(attr.digestPreference);
+    setLocked(true);
+    setBcp47(attr.uilanguagebcp47);
+    setTimerDir(attr.timercountUp);
+    setSpeed(attr.playbackSpeed);
+    setProgBar(attr.progressbarTypeid);
+    setHotKeys(attr.hotKeys);
+    setAvatarUrl(attr.avatarUrl);
+    setSyncFreq(getSyncFreq(attr.hotKeys));
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [user, editUserId]);
+
+  const userNotComplete = () =>
+    currentUser === undefined ||
+    currentUser.attributes?.name.toLowerCase() ===
+    currentUser.attributes?.email.toLowerCase();
+
+  return (<DialogContent id="profileContent" 
+    sx={profileContentProps}>
+    <Box id="profilePanel"
+      sx={profilePanelProps}>
+      <StyledGrid item xs={12} md={5}>
+        <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+        <Caption>{email || ''}</Caption>
+        <ParatextLinked setView={setView} />
+        <Button onClick={onEditClick}>Edit Profile</Button> {/* TODO: Translation*/}
+      </StyledGrid>
+    </Box>
+    <Box id="profileMain" 
+      sx={profileMainProps}>
+      <Grid container>
+      <Grid item xs={12} md={7}>
+        {editUserId && /Add/i.test(editUserId) ? (
+          <Typography variant="h6">{tp.addMember}</Typography>
+        ) : userNotComplete() ? (
+          <Typography variant="h6">{tp.completeProfile}</Typography>
+        ) : (
+          <Typography variant="h6">{tp.userProfile}</Typography>
+        )}
+        <TextField
+          id="profileName"
+          label={tp.name}
+          sx={textFieldProps}
+          value={name}
+          helperText={
+            dupName && (
+              <Typography color="secondary" variant="caption">
+                {tp.userExists}
+              </Typography>
+            )
+          }
+          margin="normal"
+          variant="standard"
+          InputProps={{
+            readOnly: true,
+            disableUnderline: true
+          }}
+        />
+        <TextField
+          id="given"
+          label={tp.given}
+          sx={textFieldProps}
+          value={given || ''}
+          margin="normal"
+          variant="standard"
+          InputProps={{
+            readOnly: true,
+            disableUnderline: true
+          }}
+        />
+        <TextField
+          id="family"
+          label={tp.family}
+          sx={textFieldProps}
+          value={family || ''}
+          margin="normal"
+          variant="standard"
+          InputProps={{
+            readOnly: true,
+            disableUnderline: true
+          }}
+        />
+        <TextField
+          id="select-locale"
+          label={tp.locale}
+          sx={selectProps}
+          value={langName(locale, locale)}
+          margin="normal"
+          variant="standard"
+          InputProps={{
+            readOnly: true,
+            disableUnderline: true
+          }}
+        />
+        <TextField
+          id="select-timezone"
+          label={tp.timezone}
+          sx={selectProps}
+          value={timezone}
+          margin="normal"
+          variant="standard"
+          InputProps={{
+            readOnly: true,
+            disableUnderline: true
+          }}
+        />
+        <FormControl>
+          <FormGroup sx={{ pb: 3 }}>
+            {userIsSharedContentAdmin && (
+              <FormControlLabel
+                sx={textFieldProps}
+                control={
+                  <Checkbox
+                    id="sharedcontent"
+                    checked={sharedContent}
+                  />
+                }
+                label={tp.sharedContentCreator}
+              />
+            )}
+            {showDetail && (
+              <>
+                <FormControlLabel
+                  control={
+                    <TextField
+                      id="phone"
+                      label={tp.phone}
+                      sx={textFieldProps}
+                      value={phone}
+                      margin="normal"
+                      variant="filled"
+                    />
+                  }
+                  label=""
+                />
+                {userIsAdmin && (
+                  <FormControlLabel
+                    sx={textFieldProps}
+                    control={
+                      <Checkbox
+                        id="checkbox-locked"
+                        checked={locked}
+                      />
+                    }
+                    label={tp.locked}
+                  />
+                )}
+              </>
+            )}
+          </FormGroup>
+        </FormControl>
+      </Grid>
+    </Grid>
+    </Box>
+  </DialogContent>);
 }
 
 interface ProfileDialogProps {
-  readOnly?: boolean;
+  readOnlyMode?: boolean;
   open: boolean;
   onClose: () => void;
   finishAdd?: () => void;
 }
 export function ProfileDialog(props: ProfileDialogProps) {
-  const { readOnly, onClose, open, finishAdd } = props;
+  const { readOnlyMode, onClose, open, finishAdd } = props;
   const t: IMainStrings = useSelector(mainSelector, shallowEqual);
-  const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
-  const { showMessage } = useSnackBar();
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [name, setName] = useState('');
-  const [view, setView] = useState('');
-  const [currentUser, setCurrentUser] = useState<UserD | undefined>();
-  const [syncFreq, setSyncFreq] = useState(2);
-  const [deleteItem, setDeleteItem] = useState('');
-  const [hotKeys, setHotKeys] = useState<string | null>(null);
-  const toolId = 'profile';
-  const {
-    startSave,
-    saveCompleted,
-    toolChanged,
-    toolsChanged,
-    saveRequested,
-    clearRequested,
-    clearCompleted,
-    isChanged,
-  } = useContext(UnsavedContext).state;
+  const handleClose = () => onClose();
+  const [ readOnly, setReadOnly ] = useState(true);
 
-  const handleClose = () => {
-    if (!readOnly) {
-      
-    }
-    onClose();
-  };
+  useEffect(() => setReadOnly(readOnlyMode ? true : false), [readOnlyMode]);
 
-  const getPanes = () => {
-    let panes = readOnly ?
-      ReadProfileView() :
-      EditProfileView(finishAdd);
-    return [
-      (<Box id="profileContent"
-        sx={{
-          display: 'flex',
-          flex: '1 1 40%',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          maxWidth: '100%',
-          backgroundColor: 'secondary.dark'
-        }}>
-        {panes[0]}
-      </Box>),
-      (<Box id="profileMain" 
-        sx={{
-          display: 'flex',
-          flex: '1 1 57%', //figure out why its 57% and not 60%
-          flexDirection: 'column',
-          maxWidth: '100%',
-          justifyContent: 'center',
-          mx: "10px"
-        }}>
-        {panes[1]}
-      </Box>)
-    ];
-  };
+  const onEditClicked = () => setReadOnly(false);
+  const onCanceled = () => setReadOnly(true);
+  const onSaved = () => setReadOnly(true);
 
   return (
     <Dialog
@@ -985,15 +1242,11 @@ export function ProfileDialog(props: ProfileDialogProps) {
           <CloseIcon></CloseIcon>
         </IconButton>
       </DialogTitle>
-      <DialogContent id="profileContent" 
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          padding: '0px'
-        }}>
-        { getPanes() }
-      </DialogContent>
+      {
+        readOnly ?
+        (<ReadProfileView onEditClick={onEditClicked}/>) :
+        (<EditProfileView finishAdd={finishAdd} onCancel={onCanceled} onSave={onSaved}></EditProfileView>)
+      }
     </Dialog>
   );
 }
