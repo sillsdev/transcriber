@@ -574,8 +574,8 @@ function EditProfileView(finishAdd?: () => void) {
     // return <StickyRedirect to={view} />;
   }
 
-  return [(<Box sx={{backgroundColor: 'pink', height: '100%'}}>
-    <Box sx={{backgroundColor: 'yellow', height: 'calc(100% - 48px)'}}>
+  return [(<Box sx={{height: '100%'}}>
+    <Box sx={{height: 'calc(100% - 48px)'}}>
       <StyledGrid item xs={12} md={5}>
         <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
         <Caption>{email || ''}</Caption>
