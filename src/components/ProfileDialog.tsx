@@ -33,6 +33,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, alpha, Theme, useTheme } from '@mui/material/styles';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSnackBar } from '../hoc/SnackBar';
 import { langName, localeDefault, LocalKey, makeAbbr, uiLang, uiLangDev, useMyNavigate, useWaitForRemoteQueue, waitForIt } from '../utils';
 import { mainSelector } from '../selector';
@@ -378,7 +379,7 @@ function EditProfileView(props: IEditProfileView) {
             } as UserD,
             currentUser !== undefined ? currentUser.id : ''
           )
-        // we aren't allowing them to change owner oraganization currently
+        // we aren't allowing them to change owner organization currently
       );
       setLang(locale);
       const mbrRec = getMbrRoleRec(
@@ -654,6 +655,7 @@ function EditProfileView(props: IEditProfileView) {
             explain={"The following action cannot be undone:"} // TODO: Setup translation for this
             handleDelete={handleDelete}
             inProgress={deleteItem !== ''}
+            icon={(<ExpandMoreIcon sx={{ color: 'primary.contrastText', rotate: '180deg' }} />)}
             SummaryProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
             DetailsProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
             DeleteButtonProps={{  }}
@@ -1073,7 +1075,6 @@ function ReadProfileView(props: IReadProfileViewProps) {
     currentUser === undefined ||
     currentUser.attributes?.name.toLowerCase() ===
     currentUser.attributes?.email.toLowerCase();
-
   return (<DialogContent id="profileContent" 
     sx={profileContentProps}>
     <Box id="profilePanel"
