@@ -1,5 +1,5 @@
 /* eslint-disable no-template-curly-in-string */
-import React, { useState, useContext, useRef, useEffect, MouseEventHandler} from 'react';
+import React, { useState, useContext, useRef, useEffect} from 'react';
 import { 
   IMainStrings, 
   IProfileStrings, 
@@ -28,17 +28,25 @@ import {
   IconButton,
   Skeleton,
   Switch,
-  InputAdornment,
-  TextFieldProps,
-  BaseTextFieldProps,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import { styled, alpha, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSnackBar } from '../hoc/SnackBar';
-import { langName, localeDefault, LocalKey, makeAbbr, uiLang, uiLangDev, useMyNavigate, useWaitForRemoteQueue, waitForIt } from '../utils';
+import {
+  langName,
+  localeDefault,
+  LocalKey,
+  localUserKey,
+  makeAbbr,
+  uiLang,
+  uiLangDev,
+  useMyNavigate,
+  useWaitForRemoteQueue,
+  waitForIt
+} from '../utils';
 import { mainSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import ParatextLinkedButton from '../components/ParatextLinkedButton';
@@ -49,9 +57,20 @@ import { useOrbitData } from '../hoc/useOrbitData';
 import { useDispatch } from 'react-redux';
 import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import * as action from '../store';
-import { related, RemoveUserFromOrg, useAddToOrgAndGroup, useRole, useTeamDelete, useUser } from '../crud';
+import {
+  related,
+  RemoveUserFromOrg,
+  useAddToOrgAndGroup,
+  useRole,
+  useTeamDelete,
+  useUser
+} from '../crud';
 import moment from 'moment';
-import { AddRecord, UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
+import {
+  AddRecord,
+  UpdateRecord,
+  UpdateRelatedRecord
+} from '../model/baseModel';
 import SelectRole from '../control/SelectRole';
 import { ActionRow, AltButton, PriButton } from '../control';
 
@@ -315,7 +334,18 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const toolId = 'profile';
   const saving = useRef(false);
   const [confirmCancel, setConfirmCancel] = useState<string>();
+  const [confirmClose, setConfirmClose] = useState<string>();
   const waitForRemoteQueue = useWaitForRemoteQueue();
+
+  const doClose = () => {
+      const view = localStorage.getItem(localUserKey(LocalKey.url));
+      if (view && !/Profile/i.test(view)) {
+        setView(view);
+      } else {
+        setView('/team');
+      }
+      onClose();
+    };
 
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
@@ -530,6 +560,31 @@ export function ProfileDialog(props: ProfileDialogProps) {
     }
   };
 
+  const resetUserData = () => {
+    let attr = currentUser?.attributes;
+    if (!attr) return;
+    setName(attr.name !== attr.email ? attr.name : '');
+    setGiven(attr.givenName ? attr.givenName : '');
+    setFamily(attr.familyName ? attr.familyName : '');
+    setEmail(attr.email.toLowerCase());
+    setPhone(attr.phone);
+    setTimezone(attr.timezone || '');
+    setLocale(
+      attr.locale ? attr.locale : localeDefault(isDeveloper === 'true')
+    );
+    setNews(attr.newsPreference);
+    setSharedContent(attr.sharedContentCreator ?? false);
+    setDigest(attr.digestPreference);
+    setLocked(true);
+    setBcp47(attr.uilanguagebcp47);
+    setTimerDir(attr.timercountUp);
+    setSpeed(attr.playbackSpeed);
+    setProgBar(attr.progressbarTypeid);
+    setHotKeys(attr.hotKeys);
+    setAvatarUrl(attr.avatarUrl);
+    setSyncFreq(getSyncFreq(attr.hotKeys));
+  }
+
   const handleCancel = () => {
     if (myChanged) {
       const defLocale =
@@ -560,11 +615,32 @@ export function ProfileDialog(props: ProfileDialogProps) {
         return;
       }
     }
+    resetUserData();
     setReadOnly(true);
   };
 
   const handleCancelAborted = () => {
     setConfirmCancel(undefined);
+  };
+
+  const handleCloseConfirmed = () => {
+    setConfirmClose(undefined);
+    toolChanged(toolId, false);
+    if (getGlobal('editUserId')) {
+      setEditUserId(null);
+      const userId = localStorage.getItem(LocalKey.userId);
+      if (!userId && offlineOnly) {
+        setView('Logout');
+        return;
+      }
+    }
+    resetUserData();
+    doClose();
+    setReadOnly(true);
+  };
+
+  const handleCloseAborted = () => {
+    setConfirmClose(undefined);
   };
 
   const handleDelete = () => {
@@ -696,13 +772,16 @@ export function ProfileDialog(props: ProfileDialogProps) {
     // return <StickyRedirect to={view} />;
   }
 
-  const handleClose = () => onClose();
+  const handleClose = () => {
+    if (myChanged) {
+      setConfirmClose(tp.discardChanges);
+    } else handleCloseConfirmed();
+  };
 
   useEffect(() => setReadOnly(readOnlyMode ? true : false), [readOnlyMode]);
 
   const onEditClicked = () => {
     setReadOnly(false);
-    console.log("test");
   };
 
   return (
@@ -737,142 +816,145 @@ export function ProfileDialog(props: ProfileDialogProps) {
           <CloseIcon></CloseIcon>
         </IconButton>}
       </DialogTitle>
-      <DialogContent id="profileContent" sx={profileContentProps}>
-        <Box id="profilePanel" sx={profilePanelProps}>
-          <StyledGrid item xs={12} height='100%' sx={{ margin: '30px 0px' }}>
-            <Box sx= {{ width: '150px',
-                        height: '150px',
-                        borderRadius: '50%', 
-                        border: '0.5px solid rgb(255, 255, 255, 0.5)',
-                        padding: '17px',
-                        margin: '1% auto 1% auto' }}>
-              <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-            </Box>
-            <Caption sx={profileEmailProps} >{email || ''}</Caption>
-            {readOnlyMode && <Button 
-                  disabled={!readOnly} 
-                  variant="contained" 
-                  onClick={onEditClicked} 
-                  sx={editProfileProps}
-                >
-                  Edit Profile
-              </Button>} {/* TODO: Translation*/}
-            <ParatextLinkedButton setView={setView}/>
-          </StyledGrid>
-          {!readOnly && (!isOffline || offlineOnly) &&
-            !editUserId &&
-            currentUser &&
-            currentUser.attributes?.name !== currentUser.attributes?.email && (
-              <DeleteExpansion
-                title={""}
-                explain={"The following action cannot be undone:"} // TODO: Setup translation for this
-                handleDelete={handleDelete}
-                inProgress={deleteItem !== ''}
-                icon={(<ExpandMoreIcon 
-                  sx={{ 
-                    color: 'primary.contrastText',
-                    transform: 'rotate(180deg)'
-                  }} 
-                />)}
-                SummaryProps={{ 
-                  backgroundColor: 'primary.dark', 
-                  color: 'primary.contrastText',
-                  display: 'flex',
-                  position: 'absolute',
-                  bottom: '0px',
-                  width: '100%',
-                  zIndex: '2'
-                 }}
-                DetailsProps={{ 
-                  backgroundColor: 'primary.dark', 
-                  color: 'primary.contrastText', 
-                  display: 'flex',
-                  flexDirection: 'column',
-                  padding: '8px 16px 64px'
-                }}
-                DeleteButtonProps={ deleteUserProps }
-                ButtonBoxProps={{ alignSelf: 'flex-end' }}
-                DeleteButtonLabel='Delete User' // TODO: Translation
-                DangerProps={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flexGrow: 1,
-                  marginTop: '3px',
-                  textAlign: 'left',
-                  color: 'primary.contrastText'
-                }}
-                DangerHeader='h6'
-                DangerHeaderProps={{ 
-                  borderBottom: '1px solid', 
-                  borderColor: 'primary.contrastText', 
-                  textAlign: 'left',
-                  color: 'primary.contrastText',
-                  marginTop: '2em'
-                }}
-                BoxProps={{
-                  width: '100%',
-                  position: 'absolute', 
-                  bottom: '0px'
-                }}
+      <DialogContent id="profileContent" 
+        sx={profileContentProps}>
+          <Box id="profilePanel" sx={profilePanelProps}>
+            <StyledGrid item xs={12} md={5} height='100%' margin={'30px 0px'}>
+              <Box sx= {{ width: '150px',
+                          height: '150px',
+                          borderRadius: '50%', 
+                          border: '0.5px solid rgb(255, 255, 255, 0.5)',
+                          padding: '17px',
+                          margin: '1% auto 1% auto' }}>
+                <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+              </Box>
+              <Caption sx={profileEmailProps} >{email || ''}</Caption>
+              <Button disabled={!readOnly}
+                variant="contained"
+                onClick={onEditClicked}
+                sx={editProfileProps}
               >
-                <Typography 
-                  variant="h6" 
-                  sx={{ 
-                    borderBottom: '1px solid', 
-                    borderColor: 'primary.contrastText', 
-                    textAlign: 'left' 
+                Edit Profile
+              </Button> {/* TODO: Translation*/}
+              <ParatextLinkedButton setView={setView}/>
+            </StyledGrid>
+            {!readOnly && (!isOffline || offlineOnly) &&
+              !editUserId &&
+              currentUser &&
+              currentUser.attributes?.name !== currentUser.attributes?.email &&
+              (
+                <DeleteExpansion
+                  title={""}
+                  explain={"The following action cannot be undone:"} // TODO: Setup translation for this
+                  handleDelete={handleDelete}
+                  inProgress={deleteItem !== ''}
+                  icon={(
+                    <ExpandMoreIcon 
+                      sx={{
+                        color: 'primary.contrastText',
+                        rotate: '180deg'
+                      }}
+                    />
+                  )}
+                  SummaryProps={{
+                    backgroundColor: 'primary.dark',
+                    color: 'primary.contrastText',
+                    display: 'flex',
+                    position: 'absolute',
+                    bottom: '0px',
+                    width: '100%',
+                    zIndex: '2'
                   }}
-                >
-                  Additional Settings {/*TODO: Translation*/}
-                </Typography>
-                <FormGroup
-                  sx={{
+                  DetailsProps={{
+                    backgroundColor: 'primary.dark',
+                    color: 'primary.contrastText', 
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'flex-start'
+                    padding: '8px 16px 64px'
+                  }}
+                  DeleteButtonProps={ deleteUserProps }
+                  ButtonBoxProps={{ alignSelf: 'flex-end' }}
+                  DeleteButtonLabel='Delete User' // TODO: Translation
+                  DangerProps={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flexGrow: 1,
+                    marginTop: '3px',
+                    textAlign: 'left',
+                    color: 'primary.contrastText'
+                  }}
+                  DangerHeader='h6'
+                  DangerHeaderProps={{ 
+                    borderBottom: '1px solid', 
+                    borderColor: 'primary.contrastText', 
+                    textAlign: 'left',
+                    color: 'primary.contrastText',
+                    marginTop: '2em'
+                  }}
+                  BoxProps={{
+                    width: '100%',
+                    position: 'absolute', 
+                    bottom: '0px'
                   }}
                 >
-                  <FormControlLabel
-                    control={
-                      <Switch defaultChecked
-                        onChange={handleSyncFreqSwitch}
-                      />
-                    }
-                    labelPlacement="start"
-                    label="Enable Data Sync:" // TODO: Setup translation for this
-                    sx={ toggleSwitchProps }
-                  />
-                  <FormControlLabel
-                    control={
-                      <TextField
-                        title={tp.syncFrequency}
-                        value={syncFreq}
-                        onChange={handleSyncFreqChange}
-                        type="number"
-                        inputProps={{
-                          min: 0,
-                          max: 720
-                        }}
-                        InputProps={{
-                          endAdornment: "min",
-                          sx: {
-                            color: 'primary.contrastText'
-                          }
-                        }}
-                        size="small"
-                        sx={ frequencyProps }
-                      />
-                    }
-                    labelPlacement="start"
-                    label={"Frequency:"} // TODO: Translation
-                    sx={{ marginLeft: '2em' }}
-                    disabled={!sync}
-                  />
-                </FormGroup>
-              </DeleteExpansion>
-            )}
-        </Box>
-        <Box id="profileMain" sx={profileMainProps}>
+                  <Typography 
+                    variant="h6" 
+                    sx={{ 
+                      borderBottom: '1px solid', 
+                      borderColor: 'primary.contrastText', 
+                      textAlign: 'left' 
+                    }}
+                  >
+                    Additional Settings {/*TODO: Translation*/}
+                  </Typography>
+                  <FormGroup
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start'
+                    }}
+                  >
+                    <FormControlLabel
+                      control={
+                        <Switch defaultChecked
+                          onChange={handleSyncFreqSwitch}
+                        />
+                      }
+                      labelPlacement="start"
+                      label="Enable Data Sync:" // TODO: Setup translation for this
+                      sx={ toggleSwitchProps }
+                    />
+                    <FormControlLabel
+                      control={
+                        <TextField
+                          title={tp.syncFrequency}
+                          value={syncFreq}
+                          onChange={handleSyncFreqChange}
+                          type="number"
+                          inputProps={{
+                            min: 0,
+                            max: 720
+                          }}
+                          InputProps={{
+                            endAdornment: "min",
+                            sx: {
+                              color: 'primary.contrastText'
+                            }
+                          }}
+                          size="small"
+                          sx={ frequencyProps }
+                        />
+                      }
+                      labelPlacement="start"
+                      label={"Frequency:"} // TODO: Translation
+                      sx={{ marginLeft: '2em' }}
+                      disabled={!sync}
+                    />
+                  </FormGroup>
+                </DeleteExpansion>
+              )}
+          </Box>
+          <Box id="profileMain" sx={profileMainProps}>
           <Grid container sx={{ height: '495px' }}>
             <Grid item xs={12} sx={{ maxWidth: '100%' }}>
               {editUserId && /Add/i.test(editUserId) ? (
@@ -970,7 +1052,14 @@ export function ProfileDialog(props: ProfileDialogProps) {
                 ) : (
                   <Box>
                     <FormControl sx={{ width: '100%'}}>
-                      <FormGroup sx={{ padding: '3px', pb: 2, marginBottom: '30px', width: '100%' }}>
+                      <FormGroup
+                        sx={{
+                          padding: '3px',
+                          pb: 2,
+                          marginBottom: '30px',
+                          width: '100%'
+                        }}
+                      >
                         <FormControlLabel
                           control={
                             <TextField
@@ -986,7 +1075,10 @@ export function ProfileDialog(props: ProfileDialogProps) {
                               onClick={handleNameClick}
                               helperText={
                                 dupName && (
-                                  <Typography color="secondary" variant="caption">
+                                  <Typography 
+                                    color="secondary"
+                                    variant="caption"
+                                  >
                                     {tp.userExists}
                                   </Typography>
                                 )
@@ -1063,7 +1155,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
                               }}
                               required
                             >
-                              {uiLanguages.map((option: string, idx: number) => (
+                              {uiLanguages.map((option: string, idx: number) =>
+                              (
                                 <MenuItem key={'loc' + idx} value={option}>
                                   {langName(locale, option)}
                                 </MenuItem>
@@ -1105,7 +1198,11 @@ export function ProfileDialog(props: ProfileDialogProps) {
                         />
                         {email !== '' && (
                           <FormControlLabel
-                            sx={{...textFieldProps, marginLeft: '-16px', paddingLeft: '0px'}}
+                            sx={{
+                              ...textFieldProps,
+                              marginLeft: '-16px',
+                              paddingLeft: '0px'
+                            }}
                             control={
                               <Checkbox
                                 id="digest"
@@ -1179,7 +1276,11 @@ export function ProfileDialog(props: ProfileDialogProps) {
                         sx={{
                           marginLeft: '0'
                         }}
-                        onClick={currentUser === undefined ? handleAdd : handleSave}
+                        onClick={
+                          currentUser === undefined ?
+                            handleAdd :
+                            handleSave
+                        }
                       >
                         {editUserId && /Add/i.test(editUserId)
                           ? tp.add
@@ -1218,6 +1319,13 @@ export function ProfileDialog(props: ProfileDialogProps) {
               text="Discard unsaved data?"
               yesResponse={handleCancelConfirmed}
               noResponse={handleCancelAborted}
+            />
+          )}
+          {!readOnly && confirmClose && (
+            <Confirm
+              text="Discard unsaved data?"
+              yesResponse={handleCloseConfirmed}
+              noResponse={handleCloseAborted}
             />
           )}
         </Box>
