@@ -136,7 +136,7 @@ const profileEmailProps = {
   marginBottom: '10px'
 } as SxProps;
 
-const editProfileProps = (theme: Theme) => {return {
+const editProfileProps = {
   color: 'secondary.dark', 
   backgroundColor: 'primary.contrastText',
   textTransform: 'capitalize',
@@ -154,8 +154,78 @@ const editProfileProps = (theme: Theme) => {return {
     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
     opacity: '90%'
   }
-} as SxProps};
+} as SxProps;
 
+const deleteUserProps = {
+  color: 'primary.dark', 
+  backgroundColor: 'primary.contrastText',
+  textTransform: 'capitalize',
+  opacity: '100%',
+  width: '120px',
+  marginLeft: 'calc(100% - 25px)',
+  '&.Mui-disabled': {
+    color: 'primary.dark', 
+    backgroundColor: 'primary.contrastText',
+    opacity: '50%',
+    padding: '6px'
+  },
+  '&:hover': {
+    borderColor: 'primary.contrastText',
+    backgroundColor: 'primary.contrastText', 
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+    opacity: '90%'
+  }
+} as SxProps;
+
+const frequencyProps = {
+  marginLeft: '5px',
+  padding: '0px',
+  width: '100%',
+  '& .MuiInputBase-root': {
+    backgroundColor: 'primary.dark', // Background color of the input
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: 'primary.contrastText', // Border color of the input
+    },
+    '&:hover fieldset': {
+      borderColor: 'primary.contrastText', // Border color on hover
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: 'secondary.dark', // Border color when focused
+    },
+    '&.Mui-disabled': {
+      opacity: '75%' // Border opacity when disabled
+    },
+    '&.Mui-disabled:hover fieldset': {
+      borderColor: 'rgba(0, 0, 0, .38)', // Border color remains unchanged on hover when disabled
+    },
+  },
+  '& .MuiInputBase-input': {
+    color: 'primary.contrastText', // Text color of the input
+  },
+  '& .MuiInputAdornment-root': {
+    color: 'primary.contrastText'
+  }
+} as SxProps;
+
+const toggleSwitchProps = {
+  margin: '0px',
+  '& .MuiSwitch-switchBase': {
+    color: 'primary.contrastText', // Color of the thumb when the switch is unchecked
+    '&.Mui-checked': {
+      color: 'primary.contrastText', // Color of the thumb when the switch is checked
+      '& + .MuiSwitch-track': {
+        backgroundColor: 'primary.contrastText', // Color of the track when the switch is checked
+        opacity: '20%'
+      },
+    },
+  },
+  '& .MuiSwitch-track': {
+    backgroundColor: 'secondar.contrastText', // Color of the track when the switch is unchecked
+    opacity: '20%'
+  },
+} as SxProps;
 
 interface IBigAvatarProps {
   avatarUrl: string | null;
@@ -186,7 +256,6 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const t: IMainStrings = useSelector(mainSelector, shallowEqual);
   const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
   const dispatch = useDispatch();
-  const theme = useTheme();
   const setLanguage = (lang: string) => dispatch(action.setLanguage(lang));
   const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [memory] = useGlobal('memory');
@@ -679,7 +748,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                 <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
               </Box>
               <Caption sx={profileEmailProps} >{email || ''}</Caption>
-              <Button disabled={!readOnly} variant="contained" onClick={onEditClicked} sx={editProfileProps(theme)}>Edit Profile</Button> {/* TODO: Translation*/}
+              <Button disabled={!readOnly} variant="contained" onClick={onEditClicked} sx={editProfileProps}>Edit Profile</Button> {/* TODO: Translation*/}
               <ParatextLinkedButton setView={setView}/>
             </StyledGrid>
             {!readOnly && (!isOffline || offlineOnly) &&
@@ -694,8 +763,17 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   icon={(<ExpandMoreIcon sx={{ color: 'primary.contrastText', rotate: '180deg' }} />)}
                   SummaryProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
                   DetailsProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
-                  DeleteButtonProps={{  }}
+                  DeleteButtonProps={ deleteUserProps }
                   DeleteButtonLabel='Delete User' // TODO: Translation
+                  DangerProps={{ marginTop: '3px', textAlign: 'left', color: 'primary.contrastText' }}
+                  DangerHeader='h6'
+                  DangerHeaderProps={{ 
+                    borderBottom: '1px solid', 
+                    borderColor: 'primary.contrastText', 
+                    textAlign: 'left',
+                    color: 'primary.contrastText',
+                    marginTop: '2em'
+                  }}
                 >
                   <Typography 
                     variant="h6" 
@@ -722,23 +800,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       }
                       labelPlacement="start"
                       label="Enable Data Sync:" // TODO: Setup translation for this
-                      sx={{
-                        margin: '0px',
-                        '& .MuiSwitch-switchBase': {
-                          color: 'primary.contrastText', // Color of the thumb when the switch is unchecked
-                          '&.Mui-checked': {
-                            color: 'primary.contrastText', // Color of the thumb when the switch is checked
-                            '& + .MuiSwitch-track': {
-                              backgroundColor: 'primary.contrastText', // Color of the track when the switch is checked
-                              opacity: '20%'
-                            },
-                          },
-                        },
-                        '& .MuiSwitch-track': {
-                          backgroundColor: 'secondar.contrastText', // Color of the track when the switch is unchecked
-                          opacity: '20%'
-                        },
-                      }}
+                      sx={ toggleSwitchProps }
                     />
                     <FormControlLabel
                       control={
@@ -758,37 +820,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                             }
                           }}
                           size="small"
-                          sx={{
-                            marginLeft: '5px',
-                            padding: '0px',
-                            width: '100%',
-                            '& .MuiInputBase-root': {
-                              backgroundColor: 'primary.dark', // Background color of the input
-                            },
-                            '& .MuiOutlinedInput-root': {
-                              '& fieldset': {
-                                borderColor: 'primary.contrastText', // Border color of the input
-                              },
-                              '&:hover fieldset': {
-                                borderColor: 'primary.contrastText', // Border color on hover
-                              },
-                              '&.Mui-focused fieldset': {
-                                borderColor: 'secondary.dark', // Border color when focused
-                              },
-                              '&.Mui-disabled': {
-                                opacity: '75%' // Border opacity when disabled
-                              },
-                              '&.Mui-disabled:hover fieldset': {
-                                borderColor: 'rgba(0, 0, 0, .38)', // Border color remains unchanged on hover when disabled
-                              },
-                            },
-                            '& .MuiInputBase-input': {
-                              color: 'primary.contrastText', // Text color of the input
-                            },
-                            '& .MuiInputAdornment-root': {
-                              color: 'primary.contrastText'
-                            }
-                          }}
+                          sx={ frequencyProps }
                         />
                       }
                       labelPlacement="start"
