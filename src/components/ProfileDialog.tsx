@@ -28,6 +28,7 @@ import {
   IconButton,
   Skeleton,
   Switch,
+  InputAdornment,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
@@ -655,7 +656,7 @@ function EditProfileView(props: IEditProfileView) {
         currentUser.attributes?.name !== currentUser.attributes?.email && (
           <DeleteExpansion
             title={""}
-            explain={"The following action cannot be undone:"} // TODO: Setup translation for this
+            explain={"The following action cannot be undone:"} // TODO: Translation
             handleDelete={handleDelete}
             inProgress={deleteItem !== ''}
             icon={(<ExpandMoreIcon sx={{ color: 'primary.contrastText', rotate: '180deg' }} />)}
@@ -664,42 +665,105 @@ function EditProfileView(props: IEditProfileView) {
             DeleteButtonProps={{  }}
             DeleteButtonLabel='Delete User' // TODO: Translation
           >
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                borderBottom: '1px solid', 
+                borderColor: 'primary.contrastText', 
+                textAlign: 'left' 
+              }}
+            >
+              Additional Settings {/*TODO: Translation*/}
+            </Typography>
             <FormGroup
               sx={{
                 display: 'flex',
                 flexDirection: 'row',
                 flexGrow: 1,
-                paddingLeft: '20px',
               }}
             >
               <FormControlLabel
+                labelPlacement="start"
                 control={
                   <Switch defaultChecked
                     onChange={handleSyncFreqSwitch}
                   />
                 }
-                label="Enable Data Sync" // TODO: Setup translation for this
+                label="Enable Data Sync: " // TODO: Setup translation for this
+                sx={{
+                  margin: '0px',
+                  '& .MuiSwitch-switchBase': {
+                    color: 'primary.contrastText', // Color of the thumb when the switch is unchecked
+                    '&.Mui-checked': {
+                      color: 'primary.contrastText', // Color of the thumb when the switch is checked
+                      '& + .MuiSwitch-track': {
+                        backgroundColor: 'primary.contrastText', // Color of the track when the switch is checked
+                        opacity: '20%'
+                      },
+                    },
+                  },
+                  '& .MuiSwitch-track': {
+                    backgroundColor: 'secondar.contrastText', // Color of the track when the switch is unchecked
+                    opacity: '20%'
+                  },
+                }}
               />
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <TextField
-                      title={tp.syncFrequency}
-                      value={syncFreq}
-                      onChange={handleSyncFreqChange}
-                      type="number"
-                      inputProps={{
-                        min: 0,
-                        max: 720
-                      }}
-                      size="small"
-                      style={{ margin: '8px' }}
-                    />
-                  }
-                  label={tp.syncFrequency}
-                  disabled={!sync}
-                />
-              </FormGroup>
+              <FormControlLabel
+                labelPlacement="start"
+                sx={{ marginLeft: '2em' }}
+                control={
+                  <TextField
+                    title={tp.syncFrequency}
+                    value={syncFreq}
+                    onChange={handleSyncFreqChange}
+                    InputProps={{
+                      endAdornment: "min",
+                      sx: {
+                        color: 'primary.contrastText'
+                      }
+                    }}
+                    type="number"
+                    inputProps={{
+                      min: 0,
+                      max: 720
+                    }}
+                    size="small"
+                    sx={{
+                      marginLeft: '5px',
+                      padding: '0px',
+                      width: '100%',
+                      '& .MuiInputBase-root': {
+                        backgroundColor: 'primary.dark', // Background color of the input
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: 'primary.contrastText', // Border color of the input
+                        },
+                        '&:hover fieldset': {
+                          borderColor: 'primary.contrastText', // Border color on hover
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: 'secondary.dark', // Border color when focused
+                        },
+                        '&.Mui-disabled': {
+                          opacity: '75%' // Border opacity when disabled
+                        },
+                        '&.Mui-disabled:hover fieldset': {
+                          borderColor: 'rgba(0, 0, 0, .38)', // Border color remains unchanged on hover when disabled
+                        },
+                      },
+                      '& .MuiInputBase-input': {
+                        color: 'primary.contrastText', // Text color of the input
+                      },
+                      '& .MuiInputAdornment-root': {
+                        color: 'primary.contrastText'
+                      }
+                    }}
+                  />
+                }
+                label={"Frequency: "}
+                disabled={!sync}
+              />
             </FormGroup>
           </DeleteExpansion>
         )}
