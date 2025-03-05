@@ -246,7 +246,18 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const toolId = 'profile';
   const saving = useRef(false);
   const [confirmCancel, setConfirmCancel] = useState<string>();
+  const [confirmClose, setConfirmClose] = useState<string>();
   const waitForRemoteQueue = useWaitForRemoteQueue();
+
+  const doClose = () => {
+      const view = localStorage.getItem(localUserKey(LocalKey.url));
+      if (view && !/Profile/i.test(view)) {
+        setView(view);
+      } else {
+        setView('/team');
+      }
+      onClose();
+    };
 
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
@@ -461,6 +472,31 @@ export function ProfileDialog(props: ProfileDialogProps) {
     }
   };
 
+  const resetUserData = () => {
+    let attr = currentUser?.attributes;
+    if (!attr) return;
+    setName(attr.name !== attr.email ? attr.name : '');
+    setGiven(attr.givenName ? attr.givenName : '');
+    setFamily(attr.familyName ? attr.familyName : '');
+    setEmail(attr.email.toLowerCase());
+    setPhone(attr.phone);
+    setTimezone(attr.timezone || '');
+    setLocale(
+      attr.locale ? attr.locale : localeDefault(isDeveloper === 'true')
+    );
+    setNews(attr.newsPreference);
+    setSharedContent(attr.sharedContentCreator ?? false);
+    setDigest(attr.digestPreference);
+    setLocked(true);
+    setBcp47(attr.uilanguagebcp47);
+    setTimerDir(attr.timercountUp);
+    setSpeed(attr.playbackSpeed);
+    setProgBar(attr.progressbarTypeid);
+    setHotKeys(attr.hotKeys);
+    setAvatarUrl(attr.avatarUrl);
+    setSyncFreq(getSyncFreq(attr.hotKeys));
+  }
+
   const handleCancel = () => {
     if (myChanged) {
       const defLocale =
@@ -491,11 +527,32 @@ export function ProfileDialog(props: ProfileDialogProps) {
         return;
       }
     }
+    resetUserData();
     setReadOnly(true);
   };
 
   const handleCancelAborted = () => {
     setConfirmCancel(undefined);
+  };
+
+  const handleCloseConfirmed = () => {
+    setConfirmClose(undefined);
+    toolChanged(toolId, false);
+    if (getGlobal('editUserId')) {
+      setEditUserId(null);
+      const userId = localStorage.getItem(LocalKey.userId);
+      if (!userId && offlineOnly) {
+        setView('Logout');
+        return;
+      }
+    }
+    resetUserData();
+    doClose();
+    setReadOnly(true);
+  };
+
+  const handleCloseAborted = () => {
+    setConfirmClose(undefined);
   };
 
   const handleDelete = () => {
@@ -627,13 +684,16 @@ export function ProfileDialog(props: ProfileDialogProps) {
     // return <StickyRedirect to={view} />;
   }
 
-  const handleClose = () => onClose();
+  const handleClose = () => {
+    if (myChanged) {
+      setConfirmClose(tp.discardChanges);
+    } else handleCloseConfirmed();
+  };
 
   useEffect(() => setReadOnly(readOnlyMode ? true : false), [readOnlyMode]);
 
   const onEditClicked = () => {
     setReadOnly(false);
-    console.log("test");
   };
 
   return (
@@ -694,7 +754,6 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   icon={(<ExpandMoreIcon sx={{ color: 'primary.contrastText', rotate: '180deg' }} />)}
                   SummaryProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
                   DetailsProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
-                  DeleteButtonProps={{  }}
                   DeleteButtonLabel='Delete User' // TODO: Translation
                 >
                   <Typography 
@@ -1147,6 +1206,13 @@ export function ProfileDialog(props: ProfileDialogProps) {
               text="Discard unsaved data?"
               yesResponse={handleCancelConfirmed}
               noResponse={handleCancelAborted}
+            />
+          )}
+          {!readOnly && confirmClose && (
+            <Confirm
+              text="Discard unsaved data?"
+              yesResponse={handleCloseConfirmed}
+              noResponse={handleCloseAborted}
             />
           )}
         </Box>
