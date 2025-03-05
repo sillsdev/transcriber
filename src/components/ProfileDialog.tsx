@@ -83,7 +83,7 @@ const selectProps = {
 } as SxProps;
 
 const menuProps = {
-  width: '200px',
+  width: '100px',
   "&:has([readOnly]) ": {
     "& .MuiSvgIcon-root-MuiSelect-icon": {
       display: 'none'
@@ -103,7 +103,8 @@ const profileContentProps = {
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'wrap',
-  padding: '0px'
+  padding: '0px',
+  margin: '0px'
 } as SxProps;
 
 const profilePanelProps = {
@@ -118,7 +119,7 @@ const profilePanelProps = {
 
 const profileMainProps = {
   display: 'flex',
-  flex: '1 1 54%', //figure out why its 54% and not 60%
+  flex: '1 1 calc(60% - 40px)',
   flexDirection: 'column',
   maxWidth: '100%',
   justifyContent: 'center',
@@ -713,6 +714,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
       scroll={'paper'}
       disableEnforceFocus
       maxWidth="md"
+      fullWidth
     >
       <DialogTitle
         id="profileDlg"
@@ -735,112 +737,118 @@ export function ProfileDialog(props: ProfileDialogProps) {
           <CloseIcon></CloseIcon>
         </IconButton>}
       </DialogTitle>
-      <DialogContent id="profileContent" 
-        sx={profileContentProps}>
-          <Box id="profilePanel" sx={profilePanelProps}>
-            <StyledGrid item xs={12} md={5} height='100%' sx={{ margin: '30px 0px' }}>
-              <Box sx= {{ width: '150px',
-                          height: '150px',
-                          borderRadius: '50%', 
-                          border: '0.5px solid rgb(255, 255, 255, 0.5)',
-                          padding: '17px',
-                          margin: '1% auto 1% auto' }}>
-                <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-              </Box>
-              <Caption sx={profileEmailProps} >{email || ''}</Caption>
-              {readOnlyMode && <Button disabled={!readOnly} variant="contained" onClick={onEditClicked} sx={editProfileProps}>Edit Profile</Button>} {/* TODO: Translation*/}
-              <ParatextLinkedButton setView={setView}/>
-            </StyledGrid>
-            {!readOnly && (!isOffline || offlineOnly) &&
-              !editUserId &&
-              currentUser &&
-              currentUser.attributes?.name !== currentUser.attributes?.email && (
-                <DeleteExpansion
-                  title={""}
-                  explain={"The following action cannot be undone:"} // TODO: Setup translation for this
-                  handleDelete={handleDelete}
-                  inProgress={deleteItem !== ''}
-                  icon={(<ExpandMoreIcon sx={{ color: 'primary.contrastText', rotate: '180deg' }} />)}
-                  SummaryProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
-                  DetailsProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
-                  DeleteButtonProps={ deleteUserProps }
-                  ButtonBoxProps={{ alignSelf: 'flex-end' }}
-                  DeleteButtonLabel='Delete User' // TODO: Translation
-                  DangerProps={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flexGrow: 1,
-                    marginTop: '3px',
-                    textAlign: 'left',
-                    color: 'primary.contrastText'
-                  }}
-                  DangerHeader='h6'
-                  DangerHeaderProps={{ 
+      <DialogContent id="profileContent" sx={profileContentProps}>
+        <Box id="profilePanel" sx={profilePanelProps}>
+          <StyledGrid item xs={12} height='100%' sx={{ margin: '30px 0px' }}>
+            <Box sx= {{ width: '150px',
+                        height: '150px',
+                        borderRadius: '50%', 
+                        border: '0.5px solid rgb(255, 255, 255, 0.5)',
+                        padding: '17px',
+                        margin: '1% auto 1% auto' }}>
+              <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+            </Box>
+            <Caption sx={profileEmailProps} >{email || ''}</Caption>
+            {readOnlyMode && <Button 
+                  disabled={!readOnly} 
+                  variant="contained" 
+                  onClick={onEditClicked} 
+                  sx={editProfileProps}
+                >
+                  Edit Profile
+              </Button>} {/* TODO: Translation*/}
+            <ParatextLinkedButton setView={setView}/>
+          </StyledGrid>
+          {!readOnly && (!isOffline || offlineOnly) &&
+            !editUserId &&
+            currentUser &&
+            currentUser.attributes?.name !== currentUser.attributes?.email && (
+              <DeleteExpansion
+                title={""}
+                explain={"The following action cannot be undone:"} // TODO: Setup translation for this
+                handleDelete={handleDelete}
+                inProgress={deleteItem !== ''}
+                icon={(<ExpandMoreIcon sx={{ color: 'primary.contrastText', rotate: '180deg' }} />)}
+                SummaryProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
+                DetailsProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
+                DeleteButtonProps={ deleteUserProps }
+                ButtonBoxProps={{ alignSelf: 'flex-end' }}
+                DeleteButtonLabel='Delete User' // TODO: Translation
+                DangerProps={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flexGrow: 1,
+                  marginTop: '3px',
+                  textAlign: 'left',
+                  color: 'primary.contrastText'
+                }}
+                DangerHeader='h6'
+                DangerHeaderProps={{ 
+                  borderBottom: '1px solid', 
+                  borderColor: 'primary.contrastText', 
+                  textAlign: 'left',
+                  color: 'primary.contrastText',
+                  marginTop: '2em'
+                }}
+              >
+                <Typography 
+                  variant="h6" 
+                  sx={{ 
                     borderBottom: '1px solid', 
                     borderColor: 'primary.contrastText', 
-                    textAlign: 'left',
-                    color: 'primary.contrastText',
-                    marginTop: '2em'
+                    textAlign: 'left' 
                   }}
                 >
-                  <Typography 
-                    variant="h6" 
-                    sx={{ 
-                      borderBottom: '1px solid', 
-                      borderColor: 'primary.contrastText', 
-                      textAlign: 'left' 
-                    }}
-                  >
-                    Additional Settings {/*TODO: Translation*/}
-                  </Typography>
-                  <FormGroup
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-start'
-                    }}
-                  >
-                    <FormControlLabel
-                      control={
-                        <Switch defaultChecked
-                          onChange={handleSyncFreqSwitch}
-                        />
-                      }
-                      labelPlacement="start"
-                      label="Enable Data Sync:" // TODO: Setup translation for this
-                      sx={ toggleSwitchProps }
-                    />
-                    <FormControlLabel
-                      control={
-                        <TextField
-                          title={tp.syncFrequency}
-                          value={syncFreq}
-                          onChange={handleSyncFreqChange}
-                          type="number"
-                          inputProps={{
-                            min: 0,
-                            max: 720
-                          }}
-                          InputProps={{
-                            endAdornment: "min",
-                            sx: {
-                              color: 'primary.contrastText'
-                            }
-                          }}
-                          size="small"
-                          sx={ frequencyProps }
-                        />
-                      }
-                      labelPlacement="start"
-                      label={"Frequency:"} // TODO: Translation
-                      sx={{ marginLeft: '2em' }}
-                      disabled={!sync}
-                    />
-                  </FormGroup>
-                </DeleteExpansion>
-              )}
-          </Box>
-          <Box id="profileMain" sx={profileMainProps}>
+                  Additional Settings {/*TODO: Translation*/}
+                </Typography>
+                <FormGroup
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'flex-start'
+                  }}
+                >
+                  <FormControlLabel
+                    control={
+                      <Switch defaultChecked
+                        onChange={handleSyncFreqSwitch}
+                      />
+                    }
+                    labelPlacement="start"
+                    label="Enable Data Sync:" // TODO: Setup translation for this
+                    sx={ toggleSwitchProps }
+                  />
+                  <FormControlLabel
+                    control={
+                      <TextField
+                        title={tp.syncFrequency}
+                        value={syncFreq}
+                        onChange={handleSyncFreqChange}
+                        type="number"
+                        inputProps={{
+                          min: 0,
+                          max: 720
+                        }}
+                        InputProps={{
+                          endAdornment: "min",
+                          sx: {
+                            color: 'primary.contrastText'
+                          }
+                        }}
+                        size="small"
+                        sx={ frequencyProps }
+                      />
+                    }
+                    labelPlacement="start"
+                    label={"Frequency:"} // TODO: Translation
+                    sx={{ marginLeft: '2em' }}
+                    disabled={!sync}
+                  />
+                </FormGroup>
+              </DeleteExpansion>
+            )}
+        </Box>
+        <Box id="profileMain" sx={profileMainProps}>
           <Grid container sx={{ height: '495px' }}>
             <Grid item xs={12} sx={{ maxWidth: '100%' }}>
               {editUserId && /Add/i.test(editUserId) ? (
