@@ -832,21 +832,41 @@ export function ProfileDialog(props: ProfileDialogProps) {
                 <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
               </Box>
               <Caption sx={profileEmailProps} >{email || ''}</Caption>
-              <Button disabled={!readOnly} variant="contained" onClick={onEditClicked} sx={editProfileProps}>Edit Profile</Button> {/* TODO: Translation*/}
+              <Button disabled={!readOnly}
+                variant="contained"
+                onClick={onEditClicked}
+                sx={editProfileProps}
+              >
+                Edit Profile
+              </Button> {/* TODO: Translation*/}
               <ParatextLinkedButton setView={setView}/>
             </StyledGrid>
             {!readOnly && (!isOffline || offlineOnly) &&
               !editUserId &&
               currentUser &&
-              currentUser.attributes?.name !== currentUser.attributes?.email && (
+              currentUser.attributes?.name !== currentUser.attributes?.email &&
+              (
                 <DeleteExpansion
                   title={""}
                   explain={"The following action cannot be undone:"} // TODO: Setup translation for this
                   handleDelete={handleDelete}
                   inProgress={deleteItem !== ''}
-                  icon={(<ExpandMoreIcon sx={{ color: 'primary.contrastText', rotate: '180deg' }} />)}
-                  SummaryProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
-                  DetailsProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
+                  icon={(
+                    <ExpandMoreIcon 
+                      sx={{
+                        color: 'primary.contrastText',
+                        rotate: '180deg'
+                      }}
+                    />
+                  )}
+                  SummaryProps={{
+                    backgroundColor: 'primary.dark',
+                    color: 'primary.contrastText'
+                  }}
+                  DetailsProps={{
+                    backgroundColor: 'primary.dark',
+                    color: 'primary.contrastText'
+                  }}
                   DeleteButtonProps={ deleteUserProps }
                   ButtonBoxProps={{ alignSelf: 'flex-end' }}
                   DeleteButtonLabel='Delete User' // TODO: Translation
