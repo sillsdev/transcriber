@@ -712,7 +712,6 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       display: 'flex',
                       flexDirection: 'row',
                       flexGrow: 1,
-                      paddingLeft: '20px',
                     }}
                   >
                     <FormControlLabel

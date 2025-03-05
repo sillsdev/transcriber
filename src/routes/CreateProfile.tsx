@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ProfileDialog } from "../components/ProfileDialog";
 import { restoreScroll } from '../utils';
 
