@@ -35,7 +35,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import { styled, alpha, Theme, useTheme } from '@mui/material/styles';
+import { styled, alpha, useTheme } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSnackBar } from '../hoc/SnackBar';
 import { langName, localeDefault, LocalKey, makeAbbr, uiLang, uiLangDev, useMyNavigate, useWaitForRemoteQueue, waitForIt } from '../utils';
@@ -1176,7 +1176,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
           </Grid>
           {!readOnly && deleteItem !== '' && (
             <Confirm
-              text={''}
+              text={tp.deleteExplained + " Are you sure you want to do this? "} // TODO Translate
               yesResponse={handleDeleteConfirmed}
               noResponse={handleDeleteRefused}
             />
