@@ -669,7 +669,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
       <DialogContent id="profileContent" 
         sx={profileContentProps}>
           <Box id="profilePanel" sx={profilePanelProps}>
-            <StyledGrid item xs={12} md={5} height='100%'>
+            <StyledGrid item xs={12} md={5} height='100%' sx={{ margin: '30px 0px' }}>
               <Box sx= {{ width: '150px',
                           height: '150px',
                           borderRadius: '50%', 
