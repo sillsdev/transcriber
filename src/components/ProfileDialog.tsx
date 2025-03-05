@@ -1,5 +1,5 @@
 /* eslint-disable no-template-curly-in-string */
-import React, { useState, useContext, useRef, useEffect, MouseEventHandler} from 'react';
+import React, { useState, useContext, useRef, useEffect} from 'react';
 import { 
   IMainStrings, 
   IProfileStrings, 
@@ -38,7 +38,18 @@ import Typography, { TypographyProps } from '@mui/material/Typography';
 import { styled, alpha, Theme, useTheme } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSnackBar } from '../hoc/SnackBar';
-import { langName, localeDefault, LocalKey, makeAbbr, uiLang, uiLangDev, useMyNavigate, useWaitForRemoteQueue, waitForIt } from '../utils';
+import {
+  langName,
+  localeDefault,
+  LocalKey,
+  localUserKey,
+  makeAbbr,
+  uiLang,
+  uiLangDev,
+  useMyNavigate,
+  useWaitForRemoteQueue,
+  waitForIt
+} from '../utils';
 import { mainSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import ParatextLinkedButton from '../components/ParatextLinkedButton';
@@ -49,9 +60,20 @@ import { useOrbitData } from '../hoc/useOrbitData';
 import { useDispatch } from 'react-redux';
 import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import * as action from '../store';
-import { related, RemoveUserFromOrg, useAddToOrgAndGroup, useRole, useTeamDelete, useUser } from '../crud';
+import {
+  related,
+  RemoveUserFromOrg,
+  useAddToOrgAndGroup,
+  useRole,
+  useTeamDelete,
+  useUser
+} from '../crud';
 import moment from 'moment';
-import { AddRecord, UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
+import {
+  AddRecord,
+  UpdateRecord,
+  UpdateRelatedRecord
+} from '../model/baseModel';
 import SelectRole from '../control/SelectRole';
 import { ActionRow, AltButton, PriButton } from '../control';
 
@@ -739,7 +761,13 @@ export function ProfileDialog(props: ProfileDialogProps) {
                 <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
               </Box>
               <Caption sx={profileEmailProps} >{email || ''}</Caption>
-              <Button disabled={!readOnly} variant="contained" onClick={onEditClicked} sx={editProfileProps(theme)}>Edit Profile</Button> {/* TODO: Translation*/}
+              <Button disabled={!readOnly}
+                variant="contained"
+                onClick={onEditClicked}
+                sx={editProfileProps(theme)}
+              >
+                Edit Profile
+              </Button> {/* TODO: Translation*/}
               <ParatextLinkedButton setView={setView}/>
             </StyledGrid>
             {!readOnly && (!isOffline || offlineOnly) &&
@@ -751,9 +779,22 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   explain={"The following action cannot be undone:"} // TODO: Setup translation for this
                   handleDelete={handleDelete}
                   inProgress={deleteItem !== ''}
-                  icon={(<ExpandMoreIcon sx={{ color: 'primary.contrastText', rotate: '180deg' }} />)}
-                  SummaryProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
-                  DetailsProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
+                  icon={(
+                    <ExpandMoreIcon 
+                      sx={{
+                        color: 'primary.contrastText',
+                        rotate: '180deg'
+                      }}
+                    />
+                  )}
+                  SummaryProps={{
+                    backgroundColor: 'primary.dark',
+                    color: 'primary.contrastText'
+                  }}
+                  DetailsProps={{
+                    backgroundColor: 'primary.dark',
+                    color: 'primary.contrastText'
+                  }}
                   DeleteButtonLabel='Delete User' // TODO: Translation
                 >
                   <Typography 
@@ -958,7 +999,14 @@ export function ProfileDialog(props: ProfileDialogProps) {
                 ) : (
                   <Box>
                     <FormControl sx={{ width: '100%'}}>
-                      <FormGroup sx={{ padding: '3px', pb: 2, marginBottom: '30px', width: '100%' }}>
+                      <FormGroup
+                        sx={{
+                          padding: '3px',
+                          pb: 2,
+                          marginBottom: '30px',
+                          width: '100%'
+                        }}
+                      >
                         <FormControlLabel
                           control={
                             <TextField
@@ -974,7 +1022,10 @@ export function ProfileDialog(props: ProfileDialogProps) {
                               onClick={handleNameClick}
                               helperText={
                                 dupName && (
-                                  <Typography color="secondary" variant="caption">
+                                  <Typography 
+                                    color="secondary"
+                                    variant="caption"
+                                  >
                                     {tp.userExists}
                                   </Typography>
                                 )
@@ -1051,7 +1102,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
                               }}
                               required
                             >
-                              {uiLanguages.map((option: string, idx: number) => (
+                              {uiLanguages.map((option: string, idx: number) =>
+                              (
                                 <MenuItem key={'loc' + idx} value={option}>
                                   {langName(locale, option)}
                                 </MenuItem>
@@ -1093,7 +1145,11 @@ export function ProfileDialog(props: ProfileDialogProps) {
                         />
                         {email !== '' && (
                           <FormControlLabel
-                            sx={{...textFieldProps, marginLeft: '-16px', paddingLeft: '0px'}}
+                            sx={{
+                              ...textFieldProps,
+                              marginLeft: '-16px',
+                              paddingLeft: '0px'
+                            }}
                             control={
                               <Checkbox
                                 id="digest"
@@ -1167,7 +1223,11 @@ export function ProfileDialog(props: ProfileDialogProps) {
                         sx={{
                           marginLeft: '0'
                         }}
-                        onClick={currentUser === undefined ? handleAdd : handleSave}
+                        onClick={
+                          currentUser === undefined ?
+                            handleAdd :
+                            handleSave
+                        }
                       >
                         {editUserId && /Add/i.test(editUserId)
                           ? tp.add
