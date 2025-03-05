@@ -268,7 +268,7 @@ export function UserTable() {
   };
 
   if (/profile/i.test(view)) {
-    navigate('/profile');//  try more with createprofile
+    navigate('/profile');
   }
   return (
     <Box sx={{ display: 'flex' }}>

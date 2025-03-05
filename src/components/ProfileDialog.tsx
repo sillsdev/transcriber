@@ -35,7 +35,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import Confirm from '../components/AlertDialog';
 import Typography, { TypographyProps } from '@mui/material/Typography';
-import { styled, alpha, Theme, useTheme } from '@mui/material/styles';
+import { styled, alpha, useTheme } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
@@ -105,7 +105,7 @@ const selectProps = {
 } as SxProps;
 
 const menuProps = {
-  width: '200px',
+  width: '100px',
   "&:has([readOnly]) ": {
     "& .MuiSvgIcon-root-MuiSelect-icon": {
       display: 'none'
@@ -125,7 +125,8 @@ const profileContentProps = {
   display: 'flex',
   flexDirection: 'row',
   flexWrap: 'wrap',
-  padding: '0px'
+  padding: '0px',
+  margin: '0px'
 } as SxProps;
 
 const profilePanelProps = {
@@ -140,7 +141,7 @@ const profilePanelProps = {
 
 const profileMainProps = {
   display: 'flex',
-  flex: '1 1 54%', //figure out why its 54% and not 60%
+  flex: '1 1 calc(60% - 40px)',
   flexDirection: 'column',
   maxWidth: '100%',
   justifyContent: 'center',
@@ -158,7 +159,7 @@ const profileEmailProps = {
   marginBottom: '10px'
 } as SxProps;
 
-const editProfileProps = (theme: Theme) => {return {
+const editProfileProps = {
   color: 'secondary.dark', 
   backgroundColor: 'primary.contrastText',
   textTransform: 'capitalize',
@@ -176,8 +177,77 @@ const editProfileProps = (theme: Theme) => {return {
     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
     opacity: '90%'
   }
-} as SxProps};
+} as SxProps;
 
+const deleteUserProps = {
+  color: 'primary.dark', 
+  backgroundColor: 'primary.contrastText',
+  textTransform: 'capitalize',
+  opacity: '100%',
+  //marginLeft: 'calc(100% - 25px)',
+  '&.Mui-disabled': {
+    color: 'primary.dark', 
+    backgroundColor: 'primary.contrastText',
+    opacity: '50%',
+    padding: '6px'
+  },
+  '&:hover': {
+    borderColor: 'primary.contrastText',
+    backgroundColor: 'primary.contrastText', 
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+    opacity: '90%'
+  }
+} as SxProps;
+
+const frequencyProps = {
+  marginLeft: '5px',
+  padding: '0px',
+  width: '100%',
+  '& .MuiInputBase-root': {
+    backgroundColor: 'primary.dark', // Background color of the input
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: 'primary.contrastText', // Border color of the input
+    },
+    '&:hover fieldset': {
+      borderColor: 'primary.contrastText', // Border color on hover
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: 'secondary.dark', // Border color when focused
+    },
+    '&.Mui-disabled': {
+      opacity: '75%' // Border opacity when disabled
+    },
+    '&.Mui-disabled:hover fieldset': {
+      borderColor: 'rgba(0, 0, 0, .38)', // Border color remains unchanged on hover when disabled
+    },
+  },
+  '& .MuiInputBase-input': {
+    color: 'primary.contrastText', // Text color of the input
+  },
+  '& .MuiInputAdornment-root': {
+    color: 'primary.contrastText'
+  }
+} as SxProps;
+
+const toggleSwitchProps = {
+  margin: '0px',
+  '& .MuiSwitch-switchBase': {
+    color: 'primary.contrastText', // Color of the thumb when the switch is unchecked
+    '&.Mui-checked': {
+      color: 'primary.contrastText', // Color of the thumb when the switch is checked
+      '& + .MuiSwitch-track': {
+        backgroundColor: 'primary.contrastText', // Color of the track when the switch is checked
+        opacity: '20%'
+      },
+    },
+  },
+  '& .MuiSwitch-track': {
+    backgroundColor: 'secondar.contrastText', // Color of the track when the switch is unchecked
+    opacity: '20%'
+  },
+} as SxProps;
 
 interface IBigAvatarProps {
   avatarUrl: string | null;
@@ -208,7 +278,6 @@ export function ProfileDialog(props: ProfileDialogProps) {
   const t: IMainStrings = useSelector(mainSelector, shallowEqual);
   const tp: IProfileStrings = useSelector(profileSelector, shallowEqual);
   const dispatch = useDispatch();
-  const theme = useTheme();
   const setLanguage = (lang: string) => dispatch(action.setLanguage(lang));
   const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [memory] = useGlobal('memory');
@@ -727,6 +796,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
       scroll={'paper'}
       disableEnforceFocus
       maxWidth="md"
+      fullWidth
     >
       <DialogTitle
         id="profileDlg"
@@ -741,17 +811,18 @@ export function ProfileDialog(props: ProfileDialogProps) {
         }}
       >
         {t.myAccount}
-        <IconButton
+        {readOnlyMode && 
+         <IconButton
           aria-label="close"
           onClick={handleClose}
           sx={{ color: 'secondary.contrastText' }}>
           <CloseIcon></CloseIcon>
-        </IconButton>
+        </IconButton>}
       </DialogTitle>
       <DialogContent id="profileContent" 
         sx={profileContentProps}>
           <Box id="profilePanel" sx={profilePanelProps}>
-            <StyledGrid item xs={12} md={5} height='100%'>
+            <StyledGrid item xs={12} md={5} height='100%' margin={'30px 0px'}>
               <Box sx= {{ width: '150px',
                           height: '150px',
                           borderRadius: '50%', 
@@ -761,13 +832,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                 <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
               </Box>
               <Caption sx={profileEmailProps} >{email || ''}</Caption>
-              <Button disabled={!readOnly}
-                variant="contained"
-                onClick={onEditClicked}
-                sx={editProfileProps(theme)}
-              >
-                Edit Profile
-              </Button> {/* TODO: Translation*/}
+              <Button disabled={!readOnly} variant="contained" onClick={onEditClicked} sx={editProfileProps}>Edit Profile</Button> {/* TODO: Translation*/}
               <ParatextLinkedButton setView={setView}/>
             </StyledGrid>
             {!readOnly && (!isOffline || offlineOnly) &&
@@ -779,23 +844,28 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   explain={"The following action cannot be undone:"} // TODO: Setup translation for this
                   handleDelete={handleDelete}
                   inProgress={deleteItem !== ''}
-                  icon={(
-                    <ExpandMoreIcon 
-                      sx={{
-                        color: 'primary.contrastText',
-                        rotate: '180deg'
-                      }}
-                    />
-                  )}
-                  SummaryProps={{
-                    backgroundColor: 'primary.dark',
-                    color: 'primary.contrastText'
-                  }}
-                  DetailsProps={{
-                    backgroundColor: 'primary.dark',
-                    color: 'primary.contrastText'
-                  }}
+                  icon={(<ExpandMoreIcon sx={{ color: 'primary.contrastText', rotate: '180deg' }} />)}
+                  SummaryProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
+                  DetailsProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
+                  DeleteButtonProps={ deleteUserProps }
+                  ButtonBoxProps={{ alignSelf: 'flex-end' }}
                   DeleteButtonLabel='Delete User' // TODO: Translation
+                  DangerProps={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flexGrow: 1,
+                    marginTop: '3px',
+                    textAlign: 'left',
+                    color: 'primary.contrastText'
+                  }}
+                  DangerHeader='h6'
+                  DangerHeaderProps={{ 
+                    borderBottom: '1px solid', 
+                    borderColor: 'primary.contrastText', 
+                    textAlign: 'left',
+                    color: 'primary.contrastText',
+                    marginTop: '2em'
+                  }}
                 >
                   <Typography 
                     variant="h6" 
@@ -810,7 +880,8 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   <FormGroup
                     sx={{
                       display: 'flex',
-                      flexDirection: 'row',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
                       flexGrow: 1,
                       paddingLeft: '20px',
                     }}
@@ -823,23 +894,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       }
                       labelPlacement="start"
                       label="Enable Data Sync:" // TODO: Setup translation for this
-                      sx={{
-                        margin: '0px',
-                        '& .MuiSwitch-switchBase': {
-                          color: 'primary.contrastText', // Color of the thumb when the switch is unchecked
-                          '&.Mui-checked': {
-                            color: 'primary.contrastText', // Color of the thumb when the switch is checked
-                            '& + .MuiSwitch-track': {
-                              backgroundColor: 'primary.contrastText', // Color of the track when the switch is checked
-                              opacity: '20%'
-                            },
-                          },
-                        },
-                        '& .MuiSwitch-track': {
-                          backgroundColor: 'secondar.contrastText', // Color of the track when the switch is unchecked
-                          opacity: '20%'
-                        },
-                      }}
+                      sx={ toggleSwitchProps }
                     />
                     <FormControlLabel
                       control={
@@ -859,37 +914,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                             }
                           }}
                           size="small"
-                          sx={{
-                            marginLeft: '5px',
-                            padding: '0px',
-                            width: '100%',
-                            '& .MuiInputBase-root': {
-                              backgroundColor: 'primary.dark', // Background color of the input
-                            },
-                            '& .MuiOutlinedInput-root': {
-                              '& fieldset': {
-                                borderColor: 'primary.contrastText', // Border color of the input
-                              },
-                              '&:hover fieldset': {
-                                borderColor: 'primary.contrastText', // Border color on hover
-                              },
-                              '&.Mui-focused fieldset': {
-                                borderColor: 'secondary.dark', // Border color when focused
-                              },
-                              '&.Mui-disabled': {
-                                opacity: '75%' // Border opacity when disabled
-                              },
-                              '&.Mui-disabled:hover fieldset': {
-                                borderColor: 'rgba(0, 0, 0, .38)', // Border color remains unchanged on hover when disabled
-                              },
-                            },
-                            '& .MuiInputBase-input': {
-                              color: 'primary.contrastText', // Text color of the input
-                            },
-                            '& .MuiInputAdornment-root': {
-                              color: 'primary.contrastText'
-                            }
-                          }}
+                          sx={ frequencyProps }
                         />
                       }
                       labelPlacement="start"
@@ -903,7 +928,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
           </Box>
           <Box id="profileMain" sx={profileMainProps}>
           <Grid container sx={{ height: '495px' }}>
-            <Grid item xs={12} md={7} sx={{ maxWidth: '100%' }}>
+            <Grid item xs={12} sx={{ maxWidth: '100%' }}>
               {editUserId && /Add/i.test(editUserId) ? (
                 <Typography variant="h6">{tp.addMember}</Typography>
               ) : userNotComplete() ? (
@@ -1256,7 +1281,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
           </Grid>
           {!readOnly && deleteItem !== '' && (
             <Confirm
-              text={''}
+              text={tp.deleteExplained + " Are you sure you want to do this? "} // TODO Translate
               yesResponse={handleDeleteConfirmed}
               noResponse={handleDeleteRefused}
             />
