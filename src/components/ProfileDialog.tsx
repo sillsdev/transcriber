@@ -728,12 +728,13 @@ export function ProfileDialog(props: ProfileDialogProps) {
         }}
       >
         {t.myAccount}
-        <IconButton
+        {readOnlyMode && 
+         <IconButton
           aria-label="close"
           onClick={handleClose}
           sx={{ color: 'secondary.contrastText' }}>
           <CloseIcon></CloseIcon>
-        </IconButton>
+        </IconButton>}
       </DialogTitle>
       <DialogContent id="profileContent" 
         sx={profileContentProps}>
@@ -748,7 +749,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                 <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
               </Box>
               <Caption sx={profileEmailProps} >{email || ''}</Caption>
-              <Button disabled={!readOnly} variant="contained" onClick={onEditClicked} sx={editProfileProps}>Edit Profile</Button> {/* TODO: Translation*/}
+              {readOnlyMode && <Button disabled={!readOnly} variant="contained" onClick={onEditClicked} sx={editProfileProps}>Edit Profile</Button>} {/* TODO: Translation*/}
               <ParatextLinkedButton setView={setView}/>
             </StyledGrid>
             {!readOnly && (!isOffline || offlineOnly) &&
