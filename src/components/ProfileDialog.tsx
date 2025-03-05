@@ -114,7 +114,8 @@ const profilePanelProps = {
   justifyContent: 'center',
   maxWidth: '100%',
   backgroundColor: 'secondary.dark',
-  textAlign: 'center'
+  textAlign: 'center',
+  position: 'relative'
 } as SxProps;
 
 const profileMainProps = {
@@ -166,8 +167,7 @@ const deleteUserProps = {
   '&.Mui-disabled': {
     color: 'primary.dark', 
     backgroundColor: 'primary.contrastText',
-    opacity: '50%',
-    padding: '6px'
+    opacity: '50%'
   },
   '&:hover': {
     borderColor: 'primary.contrastText',
@@ -768,9 +768,28 @@ export function ProfileDialog(props: ProfileDialogProps) {
                 explain={"The following action cannot be undone:"} // TODO: Setup translation for this
                 handleDelete={handleDelete}
                 inProgress={deleteItem !== ''}
-                icon={(<ExpandMoreIcon sx={{ color: 'primary.contrastText', rotate: '180deg' }} />)}
-                SummaryProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
-                DetailsProps={{ backgroundColor: 'primary.dark', color: 'primary.contrastText' }}
+                icon={(<ExpandMoreIcon 
+                  sx={{ 
+                    color: 'primary.contrastText',
+                    transform: 'rotate(180deg)'
+                  }} 
+                />)}
+                SummaryProps={{ 
+                  backgroundColor: 'primary.dark', 
+                  color: 'primary.contrastText',
+                  display: 'flex',
+                  position: 'absolute',
+                  bottom: '0px',
+                  width: '100%',
+                  zIndex: '2'
+                 }}
+                DetailsProps={{ 
+                  backgroundColor: 'primary.dark', 
+                  color: 'primary.contrastText', 
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: '8px 16px 64px'
+                }}
                 DeleteButtonProps={ deleteUserProps }
                 ButtonBoxProps={{ alignSelf: 'flex-end' }}
                 DeleteButtonLabel='Delete User' // TODO: Translation
@@ -789,6 +808,11 @@ export function ProfileDialog(props: ProfileDialogProps) {
                   textAlign: 'left',
                   color: 'primary.contrastText',
                   marginTop: '2em'
+                }}
+                BoxProps={{
+                  width: '100%',
+                  position: 'absolute', 
+                  bottom: '0px'
                 }}
               >
                 <Typography 

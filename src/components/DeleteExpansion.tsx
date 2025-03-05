@@ -39,6 +39,7 @@ interface IProps {
   DetailsProps?: SxProps<Theme>;
   DeleteButtonProps?: SxProps<Theme>;
   ButtonBoxProps?: SxProps<Theme>;
+  BoxProps?: SxProps<Theme>;
   DeleteButtonLabel?: string;
   children?: any;
 }
@@ -46,12 +47,12 @@ interface IProps {
 export function DeleteExpansion(props: IProps) {
   const { handleDelete, title, explain, inProgress, icon, SummaryProps, 
           DangerHeader, DangerHeaderProps, DangerProps, DetailsProps, 
-          DeleteButtonProps, ButtonBoxProps,
+          DeleteButtonProps, ButtonBoxProps, BoxProps,
           DeleteButtonLabel, children } = props;
   const t: IDeleteExpansionStrings = useSelector(deleteExpandSelector);
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={BoxProps || { width: '100%' }}>
       <Accordion>
         <AccordionSummary
           expandIcon={ icon || <ExpandMoreIcon/>}
