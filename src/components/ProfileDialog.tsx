@@ -380,7 +380,7 @@ function EditProfileView(props: IEditProfileView) {
             } as UserD,
             currentUser !== undefined ? currentUser.id : ''
           )
-        // we aren't allowing them to change owner oraganization currently
+        // we aren't allowing them to change owner organization currently
       );
       setLang(locale);
       const mbrRec = getMbrRoleRec(
@@ -634,22 +634,19 @@ function EditProfileView(props: IEditProfileView) {
   return (<DialogContent id="profileContent" 
     sx={profileContentProps}>
     <Box id="profilePanel" sx={profilePanelProps}>
-      <Box sx={{ height: '100%' }}>
-        <StyledGrid item xs={12} md={5}>
-          <Box sx= {{ width: '150px',
-                      height: '150px',
-                      borderRadius: '50%', 
-                      border: '0.5px solid rgb(255, 255, 255, 0.5)',
-                      padding: '17px',
-                      margin: '10% auto 1% auto' }}>
-            <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
-          </Box>
-          <Caption sx={profileEmailProps} >{email || ''}</Caption>
-          <Button disabled variant="contained" sx={editProfileProps(theme)}>Editing Profile</Button> {/* TODO: Translation*/}
-          <ParatextLinkedButton setView={setView} />
-        </StyledGrid>
-      </Box>
-      <Box>
+      <StyledGrid item xs={12} md={5} height={"100%"}>
+        <Box sx= {{ width: '150px',
+                    height: '150px',
+                    borderRadius: '50%', 
+                    border: '0.5px solid rgb(255, 255, 255, 0.5)',
+                    padding: '17px',
+                    margin: '10% auto 1% auto' }}>
+          <BigAvatar avatarUrl={avatarUrl} name={name || ''} />
+        </Box>
+        <Caption sx={profileEmailProps} >{email || ''}</Caption>
+        <Button disabled variant="contained" sx={editProfileProps(theme)}>Editing Profile</Button> {/* TODO: Translation*/}
+        <ParatextLinkedButton setView={setView} />
+      </StyledGrid>
         {(!isOffline || offlineOnly) &&
         !editUserId &&
         currentUser &&
@@ -768,7 +765,6 @@ function EditProfileView(props: IEditProfileView) {
           </DeleteExpansion>
         )}
       </Box>
-    </Box>
     <Box id="profileMain" 
       sx={profileMainProps}>
       
@@ -1143,7 +1139,6 @@ function ReadProfileView(props: IReadProfileViewProps) {
     currentUser === undefined ||
     currentUser.attributes?.name.toLowerCase() ===
     currentUser.attributes?.email.toLowerCase();
-
   return (<DialogContent id="profileContent" 
     sx={profileContentProps}>
     <Box id="profilePanel"
@@ -1165,90 +1160,90 @@ function ReadProfileView(props: IReadProfileViewProps) {
     <Box id="profileMain" 
       sx={profileMainProps}>
       <Grid container sx={{ height: '495px' }}>
-      <Grid item xs={12} md={7}>
-        {editUserId && /Add/i.test(editUserId) ? (
-          <Typography variant="h6">{tp.addMember}</Typography>
-        ) : userNotComplete() ? (
-          <Typography variant="h6">{tp.completeProfile}</Typography>
-        ) : (
-          <Typography variant="h6">{tp.userProfile}</Typography>
-        )}
-        <TextField
-          id="profileName"
-          label={tp.name}
-          sx={textFieldProps}
-          value={name}
-          onClick={handleNameClick}
-          margin="normal"
-          variant="standard"
-          InputProps={{
-            readOnly: true,
-            disableUnderline: true
-          }}
-        />
-        <TextField
-          id="given"
-          label={tp.given}
-          sx={textFieldProps}
-          value={given || ''}
-          margin="normal"
-          variant="standard"
-          InputProps={{
-            readOnly: true,
-            disableUnderline: true
-          }}
-        />
-        <TextField
-          id="family"
-          label={tp.family}
-          sx={textFieldProps}
-          value={family || ''}
-          margin="normal"
-          variant="standard"
-          InputProps={{
-            readOnly: true,
-            disableUnderline: true
-          }}
-        />
-        <TextField
-          id="select-locale"
-          label={tp.locale}
-          sx={selectProps}
-          value={langName(locale, locale)}
-          margin="normal"
-          variant="standard"
-          InputProps={{
-            readOnly: true,
-            disableUnderline: true
-          }}
-        />
-        <TextField
-          id="select-timezone"
-          label={tp.timezone}
-          sx={selectProps}
-          value={timezone}
-          margin="normal"
-          variant="standard"
-          InputProps={{
-            readOnly: true,
-            disableUnderline: true
-          }}
-        />
-        {showDetail && (
+        <Grid item xs={12} md={7}>
+          {editUserId && /Add/i.test(editUserId) ? (
+            <Typography variant="h6">{tp.addMember}</Typography>
+          ) : userNotComplete() ? (
+            <Typography variant="h6">{tp.completeProfile}</Typography>
+          ) : (
+            <Typography variant="h6">{tp.userProfile}</Typography>
+          )}
           <TextField
-          id="phone"
-          label={tp.phone}
-          sx={textFieldProps}
-          value={phone || "none"}
-          margin="normal"
-          variant="standard"
-          InputProps={{
-            readOnly: true,
-            disableUnderline: true
-          }}
-        />
-        )}
-      </Grid>
+            id="profileName"
+            label={tp.name}
+            sx={textFieldProps}
+            value={name}
+            onClick={handleNameClick}
+            margin="normal"
+            variant="standard"
+            InputProps={{
+              readOnly: true,
+              disableUnderline: true
+            }}
+          />
+          <TextField
+            id="given"
+            label={tp.given}
+            sx={textFieldProps}
+            value={given || ''}
+            margin="normal"
+            variant="standard"
+            InputProps={{
+              readOnly: true,
+              disableUnderline: true
+            }}
+          />
+          <TextField
+            id="family"
+            label={tp.family}
+            sx={textFieldProps}
+            value={family || ''}
+            margin="normal"
+            variant="standard"
+            InputProps={{
+              readOnly: true,
+              disableUnderline: true
+            }}
+          />
+          <TextField
+            id="select-locale"
+            label={tp.locale}
+            sx={selectProps}
+            value={langName(locale, locale)}
+            margin="normal"
+            variant="standard"
+            InputProps={{
+              readOnly: true,
+              disableUnderline: true
+            }}
+          />
+          <TextField
+            id="select-timezone"
+            label={tp.timezone}
+            sx={selectProps}
+            value={timezone}
+            margin="normal"
+            variant="standard"
+            InputProps={{
+              readOnly: true,
+              disableUnderline: true
+            }}
+          />
+          {showDetail && (
+            <TextField
+            id="phone"
+            label={tp.phone}
+            sx={textFieldProps}
+            value={phone || "none"}
+            margin="normal"
+            variant="standard"
+            InputProps={{
+              readOnly: true,
+              disableUnderline: true
+            }}
+          />
+          )}
+        </Grid>
     </Grid>
     </Box>
   </DialogContent>);

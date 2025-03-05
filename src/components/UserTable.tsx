@@ -122,7 +122,7 @@ export function UserTable() {
 
   const doEdit = (userId: string) => {
     setEditId(userId);
-    setView('Profile');
+    setView('Profile');//CreateProfile ??
   };
 
   const handleEdit = (userId: string) => (e: any) => {
@@ -268,7 +268,7 @@ export function UserTable() {
   };
 
   if (/profile/i.test(view)) {
-    navigate('/profile');
+    navigate('/profile');//  try more with createprofile
   }
   return (
     <Box sx={{ display: 'flex' }}>
