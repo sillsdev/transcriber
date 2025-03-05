@@ -162,6 +162,7 @@ const deleteUserProps = {
   textTransform: 'capitalize',
   opacity: '100%',
   width: '120px',
+  marginLeft: 'calc(100% - 25px)',
   '&.Mui-disabled': {
     color: 'primary.dark', 
     backgroundColor: 'primary.contrastText',
@@ -174,6 +175,56 @@ const deleteUserProps = {
     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
     opacity: '90%'
   }
+} as SxProps;
+
+const frequencyProps = {
+  marginLeft: '5px',
+  padding: '0px',
+  width: '100%',
+  '& .MuiInputBase-root': {
+    backgroundColor: 'primary.dark', // Background color of the input
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: 'primary.contrastText', // Border color of the input
+    },
+    '&:hover fieldset': {
+      borderColor: 'primary.contrastText', // Border color on hover
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: 'secondary.dark', // Border color when focused
+    },
+    '&.Mui-disabled': {
+      opacity: '75%' // Border opacity when disabled
+    },
+    '&.Mui-disabled:hover fieldset': {
+      borderColor: 'rgba(0, 0, 0, .38)', // Border color remains unchanged on hover when disabled
+    },
+  },
+  '& .MuiInputBase-input': {
+    color: 'primary.contrastText', // Text color of the input
+  },
+  '& .MuiInputAdornment-root': {
+    color: 'primary.contrastText'
+  }
+} as SxProps;
+
+const toggleSwitchProps = {
+  margin: '0px',
+  '& .MuiSwitch-switchBase': {
+    color: 'primary.contrastText', // Color of the thumb when the switch is unchecked
+    '&.Mui-checked': {
+      color: 'primary.contrastText', // Color of the thumb when the switch is checked
+      '& + .MuiSwitch-track': {
+        backgroundColor: 'primary.contrastText', // Color of the track when the switch is checked
+        opacity: '20%'
+      },
+    },
+  },
+  '& .MuiSwitch-track': {
+    backgroundColor: 'secondar.contrastText', // Color of the track when the switch is unchecked
+    opacity: '20%'
+  },
 } as SxProps;
 
 interface IBigAvatarProps {
@@ -749,23 +800,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                       }
                       labelPlacement="start"
                       label="Enable Data Sync:" // TODO: Setup translation for this
-                      sx={{
-                        margin: '0px',
-                        '& .MuiSwitch-switchBase': {
-                          color: 'primary.contrastText', // Color of the thumb when the switch is unchecked
-                          '&.Mui-checked': {
-                            color: 'primary.contrastText', // Color of the thumb when the switch is checked
-                            '& + .MuiSwitch-track': {
-                              backgroundColor: 'primary.contrastText', // Color of the track when the switch is checked
-                              opacity: '20%'
-                            },
-                          },
-                        },
-                        '& .MuiSwitch-track': {
-                          backgroundColor: 'secondar.contrastText', // Color of the track when the switch is unchecked
-                          opacity: '20%'
-                        },
-                      }}
+                      sx={ toggleSwitchProps }
                     />
                     <FormControlLabel
                       control={
@@ -785,37 +820,7 @@ export function ProfileDialog(props: ProfileDialogProps) {
                             }
                           }}
                           size="small"
-                          sx={{
-                            marginLeft: '5px',
-                            padding: '0px',
-                            width: '100%',
-                            '& .MuiInputBase-root': {
-                              backgroundColor: 'primary.dark', // Background color of the input
-                            },
-                            '& .MuiOutlinedInput-root': {
-                              '& fieldset': {
-                                borderColor: 'primary.contrastText', // Border color of the input
-                              },
-                              '&:hover fieldset': {
-                                borderColor: 'primary.contrastText', // Border color on hover
-                              },
-                              '&.Mui-focused fieldset': {
-                                borderColor: 'secondary.dark', // Border color when focused
-                              },
-                              '&.Mui-disabled': {
-                                opacity: '75%' // Border opacity when disabled
-                              },
-                              '&.Mui-disabled:hover fieldset': {
-                                borderColor: 'rgba(0, 0, 0, .38)', // Border color remains unchanged on hover when disabled
-                              },
-                            },
-                            '& .MuiInputBase-input': {
-                              color: 'primary.contrastText', // Text color of the input
-                            },
-                            '& .MuiInputAdornment-root': {
-                              color: 'primary.contrastText'
-                            }
-                          }}
+                          sx={ frequencyProps }
                         />
                       }
                       labelPlacement="start"
