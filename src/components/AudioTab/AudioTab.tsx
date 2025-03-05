@@ -37,7 +37,7 @@ import {
   VernacularTag,
   useRole,
 } from '../../crud';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { useMediaAttach } from '../../crud/useMediaAttach';
 import Memory from '@orbit/memory';
 import PassageChooser from './PassageChooser';
@@ -59,17 +59,17 @@ export function AudioTab() {
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const allBookData = useSelector((state: IState) => state.books.bookData);
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const [coordinator] = useGlobal('coordinator');
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
   const requests = React.useRef(0);
   const { getPlan } = usePlan();
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
-  const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const { toolChanged, saveCompleted } = useContext(UnsavedContext).state;
-  const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
+  const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia'); //verified this is not used in a function 2/18/25
   const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
@@ -82,7 +82,7 @@ export function AudioTab() {
   // const [filter, setFilter] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
   const cancelled = useRef(false);
-  const [complete, setComplete] = useGlobal('progress');
+  const [complete, setComplete] = useGlobal('progress'); //verified this is not used in a function 2/18/25
   const [autoMatch, setAutoMatch] = useState(false);
   const [playItem, setPlayItem] = useState('');
   const [attachMap, setAttachMap] = useState<IAttachMap>({});
@@ -305,7 +305,7 @@ export function AudioTab() {
           remoteIdGuid(
             'mediafile',
             mediaRemoteIds[0],
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           ) || mediaRemoteIds[0]
         );
         setAttachVisible(true);

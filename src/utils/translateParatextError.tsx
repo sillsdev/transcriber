@@ -1,6 +1,9 @@
 import { ISharedStrings } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import React from 'react';
+import { addPt } from './addPt';
+
+const myPt = (s: string) => addPt(s, '{Pt}');
 
 const translateParatextReferenceError = (
   errMsg: string,
@@ -16,7 +19,7 @@ const translateParatextReferenceError = (
         str = t.BookNotSet.replace('{0}', parts[1]).replace('{1}', parts[2]);
         break;
       case 'Missing Book':
-        str = t.bookNotInParatext
+        str = myPt(t.bookNotInParatext)
           .replace('{0}', parts[1])
           .replace('{1}', parts[2])
           .replace('{2}', parts[3]);
@@ -47,7 +50,7 @@ export const translateParatextError = (
   t: ISharedStrings
 ): string | JSX.Element => {
   if (err.errStatus === 401) return t.expiredToken;
-  if (err.errStatus === 400) return t.invalidParatextLogin;
+  if (err.errStatus === 400) return myPt(t.invalidParatextLogin);
   if (err.errStatus === 500) {
     if (
       (err?.errMsg?.length ?? 0) === 0 ||
@@ -57,8 +60,8 @@ export const translateParatextError = (
       err.errMsg.includes('401') ||
       err.errMsg.includes('400')
     )
-      return t.expiredParatextToken;
-    if (err.errMsg.includes('logged in')) return t.invalidParatextLogin;
+      return myPt(t.expiredParatextToken);
+    if (err.errMsg.includes('logged in')) return myPt(t.invalidParatextLogin);
   }
   return translateParatextErr(err.errMsg, t);
 };
@@ -66,7 +69,7 @@ export const translateParatextErr = (errMsg: string, t: ISharedStrings) => {
   if (errMsg.includes('ReferenceError')) {
     return translateParatextReferenceError(errMsg, t);
   }
-  if (errMsg.includes('no range')) return t.referenceNotFound;
-  if (errMsg.includes('does not contain the book')) return t.bookNotFound;
+  if (errMsg.includes('no range')) return myPt(t.referenceNotFound);
+  if (errMsg.includes('does not contain the book')) return myPt(t.bookNotFound);
   return errMsg;
 };

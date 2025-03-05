@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ArtifactTypeSlug, remoteIdGuid, useArtifactType } from '../../crud';
 import SelectArtifactType from '../Sheet/SelectArtifactType';
 import { ILanguage, Language } from '../../control';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { RecordKeyMap } from '@orbit/records';
 import { JSONParse } from '../../utils';
 
@@ -51,13 +51,13 @@ export const TranscribeStepSettings = ({ toolSettings, onChange }: IProps) => {
   };
 
   const handleLanguageChange = (val: ILanguage) => {
-    if (lgState.bcp47 !== val.bcp47 || lgState.font !== val.font) {
+    if (lgState?.bcp47 !== val?.bcp47 || lgState?.font !== val?.font) {
       setLgState((state) => ({ ...state, ...val, changed: true }));
       const json = JSONParse(toolSettings);
       onChange(
         JSON.stringify({
           ...json,
-          language: `${val.languageName}|${val.bcp47}`,
+          language: `${val?.languageName}|${val?.bcp47 ?? 'und'}`,
           font: val.font,
           rtl: val.rtl,
         })
@@ -76,7 +76,7 @@ export const TranscribeStepSettings = ({ toolSettings, onChange }: IProps) => {
         remoteIdGuid(
           'artifacttype',
           lgState.artId,
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         )) ??
       lgState.artId;
     return id && langSlugs.includes(slugFromId(id) as ArtifactTypeSlug);

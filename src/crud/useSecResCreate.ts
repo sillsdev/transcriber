@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';
 import { SectionResource, OrgWorkflowStep } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
@@ -9,10 +9,10 @@ export const useSecResCreate = (section: RecordIdentity) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
 
   const InternalizationStep = () => {
-    const workflowsteps = memory.cache.query((q) =>
+    const workflowsteps = memory?.cache.query((q) =>
       q.findRecords('orgworkflowstep')
     ) as OrgWorkflowStep[];
     const internalizationStep = workflowsteps

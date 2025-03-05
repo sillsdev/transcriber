@@ -2,7 +2,7 @@ import { MenuItem, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { ISharedStrings, RoleD } from '../model';
 import { localizeRole } from '../utils';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual, useSelector } from 'react-redux';
 import { sharedSelector } from '../selector';
 import { useOrbitData } from '../hoc/useOrbitData';
@@ -19,7 +19,7 @@ export const SelectRole = (props: IProps) => {
   const { onChange, initRole, required, disabled, label, rowid } = props;
   const roles = useOrbitData<RoleD[]>('role');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [role, setRole] = useState(initRole);
 
   const handleRoleChange = (e: any) => {

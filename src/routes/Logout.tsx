@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import { TokenContext } from '../context/TokenProvider';
 import { isElectron } from '../api-variable';
 import { localeDefault, LocalKey, useMyNavigate } from '../utils';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { GrowingSpacer } from '../control';
 import { useLogoutResets } from '../utils/useLogoutResets';
 const version = require('../../package.json').version;
@@ -26,7 +26,7 @@ export function Logout() {
   const curPath = useRef('');
   const [user] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
-  const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly'); //will be constant here
   const ctx = useContext(TokenContext).state;
   const [view, setView] = useState('');
   const logoutResets = useLogoutResets();
@@ -54,7 +54,7 @@ export function Logout() {
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
-    setLanguage(localeDefault(isDeveloper));
+    setLanguage(localeDefault(isDeveloper === 'true'));
     fetchLocalization();
     if (!isElectron) {
       // ctx.logout();
@@ -77,7 +77,8 @@ export function Logout() {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
-  if (/online|offline/i.test(view)) navigate(`/access/${view}`);
+  if (/online|offline/i.test(view))
+    setTimeout(() => navigate(`/access/${view}`), 200);
 
   return (
     <Box sx={{ width: '100%' }}>

@@ -19,6 +19,8 @@ import { useOrganizedBy } from '../../crud';
 import { IMatchData } from './makeRefMap';
 import { templateSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import { addPt } from '../../utils/addPt';
+import { Render } from '../../assets/brands';
 
 interface IstrMap {
   [key: string]: string;
@@ -38,7 +40,7 @@ const InfoDialog = (props: InfoDialogProps) => {
   const t: ITemplateStrings = useSelector(templateSelector, shallowEqual);
 
   const pattern: IstrMap = {
-    BOOK: t.book,
+    BOOK: addPt(t.book),
     BOOKNAME: t.bookname,
     SECT: organizedBy,
     PASS: t.passage.replace('{0}', organizedBy),
@@ -146,12 +148,12 @@ export function Template(props: ITemplateProps) {
         setTemplate(lastTemplate);
       } else {
         setTemplate('{SECT}');
-        // const planRecs = memory.cache.query((q) =>
+        // const planRecs = memory?.cache.query((q) =>
         //   q.findRecords('plan')
         // ) as Plan[];
         // const myPlan = planRecs.filter((p) => p.id === plan);
         // if (myPlan.length > 0) {
-        //   const planTypeRec = memory.cache.query((q) =>
+        //   const planTypeRec = memory?.cache.query((q) =>
         //     q.findRecord({
         //       type: 'plantype',
         //       id: related(myPlan[0], 'plantype'),
@@ -177,7 +179,11 @@ export function Template(props: ITemplateProps) {
         sx={{ mx: 2, width: '600px' }}
         value={template ?? ''}
         onChange={handleTemplateChange}
-        helperText={template === '{SECT}' ? t.renderExportTemplate : undefined}
+        helperText={
+          template === '{SECT}'
+            ? t.renderExportTemplate.replace('{0}', Render)
+            : undefined
+        }
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">

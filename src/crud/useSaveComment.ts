@@ -1,6 +1,6 @@
 import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 import { useDispatch } from 'react-redux';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { findRecord, PermissionName, remoteIdGuid, usePermissions } from '.';
 import { MediaFile, IApiError, CommentD } from '../model';
 import {
@@ -37,7 +37,7 @@ export const useSaveComment = (props: IProps) => {
     var mediafile = undefined;
     if (mediaRemId) {
       const id =
-        remoteIdGuid('mediafile', mediaRemId, memory.keyMap as RecordKeyMap) ||
+        remoteIdGuid('mediafile', mediaRemId, memory?.keyMap as RecordKeyMap) ||
         mediaRemId;
       mediafile = findRecord(memory, 'mediafile', id) as MediaFile;
     }

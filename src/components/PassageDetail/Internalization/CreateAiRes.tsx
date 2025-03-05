@@ -11,10 +11,15 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ResourceItem from './ResourceItem';
 import { AltButton } from '../../../control';
-import { useEffect, useState } from 'react';
-import { BookName, IFindResourceStrings, IState } from '../../../model';
+import { useEffect, useMemo, useState } from 'react';
+import {
+  BookName,
+  IFindResourceStrings,
+  ISharedStrings,
+  IState,
+} from '../../../model';
 import { shallowEqual, useSelector } from 'react-redux';
-import { findResourceSelector } from '../../../selector';
+import { findResourceSelector, sharedSelector } from '../../../selector';
 import { OptionProps } from './FindTabs';
 import { BibleResource } from '../../../model/bible-resource';
 import { LaunchLink } from '../../../control/LaunchLink';
@@ -28,7 +33,7 @@ import { useOrganizedBy } from '../../../crud/useOrganizedBy';
 import ClearIcon from '@mui/icons-material/Clear';
 import { PassageTypeEnum } from '../../../model/passageType';
 import { passageTypeFromRef } from '../../../control/RefRender';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 import { usePlanType, useSharedResRead } from '../../../crud';
 
 interface CreateAiResProps {
@@ -38,7 +43,7 @@ interface CreateAiResProps {
 export default function CreateAiRes({ resources }: CreateAiResProps) {
   const [typeOpts, setTypeOpts] = useState<OptionProps[]>([]);
   const [scopeOpts, setScopeOpts] = useState<OptionProps[]>([]);
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const { flat } = usePlanType()(plan);
   const [query, setQuery] = useState('');
   const [userEdited, setUserEdited] = useState(false);
@@ -49,7 +54,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
   const { computeMovementRef, computeSectionRef } = useComputeRef();
   const { verseTerms } = useKeyTerms();
   const [link, setLink] = useState<string>();
-  const readSharedResource = useSharedResRead();
+  const { readSharedResource } = useSharedResRead();
   const allBookData: BookName[] = useSelector(
     (state: IState) => state.books.bookData
   );
@@ -59,48 +64,56 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
     findResourceSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
-  const scopeOptions = [
-    t.passage.toLowerCase(),
-    organizedBy.toLowerCase(),
-    t.chapter.toLowerCase(),
-    t.book.toLowerCase(),
-    t.movement.toLowerCase(),
-  ];
+  const scopeOptions = useMemo(
+    () => [
+      t.passage.toLowerCase(),
+      organizedBy.toLowerCase(),
+      t.chapter.toLowerCase(),
+      t.book.toLowerCase(),
+      t.movement.toLowerCase(),
+    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [t, organizedBy]
+  );
 
-  const aiQueries = [
-    {
-      type: t.oralVersion,
-      template: t.oralVersionTpl,
-    },
-    {
-      type: t.summary,
-      template: t.summaryTpl,
-    },
-    {
-      type: t.meaning,
-      template: t.meaningTpl,
-    },
-    {
-      type: t.script,
-      template: t.scriptTpl,
-    },
-    {
-      type: t.image,
-      template: t.imageTpl,
-    },
-    {
-      type: t.video,
-      template: t.videoTpl,
-    },
-  ];
+  const aiQueries = useMemo(
+    () => [
+      {
+        type: t.oralVersion,
+        template: t.oralVersionTpl,
+      },
+      {
+        type: t.summary,
+        template: t.summaryTpl,
+      },
+      {
+        type: t.meaning,
+        template: t.meaningTpl,
+      },
+      {
+        type: t.script,
+        template: t.scriptTpl,
+      },
+      {
+        type: t.image,
+        template: t.imageTpl,
+      },
+      {
+        type: t.video,
+        template: t.videoTpl,
+      },
+    ],
+    [t]
+  );
 
   const optVal = (item: string) => ({ value: item, label: camel2Title(item) });
 
   useEffect(() => {
-    setTypeOpts(aiQueries.map((q) => q.type.replace('-', ' ')).map(optVal));
+    setTypeOpts(aiQueries.map((q) => q?.type.replace('-', ' ')).map(optVal));
     setScope(scopeOptions[0]);
-    setType(aiQueries[0].type.replace('-', ' '));
+    setType(aiQueries[0]?.type.replace('-', ' '));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -134,7 +147,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
       ref = camel2Title(scope);
     }
 
-    const aiQuery = aiQueries.find((q) => q.type === type.replace(' ', '-'));
+    const aiQuery = aiQueries.find((q) => q?.type === type.replace(' ', '-'));
     setQuery(aiQuery?.template.replace('{0}', ref) ?? '');
   };
 
@@ -212,7 +225,9 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
               value={typeOpts.find((item) => item.value === type) ?? null}
               onChange={handleTypeChange}
               sx={{ width: 180 }}
-              renderInput={(params) => <TextField {...params} label={t.type} />}
+              renderInput={(params) => (
+                <TextField {...params} label={t?.getString(type) ?? type} />
+              )}
             />
           </Grid>
           <Grid item>
@@ -243,7 +258,7 @@ export default function CreateAiRes({ resources }: CreateAiResProps) {
               sx={{ flexGrow: 1, ml: 2 }}
             />
             <Stack>
-              <IconButton onClick={handleCopy} title={t.clipboardCopy}>
+              <IconButton onClick={handleCopy} title={ts.clipboardCopy}>
                 <ContentCopyIcon />
               </IconButton>
               <IconButton onClick={handleClear} title={t.clearQuery}>

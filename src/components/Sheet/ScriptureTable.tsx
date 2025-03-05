@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
@@ -172,21 +172,22 @@ export function ScriptureTable(props: IProps) {
   const { prjId } = useParams();
   const [width, setWidth] = useState(window.innerWidth);
   const [organization] = useGlobal('organization');
-  const [project] = useGlobal('project');
-  const [plan] = useGlobal('plan');
+  const [project] = useGlobal('project'); //will be constant here
+  const [plan] = useGlobal('plan'); //will be constant here
   const [coordinator] = useGlobal('coordinator');
-  const [offline] = useGlobal('offline');
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
   const [org] = useGlobal('organization');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [, setBusy] = useGlobal('importexportBusy');
   const myChangedRef = useRef(false);
   const savingRef = useRef(false);
   const updateRef = useRef(false);
   const doForceDataChanges = useRef(false);
   const { showMessage } = useSnackBar();
+  const getGlobal = useGetGlobal();
   const ctx = React.useContext(PlanContext);
   const {
     flat,
@@ -263,7 +264,7 @@ export function ScriptureTable(props: IProps) {
     getLocalDefault,
     setLocalDefault,
   } = useProjectDefaults();
-  const readSharedResource = useSharedResRead();
+  const { getSharedResource } = useSharedResRead();
   const getFilteredSteps = useFilteredSteps();
   const getDiscussionCount = useDiscussionCount({
     mediafiles,
@@ -315,13 +316,13 @@ export function ScriptureTable(props: IProps) {
           def.minStep = remoteId(
             'orgworkflowstep',
             filter.minStep,
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           ) as string;
         if (filter.maxStep)
           def.maxStep = remoteId(
             'orgworkflowstep',
             filter.maxStep,
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           ) as string;
       }
       setProjectDefault(projDefFilterParam, def);
@@ -332,7 +333,7 @@ export function ScriptureTable(props: IProps) {
   const setSheet = (ws: ISheet[]) => {
     sheetRef.current = ws;
     setSheetx(ws);
-    var anyPublishing = !offline
+    var anyPublishing = !getGlobal('offline')
       ? ws.some((s) => isPublishingTitle(s.reference ?? '', flat))
       : false;
     if (publishingOn !== anyPublishing) setCanPublish(anyPublishing);
@@ -970,7 +971,7 @@ export function ScriptureTable(props: IProps) {
         const { ws } = getByIndex(sheetRef.current, i);
         const id = ws?.passage?.id || '';
         const passageRemoteId =
-          remoteIdNum('passage', id, memory.keyMap as RecordKeyMap) || id;
+          remoteIdNum('passage', id, memory?.keyMap as RecordKeyMap) || id;
         setView(`/detail/${prjId}/${passageRemoteId}`);
       });
     });
@@ -1023,7 +1024,7 @@ export function ScriptureTable(props: IProps) {
             plan,
             memory,
             VernacularTag,
-            offline
+            getGlobal('offline')
           )
         );
       }
@@ -1196,13 +1197,13 @@ export function ScriptureTable(props: IProps) {
       filter.minStep = remoteIdGuid(
         'orgworkflowstep',
         filter.minStep,
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       );
     if (filter.maxStep && !isNaN(Number(filter.maxStep)))
       filter.maxStep = remoteIdGuid(
         'orgworkflowstep',
         filter.maxStep,
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       );
     return filter;
   };
@@ -1385,7 +1386,7 @@ export function ScriptureTable(props: IProps) {
         graphicFind,
         getPublishTo,
         publishStatus,
-        readSharedResource,
+        getSharedResource,
       });
       setSheet(newWorkflow);
 
@@ -1539,7 +1540,11 @@ export function ScriptureTable(props: IProps) {
         sectionUpdated: currentDateTime(),
       };
       //if this is a movement...publish all the sections below it
-      if (ws.published !== destinations && ws.level === SheetLevel.Movement) {
+      if (
+        ws.published !== destinations &&
+        destinations.includes(PublishDestinationEnum.PropagateSection) &&
+        ws.level === SheetLevel.Movement
+      ) {
         let i = index + 1;
         while (i < newsht.length) {
           if (newsht[i].level === SheetLevel.Movement) break;

@@ -266,7 +266,7 @@ function MediaUpload(props: IProps) {
           )
         );
       }
-      const nonAudio = goodFiles.some((f) => !f.type.includes('audio'));
+      const nonAudio = goodFiles.some((f) => !f?.type.includes('audio'));
       if (onNonAudio) onNonAudio(nonAudio);
       goodFiles = checkSizes(goodFiles, sizeLimit);
       setName(fileName(goodFiles));

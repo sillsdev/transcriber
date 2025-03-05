@@ -41,6 +41,7 @@ import { getLocalParatextText } from '../../business/localParatext';
 import MemorySource from '@orbit/memory';
 import { passageTypeFromRef } from '../../control/RefRender';
 import { PassageTypeEnum } from '../../model/passageType';
+import { Paratext } from '../../assets/brands';
 const ipc = (window as any)?.electron;
 
 export const resetUserName = () => (dispatch: any) => {
@@ -84,7 +85,7 @@ export const getParatextText =
         logError(
           Severity.error,
           errorReporter,
-          infoMsg(err, 'Paratext Text failed')
+          infoMsg(err, Paratext + ' Text failed')
         );
       dispatch({ payload: errStatus(err), type: TEXT_ERROR });
     }
@@ -119,7 +120,7 @@ export const getParatextTextLocal =
         logError(
           Severity.error,
           errorReporter,
-          infoMsg(err, 'Paratext Text failed')
+          infoMsg(err, Paratext + ' Text failed')
         );
       dispatch({ payload: errStatus(err), type: TEXT_ERROR });
     }

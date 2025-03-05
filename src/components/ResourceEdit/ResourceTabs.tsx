@@ -30,7 +30,7 @@ import {
   getVernacularMediaRec,
 } from '../../crud';
 import { useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { useSnackBar } from '../../hoc/SnackBar';
 import { passageTypeFromRef } from '../../control/RefRender';
 import { PassageTypeEnum } from '../../model/passageType';
@@ -94,7 +94,7 @@ export function ResourceTabs({
   const graphics = useOrbitData<GraphicD[]>('graphic');
   const [value, setValue] = React.useState(0);
   const t: IResourceStrings = useSelector(sharedResourceSelector, shallowEqual);
-  const readSharedResource = useSharedResRead();
+  const { getSharedResource, readSharedResource } = useSharedResRead();
   const updateSharedResource = useSharedResUpdate({ onUpdRef });
   const createSharedResource = useSharedResCreate({
     passage: { type: 'passage', id: passId },
@@ -106,11 +106,11 @@ export function ResourceTabs({
   const graphicCreate = useGraphicCreate();
   const { userIsAdmin } = useRole();
   const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const [memory] = useGlobal('memory');
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const { showMessage } = useSnackBar();
   const { localizedArtifactCategory } = useArtifactCategory();
   const { getPassageTypeRec } = usePassageType();
@@ -122,16 +122,8 @@ export function ResourceTabs({
 
   const sharedResRec = React.useMemo(
     () => {
-      let res = readSharedResource(passId);
-      const linkedRes = related(ws?.passage, 'sharedResource');
-      if (!res && linkedRes) {
-        res = findRecord(
-          memory,
-          'sharedresource',
-          linkedRes
-        ) as SharedResourceD;
-      }
-      return res;
+      if (ws?.passage) return getSharedResource(ws?.passage);
+      else return readSharedResource(passId);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [passId, value]
@@ -268,7 +260,7 @@ export function ResourceTabs({
         var psgId = remoteIdNum(
           'passage',
           related(sr, 'passage'),
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         );
         const filter = [{ attribute: 'passage-id', value: psgId }];
         await remotePullAll({
@@ -289,12 +281,12 @@ export function ResourceTabs({
     const sourceId = remoteIdNum(
       'passage',
       related(sr, 'passage'),
-      memory.keyMap as RecordKeyMap
+      memory?.keyMap as RecordKeyMap
     );
     const resourceId = remoteIdNum(
       'passage',
       passage.id,
-      memory.keyMap as RecordKeyMap
+      memory?.keyMap as RecordKeyMap
     );
     const sourceGraphicRec = graphics.find(
       (g) =>

@@ -30,7 +30,7 @@ import {
   styled,
 } from '@mui/material';
 import BookSelect, { OptionType } from './BookSelect';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { usePlanType } from '../crud';
 import usePassageDetailContext from '../context/usePassageDetailContext';
 import { ResourceTypeEnum } from './PassageDetail/Internalization/PassageDetailArtifacts';
@@ -101,7 +101,7 @@ export const PassageDataTable = (props: IProps) => {
   const [termsCheck, setTermsCheck] = useState<number[]>([]);
   const [curTermsCheck, setCurTermsCheck] = useState<number>();
   const [bookOpt, setBookOpt] = useState<OptionType>();
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const planType = usePlanType();
   const bookSuggestions = useSelector(
     (state: IState) => state.books.suggestions
@@ -375,7 +375,7 @@ export const PassageDataTable = (props: IProps) => {
           title={t.termsReview}
           description={
             <Typography sx={{ pb: 2 }}>
-              {'for {0}'.replace('{0}', data[curTermsCheck].title)}
+              {t.titleDesc.replace('{0}', data[curTermsCheck].title)}
             </Typography>
           }
           isOpen={termsCheck !== undefined}

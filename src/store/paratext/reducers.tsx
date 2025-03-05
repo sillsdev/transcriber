@@ -16,7 +16,7 @@ const ParatextReducers = function (
   state = paratextCleanState,
   action: type.ParatextMsgs
 ): type.IParatextState {
-  switch (action.type) {
+  switch (action?.type) {
     case type.USERNAME_PENDING:
       return {
         ...state,

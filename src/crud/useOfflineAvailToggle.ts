@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { Project } from '../model';
 import IndexedDBSource from '@orbit/indexeddb';
 import { findRecord, useOfflnProjCreate, useOfflnProjRead } from '.';
@@ -14,7 +14,7 @@ export const useOfflineAvailToggle = () => {
     var offlineProject = offlineProjectRead(projectId);
     if (offlineProject.attributes) {
       // local update only, migrate offlineproject to include offlineAvailable
-      const backup = coordinator.getSource('backup') as IndexedDBSource;
+      const backup = coordinator?.getSource('backup') as IndexedDBSource;
       const transform = (t: RecordTransformBuilder) => [
         t.updateRecord({
           ...offlineProject,

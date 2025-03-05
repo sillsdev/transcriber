@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { Role, RoleD, RoleNames, User } from '../model';
 import { InitializedRecord } from '@orbit/records';
 import { findRecord, related } from '../crud';
@@ -9,8 +9,8 @@ import { ReplaceRelatedRecord } from '../model/baseModel';
 export const useRole = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const [orgRole, setOrgRole] = useGlobal('orgRole');
+  const [offlineOnly] = useGlobal('offlineOnly'); //verified this is not used in a function 2/18/25
+  const [orgRole, setOrgRole] = useGlobal('orgRole'); //verified this is not used in a function 2/18/25
   const [errorReporter] = useGlobal('errorReporter');
 
   interface IUniqueRoles {
@@ -20,7 +20,7 @@ export const useRole = () => {
   const roles = React.useMemo(() => {
     const uniqueRoles = {} as IUniqueRoles;
     const allRoles = (
-      memory.cache.query((q) => q.findRecords('role')) as RoleD[]
+      memory?.cache.query((q) => q.findRecords('role')) as RoleD[]
     ).filter((r) => r.attributes.orgRole);
     allRoles.forEach((r) => {
       if (offlineOnly !== Boolean(r?.keys?.remoteId)) {
@@ -66,7 +66,7 @@ export const useRole = () => {
 
   const getMbrRoleRec = (relate: string, id: string, userId: string) => {
     const tableName = 'organizationmembership';
-    const table = memory.cache.query((q) =>
+    const table = memory?.cache.query((q) =>
       q.findRecords(tableName)
     ) as InitializedRecord[];
     return table.filter(
@@ -89,7 +89,7 @@ export const useRole = () => {
           ...ReplaceRelatedRecord(t, memberRecs[0], 'role', 'role', roleId),
         ]);
       }
-      const roleRec = memory.cache.query((q) =>
+      const roleRec = memory?.cache.query((q) =>
         q.findRecord({ type: 'role', id: roleId })
       ) as Role;
 
@@ -104,11 +104,15 @@ export const useRole = () => {
     return getMbrRole(gMbrRecs);
   };
 
-  const setMyOrgRole = (orgId: string) => {
-    const role = getMyOrgRole(orgId);
-    if (role !== orgRole) setOrgRole(role);
-    return role;
-  };
+  const setMyOrgRole = useMemo(
+    () => (orgId: string) => {
+      const role = getMyOrgRole(orgId);
+      if (role !== orgRole) setOrgRole(role);
+      return role;
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [orgRole]
+  );
 
   return {
     getRoleId,

@@ -27,6 +27,9 @@ import { findResourceSelector } from '../../../selector';
 import { IFindResourceStrings } from '../../../model';
 import {
   currentDateTime,
+  infoMsg,
+  logError,
+  Severity,
   useBookN,
   useDataChanges,
   useWaitForRemoteQueue,
@@ -41,11 +44,13 @@ import VwBiblebrainbible from '../../../model/vwbiblebrainbible';
 import { axiosGet, axiosPost } from '../../../utils/axios';
 import { useSecResCreate } from '../../../crud/useSecResCreate';
 import remoteIdNum from '../../../crud/remoteId';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 import { RecordKeyMap } from '@orbit/records';
 import { usePlanType } from '../../../crud';
-import { HttpStatusCode } from 'axios';
+import { AxiosError, HttpStatusCode } from 'axios';
 import LinearProgress from '@mui/material/LinearProgress';
+import { BibleBrain } from '../../../assets/brands';
+import { useSnackBar } from '../../../hoc/SnackBar';
 interface FindBibleBrainProps {
   onClose?: () => void;
   closeRequested: boolean;
@@ -84,7 +89,7 @@ export default function FindBibleBrain({
   const [queryLang, setQueryLang] = useState(true);
   const [queryBible, setQueryBible] = useState(true);
   const bookN = useBookN();
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const planType = usePlanType();
   const [progress, setProgress] = useState(0);
   const [count, setCount] = useState(0);
@@ -95,6 +100,8 @@ export default function FindBibleBrain({
   );
   const { getLanguages, getBibles } = useBibleBrain();
   const IntervalIdRef = useRef<NodeJS.Timeout>();
+  const { showMessage } = useSnackBar();
+  const [errorReporter] = useGlobal('errorReporter');
 
   const scopeOptions = [t.passage, organizedBy, t.chapter, t.book];
 
@@ -207,17 +214,17 @@ export default function FindBibleBrain({
       PassageId: remoteIdNum(
         'passage',
         passage.id,
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       ),
       SectionId: remoteIdNum(
         'section',
         section.id,
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       ),
       OrgWorkflowStep: remoteIdNum(
         'orgworkflowstep',
         InternalizationStep()?.id ?? '',
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       ),
       Bibleid: bibleOpt?.value ?? '',
       Timing: timing,
@@ -226,28 +233,37 @@ export default function FindBibleBrain({
       Passages: createPassages,
       Scope: scopeI.asString(creationScope),
     };
-    var response = await axiosPost('biblebrain', postdata, token);
+    try {
+      var response = await axiosPost('biblebrain', postdata, token);
 
-    if (response.status === HttpStatusCode.Ok) {
-      const getCount = async (resolve: (value?: unknown) => void) => {
-        var cntresp = await axiosGet('biblebrain/count', undefined, token);
-        if (cntresp === 0) {
-          setProgress(0);
-          clearInterval(IntervalIdRef.current);
-          IntervalIdRef.current = undefined;
-          resolve(0);
-        } else {
-          var p = ((total - cntresp) / total) * 100;
-          setProgress(p);
-          setCount(cntresp);
-        }
-      };
-      var total = response.data;
-      if (total > 0)
-        await new Promise((resolve) => {
-          IntervalIdRef.current = setInterval(() => getCount(resolve), 2000); // Call the function every 2 second
-        });
-      return total;
+      if (response.status === HttpStatusCode.Ok) {
+        const getCount = async (resolve: (value?: unknown) => void) => {
+          var cntresp = await axiosGet('biblebrain/count', undefined, token);
+          if (cntresp === 0) {
+            setProgress(0);
+            clearInterval(IntervalIdRef.current);
+            IntervalIdRef.current = undefined;
+            resolve(0);
+          } else {
+            var p = ((total - cntresp) / total) * 100;
+            setProgress(p);
+            setCount(cntresp);
+          }
+        };
+        var total = response.data;
+        if (total > 0)
+          await new Promise((resolve) => {
+            IntervalIdRef.current = setInterval(() => getCount(resolve), 2000); // Call the function every 2 second
+          });
+        return total;
+      }
+    } catch (err) {
+      showMessage('biblebrain add failed ' + (err as AxiosError).message);
+      logError(
+        Severity.error,
+        errorReporter,
+        infoMsg(err as Error, 'biblebrain add failed ')
+      );
     }
   };
 
@@ -305,7 +321,7 @@ export default function FindBibleBrain({
                   label={
                     queryLang
                       ? t.querying
-                      : t.language.replace('{0}', 'Bible Brain')
+                      : t.language.replace('{0}', BibleBrain)
                   }
                 />
               )}
@@ -325,7 +341,7 @@ export default function FindBibleBrain({
                 label={
                   queryBible
                     ? t.querying
-                    : t.resource.replace('{0}', 'Bible Brain') + '*'
+                    : t.resource.replace('{0}', BibleBrain) + '*'
                 }
               />
             )}

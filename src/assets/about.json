@@ -19,7 +19,10 @@
     "Callie Vale (Faith Comes By Hearing) for help with design|Faith Comes By Hearing|https://www.faithcomesbyhearing.com",
     "Benjamin C Varghese (New Life India) for help on project promotion|New Life India|https://newlifeindia.org/",
     "Microsoft for Visual Studio Code|Visual Studio Code|https://code.visualstudio.com",
-    "Microsoft for .net core|.net core|https://dotnet.microsoft.com/download/dotnet-core"
+    "Microsoft for .net core|.net core|https://dotnet.microsoft.com/download/dotnet-core",
+    "Noise reduce icons created by juicy_fish - Flaticon|Noise reduce icons|https://www.flaticon.com/free-icons/no-chicken",
+    "Speech recognize icons created by Freepik - Flaticon|Speech recognize icons|https://www.flaticon.com/free-icons/transcription",
+    "Voice Convert icons created by Freepik - Flaticon|Voice Convert icons|https://www.flaticon.com/free-icons/replication"
   ],
   "mit": {
     "title": "MIT License",
@@ -43,7 +46,6 @@
       "react for framework|react|https://reactjs.com",
       "react-datasheet for plans|react-datasheet|https://github.com/nadbm/react-datasheet",
       "react-localization|react-localization|https://github.com/stefalda/react-localization",
-      "reactn for global state|reactn|https://github.com/CharlesStover/reactn",
       "redux for global state management|redux|https://redux.js.org/",
       "xmldom for Elan|xmldom|https://github.com/xmldom/xmldom"
     ]

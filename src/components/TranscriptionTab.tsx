@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import * as actions from '../store';
 import {
   IState,
@@ -59,6 +59,7 @@ import {
   PassageReference,
   afterStep,
   getStepComplete,
+  useSharedResRead,
 } from '../crud';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
@@ -131,14 +132,14 @@ export function TranscriptionTab(props: IProps) {
   const users = useOrbitData<User[]>('user');
   const roles = useOrbitData<Role[]>('role');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [busy, setBusy] = useGlobal('importexportBusy');
-  const [plan, setPlan] = useGlobal('plan');
+  const [busy, setBusy] = useGlobal('importexportBusy'); //verified this is not used in a function 2/18/25
+  const [plan, setPlan] = useGlobal('plan'); //will be constant here
   const getPlanType = usePlanType();
   const [isScripture, setScripture] = useState(false);
   const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
-  const [offline] = useGlobal('offline');
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [errorReporter] = useGlobal('errorReporter');
   const [lang] = useGlobal('lang');
   const token = useContext(TokenContext).state.accessToken;
@@ -154,13 +155,13 @@ export function TranscriptionTab(props: IProps) {
   const [exportUrl, setExportUrl] = useState<string | undefined>();
   const [exportName, setExportName] = useState('');
   const sectionMap = new Map<number, string>(sectionArr);
-  const [project] = useGlobal('project');
+  const [project] = useGlobal('project'); //will be constant here
   const [user] = useGlobal('user');
-  const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const { getOrganizedBy } = useOrganizedBy();
   const getOfflineProject = useOfflnProjRead();
-  const [globalStore] = useGlobal();
+  const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const { getTypeId, localizedArtifactType } = useArtifactType();
+  const { getSharedResource } = useSharedResRead();
   const [artifactTypes] = useState<ArtifactTypeSlug[]>([
     ArtifactTypeSlug.Vernacular,
     ArtifactTypeSlug.Retell,
@@ -172,11 +173,13 @@ export function TranscriptionTab(props: IProps) {
     artifactTypes[0]
   );
   const getTranscription = useTranscription(true);
+  const getGlobal = useGetGlobal();
+
   const columnDefs = [
     { name: 'name', title: getOrganizedBy(true) },
     { name: 'state', title: t.sectionstate },
     { name: 'planName', title: t.plan },
-    { name: 'passages', title: t.passages },
+    { name: 'passages', title: ts.passages },
     { name: 'transcriber', title: ts.transcriber },
     { name: 'editor', title: ts.editor },
     { name: 'action', title: '\u00A0' },
@@ -227,10 +230,10 @@ export function TranscriptionTab(props: IProps) {
   const doProjectExport = (exportType: ExportType, importedDate?: Moment) => {
     setBusy(true);
 
-    const mediaFiles = memory.cache.query((q) =>
+    const mediaFiles = memory?.cache.query((q) =>
       q.findRecords('mediafile')
     ) as MediaFileD[];
-    const plans = memory.cache.query((q) => q.findRecords('plan')) as Plan[];
+    const plans = memory?.cache.query((q) => q.findRecords('plan')) as Plan[];
 
     var projectplans = plans.filter((pl) => related(pl, 'project') === project);
     /* get correct count */
@@ -273,7 +276,7 @@ export function TranscriptionTab(props: IProps) {
   };
   const handleProjectExport = () => {
     setAlertOpen(false);
-    if (offline) setOpenExport(true);
+    if (getGlobal('offline')) setOpenExport(true);
     else doProjectExport(ExportType.PTF);
   };
 
@@ -335,7 +338,7 @@ export function TranscriptionTab(props: IProps) {
           showMessage(t.availableOnClipboard);
         })
         .catch((err) => {
-          showMessage(t.cantCopy);
+          showMessage(ts.cantCopy);
         });
     else
       showMessage(t.noData.replace('{0}', localizedArtifactType(artifactType)));
@@ -385,10 +388,8 @@ export function TranscriptionTab(props: IProps) {
   const handleEaf = (passageId: string) => () => {
     const mediaRec = getVernacularMediaRec(passageId, memory);
     if (!mediaRec) return;
-    const eafCode = btoa(
-      getMediaEaf(mediaRec, memory, globalStore.errorReporter)
-    );
-    const name = getMediaName(mediaRec, memory, globalStore.errorReporter);
+    const eafCode = btoa(getMediaEaf(mediaRec, memory, errorReporter));
+    const name = getMediaName(mediaRec, memory, errorReporter);
     setDataUrl('data:text/xml;base64,' + eafCode);
     setDataName(name + '.eaf');
   };
@@ -517,6 +518,7 @@ export function TranscriptionTab(props: IProps) {
               const state = activityState.getString(getPassageState(passage));
               if (!isPublishingTitle(passage?.attributes?.reference, flat)) {
                 psgCount++;
+                let sr = getSharedResource(passage as PassageD);
                 rowData.push({
                   id: passage.id,
                   name: (
@@ -524,6 +526,8 @@ export function TranscriptionTab(props: IProps) {
                       passage={passage}
                       bookData={bookData}
                       flat={flat}
+                      sharedResource={sr}
+                      fontSize={'0.8rem'}
                     />
                   ),
                   state: state,
@@ -631,11 +635,11 @@ export function TranscriptionTab(props: IProps) {
     const { column, row } = props;
     if (column.name === 'action') {
       if (row.parentId) {
-        const passRec = memory.cache.query((q) =>
+        const passRec = memory?.cache.query((q) =>
           q.findRecord({ type: 'passage', id: row.id })
         ) as PassageD;
         const state = getPassageState(passRec);
-        const media = memory.cache.query((q) =>
+        const media = memory?.cache.query((q) =>
           q
             .findRecords('mediafile')
             .filter({ relation: 'passage', record: passRec })

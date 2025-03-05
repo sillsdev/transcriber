@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { useLocation } from 'react-router-dom';
 import {
   ICardsStrings,
@@ -29,6 +29,7 @@ import {
   toDoTableSelector,
 } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
+import { addPt } from '../../utils/addPt';
 
 interface IProps {
   inProject?: boolean;
@@ -50,8 +51,8 @@ export function ProjectMenu(props: IProps) {
     justFilter,
     stopPlayer,
   } = props;
-  const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [isDeveloper] = useGlobal('developer');
   const { pathname } = useLocation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -161,7 +162,7 @@ export function ProjectMenu(props: IProps) {
               <ListItemIcon>
                 <ParatextLogo />
               </ListItemIcon>
-              <ListItemText primary={tpb.integrations} />
+              <ListItemText primary={addPt(tpb.integrations)} />
             </StyledMenuItem>
           )}
         {!inProject && (!isOffline || offlineOnly) && isAdmin && (

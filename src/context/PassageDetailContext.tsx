@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { useParams } from 'react-router-dom';
 import { shallowEqual } from 'react-redux';
 import {
@@ -246,16 +246,15 @@ const PassageDetailProvider = (props: IProps) => {
   const dispatch = useDispatch();
   const fetchBooks = (lang: string) => dispatch(actions.fetchBooks(lang));
   const { pasId, prjId } = useParams();
-  const [globals] = useGlobal();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [org] = useGlobal('organization');
   const [errorReporter] = useGlobal('errorReporter');
-  const [saveResult, setSaveResult] = useGlobal('saveResult');
+  const [saveResult, setSaveResult] = useGlobal('saveResult'); //verified this is not used in a function 2/18/25
   const [confirm, setConfirm] = useState('');
   const view = React.useRef('');
   const { showMessage } = useSnackBar();
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const { getProjectDefault } = useProjectDefaults();
   const [state, setState] = useState({
     ...initState,
@@ -282,9 +281,10 @@ const PassageDetailProvider = (props: IProps) => {
   const settingSegmentRef = useRef(false);
   const inPlayerRef = useRef<string>();
   const { getOrgDefault } = useOrgDefaults();
+  const getGlobal = useGetGlobal();
 
   const setCurrentStep = (stepId: string) => {
-    if (globals.changed) {
+    if (getGlobal('changed')) {
       setConfirm(stepId);
     } else {
       handleSetCurrentStep(stepId);
@@ -297,6 +297,7 @@ const PassageDetailProvider = (props: IProps) => {
     var step = state.orgWorkflowSteps.find((s) => s.id === stepId);
     var tool = getTool(step?.attributes?.tool) as ToolSlug;
     setCurrentSegment(undefined, 0);
+
     setState((state: ICtxState) => {
       return {
         ...state,
@@ -320,6 +321,7 @@ const PassageDetailProvider = (props: IProps) => {
     }
     segmentsCb.current = undefined;
   };
+
   const forceRefresh = (rowData?: IRow[]) => {
     refreshRef.current = refreshRef.current + 1;
     setState((state: ICtxState) => {
@@ -529,7 +531,7 @@ const PassageDetailProvider = (props: IProps) => {
   };
   const stepComplete = (stepid: string) => {
     stepid =
-      remoteId('orgworkflowstep', stepid, memory.keyMap as RecordKeyMap) ||
+      remoteId('orgworkflowstep', stepid, memory?.keyMap as RecordKeyMap) ||
       stepid;
     var step = state.psgCompleted.find((s) => s.stepid === stepid);
     return Boolean(step?.complete);
@@ -544,7 +546,9 @@ const PassageDetailProvider = (props: IProps) => {
     if (nextpsg && nextpsg !== state.passage?.keys?.remoteId) {
       rememberCurrentPassage(memory, nextpsg);
       passageNavigate(`/detail/${prjId}/${nextpsg}`);
-    } else setCurrentStep(''); // setting to empty jumps to first uncompleted
+    } else {
+      setCurrentStep('');
+    } // setting to empty jumps to first uncompleted
   };
   const setStepComplete = async (
     stepid: string,
@@ -554,7 +558,7 @@ const PassageDetailProvider = (props: IProps) => {
     if (stepid === '') return;
     var completed = psgCompleted ?? [...state.psgCompleted];
     var remId =
-      remoteId('orgworkflowstep', stepid, memory.keyMap as RecordKeyMap) ||
+      remoteId('orgworkflowstep', stepid, memory?.keyMap as RecordKeyMap) ||
       stepid;
     var step = completed.find((s) => s.stepid === remId);
     var rec = findRecord(memory, 'orgworkflowstep', stepid) as OrgWorkflowStep;
@@ -566,7 +570,7 @@ const PassageDetailProvider = (props: IProps) => {
     const recId = {
       type: 'passage',
       id:
-        remoteIdGuid('passage', pasId ?? '', memory.keyMap as RecordKeyMap) ||
+        remoteIdGuid('passage', pasId ?? '', memory?.keyMap as RecordKeyMap) ||
         pasId ||
         '',
     };
@@ -866,7 +870,7 @@ const PassageDetailProvider = (props: IProps) => {
 
   useEffect(() => {
     const passageId =
-      remoteIdGuid('passage', pasId ?? '', memory.keyMap as RecordKeyMap) ||
+      remoteIdGuid('passage', pasId ?? '', memory?.keyMap as RecordKeyMap) ||
       pasId ||
       '';
     var p = passages.find((p) => p.id === passageId);
@@ -963,7 +967,7 @@ const PassageDetailProvider = (props: IProps) => {
 
   useEffect(() => {
     const passageId =
-      remoteIdGuid('passage', pasId ?? '', memory.keyMap as RecordKeyMap) ||
+      remoteIdGuid('passage', pasId ?? '', memory?.keyMap as RecordKeyMap) ||
       pasId ||
       '';
     const passRec = passages.find((p) => p.id === passageId);

@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useState, useEffect } from 'react';
 import { useUserMedia } from './useUserMedia';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -7,7 +7,11 @@ import { logError, Severity } from '../utils';
 import { waitForIt } from '../utils/waitForIt';
 
 const CAPTURE_OPTIONS = {
-  audio: true,
+  audio: {
+    autoGainControl: false,
+    echoCancellation: true,
+    noiseSuppression: true,
+  },
   video: false,
 };
 const noop = () => {};

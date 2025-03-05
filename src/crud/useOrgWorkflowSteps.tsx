@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal, useGetGlobal } from '../context/GlobalContext';
 import { related } from '.';
 import {
   IWorkflowStepsStrings,
@@ -23,6 +23,7 @@ import {
   RecordOperation,
   RecordTransformBuilder,
 } from '@orbit/records';
+import { addPt } from '../utils/addPt';
 
 export const defaultWorkflow = 'draft';
 
@@ -35,19 +36,18 @@ export const useOrgWorkflowSteps = () => {
     shallowEqual
   );
 
-  const [global] = useGlobal();
   const [memory] = useGlobal('memory');
+  const [organization] = useGlobal('organization');
   const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
   const [errorReporter] = useGlobal('errorReporter');
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
   const waitForRemoteQueue = useWaitForRemoteQueue();
+  const getGlobal = useGetGlobal();
   const creatingRef = useRef(false);
 
   const localizedWorkStep = (val: string) => {
-    return (t as ISwitches)[toCamel(val)] || val;
+    return addPt((t as ISwitches)[toCamel(val)] ?? '') || val;
   };
   const localizedWorkStepFromId = (id: string) => {
     try {
@@ -65,9 +65,9 @@ export const useOrgWorkflowSteps = () => {
     wf: WorkflowStepD,
     org?: string
   ) => {
-    let myOrgId = org ?? global.organization;
+    let myOrgId = org ?? organization;
     // NB: The remoteId was not updated even though this always gets created online
-    // let myOrgRemoteId = remoteId('organization', myOrgId, memory.keyMap as RecordKeyMap);
+    // let myOrgRemoteId = remoteId('organization', myOrgId, memory?.keyMap as RecordKeyMap);
     // if (!offline && !myOrgRemoteId) {
     //   console.error(`no org remoteId for ${myOrgId}`);
     //   return; // offline users won't have an org remoteId
@@ -114,7 +114,7 @@ export const useOrgWorkflowSteps = () => {
         (s) =>
           (process === 'ANY' || s.attributes.process === process) &&
           related(s, 'organization') === org &&
-          Boolean(s.keys?.remoteId) !== offlineOnly
+          Boolean(s.keys?.remoteId) !== getGlobal('offlineOnly')
       )
       .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
   };
@@ -128,7 +128,7 @@ export const useOrgWorkflowSteps = () => {
           .filter({ attribute: 'process', value: process })
       )) as WorkflowStepD[]
     )
-      .filter((s) => Boolean(s?.keys?.remoteId) !== offlineOnly)
+      .filter((s) => Boolean(s?.keys?.remoteId) !== getGlobal('offlineOnly'))
       .sort((a, b) => a.attributes.sequencenum - b.attributes.sequencenum);
     var tb = new RecordTransformBuilder();
     //originally had them all in one ops, but it was too fast
@@ -146,7 +146,10 @@ export const useOrgWorkflowSteps = () => {
   }
 
   const GetOrgWorkflowSteps = async ({ process, org, showAll }: IGetSteps) => {
-    if (creatingRef.current && (!offline || offlineOnly))
+    if (
+      creatingRef.current &&
+      (!getGlobal('offline') || getGlobal('offlineOnly'))
+    )
       await waitForIt(
         'creating org workflow',
         () => !creatingRef.current,

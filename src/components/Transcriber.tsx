@@ -4,19 +4,12 @@ import React, {
   useContext,
   useRef,
   CSSProperties,
-  PropsWithChildren,
   useMemo,
   useCallback,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { useParams } from 'react-router-dom';
-import {
-  default as SplitPaneBar,
-  Pane as PaneBar,
-  PaneProps,
-  SplitPaneProps,
-} from 'react-split-pane';
-import styledComp from 'styled-components';
+import { SplitWrapper as Wrapper, SplitPane, Pane } from '../control/Panes';
 import Confirm from './AlertDialog';
 import {
   MediaFile,
@@ -111,75 +104,13 @@ import {
 } from '@orbit/records';
 import { useDispatch } from 'react-redux';
 import { PassageTypeEnum } from '../model/passageType';
+import { addPt } from '../utils/addPt';
+import { Paratext } from '../assets/brands';
 
 //import useRenderingTrace from '../utils/useRenderingTrace';
 
 const HISTORY_KEY = 'F7,CTRL+7';
 const INIT_PLAYER_HEIGHT = 180;
-
-const Wrapper = styledComp.div`
-  .Resizer {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    background: #000;
-    opacity: 0.2;
-    z-index: 1;
-    -moz-background-clip: padding;
-    -webkit-background-clip: padding;
-    background-clip: padding-box;
-  }
-
-  .Resizer:hover {
-    -webkit-transition: all 2s ease;
-    transition: all 2s ease;
-  }
-
-  .Resizer.horizontal {
-    height: 11px;
-    margin: -5px 0;
-    border-top: 5px solid rgba(255, 255, 255, 0);
-    border-bottom: 5px solid rgba(255, 255, 255, 0);
-    cursor: row-resize;
-    width: 100%;
-  }
-
-  .Resizer.horizontal:hover {
-    border-top: 5px solid rgba(0, 0, 0, 0.5);
-    border-bottom: 5px solid rgba(0, 0, 0, 0.5);
-  }
-
-  .Resizer.vertical {
-    width: 11px;
-    margin: 0 -5px;
-    border-left: 5px solid rgba(255, 255, 255, 0);
-    border-right: 5px solid rgba(255, 255, 255, 0);
-    cursor: col-resize;
-  }
-
-  .Resizer.vertical:hover {
-    border-left: 5px solid rgba(0, 0, 0, 0.5);
-    border-right: 5px solid rgba(0, 0, 0, 0.5);
-  }
-  .Pane1 {
-    // background-color: blue;
-    display: flex;
-    min-height: 0;
-  }
-  .Pane2 {
-    // background-color: red;
-    display: flex;
-    min-height: 0;
-  }
-`;
-
-const SplitPane = (props: SplitPaneProps & PropsWithChildren) => {
-  return <SplitPaneBar {...props} />;
-};
-
-const Pane = (props: PaneProps & PropsWithChildren) => {
-  return <PaneBar {...props} className={props.className || 'pane'} />;
-};
 
 interface IProps {
   defaultWidth: number;
@@ -275,10 +206,10 @@ export function Transcriber(props: IProps) {
 
   const { toolChanged, saveCompleted } = useContext(UnsavedContext).state;
   const [memory] = useGlobal('memory');
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const [project] = useGlobal('project');
-  const [projType] = useGlobal('projType');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
+  const [project] = useGlobal('project'); //will be constant here
+  const [projType] = useGlobal('projType'); //verified this is not used in a function 2/18/25
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
   const [errorReporter] = useGlobal('errorReporter');
@@ -287,6 +218,8 @@ export function Transcriber(props: IProps) {
   const [projData, setProjData] = useState<FontData>();
   const [suggestedSegs, setSuggestedSegs] = useState<string>();
   const verseSegs = useRef<string>();
+  const [verseLabels, setVerseLabels] = useState<string[]>([]);
+  const [contentVerses, setContentVerses] = useState<string[]>([]);
   const playedSecsRef = useRef<number>(0);
   const segmentsRef = useRef<string>();
   const stateRef = useRef<string>(state);
@@ -348,6 +281,8 @@ export function Transcriber(props: IProps) {
   const [style, setStyle] = useState({
     cursor: 'default',
   });
+  const getGlobal = useGetGlobal();
+
   const transcribeDefaultParams = {
     silenceThreshold: 0.004,
     timeThreshold: 0.02,
@@ -362,10 +297,9 @@ export function Transcriber(props: IProps) {
   const { slugFromId } = useArtifactType();
 
   const [textAreaStyle, setTextAreaStyle] = useState<CSSProperties>({
-    overflow: 'auto',
+    overflow: 'auto !important',
     backgroundColor: '#cfe8fc',
     height: boxHeight,
-    width: '98hu',
     fontFamily: projData?.fontFamily,
     fontSize: projData?.fontSize,
     direction: projData?.fontDir as any,
@@ -432,7 +366,7 @@ export function Transcriber(props: IProps) {
     });
     setTextAreaStyle({
       ...textAreaStyle,
-      height: boxHeight,
+      height: `${boxHeight}px !important`,
       fontFamily: projData?.fontFamily,
       fontSize: projData?.fontSize,
       direction: projData?.fontDir as any,
@@ -570,6 +504,12 @@ export function Transcriber(props: IProps) {
         let segs = getSortedRegions(
           getSegments(NamedRegions.Verse, defaultSegments)
         );
+        const verseLabels: string[] = [];
+        segs.forEach((region) => {
+          const vnum = region?.label?.split(':')[1];
+          if (vnum) verseLabels.push(vnum);
+        });
+        setVerseLabels(verseLabels);
         if (segs.length > 0) {
           const textArea = transcriptionRef.current
             .firstChild as HTMLTextAreaElement;
@@ -630,7 +570,7 @@ export function Transcriber(props: IProps) {
           ActivityStates.TranscribeReady,
         0,
         segmentsRef.current,
-        t.pullParatextStatus
+        addPt(t.pullParatextStatus)
       );
       resetParatextText();
     }
@@ -675,7 +615,7 @@ export function Transcriber(props: IProps) {
       ) || projType.toLowerCase() !== 'scripture';
     if (ptCheck !== noParatext) setNoParatext(ptCheck);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project, projType, artifactTypeSlug]);
+  }, [project, projType, artifactTypeSlug, offline]);
 
   useEffect(() => {
     const newAssigned = rowData[index]?.assigned;
@@ -716,14 +656,14 @@ export function Transcriber(props: IProps) {
       showMessage(t.invalidReference);
       return;
     }
-    if (offline) {
+    if (getGlobal('offline')) {
       getParatextDataPath().then((ptPath: string) => {
         getParatextTextLocal(
           ptPath,
           passage,
           paratextProject,
           errorReporter,
-          t.pullParatextStart
+          addPt(t.pullParatextStart)
         );
       });
     } else {
@@ -732,16 +672,16 @@ export function Transcriber(props: IProps) {
         remoteIdNum(
           'passage',
           passage.id as string,
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         ),
         artifactId &&
           (remoteId(
             'artifacttype',
             artifactId,
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           ) as string),
         errorReporter,
-        t.pullParatextStart
+        addPt(t.pullParatextStart)
       );
     }
   };
@@ -1045,6 +985,27 @@ export function Transcriber(props: IProps) {
     };
   };
 
+  useEffect(() => {
+    const transcription = textValue;
+    if (!transcription) return;
+    const newContentVerses: string[] = [];
+    verseLabels.forEach((label) => {
+      const pat = new RegExp(`\\\\v\\s+${label}\\s+[^\\\\]`);
+      if (pat.test(transcription as string)) {
+        newContentVerses.push(label);
+      }
+    });
+    if (newContentVerses.length === 0) {
+      if (!/\\v/.test(transcription as string)) {
+        newContentVerses.push('no-verses');
+      }
+    }
+    if (JSON.stringify(contentVerses) !== JSON.stringify(newContentVerses)) {
+      setContentVerses(newContentVerses);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [textValue, verseLabels, playerMediafile]);
+
   const showTranscription = (val: ITrans) => {
     transcriptionIn.current = val.transcription;
     setTextValue(val.transcription ?? '');
@@ -1093,16 +1054,33 @@ export function Transcriber(props: IProps) {
     if (teamDefault) setOrgDefault(NamedRegions.Transcription, params);
   };
 
-  const onSaveProgress = (progress: number) => {
+  const addText = (text: string, atEnd?: boolean) => {
     if (transcriptionRef.current) {
       focusOnTranscription();
-      const timeStamp = '(' + formatTime(progress) + ')';
       const textArea = transcriptionRef.current
         .firstChild as HTMLTextAreaElement;
-      insertAtCursor(textArea, timeStamp);
+      if (atEnd) setTextValue(textArea.value ?? '');
+      insertAtCursor(textArea, text);
       setTextValue(textArea.value ?? '');
     }
   };
+
+  const handleAutoTranscribe = (trans: string) => {
+    const cleanTrans = trans.replace(/[0-9]+:[0-9]+.[0-9]+: /g, '').trim();
+    const curTrans: string = transcriptionRef.current?.firstChild?.value ?? '';
+    if (curTrans.includes(cleanTrans)) return;
+    const m = /\\v (\d+)\s?/.exec(cleanTrans);
+    const index = m && curTrans.includes(m[0]) ? m[0].length : 0;
+    const space = /\s$/.test(curTrans) ? '' : ' ';
+    addText(space + cleanTrans.substring(index), true);
+    toolChanged(toolId, true);
+  };
+
+  const onSaveProgress = (progress: number) => {
+    const timeStamp = '(' + formatTime(progress) + ')';
+    addText(timeStamp);
+  };
+
   const handleSplitSize = debounce((e: any) => {
     setPlayerSize(e);
   }, 50);
@@ -1171,7 +1149,7 @@ export function Transcriber(props: IProps) {
                         PassageTypeEnum.NOTE
                       ) && (
                         <Grid item>
-                          <LightTooltip title={t.pullParatextTip}>
+                          <LightTooltip title={addPt(t.pullParatextTip)}>
                             <span>
                               <IconButton
                                 id="transcriber.pullParatext"
@@ -1179,10 +1157,8 @@ export function Transcriber(props: IProps) {
                                 disabled={!transSelected}
                               >
                                 <>
-                                  <PullIcon />{' '}
-                                  <Typography>
-                                    {t.pullParatextCaption}
-                                  </Typography>
+                                  <PullIcon />
+                                  <Typography>{Paratext}</Typography>
                                 </>
                               </IconButton>
                             </span>
@@ -1209,12 +1185,19 @@ export function Transcriber(props: IProps) {
                         onSegment={onSegmentChange}
                         onSegmentParamChange={onSegmentParamChange}
                         onInteraction={onInteraction}
+                        onTranscription={handleAutoTranscribe}
                         parentToolId={toolId}
                         onSaveProgress={
                           !transSelected || role === 'view'
                             ? undefined
                             : onSaveProgress
                         }
+                        role={role}
+                        hasTranscription={
+                          textValue !== '' &&
+                          verseLabels.length <= contentVerses.length
+                        }
+                        contentVerses={contentVerses}
                       />
                     </Grid>
                   </Grid>
@@ -1235,7 +1218,7 @@ export function Transcriber(props: IProps) {
                         readOnly={!transSelected || role === 'view'}
                         family={projData?.fontConfig?.custom?.families[0] ?? ''}
                         url={projData?.fontConfig?.custom?.urls[0] ?? ''}
-                        style={textAreaStyle}
+                        overrides={textAreaStyle}
                         onChange={handleChange}
                         lang={projData?.langTag || 'en'}
                         spellCheck={projData?.spellCheck}

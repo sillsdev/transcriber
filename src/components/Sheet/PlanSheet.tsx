@@ -8,7 +8,7 @@ import {
   ReactElement,
   useCallback,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
 import {
   IPlanSheetStrings,
   ISharedStrings,
@@ -32,7 +32,6 @@ import {
   TabActions,
   ActionHeight,
   GrowingSpacer,
-  AltButton,
   PriButton,
   iconMargin,
   LightTooltip,
@@ -45,6 +44,8 @@ import {
   rememberCurrentPassage,
   positiveWholeOnly,
   useCanPublish,
+  logError,
+  Severity,
 } from '../../utils';
 import {
   PublishDestinationEnum,
@@ -74,6 +75,8 @@ import { usePlanSheetFill } from './usePlanSheetFill';
 import { useShowIcon } from './useShowIcon';
 import { RecordKeyMap } from '@orbit/records';
 import ConfirmPublishDialog from '../ConfirmPublishDialog';
+import { addPt } from '../../utils/addPt';
+import { Akuo } from '../../assets/brands';
 
 const DOWN_ARROW = 'ARROWDOWN';
 export const SectionSeqCol = 0;
@@ -257,7 +260,6 @@ export function PlanSheet(props: IProps) {
   const {
     hidePublishing,
     publishingOn,
-    projButtonStr,
     connected,
     readonly,
     sectionArr,
@@ -265,7 +267,7 @@ export function PlanSheet(props: IProps) {
   } = ctx.state;
 
   const [memory] = useGlobal('memory');
-  const [global] = useGlobal();
+  const [errorReporter] = useGlobal('errorReporter');
   const { showMessage } = useSnackBar();
   const [position, setPosition] = useState<{
     mouseX: null | number;
@@ -278,13 +280,14 @@ export function PlanSheet(props: IProps) {
   const [confirmAction, setConfirmAction] = useState('');
   const suggestionRef = useRef<Array<OptionType>>();
   const saveTimer = useRef<NodeJS.Timeout>();
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [offlineOnly] = useGlobal('offlineOnly');
   const [pasting, setPasting] = useState(false);
   const preventSaveRef = useRef<boolean>(false);
   const [preventSave, setPreventSavex] = useState(false);
   const [anyRecording, setAnyRecording] = useState(false);
   const currentRowRef = useRef<number>(-1);
+  const startRowRef = useRef<number>(-1);
   const [currentRow, setCurrentRowx] = useState(-1);
   const [active, setActive] = useState(-1); // used for action menu to display
   const sheetRef = useRef<any>();
@@ -335,10 +338,12 @@ export function PlanSheet(props: IProps) {
   const [org] = useGlobal('organization');
   const [hasBible, setHasBible] = useState(false);
   const { getOrgBible } = useBible();
+  const getGlobal = useGetGlobal();
+
   useEffect(() => {
     if (org) {
       var bible = getOrgBible(org);
-      setHasBible(bible !== undefined);
+      setHasBible((bible?.attributes.bibleName ?? '') !== '');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
@@ -347,7 +352,7 @@ export function PlanSheet(props: IProps) {
     startSave();
   };
 
-  const publishConfirm = (destinations: PublishDestinationEnum[]) => {
+  const publishConfirm = async (destinations: PublishDestinationEnum[]) => {
     setConfirmPublish(false);
     setSectionPublish(currentRowRef.current - 1, destinations);
   };
@@ -494,10 +499,11 @@ export function PlanSheet(props: IProps) {
 
   const handleSelect = (loc: DataSheet.Selection) => {
     setCurrentRow(loc.end.i);
+    startRowRef.current = loc.start.i;
     sheetScroll();
   };
 
-  const handleValueRender = (cell: ICell) => {
+  const handleValueRender: DataSheet.ValueRenderer<ICell> = (cell) => {
     return cell?.className?.substring(0, 4) === 'book' && bookMap
       ? bookMap[cell.value]
       : cell?.className?.includes('num')
@@ -572,11 +578,11 @@ export function PlanSheet(props: IProps) {
     updateData(colChanges);
   };
 
-  const handleContextMenu = (
-    e: MouseEvent,
-    cell: any,
-    i: number,
-    j: number
+  const handleContextMenu: DataSheet.ContextMenuHandler<ICell> = (
+    e,
+    cell,
+    i,
+    j
   ) => {
     e.preventDefault();
     if (i > 0 && !readonly) {
@@ -585,6 +591,31 @@ export function PlanSheet(props: IProps) {
   };
 
   const handleNoContextMenu = () => setPosition(initialPosition);
+
+  const handleSheetCopy = (start?: number, end?: number) => {
+    let content = '';
+    start = start ?? 0;
+    end = end ?? rowData.length;
+    if (
+      startRowRef.current !== -1 &&
+      startRowRef.current !== currentRowRef.current
+    ) {
+      start = startRowRef.current - 1;
+      end = currentRowRef.current;
+    }
+    for (let idx = start; idx < end; idx++) {
+      const row = [...rowData[idx]];
+      if (Boolean(row[0]) && (row[2] as string).startsWith('(')) row[2] = '';
+      content += row.join('\t') + '\n';
+    }
+    navigator.clipboard.writeText(content).catch((reason) => {
+      logError(
+        Severity.error,
+        errorReporter,
+        new Error(`${ts.cantCopy}: ${reason}`)
+      );
+    });
+  };
 
   const parsePaste = (clipBoard: string) => {
     if (readonly) return Array<Array<string>>();
@@ -659,7 +690,11 @@ export function PlanSheet(props: IProps) {
   });
 
   const handleAutoSave = () => {
-    if (changedRef.current && !preventSaveRef.current && !global.alertOpen) {
+    if (
+      changedRef.current &&
+      !preventSaveRef.current &&
+      !getGlobal('alertOpen')
+    ) {
       handleSave();
     } else {
       startSaveTimer();
@@ -718,7 +753,7 @@ export function PlanSheet(props: IProps) {
         const pasGuid = remoteIdGuid(
           'passage',
           lastPasId,
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         );
         row = rowInfo.findIndex((r) => r.passage?.id === pasGuid);
       }
@@ -780,13 +815,13 @@ export function PlanSheet(props: IProps) {
         }
       });
     }
-    if (refErr && !warning) setWarning(t.refErr);
+    if (refErr && !warning) setWarning(addPt(t.refErr));
     else if (!refErr && warning) setWarning(undefined);
   };
 
   const handlePublishToggle: MouseEventHandler<HTMLButtonElement> = () => {
     if (!canPublish && !publishingOn) {
-      showMessage(t.paratextRequired);
+      showMessage(addPt(t.paratextRequired));
       return;
     }
     if (filtered && !publishingOn) {
@@ -962,20 +997,11 @@ export function PlanSheet(props: IProps) {
                   )}
                   onAction={(what: ExtraIcon) => onAction(currentRow - 1, what)}
                 />
-                <AltButton
-                  id="planSheetImp"
-                  key="importExcel"
-                  aria-label={t.tablePaste}
-                  disabled={pasting || anyRecording || readonly || filtered}
-                  onClick={handleTablePaste}
-                >
-                  {t.tablePaste}
-                </AltButton>
-                <AltButton
-                  id="planSheetReseq"
-                  key="resequence"
-                  aria-label={t.resequence}
-                  disabled={
+                <ProjButtons
+                  {...props}
+                  noCopy={pasting || filtered}
+                  noPaste={pasting || anyRecording || readonly || filtered}
+                  noReseq={
                     pasting ||
                     data.length < 2 ||
                     anyRecording ||
@@ -983,15 +1009,11 @@ export function PlanSheet(props: IProps) {
                     filtered ||
                     !hidePublishing
                   }
-                  onClick={handleResequence}
-                >
-                  {t.resequence}
-                </AltButton>
-                <ProjButtons
-                  {...props}
                   noImExport={anyRecording || pasting}
                   noIntegrate={anyRecording || pasting || data.length < 2}
-                  t={projButtonStr}
+                  onCopy={handleSheetCopy}
+                  onPaste={handleTablePaste}
+                  onReseq={handleResequence}
                 />
               </>
             )}
@@ -1075,13 +1097,39 @@ export function PlanSheet(props: IProps) {
                 '{0}',
                 isMovement(currentRowRef.current - 1) ? pt.MOVE : organizedBy
               )}
+              propagateLabel={t.propagate
+                .replaceAll(
+                  '{0}',
+                  isMovement(currentRowRef.current - 1)
+                    ? organizedByPlural.toLocaleLowerCase()
+                    : ts.passages.toLocaleLowerCase()
+                )
+                .replaceAll(
+                  '{1}',
+                  isMovement(currentRowRef.current - 1)
+                    ? t.movement.toLocaleLowerCase()
+                    : organizedBy.toLocaleLowerCase()
+                )}
               description={
                 isMovement(currentRowRef.current - 1)
                   ? t.confirmPublishMovement.replaceAll(
                       '{0}',
-                      organizedByPlural
+                      organizedByPlural.toLocaleLowerCase()
                     )
-                  : t.confirmPublishSection.replaceAll('{0}', organizedBy)
+                  : t.confirmPublishSection.replaceAll(
+                      '{0}',
+                      organizedBy.toLocaleLowerCase()
+                    )
+              }
+              noPropagateDescription={
+                isMovement(currentRowRef.current - 1)
+                  ? t.confirmPublishMovementNoPropagate
+                      .replaceAll('{0}', organizedByPlural.toLocaleLowerCase())
+                      .replaceAll('{1}', Akuo)
+                  : t.confirmPublishSectionNoPropagate.replaceAll(
+                      '{0}',
+                      organizedBy.toLocaleLowerCase()
+                    )
               }
               yesResponse={publishConfirm}
               noResponse={publishRefused}

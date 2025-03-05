@@ -1,5 +1,5 @@
 import React, { useContext, useState, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
 import { Grid } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import { Organization, DialogMode, OrganizationD } from '../../model';
@@ -21,10 +21,10 @@ interface IProps {
 
 export const TeamItem = (props: IProps) => {
   const { team } = props;
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [, setOrganization] = useGlobal('organization');
-  const [busy] = useGlobal('remoteBusy');
+  const [busy] = useGlobal('remoteBusy'); //verified this is not used in a function 2/18/25
   const [editOpen, setEditOpen] = useState(false);
   const [showWorkflow, setShowWorkflow] = useState(false);
   const [deleteItem, setDeleteItem] = useState<RecordIdentity>();
@@ -36,7 +36,7 @@ export const TeamItem = (props: IProps) => {
   const [openMember, setOpenMember] = useState(false);
   const { setMyOrgRole } = useRole();
   const { startSave, waitForSave } = useContext(UnsavedContext).state;
-  const [changed] = useGlobal('changed');
+  const getGlobal = useGetGlobal();
   const handleMembers = (team: OrganizationD) => () => {
     setOrganization(team.id);
     setMyOrgRole(team.id);
@@ -85,7 +85,7 @@ export const TeamItem = (props: IProps) => {
   const handleDeleteRefused = () => setDeleteItem(undefined);
 
   const handleWorkflow = (isOpen: boolean) => {
-    if (changed) {
+    if (getGlobal('changed')) {
       startSave();
       waitForSave(() => setShowWorkflow(isOpen), 500);
     } else setShowWorkflow(isOpen);
@@ -102,17 +102,24 @@ export const TeamItem = (props: IProps) => {
   return (
     <TeamPaper id="TeamItem">
       <TeamHeadDiv>
-        <TeamName variant="h5">
-          <GroupIcon sx={{ pr: 1 }} />
-          {team?.attributes?.name}
-        </TeamName>
-        <div>
-          <AltButton id="teamMembers" onClick={handleMembers(team)}>
-            {t.members.replace('{0}', teamMembers(team.id).toString())}
-          </AltButton>
-          {' \u00A0'}
-          {canModify && (
-            <>
+        <Grid container direction={'row'}>
+          <Grid item xs={12} md={4} lg={7}>
+            <TeamName variant="h5">
+              <GroupIcon sx={{ pr: 1 }} />
+              {team?.attributes?.name}
+            </TeamName>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={8}
+            lg={5}
+            sx={{ display: 'flex', justifyContent: 'flex-end' }}
+          >
+            <AltButton id="teamMembers" onClick={handleMembers(team)}>
+              {t.members.replace('{0}', teamMembers(team.id).toString())}
+            </AltButton>
+            {canModify && (
               <AltButton
                 id="editWorkflow"
                 onClick={handleEditWorkflow}
@@ -120,7 +127,8 @@ export const TeamItem = (props: IProps) => {
               >
                 {t.editWorkflow.replace('{0}', '')}
               </AltButton>
-              {' \u00A0'}
+            )}
+            {canModify && (
               <AltButton
                 id="teamSettings"
                 onClick={handleSettings(team)}
@@ -128,9 +136,9 @@ export const TeamItem = (props: IProps) => {
               >
                 {t.settings}
               </AltButton>
-            </>
-          )}
-        </div>
+            )}
+          </Grid>
+        </Grid>
       </TeamHeadDiv>
       {editOpen && (
         <TeamDialog

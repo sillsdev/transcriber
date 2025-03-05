@@ -6,7 +6,7 @@ import { AltButton, LightTooltip } from '../../../control';
 import { resourceSelector } from '../../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { StyledMenu, StyledMenuItem } from '../../../control';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 
 interface IProps {
   action?: (what: string) => void;
@@ -16,8 +16,8 @@ interface IProps {
 export const AddResource = (props: IProps) => {
   const { action, stopPlayer } = props;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const t: IPassageDetailArtifactsStrings = useSelector(
     resourceSelector,
     shallowEqual

@@ -223,25 +223,23 @@ const ipcMethods = () => {
   });
 
   ipcMain.handle('zipAddFile', async (event, zip, name, data, comment) => {
-    return admZip
-      .get(zip)
-      .addFile(name, Buffer.alloc(data.length, data), comment);
+    admZip.get(zip).addFile(name, Buffer.alloc(data.length, data), comment);
+    return true;
   });
 
   ipcMain.handle('zipAddJson', async (event, zip, name, data, comment) => {
-    return admZip
-      .get(zip)
-      .addFile(name, Buffer.from(JSON.parse(data)), comment);
+    admZip.get(zip).addFile(name, Buffer.from(JSON.parse(data)), comment);
+    return true;
   });
 
   ipcMain.handle('zipAddZip', async (event, zip, name, addZip, comment) => {
-    return admZip
-      .get(zip)
-      .addFile(name, admZip.get(addZip).toBuffer(), comment);
+    admZip.get(zip).addFile(name, admZip.get(addZip).toBuffer(), comment);
+    return true;
   });
 
   ipcMain.handle('zipAddLocal', async (event, zip, full, folder, base) => {
-    return admZip.get(zip).addLocalFile(full, folder, base);
+    admZip.get(zip).addLocalFile(full, folder, base);
+    return true;
   });
 
   ipcMain.handle('zipToBuffer', async (event, zip) => {
@@ -249,11 +247,13 @@ const ipcMethods = () => {
   });
 
   ipcMain.handle('zipWrite', async (event, zip, where) => {
-    return admZip.get(zip).writeZip(where);
+    admZip.get(zip).writeZip(where);
+    return true;
   });
 
   ipcMain.handle('zipExtract', async (event, zip, folder, replace) => {
-    return admZip.get(zip).extractAllTo(folder, replace);
+    admZip.get(zip).extractAllTo(folder, replace);
+    return true;
   });
 
   ipcMain.handle('zipClose', async (event, zip) => {
@@ -265,7 +265,7 @@ const ipcMethods = () => {
     const count = await zipStrm.extract(null, folder);
     console.log(`Extracted ${count} entries`);
     await zipStrm.close();
-    return;
+    return true;
   });
 
   let zipStr = new Map();

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { IPermissionStrings } from '../model';
 import { permissionsSelector } from '../selector';
@@ -93,7 +93,7 @@ export const usePermissions = () => {
     return {
       ...json,
       approved: false,
-      author: remoteId('user', user, memory.keyMap as RecordKeyMap) ?? user,
+      author: remoteId('user', user, memory?.keyMap as RecordKeyMap) ?? user,
     };
   };
 
@@ -115,7 +115,7 @@ export const usePermissions = () => {
     var json = JSON.parse(perms);
     if (Object.keys(json).length === 0) return undefined;
     return (
-      remoteIdGuid('user', json['author'], memory.keyMap as RecordKeyMap) ??
+      remoteIdGuid('user', json['author'], memory?.keyMap as RecordKeyMap) ??
       json['author']
     );
   };

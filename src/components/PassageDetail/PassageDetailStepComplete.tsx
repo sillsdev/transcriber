@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { IconButton } from '@mui/material';
 import CompleteIcon from '@mui/icons-material/CheckBoxOutlined';
 import NotCompleteIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -24,8 +24,8 @@ export const PassageDetailStepComplete = () => {
     passage,
   } = usePassageDetailContext();
   const { pathname } = useLocation();
-  const [busy] = useGlobal('remoteBusy');
-  const [importexportBusy] = useGlobal('importexportBusy');
+  const [busy] = useGlobal('remoteBusy'); //verified this is not used in a function 2/18/25
+  const [importexportBusy] = useGlobal('importexportBusy'); //verified this is not used in a function 2/18/25
   const [view, setView] = useState('');
   const t: IPassageDetailStepCompleteStrings = useSelector(
     passageDetailStepCompleteSelector,

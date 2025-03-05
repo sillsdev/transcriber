@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { IMainStrings, ISharedStrings, User, UserD } from '../model';
 import {
   Button,
@@ -43,7 +43,7 @@ interface IProps {
 export function UserMenu(props: IProps) {
   const { action } = props;
   const users = useOrbitData<User[]>('user');
-  const [orgRole] = useGlobal('orgRole');
+  const [orgRole] = useGlobal('orgRole'); //verified this is not used in a function 2/18/25
   const [developer] = useGlobal('developer');
   const [user] = useGlobal('user');
   const { pathname } = useLocation();

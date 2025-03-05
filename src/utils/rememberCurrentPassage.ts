@@ -9,7 +9,7 @@ export async function rememberCurrentPassage(
 ) {
   if (passageId) {
     const passageRemoteId =
-      remoteIdNum('passage', passageId, memory.keyMap as RecordKeyMap) ||
+      remoteIdNum('passage', passageId, memory?.keyMap as RecordKeyMap) ||
       passageId;
     localStorage.setItem(localUserKey(LocalKey.passage), `${passageRemoteId}`);
   } else {

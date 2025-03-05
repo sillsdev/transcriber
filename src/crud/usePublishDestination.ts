@@ -5,13 +5,16 @@ export enum PublishDestinationEnum {
   Internalization,
   OBTHelps,
   PublishDestinationSetByUser, // This is a special value that is used to indicate that the user has set the publish destination
+  PropagateSection,
 }
 
 export const usePublishDestination = () => {
   const isPublished = (destinations: PublishDestinationEnum[]) => {
     return (
       destinations.filter(
-        (p) => p !== PublishDestinationEnum.PublishDestinationSetByUser
+        (p) =>
+          p !== PublishDestinationEnum.PublishDestinationSetByUser &&
+          p !== PublishDestinationEnum.PropagateSection
       ).length > 0
     );
   };
@@ -72,6 +75,8 @@ export const usePublishDestination = () => {
         case PublishDestinationEnum.OBTHelps:
           json['OBTHelps'] = 'true';
           break;
+        case PublishDestinationEnum.PropagateSection:
+          json['Propagate'] = 'true';
       }
     });
     json['PublishDestinationSetByUser'] = 'true';

@@ -7,11 +7,20 @@ import {
   FormControlLabel,
   Box,
   SxProps,
+  styled,
+  FormControlLabelProps,
 } from '@mui/material';
 import { LanguagePicker, LangTag } from 'mui-language-picker';
 import { useSelector, shallowEqual } from 'react-redux';
 import { vProjectSelector, pickerSelector } from '../selector';
 import { fontFamilyName } from '../utils/fontFamilyName';
+import { IPickerStrings, IVProjectStrings } from '../model';
+
+const StyledFormControlLabel = styled(FormControlLabel)<FormControlLabelProps>({
+  '& .MuiFormControlLabel-asterisk': {
+    display: 'none',
+  },
+});
 
 export interface ILanguage {
   bcp47: string;
@@ -22,8 +31,17 @@ export interface ILanguage {
   info?: LangTag;
 }
 
+export const initLang: ILanguage = {
+  bcp47: 'und',
+  languageName: '',
+  font: '',
+  rtl: false,
+  spellCheck: false,
+};
+
 interface IProps extends ILanguage {
   onChange: (state: ILanguage) => void;
+  filter?: (code: string) => boolean;
   hideSpelling?: boolean;
   hideFont?: boolean;
   disabled?: boolean;
@@ -32,8 +50,18 @@ interface IProps extends ILanguage {
 }
 
 export const Language = (props: IProps) => {
-  const { bcp47, languageName, font, rtl, spellCheck, required, sx, onChange } =
-    props;
+  const {
+    bcp47,
+    languageName,
+    font,
+    rtl,
+    spellCheck,
+    required,
+    sx,
+    onChange,
+    filter,
+    hideFont,
+  } = props;
   const [state, setState] = React.useState<ILanguage>({
     bcp47,
     languageName,
@@ -41,8 +69,8 @@ export const Language = (props: IProps) => {
     rtl,
     spellCheck,
   });
-  const t = useSelector(vProjectSelector, shallowEqual);
-  const lt = useSelector(pickerSelector, shallowEqual);
+  const t: IVProjectStrings = useSelector(vProjectSelector, shallowEqual);
+  const lt: IPickerStrings = useSelector(pickerSelector, shallowEqual);
   const stateRef = React.useRef<ILanguage>();
   const langEl = React.useRef<any>();
 
@@ -100,7 +128,7 @@ export const Language = (props: IProps) => {
         <FormLabel sx={{ color: 'secondary.main' }}>{t.language}</FormLabel>
       )}
       <FormGroup sx={fullBox || undefined}>
-        <FormControlLabel
+        <StyledFormControlLabel
           id="language-code"
           ref={langEl}
           sx={sx ?? { ml: 0 }}
@@ -115,8 +143,11 @@ export const Language = (props: IProps) => {
               setFont={handleFont}
               setDir={handleDir}
               setInfo={handleInfo}
+              filter={filter}
               t={lt}
               disabled={props.disabled}
+              noScript={hideFont ? true : undefined}
+              noFont={hideFont ? true : undefined}
             />
           }
           label=""

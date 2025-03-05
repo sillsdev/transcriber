@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { localizeRole, LocalKey, localUserKey, useMyNavigate } from '../utils';
 import { shallowEqual } from 'react-redux';
 import {
@@ -72,8 +72,8 @@ export function UserTable() {
   const [user] = useGlobal('user');
   const [, setEditId] = useGlobal('editUserId');
   const [memory] = useGlobal('memory');
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const { getUserRec } = useUser();
   const [data, setData] = useState(Array<IRow>());
   const { userIsAdmin } = useRole();
@@ -246,12 +246,18 @@ export function UserTable() {
     () => data.filter((d) => d.role === RoleNames.Admin),
     [data]
   );
-  const canEdit = () => {
-    return userIsAdmin && (!offline || offlineOnly);
-  };
-  const canEditOrcanDeleteSelf = (value: string) => {
-    return (userIsAdmin || isCurrentUser(value)) && (!offline || offlineOnly);
-  };
+  const canEdit = useMemo(
+    () => userIsAdmin && (!offline || offlineOnly),
+    [userIsAdmin, offline, offlineOnly]
+  );
+
+  const canEditOrcanDeleteSelf = useMemo(
+    () => (value: string) =>
+      (userIsAdmin || isCurrentUser(value)) && (!offline || offlineOnly),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [offline, offlineOnly, userIsAdmin]
+  );
+
   const Cell = (props: any) => {
     const { column } = props;
     if (column.name === 'action') {
@@ -268,7 +274,7 @@ export function UserTable() {
     <Box sx={{ display: 'flex' }}>
       <div>
         <ActionRow>
-          {canEdit() && (
+          {canEdit && (
             <>
               {!offlineOnly && (
                 <PriButton

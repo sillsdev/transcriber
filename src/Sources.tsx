@@ -37,7 +37,6 @@ import { AlertSeverity } from './hoc/SnackBar';
 import { updateBackTranslationType } from './crud/updateBackTranslationType';
 import { updateConsultantWorkflowStep } from './crud/updateConsultantWorkflowStep';
 import { serializersSettings } from './serializers/serializersFor';
-import { State } from 'reactn/default';
 import { requestedSchema } from './schema';
 type StategyError = (...args: unknown[]) => unknown;
 
@@ -48,7 +47,8 @@ interface PullStratErrProps {
   showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void;
   memory: Memory;
   remote: JSONAPISource;
-  globalStore: State;
+  orbitRetries: any;
+  errorReporter: any;
 }
 interface QueryStratErrProps {
   tokenCtx: ITokenContext;
@@ -79,7 +79,7 @@ const updateError =
     showMessage,
     memory,
     remote,
-    globalStore,
+    orbitRetries,
   }: PullStratErrProps) =>
   (transform: RecordTransform, ex: any) => {
     console.log('***** api update fail', transform, ex);
@@ -90,8 +90,8 @@ const updateError =
       (ex instanceof Error &&
         (ex.message === 'Network Error' || ex.message === 'Failed to fetch'))
     ) {
-      if (globalStore.orbitRetries > 0) {
-        setOrbitRetries(globalStore.orbitRetries - 1);
+      if (orbitRetries > 0) {
+        setOrbitRetries(orbitRetries - 1);
         // When network errors are encountered, try again in 3s
         orbitError(orbitRetry(null, 'NetworkError - will try again soon'));
         setTimeout(() => {
@@ -142,18 +142,19 @@ export const Sources = async (
   coordinator: Coordinator,
   tokenCtx: ITokenContext,
   fingerprint: string,
+  errorReporter: any,
+  orbitRetries: number,
   setUser: (id: string) => void,
   setProjectsLoaded: (valud: string[]) => void,
   orbitError: (ex: IApiError) => void,
   setOrbitRetries: (r: number) => void,
   setLang: (locale: string) => void,
-  globalStore: State,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
   offlineSetup: () => Promise<void>,
   showMessage: (msg: string | JSX.Element, alert?: AlertSeverity) => void
 ) => {
-  const memory = coordinator.getSource('memory') as Memory;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const tokData = tokenCtx.state.profile || { sub: '' };
   const userToken = localStorage.getItem(LocalKey.authId);
   if (tokData.sub !== '') {
@@ -186,10 +187,10 @@ export const Sources = async (
 
   if (!offline) {
     remote = coordinator.sourceNames.includes('remote')
-      ? (coordinator.getSource('remote') as JSONAPISource)
+      ? (coordinator?.getSource('remote') as JSONAPISource)
       : new JSONAPISource({
-          schema: memory.schema,
-          keyMap: memory.keyMap,
+          schema: memory?.schema,
+          keyMap: memory?.keyMap,
           bucket,
           name: 'remote',
           namespace: 'api',
@@ -240,7 +241,8 @@ export const Sources = async (
             showMessage,
             memory,
             remote,
-            globalStore,
+            orbitRetries,
+            errorReporter,
           }) as unknown as StategyError,
           blocking: true,
         })
@@ -294,10 +296,10 @@ export const Sources = async (
       );
 
     datachangeremote = coordinator.sourceNames.includes('datachanges')
-      ? (coordinator.getSource('datachanges') as JSONAPISource)
+      ? (coordinator?.getSource('datachanges') as JSONAPISource)
       : new JSONAPISource({
-          schema: memory.schema,
-          keyMap: memory.keyMap,
+          schema: memory?.schema,
+          keyMap: memory?.keyMap,
           bucket: new IndexedDBBucket({
             namespace:
               'datachanges-' +
@@ -336,7 +338,7 @@ export const Sources = async (
     if (!isElectron) {
       //already did this if electron...
       setProjectsLoaded(await restoreBackup(coordinator));
-      const recs: Role[] = memory.cache.query((q) =>
+      const recs: Role[] = memory?.cache.query((q) =>
         q.findRecords('role')
       ) as any;
       if (recs.length === 0) {
@@ -375,7 +377,7 @@ export const Sources = async (
       );
       logError(
         Severity.error,
-        globalStore.errorReporter,
+        errorReporter,
         infoMsg(err, 'ITFSYNC export failed: ')
       );
       throw err;
@@ -397,10 +399,7 @@ export const Sources = async (
     setLang(locale);
     localStorage.setItem(LocalKey.userId, user.id);
     localStorage.setItem(LocalKey.onlineUserId, user.id);
-    if (
-      globalStore.errorReporter &&
-      localStorage.getItem(LocalKey.connected) !== 'false'
-    )
+    if (errorReporter && localStorage.getItem(LocalKey.connected) !== 'false')
       Bugsnag.setUser(user.keys?.remoteId ?? user.id);
   }
   var user = localStorage.getItem(LocalKey.userId) as string;
@@ -410,7 +409,7 @@ export const Sources = async (
       memory,
       tokenCtx.state.accessToken || '',
       user,
-      globalStore.errorReporter,
+      errorReporter,
       offlineSetup
     );
   }

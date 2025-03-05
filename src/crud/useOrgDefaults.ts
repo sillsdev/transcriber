@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { Organization, OrganizationD, RoleNames } from '../model';
 import { UpdateRecord } from '../model/baseModel';
 import { findRecord } from './tryFindRecord';
@@ -12,15 +12,18 @@ export const orgDefaultSortTag = 'ktSort';
 export const orgDefaultKtLang = 'ktLang';
 export const orgDefaultKtExcludeTag = 'ktExcl';
 export const orgDefaultResKw = 'ResKw';
-export const orgDefaultLangProps = 'langProps'
+export const orgDefaultLangProps = 'langProps';
+export const orgDefaultFeatures = 'features';
+export const orgDefaultVoices = 'voices';
+export const orgDefaultAsr = 'asr';
 
 export const useOrgDefaults = () => {
   const [organization] = useGlobal('organization');
-  const [orgRole] = useGlobal('orgRole');
+  const [orgRole] = useGlobal('orgRole'); //verified this is not used in a function 2/18/25
   const [user] = useGlobal('user');
   const [memory] = useGlobal('memory');
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly'); //verified this is not used in a function 2/18/25
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const { getParam, setParam } = useJsonParams();
   const getDefault = (label: string, org: Organization | OrganizationD) => {
     return getParam(label, org.attributes?.defaultParams);

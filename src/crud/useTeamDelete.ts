@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   OrganizationMembershipD,
   GroupMembershipD,
@@ -15,7 +15,7 @@ import { related, findRecord } from '.';
 import { useProjectDelete } from './useProjectDelete';
 export const useTeamDelete = () => {
   const [memory] = useGlobal('memory');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const projectDelete = useProjectDelete();
 
   const noTeam = (teamId: string) =>
@@ -24,21 +24,21 @@ export const useTeamDelete = () => {
   return async (teamid: string) => {
     if (noTeam(teamid)) return;
     const teamgrpIds = (
-      memory.cache.query((q) => q.findRecords('group')) as GroupD[]
+      memory?.cache.query((q) => q.findRecords('group')) as GroupD[]
     )
       .filter((g) => related(g, 'owner') === teamid)
       .map((tg) => tg.id);
     const teamgms = (
-      memory.cache.query((q) =>
+      memory?.cache.query((q) =>
         q.findRecords('groupmembership')
       ) as GroupMembershipD[]
     ).filter((gm) => teamgrpIds.includes(related(gm, 'group')));
     const teamprojs = (
-      memory.cache.query((q) => q.findRecords('project')) as ProjectD[]
+      memory?.cache.query((q) => q.findRecords('project')) as ProjectD[]
     ).filter((p) => teamgrpIds.includes(related(p, 'group')));
     const projIds = teamprojs.map((p) => p.id);
     const teamoms = (
-      memory.cache.query((q) =>
+      memory?.cache.query((q) =>
         q.findRecords('organizationmembership')
       ) as OrganizationMembershipD[]
     ).filter((om) => teamgrpIds.includes(related(om, 'organization')));
@@ -53,7 +53,7 @@ export const useTeamDelete = () => {
       await projectDelete(projIds[ix]);
     ops = [];
     const artifactcats = (
-      memory.cache.query((q) =>
+      memory?.cache.query((q) =>
         q.findRecords('artifactcategory').filter({
           relation: 'organization',
           record: { type: 'organization', id: teamid },
@@ -71,7 +71,7 @@ export const useTeamDelete = () => {
     );
     if (offlineOnly) {
       const orgSteps = (
-        memory.cache.query((q) =>
+        memory?.cache.query((q) =>
           q.findRecords('orgworkflowstep').filter({
             relation: 'organization',
             record: { type: 'organization', id: teamid },
@@ -80,7 +80,7 @@ export const useTeamDelete = () => {
       ).map((s) => s.id);
 
       const artifacttypes = (
-        memory.cache.query((q) =>
+        memory?.cache.query((q) =>
           q.findRecords('artifacttype').filter({
             relation: 'organization',
             record: { type: 'organization', id: teamid },
@@ -89,13 +89,13 @@ export const useTeamDelete = () => {
       ).map((s) => s.id);
 
       const discussions = (
-        memory.cache.query((q) => q.findRecords('discussion')) as DiscussionD[]
+        memory?.cache.query((q) => q.findRecords('discussion')) as DiscussionD[]
       )
         .filter((d) => orgSteps.includes(related(d, 'orgWorkflowStep')))
         .map((s) => s.id);
 
       const comments = (
-        memory.cache.query((q) => q.findRecords('comment')) as CommentD[]
+        memory?.cache.query((q) => q.findRecords('comment')) as CommentD[]
       )
         .filter((d) => discussions.includes(related(d, 'discussion')))
         .map((s) => s.id);

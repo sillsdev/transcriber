@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
 import * as actions from '../store';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import {
   IState,
   IIntegrationStrings,
@@ -82,6 +82,8 @@ import {
   projDefExportNumbers,
   useProjectDefaults,
 } from '../crud/useProjectDefaults';
+import { Paratext } from '../assets/brands';
+import { addPt } from '../utils/addPt';
 
 const panelProps = { flexDirection: 'column' } as SxProps;
 const textFieldProps = { mx: 1, width: '600px' } as SxProps;
@@ -226,7 +228,6 @@ export function IntegrationPanel(props: IProps) {
   const projects = useOrbitData<ProjectD[]>('project');
   const passages = useOrbitData<PassageD[]>('passage');
   const mediafiles = useOrbitData<MediaFileD[]>('mediafile');
-  const [connected] = useGlobal('connected');
   const [hasPtProj, setHasPtProj] = useState(false);
   const [ptProj, setPtProj] = useState(-1);
   const [ptProjId, setPtProjId] = useState('');
@@ -235,10 +236,11 @@ export function IntegrationPanel(props: IProps) {
   const [hasPermission, setHasPermission] = useState(false);
   const [ptPermission, setPtPermission] = useState('None');
   const [myProject, setMyProject] = useState('');
-  const [project] = useGlobal('project');
+  const [connected] = useGlobal('connected'); //verified this is not used in a function 2/18/25
+  const [project] = useGlobal('project'); //will be constant here
   const [user] = useGlobal('user');
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [local, setLocal] = useState(offline || offlineOnly);
   const { accessToken } = useContext(TokenContext).state;
   const forceDataChanges = useDataChanges();
@@ -247,12 +249,12 @@ export function IntegrationPanel(props: IProps) {
 
   const [paratextIntegration, setParatextIntegration] = useState('');
   const [coordinator] = useGlobal('coordinator');
-  const memory = coordinator.getSource('memory') as Memory;
-  const [plan] = useGlobal('plan');
+  const memory = coordinator?.getSource('memory') as Memory;
+  const [plan] = useGlobal('plan'); //will be constant here
 
   const [errorReporter] = useGlobal('errorReporter');
   const { showMessage, showTitledMessage } = useSnackBar();
-  const [busy] = useGlobal('remoteBusy');
+  const [busy] = useGlobal('remoteBusy'); //verified this is not used in a function 2/18/25
   const [ptPath, setPtPath] = useState('');
   const syncing = React.useRef<boolean>(false);
   const setSyncing = (state: boolean) => (syncing.current = state);
@@ -268,7 +270,7 @@ export function IntegrationPanel(props: IProps) {
   const intSave = React.useRef('');
   const { getOrganizedBy } = useOrganizedBy();
   const { getProjectDefault, setProjectDefault } = useProjectDefaults();
-
+  const getGlobal = useGetGlobal();
   const [exportNumbers, setExportNumbers] = useState(
     JSON.parse(getProjectDefault(projDefExportNumbers) ?? false) as boolean
   );
@@ -298,7 +300,7 @@ export function IntegrationPanel(props: IProps) {
         url: '',
       },
     };
-    const rn = new StandardRecordNormalizer({ schema: memory.schema });
+    const rn = new StandardRecordNormalizer({ schema: memory?.schema });
     let rec = rn.normalizeRecord(int);
     await memory.update((t) => t.addRecord(rec));
     return rec.id;
@@ -390,7 +392,7 @@ export function IntegrationPanel(props: IProps) {
       ? remoteIdNum(
           'artifacttype',
           getTypeId(exportType) || '',
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         )
       : 0;
     if (passage !== undefined) {
@@ -400,7 +402,7 @@ export function IntegrationPanel(props: IProps) {
         remoteIdNum(
           'passage',
           passage.id as string,
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         ),
         typeId,
         errorReporter,
@@ -410,7 +412,7 @@ export function IntegrationPanel(props: IProps) {
     } else {
       syncProject(
         accessToken || '',
-        remoteIdNum('project', project, memory.keyMap as RecordKeyMap),
+        remoteIdNum('project', project, memory?.keyMap as RecordKeyMap),
         typeId,
         errorReporter,
         t.syncPending,
@@ -445,15 +447,16 @@ export function IntegrationPanel(props: IProps) {
   };
 
   const getProjectLabel = (): string => {
-    if (local) return t.selectProject;
-    return connected
+    const selectMsg = addPt(t.selectProject);
+    if (local) return selectMsg;
+    return getGlobal('connected')
       ? paratext_projectsStatus && paratext_projectsStatus.complete
         ? !paratext_projectsStatus.errStatus
           ? paratext_projects.length > 0
-            ? t.selectProject
+            ? selectMsg
             : formatWithLanguage(t.noProject)
           : (translateParatextError(paratext_projectsStatus, ts) as string)
-        : t.projectsPending
+        : addPt(t.projectsPending)
       : t.offline;
   };
   const findConnectedProject = () => {
@@ -465,7 +468,7 @@ export function IntegrationPanel(props: IProps) {
         related(pi, 'project') === project
     ) as ProjectIntegration[];
     let index = -1;
-    if (!offline) curInt = curInt.filter((i) => Boolean(i?.keys?.remoteId));
+    if (!local) curInt = curInt.filter((i) => Boolean(i?.keys?.remoteId));
     if (curInt.length > 0) {
       const settings = JSON.parse(curInt[0].attributes.settings);
       index = paratext_projects.findIndex((p) => {
@@ -505,7 +508,7 @@ export function IntegrationPanel(props: IProps) {
   const formatWithLanguage = (replLang: string): string => {
     let proj = getProject();
     let language = proj && proj.attributes ? proj.attributes.languageName : '';
-    return replLang.replace('{lang0}', language || '');
+    return replLang.replace('{lang0}', language || '').replace('{0}', Paratext);
   };
 
   const isFirstPassage = useMemo(() => {
@@ -647,17 +650,22 @@ export function IntegrationPanel(props: IProps) {
                 remoteId(
                   'project',
                   related(pi, 'project'),
-                  memory.keyMap as RecordKeyMap
+                  memory?.keyMap as RecordKeyMap
                 ) || related(pi, 'project'),
             };
           });
           getParatextDataPath().then((ptPath) => {
-            getLocalProjects(ptPath, t.projectsPending, projIds, langTag);
+            getLocalProjects(
+              ptPath,
+              addPt(t.projectsPending),
+              projIds,
+              langTag
+            );
           });
         } else {
           getProjects(
             accessToken || '',
-            t.projectsPending,
+            addPt(t.projectsPending),
             errorReporter,
             langTag
           );
@@ -742,12 +750,12 @@ export function IntegrationPanel(props: IProps) {
       <Accordion id="int-online" defaultExpanded={!local} disabled={local}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls={t.paratext}
-          id={t.paratext}
+          aria-controls={Paratext}
+          id={Paratext}
         >
           <StyledHeading>
             <ParatextLogo />
-            {'\u00A0' + t.paratext}
+            {'\u00A0' + Paratext}
           </StyledHeading>
         </AccordionSummary>
         <AccordionDetails sx={panelProps}>
@@ -839,7 +847,7 @@ export function IntegrationPanel(props: IProps) {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={t.questionAccount}
+                primary={addPt(t.questionAccount)}
                 secondary={
                   hasParatext
                     ? t.yes + ': ' + paratext_username
@@ -859,7 +867,7 @@ export function IntegrationPanel(props: IProps) {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={t.questionPermission}
+                primary={addPt(t.questionPermission)}
                 secondary={
                   hasPermission
                     ? t.yes + ' :' + ptPermission
@@ -922,12 +930,12 @@ export function IntegrationPanel(props: IProps) {
       <Accordion id="int-offln" defaultExpanded={local} disabled={!local}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls={t.paratextLocal}
-          id={t.paratextLocal}
+          aria-controls={addPt(t.paratextLocal)}
+          id={addPt(t.paratextLocal)}
         >
           <StyledHeading>
             <ParatextLogo />
-            {'\u00A0' + t.paratextLocal}
+            {'\u00A0' + addPt(t.paratextLocal)}
           </StyledHeading>
         </AccordionSummary>
         <AccordionDetails sx={panelProps}>
@@ -955,7 +963,7 @@ export function IntegrationPanel(props: IProps) {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={t.questionInstalled}
+                primary={addPt(t.questionInstalled)}
                 secondary={ptPath ? t.yes : t.no}
               />
             </ListItem>

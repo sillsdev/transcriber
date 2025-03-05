@@ -17,7 +17,7 @@ import {
 } from '../../crud';
 import { shallowEqual, useSelector } from 'react-redux';
 import { passageDetailArtifactsSelector } from '../../selector';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { OptionType } from '../BookSelect';
 import PassageDataTable, { IRRow, RefLevel } from '../PassageDataTable';
 import { useSnackBar } from '../../hoc/SnackBar';
@@ -32,7 +32,7 @@ export const SelectNote = (props: IProps) => {
   const { passage, onOpen, onSelect } = props;
   const [refLevel, setRefLevel] = useState<RefLevel>(RefLevel.All);
   const [memory] = useGlobal('memory');
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const { getNotes, noteRefs, noteSource } = useNotes();
   const [notes, setNotes] = useState<SharedResourceD[]>([]);
   const [data, setData] = useState<IRRow[]>([]);
@@ -89,7 +89,7 @@ export const SelectNote = (props: IProps) => {
         set.add(related(sr, 'sharedResource') as string);
       };
       const refRecs = (
-        memory.cache.query((q) =>
+        memory?.cache.query((q) =>
           q.findRecords('sharedresourcereference')
         ) as SharedResourceReference[]
       ).filter((srr) => {

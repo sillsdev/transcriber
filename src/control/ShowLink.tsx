@@ -1,7 +1,7 @@
 import { Link } from '@mui/material';
 import { isElectron } from '../api-variable';
 import { launch } from '../utils/launch';
-import { useGlobal } from 'reactn';
+import { useGetGlobal } from '../context/GlobalContext';
 
 interface ShowLinkProps {
   link: string;
@@ -9,10 +9,10 @@ interface ShowLinkProps {
 
 export default function ShowLink(props: ShowLinkProps) {
   const { link } = props;
-  const [offline] = useGlobal('offline');
+  const getGlobal = useGetGlobal();
 
   const handleLink = (site: string) => () => {
-    if (!offline) launch(site, true);
+    if (!getGlobal('offline')) launch(site, true);
   };
 
   return (

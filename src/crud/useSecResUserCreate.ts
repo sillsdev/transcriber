@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { SectionResource, SectionResourceUser } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import { RecordIdentity, RecordTransformBuilder } from '@orbit/records';

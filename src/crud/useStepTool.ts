@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { OrgWorkflowStep } from '../model';
 import { findRecord } from './tryFindRecord';
 
@@ -32,5 +32,5 @@ export const useStepTool = (stepId: string) => {
       settings: getToolSettings(workflowstep?.attributes?.tool),
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stepId, memory.cache]);
+  }, [stepId, memory?.cache]);
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
 import {
   Tabs,
   Tab,
@@ -82,13 +82,13 @@ export function ConsultantCheck({ width }: IProps) {
   const [mediaId, setMediaId] = useState<string>('');
   const { getOrgDefault, setOrgDefault } = useOrgDefaults();
   const updateRecord = useUpdateRecord();
-  const [busy, setBusy] = useGlobal('remoteBusy');
+  const [, setBusy] = useGlobal('remoteBusy');
   const commitBusy = useRef(false);
   const { showMessage } = useSnackBar();
   const { localizedArtifactType } = useArtifactType();
   const t = useSelector(consultantSelector, shallowEqual);
   const ts = useSelector(sharedSelector, shallowEqual);
-
+  const getGlobal = useGetGlobal();
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -112,7 +112,7 @@ export function ConsultantCheck({ width }: IProps) {
   };
 
   const handleChecked = (item: ArtifactTypeSlug) => async () => {
-    if (busy || commitBusy.current) {
+    if (getGlobal('remoteBusy') || commitBusy.current) {
       showMessage(ts.wait);
       return;
     }

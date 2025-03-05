@@ -23,6 +23,8 @@ import { useCanBeFlat } from '../../../crud/useCanBeFlat';
 import { IVProjectStrings } from '../../../model';
 import { shallowEqual, useSelector } from 'react-redux';
 import { vProjectSelector } from '../../../selector';
+import { useGlobal } from '../../../context/GlobalContext';
+import { Render } from '../../../assets/brands';
 
 const StyledAccordionSummary = styled(AccordionSummary)<AccordionSummaryProps>(
   ({ theme }) => ({
@@ -43,7 +45,7 @@ const RenderRecommended = () => {
   return (
     <Typography variant="caption" sx={{ display: 'flex' }}>
       <RenderLogo />
-      {'\u00A0' + t.renderRecommended}
+      {'\u00A0' + t.renderRecommended.replace('{0}', Render)}
     </Typography>
   );
 };
@@ -54,7 +56,7 @@ const RenderCustomize = () => {
   return (
     <Typography variant="caption" sx={{ display: 'flex' }}>
       <RenderLogo />
-      {'\u00A0' + t.renderCustomize}
+      {'\u00A0' + t.renderCustomize.replace('{0}', Render)}
     </Typography>
   );
 };
@@ -74,7 +76,8 @@ export function ProjectExpansion(props: IProjectDialogState) {
     t.scenes,
     t.pericopes,
   ]);
-  const { SnackBar, message, showMessage } = useSnackBar();
+  const { SnackBar, showMessage } = useSnackBar();
+  const [message] = useGlobal('snackMessage');
 
   const handleShareable = (e: any, val: boolean) => {
     setState((state) => ({ ...state, isPublic: val }));

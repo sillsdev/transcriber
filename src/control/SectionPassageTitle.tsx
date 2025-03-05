@@ -1,5 +1,5 @@
 import { useContext, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { Grid, GridProps, styled, Typography } from '@mui/material';
 import {
   passageRefText,
@@ -7,7 +7,7 @@ import {
   sectionDescription,
   usePlanType,
 } from '../crud';
-import { BookName, Passage, Section } from '../model';
+import { BookName, Passage, Section, SharedResourceD } from '../model';
 import { PassageDetailContext } from '../context/PassageDetailContext';
 
 const GridRoot = styled(Grid)<GridProps>(({ theme }) => ({
@@ -19,10 +19,11 @@ interface IProps {
   section: Section;
   passage: Passage;
   allBookData: BookName[];
+  sharedResource: SharedResourceD | undefined;
 }
 export const SectionPassageTitle = (props: IProps) => {
-  const { section, passage, allBookData } = props;
-  const [plan] = useGlobal('plan');
+  const { section, passage, allBookData, sharedResource } = props;
+  const [plan] = useGlobal('plan'); //will be constant here
   const { sectionArr } = useContext(PassageDetailContext).state;
   const sectionMap = new Map<number, string>(sectionArr);
   const planType = usePlanType();
@@ -51,6 +52,7 @@ export const SectionPassageTitle = (props: IProps) => {
             passage={passage}
             bookData={allBookData}
             flat={isFlat}
+            sharedResource={sharedResource}
           />
         </Typography>
       </Grid>

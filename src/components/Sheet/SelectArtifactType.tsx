@@ -82,7 +82,7 @@ export const SelectArtifactType = (props: IProps) => {
       >
         {artifactTypes.map((option: IArtifactType) => (
           <MenuItem key={option.id} value={option.id}>
-            {option.type}
+            {option?.type}
           </MenuItem>
         ))}
       </TextField>

@@ -1,10 +1,10 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { OrganizationD, PlanD, ProjectD } from '../model';
 
 export const useBibleMedia = () => {
   const [memory] = useGlobal('memory');
   const getBibleMediaTeam = async () => {
-    let orgs = memory.cache.query((q) =>
+    let orgs = memory?.cache.query((q) =>
       q
         .findRecords('organization')
         .filter({ attribute: 'name', value: 'BibleMedia' })
@@ -19,7 +19,7 @@ export const useBibleMedia = () => {
     return orgs[0];
   };
   const getBibleMediaProject = async () => {
-    let projects = memory.cache.query((q) =>
+    let projects = memory?.cache.query((q) =>
       q
         .findRecords('project')
         .filter({ attribute: 'name', value: 'BibleMedia' })
@@ -35,7 +35,7 @@ export const useBibleMedia = () => {
   };
 
   const getBibleMediaPlan = async () => {
-    let plans = memory.cache.query((q) =>
+    let plans = memory?.cache.query((q) =>
       q.findRecords('plan').filter({ attribute: 'name', value: 'BibleMedia' })
     ) as PlanD[];
     if (plans.length === 0) {

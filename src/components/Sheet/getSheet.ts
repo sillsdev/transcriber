@@ -15,7 +15,6 @@ import Memory from '@orbit/memory';
 import { related } from '../../crud/related';
 import { getVernacularMediaRec, getMediaShared } from '../../crud/media';
 import { getNextStep } from '../../crud/getNextStep';
-import { findRecord } from '../../crud/tryFindRecord';
 import { getStepComplete } from '../../crud/getStepComplete';
 import { toCamel } from '../../utils/toCamel';
 import { ISTFilterState } from './filterMenu';
@@ -23,6 +22,7 @@ import { PassageTypeEnum } from '../../model/passageType';
 import { passageTypeFromRef, isPublishingTitle } from '../../control/RefRender';
 import { InitializedRecord } from '@orbit/records';
 import { PublishDestinationEnum } from '../../crud';
+import { addPt } from '../../utils/addPt';
 
 const shtSectionUpdate = (item: ISheet, rec: ISheet) => {
   if (item.sectionUpdated && rec.sectionUpdated)
@@ -164,7 +164,7 @@ export interface GetSheetProps {
     noDefault?: boolean
   ) => PublishDestinationEnum[];
   publishStatus: (destinations: PublishDestinationEnum[]) => string;
-  readSharedResource: (passId: string) => SharedResourceD | undefined;
+  getSharedResource: (p: PassageD) => SharedResourceD | undefined;
   current?: ISheet[];
 }
 
@@ -186,7 +186,7 @@ export const getSheet = ({
   graphicFind,
   getPublishTo,
   publishStatus,
-  readSharedResource,
+  getSharedResource,
   current,
 }: GetSheetProps) => {
   const myWork = current || Array<ISheet>();
@@ -280,13 +280,7 @@ export const getSheet = ({
         item.passageUpdated = passage.attributes.dateUpdated;
         item.passage = passage;
         item.passageType = passageTypeFromRef(passAttr.reference, flat);
-        if (related(passage, 'sharedResource')) {
-          item.sharedResource = findRecord(
-            memory,
-            'sharedresource',
-            related(passage, 'sharedResource')
-          ) as SharedResourceD;
-        } else item.sharedResource = readSharedResource(passage.id);
+        item.sharedResource = getSharedResource(passage);
         let mediaRec: MediaFileD | null;
         if (item.sharedResource) {
           mediaRec = getVernacularMediaRec(
@@ -320,7 +314,7 @@ export const getSheet = ({
         if (stepRec) {
           const strTag = toCamel(stepRec.attributes.name);
           item.step = wfStr.hasOwnProperty(strTag)
-            ? wfStr.getString(strTag)
+            ? addPt(wfStr.getString(strTag))
             : stepRec.attributes.name;
           item.stepId = stepRec.id;
           item.discussionCount = item.passage.id

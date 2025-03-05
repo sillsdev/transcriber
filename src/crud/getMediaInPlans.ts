@@ -84,16 +84,16 @@ export const getDownloadableMediaInPlan = (
   planid: string,
   memory: MemorySource
 ) => {
-  const mediaFiles = memory.cache.query((q) =>
+  const mediaFiles = memory?.cache.query((q) =>
     q.findRecords('mediafile')
   ) as MediaFileD[];
-  const sections = memory.cache.query((q) =>
+  const sections = memory?.cache.query((q) =>
     q.findRecords('section')
   ) as SectionD[];
-  const passages = memory.cache.query((q) =>
+  const passages = memory?.cache.query((q) =>
     q.findRecords('passage')
   ) as PassageD[];
-  var sharedres = memory.cache.query((q) =>
+  var sharedres = memory?.cache.query((q) =>
     q.findRecords('sharedresource')
   ) as SharedResourceD[];
   var plan = findRecord(memory, 'plan', planid) as PlanD;
@@ -118,7 +118,7 @@ export const getDownloadableMediaInPlan = (
   ret = ret.concat(mapMedia(media));
   //IP media
   var ipmediaids = (
-    memory.cache.query((q) =>
+    memory?.cache.query((q) =>
       q.findRecords('intellectualproperty')
     ) as IntellectualPropertyD[]
   )
@@ -134,7 +134,7 @@ export const getDownloadableMediaInPlan = (
   );
   //Category titles
   var catmediaids = (
-    memory.cache.query((q) =>
+    memory?.cache.query((q) =>
       q.findRecords('artifactcategory')
     ) as ArtifactCategoryD[]
   )
@@ -148,7 +148,7 @@ export const getDownloadableMediaInPlan = (
   );
   //Keyterm media
   var okttmediaids = (
-    memory.cache.query((q) =>
+    memory?.cache.query((q) =>
       q.findRecords('orgkeytermtarget')
     ) as OrgKeytermTargetD[]
   )

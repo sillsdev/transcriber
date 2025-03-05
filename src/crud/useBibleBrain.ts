@@ -1,11 +1,11 @@
 import JSONAPISource from '@orbit/jsonapi';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import VwBiblebrainlanguage from '../model/vwbiblebrainlanguage';
 import VwBiblebrainbible from '../model/vwbiblebrainbible';
 
 export const useBibleBrain = () => {
   const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
 
   const getLanguages = async (nt: boolean, ot: boolean, timing: boolean) => {
     if (remote && (nt || ot)) {

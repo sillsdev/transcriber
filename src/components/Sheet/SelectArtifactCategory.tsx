@@ -13,7 +13,7 @@ import { LightTooltip, StyledMenuItem } from '../../control';
 import { artifactCategorySelector } from '../../selector';
 import { NewArtifactCategory } from './NewArtifactCategory';
 import { useOrbitData } from '../../hoc/useOrbitData';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 
 export enum ScriptureEnum {
   hide,

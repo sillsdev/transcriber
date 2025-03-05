@@ -64,9 +64,10 @@ jest.mock('../hoc/useOrbitData', () => ({
       ? mockSectionResource
       : [],
 }));
-jest.mock('reactn', () => ({
+jest.mock('../context/GlobalContext', () => ({
   useGlobal: (arg: string) =>
     arg === 'memory' ? [mockMemory, jest.fn()] : [{}, jest.fn()],
+  useGetGlobal: () => (arg: string) => false, // remoteBusy & importexportBusy
 }));
 jest.mock('react-redux', () => ({
   useSelector: () => ({
@@ -75,7 +76,7 @@ jest.mock('react-redux', () => ({
     canceling: 'Canceling',
     cantCopy: "Can't Copy",
     clipboard: 'Clipboard',
-    copyToClipboard: 'Copy to Clipboard',
+    clipboardCopy: 'Copy to Clipboard',
     createResources: 'Create Resources',
     description: 'Description',
     noData: 'No Data {0}',

@@ -1,5 +1,5 @@
 import { useState, useContext, useMemo, useRef, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../../../context/GlobalContext';
 import {
   IPassageDetailArtifactsStrings,
   Passage,
@@ -101,12 +101,12 @@ export function PassageDetailArtifacts() {
   const sectionResources = useOrbitData<SectionResourceD[]>('sectionresource');
   const mediafiles = useOrbitData<MediaFile[]>('mediafile');
   const artifactTypes = useOrbitData<ArtifactType[]>('artifacttype');
-  const [globals] = useGlobal();
   const [memory] = useGlobal('memory');
-  const [, setBusy] = useGlobal('importexportBusy');
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const [complete, setComplete] = useGlobal('progress');
+  const [busy, setBusy] = useGlobal('importexportBusy'); //verified this is not used in a function 2/18/25
+  const [remoteBusy] = useGlobal('remoteBusy'); //verified this is not used in a function 2/18/25
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
+  const [, setComplete] = useGlobal('progress');
   const {
     rowData,
     section,
@@ -176,13 +176,14 @@ export function PassageDetailArtifacts() {
   const projectResourceSave = useProjectResourceSave();
   const { removeKey } = storedCompareKey(passage, section);
   const { userIsAdmin } = useRole();
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const planType = usePlanType();
   const t: IPassageDetailArtifactsStrings = useSelector(
     passageDetailArtifactsSelector,
     shallowEqual
   );
   const [findTabsClose, setFindTabsClose] = useState(false);
+  const getGlobal = useGetGlobal();
 
   const resourceType = useMemo(() => {
     const resourceType = artifactTypes.find(
@@ -307,6 +308,7 @@ export function PassageDetailArtifacts() {
   };
 
   const handleProjectResourceVisible = (v: boolean) => {
+    let complete = getGlobal('progress');
     if (complete === 0 || complete === 100) {
       setProjectResourceVisible(v);
     }
@@ -482,12 +484,12 @@ export function PassageDetailArtifacts() {
   );
 
   useEffect(() => {
-    if (!globals.importexportBusy && !globals.remoteBusy) {
+    if (!busy && !remoteBusy) {
       setSelectedRows(rowData.filter(listFilter));
       setSortKey((sortKey) => sortKey + 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, allResources, globals.importexportBusy, globals.remoteBusy]);
+  }, [rowData, allResources, busy, remoteBusy]);
 
   const onSortEnd = ({
     oldIndex,
@@ -526,7 +528,7 @@ export function PassageDetailArtifacts() {
       for (const remId of mediaRemoteIds) {
         cnt += 1;
         const id =
-          remoteIdGuid('mediafile', remId, memory.keyMap as RecordKeyMap) ||
+          remoteIdGuid('mediafile', remId, memory?.keyMap as RecordKeyMap) ||
           remId;
         const mediaRecId = { type: 'mediafile', id };
         if (descriptionRef.current) {
@@ -638,7 +640,7 @@ export function PassageDetailArtifacts() {
         projMediaRef.current?.attributes?.topic ||
         removeExtension(projMediaRef.current?.attributes?.originalFile || '')
           ?.name;
-      const passage = rec.type === 'passage' ? (rec as Passage) : undefined;
+      const passage = rec?.type === 'passage' ? (rec as Passage) : undefined;
       await projectResourceSave({
         t,
         media: projMediaRef.current as MediaFile,

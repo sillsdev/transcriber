@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useOfflnProjRead } from '.';
 import IndexedDBSource from '@orbit/indexeddb';
 
@@ -8,7 +8,7 @@ export const useOfflnProjDelete = () => {
   const getOfflineProject = useOfflnProjRead();
 
   return async (projectId: string) => {
-    const backup = coordinator.getSource('backup') as IndexedDBSource;
+    const backup = coordinator?.getSource('backup') as IndexedDBSource;
     const op = getOfflineProject(projectId);
     if (op.attributes) {
       await backup.sync((t) => [t.removeRecord(op)]);

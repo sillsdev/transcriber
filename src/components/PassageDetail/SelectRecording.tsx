@@ -160,7 +160,11 @@ export const SelectRecording = (props: IProps) => {
         />
       </Box>
       {chooser && (
-        <BigDialog title={'Select Item'} isOpen={chooser} onOpen={setChooser}>
+        <BigDialog
+          title={t.selectRecording}
+          isOpen={chooser}
+          onOpen={setChooser}
+        >
           <TableContainer component={Paper}>
             <Table size="small" aria-label="a dense table">
               <TableHead>

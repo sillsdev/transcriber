@@ -10,13 +10,14 @@ import usePassageDetailContext from '../../../context/usePassageDetailContext';
 import { ReactNode, SyntheticEvent, useEffect, useState } from 'react';
 import { LaunchLink } from '../../../control/LaunchLink';
 import { BibleResource } from '../../../model/bible-resource';
-import { IFindResourceStrings } from '../../../model';
+import { IFindResourceStrings, ISharedStrings } from '../../../model';
 import { shallowEqual, useSelector } from 'react-redux';
-import { findResourceSelector } from '../../../selector';
+import { findResourceSelector, sharedSelector } from '../../../selector';
 import FindAquifer from './FindAquifer';
 import { usePassageType } from '../../../crud/usePassageType';
 import { related } from '../../../crud';
 import { PassageTypeEnum } from '../../../model/passageType';
+import { Aquifer, BibleBrain } from '../../../assets/brands';
 
 export enum scopeI {
   passage,
@@ -93,9 +94,10 @@ export default function FindTabs({ onClose, closeRequested }: FindTabsProps) {
     findResourceSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   useEffect(() => {
-    import('../../../assets/bible-resource.js').then((module) => {
+    import('../../../assets/bible-resource').then((module) => {
       setResources(module.default);
     });
   }, []);
@@ -136,11 +138,19 @@ export default function FindTabs({ onClose, closeRequested }: FindTabsProps) {
           onChange={handleChange}
           aria-label="basic tabs example"
         >
-          {start === 0 && <Tab label={t.findBibleBrain} {...a11yProps(0)} />}
-          <Tab label={'Find: Aquifer'} {...a11yProps(1 - start)} />
+          {start === 0 && (
+            <Tab
+              label={t.findBrandedContent.replace('{0}', BibleBrain)}
+              {...a11yProps(0)}
+            />
+          )}
+          <Tab
+            label={t.findBrandedContent.replace('{0}', Aquifer)}
+            {...a11yProps(1 - start)}
+          />
           <Tab label={t.findOther} {...a11yProps(2 - start)} />
           <Tab
-            label={<Badge badgeContent="AI">{t.create}</Badge>}
+            label={<Badge badgeContent={ts.ai}>{t.create}</Badge>}
             {...a11yProps(3 - start)}
           />
         </Tabs>

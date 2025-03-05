@@ -6,6 +6,7 @@ export enum NamedRegions {
   BackTranslation = 'BT',
   ProjectResource = 'ProjRes',
   Verse = 'Verse',
+  TRTask = 'TRTask',
 }
 export function updateSegments(
   name: string,
@@ -16,7 +17,11 @@ export function updateSegments(
   if (Array.isArray(json)) {
     var index = json.findIndex((j) => j['name'] === name);
     if (index >= 0) {
-      json[index]['regionInfo'] = fornamesegs;
+      if (fornamesegs) {
+        json[index]['regionInfo'] = fornamesegs;
+      } else {
+        json.splice(index, 1); //remove it
+      }
     } else {
       json.push({ name: name, regionInfo: fornamesegs });
     }
@@ -41,8 +46,7 @@ export function getSegments(name: string, segments: string) {
     var thisone = json.find((j) => j['name'] === name) as INamedRegion;
     if (thisone?.regionInfo) {
       var ri = thisone?.regionInfo;
-      if (typeof ri === 'object')
-        return JSON.stringify(ri);
+      if (typeof ri === 'object') return JSON.stringify(ri);
       return thisone.regionInfo.toString();
     }
     return '{}';

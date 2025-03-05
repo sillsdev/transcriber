@@ -4,6 +4,7 @@ import { workflowStepsSelector } from '../../selector';
 import { toCamel } from '../../utils';
 import { SxProps, TextField } from '@mui/material';
 import { StyledMenuItem } from '../../control/StyledMenu';
+import { addPt } from '../../utils/addPt';
 
 interface IProps {
   label: string;
@@ -32,7 +33,7 @@ export function OrgWorkflowStepList(props: IProps) {
 
   const localName = (name: string) => {
     const lookUp = toCamel(name);
-    return t.hasOwnProperty(lookUp) ? t.getString(lookUp) : name;
+    return t.hasOwnProperty(lookUp) ? addPt(t.getString(lookUp)) : name;
   };
 
   return (

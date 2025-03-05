@@ -137,7 +137,7 @@ export const nextUpload =
   }: NextUploadProps) =>
   (dispatch: any) => {
     dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
-    const isText = isTextContent(files[n].type);
+    const isText = isTextContent(files[n]?.type);
     const acceptExtPat =
       /\.wav$|\.mp3$|\.m4a$|\.ogg$|\.webm$|\.pdf$|\.png$|\.jpg$/i;
     if (!isText && !acceptExtPat.test(record.originalFile)) {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 import { Column, TableColumnWidthInfo } from '@devexpress/dx-react-grid';
 import { useSelector, shallowEqual } from 'react-redux';
 import { passageDetailArtifactsSelector } from '../../../selector';
@@ -12,8 +12,8 @@ import {
   Plan,
   BookName,
   IPassageDetailArtifactsStrings,
+  ISharedStrings,
 } from '../../../model';
-import { ITranscriptionTabStrings } from '../../../model';
 import {
   Box,
   Button,
@@ -35,7 +35,7 @@ import {
   usePlanType,
   sectionRef,
 } from '../../../crud';
-import { transcriptionTabSelector } from '../../../selector';
+import { sharedSelector } from '../../../selector';
 import { eqSet } from '../../../utils';
 import { passageTypeFromRef } from '../../../control/RefRender';
 import { PassageTypeEnum } from '../../../model/passageType';
@@ -96,16 +96,13 @@ export function SelectSections(props: IProps) {
   const passages = useOrbitData<PassageD[]>('passage');
   const sections = useOrbitData<SectionD[]>('section');
   const [memory] = useGlobal('memory');
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const [data, setData] = useState(Array<IRow>());
   const [heightStyle, setHeightStyle] = useState({
     maxHeight: `${window.innerHeight - 250}px`,
   });
   const { getOrganizedBy } = useOrganizedBy();
-  const t: ITranscriptionTabStrings = useSelector(
-    transcriptionTabSelector,
-    shallowEqual
-  );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const ta: IPassageDetailArtifactsStrings = useSelector(
     passageDetailArtifactsSelector,
     shallowEqual
@@ -159,7 +156,7 @@ export function SelectSections(props: IProps) {
       setColumnDefs(
         [
           { name: 'name', title: getOrganizedBy(true) },
-          { name: 'passages', title: t.passages },
+          { name: 'passages', title: ts.passages },
         ].map((r) => r)
       );
       setColumnWidths(

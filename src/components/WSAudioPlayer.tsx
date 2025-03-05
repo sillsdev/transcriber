@@ -8,8 +8,9 @@ import {
   ToggleButton,
   Box,
   SxProps,
+  Badge,
 } from '@mui/material';
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import ForwardIcon from '@mui/icons-material/Refresh';
@@ -39,7 +40,7 @@ import { IosSlider } from '../control/IosSlider';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
 import WSAudioPlayerZoom from './WSAudioPlayerZoom';
-import { logError, Severity } from '../utils';
+import { logError, Severity, useCheckOnline } from '../utils';
 import {
   IRegion,
   IRegionChange,
@@ -53,11 +54,23 @@ import { NamedRegions } from '../utils/namedSegments';
 import { sharedSelector, wsAudioPlayerSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { WSAudioPlayerSilence } from './WSAudioPlayerSilence';
-import { AltButton, RemoveNoiseIcon } from '../control';
-import { useNoiseRemoval } from '../utils/useNoiseRemoval';
+import { AltButton } from '../control';
+import { AudioAiFn, useAudioAi } from '../utils/useAudioAi';
 import { Exception } from '@orbit/core';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { AxiosError } from 'axios';
+import { IFeatures } from './Team/TeamSettings';
+import {
+  orgDefaultFeatures,
+  orgDefaultVoices,
+  useOrgDefaults,
+} from '../crud/useOrgDefaults';
+import NoChickenIcon from '../control/NoChickenIcon';
+import VcButton from '../control/ConfButton';
+import VoiceConversionLogo from '../control/VoiceConversionLogo';
+import BigDialog, { BigDialogBp } from '../hoc/BigDialog';
+import { useVoiceUrl } from '../crud/useVoiceUrl';
+import SelectVoice from '../business/voice/SelectVoice';
 
 const VertDivider = (prop: DividerProps) => (
   <Divider orientation="vertical" flexItem sx={{ ml: '5px' }} {...prop} />
@@ -82,6 +95,7 @@ interface IProps {
   allowAutoSegment?: boolean;
   allowSpeed?: boolean;
   allowSilence?: boolean;
+  allowDeltaVoice?: boolean;
   alternatePlayer?: boolean;
   oneTryOnly?: boolean;
   size: number;
@@ -149,6 +163,7 @@ function WSAudioPlayer(props: IProps) {
     allowAutoSegment,
     allowSpeed,
     allowSilence,
+    allowDeltaVoice,
     oneTryOnly,
     size,
     segments,
@@ -186,8 +201,13 @@ function WSAudioPlayer(props: IProps) {
   } = props;
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
-  const [offline] = useGlobal('offline');
-  const [isDeveloper] = useGlobal('developer');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [org] = useGlobal('organization');
+  const [features, setFeatures] = useState<IFeatures>();
+  const [voiceVisible, setVoiceVisible] = useState(false);
+  const [voice, setVoice] = useState('');
+  const voiceUrl = useVoiceUrl();
+  const { getOrgDefault } = useOrgDefaults();
   const [confirmAction, setConfirmAction] = useState<string | JSX.Element>('');
   const [jump] = useState(2);
   const playbackRef = useRef(1);
@@ -228,7 +248,8 @@ function WSAudioPlayer(props: IProps) {
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
   const [oneShotUsed, setOneShotUsed] = useState(false);
   const cancelAIRef = useRef(false);
-  const { requestFileNoiseRemoval } = useNoiseRemoval();
+  const { requestAudioAi } = useAudioAi();
+  const checkOnline = useCheckOnline(t.reduceNoise);
   const { subscribe, unsubscribe, localizeHotKey } =
     useContext(HotKeyContext).state;
   const {
@@ -467,6 +488,16 @@ function WSAudioPlayer(props: IProps) {
     if (allowSpeed) speedKeys.forEach((k) => subscribe(k.key, k.cb));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowSpeed]);
+  const handleRefresh = () => {
+    setVoice(getOrgDefault(orgDefaultVoices)?.fullName);
+  };
+  useEffect(() => {
+    if (org) {
+      setFeatures(getOrgDefault(orgDefaultFeatures));
+      handleRefresh();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [org]);
 
   const cleanupAutoStart = () => {
     if (autostartTimer.current) {
@@ -627,7 +658,7 @@ function WSAudioPlayer(props: IProps) {
       blob,
       recordStartPosition.current,
       recordOverwritePosition.current || recordStartPosition.current,
-      e.type
+      e?.type
     );
     recordOverwritePosition.current = newPos;
     setDuration(wsDuration());
@@ -733,48 +764,123 @@ function WSAudioPlayer(props: IProps) {
     setBusy && setBusy(inprogress);
     setBlobReady && setBlobReady(!inprogress);
   };
-  const handleNoiseRemoval = () => {
-    if (!reload) throw new Exception('need reload defined.');
-    cancelAIRef.current = false;
-    try {
-      doingAI(true);
-      const filename = `${Date.now()}nr.wav`;
-      wsRegionBlob().then((blob) => {
-        if (blob) {
-          requestFileNoiseRemoval(
-            cancelAIRef,
-            new File([blob], filename, { type: 'audio/wav' }),
-            (file: File | Error) => {
-              if (file instanceof File) {
-                var regionblob = new Blob([file], { type: file.type });
-                if (regionblob) {
-                  wsRegionReplace(regionblob).then((newblob) => {
-                    if (newblob) reload(newblob);
-                    setChanged && setChanged(true);
-                  });
+  const audioAiMsg = (
+    fn: AudioAiFn,
+    targetVoice?: string,
+    error?: Error | AxiosError
+  ) => {
+    let msg =
+      t.getString(`${fn}Failed`) ??
+      t.aiFailed
+        .replace('{0}', targetVoice ? ` for ${targetVoice}` : '')
+        .replace('{1}', fn);
+    if (error instanceof Error) {
+      msg += ` ${error.message}`;
+    }
+    if (error instanceof AxiosError) {
+      msg += ` ${error.response?.data}`;
+    }
+    return msg;
+  };
+  const applyAudioAi = (fn: AudioAiFn, targetVoice?: string) => {
+    checkOnline((online) => {
+      if (!online) {
+        showMessage(ts.mustBeOnline);
+        return;
+      }
+      if (!reload) throw new Exception('need reload defined.');
+      cancelAIRef.current = false;
+      try {
+        doingAI(true);
+        const filename = `${Date.now()}nr.wav`;
+        wsRegionBlob().then((blob) => {
+          if (blob) {
+            requestAudioAi({
+              fn,
+              cancelRef: cancelAIRef,
+              file: new File([blob], filename, { type: 'audio/wav' }),
+              targetVoice,
+              cb: (file: File | Error) => {
+                if (file instanceof File) {
+                  var regionblob = new Blob([file], { type: file.type });
+                  if (regionblob) {
+                    wsRegionReplace(regionblob).then((newblob) => {
+                      if (newblob) reload(newblob);
+                      setChanged && setChanged(true);
+                    });
+                  }
+                } else {
+                  if ((file as Error).message !== 'canceled') {
+                    const msg = audioAiMsg(fn, targetVoice, file);
+                    showMessage(msg);
+                    logError(Severity.error, errorReporter, msg);
+                  }
                 }
-              } else {
-                if ((file as Error).message !== 'canceled')
-                  showMessage(
-                    `${ts.noiseRemovalFailed} ${(file as Error).message} ${
-                      (file as AxiosError).response?.data ?? ''
-                    }`
-                  );
-              }
-              doingAI(false);
-            }
-          );
-        } else {
-          doingAI(false);
-        }
-      });
-    } catch (error: any) {
-      logError(Severity.error, errorReporter, error.message);
-      showMessage(ts.noiseRemovalFailed);
-      doingAI(false);
+                doingAI(false);
+              },
+            });
+          } else {
+            doingAI(false);
+          }
+        });
+      } catch (error: any) {
+        const msg = audioAiMsg(fn, targetVoice, error);
+        logError(Severity.error, errorReporter, msg);
+        showMessage(msg);
+        doingAI(false);
+      }
+    });
+  };
+  const handleNoiseRemoval = () => {
+    applyAudioAi(AudioAiFn.noiseRemoval);
+  };
+  const applyVoiceChange = () => {
+    checkOnline(async (online) => {
+      if (!online) {
+        showMessage(ts.mustBeOnline);
+        return;
+      }
+      if (!voice) return;
+      const targetVoice = await voiceUrl(voice);
+      if (targetVoice) {
+        applyAudioAi(AudioAiFn.voiceConversion, targetVoice);
+        setVoiceVisible(false);
+        showMessage(t.beginVoiceConvert);
+      }
+    });
+  };
+  const handleVoiceChange = () => {
+    if (Boolean(voice)) {
+      applyVoiceChange();
+    } else {
+      setVoiceVisible(true);
     }
   };
+  const handleCloseVoice = () => {
+    setVoiceVisible(false);
+  };
+  const handleVoiceSettings = () => {
+    checkOnline((online) => {
+      if (!online) {
+        showMessage(ts.mustBeOnline);
+        return;
+      }
+      setVoiceVisible(true);
+    });
+  };
+
   const onSplit = (split: IRegionChange) => {};
+
+  const voiceConvertTip = useMemo(
+    () =>
+      (t.convertVoice + '\u00A0\u00A0').replace(
+        '{0}',
+        voice ? `\u2039 ${voice} \u203A` : ''
+      ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [voice]
+  );
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Paper sx={{ p: 1, margin: 'auto' }}>
@@ -884,24 +990,30 @@ function WSAudioPlayer(props: IProps) {
                       <VertDivider id="wsAudioDiv4" />
                     </>
                   )}
-                  {isDeveloper && !offline && (
-                    <LightTooltip id="noiseRemovalTim" title={ts.noiseRemoval}>
+                  {features?.noNoise && !offline && (
+                    <LightTooltip
+                      id="noiseRemovalTip"
+                      title={
+                        <Badge badgeContent={ts.ai}>{t.reduceNoise}</Badge>
+                      }
+                    >
                       <span>
                         <IconButton
                           id="noiseRemoval"
                           onClick={handleNoiseRemoval}
                           disabled={
                             !ready ||
+                            playing ||
                             recording ||
                             duration === 0 ||
                             waitingForAI
                           }
                         >
-                          <RemoveNoiseIcon
-                            width="18pt"
-                            height="18pt"
+                          <NoChickenIcon
+                            sx={{ width: '20pt', height: '20pt' }}
                             disabled={
                               !ready ||
+                              playing ||
                               recording ||
                               duration === 0 ||
                               waitingForAI
@@ -911,6 +1023,45 @@ function WSAudioPlayer(props: IProps) {
                       </span>
                     </LightTooltip>
                   )}
+                  {features?.deltaVoice &&
+                    allowDeltaVoice !== false &&
+                    !offline && (
+                      <LightTooltip
+                        id="voiceChangeTip"
+                        title={
+                          <Badge badgeContent={ts.ai}>{voiceConvertTip}</Badge>
+                        }
+                      >
+                        <span>
+                          <VcButton
+                            id="voiceChange"
+                            onClick={handleVoiceChange}
+                            onSettings={handleVoiceSettings}
+                            disabled={
+                              !ready ||
+                              playing ||
+                              recording ||
+                              duration === 0 ||
+                              waitingForAI
+                            }
+                          >
+                            <VoiceConversionLogo
+                              sx={{
+                                width: '18pt',
+                                height: '18pt',
+                              }}
+                              disabled={
+                                !ready ||
+                                playing ||
+                                recording ||
+                                duration === 0 ||
+                                waitingForAI
+                              }
+                            />
+                          </VcButton>
+                        </span>
+                      </LightTooltip>
+                    )}
                   {hasRegion !== 0 && !oneShotUsed && (
                     <LightTooltip
                       id="wsAudioDeleteRegionTip"
@@ -977,13 +1128,17 @@ function WSAudioPlayer(props: IProps) {
                 />
               )}
               {waitingForAI && (
-                <>
-                  <Grid item xs={10}>
+                <Grid container sx={{ pr: 6 }}>
+                  <Grid item xs={12}>
                     <Typography sx={{ whiteSpace: 'normal' }}>
                       {t.aiInProgress}
                     </Typography>
                   </Grid>
-                  <Grid item xs={2}>
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{ display: 'flex', justifyContent: 'center' }}
+                  >
                     <AltButton
                       id="ai-cancel"
                       onClick={() => {
@@ -994,7 +1149,7 @@ function WSAudioPlayer(props: IProps) {
                       {ts.cancel}
                     </AltButton>
                   </Grid>
-                </>
+                </Grid>
               )}
             </Grid>
             <div id="wsAudioTimeline" ref={timelineRef} />
@@ -1196,7 +1351,6 @@ function WSAudioPlayer(props: IProps) {
                             valueLabelFormat={valuetext}
                             onChange={handleSliderChange}
                           />
-
                           <LightTooltip
                             id="wsAudioFasterTip"
                             title={t.fasterTip.replace(
@@ -1263,6 +1417,19 @@ function WSAudioPlayer(props: IProps) {
                 noResponse={handleActionRefused}
               />
             )}
+            <BigDialog
+              title={t.selectVoice}
+              description={<Typography>{t.selectVoicePrompt}</Typography>}
+              isOpen={voiceVisible}
+              onOpen={handleCloseVoice}
+              bp={BigDialogBp.sm}
+            >
+              <SelectVoice
+                onOpen={handleCloseVoice}
+                begin={applyVoiceChange}
+                refresh={handleRefresh}
+              />
+            </BigDialog>
           </>
         </Box>
       </Paper>

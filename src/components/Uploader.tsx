@@ -1,5 +1,5 @@
 import React, { useRef, useContext, useEffect, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import * as actions from '../store';
 import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
 import MediaUpload, { SIZELIMIT, UploadType } from './MediaUpload';
@@ -91,13 +91,12 @@ export const Uploader = (props: IProps) => {
     dispatch(actions.nextUpload(props));
   const uploadComplete = () => dispatch(actions.uploadComplete());
   const [coordinator] = useGlobal('coordinator');
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const [errorReporter] = useGlobal('errorReporter');
   const [, setBusy] = useGlobal('importexportBusy');
-  const [plan] = useGlobal('plan');
-  const [offline] = useGlobal('offline');
+  const [plan] = useGlobal('plan'); //verified this is not used in a function 2/18/25
   const [user] = useGlobal('user');
   const planIdRef = useRef<string>(plan);
   const successCount = useRef<number>(0);
@@ -109,6 +108,8 @@ export const Uploader = (props: IProps) => {
   const [, setComplete] = useGlobal('progress');
   const [errMsgs, setErrMsgs] = useState<string[]>([]);
   const { localizedArtifactTypeFromId } = useArtifactType();
+  const getGlobal = useGetGlobal();
+
   const handleSpeakerChange = (speaker: string) => {
     onSpeakerChange && onSpeakerChange(speaker);
   };
@@ -143,20 +144,20 @@ export const Uploader = (props: IProps) => {
       ? remoteIdNum(
           'artifacttype',
           artifactState.id,
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         ) || artifactState.id
       : artifactState?.id || '';
   const getPassageId = () =>
-    remoteIdNum('passage', passageId || '', memory.keyMap as RecordKeyMap) ||
+    remoteIdNum('passage', passageId || '', memory?.keyMap as RecordKeyMap) ||
     passageId;
   const getSourceMediaId = () =>
     remoteIdNum(
       'mediafile',
       sourceMediaId || '',
-      memory.keyMap as RecordKeyMap
+      memory?.keyMap as RecordKeyMap
     ) || sourceMediaId;
   const getUserId = () =>
-    remoteIdNum('user', user || '', memory.keyMap as RecordKeyMap) || user;
+    remoteIdNum('user', user || '', memory?.keyMap as RecordKeyMap) || user;
 
   const itemComplete = async (n: number, success: boolean, data?: any) => {
     if (success) successCount.current += 1;
@@ -201,7 +202,7 @@ export const Uploader = (props: IProps) => {
     const next = n + 1;
     if (next < uploadList.length && !cancelled.current) {
       doUpload(next);
-    } else if (!offline && mediaIdRef.current?.length > 0) {
+    } else if (!getGlobal('offline') && mediaIdRef.current?.length > 0) {
       pullTableList(
         'mediafile',
         mediaIdRef.current,
@@ -218,7 +219,7 @@ export const Uploader = (props: IProps) => {
   };
 
   const getPlanId = () =>
-    remoteIdNum('plan', planIdRef.current, memory.keyMap as RecordKeyMap) ||
+    remoteIdNum('plan', planIdRef.current, memory?.keyMap as RecordKeyMap) ||
     planIdRef.current;
 
   const doUpload = (currentlyLoading: number) => {
@@ -229,7 +230,7 @@ export const Uploader = (props: IProps) => {
       versionNumber: 1,
       originalFile: uploadList[currentlyLoading].name,
       contentType: getContentType(
-        uploadList[currentlyLoading].type,
+        uploadList[currentlyLoading]?.type,
         uploadList[currentlyLoading].name
       ),
       artifactTypeId: getArtifactTypeId(),
@@ -250,7 +251,7 @@ export const Uploader = (props: IProps) => {
       files: uploadList,
       n: currentlyLoading,
       token: ctx.accessToken || '',
-      offline: offline,
+      offline: getGlobal('offline'),
       errorReporter,
       uploadType: uploadType ?? UploadType.Media,
       cb: itemComplete,
@@ -273,7 +274,11 @@ export const Uploader = (props: IProps) => {
           ? 'Project'
           : files[0]?.name.split('.')[0];
       if (createProject) planIdRef.current = await createProject(name);
-      var suffix = passageDefaultSuffix(planIdRef.current, memory, offline);
+      var suffix = passageDefaultSuffix(
+        planIdRef.current,
+        memory,
+        getGlobal('offline')
+      );
 
       while (
         files.findIndex(
@@ -291,7 +296,7 @@ export const Uploader = (props: IProps) => {
             path.basename(files[ix].name, path.extname(files[ix].name)) +
               suffix +
               path.extname(files[ix].name),
-            { type: files[ix].type }
+            { type: files[ix]?.type }
           )
         );
       }

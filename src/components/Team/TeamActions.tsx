@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import Axios from 'axios';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import {
   Box,
   BoxProps,
@@ -31,7 +31,7 @@ const RootBox = styled(Box)<BoxProps>(({ theme }) => ({
 }));
 
 const TeamActions = () => {
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [isDeveloper] = useGlobal('developer');
   const [, setBusy] = useGlobal('remoteBusy');
   const [openAdd, setOpenAdd] = useState(false);

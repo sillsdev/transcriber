@@ -3,6 +3,7 @@ import { IState, OptionType, IToolStrings } from '../model';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { ToolSlug } from '.';
+import { addPt } from '../utils/addPt';
 
 const toolSlugs = [
   ToolSlug.Resource,
@@ -32,16 +33,16 @@ export const useTools = () => {
   const [fromLocal] = useState<ISwitches>({});
 
   const localizedTool = (val: string) => {
-    return (t as ISwitches)[val] || val;
+    return addPt((t as ISwitches)[val] ?? '') || val;
   };
 
   const fromLocalizedTool = (val: string) => {
     if (Object.entries(fromLocal).length === 0) {
       for (const [key, value] of Object.entries(t)) {
-        fromLocal[value] = key;
+        fromLocal[addPt(value)] = addPt(key);
       }
     }
-    return fromLocal[val] || val;
+    return fromLocal[addPt(val)] || val;
   };
 
   const getToolOptions = () => {

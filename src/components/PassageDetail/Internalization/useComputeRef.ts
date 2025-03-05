@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 import related from '../../../crud/related';
 import { useOrbitData } from '../../../hoc/useOrbitData';
 import { PassageD, SectionD } from '../../../model';
@@ -7,7 +7,7 @@ import { parseRef } from '../../../crud/passage';
 export const useComputeRef = () => {
   const passages = useOrbitData<PassageD[]>('passage');
   const sections = useOrbitData<SectionD[]>('section');
-  const [planId] = useGlobal('plan');
+  const [planId] = useGlobal('plan'); //will be constant here
 
   const computeMovementRef = (passage: PassageD) => {
     const sectionId = related(passage, 'section');

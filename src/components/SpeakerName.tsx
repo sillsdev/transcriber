@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useGlobal } from 'reactn';
-import { ICommunityStrings } from '../model';
+import { useGlobal } from '../context/GlobalContext';
+import { ICommunityStrings, MediaFileD } from '../model';
 import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import IntellectualProperty from '../model/intellectualProperty';
@@ -8,7 +8,7 @@ import BigDialog from '../hoc/BigDialog';
 import ProvideRights from './ProvideRights';
 import { communitySelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
-import { ArtifactTypeSlug, related } from '../crud';
+import { ArtifactTypeSlug, findRecord, related } from '../crud';
 import { Typography } from '@mui/material';
 import { useOrbitData } from '../hoc/useOrbitData';
 
@@ -25,6 +25,7 @@ interface IProps {
   onRights?: (hasRights: boolean) => void;
   createProject?: (name: string) => Promise<string>;
   team?: string;
+  recordingRequired?: boolean;
 }
 
 export function SpeakerName({
@@ -33,6 +34,7 @@ export function SpeakerName({
   onRights,
   createProject,
   team,
+  recordingRequired,
 }: IProps) {
   const ipRecs = useOrbitData<IntellectualProperty[]>('intellectualproperty');
   const [value, setValue] = React.useState<NameOptionType | null>({ name });
@@ -40,6 +42,7 @@ export function SpeakerName({
   const [speakers, setSpeakers] = React.useState<NameOptionType[]>([]);
   const [showDialog, setShowDialog] = React.useState(false);
   const [organization] = useGlobal('organization');
+  const [memory] = useGlobal('memory');
   const t: ICommunityStrings = useSelector(communitySelector, shallowEqual);
 
   const handleRights = () => {
@@ -111,13 +114,26 @@ export function SpeakerName({
   React.useEffect(() => {
     const newSpeakers = new Array<NameOptionType>();
     const orgId = team || organization;
-    ipRecs.forEach((r) => {
-      if (related(r, 'organization') === orgId) {
-        newSpeakers.push({ name: r.attributes.rightsHolder });
-      }
-    });
+    const orgIp = ipRecs.filter((r) => related(r, 'organization') === orgId);
+    if (recordingRequired) {
+      orgIp.forEach((r) => {
+        const mediaRec = findRecord(
+          memory,
+          'mediafile',
+          related(r, 'releaseMediafile')
+        ) as MediaFileD;
+        if (mediaRec?.attributes?.transcription) {
+          newSpeakers.push({ name: r.attributes.rightsHolder });
+        }
+      });
+    } else {
+      newSpeakers.push(
+        ...orgIp.map((r) => ({ name: r.attributes.rightsHolder }))
+      );
+    }
     setSpeakers(newSpeakers);
-  }, [ipRecs, team, organization]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ipRecs, team, organization, recordingRequired]);
 
   React.useEffect(() => {
     if (inList(name)) {
@@ -189,13 +205,16 @@ export function SpeakerName({
         onOpen={handleCancelRights}
       >
         <>
-          <Typography>{t.releaseRights}</Typography>
+          <Typography>
+            {recordingRequired ? t.voiceRights : t.releaseRights}
+          </Typography>
           <ProvideRights
             speaker={value?.name || ''}
             recordType={ArtifactTypeSlug.IntellectualProperty}
             onRights={handleRightsChange}
             createProject={createProject}
             team={team}
+            recordingRequired={recordingRequired}
           />
         </>
       </BigDialog>

@@ -6,7 +6,7 @@ import {
   CSSProperties,
   useContext,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   IconButton,
   Typography,
@@ -174,9 +174,9 @@ export function TaskTable(props: IProps) {
   const [width, setWidth] = useState(TaskTableWidth);
   const { getPlan, getPlanName } = usePlan();
   // const offlineAvailableToggle = useOfflineAvailToggle();
-  const [planId] = useGlobal('plan');
+  const [planId] = useGlobal('plan'); //will be constant here
   const [planName, setPlanName] = useState('');
-  const [projectId] = useGlobal('project');
+  const [projectId] = useGlobal('project'); //will be constant here
   const projectPlans = useProjectPlans();
   const [openIntegration, setOpenIntegration] = useState(false);
   const [openExport, setOpenExport] = useState(false);

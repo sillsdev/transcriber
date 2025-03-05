@@ -18,7 +18,7 @@ import {
 import { PassageDetailContext } from '../../../context/PassageDetailContext';
 import { shallowEqual, useSelector } from 'react-redux';
 import { passageDetailArtifactsSelector } from '../../../selector';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../../context/GlobalContext';
 import { ResourceTypeEnum } from './PassageDetailArtifacts';
 import { OptionType } from '../../BookSelect';
 import { RecordKeyMap } from '@orbit/records';
@@ -38,7 +38,7 @@ export const SelectSharedResource = (props: IProps) => {
   const { sourcePassages, scope, onScope, onOpen, onSelect } = props;
   const [refLevel, setRefLevel] = useState<RefLevel>(RefLevel.Verse);
   const [memory] = useGlobal('memory');
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const ctx = useContext(PassageDetailContext);
   const { passage, section } = ctx.state;
   const getAllSharedResources = useAllSharedResourceRead();
@@ -115,7 +115,7 @@ export const SelectSharedResource = (props: IProps) => {
           remoteIdNum(
             'sharedresource',
             related(sr, 'sharedResource'),
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           )
         );
       };

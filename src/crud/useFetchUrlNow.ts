@@ -9,10 +9,12 @@ import { ISharedStrings } from '../model';
 import { sharedSelector } from '../selector';
 import { errStatus } from '../store/AxiosStatus';
 import { axiosGet } from '../utils/axios';
+import { AxiosError } from 'axios';
 
 export interface IFetchNowProps {
   id: string;
   cancelled: () => boolean;
+  noDownload?: boolean;
 }
 export const useFetchUrlNow = () => {
   const { accessToken } = useContext(TokenContext).state;
@@ -20,7 +22,7 @@ export const useFetchUrlNow = () => {
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const fetchUrl = async (props: IFetchNowProps): Promise<string> => {
-    let { id, cancelled } = props;
+    let { id, cancelled, noDownload } = props;
     try {
       var strings = await axiosGet(
         `mediafiles/${id}/fileurl`,
@@ -30,11 +32,13 @@ export const useFetchUrlNow = () => {
       const attr: any = strings.data.attributes;
       if (!attr || cancelled()) return '';
       const audioUrl = attr['audio-url'] as string;
-      if (isElectron) {
+      if (isElectron && !noDownload) {
         return await tryDownload(audioUrl, true);
       } else return audioUrl;
     } catch (error: any) {
       if (error.errStatus === 401) return ts.expiredToken;
+      var err = error as AxiosError;
+      if (err.status === 401) return ts.expiredToken;
       if (errStatus(error).errMsg.includes('transient')) {
         return await fetchUrl(props);
       } else throw error;

@@ -344,7 +344,7 @@ describe('usxNodeChange', () => {
       relationships: { section: { data: { id: 's1' } } },
     } as Passage;
     jest
-      .spyOn(mockMemory.cache, 'query')
+      .spyOn(mockMemory?.cache, 'query')
       .mockReturnValue([
         { id: 's1', attributes: { sequencenum: 1, name: 'name' } },
       ] as any);
@@ -373,7 +373,7 @@ describe('usxNodeChange', () => {
       relationships: { section: { data: { id: 's1' } } },
     } as Passage;
     jest
-      .spyOn(mockMemory.cache, 'query')
+      .spyOn(mockMemory?.cache, 'query')
       .mockReturnValue([
         { id: 's1', attributes: { sequencenum: 1, name: 'name' } },
       ] as any);
@@ -403,7 +403,7 @@ describe('usxNodeChange', () => {
       relationships: { section: { data: { id: 's1' } } },
     } as Passage;
     jest
-      .spyOn(mockMemory.cache, 'query')
+      .spyOn(mockMemory?.cache, 'query')
       .mockReturnValue([
         { id: 's1', attributes: { sequencenum: 1, name: 'name' } },
       ] as any);

@@ -1,17 +1,18 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { IProfileStrings, IState, User, UserD } from '../model';
 import * as action from '../store';
 import { TokenContext } from '../context/TokenProvider';
 import { profileSelector } from '../selector';
 import { useOrbitData } from '../hoc/useOrbitData';
 import { UpdateRecord } from '../model/baseModel';
+import { addPt } from './addPt';
 
 export const useCanPublish = () => {
   const [canPublish, setCanPublish] = useState<boolean | undefined>();
   const askingRef = useRef(false);
-  const [isOffline] = useGlobal('offline');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [memory] = useGlobal('memory');
   const { accessToken } = useContext(TokenContext).state;
   const [errorReporter] = useGlobal('errorReporter');
@@ -45,7 +46,11 @@ export const useCanPublish = () => {
         !paratext_canPublishStatus
       ) {
         askingRef.current = true; //so we only call it once
-        getCanPublish(accessToken || '', errorReporter, t.checkingParatext);
+        getCanPublish(
+          accessToken || '',
+          errorReporter,
+          addPt(t.checkingParatext)
+        );
       }
       if (paratext_canPublishStatus) {
         if (paratext_canPublishStatus.errStatus) {

@@ -5,7 +5,7 @@ import {
   RecordIdentity,
 } from '@orbit/records';
 import { useDispatch } from 'react-redux';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { findRecord, remoteIdGuid } from '.';
 import {
   MediaFile,
@@ -44,7 +44,7 @@ export const useKeyTermSave = ({ cb }: IProps) => {
     let mediaRec: MediaFile | undefined = undefined;
     if (mediaRemId) {
       const id =
-        remoteIdGuid('mediafile', mediaRemId, memory.keyMap as RecordKeyMap) ||
+        remoteIdGuid('mediafile', mediaRemId, memory?.keyMap as RecordKeyMap) ||
         mediaRemId;
       mediaRec = findRecord(memory, 'mediafile', id) as MediaFile;
     }

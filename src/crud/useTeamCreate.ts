@@ -1,5 +1,5 @@
 import { useMemo, useRef } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   Organization,
   RoleNames,
@@ -33,7 +33,7 @@ export const useTeamCreate = () => {
   const [, setOrganization] = useGlobal('organization');
   const [, setOrgRole] = useGlobal('orgRole');
   const [, setProject] = useGlobal('project');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const { showMessage } = useSnackBar();
   const { setProjectType } = useProjectType();
   const { getRoleId } = useRole();
@@ -44,7 +44,7 @@ export const useTeamCreate = () => {
   const { AddOrgNoteCategories } = useArtifactCategory();
 
   const memory = useMemo(
-    () => coordinator.getSource('memory') as Memory,
+    () => coordinator?.getSource('memory') as Memory,
     [coordinator]
   );
 

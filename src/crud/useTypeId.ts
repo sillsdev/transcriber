@@ -1,12 +1,12 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { InitializedRecord } from '@orbit/records';
 
 export const useTypeId = () => {
   const [memory] = useGlobal('memory');
-  const [isOfflineOnly] = useGlobal('offlineOnly');
+  const [isOfflineOnly] = useGlobal('offlineOnly'); //will be constant here
 
   return (type: string, table: string) => {
-    const ptRecs = memory.cache.query((q) =>
+    const ptRecs = memory?.cache.query((q) =>
       q.findRecords(`${table}type`)
     ) as InitializedRecord[];
     const selected = ptRecs.filter(

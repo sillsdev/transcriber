@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { SectionResourceD, SectionResourceUserD } from '../model';
 import { related } from '.';
 
@@ -7,7 +7,7 @@ export const useSecResUserRead = () => {
   const [user] = useGlobal('user');
 
   return async (resource: SectionResourceD) => {
-    const sectionResourceUsers = memory.cache.query((q) =>
+    const sectionResourceUsers = memory?.cache.query((q) =>
       q.findRecords('sectionresourceuser')
     ) as SectionResourceUserD[];
     const rec = sectionResourceUsers.filter(

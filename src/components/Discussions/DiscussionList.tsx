@@ -35,7 +35,7 @@ import ShowIcon from '@mui/icons-material/ArrowDropDown';
 import DiscussionCard, { DiscussionRegion } from './DiscussionCard';
 import BigDialog from '../../hoc/BigDialog';
 import CategoryList, { CatData } from './CategoryList';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { useDiscussionOrg, useOrgDefaults } from '../../crud';
 import FilterMenu, { IFilterState, Resolved } from './FilterMenu';
 import Confirm from '../AlertDialog';
@@ -72,10 +72,10 @@ export function DiscussionList() {
   const groups = useOrbitData<Group[]>('group');
   const groupMemberships = useOrbitData<GroupMembership[]>('groupmembership');
   const theme = useTheme();
-  const [planId] = useGlobal('plan');
+  const [planId] = useGlobal('plan'); //will be constant here
   const [userId] = useGlobal('user');
   const [organization] = useGlobal('organization');
-  const [isOffline] = useGlobal('offline');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [displayDiscussions, setDisplayDiscussions] = useState<DiscussionD[]>(
     []
   );

@@ -6,7 +6,7 @@ import React, {
   useRef,
   useContext,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { IState, IPassageRecordStrings } from '../model';
 import * as actions from '../store';
 import {
@@ -40,6 +40,7 @@ interface IProps {
   mediaId?: string;
   metaData?: JSX.Element;
   defaultFilename?: string;
+  allowDeltaVoice?: boolean;
   setCanSave: (canSave: boolean) => void;
   setCanCancel?: (canCancel: boolean) => void;
   setStatusText: (status: string) => void;
@@ -68,6 +69,7 @@ function MediaRecord(props: IProps) {
     onPlayStatus,
     mediaId,
     defaultFilename,
+    allowDeltaVoice,
     uploadMethod,
     setCanSave,
     setCanCancel,
@@ -188,7 +190,16 @@ function MediaRecord(props: IProps) {
         !saveRef.current
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blobReady, tooBig, name, filechanged, converting, uploading, recording]);
+  }, [
+    blobReady,
+    tooBig,
+    name,
+    filechanged,
+    converting,
+    uploading,
+    recording,
+    toolsChanged,
+  ]);
 
   useEffect(() => {
     if (setCanCancel) setCanCancel(!converting && !uploading);
@@ -419,6 +430,7 @@ function MediaRecord(props: IProps) {
         allowRecord={allowRecord !== false}
         allowSilence={allowWave}
         allowZoom={true}
+        allowDeltaVoice={allowDeltaVoice}
         oneTryOnly={oneTryOnly}
         size={size || 300}
         blob={originalBlob}

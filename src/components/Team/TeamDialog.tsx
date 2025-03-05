@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import Confirm from '../AlertDialog';
 import {
   Button,
@@ -23,6 +23,7 @@ import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
 import {
   defaultWorkflow,
+  orgDefaultFeatures,
   orgDefaultLangProps,
   orgDefaultWorkflowProgression,
   pubDataCopyright,
@@ -37,7 +38,12 @@ import { UnsavedContext } from '../../context/UnsavedContext';
 import { useCanPublish, useJsonParams, waitForIt } from '../../utils';
 import { useOrbitData } from '../../hoc/useOrbitData';
 import { RecordIdentity } from '@orbit/records';
-import { Options } from '../../control';
+import TeamSettings from './TeamSettings';
+import { Render } from '../../assets/brands';
+
+interface IFeatures {
+  [key: string]: any;
+}
 
 export interface ITeamDialog {
   team: OrganizationD;
@@ -45,6 +51,9 @@ export interface ITeamDialog {
   process?: string;
   bibleMediafile: string;
   isoMediafile: string;
+  noNoise?: boolean;
+  deltaVoice?: boolean;
+  aiTranscribe?: boolean;
 }
 interface IProps extends IDialog<ITeamDialog> {
   onDelete?: (team: RecordIdentity) => void;
@@ -70,7 +79,7 @@ export function TeamDialog(props: IProps) {
   const { setParam } = useJsonParams();
   const [changed, setChanged] = React.useState(false);
   const ctx = React.useContext(TeamContext);
-  const { cardStrings } = ctx.state;
+  const { cardStrings, personalTeam } = ctx.state;
   const t = cardStrings;
   const [memory] = useGlobal('memory');
   const [process, setProcess] = useState<string>();
@@ -80,14 +89,12 @@ export function TeamDialog(props: IProps) {
   const recordingRef = useRef(false);
   const [recording, setRecordingx] = useState(false);
   const [confirm, setConfirm] = React.useState(false);
+  const [features, setFeatures] = useState<IFeatures>({});
   const { anySaving, toolsChanged, startSave, clearRequested } =
     useContext(UnsavedContext).state;
   const { getBible, getBibleOwner, getOrgBible } = useBible();
   const { canPublish } = useCanPublish();
-  const workflowOptions = [
-    t.workflowProgressionPassage,
-    t.workflowProgressionStep,
-  ];
+
   const [workflowProgression, setWorkflowProgression] = useState(
     t.workflowProgressionPassage
   );
@@ -105,6 +112,7 @@ export function TeamDialog(props: IProps) {
     setDescription('');
     setPublishingData('');
     setWorkflowProgression(t.workflowProgressionPassage);
+    setFeatures({});
     onOpen && onOpen(false);
     Object.keys(toolsChanged).forEach((t) => clearRequested(t));
   };
@@ -143,16 +151,17 @@ export function TeamDialog(props: IProps) {
         10000
       ).finally(() => {
         const current =
-          mode === DialogMode.edit && values
+          mode === DialogMode.edit && values?.team
             ? values.team
             : ({ attributes: {} } as OrganizationD);
-        const df = setParam(
+        let df = setParam(
           orgDefaultWorkflowProgression,
           workflowProgression === t.workflowProgressionStep
             ? 'step'
             : 'passage',
-          defaultParams
+          current.attributes?.defaultParams ?? defaultParams
         );
+        df = setParam(orgDefaultFeatures, features, df);
         const team = {
           ...current,
           attributes: {
@@ -227,6 +236,16 @@ export function TeamDialog(props: IProps) {
         setDefaultParams(setParam(orgDefaultLangProps, value, defaultParams));
         setPublishingData(setParam(pubDataLangProps, value, publishingData));
         break;
+      case 'workflowProgression':
+        setWorkflowProgression(value);
+        break;
+      case 'noNoise':
+      case 'deltaVoice':
+      case 'aiTranscribe':
+        setFeatures({ ...features, [what]: value === 'true' });
+        break;
+      case 'refresh':
+        break;
       default:
         return;
     }
@@ -255,10 +274,7 @@ export function TeamDialog(props: IProps) {
 
   const nameInUse = (newName: string): boolean => {
     if (newName === values?.team.attributes.name) return false;
-    const sameNameRec = organizations.filter(
-      (o) => o?.attributes?.name === newName
-    );
-    return sameNameRec.length > 0;
+    return Boolean(organizations.find((o) => o?.attributes?.name === newName));
   };
 
   useEffect(() => {
@@ -268,12 +284,13 @@ export function TeamDialog(props: IProps) {
 
         if (values) {
           if (values.team) {
-            var wfp = getDefault(orgDefaultWorkflowProgression, values?.team);
+            const wfp = getDefault(orgDefaultWorkflowProgression, values?.team);
             setWorkflowProgression(
               wfp === 'step'
                 ? t.workflowProgressionStep
                 : t.workflowProgressionPassage
             );
+            setFeatures(getDefault(orgDefaultFeatures, values?.team));
           }
           setName(values.team.attributes?.name || '');
           setBible(getOrgBible(values.team.id));
@@ -282,7 +299,7 @@ export function TeamDialog(props: IProps) {
     } else reset();
 
     if (isOpen && mode === DialogMode.add && processOptions.length === 0) {
-      const opts = memory.cache.query((q) =>
+      const opts = memory?.cache.query((q) =>
         q.findRecords('workflowstep')
       ) as WorkflowStep[];
       const newProcess = opts.reduce((prev, cur) => {
@@ -293,7 +310,7 @@ export function TeamDialog(props: IProps) {
       setProcessOptions(
         newProcess.map((p) => ({
           value: p,
-          label: t.getString(p) || p,
+          label: t.getString(p)?.replace('{0}', Render) || p,
         }))
       );
     }
@@ -327,11 +344,6 @@ export function TeamDialog(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bible]);
 
-  const onChange = (val: string) => {
-    setWorkflowProgression(val);
-    setChanged(true);
-  };
-
   return (
     <div>
       <Dialog
@@ -342,26 +354,32 @@ export function TeamDialog(props: IProps) {
         disableEnforceFocus
       >
         <DialogTitle id="teamDlg">
-          {mode === DialogMode.add ? t.addTeam : t.teamSettings}
+          {mode === DialogMode.add
+            ? t.addTeam
+            : onDelete
+            ? t.teamSettings
+            : t.personalSettings}
         </DialogTitle>
         <DialogContent>
           {saving && <LinearProgress id="busy" variant="indeterminate" />}
-          <TextField
-            autoFocus
-            margin="dense"
-            id="teamName"
-            label={t.teamName}
-            value={name}
-            helperText={!saving && name && nameInUse(name) && t.nameInUse}
-            required
-            onChange={handleChange}
-            fullWidth
-          />
-          <Options
-            label={t.workflowProgression}
-            defaultValue={workflowProgression}
-            options={workflowOptions}
-            onChange={onChange}
+          {values?.team.id !== personalTeam && (
+            <TextField
+              autoFocus
+              margin="dense"
+              id="teamName"
+              label={t.teamName}
+              value={name}
+              helperText={!saving && name && nameInUse(name) && t.nameInUse}
+              required
+              onChange={handleChange}
+              fullWidth
+            />
+          )}
+          <TeamSettings
+            mode={mode}
+            team={values?.team}
+            values={{ features, workflowProgression }}
+            setValue={setValue}
           />
           {mode !== DialogMode.add && canPublish && (
             <PublishExpansion
@@ -399,7 +417,7 @@ export function TeamDialog(props: IProps) {
                 ))}
             </TextField>
           )}
-          {mode === DialogMode.edit && (
+          {mode === DialogMode.edit && values?.team.id !== personalTeam && (
             <div>
               <DeleteExpansion
                 title={t.deleteTeam}

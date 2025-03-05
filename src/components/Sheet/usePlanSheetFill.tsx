@@ -33,7 +33,7 @@ import { PlanContext } from '../../context/PlanContext';
 import BookSelect from '../BookSelect';
 import { useRefErrTest } from './useRefErrTest';
 import { SectionSeqCol } from './PlanSheet';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
 import { useShowIcon } from './useShowIcon';
 import { ExtraIcon } from '.';
 import { positiveWholeOnly, stringAvatar } from '../../utils';
@@ -152,9 +152,9 @@ export const usePlanSheetFill = ({
   const ctx = useContext(PlanContext);
   const { readonly, sectionArr, setSectionArr, shared } = ctx.state;
   const sectionMap = new Map<number, string>(sectionArr);
-  const [planId] = useGlobal('plan');
-  const [offline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [planId] = useGlobal('plan'); //will be constant here
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const { userIsAdmin } = useRole();
   const refErrTest = useRefErrTest();
   const { getOrganizedBy } = useOrganizedBy();
@@ -164,6 +164,7 @@ export const usePlanSheetFill = ({
     inlinePassages,
     hidePublishing: !publishingOn || hidePublishing,
   });
+  const getGlobal = useGetGlobal();
   const {
     isPassageType,
     isSectionType,
@@ -309,7 +310,11 @@ export const usePlanSheetFill = ({
     rowIndex,
     canEdit,
   }: PublishedValueProps) => {
-    const isShowIcon = showIcon(filtered, offline && !offlineOnly, rowIndex);
+    const isShowIcon = showIcon(
+      filtered,
+      getGlobal('offline') && !offlineOnly,
+      rowIndex
+    );
     if (isShowIcon(ExtraIcon.Publish)) {
       return (
         <PublishButton
@@ -479,11 +484,9 @@ export const usePlanSheetFill = ({
   };
 
   const refValue = (e: string | number) => {
-    if (
-      passageTypeFromRef(e as string, inlinePassages) !==
-      PassageTypeEnum.PASSAGE
-    )
-      return <RefRender value={e as string} flat={inlinePassages} />;
+    var pt = passageTypeFromRef(e as string, inlinePassages);
+    if (pt !== PassageTypeEnum.PASSAGE)
+      return <RefRender value={e as string} flat={inlinePassages} pt={pt} />;
     return e;
   };
 
@@ -678,7 +681,7 @@ export const usePlanSheetFill = ({
           readonly ||
           (cellIndex === SectionSeqCol && (e as number) < 0) ||
           cellIndex === passageSeqCol ||
-          (sharedRes && offline) ||
+          (sharedRes && getGlobal('offline')) ||
           passage
             ? false
             : section
@@ -794,7 +797,7 @@ export const usePlanSheetFill = ({
             (passage ? 'p' : '') +
             (movement ? ' movement' : book ? ' bk' : '')
           : 'pass');
-
+      const readonly = anyRecording || (sharedRes && getGlobal('offline'));
       const sheetRow = [
         stepCell({
           passage,
@@ -802,7 +805,7 @@ export const usePlanSheetFill = ({
           refCol,
           rowIndex,
           calcClassName,
-          readonly: anyRecording || (sharedRes && offline),
+          readonly: readonly,
         }),
         assignmentCell(rowIndex, calcClassName),
         publishedCell({
@@ -810,7 +813,7 @@ export const usePlanSheetFill = ({
           rowIndex,
           calcClassName:
             calcClassName + (beta && !hidePublishing ? ' beta' : ''),
-          canEdit: !anyRecording && !(sharedRes && offline),
+          canEdit: !readonly,
         }),
         actionCell({
           passage,
@@ -821,17 +824,11 @@ export const usePlanSheetFill = ({
           mediaPlaying,
           canPlay:
             !anyRecording && (rowInfo[rowIndex].mediaId?.id || '') !== '',
-          canEdit: !anyRecording && !(sharedRes && offline),
+          canEdit: !readonly,
         }),
       ];
       if (!hidePublishing && publishingOn)
-        sheetRow.push(
-          graphicCell(
-            rowIndex,
-            calcClassName,
-            anyRecording || (sharedRes && offline)
-          )
-        );
+        sheetRow.push(graphicCell(rowIndex, calcClassName, readonly));
       row
         .slice(0, 6) // quits when it runs out of columns
         .map(
@@ -860,7 +857,7 @@ export const usePlanSheetFill = ({
           book,
           active,
           filtered,
-          readonly: anyRecording || (sharedRes && offline),
+          readonly: readonly,
         })
       );
       return sheetRow;

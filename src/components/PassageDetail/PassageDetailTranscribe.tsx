@@ -12,12 +12,13 @@ import usePassageDetailContext from '../../context/usePassageDetailContext';
 import { sharedSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import TaskTable, { TaskTableWidth } from '../TaskTable';
-import { getStepComplete, ToolSlug } from '../../crud';
+import { ToolSlug } from '../../crud';
 import { findRecord } from '../../crud/tryFindRecord';
-import { JSONParse, waitForIt } from '../../utils';
-import { useGlobal } from 'reactn';
+import { JSONParse } from '../../utils';
 import { PassageDetailContext } from '../../context/PassageDetailContext';
 import { useArtifactType } from '../../crud/useArtifactType';
+import { UnsavedContext } from '../../context/UnsavedContext';
+import { useGlobal } from '../../context/GlobalContext';
 
 interface TableContainerProps extends BoxProps {
   topFilter?: boolean;
@@ -58,13 +59,14 @@ export function PassageDetailTranscribe({
     setCurrentStep,
     gotoNextStep,
     rowData,
-    passage,
+    psgCompleted,
   } = usePassageDetailContext();
+  const { waitForSave } = useContext(UnsavedContext).state;
   const { setState } = useContext(PassageDetailContext);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const [topFilter, setTopFilter] = useState(false);
   const { localizedArtifactTypeFromId } = useArtifactType();
-  const [globals] = useGlobal();
+  const [memory] = useGlobal('memory');
 
   const parsedSteps = useMemo(() => {
     if (!orgWorkflowSteps) return [];
@@ -141,22 +143,17 @@ export function PassageDetailTranscribe({
   }, [currentstep, vernacularSteps, stepSettings, hasChecking]);
 
   const handleComplete = (complete: boolean) => {
-    waitForIt(
-      'change cleared after save',
-      () => !globals.changed,
-      () => false,
-      200
-    ).then(async () => {
-      await setStepComplete(currentstep, complete, getStepComplete(passage));
+    waitForSave(undefined, 200).finally(async () => {
+      await setStepComplete(currentstep, complete, psgCompleted);
       //if we're now complete, go to the next step or passage
       if (complete) gotoNextStep();
     });
   };
 
   const uncompletedSteps = async () => {
-    await setStepComplete(currentstep, false, getStepComplete(passage));
+    await setStepComplete(currentstep, false, psgCompleted);
     if (hasChecking && nextStep)
-      await setStepComplete(nextStep, false, getStepComplete(passage));
+      await setStepComplete(nextStep, false, psgCompleted);
     if (curRole === 'editor' && prevStep) setCurrentStep(prevStep || '');
   };
 
@@ -172,14 +169,14 @@ export function PassageDetailTranscribe({
         // only for vernacular
         const recordStep = parsedSteps.find((s) => s.tool === ToolSlug.Record);
         if (recordStep) {
-          await setStepComplete(recordStep.id, false, getStepComplete(passage));
+          await setStepComplete(recordStep.id, false, psgCompleted);
           setCurrentStep(recordStep.id);
           return;
         }
       }
     }
     if (curRole === 'editor' && prevStep) {
-      await setStepComplete(prevStep, false, getStepComplete(passage));
+      await setStepComplete(prevStep, false, psgCompleted);
       setCurrentStep(prevStep);
     }
   };
@@ -194,7 +191,7 @@ export function PassageDetailTranscribe({
   };
 
   const media = useMemo(
-    () => findRecord(globals.memory, 'mediafile', mediafileId) as MediaFileD,
+    () => findRecord(memory, 'mediafile', mediafileId) as MediaFileD,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [mediafileId]
   );

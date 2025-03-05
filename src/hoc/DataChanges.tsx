@@ -6,7 +6,7 @@ import {
   useMemo,
   PropsWithChildren,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { infoMsg, logError, Severity, useCheckOnline } from '../utils';
 import { useInterval } from '../utils/useInterval';
 import {
@@ -92,9 +92,9 @@ export const processDataChanges = async (pdc: {
     cb,
   } = pdc;
 
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('datachanges') as JSONAPISource;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('datachanges') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const reloadOrgs = async (localId: string, reloadAll: boolean) => {
     const orgmem = findRecord(memory, 'organizationmembership', localId);
     if (orgmem) {
@@ -209,7 +209,7 @@ export const processDataChanges = async (pdc: {
           if (!upRec.record.relationships)
             //this is just an included record and wasn't changed
             continue;
-          switch (upRec.record.type) {
+          switch (upRec.record?.type) {
             case 'section':
               if (upRec.record.relationships?.transcriber === undefined)
                 resetRelated(localOps, tb, 'transcriber', upRec.record);
@@ -230,7 +230,7 @@ export const processDataChanges = async (pdc: {
               var localId = remoteIdGuid(
                 'mediafile',
                 upRec.record?.keys?.remoteId ?? '',
-                memory.keyMap as RecordKeyMap
+                memory?.keyMap as RecordKeyMap
               );
               if (localId) {
                 var mr = findRecord(memory, 'mediafile', localId) as MediaFileD;
@@ -330,7 +330,7 @@ export const processDataChanges = async (pdc: {
         const localId = remoteIdGuid(
           table.type,
           r.toString(),
-          memory.keyMap as RecordKeyMap
+          memory?.keyMap as RecordKeyMap
         );
         if (localId) {
           switch (table.type) {
@@ -376,9 +376,9 @@ export const doDataChanges = async (
   fetchUrl?: (props: IFetchNowProps) => Promise<string | undefined>,
   notPastTime?: string
 ) => {
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource; //to check busy
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('remote') as JSONAPISource; //to check busy
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   const userLastTimeKey = localUserKey(LocalKey.time);
   const userNextStartKey = localUserKey(LocalKey.start);
   if (!remote || !remote.activated) return;
@@ -409,7 +409,7 @@ export const doDataChanges = async (
       const p = projectsLoaded[ix];
       const op = getOfflineProject(p);
       if (
-        !isNaN(remoteIdNum('project', p, memory.keyMap as RecordKeyMap)) &&
+        !isNaN(remoteIdNum('project', p, memory?.keyMap as RecordKeyMap)) &&
         op.attributes?.snapshotDate &&
         Date.parse(op.attributes.snapshotDate) < Date.parse(lastTime)
       ) {
@@ -424,7 +424,7 @@ export const doDataChanges = async (
               [
                 'projlist',
                 JSON.stringify({
-                  id: remoteId('project', p, memory.keyMap as RecordKeyMap),
+                  id: remoteId('project', p, memory?.keyMap as RecordKeyMap),
                   since: op.attributes.snapshotDate,
                 }),
               ],
@@ -484,7 +484,7 @@ export const doDataChanges = async (
         const tb = new RecordTransformBuilder();
         pscs.forEach((p) =>
           operations.push(
-            tb.removeRecord({ type: p.type, id: p.id }).toOperation()
+            tb.removeRecord({ type: p?.type, id: p.id }).toOperation()
           )
         );
         await backup.sync((t) => operations);
@@ -498,15 +498,14 @@ export function DataChanges(props: PropsWithChildren) {
   const { children } = props;
   const dispatch = useDispatch();
   const setLanguage = (lang: string) => dispatch(actions.setLanguage(lang));
-  const [isOffline] = useGlobal('offline');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [coordinator] = useGlobal('coordinator');
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource; //to check busy
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('remote') as JSONAPISource; //to check busy
   const [loadComplete] = useGlobal('loadComplete');
-  const [busy, setBusy] = useGlobal('remoteBusy');
-  const [bigBusy] = useGlobal('importexportBusy');
+  const [, setBusy] = useGlobal('remoteBusy');
   const [, setDataChangeCount] = useGlobal('dataChangeCount');
-  const [connected] = useGlobal('connected');
+  const [connected] = useGlobal('connected'); //verified this is not used in a function 2/18/25
   const [user] = useGlobal('user');
   const [fingerprint] = useGlobal('fingerprint');
   const [errorReporter] = useGlobal('errorReporter');
@@ -515,9 +514,6 @@ export function DataChanges(props: PropsWithChildren) {
   const [busyDelay, setBusyDelay] = useState<number | null>(null);
   const [dataDelay, setDataDelay] = useState<number | null>(null);
   const [firstRun, setFirstRun] = useState(true);
-  const [project] = useGlobal('project');
-  const [projectsLoaded] = useGlobal('projectsLoaded');
-  const [orbitRetries] = useGlobal('orbitRetries');
   const doingChanges = useRef(false);
   const getOfflineProject = useOfflnProjRead();
   const checkOnline = useCheckOnline('DataChanges');
@@ -531,6 +527,7 @@ export function DataChanges(props: PropsWithChildren) {
   const users = useOrbitData<UserD[]>('user');
   const defaultDataDelayInMinutes = 2;
   const [userDataDelay, setUserDataDelay] = useState(defaultDataDelayInMinutes);
+  const getGlobal = useGetGlobal();
   useEffect(() => {
     var userRec = findRecord(memory, 'user', user) as UserD; //make sure we have the user record in memory
     const hk = JSON.parse(userRec?.attributes?.hotKeys ?? '{}');
@@ -564,18 +561,22 @@ export function DataChanges(props: PropsWithChildren) {
     const checkBusy =
       user === '' || (remote && remote.requestQueue.length !== 0);
     //we know we're offline, or we've retried something so maybe we're offline
-    if (!connected || (checkBusy && orbitRetries < OrbitNetworkErrorRetries)) {
+    if (
+      !getGlobal('connected') ||
+      (checkBusy && getGlobal('orbitRetries') < OrbitNetworkErrorRetries)
+    ) {
       checkOnline((result) => {
-        if ((checkBusy && result) !== busy) setBusy(checkBusy && result);
+        if ((checkBusy && result) !== getGlobal('remoteBusy'))
+          setBusy(checkBusy && result);
       });
-    } else if (checkBusy !== busy) setBusy(checkBusy);
+    } else if (checkBusy !== getGlobal('remoteBusy')) setBusy(checkBusy);
   };
 
   const updateData = async () => {
     if (
       !doingChanges.current &&
-      !busy &&
-      !bigBusy &&
+      !getGlobal('remoteBusy') &&
+      !getGlobal('importexportBusy') &&
       !saving &&
       authenticated()
     ) {
@@ -586,7 +587,7 @@ export function DataChanges(props: PropsWithChildren) {
         ctx.accessToken || '',
         coordinator,
         fingerprint,
-        projectsLoaded,
+        getGlobal('projectsLoaded'),
         getOfflineProject,
         errorReporter,
         user,
@@ -598,21 +599,21 @@ export function DataChanges(props: PropsWithChildren) {
         //make sure we have a bible media project and plan downloaded
         await getBibleMediaPlan();
         await doSanityCheck((await getBibleMediaProject())?.id);
-        for (var ix = 0; ix < projectsLoaded.length; ix++)
-          await doSanityCheck(projectsLoaded[ix]);
+        for (var ix = 0; ix < getGlobal('projectsLoaded').length; ix++)
+          await doSanityCheck(getGlobal('projectsLoaded')[ix]);
       }
       doingChanges.current = false; //attempt to prevent double calls
     }
   };
 
   const backupElectron = () => {
-    if (!busy && !saving && project !== '') {
+    if (!getGlobal('remoteBusy') && !saving && getGlobal('project') !== '') {
       electronExport(
         ExportType.ITFBACKUP,
         undefined, //all artifact types
         memory,
         undefined,
-        project,
+        getGlobal('project'),
         user,
         '',
         '',

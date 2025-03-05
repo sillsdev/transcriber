@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   MediaFile,
   ITranscriptionShowStrings,
   ProjectD,
   OrgWorkflowStep,
+  ISharedStrings,
 } from '../model';
 import {
   Button,
@@ -25,7 +26,7 @@ import { related } from '../crud/related';
 import { findRecord } from '../crud/tryFindRecord';
 import { ArtifactTypeSlug } from '../crud/artifactTypeSlug';
 import { useSelector, shallowEqual } from 'react-redux';
-import { transcriptionShowSelector } from '../selector';
+import { sharedSelector, transcriptionShowSelector } from '../selector';
 import { useOrbitData } from '../hoc/useOrbitData';
 
 interface IProps {
@@ -42,9 +43,9 @@ function TranscriptionShow(props: IProps) {
   const { id, isMediaId, visible, closeMethod, exportId, version } = props;
   const workflowSteps = useOrbitData<OrgWorkflowStep[]>('orgworkflowstep');
   const [memory] = useGlobal('memory');
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [org] = useGlobal('organization');
-  const [projectId] = useGlobal('project');
+  const [projectId] = useGlobal('project'); //will be constant here
   const [open, setOpen] = useState(visible);
   const { showMessage } = useSnackBar();
   const [transcription, setTranscription] = useState('');
@@ -58,6 +59,7 @@ function TranscriptionShow(props: IProps) {
     transcriptionShowSelector,
     shallowEqual
   );
+  const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const handleClose = () => {
     if (closeMethod) {
@@ -68,7 +70,7 @@ function TranscriptionShow(props: IProps) {
 
   const handleCopy = (text: string) => () => {
     navigator.clipboard.writeText(text).catch((err) => {
-      showMessage(t.cantCopy);
+      showMessage(ts.cantCopy);
     });
   };
 
@@ -87,7 +89,7 @@ function TranscriptionShow(props: IProps) {
   useEffect(() => {
     if (id) {
       let mediaRec = isMediaId
-        ? (memory.cache.query((q) =>
+        ? (memory?.cache.query((q) =>
             q.findRecord({ type: 'mediafile', id })
           ) as MediaFile)
         : null;

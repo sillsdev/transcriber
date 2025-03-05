@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { Organization, OrganizationD, User } from '../model';
 import { waitForIt } from '../utils';
 import { useTeamCreate, isPersonalTeam, remoteIdNum, defaultWorkflow } from '.';
@@ -8,32 +8,28 @@ import { RecordKeyMap } from '@orbit/records';
 
 export const useNewTeamId = () => {
   const [memory] = useGlobal('memory');
-  const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const [globals] = useGlobal();
   const teamRef = React.useRef<string>();
   const orbitTeamCreate = useTeamCreate();
+  const getGlobal = useGetGlobal();
 
   const getPersonalId = async () => {
     await waitForIt(
       'have user for personal team',
-      () => Boolean(globals.user),
+      () => Boolean(getGlobal('user')),
       () => false,
       100
     );
+    const user = getGlobal('user');
     const orgs = (await memory.query((q) =>
       q.findRecords('organization')
     )) as OrganizationD[];
     //Ugh, there's more than one per person.  Always get the last one created
     const orgRecs = orgs
-      .filter(
-        (o) =>
-          related(o, 'owner') === globals.user && isPersonalTeam(o.id, orgs)
-      )
+      .filter((o) => related(o, 'owner') === user && isPersonalTeam(o.id, orgs))
       .sort((a, b) =>
         Boolean(a.keys?.remoteId) && Boolean(b.keys?.remoteId)
-          ? remoteIdNum('organization', b.id, memory.keyMap as RecordKeyMap) -
-            remoteIdNum('organization', a.id, memory.keyMap as RecordKeyMap)
+          ? remoteIdNum('organization', b.id, memory?.keyMap as RecordKeyMap) -
+            remoteIdNum('organization', a.id, memory?.keyMap as RecordKeyMap)
           : b >= a
           ? 1
           : -1
@@ -46,11 +42,11 @@ export const useNewTeamId = () => {
   };
 
   const newPersonal = async () => {
-    if (!globals.user) return;
+    if (!getGlobal('user')) return;
     teamRef.current = await getPersonalId();
     if (!teamRef.current) {
       const userRec = memory.cache.query((q) =>
-        q.findRecord({ type: 'user', id: globals.user })
+        q.findRecord({ type: 'user', id: getGlobal('user') })
       ) as User;
       const userName = userRec?.attributes?.name ?? 'user';
       const personalOrg = `>${userName} Personal<`;
@@ -74,7 +70,7 @@ export const useNewTeamId = () => {
       const testId = await getPersonalId();
       if (testId) {
         teamId = testId;
-      } else if (!isOffline || offlineOnly) {
+      } else if (!getGlobal('offline') || getGlobal('offlineOnly')) {
         await newPersonal();
         await waitForIt(
           'create new team',

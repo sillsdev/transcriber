@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { IMainStrings } from '../model';
 import { waitForIt } from '../utils/waitForIt';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -52,10 +52,8 @@ interface IIndexableSaveInfo<SaveInfo> {
 }
 const UnsavedProvider = (props: PropsWithChildren) => {
   const t: IMainStrings = useSelector(mainSelector);
-  const [importexportBusy] = useGlobal('importexportBusy');
-  const [busy, setBusy] = useGlobal('remoteBusy');
-  const busyRef = useRef(false);
-  const [alertOpen, setAlertOpen] = useGlobal('alertOpen'); //global because planSheet checks it
+  const [, setBusy] = useGlobal('remoteBusy');
+  const [alertOpen, setAlertOpen] = useGlobal('alertOpen'); //global because planSheet checks it //verified this is not used in a function 2/18/25
   const saveConfirm = React.useRef<() => any>();
   const { showMessage } = useSnackBar();
   const [state, setState] = useState({
@@ -63,7 +61,7 @@ const UnsavedProvider = (props: PropsWithChildren) => {
     t,
   });
   const saveErr = useRef<string>();
-  const [saveResult, setSaveResult] = useGlobal('saveResult');
+  const [saveResult, setSaveResult] = useGlobal('saveResult'); //verified this is not used in a function 2/18/25
   const [, setChangedx] = useGlobal('changed');
   const changedRef = useRef(false);
   const [toolsChanged, setToolsChanged] = useState<
@@ -71,7 +69,7 @@ const UnsavedProvider = (props: PropsWithChildren) => {
   >({});
   const [, setComplete] = useGlobal('progress');
   const toolsChangedRef = useRef<IIndexableSaveInfo<SaveInfo>>({});
-
+  const getGlobal = useGetGlobal();
   const setChanged = (c: boolean) => {
     setChangedx(c);
     changedRef.current = c;
@@ -79,10 +77,6 @@ const UnsavedProvider = (props: PropsWithChildren) => {
   useEffect(() => {
     saveErr.current = saveResult;
   }, [saveResult]);
-
-  useEffect(() => {
-    busyRef.current = busy || importexportBusy;
-  }, [busy, importexportBusy]);
 
   const startSave = (id?: string) => {
     var setit = false;
@@ -159,9 +153,10 @@ const UnsavedProvider = (props: PropsWithChildren) => {
       );
     } */
     setComplete(0);
-    if (saveResult !== saveErr.current) setSaveResult(saveErr.current);
+    setSaveResult(saveErr.current);
     saveErr.current = '';
   };
+
   const saveError = () => saveErr.current || '';
 
   const SaveComplete = () =>
@@ -261,13 +256,17 @@ const UnsavedProvider = (props: PropsWithChildren) => {
   };
 
   const checkSavedFn = (method: () => any) => {
-    var timeout = busy || importexportBusy || anySaving() ? 200 : 0;
-    //sometimes the useEffect misses some so set it correctly to begin with and then hope it doesn't miss any...
-    busyRef.current = busy || importexportBusy;
+    var timeout =
+      getGlobal('remoteBusy') || getGlobal('importexportBusy') || anySaving()
+        ? 200
+        : 0;
     setTimeout(() => {
       waitForIt(
         'checkSavedFn',
-        () => !busyRef.current && !anySaving(),
+        () =>
+          !getGlobal('remoteBusy') &&
+          !getGlobal('importexportBusy') &&
+          !anySaving(),
         () => false,
         1000
       )

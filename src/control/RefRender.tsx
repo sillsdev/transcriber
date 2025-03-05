@@ -7,6 +7,7 @@ import {
   NoteIcon,
   MovementIcon,
 } from './PlanIcons';
+import { Typography } from '@mui/material';
 
 /**
  * Returns the passage type corresponding to the provided reference value.
@@ -94,22 +95,34 @@ interface AtProps {
   value: any;
   type: PassageTypeEnum;
   Icon: JSX.Element;
+  fontSize?: string;
 }
 
-const ArgType: FC<AtProps> = memo(({ value, type, Icon }: AtProps) => {
-  const len = type.length;
-  const val = String(value);
-  if (val.length <= len + 1) {
-    return Icon;
+const ArgType: FC<AtProps> = memo(
+  ({ value, type, Icon, fontSize }: AtProps) => {
+    const len = type !== PassageTypeEnum.PASSAGE ? type.length : -1;
+    let val = String(value).substring(len + 1);
+
+    return (
+      <>
+        <Typography
+          component={'span'}
+          sx={{
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            maxWidth: '200px',
+            ...(fontSize && { fontSize }),
+          }}
+        >
+          {Icon}
+          {'\u00A0'}
+          {val}
+        </Typography>
+      </>
+    );
   }
-  return (
-    <>
-      {Icon}
-      {'\u00A0'}
-      {val.substring(len + 1)}
-    </>
-  );
-});
+);
 
 /**
  * Determines the passage type based on the input value and returns the
@@ -127,17 +140,24 @@ const passageTypeMap: IPtMap = {
   [PassageTypeEnum.CHAPTERNUMBER]: ChapterNumberIcon,
   [PassageTypeEnum.BOOK]: BookIcon,
   [PassageTypeEnum.ALTBOOK]: AltBookIcon,
+  [PassageTypeEnum.NOTE]: NoteIcon,
 };
 interface IProps {
   value: string;
   flat: boolean;
+  pt: PassageTypeEnum;
+  fontSize?: string;
 }
 
-export const RefRender: FC<IProps> = memo(({ value, flat }: IProps) => {
-  const pt = passageTypeFromRef(value, flat);
-  if (pt === PassageTypeEnum.NOTE) {
-    return <ArgType value={value} type={pt} Icon={NoteIcon} />;
-  } else if (pt === PassageTypeEnum.CHAPTERNUMBER)
-    return <ArgType value={value} type={pt} Icon={ChapterNumberIcon} />;
-  else return passageTypeMap[pt] ?? <>{value}</>;
-});
+export const RefRender: FC<IProps> = memo(
+  ({ value, flat, pt, fontSize }: IProps) => {
+    return (
+      <ArgType
+        value={value}
+        type={passageTypeFromRef(value)}
+        Icon={passageTypeMap[pt]}
+        fontSize={fontSize}
+      />
+    );
+  }
+);

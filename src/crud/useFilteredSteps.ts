@@ -1,9 +1,9 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { OrgWorkflowStepD } from '../model';
 import { usePlanType, useOrgWorkflowSteps, getTool, ToolSlug } from '.';
 
 export const useFilteredSteps = () => {
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const [organization] = useGlobal('organization');
   const getPlanType = usePlanType();
   const { GetOrgWorkflowSteps } = useOrgWorkflowSteps();

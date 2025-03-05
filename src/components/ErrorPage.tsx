@@ -21,7 +21,7 @@ import {
 import { PriButton } from '../control';
 import { TokenContext } from '../context/TokenProvider';
 import { mainSelector } from '../selector';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import JSONAPISource from '@orbit/jsonapi';
 import { useRouteError } from 'react-router-dom';
 import { isElectron } from '../api-variable';
@@ -93,7 +93,7 @@ export const ModalMessage = (props: ModalProps) => {
   const dispatch = useDispatch();
   const resetOrbitError = () => dispatch(actions.resetOrbitError());
   const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
   const logoutRef = useRef<any>();
   const logoutResets = useLogoutResets();
 
@@ -258,8 +258,8 @@ export const ErrorPage = () => {
   // If there is no error just render the children component.
   return (
     <ErrorPageDiv>
-      <h1>Oops!</h1>
-      <p>Sorry, an unexpected error has occurred.</p>
+      <h1>{t.oops}</h1>
+      <p>{t.unexpectedError}</p>
       <p>
         <i>{(error as any)?.statusText || error.message}</i>
       </p>

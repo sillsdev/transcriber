@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { shallowEqual } from 'react-redux';
 import {
   IState,
-  Passage,
+  PassageD,
   Section,
   User,
   IAssignmentTableStrings,
@@ -29,6 +29,7 @@ import {
   useOrganizedBy,
   usePassageState,
   useRole,
+  useSharedResRead,
 } from '../crud';
 import {
   TabAppBar,
@@ -86,14 +87,14 @@ export function AssignmentTable(props: IProps) {
     shallowEqual
   );
   const allBookData = useSelector((state: IState) => state.books.bookData);
-  const passages = useOrbitData<Passage[]>('passage');
+  const passages = useOrbitData<PassageD[]>('passage');
   const sections = useOrbitData<Section[]>('section');
   const mediafiles = useOrbitData<MediaFile[]>('mediafile');
   const users = useOrbitData<User[]>('user');
   const roles = useOrbitData<Role[]>('role');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const { showMessage } = useSnackBar();
   const ctx = useContext(PlanContext);
   const { flat, sectionArr } = ctx.state;
@@ -106,23 +107,24 @@ export function AssignmentTable(props: IProps) {
   const [organizedBy] = useState(getOrganizedBy(true));
   const [organizedByPlural] = useState(getOrganizedBy(false));
   const [refresh, setRefresh] = useState(0);
+  const { getSharedResource } = useSharedResRead();
   const columnDefs = useMemo(
     () =>
       !flat
         ? [
-          { name: 'name', title: organizedBy },
-          { name: 'state', title: t.sectionstate },
-          { name: 'passages', title: t.passages },
-          { name: 'transcriber', title: ts.transcriber },
-          { name: 'editor', title: ts.editor },
-        ]
+            { name: 'name', title: organizedBy },
+            { name: 'state', title: t.sectionstate },
+            { name: 'passages', title: ts.passages },
+            { name: 'transcriber', title: ts.transcriber },
+            { name: 'editor', title: ts.editor },
+          ]
         : [
-          { name: 'name', title: organizedBy },
-          { name: 'state', title: t.sectionstate },
-          { name: 'transcriber', title: ts.transcriber },
-          { name: 'editor', title: ts.editor },
-        ],
-    [flat, organizedBy, t.passages, t.sectionstate, ts.editor, ts.transcriber]
+            { name: 'name', title: organizedBy },
+            { name: 'state', title: t.sectionstate },
+            { name: 'transcriber', title: ts.transcriber },
+            { name: 'editor', title: ts.editor },
+          ],
+    [flat, organizedBy, ts.passages, t.sectionstate, ts.editor, ts.transcriber]
   );
   const [filter, setFilter] = useState(false);
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
@@ -148,7 +150,7 @@ export function AssignmentTable(props: IProps) {
           related(s, 'plan') === plan &&
           s.attributes &&
           positiveWholeOnly(s.attributes.sequencenum) ===
-          s.attributes.sequencenum.toString()
+            s.attributes.sequencenum.toString()
       )
       .sort(sectionCompare);
 
@@ -168,10 +170,18 @@ export function AssignmentTable(props: IProps) {
         .filter((p) => related(p, 'section') === section.id)
         .sort(passageCompare);
       sectionRow.passages = sectionps.length.toString();
-      sectionps.forEach(function (passage: Passage) {
+      sectionps.forEach(function (passage: PassageD) {
+        var sr = getSharedResource(passage);
         rowData.push({
           id: passage.id,
-          name: <GetReference passage={[passage]} bookData={allBookData} flat={false} />,
+          name: (
+            <GetReference
+              passage={[passage]}
+              bookData={allBookData}
+              flat={false}
+              sr={sr}
+            />
+          ),
           state: activityState.getString(getPassageState(passage)),
           editor: '',
           transcriber: '',

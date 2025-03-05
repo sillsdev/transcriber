@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import Axios from 'axios';
-import { useGlobal } from 'reactn';
+import { useGlobal, useGetGlobal } from '../context/GlobalContext';
 import { TokenContext } from '../context/TokenProvider';
 import { shallowEqual } from 'react-redux';
 import {
@@ -72,15 +72,15 @@ export function Loading() {
     dispatch(action.doOrbitError(error));
   const orbitComplete = () => dispatch(action.orbitComplete());
   const [coordinator] = useGlobal('coordinator');
-  const memory = coordinator.getSource('memory') as Memory;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  const [offline] = useGlobal('offline');
+  const memory = coordinator?.getSource('memory') as Memory;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [fingerprint] = useGlobal('fingerprint');
   const [user, setUser] = useGlobal('user');
-  const [globalStore] = useGlobal();
   const [, setLang] = useGlobal('lang');
-  const [, setOrbitRetries] = useGlobal('orbitRetries');
+  const [orbitRetries, setOrbitRetries] = useGlobal('orbitRetries'); //verified this is not used in a function 2/18/25
+  const [errorReporter] = useGlobal('errorReporter');
   const [, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [loadComplete, setLoadComplete] = useGlobal('loadComplete');
   const [isDeveloper] = useGlobal('developer');
@@ -106,7 +106,7 @@ export function Loading() {
   const [view, setView] = useState('');
   const [inviteError, setInviteError] = useState('');
   const mounted = useRef(0);
-
+  const getGlobal = useGetGlobal();
   //remote is passed in because it wasn't always available in global
   const InviteUser = async (newremote: JSONAPISource, userEmail: string) => {
     const inviteId = localStorage.getItem('inviteId');
@@ -183,18 +183,19 @@ export function Loading() {
       const decodedToken = jwtDecode(accessToken || '') as IToken;
       setExpireAt(decodedToken.exp);
     }
-    setLanguage(localeDefault(isDeveloper));
+    setLanguage(localeDefault(isDeveloper === 'true'));
     localStorage.removeItem('inviteError');
     fetchLocalization();
     fetchOrbitData({
       coordinator,
       tokenCtx,
       fingerprint,
+      errorReporter,
+      orbitRetries,
       setUser,
       setProjectsLoaded,
       setOrbitRetries,
       setLang,
-      global: globalStore,
       getOfflineProject,
       offlineSetup,
       showMessage,
@@ -256,6 +257,7 @@ export function Loading() {
       setPlan(planId);
     }
   };
+
   const LoadComplete = () => {
     setCompleted(100);
     setLoadComplete(true);
@@ -264,6 +266,7 @@ export function Loading() {
     if (localStorage.getItem('inviteError')) {
       return;
     }
+    const user = localStorage.getItem(LocalKey.userId) as string;
     const userRec: User = GetUser(memory, user);
     if (
       !userRec?.attributes?.givenName ||
@@ -282,9 +285,9 @@ export function Loading() {
       const m = /^\/[workplandetail]+\/([0-9a-f-]+)/.exec(fromUrl);
       if (m) {
         const planId =
-          remoteIdGuid('plan', m[1], memory.keyMap as RecordKeyMap) || m[1];
+          remoteIdGuid('plan', m[1], memory?.keyMap as RecordKeyMap) || m[1];
         const planRec = getPlan(planId);
-        if (offline) {
+        if (getGlobal('offline')) {
           const oProjRec = planRec && getOfflineProject(planRec);
           if (!oProjRec?.attributes?.offlineAvailable) fromUrl = null;
           if (fromUrl) {

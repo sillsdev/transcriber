@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import PassageTypeD, { PassageTypeEnum } from '../model/passageType';
 import { remoteId } from './remoteId';
 import { findRecord } from './tryFindRecord';
@@ -7,7 +7,7 @@ import { RecordKeyMap } from '@orbit/records';
 
 export const usePassageType = () => {
   const [memory] = useGlobal('memory');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const { showMessage } = useSnackBar();
 
   const getPassageTypeFromId = (id?: string) => {
@@ -29,7 +29,7 @@ export const usePassageType = () => {
             remoteId(
               'passagetype',
               r.id as string,
-              memory.keyMap as RecordKeyMap
+              memory?.keyMap as RecordKeyMap
             )
           ) !== offlineOnly
       );

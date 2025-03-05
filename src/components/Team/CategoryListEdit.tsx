@@ -24,7 +24,7 @@ import {
 } from '../../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { categorySelector, sharedSelector } from '../../selector';
-import { useEffect, useGlobal, useState } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import {
   RecordKeyMap,
   RecordOperation,
@@ -35,6 +35,7 @@ import { NewArtifactCategory } from '../Sheet/NewArtifactCategory';
 import { useBibleMedia } from '../../crud/useBibleMedia';
 import CategoryEdit from './CategoryEdit';
 import { useOrbitData } from '../../hoc/useOrbitData';
+import { useEffect, useState } from 'react';
 
 interface IProps {
   type: ArtifactCategoryType;
@@ -44,7 +45,7 @@ interface IProps {
 
 export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
   const [refresh, setRefresh] = React.useState(0);
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [categories, setCategories] = useState<IArtifactCategory[]>([]);
   const [typeCategories, setTypeCategories] = useState<IArtifactCategory[]>([]);
   const [edited, setEdited] = useState<Map<string, IArtifactCategory>>(
@@ -156,7 +157,7 @@ export default function CategoryListEdit({ type, teamId, onClose }: IProps) {
     else
       waitForRemoteId(
         { type: 'artifactcategory', id: newId },
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       ).then(() => {
         setRefresh(refresh + 1);
       });

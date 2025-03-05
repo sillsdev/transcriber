@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { SharedResourceReferenceD } from '../model';
 import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
 import { UpdateRecord } from '../model/baseModel';

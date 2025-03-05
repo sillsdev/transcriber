@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { related } from '.';
 import { ProjectD, ProjectType, VProject } from '../model';
 import { ReplaceRelatedRecord } from '../model/baseModel';
@@ -6,7 +6,8 @@ import { logError, Severity } from '../utils';
 
 export const useProjectType = () => {
   const [memory] = useGlobal('memory');
-  const [projType, setProjType] = useGlobal('projType');
+  const [, setProjType] = useGlobal('projType');
+  const getGlobal = useGetGlobal();
   const [errorReporter] = useGlobal('errorReporter');
 
   const getProjType = (project: string | VProject) => {
@@ -18,7 +19,7 @@ export const useProjectType = () => {
     } else pId = related(project, 'project');
     if (!pId) return '';
     try {
-      proj = memory.cache.query((q) =>
+      proj = memory?.cache.query((q) =>
         q.findRecord({ type: 'project', id: pId })
       ) as ProjectD;
     } catch (error) {
@@ -34,7 +35,7 @@ export const useProjectType = () => {
     var ptId = related(proj, 'projecttype');
     var pt: ProjectType;
     if (ptId) {
-      pt = memory.cache.query((q) =>
+      pt = memory?.cache.query((q) =>
         q.findRecord({ type: 'projecttype', id: ptId })
       ) as ProjectType;
       return pt.attributes.name;
@@ -45,7 +46,7 @@ export const useProjectType = () => {
         errorReporter,
         `missing project type=project${proj?.attributes?.name}${proj?.keys?.remoteId}`
       );
-      var pts = memory.cache.query((q) =>
+      var pts = memory?.cache.query((q) =>
         q.findRecords('projecttype')
       ) as ProjectType[];
       var online = Boolean(proj?.keys?.remoteId);
@@ -67,7 +68,7 @@ export const useProjectType = () => {
 
   const setProjectType = (projectId: string) => {
     const pt = getProjType(projectId);
-    if (pt !== projType) setProjType(pt);
+    if (pt !== getGlobal('projType')) setProjType(pt);
     return pt;
   };
 

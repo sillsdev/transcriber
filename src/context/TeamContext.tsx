@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { shallowEqual, useSelector } from 'react-redux';
 import * as actions from '../store';
 import {
@@ -68,7 +68,7 @@ export type TeamIdType = OrganizationD | null;
 const initState = {
   lang: 'en',
   ts: {} as ISharedStrings,
-  resetOrbitError: (() => { }) as typeof actions.resetOrbitError,
+  resetOrbitError: (() => {}) as typeof actions.resetOrbitError,
   bookSuggestions: Array<OptionType>(),
   bookMap: {} as BookNameMap,
   allBookData: Array<BookName>(),
@@ -79,7 +79,7 @@ const initState = {
   personalProjects: Array<VProjectD>(),
   teamProjects: (teamId: string) => Array<VProjectD>(),
   teamMembers: (teamId: string) => 0,
-  loadProject: (plan: PlanD, cb?: () => void) => { },
+  loadProject: (plan: PlanD, cb?: () => void) => {},
   setProjectParams: (project: PlanD) => {
     return ['', ''];
   },
@@ -88,15 +88,15 @@ const initState = {
   projectDescription: (project: Plan) => '',
   projectLanguage: (project: Plan) => '',
   projectCreate: async (project: VProject, team: TeamIdType) => '',
-  projectUpdate: (project: VProjectD) => { },
-  projectDelete: (project: VProjectD) => { },
+  projectUpdate: (project: VProjectD) => {},
+  projectDelete: (project: VProjectD) => {},
   teamCreate: (
     team: Organization,
     process: string,
     cb?: (org: string) => Promise<void>
-  ) => { },
-  teamUpdate: (team: OrganizationD) => { },
-  teamDelete: async (team: RecordIdentity) => { },
+  ) => {},
+  teamUpdate: (team: OrganizationD) => {},
+  teamDelete: async (team: RecordIdentity) => {},
   isAdmin: (team: OrganizationD) => false,
   isProjectAdmin: (team: Organization) => false,
   flatAdd: async (
@@ -104,7 +104,7 @@ const initState = {
     mediaRemoteIds: string[],
     book: string | undefined,
     setComplete?: (amt: number) => void
-  ) => { },
+  ) => {},
   cardStrings: {} as ICardsStrings,
   sharedStrings: {} as ISharedStrings,
   vProjectStrings: {} as IVProjectStrings,
@@ -112,9 +112,9 @@ const initState = {
   projButtonStrings: {} as IProjButtonsStrings,
   newProjectStrings: {} as INewProjectStrings,
   importOpen: false,
-  setImportOpen: (val: boolean) => { },
+  setImportOpen: (val: boolean) => {},
   importProject: undefined as any,
-  doImport: (p: VProject | undefined = undefined) => { },
+  doImport: (p: VProject | undefined = undefined) => {},
 };
 
 export type ICtxState = typeof initState & {};
@@ -172,8 +172,8 @@ const TeamProvider = (props: IProps) => {
   const [, setProject] = useGlobal('project');
   const [, setPlan] = useGlobal('plan');
   const [user] = useGlobal('user');
-  const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [importOpen, setImportOpen] = useState(false);
   const [importProject, setImportProject] = useState<VProject>();
   const [state, setState] = useState({
@@ -208,10 +208,10 @@ const TeamProvider = (props: IProps) => {
   const { resetProject } = useHome();
   const { getOrganizedBy, localizedOrganizedBy } = useOrganizedBy();
   const isMakingPersonal = useRef(false);
-
+  const getGlobal = useGetGlobal();
   const setProjectParams = (plan: PlanD | VProjectD) => {
     const projectId = related(plan, 'project');
-    const vproj = plan.type === 'plan' ? vProject(plan) : plan;
+    const vproj = plan?.type === 'plan' ? vProject(plan) : plan;
     const orgId = related(vproj, 'organization');
     setOrganization(orgId);
     setMyOrgRole(orgId);
@@ -259,7 +259,9 @@ const TeamProvider = (props: IProps) => {
       .filter(
         (o) =>
           !isPersonalTeam(o.id, organizations) &&
-          (!isOffline || offlineOnly || teamProjects(o.id).length > 0)
+          (!getGlobal('offline') ||
+            offlineOnly ||
+            teamProjects(o.id).length > 0)
       )
       .sort((i, j) => (i?.attributes?.name <= j?.attributes?.name ? -1 : 1));
   };
@@ -285,7 +287,8 @@ const TeamProvider = (props: IProps) => {
       .filter(
         (p) =>
           related(p, 'organization') === teamId &&
-          (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
+          (!getGlobal('offline') ||
+            oProjRead(p.id)?.attributes?.offlineAvailable)
       )
       .map((p) => p.id);
     return plans
@@ -305,7 +308,7 @@ const TeamProvider = (props: IProps) => {
             : prev.movement,
         section:
           cur.attributes?.level === SheetLevel.Section &&
-            cur.attributes?.sequencenum > 0
+          cur.attributes?.sequencenum > 0
             ? prev.section + 1
             : prev.section,
       }),

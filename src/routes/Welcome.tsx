@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useLocation } from 'react-router-dom';
 import { parseQuery } from '../utils/parseQuery';
 import { IState, IWelcomeStrings, User, OfflineProject, UserD } from '../model';
@@ -107,13 +107,13 @@ export function Welcome(props: IProps) {
   const navigate = useMyNavigate();
   const offlineSetup = useOfflineSetup();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_busy, setBusy] = useGlobal('importexportBusy');
+  const [, setBusy] = useGlobal('importexportBusy');
   const [user, setUser] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
   const [whichUsers, setWhichUsers] = useState<string | null>(null);
   const [coordinator] = useGlobal('coordinator');
   const recOfType = useRecOfType();
-  const memory = coordinator.getSource('memory') as MemorySource;
+  const memory = coordinator?.getSource('memory') as MemorySource;
   const [importOpen, setImportOpen] = useState(false);
   const [hasOfflineUsers, setHasOfflineUsers] = useState(false);
   const [hasOnlineUsers, setHasOnlineUsers] = useState(false);
@@ -124,7 +124,7 @@ export function Welcome(props: IProps) {
 
   const recsFor = (recType: string, online: boolean) => {
     const recs = recOfType(recType);
-    return recs.filter(
+    return recs?.filter(
       (u) => (u.keys?.remoteId !== undefined) === Boolean(online)
     );
   };
@@ -139,7 +139,7 @@ export function Welcome(props: IProps) {
           (u) => (u.keys?.remoteId !== undefined) === Boolean(online)
         )
       : recsFor(recType, Boolean(online));
-    return recs.length > 0;
+    return recs ? recs.length > 0 : false;
   };
 
   const userTypes = () => {
@@ -154,17 +154,17 @@ export function Welcome(props: IProps) {
   const checkUsers = (autoGo: boolean, prevChoice?: string) => {
     const offlineProj = (
       recOfType('offlineproject') as OfflineProject[]
-    ).filter((p) => p?.attributes?.offlineAvailable);
-    setHasOfflineProjects(offlineProj.length > 0);
+    )?.filter((p) => p?.attributes?.offlineAvailable);
+    setHasOfflineProjects(offlineProj?.length > 0);
     const projects = recOfType('project') as InitializedRecord[];
-    setHasProjects(projects.length > 0);
+    setHasProjects(projects?.length > 0);
 
     const { users, onlineUsers, offlineUsers } = userTypes();
     const lastUserId = localStorage.getItem(LocalKey.userId);
 
     if (lastUserId !== null) {
-      const selected = users.filter((u) => u.id === lastUserId);
-      if (selected.length > 0) {
+      const selected = users?.filter((u) => u.id === lastUserId);
+      if (selected?.length > 0) {
         setUser(lastUserId);
         if (autoGo) {
           setWhichUsers(
@@ -196,7 +196,7 @@ export function Welcome(props: IProps) {
         localStorage.setItem('inviteId', params.inviteId);
       }
     }
-    dispatch(setLanguage(localeDefault(isDeveloper)));
+    dispatch(setLanguage(localeDefault(isDeveloper === 'true')));
     dispatch(fetchLocalization());
     checkOnline((connected) => {});
     const choice = localStorage.getItem(LocalKey.offlineAdmin);
@@ -267,7 +267,7 @@ export function Welcome(props: IProps) {
         email: '',
         phone: '',
         timezone: moment.tz.guess(),
-        locale: localeDefault(isDeveloper),
+        locale: localeDefault(isDeveloper === 'true'),
         isLocked: false,
         uilanguagebcp47: '',
         digestPreference: 0,

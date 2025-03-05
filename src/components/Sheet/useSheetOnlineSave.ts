@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { SectionPassage, SectionPassageD, ISheet, PassageD } from '../../model';
 import {
   RecordTransformBuilder,
@@ -52,9 +52,9 @@ export const useWfOnlineSave = (props: IProps) => {
   const { setComplete } = props;
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
-  const [plan] = useGlobal('plan');
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
+  const [plan] = useGlobal('plan'); //will be constant here
   const { getPassageTypeRec, checkIt } = usePassageType();
   const { setPublishTo, isPublished } = usePublishDestination();
 
@@ -62,11 +62,11 @@ export const useWfOnlineSave = (props: IProps) => {
     await waitForIt(
       'remoteId',
       () =>
-        remoteId(table, localid, memory.keyMap as RecordKeyMap) !== undefined,
+        remoteId(table, localid, memory?.keyMap as RecordKeyMap) !== undefined,
       () => false,
       100
     );
-    return remoteId(table, localid, memory.keyMap as RecordKeyMap);
+    return remoteId(table, localid, memory?.keyMap as RecordKeyMap);
   };
 
   // return Promise<boolean>: true if deep changes in sheet
@@ -142,12 +142,12 @@ export const useWfOnlineSave = (props: IProps) => {
       let sp: SectionPassage = {
         attributes: {
           data: JSON.stringify(recs),
-          planId: remoteIdNum('plan', plan, memory.keyMap as RecordKeyMap),
+          planId: remoteIdNum('plan', plan, memory?.keyMap as RecordKeyMap),
           uuid: generateUUID(),
         },
         type: 'sectionpassage',
       } as SectionPassage;
-      const rn = new StandardRecordNormalizer({ schema: memory.schema });
+      const rn = new StandardRecordNormalizer({ schema: memory?.schema });
       sp = rn.normalizeRecord(sp) as SectionPassageD;
       setComplete(20);
       let rec = await memory.update((t) => t.addRecord(sp), {
@@ -166,7 +166,7 @@ export const useWfOnlineSave = (props: IProps) => {
         const filter = [
           {
             attribute: 'plan-id',
-            value: remoteId('plan', plan, memory.keyMap as RecordKeyMap),
+            value: remoteId('plan', plan, memory?.keyMap as RecordKeyMap),
           },
         ];
         //must wait for these...in case they they navigate away before done
@@ -193,7 +193,7 @@ export const useWfOnlineSave = (props: IProps) => {
                 id: remoteIdGuid(
                   'section',
                   (outrecs[index][0] as SaveRec).id,
-                  memory.keyMap as RecordKeyMap
+                  memory?.keyMap as RecordKeyMap
                 ) as string,
               };
             if (isPassageRow(row) && isPassageAdding(row)) {
@@ -203,7 +203,7 @@ export const useWfOnlineSave = (props: IProps) => {
                 remoteIdGuid(
                   'passage',
                   (outrecs[index][isSectionRow(row) ? 1 : 0] as SaveRec).id,
-                  memory.keyMap as RecordKeyMap
+                  memory?.keyMap as RecordKeyMap
                 ) as string
               ) as PassageD;
             }

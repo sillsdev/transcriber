@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useAudacityProjRead, useAudacityProjCreate } from '.';
 import IndexedDBSource from '@orbit/indexeddb';
 
@@ -9,7 +9,7 @@ export const useAudacityProjUpdate = () => {
   const audCreate = useAudacityProjCreate();
 
   return async (passageId: string, audacityName: string) => {
-    const backup = coordinator.getSource('backup') as IndexedDBSource;
+    const backup = coordinator?.getSource('backup') as IndexedDBSource;
     const op = getAudacityProject(passageId);
     if (!op?.attributes) {
       await audCreate({ type: 'passage', id: passageId }, audacityName);

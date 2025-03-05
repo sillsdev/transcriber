@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   IAlertStrings,
   IPublishLevelStrings,
@@ -32,10 +32,13 @@ import { PublishLevelEnum, usePublishDestination } from '../crud';
 import ShowLink from '../control/ShowLink';
 import { PublishDestinationEnum } from '../crud';
 import { PassageTypeEnum } from '../model/passageType';
+import { Akuo, Aquifer, ObtHelps } from '../assets/brands';
 
 interface IProps {
   title: string;
+  propagateLabel: string;
   description: string;
+  noPropagateDescription: string;
   current: PublishDestinationEnum[];
   sharedProject: boolean;
   hasPublishing: boolean;
@@ -43,13 +46,15 @@ interface IProps {
   noDefaults?: boolean;
   passageType?: PassageTypeEnum;
   noResponse: () => void;
-  yesResponse: (destinations: PublishDestinationEnum[]) => void;
+  yesResponse: (destinations: PublishDestinationEnum[]) => Promise<void>;
 }
 
 function ConfirmPublishDialog(props: IProps) {
   const {
     title,
+    propagateLabel,
     description,
+    noPropagateDescription,
     sharedProject,
     hasPublishing,
     hasBible,
@@ -69,12 +74,13 @@ function ConfirmPublishDialog(props: IProps) {
   const { getDefaults } = usePublishDestination();
   const p: IPublishToStrings = useSelector(publishToSelector, shallowEqual);
   const [open, setOpen] = useState(true);
+  const [propagate, setPropagate] = useState(true);
   const [value, setValuex] = useState(
     current.length === 0 && !noDefaults
       ? getDefaults(hasPublishing, sharedProject)
       : current
   );
-
+  const [doingIt, setDoingIt] = useState(false);
   const calcAkuoValue = (val: PublishDestinationEnum[]) => {
     if (val.includes(PublishDestinationEnum.AkuoBeta)) {
       return PublishLevelEnum.Beta;
@@ -106,10 +112,19 @@ function ConfirmPublishDialog(props: IProps) {
   };
   const handleYes = () => {
     if (yesResponse !== null && value !== current) {
-      value.push(PublishDestinationEnum.PublishDestinationSetByUser);
-      yesResponse(value);
+      setDoingIt(true);
+      if (!value.includes(PublishDestinationEnum.PublishDestinationSetByUser))
+        value.push(PublishDestinationEnum.PublishDestinationSetByUser);
+      if (propagate) value.push(PublishDestinationEnum.PropagateSection);
+      else
+        setValue([
+          ...value.filter((v) => v !== PublishDestinationEnum.PropagateSection),
+        ]);
+      yesResponse(value).then(() => {
+        setDoingIt(false);
+        setOpen(false);
+      });
     } else handleNo();
-    setOpen(false);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -159,6 +174,19 @@ function ConfirmPublishDialog(props: IProps) {
       );
     }
   };
+  const needsBibleId = useMemo(
+    () =>
+      value.includes(PublishDestinationEnum.OBTHelps) ||
+      value.includes(PublishDestinationEnum.AkuoBeta) ||
+      value.includes(PublishDestinationEnum.AkuoPublic),
+    [value]
+  );
+  const handlePropagateChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const checked = event.target.checked;
+    setPropagate(checked);
+  };
   const AkuoRadioGroup = (showNotPublished: boolean, hasBible: boolean) => (
     <Box sx={{ p: 2, marginLeft: '30px', border: '2px grey' }}>
       <RadioGroup
@@ -170,7 +198,7 @@ function ConfirmPublishDialog(props: IProps) {
         <FormControlLabel
           value={PublishLevelEnum.Beta}
           control={<Radio />}
-          label={l.beta}
+          label={l.beta.replace('{0}', Akuo)}
           disabled={!hasBible}
         />
         <FormHelperText sx={{ textAlign: 'center' }}>
@@ -179,7 +207,7 @@ function ConfirmPublishDialog(props: IProps) {
         <FormControlLabel
           value={PublishLevelEnum.Public}
           control={<Radio />}
-          label={l.public}
+          label={l.public.replace('{0}', Akuo)}
           disabled={!hasBible}
         />
         {showNotPublished && (
@@ -192,7 +220,6 @@ function ConfirmPublishDialog(props: IProps) {
       </RadioGroup>
     </Box>
   );
-
   return (
     <Dialog
       open={open}
@@ -206,11 +233,27 @@ function ConfirmPublishDialog(props: IProps) {
         <DialogContent id="alertJsx">
           {hasPublishing && !hasBible && (
             <Typography variant="h6" id="bible">
-              {l.bibleRequired}
+              {l.bibleRequired.replace('{0}', Akuo).replace('{1}', ObtHelps)}
             </Typography>
           )}
           {hasPublishing && (
-            <Typography id="alertDesc">{description}</Typography>
+            <>
+              {propagateLabel && (
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={propagate}
+                      onChange={handlePropagateChange}
+                      value={'Propagate'}
+                    />
+                  }
+                  label={propagateLabel}
+                />
+              )}
+              <Typography id="alertDesc">
+                {propagate ? description : noPropagateDescription}
+              </Typography>
+            </>
           )}
           <FormControl>
             {hasPublishing && sharedProject && (
@@ -221,11 +264,11 @@ function ConfirmPublishDialog(props: IProps) {
                     <Checkbox
                       checked={hasBible && akuoValue !== PublishLevelEnum.None}
                       onChange={handleAkuoChange}
-                      value="Akuo"
+                      value={Akuo}
                       disabled={!hasBible}
                     />
                   }
-                  label="Akuo"
+                  label={Akuo}
                 />
                 {akuoValue !== PublishLevelEnum.None &&
                   AkuoRadioGroup(false, hasBible)}
@@ -242,10 +285,10 @@ function ConfirmPublishDialog(props: IProps) {
                       onChange={handleCheckboxChange(
                         PublishDestinationEnum.Aquifer
                       )}
-                      value="Aquifer"
+                      value={Aquifer}
                     />
                   }
-                  label="Aquifer"
+                  label={Aquifer}
                 />
                 <FormControlLabel
                   sx={{ m: 1 }}
@@ -272,6 +315,7 @@ function ConfirmPublishDialog(props: IProps) {
                         PublishDestinationEnum.OBTHelps
                       )}
                       value="OBTHelps"
+                      disabled={!hasBible}
                     />
                   }
                   label="obthelps.org"
@@ -283,7 +327,12 @@ function ConfirmPublishDialog(props: IProps) {
         <DialogContentText id="alertDesc">{t.areYouSure}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button id="alertNo" onClick={handleNo} color="primary">
+        <Button
+          id="alertNo"
+          onClick={handleNo}
+          color="primary"
+          disabled={doingIt}
+        >
           {value === current ? ts.cancel : t.no}
         </Button>
         <Button
@@ -291,7 +340,7 @@ function ConfirmPublishDialog(props: IProps) {
           onClick={handleYes}
           variant="contained"
           color="primary"
-          disabled={value === current}
+          disabled={value === current || (!hasBible && needsBibleId) || doingIt}
           autoFocus
         >
           {t.yes}

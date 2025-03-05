@@ -3,21 +3,14 @@ import React, {
   useState,
   useContext,
   useMemo,
-  PropsWithChildren,
   Suspense,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useLocation, useParams } from 'react-router-dom';
 import { Grid, debounce, Paper, Box, SxProps, Stack } from '@mui/material';
 
-import styled from 'styled-components';
 import AppHead from '../components/App/AppHead';
-import {
-  default as SplitPaneBar,
-  Pane as PaneBar,
-  PaneProps,
-  SplitPaneProps,
-} from 'react-split-pane';
+import { SplitWrapper as Wrapper, SplitPane, Pane } from '../control/Panes';
 import { HeadHeight } from '../App';
 import {
   PassageDetailProvider,
@@ -54,6 +47,7 @@ import Busy from '../components/Busy';
 import { RecordKeyMap } from '@orbit/records';
 import PassageDetailParatextIntegration from '../components/PassageDetail/PassageDetailParatextIntegration';
 import { PassageDetailDiscuss } from '../components/PassageDetail/PassageDetailDiscuss';
+import { addPt } from '../utils/addPt';
 
 const KeyTerms = React.lazy(
   () => import('../components/PassageDetail/Keyterms/KeyTerms')
@@ -62,70 +56,6 @@ const KeyTerms = React.lazy(
 const descProps = { overflow: 'hidden', textOverflow: 'ellipsis' } as SxProps;
 const rowProps = { alignItems: 'center', whiteSpace: 'nowrap' } as SxProps;
 
-const Wrapper = styled.div`
-  .Resizer {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    background: #000;
-    opacity: 0.2;
-    z-index: 1;
-    -moz-background-clip: padding;
-    -webkit-background-clip: padding;
-    background-clip: padding-box;
-  }
-
-  .Resizer:hover {
-    -webkit-transition: all 2s ease;
-    transition: all 2s ease;
-  }
-
-  .Resizer.horizontal {
-    height: 11px;
-    margin: -5px 0;
-    border-top: 5px solid rgba(255, 255, 255, 0);
-    border-bottom: 5px solid rgba(255, 255, 255, 0);
-    cursor: row-resize;
-    width: 100%;
-  }
-
-  .Resizer.horizontal:hover {
-    border-top: 5px solid rgba(0, 0, 0, 0.5);
-    border-bottom: 5px solid rgba(0, 0, 0, 0.5);
-  }
-
-  .Resizer.vertical {
-    width: 11px;
-    margin: 0 -5px;
-    border-left: 5px solid rgba(255, 255, 255, 0);
-    border-right: 5px solid rgba(255, 255, 255, 0);
-    cursor: col-resize;
-  }
-
-  .Resizer.vertical:hover {
-    border-left: 5px solid rgba(0, 0, 0, 0.5);
-    border-right: 5px solid rgba(0, 0, 0, 0.5);
-  }
-  .Pane1 {
-    // background-color: blue;
-    display: flex;
-    min-height: 0;
-  }
-  .Pane2 {
-    // background-color: red;
-    display: flex;
-    min-height: 0;
-  }
-`;
-
-const SplitPane = (props: SplitPaneProps & PropsWithChildren) => {
-  return <SplitPaneBar {...props} />;
-};
-
-const Pane = (props: PaneProps & PropsWithChildren) => {
-  return <PaneBar {...props} className={props.className || 'pane'} />;
-};
-
 interface PGProps {
   minWidth: number;
   onMinWidth: (width: number) => void;
@@ -133,7 +63,7 @@ interface PGProps {
 
 const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
   const INIT_PLAYERPANE_HEIGHT = 150 + 48; // 48 for possible passage chooser
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const [width, setWidth] = useState(window.innerWidth);
   const [height, setHeight] = useState(window.innerHeight);
   const widthRef = React.useRef(window.innerWidth);
@@ -173,7 +103,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
       var id = JSON.parse(settings).artifactTypeId;
       if (id)
         return (
-          remoteIdGuid('artifacttype', id, memory.keyMap as RecordKeyMap) ?? id
+          remoteIdGuid('artifacttype', id, memory?.keyMap as RecordKeyMap) ?? id
         );
     }
     return null;
@@ -284,7 +214,7 @@ const PassageDetailGrids = ({ minWidth, onMinWidth }: PGProps) => {
             <PassageDetailSectionPassage />
           </Grid>
           <Grid item id="tool" sx={rowProps} xs={3}>
-            {tool && t.hasOwnProperty(tool) ? t.getString(tool) : tool}
+            {tool && t.hasOwnProperty(tool) ? addPt(t.getString(tool)) : tool}
           </Grid>
           <Grid
             item
@@ -465,7 +395,7 @@ export const PassageDetail = () => {
   const { pathname } = useLocation();
   const setUrlContext = useUrlContext();
   const [view, setView] = useState('');
-  const [projType] = useGlobal('projType');
+  const [projType] = useGlobal('projType'); //verified this is not used in a function 2/18/25
   const [user] = useGlobal('user');
   const [minWidth, setMinWidth] = useState(800);
   const { setProjectType } = useProjectType();

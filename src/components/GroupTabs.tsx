@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { IGroupTabsStrings } from '../model';
 import { AppBar, Tabs, Tab } from '@mui/material';
 import UserTable from '../components/UserTable';
@@ -14,8 +14,8 @@ interface IProps {
 
 const GroupTabs = (props: IProps) => {
   const { changeTab } = props;
-  const [tab, setTab] = useGlobal('tab');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [tab, setTab] = useGlobal('tab'); //verified this is not used in a function 2/18/25
+  const [offlineOnly] = useGlobal('offlineOnly'); //verified this is not used in a function 2/18/25
   const t: IGroupTabsStrings = useSelector(groupTabsSelector, shallowEqual);
 
   const handleChange = (event: any, value: number) => {

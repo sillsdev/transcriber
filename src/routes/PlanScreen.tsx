@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useParams, useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
 import AppHead from '../components/App/AppHead';
@@ -15,9 +15,9 @@ export const PlanScreen = () => {
   const setUrlContext = useUrlContext();
   const uctx = React.useContext(UnsavedContext);
   const { checkSavedFn } = uctx.state;
-  const [projType] = useGlobal('projType');
+  const [projType] = useGlobal('projType'); //verified this is not used in a function 2/18/25
   const { setProjectType } = useProjectType();
-  const [project] = useGlobal('project');
+  const [project] = useGlobal('project'); //will be constant here
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
   const [view, setView] = React.useState('');

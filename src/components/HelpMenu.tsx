@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { IMainStrings, Plan } from '../model';
 import { IconButton, ListItemIcon, ListItemText, SxProps } from '@mui/material';
 import ReportIcon from '@mui/icons-material/Report';
@@ -32,6 +32,7 @@ import { mainSelector } from '../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 import { ContextHelp } from './ContextHelp';
 import { RecordKeyMap } from '@orbit/records';
+import { Akuo, TranslatorsNotes, UbsResources } from '../assets/brands';
 const ipc = (window as any)?.electron;
 
 const logosAppUri = 'https://app.logos.com/';
@@ -45,8 +46,7 @@ interface IProps {
 export function HelpMenu(props: IProps) {
   const { online, action } = props;
   const { pathname } = useLocation();
-  const [offline] = useGlobal('offline');
-  const [projType] = useGlobal('projType');
+  const [projType] = useGlobal('projType'); //verified this is not used in a function 2/18/25
   const [memory] = useGlobal('memory');
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
@@ -56,7 +56,7 @@ export function HelpMenu(props: IProps) {
   const { showMessage } = useSnackBar();
   const { getPlan } = usePlan();
   const t: IMainStrings = useSelector(mainSelector, shallowEqual);
-
+  const getGlobal = useGetGlobal();
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setShift(event.shiftKey);
     setAnchorEl(event.currentTarget);
@@ -72,7 +72,7 @@ export function HelpMenu(props: IProps) {
   };
 
   const handleDownload = (url: string, inOffline?: boolean) => async () => {
-    const loc = inOffline !== undefined ? inOffline : offline;
+    const loc = inOffline !== undefined ? inOffline : getGlobal('offline');
     const urlObj = new URL(url);
     const name = urlObj.pathname.split('/').pop() || '';
     const folder = await execFolder();
@@ -92,7 +92,7 @@ export function HelpMenu(props: IProps) {
 
   const handleDeveloper = () => {
     localStorage.setItem('developer', !developer ? 'true' : 'false');
-    setDeveloper(!developer);
+    setDeveloper(!developer ? 'true' : 'false');
     setAnchorEl(null);
   };
 
@@ -116,7 +116,7 @@ export function HelpMenu(props: IProps) {
       const match = /\/plan\/([0-9a-f-]+)\/0/.exec(pathname);
       const planId =
         match &&
-        (remoteIdGuid('plan', match[1], memory.keyMap as RecordKeyMap) ||
+        (remoteIdGuid('plan', match[1], memory?.keyMap as RecordKeyMap) ||
           match[1]);
       return planId && getPlan(planId);
     },
@@ -255,7 +255,9 @@ export function HelpMenu(props: IProps) {
             <ListItemIcon>
               <NotesIcon />
             </ListItemIcon>
-            <ListItemText primary={t.openNotes} />
+            <ListItemText
+              primary={t.brandedSite.replace('{0}', TranslatorsNotes)}
+            />
           </StyledMenuItem>
         )}
         {!isElectron && (
@@ -269,7 +271,9 @@ export function HelpMenu(props: IProps) {
               <ListItemIcon>
                 <NotesIcon />
               </ListItemIcon>
-              <ListItemText primary={t.openNotes} />
+              <ListItemText
+                primary={t.brandedSite.replace('{0}', TranslatorsNotes)}
+              />
             </StyledMenuItem>
           </a>
         )}
@@ -281,7 +285,9 @@ export function HelpMenu(props: IProps) {
             <ListItemIcon>
               <BooksIcon />
             </ListItemIcon>
-            <ListItemText primary={t.resources} />
+            <ListItemText
+              primary={t.brandedSite.replace('{0}', UbsResources)}
+            />
           </StyledMenuItem>
         )}
         {!isElectron && (
@@ -295,7 +301,9 @@ export function HelpMenu(props: IProps) {
               <ListItemIcon>
                 <BooksIcon />
               </ListItemIcon>
-              <ListItemText primary={t.resources} />
+              <ListItemText
+                primary={t.brandedSite.replace('{0}', UbsResources)}
+              />
             </StyledMenuItem>
           </a>
         )}
@@ -434,7 +442,7 @@ export function HelpMenu(props: IProps) {
             <ListItemIcon>
               <AkuoLogo />
             </ListItemIcon>
-            <ListItemText primary={t.akuo} />
+            <ListItemText primary={t.brandedSite.replace('{0}', Akuo)} />
           </StyledMenuItem>
         )}
         {!isElectron && (
@@ -448,7 +456,7 @@ export function HelpMenu(props: IProps) {
               <ListItemIcon>
                 <AkuoLogo />
               </ListItemIcon>
-              <ListItemText primary={t.akuo} />
+              <ListItemText primary={t.brandedSite.replace('{0}', Akuo)} />
             </StyledMenuItem>
           </a>
         )}

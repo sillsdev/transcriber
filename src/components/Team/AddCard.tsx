@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import {
   Box,
   Card,
@@ -22,7 +22,7 @@ import {
   ProjectType,
   initProjectState,
 } from './ProjectDialog';
-import { Language, ILanguage } from '../../control';
+import { Language, ILanguage, initLang } from '../../control';
 import Uploader from '../Uploader';
 import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
@@ -63,14 +63,6 @@ const StyledCardContent = styled(CardContent)<CardContentProps>(
   })
 );
 
-const initLang = {
-  bcp47: 'und',
-  languageName: '',
-  font: '',
-  rtl: false,
-  spellCheck: false,
-};
-
 interface IProps {
   team: TeamIdType;
 }
@@ -79,7 +71,7 @@ export const AddCard = (props: IProps) => {
   const { team } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const ctx = React.useContext(TeamContext);
   const {
     projectCreate,
@@ -108,7 +100,7 @@ export const AddCard = (props: IProps) => {
   const [book, setBookx] = React.useState<OptionType | null>(null);
   const bookRef = useRef<OptionType | null>(null);
   const languageRef = useRef<ILanguage>(initLang);
-  const [complete, setComplete] = useGlobal('progress');
+  const [complete, setComplete] = useGlobal('progress'); //verified this is not used in a function 2/18/25S
   const [, setBusy] = useGlobal('importexportBusy');
   const [steps] = React.useState([
     t.projectCreated,
@@ -224,7 +216,7 @@ export const AddCard = (props: IProps) => {
           name,
           description,
           type,
-          language: values.bcp47,
+          language: values?.bcp47 ?? 'und',
           languageName,
           isPublic,
           spellCheck,
@@ -272,7 +264,7 @@ export const AddCard = (props: IProps) => {
           attributes: {
             ...projRec.attributes,
             name: newName,
-            language: languageRef.current.bcp47,
+            language: languageRef.current?.bcp47 || 'und',
             languageName: languageRef.current.languageName,
             spellCheck: languageRef.current.spellCheck,
             defaultFont: languageRef.current.font,
@@ -294,7 +286,7 @@ export const AddCard = (props: IProps) => {
           name: bookRef.current?.label || nextName(name),
           description: '',
           type,
-          language: languageRef.current.bcp47,
+          language: languageRef.current?.bcp47 || 'und',
           languageName: languageRef.current.languageName,
           isPublic: false,
           spellCheck: languageRef.current.spellCheck,
@@ -312,7 +304,7 @@ export const AddCard = (props: IProps) => {
     if (!offlineOnly)
       await waitForRemoteId(
         { type: 'plan', id: planRef.current },
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       );
     stepRef.current = 1;
     return planRef.current;
@@ -349,7 +341,7 @@ export const AddCard = (props: IProps) => {
       stepRef.current = 0;
       setView(
         `/plan/${
-          remoteId('plan', planId, memory.keyMap as RecordKeyMap) || planId
+          remoteId('plan', planId, memory?.keyMap as RecordKeyMap) || planId
         }/0`
       );
     }, 1000);

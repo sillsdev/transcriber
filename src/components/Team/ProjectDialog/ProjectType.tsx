@@ -24,7 +24,7 @@ export const ProjectType = (props: IProps) => {
 
   return (
     <Options
-      label={t.type}
+      label={t?.type}
       defaultValue={type}
       options={planTypes
         .sort((i, j) => (i.attributes.name <= j.attributes.name ? -1 : 1))

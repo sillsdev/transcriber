@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { IResourceState } from '.';
 import MediaTitle from '../../control/MediaTitle';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { getDefaultName } from '../Sheet/getDefaultName';
 import { IResourceStrings } from '../../model';
 import { shallowEqual, useSelector } from 'react-redux';
@@ -12,7 +12,7 @@ import { Typography } from '@mui/material';
 export const NoteTitle = (props: IResourceState) => {
   const { state, setState } = props;
   const { title, ws } = state;
-  const [planId] = useGlobal('plan');
+  const [planId] = useGlobal('plan'); //will be constant here
   const [memory] = useGlobal('memory');
   const [titlex, setTitle] = useState(title || '');
   const [source, setSource] = useState('');
@@ -28,7 +28,10 @@ export const NoteTitle = (props: IResourceState) => {
   }, [state]);
 
   useEffect(() => {
-    if (ws?.sharedResource && related(ws.sharedResource, 'passage') !== (ws.passage?.id)) {
+    if (
+      ws?.sharedResource &&
+      related(ws.sharedResource, 'passage') !== ws.passage?.id
+    ) {
       setSource(noteSource(ws.sharedResource));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

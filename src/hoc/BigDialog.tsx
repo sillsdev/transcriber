@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import { ISharedStrings } from '../model';
 import { useSelector, shallowEqual } from 'react-redux';
 import { sharedSelector } from '../selector';
@@ -105,16 +105,16 @@ export function BigDialog({
   bp,
   setCloseRequested,
 }: IProps) {
-  const [isExportBusy] = useGlobal('importexportBusy');
+  const [isExportBusy] = useGlobal('importexportBusy'); //verified this is not used in a function 2/18/25
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const { showMessage } = useSnackBar();
-
+  const getGlobal = useGetGlobal();
   const handleClose = (
     event?: {},
     reason?: 'backdropClick' | 'escapeKeyDown'
   ) => {
-    if (isExportBusy) {
+    if (getGlobal('importexportBusy')) {
       showMessage(ts.wait);
       return;
     }

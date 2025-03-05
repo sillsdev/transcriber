@@ -10,7 +10,7 @@ import { usePeerGroups } from '../components/Peers/usePeerGroups';
 import { useSelector, shallowEqual } from 'react-redux';
 import { discussionCardSelector } from '../selector';
 import { related } from '../crud';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { useOrbitData } from '../hoc/useOrbitData';
 
 interface IProps {
@@ -42,7 +42,7 @@ export const SelectDiscussionAssignment = (props: IProps) => {
   );
   const { peerGroups } = usePeerGroups();
   const [orgUsers, setOrgUsers] = useState<User[]>([]);
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [organization] = useGlobal('organization');
   const [value, setValue] = useState(initAssignment);
   const t = useSelector(

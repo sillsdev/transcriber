@@ -1,4 +1,9 @@
-import { ICommunityStrings, ISharedStrings } from '../model';
+import {
+  ICommunityStrings,
+  ISharedStrings,
+  MediaFileD,
+  Organization,
+} from '../model';
 import {
   Button,
   Paper,
@@ -14,12 +19,15 @@ import {
   remoteIdGuid,
   findRecord,
   related,
+  useUpdateRecord,
+  orgDefaultVoices,
+  useOrgDefaults,
 } from '../crud';
 import Memory from '@orbit/memory';
 import { useSnackBar } from '../hoc/SnackBar';
 import { cleanFileName } from '../utils';
 import MediaRecord from './MediaRecord';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { UnsavedContext } from '../context/UnsavedContext';
 import Uploader from './Uploader';
 import AddIcon from '@mui/icons-material/LibraryAddOutlined';
@@ -34,6 +42,9 @@ import {
   RecordKeyMap,
   UninitializedRecord,
 } from '@orbit/records';
+import React from 'react';
+import { VoiceStatement } from '../business/voice/VoiceStatement';
+import { IVoicePerm } from '../business/voice/PersonalizeVoicePermission';
 
 const paperProps = { p: 2, m: 'auto', width: `calc(100% - 32px)` } as SxProps;
 const rowProp = { display: 'flex', p: 2 };
@@ -51,21 +62,31 @@ interface IProps {
   onRights?: (hasRights: boolean) => void;
   createProject?: (name: string) => Promise<string>;
   team?: string;
+  recordingRequired?: boolean;
 }
 
 export function ProvideRights(props: IProps) {
-  const { speaker, recordType, onRights, createProject, team } = props;
+  const {
+    speaker,
+    recordType,
+    onRights,
+    createProject,
+    team,
+    recordingRequired,
+  } = props;
   const [user] = useGlobal('user');
   const [organizationId] = useGlobal('organization');
-  const [busy] = useGlobal('importexportBusy');
+  const [busy] = useGlobal('importexportBusy'); //verified this is not used in a function 2/18/25
+  const [state, setState] = useState<IVoicePerm>({});
   const [statusText, setStatusText] = useState('');
   const [canSave, setCanSave] = useState(false);
   const [defaultFilename, setDefaultFileName] = useState('');
   const [coordinator] = useGlobal('coordinator');
-  const memory = coordinator.getSource('memory') as Memory;
+  const memory = coordinator?.getSource('memory') as Memory;
   const [importList, setImportList] = useState<File[]>();
   const [uploadVisible, setUploadVisible] = useState(false);
   const [resetMedia, setResetMedia] = useState(false);
+  const [statement, setStatement] = useState<string>('');
   const {
     toolChanged,
     toolsChanged,
@@ -79,10 +100,23 @@ export function ProvideRights(props: IProps) {
   const { getTypeId } = useArtifactType();
   const { showMessage } = useSnackBar();
   const cancelled = useRef(false);
+  const updateRecord = useUpdateRecord();
+  const { getOrgDefault } = useOrgDefaults();
   const t: ICommunityStrings = useSelector(communitySelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
 
   const toolId = 'RecordArtifactTool';
+
+  const teamRec = React.useMemo(
+    () =>
+      findRecord(
+        memory,
+        'organization',
+        team || organizationId
+      ) as Organization,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [organizationId, team]
+  );
 
   useEffect(() => {
     toolChanged(toolId, canSave);
@@ -98,6 +132,8 @@ export function ProvideRights(props: IProps) {
 
   useEffect(() => {
     setDefaultFileName(cleanFileName(`${speaker}_ip`));
+    const state = getOrgDefault(orgDefaultVoices) as IVoicePerm;
+    setState({ ...state, fullName: speaker } as IVoicePerm);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [speaker]);
 
@@ -123,6 +159,10 @@ export function ProvideRights(props: IProps) {
     }
   };
 
+  const handleStatement = (statement: string) => {
+    if (recordingRequired) setStatement(statement);
+  };
+
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     setStatusText('');
     if (mediaRemoteIds && mediaRemoteIds.length > 0) {
@@ -141,12 +181,24 @@ export function ProvideRights(props: IProps) {
           remoteIdGuid(
             'mediafile',
             mediaRemoteIds[0],
-            memory.keyMap as RecordKeyMap
+            memory?.keyMap as RecordKeyMap
           ) ?? mediaRemoteIds[0];
+        if (statement) {
+          const mediaRec = findRecord(
+            memory,
+            'mediafile',
+            mediaId
+          ) as MediaFileD;
+          updateRecord({
+            ...mediaRec,
+            attributes: { ...mediaRec.attributes, transcription: statement },
+          } as MediaFileD);
+        }
         const ip = {
           type: 'intellectualproperty',
           attributes: {
             rightsHolder: speaker,
+            notes: JSON.stringify(state),
           },
         } as IntellectualProperty & UninitializedRecord;
         await memory.update((t) => [
@@ -207,26 +259,33 @@ export function ProvideRights(props: IProps) {
   return (
     <div>
       <Paper sx={paperProps}>
-        <Box sx={rowProp}>
-          <Button
-            sx={buttonProp}
-            id="spkr-upload"
-            onClick={handleUpload}
-            title={ts.uploadRights}
-          >
-            <AddIcon />
-            {ts.uploadRights}
-          </Button>
-        </Box>
-        <Box sx={rowProp}>
-          <Typography sx={statusProps}>{t.record}</Typography>
-        </Box>
+        {!recordingRequired && (
+          <Box sx={rowProp}>
+            <Button
+              sx={buttonProp}
+              id="spkr-upload"
+              onClick={handleUpload}
+              title={ts.uploadRights}
+            >
+              <AddIcon />
+              {ts.uploadRights}
+            </Button>
+          </Box>
+        )}
+        <VoiceStatement
+          voice={speaker}
+          team={teamRec}
+          state={state}
+          setState={setState}
+          setStatement={handleStatement}
+        />
         <MediaRecord
           toolId={toolId}
           uploadMethod={uploadMedia}
           defaultFilename={defaultFilename}
           allowWave={false}
           showFilename={false}
+          allowDeltaVoice={false}
           setCanSave={handleSetCanSave}
           setStatusText={setStatusText}
           doReset={resetMedia}
@@ -234,9 +293,11 @@ export function ProvideRights(props: IProps) {
           size={200}
         />
         <Box sx={rowProp}>
-          <Button id="spkr-later" onClick={handleLater}>
-            {t.later}
-          </Button>
+          {!recordingRequired && (
+            <Button id="spkr-later" onClick={handleLater}>
+              {t.later}
+            </Button>
+          )}
           <Typography variant="caption" sx={statusProps}>
             {statusText}
           </Typography>
@@ -245,7 +306,7 @@ export function ProvideRights(props: IProps) {
             id="spkr-save"
             sx={buttonProp}
             onClick={handleSave}
-            disabled={!canSave}
+            disabled={!canSave || state?.valid === false}
           >
             {ts.save}
           </PriButton>

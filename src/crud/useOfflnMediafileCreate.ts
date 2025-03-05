@@ -1,5 +1,5 @@
 import { RecordOperation, RecordTransformBuilder } from '@orbit/records';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { MediaFile, MediaFileD } from '../model';
 import { AddRecord, ReplaceRelatedRecord } from '../model/baseModel';
 import path from 'path-browserify';
@@ -7,7 +7,7 @@ import { getContentType } from '../utils/contentType';
 
 export const useOfflnMediafileCreate = () => {
   const [memory] = useGlobal('memory');
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const [user] = useGlobal('user');
   const createMedia = async (
     data: any, //from upload
@@ -26,7 +26,7 @@ export const useOfflnMediafileCreate = () => {
         audioUrl: data.audioUrl || '',
         s3file: data.s3file || '',
         duration: data.duration || 0,
-        contentType: getContentType(data.contentType,data.originalFile),
+        contentType: getContentType(data.contentType, data.originalFile),
         audioQuality: data.audioQuality || '',
         textQuality: data.textQuality || '',
         transcription: '',
@@ -51,7 +51,9 @@ export const useOfflnMediafileCreate = () => {
     //check new comment version
     if (
       path.basename(data.audioUrl || '') !== data.originalFile &&
-      /^audio/.test(getContentType(data.contentType,path.basename(data.audioUrl || '')))
+      /^audio/.test(
+        getContentType(data.contentType, path.basename(data.audioUrl || ''))
+      )
     ) {
       newMediaRec.attributes.originalFile = path.basename(data.audioUrl || '');
     }

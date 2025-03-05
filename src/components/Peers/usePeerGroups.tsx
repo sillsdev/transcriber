@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { User, GroupD, GroupMembership } from '../../model';
 import { PermissionName, related, useAllUserGroup, useUser } from '../../crud';
 import { useOrbitData } from '../../hoc/useOrbitData';
@@ -21,7 +21,7 @@ export const usePeerGroups = () => {
   const [myGroups, setMyGroups] = useState<GroupD[]>([]);
   const [check, setCheck] = useState<string[]>();
   const [user] = useGlobal('user');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
 
   const cKey = (userId: string, groupId: string) => `${userId}_${groupId}`;
 

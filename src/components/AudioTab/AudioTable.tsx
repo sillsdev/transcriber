@@ -1,5 +1,5 @@
-import React, { memo, useEffect, useState } from 'react';
-import { useGlobal } from 'reactn';
+import React, { memo, useEffect, useMemo, useState } from 'react';
+import { useGlobal } from '../../context/GlobalContext';
 import { shallowEqual, useSelector } from 'react-redux';
 import {
   IState,
@@ -68,11 +68,11 @@ export const AudioTable = (props: IProps) => {
   const t: IMediaTabStrings = useSelector(mediaTabSelector, shallowEqual);
   const ts: ISharedStrings = useSelector(sharedSelector, shallowEqual);
   const lang = useSelector((state: IState) => state.strings.lang);
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [memory] = useGlobal('memory');
   const [org] = useGlobal('organization');
   const [user] = useGlobal('user');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [, setBusy] = useGlobal('remoteBusy');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
@@ -181,23 +181,23 @@ export const AudioTable = (props: IProps) => {
     if (rowVer) setVerValue(parseInt(rowVer));
     setShowId(id);
   };
-  const updateMediaRec = (id: string, publishTo: PublishDestinationEnum[]) => {
+  const updateMediaRec = async (
+    id: string,
+    publishTo: PublishDestinationEnum[]
+  ) => {
     var mediaRec = memory.cache.query((q) =>
       q.findRecord({ type: 'mediafile', id: id })
     ) as MediaFileD;
     mediaRec.attributes.publishTo = setPublishTo(publishTo);
     mediaRec.attributes.readyToShare = isPublished(publishTo);
-    memory
-      .update((t) => UpdateRecord(t, mediaRec, user))
-      .then(() => {
-        waitForRemoteQueue('publishTo').then(() => {
-          forceDataChanges();
-        });
-        setRefresh();
-      });
+    await memory.update((t) => UpdateRecord(t, mediaRec, user));
+    await waitForRemoteQueue('publishTo');
+    await forceDataChanges();
+    setRefresh();
   };
-  const publishConfirm = (destinations: PublishDestinationEnum[]) => {
-    updateMediaRec(data[publishItem].id, destinations);
+
+  const publishConfirm = async (destinations: PublishDestinationEnum[]) => {
+    await updateMediaRec(data[publishItem].id, destinations);
     setPublishItem(-1);
   };
   const publishRefused = () => {
@@ -252,7 +252,7 @@ export const AudioTable = (props: IProps) => {
   useEffect(() => {
     if (org) {
       var bible = getOrgBible(org);
-      setHasBible(bible !== undefined);
+      setHasBible((bible?.attributes.bibleName ?? '') !== '');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [org]);
@@ -287,13 +287,17 @@ export const AudioTable = (props: IProps) => {
     tableColumn: any;
     children?: Array<any>;
   }
+  const canCreate = useMemo(
+    () => !offline || offlineOnly,
+    [offline, offlineOnly]
+  );
 
   const PlayCell = ({ value, style, row, mediaId, ...restProps }: ICell) => (
     <Table.Cell row={row} {...restProps} style={{ ...style }} value>
       <MediaActions
         rowIndex={row.index}
         mediaId={row.id}
-        online={!offline || offlineOnly}
+        online={canCreate}
         readonly={onAttach ? readonly : true}
         attached={Boolean(row.passId)}
         onAttach={onAttach}
@@ -310,7 +314,7 @@ export const AudioTable = (props: IProps) => {
         <MediaActions2
           rowIndex={row.index}
           mediaId={mediaId || ''}
-          online={!offline || offlineOnly}
+          online={canCreate}
           readonly={readonly}
           canDelete={!readonly && !row.readyToShare}
           onDelete={handleConfirmAction}
@@ -365,12 +369,12 @@ export const AudioTable = (props: IProps) => {
     const { column, row } = props;
     if (column.name === 'actions') {
       const mediaId =
-        remoteId('mediafile', row.id, memory.keyMap as RecordKeyMap) || row.id;
+        remoteId('mediafile', row.id, memory?.keyMap as RecordKeyMap) || row.id;
       return <PlayCell {...props} mediaId={mediaId} />;
     }
     if (column.name === 'detach') {
       const mediaId =
-        remoteId('mediafile', row.id, memory.keyMap as RecordKeyMap) || row.id;
+        remoteId('mediafile', row.id, memory?.keyMap as RecordKeyMap) || row.id;
       return <DetachCell {...props} mediaId={mediaId} />;
     }
     if (column.name === 'version' && onAttach) {
@@ -427,7 +431,9 @@ export const AudioTable = (props: IProps) => {
       {publishItem !== -1 && (
         <ConfirmPublishDialog
           title={t.publish}
+          propagateLabel={''}
           description={''}
+          noPropagateDescription={''}
           yesResponse={publishConfirm}
           noResponse={publishRefused}
           current={getPublishTo(

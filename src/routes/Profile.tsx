@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../context/GlobalContext';
 import {
   User,
   UserD,
@@ -129,13 +129,14 @@ export function Profile(props: IProps) {
   const t: IProfileStrings = useSelector(profileSelector, shallowEqual);
   const dispatch = useDispatch();
   const setLanguage = (lang: string) => dispatch(action.setLanguage(lang));
-  const [isOffline] = useGlobal('offline');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [memory] = useGlobal('memory');
-  const [editId, setEditId] = useGlobal('editUserId');
+  const [editUserId, setEditUserId] = useGlobal('editUserId'); //verified this is not used in a function 2/18/25
+  const getGlobal = useGetGlobal();
   const [organization] = useGlobal('organization');
   const [user, setUser] = useGlobal('user');
   const [, setLang] = useGlobal('lang');
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const [isDeveloper] = useGlobal('developer');
   const navigate = useMyNavigate();
   const { getUserRec } = useUser();
@@ -149,7 +150,9 @@ export function Profile(props: IProps) {
   const [timezone, setTimezone] = useState<string>(moment.tz.guess() || '');
   const [syncFreq, setSyncFreq] = useState(2);
   const [role, setRole] = useState('');
-  const [locale, setLocale] = useState<string>(localeDefault(isDeveloper));
+  const [locale, setLocale] = useState<string>(
+    localeDefault(isDeveloper === 'true')
+  );
   const [news, setNews] = useState<boolean | null>(null);
   const [sharedContent, setSharedContent] = useState(false);
   const [digest, setDigest] = useState<DigestPreference | null>(null);
@@ -202,7 +205,7 @@ export function Profile(props: IProps) {
         setFamily(parts[parts.length - 1]);
       }
     }
-    if (editId) {
+    if (getGlobal('editUserId')) {
       const userRecs = users.filter(
         (u) => u.attributes?.name === e.target.value
       );
@@ -332,11 +335,11 @@ export function Profile(props: IProps) {
           );
         }
       }
-      if (!editId) setLanguage(locale);
+      if (!getGlobal('editUserId')) setLanguage(locale);
     }
     saveCompleted(toolId);
-    if (editId) {
-      setEditId(null);
+    if (getGlobal('editUserId')) {
+      setEditUserId(null);
     }
     saving.current = false;
     doClose();
@@ -366,7 +369,7 @@ export function Profile(props: IProps) {
           avatarUrl,
         },
       } as User;
-      if (!editId || !organization) {
+      if (!getGlobal('editUserId') || !organization) {
         await memory.update((t) => AddRecord(t, userRec, user, memory));
         if (offlineOnly) setUser(userRec.id as string);
       } else {
@@ -387,8 +390,8 @@ export function Profile(props: IProps) {
     if (finishAdd) {
       finishAdd();
     }
-    if (editId) {
-      setEditId(null);
+    if (getGlobal('editUserId')) {
+      setEditUserId(null);
     }
     doClose();
   };
@@ -414,8 +417,8 @@ export function Profile(props: IProps) {
   const handleCancelConfirmed = () => {
     setConfirmCancel(undefined);
     toolChanged(toolId, false);
-    if (editId) {
-      setEditId(null);
+    if (getGlobal('editUserId')) {
+      setEditUserId(null);
       const userId = localStorage.getItem(LocalKey.userId);
       if (!userId && offlineOnly) {
         setView('Logout');
@@ -483,12 +486,14 @@ export function Profile(props: IProps) {
         avatarUrl,
       },
     } as User;
-    if (!editId || !/Add/i.test(editId)) {
-      const current = users.filter((u) => u.id === (editId ? editId : user));
+    if (!editUserId || !/Add/i.test(editUserId)) {
+      const current = users.filter(
+        (u) => u.id === (editUserId ? editUserId : user)
+      );
       if (current.length === 1) {
         userRec = current[0];
         setCurrentUser(userRec as UserD);
-        const orgMbrRecs = memory.cache.query((q) =>
+        const orgMbrRecs = memory?.cache.query((q) =>
           q.findRecords('organizationmembership')
         ) as OrganizationMembership[];
         const mbrRec = orgMbrRecs.filter(
@@ -509,7 +514,9 @@ export function Profile(props: IProps) {
     setEmail(attr.email.toLowerCase());
     setPhone(attr.phone);
     setTimezone(attr.timezone || '');
-    setLocale(attr.locale ? attr.locale : localeDefault(isDeveloper));
+    setLocale(
+      attr.locale ? attr.locale : localeDefault(isDeveloper === 'true')
+    );
     setNews(attr.newsPreference);
     setSharedContent(attr.sharedContentCreator ?? false);
     setDigest(attr.digestPreference);
@@ -522,7 +529,7 @@ export function Profile(props: IProps) {
     setAvatarUrl(attr.avatarUrl);
     setSyncFreq(getSyncFreq(attr.hotKeys));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [user]);
+  }, [user, editUserId]);
 
   const getSyncFreq = (hotKeys: string | null) => {
     const hk = JSON.parse(hotKeys ?? '{}');
@@ -567,7 +574,7 @@ export function Profile(props: IProps) {
               <ParatextLinked setView={setView} />
             </StyledGrid>
             <Grid item xs={12} md={7}>
-              {editId && /Add/i.test(editId) ? (
+              {editUserId && /Add/i.test(editUserId) ? (
                 <Typography variant="h6">{t.addMember}</Typography>
               ) : userNotComplete() ? (
                 <Typography variant="h6">{t.completeProfile}</Typography>
@@ -631,7 +638,7 @@ export function Profile(props: IProps) {
                     }
                     label=""
                   />
-                  {userIsAdmin && editId && email !== '' && (
+                  {userIsAdmin && editUserId && email !== '' && (
                     <FormControlLabel
                       control={
                         <SelectRole
@@ -702,6 +709,7 @@ export function Profile(props: IProps) {
                   <FormControlLabel
                     control={
                       <input
+                        title={t.syncFrequency}
                         value={syncFreq}
                         onChange={handleSyncFreqChange}
                         type="number"
@@ -772,7 +780,7 @@ export function Profile(props: IProps) {
                 </FormGroup>
               </FormControl>
               <ActionRow>
-                {((editId && /Add/i.test(editId)) ||
+                {((editUserId && /Add/i.test(editUserId)) ||
                   (currentUser &&
                     currentUser.attributes?.name !==
                       currentUser.attributes?.email)) && (
@@ -797,7 +805,7 @@ export function Profile(props: IProps) {
                   }
                   onClick={currentUser === undefined ? handleAdd : handleSave}
                 >
-                  {editId && /Add/i.test(editId)
+                  {editUserId && /Add/i.test(editUserId)
                     ? t.add
                     : userNotComplete()
                     ? t.next
@@ -808,7 +816,7 @@ export function Profile(props: IProps) {
             </Grid>
           </Grid>
           {(!isOffline || offlineOnly) &&
-            !editId &&
+            !editUserId &&
             currentUser &&
             currentUser.attributes?.name !== currentUser.attributes?.email && (
               <DeleteExpansion

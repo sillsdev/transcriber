@@ -95,9 +95,9 @@ export async function insertData(
   try {
     if (item.keys && checkExisting) {
       var id = remoteIdGuid(
-        item.type,
+        item?.type,
         item.keys['remoteId'],
-        memory.keyMap as RecordKeyMap
+        memory?.keyMap as RecordKeyMap
       );
       rec = memory.cache.query((q) =>
         q.findRecord({ type: item.type, id: id as string })
@@ -137,13 +137,13 @@ export async function insertData(
               tb,
               rec,
               rel,
-              (item.relationships[rel].data as RecordIdentity).type,
+              (item.relationships[rel].data as RecordIdentity)?.type,
               (item.relationships[rel].data as RecordIdentity).id
             )
           );
       }
     } else {
-      const rn = new StandardRecordNormalizer({ schema: memory.schema });
+      const rn = new StandardRecordNormalizer({ schema: memory?.schema });
       try {
         if (typeof item.id === 'number') item = rn.normalizeRecord(item);
         oparray.push(tb.addRecord(item).toOperation());
@@ -274,9 +274,9 @@ export async function LoadData(
   setCompleted: (valud: number) => void,
   orbitError: (ex: IApiError) => void
 ): Promise<boolean> {
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   var tb: RecordTransformBuilder = new RecordTransformBuilder();
   const ser = getDocSerializer(memory);
   //const { checkIt } = usePassageType();
@@ -346,9 +346,9 @@ export async function LoadProjectData(
   setBusy: (v: boolean) => void,
   orbitError: (ex: IApiError) => void
 ): Promise<boolean> {
-  const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const memory = coordinator?.getSource('memory') as Memory;
+  const remote = coordinator?.getSource('remote') as JSONAPISource;
+  const backup = coordinator?.getSource('backup') as IndexedDBSource;
   //const { checkIt } = usePassageType();
   if (projectsLoaded.includes(project)) return true;
   if (!remote || !online) throw new Error('offline.');
@@ -356,7 +356,7 @@ export async function LoadProjectData(
   const projectid = remoteIdNum(
     'project',
     project,
-    memory.keyMap as RecordKeyMap
+    memory?.keyMap as RecordKeyMap
   );
   var tb: RecordTransformBuilder = new RecordTransformBuilder();
   const ser = getDocSerializer(memory);

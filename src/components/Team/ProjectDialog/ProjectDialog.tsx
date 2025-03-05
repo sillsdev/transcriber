@@ -36,6 +36,7 @@ const initState = {
   description: '',
   type: 'scripture',
   book: '',
+  story: true,
   bcp47: 'und',
   languageName: '',
   isPublic: false,

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import {
   IState,
   IArtifactCategoryStrings,
@@ -45,7 +45,7 @@ export const useArtifactCategory = (teamId?: string) => {
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
   const curOrg = teamId ?? organization;
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
   const waitForRemoteQueue = useWaitForRemoteQueue();
   const t: IArtifactCategoryStrings = useSelector(stringSelector, shallowEqual);
   const [fromLocal] = useState<ISwitches>({});
@@ -107,7 +107,7 @@ export const useArtifactCategory = (teamId?: string) => {
     /* wait for new categories remote id to fill in */
     await waitForRemoteQueue('category update');
     var orgrecs: ArtifactCategoryD[] = (
-      memory.cache.query((q) =>
+      memory?.cache.query((q) =>
         q.findRecords('artifactcategory')
       ) as ArtifactCategoryD[]
     ).filter(
@@ -169,7 +169,7 @@ export const useArtifactCategory = (teamId?: string) => {
     id?: string
   ) => {
     //check for duplicate
-    const orgrecs: ArtifactCategory[] = memory.cache.query((q) =>
+    const orgrecs: ArtifactCategory[] = memory?.cache.query((q) =>
       q
         .findRecords('artifactcategory')
         .filter({ attribute: 'categoryname', value: newArtifactCategory })

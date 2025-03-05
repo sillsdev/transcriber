@@ -8,7 +8,7 @@ import ResolveIcon from '@mui/icons-material/Check';
 import ReopenIcon from '@mui/icons-material/Unarchive';
 import LinkIcon from '@mui/icons-material/Link';
 import { StyledMenu, StyledMenuItem } from '../../control';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import { discussionMenuSelector } from '../../selector';
 import { shallowEqual, useSelector } from 'react-redux';
 
@@ -22,8 +22,8 @@ interface IProps {
 
 export function DiscussionMenu(props: IProps) {
   const { id, action, resolved, canSet, stopPlayer } = props;
-  const [offlineOnly] = useGlobal('offlineOnly');
-  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly'); //will be constant here
+  const [offline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const t: IDiscussionMenuStrings = useSelector(
     discussionMenuSelector,

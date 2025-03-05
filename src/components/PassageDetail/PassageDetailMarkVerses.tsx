@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../../context/GlobalContext';
 import {
   ISharedStrings,
   ITranscriptionTabStrings,
@@ -46,8 +46,6 @@ import {
 import { useSnackBar } from '../../hoc/SnackBar';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import { useProjectSegmentSave } from './Internalization/useProjectSegmentSave';
-import { waitForIt } from '../../utils/waitForIt';
-import { JSONParse } from '../../utils/jsonParse';
 import { IRegion } from '../../crud/useWavesurferRegions';
 import { cleanClipboard } from '../../utils/cleanClipboard';
 import { refMatch } from '../../utils/refMatch';
@@ -122,13 +120,11 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     currentstep,
     currentSegment,
     setStepComplete,
-    setCurrentStep,
-    orgWorkflowSteps,
+    gotoNextStep,
     rowData,
   } = usePassageDetailContext();
   const [memory] = useGlobal('memory');
   const [, setComplete] = useGlobal('progress');
-  const [globals] = useGlobal();
   const [data, setDatax] = useState<ICell[][]>([]);
   const [issues, setIssues] = useState<string[]>([]);
   const [confirm, setConfirm] = useState('');
@@ -160,10 +156,11 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     clearRequested,
     clearCompleted,
     checkSavedFn,
+    waitForSave,
   } = useContext(UnsavedContext).state;
   const projectSegmentSave = useProjectSegmentSave();
   const { showMessage } = useSnackBar();
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal('plan'); //will be constant here
   const planType = usePlanType();
 
   const isFlat = useMemo(() => {
@@ -290,50 +287,10 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passage, engVrs, currentSegment]);
 
-  const parsedSteps = useMemo(() => {
-    if (!orgWorkflowSteps) return [];
-    return orgWorkflowSteps
-      .sort(
-        (a, b) =>
-          (a.attributes.sequencenum ?? 0) - (b.attributes.sequencenum ?? 0)
-      )
-      .map((s, ix) => ({
-        id: s.id,
-        sequencenum: ix,
-        tool: JSONParse(s?.attributes?.tool).tool,
-        settings:
-          (JSONParse(s?.attributes?.tool).settings ?? '') === ''
-            ? '{}'
-            : JSONParse(s?.attributes?.tool).settings,
-      }));
-  }, [orgWorkflowSteps]);
-
-  const nextStep = useMemo(() => {
-    if (!currentstep || !parsedSteps) return null;
-    let found = false;
-    for (let s of parsedSteps) {
-      if (s.id === currentstep) {
-        found = true;
-        continue;
-      }
-      if (!found) continue;
-      return s.id;
-    }
-    return null;
-  }, [currentstep, parsedSteps]);
-
   const handleComplete = (complete: boolean) => {
-    waitForIt(
-      'change cleared after save',
-      () => !globals.changed,
-      () => false,
-      200
-    ).then(async () => {
+    waitForSave(undefined, 200).finally(async () => {
       await setStepComplete(currentstep, complete);
-      //is this what users want if they have next passage set?
-      //do they want to transcribe the next passage...probably?
-      //change this to gotoNextStep()?
-      if (complete) setCurrentStep(nextStep || '');
+      if (complete) gotoNextStep();
     });
   };
 
@@ -342,8 +299,8 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
       savingRef.current = true;
       if (media) {
         if (numSegments !== 0) {
-          let segs = getSortedRegions(segmentsRef.current);
-          segs = segs.map((r, i) =>
+          let regions = getSortedRegions(segmentsRef.current);
+          regions = regions.map((r, i) =>
             i + 1 < dataRef.current.length
               ? {
                   ...r,
@@ -351,7 +308,6 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
                 }
               : { ...r, label: '' }
           );
-          const regions = JSON.stringify(segs);
           segmentsRef.current = JSON.stringify({ regions });
         }
         // update all three segment types: verse, transcription, backtranslation
@@ -371,6 +327,8 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
             segmentsRef.current
           );
         }
+        // remove TRTask segments that handle AI transcription
+        segments = updateSegments(NamedRegions.TRTask, segments, '');
         projectSegmentSave({ media, segments })
           .then(() => {
             saveCompleted(verseToolId);
@@ -523,7 +481,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
           showMessage(tt.availableOnClipboard);
         })
         .catch((err) => {
-          showMessage(tt.cantCopy);
+          showMessage(ts.cantCopy);
         });
     else showMessage(tt.noData.replace('{0}', t.markVerses));
   };
@@ -626,7 +584,7 @@ export function PassageDetailMarkVerses({ width }: MarkVersesProps) {
           onClick={handleCopy}
           disabled={numSegments === 0}
         >
-          {t.copyToClipboard}
+          {ts.clipboardCopy}
         </AltButton>
         <GrowingSpacer />
         <PriButton

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { isElectron, API_CONFIG } from '../api-variable';
 import { launch, launchCmd, execFolder } from '../utils';
 import path from 'path-browserify';
@@ -21,7 +21,7 @@ interface IHelpLinkProps {
 }
 
 export function ContextHelp({ topic, reset }: IHelpLinkProps) {
-  const [isOffline] = useGlobal('offline');
+  const [isOffline] = useGlobal('offline'); //verified this is not used in a function 2/18/25
   const [showTopic, setShowTopic] = React.useState<string>();
   const [helpToggle, setHelpToggle] = React.useState(false);
   const helpRef = React.useRef<any>();

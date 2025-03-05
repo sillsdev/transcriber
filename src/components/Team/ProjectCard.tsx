@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState, useEffect } from 'react';
-import { useGlobal } from 'reactn';
+import { useGetGlobal, useGlobal } from '../../context/GlobalContext';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
@@ -55,6 +55,7 @@ import { RecordKeyMap } from '@orbit/records';
 import {
   projDefBook,
   projDefSectionMap,
+  projDefStory,
   useProjectDefaults,
 } from '../../crud/useProjectDefaults';
 import { useOrbitData } from '../../hoc/useOrbitData';
@@ -135,7 +136,7 @@ export const ProjectCard = (props: IProps) => {
   const { localizedOrganizedBy } = useOrganizedBy();
   const [, setOrganizedBySing] = useState('');
   const [, setOrganizedByPlural] = useState('');
-  const [projectId] = useGlobal('project');
+  const [projectId] = useGlobal('project'); //verified this is not used in a function 2/18/25
   const [user] = useGlobal('user');
   const projectPlans = useProjectPlans();
   const offlineProjectRead = useOfflnProjRead();
@@ -155,7 +156,7 @@ export const ProjectCard = (props: IProps) => {
   const { leaveHome } = useHome();
   const { getParam, setParam } = useJsonParams();
   const sections = useOrbitData<Section[]>('section');
-
+  const getGlobal = useGetGlobal();
   const handleSelect = (project: VProjectD) => () => {
     loadProject(project);
     leaveHome();
@@ -228,8 +229,8 @@ export const ProjectCard = (props: IProps) => {
         copyProject({
           projectid: remoteIdNum(
             'project',
-            projectId,
-            memory.keyMap as RecordKeyMap
+            getGlobal('project'),
+            memory?.keyMap as RecordKeyMap
           ),
           sameorg: what === 'copysame',
           token: accessToken,
@@ -254,7 +255,7 @@ export const ProjectCard = (props: IProps) => {
   const handleProjectAction = (what: string) => {
     const [projectid] = setProjectParams(project);
     //otherwise it will be done in the useEffect for projectId
-    if (projectid === projectId) doOpen(what);
+    if (projectid === getGlobal('project')) doOpen(what);
     else setOpen(what);
   };
 
@@ -274,6 +275,7 @@ export const ProjectCard = (props: IProps) => {
       tags,
       organizedBy,
       book,
+      story,
     } = values;
     var oldBook = getParam(projDefBook, project?.attributes?.defaultParams);
     var defaultParams = setParam(
@@ -281,6 +283,7 @@ export const ProjectCard = (props: IProps) => {
       book,
       project?.attributes?.defaultParams
     );
+    defaultParams = setParam(projDefStory, story, defaultParams);
     projectUpdate({
       ...project,
       attributes: {
@@ -288,7 +291,7 @@ export const ProjectCard = (props: IProps) => {
         name,
         description,
         type,
-        language: values.bcp47,
+        language: values?.bcp47 ?? 'und',
         languageName,
         isPublic,
         spellCheck,
@@ -334,8 +337,10 @@ export const ProjectCard = (props: IProps) => {
     const value: IProjectDialog = {
       name: attr.name,
       description: attr.description || '',
-      type: attr.type,
+      type: attr?.type,
       book: getProjectDefault(projDefBook, project as any as ProjectD) || '',
+      story:
+        getProjectDefault(projDefStory, project as any as ProjectD) ?? true,
       bcp47: attr.language,
       languageName: attr.languageName || '',
       isPublic: attr.isPublic,
@@ -376,7 +381,7 @@ export const ProjectCard = (props: IProps) => {
               ) : (
                 <BsPencilSquare />
               )}
-              {(project.attributes.isPublic && <ShareIcon />)}
+              {project.attributes.isPublic && <ShareIcon />}
               {'\u00A0 '}
               {project?.attributes?.name}
             </Typography>

@@ -1,4 +1,4 @@
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { PlanD, ProjectD, VProjectD } from '../model';
 import { related, useTypeId } from '.';
 import { ReplaceRelatedRecord, UpdateRecord } from '../model/baseModel';

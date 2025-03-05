@@ -315,6 +315,8 @@ var curSheet: ISheet[] | undefined = undefined;
 
 var publishStatus = (destinations: PublishDestinationEnum[]) => '';
 
+var getSharedResource = (passage: PassageD) => undefined;
+
 var gsDefaults = {
   plan: '',
   sections: [] as SectionD[],
@@ -335,6 +337,7 @@ var gsDefaults = {
   publishStatus,
   readSharedResource,
   current: curSheet,
+  getSharedResource,
 };
 
 var secResult = {

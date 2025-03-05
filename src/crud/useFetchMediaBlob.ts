@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useState } from 'react';
 import useFetchMediaUrl, { IMediaState, mediaClean } from './useFetchMediaUrl';
-import { useGlobal } from 'reactn';
+import { useGlobal } from '../context/GlobalContext';
 import { loadBlob } from '../utils/loadBlob';
 
 export enum BlobStatus {
@@ -34,7 +34,7 @@ type Action =
   | { type: BlobStatus.IDLE; payload: undefined };
 
 const stateReducer = (state: IBlobState, action: Action): IBlobState => {
-  switch (action.type) {
+  switch (action?.type) {
     case BlobStatus.PENDING:
       return {
         ...blobClean,
