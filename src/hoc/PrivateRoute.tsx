@@ -22,7 +22,7 @@ export function PrivateRoute({ el }: IProps) {
     localStorage.setItem(localUserKey(LocalKey.url), pathname);
   if (!offline && !authenticated())
     navigate('/', { state: { from: pathname } });
-
+  
   return el;
 }
 export default PrivateRoute;

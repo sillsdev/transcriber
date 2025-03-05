@@ -274,7 +274,7 @@ export function Loading() {
       !userRec?.attributes?.locale ||
       !uiLanguages.includes(userRec?.attributes?.locale)
     ) {
-      setView('/profile');
+      setView('/createProfile');
       return;
     }
     let fromUrl = getGotoUrl();
