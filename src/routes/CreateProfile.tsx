@@ -3,9 +3,7 @@ import { ProfileDialog } from "../components/ProfileDialog";
 import { restoreScroll } from '../utils';
 
 interface CreateProfileProps {
-    readOnlyMode?: boolean;
-    open: boolean;
-    onClose: () => void;
+    noMargin?: boolean;
     finishAdd?: () => void;
 }
 
@@ -17,6 +15,8 @@ export function CreateProfile(props: CreateProfileProps) {
         restoreScroll();
         setAnchorEl(null);
     };
-    <ProfileDialog open={true} readOnlyMode={false} onClose={handleProfile(false)} />
+    return (
+        <ProfileDialog open={true} readOnlyMode={false} onClose={handleProfile(false)} />
+    )
 }
 export default CreateProfile;
